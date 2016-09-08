@@ -15,17 +15,53 @@ Entry.PyHint = function() {
         var cur = editor.getCursor(), token = editor.getTokenAt(cur);
         // If it's not a 'word-style' token, ignore the token.
 
-        if (!/^[\w$_]*$/.test(token.string)) {
+        var defTokens = ["def entry_event_start", "def entry_event_mouse_up", "def entry_event_object_down", 
+                        "def entry_event_object_up", "def entry_event_scene_start", "def entry_event_clone_create", 
+                        "def entry_event_clone_create", "def entry_event_signal", "def entry_event_key"];
+
+        var defMaps = [];
+        for(var d in defTokens) {
+            var defToken = defTokens[d];
+            if(defToken == "def entry_event_signal") {
+                defMaps.push({
+                    displayText: defToken,
+                    text: defToken + "(\"None\"):"
+                });
+            }
+            else if(defToken == "def entry_event_key") {
+                defMaps.push({
+                    displayText: defToken,
+                    text: defToken + "(\"Q\"):"
+                });
+            } 
+            else {
+                defMaps.push({
+                    displayText: defToken,
+                    text: defToken + "():"
+                });
+            }
+
+        }
+
+        var found = [], current = token.string;
+
+        if(token.string == "def") {
+            found = found.concat(fuzzySearch(
+                    defMaps, current,
+                    {extract: function(e) {return e.displayText}}));
+        } 
+        else if (!/^[\w$_]*$/.test(token.string)) {
             token = {start: cur.ch, end: cur.ch, string: "", state: token.state,
                 className: token.string == ":" ? "python-type" : null};
         }
 
-        var found = [], current = token.string;
+        
 
         var base;
 
         if (token.type == "variable") {
             base = token.string;
+            console.log("base1", base);
             if (base != null) {
                 found = found.concat(fuzzySearch(globalKeywordsL, current));
                 found = found.concat(fuzzySearch(
@@ -60,8 +96,10 @@ Entry.PyHint = function() {
             to: CodeMirror.Pos(cur.line, token.end)};
     }
 
+    var hwObjects = ["Codeino", "Arduino", "Xbot", "Dplay", "Sensorboard", 
+                    "Nemoino", "Hamster", "Albert", "Bitbrick", "Neobot", "Robotis"];
     var globalKeywords =
-        "Entry,self,Hw,while True,True,False,break,for i in range,if,if else,len,random.randint";
+        "Entry,self,Hw,while True,True,False,break,for i in range(),if,if else,len,random.randint";
     var globalKeywordsL = globalKeywords.split(",");
 
     var syntaxMap = {_global: []};
@@ -84,6 +122,16 @@ Entry.PyHint = function() {
 
         var objName = syntax.shift();
 
+        var isHwObjectName = false;
+        for(var h in hwObjects) {
+            var hwObject = hwObjects[h];
+            if(objName == hwObject || objName == "hw")
+                isHwObjectName = true;
+        }
+
+        if(isHwObjectName)
+            continue;
+
         if (!syntaxMap[objName]) {
             syntaxMap[objName] = [];
             syntaxMap._global.push({
@@ -99,6 +147,17 @@ Entry.PyHint = function() {
             displayText: operator,
             text: operator + paramPart
         });
+
+
+        var isHwObjectName = false;
+        for(var h in hwObjects) {
+            var hwObject = hwObjects[h];
+            if(objName == hwObject || objName == "hw")
+                isHwObjectName = true;
+        }
+
+        if(isHwObjectName)
+            continue;
 
         if(objName == "def") {
             syntaxMap._global.push({

@@ -11653,48 +11653,69 @@ Entry.PyHint = function() {
       return a.original;
     });
   }
-  CodeMirror.registerHelper("hint", "python", function(c) {
-    var e = c.getCursor(), f = c.getTokenAt(e);
-    /^[\w$_]*$/.test(f.string) || (f = {start:e.ch, end:e.ch, string:"", state:f.state, className:":" == f.string ? "python-type" : null});
-    var g = [], h = f.string, q;
+  CodeMirror.registerHelper("hint", "python", function(a) {
+    var e = a.getCursor(), f = a.getTokenAt(e), g = "def entry_event_start;def entry_event_mouse_up;def entry_event_object_down;def entry_event_object_up;def entry_event_scene_start;def entry_event_clone_create;def entry_event_clone_create;def entry_event_signal;def entry_event_key".split(";"), h = [], k;
+    for (k in g) {
+      var l = g[k];
+      "def entry_event_signal" == l ? h.push({displayText:l, text:l + '("None"):'}) : "def entry_event_key" == l ? h.push({displayText:l, text:l + '("Q"):'}) : h.push({displayText:l, text:l + "():"});
+    }
+    g = [];
+    k = f.string;
+    "def" == f.string ? g = g.concat(b(h, k, {extract:function(a) {
+      return a.displayText;
+    }})) : /^[\w$_]*$/.test(f.string) || (f = {start:e.ch, end:e.ch, string:"", state:f.state, className:":" == f.string ? "python-type" : null});
     if ("variable" == f.type) {
-      q = f.string, null != q && (g = g.concat(b(a, h)), g = g.concat(b(d._global, h, {extract:function(a) {
+      h = f.string, console.log("base1", h), null != h && (g = g.concat(b(d, k)), g = g.concat(b(c._global, k, {extract:function(a) {
         return a.displayText;
       }})));
     } else {
       if ("property" == f.type || "variable-2" == f.type || "." == f.state.lastToken) {
-        q = f.string;
-        c = c.getLineTokens(e.line);
-        for (var u = c.shift();"variable" !== u.type && "variable-2" !== u.type;) {
-          u = c.shift();
+        h = f.string;
+        a = a.getLineTokens(e.line);
+        for (l = a.shift();"variable" !== l.type && "variable-2" !== l.type;) {
+          l = a.shift();
         }
-        c = u.string;
-        null != q && d[c] && (g = g.concat(b(d[c], h, {extract:function(a) {
+        a = l.string;
+        null != h && c[a] && (g = g.concat(b(c[a], k, {extract:function(a) {
           return a.displayText;
         }})));
-        "." == f.state.lastToken && (g = g.concat(d[c]));
+        "." == f.state.lastToken && (g = g.concat(c[a]));
       }
     }
     return {list:g.slice(0, 25), from:CodeMirror.Pos(e.line, f.start), to:CodeMirror.Pos(e.line, f.end)};
   });
-  var a = "Entry;self;Hw;while True;True;False;break;for i in range;if;if else;len;random.randint".split(";"), d = {_global:[]}, c = Entry.block, e;
-  for (e in c) {
-    var f = c[e].syntax;
-    if (f && f.py) {
-      f = f.py.join("");
-      f = f.split(".");
-      if (-1 < f[0].indexOf("def ")) {
-        f = f[0].split(" ");
+  var a = "Codeino Arduino Xbot Dplay Sensorboard Nemoino Hamster Albert Bitbrick Neobot Robotis".split(" "), d = "Entry;self;Hw;while True;True;False;break;for i in range();if;if else;len;random.randint".split(";"), c = {_global:[]}, e = Entry.block, f;
+  for (f in e) {
+    var g = e[f].syntax;
+    if (g && g.py) {
+      g = g.py.join("");
+      g = g.split(".");
+      if (-1 < g[0].indexOf("def ")) {
+        g = g[0].split(" ");
       } else {
-        if (1 === f.length) {
+        if (1 === g.length) {
           continue;
         }
       }
-      var g = f.shift();
-      d[g] || (d[g] = [], d._global.push({displayText:g, text:g}));
-      var f = f[0].split(","), h = "(" + Array(f.length).join(" , ") + ")", f = f[0].split("(")[0];
-      d[g].push({displayText:f, text:f + h});
-      "def" == g ? d._global.push({displayText:g + " " + f, text:g + " " + f + h + ":"}) : d._global.push({displayText:g + "." + f, text:g + "." + f + h});
+      var h = g.shift(), k = !1, l;
+      for (l in a) {
+        var m = a[l];
+        if (h == m || "hw" == h) {
+          k = !0;
+        }
+      }
+      if (!k) {
+        c[h] || (c[h] = [], c._global.push({displayText:h, text:h}));
+        var g = g[0].split(","), n = "(" + Array(g.length).join(" , ") + ")", g = g[0].split("(")[0];
+        c[h].push({displayText:g, text:g + n});
+        k = !1;
+        for (l in a) {
+          if (m = a[l], h == m || "hw" == h) {
+            k = !0;
+          }
+        }
+        k || ("def" == h ? c._global.push({displayText:h + " " + g, text:h + " " + g + n + ":"}) : c._global.push({displayText:h + "." + g, text:h + "." + g + n}));
+      }
     }
   }
 };
