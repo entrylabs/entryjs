@@ -139,6 +139,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     };
 
     p.getTextWidth = function() {
-        return this.textElement.getComputedTextLength() + X_PADDING + 2;
+        return this.textElement.getBoundingClientRect().width + X_PADDING + 2;
     };
 })(Entry.FieldTextInput.prototype);

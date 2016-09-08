@@ -4,10 +4,11 @@
 "use strict";
 
 goog.require("Entry.Command");
+goog.require("Entry.STATIC");
 
 (function(c) {
     c.selectObject = {
-        type: EntryStatic.COMMAND_TYPES.selectObject,
+        type: Entry.STATIC.COMMAND_TYPES.selectObject,
         do: function(objectId) {
             return Entry.container.selectObject(objectId);
         },
