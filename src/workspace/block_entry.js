@@ -13299,9 +13299,10 @@ Entry.block = {
                 }
 
                 data_default_address = data_default_address + increase * data_default_length;
-                if (increase != 0) {
-                    data_length = 6 * data_default_length;
-                }
+                data_address = data_default_address;
+                // if (increase != 0) {
+                   // data_length = 6 * data_default_length;
+                // }
 
                 Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
                 // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
