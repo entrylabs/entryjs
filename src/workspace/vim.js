@@ -96,7 +96,7 @@ Entry.Vim = function(dom, textType) {
             });
             var mouseup = Entry.Utils.createMouseEvent('mouseup', e);
             _self.codeMirror.display.scroller.dispatchEvent(mouseup);
-        } 
+        }
 
         function eventDragOver(e) {
             _self.codeMirror.display.dragFunctions.over(e);
@@ -201,7 +201,7 @@ Entry.Vim = function(dom, textType) {
 
         return textCode;
     };
-    
+
     p.setParserAvailableCode = function(blockMenuCode, boardCode) {
         this._parser.setAvailableCode(blockMenuCode, boardCode);
     };

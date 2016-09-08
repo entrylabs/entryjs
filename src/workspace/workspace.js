@@ -95,12 +95,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     if (this.board) this.board.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.set({selectedBoard:this.vimBoard});
-                    this.vimBoard.show(); 
-                    this.codeToText(this.board.code, mode); 
+                    this.vimBoard.show();
+                    this.codeToText(this.board.code, mode);
                     this.blockMenu.renderText();
                     this.board.clear();
                     //this.oldMode = this.mode;
-                    this.oldTextType = this.textType;  
+                    this.oldTextType = this.textType;
 
                 break;
 
@@ -110,24 +110,24 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.set({selectedBoard:this.board});
                     this.textToCode(this.oldMode, this.oldTextType);
                     if (this.vimBoard) this.vimBoard.hide();
-                    if (this.overlayBoard) this.overlayBoard.hide(); 
+                    if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.renderBlock(function() {
                        this.blockMenu.reDraw();
                        }.bind(this)
                    );
                     //this.oldMode = this.mode;
-                    this.oldTextType = this.textType; 
+                    this.oldTextType = this.textType;
                 } catch(e) {
                     this.board.code.clear();
                     if (this.board) this.board.hide();
                     this.set({selectedBoard:this.vimBoard});
                     this.mode = Entry.Workspace.MODE_VIMBOARD;
-                    
+
                     //console.log(("this.oldTextType", this.oldTextType);
 
                     if(this.oldTextType == Entry.Vim.TEXT_TYPE_JS) {
                         mode.boardType = Entry.Workspace.MODE_VIMBOARD;
-                        mode.textType = Entry.Vim.TEXT_TYPE_JS; 
+                        mode.textType = Entry.Vim.TEXT_TYPE_JS;
                         mode.runType = Entry.Vim.MAZE_MODE;
                         this.oldTextType = Entry.Vim.TEXT_TYPE_JS;
                         Entry.dispatchEvent("changeMode", mode);
@@ -139,8 +139,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         this.oldTextType = Entry.Vim.TEXT_TYPE_PY;
                         //console.log(("mode", mode);
                         Entry.dispatchEvent("changeMode", mode);
-                    } 
-                    
+                    }
+
                     //throw e;
                 }
                 Entry.commander.setCurrentEditor("board", this.board);
@@ -205,7 +205,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var changedCode = this.vimBoard.textToCode(this.textType);
         var board = this.board;
         var code = board.code;
-        code.load(changedCode); 
+        code.load(changedCode);
     };
 
     p.codeToText = function(code, mode) {
@@ -266,11 +266,26 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             }
         }
 
-        if (ctrlKey && keyCode == 86) { //paste
-            var board = this.selectedBoard;
-            if (board && board instanceof Entry.Board && Entry.clipboard)
-                Entry.do('addThread', Entry.clipboard).value
-                    .getFirstBlock().copyToClipboard();
+        if (ctrlKey) {
+            if (keyCode == 86) { //paste
+                var board = this.selectedBoard;
+                if (board && board instanceof Entry.Board && Entry.clipboard)
+                    Entry.do('addThread', Entry.clipboard).value
+                        .getFirstBlock().copyToClipboard();
+            }
+            if (keyCode == 66) { //setMode(block)
+                var mode = {};
+                mode.boardType = Entry.Workspace.MODE_BOARD;
+                mode.textType = -1;
+                this.setMode(mode);
+            }
+            if (keyCode == 80) { //setMode(python)
+                var mode = {};
+                mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+                mode.textType = Entry.Vim.TEXT_TYPE_PY;
+                mode.runType = Entry.Vim.WORKSPACE_MODE;
+                Entry.dispatchEvent("changeMode", mode);
+            }
         }
     };
 
