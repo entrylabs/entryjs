@@ -1198,14 +1198,14 @@ Entry.TextCodingUtil = {};
         var targets = vc.variables_ || [];
         for (var i=0; i<targets.length; i++) {
             if (test(targets[i].name_))
-                return "변수 이름에 공백(띄어쓰기)이 포함되어 있습니다.";
+                return "등록된 변수중에 공백(띄어쓰기)이 포함된 변수가 있습니다.";
         }
 
         //inspect lists
         targets = vc.lists_ || [];
         for (i=0; i<targets.length; i++) {
             if (test(targets[i].name_))
-                return "리스트 이름에 공백(띄어쓰기)이 포함되어 있습니다.";
+                return "등록된 리스트중에 공백(띄어쓰기)이 포함된 리스트드가 있습니다.";
         }
 
         //this is OK...
@@ -1233,10 +1233,10 @@ Entry.TextCodingUtil = {};
                             if(paramBlockParams[1] == undefined) {
                                 var name = paramBlockParams[0];
                                 if (test(name)) 
-                                    return "함수 이름에 공백(띄어쓰기)이 포함되어 있습니다.";
+                                    return "등록된 함수중에 함수명에 공백(띄어쓰기)이 포함된 함수가 있습니다.";
                             } 
                             else {
-                                return "함수 이름 라벨이 2개 이상으로 구성된 함수를 포함하고 있습니다.";
+                                return "등록된 함수중에 함수 이름라벨이 2개 이상으로 구성된 함수가 있습니다.";
                             }
                         }
                         else {

@@ -273,14 +273,26 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     Entry.do('addThread', Entry.clipboard).value
                         .getFirstBlock().copyToClipboard();
             }
-            if (keyCode == 66) { //setMode(block)
+            if (keyCode == 66) { //setMode(block) for textcoding
+                var message =Entry.TextCodingUtil.isNamesIncludeSpace()
+                if(message) {
+                    alert(message);
+                    return;
+                }
+
                 var mode = {};
                 mode.boardType = Entry.Workspace.MODE_BOARD;
                 mode.textType = -1;
                 this.setMode(mode);
                 $('.entryModeSelector span ul li:eq(0)').triggerHandler('click');
             }
-            if (keyCode == 80) { //setMode(python)
+            if (keyCode == 80) { //setMode(python) for textcoding
+                var message =Entry.TextCodingUtil.isNamesIncludeSpace()
+                if(message) {
+                    alert(message);
+                    return;
+                }
+
                 var mode = {};
                 mode.boardType = Entry.Workspace.MODE_VIMBOARD;
                 mode.textType = Entry.Vim.TEXT_TYPE_PY;
