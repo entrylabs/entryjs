@@ -6118,7 +6118,7 @@ Entry.block = {
     },
     "set_visible_project_timer": {
         "color": "#FFD974",
-        vimModeFontColor: "#000",
+        vimModeFontColor: "#fff",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -6793,7 +6793,7 @@ Entry.block = {
     },
     "choose_project_timer_action": {
         "color": "#FFD974",
-        vimModeFontColor: "#000",
+        vimModeFontColor: "#fff",
         "skeleton": "basic",
         "statements": [],
         "params": [
