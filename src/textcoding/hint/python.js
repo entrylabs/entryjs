@@ -54,9 +54,7 @@ Entry.PyHint = function() {
                 token = {start: cur.ch, end: cur.ch, string: "", state: token.state,
                     className: token.string == ":" ? "python-type" : null};
         }
-
-        console.log("token token", token.string);
-        console.log("token type", token.type);
+        
         var base;
 
         if (token.type == "variable" || token.string == "set" || token.string == "print" || token.string == "is") {
