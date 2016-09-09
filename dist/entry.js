@@ -11664,8 +11664,6 @@ Entry.PyHint = function() {
     "def" == f.string ? g = g.concat(b(h, k, {extract:function(a) {
       return a.displayText;
     }})) : /^[\w$_]*$/.test(f.string) || (console.log("test", f.string), f = {start:e.ch, end:e.ch, string:"", state:f.state, className:":" == f.string ? "python-type" : null});
-    console.log("token token", f.string);
-    console.log("token type", f.type);
     if ("variable" == f.type || "set" == f.string || "print" == f.string || "is" == f.string) {
       h = f.string, console.log("base1", h), null != h && (g = g.concat(b(d, k)), g = g.concat(b(c._global, k, {extract:function(a) {
         return a.displayText;
@@ -12250,9 +12248,9 @@ Entry.TextCodingUtil = {};
     console.log("assembleRepeatWhileTrueBlock >>", "block", a.data.type, "syntax", b);
     var c = "";
     if ("repeat_while_true" == a.data.type) {
-      var c = b.split(" "), e = c[c.length - 1];
-      console.log("option", e, "option.length", e.length);
-      '"until"' == e ? (c.shift(), c.pop(), c = c.join(" "), c = "while " + ("True:\n\tif " + c + ":\n\t\tbreak")) : '"while"' == e ? (c.shift(), c.pop(), c = c.join(" "), c = "while " + ("True:\n\tif not (" + c + "):\n\t\tbreak")) : c = b;
+      var c = b.split(" "), e = c.length - 1, f = c[e];
+      console.log("option", f, "option.length", f.length);
+      '"until"' == f ? (c.splice(1, 0, "not"), c.splice(e + 1, 1), c = c.join(" ") + ":") : '"while"' == f ? (c.splice(e, 1), c = c.join(" ") + ":") : c = b;
     } else {
       c = b;
     }
@@ -12363,7 +12361,7 @@ Entry.TextCodingUtil = {};
                     return "\ub4f1\ub85d\ub41c \ud568\uc218\uc911\uc5d0 \ud568\uc218\uba85\uc5d0 \uacf5\ubc31(\ub744\uc5b4\uc4f0\uae30)\uc774 \ud3ec\ud568\ub41c \ud568\uc218\uac00 \uc788\uc2b5\ub2c8\ub2e4.";
                   }
                 } else {
-                  return "\ub4f1\ub85d\ub41c \ud568\uc218\uc911\uc5d0 \ud568\uc218 \uc774\ub984\ub77c\ubca8\uc774 2\uac1c \uc774\uc0c1\uc73c\ub85c \uad6c\uc131\ub41c \ud568\uc218\uac00 \uc788\uc2b5\ub2c8\ub2e4.";
+                  return "\ub4f1\ub85d\ub41c \ud568\uc218\uc911\uc5d0 \ud568\uc218\uba85\uc774 2\uac1c \uc774\uc0c1\uc758 \ub124\uc784\ube14\ub85d\uc73c\ub85c \uad6c\uc131\ub41c \ud568\uc218\uac00 \uc788\uc2b5\ub2c8\ub2e4.";
                 }
               } else {
                 return "\uc815\uc0c1\uc801\uc774\uc9c0 \uc54a\uc740 \ud568\uc218\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
@@ -13642,51 +13640,52 @@ Entry.PyToBlockParser = function(b) {
     b = {statements:[]};
     var c = a.test;
     console.log("WhileStatement test", c);
-    var e = "basic", f = a.body;
-    if (!0 === c.value) {
-      if (f && f.body && 0 != f.body.length && "IfStatement" == f.body[0].type) {
-        var f = f.body[0], g = f.consequent;
-        (f = f.test) && "!" == f.operator && g && g.body && 1 == g.body.length && "BreakStatement" == g.body[0].type ? (g = this.getBlockType("while %1 %2\n$1"), e = "while") : f && g && g.body && 1 == g.body.length && "BreakStatement" == g.body[0].type ? (g = this.getBlockType("while %1 %2\n$1"), e = "until") : g = this.getBlockType("while True:\n$1");
+    if (c.type) {
+      if ("Literal" == c.type) {
+        if (!0 === c.value) {
+          var e = this.getBlockType("while True:\n$1")
+        } else {
+          throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. 'True' \ub97c \uc0ac\uc6a9\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
+        }
       } else {
-        g = this.getBlockType("while True:\n$1");
+        if ("Identifier" == c.type) {
+          throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. 'True' \ub97c \uc0ac\uc6a9\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
+        }
+        e = this.getBlockType("while %1 %2\n$1");
       }
     }
-    console.log("while type", g);
-    if ("Identifier" == c.type) {
-      throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. 'True' \ub97c \uc0ac\uc6a9\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
-    }
-    console.log("WhileStatement type", g);
-    if (!g) {
+    console.log("WhileStatement type", e);
+    if (!e) {
       throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'while'\ubb38\uc758 \ud30c\ub77c\ubbf8\ud130\ub97c \ud655\uc778\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
     }
-    var h = Entry.block[g].params;
-    console.log("WhileStatement paramsMeta", h);
-    f = [];
-    if ("Literal" == c.type || "Identifier" == c.type || "BinaryExpression" == c.type) {
+    var f = Entry.block[e].params;
+    console.log("WhileStatement paramsMeta", f);
+    var g = [];
+    if ("Literal" == c.type || "Identifier" == c.type) {
       arguments = [];
       arguments.push(c);
-      h = Entry.block[g].params;
-      c = Entry.block[g].def.params;
-      console.log("WhileStatement paramsMeta", h);
+      f = Entry.block[e].params;
+      c = Entry.block[e].def.params;
+      console.log("WhileStatement paramsMeta", f);
       console.log("WhileStatement paramsDefMeta", c);
-      for (var k in h) {
-        var l = h[k].type;
-        "Indicator" == l ? (l = {raw:null, type:"Literal", value:null}, k < arguments.length && arguments.splice(k, 0, l)) : "Text" == l && (l = {raw:"", type:"Literal", value:""}, k < arguments.length && arguments.splice(k, 0, l));
+      for (var h in f) {
+        var k = f[h].type;
+        "Indicator" == k ? (k = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, k)) : "Text" == k && (k = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, k));
       }
-      for (var m in arguments) {
-        k = arguments[m], console.log("WhileStatement argument", k), k = this[k.type](k, h[m], c[m], !0), console.log("WhileStatement Literal param", k), k && null != k && f.push(k);
+      console.log("WhileStatement arguments", arguments);
+      for (var l in arguments) {
+        h = arguments[l], console.log("WhileStatement argument", h), h = this[h.type](h, f[l], c[l], !0), console.log("WhileStatement Literal param", h), h && null != h && g.push(h);
       }
     } else {
-      k = this[c.type](c), console.log("WhileStatement Not Literal param", k), k && null != k && f.push(k);
+      h = this[c.type](c), console.log("WhileStatement block param not True block", h), h && null != h && ("UnaryExpression" == c.type && "!" == c.operator ? "boolean_not" == h.type && (h = h.params[1], g.push(h), g.push("until")) : (g.push(h), g.push("while")));
     }
-    m = a.body;
-    m = this[m.type](m);
-    console.log("WhileStatement bodyData", m);
-    b.type = g;
-    "repeat_while_true" == g && ("until" == e ? m.data && m.data[0] && (e = m.data[0], k = e.params[0], f = [], f.push(k), f.push("until")) : "while" == e && m.data && m.data[0] && (e = m.data[0], k = e.params[0].params[1], f = [], f.push(k), f.push("while")), m.statements.shift());
-    console.log("WhileStatement params", f);
-    b.statements.push(m.statements);
-    b.params = f;
+    f = a.body;
+    f = this[f.type](f);
+    console.log("WhileStatement bodyData", f);
+    b.type = e;
+    console.log("WhileStatement params", g);
+    b.statements.push(f.statements);
+    b.params = g;
     console.log("WhileStatement result", b);
     return b;
   };
@@ -24959,6 +24958,7 @@ Entry.Playground = function() {
   Entry.addEventListener("textEdited", this.injectText);
   Entry.addEventListener("hwChanged", this.updateHW);
   Entry.addEventListener("changeMode", function(a) {
+    console.log("Entry.Workspace.");
     b.setMode(a);
   });
 };

@@ -1002,20 +1002,15 @@ Entry.TextCodingUtil = {};
             console.log("option", option, "option.length", option.length);
 
             if(option == '\"until\"') {
-                blockArr.shift();
-                blockArr.pop();
-                var condition = blockArr.join(" ");
-                var restContext = "True:\n\tif " + condition + ":\n\t\tbreak";
-                var whileStatement = "while";
-                result = whileStatement + " " + restContext;
+                var condition = "not";
+                blockArr.splice(1, 0, condition);
+                lastIndex += 1;
+                blockArr.splice(lastIndex, 1);
+                result = blockArr.join(" ") + ":";
             }
             else if(option == '\"while\"') {
-                blockArr.shift();
-                blockArr.pop();
-                var condition = blockArr.join(" ");
-                var restContext = "True:\n\tif " + "not (" + condition + "):\n\t\tbreak";
-                var whileStatement = "while";
-                result = whileStatement + " " + restContext;
+                blockArr.splice(lastIndex, 1);
+                result = blockArr.join(" ") + ":";
             }
             else {
                 result = syntax;
@@ -1236,7 +1231,7 @@ Entry.TextCodingUtil = {};
                                     return "등록된 함수중에 함수명에 공백(띄어쓰기)이 포함된 함수가 있습니다.";
                             } 
                             else {
-                                return "등록된 함수중에 함수 이름라벨이 2개 이상으로 구성된 함수가 있습니다.";
+                                return "등록된 함수중에 함수명이 2개 이상의 네임블록으로 구성된 함수가 있습니다.";
                             }
                         }
                         else {

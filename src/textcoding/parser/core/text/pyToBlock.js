@@ -1115,48 +1115,35 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var whileType = "basic";
 
         var condBody = component.body;
-        if(test.value === true) {
-            if(condBody && condBody.body && condBody.body.length != 0 && condBody.body[0].type == "IfStatement") {
-                var ifStatement = condBody.body[0];
-                var cons = ifStatement.consequent;
-                var ifTest = ifStatement.test;
-                if(ifTest && ifTest.operator == "!" && cons && cons.body && cons.body.length == 1 && cons.body[0].type == "BreakStatement") {
-                    var syntax = String("while %1 %2\n$1");
-                    var type = this.getBlockType(syntax);
-                    whileType = "while";
-                }
-                else if(ifTest && cons && cons.body && cons.body.length == 1 && cons.body[0].type == "BreakStatement") {
-                    var syntax = String("while %1 %2\n$1");
-                    var type = this.getBlockType(syntax);
-                    whileType = "until";
-                }
-                else {
+        
+        if(test.type) {
+            if(test.type == "Literal") {
+                if(test.value === true) {
                     var syntax = String("while True:\n$1");
                     var type = this.getBlockType(syntax);
+                    
                 }
-            } else {
-                var syntax = String("while True:\n$1");
+                else {
+                    var error = {};
+                    error.title = "지원되지 않는 코드";
+                    error.message = "블록으로 변환될 수 없는 코드입니다. \'True\' 를 사용하세요.";
+                    error.line = this._blockCount;
+                    console.log("send error", error);
+                    throw error;
+                }
+            }
+            else if(test.type == "Identifier") {
+                var error = {};
+                error.title = "지원되지 않는 코드";
+                error.message = "블록으로 변환될 수 없는 코드입니다. \'True\' 를 사용하세요.";
+                error.line = this._blockCount;
+                console.log("send error", error);
+                throw error;
+            }
+            else {
+                var syntax = String("while %1 %2\n$1");
                 var type = this.getBlockType(syntax);
             }
-        }
-
-        console.log("while type", type);
-        /*else if(test.operator == "!=") {
-            var syntax = String("while %1 %2\n$1");
-            var type = this.getBlockType(syntax);
-        }
-        else if(test.operator == "==") {
-            var syntax = String("while %1 %2\n$1");
-            var type = this.getBlockType(syntax);
-        }*/
-
-        if(test.type == "Identifier") {
-            var error = {};
-            error.title = "지원되지 않는 코드";
-            error.message = "블록으로 변환될 수 없는 코드입니다. \'True\' 를 사용하세요.";
-            error.line = this._blockCount;
-            console.log("send error", error);
-            throw error;
         }
 
         console.log("WhileStatement type", type);
@@ -1174,7 +1161,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("WhileStatement paramsMeta", paramsMeta);
 
         var params = [];
-        if(test.type == "Literal" || test.type == "Identifier" || test.type == "BinaryExpression") {
+        if(test.type == "Literal" || test.type == "Identifier") {
             var arguments = [];
             arguments.push(test);
             var paramsMeta = Entry.block[type].params;
@@ -1196,6 +1183,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
 
+            console.log("WhileStatement arguments", arguments);
+
             for(var i in arguments) {
                 var argument = arguments[i];
                 console.log("WhileStatement argument", argument);
@@ -1205,12 +1194,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(param && param != null)
                     params.push(param);
             }
-
         } else {
             var param = this[test.type](test);
-            console.log("WhileStatement Not Literal param", param);
-            if(param && param != null)
-                params.push(param);
+            console.log("WhileStatement block param not True block", param);
+            if(param && param != null) {
+                if(test.type == "UnaryExpression" && test.operator == "!") {
+                    if(param.type == "boolean_not") {
+                        param = param.params[1];
+                        params.push(param);
+                        var param = "until";
+                        params.push(param);
+                    }
+                }
+                else {
+                    params.push(param);
+                    var param = "while";
+                    params.push(param);
+                }
+            }
         }
 
         var statements = [];
@@ -1220,7 +1221,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("WhileStatement bodyData", bodyData);
 
         structure.type = type;
-        if(type == "repeat_while_true") {
+        /*if(type == "repeat_while_true") {
             if(whileType == "until") {
                 if(bodyData.data && bodyData.data[0]) {
                     var ifStmt = bodyData.data[0];
@@ -1245,7 +1246,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
             bodyData.statements.shift();
-        }
+        }*/
 
         console.log("WhileStatement params", params);
 
