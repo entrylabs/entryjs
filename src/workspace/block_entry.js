@@ -18220,7 +18220,8 @@ Entry.block = {
                 var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_BRICK], 1);
 
                 if(!isCollisionPossible) {
-                    Ntry.dispatchEvent("complete",false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
                 }
                 this.isContinue = true;
@@ -18279,12 +18280,13 @@ Entry.block = {
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
                 var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_SPIDER]);
-                var particleZIndex = 150;
+                var particleZIndex = 550;
                 if(unitComp.direction === Ntry.STATIC.NORTH) {
-                    particleZIndex = 50;
+                    particleZIndex = 450;
                 }
                 if(!isCollisionPossible) {
-                    Ntry.dispatchEvent("complete",false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
                 }
 
@@ -18292,7 +18294,7 @@ Entry.block = {
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
                     $.each(components, function(type, component) {
                         if(+type === Ntry.STATIC.SPRITE) {
-                            var cloneComponent = $.extend({}, component);                        
+                            var cloneComponent = $.extend({}, component);
                             cloneComponent.zIndex = particleZIndex;
                             Ntry.entityManager.addComponent(particle.id, cloneComponent);
                         } else if(+type != Ntry.STATIC.UNIT) {
@@ -18312,7 +18314,7 @@ Entry.block = {
                             Ntry.entityManager.removeEntity(particle.id);
                             self.isAction = false;
                         }
-                    });                    
+                    });
                 });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -18353,11 +18355,12 @@ Entry.block = {
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
                 var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY2]);
-                var particleZIndex = 150;
+                var particleZIndex = 550;
                 if(unitComp.direction === Ntry.STATIC.NORTH) {
-                    particleZIndex = 50;
+                    particleZIndex = 450;
                 }
                 if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
                 }
@@ -18430,8 +18433,8 @@ Entry.block = {
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
                 var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ICE], 1);
 
-                console.log(isCollisionPossible);
                 if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
                 }
