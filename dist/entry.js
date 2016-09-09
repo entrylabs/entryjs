@@ -12361,7 +12361,9 @@ Entry.TextCodingUtil = {};
                     return "\ub4f1\ub85d\ub41c \ud568\uc218\uc911\uc5d0 \ud568\uc218\uba85\uc5d0 \uacf5\ubc31(\ub744\uc5b4\uc4f0\uae30)\uc774 \ud3ec\ud568\ub41c \ud568\uc218\uac00 \uc788\uc2b5\ub2c8\ub2e4.";
                   }
                 } else {
-                  return "\ub4f1\ub85d\ub41c \ud568\uc218\uc911\uc5d0 \ud568\uc218\uba85\uc774 2\uac1c \uc774\uc0c1\uc758 \ub124\uc784\ube14\ub85d\uc73c\ub85c \uad6c\uc131\ub41c \ud568\uc218\uac00 \uc788\uc2b5\ub2c8\ub2e4.";
+                  if ("function_field_label" == a[1].data.type) {
+                    return "\ub4f1\ub85d\ub41c \ud568\uc218\uc911\uc5d0 \ud568\uc218\uba85\uc774 2\uac1c \uc774\uc0c1\uc758 \ub124\uc784\ube14\ub85d\uc73c\ub85c \uad6c\uc131\ub41c \ud568\uc218\uac00 \uc788\uc2b5\ub2c8\ub2e4.";
+                  }
                 }
               } else {
                 return "\uc815\uc0c1\uc801\uc774\uc9c0 \uc54a\uc740 \ud568\uc218\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
@@ -14396,7 +14398,7 @@ Entry.PyToBlockParser = function(b) {
         t = q._data[0].data.params[0];
         r = t.data.params;
         m.description = "";
-        g = f.split("__");
+        g = f.split("!@#$");
         if (1 < g.length) {
           for (e = 1;e < g.length;e++) {
             h = g[e], l = new Entry.Block({type:"function_field_label"}, q), l.data.params = [], l.data.params.push(h), n = Entry.TextCodingUtil.getLastParam(t), n.data.params[1] = l, m.description += h.concat(" ");

@@ -1231,7 +1231,9 @@ Entry.TextCodingUtil = {};
                                     return "등록된 함수중에 함수명에 공백(띄어쓰기)이 포함된 함수가 있습니다.";
                             } 
                             else {
-                                return "등록된 함수중에 함수명이 2개 이상의 네임블록으로 구성된 함수가 있습니다.";
+                                if(paramBlockParams[1].data.type == "function_field_label") {
+                                    return "등록된 함수중에 함수명이 2개 이상의 네임블록으로 구성된 함수가 있습니다.";
+                                }
                             }
                         }
                         else {

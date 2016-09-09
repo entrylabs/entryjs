@@ -2920,7 +2920,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             // inject block func name
             // func name join
-            var textFuncNameTokens = textFuncName.split('__');
+            var textFuncNameTokens = textFuncName.split('!@#$');
             if(textFuncNameTokens.length > 1) {
                 for(var n = 1; n < textFuncNameTokens.length; n++) {
                     var token = textFuncNameTokens[n];
