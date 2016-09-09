@@ -311,11 +311,12 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.show = function() {this.view.removeClass('entryRemove');};
 
-    p.renderText = function() {
+    p.renderText = function(cb) {
         var threads = this.code.getThreads();
         this.code.mode = 'text';
         for (var i=0; i<threads.length; i++)
             threads[i].view.renderText();
+        cb && cb();
     };
 
     p.renderBlock = function(cb) {
