@@ -180,7 +180,9 @@ Entry.BlockView.pngMap = {};
                 var templateParams = template.split(reg);
                 var params = schema.params;
                 for (var i=0; i<templateParams.length; i++) {
-                    var param = templateParams[i].trim();
+                    var param = templateParams[i];
+                    if (param[0] === " ") param = param.substring(1);
+                    if (param[param.length - 1] === " ") param = param.substring(0, param.length - 1);
                     if (param.length === 0) continue;
 
                     if (reg.test(param)) {
