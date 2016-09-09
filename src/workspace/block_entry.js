@@ -7501,7 +7501,8 @@ Entry.block = {
         "skeleton": "basic_button",
         "color": "#eee",
         "isNotFor": [
-            "functionInit"
+            "functionInit",
+            "textMode"
         ],
         "params": [
             {
