@@ -7023,7 +7023,7 @@ Entry.block = {
             script.isLooped = true;
             return script.getStatement('DO');
         },
-        "syntax": {"js": [], "py": ["while 1:\n$1"]}
+        "syntax": {"js": [], "py": ["while True:\n$1"]}
     },
     "stop_repeat": {
         "color": "#498deb",
