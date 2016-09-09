@@ -18190,6 +18190,115 @@ Entry.block = {
             }
         }
     },
+    "maze_step_forward": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/moveStep.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_rotate_left": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "left"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/turnL.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_rotate_right": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/turnR.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
     "maze_moon_kick": {
         "skeleton": "basic",
         "mode": "maze",
