@@ -51,6 +51,9 @@ Entry.SVG.createElement = function (tag, options) {
     el.remove = Entry.SVG.remove;
     el.removeAttr = Entry.SVG.removeAttr;
 
+    if (tag === "text")
+       el.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space","preserve");
+
     return el;
 };
 
