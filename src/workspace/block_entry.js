@@ -18463,7 +18463,7 @@ Entry.block = {
 
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
-                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY2]);
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY2, Ntry.STATIC.OBSTACLE_ENERMY3]);
                 var particleZIndex = 550;
                 if(unitComp.direction === Ntry.STATIC.NORTH) {
                     particleZIndex = 450;
@@ -18491,7 +18491,7 @@ Entry.block = {
                             Ntry.entityManager.addComponent(particle.id, {
                                 type: Ntry.STATIC.PARTICLE,
                                 direction: component.direction,
-                                collisionList: [ Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY2 ],
+                                collisionList: [ Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY2, Ntry.STATIC.OBSTACLE_ENERMY3 ],
                             });
                         }
                     });
@@ -18505,6 +18505,157 @@ Entry.block = {
                         }
                     });                    
                 });
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_james_heart2": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#D39D18",
+        "template": Lang.template.maze_james_heart,
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/james_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            var self = this;
+            if (!this.isContinue) {
+                
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY3], 2);
+                var particleZIndex = 550;
+                if(unitComp.direction === Ntry.STATIC.NORTH) {
+                    particleZIndex = 450;
+                }
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    return;
+                }
+
+                this.isContinue = true;
+                this.isAction = true;
+
+                var particle = Ntry.entityManager.addEntity();
+
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
+                    $.each(components, function(type, component) {
+                        if(+type === Ntry.STATIC.SPRITE) {
+                            var cloneComponent = $.extend({}, component);                        
+                            cloneComponent.zIndex = particleZIndex;
+                            Ntry.entityManager.addComponent(particle.id, cloneComponent);
+                        } else if(+type != Ntry.STATIC.UNIT) {
+                            Ntry.entityManager.addComponent(particle.id, component);
+                        } else {
+                            Ntry.entityManager.addComponent(particle.id, {
+                                type: Ntry.STATIC.PARTICLE,
+                                direction: component.direction,
+                                collisionList: [Ntry.STATIC.OBSTACLE_ENERMY3, Ntry.STATIC.OBSTACLE_ENERMY3_AREA],
+                                penetrationList: [Ntry.STATIC.OBSTACLE_ENERMY3_AREA],
+                            });
+                        }
+                    });
+
+                    Ntry.dispatchEvent("particleAction", {
+                        entityId: particle.id,
+                        actionType: Ntry.STATIC.HEART_ATTACK,
+                        callback: function () {
+                            Ntry.entityManager.removeEntity(particle.id);
+                            self.isAction = false;
+                        }
+                    });                    
+                });
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_iron_switch": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#748d69",
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/iron_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var tileSize = Ntry.configManager.getConfig("tileSize").width;
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.OBSTACLE);
+                
+                for(var id in entities) {
+                    var obstacleComp = Ntry.entityManager.getComponent(id, Ntry.STATIC.OBSTACLE);
+                    if(obstacleComp.tileType === Ntry.STATIC.OBSTACLE_IRON) {
+                        var obstacleGrid = Ntry.entityManager.getComponent(id, Ntry.STATIC.GRID);
+                        var obstaclePosition = Ntry.entityManager.getComponent(id, Ntry.STATIC.POSITION);
+                        var grid = {
+                            x: obstacleGrid.x,
+                            y: (obstacleGrid.y === 1) ? 3 : 1,
+                        }
+
+                        var position = {
+                            x: obstaclePosition.x,
+                            y: grid.y * tileSize
+                        }
+
+                        obstacleGrid = grid;
+
+                        Ntry.entityManager.addComponent(
+                            id, {
+                                type: Ntry.STATIC.ANIMATE,
+                                animateType: Ntry.STATIC.TRANSITION,
+                                option: {
+                                    position: position,
+                                },
+                                afterAnimate: function() {
+                                    console.log('dasdasd');
+                                },
+                            }
+                        );
+
+                        // Ntry.dispatchEvent('moveObstacle', id, grid);
+                    }
+                }
+
+                // turn direction
+                // Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, callback);
+                // return;
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
