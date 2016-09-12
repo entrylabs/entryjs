@@ -27,7 +27,7 @@ Entry.RenderView = function(dom, align) {
     this.setWidth();
 
 
-    this.svg = Entry.SVG(this._svgId);
+    this.svg = Entry.SVG(this._svgId , this.svgDom[0]);
     Entry.Utils.addFilters(this.svg, this.suffix);
 
     if (this.svg) {
@@ -70,8 +70,9 @@ Entry.RenderView = function(dom, align) {
             return console.error("You must inject code instance");
         var that = this;
         this.code = code;
+
         if (!this.svg) {
-            this.svg = Entry.SVG(this._svgId);
+            this.svg = Entry.SVG(this._svgId , this.svgDom[0]);
             this.svgGroup = this.svg.elem("g");
 
             this.svgThreadGroup = this.svgGroup.elem("g");
