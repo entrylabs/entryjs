@@ -13,8 +13,8 @@ goog.provide('Entry.SVG');
  * @param {string} tag or html to construct dom element.
  * @param {?object} options include id, classes, parent etc.
  */
-Entry.SVG = function (id) {
-    var element = document.getElementById(id);
+Entry.SVG = function (id , svgDom) {
+    var element = svgDom ? svgDom : document.getElementById(id);
     return Entry.SVG.createElement(element);
 };
 

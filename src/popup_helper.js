@@ -135,6 +135,7 @@ Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
     if(typeof popupObject.setPopupLayout === 'function') {
         popupObject.setPopupLayout(content_);
     }
+    content_._obj = popupObject;
 
     this.popupList[key] = content_;
 };
@@ -175,8 +176,10 @@ Entry.popupHelper.prototype.show = function(key) {
     this.window_.append(this.popupList[key]);
     this.nowContent = this.popupList[key];
     this.body_.removeClass('hiddenPopup');
-};
 
+    if (this.nowContent && this.nowContent._obj && this.nowContent._obj.onShow)
+        this.nowContent._obj.onShow();
+};
 
 Entry.popupHelper.prototype.hide = function() {
     this.nowContent = undefined;
