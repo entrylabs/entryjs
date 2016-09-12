@@ -18452,7 +18452,7 @@ Entry.block = {
         func: function() {
             var self = this;
             if (!this.isContinue) {
-
+                
                 var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
                 var unitId;
@@ -18482,7 +18482,7 @@ Entry.block = {
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
                     $.each(components, function(type, component) {
                         if(+type === Ntry.STATIC.SPRITE) {
-                            var cloneComponent = $.extend({}, component);
+                            var cloneComponent = $.extend({}, component);                        
                             cloneComponent.zIndex = particleZIndex;
                             Ntry.entityManager.addComponent(particle.id, cloneComponent);
                         } else if(+type != Ntry.STATIC.UNIT) {
@@ -18503,7 +18503,7 @@ Entry.block = {
                             Ntry.entityManager.removeEntity(particle.id);
                             self.isAction = false;
                         }
-                    });
+                    });                    
                 });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -18615,6 +18615,7 @@ Entry.block = {
             if (!this.isContinue) {
                 this.isContinue = true;
                 this.isAction = true;
+                var eventCount = 0;
                 var self = this;
                 var tileSize = Ntry.configManager.getConfig("tileSize").width;
                 var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.OBSTACLE);
@@ -18629,30 +18630,47 @@ Entry.block = {
                             y: (obstacleGrid.y === 1) ? 3 : 1,
                         }
 
-                        var position = {
-                            x: obstaclePosition.x,
-                            y: grid.y * tileSize
-                        }
+                        obstacleGrid.y = (obstacleGrid.y === 1) ? 3 : 1;
 
-                        obstacleGrid = grid;
-
-                        Ntry.entityManager.addComponent(
-                            id, {
-                                type: Ntry.STATIC.ANIMATE,
-                                animateType: Ntry.STATIC.TRANSITION,
-                                option: {
-                                    position: position,
-                                },
-                                afterAnimate: function() {
-                                    console.log('dasdasd');
-                                },
-                            }
-                        );
-
-                        // Ntry.dispatchEvent('moveObstacle', id, grid);
+                        var deltaPos = {
+                            x: 0,
+                            y: ((obstacleGrid.y + 1) * tileSize - obstaclePosition.y) / 2.5,
+                        };
+                        var deltaPos2 = {
+                            x: 0,
+                            y: ((obstacleGrid.y + 1) * tileSize - obstaclePosition.y) / 1.5,
+                        };
+                        (function (_id, _deltaPos, _deltaPos2) {
+                            Ntry.entityManager.addComponent(
+                                _id, {
+                                    type: Ntry.STATIC.ANIMATE,
+                                    animateType: Ntry.STATIC.TRANSITION,
+                                    option: {
+                                        deltaPos: _deltaPos,
+                                    },
+                                    afterAnimate: function() {
+                                        console.log('middle');
+                                        if(eventCount === 0) {
+                                            self.isAction = false;
+                                        }
+                                        Ntry.entityManager.addComponent(
+                                            _id, {
+                                                type: Ntry.STATIC.ANIMATE,
+                                                animateType: Ntry.STATIC.TRANSITION,
+                                                option: {
+                                                    deltaPos: _deltaPos2,
+                                                },
+                                                afterAnimate: function() {
+                                                    console.log('afterAnimate');
+                                                },
+                                            }
+                                        );
+                                    },
+                                }
+                            );
+                        })(id, deltaPos, deltaPos2);
                     }
                 }
-
                 // turn direction
                 // Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, callback);
                 // return;
