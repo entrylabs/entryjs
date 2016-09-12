@@ -1106,9 +1106,8 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
             this.pictureView_.object = this.object;
             this.injectPicture();
         }
-    } else {
-        this.painter.hide()
-    }
+    } else this.painter.hide()
+
     if (viewType == 'sound' && (!this.soundView_.object ||
         this.soundView_.object != this.object)) {
         this.soundView_.object = this.object;
@@ -1117,9 +1116,11 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
         (this.textView_.object != this.object)) {
         this.textView_.object = this.object;
         this.injectText();
-    } else if (viewType == 'code' && this.resizeHandle_) {
-        this.resizeHandle_.removeClass('entryRemove');
     }
+
+    if (viewType == 'code' && this.resizeHandle_)
+        this.resizeHandle_.removeClass('entryRemove');
+
     if (Entry.engine.isState('run'))
         this.curtainView_.removeClass('entryRemove');
     this.viewMode_ = viewType;
