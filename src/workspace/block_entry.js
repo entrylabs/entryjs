@@ -18452,7 +18452,7 @@ Entry.block = {
         func: function() {
             var self = this;
             if (!this.isContinue) {
-                
+
                 var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
                 var unitId;
@@ -18482,7 +18482,7 @@ Entry.block = {
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
                     $.each(components, function(type, component) {
                         if(+type === Ntry.STATIC.SPRITE) {
-                            var cloneComponent = $.extend({}, component);                        
+                            var cloneComponent = $.extend({}, component);
                             cloneComponent.zIndex = particleZIndex;
                             Ntry.entityManager.addComponent(particle.id, cloneComponent);
                         } else if(+type != Ntry.STATIC.UNIT) {
@@ -18503,7 +18503,7 @@ Entry.block = {
                             Ntry.entityManager.removeEntity(particle.id);
                             self.isAction = false;
                         }
-                    });                    
+                    });
                 });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -20770,6 +20770,33 @@ Entry.block = {
                     ]
                 }
             ]
+        }
+    },
+    "hidden": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "         ?       %1",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "hidden"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {
         }
     }
 };
