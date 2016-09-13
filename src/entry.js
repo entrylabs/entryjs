@@ -49,6 +49,7 @@ Entry.loadProject = function(project) {
     if (Object.keys(Entry.container.inputValue).length === 0)
         Entry.variableContainer.generateAnswer();
     Entry.start();
+    Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
     return project;
 };
 
@@ -334,9 +335,9 @@ Entry.cancelObjectEdit = function(e) {
     var target = e.target;
     var isCurrent = $(objectView).find(target).length !== 0;
     var tagName = target.tagName.toUpperCase();
-    if (!object.isEditing || (tagName === 'INPUT' && isCurrent))
+    var type = e.type
+    if (!object.isEditing || (tagName === 'INPUT' && isCurrent || type === 'touchstart'))
         return;
-
     object.editObjectValues(false);
 };
 

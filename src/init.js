@@ -64,6 +64,10 @@ Entry.init = function(container, options) {
         Entry.addActivity("save");
     });
 
+    Entry.addEventListener("showBlockHelper", function(e) {
+        Entry.propertyPanel.select("helper");
+    });
+
     if (Entry.getBrowserType().substr(0,2) == 'IE' && !window.flashaudio) {
         createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/";
         createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);

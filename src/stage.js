@@ -200,6 +200,7 @@ Entry.Stage.prototype.loadEntity = function(entity) {
     objContainer.addChild(entity.object);
     this.sortZorder();
     //this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -211,6 +212,7 @@ Entry.Stage.prototype.unloadEntity = function(entity) {
     var objContainer = Entry.stage.getObjectContainerByScene(scene);
     objContainer.removeChild(entity.object);
    //this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -710,11 +712,11 @@ Entry.Stage.prototype.moveSprite = function (e) {
 
 Entry.Stage.prototype.getBoundRect = function (e) {
     if (!this._boundRect)
-        this.updateBoundRect();
+        return this.updateBoundRect();
     return this._boundRect;
 };
 
 Entry.Stage.prototype.updateBoundRect = function (e) {
-    this._boundRect = this.canvas.canvas.getBoundingClientRect();
+    return this._boundRect = this.canvas.canvas.getBoundingClientRect();
 };
 

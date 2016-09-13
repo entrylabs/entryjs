@@ -23,8 +23,17 @@ Entry.Playground = function() {
      * @type {string}
      */
     this.viewMode_ = 'default';
+    var that = this;
     Entry.addEventListener('textEdited', this.injectText);
     Entry.addEventListener('hwChanged', this.updateHW);
+    Entry.addEventListener('changeMode', function(mode) {
+        that.setMode(mode);
+    });
+};
+
+Entry.Playground.prototype.setMode = function(mode) {
+    //console.log("playground setMode", mode);
+    this.mainWorkspace.setMode(mode);
 };
 
 /**
@@ -337,10 +346,7 @@ Entry.Playground.prototype.generatePictureView = function(PictureView) {
         painterView.addClass('entryPlaygroundPainter');
         PictureView.appendChild(painterView);
 
-        this.painter = new Entry.Painter();
-        //this.painter.generateView(painterView);
-        this.painter.initialize(painterView);
-
+        this.painter = new Entry.Painter2(painterView);
     } else if (Entry.type == 'phone') {
         var pictureAdd = Entry.createElement('div', 'entryAddPicture');
         pictureAdd.addClass('entryPlaygroundAddPicturePhone');
@@ -911,6 +917,20 @@ Entry.Playground.prototype.setPicture = function(picture) {
 };
 
 /**
+ * Download a picture
+ * @param {!String} pictureId
+ */
+Entry.Playground.prototype.downloadPicture = function(pictureId) {
+    var picture = Entry.playground.object.getPicture(pictureId);
+    if (picture.fileurl) {
+        window.open(picture.fileurl);
+    } else {
+        window.open('/api/sprite/download/image/'+
+                encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
+    }
+}
+
+/**
  * Clone picture
  * @param {!String} pictureId
  */
@@ -1079,11 +1099,16 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
             view.addClass('entryRemove');
     }
 
-    if (viewType == 'picture' && (!this.pictureView_.object ||
-        this.pictureView_.object != this.object)) {
-        this.pictureView_.object = this.object;
-        this.injectPicture();
-    } else if (viewType == 'sound' && (!this.soundView_.object ||
+    if (viewType == 'picture') {
+        this.painter.show()
+        if (!this.pictureView_.object ||
+            this.pictureView_.object != this.object) {
+            this.pictureView_.object = this.object;
+            this.injectPicture();
+        }
+    } else this.painter.hide()
+
+    if (viewType == 'sound' && (!this.soundView_.object ||
         this.soundView_.object != this.object)) {
         this.soundView_.object = this.object;
         this.injectSound();
@@ -1095,6 +1120,7 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
 
     if (viewType == 'code' && this.resizeHandle_)
         this.resizeHandle_.removeClass('entryRemove');
+
     if (Entry.engine.isState('run'))
         this.curtainView_.removeClass('entryRemove');
     this.viewMode_ = viewType;
@@ -1341,13 +1367,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
             {
                 text: Lang.Workspace.context_download,
                 callback: function(){
-                    if (picture.fileurl) {
-                        window.open(picture.fileurl);
-                    } else {
-                        // deprecated
-                        window.open('/api/sprite/download/image/'+
-                                encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
-                    }
+                    Entry.playground.downloadPicture(picture.id);
                 }
             }
         ];
