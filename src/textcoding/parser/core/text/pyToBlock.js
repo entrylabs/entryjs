@@ -30,6 +30,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     this._blockCount = 0;
 
     Entry.TextCodingUtil.init();
+
+    this._
 };
 
 (function(p){
@@ -533,6 +535,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if(type) {
                 result = {};
                 result.type = type;
+            }
+            else {
+                if(result.callee.isCallParam == false) {
+                    if(!Entry.TextCodingUtil.isEntryEventFuncName(result.callee.name)) {
+                        var error = {};
+                        error.title = "지원되지 않는 코드";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + result.callee.name + "\'" + "을 제거하세요.";
+                        error.line = this._blockCount;
+                        console.log("send error", error);
+                        throw error;
+                    }
+                }
             }
         }
 
@@ -1378,6 +1392,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         for(var i in allStatements) {
                             var statement = allStatements[i];
                             console.log("BlockStatement(for) statement", statement);
+                            if(!statement)
+                                continue;
+
                             if(statement.type) {
                                 if(Entry.TextCodingUtil.isJudgementBlock(statement.type)) {
                                     continue;
@@ -1390,12 +1407,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 }
                                 statements.push(statement);
                             } else {
-                                var error = {};
-                                error.title = "지원되지 않는 코드";
-                                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + statement.name + "\'" + "을 제거하세요.";
-                                error.line = this._blockCount;
-                                console.log("send error", error);
-                                throw error;
+                                if(statement.callee) {
+                                    var error = {};
+                                    error.title = "지원되지 않는 코드";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + statement.callee.name + "\'" + "을 제거하세요.";
+                                    error.line = this._blockCount;
+                                    console.log("send error", error);
+                                    throw error;
+                                }
+                                else {
+                                    var error = {};
+                                    error.title = "지원되지 않는 코드";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + statement.name + "\'" + "을 제거하세요.";
+                                    error.line = this._blockCount;
+                                    console.log("send error", error);
+                                    throw error;
+                                }
                             }
                         }
                     }
@@ -3040,6 +3067,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.FunctionExpression = function(component) {
         console.log("FunctionExpression component", component);
+        this._blockCount++;
+        console.log("FunctionExpression blockCount++");
         var result = {};
 
         var body = component.body;

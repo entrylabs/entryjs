@@ -897,7 +897,6 @@ Entry.TextCodingUtil = {};
                         if(typeof textFuncStatementParams[j] !== "object") {
                             if(textFuncStatementParams[j] == blockFuncContentParams[j]) {
                                 matchFlag = true;
-                                break;
                             }
                         }
                         else if(textFuncStatementParams[j].name) {
@@ -914,7 +913,6 @@ Entry.TextCodingUtil = {};
                                             //console.log("bfcParam", bfcParam);
                                             if(blockFuncContentParams[j].data.type == paramBlockType) {
                                                 matchFlag = true;
-                                                break;
                                                 //console.log("Function Definition Param Found", paramMap[bfcParam], "index k", j);
                                             }
                                         //}
@@ -925,7 +923,12 @@ Entry.TextCodingUtil = {};
                             //}
                         }
                         else if(textFuncStatementParams[j].type == "True" || textFuncStatementParams[j].type == "False") {
-                            if(textFuncStatementParams[j].type == blockFuncContentParams[j].data.type) {
+                            if(blockFuncContentParams[j].data) {
+                                if(textFuncStatementParams[j].type == blockFuncContentParams[j].data.type) {
+                                     matchFlag = true;
+                                }
+                            }
+                            else if(textFuncStatementParams[j].type == blockFuncContentParams[j].type) {
                                 matchFlag = true;
                             }
                         } 
@@ -1005,7 +1008,7 @@ Entry.TextCodingUtil = {};
             
             if(typeof param != "object") 
                 continue;
-            
+
             if(param.params && param.params.length != 0 && param.params[0].name) {
                 var paramKey = param.params[0].name;
                 var paramBlockType = paramInfo[paramKey];
