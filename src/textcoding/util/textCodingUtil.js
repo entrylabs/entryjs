@@ -10,7 +10,12 @@ goog.require("Entry.Queue");
 Entry.TextCodingUtil = {};
 
 (function(tu) {
-    tu._funcParamQ;
+    this._funcParams;
+    this._funcParamQ;
+
+    tu.init = function() {
+        this._funcParams = [];
+    };
 
     tu.initQueue = function() {
         var queue = new Entry.Queue();
@@ -833,7 +838,7 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.isFuncContentsMatch = function(blockFuncContents, textFuncStatements, paramMap) {
+    tu.isFuncContentsMatch = function(blockFuncContents, textFuncStatements, paramMap, paramInfo) {
         console.log("blockFuncContents, textFuncStatements, paramMap", blockFuncContents, textFuncStatements, paramMap);
         var matchFlag = true;
 
@@ -863,6 +868,7 @@ Entry.TextCodingUtil = {};
 
             if(textFuncStatement.type == blockFuncContent.data.type) { //Type Check
                 matchFlag = true;
+                
                 var textFuncStatementParams = textFuncStatement.params;
                 var blockFuncContentParams = blockFuncContent.data.params;
                 var cleansingParams = [];
@@ -884,41 +890,56 @@ Entry.TextCodingUtil = {};
                             break;
                         matchFlag = false;
                         console.log("blockFuncContentParams", blockFuncContentParams);
-                        console.log("blockFuncContentParams[j]", blockFuncContentParams[j]);
+                        console.log("textFuncStatementParams", textFuncStatementParams);
+                        console.log("paramMap", paramMap);
+                        console.log("paramInfo", paramInfo);
                         if(textFuncStatementParams[j].name) {
-                            for(var k in blockFuncContentParams) {
-                                if(textFuncStatementParams[j].name == blockFuncContentParams[k]) { // Param Locatin Comparision
+                            //for(var k in blockFuncContentParams) {
+                                //if(textFuncStatementParams[j].name == blockFuncContentParams[k]) { // Param Locatin Comparision
                                     //console.log("textFuncStatementParams[j].name", textFuncStatementParams[j].name);
                                     //console.log("textFuncParams[k]", textFuncParams[k]);
-                                    for(var bfcParam in paramMap) {
-                                        if(blockFuncContentParams[j].data.type == bfcParam) {
+                                    //for(var p in paramMap) {
+                                        var paramKey = textFuncStatementParams[j].name;
+                                        var paramBlockType = paramInfo[paramKey];
+
+                                        //if(paramValue == p) {
                                             //console.log("blockFuncContentParams[j].data.type", blockFuncContentParams[j].data.type);
                                             //console.log("bfcParam", bfcParam);
-                                            if(paramMap[bfcParam] == k) {
+                                            if(blockFuncContentParams[j].data.type == paramBlockType) {
                                                 matchFlag = true;
                                                 break;
                                                 //console.log("Function Definition Param Found", paramMap[bfcParam], "index k", j);
                                             }
-                                        }
-                                    }
-                                    if(matchFlag)
+                                        //}
+                                    //}
+                                    if(matchFlag) 
                                         break;
-                                }
-                            }
+                                //}
+                            //}
                         }
                         else if(textFuncStatementParams[j].type == "True" || textFuncStatementParams[j].type == "False") {
                             if(textFuncStatementParams[j].type == blockFuncContentParams[j].type) {
                                 matchFlag = true;
                             }
                         } else if(textFuncStatementParams[j].type && textFuncStatementParams[j].params) {
-                            if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0]) {
+                            console.log("textFuncStatementParams[j]", textFuncStatementParams[j]);
+                            
+                            if(textFuncStatementParams[j].params[0].name) {
+                                var paramKey = textFuncStatementParams[j].params[0].name; 
+                                var paramBlockType = paramInfo[paramKey];
+                                console.log("paramBlockType", paramBlockType, "blockFuncContentParams[j].data.type", blockFuncContentParams[j].data.type);
+                                if(paramBlockType == blockFuncContentParams[j].data.type) {
+                                    matchFlag = true; 
+                                } 
+                            } 
+                            else if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0]) {
                                 matchFlag = true;
-                            }
+                            }  
                         }
                     }
 
                     if(matchFlag && textFuncStatement.statements && textFuncStatement.statements.length != 0) {
-                        matchFlag = this.isFuncContentsMatch(blockFuncContent.data.statements[0]._data, textFuncStatement.statements[0]);
+                        matchFlag = this.isFuncContentsMatch(blockFuncContent.data.statements[0]._data, textFuncStatement.statements[0], paramMap, paramInfo);
                     }
                 }
                 else {
@@ -963,6 +984,53 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
+    };
+
+    tu.makeParamBlock = function(funcStatement, paramInfo) {
+        console.log("funcStatement", funcStatement);
+        var params = funcStatement.params;
+        console.log("makeParamBlock params", params);
+
+        for(var p in params) {
+            var param = params[p];
+            console.log("makeParamBlock param", param);
+            
+            if(param.params && param.params.length != 0 && param.params[0].name) {
+                var paramKey = param.params[0].name;
+                var paramBlockType = paramInfo[paramKey];
+                var paramBlock = {};
+                paramBlock.type = paramBlockType;
+                paramBlock.params = [];
+
+                params[p] = paramBlock;
+            }
+            else if(param.name) {
+                var paramKey = param.name; 
+                var paramBlockType = paramInfo[paramKey];
+                var paramBlock = {};
+                paramBlock.type = paramBlockType;
+                paramBlock.params = [];
+                 
+                params[p] = paramBlock;
+            } 
+        }
+
+        if(funcStatement.statements && funcStatement.statements[0]) {
+            var statements = funcStatement.statements[0];
+            for(var s in statements) {
+                var statement = statements[s];
+                this.makeParamBlock(statement, paramInfo);
+            }
+        }
+
+        if(funcStatement.statements && funcStatement.statements[1]) {
+            var statements = funcStatement.statements[1];
+            for(var s in statements) {
+                var statement = statements[s];
+                this.makeParamBlock(statement, paramInfo);
+            }
+        }
+
     };
 
     tu.updateBlockInfo = function(data, blockInfo) {
@@ -1255,6 +1323,34 @@ Entry.TextCodingUtil = {};
         function test(name) {
             return / /.test(name);
         }
+    };
+
+    tu.addFuncParam = function(param) {
+        this._funcParams.push(param);
+    };
+
+    tu.clearFuncParam = function() {
+        this._funcParams = [];
+    };
+
+    tu.isFuncParam = function(paramName) {
+        var result = false;
+        console.log("isFuncParam", this._funcParams);
+
+        var funcParams = this._funcParams;
+
+        if(funcParams.length == 0)
+            return false;
+
+        for(var p in funcParams) {
+            var funcParam = funcParams[p];
+            if(funcParam == paramName) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
     };
 
 

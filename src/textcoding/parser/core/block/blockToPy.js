@@ -694,12 +694,13 @@ Entry.BlockToPyParser = function(blockSyntax) {
             var funcParams = {};
             for(var key in funcParamMap) {
                 var index = funcParamMap[key];
+                console.log("paramName index", Number(parseInt(index)+1));
                 var i = key.search('_');
                 var nickname = key.substring(0, i);
                 if(nickname == 'stringParam')
-                    var name = 'value' + String(index+1);
+                    var name = 'param' + Number(parseInt(index)+1);
                 else if (nickname == 'booleanParam')
-                    var name = 'boolean' + String(index+1);
+                    var name = 'param' + Number(parseInt(index)+1);
 
                 var param = name;
                 funcParams[index] = param;

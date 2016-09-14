@@ -24,8 +24,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
     var paramQ = new Entry.Queue();
     this._paramQ = paramQ;
 
+    this._funcParamList = [];
+
     this._threadCount = 0;
     this._blockCount = 0;
+
+    Entry.TextCodingUtil.init();
 };
 
 (function(p){
@@ -304,7 +308,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(!permitParamName) {
                         if(param && typeof param == "object" && !param.type && param.isCallParam) {
                             if(param.name && !Entry.TextCodingUtil.isGlobalVariableExisted(param.name)) {
-                                if(!param.name.includes("value")) {
+                                if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
                                     var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
@@ -605,6 +609,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var declarationData = this[declaration.type](declaration);
 
             console.log("VariableDeclaration declarationData", declarationData);
+            if(declarationData && declarationData.isFuncParam) {
+                Entry.TextCodingUtil.addFuncParam(declarationData.name); 
+            }
+
             if(declarationData) {
                 result.declarations.push(declarationData);
             }
@@ -644,6 +652,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         // This is Function-Related Param
         if(init.callee && init.callee.name == "__getParam0") {
+            result.isFuncParam = true;
             result.name = id.name;
 
             return result;
@@ -1320,12 +1329,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                                 params.push(param);
                                             }
                                             else if(value.name) {
-                                                var error = {};
-                                                error.title = "지원되지 않는 코드";
-                                                error.message = "블록으로 변환될 수 없는 코드입니다." + "파라미터 " + "\'" + value + "\'" + "을(를) 양수값으로 변경해주세요.";
-                                                error.line = this._blockCount--;
-                                                console.log("send error", error);
-                                                throw error;
+                                                    var error = {};
+                                                    error.title = "지원되지 않는 코드";
+                                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "파라미터 " + "\'" + value + "\'" + "을(를) 양수값으로 변경해주세요.";
+                                                    error.line = this._blockCount--;
+                                                    console.log("send error", error);
+                                                    throw error;
                                             }
                                             else {
                                                 var error = {};
@@ -1337,7 +1346,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             }
                                         }
                                         else {
-                                            if(param.callee == "__pythonRuntime.functions.range") {
+                                            if(param.callee == "__pythonRuntime.functions.range" && param.isCallParam) {
                                                 var value = param.params[0];
                                                 if(typeof value != "number") {
                                                     var error = {};
@@ -1508,9 +1517,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var test = component.test;
 
-
-
-
         if(test.operator !== 'instanceof') {
             this._blockCount++;
             console.log("IfStatement blockCount++");
@@ -1525,8 +1531,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         structure.type = type;
 
         console.log("IfStatement type", type);
-
-
         console.log("IfStatement test", test);
 
 
@@ -1562,12 +1566,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params.push(param);
 
                     if(!param.type) {
-                        var error = {};
-                        error.title = "지원되지 않는 코드";
-                        error.message = "블록으로 변환될 수 없는 코드입니다. \'True\' 또는 \'False\'를 사용하세요.";
-                        error.line = this._blockCount;
-                        console.log("send error", error);
-                        throw error;
+                        if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
+                            var error = {};
+                            error.title = "지원되지 않는 코드";
+                            error.message = "블록으로 변환될 수 없는 코드입니다. \'True\' 또는 \'False\'를 사용하세요.";
+                            error.line = this._blockCount;
+                            console.log("send error", error);
+                            throw error;
+                        }
                     }
                 }
             }
@@ -1928,12 +1934,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("LogicalExpression left param", param);
 
         if(!param.type && param.name) {
-            var error = {};
-            error.title = "지원되지 않는 코드";
-            error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을 수정하세요";
-            error.line = this._blockCount;
-            console.log("send error", error);
-            throw error;
+            if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
+                var error = {};
+                error.title = "지원되지 않는 코드";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을 수정하세요";
+                error.line = this._blockCount;
+                console.log("send error", error);
+                throw error;
+            }
         }
 
         operator = String(component.operator);
@@ -2187,12 +2195,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(param && param != null) {
                         if(param.name && !param.name.includes("__filbert")) {
                             if(typeof param == "object" && !param.type && param.isCallParam) {
-                                var error = {};
-                                error.title = "지원되지 않는 코드";
-                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                error.line = this._blockCount;
-                                console.log("send error", error);
-                                throw error;
+                                if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
+                                    var error = {};
+                                    error.title = "지원되지 않는 코드";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                    error.line = this._blockCount;
+                                    console.log("send error", error);
+                                    throw error;
+                                }
                             }
                         }
                         params.push(param);
@@ -2262,12 +2272,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(param && param != null) {
                         if(param.name && !param.name.includes("__filbert")) {
                             if(typeof param == "object" && !param.type && param.isCallParam) {
-                                var error = {};
-                                error.title = "지원되지 않는 코드";
-                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                error.line = this._blockCount;
-                                console.log("send error", error);
-                                throw error;
+                                if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
+                                    var error = {};
+                                    error.title = "지원되지 않는 코드";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                    error.line = this._blockCount;
+                                    console.log("send error", error);
+                                    throw error;
+                                }
                             }
                         }
                         params.push(param);
@@ -2764,6 +2776,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var foundFlag;
         var matchFlag;
         var targetFuncId;
+        var paramMap = {};
+        var paramInfo = {};
         var entryFunctions = Entry.variableContainer.functions_;
         for(var funcId in entryFunctions) {
             var blockFunc = entryFunctions[funcId];
@@ -2772,7 +2786,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil._funcParamQ);
             var funcParams = [];
 
-            var paramMap = {};
+            paramMap = {};
+            paramInfo = {};
+
             while(param = Entry.TextCodingUtil._funcParamQ.dequeue()) {
                 funcParams.push(param);
                 console.log("param", param);
@@ -2781,6 +2797,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             for(var p in funcParams) {
                 var funcParam = funcParams[p];
                 paramMap[funcParam] = p;
+                paramInfo[textFuncParams[p]] = funcParam;
             }
 
             console.log("paramMap", paramMap);
@@ -2819,7 +2836,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     console.log("paramMap", paramMap);
 
-                    matchFlag = Entry.TextCodingUtil.isFuncContentsMatch(blockFuncCts, textFuncStatements, paramMap);
+                    matchFlag = Entry.TextCodingUtil.isFuncContentsMatch(blockFuncCts, textFuncStatements, paramMap, paramInfo);
 
                 }
                 else {
@@ -2864,9 +2881,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var thread = targetFunc.content._data[0];
             thread._data.splice(1, thread._data.length-1);
 
+
+            console.log("paramInfo", paramInfo);
             if(textFuncStatements.length > 0) {
                 for(var s in textFuncStatements) {
                     var statement = textFuncStatements[s];
+                    Entry.TextCodingUtil.makeParamBlock(statement, paramInfo);
+                    console.log("textFunction statement", statement);
                     var stmtBlock = new Entry.Block(statement, thread);
                     thread._data.push(stmtBlock);
                 }
@@ -2955,6 +2976,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 newFunc.paramMap[stringParam] = Number(0);
                 console.log("FunctionDeclaration paramBlock", newFunc);
 
+                paramInfo = {};
+                console.log("textFuncParams ppp", textFuncParams[p]);
+                paramInfo[textFuncParams[0]] = stringParam;
+
                 for(var p = 1; p < textFuncParams.length; p++) {
                     var paramFieldBlock = new Entry.Block({ type: "function_field_string" }, thread);
                     paramFieldBlock.data.params = [];
@@ -2972,6 +2997,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         paramBlock.data.params[1] = paramFieldBlock;
 
                     newFunc.paramMap[stringParam] = Number(p);
+                    console.log("textFuncParams ppp", textFuncParams[p]);
+                    paramInfo[textFuncParams[p]] = stringParam;
                     console.log("FunctionDeclaration paramBlock", newFunc);
                 }
 
@@ -2985,6 +3012,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if(textFuncStatements.length > 0) {
                 for(var s in textFuncStatements) {
                     var statement = textFuncStatements[s];
+                    console.log("paramInfo yyyyy", paramInfo);
+                    Entry.TextCodingUtil.makeParamBlock(statement, paramInfo);
                     var stmtBlock = new Entry.Block(statement, thread);
                     thread._data.push(stmtBlock);
                 }
@@ -3004,6 +3033,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("FunctionDeclaration newFunc after", newFunc);
 
         }
+
+        Entry.TextCodingUtil.clearFuncParam();
 
         console.log("FunctionDeclaration result", result);
         //return result;

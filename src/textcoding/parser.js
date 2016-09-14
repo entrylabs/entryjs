@@ -294,11 +294,19 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var tCount = 0;
                     var ast;
                     console.log("threads", threads);
-                    threads.shift();
-                    threads.shift();
+                    
+                    var cleansedThreads = [];
+                    for(var t in threads) {
+                        var thread = threads[t];
+                        if(thread.length != 0) {
+                            cleansedThreads.push(thread);
+                        } 
+                    }
 
-                    for(var index in threads) {
-                        var thread = threads[index];
+                    console.log("cleansedThreads", cleansedThreads);
+
+                    for(var index in cleansedThreads) {
+                        var thread = cleansedThreads[index];
                         console.log("ttt thread", thread);
                         if(thread.length != 0 && thread != "") {
                             tCount++;
@@ -323,7 +331,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         if(thread.length != 0 && thread != "") {
                             var tToken = thread.split('\n');
-                            tToken.pop();
+                            //tToken.pop();
                             var idx = parseInt(this._pyThreadCount).toString();
                             this._pyBlockCount[idx] =  tToken.length;
                             console.log("this._pyBlockCount", this._pyBlockCount);
