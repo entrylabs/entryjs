@@ -267,6 +267,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 try {
                     this._pyBlockCount = {};
                     this._pyThreadCount = 1;
+                    this._syntaxParsingCount = 0;
                     //this._marker.clear();
 
                     var pyAstGenerator = new Entry.PyAstGenerator();
@@ -308,6 +309,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     for(var index in cleansedThreads) {
                         var thread = cleansedThreads[index];
                         console.log("ttt thread", thread);
+                        this._syntaxParsingCount = parseInt(index) + 1;
                         if(thread.length != 0 && thread != "") {
                             tCount++;
                             this._pyThreadCount = parseInt(tCount);
@@ -333,7 +335,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var tToken = thread.split('\n');
                             //tToken.pop();
                             var idx = parseInt(this._pyThreadCount).toString();
-                            this._pyBlockCount[idx] =  tToken.length;
+                            this._pyBlockCount[idx] =  tToken.length-1;
                             console.log("this._pyBlockCount", this._pyBlockCount);
                         }
 
@@ -354,33 +356,33 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         var isSyntaxLineEmpty = false;
                         if (error instanceof SyntaxError) {
                             console.log("py error type 1", error.loc);
-                            var errorInfo = this.findSyntaxErrorInfo(error);
+                            var errorLine = {};
 
-                            console.log("errorInfo", errorInfo);
+                            errorLine = this.findSyntaxErrorLine(error);
 
                             //errorInfo.line -= 1;
 
-                            if(errorInfo.unknown)
+                            //if(errorInfo.unknown)
                                 error.message = '해당 구문 범위안에서 문법오류가 존재합니다.';
 
-                            var updateLineInfo = this.updateLineEmpty(errorInfo.line);
+                            //var updateLineInfo = this.updateLineEmpty(errorInfo.line);
 
-                            if(updateLineInfo.isLineEmpty) {
+                            /*if(updateLineInfo.isLineEmpty) {
                                 errorInfo.line = updateLineInfo.line;
                                 errorInfo.start = updateLineInfo.start;
                                 errorInfo.end = updateLineInfo.end;
                                 error.message = updateLineInfo.message;
-                            }
+                            }*/
 
                             annotation = {
-                                from: {line: errorInfo.line-1, ch: errorInfo.start},
-                                to: {line: errorInfo.line-1, ch: errorInfo.end}
+                                from: {line: errorLine.from.line, ch: errorLine.from.ch},
+                                to: {line: errorLine.to.line, ch: errorLine.to.ch}
                             }
 
-                            if(this._threeLine) {
+                            /*if(this._threeLine) {
                                 annotation.from.line = errorInfo.from.line;
                                 annotation.to.line = errorInfo.to.line;
-                            }
+                            }*/
 
                             if(!error.message)
                                 error.message = "파이썬 문법 오류입니다.";
@@ -453,9 +455,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 var errorTitle = '지원되지 않는 코드';
                         }
 
-                        line = parseInt(errorInfo.line);
+                        //line = parseInt(errorInfo.line);
 
-                        if(error.message && line)
+                        if(error.message)
                             var errorMsg = error.message + ' \n(line: ' + (annotation.from.line+1) + '~' + (annotation.to.line+1)  + ')';
                         else {
                             if(error.message) {
@@ -721,32 +723,33 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     };
 
-    p.findSyntaxErrorInfo = function(error) {
+    p.findSyntaxErrorLine = function(error) {
         this._threeLine = false;
         var result = {};
-        var line = error.loc.line;
-        var column = error.loc.column
-        var pos = error.pos;
+        var errorline = error.loc.line;
+        //var column = error.loc.column
+        //var pos = error.pos;
 
-        result.line = line;
+        //result.line = line;
 
         console.log("error.loc222", error.loc);
 
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
-        contentsArr.shift();
-        contentsArr.shift();
-        contentsArr.shift();
-        contentsArr.shift();
+        //contentsArr.shift();
+        //contentsArr.shift();
+        //contentsArr.shift();
+        //contentsArr.shift();
 
         console.log("findSyntaxErrorInfo contentsArr1", contentsArr);
         console.log("this._pyThreadCount", this._pyThreadCount);
+        console.log("this._pyBlockCount", this._pyBlockCount);
 
-        for(var ca in contentsArr) {
-            var arr = contentsArr[ca];
+        /*for(var ca in contentsArr) {
+            var arr = contentsArr[ca]; 
             if(arr.trim().length == 0)
                 contentsArr[ca] = "";
-        }
+        }*/
 
         console.log("findSyntaxErrorInfo contentsArr2", contentsArr);
 
@@ -762,34 +765,43 @@ Entry.Parser = function(mode, type, cm, syntax) {
         }
 
         console.log("currentLineCount", currentLineCount);
-        console.log("this.pyBlockcount", this._pyBlockCount);
+        console.log("this._pyBlockcount", this._pyBlockCount);
 
-        var initEmptyLine = 0;
-        var notShowTextLine = true;
-
-        if(isNaN(column)) {
+        /* if(isNaN(column)) {
             line = contentsArr.length;
-        }
+        }*/
 
-        for(var i = 0; i < contentsArr.length; i++) {
-            var targetText = contentsArr[i];
-            console.log("targetText", targetText);
+        var currentThreadCount = 0;
+        var lineCount = 0;
+        var isInThread = false;
+        var targetText = "";
+        for(var i = 4; i < contentsArr.length; i++) {
+            targetText = contentsArr[i];
+            console.log("targetText", targetText.charAt(0), targetText.charAt(0).trim().length);
             console.log("this._pyThreadCount", this._pyThreadCount);
 
-            if(targetText.trim().length == 0 && notShowTextLine)
-                initEmptyLine++;
-            else
-                notShowTextLine = false;
+            var lineCharLength = targetText.charAt(0).trim().length;
+            if(lineCharLength == 0) {
+                isInThread = false;
+            }
+            else {
+                if(!isInThread)
+                    currentThreadCount++;
+                isInThread = true;
+            }
 
+            lineCount++;
 
-            if(line > contentsArr.length)
-                line = contentsArr.length;
+            console.log("baby this._syntaxParsingCount", this._syntaxParsingCount);
+            console.log("baby currentThreadCount", currentThreadCount);
+            console.log("baby lineCount", lineCount);
 
-            if(i+1 == line) {
-                console.log("i+1", i+1);
+            if(this._syntaxParsingCount == currentThreadCount) {
+                //result.line = lineCount;
+                /*console.log("i+1", i+1);
                 result.line = i + 1 + currentLineCount + (this._pyThreadCount-1) + initEmptyLine;
-                console.log("column", column);
-                if(column == 0 && (i+1) == 2) {
+                console.log("column", column);*/
+                /*if(column == 0 && (i+1) == 2) {
                     console.log("type1");
                     result.line -= 1;
                     this._threeLine = true;
@@ -813,42 +825,49 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     console.log("type5");
                     result.line -= 1;
                     this._threeLine = true;
-                }
+                }*/
 
+                /*result.line -= 1;
                 result.line += 4;
                 result.start = 0;
 
                 if(targetText.length == 0)
                     result.end = 5;
                 else
-                    result.end = targetText.length;
+                    result.end = targetText.length;*/
 
                 break;
 
             }
         }
 
-        if(isNaN(column)) {
+        //this._threeLine = true;
+
+        /*if(isNaN(column)) {
             console.log("initEmptyLine", initEmptyLine);
             result.line = currentLineCount + (this._pyThreadCount-1) + 4 + 1 + initEmptyLine;
             result.start = 0;
             result.end = contentsArr[line-1].length;
             result.unknown = true;
-        }
+        }*/
 
-        if(this._threeLine) {
-            var eLine = result.line - 1;
-            result.from = {};
+        //if(this._threeLine) {
+
+            
+            var eLine = errorline + lineCount + 4 - 1 - 1;
+            result.from = {}
             result.from.line = eLine -1;
+            result.from.ch = 0;
             result.to = {};
             result.to.line = eLine + 1;
+            result.to.ch = targetText.length - 1;
 
-            if(result.from.line > contentsArr.length + 4)
+            /*if(result.from.line > contentsArr.length + 4)
                 result.from.line = contentsArr.length + 4;
 
             if(result.to.line > contentsArr.length + 4)
-                result.to.line = contentsArr.length + 4;
-        }
+                result.to.line = contentsArr.length + 4;*/
+        //}
 
         console.log("findSyntaxErrorInfo result", result);
         return result;

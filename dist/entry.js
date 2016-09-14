@@ -14796,8 +14796,8 @@ Entry.Parser = function(b, a, d, c) {
           c = this._parser.Program(f);
         } catch (u) {
           if (this.codeMirror) {
-            u instanceof SyntaxError ? (e = {from:{line:u.loc.line - 1, ch:0}, to:{line:u.loc.line - 1, ch:u.loc.column}}, u.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", u.type = 1) : (e = this.getLineNumber(u.node.start, u.node.end), e.message = u.message, e.severity = "converting error", u.type = 2);
-            this.codeMirror.markText(e.from, e.to, {className:"CodeMirror-lint-mark-error", __annotation:e, clearOnEnter:!0});
+            u instanceof SyntaxError ? (c = {from:{line:u.loc.line - 1, ch:0}, to:{line:u.loc.line - 1, ch:u.loc.column}}, u.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", u.type = 1) : (c = this.getLineNumber(u.node.start, u.node.end), c.message = u.message, c.severity = "converting error", u.type = 2);
+            this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0});
             var l = u.title ? u.title : "\ubb38\ubc95 \uc624\ub958";
             if (2 == u.type && u.message) {
               var m = u.message
@@ -14819,6 +14819,7 @@ Entry.Parser = function(b, a, d, c) {
         try {
           this._pyBlockCount = {};
           this._pyThreadCount = 1;
+          this._syntaxParsingCount = 0;
           var n = new Entry.PyAstGenerator, e = this.makeCodeToThreads(a);
           console.log("code", a);
           for (var q in e) {
@@ -14833,10 +14834,10 @@ Entry.Parser = function(b, a, d, c) {
           }
           console.log("cleansedThreads", r);
           for (g in r) {
-            if (h = r[g], console.log("ttt thread", h), 0 != h.length && "" != h && (q++, this._pyThreadCount = parseInt(q), console.log("success??", k), h = Entry.TextCodingUtil.entryEventFuncFilter(h), console.log("real thread", h), k = n.generate(h)), k) {
+            if (h = r[g], console.log("ttt thread", h), this._syntaxParsingCount = parseInt(g) + 1, 0 != h.length && "" != h && (q++, this._pyThreadCount = parseInt(q), console.log("success??", k), h = Entry.TextCodingUtil.entryEventFuncFilter(h), console.log("real thread", h), k = n.generate(h)), k) {
               if (0 != h.length && "" != h) {
                 var x = h.split("\n"), v = parseInt(this._pyThreadCount).toString();
-                this._pyBlockCount[v] = x.length;
+                this._pyBlockCount[v] = x.length - 1;
                 console.log("this._pyBlockCount", this._pyBlockCount);
               }
               "Program" == k.type && 0 != k.body.length && f.push(k);
@@ -14848,11 +14849,10 @@ Entry.Parser = function(b, a, d, c) {
           this._parser._variableMap.clear();
         } catch (u) {
           if (this.codeMirror) {
-            throw this._threeLine = !1, console.log("came here error", u), u instanceof SyntaxError ? (console.log("py error type 1", u.loc), c = this.findSyntaxErrorInfo(u), console.log("errorInfo", c), c.unknown && (u.message = "\ud574\ub2f9 \uad6c\ubb38 \ubc94\uc704\uc548\uc5d0\uc11c \ubb38\ubc95\uc624\ub958\uac00 \uc874\uc7ac\ud569\ub2c8\ub2e4."), e = this.updateLineEmpty(c.line), e.isLineEmpty && (c.line = e.line, c.start = e.start, c.end = e.end, u.message = e.message), e = {from:{line:c.line - 
-            1, ch:c.start}, to:{line:c.line - 1, ch:c.end}}, this._threeLine && (e.from.line = c.from.line, e.to.line = c.to.line), u.message || (u.message = "\ud30c\uc774\uc36c \ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4."), u.type = 1) : (console.log("py error type 2", u), c = u, e = this.findErrorLineForConverting(c.line), c.line = e, e = this.findConvertingTargetChInfo(c.line), e = {from:{line:c.line - 1, ch:e.start}, to:{line:c.line - 1, ch:e.end}}, u.message || (u.message = "\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4."), 
-            u.type = 2), console.log("annotation", e), f = {className:"CodeMirror-lint-mark-error", __annotation:e, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1}, console.log("this._threeLine", this._threeLine), this._marker = this.codeMirror.markText(e.from, e.to, f), console.log("came here error2", u), console.log("came here error2 title", u.title), console.log("came here error2 message", u.message), u.title ? l = u.title : 1 == u.type ? l = "\ubb38\ubc95 \uc624\ub958(Syntax Error)" : 
-            2 == u.type && (l = "\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"), c = parseInt(c.line), u.message && c ? m = u.message + " \n(line: " + (e.from.line + 1) + "~" + (e.to.line + 1) + ")" : u.message ? m = u.message : 1 == u.type ? m = "\ud30c\uc774\uc36c\uc5d0\uc11c \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ubb38\ubc95\uc785\ub2c8\ub2e4." : 2 == u.type && (m = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub418\ub294 \ucf54\ub4dc\uc778\uc9c0 \ud655\uc778\ud574\uc8fc\uc138\uc694"), Entry.toast.alert(l, 
-            m), u;
+            throw this._threeLine = !1, console.log("came here error", u), u instanceof SyntaxError ? (console.log("py error type 1", u.loc), c = {}, c = this.findSyntaxErrorLine(u), u.message = "\ud574\ub2f9 \uad6c\ubb38 \ubc94\uc704\uc548\uc5d0\uc11c \ubb38\ubc95\uc624\ub958\uac00 \uc874\uc7ac\ud569\ub2c8\ub2e4.", c = {from:{line:c.from.line, ch:c.from.ch}, to:{line:c.to.line, ch:c.to.ch}}, u.message || (u.message = "\ud30c\uc774\uc36c \ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4."), u.type = 1) : 
+            (console.log("py error type 2", u), c = this.findErrorLineForConverting(u.line), u.line = c, c = this.findConvertingTargetChInfo(u.line), c = {from:{line:u.line - 1, ch:c.start}, to:{line:u.line - 1, ch:c.end}}, u.message || (u.message = "\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4."), u.type = 2), console.log("annotation", c), e = {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1}, 
+            console.log("this._threeLine", this._threeLine), this._marker = this.codeMirror.markText(c.from, c.to, e), console.log("came here error2", u), console.log("came here error2 title", u.title), console.log("came here error2 message", u.message), u.title ? l = u.title : 1 == u.type ? l = "\ubb38\ubc95 \uc624\ub958(Syntax Error)" : 2 == u.type && (l = "\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"), u.message ? m = u.message + " \n(line: " + (c.from.line + 1) + "~" + (c.to.line + 1) + 
+            ")" : u.message ? m = u.message : 1 == u.type ? m = "\ud30c\uc774\uc36c\uc5d0\uc11c \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ubb38\ubc95\uc785\ub2c8\ub2e4." : 2 == u.type && (m = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub418\ub294 \ucf54\ub4dc\uc778\uc9c0 \ud655\uc778\ud574\uc8fc\uc138\uc694"), Entry.toast.alert(l, m), u;
           }
           c = [];
         }
@@ -14969,56 +14969,36 @@ Entry.Parser = function(b, a, d, c) {
     console.log("findConvertingErrorInfo result", b);
     return b;
   };
-  b.findSyntaxErrorInfo = function(a) {
+  b.findSyntaxErrorLine = function(a) {
     this._threeLine = !1;
-    var b = {}, c = a.loc.line, e = a.loc.column;
-    b.line = c;
+    var b = {}, c = a.loc.line;
     console.log("error.loc222", a.loc);
     a = this.codeMirror.getValue().split("\n");
-    a.shift();
-    a.shift();
-    a.shift();
-    a.shift();
     console.log("findSyntaxErrorInfo contentsArr1", a);
     console.log("this._pyThreadCount", this._pyThreadCount);
-    for (var f in a) {
-      0 == a[f].trim().length && (a[f] = "");
-    }
+    console.log("this._pyBlockCount", this._pyBlockCount);
     console.log("findSyntaxErrorInfo contentsArr2", a);
-    f = 0;
+    var e = 0;
     console.log("this._pythre", this._pyThreadCount);
-    for (var g = 1;g < this._pyThreadCount;g++) {
+    for (var f = 1;f < this._pyThreadCount;f++) {
       console.log("aaa", this._pyBlockCount);
-      var h = g.toString();
-      console.log("idx", h);
-      h = this._pyBlockCount[h];
-      console.log("count c", h);
-      f += h;
+      var g = f.toString();
+      console.log("idx", g);
+      g = this._pyBlockCount[g];
+      console.log("count c", g);
+      e += g;
     }
-    console.log("currentLineCount", f);
-    console.log("this.pyBlockcount", this._pyBlockCount);
-    g = 0;
-    h = !0;
-    isNaN(e) && (c = a.length);
-    for (var k = 0;k < a.length;k++) {
-      var l = a[k];
-      console.log("targetText", l);
-      console.log("this._pyThreadCount", this._pyThreadCount);
-      0 == l.trim().length && h ? g++ : h = !1;
-      c > a.length && (c = a.length);
-      if (k + 1 == c) {
-        console.log("i+1", k + 1);
-        b.line = k + 1 + f + (this._pyThreadCount - 1) + g;
-        console.log("column", e);
-        0 == e && 2 == k + 1 ? (console.log("type1"), --b.line, this._threeLine = !0) : 1 == e && 1 != k + 1 ? (console.log("type2"), --b.line, this._threeLine = !0) : 1 == c && 0 == e ? (console.log("type3"), --b.line, this._threeLine = !0) : 2 == e ? (console.log("type4"), --b.line, this._threeLine = !0) : 0 == e && (console.log("type5"), --b.line, this._threeLine = !0);
-        b.line += 4;
-        b.start = 0;
-        b.end = 0 == l.length ? 5 : l.length;
-        break;
-      }
+    console.log("currentLineCount", e);
+    console.log("this._pyBlockcount", this._pyBlockCount);
+    for (var g = f = 0, h = !1, e = "", k = 4;k < a.length && (e = a[k], console.log("targetText", e.charAt(0), e.charAt(0).trim().length), console.log("this._pyThreadCount", this._pyThreadCount), 0 == e.charAt(0).trim().length ? h = !1 : (h || f++, h = !0), g++, console.log("baby this._syntaxParsingCount", this._syntaxParsingCount), console.log("baby currentThreadCount", f), console.log("baby lineCount", g), this._syntaxParsingCount != f);k++) {
     }
-    isNaN(e) && (console.log("initEmptyLine", g), b.line = f + (this._pyThreadCount - 1) + 4 + 1 + g, b.start = 0, b.end = a[c - 1].length, b.unknown = !0);
-    this._threeLine && (c = b.line - 1, b.from = {}, b.from.line = c - 1, b.to = {}, b.to.line = c + 1, b.from.line > a.length + 4 && (b.from.line = a.length + 4), b.to.line > a.length + 4 && (b.to.line = a.length + 4));
+    c = c + g + 4 - 1 - 1;
+    b.from = {};
+    b.from.line = c - 1;
+    b.from.ch = 0;
+    b.to = {};
+    b.to.line = c + 1;
+    b.to.ch = e.length - 1;
     console.log("findSyntaxErrorInfo result", b);
     return b;
   };
