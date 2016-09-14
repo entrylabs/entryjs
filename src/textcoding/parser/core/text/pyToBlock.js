@@ -1211,14 +1211,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(param.type == "boolean_not") {
                         param = param.params[1];
                         params.push(param);
-                        var param = "until";
-                        params.push(param);
+                        var option = "until";
+                        params.push(option);
                     }
                 }
                 else {
                     params.push(param);
-                    var param = "while";
-                    params.push(param);
+                    var option = "while";
+                    params.push(option);
                 }
             }
         }
@@ -1240,8 +1240,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var option = "until";
                     params.push(option);
                 }
-
-
             }
             else if(whileType == "while") {
                 if(bodyData.data && bodyData.data[0]) {
@@ -2742,6 +2740,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         textFuncName = idData.name;
 
         var funcBodyData = bodyData.data;
+        console.log("funcBodyData", funcBodyData);
         for(var i in funcBodyData) {
             if(funcBodyData[i].declarations) {
                 var declarations = funcBodyData[i].declarations;
@@ -2881,7 +2880,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var thread = targetFunc.content._data[0];
             thread._data.splice(1, thread._data.length-1);
 
-
             console.log("paramInfo", paramInfo);
             if(textFuncStatements.length > 0) {
                 for(var s in textFuncStatements) {
@@ -2980,7 +2978,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("textFuncParams ppp", textFuncParams[p]);
                 paramInfo[textFuncParams[0]] = stringParam;
 
-                for(var p = 1; p < textFuncParams.length; p++) {
+              for(var p = 1; p < textFuncParams.length; p++) {
                     var paramFieldBlock = new Entry.Block({ type: "function_field_string" }, thread);
                     paramFieldBlock.data.params = [];
 

@@ -893,7 +893,14 @@ Entry.TextCodingUtil = {};
                         console.log("textFuncStatementParams", textFuncStatementParams);
                         console.log("paramMap", paramMap);
                         console.log("paramInfo", paramInfo);
-                        if(textFuncStatementParams[j].name) {
+                        console.log("textFuncStatementParams[j]", textFuncStatementParams[j]);
+                        if(typeof textFuncStatementParams[j] !== "object") {
+                            if(textFuncStatementParams[j] == blockFuncContentParams[j]) {
+                                matchFlag = true;
+                                break;
+                            }
+                        }
+                        else if(textFuncStatementParams[j].name) {
                             //for(var k in blockFuncContentParams) {
                                 //if(textFuncStatementParams[j].name == blockFuncContentParams[k]) { // Param Locatin Comparision
                                     //console.log("textFuncStatementParams[j].name", textFuncStatementParams[j].name);
@@ -912,16 +919,17 @@ Entry.TextCodingUtil = {};
                                             }
                                         //}
                                     //}
-                                    if(matchFlag) 
-                                        break;
+                                    //if(matchFlag) 
+                                        //break;
                                 //}
                             //}
                         }
                         else if(textFuncStatementParams[j].type == "True" || textFuncStatementParams[j].type == "False") {
-                            if(textFuncStatementParams[j].type == blockFuncContentParams[j].type) {
+                            if(textFuncStatementParams[j].type == blockFuncContentParams[j].data.type) {
                                 matchFlag = true;
                             }
-                        } else if(textFuncStatementParams[j].type && textFuncStatementParams[j].params) {
+                        } 
+                        else if(textFuncStatementParams[j].type && textFuncStatementParams[j].params) {
                             console.log("textFuncStatementParams[j]", textFuncStatementParams[j]);
                             
                             if(textFuncStatementParams[j].params[0].name) {
@@ -994,6 +1002,9 @@ Entry.TextCodingUtil = {};
         for(var p in params) {
             var param = params[p];
             console.log("makeParamBlock param", param);
+            
+            if(typeof param != "object") 
+                continue;
             
             if(param.params && param.params.length != 0 && param.params[0].name) {
                 var paramKey = param.params[0].name;
