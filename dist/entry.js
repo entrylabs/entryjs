@@ -12290,6 +12290,9 @@ Entry.TextCodingUtil = {};
   b.isCalculationBlock = function(a) {
     return "calc_basic" == a || "calc_rand" == a || "coordinate_mouse" == a || "coordinate_object" == a || "get_sound_volume" == a || "quotient_and_mod" == a || "calc_operation" == a || "get_project_timer_value" == a || "get_date" == a || "distance_something" == a || "get_sound_duration" == a || "length_of_string" == a || "combine_something" == a || "char_at" == a || "substring" == a || "index_of_string" == a || "replace_string" == a || "change_string_case" == a ? !0 : !1;
   };
+  b.isVariableDeclarationBlock = function(a) {
+    return "set_variable" == a ? !0 : !1;
+  };
   b.isMaterialBlock = function(a) {
     return "get_canvas_input_value" == a || "get_variable" == a || "value_of_index_from_list" == a || "length_of_list" == a || "is_included_in_list" == a ? !0 : !1;
   };
@@ -13224,7 +13227,7 @@ Entry.PyToBlockParser = function(b) {
           console.log("Program node", g);
           var h = this[g.type](g);
           console.log("result block", h);
-          h && h.type && (console.log("block.type", h.type), Entry.TextCodingUtil.isJudgementBlock(h.type) || Entry.TextCodingUtil.isCalculationBlock(h.type) || Entry.TextCodingUtil.isMaterialBlock(h.type) || e.push(h));
+          h && h.type && (console.log("block.type", h.type), Entry.TextCodingUtil.isJudgementBlock(h.type) || Entry.TextCodingUtil.isCalculationBlock(h.type) || Entry.TextCodingUtil.isMaterialBlock(h.type) || Entry.TextCodingUtil.isVariableDeclarationBlock(h.type) || e.push(h));
         }
         console.log("thread", e);
         0 != e.length && b.push(e);

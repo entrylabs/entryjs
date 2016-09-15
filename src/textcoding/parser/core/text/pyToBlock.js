@@ -68,6 +68,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                         else if(Entry.TextCodingUtil.isMaterialBlock(block.type)) {
                             continue;
+                        } else if(Entry.TextCodingUtil.isVariableDeclarationBlock(block.type)) {
+                            continue;
                         }
 
                         thread.push(block);
@@ -830,9 +832,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result.type = structure.type;
             result.params = structure.params;
         }
-
-
-
 
         console.log("VariableDeclarator result", result);
         return result;

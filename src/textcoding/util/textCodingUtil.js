@@ -1148,6 +1148,13 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
+    tu.isVariableDeclarationBlock = function(blockType) {
+         if(blockType == "set_variable")
+            return true;
+
+        return false;
+    }
+
     tu.isMaterialBlock = function(blockType) {
         if(blockType == "get_canvas_input_value" ||
             blockType == "get_variable" ||
