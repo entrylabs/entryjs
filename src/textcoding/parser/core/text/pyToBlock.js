@@ -720,9 +720,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 Entry.TextCodingUtil.createGlobalList(name, array);
             }
         } else {
-            this._blockCount++;
-            console.log("VariableDeclarator blockCount++");
-
             var name = id.name;
             if(init.type == "Literal") {
                 var value = init.value;
@@ -761,22 +758,33 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var type = this.getBlockType(syntax);
                 structure.type = type;
 
+                if(idData && idData.name && !idData.name.includes("__filbert")) {
+                    this._blockCount++;
+                    console.log("VariableDeclarator blockCount++");
+                }
+
             }
             else {
-                if(initData.params && initData.params[0] && initData.params[0].name && (idData.name == initData.params[0].name)) {
+                if(initData.params && initData.params[0] && initData.params[0].name && (idData.name == initData.params[0].name) && initData.operator == "PLUS") {
+                    /*if(initData.operator != "PLUS") 
+                        return result;*/
+
                     console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
-                    var syntax = String("%1 += %2");
+                    var syntax = String("%1 = %1 + %2");
                     var type = this.getBlockType(syntax);
                     structure.type = type;
 
-
-                    if(initData.operator != "PLUS")
-                        return result;
-
+                    this._blockCount++;
+                    console.log("VariableDeclarator blockCount++");                    
                 } else {
                     var syntax = String("%1 = %2");
                     var type = this.getBlockType(syntax);
                     structure.type = type;
+
+                    if(idData && idData.name && !idData.name.includes("__filbert")) {
+                        this._blockCount++;
+                        console.log("VariableDeclarator blockCount++");
+                    }
 
                 }
 
@@ -800,7 +808,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
             else {
                 console.log("VariableDeclarator idData", idData, "initData", initData);
-                if(initData.params && initData.params[0] && (idData.name == initData.params[0].name)) {
+                if(initData.params && initData.params[0] && (idData.name == initData.params[0].name) && initData.operator == "PLUS") {
                     console.log("in initData.params[0]");
                     if(idData.params && idData.params[0])
                         params.push(idData.params[0]);
@@ -2449,7 +2457,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     console.log("AssignmentExpression leftEx", leftEx, "rightEx", rightEx);
                     if(component.right.arguments && (leftEx == rightEx)) {
-                        var syntax = String("%1 += %2");
+                        var syntax = String("%1 = %1 + %2");
                         var type = this.getBlockType(syntax);
                         structure.type = type;
                     } else {
@@ -2702,7 +2710,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
         }
-        else if(syntax == String("%1 += %2")) {
+        else if(syntax == String("%1 = %1 + %2")) {
             if(object && object.name == "self") {
                 var block = Entry.block[type];
                 var paramsMeta = block.params;

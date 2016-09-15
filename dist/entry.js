@@ -12539,6 +12539,7 @@ Entry.BlockToPyParser = function(b) {
   this._variableMap = new Entry.Map;
   this._funcMap = new Entry.Map;
   this._queue = new Entry.Queue;
+  this._funcDefMap = {};
 };
 (function(b) {
   b.Code = function(a, b) {
@@ -12582,7 +12583,7 @@ Entry.BlockToPyParser = function(b) {
     var b = "", c;
     a._schema && a._schema.syntax && (c = a._schema.syntax.py[0]);
     if (this.isFunc(a)) {
-      if (b += this.makeFuncDef(a), console.log("result0", b), this.isRegisteredFunc(a) && (c = this.makeFuncSyntax(a), console.log("Func Fianl Syntax", c), this._parseMode == Entry.Parser.PARSE_SYNTAX)) {
+      if (console.log("Block isFunc", a), console.log("Block makeFuncDef", this.makeFuncDef(a)), this._funcDefMap[a.data.type] = this.makeFuncDef(a), console.log("result0", b), this.isRegisteredFunc(a) && (c = this.makeFuncSyntax(a), console.log("Func Fianl Syntax", c), this._parseMode == Entry.Parser.PARSE_SYNTAX)) {
         return c;
       }
     } else {
@@ -13505,39 +13506,10 @@ Entry.PyToBlockParser = function(b) {
         }
         Entry.TextCodingUtil.isGlobalListExisted(h) ? Entry.TextCodingUtil.updateGlobalList(h, f) : Entry.TextCodingUtil.createGlobalList(h, f);
       } else {
-        this._blockCount++;
-        console.log("VariableDeclarator blockCount++");
-        h = e.name;
-        g = "Literal" == f.type ? f.value : "Identifier" == f.type ? f.name : NaN;
-        console.log("variable name", h, "value", g);
-        g && NaN != g && h && !h.includes("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(h) ? Entry.TextCodingUtil.updateGlobalVariable(h, g) : Entry.TextCodingUtil.createGlobalVariable(h, g));
-        h = this[e.type](e);
-        console.log("VariableDeclarator idData", h);
-        b.id = h;
-        g = this[f.type](f);
-        console.log("VariableDeclarator initData", g);
-        b.init = g;
-        console.log("VariableDeclarator init.type", f.type);
-        if ("Literal" == f.type) {
-          c = e = this.getBlockType("%1 = %2");
-        } else {
-          if (g.params && g.params[0] && g.params[0].name && h.name == g.params[0].name) {
-            if (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", g.params[0].name), c = e = this.getBlockType("%1 += %2"), "PLUS" != g.operator) {
-              return b;
-            }
-          } else {
-            c = e = this.getBlockType("%1 = %2");
-          }
-        }
-        k = Entry.block[e];
-        console.log("vblock", k);
-        e = k.params;
-        k = k.def.params;
-        h.name && (m = this.ParamDropdownDynamic(h.name, e[0], k[0]));
-        e = [];
-        "Literal" == f.type ? (h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g)) : (console.log("VariableDeclarator idData", h, "initData", g), g.params && g.params[0] && h.name == g.params[0].name ? (console.log("in initData.params[0]"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g.params[2])) : (console.log("in initData"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g)));
-        b.type = c;
-        b.params = e;
+        h = e.name, g = "Literal" == f.type ? f.value : "Identifier" == f.type ? f.name : NaN, console.log("variable name", h, "value", g), g && NaN != g && h && !h.includes("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(h) ? Entry.TextCodingUtil.updateGlobalVariable(h, g) : Entry.TextCodingUtil.createGlobalVariable(h, g)), h = this[e.type](e), console.log("VariableDeclarator idData", h), b.id = h, g = this[f.type](f), console.log("VariableDeclarator initData", g), b.init = g, console.log("VariableDeclarator init.type", 
+        f.type), "Literal" == f.type ? (c = e = this.getBlockType("%1 = %2"), h && h.name && !h.name.includes("__filbert") && (this._blockCount++, console.log("VariableDeclarator blockCount++"))) : g.params && g.params[0] && g.params[0].name && h.name == g.params[0].name && "PLUS" == g.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", g.params[0].name), c = e = this.getBlockType("%1 = %1 + %2"), this._blockCount++, console.log("VariableDeclarator blockCount++")) : 
+        (c = e = this.getBlockType("%1 = %2"), h && h.name && !h.name.includes("__filbert") && (this._blockCount++, console.log("VariableDeclarator blockCount++"))), k = Entry.block[e], console.log("vblock", k), e = k.params, k = k.def.params, h.name && (m = this.ParamDropdownDynamic(h.name, e[0], k[0])), e = [], "Literal" == f.type ? (h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g)) : (console.log("VariableDeclarator idData", h, "initData", g), g.params && g.params[0] && h.name == 
+        g.params[0].name && "PLUS" == g.operator ? (console.log("in initData.params[0]"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g.params[2])) : (console.log("in initData"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g))), b.type = c, b.params = e;
       }
       console.log("VariableDeclarator result", b);
       return b;
@@ -14274,8 +14246,8 @@ Entry.PyToBlockParser = function(b) {
           r = Entry.playground.object;
           Entry.TextCodingUtil.isLocalListExisted(g, r) ? Entry.TextCodingUtil.updateLocalList(g, n, r) : Entry.TextCodingUtil.createLocalList(g, n, r);
         }
-        h.property && "__pythonRuntime.ops.subscriptIndex" == h.property.callee ? g = "%1[%2] = %3" : k.arguments && k.arguments[0] ? (g = a.left.name ? a.left.name : a.left.object.name.concat(a.left.property.name), a.right.arguments[0].name ? c = a.right.arguments[0].name : a.right.arguments[0].object && (c = a.right.arguments[0].object.name.concat(a.right.arguments[0].property.name)), console.log("AssignmentExpression leftEx", g, "rightEx", c), g = a.right.arguments && g == c ? "%1 += %2" : "%1 = %2") : 
-        g = "%1 = %2";
+        h.property && "__pythonRuntime.ops.subscriptIndex" == h.property.callee ? g = "%1[%2] = %3" : k.arguments && k.arguments[0] ? (g = a.left.name ? a.left.name : a.left.object.name.concat(a.left.property.name), a.right.arguments[0].name ? c = a.right.arguments[0].name : a.right.arguments[0].object && (c = a.right.arguments[0].object.name.concat(a.right.arguments[0].property.name)), console.log("AssignmentExpression leftEx", g, "rightEx", c), g = a.right.arguments && g == c ? "%1 = %1 + %2" : 
+        "%1 = %2") : g = "%1 = %2";
         c = q = this.getBlockType(g);
         break;
       case "+=":
@@ -14333,7 +14305,7 @@ Entry.PyToBlockParser = function(b) {
         h, r)), g = this.ParamDropdownDynamic(g, m[0], t[0]), e.push(g)) : (r = Entry.block[q], m = r.params, t = r.def.params, console.log("property 123", f), g = f, (h = "number" == l.type || "text" == l.type ? l.params[0] : NaN) && NaN != h && (r = Entry.playground.object, console.log("final object", r), console.log("final value", h), Entry.TextCodingUtil.isGlobalVariableExisted(g, r) ? Entry.TextCodingUtil.updateGlobalVariable(g, h, r) : Entry.TextCodingUtil.createGlobalVariable(g, h, r)), g = 
         this.ParamDropdownDynamic(g, m[0], t[0]), e.push(g), l.callee && delete l.callee), e.push(l);
       } else {
-        if ("%1 += %2" == g) {
+        if ("%1 = %1 + %2" == g) {
           if (r && "self" == r.name) {
             if (r = Entry.block[q], m = r.params, t = r.def.params, g = f.name, r = Entry.playground.object, console.log("final object", r), !Entry.TextCodingUtil.isLocalVariableExisted(g, r)) {
               return b;
@@ -14827,16 +14799,15 @@ Entry.Parser = function(b, a, d, c) {
           for (var q in e) {
             h = e[q], -1 != h.search("import") ? e[q] = "" : "#" == h.charAt(0) ? e[q] = "" : e[q] = h;
           }
-          f = [];
-          q = 0;
+          var f = [], r = 0;
           console.log("threads", e);
-          var r = [], t;
-          for (t in e) {
-            h = e[t], 0 != h.length && r.push(h);
+          q = [];
+          for (var t in e) {
+            h = e[t], 0 != h.length && q.push(h);
           }
-          console.log("cleansedThreads", r);
-          for (g in r) {
-            if (h = r[g], console.log("ttt thread", h), this._syntaxParsingCount = parseInt(g) + 1, 0 != h.length && "" != h && (q++, this._pyThreadCount = parseInt(q), console.log("success??", k), h = Entry.TextCodingUtil.entryEventFuncFilter(h), console.log("real thread", h), k = n.generate(h)), k) {
+          console.log("cleansedThreads", q);
+          for (g in q) {
+            if (h = q[g], console.log("ttt thread", h), this._syntaxParsingCount = parseInt(g) + 1, 0 != h.length && "" != h && (r++, this._pyThreadCount = parseInt(r), console.log("success??", k), h = Entry.TextCodingUtil.entryEventFuncFilter(h), console.log("real thread", h), k = n.generate(h)), k) {
               if (0 != h.length && "" != h) {
                 var x = h.split("\n"), u = parseInt(this._pyThreadCount).toString();
                 this._pyBlockCount[u] = x.length - 1;
@@ -14844,7 +14815,7 @@ Entry.Parser = function(b, a, d, c) {
               }
               "Program" == k.type && 0 != k.body.length && f.push(k);
             } else {
-              1 < this._pyThreadCount && (q--, this._pyThreadCount--);
+              1 < this._pyThreadCount && (r--, this._pyThreadCount--);
             }
           }
           c = this._parser.Program(f);
@@ -14863,7 +14834,16 @@ Entry.Parser = function(b, a, d, c) {
         c = l = this._parser.Code(a, b);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        console.log("parser parsemode", b), l = this._parser.Code(a, b), this._pyHinter || (this._pyHinter = new Entry.PyHint), c = l;
+        console.log("parser parsemode", b);
+        c = "";
+        l = this._parser.Code(a, b);
+        this._pyHinter || (this._pyHinter = new Entry.PyHint);
+        if (b == Entry.Parser.PARSE_GENERAL) {
+          for (r in m = this._parser._funcDefMap, console.log("funcDefMap", m), m) {
+            c += m[r] + "\n";
+          }
+        }
+        c += l;
     }
     return c;
   };

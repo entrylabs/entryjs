@@ -465,12 +465,22 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 console.log("parser parsemode", parseMode);
+                result = "";
                 var textCode = this._parser.Code(code, parseMode);
 
                 if (!this._pyHinter)
                     this._pyHinter = new Entry.PyHint();
 
-                result = textCode;
+                if(parseMode == Entry.Parser.PARSE_GENERAL) {
+                    var funcDefMap = this._parser._funcDefMap;
+                    console.log("funcDefMap", funcDefMap);
+                    for(var f in funcDefMap) {
+                        var funcDef = funcDefMap[f]; 
+                        result += funcDef + '\n';
+                    }
+                }
+
+                result += textCode;
 
                 break;
         }

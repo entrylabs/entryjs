@@ -16353,7 +16353,7 @@ Entry.block = {
             variable.setValue((value + variable.getValue()).toFixed(fixed));
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["%1 += %2"]}
+        "syntax": {"js": [], "py": ["%1 = %1 + %2"]}
     },
     "set_variable": {
         "color": "#E457DC",

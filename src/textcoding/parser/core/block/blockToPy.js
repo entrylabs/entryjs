@@ -21,6 +21,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     var queue = new Entry.Queue();
     this._queue = queue;
+
+    var funcDefMap = {};
+    this._funcDefMap = {};
 };
 
 (function(p){
@@ -126,8 +129,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         // User Function
         if(this.isFunc(block)) {
-            //console.log("Block isFunc", block);
-            result += this.makeFuncDef(block);
+            console.log("Block isFunc", block);
+            console.log("Block makeFuncDef", this.makeFuncDef(block));
+            this._funcDefMap[block.data.type] = this.makeFuncDef(block);
+            //result += this.makeFuncDef(block);
 
             console.log("result0", result);
 
