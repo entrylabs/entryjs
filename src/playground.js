@@ -27,7 +27,6 @@ Entry.Playground = function() {
     Entry.addEventListener('textEdited', this.injectText);
     Entry.addEventListener('hwChanged', this.updateHW);
     Entry.addEventListener('changeMode', function(mode) {
-        console.log("Entry.Workspace.")
         that.setMode(mode);
     });
 };

@@ -359,66 +359,33 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var errorLine = {};
 
                             errorLine = this.findSyntaxErrorLine(error);
-
-                            //errorInfo.line -= 1;
-
-                            //if(errorInfo.unknown)
-                                error.message = '해당 구문 범위안에서 문법오류가 존재합니다.';
-
-                            //var updateLineInfo = this.updateLineEmpty(errorInfo.line);
-
-                            /*if(updateLineInfo.isLineEmpty) {
-                                errorInfo.line = updateLineInfo.line;
-                                errorInfo.start = updateLineInfo.start;
-                                errorInfo.end = updateLineInfo.end;
-                                error.message = updateLineInfo.message;
-                            }*/
+                            error.message = '해당구문 범위 또는 주위 라인에서 \'문법오류 및 들여쓰기(Indentation)오류\'를 확인하세요.';
 
                             annotation = {
                                 from: {line: errorLine.from.line, ch: errorLine.from.ch},
                                 to: {line: errorLine.to.line, ch: errorLine.to.ch}
                             }
 
-                            /*if(this._threeLine) {
-                                annotation.from.line = errorInfo.from.line;
-                                annotation.to.line = errorInfo.to.line;
-                            }*/
-
                             if(!error.message)
                                 error.message = "파이썬 문법 오류입니다.";
 
                             error.type = 1;
-
-                            /*annotation = {
-                                from: {line: error.loc.line - 1, ch: error.loc.column - 2},
-                                to: {line: error.loc.line - 1, ch: error.loc.column + 1}
-                            }*/
                         } else {
                             console.log("py error type 2", error);
-                            var errorInfo = error;
+                            var errorLine = this.findConvertingErrorLine(error.line);
+                            var ch = this.findConvertingErrorLineCh(errorLine.from.line);
 
-                            var errorLine = this.findErrorLineForConverting(errorInfo.line);
-                            errorInfo.line = errorLine;
-
-                            /*annotation = this.getLineNumber(error.node.start, error.node.end);
-                            annotation.message = error.message;
-                            annotation.severity = "error";*/
-
-                            var ch = this.findConvertingTargetChInfo(errorInfo.line);
+                            console.log("type2 errorLine", errorLine);
 
                             annotation = {
-                                from: {line: errorInfo.line - 1, ch: ch.start},
-                                to: {line: errorInfo.line - 1, ch: ch.end}
+                                from: {line: errorLine.from.line - 1, ch: ch.start},
+                                to: {line: errorLine.to.line - 1, ch: ch.end}
                             }
 
                             if(!error.message)
                                 error.message = "지원하지 않는 코드입니다.";
 
                             error.type = 2;
-
-                            /*annotation = this.getLineNumber(error.node.start, error.node.end);
-                            annotation.message = error.message;
-                            annotation.severity = "block_convert_error";*/
                         }
 
                         console.log("annotation", annotation);
@@ -434,14 +401,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         console.log("this._threeLine", this._threeLine);
 
-
-
                         this._marker = this.codeMirror.markText(
                             annotation.from, annotation.to, option);
 
 
                         console.log("came here error2", error);
-
                         console.log("came here error2 title", error.title);
                         console.log("came here error2 message", error.message);
 
@@ -455,24 +419,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 var errorTitle = '지원되지 않는 코드';
                         }
 
-                        //line = parseInt(errorInfo.line);
-
                         if(error.message)
                             var errorMsg = error.message + ' \n(line: ' + (annotation.from.line+1) + '~' + (annotation.to.line+1)  + ')';
                         else {
-                            if(error.message) {
-                                var errorMsg = error.message;
-                            }
-                            else {
-                                if(error.type == 1)
-                                    var errorMsg = '파이썬에서 지원하지 않는 문법입니다.';
-                                else if(error.type == 2)
-                                    var errorMsg = '블록으로 변환되는 코드인지 확인해주세요';
-                            }
+                            if(error.type == 1)
+                                var errorMsg = '파이썬에서 지원하지 않는 문법입니다.';
+                            else if(error.type == 2)
+                                var errorMsg = '블록으로 변환되는 코드인지 확인해주세요'; 
                         }
 
                         Entry.toast.alert(errorTitle, errorMsg);
-
                         throw error;
                     }
 
@@ -644,8 +600,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
         this.availableCode = this.availableCode.concat(availableList);
     };
 
-    p.findErrorLineForConverting = function(blockCount) {
+    p.findConvertingErrorLine = function(blockCount) {
         console.log("blockCount", blockCount);
+        var result = {};
         var errorLine = 0;
 
         var contents = this.codeMirror.getValue();
@@ -657,17 +614,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
             return errorLine;
         }
 
-
         var index = 0;
         for(var i = 4; i < contentsArr.length; i++) {
             var line = contentsArr[i];
             console.log("ljh line", line);
+
             if(line.trim().length == 0 || line.trim() == "else:")
                 errorLine++;
             else
                 index++;
-            console.log("iiiiii", i);
-            console.log("index", index, "blockCount", blockCount);
+
             if(index == blockCount) {
                 errorLine += index;
                 break;
@@ -677,37 +633,32 @@ Entry.Parser = function(mode, type, cm, syntax) {
         errorLine += 4;
         console.log("errorLine kk", errorLine);
 
-        return errorLine;
+        result.from = {};
+        result.to = {};
+
+        result.from.line = errorLine;
+        result.to.line = errorLine;
+
+        return result;
     };
 
-    p.findConvertingTargetChInfo = function(errorLine) {
+    p.findConvertingErrorLineCh = function(errorLine) {
         var result = {};
 
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
-
-        console.log("contentsArr1", contentsArr);
-
-        console.log("errorline", errorLine);
         var currentLineCount = 0;
-        console.log("this._pythre", this._pyThreadCount);
+    
         for(var c = 1; c < this._pyThreadCount; c++) {
-            console.log("aaa", this._pyBlockCount);
             var idx = c.toString();
-            console.log("idx", idx);
             var count = this._pyBlockCount[idx];
-            console.log("count c", count);
             currentLineCount += count;
         }
 
         result.line = currentLineCount + (this._pyThreadCount-1);
 
-        //errorLine -= 4;
-
         for(var i = 0; i < contentsArr.length; i++) {
             var targetText = contentsArr[i];
-            console.log("targetText", targetText);
-            console.log("this._pyThreadCount", this._pyThreadCount);
 
             if(targetText.trim().length != 0) {
                 if((i+1) == errorLine) {
@@ -724,33 +675,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.findSyntaxErrorLine = function(error) {
-        this._threeLine = false;
         var result = {};
         var errorline = error.loc.line;
-        //var column = error.loc.column
-        //var pos = error.pos;
-
-        //result.line = line;
-
-        console.log("error.loc222", error.loc);
-
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
-        //contentsArr.shift();
-        //contentsArr.shift();
-        //contentsArr.shift();
-        //contentsArr.shift();
+        
 
         console.log("findSyntaxErrorInfo contentsArr1", contentsArr);
         console.log("this._pyThreadCount", this._pyThreadCount);
         console.log("this._pyBlockCount", this._pyBlockCount);
-
-        /*for(var ca in contentsArr) {
-            var arr = contentsArr[ca]; 
-            if(arr.trim().length == 0)
-                contentsArr[ca] = "";
-        }*/
-
         console.log("findSyntaxErrorInfo contentsArr2", contentsArr);
 
         var currentLineCount = 0;
@@ -766,10 +699,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         console.log("currentLineCount", currentLineCount);
         console.log("this._pyBlockcount", this._pyBlockCount);
-
-        /* if(isNaN(column)) {
-            line = contentsArr.length;
-        }*/
 
         var currentThreadCount = 0;
         var lineCount = 0;
@@ -797,77 +726,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
             console.log("baby lineCount", lineCount);
 
             if(this._syntaxParsingCount == currentThreadCount) {
-                //result.line = lineCount;
-                /*console.log("i+1", i+1);
-                result.line = i + 1 + currentLineCount + (this._pyThreadCount-1) + initEmptyLine;
-                console.log("column", column);*/
-                /*if(column == 0 && (i+1) == 2) {
-                    console.log("type1");
-                    result.line -= 1;
-                    this._threeLine = true;
-                }
-                else if(column == 1 && (i+1) != 1) {
-                    console.log("type2");
-                    result.line -= 1;
-                    this._threeLine = true;
-                }
-                else if(line == 1 && column == 0) {
-                    console.log("type3");
-                    result.line -= 1;
-                    this._threeLine = true;
-                }
-                else if(column == 2) {
-                    console.log("type4");
-                    result.line -= 1;
-                    this._threeLine = true;
-                }
-                else if(column == 0) {
-                    console.log("type5");
-                    result.line -= 1;
-                    this._threeLine = true;
-                }*/
-
-                /*result.line -= 1;
-                result.line += 4;
-                result.start = 0;
-
-                if(targetText.length == 0)
-                    result.end = 5;
-                else
-                    result.end = targetText.length;*/
-
                 break;
 
             }
         }
 
-        //this._threeLine = true;
-
-        /*if(isNaN(column)) {
-            console.log("initEmptyLine", initEmptyLine);
-            result.line = currentLineCount + (this._pyThreadCount-1) + 4 + 1 + initEmptyLine;
-            result.start = 0;
-            result.end = contentsArr[line-1].length;
-            result.unknown = true;
-        }*/
-
-        //if(this._threeLine) {
-
-            
-            var eLine = errorline + lineCount + 4 - 1 - 1;
-            result.from = {}
-            result.from.line = eLine -1;
-            result.from.ch = 0;
-            result.to = {};
-            result.to.line = eLine + 1;
-            result.to.ch = targetText.length - 1;
-
-            /*if(result.from.line > contentsArr.length + 4)
-                result.from.line = contentsArr.length + 4;
-
-            if(result.to.line > contentsArr.length + 4)
-                result.to.line = contentsArr.length + 4;*/
-        //}
+        var eLine = errorline + lineCount + 4 - 1 - 1;
+        result.from = {}
+        result.from.line = eLine -1;
+        result.from.ch = 0;
+        result.to = {};
+        result.to.line = eLine + 1;
+        result.to.ch = targetText.length - 1;
 
         console.log("findSyntaxErrorInfo result", result);
         return result;

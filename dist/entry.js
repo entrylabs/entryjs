@@ -10212,8 +10212,8 @@ Entry.Painter.prototype.generateView = function(b) {
     c.addClass("entryPlaygroundPainterAttrLineStyleLine1");
     x.appendChild(c);
     c.value = "line";
-    var v = Entry.createElement("div");
-    v.addClass("painterAttrLineStyleBackgroundLine");
+    var u = Entry.createElement("div");
+    u.addClass("painterAttrLineStyleBackgroundLine");
     t.bindOnClick(function(a) {
       x.removeClass("entryRemove");
     });
@@ -10225,11 +10225,11 @@ Entry.Painter.prototype.generateView = function(b) {
     };
     c.bindOnClick(function(a) {
       this.attrLineArea.removeClass(t);
-      this.attrLineArea.appendChild(v);
+      this.attrLineArea.appendChild(u);
       this.attrLineArea.onchange(a);
       x.blur();
     });
-    v.bindOnClick(function(a) {
+    u.bindOnClick(function(a) {
       x.removeClass("entryRemove");
     });
     this.attrLineArea.onchange = function(b) {
@@ -13252,7 +13252,7 @@ Entry.PyToBlockParser = function(b) {
     console.log("CallExpression calleeData", k);
     arguments = a.arguments;
     if ("Identifier" == h.type) {
-      if (console.log("CallExpression Identifier calleeData", k), e.callee = k, v = Entry.TextCodingUtil.eventBlockSyntaxFilter(k.name), g = this.getBlockType(v), console.log("bb type", g), !g && k.name && 0 != arguments.length && "Literal" == arguments[0].type) {
+      if (console.log("CallExpression Identifier calleeData", k), e.callee = k, u = Entry.TextCodingUtil.eventBlockSyntaxFilter(k.name), g = this.getBlockType(u), console.log("bb type", g), !g && k.name && 0 != arguments.length && "Literal" == arguments[0].type) {
         throw console.log("callex error calleeData", k), f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. 'range()'\ub97c \uc0ac\uc6a9\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
       }
     } else {
@@ -13344,17 +13344,17 @@ Entry.PyToBlockParser = function(b) {
       console.log("CallExpression argument params", f);
       if ("%2.append" == q || "%2.pop" == q) {
         if ("self" == n[0]) {
-          var l = Entry.playground.object, v = n[1];
-          if (!Entry.TextCodingUtil.isLocalListExisted(v, l)) {
+          var l = Entry.playground.object, u = n[1];
+          if (!Entry.TextCodingUtil.isLocalListExisted(u, l)) {
             throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
           }
         } else {
-          if (v = n[0], !Entry.TextCodingUtil.isGlobalListExisted(v)) {
+          if (u = n[0], !Entry.TextCodingUtil.isGlobalListExisted(u)) {
             throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
           }
         }
         console.log("CallExpression append calleeData", k);
-        x = this.ParamDropdownDynamic(v, h[1], r[1]);
+        x = this.ParamDropdownDynamic(u, h[1], r[1]);
         console.log("CallExpression listName", x);
         f.push(x);
         console.log("CallExpression params[0]", f[0]);
@@ -13362,18 +13362,18 @@ Entry.PyToBlockParser = function(b) {
       } else {
         if ("%2.insert" == q) {
           if ("self" == n[0]) {
-            if (l = Entry.playground.object, v = n[1], !Entry.TextCodingUtil.isLocalListExisted(v, l)) {
+            if (l = Entry.playground.object, u = n[1], !Entry.TextCodingUtil.isLocalListExisted(u, l)) {
               throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
             }
           } else {
-            if (v = n[0], !Entry.TextCodingUtil.isGlobalListExisted(v)) {
+            if (u = n[0], !Entry.TextCodingUtil.isGlobalListExisted(u)) {
               throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
             }
           }
           console.log("CallExpression insert params", f);
           f.pop();
           console.log("CallExpression append calleeData", k);
-          x = this.ParamDropdownDynamic(v, h[1], r[1]);
+          x = this.ParamDropdownDynamic(u, h[1], r[1]);
           console.log("CallExpression listName", x);
           f.splice(0, 0, x);
           console.log("CallExpression check arguments", arguments);
@@ -13505,6 +13505,8 @@ Entry.PyToBlockParser = function(b) {
         }
         Entry.TextCodingUtil.isGlobalListExisted(h) ? Entry.TextCodingUtil.updateGlobalList(h, f) : Entry.TextCodingUtil.createGlobalList(h, f);
       } else {
+        this._blockCount++;
+        console.log("VariableDeclarator blockCount++");
         h = e.name;
         g = "Literal" == f.type ? f.value : "Identifier" == f.type ? f.name : NaN;
         console.log("variable name", h, "value", g);
@@ -14397,8 +14399,8 @@ Entry.PyToBlockParser = function(b) {
         x.push(g), console.log("param", g);
       }
       console.log("funcParams", x);
-      for (var v in x) {
-        g = x[v], h[g] = v, e[c[v]] = g;
+      for (var u in x) {
+        g = x[u], h[g] = u, e[c[u]] = g;
       }
       console.log("paramMap", h);
       console.log("funcNameQueue", Entry.TextCodingUtil._funcNameQ);
@@ -14435,7 +14437,7 @@ Entry.PyToBlockParser = function(b) {
         console.log("paramInfo", e);
         if (0 < a.length) {
           for (k in a) {
-            v = a[k], Entry.TextCodingUtil.makeParamBlock(v, e), console.log("textFunction statement", v), v = new Entry.Block(v, r), r._data.push(v);
+            u = a[k], Entry.TextCodingUtil.makeParamBlock(u, e), console.log("textFunction statement", u), u = new Entry.Block(u, r), r._data.push(u);
           }
         }
         Entry.variableContainer.saveFunction(b);
@@ -14475,14 +14477,14 @@ Entry.PyToBlockParser = function(b) {
           q[0] = f, m.description = f + " ";
         }
         if (0 < c.length) {
-          for (h = new Entry.Block({type:"function_field_string"}, r), h.data.params = [], l = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", l), g = new Entry.Block({type:l}, r), h.data.params.push(g), g = Entry.TextCodingUtil.getLastParam(n), g.data.params[1] = h, m.paramMap[l] = Number(0), console.log("FunctionDeclaration paramBlock", m), e = {}, console.log("textFuncParams ppp", c[v]), e[c[0]] = l, v = 1;v < c.length;v++) {
-            h = new Entry.Block({type:"function_field_string"}, r), h.data.params = [], l = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", l), g = new Entry.Block({type:l}, r), h.data.params.push(g), n = Entry.TextCodingUtil.searchFuncDefParam(q[1]), console.log("FunctionDeclaration paramBlock", n), 0 == n.data.params.length ? n.data.params[0] = g : 1 == n.data.params.length && (n.data.params[1] = h), m.paramMap[l] = Number(v), console.log("textFuncParams ppp", 
-            c[v]), e[c[v]] = l, console.log("FunctionDeclaration paramBlock", m);
+          for (h = new Entry.Block({type:"function_field_string"}, r), h.data.params = [], l = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", l), g = new Entry.Block({type:l}, r), h.data.params.push(g), g = Entry.TextCodingUtil.getLastParam(n), g.data.params[1] = h, m.paramMap[l] = Number(0), console.log("FunctionDeclaration paramBlock", m), e = {}, console.log("textFuncParams ppp", c[u]), e[c[0]] = l, u = 1;u < c.length;u++) {
+            h = new Entry.Block({type:"function_field_string"}, r), h.data.params = [], l = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", l), g = new Entry.Block({type:l}, r), h.data.params.push(g), n = Entry.TextCodingUtil.searchFuncDefParam(q[1]), console.log("FunctionDeclaration paramBlock", n), 0 == n.data.params.length ? n.data.params[0] = g : 1 == n.data.params.length && (n.data.params[1] = h), m.paramMap[l] = Number(u), console.log("textFuncParams ppp", 
+            c[u]), e[c[u]] = l, console.log("FunctionDeclaration paramBlock", m);
           }
         }
         if (0 < a.length) {
           for (k in a) {
-            v = a[k], console.log("paramInfo yyyyy", e), Entry.TextCodingUtil.makeParamBlock(v, e), v = new Entry.Block(v, r), r._data.push(v);
+            u = a[k], console.log("paramInfo yyyyy", e), Entry.TextCodingUtil.makeParamBlock(u, e), u = new Entry.Block(u, r), r._data.push(u);
           }
         }
         Entry.Func.generateWsBlock(m);
@@ -14794,15 +14796,15 @@ Entry.Parser = function(b, a, d, c) {
             f.push(k);
           }
           c = this._parser.Program(f);
-        } catch (u) {
+        } catch (v) {
           if (this.codeMirror) {
-            u instanceof SyntaxError ? (c = {from:{line:u.loc.line - 1, ch:0}, to:{line:u.loc.line - 1, ch:u.loc.column}}, u.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", u.type = 1) : (c = this.getLineNumber(u.node.start, u.node.end), c.message = u.message, c.severity = "converting error", u.type = 2);
+            v instanceof SyntaxError ? (c = {from:{line:v.loc.line - 1, ch:0}, to:{line:v.loc.line - 1, ch:v.loc.column}}, v.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", v.type = 1) : (c = this.getLineNumber(v.node.start, v.node.end), c.message = v.message, c.severity = "converting error", v.type = 2);
             this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0});
-            var l = u.title ? u.title : "\ubb38\ubc95 \uc624\ub958";
-            if (2 == u.type && u.message) {
-              var m = u.message
+            var l = v.title ? v.title : "\ubb38\ubc95 \uc624\ub958";
+            if (2 == v.type && v.message) {
+              var m = v.message
             } else {
-              2 != u.type || u.message ? 1 == u.type && (m = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ubb38\ubc95\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694.") : m = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694.";
+              2 != v.type || v.message ? 1 == v.type && (m = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ubb38\ubc95\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694.") : m = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694.";
             }
             Entry.toast.alert(l, m);
             l = {};
@@ -14810,7 +14812,7 @@ Entry.Parser = function(b, a, d, c) {
             l.textType = Entry.Vim.TEXT_TYPE_JS;
             l.runType = Entry.Vim.MAZE_MODE;
             Ntry.dispatchEvent("textError", l);
-            throw u;
+            throw v;
           }
           c = [];
         }
@@ -14836,8 +14838,8 @@ Entry.Parser = function(b, a, d, c) {
           for (g in r) {
             if (h = r[g], console.log("ttt thread", h), this._syntaxParsingCount = parseInt(g) + 1, 0 != h.length && "" != h && (q++, this._pyThreadCount = parseInt(q), console.log("success??", k), h = Entry.TextCodingUtil.entryEventFuncFilter(h), console.log("real thread", h), k = n.generate(h)), k) {
               if (0 != h.length && "" != h) {
-                var x = h.split("\n"), v = parseInt(this._pyThreadCount).toString();
-                this._pyBlockCount[v] = x.length - 1;
+                var x = h.split("\n"), u = parseInt(this._pyThreadCount).toString();
+                this._pyBlockCount[u] = x.length - 1;
                 console.log("this._pyBlockCount", this._pyBlockCount);
               }
               "Program" == k.type && 0 != k.body.length && f.push(k);
@@ -14847,12 +14849,12 @@ Entry.Parser = function(b, a, d, c) {
           }
           c = this._parser.Program(f);
           this._parser._variableMap.clear();
-        } catch (u) {
+        } catch (v) {
           if (this.codeMirror) {
-            throw this._threeLine = !1, console.log("came here error", u), u instanceof SyntaxError ? (console.log("py error type 1", u.loc), c = {}, c = this.findSyntaxErrorLine(u), u.message = "\ud574\ub2f9 \uad6c\ubb38 \ubc94\uc704\uc548\uc5d0\uc11c \ubb38\ubc95\uc624\ub958\uac00 \uc874\uc7ac\ud569\ub2c8\ub2e4.", c = {from:{line:c.from.line, ch:c.from.ch}, to:{line:c.to.line, ch:c.to.ch}}, u.message || (u.message = "\ud30c\uc774\uc36c \ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4."), u.type = 1) : 
-            (console.log("py error type 2", u), c = this.findErrorLineForConverting(u.line), u.line = c, c = this.findConvertingTargetChInfo(u.line), c = {from:{line:u.line - 1, ch:c.start}, to:{line:u.line - 1, ch:c.end}}, u.message || (u.message = "\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4."), u.type = 2), console.log("annotation", c), e = {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1}, 
-            console.log("this._threeLine", this._threeLine), this._marker = this.codeMirror.markText(c.from, c.to, e), console.log("came here error2", u), console.log("came here error2 title", u.title), console.log("came here error2 message", u.message), u.title ? l = u.title : 1 == u.type ? l = "\ubb38\ubc95 \uc624\ub958(Syntax Error)" : 2 == u.type && (l = "\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"), u.message ? m = u.message + " \n(line: " + (c.from.line + 1) + "~" + (c.to.line + 1) + 
-            ")" : u.message ? m = u.message : 1 == u.type ? m = "\ud30c\uc774\uc36c\uc5d0\uc11c \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ubb38\ubc95\uc785\ub2c8\ub2e4." : 2 == u.type && (m = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub418\ub294 \ucf54\ub4dc\uc778\uc9c0 \ud655\uc778\ud574\uc8fc\uc138\uc694"), Entry.toast.alert(l, m), u;
+            throw this._threeLine = !1, console.log("came here error", v), v instanceof SyntaxError ? (console.log("py error type 1", v.loc), c = {}, c = this.findSyntaxErrorLine(v), v.message = "\ud574\ub2f9\uad6c\ubb38 \ubc94\uc704 \ub610\ub294 \uc8fc\uc704 \ub77c\uc778\uc5d0\uc11c '\ubb38\ubc95\uc624\ub958 \ubc0f \ub4e4\uc5ec\uc4f0\uae30(Indentation)\uc624\ub958'\ub97c \ud655\uc778\ud558\uc138\uc694.", c = {from:{line:c.from.line, ch:c.from.ch}, to:{line:c.to.line, ch:c.to.ch}}, v.message || (v.message = 
+            "\ud30c\uc774\uc36c \ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4."), v.type = 1) : (console.log("py error type 2", v), c = this.findConvertingErrorLine(v.line), e = this.findConvertingErrorLineCh(c.from.line), console.log("type2 errorLine", c), c = {from:{line:c.from.line - 1, ch:e.start}, to:{line:c.to.line - 1, ch:e.end}}, v.message || (v.message = "\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4."), v.type = 2), console.log("annotation", c), e = {className:"CodeMirror-lint-mark-error", 
+            __annotation:c, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1}, console.log("this._threeLine", this._threeLine), this._marker = this.codeMirror.markText(c.from, c.to, e), console.log("came here error2", v), console.log("came here error2 title", v.title), console.log("came here error2 message", v.message), v.title ? l = v.title : 1 == v.type ? l = "\ubb38\ubc95 \uc624\ub958(Syntax Error)" : 2 == v.type && (l = "\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"), 
+            v.message ? m = v.message + " \n(line: " + (c.from.line + 1) + "~" + (c.to.line + 1) + ")" : 1 == v.type ? m = "\ud30c\uc774\uc36c\uc5d0\uc11c \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ubb38\ubc95\uc785\ub2c8\ub2e4." : 2 == v.type && (m = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub418\ub294 \ucf54\ub4dc\uc778\uc9c0 \ud655\uc778\ud574\uc8fc\uc138\uc694"), Entry.toast.alert(l, m), v;
           }
           c = [];
         }
@@ -14922,45 +14924,37 @@ Entry.Parser = function(b, a, d, c) {
     });
     this.availableCode = this.availableCode.concat(c);
   };
-  b.findErrorLineForConverting = function(a) {
+  b.findConvertingErrorLine = function(a) {
     console.log("blockCount", a);
-    var b = 0, c = this.codeMirror.getValue().split("\n");
-    console.log("contentsArr44", c);
-    if (a > c.length - 4) {
-      return b = c.length;
+    var b = {}, c = 0, e = this.codeMirror.getValue().split("\n");
+    console.log("contentsArr44", e);
+    if (a > e.length - 4) {
+      return c = e.length;
     }
-    for (var e = 0, f = 4;f < c.length;f++) {
-      var g = c[f];
-      console.log("ljh line", g);
-      0 == g.trim().length || "else:" == g.trim() ? b++ : e++;
-      console.log("iiiiii", f);
-      console.log("index", e, "blockCount", a);
-      if (e == a) {
-        b += e;
+    for (var f = 0, g = 4;g < e.length;g++) {
+      var h = e[g];
+      console.log("ljh line", h);
+      0 == h.trim().length || "else:" == h.trim() ? c++ : f++;
+      if (f == a) {
+        c += f;
         break;
       }
     }
-    b += 4;
-    console.log("errorLine kk", b);
+    c += 4;
+    console.log("errorLine kk", c);
+    b.from = {};
+    b.to = {};
+    b.from.line = c;
+    b.to.line = c;
     return b;
   };
-  b.findConvertingTargetChInfo = function(a) {
-    var b = {}, c = this.codeMirror.getValue().split("\n");
-    console.log("contentsArr1", c);
-    console.log("errorline", a);
-    var e = 0;
-    console.log("this._pythre", this._pyThreadCount);
-    for (var f = 1;f < this._pyThreadCount;f++) {
-      console.log("aaa", this._pyBlockCount);
-      var g = f.toString();
-      console.log("idx", g);
-      g = this._pyBlockCount[g];
-      console.log("count c", g);
-      e += g;
+  b.findConvertingErrorLineCh = function(a) {
+    for (var b = {}, c = this.codeMirror.getValue().split("\n"), e = 0, f = 1;f < this._pyThreadCount;f++) {
+      e += this._pyBlockCount[f.toString()];
     }
     b.line = e + (this._pyThreadCount - 1);
     for (e = 0;e < c.length;e++) {
-      if (f = c[e], console.log("targetText", f), console.log("this._pyThreadCount", this._pyThreadCount), 0 != f.trim().length && e + 1 == a) {
+      if (f = c[e], 0 != f.trim().length && e + 1 == a) {
         b.start = 0;
         b.end = f.length;
         break;
@@ -14970,14 +14964,13 @@ Entry.Parser = function(b, a, d, c) {
     return b;
   };
   b.findSyntaxErrorLine = function(a) {
-    this._threeLine = !1;
-    var b = {}, c = a.loc.line;
-    console.log("error.loc222", a.loc);
-    a = this.codeMirror.getValue().split("\n");
-    console.log("findSyntaxErrorInfo contentsArr1", a);
+    var b = {};
+    a = a.loc.line;
+    var c = this.codeMirror.getValue().split("\n");
+    console.log("findSyntaxErrorInfo contentsArr1", c);
     console.log("this._pyThreadCount", this._pyThreadCount);
     console.log("this._pyBlockCount", this._pyBlockCount);
-    console.log("findSyntaxErrorInfo contentsArr2", a);
+    console.log("findSyntaxErrorInfo contentsArr2", c);
     var e = 0;
     console.log("this._pythre", this._pyThreadCount);
     for (var f = 1;f < this._pyThreadCount;f++) {
@@ -14990,14 +14983,14 @@ Entry.Parser = function(b, a, d, c) {
     }
     console.log("currentLineCount", e);
     console.log("this._pyBlockcount", this._pyBlockCount);
-    for (var g = f = 0, h = !1, e = "", k = 4;k < a.length && (e = a[k], console.log("targetText", e.charAt(0), e.charAt(0).trim().length), console.log("this._pyThreadCount", this._pyThreadCount), 0 == e.charAt(0).trim().length ? h = !1 : (h || f++, h = !0), g++, console.log("baby this._syntaxParsingCount", this._syntaxParsingCount), console.log("baby currentThreadCount", f), console.log("baby lineCount", g), this._syntaxParsingCount != f);k++) {
+    for (var g = f = 0, h = !1, e = "", k = 4;k < c.length && (e = c[k], console.log("targetText", e.charAt(0), e.charAt(0).trim().length), console.log("this._pyThreadCount", this._pyThreadCount), 0 == e.charAt(0).trim().length ? h = !1 : (h || f++, h = !0), g++, console.log("baby this._syntaxParsingCount", this._syntaxParsingCount), console.log("baby currentThreadCount", f), console.log("baby lineCount", g), this._syntaxParsingCount != f);k++) {
     }
-    c = c + g + 4 - 1 - 1;
+    a = a + g + 4 - 1 - 1;
     b.from = {};
-    b.from.line = c - 1;
+    b.from.line = a - 1;
     b.from.ch = 0;
     b.to = {};
-    b.to.line = c + 1;
+    b.to.line = a + 1;
     b.to.ch = e.length - 1;
     console.log("findSyntaxErrorInfo result", b);
     return b;
@@ -21677,7 +21670,7 @@ Entry.BlockView.pngMap = {};
     }() ? .9 : .95;
     -1 < this.type.indexOf("func_") && (n *= .99);
     k.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -l.offsetX).replace("%Y", -l.offsetY).replace("%SCALE", m));
-    for (var q = this.getBoard().svgDom.find("defs"), r = k.getElementsByTagName("image"), l = k.getElementsByTagName("text"), t = ["\u2265", "\u2264"], x = "\u2265\u2264-><=+-x/".split(""), v = 0;v < l.length;v++) {
+    for (var q = this.getBoard().svgDom.find("defs"), r = k.getElementsByTagName("image"), l = k.getElementsByTagName("text"), t = ["\u2265", "\u2264"], x = "\u2265\u2264-><=+-x/".split(""), u = 0;u < l.length;u++) {
       (function(a) {
         a.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
         var b = parseInt(a.getAttribute("font-size")), c = $(a).text();
@@ -21688,22 +21681,22 @@ Entry.BlockView.pngMap = {};
         }
         -1 < x.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * n + "px");
         a.setAttribute("alignment-baseline", "baseline");
-      })(l[v]);
+      })(l[u]);
     }
-    var u = 0;
+    var v = 0;
     if (0 === r.length) {
       c();
     } else {
-      for (v = 0;v < r.length;v++) {
+      for (u = 0;u < r.length;u++) {
         (function(a) {
           var b = a.getAttribute("href");
           e(b, a.getAttribute("width"), a.getAttribute("height")).then(function(b) {
             a.setAttribute("href", b);
-            if (++u == r.length) {
+            if (++v == r.length) {
               return c();
             }
           });
-        })(r[v]);
+        })(r[u]);
       }
     }
     return f.promise();
@@ -25015,7 +25008,6 @@ Entry.Playground = function() {
   Entry.addEventListener("textEdited", this.injectText);
   Entry.addEventListener("hwChanged", this.updateHW);
   Entry.addEventListener("changeMode", function(a) {
-    console.log("Entry.Workspace.");
     b.setMode(a);
   });
 };
@@ -25380,8 +25372,8 @@ Entry.Playground.prototype.generateTextView = function(b) {
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!1);
-    v.innerHTML = Lang.Menus.linebreak_off_desc_1;
-    u.innerHTML = Lang.Menus.linebreak_off_desc_2;
+    u.innerHTML = Lang.Menus.linebreak_off_desc_1;
+    v.innerHTML = Lang.Menus.linebreak_off_desc_2;
     y.innerHTML = Lang.Menus.linebreak_off_desc_3;
   });
   e.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
@@ -25390,8 +25382,8 @@ Entry.Playground.prototype.generateTextView = function(b) {
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!0);
-    v.innerHTML = Lang.Menus.linebreak_on_desc_1;
-    u.innerHTML = Lang.Menus.linebreak_on_desc_2;
+    u.innerHTML = Lang.Menus.linebreak_on_desc_1;
+    v.innerHTML = Lang.Menus.linebreak_on_desc_2;
     y.innerHTML = Lang.Menus.linebreak_on_desc_3;
   });
   e.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
@@ -25400,14 +25392,14 @@ Entry.Playground.prototype.generateTextView = function(b) {
   a = Entry.createElement("div");
   a.addClass("entryPlaygroundLinebreakDescription");
   b.appendChild(a);
-  var v = Entry.createElement("p");
-  v.innerHTML = Lang.Menus.linebreak_off_desc_1;
-  a.appendChild(v);
+  var u = Entry.createElement("p");
+  u.innerHTML = Lang.Menus.linebreak_off_desc_1;
+  a.appendChild(u);
   b = Entry.createElement("ul");
   a.appendChild(b);
-  var u = Entry.createElement("li");
-  u.innerHTML = Lang.Menus.linebreak_off_desc_2;
-  b.appendChild(u);
+  var v = Entry.createElement("li");
+  v.innerHTML = Lang.Menus.linebreak_off_desc_2;
+  b.appendChild(v);
   var y = Entry.createElement("li");
   y.innerHTML = Lang.Menus.linebreak_off_desc_3;
   b.appendChild(y);

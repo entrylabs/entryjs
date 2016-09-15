@@ -651,6 +651,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.VariableDeclarator = function(component) {
         console.log("VariableDeclarator component", component);
+
         var result = {};
         var structure = {};
         var params = [];
@@ -719,11 +720,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 Entry.TextCodingUtil.createGlobalList(name, array);
             }
         } else {
+            this._blockCount++;
+            console.log("VariableDeclarator blockCount++");
+
             var name = id.name;
             if(init.type == "Literal") {
                 var value = init.value;
             }
-            else if(init.type == "Identifier") {
+            else if(init.type == "Identifier") { 
                 var value = init.name;
             }
             else {
