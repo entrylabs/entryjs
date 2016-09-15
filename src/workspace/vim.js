@@ -2,6 +2,8 @@
 
 goog.provide("Entry.Vim");
 
+goog.require("Entry.TextCodingUtil");
+
 Entry.Vim = function(dom, textType) {
     //Definition For Textmode
     Entry.Vim.MAZE_MODE = 1;
@@ -89,7 +91,8 @@ Entry.Vim = function(dom, textType) {
                 _self.codeMirror.replaceSelection(text);
                 var cursor = _self.doc.getCursor();
                 lastLine = cursor.line;
-                _self.codeMirror.indentLine(lastLine);
+                /*if(!Entry.TextCodingUtil.isEntryEventFuncByFullText(text))
+                    _self.codeMirror.indentLine(lastLine);*/
                 if(i === 0 || max !== i) {
                     _self.codeMirror.replaceSelection('\n');
                 }

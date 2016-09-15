@@ -5260,6 +5260,7 @@ Entry.block = {
     },
     "distance_something": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -5311,6 +5312,7 @@ Entry.block = {
     },
     "coordinate_mouse": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -5357,6 +5359,7 @@ Entry.block = {
     },
     "coordinate_object": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -5439,6 +5442,7 @@ Entry.block = {
     },
     "calc_basic": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -5802,6 +5806,7 @@ Entry.block = {
     },
     "calc_operation": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -5915,6 +5920,7 @@ Entry.block = {
     },
     "calc_rand": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -5981,6 +5987,7 @@ Entry.block = {
     },
     "get_date": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -6039,6 +6046,7 @@ Entry.block = {
     },
     "get_sound_duration": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -6118,7 +6126,7 @@ Entry.block = {
     },
     "set_visible_project_timer": {
         "color": "#FFD974",
-        vimModeFontColor: "#fff",
+        "vimModeFontColor": "black",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -6208,6 +6216,7 @@ Entry.block = {
     },
     "get_project_timer_value": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -6247,6 +6256,7 @@ Entry.block = {
     },
     "char_at": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -6309,6 +6319,7 @@ Entry.block = {
     },
     "length_of_string": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -6351,6 +6362,7 @@ Entry.block = {
     },
     "substring": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -6430,6 +6442,7 @@ Entry.block = {
     },
     "replace_string": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -6506,6 +6519,7 @@ Entry.block = {
     },
     "change_string_case": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -6566,6 +6580,7 @@ Entry.block = {
     },
     "index_of_string": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -6626,6 +6641,7 @@ Entry.block = {
     },
     "combine_something": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -6686,6 +6702,7 @@ Entry.block = {
     },
     "get_sound_volume": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -6716,6 +6733,7 @@ Entry.block = {
     },
     "quotient_and_mod": {
         "color": "#FFD974",
+        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -6793,7 +6811,7 @@ Entry.block = {
     },
     "choose_project_timer_action": {
         "color": "#FFD974",
-        vimModeFontColor: "#fff",
+        "vimModeFontColor": "black",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -9324,6 +9342,7 @@ Entry.block = {
     },
     "is_clicked": {
         "color": "#AEB8FF",
+        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -9347,6 +9366,7 @@ Entry.block = {
     },
     "is_press_some_key": {
         "color": "#AEB8FF",
+        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -9378,6 +9398,7 @@ Entry.block = {
     },
     "reach_something": {
         "color": "#AEB8FF",
+        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -9703,6 +9724,7 @@ Entry.block = {
     },
     "boolean_and": {
         "color": "#AEB8FF",
+        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -9748,6 +9770,7 @@ Entry.block = {
     },
     "boolean_or": {
         "color": "#AEB8FF",
+        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -9789,6 +9812,7 @@ Entry.block = {
     },
     "boolean_not": {
         "color": "#AEB8FF",
+        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -9902,6 +9926,7 @@ Entry.block = {
     },
     "boolean_basic_operator": {
         "color": "#AEB8FF",
+        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -16677,7 +16702,7 @@ Entry.block = {
     },
     "get_canvas_input_value": {
         "color": "#E457DC",
-        vimModeFontColor: "white",
+        "vimModeFontColor": "white",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [

@@ -762,6 +762,28 @@ Entry.TextCodingUtil = {};
 
     };
 
+    tu.isEntryEventFuncByFullText = function(text) {
+        var index = text.indexOf("(");
+        var name = text.substring(0, index);
+        console.log("isEntryEventFuncByFullText name", name);
+
+        if( name == "def entry_event_start" ||
+            name == "def entry_event_key" ||
+            name == "def entry_event_mouse_down" ||
+            name == "def entry_event_mouse_up" ||
+            name == "def entry_event_object_down" ||
+            name == "def entry_event_object_up" ||
+            name == "def entry_event_signal" ||
+            name == "def entry_event_scene_start" ||
+            name == "def entry_event_clone_create") {
+
+            return true;
+        }
+
+        return false;
+
+    };
+
     tu.isEntryEventFuncName = function(name) {
         if( name == "entry_event_start" ||
             name == "entry_event_key" ||

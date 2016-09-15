@@ -11661,29 +11661,36 @@ Entry.PyHint = function() {
     }
     g = [];
     k = f.string;
-    "def" == f.string ? g = g.concat(b(h, k, {extract:function(a) {
+    f.string.includes("def") ? g = g.concat(b(h, k, {extract:function(a) {
       return a.displayText;
-    }})) : /^[\w$_]*$/.test(f.string) || (console.log("test", f.string), f = {start:e.ch, end:e.ch, string:"", state:f.state, className:":" == f.string ? "python-type" : null});
-    if ("variable" == f.type || "set" == f.string || "print" == f.string || "is" == f.string) {
-      h = f.string, console.log("base1", h), null != h && (g = g.concat(b(d, k)), g = g.concat(b(c._global, k, {extract:function(a) {
+    }})) : /^[\w$_]*$/.test(f.string) || (f = {start:e.ch, end:e.ch, string:"", state:f.state, className:":" == f.string ? "python-type" : null});
+    if ("def" == f.type) {
+      g = g.concat(b(h, k, {extract:function(a) {
         return a.displayText;
-      }})));
+      }}));
     } else {
-      if ("property" == f.type || "variable-2" == f.type || "." == f.state.lastToken) {
-        h = f.string;
-        a = a.getLineTokens(e.line);
-        for (l = a.shift();"variable" !== l.type && "variable-2" !== l.type;) {
-          l = a.shift();
-        }
-        a = l.string;
-        null != h && c[a] && (g = g.concat(b(c[a], k, {extract:function(a) {
+      if ("variable" == f.type || "set" == f.string || "print" == f.string || "is" == f.string) {
+        h = f.string, null != h && (g = g.concat(b(d, k)), g = g.concat(b(c._global, k, {extract:function(a) {
           return a.displayText;
         }})));
-        "." == f.state.lastToken && (g = g.concat(c[a]));
+      } else {
+        if ("property" == f.type || "variable-2" == f.type || "." == f.state.lastToken) {
+          h = f.string;
+          a = a.getLineTokens(e.line);
+          for (l = a.shift();"variable" !== l.type && "variable-2" !== l.type;) {
+            l = a.shift();
+          }
+          a = l.string;
+          null != h && c[a] && (g = g.concat(b(c[a], k, {extract:function(a) {
+            return a.displayText;
+          }})));
+          "." == f.state.lastToken && (g = g.concat(c[a]));
+        }
       }
     }
     return {list:g.slice(0, 25), from:CodeMirror.Pos(e.line, f.start), to:CodeMirror.Pos(e.line, f.end)};
   });
+  this.syntax = g;
   var a = "Codeino Arduino Xbot Dplay Sensorboard Nemoino Hamster Albert Bitbrick Neobot Robotis".split(" "), d = "Entry;self;Hw;while True;True;False;break;for i in range();if;if else;len;random.randint".split(";"), c = {_global:[]}, e = Entry.block, f;
   for (f in e) {
     var g = e[f].syntax;
@@ -12124,6 +12131,12 @@ Entry.TextCodingUtil = {};
     }
   };
   b.isEntryEventFunc = function(a) {
+    return "def entry_event_start" == a || "def entry_event_key" == a || "def entry_event_mouse_down" == a || "def entry_event_mouse_up" == a || "def entry_event_object_down" == a || "def entry_event_object_up" == a || "def entry_event_signal" == a || "def entry_event_scene_start" == a || "def entry_event_clone_create" == a ? !0 : !1;
+  };
+  b.isEntryEventFuncByFullText = function(a) {
+    var b = a.indexOf("(");
+    a = a.substring(0, b);
+    console.log("isEntryEventFuncByFullText name", a);
     return "def entry_event_start" == a || "def entry_event_key" == a || "def entry_event_mouse_down" == a || "def entry_event_mouse_up" == a || "def entry_event_object_down" == a || "def entry_event_object_up" == a || "def entry_event_signal" == a || "def entry_event_scene_start" == a || "def entry_event_clone_create" == a ? !0 : !1;
   };
   b.isEntryEventFuncName = function(a) {
@@ -21225,6 +21238,7 @@ Entry.BlockView.pngMap = {};
         b = this.getBoard().workspace.getCodeToText(this.block);
         a = !1;
         /(if)+(.|\n)+(else)+/.test(b) && (g = b.split("\n"), b = g.shift() + " " + g.shift(), a = !0, g = g.join(" "));
+        console.log("this.block._schema", this.block._schema);
         b = {text:b, color:"white"};
         this.block._schema.vimModeFontColor && (b.color = this.block._schema.vimModeFontColor);
         this._contents.push(new Entry.FieldText(b, this));
@@ -24768,11 +24782,10 @@ Entry.Vim = function(b, a) {
       e.codeMirror.display.dragFunctions.leave(a);
       var d = Entry.Utils.createMouseEvent("mousedown", a);
       e.codeMirror.display.scroller.dispatchEvent(d);
-      var c = c.split("\n"), k = c.length - 1, l = 0;
+      var c = c.split("\n"), k = c.length - 1;
       c.forEach(function(a, b) {
         e.codeMirror.replaceSelection(a);
-        l = e.doc.getCursor().line;
-        e.codeMirror.indentLine(l);
+        e.doc.getCursor();
         0 !== b && k === b || e.codeMirror.replaceSelection("\n");
       });
       a = Entry.Utils.createMouseEvent("mouseup", a);

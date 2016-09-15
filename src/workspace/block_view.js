@@ -217,6 +217,8 @@ Entry.BlockView.pngMap = {};
                     secondLineText = contents.join(" ");
                 }
 
+                console.log("this.block._schema", this.block._schema);
+
                 var fieldText = {text:text, color: 'white'};
                 if (this.block._schema.vimModeFontColor)
                     fieldText.color = this.block._schema.vimModeFontColor;

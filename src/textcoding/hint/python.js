@@ -10,6 +10,7 @@ goog.provide("Entry.PyHint");
 //
 Entry.PyHint = function() {
     CodeMirror.registerHelper("hint", "python", pythonHint);
+    this.syntax = syntax;
 
     function pythonHint(editor) {
         var cur = editor.getCursor(), token = editor.getTokenAt(cur);
@@ -43,23 +44,26 @@ Entry.PyHint = function() {
         }
 
         var found = [], current = token.string;
-
-        if(token.string == "def") {
+        
+        if(token.string.includes("def")) {
             found = found.concat(fuzzySearch(
                     defMaps, current,
                     {extract: function(e) {return e.displayText}}));
         }
         else if (!/^[\w$_]*$/.test(token.string)) {
-            console.log("test", token.string);
                 token = {start: cur.ch, end: cur.ch, string: "", state: token.state,
                     className: token.string == ":" ? "python-type" : null};
         }
-        
+
         var base;
 
-        if (token.type == "variable" || token.string == "set" || token.string == "print" || token.string == "is") {
+        if(token.type == "def") {
+             found = found.concat(fuzzySearch(
+                    defMaps, current,
+                    {extract: function(e) {return e.displayText}}));
+        }
+        else if (token.type == "variable" || token.string == "set" || token.string == "print" || token.string == "is") {
             base = token.string;
-            console.log("base1", base);
             if (base != null) {
                 found = found.concat(fuzzySearch(globalKeywordsL, current));
                 found = found.concat(fuzzySearch(
@@ -108,11 +112,12 @@ Entry.PyHint = function() {
         var syntax = block.syntax;
         if (!syntax || !syntax.py)
             continue;
+
         syntax = syntax.py.join("");
         syntax = syntax.split('.');
         //console.log("syntax", syntax, "include", syntax[0].indexOf("def"));
         
-        if(syntax[0].indexOf("def ") > -1) {
+        if(syntax[0].indexOf("def ") > -1) { 
             syntax = syntax[0].split(' ');
         }
         else if(syntax.length === 1)
