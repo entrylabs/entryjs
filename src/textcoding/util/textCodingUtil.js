@@ -638,6 +638,22 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
+    tu.isEventBlockByType = function(blockType) {
+        if( blockType == "when_run_button_click" ||
+            blockType == "when_some_key_pressed" ||
+            blockType == "mouse_clicked" ||
+            blockType == "mouse_click_cancled" ||
+            blockType == "when_object_click" ||
+            blockType == "when_object_click_canceled" ||
+            blockType == "when_message_cast" ||
+            blockType == "when_scene_start" ||
+            blockType == "when_clone_start") {
+            return true;
+        }
+
+        return false;
+    };
+
     tu.makeDefinition = function(block) {
         var blockType = block.data.type;
         var syntax = Entry.block[blockType].syntax.py[0];

@@ -12094,6 +12094,9 @@ Entry.TextCodingUtil = {};
     a = a.data.type;
     return "when_run_button_click" == a || "when_some_key_pressed" == a || "mouse_clicked" == a || "mouse_click_cancled" == a || "when_object_click" == a || "when_object_click_canceled" == a || "when_message_cast" == a || "when_scene_start" == a || "when_clone_start" == a ? !0 : !1;
   };
+  b.isEventBlockByType = function(a) {
+    return "when_run_button_click" == a || "when_some_key_pressed" == a || "mouse_clicked" == a || "mouse_click_cancled" == a || "when_object_click" == a || "when_object_click_canceled" == a || "when_message_cast" == a || "when_scene_start" == a || "when_clone_start" == a ? !0 : !1;
+  };
   b.makeDefinition = function(a) {
     var b = /(%.)/mi;
     a = Entry.block[a.data.type].syntax.py[0].split(b);
@@ -13222,12 +13225,13 @@ Entry.PyToBlockParser = function(b) {
         this._threadCount++;
         var e = [], f = a[c].body;
         console.log("nodes", f);
+        isEntryEventExisted = !1;
         for (c in f) {
           var g = f[c];
           console.log("Program node", g);
           var h = this[g.type](g);
           console.log("result block", h);
-          h && h.type && (console.log("block.type", h.type), Entry.TextCodingUtil.isJudgementBlock(h.type) || Entry.TextCodingUtil.isCalculationBlock(h.type) || Entry.TextCodingUtil.isMaterialBlock(h.type) || Entry.TextCodingUtil.isVariableDeclarationBlock(h.type) || e.push(h));
+          h && h.type && (console.log("block.type", h.type), Entry.TextCodingUtil.isJudgementBlock(h.type) || Entry.TextCodingUtil.isCalculationBlock(h.type) || Entry.TextCodingUtil.isMaterialBlock(h.type) || (Entry.TextCodingUtil.isEventBlockByType(h.type) && (isEntryEventExisted = !0), Entry.TextCodingUtil.isVariableDeclarationBlock(h.type) && !isEntryEventExisted || e.push(h)));
         }
         console.log("thread", e);
         0 != e.length && b.push(e);
@@ -13509,10 +13513,11 @@ Entry.PyToBlockParser = function(b) {
         }
         Entry.TextCodingUtil.isGlobalListExisted(h) ? Entry.TextCodingUtil.updateGlobalList(h, f) : Entry.TextCodingUtil.createGlobalList(h, f);
       } else {
-        h = e.name, g = "Literal" == f.type ? f.value : "Identifier" == f.type ? f.name : NaN, console.log("variable name", h, "value", g), g && NaN != g && h && !h.includes("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(h) ? Entry.TextCodingUtil.updateGlobalVariable(h, g) : Entry.TextCodingUtil.createGlobalVariable(h, g)), h = this[e.type](e), console.log("VariableDeclarator idData", h), b.id = h, g = this[f.type](f), console.log("VariableDeclarator initData", g), b.init = g, console.log("VariableDeclarator init.type", 
-        f.type), "Literal" == f.type ? (c = e = this.getBlockType("%1 = %2"), h && h.name && !h.name.includes("__filbert") && (this._blockCount++, console.log("VariableDeclarator blockCount++"))) : g.params && g.params[0] && g.params[0].name && h.name == g.params[0].name && "PLUS" == g.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", g.params[0].name), c = e = this.getBlockType("%1 = %1 + %2"), this._blockCount++, console.log("VariableDeclarator blockCount++")) : 
-        (c = e = this.getBlockType("%1 = %2"), h && h.name && !h.name.includes("__filbert") && (this._blockCount++, console.log("VariableDeclarator blockCount++"))), k = Entry.block[e], console.log("vblock", k), e = k.params, k = k.def.params, h.name && (m = this.ParamDropdownDynamic(h.name, e[0], k[0])), e = [], "Literal" == f.type ? (h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g)) : (console.log("VariableDeclarator idData", h, "initData", g), g.params && g.params[0] && h.name == 
-        g.params[0].name && "PLUS" == g.operator ? (console.log("in initData.params[0]"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g.params[2])) : (console.log("in initData"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g))), b.type = c, b.params = e;
+        h = e.name, "Literal" == f.type ? g = f.value : "Identifier" == f.type ? g = f.name : "UnaryExpression" == f.type ? (g = this[f.type](f), console.log("VariableDeclarator initData UnaryExpression", g), g = g.params[0], "string" != typeof g && "number" != typeof g && (g = NaN)) : g = NaN, console.log("variable name", h, "value", g), void 0 != g && null != g && NaN != g && h && !h.includes("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(h) ? Entry.TextCodingUtil.updateGlobalVariable(h, 
+        g) : Entry.TextCodingUtil.createGlobalVariable(h, g)), h = this[e.type](e), console.log("VariableDeclarator idData", h), b.id = h, g = this[f.type](f), console.log("VariableDeclarator initData", g), b.init = g, console.log("VariableDeclarator init.type", f.type), "Literal" == f.type ? (c = e = this.getBlockType("%1 = %2"), h && h.name && !h.name.includes("__filbert") && (this._blockCount++, console.log("VariableDeclarator blockCount++"))) : g.params && g.params[0] && g.params[0].name && h.name == 
+        g.params[0].name && "PLUS" == g.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", g.params[0].name), c = e = this.getBlockType("%1 = %1 + %2"), this._blockCount++, console.log("VariableDeclarator blockCount++")) : (c = e = this.getBlockType("%1 = %2"), h && h.name && !h.name.includes("__filbert") && (this._blockCount++, console.log("VariableDeclarator blockCount++"))), k = Entry.block[e], console.log("vblock", k), e = k.params, k = k.def.params, 
+        h.name && (m = this.ParamDropdownDynamic(h.name, e[0], k[0])), e = [], "Literal" == f.type ? (h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g)) : (console.log("VariableDeclarator idData", h, "initData", g), g.params && g.params[0] && h.name == g.params[0].name && "PLUS" == g.operator ? (console.log("in initData.params[0]"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g.params[2])) : (console.log("in initData"), h.params && h.params[0] ? e.push(h.params[0]) : 
+        e.push(m), e.push(g))), b.type = c, b.params = e;
       }
       console.log("VariableDeclarator result", b);
       return b;

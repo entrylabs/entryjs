@@ -42,6 +42,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             this._threadCount = 0;
             this._blockCount = 0;
+            var isEventBlockExisted = false;
             for(var index in astArr) {
                 if(astArr[index].type != 'Program') return;
                 this._threadCount++;
@@ -49,9 +50,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var nodes = astArr[index].body;
 
                 console.log("nodes", nodes);
-
+                isEntryEventExisted = false;
                 for(var index in nodes) {
-
                     var node = nodes[index];
                     console.log("Program node", node);
 
@@ -68,9 +68,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                         else if(Entry.TextCodingUtil.isMaterialBlock(block.type)) {
                             continue;
-                        } else if(Entry.TextCodingUtil.isVariableDeclarationBlock(block.type)) {
-                            continue;
+                        } 
+
+                        if(Entry.TextCodingUtil.isEventBlockByType(block.type))
+                            isEntryEventExisted = true;
+
+                        if(Entry.TextCodingUtil.isVariableDeclarationBlock(block.type)) {
+                            if(!isEntryEventExisted)
+                                continue;
                         }
+                        
 
                         thread.push(block);
                     }
@@ -729,13 +736,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else if(init.type == "Identifier") { 
                 var value = init.name;
             }
+            else if(init.type == "UnaryExpression") {
+                var initData = this[init.type](init);
+                console.log("VariableDeclarator initData UnaryExpression", initData);
+                var value = initData.params[0];
+                if(typeof value != "string" && typeof value != "number") {
+                    value = NaN;
+                }
+            }
             else {
                 var value = NaN;
             }
 
             console.log("variable name", name, "value", value);
 
-            if(value && value != NaN) {
+            if(value != undefined && value != null && value != NaN) {
                 if(name && !name.includes('__filbert')) {
                     if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                         Entry.TextCodingUtil.updateGlobalVariable(name, value);
