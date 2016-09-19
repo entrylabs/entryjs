@@ -12339,7 +12339,7 @@ Entry.Painter2 = function(a) {
         this.lc.repaintLayer("background");
       }.bind(this);
       b = function(b) {
-        b.shape && !b.opts && b.shape.isPass || b.opts && b.opts.isPass ? Entry.do("processPicture", b, this.lc) : Entry.do("editPicture", b, this.lc);
+        null === b ? Entry.do("editPicture", b, this.lc) : b.shape && !b.opts && b.shape.isPass || b.opts && b.opts.isPass ? Entry.do("processPicture", b, this.lc) : Entry.do("editPicture", b, this.lc);
         this.file.modified = !0;
       }.bind(this);
       this.lc.on("clear", b);

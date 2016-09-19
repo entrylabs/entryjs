@@ -48,7 +48,9 @@ p.initialize = function() {
     }.bind(this);
 
     var watchFunc = function(e) {
-        if ((e.shape && !e.opts && e.shape.isPass) ||
+        if (e === null) {
+            Entry.do("editPicture", e, this.lc)
+        } else if ((e.shape && !e.opts && e.shape.isPass) ||
             e.opts && e.opts.isPass) {
             Entry.do("processPicture", e, this.lc)
         } else {
