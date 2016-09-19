@@ -1099,14 +1099,16 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
             view.addClass('entryRemove');
     }
 
-    if (viewType == 'picture') {
-        this.painter.show()
-        if (!this.pictureView_.object ||
-            this.pictureView_.object != this.object) {
-            this.pictureView_.object = this.object;
-            this.injectPicture();
-        }
-    } else this.painter.hide()
+    if (Entry.type == 'workspace') {
+        if (viewType == 'picture') {
+            this.painter.show()
+            if (!this.pictureView_.object ||
+                this.pictureView_.object != this.object) {
+                this.pictureView_.object = this.object;
+                this.injectPicture();
+            }
+        } else this.painter.hide()
+    }
 
     if (viewType == 'sound' && (!this.soundView_.object ||
         this.soundView_.object != this.object)) {
