@@ -1099,7 +1099,7 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
             view.addClass('entryRemove');
     }
 
-    if (Entry.type == 'workspace') {
+    if (Entry.pictureEditable) {
         if (viewType == 'picture') {
             this.painter.show()
             if (!this.pictureView_.object ||

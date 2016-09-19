@@ -24956,7 +24956,7 @@ Entry.Playground.prototype.changeViewMode = function(b) {
       var c = d[a];
       -1 < c.id.toUpperCase().indexOf(b.toUpperCase()) ? c.removeClass("entryRemove") : c.addClass("entryRemove");
     }
-    "workspace" == Entry.type && ("picture" == b ? (this.painter.show(), this.pictureView_.object && this.pictureView_.object == this.object || (this.pictureView_.object = this.object, this.injectPicture())) : this.painter.hide());
+    Entry.pictureEditable && ("picture" == b ? (this.painter.show(), this.pictureView_.object && this.pictureView_.object == this.object || (this.pictureView_.object = this.object, this.injectPicture())) : this.painter.hide());
     if ("sound" == b && (!this.soundView_.object || this.soundView_.object != this.object)) {
       this.soundView_.object = this.object, this.injectSound();
     } else {
