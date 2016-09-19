@@ -20145,6 +20145,100 @@ Entry.block = {
             return Entry.STATIC.BREAK;
         }
     },
+    "maze_repeat_until_6": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicWhile",
+            "true"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/stage1/tile_1_goal_03.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            // TODO: func 내용은 변경해야 함.
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+
+            this.executor.stepInto(statement);
+            return Entry.STATIC.BREAK;
+        }
+    },
+    "maze_radar_check": {
+        "skeleton": "basic_boolean_field",
+        "mode": "maze",
+        "color": "#AEB8FF",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.maze_distance1, "1"],
+                    [Lang.Menus.maze_distance2, "2"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            }, {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.maze_object_trap, "TRAP"],
+                    [Lang.Menus.maze_object_monster, "MONSTER"],
+                    [Lang.Menus.maze_object_obstacle1, "OBSTACLE"],
+                ],
+                "value": "TRAP",
+                "fontSize": 11
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        "paramsKeyMap": {
+            "DISTANCE": 0,
+            "TYPE": 1,
+        },
+        func: function(sprite, script) {
+            var distance = script.getNumberField("DISTANCE", script);
+            var type = script.getField("TYPE", script);
+
+            var entityId = Ntry.getRadarEntityIdByDistance(distance);
+            var tileComp = Ntry.entityManager.getComponent(entityId, Ntry.STATIC.TILE);
+            var tileType;
+            switch(tileComp.tileType) {
+                case Ntry.STATIC.OBSTACLE_HOLE:
+                    tileType = 'TRAP';
+                    break;
+                case Ntry.STATIC.OBSTACLE_ENERMY3:
+                    tileType = 'MONSTER';
+                    break;
+                case Ntry.STATIC.OBSTACLE_IRON:
+                    tileType = 'OBSTACLE';
+                    break;
+            }
+            console.log(type, tileType);
+            if(type === tileType) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    },
     // TODO: 해당 부분 수정 필요
     "maze_step_if_5": {
         "skeleton": "basic_loop",
@@ -20350,6 +20444,14 @@ Entry.block = {
                 return Entry.STATIC.BREAK;
             }
         }
+    },
+    "maze_step_if_8": {
+        "parent": "_if",
+        "class": "",
+    },    
+    "maze_step_if_else": {
+        "parent": "if_else",
+        "class": "",
     },
     "test_wrapper": {
         "skeleton": "basic",
