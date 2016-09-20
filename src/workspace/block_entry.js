@@ -19732,6 +19732,88 @@ Entry.block = {
                 delete this.isContinue;
             }
         }
+    },    
+    "maze_cony_flower_throw2": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#D8617D",
+        "template": Lang.template.maze_cony_flower_throw,
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/cony_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            var self = this;
+            if (!this.isContinue) {
+                
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY1], 2, true);
+                var particleZIndex = 550;
+                if(unitComp.direction === Ntry.STATIC.NORTH) {
+                    particleZIndex = 450;
+                }
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    return;
+                }
+
+                this.isContinue = true;
+                this.isAction = true;
+
+                var particle = Ntry.entityManager.addEntity();
+
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
+                    $.each(components, function(type, component) {
+                        if(+type === Ntry.STATIC.SPRITE) {
+                            var cloneComponent = $.extend({}, component);                        
+                            cloneComponent.zIndex = particleZIndex;
+                            Ntry.entityManager.addComponent(particle.id, cloneComponent);
+                        } else if(+type != Ntry.STATIC.UNIT) {
+                            Ntry.entityManager.addComponent(particle.id, component);
+                        } else {
+                            Ntry.entityManager.addComponent(particle.id, {
+                                type: Ntry.STATIC.PARTICLE,
+                                direction: component.direction,
+                                collisionList: [Ntry.STATIC.OBSTACLE_ENERMY1],
+                                penetrationList: [Ntry.STATIC.WALL],
+                            });
+                        }
+                    });
+
+                    Ntry.dispatchEvent("particleAction", {
+                        entityId: particle.id,
+                        actionType: Ntry.STATIC.HEART_ATTACK,
+                        callback: function () {
+                            Ntry.entityManager.removeEntity(particle.id);
+                            self.isAction = false;
+                        }
+                    });                    
+                });
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "maze_james_heart": {
         "skeleton": "basic",
@@ -19941,7 +20023,7 @@ Entry.block = {
                             x: 0,
                             y: deltaY * 0.6,
                         };
-                        
+
                         var deltaPos2 = {
                             x: 0,
                             y: deltaY * 0.4,
@@ -20222,6 +20304,8 @@ Entry.block = {
             var distance = script.getNumberField("DISTANCE", script);
             var type = script.getField("TYPE", script);
 
+            console.log(distance, type);
+
             var entityId = Ntry.getRadarEntityIdByDistance(distance);
             var tileType;
             if(entityId) {
@@ -20230,6 +20314,8 @@ Entry.block = {
                     case Ntry.STATIC.OBSTACLE_HOLE:
                         tileType = 'TRAP';
                         break;
+                    case Ntry.STATIC.OBSTACLE_ENERMY1:
+                    case Ntry.STATIC.OBSTACLE_ENERMY2:
                     case Ntry.STATIC.OBSTACLE_ENERMY3:
                     case Ntry.STATIC.OBSTACLE_ENERMY4:
                         tileType = 'MONSTER';
