@@ -19926,29 +19926,35 @@ Entry.block = {
                         var obstaclePosition = Ntry.entityManager.getComponent(id, Ntry.STATIC.POSITION);
                         var grid = {
                             x: obstacleGrid.x,
-                            y: (obstacleGrid.y === 1) ? 3 : 1,
+                            y: (obstacleGrid.y === 1) ? 4 : 1,
                         }
 
-                        obstacleGrid.y = (obstacleGrid.y === 1) ? 3 : 1;
+                        obstacleGrid.y = (obstacleGrid.y === 1) ? 4 : 1;
+
+                        var deltaY = tileSize * 2;
+                        if(obstacleGrid.y === 1) {
+                            deltaY = -deltaY;
+                        }
 
                         var deltaPos = {
                             x: 0,
-                            y: ((obstacleGrid.y + 1) * tileSize - obstaclePosition.y) / 2.5,
+                            y: deltaY * 0.6,
                         };
                         var deltaPos2 = {
                             x: 0,
-                            y: ((obstacleGrid.y + 1) * tileSize - obstaclePosition.y) / 1.5,
+                            y: deltaY * 0.4,
                         };
+
                         (function (_id, _deltaPos, _deltaPos2) {
                             Ntry.entityManager.addComponent(
                                 _id, {
                                     type: Ntry.STATIC.ANIMATE,
                                     animateType: Ntry.STATIC.TRANSITION,
+                                    duration: 24,
                                     option: {
                                         deltaPos: _deltaPos,
                                     },
                                     afterAnimate: function() {
-                                        console.log('middle');
                                         if(eventCount === 0) {
                                             self.isAction = false;
                                         }
@@ -19956,11 +19962,11 @@ Entry.block = {
                                             _id, {
                                                 type: Ntry.STATIC.ANIMATE,
                                                 animateType: Ntry.STATIC.TRANSITION,
+                                                duration: 16,
                                                 option: {
                                                     deltaPos: _deltaPos2,
                                                 },
                                                 afterAnimate: function() {
-                                                    console.log('afterAnimate');
                                                 },
                                             }
                                         );
@@ -19970,9 +19976,6 @@ Entry.block = {
                         })(id, deltaPos, deltaPos2);
                     }
                 }
-                // turn direction
-                // Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, callback);
-                // return;
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -20218,20 +20221,24 @@ Entry.block = {
             var type = script.getField("TYPE", script);
 
             var entityId = Ntry.getRadarEntityIdByDistance(distance);
-            var tileComp = Ntry.entityManager.getComponent(entityId, Ntry.STATIC.TILE);
             var tileType;
-            switch(tileComp.tileType) {
-                case Ntry.STATIC.OBSTACLE_HOLE:
-                    tileType = 'TRAP';
-                    break;
-                case Ntry.STATIC.OBSTACLE_ENERMY3:
-                    tileType = 'MONSTER';
-                    break;
-                case Ntry.STATIC.OBSTACLE_IRON:
-                    tileType = 'OBSTACLE';
-                    break;
+            if(entityId) {
+                var tileComp = Ntry.entityManager.getComponent(entityId, Ntry.STATIC.TILE);
+                switch(tileComp.tileType) {
+                    case Ntry.STATIC.OBSTACLE_HOLE:
+                        tileType = 'TRAP';
+                        break;
+                    case Ntry.STATIC.OBSTACLE_ENERMY3:
+                        tileType = 'MONSTER';
+                        break;
+                    case Ntry.STATIC.OBSTACLE_IRON:
+                        tileType = 'OBSTACLE';
+                        break;
+                }
+            } else {
+                tileType = 'TRAP';
             }
-            console.log(type, tileType);
+
             if(type === tileType) {
                 return true;
             } else {
