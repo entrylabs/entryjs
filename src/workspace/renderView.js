@@ -138,8 +138,7 @@ Entry.RenderView = function(dom, align) {
         setTimeout(function() {
             this._setSize();
             $(this.svg).css({
-                'height': this._bBox.height + 5,
-                'width': this._bBox.width + 5
+                'height': this._bBox.height + 5
             });
         }.bind(this), 0);
     };

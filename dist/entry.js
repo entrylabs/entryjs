@@ -22749,7 +22749,7 @@ Entry.RenderView = function(b, a) {
   b.resize = function() {
     this.svg && this._bBox && setTimeout(function() {
       this._setSize();
-      $(this.svg).css({height:this._bBox.height + 5, width:this._bBox.width + 5});
+      $(this.svg).css({height:this._bBox.height + 5});
     }.bind(this), 0);
   };
   b.setDomSize = function() {
