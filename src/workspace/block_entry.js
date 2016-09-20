@@ -19843,7 +19843,8 @@ Entry.block = {
 
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
-                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY3], 2);
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY3, Ntry.STATIC.OBSTACLE_ENERMY4], 2);
+                console.log('unitComp.direction', unitComp.direction);
                 var particleZIndex = 550;
                 if(unitComp.direction === Ntry.STATIC.NORTH) {
                     particleZIndex = 450;
@@ -19871,8 +19872,8 @@ Entry.block = {
                             Ntry.entityManager.addComponent(particle.id, {
                                 type: Ntry.STATIC.PARTICLE,
                                 direction: component.direction,
-                                collisionList: [Ntry.STATIC.OBSTACLE_ENERMY3, Ntry.STATIC.OBSTACLE_ENERMY3_AREA],
-                                penetrationList: [Ntry.STATIC.OBSTACLE_ENERMY3_AREA],
+                                collisionList: [Ntry.STATIC.OBSTACLE_ENERMY3, Ntry.STATIC.OBSTACLE_ENERMY4, Ntry.STATIC.OBSTACLE_ENERMY_AREA],
+                                penetrationList: [Ntry.STATIC.OBSTACLE_ENERMY_AREA],
                             });
                         }
                     });
@@ -19926,10 +19927,10 @@ Entry.block = {
                         var obstaclePosition = Ntry.entityManager.getComponent(id, Ntry.STATIC.POSITION);
                         var grid = {
                             x: obstacleGrid.x,
-                            y: (obstacleGrid.y === 1) ? 4 : 1,
+                            y: (obstacleGrid.y === 1) ? 3 : 1,
                         }
 
-                        obstacleGrid.y = (obstacleGrid.y === 1) ? 4 : 1;
+                        obstacleGrid.y = (obstacleGrid.y === 1) ? 3 : 1;
 
                         var deltaY = tileSize * 2;
                         if(obstacleGrid.y === 1) {
@@ -19940,6 +19941,7 @@ Entry.block = {
                             x: 0,
                             y: deltaY * 0.6,
                         };
+                        
                         var deltaPos2 = {
                             x: 0,
                             y: deltaY * 0.4,
@@ -20229,6 +20231,7 @@ Entry.block = {
                         tileType = 'TRAP';
                         break;
                     case Ntry.STATIC.OBSTACLE_ENERMY3:
+                    case Ntry.STATIC.OBSTACLE_ENERMY4:
                         tileType = 'MONSTER';
                         break;
                     case Ntry.STATIC.OBSTACLE_IRON:
