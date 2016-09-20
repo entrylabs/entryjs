@@ -17,10 +17,8 @@ Entry.Codestar = {
         listPorts: {
             '13':{name: '진동모터', type: 'output', pos: {x: 0, y: 0}},
             '6':{name: '진동센서', type: 'input', pos: {x: 0, y: 0}},
-            'geomagnetic':{name: '3축 지자기', type: 'input', pos: {x: 0, y: 0}}
         },
         ports: {
-            '4':{name: '리모콘', type: 'input', pos: {x: 254, y: 9}},
             '7':{name: '빨간색', type: 'output', pos: {x: 238, y: 108}},
             '8':{name: '파란색', type: 'output', pos: {x: 265, y: 126}},
             '9':{name: '3색 빨간색', type: 'output', pos: {x: 292, y: 34}},

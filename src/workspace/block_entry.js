@@ -19976,10 +19976,10 @@ Entry.block = {
         color: '#00979D',
         skeleton: 'basic',
         statements: [],
-        template: '눈 %1 LED %2 %3',
+        template: '%1 LED %2 %3',
         params: [{
             type: 'Dropdown',
-            options: [['빨간색', 7], ['파란색', 8]]
+            options: [[Lang.Hw.leftEye, 7], [Lang.Hw.rightEye, 8]]
         }, {
             type: 'Dropdown',
             options: [[Lang.Blocks.ARDUINO_on,"on"], [Lang.Blocks.ARDUINO_off,"off"]],
@@ -20244,7 +20244,7 @@ Entry.block = {
             var value = script.getNumberValue('VALUE');
             var dir = Number(script.getField('DIRECTION'));
             var id = 1;
-            if(value == 0)value = 1;
+            //if(value == 0)value = 1;
             value = Math.round(value);
             value = Math.max(value, -255);
             value = Math.min(value, 255);
@@ -20253,7 +20253,7 @@ Entry.block = {
                 value *=-1;
             }
             value = Math.round(value/30);
-            if(value == 0) value = 1;
+            //if(value == 0) value = 1;
             var query = (id << 7) + (dir << 5) + value;
             Entry.hw.setDigitalPortValue(14, query);
             return script.callReturn();
@@ -20267,8 +20267,7 @@ Entry.block = {
         template: '밝기센서 %1',
         params: [{
             type: 'Indicator',
-            img: 'block_icon/hardware_03.png',
-            size: 12
+            size: 11
         }],
         events: {},
         def: {
@@ -20290,8 +20289,7 @@ Entry.block = {
         template: '버튼 %1',
         params: [{
             type: 'Indicator',
-            img: 'block_icon/hardware_03.png',
-            size: 12
+            size: 11
         }],
         events: {},
         def: {
@@ -20316,8 +20314,7 @@ Entry.block = {
             options: [['A0', '0'], ['A1', '1'], ['A4', '4'], ['A5', '5']]
         }, {
             type: 'Indicator',
-            img: 'block_icon/hardware_03.png',
-            size: 12
+            size: 11
         }],
         events: {},
         def: {
@@ -20342,8 +20339,7 @@ Entry.block = {
         template: '초음파 %1',
         params: [{
             type: 'Indicator',
-            img: 'block_icon/hardware_03.png',
-            size: 12
+            size: 11
         }],
         events: {},
         def: {
@@ -20368,8 +20364,7 @@ Entry.block = {
             options: [['A0', '0'], ['A1', '1'], ['A4', '4'], ['A5', '5']]
         }, {
             type: 'Indicator',
-            img: 'block_icon/hardware_03.png',
-            size: 12
+            size: 11
         }],
         events: {},
         def: {
@@ -20394,8 +20389,7 @@ Entry.block = {
         template: '마이크 %1',
         params: [{
             type: 'Indicator',
-            img: 'block_icon/hardware_03.png',
-            size: 12
+            size: 11
         }],
         events: {},
         def: {
@@ -20417,8 +20411,7 @@ Entry.block = {
         template: '온도 %1',
         params: [{
             type: 'Indicator',
-            img: 'block_icon/hardware_03.png',
-            size: 12
+            size: 11
         }],
         events: {},
         def: {
@@ -20443,8 +20436,7 @@ Entry.block = {
             options: [['x', 'x'], ['y', 'y'], ['z', 'z']]
         }, {
             type: 'Indicator',
-            img: 'block_icon/hardware_03.png',
-            size: 12
+            size: 11
         }],
         events: {},
         def: {
@@ -20471,8 +20463,7 @@ Entry.block = {
             options: [['x', 'x'], ['y', 'y'], ['z', 'z']]
         },{
             type: 'Indicator',
-            img: 'block_icon/hardware_03.png',
-            size: 12
+            size: 11
         }],
         events: {},
         def: {
@@ -20497,8 +20488,7 @@ Entry.block = {
         template: 'IR 리모콘 %1',
         params: [{
             type: 'Indicator',
-            img: 'block_icon/hardware_03.png',
-            size: 12
+            size: 11
         }],
         events: {},
         def: {
@@ -20520,8 +20510,7 @@ Entry.block = {
         template: '틸트 %1',
         params: [{
             type: 'Indicator',
-            img: 'block_icon/hardware_03.png',
-            size: 12
+            size: 11
         }],
         events: {},
         def: {

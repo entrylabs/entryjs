@@ -474,10 +474,7 @@ EntryStatic.getAllBlocks = function() {
                 'codestar_ir', 
                 'codestar_sonar',
                 'codestar_mic',
-                'codestar_temperature',
-                'codestar_geomagnetic',
-                'codestar_irR',
-                'codestar_tilt',
+                'codestar_temperature'
             ]
         }
     ]
