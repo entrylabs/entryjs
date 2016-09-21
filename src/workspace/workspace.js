@@ -7,6 +7,7 @@ goog.provide("Entry.Workspace");
 
 goog.require("Entry.Model");
 goog.require("Entry.FieldTrashcan");
+goog.require("Entry.TextCodingUtil");
 
 Entry.Workspace = function(options) {
     Entry.Model(this, false);
@@ -92,6 +93,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 return;
 
             case Entry.Workspace.MODE_VIMBOARD:
+                    Entry.TextCodingUtil._currentObject = Entry.playground.object;
+                    console.log("Entry.TextCodingUtil._currentObject", Entry.TextCodingUtil._currentObject);
                     if (this.board) this.board.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.banClass('textMode');
@@ -316,6 +319,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p._syncTextCode = function() {
+        console.log("_syncTextCode current object", Entry.TextCodingUtil._currentObject);
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
             return;
 
@@ -326,6 +330,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         code.load(changedCode);
         code.createView(board);
         this.board.alignThreads();
+
+        Entry.TextCodingUtil._currentObject = Entry.playground.object;
     };
 
     p.addVimBoard = function(dom) {

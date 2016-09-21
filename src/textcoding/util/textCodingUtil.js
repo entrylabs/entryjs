@@ -12,6 +12,7 @@ Entry.TextCodingUtil = {};
 (function(tu) {
     this._funcParams;
     this._funcParamQ;
+    this._currentObject;
 
     tu.init = function() {
         this._funcParams = [];
@@ -126,6 +127,81 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
+    tu.dropdownDynmaicNameToIdConvertor = function(name, menuName) {
+        if(!name)
+            return name;
+
+        var result = name;
+        
+        if(menuName == "variables") {
+            var entryVariables = Entry.variableContainer.variables_;
+            //console.log("dropdownDynamicValueConvertor entryVariables", entryVariables);
+            for(var e in entryVariables) {
+                var entryVariable = entryVariables[e];
+                if(entryVariable.name_ == name) {
+                    result = entryVariable.id_;
+                    break;
+                }
+
+            }
+        }
+        else if(menuName == "lists") {
+            var entryLists = Entry.variableContainer.lists;
+            //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
+            for(var e in entryLists) {
+                var entryList = entryLists[e];
+                if(entryList.name_ == name) {
+                    result = entryList.id_;
+                    break;
+                }
+
+            }
+        }
+        else if(menuName == "messages") {
+            var entryMessages = Entry.variableContainer.messages_;
+            //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
+            for(var e in entryMessages) {
+                var entryList = entryMessages[e];
+                if(entryList.name == name) {
+                    result = entryList.id;
+                    break;
+                }
+
+            }
+        }
+        else if(menuName == "pictures") {
+            var objects = Entry.container.getAllObjects();
+            for(var o in objects) {
+                var object = objects[o];
+                var pictures = object.pictures;
+                for(var p in pictures) {
+                    var picture = pictures[p];
+                    if(picture.name == name) {
+                        result = picture.id;
+                        return result;
+                    }
+                }
+            }
+        }
+        else if(menuName == "sounds") {
+            var objects = Entry.container.getAllObjects();
+            for(var o in objects) {
+                var object = objects[o];
+                var sounds = object.sounds;
+                for(var p in sounds) {
+                    var sound = sounds[p];
+                    if(sound.name == name) {
+                        result = sound.id;
+                        return result;
+                    }
+                }
+            }
+        }
+
+
+        return result;
+    };
+
     tu.dropdownDynamicValueConvertor = function(value, param) {
         var options = param.options;
         //console.log("dropdownDynamicValueConvertor value", value, "options", options);
@@ -180,6 +256,18 @@ Entry.TextCodingUtil = {};
                 var entryList = entryLists[e];
                 if(entryList.id_ == value) {
                     result = entryList.name_;
+                    break;
+                }
+
+            }
+        }
+        else if(!found && param.menuName == "messages") {
+            var entryMessages = Entry.variableContainer.messages_;
+            //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
+            for(var e in entryMessages) {
+                var entryList = entryMessages[e];
+                if(entryList.id == value) {
+                    result = entryList.name;
                     break;
                 }
 
@@ -402,10 +490,11 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isLocalVariableExisted = function(name, object) {
+        console.log("isLocalVariableExisted name object", name, object);
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
-            //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
+            console.log("TextCodingUtil isLocalVariableExisted", entryVariable);
             if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
                 return true;
             }
@@ -932,33 +1021,28 @@ Entry.TextCodingUtil = {};
                         console.log("paramMap", paramMap);
                         console.log("paramInfo", paramInfo);
                         console.log("textFuncStatementParams[j]", textFuncStatementParams[j]);
+                        console.log("blockFuncContentParams[j]", blockFuncContentParams[j]);
+
                         if(typeof textFuncStatementParams[j] !== "object") {
                             if(textFuncStatementParams[j] == blockFuncContentParams[j]) {
                                 matchFlag = true;
                             }
+                            else {
+                                matchFlag = false;
+                            }
                         }
                         else if(textFuncStatementParams[j].name) {
-                            //for(var k in blockFuncContentParams) {
-                                //if(textFuncStatementParams[j].name == blockFuncContentParams[k]) { // Param Locatin Comparision
-                                    //console.log("textFuncStatementParams[j].name", textFuncStatementParams[j].name);
-                                    //console.log("textFuncParams[k]", textFuncParams[k]);
-                                    //for(var p in paramMap) {
-                                        var paramKey = textFuncStatementParams[j].name;
-                                        var paramBlockType = paramInfo[paramKey];
-
-                                        //if(paramValue == p) {
-                                            //console.log("blockFuncContentParams[j].data.type", blockFuncContentParams[j].data.type);
-                                            //console.log("bfcParam", bfcParam);
-                                            if(blockFuncContentParams[j].data.type == paramBlockType) {
-                                                matchFlag = true;
-                                                //console.log("Function Definition Param Found", paramMap[bfcParam], "index k", j);
-                                            }
-                                        //}
-                                    //}
-                                    //if(matchFlag) 
-                                        //break;
-                                //}
-                            //}
+                            var paramKey = textFuncStatementParams[j].name;
+                            var paramBlockType = paramInfo[paramKey];
+    
+                            if(paramBlockType) {
+                                if(blockFuncContentParams[j].data.type == paramBlockType)
+                                    matchFlag = true;                   
+                            }
+                            else {
+                                if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0])
+                                    matchFlag = true;
+                            }
                         }
                         else if(textFuncStatementParams[j].type == "True" || textFuncStatementParams[j].type == "False") {
                             if(blockFuncContentParams[j].data) {
@@ -971,19 +1055,7 @@ Entry.TextCodingUtil = {};
                             }
                         } 
                         else if(textFuncStatementParams[j].type && textFuncStatementParams[j].params) {
-                            console.log("textFuncStatementParams[j]", textFuncStatementParams[j]);
-                            
-                            if(textFuncStatementParams[j].params[0].name) {
-                                var paramKey = textFuncStatementParams[j].params[0].name; 
-                                var paramBlockType = paramInfo[paramKey];
-                                console.log("paramBlockType", paramBlockType, "blockFuncContentParams[j].data.type", blockFuncContentParams[j].data.type);
-                                if(paramBlockType == blockFuncContentParams[j].data.type) {
-                                    matchFlag = true; 
-                                } 
-                            } 
-                            else if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0]) {
-                                matchFlag = true;
-                            }  
+                            matchFlag = this.isFuncContentsParamsMatch(blockFuncContentParams[j], textFuncStatementParams[j], paramMap, paramInfo);
                         }
                     }
 
@@ -1001,6 +1073,90 @@ Entry.TextCodingUtil = {};
                 break;
             }
         }
+
+        return matchFlag;
+    };
+
+    tu.isFuncContentsParamsMatch = function(blockFuncContentParam, textFuncStatementParam, paramMap, paramInfo) {
+        console.log("blockFuncContentParam", blockFuncContentParam);
+        console.log("textFuncStatementParam", textFuncStatementParam);
+
+        var matchFlag = false;
+
+        var tfspType = textFuncStatementParam.type;
+        var bfcpType = blockFuncContentParam.data.type;
+
+        if(tfspType == "text" || tfspType == "number")
+            tfspType = "literal";
+
+        if(bfcpType == "text" || bfcpType == "number")
+            bfcpType = "literal";
+
+        if(tfspType == bfcpType) {
+            var textSubParams = textFuncStatementParam.params;
+            var blockSubParamsUncleansed = blockFuncContentParam.data.params;
+            var blockSubParams = [];
+
+            for(var b in blockSubParamsUncleansed) {
+                var blockSubParamUncleansed = blockSubParamsUncleansed[b];
+                if(blockSubParamUncleansed)
+                    blockSubParams.push(blockSubParamUncleansed);
+            }
+
+            console.log("textSubParams", textSubParams);
+            console.log("blockSubParams", blockSubParams);
+            if(textSubParams.length == blockSubParams.length) {
+                matchFlag = true;
+                for(var t in textSubParams) {
+                    if(!matchFlag)
+                        break;
+                    matchFlag = false;
+                    var textSubParam = textSubParams[t];
+                    var blockSubParam = blockSubParams[t];
+                    console.log("textSubParam", textSubParam);
+                    console.log("blockSubParam", blockSubParam);
+                    if(typeof textSubParam !== "object") {
+                        if(textSubParam == blockSubParam) {
+                            matchFlag = true;
+                        }
+                    }
+                    else if(textSubParam.name) {
+                        console.log("paramInfo", paramInfo);
+                        var paramKey = textSubParam.name;
+                        var paramBlockType = paramInfo[paramKey];
+                        console.log("blockSubParam.data.type", blockSubParam.data.type, "paramBlockType", paramBlockType);
+                        if(paramBlockType) {
+                            if(blockSubParam.data.type == paramBlockType)
+                                matchFlag = true;                   
+                        } else {
+                            if(textSubParam.params[0] == blockSubParam.data.params[0])
+                                matchFlag = true;
+                        }
+                    }
+                    else if(textSubParam.type == "True" || textSubParam.type == "False") {
+                        if(blockSubParam.data) {
+                            if(textSubParam.type == blockSubParam.data.type) {
+                                 matchFlag = true;
+                            }
+                        }
+                        else if(textSubParam.type == blockSubParam.type) {
+                            matchFlag = true;
+                        }
+                    } 
+                    else if(textSubParam.type && textSubParam.params) {
+                        matchFlag = this.isFuncContentsParamsMatch(blockSubParam, textSubParam, paramMap, paramInfo);
+                    }
+                }
+            }
+            else {
+                matchFlag = false;
+            }
+        } 
+        else {
+                matchFlag = false;
+        }
+
+        console.log("isFuncContentsParamsMatch result matchFlag", matchFlag);
 
         return matchFlag;
     };
@@ -1035,48 +1191,56 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.makeParamBlock = function(funcStatement, paramInfo) {
-        console.log("funcStatement", funcStatement);
-        var params = funcStatement.params;
+    tu.makeParamBlock = function(targetBlock, paramInfo) {
+        console.log("targetBlock", targetBlock);
+        var params = targetBlock.params;
         console.log("makeParamBlock params", params);
+
 
         for(var p in params) {
             var param = params[p];
             console.log("makeParamBlock param", param);
             
-            if(typeof param != "object") 
+            if(typeof param != "object")  
                 continue;
 
-            if(param.params && param.params.length != 0 && param.params[0].name) {
-                var paramKey = param.params[0].name;
+            if(param.type && param.params) {//) && param.params.length != 0 && param.params[0].name) {
+                /*var paramKey = param.params[0].name;
                 var paramBlockType = paramInfo[paramKey];
-                var paramBlock = {};
-                paramBlock.type = paramBlockType;
-                paramBlock.params = [];
+                console.log("paramBlockType1", paramBlockType);
+                if(paramBlockType) {
+                    var paramBlock = {};
+                    paramBlock.type = paramBlockType;
+                    paramBlock.params = [];
 
-                params[p] = paramBlock;
+                    params[p] = paramBlock;
+                }*/
+                this.makeParamBlock(param, paramInfo);
             }
             else if(param.name) {
                 var paramKey = param.name; 
                 var paramBlockType = paramInfo[paramKey];
-                var paramBlock = {};
-                paramBlock.type = paramBlockType;
-                paramBlock.params = [];
-                 
-                params[p] = paramBlock;
+                console.log("paramBlockType2", paramBlockType);
+                if(paramBlockType) {
+                    var paramBlock = {};
+                    paramBlock.type = paramBlockType;
+                    paramBlock.params = [];
+                     
+                    params[p] = paramBlock;
+                }
             } 
         }
 
-        if(funcStatement.statements && funcStatement.statements[0]) {
-            var statements = funcStatement.statements[0];
+        if(targetBlock.statements && targetBlock.statements[0]) {
+            var statements = targetBlock.statements[0];
             for(var s in statements) {
                 var statement = statements[s];
                 this.makeParamBlock(statement, paramInfo);
             }
         }
 
-        if(funcStatement.statements && funcStatement.statements[1]) {
-            var statements = funcStatement.statements[1];
+        if(targetBlock.statements && targetBlock.statements[1]) {
+            var statements = targetBlock.statements[1];
             for(var s in statements) {
                 var statement = statements[s];
                 this.makeParamBlock(statement, paramInfo);
@@ -1411,6 +1575,4 @@ Entry.TextCodingUtil = {};
 
         return result;
     };
-
-
 })(Entry.TextCodingUtil);
