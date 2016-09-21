@@ -368,7 +368,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         type = param.type;
                         params = param.params; 
                     }
-                } else {
+                }
+                else if(calleeName == "__pythonRuntime.functions.range" && typeof param == "object") {
+                    result.name = param.name;
+                    return result;
+
+                } 
+                else {
                     if(param && param.data) {
                         param = param.data;
                     }
@@ -539,16 +545,29 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         if(result.callee) {
-            if(result.arguments)
+            if(result.arguments) {
                 var idNumber = result.arguments.length;
-            else
+
+                var params = [];
+                var arguments = result.arguments;
+                for(var a in arguments) {
+                    var argument = arguments[a];
+                    params.push(argument);
+                }
+            }
+            else {
                 var idNumber = 0;
+            }
             var funcKey = result.callee.name + idNumber;
             console.log("funcKey", funcKey);
             var type = this._funcMap.get(funcKey);
             if(type) {
                 result = {};
                 result.type = type;
+
+                if(params && params.length != 0) {
+                    result.params = params;
+                }
             }
             else {
                 if(result.callee.isCallParam == false) {
