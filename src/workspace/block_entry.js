@@ -20054,7 +20054,7 @@ Entry.block = {
                                     _id, {
                                         type: Ntry.STATIC.ANIMATE,
                                         animateType: Ntry.STATIC.TRANSITION,
-                                        duration: 48,
+                                        duration: 24,
                                         option: {
                                             deltaPos: _deltaPos2,                                            
                                             targetPos: _targetPos,
@@ -20068,7 +20068,7 @@ Entry.block = {
                                     _id, {
                                         type: Ntry.STATIC.ANIMATE,
                                         animateType: Ntry.STATIC.TRANSITION,
-                                        duration: 24,
+                                        duration: 12,
                                         option: {
                                             deltaPos: _deltaPos,
                                         },
@@ -20080,7 +20080,7 @@ Entry.block = {
                                                 _id, {
                                                     type: Ntry.STATIC.ANIMATE,
                                                     animateType: Ntry.STATIC.TRANSITION,
-                                                    duration: 24,
+                                                    duration: 12,
                                                     option: {
                                                         deltaPos: _deltaPos,
                                                         targetPos: _targetPos,
