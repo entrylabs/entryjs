@@ -19999,6 +19999,7 @@ Entry.block = {
                 this.isAction = true;
                 var eventCount = 0;
                 var self = this;
+                var gridSize = Ntry.configManager.getConfig("gridSize");
                 var tileSize = Ntry.configManager.getConfig("tileSize").width;
                 var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.OBSTACLE);
                 
@@ -20015,49 +20016,84 @@ Entry.block = {
                         obstacleGrid.y = (obstacleGrid.y === 1) ? 3 : 1;
 
                         var deltaY = tileSize * 2;
+
                         if(obstacleGrid.y === 1) {
                             deltaY = -deltaY;
                         }
 
                         var deltaPos = {
                             x: 0,
-                            y: deltaY * 0.6,
+                            y: deltaY * 0.5,
                         };
 
                         var deltaPos2 = {
                             x: 0,
-                            y: deltaY * 0.4,
+                            y: deltaY,
                         };
 
-                        (function (_id, _deltaPos, _deltaPos2) {
-                            Ntry.entityManager.addComponent(
-                                _id, {
-                                    type: Ntry.STATIC.ANIMATE,
-                                    animateType: Ntry.STATIC.TRANSITION,
-                                    duration: 24,
-                                    option: {
-                                        deltaPos: _deltaPos,
-                                    },
-                                    afterAnimate: function() {
-                                        if(eventCount === 0) {
-                                            self.isAction = false;
-                                        }
-                                        Ntry.entityManager.addComponent(
-                                            _id, {
-                                                type: Ntry.STATIC.ANIMATE,
-                                                animateType: Ntry.STATIC.TRANSITION,
-                                                duration: 16,
-                                                option: {
-                                                    deltaPos: _deltaPos2,
-                                                },
-                                                afterAnimate: function() {
-                                                },
-                                            }
-                                        );
-                                    },
+                        var targetPos = {
+                            minX: 0,
+                            minY: 0,
+                            maxX: gridSize.width * tileSize,
+                            maxY: gridSize.height * tileSize,
+                        };
+
+                        if(deltaY > 0) {
+                            targetPos.maxY = obstacleGrid.y * tileSize + (tileSize / 2);
+                        } else {
+                            targetPos.minY = obstacleGrid.y * tileSize + (tileSize / 2);
+                        }
+
+                        (function (_id, _deltaPos, _deltaPos2, _targetPos) {
+                            var comp = Ntry.entityManager.getComponent(_id, Ntry.STATIC.ANIMATE);
+                            if(comp) {
+                                if(eventCount === 0) {
+                                    self.isAction = false;
                                 }
-                            );
-                        })(id, deltaPos, deltaPos2);
+                                Ntry.entityManager.addComponent(
+                                    _id, {
+                                        type: Ntry.STATIC.ANIMATE,
+                                        animateType: Ntry.STATIC.TRANSITION,
+                                        duration: 48,
+                                        option: {
+                                            deltaPos: _deltaPos2,                                            
+                                            targetPos: _targetPos,
+                                        },
+                                        afterAnimate: function() {                                            
+                                        }
+                                    }
+                                );
+                            } else {
+                                Ntry.entityManager.addComponent(
+                                    _id, {
+                                        type: Ntry.STATIC.ANIMATE,
+                                        animateType: Ntry.STATIC.TRANSITION,
+                                        duration: 24,
+                                        option: {
+                                            deltaPos: _deltaPos,
+                                        },
+                                        afterAnimate: function() {
+                                            if(eventCount === 0) {
+                                                self.isAction = false;
+                                            }
+                                            Ntry.entityManager.addComponent(
+                                                _id, {
+                                                    type: Ntry.STATIC.ANIMATE,
+                                                    animateType: Ntry.STATIC.TRANSITION,
+                                                    duration: 24,
+                                                    option: {
+                                                        deltaPos: _deltaPos,
+                                                        targetPos: _targetPos,
+                                                    },
+                                                    afterAnimate: function() {
+                                                    },
+                                                }
+                                            );
+                                        },
+                                    }
+                                );                                
+                            }
+                        })(id, deltaPos, deltaPos2, targetPos);
                     }
                 }
                 return Entry.STATIC.BREAK;
