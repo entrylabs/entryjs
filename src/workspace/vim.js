@@ -178,6 +178,7 @@ Entry.Vim = function(dom, textType) {
             .concat("\n\n")
             .concat(textCode);
         }
+        textCode += '\n';
         this.codeMirror.setValue(textCode);
         if(textType == Entry.Vim.TEXT_TYPE_PY)
             this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 4, ch:0}, {readOnly: true});

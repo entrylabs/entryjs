@@ -16,6 +16,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
+  Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
   return b;
 }, exportProject:function(b) {
   b || (b = {});
@@ -134,8 +135,8 @@ Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightE
   b.tempo = 60;
   b.removeAllTimeouts();
 }, monitorTemplate:{imgPath:"hw/albert.png", width:387, height:503, listPorts:{temperature:{name:Lang.Blocks.ALBERT_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.ALBERT_sensor_acceleration_x, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.ALBERT_sensor_acceleration_y, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.ALBERT_sensor_acceleration_z, type:"input", pos:{x:0, y:0}}, frontOid:{name:Lang.Blocks.ALBERT_sensor_front_oid, type:"input", 
-pos:{x:0, y:0}}, backOid:{name:Lang.Blocks.ALBERT_sensor_back_oid, type:"input", pos:{x:0, y:0}}, positionX:{name:Lang.Blocks.ALBERT_sensor_position_x, type:"input", pos:{x:0, y:0}}, positionY:{name:Lang.Blocks.ALBERT_sensor_position_y, type:"input", pos:{x:0, y:0}}, orientation:{name:Lang.Blocks.ALBERT_sensor_orientation, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, note:{name:Lang.Hw.note, type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, 
-type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:127, y:391}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:299, y:406}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:22, y:325}}, leftEye:{name:Lang.Hw.leftEye, type:"output", pos:{x:260, y:26}}, 
+pos:{x:0, y:0}}, backOid:{name:Lang.Blocks.ALBERT_sensor_back_oid, type:"input", pos:{x:0, y:0}}, positionX:{name:Lang.Blocks.ALBERT_sensor_position_x, type:"input", pos:{x:0, y:0}}, positionY:{name:Lang.Blocks.ALBERT_sensor_position_y, type:"input", pos:{x:0, y:0}}, orientation:{name:Lang.Blocks.ALBERT_sensor_orientation, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, note:{name:Lang.Hw.note, type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_left_proximity, 
+type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_right_proximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:127, y:391}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:299, y:406}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:22, y:325}}, leftEye:{name:Lang.Hw.leftEye, type:"output", pos:{x:260, y:26}}, 
 rightEye:{name:Lang.Hw.rightEye, type:"output", pos:{x:164, y:13}}, bodyLed:{name:Lang.Hw.body + " " + Lang.Hw.led_en, type:"output", pos:{x:367, y:308}}, frontLed:{name:Lang.Hw.front + " " + Lang.Hw.led_en, pos:{x:117, y:410}}}, mode:"both"}, tempo:60, timeouts:[], removeTimeout:function(b) {
   clearTimeout(b);
   var a = this.timeouts;
@@ -822,7 +823,10 @@ Entry.dplay = {name:"dplay", vel_value:255, Left_value:255, Right_value:255, set
     clearTimeout(b[a]);
   }
   this.timeouts = [];
-}};
+}, monitorTemplate:{imgPath:"hw/dplay.png", width:500, height:600, listPorts:{2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + 
+" 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 8:{name:Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
+Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
+Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.nemoino = {name:"nemoino", setZero:Entry.Arduino.setZero};
 Entry.joystick = {name:"joystick", setZero:Entry.Arduino.setZero};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
@@ -4901,12 +4905,279 @@ Entry.block.neobot_play_note_for = function(b, a) {
   }, 1 / f * 2E3);
   return a;
 };
+Entry.Roborobo_Roduino = {name:"roborobo_roduino", INSTRUCTION:{DIGITAL_READ:1, DIGITAL_SET_MODE:2, DIGITAL_WRITE:3, ANALOG_WRITE:4, ANALOG_READ:5, MOTOR:6, COLOR:7}, setZero:function() {
+  for (var b = 0;5 > b;b++) {
+    Entry.hw.sendQueue[b] = 0;
+  }
+  this.ColorPin = [0, 0, 0];
+  Entry.hw.update();
+}, setSendData:function(b) {
+  Entry.hw.sendQueue = b;
+  Entry.hw.update();
+  this.wait(32);
+}, wait:function(b) {
+  for (var a = (new Date).getTime(), d = a;d < a + b;) {
+    d = (new Date).getTime();
+  }
+}, ColorPin:[0, 0, 0]};
+Entry.Roborobo_SchoolKit = {name:"roborobo_schoolkit", INSTRUCTION:{DIGITAL_READ:1, DIGITAL_WRITE:2, MOTOR:3, COLOR:4, SERVO:5}, setZero:function() {
+  for (var b = 0;5 > b;b++) {
+    Entry.hw.sendQueue[b] = 0;
+  }
+  this.ColorPin = [0, 0, 0];
+  Entry.hw.update();
+}, setSendData:function(b) {
+  Entry.hw.sendQueue = b;
+  Entry.hw.update();
+  this.wait(32);
+}, wait:function(b) {
+  for (var a = (new Date).getTime(), d = a;d < a + b;) {
+    d = (new Date).getTime();
+  }
+}, ColorPin:[0, 0, 0]};
+Blockly.Blocks.roduino_on_block = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_on);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.roduino_on_block = function(b, a) {
+  return "1";
+};
+Blockly.Blocks.roduino_off_block = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_off);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.roduino_off_block = function(b, a) {
+  return "0";
+};
+Blockly.Blocks.roduino_get_analog_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.roduino_get_analog_number = function(b, a) {
+  return a.getStringField("PORT");
+};
+Blockly.Blocks.roduino_get_port_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.roduino_get_port_number = function(b, a) {
+  return a.getStringField("PORT");
+};
+Blockly.Blocks.roduino_get_analog_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_analog_value_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_analog_value_2).appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.roduino_get_analog_value = function(b, a) {
+  var d = parseInt(a.getValue("VALUE", a));
+  Entry.Roduino.setSendData([Entry.Roduino.INSTRUCTION.ANALOG_READ, d]);
+  return Entry.hw.getAnalogPortValue(d);
+};
+Blockly.Blocks.roduino_get_digital_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_get_digital_value_1);
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_sensor_value_2).appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.roduino_get_digital_value = function(b, a) {
+  var d = a.getNumberValue("VALUE");
+  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ, d]);
+  return Entry.hw.portData[d - 2];
+};
+Blockly.Blocks.roduino_get_color = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_color + " ").appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_color_red, "red"], [Lang.Blocks.roborobo_color_green, "green"], [Lang.Blocks.roborobo_color_blue, "blue"], [Lang.Blocks.roborobo_color_yellow, "yellow"]]), "VALUE").appendField(Lang.Blocks.roborobo_color_detected);
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.roduino_get_color = function(b, a) {
+  var d = 0, c = a.getField("VALUE", a), e = [Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[0] - 2], Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[1] - 2], Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[2] - 2]];
+  switch(c) {
+    case "red":
+      1 == e[0] && 0 == e[1] && 0 == e[2] && (d = 1);
+      break;
+    case "green":
+      0 == e[0] && 1 == e[1] && 0 == e[2] && (d = 1);
+      break;
+    case "blue":
+      0 == e[0] && 0 == e[1] && 1 == e[2] && (d = 1);
+      break;
+    case "yellow":
+      1 == e[0] && 1 == e[1] && 1 == e[2] && (d = 1);
+  }
+  return d;
+};
+Blockly.Blocks.roduino_set_digital = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_2);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_on, "on"], [Lang.Blocks.roborobo_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.roduino_set_digital = function(b, a) {
+  var d = a.getNumberValue("VALUE"), c = a.getField("OPERATOR");
+  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, d, "on" == c ? 1 : 0]);
+  return a.callReturn();
+};
+Blockly.Blocks.roduino_motor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_motor1, "motor1"], [Lang.Blocks.roborobo_motor2, "motor2"]]), "MODE");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_motor_CW, "cw"], [Lang.Blocks.roborobo_motor_CCW, "ccw"], [Lang.Blocks.roborobo_motor_stop, "stop"]]), "OPERATOR").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.roduino_motor = function(b, a) {
+  var d = pin2 = 0, c = value2 = 0, d = a.getField("MODE"), c = a.getField("OPERATOR");
+  "motor1" == d ? (d = 9, pin2 = 10) : (d = 11, pin2 = 12);
+  "cw" == c ? (c = 1, value2 = 0) : "ccw" == c ? (c = 0, value2 = 1) : value2 = c = 0;
+  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.MOTOR, d, c, pin2, value2]);
+  return a.callReturn();
+};
+Blockly.Blocks.roduino_set_color_pin = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_color + "R : ");
+  this.appendValueInput("RED").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(" G : ");
+  this.appendValueInput("GREEN").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(" B : ");
+  this.appendValueInput("BLUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.roduino_set_color_pin = function(b, a) {
+  var d = a.getNumberValue("RED", a), c = a.getNumberValue("GREEN", a), e = a.getNumberValue("BLUE", a);
+  Entry.Roborobo_Roduino.ColorPin = [d, c, e];
+  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, d, c, e]);
+  return a.callReturn();
+};
+Blockly.Blocks.schoolkit_on_block = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_on);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.schoolkit_on_block = function(b, a) {
+  return "1";
+};
+Blockly.Blocks.schoolkit_off_block = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_off);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.schoolkit_off_block = function(b, a) {
+  return "0";
+};
+Blockly.Blocks.schoolkit_get_out_port_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["OUT1", "2"], ["OUT2", "3"], ["OUT3", "4"], ["OUT4", "5"], ["OUT5", "6"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.schoolkit_get_out_port_number = function(b, a) {
+  return a.getNumberField("PORT");
+};
+Blockly.Blocks.schoolkit_set_output = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_2);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_on, "on"], [Lang.Blocks.roborobo_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.schoolkit_set_output = function(b, a) {
+  var d = a.getNumberValue("VALUE"), c = a.getField("OPERATOR");
+  Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, d, "on" == c ? 1 : 0]);
+  return a.callReturn();
+};
+Blockly.Blocks.schoolkit_get_in_port_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["IN1", "7"], ["IN2", "8"], ["IN3", "9"], ["IN4", "10"], ["IN5", "11"], ["IN6", "12"], ["IN7", "13"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.schoolkit_get_in_port_number = function(b, a) {
+  return a.getNumberField("PORT");
+};
+Blockly.Blocks.schoolkit_get_input_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_get_digital_value_1);
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_sensor_value_2).appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.schoolkit_get_input_value = function(b, a) {
+  var d = a.getNumberValue("VALUE");
+  Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_READ, d]);
+  return Entry.hw.portData[d - 7];
+};
+Blockly.Blocks.schoolkit_motor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_motor1, "motor1"], [Lang.Blocks.roborobo_motor2, "motor2"]]), "MODE");
+  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_motor_CW, "cw"], [Lang.Blocks.roborobo_motor_CCW, "ccw"], [Lang.Blocks.roborobo_motor_stop, "stop"]]), "OPERATOR").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.schoolkit_motor = function(b, a) {
+  var d = 0, d = a.getField("MODE"), c = a.getField("OPERATOR"), e = a.getNumberValue("VALUE"), d = "motor1" == d ? 7 : 8;
+  255 < e ? e = 255 : 0 > e && (e = 0);
+  "cw" == c ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 1, d, e]) : "ccw" == c ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 2, d, e]) : "stop" == c && Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 0, d, e]);
+  return a.callReturn();
+};
+Blockly.Blocks.schoolkit_set_servo_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_1);
+  this.appendValueInput("PIN").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_2);
+  this.appendDummyInput().appendField(" : ");
+  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_degree);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.schoolkit_set_servo_value = function(b, a) {
+  var d = a.getNumberValue("PIN"), c = a.getNumberValue("VALUE");
+  0 > c ? c = 0 : 180 < c && (c = 180);
+  Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.SERVO, d, c]);
+  return a.callReturn();
+};
 Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED:[67, 1], CM_SPRING_RIGHT:[69, 1, 69, 2], CM_SPRING_LEFT:[70, 1, 69, 2], CM_SWITCH:[71, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_IR_LEFT:[91, 2, 91, 4], CM_IR_RIGHT:[93, 2, 91, 4], CM_CALIBRATION_LEFT:[95, 2], CM_CALIBRATION_RIGHT:[97, 2], AUX_MOTOR_SPEED_LEFT:[152, 2], AUX_MOTOR_SPEED_RIGHT:[154, 2]}, setZero:function() {
-  this.setRobotisData([[Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0], [Entry.Robotis_carCont.INSTRUCTION.WRITE, 154, 2, 0]]);
   Entry.hw.sendQueue.setZero = [1];
   this.update();
   this.setRobotisData(null);
   Entry.hw.sendQueue.setZero = null;
+  this.update();
+  this.setRobotisData([[Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0], [Entry.Robotis_carCont.INSTRUCTION.WRITE, 154, 2, 0]]);
   this.update();
 }, name:"robotis_carCont", delay:40, postCallReturn:function(b, a, d) {
   if (0 >= d) {
@@ -4952,12 +5223,13 @@ Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{C
 }};
 Entry.Robotis_openCM70 = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED_R:[79, 1], CM_LED_G:[80, 1], CM_LED_B:[81, 1], CM_BUZZER_INDEX:[84, 1], CM_BUZZER_TIME:[85, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_USER_BUTTON:[26, 1], CM_MOTION:[66, 1], AUX_SERVO_POSITION:[152, 2], AUX_IR:[168, 2], AUX_TOUCH:[202, 1], AUX_TEMPERATURE:[234, 1], AUX_ULTRASONIC:[242, 1], AUX_MAGNETIC:[250, 1], AUX_MOTION_DETECTION:[258, 1], AUX_COLOR:[266, 1], AUX_CUSTOM:[216, 2], AUX_BRIGHTNESS:[288, 
 2], AUX_HYDRO_THEMO_HUMIDITY:[274, 1], AUX_HYDRO_THEMO_TEMPER:[282, 1], AUX_SERVO_MODE:[126, 1], AUX_SERVO_SPEED:[136, 2], AUX_MOTOR_SPEED:[136, 2], AUX_LED_MODULE:[210, 1]}, setZero:function() {
-  Entry.Robotis_carCont.setRobotisData([[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 140, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 142, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 
-  81, 1, 0]]);
   Entry.hw.sendQueue.setZero = [1];
   Entry.Robotis_carCont.update();
   Entry.Robotis_carCont.setRobotisData(null);
   Entry.hw.sendQueue.setZero = null;
+  Entry.Robotis_carCont.update();
+  Entry.Robotis_carCont.setRobotisData([[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 140, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 142, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 
+  81, 1, 0]]);
   Entry.Robotis_carCont.update();
 }, name:"robotis_openCM70", delay:15};
 Blockly.Blocks.robotis_openCM70_cm_custom_value = {init:function() {
@@ -11048,6 +11320,7 @@ Entry.Popup.prototype.remove = function() {
   window.popup = null;
   Entry.removeEventListener("windowResized", this.resize);
   Entry.engine.popup = null;
+  Entry.windowResized.notify();
 };
 Entry.Popup.prototype.resize = function(b) {
   b = window.popup.window_;
@@ -11055,6 +11328,7 @@ Entry.Popup.prototype.resize = function(b) {
   9 * a <= 16 * d ? d = a / 16 * 9 : a = 16 * d / 9;
   b.style.width = String(a) + "px";
   b.style.height = String(d + 35) + "px";
+  Entry.stage && Entry.stage.updateBoundRect();
 };
 Entry.popupHelper = function(b) {
   this.popupList = {};
@@ -12635,15 +12909,15 @@ Entry.BlockToJsParser = function(b) {
   };
   b.BasicIf = function(a) {
     if (2 == a.data.statements.length) {
-      var b = this.Thread(a.statements[0]), c = this.Thread(a.statements[1]), e = a._schema.syntax.concat(), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {\n" + this.indent(b) + "}\nelse {\n" + this.indent(c) + "}"
+      var b = this.Thread(a.statements[0]), c = this.Thread(a.statements[1]), e = a._schema.syntax.concat(), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {\n" + this.indent(b) + "}\nelse {\n" + this.indent(c) + "}\n"
     } else {
-      b = this.Thread(a.statements[0]), e = a._schema.syntax.concat(), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {\n" + this.indent(b) + "}";
+      b = this.Thread(a.statements[0]), e = a._schema.syntax.concat(), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {\n" + this.indent(b) + "}\n";
     }
     return b;
   };
   b.BasicWhile = function(a) {
     var b = this.Thread(a.statements[0]);
-    return "while (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(b) + "}";
+    return "while (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(b) + "}\n";
   };
   b.indent = function(a) {
     var b = "";
@@ -13158,7 +13432,9 @@ Entry.JsToBlockParser = function(b) {
           h = b[g].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, g < arguments.length && arguments.splice(g, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, g < arguments.length && arguments.splice(g, 0, h));
         }
         for (k in arguments) {
-          b = arguments[k], h = this[b.type](b), "string" == typeof h && (g = h.split("_"), "radar" == g[0] && (b = {type:"ai_distance_value", params:[]}, b.params.push(g[1].toUpperCase()), h = b)), h && null != h && ("ai_boolean_object" == f && (h = h.params[0], e.splice(1, 1)), h = Entry.TextCodingUtil.tTobDropdownValueConvertor(h), e.push(h));
+          if (b = arguments[k], h = this[b.type](b), "string" == typeof h && (g = h.split("_"), "radar" == g[0] && (b = {type:"ai_distance_value", params:[]}, b.params.push(g[1].toUpperCase()), h = b)), h && null != h && ("ai_boolean_object" == f && (h = h.params[0], e.splice(1, 1)), h = Entry.TextCodingUtil.tTobDropdownValueConvertor(h), e.push(h), console.log("rigth param", e), e[2] && "text" != e[2].type && "ai_distance_value" != e[2].type)) {
+            throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
+          }
         }
       } else {
         h = this[b.type](b), "ai_boolean_object" == f && (h = h.params[0], e.splice(1, 1)), h && e.push(h);
@@ -13207,6 +13483,12 @@ Entry.JsToBlockParser = function(b) {
       }
       for (k in arguments) {
         c = arguments[k], (c = this[c.type](c)) && null != c && f.push(c);
+      }
+      if ("True" != f[0].type && "ai_boolean_distance" != f[0].type && "ai_boolean_object" != f[0].type && "ai_boolean_and" != f[0].type && "ai_distance_value" != f[0].type) {
+        throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub801\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
+      }
+      if ("True" != f[2].type && "ai_boolean_distance" != f[2].type && "ai_boolean_object" != f[2].type && "ai_boolean_and" != f[2].type && "ai_distance_value" != f[2].type) {
+        throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub801\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
       }
     } else {
       (c = this[c.type](c)) && f.push(c);
@@ -16494,7 +16776,7 @@ Entry.ContextMenu = {};
     this._hideEvent && (Entry.documentMousedown.detach(this._hideEvent), this._hideEvent = null);
   };
 })(Entry.ContextMenu);
-Entry.Loader = {queueCount:0, totalCount:0};
+Entry.Loader = {queueCount:0, totalCount:0, loaded:!1};
 Entry.Loader.addQueue = function(b) {
   this.queueCount || Entry.dispatchEvent("loadStart");
   this.queueCount++;
@@ -16502,10 +16784,16 @@ Entry.Loader.addQueue = function(b) {
 };
 Entry.Loader.removeQueue = function(b) {
   this.queueCount--;
-  this.queueCount || (Entry.dispatchEvent("loadComplete"), this.totalCount = 0);
+  this.queueCount || (this.totalCount = 0, this.handleLoad());
 };
 Entry.Loader.getLoadedPercent = function() {
   return 0 === this.totalCount ? 1 : this.queueCount / this.totalCount;
+};
+Entry.Loader.isLoaded = function() {
+  return !this.queueCount && !this.totalCount;
+};
+Entry.Loader.handleLoad = function() {
+  this.loaded || (this.loaded = !0, Entry.dispatchEvent("loadComplete"));
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectObject:201, "do":301, 
 undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404}};
@@ -17547,6 +17835,9 @@ Entry.Utils.convertMouseEvent = function(b) {
 Entry.Utils.convertIntToHex = function(b) {
   return b.toString(16).toUpperCase();
 };
+Entry.Utils.hasSpecialCharacter = function(b) {
+  return /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g.test(b);
+};
 Entry.Model = function(b, a) {
   var d = Entry.Model;
   d.generateSchema(b);
@@ -18106,7 +18397,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "12.1":Entry.EV3};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -18646,11 +18937,10 @@ Entry.Stage.prototype.moveSprite = function(b) {
   }
 };
 Entry.Stage.prototype.getBoundRect = function(b) {
-  this._boundRect || this.updateBoundRect();
-  return this._boundRect;
+  return this._boundRect ? this._boundRect : this.updateBoundRect();
 };
 Entry.Stage.prototype.updateBoundRect = function(b) {
-  this._boundRect = this.canvas.canvas.getBoundingClientRect();
+  return this._boundRect = this.canvas.canvas.getBoundingClientRect();
 };
 Entry.Variable = function(b) {
   Entry.assert("string" == typeof b.name, "Variable name must be given");
@@ -18770,12 +19060,9 @@ Entry.Variable.prototype.updateView = function() {
       if ("variable" == this.type) {
         this.view_.x = this.getX();
         this.view_.y = this.getY();
-        if (this.object_) {
-          var b = Entry.container.getObject(this.object_);
-          this.textView_.text = b ? b.name + ":" + this.getName() : this.getName();
-        } else {
-          this.textView_.text = this.getName();
-        }
+        var b = this.textView_.text, a;
+        a = this.object_ ? (a = Entry.container.getObject(this.object_)) ? a.name + ":" + this.getName() : this.getName() : this.getName();
+        b !== a && (this.textView_.text = a, this._nameWidth = null);
         null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth());
         this.valueView_.x = this._nameWidth + 14;
         this.valueView_.y = 1;
@@ -18785,19 +19072,19 @@ Entry.Variable.prototype.updateView = function() {
         this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
       } else {
         if ("slide" == this.type) {
-          this.view_.x = this.getX(), this.view_.y = this.getY(), this.object_ ? (b = Entry.container.getObject(this.object_), this.textView_.text = b ? b.name + ":" + this.getName() : this.getName()) : this.textView_.text = this.getName(), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", "") : this.valueView_.text = 
-          this.getValue(), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), b = this._nameWidth + this._valueWidth + 26, b = Math.max(b, 90), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, b, 33, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7), b = this._nameWidth + this._valueWidth + 26, b = Math.max(b, 90), this.maxWidth = b - 20, 
-          this.slideBar_.graphics.clear().beginFill("#A0A1A1").s("#A0A1A1").ss(1).dr(10, 10, this.maxWidth, 1.5), b = this.getSlidePosition(this.maxWidth), this.valueSetter_.graphics.clear().beginFill("#1bafea").s("#A0A1A1").ss(1).dc(b, 10.5, 3);
+          this.view_.x = this.getX(), this.view_.y = this.getY(), b = this.textView_.text, a = this.object_ ? (a = Entry.container.getObject(this.object_)) ? a.name + ":" + this.getName() : this.getName() : this.getName(), b !== a && (this.textView_.text = a, this._nameWidth = null), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", 
+          "") : this.valueView_.text = this.getValue(), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), b = this._nameWidth + this._valueWidth + 26, b = Math.max(b, 90), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, b, 33, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7), b = this._nameWidth + this._valueWidth + 26, b = Math.max(b, 
+          90), this.maxWidth = b - 20, this.slideBar_.graphics.clear().beginFill("#A0A1A1").s("#A0A1A1").ss(1).dr(10, 10, this.maxWidth, 1.5), b = this.getSlidePosition(this.maxWidth), this.valueSetter_.graphics.clear().beginFill("#1bafea").s("#A0A1A1").ss(1).dc(b, 10.5, 3);
         } else {
           if ("list" == this.type) {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
             this.resizeHandle_.x = this.width_ - 2;
             this.resizeHandle_.y = this.height_ - 2;
-            var a = this.getName();
-            this.object_ && (b = Entry.container.getObject(this.object_)) && (a = b.name + ":" + a);
-            a = 7 < a.length ? a.substr(0, 6) + ".." : a;
-            this.titleView_.text = a;
+            b = this.getName();
+            this.object_ && (a = Entry.container.getObject(this.object_)) && (b = a.name + ":" + b);
+            b = 7 < b.length ? b.substr(0, 6) + ".." : b;
+            this.titleView_.text = b;
             this.titleView_.x = this.width_ / 2;
             for (this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rect(0, 0, this.width_, this.height_);this.view_.children[4];) {
               this.view_.removeChild(this.view_.children[4]);
@@ -22106,7 +22393,7 @@ Entry.CodeView = function(b, a) {
   this.svgBlockGroup.attr({class:"svgBlockGroup"});
   this.svgBlockGroup.board = a;
   a.bindCodeView(this);
-  this.code.map(function(b) {
+  this.code._data.getAll().forEach(function(b) {
     b.createView(a);
   });
   b.observe(this, "_setBoard", ["board"]);
@@ -23328,7 +23615,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this._blockView.alignContent();
   };
   b.getTextWidth = function() {
-    return this.textElement.getComputedTextLength() + 6 + 2;
+    return this.textElement.getBoundingClientRect().width + 6 + 2;
   };
 })(Entry.FieldTextInput.prototype);
 Entry.GlobalSvg = {};
@@ -23783,9 +24070,8 @@ Entry.Board.DRAG_RADIUS = 5;
   b.alignThreads = function(a) {
     for (var b = this.svgDom.height(), c = this.code.getThreads(), e = 15, f = 0, b = b - 30, g = 50, h = 0;h < c.length;h++) {
       var k = c[h], l = k.getFirstBlock();
-      if (l) {
-        a && k.view.reDraw();
-        var k = l.view, l = k.svgGroup.getBBox(), m = e + 15;
+      if (l && (a && k.view.reDraw(), k = l.view, k.movable)) {
+        var l = k.svgGroup.getBBox(), m = e + 15;
         m > b && (g = g + f + 10, f = 0, e = 15);
         f = Math.max(f, l.width);
         m = e + 15;
@@ -24978,7 +25264,7 @@ Entry.Vim = function(b, a) {
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
     e === Entry.Vim.TEXT_TYPE_PY && (f = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat("\n\n").concat(f));
-    this.codeMirror.setValue(f);
+    this.codeMirror.setValue(f + "\n");
     e == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:4, ch:0}, {readOnly:!0});
     c = this.codeMirror.getDoc();
     c.setCursor({line:c.lastLine() - 1});
@@ -25751,7 +26037,14 @@ Entry.Playground.prototype.changeViewMode = function(b) {
       -1 < c.id.toUpperCase().indexOf(b.toUpperCase()) ? c.removeClass("entryRemove") : c.addClass("entryRemove");
     }
     "picture" == b ? (this.painter.show(), this.pictureView_.object && this.pictureView_.object == this.object || (this.pictureView_.object = this.object, this.injectPicture())) : this.painter.hide();
-    "sound" != b || this.soundView_.object && this.soundView_.object == this.object ? "text" == b && "textBox" == this.object.objectType || this.textView_.object != this.object ? (this.textView_.object = this.object, this.injectText()) : "code" == b && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove") : (this.soundView_.object = this.object, this.injectSound());
+    if ("sound" == b && (!this.soundView_.object || this.soundView_.object != this.object)) {
+      this.soundView_.object = this.object, this.injectSound();
+    } else {
+      if ("text" == b && "textBox" == this.object.objectType || this.textView_.object != this.object) {
+        this.textView_.object = this.object, this.injectText();
+      }
+    }
+    "code" == b && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove");
     Entry.engine.isState("run") && this.curtainView_.removeClass("entryRemove");
     this.viewMode_ = b;
     this.toggleOffVariableView();

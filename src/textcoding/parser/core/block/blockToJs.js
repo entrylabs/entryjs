@@ -176,7 +176,7 @@ Entry.BlockToJsParser = function(syntax) {
 
             var code = "if (" + param + ") {\n" +
                 this.indent(statementCode1) + "}\n" +
-                "else {\n" + this.indent(statementCode2) + "}";
+                "else {\n" + this.indent(statementCode2) + "}\n";
         } else {
             var statementCode1 = this.Thread(block.statements[0]);
             var syntax = block._schema.syntax.concat();
@@ -194,7 +194,7 @@ Entry.BlockToJsParser = function(syntax) {
             }
 
             var code = "if (" + param + ") {\n" +
-                this.indent(statementCode1) + "}"
+                this.indent(statementCode1) + "}\n";
         }
 
         return code;
@@ -204,7 +204,7 @@ Entry.BlockToJsParser = function(syntax) {
         var statementCode = this.Thread(block.statements[0]);
         var syntax = block._schema.syntax.concat();
         var code = "while (" + syntax[1] + ") {\n" +
-            this.indent(statementCode) + "}"
+            this.indent(statementCode) + "}\n"
         return code;
     };
 

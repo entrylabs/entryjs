@@ -24,14 +24,16 @@ Entry.Robotis_carCont = {
     },
     setZero: function() {
         // instruction / address / length / value / default length
-        this.setRobotisData([
-            [Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0],
-            [Entry.Robotis_carCont.INSTRUCTION.WRITE, 154, 2, 0]
-        ]);
         Entry.hw.sendQueue['setZero'] = [1];
         this.update();
         this.setRobotisData(null);
         Entry.hw.sendQueue['setZero'] = null;
+        this.update();
+        this.setRobotisData([
+            [Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0],
+            [Entry.Robotis_carCont.INSTRUCTION.WRITE, 154, 2, 0]
+        ]);
+        
         this.update();
     },
     name: 'robotis_carCont',
@@ -143,6 +145,11 @@ Entry.Robotis_openCM70 = {
     },
     setZero: function() {
         // instruction / address / length / value / default length
+        Entry.hw.sendQueue['setZero'] = [1];
+        Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData(null);
+        Entry.hw.sendQueue['setZero'] = null;
+        Entry.Robotis_carCont.update();
         Entry.Robotis_carCont.setRobotisData([
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0],
@@ -154,10 +161,7 @@ Entry.Robotis_openCM70 = {
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0]
         ]);
-        Entry.hw.sendQueue['setZero'] = [1];
-        Entry.Robotis_carCont.update();
-        Entry.Robotis_carCont.setRobotisData(null);
-        Entry.hw.sendQueue['setZero'] = null;
+        
         Entry.Robotis_carCont.update();
     },
     name: 'robotis_openCM70',

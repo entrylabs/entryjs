@@ -42,8 +42,8 @@ Entry.Albert = {
         	"note":{name: Lang.Hw.note , type: "output", pos: {x: 0, y: 0}}
         },
         ports: {
-            "leftProximity":{name: Lang.Blocks.ALBERT_sensor_leftProximity, type: "input", pos: {x : 178, y: 401}},
-            "rightProximity":{name: Lang.Blocks.ALBERT_sensor_rightProximity, type: "input", pos: {x: 66, y: 359}},
+            "leftProximity":{name: Lang.Blocks.ALBERT_sensor_left_proximity, type: "input", pos: {x : 178, y: 401}},
+            "rightProximity":{name: Lang.Blocks.ALBERT_sensor_right_proximity, type: "input", pos: {x: 66, y: 359}},
             "battery":{name: Lang.Blocks.ALBERT_sensor_battery , type: "input", pos: {x : 88, y: 368}},
             "light":{name: Lang.Blocks.ALBERT_sensor_light, type: "input", pos: {x: 127, y: 391}},
             "leftWheel":{name: Lang.Hw.leftWheel , type: "output", pos: {x: 299, y: 406}},

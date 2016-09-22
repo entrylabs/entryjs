@@ -480,18 +480,16 @@ Entry.JsToBlockParser = function(syntax) {
 
     p.BinaryExpression = function(node) {
         ////console.log("BinaryExpression node", node);
-
         var result = {};
         var structure = {};
+        var operator = String(node.operator);  
+        var nodeLeftName = node.left.name;
 
-        var operator = String(node.operator);
-        var nodeName = node.left.name;
-
-        switch(operator){
-            case "==":
-                if(nodeName == "object_up" || nodeName == "object_right" || nodeName == "object_down")
+        switch(operator){ 
+            case "==": 
+                if(nodeLeftName == "object_up" || nodeLeftName == "object_right" || nodeLeftName == "object_down")
                     var type = "ai_boolean_object";
-                else if(nodeName == "radar_up" || nodeName == "radar_right" || nodeName == "radar_down")
+                else if(nodeLeftName == "radar_up" || nodeLeftName == "radar_right" || nodeLeftName == "radar_down")
                     var type = "ai_boolean_distance";
                 else
                     var type = null;
@@ -616,8 +614,15 @@ Entry.JsToBlockParser = function(syntax) {
                         }
 
                         param = Entry.TextCodingUtil.tTobDropdownValueConvertor(param);
-
-                        params.push(param);
+                        params.push(param);  
+                        console.log("rigth param", params); 
+                        
+                        if(params[2] && params[2].type != "text" && params[2].type != "ai_distance_value") {
+                           throw {
+                                message : '지원하지 않는 표현식 입니다.',
+                                node : node.test
+                            }; 
+                        }
                     }
                 }
             } else {
@@ -730,6 +735,32 @@ Entry.JsToBlockParser = function(syntax) {
 
                 if(param && param != null)
                     params.push(param);
+            }
+
+            //console.log("&& params", params); 
+
+            if(params[0].type != "True" && 
+                params[0].type != "ai_boolean_distance" && 
+                params[0].type != "ai_boolean_object" && 
+                params[0].type != "ai_boolean_and" &&
+                params[0].type != "ai_distance_value")
+            { 
+                throw {
+                    message : '지원하지 않는 명렁어 입니다.',
+                    node : node
+                } 
+            } 
+
+            if(params[2].type != "True" && 
+                params[2].type != "ai_boolean_distance" && 
+                params[2].type != "ai_boolean_object" && 
+                params[2].type != "ai_boolean_and" &&
+                params[2].type != "ai_distance_value")
+            {
+                throw {
+                    message : '지원하지 않는 명렁어 입니다.',
+                    node : node
+                }
             }
         } else {
             param = this[right.type](right);
@@ -975,12 +1006,6 @@ Entry.JsToBlockParser = function(syntax) {
             else
                 var testCondition = null;
 
-            //console.log("this.syntax", this.syntax);
-            //console.log("testCondition", testCondition);
-
-            //console.log("node.test", node.test);
-
-            ////console.log("testCondition", testCondition);
             if(testCondition == "frontwall" && (operator == "==")) {
                 test = "front == \'wall\'";
                 type = this.syntax.BasicIf[test];
@@ -997,6 +1022,7 @@ Entry.JsToBlockParser = function(syntax) {
                 if(node.test.value || (node.test.left && node.test.right)) {
                     type = "ai_if_else";
                     var callExData = this[node.test.type](node.test, this.syntax.Scope);
+                    var value = callExData.params[2];
                     params.push(callExData);
                 } else {
                     throw {
@@ -1004,45 +1030,9 @@ Entry.JsToBlockParser = function(syntax) {
                         node : node.test
                     };
                 }
-
             }
-            /*else if(node.test.left && (node.test.left.name == "object_up" || node.test.left.name == "object_right" || node.test.left.name == "object_down")) {
-                if(node.test.right && (node.test.right.raw == "\'obstacle\'" || node.test.right.raw == "\'wall\'" || node.test.right.raw == "\'item\'")) {
-                    if(node.test.operator == "==") {
-                        //console.log("tttest", test);
-                        type = "ai_if_else";
-                        var callExData = this[node.test.type](node.test, this.syntax.Scope);
-                        params.push(callExData);
-                    } else {
-                        throw {
-                            message : '지원하지 않는 표현식 입니다.',
-                            node : node.test
-                        };
-                    }
-                } else {
-                    throw {
-                        message : '지원하지 않는 표현식 입니다.',
-                        node : node.test
-                    };
-                }
-            } else {
-                //console.log("node.test.raw", node.test.raw);
-                if(node.test.raw && (node.test.raw == "true" || node.test.raw == "false")) {
-                    type = "ai_if_else";
-                    var callExData = this[node.test.type](node.test, this.syntax.Scope);
-                    params.push(callExData);
-                } else {
-                    throw {
-                        message : '지원하지 않는 표현식 입니다.',
-                        node : node.test
-                    };
-                }
-            }*/
-
-            if (type) {
-                ////console.log("target", this.syntax.BasicIf[test]);
-                ////console.log("consequent", consequent, "alternate", alternate);
-
+            
+            if (type) {    
                 if(consequent && consequent.length != 0){
                     stmtCons = consequent;
                     result.statements.push(stmtCons);
@@ -1057,8 +1047,6 @@ Entry.JsToBlockParser = function(syntax) {
                     result.type = type;
                 if(params && params.length != 0)
                     result.params = params;
-
-                //console.log("result", result);
 
                 return result;
             } else {

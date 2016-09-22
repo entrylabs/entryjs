@@ -32,7 +32,7 @@ Entry.block = {
     "albert_is_oid_value": {
         "color": "#00979D",
         "fontColor": "#fff",
-        "skeleton": "basic_string_field",
+        "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
             {
@@ -87,14 +87,18 @@ Entry.block = {
                 "options": [
                     [Lang.Blocks.ALBERT_sensor_left_proximity ,"leftProximity"],
                     [Lang.Blocks.ALBERT_sensor_right_proximity,"rightProximity"],
-                    [Lang.Blocks.ALBERT_sensor_light,"light"],
-                    [Lang.Blocks.ALBERT_sensor_battery,"battery"],
-                    [Lang.Blocks.ALBERT_sensor_signal_strength,"signalStrength"],
+                    [Lang.Blocks.ALBERT_sensor_acceleration_x, "accelerationX"],
+                    [Lang.Blocks.ALBERT_sensor_acceleration_y,"accelerationY"],
+                    [Lang.Blocks.ALBERT_sensor_acceleration_z,"accelerationZ"],
                     [Lang.Blocks.ALBERT_sensor_front_oid,"frontOid"],
                     [Lang.Blocks.ALBERT_sensor_back_oid,"backOid"],
                     [Lang.Blocks.ALBERT_sensor_position_x,"positionX"],
                     [Lang.Blocks.ALBERT_sensor_position_y,"positionY"],
-                    [Lang.Blocks.ALBERT_sensor_orientation,"orientation"]
+                    [Lang.Blocks.ALBERT_sensor_orientation,"orientation"],
+                    [Lang.Blocks.ALBERT_sensor_light,"light"],
+                    [Lang.Blocks.ALBERT_sensor_temperature, "temperature"],
+                    [Lang.Blocks.ALBERT_sensor_battery,"battery"],
+                    [Lang.Blocks.ALBERT_sensor_signal_strength,"signalStrength"]
                 ],
                 "value": "leftProximity",
                 "fontSize": 11
@@ -245,8 +249,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"]
+                    [Lang.Blocks.ALBERT_turn_left,"LEFT"],
+                    [Lang.Blocks.ALBERT_turn_right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -419,9 +423,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.ALBERT_left_wheel,"LEFT"],
+                    [Lang.Blocks.ALBERT_right_wheel,"RIGHT"],
+                    [Lang.Blocks.ALBERT_both_wheels,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -478,9 +482,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.ALBERT_left_wheel,"LEFT"],
+                    [Lang.Blocks.ALBERT_right_wheel,"RIGHT"],
+                    [Lang.Blocks.ALBERT_both_wheels,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -809,9 +813,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.ALBERT_left_eye,"LEFT"],
+                    [Lang.Blocks.ALBERT_right_eye,"RIGHT"],
+                    [Lang.Blocks.ALBERT_both_eyes,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -819,13 +823,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.red,"4"],
-                    [Lang.General.yellow,"6"],
-                    [Lang.General.green,"2"],
+                    [Lang.Blocks.ALBERT_color_red,"4"],
+                    [Lang.Blocks.ALBERT_color_yellow,"6"],
+                    [Lang.Blocks.ALBERT_color_green,"2"],
                     [Lang.Blocks.ALBERT_color_cyan,"3"],
-                    [Lang.General.blue,"1"],
+                    [Lang.Blocks.ALBERT_color_blue,"1"],
                     [Lang.Blocks.ALBERT_color_magenta,"5"],
-                    [Lang.General.white,"7"]
+                    [Lang.Blocks.ALBERT_color_white,"7"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -871,9 +875,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.ALBERT_left_eye,"LEFT"],
+                    [Lang.Blocks.ALBERT_right_eye,"RIGHT"],
+                    [Lang.Blocks.ALBERT_both_eyes,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -917,8 +921,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "켜기", "ON" ],
-                    [ "끄기", "OFF" ]
+                    [ Lang.Blocks.ALBERT_turn_on, "ON" ],
+                    [ Lang.Blocks.ALBERT_turn_off, "OFF" ]
                 ],
                 "value": "ON",
                 "fontSize": 11
@@ -956,8 +960,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "켜기", "ON" ],
-                    [ "끄기", "OFF" ]
+                    [ Lang.Blocks.ALBERT_turn_on, "ON" ],
+                    [ Lang.Blocks.ALBERT_turn_off, "OFF" ]
                 ],
                 "value": "ON",
                 "fontSize": 11
@@ -1144,18 +1148,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.note_c + '',"4"],
-                    [Lang.General.note_c + '#',"5"],
-                    [Lang.General.note_d + '',"6"],
-                    [Lang.General.note_e + 'b',"7"],
-                    [Lang.General.note_e + '',"8"],
-                    [Lang.General.note_f + '',"9"],
-                    [Lang.General.note_f + '#',"10"],
-                    [Lang.General.note_g + '',"11"],
-                    [Lang.General.note_g + '#',"12"],
-                    [Lang.General.note_a + '',"13"],
-                    [Lang.General.note_b + 'b',"14"],
-                    [Lang.General.note_b + '',"15"]
+                    [Lang.Blocks.ALBERT_note_c + '',"4"],
+                    [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                    [Lang.Blocks.ALBERT_note_d + '',"6"],
+                    [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                    [Lang.Blocks.ALBERT_note_e + '',"8"],
+                    [Lang.Blocks.ALBERT_note_f + '',"9"],
+                    [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                    [Lang.Blocks.ALBERT_note_g + '',"11"],
+                    [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                    [Lang.Blocks.ALBERT_note_a + '',"13"],
+                    [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                    [Lang.Blocks.ALBERT_note_b + '',"15"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -1465,8 +1469,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ]
+                    [ Lang.Blocks.ALBERT_turn_left, "LEFT" ],
+                    [ Lang.Blocks.ALBERT_turn_right, "RIGHT" ]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -1523,9 +1527,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "FRONT" ]
+                    [ Lang.Blocks.HAMSTER_left_led, "LEFT" ],
+                    [ Lang.Blocks.HAMSTER_right_led, "RIGHT" ],
+                    [ Lang.Blocks.HAMSTER_both_leds, "FRONT" ]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -1533,13 +1537,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "빨간색", "4" ],
-                    [ "노란색", "6" ],
-                    [ "초록색", "2" ],
-                    [ "하늘색", "3" ],
-                    [ "파란색", "1" ],
-                    [ "보라색", "5" ],
-                    [ "하얀색", "7" ]
+                    [ Lang.Blocks.HAMSTER_color_red, "4" ],
+                    [ Lang.Blocks.HAMSTER_color_yellow, "6" ],
+                    [ Lang.Blocks.HAMSTER_color_green, "2" ],
+                    [ Lang.Blocks.HAMSTER_color_cyan, "3" ],
+                    [ Lang.Blocks.HAMSTER_color_blue, "1" ],
+                    [ Lang.Blocks.HAMSTER_color_magenta, "5" ],
+                    [ Lang.Blocks.HAMSTER_color_white, "7" ]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -1582,9 +1586,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "FRONT" ]
+                    [ Lang.Blocks.HAMSTER_left_led, "LEFT" ],
+                    [ Lang.Blocks.HAMSTER_right_led, "RIGHT" ],
+                    [ Lang.Blocks.HAMSTER_both_leds, "FRONT" ]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -1623,9 +1627,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "FRONT" ]
+                    [ Lang.Blocks.ALBERT_left_wheel, "LEFT" ],
+                    [ Lang.Blocks.ALBERT_right_wheel, "RIGHT" ],
+                    [ Lang.Blocks.ALBERT_both_wheels, "FRONT" ]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -1679,9 +1683,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "FRONT" ]
+                    [ Lang.Blocks.ALBERT_left_wheel, "LEFT" ],
+                    [ Lang.Blocks.ALBERT_right_wheel, "RIGHT" ],
+                    [ Lang.Blocks.ALBERT_both_wheels, "FRONT" ]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -7893,8 +7897,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"]
+                    [Lang.Blocks.HAMSTER_turn_once_left,"LEFT"],
+                    [Lang.Blocks.HAMSTER_turn_right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -8174,8 +8178,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"]
+                    [Lang.Blocks.HAMSTER_turn_once_left,"LEFT"],
+                    [Lang.Blocks.HAMSTER_turn_right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -8350,9 +8354,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -8410,9 +8414,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -8471,7 +8475,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.HAMSTER_color_black,"BLACK"],
-                    [Lang.General.white,"WHITE"]
+                    [Lang.Blocks.HAMSTER_color_white,"WHITE"]
                 ],
                 "value": "BLACK",
                 "fontSize": 11
@@ -8479,9 +8483,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_floor_sensors,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -8529,7 +8533,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.HAMSTER_color_black,"BLACK"],
-                    [Lang.General.white,"WHITE"]
+                    [Lang.Blocks.HAMSTER_color_white,"WHITE"]
                 ],
                 "value": "BLACK",
                 "fontSize": 11
@@ -8537,8 +8541,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
                     [Lang.Blocks.HAMSTER_front,"FRONT"],
                     [Lang.Blocks.HAMSTER_rear,"REAR"]
                 ],
@@ -8674,9 +8678,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -8684,13 +8688,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.red,"4"],
-                    [Lang.General.yellow,"6"],
-                    [Lang.General.green,"2"],
+                    [Lang.Blocks.HAMSTER_color_red,"4"],
+                    [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                    [Lang.Blocks.HAMSTER_color_green,"2"],
                     [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                    [Lang.General.blue,"1"],
+                    [Lang.Blocks.HAMSTER_color_blue,"1"],
                     [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                    [Lang.General.white,"7"]
+                    [Lang.Blocks.HAMSTER_color_white,"7"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -8736,9 +8740,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -8931,18 +8935,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.note_c + '',"4"],
-                    [Lang.General.note_c + '#',"5"],
-                    [Lang.General.note_d + '',"6"],
-                    [Lang.General.note_e + 'b',"7"],
-                    [Lang.General.note_e + '',"8"],
-                    [Lang.General.note_f + '',"9"],
-                    [Lang.General.note_f + '#',"10"],
-                    [Lang.General.note_g + '',"11"],
-                    [Lang.General.note_g + '#',"12"],
-                    [Lang.General.note_a + '',"13"],
-                    [Lang.General.note_b + 'b',"14"],
-                    [Lang.General.note_b + '',"15"]
+                    [Lang.Blocks.ALBERT_note_c + '',"4"],
+                    [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                    [Lang.Blocks.ALBERT_note_d + '',"6"],
+                    [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                    [Lang.Blocks.ALBERT_note_e + '',"8"],
+                    [Lang.Blocks.ALBERT_note_f + '',"9"],
+                    [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                    [Lang.Blocks.ALBERT_note_g + '',"11"],
+                    [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                    [Lang.Blocks.ALBERT_note_a + '',"13"],
+                    [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                    [Lang.Blocks.ALBERT_note_b + '',"15"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -13590,9 +13594,10 @@ Entry.block = {
                 }
 
                 data_default_address = data_default_address + increase * data_default_length;
-                if (increase != 0) {
-                    data_length = 6 * data_default_length;
-                }
+                data_address = data_default_address;
+                // if (increase != 0) {
+                   // data_length = 6 * data_default_length;
+                // }
 
                 Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
                 // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
@@ -22163,7 +22168,760 @@ Entry.block = {
 
             return result;
         }
-    }
+    },
+    "roduino_on_block": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "roduino_on_block"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "roduino_value",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            return "1";
+        }
+    },
+    "roduino_off_block": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "roduino_off_block"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "roduino_value",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            return "0";
+        }
+    },
+    "roduino_get_analog_number": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ '0', "0" ],
+                    [ '1', "1" ],
+                    [ '2', "2" ],
+                    [ '3', "3" ],
+                    [ '4', "4" ],
+                    [ '5', "5" ]
+                ],
+                "value": "0",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("PORT");
+        }
+    },
+    "roduino_get_port_number": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ '2', "2" ],
+                    [ '3', "3" ],
+                    [ '4', "4" ],
+                    [ '5', "5" ],
+                    [ '6', "6" ],
+                    [ '7', "7" ],
+                    [ '8', "8" ]
+                ],
+                "value": "2",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("PORT");
+        }
+    },
+    "roduino_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "roduino_get_analog_number"
+                }
+            ],
+            "type": "roduino_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "roduino_value",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            var signal = parseInt(script.getValue("VALUE", script));
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.ANALOG_READ, signal]);
+            return Entry.hw.getAnalogPortValue(signal);
+        }
+    },
+    "roduino_get_digital_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "roduino_get_port_number"
+                }
+            ],
+            "type": "roduino_get_digital_value"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "roduino_value",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            var signal = script.getNumberValue("VALUE", script);
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ, signal]);
+            return Entry.hw.portData[signal - 2];
+        }
+    },
+    "roduino_get_color": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.roborobo_color_red, "red"],
+                    [Lang.Blocks.roborobo_color_green, "green"],
+                    [Lang.Blocks.roborobo_color_blue, "blue"],
+                    [Lang.Blocks.roborobo_color_yellow, "yellow"]
+                ],
+                "value": "red",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "roduino_get_color"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "roduino_value",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            var flag = 0;
+            var signal = script.getField("VALUE", script);
+            var value =
+            [
+                Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[0] - 2],
+                Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[1] - 2],
+                Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[2] - 2]
+            ];
+            
+            switch(signal) {
+                case "red":
+                    if(value[0] == 1 && value[1] == 0 && value[2] == 0) {
+                        flag = 1;
+                    }
+                break;
+                case "green":
+                    if(value[0] == 0 && value[1] == 1 && value[2] == 0) {
+                        flag = 1;
+                    }
+                break;
+                case "blue":
+                    if(value[0] == 0 && value[1] == 0 && value[2] == 1) {
+                        flag = 1;
+                    }
+                break;
+                case "yellow":
+                    if(value[0] == 1 && value[1] == 1 && value[2] == 1) {
+                        flag = 1;
+                    }
+                break;
+            }
+            return flag;
+        }
+    },
+    "roduino_set_digital": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.roborobo_on, "on" ],
+                    [ Lang.Blocks.roborobo_off, "off" ]
+                ],
+                "value": "on",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "roduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "roduino_set_digital"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0,
+            "OPERATOR": 1
+        },
+        "class": "roduino_set",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            var pin = script.getNumberValue("VALUE", script);
+            var operator = script.getField("OPERATOR");
+            var value = operator == "on" ? 1 : 0;
+            
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, pin, value]);
+            return script.callReturn();
+        }
+    },
+    "roduino_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.roborobo_motor1, "motor1" ],
+                    [ Lang.Blocks.roborobo_motor2, "motor2" ]                    
+                ],
+                "value": "motor1",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.roborobo_motor_CW, "cw" ],
+                    [ Lang.Blocks.roborobo_motor_CCW, "ccw" ],
+                    [ Lang.Blocks.roborobo_motor_stop, "stop" ]
+                ],
+                "value": "cw",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                null
+            ],
+            "type": "roduino_motor"
+        },
+        "paramsKeyMap": {
+            "MODE": 0,
+            "OPERATOR": 1
+        },
+        "class": "roduino_set",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            var pin1 = pin2 = 0;
+            var value1 = value2 = 0;
+            var mode = script.getField("MODE");
+            var operator = script.getField("OPERATOR");
+            
+            if(mode == "motor1") {
+                pin1 = 9;
+                pin2 = 10;
+            } else {
+                pin1 = 11;
+                pin2 = 12;
+            }
+            
+            if (operator == "cw") {
+                value1 = 1;
+                value2 = 0;
+            } else if (operator == "ccw") {
+                value1 = 0;
+                value2 = 1;
+            } else {
+                value1 = 0;
+                value2 = 0;
+            }
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.MOTOR, pin1, value1, pin2, value2]);
+            return script.callReturn();
+        }
+    },
+    "roduino_set_color_pin": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "2" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "3" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "4" ]
+                },
+                null
+            ],
+            "type": "roduino_set_color_pin"
+        },
+        "paramsKeyMap": {
+            "RED": 0,
+            "GREEN": 1,
+            "BLUE": 2
+        },
+        "class": "roduino_set",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            var redPin = script.getNumberValue("RED", script);
+            var greenPin = script.getNumberValue("GREEN", script);
+            var bluePin = script.getNumberValue("BLUE", script);
+            
+            Entry.Roborobo_Roduino.ColorPin = [ redPin, greenPin, bluePin ];
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, redPin, greenPin, bluePin]);
+            return script.callReturn();
+        }
+    },
+    "schoolkit_on_block": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "schoolkit_on_block"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "schoolkit_value",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            return "1";
+        }
+    },
+    "schoolkit_off_block": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "schoolkit_off_block"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "schoolkit_value",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            return "0";
+        }
+    },
+    "schoolkit_get_out_port_number": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "OUT1", 2 ],
+                    [ "OUT2", 3 ],
+                    [ "OUT3", 4 ],
+                    [ "OUT4", 5 ],
+                    [ "OUT5", 6 ]
+                ],
+                "value": 2,
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getNumberField("PORT");
+        }
+    },
+    "schoolkit_get_in_port_number": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "IN1", 7 ],
+                    [ "IN2", 8 ],
+                    [ "IN3", 9 ],
+                    [ "IN4", 10 ],
+                    [ "IN5", 11 ],
+                    [ "IN6", 12 ],
+                    [ "IN7", 13 ]
+                ],
+                "value": 7,
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getNumberField("PORT");
+        }
+    },    
+    "schoolkit_set_output": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.roborobo_on, "on" ],
+                    [ Lang.Blocks.roborobo_off, "off" ]
+                ],
+                "value": "on",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "schoolkit_get_out_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "schoolkit_set_output"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0,
+            "OPERATOR": 1
+        },
+        "class": "schoolkit_set",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            var pin = script.getNumberValue("VALUE", script);
+            var operator = script.getField("OPERATOR");
+            var value = operator == "on" ? 1 : 0;
+            
+            Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, pin, value]);
+            return script.callReturn();
+        }
+    },
+    "schoolkit_get_input_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "schoolkit_get_in_port_number"
+                }
+            ],
+            "type": "schoolkit_get_input_value"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "schoolkit_value",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            var signal = script.getNumberValue("VALUE", script);
+            Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_READ, signal]);
+            return Entry.hw.portData[signal - 7];
+        }
+    },
+    "schoolkit_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.roborobo_motor1, "motor1" ],
+                    [ Lang.Blocks.roborobo_motor2, "motor2" ]                    
+                ],
+                "value": "motor1",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.roborobo_motor_CW, "cw" ],
+                    [ Lang.Blocks.roborobo_motor_CCW, "ccw" ],
+                    [ Lang.Blocks.roborobo_motor_stop, "stop" ]
+                ],
+                "value": "cw",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },            
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,                
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                null,
+                null
+            ],
+            "type": "schoolkit_motor"
+        },
+        "paramsKeyMap": {
+            "MODE": 0,            
+            "VALUE": 1,
+            "OPERATOR": 2            
+        },
+        "class": "schoolkit_set",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            var pin = 0;
+            var operatorValue = 0;
+            var mode = script.getField("MODE");
+            var operator = script.getField("OPERATOR");
+            var value = script.getNumberValue("VALUE");
+            
+            if(mode == "motor1") {
+                pin = 7;
+            } else {
+                pin = 8;
+            }
+            if(value > 255) {
+                value = 255;
+            } else if(value < 0) {
+                value = 0;
+            }
+            
+            if (operator == "cw") {
+                operatorValue = 1;
+                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+            } else if (operator == "ccw") {
+                operatorValue = 2;
+                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+            } else if(operator == "stop") {
+                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+            }
+            return script.callReturn();
+        }
+    },
+    "schoolkit_set_servo_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "schoolkit_get_out_port_number"
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "schoolkit_set_servo_value"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+            "VALUE": 1
+        },
+        "class": "schoolkit_set",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            var pin = script.getNumberValue("PIN", script);
+            var value = script.getNumberValue("VALUE");
+            
+            if(value < 0) {
+                value = 0;
+            } else if(value > 180) {
+                value = 180;
+            }
+            
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.SERVO, pin, value]);
+            return script.callReturn();
+        }
+    }     
 };
 
 (function() {
