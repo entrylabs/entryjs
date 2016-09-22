@@ -16001,9 +16001,7 @@ Entry.block = {
             if (value == 'null' || !isExist)
                 throw new Error('value can not be null or undefined');
 
-            Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                                         ["when_message_cast", value]);
-                                                         return script.callReturn();
+            Entry.engine.raiseMessage(value);
         },
         "syntax": {"js": [], "py": ["Entry.send_signal(%1)"]}
     },
@@ -16068,10 +16066,7 @@ Entry.block = {
                 var isExist = Entry.isExist(value, 'id', arr);
                 if (value == 'null' || !isExist)
                     throw new Error('value can not be null or undefined');
-                var data = Entry.container.mapEntityIncludeCloneOnScene(
-                    Entry.engine.raiseKeyEvent,
-                    ["when_message_cast", value]
-                );
+                var data = Entry.engine.raiseMessage(value);
                 var runningScript = [];
                 while (data.length) {
                     var executor = data.shift();
@@ -19833,7 +19828,7 @@ Entry.block = {
         func: function() {
             var self = this;
             if (!this.isContinue) {
-                
+
                 var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
                 var unitId;
@@ -19863,7 +19858,7 @@ Entry.block = {
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
                     $.each(components, function(type, component) {
                         if(+type === Ntry.STATIC.SPRITE) {
-                            var cloneComponent = $.extend({}, component);                        
+                            var cloneComponent = $.extend({}, component);
                             cloneComponent.zIndex = particleZIndex;
                             Ntry.entityManager.addComponent(particle.id, cloneComponent);
                         } else if(+type != Ntry.STATIC.UNIT) {
@@ -19884,7 +19879,7 @@ Entry.block = {
                             Ntry.entityManager.removeEntity(particle.id);
                             self.isAction = false;
                         }
-                    });                    
+                    });
                 });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -19914,7 +19909,7 @@ Entry.block = {
         func: function() {
             var self = this;
             if (!this.isContinue) {
-                
+
                 var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
                 var unitId;
@@ -19945,7 +19940,7 @@ Entry.block = {
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
                     $.each(components, function(type, component) {
                         if(+type === Ntry.STATIC.SPRITE) {
-                            var cloneComponent = $.extend({}, component);                        
+                            var cloneComponent = $.extend({}, component);
                             cloneComponent.zIndex = particleZIndex;
                             Ntry.entityManager.addComponent(particle.id, cloneComponent);
                         } else if(+type != Ntry.STATIC.UNIT) {
@@ -19967,7 +19962,7 @@ Entry.block = {
                             Ntry.entityManager.removeEntity(particle.id);
                             self.isAction = false;
                         }
-                    });                    
+                    });
                 });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -20002,7 +19997,7 @@ Entry.block = {
                 var gridSize = Ntry.configManager.getConfig("gridSize");
                 var tileSize = Ntry.configManager.getConfig("tileSize").width;
                 var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.OBSTACLE);
-                
+
                 for(var id in entities) {
                     var obstacleComp = Ntry.entityManager.getComponent(id, Ntry.STATIC.OBSTACLE);
                     if(obstacleComp.tileType === Ntry.STATIC.OBSTACLE_IRON) {
