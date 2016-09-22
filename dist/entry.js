@@ -13921,7 +13921,7 @@ Entry.Playground.prototype.changeViewMode = function(a) {
       var c = d[b];
       -1 < c.id.toUpperCase().indexOf(a.toUpperCase()) ? c.removeClass("entryRemove") : c.addClass("entryRemove");
     }
-    "picture" == a ? (this.painter.show(), this.pictureView_.object && this.pictureView_.object == this.object || (this.pictureView_.object = this.object, this.injectPicture())) : this.painter.hide();
+    Entry.pictureEditable && ("picture" == a ? (this.painter.show(), this.pictureView_.object && this.pictureView_.object == this.object || (this.pictureView_.object = this.object, this.injectPicture())) : this.painter.hide());
     if ("sound" == a && (!this.soundView_.object || this.soundView_.object != this.object)) {
       this.soundView_.object = this.object, this.injectSound();
     } else {
@@ -25203,7 +25203,7 @@ Entry.RenderView = function(a, b) {
   this._svgId = "renderView_" + (new Date).getTime();
   this._generateView();
   this.offset = this.svgDom.offset();
-  this.setWidth();
+  this._setSize();
   this.svg = Entry.SVG(this._svgId, this.svgDom[0]);
   Entry.Utils.addFilters(this.svg, this.suffix);
   this.svg && (this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
@@ -25233,8 +25233,7 @@ Entry.RenderView = function(a, b) {
         g = g.svgGroup.getBBox().height;
         a += g + 15;
       }
-      this._bBox = this.svgGroup.getBBox();
-      this.height = this._bBox.height;
+      this._setSize();
     }
   };
   a.hide = function() {
@@ -25243,9 +25242,9 @@ Entry.RenderView = function(a, b) {
   a.show = function() {
     this.view.removeClass("entryRemove");
   };
-  a.setWidth = function() {
-    this._svgWidth = this.svgDom.width();
-    this.offset = this.svgDom.offset();
+  a._setSize = function() {
+    this.svgDom && (this._svgWidth = this.svgDom.width(), this.offset = this.svgDom.offset());
+    this.svgGroup && (this._bBox = this.svgGroup.getBBox());
   };
   a.bindCodeView = function(b) {
     this.svgBlockGroup.remove();
@@ -25256,7 +25255,14 @@ Entry.RenderView = function(a, b) {
     this.svgGroup.appendChild(this.svgBlockGroup);
   };
   a.resize = function() {
-    this.svg && this._bBox && $(this.svg).css("height", this._bBox.height + 10);
+    this.svg && this._bBox && setTimeout(function() {
+      this._setSize();
+      $(this.svg).css({height:this._bBox.height + 5});
+    }.bind(this), 0);
+  };
+  a.setDomSize = function() {
+    this.align();
+    this.resize();
   };
 })(Entry.RenderView.prototype);
 Entry.ThreadView = function(a, b) {
@@ -25397,8 +25403,8 @@ Entry.Vim = function(a, b) {
     a === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : a === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     return this._parser.parse(b, Entry.Parser.PARSE_SYNTAX);
   };
-  a.setParserAvailableCode = function(b, a) {
-    this._parser.setAvailableCode(b, a);
+  a.setParserAvailableCode = function(a, d) {
+    this._parser.setAvailableCode(a, d);
   };
 })(Entry.Vim.prototype);
 Entry.Xml = {};

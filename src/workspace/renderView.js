@@ -24,8 +24,7 @@ Entry.RenderView = function(dom, align) {
     this._generateView();
 
     this.offset = this.svgDom.offset();
-    this.setWidth();
-
+    this._setSize();
 
     this.svg = Entry.SVG(this._svgId , this.svgDom[0]);
     Entry.Utils.addFilters(this.svg, this.suffix);
@@ -109,17 +108,20 @@ Entry.RenderView = function(dom, align) {
             var height = blockView.svgGroup.getBBox().height;
             marginFromTop += height + vPadding;
         }
-        this._bBox = this.svgGroup.getBBox();
-        this.height = this._bBox.height;
+        this._setSize();
     };
 
     p.hide = function() {this.view.addClass('entryRemove');};
 
     p.show = function() {this.view.removeClass('entryRemove');};
 
-    p.setWidth = function() {
-        this._svgWidth = this.svgDom.width();
-        this.offset = this.svgDom.offset();
+    p._setSize = function() {
+        if (this.svgDom) {
+            this._svgWidth = this.svgDom.width();
+            this.offset = this.svgDom.offset();
+        }
+        if (this.svgGroup)
+            this._bBox = this.svgGroup.getBBox();
     };
 
     p.bindCodeView = function(codeView) {
@@ -133,7 +135,17 @@ Entry.RenderView = function(dom, align) {
 
     p.resize = function() {
         if (!this.svg || !this._bBox) return;
-        $(this.svg).css('height', this._bBox.height + 10);
+        setTimeout(function() {
+            this._setSize();
+            $(this.svg).css({
+                'height': this._bBox.height + 5
+            });
+        }.bind(this), 0);
+    };
+
+    p.setDomSize = function() {
+        this.align();
+        this.resize();
     };
 
 })(Entry.RenderView.prototype);
