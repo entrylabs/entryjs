@@ -228,6 +228,10 @@ Entry.VariableContainer.prototype.select = function(object) {
     }
 };
 
+Entry.VariableContainer.prototype.getMessage = function(messageId) {
+    return this.messages_.filter(function(m) {return m.id === messageId})[0]
+}
+
 /**
  * @param {object} message
  */

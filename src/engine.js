@@ -65,6 +65,8 @@ Entry.Engine = function() {
             this._mouseMoved = false;
         }
     }.bind(this), 100)
+
+    Entry.message = new Entry.Event(window);
 };
 
 /**
@@ -614,8 +616,8 @@ Entry.Engine.prototype.togglePause = function() {
  * @param {string} eventName
  */
 Entry.Engine.prototype.fireEvent = function(eventName) {
-    if (this.state == 'run')
-        Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, eventName);
+    if (this.state !== 'run') return;
+    Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, eventName);
 };
 
 /**
@@ -817,3 +819,9 @@ Entry.Engine.prototype.updateProjectTimer = function(value) {
     }
 };
 
+
+Entry.Engine.prototype.raiseMessage = function(value) {
+    Entry.message.notify(Entry.variableContainer.getMessage(value));
+    return Entry.container.mapEntityIncludeCloneOnScene(
+        this.raiseKeyEvent, ["when_message_cast", value]);
+};
