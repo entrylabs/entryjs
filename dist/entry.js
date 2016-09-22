@@ -25219,11 +25219,11 @@ Entry.Vim = function(b, a) {
       e.codeMirror.display.dragFunctions.leave(a);
       var d = Entry.Utils.createMouseEvent("mousedown", a);
       e.codeMirror.display.scroller.dispatchEvent(d);
-      var c = c.split("\n"), k = c.length - 1;
+      var c = c.split("\n"), f = c.length - 1;
       c.forEach(function(a, b) {
         e.codeMirror.replaceSelection(a);
         e.doc.getCursor();
-        0 !== b && k === b || e.codeMirror.replaceSelection("\n");
+        0 !== b && f === b || e.codeMirror.replaceSelection("\n");
       });
       a = Entry.Utils.createMouseEvent("mouseup", a);
       e.codeMirror.display.scroller.dispatchEvent(a);
@@ -25233,7 +25233,12 @@ Entry.Vim = function(b, a) {
     }
     var e;
     this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
-    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, indentWithTabs:!0, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"autocomplete"}, lint:!0, viewportMargin:10});
+    var f = this;
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, indentWithTabs:!0, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"autocomplete", "Ctrl-[":function(a) {
+      (a = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(a) : (a = {}, a.boardType = Entry.Workspace.MODE_BOARD, a.textType = -1, f.workspace.setMode(a), $(".entryModeSelector span ul li:eq(0)").triggerHandler("click"));
+    }, "Ctrl-]":function(a) {
+      (a = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(a) : (a = {}, a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, Entry.dispatchEvent("changeMode", a), $(".entryModeSelector span ul li:eq(1)").triggerHandler("click"));
+    }}, lint:!0, viewportMargin:10});
     this.doc = this.codeMirror.getDoc();
     e = this;
     a = this.view[0];
@@ -25249,6 +25254,7 @@ Entry.Vim = function(b, a) {
     this.view.removeClass("entryRemove");
   };
   b.textToCode = function(a) {
+    console.log("textToCode", a);
     a === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : a === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     var b = this.codeMirror.getValue();
     console.log("textCode 111", b);
@@ -26037,14 +26043,7 @@ Entry.Playground.prototype.changeViewMode = function(b) {
       -1 < c.id.toUpperCase().indexOf(b.toUpperCase()) ? c.removeClass("entryRemove") : c.addClass("entryRemove");
     }
     "picture" == b ? (this.painter.show(), this.pictureView_.object && this.pictureView_.object == this.object || (this.pictureView_.object = this.object, this.injectPicture())) : this.painter.hide();
-    if ("sound" == b && (!this.soundView_.object || this.soundView_.object != this.object)) {
-      this.soundView_.object = this.object, this.injectSound();
-    } else {
-      if ("text" == b && "textBox" == this.object.objectType || this.textView_.object != this.object) {
-        this.textView_.object = this.object, this.injectText();
-      }
-    }
-    "code" == b && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove");
+    "sound" != b || this.soundView_.object && this.soundView_.object == this.object ? "text" == b && "textBox" == this.object.objectType || this.textView_.object != this.object ? (this.textView_.object = this.object, this.injectText()) : "code" == b && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove") : (this.soundView_.object = this.object, this.injectSound());
     Entry.engine.isState("run") && this.curtainView_.removeClass("entryRemove");
     this.viewMode_ = b;
     this.toggleOffVariableView();
