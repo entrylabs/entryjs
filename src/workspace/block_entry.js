@@ -20169,41 +20169,6 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/maze/bitmap/stage1/tile_1_goal_01.png",
-                "size": 18
-            },
-            {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/for.png",
-                "size": 24
-            }
-        ],
-        "statements": [
-            {
-                "accept": "basic"
-            }
-        ],
-        func: function() {
-            // TODO: func 내용은 변경해야 함.
-            var statement = this.block.statements[0];
-            if (statement.getBlocks().length === 0)
-                return;
-
-            this.executor.stepInto(statement);
-            return Entry.STATIC.BREAK;
-        }
-    },
-    "maze_repeat_until_4": {
-        "skeleton": "basic_loop",
-        "mode": "maze",
-        "color": "#498DEB",
-        "syntax": [
-            "BasicWhile",
-            "true"
-        ],
-        "params": [
-            {
-                "type": "Image",
                 "img": "/img/assets/maze/bitmap/ws/tile_goal_01.png",
                 "size": 18
             },
@@ -20228,8 +20193,8 @@ Entry.block = {
             return Entry.STATIC.BREAK;
         }
     },
-    "maze_repeat_until_5": {
-        "parent": "maze_repeat_until_4",
+    "maze_repeat_until_4": {
+        "parent": "maze_repeat_until_3",
         "params": [
             {
                 "type": "Image",
@@ -20243,8 +20208,23 @@ Entry.block = {
             }
         ],
     },
+    "maze_repeat_until_5": {
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_03.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
     "maze_repeat_until_6": {
-        "parent": "maze_repeat_until_4",
+        "parent": "maze_repeat_until_3",
         "params": [
             {
                 "type": "Image",
@@ -20259,7 +20239,7 @@ Entry.block = {
         ],
     },
     "maze_repeat_until_7": {
-        "parent": "maze_repeat_until_4",
+        "parent": "maze_repeat_until_3",
         "params": [
             {
                 "type": "Image",
