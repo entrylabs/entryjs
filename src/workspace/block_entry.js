@@ -20209,7 +20209,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/maze/bitmap/stage1/tile_1_goal_02.png",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_01.png",
                 "size": 18
             },
             {
@@ -20234,17 +20234,11 @@ Entry.block = {
         }
     },
     "maze_repeat_until_5": {
-        "skeleton": "basic_loop",
-        "mode": "maze",
-        "color": "#498DEB",
-        "syntax": [
-            "BasicWhile",
-            "true"
-        ],
+        "parent": "maze_repeat_until_4",
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/maze/bitmap/stage1/tile_1_goal_03.png",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_02.png",
                 "size": 18
             },
             {
@@ -20253,33 +20247,13 @@ Entry.block = {
                 "size": 24
             }
         ],
-        "statements": [
-            {
-                "accept": "basic"
-            }
-        ],
-        func: function() {
-            // TODO: func 내용은 변경해야 함.
-            var statement = this.block.statements[0];
-            if (statement.getBlocks().length === 0)
-                return;
-
-            this.executor.stepInto(statement);
-            return Entry.STATIC.BREAK;
-        }
     },
     "maze_repeat_until_6": {
-        "skeleton": "basic_loop",
-        "mode": "maze",
-        "color": "#498DEB",
-        "syntax": [
-            "BasicWhile",
-            "true"
-        ],
+        "parent": "maze_repeat_until_4",
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/maze/bitmap/stage1/tile_1_goal_03.png",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_03.png",
                 "size": 18
             },
             {
@@ -20288,20 +20262,21 @@ Entry.block = {
                 "size": 24
             }
         ],
-        "statements": [
+    },
+    "maze_repeat_until_7": {
+        "parent": "maze_repeat_until_4",
+        "params": [
             {
-                "accept": "basic"
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_04.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
             }
         ],
-        func: function() {
-            // TODO: func 내용은 변경해야 함.
-            var statement = this.block.statements[0];
-            if (statement.getBlocks().length === 0)
-                return;
-
-            this.executor.stepInto(statement);
-            return Entry.STATIC.BREAK;
-        }
     },
     "maze_radar_check": {
         "skeleton": "basic_boolean_field",
