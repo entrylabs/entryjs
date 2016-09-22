@@ -12779,6 +12779,11 @@ Entry.TextCodingUtil = {};
     console.log("includeEntryEventKeyBlock result", b);
     return b;
   };
+  b.canConvertTextModeForOverlayMode = function(a) {
+    if (Entry.playground.mainWorkspace.oldMode == Entry.Workspace.MODE_OVERLAYBOARD && a == Entry.Workspace.MODE_VIMBOARD) {
+      return "'\ud568\uc218\ub9cc\ub4e4\uae30' \uc5d0\ub514\ud130\uc5d0\uc11c\ub294 '\ud14d\uc2a4\ud2b8\ucf54\ub529' \uc11c\ube44\uc2a4\ub85c \ubcc0\ud658\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.";
+    }
+  };
   b.isNamesIncludeSpace = function() {
     var a = Entry.variableContainer;
     if (a) {
@@ -25370,7 +25375,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         return;
       case Entry.Workspace.MODE_VIMBOARD:
         Entry.TextCodingUtil._currentObject = Entry.playground.object;
-        console.log("Entry.TextCodingUtil._currentObject", Entry.TextCodingUtil._currentObject);
         this.board && this.board.hide();
         this.overlayBoard && this.overlayBoard.hide();
         this.blockMenu.banClass("textMode");
@@ -25455,6 +25459,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       if (c) {
         86 == b && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
         if (219 == b) {
+          if (Entry.playground.mainWorkspace.oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
+            return;
+          }
           if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
             alert(c);
             return;
@@ -25466,6 +25473,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           $(".entryModeSelector span ul li:eq(0)").triggerHandler("click");
         }
         if (221 == b) {
+          if (c = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
+            alert(c);
+            return;
+          }
           if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
             alert(c);
             return;
@@ -26094,7 +26105,14 @@ Entry.Playground.prototype.changeViewMode = function(b) {
       -1 < c.id.toUpperCase().indexOf(b.toUpperCase()) ? c.removeClass("entryRemove") : c.addClass("entryRemove");
     }
     "picture" == b ? (this.painter.show(), this.pictureView_.object && this.pictureView_.object == this.object || (this.pictureView_.object = this.object, this.injectPicture())) : this.painter.hide();
-    "sound" != b || this.soundView_.object && this.soundView_.object == this.object ? "text" == b && "textBox" == this.object.objectType || this.textView_.object != this.object ? (this.textView_.object = this.object, this.injectText()) : "code" == b && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove") : (this.soundView_.object = this.object, this.injectSound());
+    if ("sound" == b && (!this.soundView_.object || this.soundView_.object != this.object)) {
+      this.soundView_.object = this.object, this.injectSound();
+    } else {
+      if ("text" == b && "textBox" == this.object.objectType || this.textView_.object != this.object) {
+        this.textView_.object = this.object, this.injectText();
+      }
+    }
+    "code" == b && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove");
     Entry.engine.isState("run") && this.curtainView_.removeClass("entryRemove");
     this.viewMode_ = b;
     this.toggleOffVariableView();

@@ -80,7 +80,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-
         if (typeof mode === 'number') {
             this.mode = mode;
         } else {
@@ -95,7 +94,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
             case Entry.Workspace.MODE_VIMBOARD:
                     Entry.TextCodingUtil._currentObject = Entry.playground.object;
-                    console.log("Entry.TextCodingUtil._currentObject", Entry.TextCodingUtil._currentObject);
                     if (this.board) this.board.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.banClass('textMode');
@@ -284,7 +282,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         .getFirstBlock().copyToClipboard();
             }
             if (keyCode == 219) { //setMode(block) for textcoding
-                var message =Entry.TextCodingUtil.isNamesIncludeSpace()
+                var oldMode = Entry.playground.mainWorkspace.oldMode;
+                if(oldMode == Entry.Workspace.MODE_OVERLAYBOARD)
+                    return;
+                
+                var message = Entry.TextCodingUtil.isNamesIncludeSpace()
                 if(message) {
                     alert(message);
                     return;
@@ -297,6 +299,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 $('.entryModeSelector span ul li:eq(0)').triggerHandler('click');
             }
             if (keyCode == 221) { //setMode(python) for textcoding
+                var message;
+                message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
+                if(message) {
+                    alert(message);
+                    return;
+                }
+
                 var message =Entry.TextCodingUtil.isNamesIncludeSpace()
                 if(message) {
                     alert(message);

@@ -1476,6 +1476,18 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
+    tu.canConvertTextModeForOverlayMode = function(convertingMode) {
+        var message;
+        var oldMode = Entry.playground.mainWorkspace.oldMode;
+
+        if(oldMode == Entry.Workspace.MODE_OVERLAYBOARD && convertingMode == Entry.Workspace.MODE_VIMBOARD) {
+            message = "\'함수만들기\' 에디터에서는 \'텍스트코딩\' 서비스로 변환할 수 없습니다.";
+            return message;
+        }
+
+        return message;
+    };
+
     tu.isNamesIncludeSpace = function() { 
         var vc = Entry.variableContainer;
         if(!vc)
