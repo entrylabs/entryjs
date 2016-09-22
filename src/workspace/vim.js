@@ -90,6 +90,23 @@ Entry.Vim = function(dom, textType) {
                     mode.runType = Entry.Vim.WORKSPACE_MODE;
                     Entry.dispatchEvent("changeMode", mode);
                     $('.entryModeSelector span ul li:eq(1)').triggerHandler('click');
+                },
+                "Alt-[": function() {
+                    var currentScene = Entry.scene.selectedScene;
+                    var currentObject = Entry.playground.object;
+                    var option = "prev";
+
+                    Entry.TextCodingUtil.selectObjectForShortCut(currentScene, currentObject, option);
+                    console.log("Alt-[ shortcut", currentScene, currentObject, option);
+
+                },
+                "Alt-]": function() {
+                    var currentScene = Entry.scene.selectedScene;
+                    var currentObject = Entry.playground.object;
+                    var option = "next";
+
+                    Entry.TextCodingUtil.selectObjectForShortCut(currentScene, currentObject, option);
+                    console.log("Alt-] shortcut", currentScene, currentObject, option);
                 }
                 /*"Tab": function(cm) {
                     var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");

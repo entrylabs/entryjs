@@ -1575,4 +1575,67 @@ Entry.TextCodingUtil = {};
 
         return result;
     };
+
+    tu.selectObjectForShortCut = function(currentScene, currentObject, option) {
+        if(!currentScene)
+            return;
+        if(!currentObject)
+            return;
+
+        var objects = Entry.container.objects_;
+        var currentSceneObjects = [];
+        for(var o in objects) {
+            var object = objects[o];
+            if(object.scene.id == currentScene.id)
+                currentSceneObjects.push(object);
+        }
+
+        console.log("currentSceneObjects", currentSceneObjects);
+        
+        if(currentSceneObjects.length == 0)
+            return;
+
+        var start = 0;
+        var end = currentSceneObjects.length - 1;
+
+        console.log("start", start, "end", end);
+
+        var currentIndex = 0; 
+
+        for(var c in currentSceneObjects) {
+            var object = currentSceneObjects[c];
+            if(object.id == currentObject.id) {
+                currentIndex = c;
+                break;
+            }
+        }
+
+        console.log("currentIndex", currentIndex);
+
+        if(option == "prev") {
+            if(currentIndex == start) {
+                var targetIndex = end;
+            }
+            else {
+                var targetIndex = parseInt(currentIndex) - 1;
+            }
+        } 
+        else if(option == "next") {
+            if(currentIndex == end) {
+                var targetIndex = start;
+            } 
+            else {
+                var targetIndex = parseInt(currentIndex) + 1;
+            }
+        } 
+
+        var targetObject = currentSceneObjects[targetIndex];
+
+        if(!targetObject)
+            return;
+
+        console.log("targetObject", targetObject, "targetIndex", targetIndex);
+
+        Entry.container.selectObject(targetObject.id);
+    };
 })(Entry.TextCodingUtil);

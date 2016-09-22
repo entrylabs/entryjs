@@ -12845,6 +12845,36 @@ Entry.TextCodingUtil = {};
     }
     return b;
   };
+  b.selectObjectForShortCut = function(a, b, c) {
+    if (a && b) {
+      var e = Entry.container.objects_, f = [], g;
+      for (g in e) {
+        var h = e[g];
+        h.scene.id == a.id && f.push(h);
+      }
+      console.log("currentSceneObjects", f);
+      if (0 != f.length) {
+        a = f.length - 1;
+        console.log("start", 0, "end", a);
+        var e = 0, k;
+        for (k in f) {
+          if (h = f[k], h.id == b.id) {
+            e = k;
+            break;
+          }
+        }
+        console.log("currentIndex", e);
+        if ("prev" == c) {
+          var l = 0 == e ? a : parseInt(e) - 1
+        } else {
+          "next" == c && (l = e == a ? 0 : parseInt(e) + 1);
+        }
+        if (b = f[l]) {
+          console.log("targetObject", b, "targetIndex", l), Entry.container.selectObject(b.id);
+        }
+      }
+    }
+  };
 })(Entry.TextCodingUtil);
 Entry.BlockToJsParser = function(b) {
   this.syntax = b;
@@ -18507,7 +18537,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.9_Setup.exe", "_blank").focus();
+  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.10_Setup.exe", "_blank").focus();
 };
 p.downloadGuide = function() {
   window.open("http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC-%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%EC%97%B0%EA%B2%B0%EB%A7%A4%EB%89%B4%EC%96%BC_16_08_17.hwp", "_blank").focus();
@@ -25238,6 +25268,14 @@ Entry.Vim = function(b, a) {
       (a = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(a) : (a = {}, a.boardType = Entry.Workspace.MODE_BOARD, a.textType = -1, f.workspace.setMode(a), $(".entryModeSelector span ul li:eq(0)").triggerHandler("click"));
     }, "Ctrl-]":function(a) {
       (a = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(a) : (a = {}, a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, Entry.dispatchEvent("changeMode", a), $(".entryModeSelector span ul li:eq(1)").triggerHandler("click"));
+    }, "Alt-[":function() {
+      var a = Entry.scene.selectedScene, b = Entry.playground.object;
+      Entry.TextCodingUtil.selectObjectForShortCut(a, b, "prev");
+      console.log("Alt-[ shortcut", a, b, "prev");
+    }, "Alt-]":function() {
+      var a = Entry.scene.selectedScene, b = Entry.playground.object;
+      Entry.TextCodingUtil.selectObjectForShortCut(a, b, "next");
+      console.log("Alt-] shortcut", a, b, "next");
     }}, lint:!0, viewportMargin:10});
     this.doc = this.codeMirror.getDoc();
     e = this;
@@ -25409,11 +25447,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b._keyboardControl = function(a) {
     var b = a.keyCode || a.which, c = a.ctrlKey;
+    altKey = a.altKey;
     if (!Entry.Utils.isInInput(a)) {
       var e = this.selectedBlockView;
       e && !e.isInBlockMenu && e.block.isDeletable() && (8 == b || 46 == b ? (Entry.do("destroyBlock", e.block), a.preventDefault()) : c && (67 == b ? e.block.copyToClipboard() : 88 == b && (a = e.block, a.copyToClipboard(), a.destroy(!0, !0), e.getBoard().setSelectedBlock(null))));
+      console.log("keyCode", b);
       if (c) {
-        console.log("keyCode", b);
         86 == b && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
         if (219 == b) {
           if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
@@ -25426,8 +25465,20 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           this.setMode(c);
           $(".entryModeSelector span ul li:eq(0)").triggerHandler("click");
         }
-        221 == b && ((c = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(c) : (c = {}, c.boardType = Entry.Workspace.MODE_VIMBOARD, c.textType = Entry.Vim.TEXT_TYPE_PY, c.runType = Entry.Vim.WORKSPACE_MODE, Entry.dispatchEvent("changeMode", c), $(".entryModeSelector span ul li:eq(1)").triggerHandler("click")));
+        if (221 == b) {
+          if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+            alert(c);
+            return;
+          }
+          c = {};
+          c.boardType = Entry.Workspace.MODE_VIMBOARD;
+          c.textType = Entry.Vim.TEXT_TYPE_PY;
+          c.runType = Entry.Vim.WORKSPACE_MODE;
+          Entry.dispatchEvent("changeMode", c);
+          $(".entryModeSelector span ul li:eq(1)").triggerHandler("click");
+        }
       }
+      altKey && this.mode == Entry.Workspace.MODE_VIMBOARD && (219 == b ? (b = Entry.scene.selectedScene, c = Entry.playground.object, e = "prev", Entry.TextCodingUtil.selectObjectForShortCut(b, c, e), console.log("Alt-[ shortcut", b, c, e)) : 221 == b && (b = Entry.scene.selectedScene, c = Entry.playground.object, e = "next", Entry.TextCodingUtil.selectObjectForShortCut(b, c, e), console.log("Alt-] shortcut", b, c, e)));
     }
   };
   b._handleChangeBoard = function() {
