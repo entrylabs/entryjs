@@ -20191,7 +20191,7 @@ Entry.block = {
             }
 
             this.executor.stepInto(statement);
-            Ntry.dispatchEvent('executeEnd', true);
+            Ntry.dispatchEvent('executeEnd');
             return Entry.STATIC.BREAK;
         }
     },
