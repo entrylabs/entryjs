@@ -19727,7 +19727,7 @@ Entry.block = {
                 delete this.isContinue;
             }
         }
-    },    
+    },
     "maze_cony_flower_throw2": {
         "skeleton": "basic",
         "mode": "maze",
@@ -19747,7 +19747,7 @@ Entry.block = {
         func: function() {
             var self = this;
             if (!this.isContinue) {
-                
+
                 var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
                 var unitId;
@@ -19758,7 +19758,7 @@ Entry.block = {
 
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
-                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY1], 2, true);
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY4], 2, true);
                 var particleZIndex = 550;
                 if(unitComp.direction === Ntry.STATIC.NORTH) {
                     particleZIndex = 450;
@@ -19777,7 +19777,7 @@ Entry.block = {
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
                     $.each(components, function(type, component) {
                         if(+type === Ntry.STATIC.SPRITE) {
-                            var cloneComponent = $.extend({}, component);                        
+                            var cloneComponent = $.extend({}, component);
                             cloneComponent.zIndex = particleZIndex;
                             Ntry.entityManager.addComponent(particle.id, cloneComponent);
                         } else if(+type != Ntry.STATIC.UNIT) {
@@ -19786,7 +19786,7 @@ Entry.block = {
                             Ntry.entityManager.addComponent(particle.id, {
                                 type: Ntry.STATIC.PARTICLE,
                                 direction: component.direction,
-                                collisionList: [Ntry.STATIC.OBSTACLE_ENERMY1],
+                                collisionList: [Ntry.STATIC.OBSTACLE_ENERMY1, , Ntry.STATIC.OBSTACLE_ENERMY4],
                                 penetrationList: [Ntry.STATIC.WALL],
                             });
                         }
@@ -19799,7 +19799,7 @@ Entry.block = {
                             Ntry.entityManager.removeEntity(particle.id);
                             self.isAction = false;
                         }
-                    });                    
+                    });
                 });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -19921,7 +19921,6 @@ Entry.block = {
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
                 var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY3, Ntry.STATIC.OBSTACLE_ENERMY4], 2);
-                console.log('unitComp.direction', unitComp.direction);
                 var particleZIndex = 550;
                 if(unitComp.direction === Ntry.STATIC.NORTH) {
                     particleZIndex = 450;
@@ -20027,9 +20026,7 @@ Entry.block = {
                         };
 
                         var targetPos = {
-                            minX: 0,
                             minY: 0,
-                            maxX: gridSize.width * tileSize,
                             maxY: gridSize.height * tileSize,
                         };
 
@@ -20051,10 +20048,10 @@ Entry.block = {
                                         animateType: Ntry.STATIC.TRANSITION,
                                         duration: 24,
                                         option: {
-                                            deltaPos: _deltaPos2,                                            
+                                            deltaPos: _deltaPos2,
                                             targetPos: _targetPos,
                                         },
-                                        afterAnimate: function() {                                            
+                                        afterAnimate: function() {
                                         }
                                     }
                                 );
@@ -20086,7 +20083,7 @@ Entry.block = {
                                             );
                                         },
                                     }
-                                );                                
+                                );
                             }
                         })(id, deltaPos, deltaPos2, targetPos);
                     }
@@ -20169,7 +20166,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/maze/bitmap/stage1/tile_1_goal_01.png",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_01.png",
                 "size": 18
             },
             {
@@ -20186,25 +20183,21 @@ Entry.block = {
         func: function() {
             // TODO: func 내용은 변경해야 함.
             var statement = this.block.statements[0];
-            if (statement.getBlocks().length === 0)
+            if (statement.getBlocks().length === 0) {
                 return;
+            }
 
             this.executor.stepInto(statement);
+            Ntry.dispatchEvent('executeEnd');
             return Entry.STATIC.BREAK;
         }
     },
     "maze_repeat_until_4": {
-        "skeleton": "basic_loop",
-        "mode": "maze",
-        "color": "#498DEB",
-        "syntax": [
-            "BasicWhile",
-            "true"
-        ],
+        "parent": "maze_repeat_until_3",
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/maze/bitmap/stage1/tile_1_goal_02.png",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_02.png",
                 "size": 18
             },
             {
@@ -20213,33 +20206,13 @@ Entry.block = {
                 "size": 24
             }
         ],
-        "statements": [
-            {
-                "accept": "basic"
-            }
-        ],
-        func: function() {
-            // TODO: func 내용은 변경해야 함.
-            var statement = this.block.statements[0];
-            if (statement.getBlocks().length === 0)
-                return;
-
-            this.executor.stepInto(statement);
-            return Entry.STATIC.BREAK;
-        }
     },
     "maze_repeat_until_5": {
-        "skeleton": "basic_loop",
-        "mode": "maze",
-        "color": "#498DEB",
-        "syntax": [
-            "BasicWhile",
-            "true"
-        ],
+        "parent": "maze_repeat_until_3",
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/maze/bitmap/stage1/tile_1_goal_03.png",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_03.png",
                 "size": 18
             },
             {
@@ -20248,33 +20221,13 @@ Entry.block = {
                 "size": 24
             }
         ],
-        "statements": [
-            {
-                "accept": "basic"
-            }
-        ],
-        func: function() {
-            // TODO: func 내용은 변경해야 함.
-            var statement = this.block.statements[0];
-            if (statement.getBlocks().length === 0)
-                return;
-
-            this.executor.stepInto(statement);
-            return Entry.STATIC.BREAK;
-        }
     },
     "maze_repeat_until_6": {
-        "skeleton": "basic_loop",
-        "mode": "maze",
-        "color": "#498DEB",
-        "syntax": [
-            "BasicWhile",
-            "true"
-        ],
+        "parent": "maze_repeat_until_3",
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/maze/bitmap/stage1/tile_1_goal_03.png",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_03.png",
                 "size": 18
             },
             {
@@ -20283,20 +20236,21 @@ Entry.block = {
                 "size": 24
             }
         ],
-        "statements": [
+    },
+    "maze_repeat_until_7": {
+        "parent": "maze_repeat_until_3",
+        "params": [
             {
-                "accept": "basic"
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_04.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
             }
         ],
-        func: function() {
-            // TODO: func 내용은 변경해야 함.
-            var statement = this.block.statements[0];
-            if (statement.getBlocks().length === 0)
-                return;
-
-            this.executor.stepInto(statement);
-            return Entry.STATIC.BREAK;
-        }
     },
     "maze_radar_check": {
         "skeleton": "basic_boolean_field",
@@ -20322,11 +20276,6 @@ Entry.block = {
                 "fontSize": 11
             }
         ],
-        "statements": [
-            {
-                "accept": "basic"
-            }
-        ],
         "paramsKeyMap": {
             "DISTANCE": 0,
             "TYPE": 1,
@@ -20334,8 +20283,6 @@ Entry.block = {
         func: function(sprite, script) {
             var distance = script.getNumberField("DISTANCE", script);
             var type = script.getField("TYPE", script);
-
-            console.log(distance, type);
 
             var entityId = Ntry.getRadarEntityIdByDistance(distance);
             var tileType;
@@ -20575,7 +20522,7 @@ Entry.block = {
     "maze_step_if_8": {
         "parent": "_if",
         "class": "",
-    },    
+    },
     "maze_step_if_else": {
         "parent": "if_else",
         "class": "",

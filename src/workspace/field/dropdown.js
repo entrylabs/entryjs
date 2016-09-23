@@ -249,6 +249,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 return option[0];
         }
         //no match found
+        if (value === "?") return value;
         return Lang.Blocks.no_target;
     };
 

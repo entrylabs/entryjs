@@ -21620,7 +21620,7 @@ Entry.Block.DELETABLE_TRUE = 1;
 Entry.Block.DELETABLE_FALSE = 2;
 Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 (function(a) {
-  a.schema = {id:null, x:0, y:0, type:null, params:[], statements:[], view:null, thread:null, movable:null, deletable:Entry.Block.DELETABLE_TRUE, readOnly:null, copyable:!0, events:{}};
+  a.schema = {id:null, x:0, y:0, type:null, params:[], statements:[], view:null, thread:null, movable:null, deletable:Entry.Block.DELETABLE_TRUE, readOnly:null, copyable:!0, events:{}, extensions:[]};
   a.load = function(b) {
     b.id || (b.id = Entry.Utils.generateId());
     this.set(b);
@@ -22419,6 +22419,7 @@ Entry.BlockView = function(a, b, d) {
     var e = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
     this._statements = [];
+    this._extensions = [];
     this.magnet = {};
     this._paramMap = {};
     e.magnets && e.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"])));
@@ -22486,6 +22487,7 @@ Entry.BlockView.pngMap = {};
     this._path.attr(e);
     this._moveTo(this.x, this.y, !1);
     this._startContentRender(a);
+    this._startExtension(a);
     !0 !== this._board.disableMouseEvent && this._addControl();
     this.bindPrev();
   };
@@ -22535,6 +22537,11 @@ Entry.BlockView.pngMap = {};
         b && (this._contents.push(new Entry.FieldLineBreak(null, this)), a.text = g, this._contents.push(new Entry.FieldText(a, this)));
     }
     this.alignContent(!1);
+  };
+  a._startExtension = function(b) {
+    this._extensions = this.block.extensions.map(function(a) {
+      return new Entry["Ext" + a.type](a, this, b);
+    }.bind(this));
   };
   a._updateSchema = function() {
     this._startContentRender();
@@ -24293,6 +24300,44 @@ Entry.Scope = function(a, b) {
     return Entry.STATIC.BREAK;
   };
 })(Entry.Scope.prototype);
+Entry.BlockExtension = function(a, b) {
+};
+(function(a) {
+})(Entry.BlockExtension.prototype);
+Entry.ExtSideTag = function(a, b, d) {
+  this.blockView = b;
+  this.color = a.color ? a.color : "#EBC576";
+  this.text = a.text ? a.text : "";
+  this.height = a.height ? Number(a.height) : 31 * Number(a.count);
+  this.render();
+  this.updatePos();
+};
+(function(a) {
+  a.render = function() {
+    this.svgGroup = this.blockView.svgGroup.elem("g");
+    $(this.svgGroup).bind("mousedown touchstart", function(b) {
+      b.stopPropagation && b.stopPropagation();
+      b.preventDefault && b.preventDefault();
+    });
+    this.path = this.svgGroup.elem("path").attr({d:"m0,2 h-9 v" + (this.height - 4) + " h9", stroke:this.color, fill:"transparent", "stroke-width":"3"});
+    this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre;", "font-size":"10px", "font-family":"nanumBarunRegular", "class":"dragNone", fill:"#000000"});
+    this.tspans = this.text.split("\n").map(function(b) {
+      var a = this.textElement.elem("tspan").attr({dy:"1.2em", x:"0"});
+      a.textContent = b;
+      return a;
+    }.bind(this));
+  };
+  a.updatePos = function() {
+    this.positionX = 8 * -(this.blockView.block.pointer().length - 2);
+    this.svgGroup.attr("transform", "translate(" + this.positionX + ",0)");
+    this.textElement.attr({y:this.height / 2 - 12 * (this.tspans.length - 1) - 2});
+    var b = this.textElement.getBoundingClientRect();
+    console.log(b);
+    this.tspans.map(function(a) {
+      a.attr({x:-b.width - 14});
+    });
+  };
+})(Entry.ExtSideTag.prototype);
 Entry.FieldAngle = function(a, b, d) {
   this._block = b.block;
   this._blockView = b;
@@ -24568,7 +24613,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         return f[0];
       }
     }
-    return Lang.Blocks.no_target;
+    return "?" === b ? b : Lang.Blocks.no_target;
   };
   a.getContentHeight = function(b) {
     return b = b || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);
@@ -25398,10 +25443,10 @@ Entry.Vim = function(a, b) {
     b = this.codeMirror.getDoc();
     b.setCursor({line:b.lastLine() - 1});
   };
-  a.getCodeToText = function(b) {
-    var a = this.workspace.oldTextType;
-    a === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : a === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
-    return this._parser.parse(b, Entry.Parser.PARSE_SYNTAX);
+  a.getCodeToText = function(a) {
+    var d = this.workspace.oldTextType;
+    d === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : d === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
+    return this._parser.parse(a, Entry.Parser.PARSE_SYNTAX);
   };
   a.setParserAvailableCode = function(a, d) {
     this._parser.setAvailableCode(a, d);
