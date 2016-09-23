@@ -439,11 +439,22 @@ EntryStatic.getAllBlocks = function() {
                 "CODEino_is_button_pressed",
                 "CODEino_get_accelerometer_direction",
                 "CODEino_get_accelerometer_value",
-                "CODEino_get_number_sensor_value",
+                //"CODEino_get_number_sensor_value",
                 "CODEino_get_digital_value",
-                "CODEino_toggle_led",
-                "CODEino_toggle_pwm",
+                //"CODEino_toggle_led",
+                //"CODEino_toggle_pwm",
                 "CODEino_convert_scale",
+                //2016-09-23
+                "CODEino_get_analog_value",
+                "CODEino_set_digital_value",
+                "CODEino_set_pwm_value",
+                "CODEino_led_by_value",
+                "CODEino_set_rgb_off",
+                "CODEino_set__led_by_rgb",
+                "CODEino_rgb_set_color",
+                "CODEino_set_rgb_value",
+                "CODEino_set_rgb_add_value",
+                //robotis_openCM70
                 "robotis_openCM70_sensor_value",
                 "robotis_openCM70_aux_sensor_value",
                 "robotis_openCM70_cm_buzzer_index",
@@ -491,7 +502,7 @@ EntryStatic.getAllBlocks = function() {
                 "ev3_motor_power",
                 "ev3_motor_power_on_time",
                 "ev3_motor_degrees",
-                
+
                 "roduino_on_block",
                 "roduino_off_block",
                 "roduino_get_analog_value",
@@ -500,7 +511,7 @@ EntryStatic.getAllBlocks = function() {
                 "roduino_set_digital",
                 "roduino_motor",
                 "roduino_set_color_pin",
-                
+
                 "schoolkit_on_block",
                 "schoolkit_off_block",
                 "schoolkit_get_input_value",
