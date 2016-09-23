@@ -30,6 +30,7 @@ Entry.BlockView = function(block, board, mode) {
     var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
     this._statements = [];
+    this._extensions = [];
     this.magnet = {};
     this._paramMap = {};
 
@@ -150,6 +151,7 @@ Entry.BlockView.pngMap = {};
 
         this._moveTo(this.x, this.y, false);
         this._startContentRender(mode);
+        this._startExtension(mode)
         if (this._board.disableMouseEvent !== true) {
             this._addControl();
         }
@@ -231,6 +233,12 @@ Entry.BlockView.pngMap = {};
                 break;
         }
         this.alignContent(false);
+    };
+
+    p._startExtension = function(mode) {
+        this._extensions = this.block.extensions.map(function(e) {
+            return new Entry['Ext' + e.type](e, this, mode);
+        }.bind(this));
     };
 
     p._updateSchema = function() {

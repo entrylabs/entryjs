@@ -53,7 +53,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         deletable: Entry.Block.DELETABLE_TRUE,
         readOnly: null,
         copyable: true,
-        events: {}
+        events: {},
+        extensions: []
     };
 
     p.load = function(block) {

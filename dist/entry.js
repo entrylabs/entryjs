@@ -20539,6 +20539,7 @@ Entry.BlockView = function(b, a, d) {
     var e = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
     this._statements = [];
+    this._extensions = [];
     this.magnet = {};
     this._paramMap = {};
     e.magnets && e.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"])));
@@ -20605,6 +20606,7 @@ Entry.BlockView.pngMap = {};
     this._path.attr(f);
     this._moveTo(this.x, this.y, !1);
     this._startContentRender(b);
+    this._startExtension(b);
     !0 !== this._board.disableMouseEvent && this._addControl();
     this.bindPrev();
   };
@@ -20654,6 +20656,11 @@ Entry.BlockView.pngMap = {};
         a && (this._contents.push(new Entry.FieldLineBreak(null, this)), b.text = g, this._contents.push(new Entry.FieldText(b, this)));
     }
     this.alignContent(!1);
+  };
+  b._startExtension = function(a) {
+    this._extensions = this.block.extensions.map(function(b) {
+      return new Entry["Ext" + b.type](b, this, a);
+    }.bind(this));
   };
   b._updateSchema = function() {
     this._startContentRender();
@@ -21541,6 +21548,44 @@ Entry.Scope = function(b, a) {
     return Entry.STATIC.BREAK;
   };
 })(Entry.Scope.prototype);
+Entry.BlockExtension = function(b, a) {
+};
+(function(b) {
+})(Entry.BlockExtension.prototype);
+Entry.ExtSideTag = function(b, a, d) {
+  this.blockView = a;
+  this.color = b.color ? b.color : "#EBC576";
+  this.text = b.text ? b.text : "";
+  this.height = b.height ? Number(b.height) : 31 * Number(b.count);
+  this.render();
+  this.updatePos();
+};
+(function(b) {
+  b.render = function() {
+    this.svgGroup = this.blockView.svgGroup.elem("g");
+    $(this.svgGroup).bind("mousedown touchstart", function(a) {
+      a.stopPropagation && a.stopPropagation();
+      a.preventDefault && a.preventDefault();
+    });
+    this.path = this.svgGroup.elem("path").attr({d:"m0,2 h-9 v" + (this.height - 4) + " h9", stroke:this.color, fill:"transparent", "stroke-width":"3"});
+    this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre;", "font-size":"10px", "font-family":"nanumBarunRegular", "class":"dragNone", fill:"#000000"});
+    this.tspans = this.text.split("\n").map(function(a) {
+      var b = this.textElement.elem("tspan").attr({dy:"1.2em", x:"0"});
+      b.textContent = a;
+      return b;
+    }.bind(this));
+  };
+  b.updatePos = function() {
+    this.positionX = 8 * -(this.blockView.block.pointer().length - 2);
+    this.svgGroup.attr("transform", "translate(" + this.positionX + ",0)");
+    this.textElement.attr({y:this.height / 2 - 12 * (this.tspans.length - 1) - 2});
+    var a = this.textElement.getBoundingClientRect();
+    console.log(a);
+    this.tspans.map(function(b) {
+      b.attr({x:-a.width - 14});
+    });
+  };
+})(Entry.ExtSideTag.prototype);
 Entry.Field = function() {
 };
 (function(b) {
@@ -23765,7 +23810,7 @@ Entry.Block.DELETABLE_TRUE = 1;
 Entry.Block.DELETABLE_FALSE = 2;
 Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 (function(b) {
-  b.schema = {id:null, x:0, y:0, type:null, params:[], statements:[], view:null, thread:null, movable:null, deletable:Entry.Block.DELETABLE_TRUE, readOnly:null, copyable:!0, events:{}};
+  b.schema = {id:null, x:0, y:0, type:null, params:[], statements:[], view:null, thread:null, movable:null, deletable:Entry.Block.DELETABLE_TRUE, readOnly:null, copyable:!0, events:{}, extensions:[]};
   b.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
