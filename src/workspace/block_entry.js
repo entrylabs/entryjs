@@ -19727,7 +19727,7 @@ Entry.block = {
                 delete this.isContinue;
             }
         }
-    },    
+    },
     "maze_cony_flower_throw2": {
         "skeleton": "basic",
         "mode": "maze",
@@ -19747,7 +19747,7 @@ Entry.block = {
         func: function() {
             var self = this;
             if (!this.isContinue) {
-                
+
                 var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
                 var unitId;
@@ -19777,7 +19777,7 @@ Entry.block = {
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
                     $.each(components, function(type, component) {
                         if(+type === Ntry.STATIC.SPRITE) {
-                            var cloneComponent = $.extend({}, component);                        
+                            var cloneComponent = $.extend({}, component);
                             cloneComponent.zIndex = particleZIndex;
                             Ntry.entityManager.addComponent(particle.id, cloneComponent);
                         } else if(+type != Ntry.STATIC.UNIT) {
@@ -19799,7 +19799,7 @@ Entry.block = {
                             Ntry.entityManager.removeEntity(particle.id);
                             self.isAction = false;
                         }
-                    });                    
+                    });
                 });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -20048,10 +20048,10 @@ Entry.block = {
                                         animateType: Ntry.STATIC.TRANSITION,
                                         duration: 24,
                                         option: {
-                                            deltaPos: _deltaPos2,                                            
+                                            deltaPos: _deltaPos2,
                                             targetPos: _targetPos,
                                         },
-                                        afterAnimate: function() {                                            
+                                        afterAnimate: function() {
                                         }
                                     }
                                 );
@@ -20083,7 +20083,7 @@ Entry.block = {
                                             );
                                         },
                                     }
-                                );                                
+                                );
                             }
                         })(id, deltaPos, deltaPos2, targetPos);
                     }
@@ -20274,11 +20274,6 @@ Entry.block = {
                 ],
                 "value": "TRAP",
                 "fontSize": 11
-            }
-        ],
-        "statements": [
-            {
-                "accept": "basic"
             }
         ],
         "paramsKeyMap": {
@@ -20527,7 +20522,7 @@ Entry.block = {
     "maze_step_if_8": {
         "parent": "_if",
         "class": "",
-    },    
+    },
     "maze_step_if_else": {
         "parent": "if_else",
         "class": "",
