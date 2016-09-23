@@ -58,7 +58,13 @@ Entry.PyHint = function() {
         var base;
 
         if(token.type == "def") {
-             found = found.concat(fuzzySearch(
+            defMaps.map(function(keyword, index) {
+                console.log("def keyoword", keyword);
+                keyword.displayText = keyword.displayText.split("def")[1].trim();
+                keyword.text = keyword.text.split("def")[1].trim();
+            });
+
+            found = found.concat(fuzzySearch(
                     defMaps, current,
                     {extract: function(e) {return e.displayText}}));
         }

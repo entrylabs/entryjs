@@ -11939,7 +11939,11 @@ Entry.PyHint = function() {
       return a.displayText;
     }})) : /^[\w$_]*$/.test(f.string) || (f = {start:e.ch, end:e.ch, string:"", state:f.state, className:":" == f.string ? "python-type" : null});
     if ("def" == f.type) {
-      g = g.concat(b(h, k, {extract:function(a) {
+      h.map(function(a, b) {
+        console.log("def keyoword", a);
+        a.displayText = a.displayText.split("def")[1].trim();
+        a.text = a.text.split("def")[1].trim();
+      }), g = g.concat(b(h, k, {extract:function(a) {
         return a.displayText;
       }}));
     } else {
