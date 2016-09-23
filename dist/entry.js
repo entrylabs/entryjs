@@ -6994,7 +6994,7 @@ Entry.Container.prototype.selectObject = function(b, a) {
     a.view_ && a.view_.removeClass("selectedObject");
     a.isSelected_ = !1;
   });
-  d && (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0);
+  d ? (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0) : Entry.playground && Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.vimBoard && Entry.playground.mainWorkspace.vimBoard.clearText();
   Entry.playground && Entry.playground.injectObject(d);
   "minimize" != Entry.type && Entry.engine.isState("stop") && Entry.stage.selectObject(d);
 };
@@ -25270,7 +25270,7 @@ Entry.Vim = function(b, a) {
     this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
     var f = this;
     this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, indentWithTabs:!0, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"autocomplete", "Ctrl-[":function(a) {
-      (a = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(a) : (a = {}, a.boardType = Entry.Workspace.MODE_BOARD, a.textType = -1, f.workspace.setMode(a), $(".entryModeSelector span ul li:eq(0)").triggerHandler("click"));
+      Entry.playground.object ? (a = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(a) : (a = {}, a.boardType = Entry.Workspace.MODE_BOARD, a.textType = -1, f.workspace.setMode(a), $(".entryModeSelector span ul li:eq(0)").triggerHandler("click")) : alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
     }, "Ctrl-]":function(a) {
       (a = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(a) : (a = {}, a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, Entry.dispatchEvent("changeMode", a), $(".entryModeSelector span ul li:eq(1)").triggerHandler("click"));
     }, "Alt-[":function() {
@@ -25295,6 +25295,9 @@ Entry.Vim = function(b, a) {
   };
   b.show = function() {
     this.view.removeClass("entryRemove");
+  };
+  b.clearText = function() {
+    this.codeMirror.setValue("");
   };
   b.textToCode = function(a) {
     console.log("textToCode", a);
@@ -25347,6 +25350,7 @@ Entry.Workspace = function(b) {
   this.changeEvent = new Entry.Event(this);
   Entry.commander.setCurrentEditor("board", this.board);
   this.textType = Entry.Vim.TEXT_TYPE_PY;
+  this.mode = this.oldMode = Entry.Workspace.MODE_BOARD;
 };
 Entry.Workspace.MODE_BOARD = 0;
 Entry.Workspace.MODE_VIMBOARD = 1;
@@ -25393,8 +25397,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             this.blockMenu.reDraw();
           }.bind(this)), this.oldTextType = this.textType;
         } catch (c) {
-          this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.TEXT_TYPE_JS ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_JS, Entry.dispatchEvent("changeMode", a), Ntry.dispatchEvent("textError", a)) : this.oldTextType == Entry.Vim.TEXT_TYPE_PY && (a.boardType = Entry.Workspace.MODE_VIMBOARD, 
-          a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_PY, Entry.dispatchEvent("changeMode", a));
+          this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.TEXT_TYPE_JS ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_JS, Entry.dispatchEvent("changeMode", a), Ntry.dispatchEvent("textError", a)) : this.oldTextType == Entry.Vim.TEXT_TYPE_PY && 
+          (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_PY, Entry.dispatchEvent("changeMode", a));
         }
         Entry.commander.setCurrentEditor("board", this.board);
         break;
@@ -25405,7 +25409,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.changeEvent.notify(b);
   };
   b.changeBoardCode = function(a) {
-    console.log("code123", a);
     this._syncTextCode();
     this.board.changeCode(a);
     this.mode === Entry.Workspace.MODE_VIMBOARD && (a = {}, a.textType = this.textType, a.boardType = this.boardType, a.runType = this.runType, this.codeToText(this.board.code, a));
@@ -25418,9 +25421,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.textToCode = function(a, b) {
     if (a == Entry.Workspace.MODE_VIMBOARD) {
-      var c = this, e = this.vimBoard.textToCode(b), f = this.board, g = f.code;
+      var c = this, e = this.vimBoard.textToCode(b);
+      console.log("changedCode", e);
+      var f = this.board;
+      console.log("here come in1", f);
+      var g = f.code;
+      console.log("here come in2", g);
       g.load(e);
+      console.log("here come in3");
       g.createView(f);
+      console.log("here come in4");
       this.board.reDraw();
       setTimeout(function() {
         c.board.alignThreads();
@@ -25459,6 +25469,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       if (c) {
         86 == b && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
         if (219 == b) {
+          if (!Entry.playground.object && this.oldMode === Entry.Workspace.MODE_VIMBOARD) {
+            alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+            return;
+          }
           if (Entry.playground.mainWorkspace.oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
             return;
           }
@@ -25473,6 +25487,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           $(".entryModeSelector span ul li:eq(0)").triggerHandler("click");
         }
         if (221 == b) {
+          if (!Entry.playground.object && this.oldMode === Entry.Workspace.MODE_BOARD) {
+            alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+            return;
+          }
           if (c = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
             alert(c);
             return;
@@ -25489,7 +25507,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           $(".entryModeSelector span ul li:eq(1)").triggerHandler("click");
         }
       }
-      altKey && this.mode == Entry.Workspace.MODE_VIMBOARD && (219 == b ? (b = Entry.scene.selectedScene, c = Entry.playground.object, e = "prev", Entry.TextCodingUtil.selectObjectForShortCut(b, c, e), console.log("Alt-[ shortcut", b, c, e)) : 221 == b && (b = Entry.scene.selectedScene, c = Entry.playground.object, e = "next", Entry.TextCodingUtil.selectObjectForShortCut(b, c, e), console.log("Alt-] shortcut", b, c, e)));
+      altKey && this.mode == Entry.Workspace.MODE_VIMBOARD && (219 == b ? Entry.playground.object ? (b = Entry.scene.selectedScene, c = Entry.playground.object, e = "prev", Entry.TextCodingUtil.selectObjectForShortCut(b, c, e), console.log("Alt-[ shortcut", b, c, e)) : alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.") : 221 == b && (Entry.playground.object ? (b = 
+      Entry.scene.selectedScene, c = Entry.playground.object, e = "next", Entry.TextCodingUtil.selectObjectForShortCut(b, c, e), console.log("Alt-] shortcut", b, c, e)) : alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.")));
     }
   };
   b._handleChangeBoard = function() {
@@ -25501,6 +25520,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
       console.log("workspace textType", this.textType);
       var a = this.vimBoard.textToCode(this.textType), b = this.board, c = b.code;
+      console.log("syncTextCode", c);
       c.load(a);
       c.createView(b);
       this.board.alignThreads();

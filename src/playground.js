@@ -1120,7 +1120,7 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
         this.textView_.object = this.object;
         this.injectText();
     }
-    
+
     if (viewType == 'code' && this.resizeHandle_) {
         this.resizeHandle_.removeClass('entryRemove');
     }

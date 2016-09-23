@@ -360,7 +360,7 @@ Entry.Container.prototype.removeObject = function(object) {
             Entry.container.selectObject();
         }
     }
-    else if (this.objects_.length && index === 0)
+    else if (this.objects_.length && index === 0) 
         Entry.container.selectObject(this.getCurrentObjects()[0].id);
     else {
         Entry.container.selectObject();
@@ -394,7 +394,13 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
         if (object.view_)
             object.view_.addClass('selectedObject');
         object.isSelected_ = true;
+    } 
+    else {
+        if(Entry.playground && Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.vimBoard) {
+            Entry.playground.mainWorkspace.vimBoard.clearText();
+        }
     }
+    
     if (Entry.playground)
         Entry.playground.injectObject(object);
     if (Entry.type != "minimize" && Entry.engine.isState('stop'))

@@ -57,6 +57,9 @@ Entry.Workspace = function(options) {
     Entry.commander.setCurrentEditor("board", this.board);
     this.textType = Entry.Vim.TEXT_TYPE_PY;
 
+    this.oldMode = Entry.Workspace.MODE_BOARD;
+    this.mode = Entry.Workspace.MODE_BOARD;
+
 };
 
 Entry.Workspace.MODE_BOARD = 0;
@@ -124,7 +127,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     //this.oldMode = this.mode;
                     this.oldTextType = this.textType;
                 } catch(e) {
-                    this.board.code.clear();
+                    if(this.board && this.board.code)
+                        this.board.code.clear();
                     if (this.board) this.board.hide();
                     this.set({selectedBoard:this.vimBoard});
                     this.mode = Entry.Workspace.MODE_VIMBOARD;
@@ -168,7 +172,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p.changeBoardCode = function(code) {
-        console.log("code123", code);
         this._syncTextCode();
         this.board.changeCode(code);
         if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
@@ -194,11 +197,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var that = this;
 
         var changedCode = this.vimBoard.textToCode(oldTextType);
+        console.log("changedCode", changedCode);
         var board = this.board;
+        console.log("here come in1", board);
         var code = board.code;
-
+        console.log("here come in2", code);
         code.load(changedCode);
+        console.log("here come in3");
         code.createView(board);
+
+        console.log("here come in4");
 
         this.board.reDraw();
         setTimeout(function() {
@@ -282,10 +290,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         .getFirstBlock().copyToClipboard();
             }
             if (keyCode == 219) { //setMode(block) for textcoding
+                if(!Entry.playground.object) {
+                    if (this.oldMode === Entry.Workspace.MODE_VIMBOARD) {
+                        var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                        alert(message);
+                        return;
+                    }
+                }
                 var oldMode = Entry.playground.mainWorkspace.oldMode;
                 if(oldMode == Entry.Workspace.MODE_OVERLAYBOARD)
                     return;
-                
+
                 var message = Entry.TextCodingUtil.isNamesIncludeSpace()
                 if(message) {
                     alert(message);
@@ -299,6 +314,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 $('.entryModeSelector span ul li:eq(0)').triggerHandler('click');
             }
             if (keyCode == 221) { //setMode(python) for textcoding
+                if(!Entry.playground.object) {
+                    if (this.oldMode === Entry.Workspace.MODE_BOARD) {
+                        var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                        alert(message);
+                        return;
+                    }
+                } 
+
                 var message;
                 message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
                 if(message) {
@@ -324,6 +347,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if(altKey) { 
             if(this.mode == Entry.Workspace.MODE_VIMBOARD) {
                 if (keyCode == 219) { //Previous Object
+                    if(!Entry.playground.object) {
+                        var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                        alert(message);
+                        return;
+                    }
                     var currentScene = Entry.scene.selectedScene;
                     var currentObject = Entry.playground.object;
                     var option = "prev";
@@ -332,6 +360,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     console.log("Alt-[ shortcut", currentScene, currentObject, option);
                 }
                 else if(keyCode == 221) { //Next Object
+                    if(!Entry.playground.object) {
+                        var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                        alert(message);
+                        return;
+                    }
                     var currentScene = Entry.scene.selectedScene;
                     var currentObject = Entry.playground.object;
                     var option = "next";
@@ -359,6 +392,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var changedCode = this.vimBoard.textToCode(this.textType);
         var board = this.board;
         var code = board.code;
+        console.log("syncTextCode", code);
         code.load(changedCode);
         code.createView(board);
         this.board.alignThreads();

@@ -67,6 +67,11 @@ Entry.Vim = function(dom, textType) {
             extraKeys: {
                 "Ctrl-Space": "autocomplete",
                 "Ctrl-[": function(e) { 
+                    if(!Entry.playground.object) {
+                            var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                            alert(message);
+                            return;
+                    }
                     var message =Entry.TextCodingUtil.isNamesIncludeSpace()
                     if(message) {
                         alert(message);
@@ -161,6 +166,10 @@ Entry.Vim = function(dom, textType) {
 
     p.show = function() {
         this.view.removeClass('entryRemove');
+    };
+
+    p.clearText = function() {
+        this.codeMirror.setValue("");
     };
 
     p.textToCode = function(textType) {
