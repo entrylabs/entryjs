@@ -20186,10 +20186,12 @@ Entry.block = {
         func: function() {
             // TODO: func 내용은 변경해야 함.
             var statement = this.block.statements[0];
-            if (statement.getBlocks().length === 0)
+            if (statement.getBlocks().length === 0) {
                 return;
+            }
 
             this.executor.stepInto(statement);
+            Ntry.dispatchEvent('executeEnd', true);
             return Entry.STATIC.BREAK;
         }
     },
