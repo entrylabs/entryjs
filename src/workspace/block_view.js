@@ -47,8 +47,6 @@ Entry.BlockView = function(block, board, mode) {
             events.mousedown.forEach(function(fn){fn(that);});
 
         that.onMouseDown.apply(that, arguments);
-
-
     };
     this._startRender(block, mode);
 
@@ -172,6 +170,7 @@ Entry.BlockView.pngMap = {};
         this.contentSvgGroup = this.svgGroup.elem("g");
         if (schema.statements && schema.statements.length)
             this.statementSvgGroup = this.svgGroup.elem("g");
+
         switch (mode) {
             case Entry.Workspace.MODE_BOARD:
             case Entry.Workspace.MODE_OVERLAYBOARD:

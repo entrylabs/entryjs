@@ -79,15 +79,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-       if (!isNaN(mode))
-           this.mode = mode;
-       else {
-           this.mode = mode.boardType;
-           this.runType = mode.runType;
-           this.textType = mode.textType;
-       }
+        if (!isNaN(mode)) this.mode = mode;
+        else {
+            this.mode = mode.boardType;
+            this.runType = mode.runType;
+            this.textType = mode.textType;
+        }
 
-       switch (this.mode) {
+        this.mode = Number(this.mode);
+
+        switch (this.mode) {
            case this.oldMode:
                return;
 

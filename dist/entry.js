@@ -23737,7 +23737,8 @@ Entry.Thread = function(b, a, d) {
   };
   b.getBlockList = function(a, b) {
     for (var c = [], e = 0;e < this._data.length;e++) {
-      c = c.concat(this._data[e].getBlockList(a, b));
+      var f = this._data[e];
+      f.constructor === Entry.Block && (c = c.concat(f.getBlockList(a, b)));
     }
     return c;
   };
@@ -24028,7 +24029,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     }
     if (e = this.statements) {
       for (f = 0;f < e.length;f++) {
-        c = c.concat(e[f].getBlockList(a, b));
+        g = e[f], g.constructor === Entry.Thread && (c = c.concat(g.getBlockList(a, b)));
       }
     }
     return c;
@@ -24293,6 +24294,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.setMode = function(a, b) {
     isNaN(a) ? (this.mode = a.boardType, this.runType = a.runType, this.textType = a.textType) : this.mode = a;
+    this.mode = Number(this.mode);
     switch(this.mode) {
       case this.oldMode:
         return;

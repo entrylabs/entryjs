@@ -257,8 +257,12 @@ Entry.Thread = function(thread, code, parent) {
 
     p.getBlockList = function(excludePrimitive, type) {
         var blocks = [];
-        for (var i = 0; i < this._data.length; i++)
-            blocks = blocks.concat(this._data[i].getBlockList(excludePrimitive, type));
+        for (var i = 0; i < this._data.length; i++) {
+            var block = this._data[i];
+            if (block.constructor !== Entry.Block)
+                continue;
+            blocks = blocks.concat(block.getBlockList(excludePrimitive, type));
+        }
 
         return blocks;
     };

@@ -487,7 +487,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         var statements = this.statements;
         if (statements) {
             for (var j = 0; j < statements.length; j++) {
-                blocks = blocks.concat(statements[j].getBlockList(excludePrimitive, type));
+                var statement = statements[j];
+                if (statement.constructor !== Entry.Thread)
+                    continue;
+                blocks = blocks.concat(statement.getBlockList(excludePrimitive, type));
             }
         }
         return blocks;
