@@ -25525,8 +25525,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       console.log("workspace textType", this.textType);
       var a = this.vimBoard.textToCode(this.textType), b = this.board, c = b.code;
       console.log("syncTextCode", c);
-      c && (c.load(a), c.createView(b));
-      this.board.alignThreads();
+      c && (c.load(a), c.createView(b), this.board.alignThreads());
       Entry.TextCodingUtil._currentObject = Entry.playground.object;
     }
   };

@@ -397,8 +397,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if(code) {
             code.load(changedCode);
             code.createView(board);
+            this.board.alignThreads();
         }
-        this.board.alignThreads();
 
         Entry.TextCodingUtil._currentObject = Entry.playground.object;
     };
