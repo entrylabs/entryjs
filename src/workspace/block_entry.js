@@ -20036,7 +20036,7 @@ Entry.block = {
                             targetPos.minY = obstacleGrid.y * tileSize + (tileSize / 2);
                         }
 
-                        (function (_id, _deltaPos, _deltaPos2, _targetPos) {
+                        (function (_id, _deltaPos, _deltaPos2, _targetPos, obstacleGrid) {
                             var comp = Ntry.entityManager.getComponent(_id, Ntry.STATIC.ANIMATE);
                             if(comp) {
                                 if(eventCount === 0) {
@@ -20052,6 +20052,11 @@ Entry.block = {
                                             targetPos: _targetPos,
                                         },
                                         afterAnimate: function() {
+                                            var unitGrid = Ntry.getUtilGrid();
+
+                                            if(obstacleGrid.x == unitGrid.x && obstacleGrid.y == unitGrid.y) {
+                                                Ntry.dispatchEvent("unitAction", Ntry.STATIC.CONTACT_IRON2);
+                                            }
                                         }
                                     }
                                 );
@@ -20078,6 +20083,14 @@ Entry.block = {
                                                         targetPos: _targetPos,
                                                     },
                                                     afterAnimate: function() {
+                                                        var unitGrid = Ntry.getUtilGrid();
+
+                                                        if(obstacleGrid.x == unitGrid.x && obstacleGrid.y == unitGrid.y) {
+                                                            console.log('충돌');
+                                                            // Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                                                            Ntry.dispatchEvent("unitAction", Ntry.STATIC.CONTACT_IRON2);
+                                                            // Ntry.dispatchEvent("complete", false, Ntry.STATIC.CONTACT_IRON2);
+                                                        }
                                                     },
                                                 }
                                             );
@@ -20085,7 +20098,7 @@ Entry.block = {
                                     }
                                 );
                             }
-                        })(id, deltaPos, deltaPos2, targetPos);
+                        })(id, deltaPos, deltaPos2, targetPos, obstacleGrid);
                     }
                 }
                 return Entry.STATIC.BREAK;
@@ -20227,7 +20240,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/maze/bitmap/ws/tile_goal_03.png",
+                "img": "/img/assets/maze/bitmap/ws/blcok-1.png",
                 "size": 18
             },
             {
@@ -20242,7 +20255,112 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/maze/bitmap/ws/tile_goal_04.png",
+                "img": "/img/assets/maze/bitmap/ws/blcok-4.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_8": {
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-5.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_9": {
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-6.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_10": {
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-7.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_11": {
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-9.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_12": {
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-10.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_13": {
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-11.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_14": {
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-12.png",
                 "size": 18
             },
             {
