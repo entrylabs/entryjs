@@ -20201,13 +20201,13 @@ Entry.block = {
             var value = script.getNumberValue('VALUE');
             var dir = Number(script.getField('DIRECTION'));
             var id = 0;
-            if(value == 0) value = 1;
+            //if(value == 0) value = 1;
             value = Math.round(value);
             value = Math.max(value, 0);
             value = Math.min(value, 255);
 
             value = Math.round(value/30);
-            if(value == 0) value = 1;
+            //if(value == 0) value = 1;
             var query = (id << 7) + (dir << 5) + value;
             Entry.hw.setDigitalPortValue(14, query);
             return script.callReturn();
