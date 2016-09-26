@@ -7475,10 +7475,21 @@ Entry.Dialog.prototype.generateSpeak = function() {
   Entry.requestUpdate = !0;
 };
 Entry.Dialog.prototype.update = function() {
-  var b = this.parent.object.getTransformedBounds(), a = "";
+  var b = this.parent.object.getTransformedBounds();
+  if (!b && "textBox" === this.parent.type) {
+    if (this._isNoContentTried) {
+      delete this._isNoContentTried;
+      return;
+    }
+    this.parent.setText(" ");
+    b = this.parent.object.getTransformedBounds();
+    this._isNoContentTried = !0;
+  }
+  var a = "";
   -135 < b.y - this.height - 20 - this.border ? (this.object.y = b.y - this.height / 2 - 20 - this.padding, a += "n") : (this.object.y = b.y + b.height + this.height / 2 + 20 + this.padding, a += "s");
   240 > b.x + b.width + this.width ? (this.object.x = b.x + b.width + this.width / 2, a += "e") : (this.object.x = b.x - this.width / 2, a += "w");
   this.notch.type != a && (this.object.removeChild(this.notch), this.notch = this.createSpeakNotch(a), this.object.addChild(this.notch));
+  this._isNoContentTried && this.parent.setText("");
   Entry.requestUpdate = !0;
 };
 Entry.Dialog.prototype.createSpeakNotch = function(b) {

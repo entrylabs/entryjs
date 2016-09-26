@@ -67,6 +67,16 @@ Entry.Dialog.prototype.generateSpeak = function() {
  */
 Entry.Dialog.prototype.update = function() {
     var bound = this.parent.object.getTransformedBounds();
+    if (!bound && this.parent.type === 'textBox') {
+        if (!this._isNoContentTried) {
+            this.parent.setText(' ');
+            bound = this.parent.object.getTransformedBounds();
+            this._isNoContentTried = true;
+        } else {
+            delete this._isNoContentTried;
+            return;
+        }
+    }
     var notchType = '';
 
     if (bound.y - this.height -20 - this.border> -135) {
@@ -88,6 +98,8 @@ Entry.Dialog.prototype.update = function() {
         this.notch = this.createSpeakNotch(notchType);
         this.object.addChild(this.notch);
     }
+
+    this._isNoContentTried && this.parent.setText('');
     Entry.requestUpdate = true;
 };
 
