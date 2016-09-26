@@ -99,13 +99,22 @@ Entry.RenderView = function(dom, align) {
             var block = thread.getFirstBlock();
             var blockView = block.view;
 
+            var height = blockView.svgGroup.getBBox().height;
             var className = Entry.block[block.type].class;
+            var xPos = 0;
+            var extensions = $(blockView.svgGroup).find('.extension');
+            if (extensions) {
+                for (var i=0; i<extensions.length; i++) {
+                    var ext = extensions[i];
+                    var currentXpos = parseFloat(ext.getAttribute('x'));
+                    xPos = Math.min(xPos, currentXpos);
+                }
+            }
             blockView._moveTo(
-                hPadding,
+                hPadding - xPos,
                 marginFromTop - blockView.offsetY,
                 false
             );
-            var height = blockView.svgGroup.getBBox().height;
             marginFromTop += height + vPadding;
         }
         this._setSize();
@@ -137,9 +146,24 @@ Entry.RenderView = function(dom, align) {
         if (!this.svg || !this._bBox) return;
         setTimeout(function() {
             this._setSize();
+            var width = Math.round(this._bBox.width);
+            var height = Math.round(this._bBox.height);
+            //svg is not on the screen
+            if (width === 0 || height === 0)
+                return;
+
             $(this.svg).css({
-                'height': this._bBox.height + 5
+                'width': width + 15,
+                'height': height + 5
             });
+
+            //double check
+            setTimeout(function() {
+                var bBox = this.svgGroup.getBBox();
+                if (Math.round(bBox.width) !== width ||
+                    Math.round(bBox.height) !== height)
+                    this.resize();
+            }.bind(this), 1000);
         }.bind(this), 0);
     };
 

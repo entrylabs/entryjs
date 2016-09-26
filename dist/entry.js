@@ -21045,6 +21045,11 @@ Entry.BlockView.pngMap = {};
           a[c].view.reDraw();
         }
       }
+      if (a = this._extensions) {
+        for (c = 0;c < a.length;c++) {
+          a[c].updatePos();
+        }
+      }
     }
   };
   b.getParam = function(a) {
@@ -21577,7 +21582,7 @@ Entry.ExtSideTag = function(b, a, d) {
     this.path = this.svgGroup.elem("path").attr({d:"m0,2 h-9 v" + (this.height - 4) + " h9", stroke:this.color, fill:"transparent", "stroke-width":"3"});
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre;", "font-size":"10px", "font-family":"nanumBarunRegular", "class":"dragNone", fill:"#000000"});
     this.tspans = this.text.split("\n").map(function(a) {
-      var b = this.textElement.elem("tspan").attr({dy:"1.2em", x:"0"});
+      var b = this.textElement.elem("tspan").attr({dy:"1.2em", x:"0", "class":"extension sideTagTspan"});
       b.textContent = a;
       return b;
     }.bind(this));
@@ -21587,7 +21592,6 @@ Entry.ExtSideTag = function(b, a, d) {
     this.svgGroup.attr("transform", "translate(" + this.positionX + ",0)");
     this.textElement.attr({y:this.height / 2 - 12 * (this.tspans.length - 1) - 2});
     var a = this.textElement.getBoundingClientRect();
-    console.log(a);
     this.tspans.map(function(b) {
       b.attr({x:-a.width - 14});
     });
@@ -22782,10 +22786,14 @@ Entry.RenderView = function(b, a) {
     var a = this.code.getThreads();
     if (a && 0 !== a.length) {
       for (var b = 0, c = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
-        var g = a[e].getFirstBlock().view;
-        g._moveTo(c, b - g.offsetY, !1);
-        g = g.svgGroup.getBBox().height;
-        b += g + 15;
+        var g = a[e].getFirstBlock().view, h = g.svgGroup.getBBox().height, k = 0, l = $(g.svgGroup).find(".extension");
+        if (l) {
+          for (e = 0;e < l.length;e++) {
+            var m = parseFloat(l[e].getAttribute("x")), k = Math.min(k, m)
+          }
+        }
+        g._moveTo(c - k, b - g.offsetY, !1);
+        b += h + 15;
       }
       this._setSize();
     }
@@ -22811,7 +22819,11 @@ Entry.RenderView = function(b, a) {
   b.resize = function() {
     this.svg && this._bBox && setTimeout(function() {
       this._setSize();
-      $(this.svg).css({height:this._bBox.height + 5});
+      var a = Math.round(this._bBox.width), b = Math.round(this._bBox.height);
+      0 !== a && 0 !== b && ($(this.svg).css({width:a + 15, height:b + 5}), setTimeout(function() {
+        var c = this.svgGroup.getBBox();
+        Math.round(c.width) === a && Math.round(c.height) === b || this.resize();
+      }.bind(this), 1E3));
     }.bind(this), 0);
   };
   b.setDomSize = function() {

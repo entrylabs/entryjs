@@ -46,7 +46,8 @@ Entry.ExtSideTag = function(content, blockView, mode) {
         this.tspans = textArray.map(function(t) {
             var tspan = this.textElement.elem("tspan").attr({
                 "dy": "1.2em",
-                "x" : "0"
+                "x" : "0",
+                "class": 'extension sideTagTspan'
             });
             tspan.textContent = t;
             return tspan
@@ -62,14 +63,12 @@ Entry.ExtSideTag = function(content, blockView, mode) {
         this.textElement.attr({
             "y": this.height / 2 - 12 * (this.tspans.length - 1) - 2
         });
-        var x = 0;
         var bBox = this.textElement.getBoundingClientRect();
-        console.log(bBox)
 
         this.tspans.map(function(tspan) {
             tspan.attr({
                 x: - bBox.width - 14
             })
-        })
+        });
     };
 })(Entry.ExtSideTag.prototype);

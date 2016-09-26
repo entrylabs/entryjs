@@ -1020,6 +1020,12 @@ Entry.BlockView.pngMap = {};
                 statement.view.reDraw();
             }
         }
+        var extensions = this._extensions;
+        if (extensions) {
+            for (var i=0; i<extensions.length; i++) {
+                extensions[i].updatePos();
+            }
+        }
     };
 
     p.getParam = function(index) { return this._paramMap[index]; };
