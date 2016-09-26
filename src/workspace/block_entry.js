@@ -20266,6 +20266,7 @@ Entry.block = {
         ],
     },
     "maze_repeat_until_8": {
+        "template": Lang.template.maze_repeat_until_7,
         "parent": "maze_repeat_until_3",
         "params": [
             {
@@ -20281,6 +20282,7 @@ Entry.block = {
         ],
     },
     "maze_repeat_until_9": {
+        "template": Lang.template.maze_repeat_until_7,
         "parent": "maze_repeat_until_3",
         "params": [
             {
@@ -20296,6 +20298,7 @@ Entry.block = {
         ],
     },
     "maze_repeat_until_10": {
+        "template": Lang.template.maze_repeat_until_7,
         "parent": "maze_repeat_until_3",
         "params": [
             {
@@ -20311,6 +20314,7 @@ Entry.block = {
         ],
     },
     "maze_repeat_until_11": {
+        "template": Lang.template.maze_repeat_until_7,
         "parent": "maze_repeat_until_3",
         "params": [
             {
@@ -20326,6 +20330,7 @@ Entry.block = {
         ],
     },
     "maze_repeat_until_12": {
+        "template": Lang.template.maze_repeat_until_7,
         "parent": "maze_repeat_until_3",
         "params": [
             {
@@ -20341,6 +20346,7 @@ Entry.block = {
         ],
     },
     "maze_repeat_until_13": {
+        "template": Lang.template.maze_repeat_until_7,
         "parent": "maze_repeat_until_3",
         "params": [
             {
@@ -20356,6 +20362,7 @@ Entry.block = {
         ],
     },
     "maze_repeat_until_14": {
+        "template": Lang.template.maze_repeat_until_7,
         "parent": "maze_repeat_until_3",
         "params": [
             {
