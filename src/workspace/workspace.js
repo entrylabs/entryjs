@@ -385,7 +385,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p._syncTextCode = function() {
         console.log("_syncTextCode current object", Entry.TextCodingUtil._currentObject);
-        
+
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
             return;
 
@@ -394,8 +394,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var board = this.board;
         var code = board.code;
         console.log("syncTextCode", code);
-        code.load(changedCode);
-        code.createView(board);
+        if(code) {
+            code.load(changedCode);
+            code.createView(board);
+        }
         this.board.alignThreads();
 
         Entry.TextCodingUtil._currentObject = Entry.playground.object;
