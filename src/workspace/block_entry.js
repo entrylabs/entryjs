@@ -19999,7 +19999,7 @@ Entry.block = {
         },
         class: 'codestar_output_sensor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {        
+        func: function (sprite, script) {
             var port = script.getField('PORT');
             var onoff = script.getField('ONOFF');
             var value = onoff == 'on' ? 255 : 0;
@@ -20036,7 +20036,7 @@ Entry.block = {
         },
         class: 'codestar_output_sensor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {   
+        func: function (sprite, script) {
             var port = script.getField('PORT');
             var value = script.getNumberValue('VALUE');
             value = Math.round(value);
@@ -20069,7 +20069,7 @@ Entry.block = {
         },
         class: 'codestar_output_sensor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {  
+        func: function (sprite, script) {
             var port = 13;
             var onoff = script.getField('ONOFF');
             var value = onoff == 'on' ? 255 : 0;
@@ -20100,7 +20100,7 @@ Entry.block = {
         },
         class: 'codestar_output_sensor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {    
+        func: function (sprite, script) {
             var tone = script.getField('TONE');
             Entry.hw.setDigitalPortValue(15, tone);
             return script.callReturn();
@@ -20124,8 +20124,8 @@ Entry.block = {
         paramsKeyMap: {},
         class: 'codestar_output_sensor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {   
-            Entry.hw.setDigitalPortValue(15, 24);       
+        func: function (sprite, script) {
+            Entry.hw.setDigitalPortValue(15, 24);
             return script.callReturn();
         }
     },
@@ -20156,13 +20156,13 @@ Entry.block = {
         },
         class: 'codestar_motor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) { 
+        func: function (sprite, script) {
             var value = script.getNumberValue('VALUE');
             var sq = Entry.hw.sendQueue;
             sq.outport = script.getField('PORT');
             sq.value = 0;
             if(!isNaN(value)){
-                var tmp = value;                
+                var tmp = value;
                 if(value < 0) tmp = 0;
                 if(value > 255) tmp = 255;
                 sq.value = tmp;
@@ -20197,17 +20197,17 @@ Entry.block = {
         },
         class: 'codestar_motor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {    
+        func: function (sprite, script) {
             var value = script.getNumberValue('VALUE');
             var dir = Number(script.getField('DIRECTION'));
             var id = 0;
-            if(value == 0) value = 1;
+            //if(value == 0) value = 1;
             value = Math.round(value);
             value = Math.max(value, 0);
             value = Math.min(value, 255);
 
             value = Math.round(value/30);
-            if(value == 0) value = 1;
+            //if(value == 0) value = 1;
             var query = (id << 7) + (dir << 5) + value;
             Entry.hw.setDigitalPortValue(14, query);
             return script.callReturn();
@@ -20240,7 +20240,7 @@ Entry.block = {
         },
         class: 'codestar_motor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {   
+        func: function (sprite, script) {
             var value = script.getNumberValue('VALUE');
             var dir = Number(script.getField('DIRECTION'));
             var id = 1;
@@ -20277,7 +20277,7 @@ Entry.block = {
         paramsKeyMap: {},
         class: 'codestar_input_sensor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {  
+        func: function (sprite, script) {
             return Entry.hw.getAnalogPortValue('6');
         }
     },
@@ -20326,7 +20326,7 @@ Entry.block = {
         },
         class: 'codestar_input_sensor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {            
+        func: function (sprite, script) {
             var port = script.getField('PORT');
             return Entry.hw.getAnalogPortValue(port);
         }
@@ -20349,7 +20349,7 @@ Entry.block = {
         paramsKeyMap: {},
         class: 'codestar_input_sensor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {            
+        func: function (sprite, script) {
             return Entry.hw.portData.sonar;
         }
     },
@@ -20376,7 +20376,7 @@ Entry.block = {
         },
         class: 'codestar_input_sensor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {            
+        func: function (sprite, script) {
             var port = script.getField('PORT');
             return Entry.hw.getAnalogPortValue(port);
         }
@@ -20399,7 +20399,7 @@ Entry.block = {
         paramsKeyMap: {},
         class: 'codestar_input_sensor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {            
+        func: function (sprite, script) {
             return Entry.hw.getAnalogPortValue('2');
         }
     },
@@ -20421,7 +20421,7 @@ Entry.block = {
         paramsKeyMap: {},
         class: 'codestar_input_sensor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {            
+        func: function (sprite, script) {
             return Entry.hw.portData.temperature;
         }
     },
@@ -20475,7 +20475,7 @@ Entry.block = {
         },
         class: 'codestar_input_sensor',
         isNotFor: ['codestar'],
-        func: function (sprite, script) {            
+        func: function (sprite, script) {
             var axis = script.getField('AXIS');
             return Entry.hw.getAnalogPortValue('geo_'+axis);
         }
