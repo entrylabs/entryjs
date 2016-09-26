@@ -42,7 +42,8 @@ Entry.HW = function() {
         '8.1': Entry.Arduino,
         '10.1': Entry.Roborobo_Roduino,
         '10.2': Entry.Roborobo_SchoolKit,
-        '12.1': Entry.EV3
+        '12.1': Entry.EV3,
+        'B.1': Entry.Codestar
     };
 };
 

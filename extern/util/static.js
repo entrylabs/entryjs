@@ -485,13 +485,14 @@ EntryStatic.getAllBlocks = function() {
                 "ardublock_toggle_pwm",
                 "ardublock_convert_scale",
                 // ardublock Added 2016-06-01
+
                 "ev3_get_sensor_value",
                 "ev3_touch_sensor",
                 "ev3_color_sensor",
                 "ev3_motor_power",
                 "ev3_motor_power_on_time",
                 "ev3_motor_degrees",
-                
+
                 "roduino_on_block",
                 "roduino_off_block",
                 "roduino_get_analog_value",
@@ -500,13 +501,28 @@ EntryStatic.getAllBlocks = function() {
                 "roduino_set_digital",
                 "roduino_motor",
                 "roduino_set_color_pin",
-                
+
                 "schoolkit_on_block",
                 "schoolkit_off_block",
                 "schoolkit_get_input_value",
                 "schoolkit_set_output",
                 "schoolkit_motor",
-                "schoolkit_set_servo_value"
+                "schoolkit_set_servo_value",
+
+                // codestar 2016-09-26
+                'codestar_color_single',
+                'codestar_3color',
+                'codestar_vibration',
+                'codestar_buzzer',
+                'codestar_buzzer_stop',
+                'codestar_drive',
+                'codestar_wheel',
+                'codestar_light',
+                'codestar_button',
+                'codestar_ir',
+                'codestar_sonar',
+                'codestar_mic',
+                'codestar_temperature'
             ]
         }
     ]
