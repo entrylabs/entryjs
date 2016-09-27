@@ -18,7 +18,7 @@ Entry.BlockView = function(block, board, mode) {
     this.set(block);
     this.svgGroup = board.svgBlockGroup.elem("g");
 
-    this._schema = Entry.block[block.type];
+    this._schema = Entry.skinContainer.getSkin(block);
     if (this._schema === undefined) {
         this.block.destroy(false, false);
         return;
