@@ -22326,6 +22326,7 @@ Entry.BlockMenuScroller = function(a) {
   this.createScrollBar();
   this.setOpacity(0);
   this._addControl();
+  this._domHeight = 0;
   Entry.windowResized && Entry.windowResized.attach(this, this.resizeScrollBar);
 };
 Entry.BlockMenuScroller.RADIUS = 7;
@@ -22337,10 +22338,11 @@ Entry.BlockMenuScroller.RADIUS = 7;
   };
   a.resizeScrollBar = function() {
     this._updateRatio();
-    if (this._visible && 0 !== this.vRatio) {
-      var b = this.board.blockMenuContainer;
-      this.vScrollbar.attr({width:9, height:b.height() / this.vRatio, x:b.width() - 9});
+    var b = this.board.blockMenuContainer, a = b.height();
+    if (a !== this._domHeight) {
+      return this._domHeight = a, this.board.align();
     }
+    this._visible && 0 !== this.vRatio && this.vScrollbar.attr({width:9, height:b.height() / this.vRatio, x:b.width() - 9});
   };
   a.updateScrollBar = function(b) {
     this.vY += b;
@@ -22365,9 +22367,10 @@ Entry.BlockMenuScroller.RADIUS = 7;
     return this._visible;
   };
   a._updateRatio = function() {
-    var b = this.board, a = b.svgBlockGroup.getBoundingClientRect(), c = b.blockMenuContainer.height(), b = b.offset();
-    this.vRatio = a = (a.height + (a.top - b.top) + 10) / c;
-    1 >= a ? this.setVisible(!1) : this.setVisible(!0);
+    var b = this.board, a = b.svgBlockGroup.getBoundingClientRect(), c = b.blockMenuContainer.height();
+    b.offset();
+    this.vRatio = b = (a.height + 20) / c;
+    1 >= b ? this.setVisible(!1) : this.setVisible(!0);
   };
   a._reset = function() {
     this.vY = 0;
