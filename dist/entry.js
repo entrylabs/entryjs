@@ -11210,6 +11210,7 @@ Entry.PropertyPanel = function() {
     var b = this;
     a.bind("mousedown touchstart", function(a) {
       b._cover.removeClass("entryRemove");
+      b._cover._isVisible = !0;
       Entry.container.disableSort();
       Entry.container.splitterEnable = !0;
       Entry.documentMousemove && (Entry.container.resizeEvent = Entry.documentMousemove.attach(this, function(a) {
@@ -11218,8 +11219,9 @@ Entry.PropertyPanel = function() {
     });
     $(document).bind("mouseup touchend", function(a) {
       if (a = Entry.container.resizeEvent) {
-        Entry.container.splitterEnable = !1, Entry.documentMousemove.detach(a), b._cover.addClass("entryRemove"), delete Entry.container.resizeEvent;
+        Entry.container.splitterEnable = !1, Entry.documentMousemove.detach(a), delete Entry.container.resizeEvent;
       }
+      b._cover._isVisible && (b._cover._isVisible = !1, b._cover.addClass("entryRemove"));
       Entry.container.enableSort();
     });
   };
