@@ -23738,7 +23738,6 @@ Entry.block = {
             Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.SERVO, pin, value]);
             return script.callReturn();
         }
-<<<<<<< HEAD
     },
     codestar_color_single: {
         color: '#00979D',
@@ -24264,8 +24263,6 @@ Entry.block = {
         func: function (sprite, script) {
             return Entry.hw.getDigitalPortValue('6');
         }
-=======
->>>>>>> issue/codeino-0923
     }
 };
 
