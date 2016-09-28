@@ -10095,7 +10095,6 @@ Entry.initialize_ = function() {
   this.engine = new Entry.Engine;
   this.propertyPanel = new Entry.PropertyPanel;
   this.container = new Entry.Container;
-  this.skinContainer = new Entry.SkinContainer;
   this.helper = new Entry.Helper;
   this.youtube = new Entry.Youtube;
   this.variableContainer = new Entry.VariableContainer;
@@ -25330,9 +25329,7 @@ Entry.RenderView = function(a, b) {
     this.resize();
   };
 })(Entry.RenderView.prototype);
-Entry.SkinContainer = function() {
-  this._skins = {};
-};
+Entry.skinContainer = {_skins:{}};
 (function(a) {
   a.skinSchema = {type:"", condition:[]};
   a.loadSkins = function(b) {
@@ -25352,7 +25349,7 @@ Entry.SkinContainer = function() {
   a.getSkin = function(b) {
     return this._skins[b.type] ? this._skins[b.type][0] : Entry.block[b.type];
   };
-})(Entry.SkinContainer.prototype);
+})(Entry.skinContainer);
 Entry.ThreadView = function(a, b) {
   Entry.Model(this, !1);
   this.thread = a;

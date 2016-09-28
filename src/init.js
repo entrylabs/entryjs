@@ -149,13 +149,6 @@ Entry.initialize_ = function() {
     this.container = new Entry.Container();
 
     /**
-     * Initialize container for objects.
-     * @type {!Entry.SkinContainer}π
-     * @type {!object}
-     */
-    this.skinContainer = new Entry.SkinContainer();
-
-    /**
      * Initialize helper.
      * @type {!Entry.Helper}
      * @type {!object}

@@ -3,11 +3,10 @@
  */
 "use strict";
 
-goog.provide("Entry.SkinContainer");
+goog.provide("Entry.skinContainer");
 
-Entry.SkinContainer = function() {
-    this._skins = {};
-
+Entry.skinContainer = {
+    _skins: {}
 };
 
 (function(p) {
@@ -43,4 +42,4 @@ Entry.SkinContainer = function() {
         }
     };
 
-})(Entry.SkinContainer.prototype)
+})(Entry.skinContainer)
