@@ -2961,7 +2961,7 @@ Entry.block = {
         "isNotFor": [ "CODEino" ],
         "func": function (sprite, script) {
             var port = script.getField("PORT", script);
-            var nowTime = Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.ANALOG);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
             var hardwareTime = Entry.hw.portData['TIME'] || 0;
             var scope = script.executor.scope;
             var ANALOG = Entry.hw.portData.ANALOG;
@@ -2969,9 +2969,9 @@ Entry.block = {
                 scope.isStart = true;
                 scope.stamp = nowTime;
                 Entry.hw.sendQueue['TIME'] = nowTime;
-                Entry.hw.sendQueue['KEY'] = Entry.CODEino.getSensorKey();
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
                 Entry.hw.sendQueue['GET'] = {
-                    type: Entry.CODEino.sensorTypes.ANALOG,
+                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
                     port: port
                 };
                 throw new Entry.Utils.AsyncError();
