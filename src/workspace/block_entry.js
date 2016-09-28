@@ -20046,7 +20046,7 @@ Entry.block = {
                                     _id, {
                                         type: Ntry.STATIC.ANIMATE,
                                         animateType: Ntry.STATIC.TRANSITION,
-                                        duration: 24,
+                                        duration: 20,
                                         option: {
                                             deltaPos: _deltaPos2,
                                             targetPos: _targetPos,
@@ -20065,7 +20065,7 @@ Entry.block = {
                                     _id, {
                                         type: Ntry.STATIC.ANIMATE,
                                         animateType: Ntry.STATIC.TRANSITION,
-                                        duration: 12,
+                                        duration: 10,
                                         option: {
                                             deltaPos: _deltaPos,
                                         },
@@ -20077,7 +20077,7 @@ Entry.block = {
                                                 _id, {
                                                     type: Ntry.STATIC.ANIMATE,
                                                     animateType: Ntry.STATIC.TRANSITION,
-                                                    duration: 12,
+                                                    duration: 10,
                                                     option: {
                                                         deltaPos: _deltaPos,
                                                         targetPos: _targetPos,
@@ -20368,6 +20368,22 @@ Entry.block = {
             {
                 "type": "Image",
                 "img": "/img/assets/maze/bitmap/ws/blcok-12.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_15": {
+        "template": Lang.template.maze_repeat_until_7,
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_04.png",
                 "size": 18
             },
             {
