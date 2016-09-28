@@ -25347,7 +25347,24 @@ Entry.skinContainer = {_skins:{}};
     this._skins[b.type].push(a);
   };
   a.getSkin = function(b) {
-    return this._skins[b.type] ? this._skins[b.type][0] : Entry.block[b.type];
+    if (this._skins[b.type]) {
+      for (var a = this._skins[b.type], c = 0;c < a.length;c++) {
+        var e = a[0];
+        if (!e.conditions || !e.conditions.length) {
+          return e;
+        }
+        for (var f = 0;f < e.conditions.length;f++) {
+          var g = e.conditions[f];
+          if (b.params[g.index] !== g.value) {
+            break;
+          }
+          if (f === e.conditions.length - 1) {
+            return e;
+          }
+        }
+      }
+    }
+    return Entry.block[b.type];
   };
 })(Entry.skinContainer);
 Entry.ThreadView = function(a, b) {
