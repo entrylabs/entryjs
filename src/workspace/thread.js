@@ -116,13 +116,13 @@ Entry.Thread = function(thread, code, parent) {
         return newThread;
     };
 
-    p.toJSON = function(isNew, start, excludeInfo) {
+    p.toJSON = function(isNew, start, excludeData) {
         var array = [];
         start = start === undefined ? 0 : start;
         for (var i = start; i < this._data.length; i++) {
             var block = this._data[i];
             if (block instanceof Entry.Block)
-                array.push(this._data[i].toJSON(isNew, excludeInfo));
+                array.push(this._data[i].toJSON(isNew, excludeData));
         }
         return array;
     };
@@ -267,8 +267,8 @@ Entry.Thread = function(thread, code, parent) {
         return blocks;
     };
 
-    p.stringify = function(excludeInfo) {
-        return JSON.stringify(this.toJSON(undefined, undefined, excludeInfo));
+    p.stringify = function(excludeData) {
+        return JSON.stringify(this.toJSON(undefined, undefined, excludeData));
     };
 
 })(Entry.Thread.prototype);

@@ -187,7 +187,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         );
     };
 
-    p.toJSON = function(isNew, excludeInfo) {
+    p.toJSON = function(isNew, excludeData) {
         var json = this._toJSON();
         delete json.view;
         delete json.thread;
@@ -197,12 +197,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         json.params = json.params.map(function(p) {
             if (p instanceof Entry.Block)
-                p = p.toJSON(isNew, excludeInfo);
+                p = p.toJSON(isNew, excludeData);
             return p;
         });
 
         json.statements = json.statements.map(
-            function(s) {return s.toJSON(isNew, undefined, excludeInfo);}
+            function(s) {return s.toJSON(isNew, undefined, excludeData);}
         );
 
         json.x = this.x;
@@ -212,8 +212,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         json.deletable = this.deletable;
         json.readOnly = this.readOnly;
 
-        if (excludeInfo && excludeInfo instanceof Array) {
-            excludeInfo.forEach(function(i) { delete json[i]; });
+        if (excludeData && excludeData instanceof Array) {
+            excludeData.forEach(function(i) { delete json[i]; });
         }
 
         return json;
@@ -502,8 +502,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return blocks;
     };
 
-    p.stringify = function(excludeInfo) {
-        return JSON.stringify(this.toJSON(false, excludeInfo));
+    p.stringify = function(excludeData) {
+        return JSON.stringify(this.toJSON(false, excludeData));
     };
 
 })(Entry.Block.prototype);
