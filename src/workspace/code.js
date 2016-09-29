@@ -206,11 +206,11 @@ Entry.PARAM = -1;
         return this._data.map(function(t){return t;});
     };
 
-    p.toJSON = function() {
+    p.toJSON = function(excludeData) {
         var threads = this.getThreads();
         var json = [];
         for (var i=0, len=threads.length; i<len; i++)
-            json.push(threads[i].toJSON());
+            json.push(threads[i].toJSON(false, undefined, excludeData));
         return json;
     };
 
@@ -234,8 +234,8 @@ Entry.PARAM = -1;
         if (board instanceof Entry.BlockMenu) board.updateSplitters(y);
     };
 
-    p.stringify = function() {
-        return JSON.stringify(this.toJSON());
+    p.stringify = function(excludeData) {
+        return JSON.stringify(this.toJSON(excludeData));
     };
 
     p.dominate = function(thread) {
