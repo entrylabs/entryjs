@@ -206,7 +206,7 @@ Entry.PARAM = -1;
         return this._data.map(function(t){return t;});
     };
 
-    p.toJSON = function() {
+    p.toJSON = function(excludeInfo) {
         var threads = this.getThreads();
         var json = [];
         for (var i=0, len=threads.length; i<len; i++)
@@ -234,8 +234,8 @@ Entry.PARAM = -1;
         if (board instanceof Entry.BlockMenu) board.updateSplitters(y);
     };
 
-    p.stringify = function() {
-        return JSON.stringify(this.toJSON());
+    p.stringify = function(excludeInfo) {
+        return JSON.stringify(this.toJSON(excludeInfo));
     };
 
     p.dominate = function(thread) {

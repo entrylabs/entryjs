@@ -21276,8 +21276,9 @@ Entry.PARAM = -1;
       return a;
     });
   };
-  b.toJSON = function() {
-    for (var a = this.getThreads(), b = [], c = 0, e = a.length;c < e;c++) {
+  b.toJSON = function(a) {
+    a = this.getThreads();
+    for (var b = [], c = 0, e = a.length;c < e;c++) {
       b.push(a[c].toJSON());
     }
     return b;
@@ -21296,8 +21297,8 @@ Entry.PARAM = -1;
     c = this.board;
     c instanceof Entry.BlockMenu && c.updateSplitters(b);
   };
-  b.stringify = function() {
-    return JSON.stringify(this.toJSON());
+  b.stringify = function(a) {
+    return JSON.stringify(this.toJSON(a));
   };
   b.dominate = function(a) {
     a.view.setZIndex(this._maxZIndex++);
@@ -23725,11 +23726,12 @@ Entry.Thread = function(b, a, d) {
     c.load(f, b);
     return c;
   };
-  b.toJSON = function(a, b) {
-    for (var c = [], e = void 0 === b ? 0 : b;e < this._data.length;e++) {
-      this._data[e] instanceof Entry.Block && c.push(this._data[e].toJSON(a));
+  b.toJSON = function(a, b, c) {
+    var e = [];
+    for (b = void 0 === b ? 0 : b;b < this._data.length;b++) {
+      this._data[b] instanceof Entry.Block && e.push(this._data[b].toJSON(a, c));
     }
-    return c;
+    return e;
   };
   b.destroy = function(a) {
     this._code.destroyThread(this, !1);
@@ -23835,8 +23837,8 @@ Entry.Thread = function(b, a, d) {
     }
     return c;
   };
-  b.stringify = function() {
-    return JSON.stringify(this.toJSON());
+  b.stringify = function(a) {
+    return JSON.stringify(this.toJSON(void 0, void 0, a));
   };
 })(Entry.Thread.prototype);
 Entry.Block = function(b, a) {
@@ -23930,25 +23932,28 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   b.clone = function(a) {
     return new Entry.Block(this.toJSON(!0), a);
   };
-  b.toJSON = function(a) {
-    var b = this._toJSON();
-    delete b.view;
-    delete b.thread;
-    delete b.events;
-    a && delete b.id;
-    b.params = b.params.map(function(b) {
-      b instanceof Entry.Block && (b = b.toJSON(a));
-      return b;
+  b.toJSON = function(a, b) {
+    var c = this._toJSON();
+    delete c.view;
+    delete c.thread;
+    delete c.events;
+    a && delete c.id;
+    c.params = c.params.map(function(c) {
+      c instanceof Entry.Block && (c = c.toJSON(a, b));
+      return c;
     });
-    b.statements = b.statements.map(function(b) {
-      return b.toJSON(a);
+    c.statements = c.statements.map(function(c) {
+      return c.toJSON(a, b);
     });
-    b.x = this.x;
-    b.y = this.y;
-    b.movable = this.movable;
-    b.deletable = this.deletable;
-    b.readOnly = this.readOnly;
-    return b;
+    c.x = this.x;
+    c.y = this.y;
+    c.movable = this.movable;
+    c.deletable = this.deletable;
+    c.readOnly = this.readOnly;
+    b && b instanceof Array && b.forEach(function(a) {
+      delete c[a];
+    });
+    return c;
   };
   b.destroy = function(a, b) {
     var c = this, e = this.params;
@@ -24127,8 +24132,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     }
     return c;
   };
-  b.stringify = function() {
-    return JSON.stringify(this.toJSON());
+  b.stringify = function(a) {
+    return JSON.stringify(this.toJSON(!1, a));
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(b, a) {
