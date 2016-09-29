@@ -25360,7 +25360,7 @@ Entry.skinContainer = {_skins:{}};
   b.getSkin = function(a) {
     if (this._skins[a.type]) {
       for (var b = this._skins[a.type], c = 0;c < b.length;c++) {
-        var e = b[0];
+        var e = b[c];
         if (!e.conditions || !e.conditions.length) {
           return e;
         }
