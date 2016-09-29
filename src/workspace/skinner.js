@@ -43,7 +43,7 @@ Entry.skinContainer = {
                     return candidate;
                 for (var j = 0; j < candidate.conditions.length; j++) {
                     var condition = candidate.conditions[j];
-                    if (block.params[condition.index] !== condition.value)
+                    if (block.getDataByPointer(condition.pointer) !== condition.value) // here
                         break;
                     if (j === candidate.conditions.length - 1)
                         return candidate;

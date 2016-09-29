@@ -465,6 +465,18 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return pointer;
     };
 
+    p.getDataByPointer = function(pointer) {
+        pointer = pointer.concat()
+        var data = this.params[pointer.shift()];
+        if (pointer.length)
+            if (data.getDataByPointer)
+                return data.getDataByPointer(pointer);
+            else
+                return null;
+        else
+            return data;
+    };
+
     p.getBlockList = function(excludePrimitive, type) {
         var blocks = [];
         var currentType = type || this.type;

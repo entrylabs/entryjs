@@ -21873,6 +21873,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     4 === b.length && 0 === b[3] && b.pop();
     return b;
   };
+  a.getDataByPointer = function(b) {
+    b = b.concat();
+    var a = this.params[b.shift()];
+    return b.length ? a.getDataByPointer ? a.getDataByPointer(b) : null : a;
+  };
   a.getBlockList = function(b, a) {
     var c = [];
     if (!this._schema) {
@@ -23097,10 +23102,20 @@ Entry.Field = function() {
     return this._block.view.getBoard().svgGroup.elem("g");
   };
   a.getValue = function() {
-    return this._block.params[this._index];
+    var b = this._block.params[this._index];
+    return b && this._contents && this._contents.reference && this._contents.reference.length ? b.getDataByPointer(this._contents.reference) : b;
   };
   a.setValue = function(b, a) {
-    this.value != b && (this.value = b, this._block.params[this._index] = b, a && this._blockView.reDraw());
+    if (this.value != b) {
+      this.value = b;
+      if (this._contents && this._contents.reference && this._contents.reference.length) {
+        var c = this._contents.reference.concat(), e = c.pop();
+        this._block.params[this._index].getDataByPointer(c).params[e] = b;
+      } else {
+        this._block.params[this._index] = b;
+      }
+      a && this._blockView.reDraw();
+    }
   };
   a._isEditable = function() {
     if (Entry.ContextMenu.visible || this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
@@ -25355,7 +25370,7 @@ Entry.skinContainer = {_skins:{}};
         }
         for (var f = 0;f < e.conditions.length;f++) {
           var g = e.conditions[f];
-          if (b.params[g.index] !== g.value) {
+          if (b.getDataByPointer(g.pointer) !== g.value) {
             break;
           }
           if (f === e.conditions.length - 1) {
@@ -25500,10 +25515,10 @@ Entry.Vim = function(a, b) {
     b = this.codeMirror.getDoc();
     b.setCursor({line:b.lastLine() - 1});
   };
-  a.getCodeToText = function(a) {
-    var d = this.workspace.oldTextType;
-    d === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : d === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
-    return this._parser.parse(a, Entry.Parser.PARSE_SYNTAX);
+  a.getCodeToText = function(b) {
+    var a = this.workspace.oldTextType;
+    a === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : a === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
+    return this._parser.parse(b, Entry.Parser.PARSE_SYNTAX);
   };
   a.setParserAvailableCode = function(a, d) {
     this._parser.setAvailableCode(a, d);
