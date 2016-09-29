@@ -21278,7 +21278,7 @@ Entry.PARAM = -1;
   };
   b.toJSON = function(a) {
     for (var b = this.getThreads(), c = [], e = 0, f = b.length;e < f;e++) {
-      c.push(b[e].toJSON(a));
+      c.push(b[e].toJSON(!1, void 0, a));
     }
     return c;
   };
