@@ -873,7 +873,8 @@ Entry.EntryObject.prototype.initEntity = function(model) {
         json.regX = dimension.width/2;
         json.regY = dimension.height/2;
         var scale;
-        if (model.sprite.category.main == "background")
+        if (model.sprite.category.main == "background" ||
+            model.sprite.category.main == "new")
             scale = Math.max(270/dimension.height, 480/dimension.width);
         else if (model.sprite.category.main == "new")
             scale = 1;

@@ -8659,10 +8659,21 @@ Entry.Dialog.prototype.generateSpeak = function() {
   Entry.requestUpdate = !0;
 };
 Entry.Dialog.prototype.update = function() {
-  var a = this.parent.object.getTransformedBounds(), b = "";
+  var a = this.parent.object.getTransformedBounds();
+  if (!a && "textBox" === this.parent.type) {
+    if (this._isNoContentTried) {
+      delete this._isNoContentTried;
+      return;
+    }
+    this.parent.setText(" ");
+    a = this.parent.object.getTransformedBounds();
+    this._isNoContentTried = !0;
+  }
+  var b = "";
   -135 < a.y - this.height - 20 - this.border ? (this.object.y = a.y - this.height / 2 - 20 - this.padding, b += "n") : (this.object.y = a.y + a.height + this.height / 2 + 20 + this.padding, b += "s");
   240 > a.x + a.width + this.width ? (this.object.x = a.x + a.width + this.width / 2, b += "e") : (this.object.x = a.x - this.width / 2, b += "w");
   this.notch.type != b && (this.object.removeChild(this.notch), this.notch = this.createSpeakNotch(b), this.object.addChild(this.notch));
+  this._isNoContentTried && this.parent.setText("");
   Entry.requestUpdate = !0;
 };
 Entry.Dialog.prototype.createSpeakNotch = function(a) {
@@ -11071,7 +11082,7 @@ Entry.EntryObject.prototype.initEntity = function(a) {
     var d = a.sprite.pictures[0].dimension;
     b.regX = d.width / 2;
     b.regY = d.height / 2;
-    b.scaleX = b.scaleY = "background" == a.sprite.category.main ? Math.max(270 / d.height, 480 / d.width) : "new" == a.sprite.category.main ? 1 : 200 / (d.width + d.height);
+    b.scaleX = b.scaleY = "background" == a.sprite.category.main || "new" == a.sprite.category.main ? Math.max(270 / d.height, 480 / d.width) : "new" == a.sprite.category.main ? 1 : 200 / (d.width + d.height);
     b.width = d.width;
     b.height = d.height;
   } else {
@@ -25434,45 +25445,45 @@ Entry.GlobalSvg = {};
     var a = Entry.mouseCoordinate, c = b.getBoard(), e = c.workspace.blockMenu, f = e.offset().left, g = e.offset().top, h = e.visible ? e.svgDom.width() : 0;
     return a.y > c.offset().top - 20 && a.x > f + h ? this.DONE : a.y > g && a.x > f && e.visible ? b.block.isDeletable() ? this.REMOVE : this.RETURN : this.RETURN;
   };
-  a.addControl = function(b) {
+  a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
   };
-  a.onMouseDown = function(b) {
-    function a(b) {
-      var c = b.pageX;
-      b = b.pageY;
-      var d = e.left + (c - e._startX), f = e.top + (b - e._startY);
-      e.svgDom.css({transform:"translate3d(" + d + "px," + f + "px, 0px)"});
-      e._startX = c;
-      e._startY = b;
-      e.left = d;
-      e.top = f;
+  a.onMouseDown = function(a) {
+    function d(a) {
+      var b = a.pageX;
+      a = a.pageY;
+      var c = e.left + (b - e._startX), d = e.top + (a - e._startY);
+      e.svgDom.css({transform:"translate3d(" + c + "px," + d + "px, 0px)"});
+      e._startX = b;
+      e._startY = a;
+      e.left = c;
+      e.top = d;
     }
-    function c(b) {
+    function c(a) {
       $(document).unbind(".block");
     }
-    this._startY = b.pageY;
+    this._startY = a.pageY;
     var e = this;
-    b.stopPropagation();
-    b.preventDefault();
+    a.stopPropagation();
+    a.preventDefault();
     var f = $(document);
-    f.bind("mousemove.block", a);
+    f.bind("mousemove.block", d);
     f.bind("mouseup.block", c);
-    f.bind("touchmove.block", a);
+    f.bind("touchmove.block", d);
     f.bind("touchend.block", c);
-    this._startX = b.pageX;
-    this._startY = b.pageY;
+    this._startX = a.pageX;
+    this._startY = a.pageY;
   };
 })(Entry.GlobalSvg);
 Entry.Mutator = function() {
 };
 (function(a) {
-  a.mutate = function(b, a) {
-    b = Entry.block[b];
-    void 0 === b.changeEvent && (b.changeEvent = new Entry.Event);
-    b.template = a.template;
-    b.params = a.params;
-    b.changeEvent.notify(1);
+  a.mutate = function(a, d) {
+    a = Entry.block[a];
+    void 0 === a.changeEvent && (a.changeEvent = new Entry.Event);
+    a.template = d.template;
+    a.params = d.params;
+    a.changeEvent.notify(1);
   };
 })(Entry.Mutator);
 (function(a) {
@@ -25501,24 +25512,24 @@ Entry.RenderView = function(a, b) {
     this.renderViewContainer = Entry.Dom("div", {"class":"renderViewContainer", parent:this.view});
     this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.renderViewContainer});
   };
-  a.changeCode = function(b) {
-    if (!(b instanceof Entry.Code)) {
+  a.changeCode = function(a) {
+    if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
-    this.code = b;
+    this.code = a;
     this.svg || (this.svg = Entry.SVG(this._svgId), this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
-    b.createView(this);
+    a.createView(this);
     this.align();
     this.resize();
   };
   a.align = function() {
-    var b = this.code.getThreads();
-    if (b && 0 !== b.length) {
-      for (var a = 0, c = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = b.length;e < f;e++) {
-        var g = b[e].getFirstBlock().view;
-        g._moveTo(c, a - g.offsetY, !1);
+    var a = this.code.getThreads();
+    if (a && 0 !== a.length) {
+      for (var d = 0, c = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+        var g = a[e].getFirstBlock().view;
+        g._moveTo(c, d - g.offsetY, !1);
         g = g.svgGroup.getBBox().height;
-        a += g + 15;
+        d += g + 15;
       }
       this._bBox = this.svgGroup.getBBox();
       this.height = this._bBox.height;
@@ -25534,11 +25545,11 @@ Entry.RenderView = function(a, b) {
     this._svgWidth = this.svgDom.width();
     this.offset = this.svgDom.offset();
   };
-  a.bindCodeView = function(b) {
+  a.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
     this.svgThreadGroup.remove();
-    this.svgBlockGroup = b.svgBlockGroup;
-    this.svgThreadGroup = b.svgThreadGroup;
+    this.svgBlockGroup = a.svgBlockGroup;
+    this.svgThreadGroup = a.svgThreadGroup;
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
   };
@@ -25557,15 +25568,15 @@ Entry.ThreadView = function(a, b) {
   a.destroy = function() {
     this.svgGroup.remove();
   };
-  a.setParent = function(b) {
-    this.parent = b;
+  a.setParent = function(a) {
+    this.parent = a;
   };
   a.getParent = function() {
     return this.parent;
   };
   a.renderText = function() {
-    for (var b = this.thread.getBlocks(), a = 0;a < b.length;a++) {
-      b[a].view.renderText();
+    for (var a = this.thread.getBlocks(), d = 0;d < a.length;d++) {
+      a[d].view.renderText();
     }
   };
   a.renderBlock = function() {
