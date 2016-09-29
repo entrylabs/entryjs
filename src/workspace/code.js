@@ -210,7 +210,7 @@ Entry.PARAM = -1;
         var threads = this.getThreads();
         var json = [];
         for (var i=0, len=threads.length; i<len; i++)
-            json.push(threads[i].toJSON());
+            json.push(threads[i].toJSON(excludeInfo));
         return json;
     };
 

@@ -202,7 +202,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         });
 
         json.statements = json.statements.map(
-            function(s) {return s.toJSON(isNew, excludeInfo);}
+            function(s) {return s.toJSON(isNew, undefined, excludeInfo);}
         );
 
         json.x = this.x;

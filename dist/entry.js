@@ -21277,11 +21277,10 @@ Entry.PARAM = -1;
     });
   };
   b.toJSON = function(a) {
-    a = this.getThreads();
-    for (var b = [], c = 0, e = a.length;c < e;c++) {
-      b.push(a[c].toJSON());
+    for (var b = this.getThreads(), c = [], e = 0, f = b.length;e < f;e++) {
+      c.push(b[e].toJSON(a));
     }
-    return b;
+    return c;
   };
   b.countBlock = function() {
     for (var a = this.getThreads(), b = 0, c = 0;c < a.length;c++) {
@@ -23943,7 +23942,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       return c;
     });
     c.statements = c.statements.map(function(c) {
-      return c.toJSON(a, b);
+      return c.toJSON(a, void 0, b);
     });
     c.x = this.x;
     c.y = this.y;
