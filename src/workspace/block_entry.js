@@ -3338,7 +3338,7 @@ Entry.block = {
                 delete scope.isStart;
                 delete scope.stamp;
                 result = ANALOG[port];
-                result = (result - 265) * 1.1386 - 90;
+                result = (result - 333) * 1.46;
                 result = Math.min(90, result);
                 result = Math.max(-90, result);
                 return Math.round(result);
@@ -3346,7 +3346,7 @@ Entry.block = {
                 delete scope.isStart;
                 delete scope.stamp;
                 result = ANALOG[port];
-                result = (result - 265) * 1.1386 - 90;
+                result = (result - 333) * 1.46;
                 result = Math.min(90, result);
                 result = Math.max(-90, result);
                 return Math.round(result);
