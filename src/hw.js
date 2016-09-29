@@ -42,7 +42,8 @@ Entry.HW = function() {
         '8.1': Entry.Arduino,
         '10.1': Entry.Roborobo_Roduino,
         '10.2': Entry.Roborobo_SchoolKit,
-        '12.1': Entry.EV3
+        '12.1': Entry.EV3,
+        'B.1': Entry.Codestar
     };
 };
 
@@ -224,7 +225,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.9_Setup.exe";
+    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.10_Setup.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
