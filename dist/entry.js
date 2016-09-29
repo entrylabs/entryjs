@@ -11438,6 +11438,7 @@ Entry.PropertyPanel = function() {
     e.bind("click", function() {
       f.select(a);
     });
+    "console" == a && b.codeMirror.refresh();
     this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove(), "hw" == a && ($(this.modes).removeClass(".propertyTabhw"), $(".propertyTabhw").unbind("dblclick")));
     this.modes[a] = {obj:b, tabDom:e, contentDom:c};
     "hw" == a && $(".propertyTabhw").bind("dblclick", function() {
@@ -12031,6 +12032,7 @@ Entry.Console = function() {
     });
     Entry.addEventListener("stop", this.clear.bind(this));
     this.clear();
+    console.log("this.clear()");
   };
   b.getView = function() {
     return this.view;

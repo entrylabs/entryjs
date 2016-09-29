@@ -42,7 +42,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     this._console = new Entry.Console();
 
-
     switch (this._lang) {
         case "js":
             this._parser = new Entry.JsToBlockParser(this.syntax);

@@ -51,21 +51,23 @@ Entry.Console = function() {
         }.bind(this));
 
         this.codeMirror.on("cursorActivity", function(cm, event) {
-            cm.execCommand("goDocEnd");
+            cm.execCommand("goDocEnd");                                     
         });
 
-        Entry.addEventListener("stop", this.clear.bind(this))
+        Entry.addEventListener("stop", this.clear.bind(this));
 
         this.clear();
+
+        console.log("this.clear()");
     };
 
-    p.getView = function() {
+    p.getView = function() { 
         return this.view;
     };
 
     p.clear = function() {
         this.setEditing(true);
-        this.codeMirror.setValue("Entry Console \n")
+        this.codeMirror.setValue("Entry Console \n");
         this.codeMirror.execCommand("goDocEnd");
         this.setEditing(false);
     };

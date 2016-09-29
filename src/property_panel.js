@@ -61,6 +61,9 @@ Entry.PropertyPanel = function() {
             that.select(mode);
         });
 
+        if(mode == "console")
+            contentObj.codeMirror.refresh();
+
         if (this.modes[mode]) {
             this.modes[mode].tabDom.remove();
             this.modes[mode].contentDom.remove();
@@ -69,7 +72,6 @@ Entry.PropertyPanel = function() {
                 $('.propertyTabhw').unbind('dblclick');
             }
         }
-
 
         this.modes[mode] = {
             obj: contentObj,
