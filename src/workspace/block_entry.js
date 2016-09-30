@@ -18877,6 +18877,48 @@ Entry.block = {
             }
         }
     },
+    "maze_step_jump2": {
+        "parent": "maze_step_jump",
+        "template": Lang.template.maze_step_jump,
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var checkGrid = {
+                    x: unitGrid.x,
+                    y: unitGrid.y,
+                }
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_IRON], 2);
+                if(isCollisionPossible) {
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.FAIL_JUMP, callBack);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.CONTACT_IRON);
+                    return;
+                }
+
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
     "maze_step_for": {
         "skeleton": "basic_loop",
         "mode": "maze",
