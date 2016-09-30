@@ -5,7 +5,7 @@ goog.provide("Entry.RenderView");
 goog.require("Entry.Dom");
 goog.require("Entry.Utils");
 
-Entry.RenderView = function(dom, align) {
+Entry.RenderView = function(dom, align, scale) {
     this._align = align || "CENTER";
 
     if (typeof dom === "string") dom = $('#' + dom);
@@ -17,6 +17,7 @@ Entry.RenderView = function(dom, align) {
     this.view = dom;
     this.viewOnly = true;
     this.suffix = 'renderView';
+    this._scale = scale === undefined ? 1 : scale;
 
     this.visible = true;
     this.disableMouseEvent = true;
@@ -168,8 +169,17 @@ Entry.RenderView = function(dom, align) {
     };
 
     p.setDomSize = function() {
+        if (this.svgBlockGroup)
+            this.svgBlockGroup.attr('transform', 'scale(1)');
         this.align();
         this.resize();
+        if (this._scale !== 1) {
+            window.setTimeout(function() {
+                this.svgBlockGroup.attr('transform', 'scale(%scale)'.replace('%scale', this._scale));
+                this.align();
+                this.resize();
+            }.bind(this), 0);
+        }
     };
 
 })(Entry.RenderView.prototype);

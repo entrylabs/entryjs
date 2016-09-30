@@ -22563,7 +22563,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
-    this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre;", "font-size":this._fontSize + "px", "font-family":"nanumBarunRegular", "class":"dragNone", fill:this._color});
+    this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre;", "font-size":this._fontSize, "font-family":"nanumBarunRegular", "class":"dragNone", lengthAdjust:"spacing", fill:this._color});
     this.textElement.textContent = this._text;
     var a = 0, b = this.textElement.getBoundingClientRect();
     "center" == this._align && (a = -b.width / 2);
@@ -22739,7 +22739,7 @@ Entry.Mutator = function() {
 })(Entry.Mutator);
 (function(b) {
 })(Entry.Mutator.prototype);
-Entry.RenderView = function(b, a) {
+Entry.RenderView = function(b, a, d) {
   this._align = a || "CENTER";
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
@@ -22748,6 +22748,7 @@ Entry.RenderView = function(b, a) {
   this.view = b;
   this.viewOnly = !0;
   this.suffix = "renderView";
+  this._scale = void 0 === d ? 1 : d;
   this.disableMouseEvent = this.visible = !0;
   this._svgId = "renderView_" + (new Date).getTime();
   this._generateView();
@@ -22818,8 +22819,14 @@ Entry.RenderView = function(b, a) {
     }.bind(this), 0);
   };
   b.setDomSize = function() {
+    this.svgBlockGroup && this.svgBlockGroup.attr("transform", "scale(1)");
     this.align();
     this.resize();
+    1 !== this._scale && window.setTimeout(function() {
+      this.svgBlockGroup.attr("transform", "scale(%scale)".replace("%scale", this._scale));
+      this.align();
+      this.resize();
+    }.bind(this), 0);
   };
 })(Entry.RenderView.prototype);
 Entry.Scroller = function(b, a, d) {
