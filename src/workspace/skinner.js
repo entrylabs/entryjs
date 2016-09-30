@@ -38,12 +38,12 @@ Entry.skinContainer = {
         if (this._skins[block.type]) {
             var candidates = this._skins[block.type];
             for (var i = 0; i < candidates.length; i++) {
-                var candidate = candidates[0];
+                var candidate = candidates[i];
                 if (!candidate.conditions || !candidate.conditions.length)
                     return candidate;
                 for (var j = 0; j < candidate.conditions.length; j++) {
                     var condition = candidate.conditions[j];
-                    if (block.params[condition.index] !== condition.value)
+                    if (block.getDataByPointer(condition.pointer) !== condition.value) // here
                         break;
                     if (j === candidate.conditions.length - 1)
                         return candidate;

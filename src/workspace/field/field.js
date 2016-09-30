@@ -141,13 +141,23 @@ Entry.Field = function() {};
     };
 
     p.getValue = function() {
-        return this._block.params[this._index];
+        var data = this._block.params[this._index];
+        if (data && this._contents && this._contents.reference && this._contents.reference.length)
+            return data.getDataByPointer(this._contents.reference);
+        else
+            return data;
     };
 
     p.setValue = function(value, reDraw) {
         if (this.value == value) return;
         this.value = value;
-        this._block.params[this._index] = value;
+        if (this._contents && this._contents.reference && this._contents.reference.length) {
+            var ref = this._contents.reference.concat();
+            var index = ref.pop();
+            var targetBlock = this._block.params[this._index].getDataByPointer(ref)
+            targetBlock.params[index] = value;
+        } else
+            this._block.params[this._index] = value;
         if (reDraw) this._blockView.reDraw();
     };
 

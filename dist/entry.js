@@ -21640,10 +21640,20 @@ Entry.Field = function() {
     return this._block.view.getBoard().svgGroup.elem("g");
   };
   b.getValue = function() {
-    return this._block.params[this._index];
+    var a = this._block.params[this._index];
+    return a && this._contents && this._contents.reference && this._contents.reference.length ? a.getDataByPointer(this._contents.reference) : a;
   };
   b.setValue = function(a, b) {
-    this.value != a && (this.value = a, this._block.params[this._index] = a, b && this._blockView.reDraw());
+    if (this.value != a) {
+      this.value = a;
+      if (this._contents && this._contents.reference && this._contents.reference.length) {
+        var c = this._contents.reference.concat(), e = c.pop();
+        this._block.params[this._index].getDataByPointer(c).params[e] = a;
+      } else {
+        this._block.params[this._index] = a;
+      }
+      b && this._blockView.reDraw();
+    }
   };
   b._isEditable = function() {
     if (Entry.ContextMenu.visible || this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
@@ -22563,7 +22573,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
-    this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre;", "font-size":this._fontSize, "font-family":"nanumBarunRegular", "class":"dragNone", lengthAdjust:"spacing", fill:this._color});
+    this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre;", "font-size":this._fontSize + "px", "font-family":"nanumBarunRegular", "class":"dragNone", fill:this._color});
     this.textElement.textContent = this._text;
     var a = 0, b = this.textElement.getBoundingClientRect();
     "center" == this._align && (a = -b.width / 2);
@@ -23641,13 +23651,13 @@ Entry.skinContainer = {_skins:{}};
   b.getSkin = function(a) {
     if (this._skins[a.type]) {
       for (var b = this._skins[a.type], c = 0;c < b.length;c++) {
-        var e = b[0];
+        var e = b[c];
         if (!e.conditions || !e.conditions.length) {
           return e;
         }
         for (var f = 0;f < e.conditions.length;f++) {
           var g = e.conditions[f];
-          if (a.params[g.index] !== g.value) {
+          if (a.getDataByPointer(g.pointer) !== g.value) {
             break;
           }
           if (f === e.conditions.length - 1) {
@@ -24117,6 +24127,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     var a = this.thread.pointer([], this);
     4 === a.length && 0 === a[3] && a.pop();
     return a;
+  };
+  b.getDataByPointer = function(a) {
+    a = a.concat();
+    var b = this.params[a.shift()];
+    return a.length ? b.getDataByPointer ? b.getDataByPointer(a) : null : b;
   };
   b.getBlockList = function(a, b) {
     var c = [];
