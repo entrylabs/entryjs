@@ -726,6 +726,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 calleeName = objectObjectName.concat('.').concat(objectPropertyName).concat('.').concat(propertyName);
         }
 
+        console.log("calleeName", calleeName);
+
         if(calleeName == "__pythonRuntime.objects.list") {
             var idData = this[id.type](id);
             console.log("VariableDeclarator idData", idData);
@@ -764,6 +766,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var initData = this[init.type](init);
                 console.log("VariableDeclarator initData UnaryExpression", initData);
                 var value = initData.params[0];
+                console.log("gl initData", initData, "type", typeof value);
                 if(typeof value != "string" && typeof value != "number") {
                     value = NaN;
                 }
@@ -1868,7 +1871,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("UnaryExpression operator", operator);
             var params = [];
             if(operator == "+" || operator == "-") {
-                argument.value = Number(operator.concat(argument.value));
+                /*console.log("UnaryExpression argument", argument.value);
+                console.log("aaa", Number(operator.concat(argument.value)));
+                argument.value = Number(operator.concat(argument.value));*/
+                if(argument.value >= 0)
+                    argument.value = operator + argument.value;
+
+                console.log("UnaryExpression argument", argument);
                 var value = this[argument.type](argument);
                 data = value;
                 console.log("UnaryExpression data", data);
