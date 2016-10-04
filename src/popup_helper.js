@@ -36,21 +36,6 @@ Entry.popupHelper = function(reset) {
         }
     });
 
-    this.body_.bind('touchstart', function(e) {
-        if(that.nowContent && ignoreCloseType.indexOf(that.nowContent.prop('type')) > -1) {
-            return;
-        }
-        var $target = $(e.target);
-        spanArea.forEach((function (className) {
-            if($target.hasClass(className)) {
-                this.popup.hide();
-            }
-        }).bind(this));
-        if (e.target==this) {
-            this.popup.hide();
-        }
-    });
-
     window.popupHelper = this;
     this.body_.prop('popup', this);
 
@@ -105,14 +90,6 @@ Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
     }).bind(this));
 
     var self = this;
-    
-    titleButton_.bind('touchstart', function() {
-        if(popupObject.closeEvent) {
-            popupObject.closeEvent(self);   
-        } else {
-            self.hide();
-        }
-    });
 
     var popupWrapper_ = Entry.Dom('div', {
         class: 'entryPopupHelperWrapper'
