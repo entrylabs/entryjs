@@ -25,6 +25,7 @@ Entry.RenderView = function(dom, align, scale) {
     this._generateView();
 
     this.offset = this.svgDom.offset();
+    this._minBlockOffsetX = 0;
     this._setSize();
 
     this.svg = Entry.SVG(this._svgId , this.svgDom[0]);
@@ -93,7 +94,7 @@ Entry.RenderView = function(dom, align, scale) {
         var totalHeight = 0;
         var vPadding = 15,
             marginFromTop = 0,
-            hPadding = this._align == 'LEFT' ? 20 : this.svgDom.width()/2;
+            hPadding = this._getHorizontalPadding();
 
         for (var i=0,len=threads.length; i<len; i++) {
             var thread = threads[i];
@@ -111,8 +112,9 @@ Entry.RenderView = function(dom, align, scale) {
                     xPos = Math.min(xPos, currentXpos);
                 }
             }
+            this._minBlockOffsetX = Math.min(this._minBlockOffsetX, blockView.offsetX);
             blockView._moveTo(
-                hPadding - xPos,
+                hPadding - xPos - blockView.offsetX,
                 marginFromTop - blockView.offsetY,
                 false
             );
@@ -154,7 +156,7 @@ Entry.RenderView = function(dom, align, scale) {
                 return;
 
             $(this.svg).css({
-                'width': width + 15,
+                'width': width + this._getHorizontalPadding() - this._minBlockOffsetX,
                 'height': height + 5
             });
 
@@ -171,6 +173,7 @@ Entry.RenderView = function(dom, align, scale) {
     p.setDomSize = function() {
         if (this.svgBlockGroup)
             this.svgBlockGroup.attr('transform', 'scale(1)');
+        this.code.view.reDraw();
         this.align();
         this.resize();
         if (this._scale !== 1) {
@@ -181,5 +184,16 @@ Entry.RenderView = function(dom, align, scale) {
             }.bind(this), 0);
         }
     };
+
+    p._getHorizontalPadding = function() {
+        var marginMap = {
+            'LEFT': 20,
+            'LEFT_MOST': 0
+        };
+        var ret = marginMap[this._align];
+
+        return ret !== undefined ? ret : this.svgDom.width()/2;
+    };
+
 
 })(Entry.RenderView.prototype);
