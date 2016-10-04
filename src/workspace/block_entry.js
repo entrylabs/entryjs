@@ -19801,7 +19801,7 @@ Entry.block = {
 
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
-                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY4], 2, true);
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY5, Ntry.STATIC.OBSTACLE_ENERMY4], 2, true);
                 var particleZIndex = 550;
                 if(unitComp.direction === Ntry.STATIC.NORTH) {
                     particleZIndex = 450;
@@ -19829,7 +19829,7 @@ Entry.block = {
                             Ntry.entityManager.addComponent(particle.id, {
                                 type: Ntry.STATIC.PARTICLE,
                                 direction: component.direction,
-                                collisionList: [Ntry.STATIC.OBSTACLE_ENERMY1, , Ntry.STATIC.OBSTACLE_ENERMY4],
+                                collisionList: [Ntry.STATIC.OBSTACLE_ENERMY5, , Ntry.STATIC.OBSTACLE_ENERMY4],
                                 penetrationList: [Ntry.STATIC.WALL],
                             });
                         }
@@ -19882,7 +19882,7 @@ Entry.block = {
 
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
-                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY2, Ntry.STATIC.OBSTACLE_ENERMY3]);
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY2, Ntry.STATIC.OBSTACLE_ENERMY3, Ntry.STATIC.OBSTACLE_ENERMY5]);
                 var particleZIndex = 550;
                 if(unitComp.direction === Ntry.STATIC.NORTH) {
                     particleZIndex = 450;
@@ -19910,7 +19910,7 @@ Entry.block = {
                             Ntry.entityManager.addComponent(particle.id, {
                                 type: Ntry.STATIC.PARTICLE,
                                 direction: component.direction,
-                                collisionList: [ Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY2, Ntry.STATIC.OBSTACLE_ENERMY3 ],
+                                collisionList: [ Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY2, Ntry.STATIC.OBSTACLE_ENERMY3, Ntry.STATIC.OBSTACLE_ENERMY5 ],
                             });
                         }
                     });
@@ -20480,6 +20480,7 @@ Entry.block = {
                     case Ntry.STATIC.OBSTACLE_ENERMY2:
                     case Ntry.STATIC.OBSTACLE_ENERMY3:
                     case Ntry.STATIC.OBSTACLE_ENERMY4:
+                    case Ntry.STATIC.OBSTACLE_ENERMY5:
                         tileType = 'MONSTER';
                         break;
                     case Ntry.STATIC.OBSTACLE_IRON:
