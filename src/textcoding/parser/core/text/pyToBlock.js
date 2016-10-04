@@ -809,7 +809,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             }
             else {
-                if(initData.params && initData.params[0] && initData.params[0].name && (idData.name == initData.params[0].name) && initData.operator == "PLUS") {
+                if(initData.params && initData.params[0] && initData.params[0].name && 
+                    idData.name == initData.params[0].name && 
+                    initData.operator == "PLUS" || initData.operator == "MINUS") {
                     /*if(initData.operator != "PLUS") 
                         return result;*/
 
@@ -852,12 +854,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
             else {
                 console.log("VariableDeclarator idData", idData, "initData", initData);
-                if(initData.params && initData.params[0] && (idData.name == initData.params[0].name) && initData.operator == "PLUS") {
+                if(initData.params && initData.params[0] && idData.name == initData.params[0].name && 
+                    initData.operator == "PLUS" || initData.operator == "MINUS") {
                     console.log("in initData.params[0]");
                     if(idData.params && idData.params[0])
                         params.push(idData.params[0]);
                     else
                         params.push(variableId);
+                    if(initData.operator == "MINUS")
+                        initData.params[2].params[0] = "-" + initData.params[2].params[0];
+                    
                     params.push(initData.params[2]);
                 } else {
                     console.log("in initData");
@@ -2603,9 +2609,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         result.operator = operatorData;
-
-
-
 
         /*//save the variable to map
         var variable = leftData;
