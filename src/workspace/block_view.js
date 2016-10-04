@@ -1008,7 +1008,7 @@ Entry.BlockView.pngMap = {};
         if (params) {
             for (var i=0; i<params.length; i++) {
                 var param = params[i];
-                if (param instanceof Entry.Block) {
+                if (param instanceof Entry.Block && param.view) {
                     param.view.reDraw();
                 }
             }

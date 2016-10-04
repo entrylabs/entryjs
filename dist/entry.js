@@ -21022,7 +21022,7 @@ Entry.BlockView.pngMap = {};
       if (b) {
         for (var c = 0;c < b.length;c++) {
           var e = b[c];
-          e instanceof Entry.Block && e.view.reDraw();
+          e instanceof Entry.Block && e.view && e.view.reDraw();
         }
       }
       if (a = a.statements) {
@@ -21641,8 +21641,9 @@ Entry.Field = function() {
     if (this.value != a) {
       this.value = a;
       if (this._contents && this._contents.reference && this._contents.reference.length) {
-        var c = this._contents.reference.concat(), e = c.pop();
-        this._block.params[this._index].getDataByPointer(c).params[e] = a;
+        var c = this._contents.reference.concat(), e = c.pop(), f = this._block.params[this._index];
+        c.length && (f = f.getDataByPointer(c));
+        f.params[e] = a;
       } else {
         this._block.params[this._index] = a;
       }

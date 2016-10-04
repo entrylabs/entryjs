@@ -154,7 +154,9 @@ Entry.Field = function() {};
         if (this._contents && this._contents.reference && this._contents.reference.length) {
             var ref = this._contents.reference.concat();
             var index = ref.pop();
-            var targetBlock = this._block.params[this._index].getDataByPointer(ref)
+            var targetBlock = this._block.params[this._index]
+            if (ref.length)
+                targetBlock = targetBlock.getDataByPointer(ref)
             targetBlock.params[index] = value;
         } else
             this._block.params[this._index] = value;
