@@ -20237,7 +20237,6 @@ Entry.block = {
             }
         ],
         func: function() {
-            // TODO: func 내용은 변경해야 함.
             var statement = this.block.statements[0];
             if (statement.getBlocks().length === 0) {
                 return;
@@ -20250,9 +20249,21 @@ Entry.block = {
             }
             
             var unitGrid = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
-            var tile = Ntry.getTileByGrid(unitGrid);
+            var entities = Ntry.entityManager.getEntitiesByGrid(unitGrid.x, unitGrid.y);
+            var isGoal = false;
 
-            if(tile.tileType !== Ntry.STATIC.GOAL) {
+            for(var idx in entities) {
+                var entity = entities[idx];
+                console.log(entity);
+                var tile = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.TILE);
+                var item = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.ITEM);
+
+                if(tile && item && tile.tileType === Ntry.STATIC.GOAL && item.itemType === Ntry.STATIC.GOAL_ITEM ) {
+                    isGoal = true;
+                    break;
+                }
+            }
+            if(!isGoal) {
                 this.executor.stepInto(statement);
                 return Entry.STATIC.BREAK;
             }
