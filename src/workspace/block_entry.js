@@ -22354,7 +22354,7 @@ Entry.block = {
                 Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[1] - 2],
                 Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[2] - 2]
             ];
-            
+
             switch(signal) {
                 case "red":
                     if(value[0] == 1 && value[1] == 0 && value[2] == 0) {
@@ -22426,7 +22426,7 @@ Entry.block = {
             var pin = script.getNumberValue("VALUE", script);
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
-            
+
             Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, pin, value]);
             return script.callReturn();
         }
@@ -22440,7 +22440,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [ Lang.Blocks.roborobo_motor1, "motor1" ],
-                    [ Lang.Blocks.roborobo_motor2, "motor2" ]                    
+                    [ Lang.Blocks.roborobo_motor2, "motor2" ]
                 ],
                 "value": "motor1",
                 "fontSize": 11,
@@ -22483,7 +22483,7 @@ Entry.block = {
             var value1 = value2 = 0;
             var mode = script.getField("MODE");
             var operator = script.getField("OPERATOR");
-            
+
             if(mode == "motor1") {
                 pin1 = 9;
                 pin2 = 10;
@@ -22491,7 +22491,7 @@ Entry.block = {
                 pin1 = 11;
                 pin2 = 12;
             }
-            
+
             if (operator == "cw") {
                 value1 = 1;
                 value2 = 0;
@@ -22559,7 +22559,7 @@ Entry.block = {
             var redPin = script.getNumberValue("RED", script);
             var greenPin = script.getNumberValue("GREEN", script);
             var bluePin = script.getNumberValue("BLUE", script);
-            
+
             Entry.Roborobo_Roduino.ColorPin = [ redPin, greenPin, bluePin ];
             Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, redPin, greenPin, bluePin]);
             return script.callReturn();
@@ -22674,7 +22674,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getNumberField("PORT");
         }
-    },    
+    },
     "schoolkit_set_output": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -22721,7 +22721,7 @@ Entry.block = {
             var pin = script.getNumberValue("VALUE", script);
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
-            
+
             Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, pin, value]);
             return script.callReturn();
         }
@@ -22766,7 +22766,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [ Lang.Blocks.roborobo_motor1, "motor1" ],
-                    [ Lang.Blocks.roborobo_motor2, "motor2" ]                    
+                    [ Lang.Blocks.roborobo_motor2, "motor2" ]
                 ],
                 "value": "motor1",
                 "fontSize": 11,
@@ -22786,7 +22786,7 @@ Entry.block = {
                 "value": "cw",
                 "fontSize": 11,
                 'arrowColor': EntryStatic.ARROW_COLOR_HW
-            },            
+            },
             {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
@@ -22796,7 +22796,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                null,                
+                null,
                 {
                     "type": "number",
                     "params": [ "0" ]
@@ -22807,9 +22807,9 @@ Entry.block = {
             "type": "schoolkit_motor"
         },
         "paramsKeyMap": {
-            "MODE": 0,            
+            "MODE": 0,
             "VALUE": 1,
-            "OPERATOR": 2            
+            "OPERATOR": 2
         },
         "class": "schoolkit_set",
         "isNotFor": [ "roborobo_schoolkit" ],
@@ -22819,7 +22819,7 @@ Entry.block = {
             var mode = script.getField("MODE");
             var operator = script.getField("OPERATOR");
             var value = script.getNumberValue("VALUE");
-            
+
             if(mode == "motor1") {
                 pin = 7;
             } else {
@@ -22830,7 +22830,7 @@ Entry.block = {
             } else if(value < 0) {
                 value = 0;
             }
-            
+
             if (operator == "cw") {
                 operatorValue = 1;
                 Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
@@ -22885,13 +22885,13 @@ Entry.block = {
         "func": function (sprite, script) {
             var pin = script.getNumberValue("PIN", script);
             var value = script.getNumberValue("VALUE");
-            
+
             if(value < 0) {
                 value = 0;
             } else if(value > 180) {
                 value = 180;
             }
-            
+
             Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.SERVO, pin, value]);
             return script.callReturn();
         }
@@ -22968,6 +22968,7 @@ Entry.block = {
             "DEGREE": 1
         },
         "class": "neobot_servo",
+        "isNotFor": [ "mini_hw" ],
         "func": function (sprite, script) {
             var port = script.getNumberField('PORT');
             var degree = script.getNumberValue('DEGREE');
@@ -23036,6 +23037,7 @@ Entry.block = {
             "DURATION": 3
         },
         "class": "neobot_motor",
+        "isNotFor": [ "mini_hw" ],
         "func": function (sprite, script) {
             if (!script.isStart) {
                 var wheel = script.getNumberField('WHEEL');
@@ -23140,7 +23142,7 @@ Entry.block = {
             "SPEED": 2
         },
         "class": "neobot_motor",
-        //"isNotFor": ["mini"],
+        "isNotFor": ["mini_hw"],
         "func": function (sprite, script) {
             var wheel = script.getNumberField('WHEEL');
             var speed = script.getNumberValue('SPEED');
@@ -23197,6 +23199,7 @@ Entry.block = {
             "WHEEL": 0
         },
         "class": "neobot_motor",
+        "isNotFor": [ "mini_hw" ],
         "func": function (sprite, script) {
             var wheel = script.getNumberField('WHEEL');
             if (wheel == 2) {
@@ -23235,6 +23238,7 @@ Entry.block = {
             "PORT": 0
         },
         "class": "neobot_touch",
+        "isNotFor": [ "mini_hw" ],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             var value = (Entry.hw.portData['IN' + port] > 125) ? 1 : 0;
@@ -23274,6 +23278,7 @@ Entry.block = {
             "TOUCH": 1
         },
         "class": "neobot_touch",
+        "isNotFor": [ "mini_hw" ],
         "func": function(sprite, script) {
             var port = script.getStringField('PORT');
             var touch = script.getNumberField("TOUCH", script);
@@ -23308,6 +23313,7 @@ Entry.block = {
             "PORT": 0
         },
         "class": "neobot_light",
+        "isNotFor": [ "mini_hw" ],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             return Entry.hw.portData['IN' + port];
@@ -23358,6 +23364,7 @@ Entry.block = {
             "RIGHTVALUE": 2
         },
         "class": "neobot_light",
+        "isNotFor": [ "mini_hw" ],
         "func": function(sprite, script) {
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
@@ -23411,6 +23418,7 @@ Entry.block = {
             "PORT": 0
         },
         "class": "neobot_sound",
+        "isNotFor": [ "mini_hw" ],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             return Entry.hw.portData['IN' + port];
@@ -23462,6 +23470,7 @@ Entry.block = {
             "RIGHTVALUE": 2
         },
         "class": "neobot_sound",
+        "isNotFor": [ "mini_hw" ],
         "func": function(sprite, script) {
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
@@ -23515,7 +23524,7 @@ Entry.block = {
             "PORT": 0
         },
         "class": "neobot_irs",
-        //"isNotFor": ["mini"],
+        "isNotFor": ["mini_hw"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             return Entry.hw.portData['IN' + port];
@@ -23567,7 +23576,7 @@ Entry.block = {
             "RIGHTVALUE": 2
         },
         "class": "neobot_irs",
-        //"isNotFor": ['mini'],
+        "isNotFor": ['mini_hw'],
         "func": function(sprite, script) {
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
@@ -23641,6 +23650,7 @@ Entry.block = {
             "VALUE": 2
         },
         "class": "neobot_diode",
+        "isNotFor": [ "mini_hw" ],
         "func": function (sprite, script) {
              if (!script.isStart) {
                 var port = script.getNumberField('PORT');
@@ -23720,7 +23730,7 @@ Entry.block = {
             "VALUE": 1
         },
         "class": "neobot_diode",
-        //"isNotFor": ["mini"],
+        "isNotFor": ["mini_hw"],
         "func": function (sprite, script) {
             var port = script.getNumberField('PORT');
             var value = script.getNumberField('VALUE');
@@ -23792,7 +23802,7 @@ Entry.block = {
             "MAX": 3
         },
         "class": "neobot_diode",
-        //"isNotFor": ["mini"],
+        "isNotFor": ["mini_hw"],
         "func": function (sprite, script) {
             var outputPort = script.getNumberField('OUTPUT');
             var inputPort = script.getNumberField('INPUT');
@@ -23853,7 +23863,7 @@ Entry.block = {
             "VALUE": 1
         },
         "class": "neobot_diode",
-        //"isNotFor": ["mini"],
+        "isNotFor": ["mini_hw"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT', script);
             var value = script.getNumberValue('VALUE', script);
@@ -23896,6 +23906,7 @@ Entry.block = {
             "PORT": 0
         },
         "class": "neobot_diode",
+        "isNotFor": [ "mini_hw" ],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             return Entry.hw.portData['IN' + port];
@@ -23964,7 +23975,7 @@ Entry.block = {
             "DURATION": 2
         },
         "class": "neobot_melody",
-        //"isNotFor": ["mini"],
+        "isNotFor": ["mini_hw"],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
 

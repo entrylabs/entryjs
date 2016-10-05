@@ -25,7 +25,7 @@ Entry.Playground = function() {
     this.viewMode_ = 'default';
     var that = this;
     Entry.addEventListener('textEdited', this.injectText);
-    Entry.addEventListener('hwChanged', this.updateHW);
+    Entry.addEventListener('hwChanged', this.updateMiniHW);
     Entry.addEventListener('changeMode', function(mode) {
         that.setMode(mode);
     });
@@ -305,7 +305,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
     this.blockMenu = this.mainWorkspace.blockMenu;
     this.board = this.mainWorkspace.board;
 
-    if (Entry.hw) this.updateHW();
+    if (Entry.hw) this.updateMiniHW();
 };
 
 /**
@@ -1615,6 +1615,28 @@ Entry.Playground.prototype.updateHW = function() {
         blockMenu.unbanClass("arduinoDisconnected", true);
         Entry.hw.banHW();
     }
+    blockMenu.reDraw();
+};
+
+Entry.Playground.prototype.updateMiniHW = function() {
+    var self = Entry.playground;
+    var blockMenu = self.mainWorkspace.blockMenu;
+    if (!blockMenu) return;
+
+    var hw = Entry.hw;
+    //console.log('connected:',hw.connected);
+    if (hw && hw.connected) {
+        //console.log('show hardware blocks');
+        blockMenu.unbanClass("mini_hw", true);
+        blockMenu.unbanClass("arduinoConnected", true);
+        blockMenu.banClass("arduinoDisconnected", true);
+    } else {
+        //console.log('hide hardware blocks');
+        blockMenu.banClass("mini_hw", true);
+        blockMenu.banClass("arduinoConnected", true);
+        blockMenu.unbanClass("arduinoDisconnected", true);
+    }
+    blockMenu.setMenu();
     blockMenu.reDraw();
 };
 
