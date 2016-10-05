@@ -20243,9 +20243,20 @@ Entry.block = {
                 return;
             }
 
-            this.executor.stepInto(statement);
-            Ntry.dispatchEvent('executeEnd');
-            return Entry.STATIC.BREAK;
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+            var entity;
+            for (var key in entities){
+                entity = entities[key];
+            }
+            
+            var unitGrid = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+            var tile = Ntry.getTileByGrid(unitGrid);
+
+            if(tile.tileType !== Ntry.STATIC.GOAL) {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+            // Ntry.dispatchEvent('executeEnd');
         }
     },
     "maze_repeat_until_4": {
