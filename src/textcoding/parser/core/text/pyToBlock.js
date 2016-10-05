@@ -861,9 +861,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params.push(idData.params[0]);
                     else
                         params.push(variableId);
-                    if(initData.operator == "MINUS")
-                        initData.params[2].params[0] = "-" + initData.params[2].params[0];
                     
+                    if(initData.operator == "MINUS") {
+                        if(initData.params[2].params[0] != 0)
+                            initData.params[2].params[0] = "-" + initData.params[2].params[0];
+                    }
+
                     params.push(initData.params[2]);
                 } else {
                     console.log("in initData");
@@ -884,6 +887,428 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("VariableDeclarator result", result);
         return result;
 
+    };
+
+    p.AssignmentExpression = function(component) {
+        console.log("AssignmentExpression component", component);
+        var result = {};
+        var structure = {};
+
+        var params = [];
+        var param;
+
+        var left = component.left;
+        if(left.type) {
+            var leftData = this[left.type](left);
+            console.log("AssignmentExpression leftData", leftData);
+        }
+
+        console.log("AssignmentExpression leftData", leftData);
+
+        result.left = leftData
+
+        operator = String(component.operator);
+        console.log("AssignmentExpression operator", operator);
+
+        var right = component.right;
+        if(right.type) {
+            var rightData = this[right.type](right);
+            console.log("AssignmentExpression rightData", rightData);
+        }
+
+        result.right = rightData;
+
+        switch(operator){
+            case "=": {
+                if(rightData.callee && rightData.callee.object) {
+                    var calleeName = rightData.callee.object.object.name.concat('.')
+                        .concat(rightData.callee.object.property.name).concat('.')
+                        .concat(rightData.callee.property.name);
+                } 
+
+                if(calleeName == "__pythonRuntime.objects.list") {
+                    if(leftData.object.name == "self") {
+                        var calleeName;
+                        var name = leftData.property.name;
+
+                        var array = [];
+                        var arguments = rightData.arguments;
+                        for(var a in arguments) {
+                            var argument = arguments[a];
+                            var item = {};
+                            item.data = String(argument.params[0]);
+                            array.push(item);
+                        }
+
+                        var object = Entry.TextCodingUtil._currentObject;
+
+                        if(Entry.TextCodingUtil.isLocalListExisted(name, object)) {
+                            Entry.TextCodingUtil.updateLocalList(name, array, object);
+                        }
+                        else {
+                            Entry.TextCodingUtil.createLocalList(name, array, object);
+                        }
+                    }
+                }
+
+                if(left.name) {
+                    var leftEx = left.name;
+                }
+                else if(left.object && left.object.name) {
+                    var leftEx = left.object.name.concat(left.property.name);
+                }
+                
+                if(right.arguments && right.arguments[0].name) {
+                    var rightEx = right.arguments[0].name;
+                }
+                else if(right.arguments && right.arguments[0].object) {
+                    var rightEx = right.arguments[0].object.name.concat(right.arguments[0].property.name);
+                } 
+                else if(right.left && right.left.name) {
+                    var rightEx = right.left.name;
+                } 
+                else if(right.left && right.left.object) {
+                    var rightEx = right.left.object.name.concat(right.left.property.name);
+                }
+
+                console.log("AssignmentExpression leftEx", leftEx, "rightEx", rightEx);
+                
+                if(leftData.property && (leftData.property.callee == "__pythonRuntime.ops.subscriptIndex")) {
+                    var syntax = String("%1\[%2\] = %3");
+                    var type = this.getBlockType(syntax);
+                    structure.type = type;
+                } 
+                else if(leftEx && rightEx && leftEx == rightEx) {
+                    var syntax = String("%1 = %1 + %2");
+                    var type = this.getBlockType(syntax);
+                    structure.type = type;
+                } 
+                else {
+                    var syntax = String("%1 = %2");
+                    var type = this.getBlockType(syntax);
+                    structure.type = type;
+                }
+
+                break;
+            }
+            case "+=":
+                var syntax = String("%1 = %1 + %2");
+                var type = this.getBlockType(syntax);
+                structure.type = type;
+                break;
+            case "-=":
+                var syntax = String("%1 = %1 + %2");
+                var type = this.getBlockType(syntax);
+                structure.type = type;
+                break;
+                
+                /*var error = {};
+                error.title = "지원되지 않는 코드";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount;
+                console.log("send error", error);
+                throw error;*/
+            
+            case "*=":
+                var syntax = String("%1 = %1 + %2");
+                var type = this.getBlockType(syntax);
+                structure.type = type;
+                break;
+            case "/=":
+                var syntax = String("%1 = %1 + %2");
+                var type = this.getBlockType(syntax);
+                structure.type = type;
+                break;
+                /*var error = {};
+                error.title = "지원되지 않는 코드";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount;
+                console.log("send error", error);
+                throw error;*/
+                
+            case "%=":
+                var error = {};
+                error.title = "지원되지 않는 코드";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount;
+                console.log("send error", error);
+                throw error;
+                break;
+            case "<<=":
+                var error = {};
+                error.title = "지원되지 않는 코드";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount;
+                console.log("send error", error);
+                throw error;
+                break;
+            case ">>=":
+                var error = {};
+                error.title = "지원되지 않는 코드";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount;
+                console.log("send error", error);
+                throw error;
+                break;
+            case "|=":
+                var error = {};
+                error.title = "지원되지 않는 코드";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount;
+                console.log("send error", error);
+                throw error;
+                break;
+            case "^=":
+                var error = {};
+                error.title = "지원되지 않는 코드";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount;
+                console.log("send error", error);
+                throw error;
+                break;
+            case "&=":
+                var error = {};
+                error.title = "지원되지 않는 코드";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount;
+                console.log("send error", error);
+                throw error;
+                break;
+            default:
+                operator = operator;
+                var error = {};
+                error.title = "지원되지 않는 코드";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount;
+                console.log("send error", error);
+                throw error;
+                break;
+        }
+
+        if(operator) {
+            var operatorData = Entry.TextCodingUtil.logicalExpressionConvert(operator);
+        }
+
+        result.operator = operatorData;
+
+        /*//save the variable to map
+        var variable = leftData;
+        var value = rightData;
+        console.log("variable", variable, "value", value);
+        if(variable && value)
+            this._variableMap.put(variable, value);*/
+        //save the variable to map
+
+        console.log("AssignmentExpression syntax", syntax);
+
+        if(leftData.object)
+            var object = leftData.object;
+        else if(leftData.name)
+            var object = leftData.name;
+
+        if(leftData.property)
+            var property = leftData.property;
+        else if(leftData.name)
+            var property = leftData.name;
+
+        console.log("AssignmentExpression object property value", object, property);
+
+        if(syntax == String("%1\[%2\] = %3")) {
+            var block = Entry.block[type];
+            var paramsMeta = block.params;
+            var paramsDefMeta = block.def.params;
+
+            if(!leftData.params) {
+                var error = {};
+                error.title = "지원되지 않는 코드";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                error.line = this._blockCount;
+                console.log("send error", error);
+                throw error;
+            }
+
+            var listName = leftData.params[1];
+
+            console.log("AssignmentExpression listName", listName);
+
+            params.push(listName);
+            var param = leftData.property.arguments[0];
+            console.log("AssignmentExpression left param", param);
+
+            params.push(param);
+            param = leftData.property.arguments[1];
+            params.push(param);
+            console.log("AssignmentExpression left param", param);
+            params.push(rightData);
+
+            if(params.length == 4) {
+                params.splice(1,1);
+            }
+
+            structure.params = params;
+
+        }
+        else if(syntax == String("%1 = %2")) {
+            console.log("AssignmentExpression calleeName check", calleeName);
+            //if(object && object.name == "self" && calleeName != "__pythonRuntime.objects.list") {
+            if(object && object.name == "self") {
+                var block = Entry.block[type];
+                var paramsMeta = block.params;
+                var paramsDefMeta = block.def.params;
+
+                console.log("assi property", property);
+
+                var name = property.name;
+                if(rightData.type == "number" || rightData.type == "text")
+                    var value = rightData.params[0];
+                else
+                    var value = NaN;
+
+                if(value != NaN) {
+                    var object = Entry.TextCodingUtil._currentObject;
+                    console.log("final value", value);
+                    console.log("final object", object);
+
+
+                    if(Entry.TextCodingUtil.isLocalVariableExisted(name, object)) {
+                        Entry.TextCodingUtil.updateLocalVariable(name, value, object);
+                    }
+                    else {
+                        Entry.TextCodingUtil.createLocalVariable(name, value, object);
+                    }
+                }
+
+                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                params.push(name);
+                params.push(rightData);
+            }
+            else {
+                var block = Entry.block[type];
+                var paramsMeta = block.params;
+                var paramsDefMeta = block.def.params;
+
+                var name = property;
+                if(rightData.type == "number" || rightData.type == "text")
+                    var value = rightData.params[0];
+                else
+                    var value = NaN;
+
+                if(value != NaN) {
+                    var object = Entry.TextCodingUtil._currentObject;
+                    console.log("final object", object);
+                    console.log("final value", value);
+
+                    if(Entry.TextCodingUtil.isGlobalVariableExisted(name, object)) {
+                        Entry.TextCodingUtil.updateGlobalVariable(name, value, object);
+                    }
+                    else {
+                        Entry.TextCodingUtil.createGlobalVariable(name, value, object);
+                    }
+                }
+
+                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                params.push(name);
+                if(rightData.callee)
+                    delete rightData.callee;
+                params.push(rightData);
+            }
+
+        }
+        else if(syntax == String("%1 = %1 + %2")) {
+            if(object && object.name == "self") {
+                var block = Entry.block[type];
+                var paramsMeta = block.params;
+                var paramsDefMeta = block.def.params;
+
+                var name = property.name;
+
+                var object = Entry.TextCodingUtil._currentObject;
+                console.log("final object", object);
+
+                if(!Entry.TextCodingUtil.isLocalVariableExisted(name, object))
+                    return result;
+
+                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                params.push(name);
+                
+
+                if(rightData.type == "text" || rightData.type == "number") {
+                    params.push(rightData);
+                }
+                else {
+                    /*if(rightData.params[2].type == "text" || rightData.params[2].type == "number") {
+                        if(rightData.params[2].params[0] != 0) {
+                            if(rightData.params[1] == "MINUS") {
+                                rightData.params[2].params[0] = "-" + rightData.params[2].params[0];
+                            }
+                        }
+                        params.push(rightData.params[2]); 
+                    } 
+                    else {*/
+                    if(rightData.operator == "PLUS") {
+                        if(rightData.params[2].params[0] != 0) {
+                            if(rightData.params[1] == "MINUS") {
+                                rightData.params[2].params[0] = "-" + rightData.params[2].params[0];
+                            }
+                        }
+                        params.push(rightData.params[2]); 
+                    }
+                    else {
+                        params.push(rightData); 
+                    }
+                    //}   
+                }
+            }
+            else {
+                var block = Entry.block[type];
+                var paramsMeta = block.params;
+                var paramsDefMeta = block.def.params;
+
+                var name = property; 
+
+                if(!Entry.TextCodingUtil.isGlobalVariableExisted(name))
+                    return result;
+
+                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                params.push(name); 
+
+                if(rightData.type == "text" || rightData.type == "number") {
+                    params.push(rightData);
+                }
+                else {
+                    /*if(rightData.params[2].type == "text" || rightData.params[2].type == "number") {
+                        if(rightData.params[2].params[0] != 0) {
+                            if(rightData.params[1] == "MINUS") {
+                                rightData.params[2].params[0] = "-" + rightData.params[2].params[0];
+                            }
+                        }
+                        params.push(rightData.params[2]); 
+                    } 
+                    else {*/
+                    if(rightData.operator == "PLUS") {
+                        if(rightData.params[2].params[0] != 0) {
+                            if(rightData.params[1] == "MINUS") {
+                                rightData.params[2].params[0] = "-" + rightData.params[2].params[0];
+                            }
+                        }
+                        params.push(rightData.params[2]); 
+                    }
+                    else {
+                        params.push(rightData); 
+                    }
+                    //}   
+                }
+            }
+        }
+
+        structure.params = params;
+
+        result.type = structure.type;
+        result.params = structure.params;
+
+        console.log("AssignmentExpression result", result);
+
+        return result;
     };
 
     p.Literal = function(component, paramMeta, paramDefMeta, aflag) {
@@ -2412,382 +2837,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = data;
 
         console.log("UpdateExpression result", result);
-        return result;
-    };
-
-    p.AssignmentExpression = function(component) {
-        console.log("AssignmentExpression component", component);
-        var result = {};
-        var structure = {};
-
-        var params = [];
-        var param;
-
-        var left = component.left;
-        if(left.type) {
-            var leftData = this[left.type](left);
-            console.log("AssignmentExpression leftData", leftData);
-        }
-
-        console.log("AssignmentExpression leftData", leftData);
-
-        result.left = leftData
-
-        operator = String(component.operator);
-        console.log("AssignmentExpression operator", operator);
-
-        var right = component.right;
-        if(right.type) {
-            var rightData = this[right.type](right);
-            console.log("AssignmentExpression rightData", rightData);
-        }
-
-        result.right = rightData;
-
-        switch(operator){
-            case "=": {
-                if(rightData.callee && rightData.callee.object) {
-                    var calleeName = rightData.callee.object.object.name.concat('.')
-                        .concat(rightData.callee.object.property.name).concat('.')
-                        .concat(rightData.callee.property.name);
-                } /*else if(rightData.callee) {
-                    calleeName = rightData.callee;
-                }*/
-
-                if(calleeName == "__pythonRuntime.objects.list") {
-                    if(leftData.object.name == "self") {
-                        var calleeName;
-                        var name = leftData.property.name;
-
-                        var array = [];
-                        var arguments = rightData.arguments;
-                        for(var a in arguments) {
-                            var argument = arguments[a];
-                            var item = {};
-                            item.data = String(argument.params[0]);
-                            array.push(item);
-                        }
-
-                        var object = Entry.TextCodingUtil._currentObject;
-
-                        if(Entry.TextCodingUtil.isLocalListExisted(name, object)) {
-                            Entry.TextCodingUtil.updateLocalList(name, array, object);
-                        }
-                        else {
-                            Entry.TextCodingUtil.createLocalList(name, array, object);
-                        }
-                    }
-                }
-
-                if(leftData.property && (leftData.property.callee == "__pythonRuntime.ops.subscriptIndex")) {
-                    var syntax = String("%1\[%2\] = %3");
-                    var type = this.getBlockType(syntax);
-                    structure.type = type;
-                }
-                else if(right.arguments && right.arguments[0]) {
-                    if(component.left.name)
-                        var leftEx = component.left.name;
-                    else
-                        var leftEx = component.left.object.name.concat(component.left.property.name);
-
-                    if(component.right.arguments[0].name)
-                        var rightEx = component.right.arguments[0].name;
-                    else if(component.right.arguments[0].object)
-                        var rightEx = component.right.arguments[0].object.name.concat(component.right.arguments[0].property.name);
-
-                    console.log("AssignmentExpression leftEx", leftEx, "rightEx", rightEx);
-                    if(component.right.arguments && (leftEx == rightEx)) {
-                        var syntax = String("%1 = %1 + %2");
-                        var type = this.getBlockType(syntax);
-                        structure.type = type;
-                    } else {
-                        var syntax = String("%1 = %2");
-                        var type = this.getBlockType(syntax);
-                        structure.type = type;
-                    }
-                } else {
-                    var syntax = String("%1 = %2");
-                    var type = this.getBlockType(syntax);
-                    structure.type = type;
-                }
-
-                break;
-            }
-            case "+=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-                break;
-            case "-=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-                break;
-            case "*=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-                break;
-            case "/=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-                break;
-            case "%=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-                break;
-            case "<<=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-                break;
-            case ">>=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-                break;
-            case "|=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-                break;
-            case "^=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-                break;
-            case "&=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-                break;
-            default:
-                operator = operator;
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-                break;
-        }
-
-        if(operator) {
-            var operatorData = Entry.TextCodingUtil.logicalExpressionConvert(operator);
-        }
-
-        result.operator = operatorData;
-
-        /*//save the variable to map
-        var variable = leftData;
-        var value = rightData;
-        console.log("variable", variable, "value", value);
-        if(variable && value)
-            this._variableMap.put(variable, value);*/
-        //save the variable to map
-
-        console.log("AssignmentExpression syntax", syntax);
-
-        if(leftData.object)
-            var object = leftData.object;
-        else if(leftData.name)
-            var object = leftData.name;
-
-        if(leftData.property)
-            var property = leftData.property;
-        else if(leftData.name)
-            var property = leftData.name;
-
-        console.log("AssignmentExpression object property value", object, property);
-
-        if(syntax == String("%1\[%2\] = %3")) {
-            var block = Entry.block[type];
-            var paramsMeta = block.params;
-            var paramsDefMeta = block.def.params;
-
-            /*var listName = leftData.property.arguments[0].property.name;
-            listName = this.ParamDropdownDynamic(listName, paramsMeta[0], paramsDefMeta[0]);*/
-
-            if(!leftData.params) {
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-            }
-
-            var listName = leftData.params[1];
-
-            console.log("AssignmentExpression listName", listName);
-
-            /*if(!listName)
-                return result;*/
-
-            params.push(listName);
-            var param = leftData.property.arguments[0];
-            console.log("AssignmentExpression left param", param);
-            /*if(param.type == "number") {
-                param.params[0] += 1;
-            }
-            else if(param.type == "text") {
-                param.params[0] = String(Number(param.params[0]) + 1);
-            }*/
-
-            params.push(param);
-            param = leftData.property.arguments[1];
-            params.push(param);
-            console.log("AssignmentExpression left param", param);
-            params.push(rightData);
-
-            if(params.length == 4) {
-                params.splice(1,1);
-            }
-
-            structure.params = params;
-
-        }
-        else if(syntax == String("%1 = %2")) {
-            console.log("AssignmentExpression calleeName check", calleeName);
-            //if(object && object.name == "self" && calleeName != "__pythonRuntime.objects.list") {
-            if(object && object.name == "self") {
-                var block = Entry.block[type];
-                var paramsMeta = block.params;
-                var paramsDefMeta = block.def.params;
-
-                console.log("assi property", property);
-
-                var name = property.name;
-                if(rightData.type == "number" || rightData.type == "text")
-                    var value = rightData.params[0];
-                else
-                    var value = NaN;
-
-                if(value != NaN) {
-                    var object = Entry.TextCodingUtil._currentObject;
-                    console.log("final value", value);
-                    console.log("final object", object);
-
-
-                    if(Entry.TextCodingUtil.isLocalVariableExisted(name, object)) {
-                        Entry.TextCodingUtil.updateLocalVariable(name, value, object);
-                    }
-                    else {
-                        Entry.TextCodingUtil.createLocalVariable(name, value, object);
-                    }
-                }
-
-                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
-                params.push(name);
-                params.push(rightData);
-            }
-            else {
-                var block = Entry.block[type];
-                var paramsMeta = block.params;
-                var paramsDefMeta = block.def.params;
-
-                console.log("property 123", property); 
-
-                var name = property;
-                if(rightData.type == "number" || rightData.type == "text")
-                    var value = rightData.params[0];
-                else
-                    var value = NaN;
-
-                if(value != NaN) {
-                    var object = Entry.TextCodingUtil._currentObject;
-                    console.log("final object", object);
-                    console.log("final value", value);
-
-                    if(Entry.TextCodingUtil.isGlobalVariableExisted(name, object)) {
-                        Entry.TextCodingUtil.updateGlobalVariable(name, value, object);
-                    }
-                    else {
-                        Entry.TextCodingUtil.createGlobalVariable(name, value, object);
-                    }
-                }
-
-                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
-                params.push(name);
-                if(rightData.callee)
-                    delete rightData.callee;
-                params.push(rightData);
-            }
-
-        }
-        else if(syntax == String("%1 = %1 + %2")) {
-            if(object && object.name == "self") {
-                var block = Entry.block[type];
-                var paramsMeta = block.params;
-                var paramsDefMeta = block.def.params;
-
-                var name = property.name;
-
-                var object = Entry.TextCodingUtil._currentObject;
-                console.log("final object", object);
-
-                if(!Entry.TextCodingUtil.isLocalVariableExisted(name, object))
-                    return result;
-
-                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
-                params.push(name);
-                params.push(rightData.params[2]);
-            }
-            else {
-                var block = Entry.block[type];
-                var paramsMeta = block.params;
-                var paramsDefMeta = block.def.params;
-
-                var name = property;
-
-                if(!Entry.TextCodingUtil.isGlobalVariableExisted(name))
-                    return result;
-
-                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
-                params.push(name);
-                params.push(rightData.params[2]);
-            }
-        }
-
-        structure.params = params;
-
-        result.type = structure.type;
-        result.params = structure.params;
-
-        console.log("AssignmentExpression result", result);
-
         return result;
     };
 
