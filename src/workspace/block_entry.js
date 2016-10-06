@@ -20237,6 +20237,7 @@ Entry.block = {
             }
         ],
         func: function() {
+            var isGoal = false;
             var statement = this.block.statements[0];
             if (statement.getBlocks().length === 0) {
                 return;
@@ -20248,24 +20249,28 @@ Entry.block = {
                 entity = entities[key];
             }
             
-            var unitGrid = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
-            var entities = Ntry.entityManager.getEntitiesByGrid(unitGrid.x, unitGrid.y);
-            var isGoal = false;
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
 
-            for(var idx in entities) {
-                var entity = entities[idx];
-                var tile = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.TILE);
-                var item = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.ITEM);
+            if(unitComp.isStartedUnit) {
+                var unitGrid = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+                var entities = Ntry.entityManager.getEntitiesByGrid(unitGrid.x, unitGrid.y);
 
-                if(tile && item && tile.tileType === Ntry.STATIC.GOAL && item.itemType === Ntry.STATIC.GOAL_ITEM ) {
-                    isGoal = true;
-                    break;
+                for(var idx in entities) {
+                    var entity = entities[idx];
+                    var tile = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.TILE);
+                    var item = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.ITEM);
+
+                    if(tile && item && tile.tileType === Ntry.STATIC.GOAL && item.itemType === Ntry.STATIC.GOAL_ITEM) {
+                        isGoal = true;
+                        break;
+                    }
                 }
             }
+
             if(!isGoal) {
                 this.executor.stepInto(statement);
                 return Entry.STATIC.BREAK;
-            }
+            }                
             // Ntry.dispatchEvent('executeEnd');
         }
     },
