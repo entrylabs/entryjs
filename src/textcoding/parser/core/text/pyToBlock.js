@@ -1236,27 +1236,26 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params.push(rightData);
                 }
                 else {
-                    /*if(rightData.params[2].type == "text" || rightData.params[2].type == "number") {
-                        if(rightData.params[2].params[0] != 0) {
-                            if(rightData.params[1] == "MINUS") {
-                                rightData.params[2].params[0] = "-" + rightData.params[2].params[0];
-                            }
-                        }
-                        params.push(rightData.params[2]); 
-                    } 
-                    else {*/
-                    if(rightData.operator == "PLUS") {
-                        if(rightData.params[2].params[0] != 0) {
-                            if(rightData.params[1] == "MINUS") {
-                                rightData.params[2].params[0] = "-" + rightData.params[2].params[0];
-                            }
-                        }
-                        params.push(rightData.params[2]); 
-                    }
-                    else {
+                    if(operator == "-=") { 
                         params.push(rightData); 
                     }
-                    //}   
+                    else if(operator == "/=") {
+                        params.push(rightData); 
+                    }
+                    else {
+                        if(rightData.operator == "PLUS") {
+                            if(rightData.params[2].params[0] != 0) {
+                                if(rightData.params[1] == "MINUS") {
+                                    rightData.params[2].params[0] = "-" + rightData.params[2].params[0];
+                                }
+                            }
+                            params.push(rightData.params[2]); 
+                        }
+                        else {
+                            params.push(rightData); 
+                        }  
+                    }
+                    
                 }
             }
             else {
@@ -1272,31 +1271,133 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
                 params.push(name); 
 
-                if(rightData.type == "text" || rightData.type == "number") {
-                    params.push(rightData);
-                }
-                else {
-                    /*if(rightData.params[2].type == "text" || rightData.params[2].type == "number") {
-                        if(rightData.params[2].params[0] != 0) {
-                            if(rightData.params[1] == "MINUS") {
-                                rightData.params[2].params[0] = "-" + rightData.params[2].params[0];
-                            }
-                        }
+                if(operator == "=") {
+                    if(rightData.operator == "PLUS") { //possible
                         params.push(rightData.params[2]); 
-                    } 
-                    else {*/
-                    if(rightData.operator == "PLUS") {
-                        if(rightData.params[2].params[0] != 0) {
-                            if(rightData.params[1] == "MINUS") {
-                                rightData.params[2].params[0] = "-" + rightData.params[2].params[0];
-                            }
+                    }
+                    else if(rightData.operator == "MINUS") { //posiible
+                        if(rightData.type == "calc_basic" && (rightData.params[2].type == "text" || rightData.params[2].type == "number")) {
+                            rightData.params[2].params[0] = -rightData.params[2].params[0];
+                            params.push(rightData.params[2]); 
                         }
-                        params.push(rightData.params[2]); 
+                        else {
+                            var structure = {};
+
+                            structure.type = "set_variable";
+                            structure.params = [];
+                            structure.params.push(leftData.params[0]);
+                            structure.params.push(rightData);
+
+                            result = structure;
+
+                            console.log("ex result1", result);
+
+                            return result;
+                        }
+                    }
+                    else if(rightData.operator == "MULTI") {
+                        var structure = {};
+
+                        structure.type = "set_variable";
+                        structure.params = [];
+                        structure.params.push(leftData.params[0]);
+                        structure.params.push(rightData);
+
+                        result = structure;
+
+                        console.log("ex result4", result);
+
+                        return result;
+                    }
+                    else if(rightData.operator == "DIVIDE") {
+                        var structure = {};
+
+                        structure.type = "set_variable";
+                        structure.params = [];
+                        structure.params.push(leftData.params[0]);
+                        structure.params.push(rightData);
+
+                        result = structure;
+
+                        console.log("ex result2", result);
+
+                        return result;
                     }
                     else {
                         params.push(rightData); 
+                    }  
+                }
+                else if(operator == "+=") { //possible
+                    params.push(rightData);
+                }
+                else if(operator == "-=") { //possible
+                    if(rightData.type == "text" || rightData.type == "number") {
+                        rightData.params[0] = -rightData.params[0];
+                        params.push(rightData); 
                     }
-                    //}   
+                    else {
+                        var structure = {};
+
+                        structure.type = "set_variable";
+                        structure.params = [];
+                        structure.params.push(leftData.params[0]);
+                        
+                        var paramBlock = {};
+                        paramBlock.type = "calc_basic";
+                        paramBlock.params = [];
+                        paramBlock.params.push(leftData);
+                        paramBlock.params.push("MINUS");
+                        paramBlock.params.push(rightData);
+
+                        structure.params.push(paramBlock);
+
+                        result = structure;
+
+                        console.log("ex result3", result);
+
+                        return result;
+                    } 
+                } 
+                else if(operator == "*=") {
+                    var structure = {};
+
+                    structure.type = "set_variable";
+                    structure.params = [];
+                    structure.params.push(leftData.params[0]);
+                    structure.params.push(rightData);
+
+                    result = structure;
+
+                    console.log("ex result4", result);
+
+                    return result;
+                }
+                else if(operator == "/=") {
+                    var structure = {};
+
+                    var structure = {};
+
+                    structure.type = "set_variable";
+                    structure.params = [];
+                    structure.params.push(leftData.params[0]);
+                    
+                    var paramBlock = {};
+                    paramBlock.type = "calc_basic";
+                    paramBlock.params = [];
+                    paramBlock.params.push(leftData);
+                    paramBlock.params.push("DIVIDE");
+                    paramBlock.params.push(rightData);
+
+                    structure.params.push(paramBlock);
+
+                    result = structure;
+
+                    console.log("ex result5", result);
+
+                    return result;
+                }
+                else {   
+                    params.push(rightData);
                 }
             }
         }
