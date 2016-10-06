@@ -142,8 +142,14 @@ Entry.Field = function() {};
 
     p.getValue = function() {
         var data = this._block.params[this._index];
-        if (data && this._contents && this._contents.reference && this._contents.reference.length)
-            return data.getDataByPointer(this._contents.reference);
+        if (this._contents && this._contents.reference && this._contents.reference.length) {
+            var reference = this._contents.reference.concat();
+            if (reference[0][0] === "%")
+                data = this._block.params[parseInt(reference.shift().substr(1)) - 1];
+            if (!data)
+                return data;
+            return data.getDataByPointer(reference);
+        }
         else
             return data;
     };
@@ -155,6 +161,8 @@ Entry.Field = function() {};
             var ref = this._contents.reference.concat();
             var index = ref.pop();
             var targetBlock = this._block.params[this._index]
+            if (ref.length && ref[0][0] === "%")
+                targetBlock = this._block.params[parseInt(ref.shift().substr(1)) - 1];
             if (ref.length)
                 targetBlock = targetBlock.getDataByPointer(ref)
             targetBlock.params[index] = value;
