@@ -14125,67 +14125,54 @@ Entry.PyToBlockParser = function(b) {
       } else {
         if ("%1 = %1 + %2" == n) {
           if (r && "self" == r.name) {
-            r = Entry.block[g];
-            m = r.params;
-            u = r.def.params;
-            n = f.name;
-            r = Entry.TextCodingUtil._currentObject;
-            console.log("final object", r);
-            if (!Entry.TextCodingUtil.isLocalVariableExisted(n, r)) {
+            if (r = Entry.block[g], m = r.params, u = r.def.params, n = f.name, r = Entry.TextCodingUtil._currentObject, console.log("final object", r), !Entry.TextCodingUtil.isLocalVariableExisted(n, r)) {
               return b;
             }
-            n = this.ParamDropdownDynamic(n, m[0], u[0]);
-            e.push(n);
-            "text" == l.type || "number" == l.type ? e.push(l) : "-=" == operator ? e.push(l) : "/=" == operator ? e.push(l) : "PLUS" == l.operator ? (0 != l.params[2].params[0] && "MINUS" == l.params[1] && (l.params[2].params[0] = "-" + l.params[2].params[0]), e.push(l.params[2])) : e.push(l);
           } else {
-            r = Entry.block[g];
-            m = r.params;
-            u = r.def.params;
-            n = f;
-            if (!Entry.TextCodingUtil.isGlobalVariableExisted(n)) {
+            if (r = Entry.block[g], m = r.params, u = r.def.params, n = f, !Entry.TextCodingUtil.isGlobalVariableExisted(n)) {
               return b;
             }
-            n = this.ParamDropdownDynamic(n, m[0], u[0]);
-            e.push(n);
-            if ("=" == operator) {
-              if ("PLUS" == l.operator) {
+          }
+          n = this.ParamDropdownDynamic(n, m[0], u[0]);
+          e.push(n);
+          if ("=" == operator) {
+            if ("PLUS" == l.operator) {
+              e.push(l.params[2]);
+            } else {
+              if ("MINUS" == l.operator) {
+                if ("calc_basic" != l.type || "text" != l.params[2].type && "number" != l.params[2].type) {
+                  return c = {type:"set_variable", params:[]}, c.params.push(h.params[0]), c.params.push(l), b = c, console.log("ex result1", b), b;
+                }
+                l.params[2].params[0] = -l.params[2].params[0];
                 e.push(l.params[2]);
               } else {
-                if ("MINUS" == l.operator) {
-                  if ("calc_basic" != l.type || "text" != l.params[2].type && "number" != l.params[2].type) {
-                    return c = {type:"set_variable", params:[]}, c.params.push(h.params[0]), c.params.push(l), b = c, console.log("ex result1", b), b;
-                  }
-                  l.params[2].params[0] = -l.params[2].params[0];
-                  e.push(l.params[2]);
-                } else {
-                  if ("MULTI" == l.operator) {
-                    return c = {type:"set_variable", params:[]}, c.params.push(h.params[0]), c.params.push(l), b = c, console.log("ex result4", b), b;
-                  }
-                  if ("DIVIDE" == l.operator) {
-                    return c = {type:"set_variable", params:[]}, c.params.push(h.params[0]), c.params.push(l), b = c, console.log("ex result2", b), b;
-                  }
-                  e.push(l);
+                if ("MULTI" == l.operator) {
+                  return c = {type:"set_variable", params:[]}, c.params.push(h.params[0]), c.params.push(l), b = c, console.log("ex result4", b), b;
                 }
-              }
-            } else {
-              if ("+=" == operator) {
+                if ("DIVIDE" == l.operator) {
+                  return c = {type:"set_variable", params:[]}, c.params.push(h.params[0]), c.params.push(l), b = c, console.log("ex result2", b), b;
+                }
                 e.push(l);
-              } else {
-                if ("-=" == operator) {
-                  if ("text" == l.type || "number" == l.type) {
-                    l.params[0] = -l.params[0], e.push(l);
-                  } else {
-                    return c = {type:"set_variable", params:[]}, c.params.push(h.params[0]), b = {type:"calc_basic", params:[]}, b.params.push(h), b.params.push("MINUS"), b.params.push(l), c.params.push(b), b = c, console.log("ex result3", b), b;
-                  }
+              }
+            }
+          } else {
+            if ("+=" == operator) {
+              e.push(l);
+            } else {
+              if ("-=" == operator) {
+                if ("text" == l.type || "number" == l.type) {
+                  l.params[0] = -l.params[0], e.push(l);
                 } else {
-                  if ("*=" == operator) {
-                    return c = {type:"set_variable", params:[]}, c.params.push(h.params[0]), c.params.push(l), b = c, console.log("ex result4", b), b;
-                  }
-                  if ("/=" == operator) {
-                    return c = {type:"set_variable", params:[]}, c.params.push(h.params[0]), b = {type:"calc_basic", params:[]}, b.params.push(h), b.params.push("DIVIDE"), b.params.push(l), c.params.push(b), b = c, console.log("ex result5", b), b;
-                  }
-                  e.push(l);
+                  return c = {type:"set_variable", params:[]}, c.params.push(h.params[0]), b = {type:"calc_basic", params:[]}, b.params.push(h), b.params.push("MINUS"), b.params.push(l), c.params.push(b), b = c, console.log("ex result3", b), b;
                 }
+              } else {
+                if ("*=" == operator) {
+                  return c = {type:"set_variable", params:[]}, c.params.push(h.params[0]), c.params.push(l), b = c, console.log("ex result4", b), b;
+                }
+                if ("/=" == operator) {
+                  return c = {type:"set_variable", params:[]}, c.params.push(h.params[0]), b = {type:"calc_basic", params:[]}, b.params.push(h), b.params.push("DIVIDE"), b.params.push(l), c.params.push(b), b = c, console.log("ex result5", b), b;
+                }
+                e.push(l);
               }
             }
           }
