@@ -20254,7 +20254,6 @@ Entry.block = {
 
             for(var idx in entities) {
                 var entity = entities[idx];
-                console.log(entity);
                 var tile = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.TILE);
                 var item = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.ITEM);
 
