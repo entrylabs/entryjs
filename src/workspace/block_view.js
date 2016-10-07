@@ -36,7 +36,7 @@ Entry.BlockView = function(block, board, mode) {
 
     if (skeleton.magnets && skeleton.magnets(this).next) {
         this.svgGroup.nextMagnet = this.block;
-        this._nextGroup = this.svgGroup.elem("g");
+        this._nextGroup = this.svgGroup.elem("g", {class: 'entryBlockNextGroup'});
         this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"]));
     }
 
@@ -156,7 +156,12 @@ Entry.BlockView.pngMap = {};
             this._addControl();
         }
 
+        var guide = this.guideSvgGroup;
+        if (guide)
+            this.svgGroup.insertBefore(guide, this.svgGroup.firstChild);
+
         this.bindPrev();
+
     };
 
     p._startContentRender = function(mode) {
@@ -169,9 +174,11 @@ Entry.BlockView.pngMap = {};
             this.statementSvgGroup.remove();
         this._contents = [];
 
-        this.contentSvgGroup = this.svgGroup.elem("g");
+        this.contentSvgGroup = this.svgGroup.elem("g", {class:'contentsGroup'});
         if (schema.statements && schema.statements.length)
-            this.statementSvgGroup = this.svgGroup.elem("g");
+            this.statementSvgGroup = this.svgGroup.elem("g", {
+                class: 'statementGroup'
+            });
 
         switch (mode) {
             case Entry.Workspace.MODE_BOARD:
@@ -1237,6 +1244,10 @@ Entry.BlockView.pngMap = {};
         Entry.ContextMenu.show(options, null,
             { x: e.clientX, y: e.clientY }
         );
+    };
+
+    p.clone = function() {
+        return this.svgGroup.cloneNode(true);
     };
 
 })(Entry.BlockView.prototype);
