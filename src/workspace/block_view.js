@@ -24,6 +24,9 @@ Entry.BlockView = function(block, board, mode) {
         return;
     }
 
+    if (this._schema.deletable)
+        this.block.setDeltable(this._schema.deletable)
+
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
