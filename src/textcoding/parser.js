@@ -628,7 +628,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             var line = contentsArr[i];
             console.log("ljh line", line);
 
-            if(line.trim().length == 0 || line.trim() == "else:")
+            if(line.trim().length == 0 || line.trim() == "else:" || line.trim().charAt(0) == "#")
                 errorLine++;
             else
                 index++;

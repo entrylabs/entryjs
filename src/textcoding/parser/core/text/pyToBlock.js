@@ -24,14 +24,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
     var paramQ = new Entry.Queue();
     this._paramQ = paramQ;
 
+    var blockCountMap = new Entry.Map();
+    this._blockCountMap = blockCountMap;
+
     this._funcParamList = [];
 
     this._threadCount = 0;
     this._blockCount = 0;
 
     Entry.TextCodingUtil.init();
-
-    this._
 };
 
 (function(p){
@@ -138,6 +139,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("send error", error);
             throw error;
         }
+
+        this._blockCountMap.put("ExpressionStatement", "E");
 
         console.log("ExpressionStatement result", result);
 
@@ -588,7 +591,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.Identifier = function(component, paramMeta, paramDefMeta) {
-       console.log("Identifier component", component, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta);
+        console.log("Identifier component", component, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta);
         var result = {};
         var structure = {};
         structure.params = [];
@@ -690,6 +693,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         /*var existed = false;
         var variableFlag = true;*/
+
+        if(component.id.name && !component.id.name.includes("__filbert")) {
+            var blockCountStatus = this._blockCountMap.get("VariableDeclarator");
+            if(blockCountStatus != "S") {
+                this._blockCount++;
+                this._blockCountMap.put("VariableDeclarator", "S"); 
+                console.log("VariableDeclarator blockCount++");
+            }
+        }
 
         var id = component.id;
         var init = component.init;
@@ -802,10 +814,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var type = this.getBlockType(syntax);
                 structure.type = type;
 
-                if(idData && idData.name && !idData.name.includes("__filbert")) {
+                /*if(idData && idData.name && !idData.name.includes("__filbert")) {
                     this._blockCount++;
                     console.log("VariableDeclarator blockCount++");
-                }
+                }*/
 
             }
             else {
@@ -827,10 +839,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var type = this.getBlockType(syntax);
                     structure.type = type;
 
-                    if(idData && idData.name && !idData.name.includes("__filbert")) {
+                    /*if(idData && idData.name && !idData.name.includes("__filbert")) {
                         this._blockCount++;
                         console.log("VariableDeclarator blockCount++");
-                    }
+                    }*/
 
                 }
 
@@ -884,6 +896,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result.params = structure.params;
         }
 
+        this._blockCountMap.put("VariableDeclarator", "E");
         console.log("VariableDeclarator result", result);
         return result;
 
@@ -896,6 +909,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var params = [];
         var param;
+
+        var blockCountStatus = this._blockCountMap.get("AssignmentExpression");
+        if(blockCountStatus != "S") {
+            this._blockCount++;
+            this._blockCountMap.put("AssignmentExpression", "S"); 
+            console.log("AssignmentExpression blockCount++");
+        }
 
         var left = component.left;
         if(left.type) {
@@ -951,6 +971,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 }
 
+                //left expressoin
                 if(left.name) {
                     var leftEx = left.name;
                 }
@@ -958,10 +979,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var leftEx = left.object.name.concat(left.property.name);
                 }
                 
-                if(right.arguments && right.arguments[0].name) {
+                //right expression
+                if(right.arguments && right.arguments.length != 0 && right.arguments[0].name) {
                     var rightEx = right.arguments[0].name;
                 }
-                else if(right.arguments && right.arguments[0].object) {
+                else if(right.arguments && right.arguments.length != 0 && right.arguments[0].object) {
                     var rightEx = right.arguments[0].object.name.concat(right.arguments[0].property.name);
                 } 
                 else if(right.left && right.left.name) {
@@ -1510,6 +1532,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result.type = structure.type;
         result.params = structure.params;
 
+        this._blockCountMap.put("AssignmentExpression", "E");
+
         console.log("AssignmentExpression result", result);
 
         return result;
@@ -1819,6 +1843,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.WhileStatement = function(component) {
         console.log("WhileStatement component", component);
         this._blockCount++;
+        this._blockCountMap.put("WhileStatement", "S");
         console.log("WhileStatement blockCount++");
         var result;
         var structure = {};
@@ -1947,6 +1972,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         structure.params = params;
 
         result = structure;
+
+        this._blockCountMap.put("WhileStatement", "E");
 
         console.log("WhileStatement result", result);
         return result;
@@ -2219,6 +2246,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(test.operator !== 'instanceof') {
             this._blockCount++;
+            this._blockCountMap.put("IfStatement", "S");
             console.log("IfStatement blockCount++");
         }
 
@@ -2340,6 +2368,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result = structure;
 
+        this._blockCountMap.put("IfStatement", "E");
+
         console.log("IfStatement result", result);
         return result;
     };
@@ -2347,6 +2377,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
      p.ForStatement = function(component) {
         console.log("ForStatement component", component);
         this._blockCount++;
+        this._blockCountMap.put("ForStatement", "S");
+        
         console.log("ForStatement blockCount++");
         var result;
         var structure = {};
@@ -2396,6 +2428,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("ForStatement updateData", updateData);
 
         result = structure;
+
+        this._blockCountMap.put("ForStatement", "E");
 
         console.log("ForStatement result", result);
 

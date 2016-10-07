@@ -13666,10 +13666,10 @@ Entry.PyToBlockParser = function(b) {
   this._variableMap = new Entry.Map;
   this._funcMap = new Entry.Map;
   this._paramQ = new Entry.Queue;
+  this._blockCountMap = new Entry.Map;
   this._funcParamList = [];
   this._blockCount = this._threadCount = 0;
   Entry.TextCodingUtil.init();
-  this._;
 };
 (function(b) {
   b.Program = function(a) {
@@ -13716,6 +13716,7 @@ Entry.PyToBlockParser = function(b) {
     if (!result.type && result.name) {
       throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + result.name + "'\uc744 \uc0ad\uc81c\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
     }
+    this._blockCountMap.put("ExpressionStatement", "E");
     console.log("ExpressionStatement result", result);
     return result;
   };
@@ -13961,7 +13962,9 @@ Entry.PyToBlockParser = function(b) {
   };
   b.VariableDeclarator = function(a) {
     console.log("VariableDeclarator component", a);
-    var b = {}, c, e = [], e = a.id, f = a.init;
+    var b = {}, c, e = [];
+    a.id.name && !a.id.name.includes("__filbert") && "S" != this._blockCountMap.get("VariableDeclarator") && (this._blockCount++, this._blockCountMap.put("VariableDeclarator", "S"), console.log("VariableDeclarator blockCount++"));
+    var e = a.id, f = a.init;
     if ("__params0" != e.name && "__formalsIndex0" != e.name && "__args0" != e.name) {
       if (f.callee && "__getParam0" == f.callee.name) {
         return b.isFuncParam = !0, b.name = e.name, b;
@@ -13999,18 +14002,21 @@ Entry.PyToBlockParser = function(b) {
         Entry.TextCodingUtil.isGlobalListExisted(h) ? Entry.TextCodingUtil.updateGlobalList(h, f) : Entry.TextCodingUtil.createGlobalList(h, f);
       } else {
         h = e.name, "Literal" == f.type ? c = f.value : "Identifier" == f.type ? c = f.name : "UnaryExpression" == f.type ? (g = this[f.type](f), console.log("VariableDeclarator initData UnaryExpression", g), c = g.params[0], console.log("gl initData", g, "type", typeof c), "string" != typeof c && "number" != typeof c && (c = NaN)) : c = 0, console.log("variable name", h, "value", c), void 0 != c && null != c && NaN != c && h && !h.includes("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(h) ? 
-        Entry.TextCodingUtil.updateGlobalVariable(h, c) : Entry.TextCodingUtil.createGlobalVariable(h, c)), h = this[e.type](e), console.log("VariableDeclarator idData", h), b.id = h, g = this[f.type](f), console.log("VariableDeclarator initData", g), b.init = g, console.log("VariableDeclarator init.type", f.type), "Literal" == f.type ? (c = e = this.getBlockType("%1 = %2"), h && h.name && !h.name.includes("__filbert") && (this._blockCount++, console.log("VariableDeclarator blockCount++"))) : g.params && 
-        g.params[0] && g.params[0].name && h.name == g.params[0].name && "PLUS" == g.operator || "MINUS" == g.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", g.params[0].name), c = e = this.getBlockType("%1 = %1 + %2"), this._blockCount++, console.log("VariableDeclarator blockCount++")) : (c = e = this.getBlockType("%1 = %2"), h && h.name && !h.name.includes("__filbert") && (this._blockCount++, console.log("VariableDeclarator blockCount++"))), k = Entry.block[e], 
-        console.log("vblock", k), e = k.params, k = k.def.params, h.name && (m = this.ParamDropdownDynamic(h.name, e[0], k[0])), e = [], "Literal" == f.type ? (h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g)) : (console.log("VariableDeclarator idData", h, "initData", g), g.params && g.params[0] && h.name == g.params[0].name && "PLUS" == g.operator || "MINUS" == g.operator ? (console.log("in initData.params[0]"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), "MINUS" == 
-        g.operator && 0 != g.params[2].params[0] && (g.params[2].params[0] = "-" + g.params[2].params[0]), e.push(g.params[2])) : (console.log("in initData"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g))), b.type = c, b.params = e;
+        Entry.TextCodingUtil.updateGlobalVariable(h, c) : Entry.TextCodingUtil.createGlobalVariable(h, c)), h = this[e.type](e), console.log("VariableDeclarator idData", h), b.id = h, g = this[f.type](f), console.log("VariableDeclarator initData", g), b.init = g, console.log("VariableDeclarator init.type", f.type), "Literal" == f.type ? c = e = this.getBlockType("%1 = %2") : g.params && g.params[0] && g.params[0].name && h.name == g.params[0].name && "PLUS" == g.operator || "MINUS" == g.operator ? 
+        (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", g.params[0].name), c = e = this.getBlockType("%1 = %1 + %2"), this._blockCount++, console.log("VariableDeclarator blockCount++")) : c = e = this.getBlockType("%1 = %2"), k = Entry.block[e], console.log("vblock", k), e = k.params, k = k.def.params, h.name && (m = this.ParamDropdownDynamic(h.name, e[0], k[0])), e = [], "Literal" == f.type ? (h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g)) : 
+        (console.log("VariableDeclarator idData", h, "initData", g), g.params && g.params[0] && h.name == g.params[0].name && "PLUS" == g.operator || "MINUS" == g.operator ? (console.log("in initData.params[0]"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), "MINUS" == g.operator && 0 != g.params[2].params[0] && (g.params[2].params[0] = "-" + g.params[2].params[0]), e.push(g.params[2])) : (console.log("in initData"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g))), 
+        b.type = c, b.params = e;
       }
+      this._blockCountMap.put("VariableDeclarator", "E");
       console.log("VariableDeclarator result", b);
       return b;
     }
   };
   b.AssignmentExpression = function(a) {
     console.log("AssignmentExpression component", a);
-    var b = {}, c = {}, e = [], f, g = a.left;
+    var b = {}, c = {}, e = [], f;
+    "S" != this._blockCountMap.get("AssignmentExpression") && (this._blockCount++, this._blockCountMap.put("AssignmentExpression", "S"), console.log("AssignmentExpression blockCount++"));
+    var g = a.left;
     if (g.type) {
       var h = this[g.type](g);
       console.log("AssignmentExpression leftData", h);
@@ -14045,10 +14051,10 @@ Entry.PyToBlockParser = function(b) {
         } else {
           g.object && g.object.name && (x = g.object.name.concat(g.property.name));
         }
-        if (k.arguments && k.arguments[0].name) {
+        if (k.arguments && 0 != k.arguments.length && k.arguments[0].name) {
           var v = k.arguments[0].name
         } else {
-          k.arguments && k.arguments[0].object ? v = k.arguments[0].object.name.concat(k.arguments[0].property.name) : k.left && k.left.name ? v = k.left.name : k.left && k.left.object && (v = k.left.object.name.concat(k.left.property.name));
+          k.arguments && 0 != k.arguments.length && k.arguments[0].object ? v = k.arguments[0].object.name.concat(k.arguments[0].property.name) : k.left && k.left.name ? v = k.left.name : k.left && k.left.object && (v = k.left.object.name.concat(k.left.property.name));
         }
         console.log("AssignmentExpression leftEx", x, "rightEx", v);
         n = h.property && "__pythonRuntime.ops.subscriptIndex" == h.property.callee ? "%1[%2] = %3" : x && v && x == v ? "%1 = %1 + %2" : "%1 = %2";
@@ -14182,6 +14188,7 @@ Entry.PyToBlockParser = function(b) {
     c.params = e;
     b.type = c.type;
     b.params = c.params;
+    this._blockCountMap.put("AssignmentExpression", "E");
     console.log("AssignmentExpression result", b);
     return b;
   };
@@ -14343,6 +14350,7 @@ Entry.PyToBlockParser = function(b) {
   b.WhileStatement = function(a) {
     console.log("WhileStatement component", a);
     this._blockCount++;
+    this._blockCountMap.put("WhileStatement", "S");
     console.log("WhileStatement blockCount++");
     var b;
     b = {statements:[]};
@@ -14397,6 +14405,7 @@ Entry.PyToBlockParser = function(b) {
     console.log("WhileStatement params", g);
     b.statements.push(f.data);
     b.params = g;
+    this._blockCountMap.put("WhileStatement", "E");
     console.log("WhileStatement result", b);
     return b;
   };
@@ -14512,7 +14521,7 @@ Entry.PyToBlockParser = function(b) {
     var b;
     b = {statements:[]};
     var c, e = [], f = a.consequent, g = a.alternate, h = a.test;
-    "instanceof" !== h.operator && (this._blockCount++, console.log("IfStatement blockCount++"));
+    "instanceof" !== h.operator && (this._blockCount++, this._blockCountMap.put("IfStatement", "S"), console.log("IfStatement blockCount++"));
     c = null != g ? "if_else" : "_if";
     b.type = c;
     console.log("IfStatement type", c);
@@ -14561,12 +14570,14 @@ Entry.PyToBlockParser = function(b) {
       }
       0 != f.length && (b.statements[1] = f);
     }
+    this._blockCountMap.put("IfStatement", "E");
     console.log("IfStatement result", b);
     return b;
   };
   b.ForStatement = function(a) {
     console.log("ForStatement component", a);
     this._blockCount++;
+    this._blockCountMap.put("ForStatement", "S");
     console.log("ForStatement blockCount++");
     var b = {statements:[]}, c = this.getBlockType("for i in range");
     b.type = c;
@@ -14593,6 +14604,7 @@ Entry.PyToBlockParser = function(b) {
     }
     b.update = h;
     console.log("ForStatement updateData", h);
+    this._blockCountMap.put("ForStatement", "E");
     console.log("ForStatement result", b);
     return b;
   };
@@ -15475,7 +15487,7 @@ Entry.Parser = function(b, a, d, c) {
     for (var f = 0, g = 4;g < e.length;g++) {
       var h = e[g];
       console.log("ljh line", h);
-      0 == h.trim().length || "else:" == h.trim() ? c++ : f++;
+      0 == h.trim().length || "else:" == h.trim() || "#" == h.trim().charAt(0) ? c++ : f++;
       if (f == a) {
         c += f;
         break;
