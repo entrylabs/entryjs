@@ -20510,6 +20510,7 @@ Entry.BlockView = function(b, a, d) {
   if (void 0 === this._schema) {
     this.block.destroy(!1, !1);
   } else {
+    this._schema.deletable && this.block.setDeletable(this._schema.deletable);
     this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
     var e = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
@@ -20553,6 +20554,7 @@ Entry.BlockView.pngMap = {};
   b._startRender = function(a, b) {
     var c = this, e = this._skeleton;
     this.svgGroup.attr({class:"block"});
+    this._schema.css && this.svgGroup.attr({style:this._schema.css});
     var f = e.classes;
     f && 0 !== f.length && f.forEach(function(a) {
       c.svgGroup.addClass(a);
@@ -21645,13 +21647,19 @@ Entry.Field = function() {
   };
   b.getValue = function() {
     var a = this._block.params[this._index];
-    return a && this._contents && this._contents.reference && this._contents.reference.length ? a.getDataByPointer(this._contents.reference) : a;
+    if (this._contents && this._contents.reference && this._contents.reference.length) {
+      var b = this._contents.reference.concat();
+      "%" === b[0][0] && (a = this._block.params[parseInt(b.shift().substr(1)) - 1]);
+      return a ? a.getDataByPointer(b) : a;
+    }
+    return a;
   };
   b.setValue = function(a, b) {
     if (this.value != a) {
       this.value = a;
       if (this._contents && this._contents.reference && this._contents.reference.length) {
         var c = this._contents.reference.concat(), e = c.pop(), f = this._block.params[this._index];
+        c.length && "%" === c[0][0] && (f = this._block.params[parseInt(c.shift().substr(1)) - 1]);
         c.length && (f = f.getDataByPointer(c));
         f.params[e] = a;
       } else {

@@ -24,6 +24,9 @@ Entry.BlockView = function(block, board, mode) {
         return;
     }
 
+    if (this._schema.deletable)
+        this.block.setDeletable(this._schema.deletable)
+
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
@@ -103,6 +106,11 @@ Entry.BlockView.pngMap = {};
         this.svgGroup.attr({
             class: "block"
         });
+
+        if (this._schema.css)
+            this.svgGroup.attr({
+                style: this._schema.css
+            });
 
         var classes = skeleton.classes;
         if (classes && classes.length !== 0)
