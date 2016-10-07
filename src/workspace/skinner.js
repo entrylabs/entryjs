@@ -39,6 +39,10 @@ Entry.skinContainer = {
             var candidates = this._skins[block.type];
             for (var i = 0; i < candidates.length; i++) {
                 var candidate = candidates[i];
+                if (candidate.id && candidate.id === block.id)
+                    return candidate;
+                else
+                    continue;
                 if (!candidate.conditions || !candidate.conditions.length)
                     return candidate;
                 for (var j = 0; j < candidate.conditions.length; j++) {

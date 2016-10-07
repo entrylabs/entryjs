@@ -22444,6 +22444,7 @@ Entry.BlockView.pngMap = {};
     var c = this;
     a = this._skeleton;
     this.svgGroup.attr({class:"block"});
+    this._schema.css && this.svgGroup.attr({style:this._schema.css});
     var e = a.classes;
     e && 0 !== e.length && e.forEach(function(a) {
       c.svgGroup.addClass(a);
@@ -25359,17 +25360,8 @@ Entry.skinContainer = {_skins:{}};
     if (this._skins[a.type]) {
       for (var b = this._skins[a.type], c = 0;c < b.length;c++) {
         var e = b[c];
-        if (!e.conditions || !e.conditions.length) {
+        if (e.id && e.id === a.id) {
           return e;
-        }
-        for (var f = 0;f < e.conditions.length;f++) {
-          var g = e.conditions[f];
-          if (a.getDataByPointer(g.pointer) !== g.value) {
-            break;
-          }
-          if (f === e.conditions.length - 1) {
-            return e;
-          }
         }
       }
     }

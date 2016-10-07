@@ -104,6 +104,11 @@ Entry.BlockView.pngMap = {};
             class: "block"
         });
 
+        if (this._schema.css)
+            this.svgGroup.attr({
+                style: this._schema.css
+            });
+
         var classes = skeleton.classes;
         if (classes && classes.length !== 0)
             classes.forEach(function(c){that.svgGroup.addClass(c);});
