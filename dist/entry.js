@@ -25360,8 +25360,17 @@ Entry.skinContainer = {_skins:{}};
     if (this._skins[a.type]) {
       for (var b = this._skins[a.type], c = 0;c < b.length;c++) {
         var e = b[c];
-        if (e.id && e.id === a.id) {
+        if (!e.conditions || !e.conditions.length) {
           return e;
+        }
+        for (var f = 0;f < e.conditions.length;f++) {
+          var g = e.conditions[f];
+          if (a.getDataByPointer(g.pointer) !== g.value) {
+            break;
+          }
+          if (f === e.conditions.length - 1) {
+            return e;
+          }
         }
       }
     }
