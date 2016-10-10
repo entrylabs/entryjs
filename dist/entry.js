@@ -16677,10 +16677,10 @@ Entry.Utils.addFilters = function(b, a) {
   d.elem("feColorMatrix", {result:"matrixOut", in:"offOut", type:"matrix", values:"1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0"});
 };
 Entry.Utils.addBlockPattern = function(b, a) {
-  for (var d = b.elem("pattern", {id:"blockHoverPattern_" + a, class:"blockHoverPattern", patternUnits:"userSpaceOnUse", patternTransform:"translate(12, 0)", x:0, y:0, width:125, height:33, style:"display: none"}), c = d.elem("g"), e = c.elem("rect", {x:0, y:0, width:125, height:33}), f = Entry.mediaFilePath + "block_pattern_(order).png", g = 1;5 > g;g++) {
-    c.elem("image", {class:"pattern" + g, href:f.replace("(order)", g), x:0, y:0, width:125, height:33});
+  for (var d = b.elem("pattern", {id:"blockHoverPattern_" + a, class:"blockHoverPattern", patternUnits:"userSpaceOnUse", patternTransform:"translate(12, 0)", x:0, y:0, width:125, height:33, style:"display: none"}), c = Entry.mediaFilePath + "block_pattern_(order).png", e = 1;5 > e;e++) {
+    d.elem("image", {class:"pattern" + e, href:c.replace("(order)", e), x:0, y:0, width:125, height:33});
   }
-  return {pattern:d, rect:e};
+  return {pattern:d};
 };
 Entry.Utils.COLLISION = {NONE:0, UP:1, RIGHT:2, LEFT:3, DOWN:4};
 Entry.Utils.createMouseEvent = function(b, a) {
@@ -20006,9 +20006,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   this.setWidth();
   this.svg = Entry.SVG(this._svgId);
   Entry.Utils.addFilters(this.svg, this.suffix);
-  a = Entry.Utils.addBlockPattern(this.svg, this.suffix);
-  this.patternRect = a.rect;
-  this.pattern = a.pattern;
+  this.pattern = Entry.Utils.addBlockPattern(this.svg, this.suffix).pattern;
   this.svgGroup = this.svg.elem("g");
   this.svgThreadGroup = this.svgGroup.elem("g");
   this.svgThreadGroup.board = this;
@@ -20315,9 +20313,8 @@ Entry.BlockMenu = function(b, a, d, c) {
     var b = a.keyCode, c = Entry.type;
     a.ctrlKey && "workspace" == c && 48 < b && 58 > b && (a.preventDefault(), this.selectMenu(b - 49));
   };
-  b.setPatternRectFill = function(a) {
-    this.patternRect.attr({fill:a});
-    this.pattern.attr({style:""});
+  b.enablePattern = function() {
+    this.pattern.removeAttribute("style");
   };
   b.disablePattern = function() {
     this.pattern.attr({style:"display: none"});
@@ -20564,11 +20561,12 @@ Entry.BlockView.pngMap = {};
     this.pathGroup = this.svgGroup.elem("g");
     this._updateMagnet();
     this._path = this.pathGroup.elem("path");
-    this.getBoard().patternRect && ($(this._path).mouseenter(function(a) {
+    $(this._path).mouseenter(function(a) {
       c._mouseEnable && c._changeFill(!0);
-    }), $(this._path).mouseleave(function(a) {
+    });
+    $(this._path).mouseleave(function(a) {
       c._mouseEnable && c._changeFill(!1);
-    }));
+    });
     var g = this._schema.color;
     this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN && (g = Entry.Utils.colorLighten(g));
     this._fillColor = g;
@@ -20681,6 +20679,7 @@ Entry.BlockView.pngMap = {};
     var a = this._skeleton.path(this);
     this._path.attr({d:a});
     this.set({animating:!1});
+    this._setBackgroundPath();
   };
   b._setPosition = function(a) {
     this.svgGroup.attr("transform", "translate(" + this.x + "," + this.y + ")");
@@ -20989,9 +20988,9 @@ Entry.BlockView.pngMap = {};
   };
   b._changeFill = function(a) {
     var b = this.getBoard();
-    if (b.patternRect && !b.dragBlock) {
+    if (!b.dragBlock) {
       var c = this._fillColor, e = this._path, b = this.getBoard();
-      a ? (b.setPatternRectFill(c), c = "url(#blockHoverPattern_" + this.getBoard().suffix + ")") : b.disablePattern();
+      a ? (c = "url(#blockHoverPattern_" + this.getBoard().suffix + ")", b.enablePattern()) : b.disablePattern();
       e.attr({fill:c});
     }
   };
@@ -21019,7 +21018,7 @@ Entry.BlockView.pngMap = {};
       }
       if (a = this._extensions) {
         for (c = 0;c < a.length;c++) {
-          a[c].updatePos();
+          b = a[c], b.updatePos && b.updatePos();
         }
       }
     }
@@ -21135,6 +21134,14 @@ Entry.BlockView.pngMap = {};
   };
   b.clone = function() {
     return this.svgGroup.cloneNode(!0);
+  };
+  b._setBackgroundPath = function() {
+    this._backgroundPath && $(this._backgroundPath).remove();
+    var a = this._path.cloneNode(!0);
+    a.setAttribute("class", "blockBackgroundPath");
+    a.setAttribute("fill", this._fillColor);
+    this._backgroundPath = a;
+    this.pathGroup.insertBefore(a, this._path);
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(b, a) {
@@ -23027,9 +23034,7 @@ Entry.Board.DRAG_RADIUS = 5;
     this.svgBlockGroup.board = this;
     a.isOverlay ? (this.wrapper.addClass("entryOverlayBoard"), this.generateButtons(), this.suffix = "overlayBoard") : this.suffix = "board";
     Entry.Utils.addFilters(this.svg, this.suffix);
-    a = Entry.Utils.addBlockPattern(this.svg, this.suffix);
-    this.patternRect = a.rect;
-    this.pattern = a.pattern;
+    this.pattern = Entry.Utils.addBlockPattern(this.svg, this.suffix).pattern;
   };
   b.changeCode = function(a) {
     this.code && this.codeListener && this.code.changeEvent.detach(this.codeListener);
@@ -23391,9 +23396,8 @@ Entry.Board.DRAG_RADIUS = 5;
   b.dominate = function(a) {
     a && (a = a.getFirstBlock()) && (this.svgBlockGroup.appendChild(a.view.svgGroup), this.code.dominate(a.thread));
   };
-  b.setPatternRectFill = function(a) {
-    this.patternRect.attr({fill:a});
-    this.pattern.attr({style:""});
+  b.enablePattern = function() {
+    this.pattern.removeAttribute("style");
   };
   b.disablePattern = function() {
     this.pattern.attr({style:"display: none"});

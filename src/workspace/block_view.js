@@ -125,17 +125,15 @@ Entry.BlockView.pngMap = {};
 
         this._path = this.pathGroup.elem("path");
 
-        if (this.getBoard().patternRect) {
-            $(this._path).mouseenter(function(e) {
-                if (!that._mouseEnable) return;
-                that._changeFill(true);
-            });
+        $(this._path).mouseenter(function(e) {
+            if (!that._mouseEnable) return;
+            that._changeFill(true);
+        });
 
-            $(this._path).mouseleave(function(e) {
-                if (!that._mouseEnable) return;
-                that._changeFill(false);
-            });
-        }
+        $(this._path).mouseleave(function(e) {
+            if (!that._mouseEnable) return;
+            that._changeFill(false);
+        });
 
         var fillColor = this._schema.color;
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
@@ -357,6 +355,7 @@ Entry.BlockView.pngMap = {};
 
             this.set({animating: false});
         }
+        this._setBackgroundPath();
     };
 
     p._setPosition = function(animate) {
@@ -995,17 +994,15 @@ Entry.BlockView.pngMap = {};
 
     p._changeFill = function(isPattern) {
         var board = this.getBoard();
-        if (!board.patternRect || board.dragBlock) return;
+        if (board.dragBlock) return;
         var fillColor = this._fillColor;
         var path = this._path;
 
         var board = this.getBoard();
         if (isPattern) {
-            board.setPatternRectFill(fillColor);
             fillColor = "url(#blockHoverPattern_" + this.getBoard().suffix +")";
-        } else {
-            board.disablePattern();
-        }
+            board.enablePattern();
+        } else board.disablePattern();
         path.attr({fill:fillColor});
     };
 
@@ -1040,7 +1037,8 @@ Entry.BlockView.pngMap = {};
         var extensions = this._extensions;
         if (extensions) {
             for (var i=0; i<extensions.length; i++) {
-                extensions[i].updatePos();
+                var ext = extensions[i];
+                ext.updatePos && ext.updatePos();
             }
         }
     };
@@ -1258,6 +1256,17 @@ Entry.BlockView.pngMap = {};
 
     p.clone = function() {
         return this.svgGroup.cloneNode(true);
+    };
+
+    p._setBackgroundPath = function() {
+        this._backgroundPath && $(this._backgroundPath).remove();
+
+        var backgroundPath = this._path.cloneNode(true);
+        backgroundPath.setAttribute('class', 'blockBackgroundPath');
+        backgroundPath.setAttribute('fill', this._fillColor);
+
+        this._backgroundPath = backgroundPath;
+        this.pathGroup.insertBefore(backgroundPath, this._path);
     };
 
 })(Entry.BlockView.prototype);

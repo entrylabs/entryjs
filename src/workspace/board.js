@@ -103,7 +103,6 @@ Entry.Board.DRAG_RADIUS = 5;
 
         Entry.Utils.addFilters(this.svg, this.suffix);
         var returnVal = Entry.Utils.addBlockPattern(this.svg, this.suffix);
-        this.patternRect = returnVal.rect;
         this.pattern = returnVal.pattern;
     };
 
@@ -802,13 +801,8 @@ Entry.Board.DRAG_RADIUS = 5;
         this.code.dominate(block.thread);
     };
 
-    p.setPatternRectFill = function(color) {
-        this.patternRect.attr({
-            fill:color
-        });
-        this.pattern.attr({
-            style: ""
-        });
+    p.enablePattern = function() {
+        this.pattern.removeAttribute('style');
     };
 
     p.disablePattern = function() {
