@@ -22587,7 +22587,7 @@ Entry.BlockView.pngMap = {};
     this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
   };
   b._moveTo = function(a, b, c) {
-    this.set({x:a, y:b});
+    this.display ? this.set({x:a, y:b}) : this.set({x:-99999, y:-99999});
     this._lazyUpdatePos();
     this.visible && this.display && this._setPosition(c);
   };

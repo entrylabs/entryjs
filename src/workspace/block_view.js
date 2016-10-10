@@ -395,7 +395,10 @@ Entry.BlockView.pngMap = {};
     };
 
     p._moveTo = function(x, y, animate) {
-        this.set({ x: x, y: y });
+        if (this.display)
+            this.set({ x: x, y: y });
+        else
+            this.set({ x: -99999, y: -99999 });
         this._lazyUpdatePos();
         if (this.visible && this.display)
             this._setPosition(animate);
