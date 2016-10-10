@@ -15376,7 +15376,7 @@ Entry.Parser = function(b, a, d, c) {
           console.log("threads", e);
           q = [];
           for (var r in e) {
-            h = e[r], 0 != h.length && q.push(h);
+            h = e[r], 0 != h.length && (h = h.trim(), 0 != h.length && q.push(h));
           }
           console.log("cleansedThreads", q);
           for (g in q) {

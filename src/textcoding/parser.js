@@ -298,9 +298,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var cleansedThreads = [];
                     for(var t in threads) {
                         var thread = threads[t];
-                        if(thread.length != 0) {
+                        if(thread.length == 0)
+                            continue; 
+                        
+                        thread = thread.trim();
+                        if(thread.length != 0)
                             cleansedThreads.push(thread);
-                        } 
                     }
 
                     console.log("cleansedThreads", cleansedThreads);
