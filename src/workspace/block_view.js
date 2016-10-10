@@ -27,11 +27,13 @@ Entry.BlockView = function(block, board, mode) {
     if (this._schema.deletable)
         this.block.setDeletable(this._schema.deletable)
     if (this._schema.copyable)
-        this.block.setDeletable(this._schema.copyable)
-
+        this.block.setCopyable(this._schema.copyable)
+    if (this._schema.display === false)
+        this.set({display: false})
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
+
     var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
     this._statements = [];
@@ -392,7 +394,10 @@ Entry.BlockView.pngMap = {};
     };
 
     p._moveTo = function(x, y, animate) {
-        this.set({ x: x, y: y });
+        if (this.display)
+            this.set({ x: x, y: y });
+        else
+            this.set({ x: -99999, y: -99999 });
         this._lazyUpdatePos();
         if (this.visible && this.display)
             this._setPosition(animate);

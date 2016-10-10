@@ -20508,7 +20508,8 @@ Entry.BlockView = function(b, a, d) {
     this.block.destroy(!1, !1);
   } else {
     this._schema.deletable && this.block.setDeletable(this._schema.deletable);
-    this._schema.copyable && this.block.setDeletable(this._schema.copyable);
+    this._schema.copyable && this.block.setCopyable(this._schema.copyable);
+    !1 === this._schema.display && this.set({display:!1});
     this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
     var e = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
@@ -20694,7 +20695,7 @@ Entry.BlockView.pngMap = {};
     this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
   };
   b._moveTo = function(a, b, c) {
-    this.set({x:a, y:b});
+    this.display ? this.set({x:a, y:b}) : this.set({x:-99999, y:-99999});
     this._lazyUpdatePos();
     this.visible && this.display && this._setPosition(c);
   };
