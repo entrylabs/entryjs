@@ -26,6 +26,8 @@ Entry.BlockView = function(block, board, mode) {
 
     if (this._schema.deletable)
         this.block.setDeletable(this._schema.deletable)
+    if (this._schema.copyable)
+        this.block.setDeletable(this._schema.copyable)
 
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(

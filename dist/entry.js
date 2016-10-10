@@ -20511,6 +20511,7 @@ Entry.BlockView = function(b, a, d) {
     this.block.destroy(!1, !1);
   } else {
     this._schema.deletable && this.block.setDeletable(this._schema.deletable);
+    this._schema.copyable && this.block.setDeletable(this._schema.copyable);
     this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
     var e = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
