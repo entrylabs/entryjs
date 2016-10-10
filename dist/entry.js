@@ -22409,7 +22409,7 @@ Entry.BlockView = function(b, a, d) {
     this._extensions = [];
     this.magnet = {};
     this._paramMap = {};
-    e.magnets && e.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"])));
+    e.magnets && e.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g", {class:"entryBlockNextGroup"}), this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"])));
     this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
     this.mouseHandler = function() {
       var a = c.block.events;
@@ -22477,6 +22477,7 @@ Entry.BlockView.pngMap = {};
     this._startContentRender(b);
     this._startExtension(b);
     !0 !== this._board.disableMouseEvent && this._addControl();
+    (b = this.guideSvgGroup) && this.svgGroup.insertBefore(b, this.svgGroup.firstChild);
     this.bindPrev();
   };
   b._startContentRender = function(a) {
@@ -22485,8 +22486,8 @@ Entry.BlockView.pngMap = {};
     var b = this._schema;
     b.statements && b.statements.length && this.statementSvgGroup && this.statementSvgGroup.remove();
     this._contents = [];
-    this.contentSvgGroup = this.svgGroup.elem("g");
-    b.statements && b.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g"));
+    this.contentSvgGroup = this.svgGroup.elem("g", {class:"contentsGroup"});
+    b.statements && b.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g", {class:"statementGroup"}));
     switch(a) {
       case Entry.Workspace.MODE_BOARD:
       ;
@@ -23024,6 +23025,9 @@ Entry.BlockView.pngMap = {};
       a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
       Entry.ContextMenu.show(b, null, {x:a.clientX, y:a.clientY});
     }
+  };
+  b.clone = function() {
+    return this.svgGroup.cloneNode(!0);
   };
 })(Entry.BlockView.prototype);
 Entry.Field = function() {
@@ -24314,6 +24318,29 @@ Entry.BlockExtension = function(b, a) {
 };
 (function(b) {
 })(Entry.BlockExtension.prototype);
+Entry.ExtGuide = function(b, a, d) {
+  this.blockView = a;
+  this.block = a.block;
+  this.model = b.model ? b.model : [];
+  this.render();
+};
+(function(b) {
+  b.render = function() {
+    var a = this.blockView.getBoard();
+    this.svgGroup = this.blockView.svgGroup.elem("g", {class:"extension guideGroup"});
+    this.blockView.guideSvgGroup = this.svgGroup;
+    $(this.svgGroup).bind("mousedown touchstart", function(a) {
+      a.stopPropagation && a.stopPropagation();
+      a.preventDefault && a.preventDefault();
+    });
+    var b = this.block.getCode().createThread(this.model);
+    !b.view && b.createView(a);
+    this.svgGroup.appendChild(b.getFirstBlock().view.clone());
+    b.destroy(!1);
+  };
+  b.updatePos = function() {
+  };
+})(Entry.ExtGuide.prototype);
 Entry.ExtSideTag = function(b, a, d) {
   this.blockView = a;
   this.color = b.color ? b.color : "#EBC576";
