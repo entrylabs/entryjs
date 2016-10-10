@@ -21556,9 +21556,14 @@ Entry.ExtGuide = function(b, a, d) {
     var b = this.block.getCode().createThread(this.model);
     !b.view && b.createView(a);
     this.svgGroup.appendChild(b.getFirstBlock().view.clone());
+    this.updatePos();
     b.destroy(!1);
   };
   b.updatePos = function() {
+    this.svgGroup.attr("transform", this._getTransform());
+  };
+  b._getTransform = function() {
+    return "translate(0,%y)".replace("%y", this.blockView.magnet.next.y);
   };
 })(Entry.ExtGuide.prototype);
 Entry.ExtSideTag = function(b, a, d) {

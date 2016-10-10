@@ -30,8 +30,16 @@ Entry.ExtGuide = function(content, blockView, mode) {
         var thread = code.createThread(this.model);
         !thread.view && thread.createView(board);
         this.svgGroup.appendChild(thread.getFirstBlock().view.clone());
+        this.updatePos();
         thread.destroy(false);
     };
 
-    p.updatePos = function() {};
+    p.updatePos = function() {
+        this.svgGroup.attr('transform', this._getTransform());
+    };
+
+    p._getTransform = function() {
+        return 'translate(0,%y)'.replace('%y',
+            this.blockView.magnet.next.y);
+    };
 })(Entry.ExtGuide.prototype);
