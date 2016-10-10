@@ -28,10 +28,12 @@ Entry.BlockView = function(block, board, mode) {
         this.block.setDeletable(this._schema.deletable)
     if (this._schema.copyable)
         this.block.setCopyable(this._schema.copyable)
-
+    if (this._schema.display === false)
+        this.set({display: false})
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
+
     var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
     this._statements = [];
