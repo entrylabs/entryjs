@@ -22145,7 +22145,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.resize();
   };
   b.getTextByValue = function(a) {
-    if (!a || "null" === a) {
+    if (!a && "number" !== typeof a || "null" === a) {
       return Lang.Blocks.no_target;
     }
     for (var b = this._contents.options, c = 0, e = b.length;c < e;c++) {
