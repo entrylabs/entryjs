@@ -273,6 +273,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
                            !Entry.TextCodingUtil.isBinaryOperator(param))
                            param = String("\"" + param + "\"");
 
+                        console.log("start None", param);
+
+                        if(param == String('\"None\"')) { 
+                           var data = {None:"None"};
+                           var x = "None";
+                           param = data[x];
+                        }
+
                         param = Entry.TextCodingUtil.variableListFilter(block, blockParamIndex, param);
 
                         console.log("here pa param", param);
@@ -401,13 +409,17 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var object = Entry.playground.object;
         console.log("FieldDropdownDynamic Object", object);
 
-        if(dataParam == "null") {
+        if(dataParam == "None") {   
+            dataParam = "None"; 
+        } 
+        else if(dataParam == "null") {
             dataParam = "None";
-        } else {
+        }
+        else {
             dataParam = Entry.TextCodingUtil.dropdownDynamicValueConvertor(dataParam, schemaParam);
         }
 
-        //console.log("FieldDropdownDynamic result ", dataParam);
+        console.log("FieldDropdownDynamic result ", dataParam);
         return dataParam;
     };
 

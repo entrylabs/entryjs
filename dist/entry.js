@@ -12142,7 +12142,7 @@ Entry.TextCodingUtil = {};
     if (!a) {
       return a;
     }
-    var c = a;
+    var c;
     if ("variables" == b) {
       var e = Entry.variableContainer.variables_, f;
       for (f in e) {
@@ -12193,6 +12193,7 @@ Entry.TextCodingUtil = {};
         }
       }
     }
+    c || (c = "None");
     return c;
   };
   b.dropdownDynamicValueConvertor = function(a, b) {
@@ -12200,7 +12201,7 @@ Entry.TextCodingUtil = {};
     for (f in c) {
       e = c[f];
       if ("null" == e[1]) {
-        return e = {};
+        return e = "None";
       }
       if ("mouse" == a || "wall" == a || "wall_up" == a || "wall_down" == a || "wall_right" == a || "wall_left" == a) {
         return a;
@@ -12258,6 +12259,7 @@ Entry.TextCodingUtil = {};
         }
       }
     }
+    console.log("dropdownDynamicValueConvertor result", e);
     return e;
   };
   b.binaryOperatorValueConvertor = function(a) {
@@ -13073,8 +13075,8 @@ Entry.BlockToPyParser = function(b) {
                 this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (t = Object.keys(l), n = String(t[n++]), n = n.toLowerCase(), this._variableMap.put(n, m), this._queue.enqueue(n));
               }
             } else {
-              m = this["Field" + g[t].type](h[t], g[t]), null == m && (m = g[t].text ? g[t].text : null), m = Entry.TextCodingUtil.binaryOperatorValueConvertor(m), m = String(m), Entry.TextCodingUtil.isNumeric(m) || Entry.TextCodingUtil.isBinaryOperator(m) || (m = String('"' + m + '"')), m = Entry.TextCodingUtil.variableListFilter(a, n, m), console.log("here pa param", m), Entry.TextCodingUtil.isLocalType(a, h[t]) && (m = "self".concat(".").concat(m)), console.log("currentBlock", a), b += m, console.log("btop parser param result", 
-              b), b = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(a, b), this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (t = Object.keys(l), n = String(t[n++]), n = n.toLowerCase(), this._variableMap.put(n, m), this._queue.enqueue(n));
+              m = this["Field" + g[t].type](h[t], g[t]), null == m && (m = g[t].text ? g[t].text : null), m = Entry.TextCodingUtil.binaryOperatorValueConvertor(m), m = String(m), Entry.TextCodingUtil.isNumeric(m) || Entry.TextCodingUtil.isBinaryOperator(m) || (m = String('"' + m + '"')), console.log("start None", m), '"None"' == m && (m = "None"), m = Entry.TextCodingUtil.variableListFilter(a, n, m), console.log("here pa param", m), Entry.TextCodingUtil.isLocalType(a, h[t]) && (m = "self".concat(".").concat(m)), 
+              console.log("currentBlock", a), b += m, console.log("btop parser param result", b), b = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(a, b), this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (t = Object.keys(l), n = String(t[n++]), n = n.toLowerCase(), this._variableMap.put(n, m), this._queue.enqueue(n));
             }
           }
         } else {
@@ -13103,7 +13105,9 @@ Entry.BlockToPyParser = function(b) {
   b.FieldDropdownDynamic = function(a, b) {
     console.log("FieldDropdownDynamic", a, b);
     console.log("FieldDropdownDynamic Object", Entry.playground.object);
-    return a = "null" == a ? "None" : Entry.TextCodingUtil.dropdownDynamicValueConvertor(a, b);
+    a = "None" == a ? "None" : "null" == a ? "None" : Entry.TextCodingUtil.dropdownDynamicValueConvertor(a, b);
+    console.log("FieldDropdownDynamic result ", a);
+    return a;
   };
   b.FieldImage = function(a) {
     return a;
@@ -14204,8 +14208,7 @@ Entry.PyToBlockParser = function(b) {
       return "";
     }
     console.log("Literal paramMeta", b, "paramDefMeta", c);
-    null != a.value ? (b = this["Param" + b.type](e, b, c), console.log("Literal param", void 0)) : (b = [], c = this[a.left.type](a.left), b.push(c), b.push(a.operator), a = this[a.right.type](a.right), b.push(a));
-    a = b;
+    "None" == a.raw ? (b = this["Param" + b.type]("None", b, c), console.log("Literal params", b), a = b) : a.value ? (b = this["Param" + b.type](e, b, c), console.log("Literal params", b), a = b) : a.left && a.operator && a.right ? (b = [], c = this[a.left.type](a.left), b.push(c), b.push(a.operator), a = this[a.right.type](a.right), b.push(a), a = b) : a = "None";
     console.log("Literal result", a);
     return a;
   };

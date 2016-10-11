@@ -1568,11 +1568,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("Literal paramMeta", paramMeta, "paramDefMeta", paramDefMeta);
 
-        if(component.value != null) {
+        if(component.raw == "None") {
+            value = "None";
             var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
-            console.log("Literal param", param);
+            console.log("Literal params", params);
             result = params;
-        } else {
+        }
+        else if(component.value) {
+            var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
+            console.log("Literal params", params);
+            result = params;
+        } 
+        else if(component.left && component.operator && component.right){
             // If 'Literal' doesn't have value
             var params = [];
             var leftParam = this[component.left.type](component.left);
@@ -1583,6 +1590,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             params.push(rightParam);
 
             result = params;
+        } 
+        else {
+            result = "None";
         }
         console.log("Literal result", result);
 

@@ -131,7 +131,7 @@ Entry.TextCodingUtil = {};
         if(!name)
             return name;
 
-        var result = name;
+        var result;
         
         if(menuName == "variables") {
             var entryVariables = Entry.variableContainer.variables_;
@@ -198,6 +198,9 @@ Entry.TextCodingUtil = {};
             }
         }
 
+        if(!result) {
+            result = "None";
+        }
 
         return result;
     };
@@ -210,10 +213,12 @@ Entry.TextCodingUtil = {};
         for(var index in options) {
             var option = options[index];
             if(option[1] == "null") {
-                var item = {};
+                /*var item = {};
                 var None = {};
                 item.None = None;
-                result = item.None;
+                result = item.None;*/
+
+                result = "None";
 
                 found = true;
                 return result;
@@ -302,7 +307,7 @@ Entry.TextCodingUtil = {};
             }
         }
 
-        //console.log("b to py dd", result);
+        console.log("dropdownDynamicValueConvertor result", result);
 
         return result;
 
