@@ -23629,9 +23629,13 @@ Entry.Board.DRAG_RADIUS = 5;
     }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, callback:function() {
       a.code.clear();
     }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome() && !Entry.isMobile(), option:{text:Lang.Menus.save_as_image_all, enable:!0, callback:function() {
-      a.code.getThreads().forEach(function(a, b) {
-        var e = a.getFirstBlock();
-        e && e.view.downloadAsImage(++b);
+      var b = a.code.getThreads(), c = [];
+      b.forEach(function(a, f) {
+        var g = a.getFirstBlock();
+        g && (console.log("threads.length=", b.length), 1 < b.length && Entry.isOffline ? g.view.getDataUrl().then(function(a) {
+          c.push(a);
+          c.length == b.length && Entry.dispatchEvent("saveBlockImages", {images:c});
+        }) : g.view.downloadAsImage(++f));
       });
     }}}];
   };
