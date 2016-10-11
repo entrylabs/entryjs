@@ -949,10 +949,10 @@ Entry.Board.DRAG_RADIUS = 5;
                     text: Lang.Menus.save_as_image_all,
                     enable: true,
                     callback: function(){
-                        that.code.getThreads().forEach(function(t) {
+                        that.code.getThreads().forEach(function(t,i) {
                             var topBlock = t.getFirstBlock();
                             if (!topBlock) return;
-                            topBlock.view.downloadAsImage();
+                            topBlock.view.downloadAsImage(++i);
                         });
                     }
                 }
