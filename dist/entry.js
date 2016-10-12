@@ -23460,7 +23460,7 @@ Entry.Board.DRAG_RADIUS = 5;
         l > a && (f = f + e + 10, e = 0, c = 15);
         e = Math.max(e, k.width);
         l = c + 15;
-        h._moveTo(f - h.offsetX / 2, l, !1);
+        h._moveTo(f - k.x, l, !1);
         c = c + k.height + 15;
       }
     }

@@ -324,7 +324,7 @@ Entry.Board.DRAG_RADIUS = 5;
             }
             columWidth = Math.max(columWidth, bBox.width);
             top = acculmulatedTop + verticalGap;
-            blockView._moveTo(left - blockView.offsetX/2, top, false);
+            blockView._moveTo(left - bBox.x, top, false);
             acculmulatedTop = acculmulatedTop + bBox.height + verticalGap;
         }
         this.scroller.resizeScrollBar();

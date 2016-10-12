@@ -167,11 +167,9 @@ Entry.BlockView.pngMap = {};
         }
 
         var guide = this.guideSvgGroup;
-        if (guide)
-            this.svgGroup.insertBefore(guide, this.svgGroup.firstChild);
+        guide && this.svgGroup.insertBefore(guide, this.svgGroup.firstChild);
 
         this.bindPrev();
-
     };
 
     p._startContentRender = function(mode) {
