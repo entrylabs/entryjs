@@ -58,7 +58,6 @@ Entry.PARAM = -1;
             this._data[i].destroy(false);
 
         this.clearExecutors();
-        this._eventMap = {};
     };
 
     p.createView = function(board) {

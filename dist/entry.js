@@ -21175,7 +21175,6 @@ Entry.PARAM = -1;
       this._data[a].destroy(!1);
     }
     this.clearExecutors();
-    this._eventMap = {};
   };
   b.createView = function(a) {
     null === this.view ? this.set({view:new Entry.CodeView(this, a), board:a}) : (this.set({board:a}), a.bindCodeView(this.view));
@@ -23781,11 +23780,11 @@ Entry.Thread = function(b, a, d) {
     return e;
   };
   b.destroy = function(a) {
-    this._code.destroyThread(this, !1);
     this.view && this.view.destroy(a);
     for (var b = this._data, c = b.length - 1;0 <= c;c--) {
       b[c].destroy(a);
     }
+    !b.length && this._code.destroyThread(this, !1);
   };
   b.getBlock = function(a) {
     return this._data[a];
@@ -24003,30 +24002,32 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     return c;
   };
   b.destroy = function(a, b) {
-    var c = this, e = this.params;
-    if (e) {
-      for (var f = 0;f < e.length;f++) {
-        var g = e[f];
-        g instanceof Entry.Block && (g.doNotSplice = !0, g.destroy(a));
+    if (this.deletable === Entry.Block.DELETABLE_TRUE) {
+      var c = this, e = this.params;
+      if (e) {
+        for (var f = 0;f < e.length;f++) {
+          var g = e[f];
+          g instanceof Entry.Block && (g.doNotSplice = !0, g.destroy(a));
+        }
       }
-    }
-    if (e = this.statements) {
-      for (f = 0;f < e.length;f++) {
-        e[f].destroy(a);
+      if (e = this.statements) {
+        for (f = 0;f < e.length;f++) {
+          e[f].destroy(a);
+        }
       }
+      g = this.getPrevBlock();
+      f = this.getNextBlock();
+      this.getCode().unregisterBlock(this);
+      e = this.getThread();
+      this._schema && this._schema.event && e.unregisterEvent(this, this._schema.event);
+      f && (b ? f.destroy(a, b) : g ? f.view && f.view.bindPrev(g) : (g = this.getThread().view.getParent(), g.constructor === Entry.FieldStatement ? (f.view && f.view.bindPrev(g), g.insertTopBlock(f)) : g.constructor === Entry.FieldStatement ? f.replace(g._valueBlock) : f.view._toGlobalCoordinate()));
+      !this.doNotSplice && e.spliceBlock ? e.spliceBlock(this) : delete this.doNotSplice;
+      this.view && this.view.destroy(a);
+      this._schemaChangeEvent && this._schemaChangeEvent.destroy();
+      (f = this.events.dataDestroy) && this.getCode().object && f.forEach(function(a) {
+        Entry.Utils.isFunction(a) && a(c);
+      });
     }
-    g = this.getPrevBlock();
-    f = this.getNextBlock();
-    this.getCode().unregisterBlock(this);
-    e = this.getThread();
-    this._schema && this._schema.event && e.unregisterEvent(this, this._schema.event);
-    f && (b ? f.destroy(a, b) : g ? f.view && f.view.bindPrev(g) : (g = this.getThread().view.getParent(), g.constructor === Entry.FieldStatement ? (f.view && f.view.bindPrev(g), g.insertTopBlock(f)) : g.constructor === Entry.FieldStatement ? f.replace(g._valueBlock) : f.view._toGlobalCoordinate()));
-    !this.doNotSplice && e.spliceBlock ? e.spliceBlock(this) : delete this.doNotSplice;
-    this.view && this.view.destroy(a);
-    this._schemaChangeEvent && this._schemaChangeEvent.destroy();
-    (f = this.events.dataDestroy) && this.getCode().object && f.forEach(function(a) {
-      Entry.Utils.isFunction(a) && a(c);
-    });
   };
   b.getView = function() {
     return this.view;

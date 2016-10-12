@@ -220,6 +220,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.destroy = function(animate, next) {
+        if (this.deletable !== Entry.Block.DELETABLE_TRUE)
+            return;
         var that = this;
         var params = this.params;
         if (params) {
