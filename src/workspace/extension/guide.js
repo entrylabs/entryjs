@@ -31,6 +31,7 @@ Entry.ExtGuide = function(content, blockView, mode) {
         !thread.view && thread.createView(board);
         this.svgGroup.appendChild(thread.getFirstBlock().view.clone());
         this.updatePos();
+        this.block.getThread().view.setHasGuide(true);
         thread.destroy(false);
     };
 

@@ -21565,6 +21565,7 @@ Entry.ExtGuide = function(b, a, d) {
     !b.view && b.createView(a);
     this.svgGroup.appendChild(b.getFirstBlock().view.clone());
     this.updatePos();
+    this.block.getThread().view.setHasGuide(!0);
     b.destroy(!1);
   };
   b.updatePos = function() {
@@ -24194,6 +24195,7 @@ Entry.ThreadView = function(b, a) {
   this.thread = b;
   this.svgGroup = a.svgThreadGroup.elem("g");
   this.parent = a;
+  this._hasGuide = !1;
 };
 (function(b) {
   b.schema = {height:0, zIndex:0};
@@ -24230,7 +24232,7 @@ Entry.ThreadView = function(b, a) {
     return f;
   };
   b.dominate = function() {
-    this.parent.dominate(this.thread);
+    !this._hasGuide && this.parent.dominate(this.thread);
   };
   b.isGlobal = function() {
     return this.parent instanceof Entry.Board;
@@ -24242,6 +24244,9 @@ Entry.ThreadView = function(b, a) {
   };
   b.setZIndex = function(a) {
     this.set({zIndex:a});
+  };
+  b.setHasGuide = function(a) {
+    this._hasGuide = a;
   };
 })(Entry.ThreadView.prototype);
 Entry.FieldTrashcan = function(b) {
