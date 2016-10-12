@@ -829,7 +829,22 @@ Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.nemoino = {name:"nemoino", setZero:Entry.Arduino.setZero};
 Entry.joystick = {name:"joystick", setZero:Entry.Arduino.setZero};
-Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
+Entry.CODEino = {name:"CODEino", getSensorKey:function() {
+  return "xxxxxxxx".replace(/[xy]/g, function(b) {
+    var a = 16 * Math.random() | 0;
+    return ("x" == b ? a : a & 0 | 0).toString(16);
+  }).toUpperCase();
+}, getSensorTime:function(b) {
+  return (new Date).getTime() + b;
+}, monitorTemplate:Entry.Arduino.monitorTemplate, setZero:function() {
+  Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(b) {
+    Entry.hw.sendQueue.SET[b].data = 0;
+    Entry.hw.sendQueue.TIME = Entry.CODEino.getSensorTime(Entry.hw.sendQueue.SET[b].type);
+    Entry.hw.sendQueue.KEY = Entry.CODEino.getSensorKey();
+  }) : Entry.hw.sendQueue = {SET:{0:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 1:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 2:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 3:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 4:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 5:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 6:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 7:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 8:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 
+  9:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 10:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 11:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 12:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 13:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}}, TIME:Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.DIGITAL), KEY:Entry.CODEino.getSensorKey()};
+  Entry.hw.update();
+}, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, RGBLED_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8, ADDCOLOR:9}, BlockState:{}};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput("Arduino"), "NAME");
@@ -2421,6 +2436,15 @@ Entry.block.cobl_7_segment = function(b, a) {
   Entry.hw.setDigitalPortValue("7SEG", d);
   return a.callReturn();
 };
+Entry.Codestar = {name:"codestar", setZero:function() {
+  Entry.hw.sendQueue.readablePorts = [];
+  for (var b = 0;20 > b;b++) {
+    Entry.hw.sendQueue[b] = 0, Entry.hw.sendQueue.readablePorts.push(b);
+  }
+  Entry.hw.update();
+}, monitorTemplate:{imgPath:"hw/codestar.png", width:333, height:409, listPorts:{13:{name:"\uc9c4\ub3d9\ubaa8\ud130", type:"output", pos:{x:0, y:0}}, 6:{name:"\uc9c4\ub3d9\uc13c\uc11c", type:"input", pos:{x:0, y:0}}}, ports:{7:{name:"\ube68\uac04\uc0c9", type:"output", pos:{x:238, y:108}}, 8:{name:"\ud30c\ub780\uc0c9", type:"output", pos:{x:265, y:126}}, 9:{name:"3\uc0c9 \ube68\uac04\uc0c9", type:"output", pos:{x:292, y:34}}, 10:{name:"3\uc0c9 \ub179\uc0c9", type:"output", pos:{x:292, y:34}}, 11:{name:"3\uc0c9 \ud30c\ub780\uc0c9", 
+type:"output", pos:{x:292, y:34}}, 12:{name:"\ubc84\ud2bc", type:"input", pos:{x:248, y:142}}, a0:{name:"\uc67c\ucabd \ubcbd\uac10\uc9c0", type:"input", pos:{x:24, y:231}}, a2:{name:"\ub9c8\uc774\ud06c", type:"input", pos:{x:225, y:67}}, a3:{name:"\ubd80\uc800", type:"output", pos:{x:283, y:105}}, a4:{name:"\uc67c\ucabd \ub77c\uc778\uac10\uc9c0", type:"input", pos:{x:37, y:353}}, a5:{name:"\uc624\ub978\ucabd \ub77c\uc778\uac10\uc9c0", type:"input", pos:{x:50, y:368}}, a6:{name:"\uc870\ub3c4\uc13c\uc11c", 
+type:"input", pos:{x:273, y:22}}, a7:{name:"\uc624\ub978\ucabd \ubcbd\uac10\uc9c0", type:"input", pos:{x:103, y:381}}, temperature:{name:"\uc628\ub3c4\uc13c\uc11c", type:"input", pos:{x:311, y:238}}, sonar:{name:"\ucd08\uc74c\ud30c", type:"input", pos:{x:7, y:277}}, leftwheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:177, y:370}}, rightwheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:83, y:218}}}, mode:"both"}};
 Entry.EV3 = {PORT_MAP:{A:0, B:0, C:0, D:0, 1:void 0, 2:void 0, 3:void 0, 4:void 0}, motorMovementTypes:{Degrees:0, Power:1}, deviceTypes:{NxtTouch:1, NxtLight:2, NxtSound:3, NxtColor:4, NxtUltrasonic:5, NxtTemperature:6, LMotor:7, MMotor:8, Touch:16, Color:29, Ultrasonic:30, Gyroscope:32, Infrared:33, Initializing:125, Empty:126, WrongPort:127, Unknown:255}, colorSensorValue:" 000000 0000FF 00FF00 FFFF00 FF0000 FFFFFF A52A2A".split(" "), timeouts:[], removeTimeout:function(b) {
   clearTimeout(b);
   var a = this.timeouts;
@@ -4905,12 +4929,279 @@ Entry.block.neobot_play_note_for = function(b, a) {
   }, 1 / f * 2E3);
   return a;
 };
+Entry.Roborobo_Roduino = {name:"roborobo_roduino", INSTRUCTION:{DIGITAL_READ:1, DIGITAL_SET_MODE:2, DIGITAL_WRITE:3, ANALOG_WRITE:4, ANALOG_READ:5, MOTOR:6, COLOR:7}, setZero:function() {
+  for (var b = 0;5 > b;b++) {
+    Entry.hw.sendQueue[b] = 0;
+  }
+  this.ColorPin = [0, 0, 0];
+  Entry.hw.update();
+}, setSendData:function(b) {
+  Entry.hw.sendQueue = b;
+  Entry.hw.update();
+  this.wait(32);
+}, wait:function(b) {
+  for (var a = (new Date).getTime(), d = a;d < a + b;) {
+    d = (new Date).getTime();
+  }
+}, ColorPin:[0, 0, 0]};
+Entry.Roborobo_SchoolKit = {name:"roborobo_schoolkit", INSTRUCTION:{DIGITAL_READ:1, DIGITAL_WRITE:2, MOTOR:3, COLOR:4, SERVO:5}, setZero:function() {
+  for (var b = 0;5 > b;b++) {
+    Entry.hw.sendQueue[b] = 0;
+  }
+  this.ColorPin = [0, 0, 0];
+  Entry.hw.update();
+}, setSendData:function(b) {
+  Entry.hw.sendQueue = b;
+  Entry.hw.update();
+  this.wait(32);
+}, wait:function(b) {
+  for (var a = (new Date).getTime(), d = a;d < a + b;) {
+    d = (new Date).getTime();
+  }
+}, ColorPin:[0, 0, 0]};
+Blockly.Blocks.roduino_on_block = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_on);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.roduino_on_block = function(b, a) {
+  return "1";
+};
+Blockly.Blocks.roduino_off_block = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_off);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.roduino_off_block = function(b, a) {
+  return "0";
+};
+Blockly.Blocks.roduino_get_analog_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.roduino_get_analog_number = function(b, a) {
+  return a.getStringField("PORT");
+};
+Blockly.Blocks.roduino_get_port_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.roduino_get_port_number = function(b, a) {
+  return a.getStringField("PORT");
+};
+Blockly.Blocks.roduino_get_analog_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_analog_value_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_analog_value_2).appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.roduino_get_analog_value = function(b, a) {
+  var d = parseInt(a.getValue("VALUE", a));
+  Entry.Roduino.setSendData([Entry.Roduino.INSTRUCTION.ANALOG_READ, d]);
+  return Entry.hw.getAnalogPortValue(d);
+};
+Blockly.Blocks.roduino_get_digital_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_get_digital_value_1);
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_sensor_value_2).appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.roduino_get_digital_value = function(b, a) {
+  var d = a.getNumberValue("VALUE");
+  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ, d]);
+  return Entry.hw.portData[d - 2];
+};
+Blockly.Blocks.roduino_get_color = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_color + " ").appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_color_red, "red"], [Lang.Blocks.roborobo_color_green, "green"], [Lang.Blocks.roborobo_color_blue, "blue"], [Lang.Blocks.roborobo_color_yellow, "yellow"]]), "VALUE").appendField(Lang.Blocks.roborobo_color_detected);
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.roduino_get_color = function(b, a) {
+  var d = 0, c = a.getField("VALUE", a), e = [Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[0] - 2], Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[1] - 2], Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[2] - 2]];
+  switch(c) {
+    case "red":
+      1 == e[0] && 0 == e[1] && 0 == e[2] && (d = 1);
+      break;
+    case "green":
+      0 == e[0] && 1 == e[1] && 0 == e[2] && (d = 1);
+      break;
+    case "blue":
+      0 == e[0] && 0 == e[1] && 1 == e[2] && (d = 1);
+      break;
+    case "yellow":
+      1 == e[0] && 1 == e[1] && 1 == e[2] && (d = 1);
+  }
+  return d;
+};
+Blockly.Blocks.roduino_set_digital = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_2);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_on, "on"], [Lang.Blocks.roborobo_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.roduino_set_digital = function(b, a) {
+  var d = a.getNumberValue("VALUE"), c = a.getField("OPERATOR");
+  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, d, "on" == c ? 1 : 0]);
+  return a.callReturn();
+};
+Blockly.Blocks.roduino_motor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_motor1, "motor1"], [Lang.Blocks.roborobo_motor2, "motor2"]]), "MODE");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_motor_CW, "cw"], [Lang.Blocks.roborobo_motor_CCW, "ccw"], [Lang.Blocks.roborobo_motor_stop, "stop"]]), "OPERATOR").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.roduino_motor = function(b, a) {
+  var d = pin2 = 0, c = value2 = 0, d = a.getField("MODE"), c = a.getField("OPERATOR");
+  "motor1" == d ? (d = 9, pin2 = 10) : (d = 11, pin2 = 12);
+  "cw" == c ? (c = 1, value2 = 0) : "ccw" == c ? (c = 0, value2 = 1) : value2 = c = 0;
+  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.MOTOR, d, c, pin2, value2]);
+  return a.callReturn();
+};
+Blockly.Blocks.roduino_set_color_pin = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_color + "R : ");
+  this.appendValueInput("RED").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(" G : ");
+  this.appendValueInput("GREEN").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(" B : ");
+  this.appendValueInput("BLUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.roduino_set_color_pin = function(b, a) {
+  var d = a.getNumberValue("RED", a), c = a.getNumberValue("GREEN", a), e = a.getNumberValue("BLUE", a);
+  Entry.Roborobo_Roduino.ColorPin = [d, c, e];
+  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, d, c, e]);
+  return a.callReturn();
+};
+Blockly.Blocks.schoolkit_on_block = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_on);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.schoolkit_on_block = function(b, a) {
+  return "1";
+};
+Blockly.Blocks.schoolkit_off_block = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_off);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.schoolkit_off_block = function(b, a) {
+  return "0";
+};
+Blockly.Blocks.schoolkit_get_out_port_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["OUT1", "2"], ["OUT2", "3"], ["OUT3", "4"], ["OUT4", "5"], ["OUT5", "6"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.schoolkit_get_out_port_number = function(b, a) {
+  return a.getNumberField("PORT");
+};
+Blockly.Blocks.schoolkit_set_output = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_2);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_on, "on"], [Lang.Blocks.roborobo_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.schoolkit_set_output = function(b, a) {
+  var d = a.getNumberValue("VALUE"), c = a.getField("OPERATOR");
+  Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, d, "on" == c ? 1 : 0]);
+  return a.callReturn();
+};
+Blockly.Blocks.schoolkit_get_in_port_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["IN1", "7"], ["IN2", "8"], ["IN3", "9"], ["IN4", "10"], ["IN5", "11"], ["IN6", "12"], ["IN7", "13"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.schoolkit_get_in_port_number = function(b, a) {
+  return a.getNumberField("PORT");
+};
+Blockly.Blocks.schoolkit_get_input_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_get_digital_value_1);
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_sensor_value_2).appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.schoolkit_get_input_value = function(b, a) {
+  var d = a.getNumberValue("VALUE");
+  Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_READ, d]);
+  return Entry.hw.portData[d - 7];
+};
+Blockly.Blocks.schoolkit_motor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_motor1, "motor1"], [Lang.Blocks.roborobo_motor2, "motor2"]]), "MODE");
+  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_motor_CW, "cw"], [Lang.Blocks.roborobo_motor_CCW, "ccw"], [Lang.Blocks.roborobo_motor_stop, "stop"]]), "OPERATOR").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.schoolkit_motor = function(b, a) {
+  var d = 0, d = a.getField("MODE"), c = a.getField("OPERATOR"), e = a.getNumberValue("VALUE"), d = "motor1" == d ? 7 : 8;
+  255 < e ? e = 255 : 0 > e && (e = 0);
+  "cw" == c ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 1, d, e]) : "ccw" == c ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 2, d, e]) : "stop" == c && Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 0, d, e]);
+  return a.callReturn();
+};
+Blockly.Blocks.schoolkit_set_servo_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_1);
+  this.appendValueInput("PIN").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_2);
+  this.appendDummyInput().appendField(" : ");
+  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_degree);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.schoolkit_set_servo_value = function(b, a) {
+  var d = a.getNumberValue("PIN"), c = a.getNumberValue("VALUE");
+  0 > c ? c = 0 : 180 < c && (c = 180);
+  Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.SERVO, d, c]);
+  return a.callReturn();
+};
 Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED:[67, 1], CM_SPRING_RIGHT:[69, 1, 69, 2], CM_SPRING_LEFT:[70, 1, 69, 2], CM_SWITCH:[71, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_IR_LEFT:[91, 2, 91, 4], CM_IR_RIGHT:[93, 2, 91, 4], CM_CALIBRATION_LEFT:[95, 2], CM_CALIBRATION_RIGHT:[97, 2], AUX_MOTOR_SPEED_LEFT:[152, 2], AUX_MOTOR_SPEED_RIGHT:[154, 2]}, setZero:function() {
-  this.setRobotisData([[Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0], [Entry.Robotis_carCont.INSTRUCTION.WRITE, 154, 2, 0]]);
   Entry.hw.sendQueue.setZero = [1];
   this.update();
   this.setRobotisData(null);
   Entry.hw.sendQueue.setZero = null;
+  this.update();
+  this.setRobotisData([[Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0], [Entry.Robotis_carCont.INSTRUCTION.WRITE, 154, 2, 0]]);
   this.update();
 }, name:"robotis_carCont", delay:40, postCallReturn:function(b, a, d) {
   if (0 >= d) {
@@ -4956,12 +5247,13 @@ Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{C
 }};
 Entry.Robotis_openCM70 = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED_R:[79, 1], CM_LED_G:[80, 1], CM_LED_B:[81, 1], CM_BUZZER_INDEX:[84, 1], CM_BUZZER_TIME:[85, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_USER_BUTTON:[26, 1], CM_MOTION:[66, 1], AUX_SERVO_POSITION:[152, 2], AUX_IR:[168, 2], AUX_TOUCH:[202, 1], AUX_TEMPERATURE:[234, 1], AUX_ULTRASONIC:[242, 1], AUX_MAGNETIC:[250, 1], AUX_MOTION_DETECTION:[258, 1], AUX_COLOR:[266, 1], AUX_CUSTOM:[216, 2], AUX_BRIGHTNESS:[288, 
 2], AUX_HYDRO_THEMO_HUMIDITY:[274, 1], AUX_HYDRO_THEMO_TEMPER:[282, 1], AUX_SERVO_MODE:[126, 1], AUX_SERVO_SPEED:[136, 2], AUX_MOTOR_SPEED:[136, 2], AUX_LED_MODULE:[210, 1]}, setZero:function() {
-  Entry.Robotis_carCont.setRobotisData([[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 140, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 142, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 
-  81, 1, 0]]);
   Entry.hw.sendQueue.setZero = [1];
   Entry.Robotis_carCont.update();
   Entry.Robotis_carCont.setRobotisData(null);
   Entry.hw.sendQueue.setZero = null;
+  Entry.Robotis_carCont.update();
+  Entry.Robotis_carCont.setRobotisData([[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 140, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 142, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 
+  81, 1, 0]]);
   Entry.Robotis_carCont.update();
 }, name:"robotis_openCM70", delay:15};
 Blockly.Blocks.robotis_openCM70_cm_custom_value = {init:function() {
@@ -7208,10 +7500,21 @@ Entry.Dialog.prototype.generateSpeak = function() {
   Entry.requestUpdate = !0;
 };
 Entry.Dialog.prototype.update = function() {
-  var b = this.parent.object.getTransformedBounds(), a = "";
+  var b = this.parent.object.getTransformedBounds();
+  if (!b && "textBox" === this.parent.type) {
+    if (this._isNoContentTried) {
+      delete this._isNoContentTried;
+      return;
+    }
+    this.parent.setText(" ");
+    b = this.parent.object.getTransformedBounds();
+    this._isNoContentTried = !0;
+  }
+  var a = "";
   -135 < b.y - this.height - 20 - this.border ? (this.object.y = b.y - this.height / 2 - 20 - this.padding, a += "n") : (this.object.y = b.y + b.height + this.height / 2 + 20 + this.padding, a += "s");
   240 > b.x + b.width + this.width ? (this.object.x = b.x + b.width + this.width / 2, a += "e") : (this.object.x = b.x - this.width / 2, a += "w");
   this.notch.type != a && (this.object.removeChild(this.notch), this.notch = this.createSpeakNotch(a), this.object.addChild(this.notch));
+  this._isNoContentTried && this.parent.setText("");
   Entry.requestUpdate = !0;
 };
 Entry.Dialog.prototype.createSpeakNotch = function(b) {
@@ -8773,7 +9076,7 @@ Entry.EntryObject.prototype.initEntity = function(b) {
     var d = b.sprite.pictures[0].dimension;
     a.regX = d.width / 2;
     a.regY = d.height / 2;
-    a.scaleX = a.scaleY = "background" == b.sprite.category.main ? Math.max(270 / d.height, 480 / d.width) : "new" == b.sprite.category.main ? 1 : 200 / (d.width + d.height);
+    a.scaleX = a.scaleY = "background" == b.sprite.category.main || "new" == b.sprite.category.main ? Math.max(270 / d.height, 480 / d.width) : "new" == b.sprite.category.main ? 1 : 200 / (d.width + d.height);
     a.width = d.width;
     a.height = d.height;
   } else {
@@ -17334,7 +17637,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "12.1":Entry.EV3};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "B.1":Entry.Codestar};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -17444,7 +17747,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.9_Setup.exe", "_blank").focus();
+  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.11_Setup.exe", "_blank").focus();
 };
 p.downloadGuide = function() {
   window.open("http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC-%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%EC%97%B0%EA%B2%B0%EB%A7%A4%EB%89%B4%EC%96%BC_16_08_17.hwp", "_blank").focus();

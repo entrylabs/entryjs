@@ -439,11 +439,22 @@ EntryStatic.getAllBlocks = function() {
                 "CODEino_is_button_pressed",
                 "CODEino_get_accelerometer_direction",
                 "CODEino_get_accelerometer_value",
-                "CODEino_get_number_sensor_value",
+                //"CODEino_get_number_sensor_value",
                 "CODEino_get_digital_value",
-                "CODEino_toggle_led",
-                "CODEino_toggle_pwm",
+                //"CODEino_toggle_led",
+                //"CODEino_toggle_pwm",
                 "CODEino_convert_scale",
+                //2016-09-23
+                "CODEino_get_analog_value",
+                "CODEino_set_digital_value",
+                "CODEino_set_pwm_value",
+                "CODEino_led_by_value",
+                "CODEino_set_rgb_off",
+                "CODEino_set__led_by_rgb",
+                "CODEino_rgb_set_color",
+                "CODEino_set_rgb_value",
+                "CODEino_set_rgb_add_value",
+                //robotis_openCM70
                 "robotis_openCM70_sensor_value",
                 "robotis_openCM70_aux_sensor_value",
                 "robotis_openCM70_cm_buzzer_index",
@@ -485,12 +496,44 @@ EntryStatic.getAllBlocks = function() {
                 "ardublock_toggle_pwm",
                 "ardublock_convert_scale",
                 // ardublock Added 2016-06-01
+
                 "ev3_get_sensor_value",
                 "ev3_touch_sensor",
                 "ev3_color_sensor",
                 "ev3_motor_power",
                 "ev3_motor_power_on_time",
-                "ev3_motor_degrees"
+                "ev3_motor_degrees",
+
+                "roduino_on_block",
+                "roduino_off_block",
+                "roduino_get_analog_value",
+                "roduino_get_digital_value",
+                "roduino_get_color",
+                "roduino_set_digital",
+                "roduino_motor",
+                "roduino_set_color_pin",
+
+                "schoolkit_on_block",
+                "schoolkit_off_block",
+                "schoolkit_get_input_value",
+                "schoolkit_set_output",
+                "schoolkit_motor",
+                "schoolkit_set_servo_value",
+
+                // codestar 2016-09-26
+                'codestar_color_single',
+                'codestar_3color',
+                'codestar_vibration',
+                'codestar_buzzer',
+                'codestar_buzzer_stop',
+                'codestar_drive',
+                'codestar_wheel',
+                'codestar_light',
+                'codestar_button',
+                'codestar_ir',
+                'codestar_sonar',
+                'codestar_mic',
+                'codestar_temperature'
             ]
         }
     ]
