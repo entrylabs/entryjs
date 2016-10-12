@@ -2879,7 +2879,7 @@ Entry.block = {
     "arduino_reconnect": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "isNotFor": ["arduinoDisconnected"],
+        "isNotFor": [""],
         "params": [
             {
                 "type": "Text",

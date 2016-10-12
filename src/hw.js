@@ -69,67 +69,91 @@ p.initSocket = function() {
         this.connectTrial++;
 
         if(location.protocol.indexOf('https') > -1) {
-            socketSecurity = new WebSocket("wss://hardware.play-entry.org:23518");
+            socketSecurity = io('https://hardware.play-entry.org:23518', {reconnectionAttempts: Entry.HW.TRIAL_LIMIT, query:{'client': true}});
         } else {
             try{
-                socket = new WebSocket("ws://127.0.0.1:23518");
-                socket.binaryType = "arraybuffer";
-
-                socket.onopen = (function()
-                {
+                socket = io('https://127.0.0.1:23518', {reconnectionAttempts: Entry.HW.TRIAL_LIMIT, query:{'client': true}});
+                socket.on('connect', function() {
+                    socketSecurity.close();
                     hw.socketType = 'WebSocket';
                     hw.initHardware(socket);
-                }).bind(this);
+                });
 
-                socket.onmessage = (function (evt)
-                {
-                    var data = JSON.parse(evt.data);
-                    hw.checkDevice(data);
-                    hw.updatePortData(data);
-                }).bind(this);
+                socket.on('mode', function (mode) {
+                    socket.mode = mode;
+                });
 
-                socket.onclose = function()
-                {
+                socket.on('message', function(msg) {
+                    if(msg.data && typeof msg.data === 'string') {
+                        var data = JSON.parse(msg.data);
+                        hw.checkDevice(data);
+                        hw.updatePortData(data);
+                    }
+                });
+
+                socket.on('disconnect reconnecting', function() {
                     if(hw.socketType === 'WebSocket') {
-                        this.socket = null;
+                        hw.socket = null;
                         hw.initSocket();
                     }
-                };
+                });
+
+                socket.on('reconnecting', function() {
+                    if(hw.socketType === 'WebSocket') {
+                        hw.socket = null;
+                        hw.initSocket();
+                    }
+                });
             } catch(e) {}
             try{
-                socketSecurity = new WebSocket("wss://hardware.play-entry.org:23518");
+                socketSecurity = io('https://hardware.play-entry.org:23518', {reconnectionAttempts: Entry.HW.TRIAL_LIMIT, query:{'client': true}});
             } catch(e) {
             }
         }
-        socketSecurity.binaryType = "arraybuffer";
-        socketSecurity.onopen = function()
-        {
-            hw.socketType = 'WebSocketSecurity';
+
+        socketSecurity.on('connect', function() {
+            socket.close();
+            hw.socketType = 'WebSocket';
             hw.initHardware(socketSecurity);
-        };
+        });
 
-        socketSecurity.onmessage = function (evt)
-        {
-            var data = JSON.parse(evt.data);
-            hw.checkDevice(data);
-            hw.updatePortData(data);
-        };
+        socketSecurity.on('mode', function (mode) {
+            socketSecurity.mode = mode;
+        });
 
-        socketSecurity.onclose = function()
-        {
-            if(hw.socketType === 'WebSocketSecurity') {
-                this.socket = null;
+        socketSecurity.on('message', function(msg) {
+            if(msg.data && typeof msg.data === 'string') {
+                var data = JSON.parse(msg.data);
+                hw.checkDevice(data);
+                hw.updatePortData(data);
+            }
+        });
+
+        socketSecurity.on('disconnect', function() {
+            if(hw.socketType === 'WebSocket') {
+                hw.socket = null;
                 hw.initSocket();
             }
-        };
+        });
+        socketSecurity.on('reconnecting', function() {
+            if(hw.socketType === 'WebSocket') {
+                hw.socket = null;
+                hw.initSocket();
+            }
+        });
 
         Entry.dispatchEvent("hwChanged");
     } catch(e) {}
 };
 
 p.retryConnect = function() {
-    this.connectTrial = 0;
-    this.initSocket();
+    if(this.socket) {
+        this.executeHardware();
+    } else {
+        this.executeHardware();
+        this.connectTrial = 0;
+        this.initSocket();
+    }
 };
 
 p.initHardware = function(socket) {
@@ -203,11 +227,11 @@ p.update = function() {
         return;
     }
 
-    if(this.socket.readyState != 1) {
-        return;
-    }
+    // if(this.socket.readyState != 1) {
+    //     return;
+    // }
 
-    this.socket.send(JSON.stringify(this.sendQueue));
+    this.socket.emit('message', {data:JSON.stringify(this.sendQueue), mode: this.socket.mode, type:'utf8'});
 };
 
 p.updatePortData = function(data) {
@@ -297,3 +321,169 @@ p.banHW = function() {
         Entry.playground.mainWorkspace.blockMenu.banClass(hwOptions[i].name, true);
 
 };
+
+p.executeHardware = function() {
+
+    var executeIeCustomLauncher = {
+        _bNotInstalled : false,
+        init : function(sUrl, fpCallback) {
+            var width = 1;
+            var height = 1;
+            var left = window.screenLeft;
+            var top = window.screenTop;
+            var settings = 'width=' + width + ', height=' + height + ',  top=' + top + ', left=' + left;
+            this._w = window.open('', "comic_viewer_launcher", settings);
+            var fnInterval = null;
+            fnInterval = setTimeout(function() {
+                executeIeCustomLauncher.runViewer(sUrl, fpCallback);
+                clearInterval(fnInterval);
+            }, 1000);
+        },
+        runViewer : function(sUrl, fpCallback) {
+            this._w.document.write("<iframe src='"+ sUrl +"' onload='opener.ieCustomLaunch.set()' style='display:none;width:0;height:0'></iframe>");
+            var nCounter = 0;
+            var bNotInstalled = false;
+            var nInterval = null;
+            nInterval = setInterval((function() {
+                try {
+                    this._w.location.href;
+                }
+                catch(e) {
+                    this._bNotInstalled = true;
+                }
+
+                if(bNotInstalled || nCounter > 10) {
+                    clearInterval(nInterval);
+                    var nCloseCounter = 0;
+                    var nCloseInterval = null;
+                    nCloseInterval = setInterval((function() {
+                        nCloseCounter++;
+                        if(this._w.closed || nCloseCounter > 2) {
+                            clearInterval(nCloseInterval);
+                        } else {
+                            this._w.close();
+                        }
+                        this._bNotInstalled = false;
+                        nCounter = 0;
+                    }).bind(this), 5000);
+                    fpCallback(!this._bNotInstalled);
+                }
+                nCounter++;
+            }).bind(this), 100);
+        },
+        set : function() {
+            this._bNotInstalled = true;
+        }
+    };
+    var clientId = (this.socket) ? this.socket.id : '';
+    var entryHardwareUrl = 'entryhw://-clientId:' + clientId;
+
+    if(navigator.userAgent.indexOf("MSIE") > 0 || navigator.userAgent.indexOf("Trident") > 0){
+        if (navigator.msLaunchUri != undefined) {
+            executeIe(entryHardwareUrl);
+        } else {
+            var ieVersion;
+            if(document.documentMode > 0) {
+                ieVersion = document.documentMode;
+            } else {
+                ieVersion = navigator.userAgent.match(/(?:MSIE) ([0-9.]+)/)[1];
+            }
+
+            if (ieVersion < 9) {
+                alert("지원하지 않는 브라우저입니다.");
+            } else {
+                executeIeCustomLauncher.init(entryHardwareUrl,
+                    function(bInstalled) {
+                        if (bInstalled == false) {
+                            alert('설치안됬엉');
+                             // window.open(VIWER_DOWNLOAD_URL, "comic_viewer_download", "width=530, height=400, resizable=yes");
+                        }
+                    }
+                );
+            }
+        }
+    }
+    else if(navigator.userAgent.indexOf("Firefox") > 0 ) {
+        executeFirefox(entryHardwareUrl);
+    }
+    else if(navigator.userAgent.indexOf("Chrome") > 0 || navigator.userAgent.indexOf("Safari") > 0) {
+        executeChrome(entryHardwareUrl);
+    } else {
+        alert("지원하지 않는 브라우저입니다.");
+    }
+
+    function executeIe(customUrl) {
+        navigator.msLaunchUri(customUrl,
+            function() {
+            },
+            function() {
+                alert('설치안됬엉');
+                // var popup = window.open(VIWER_DOWNLOAD_URL, "comic_viewer_launcher", "width=510, height=360, resizable=yes");
+                // if(window.focus){
+                //     setTimeout(function(){
+                //         popup.focus();
+                //     }, 500);
+                // }
+            }
+        );
+    }
+
+    function executeFirefox(customUrl) {
+        var iFrame = document.createElement('iframe');
+        iFrame.src = "about:blank";
+        iFrame.style = "display:none";
+        document.getElementsByTagName("body")[0].appendChild(iFrame);
+        var fnTimeout = null;
+        fnTimeout = setTimeout(function() {
+            var isInstalled = false;
+            try{
+                iFrame.contentWindow.location.href = customUrl;
+                isInstalled = true;
+            }catch(e){
+                if (e.name == "NS_ERROR_UNKNOWN_PROTOCOL"){
+                    isInstalled = false;
+                }
+            }
+
+            if(!isInstalled) {
+                alert('설치안됬엉');
+                // var popup = window.open(VIWER_DOWNLOAD_URL, "comic_viewer_launcher", "width=510, height=360, resizable=yes");
+                // if(window.focus){
+                //     setTimeout(function(){
+                //         if (popup == null || typeof(popup)=='undefined') {
+                //             alert("Firefox 설정에 팝업 창 차단을 해제해주세요.");
+                //         } else {
+                //             popup.focus();
+                //         }
+                //     }, 500);
+                // }
+            }
+
+            document.getElementsByTagName("body")[0].removeChild(iFrame);
+            clearTimeout(fnTimeout);
+        }, 500);
+    }
+
+    function executeChrome(customUrl) {
+        var isInstalled = false;
+        window.focus();
+        window.onblur = function() {
+            isInstalled = true;
+        };
+
+        location.assign(encodeURI(customUrl));
+        setTimeout(function() {
+            if (isInstalled == false || navigator.userAgent.indexOf("Edge") > 0) {
+                alert('설치 안됬엉');
+                // var popup = window.open(VIWER_DOWNLOAD_URL, "comic_viewer_launcher", "width=530, height=400, resizable=yes");
+                // if(window.focus){
+                //     setTimeout(function(){
+                //         popup.focus();
+                //     }, 500);
+                // }
+            }
+            window.onblur = null;
+        }, 1500);
+    }
+}
+
