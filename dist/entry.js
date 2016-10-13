@@ -10139,6 +10139,8 @@ Entry.HWMonitor = function(a) {
   };
 })(Entry.HWMonitor.prototype);
 Entry.HW = function() {
+  this.sessionRoomId = sessionStorage.getItem("entryhwRoomId");
+  this.sessionRoomId || (this.sessionRoomId = this.createRandomRoomId(), sessionStorage.setItem("entryhwRoomId", this.sessionRoomId));
   this.connectTrial = 0;
   this.isFirstConnect = !0;
   this.initSocket();
@@ -10153,6 +10155,12 @@ Entry.HW = function() {
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
+p.createRandomRoomId = function() {
+  return "xxxxxxxxyx".replace(/[xy]/g, function(a) {
+    var b = 16 * Math.random() | 0;
+    return ("x" == a ? b : b & 3 | 8).toString(16);
+  });
+};
 p.initSocket = function() {
   try {
     if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
@@ -10160,12 +10168,11 @@ p.initSocket = function() {
     } else {
       var a = this, b, c;
       this.connected = !1;
-      this.connectTrial++;
       if (-1 < location.protocol.indexOf("https")) {
-        c = io("https://hardware.play-entry.org:23518", {reconnectionAttempts:Entry.HW.TRIAL_LIMIT, query:{client:!0}});
+        c = io("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
       } else {
         try {
-          b = io("https://127.0.0.1:23518", {reconnectionAttempts:Entry.HW.TRIAL_LIMIT, query:{client:!0}}), b.on("connect", function() {
+          b = io("https://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}}), b.on("connect", function() {
             c.close();
             a.socketType = "WebSocket";
             a.initHardware(b);
@@ -10173,22 +10180,24 @@ p.initSocket = function() {
             b.mode = a;
           }), b.on("message", function(b) {
             b.data && "string" === typeof b.data && (b = JSON.parse(b.data), a.checkDevice(b), a.updatePortData(b));
-          }), b.on("disconnect reconnecting", function() {
-            "WebSocket" === a.socketType && (a.socket = null, a.initSocket());
-          }), b.on("reconnecting", function() {
+          }), b.on("disconnect", function() {
             "WebSocket" === a.socketType && (a.socket = null, a.initSocket());
           });
         } catch (d) {
         }
         try {
-          c = io("https://hardware.play-entry.org:23518", {reconnectionAttempts:Entry.HW.TRIAL_LIMIT, query:{client:!0}});
+          c = io("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
         } catch (d) {
         }
       }
       c.on("connect", function() {
+        console.log("connect", c.id);
         b.close();
         a.socketType = "WebSocket";
         a.initHardware(c);
+      });
+      c.on("matched", function(b) {
+        c.emit("matchTarget", {target:b});
       });
       c.on("mode", function(b) {
         c.mode = b;
@@ -10197,9 +10206,7 @@ p.initSocket = function() {
         b.data && "string" === typeof b.data && (b = JSON.parse(b.data), a.checkDevice(b), a.updatePortData(b));
       });
       c.on("disconnect", function() {
-        "WebSocket" === a.socketType && (a.socket = null, a.initSocket());
-      });
-      c.on("reconnecting", function() {
+        console.log("disconnect");
         "WebSocket" === a.socketType && (a.socket = null, a.initSocket());
       });
       Entry.dispatchEvent("hwChanged");
@@ -10208,7 +10215,7 @@ p.initSocket = function() {
   }
 };
 p.retryConnect = function() {
-  this.socket ? this.executeHardware() : (this.executeHardware(), this.connectTrial = 0, this.initSocket());
+  this.socket ? (console.log("retry execHardware"), this.executeHardware()) : (console.log("retry initSocket"), this.executeHardware(), this.connectTrial = 0, this.initSocket());
 };
 p.initHardware = function(a) {
   this.socket = a;
@@ -10350,7 +10357,7 @@ p.executeHardware = function() {
     }.bind(this), 100);
   }, set:function() {
     this._bNotInstalled = !0;
-  }}, e = "entryhw://-clientId:" + (this.socket ? this.socket.id : "");
+  }}, e = "entryhw://-roomId:" + this.sessionRoomId;
   0 < navigator.userAgent.indexOf("MSIE") || 0 < navigator.userAgent.indexOf("Trident") ? void 0 != navigator.msLaunchUri ? a(e) : 9 > (0 < document.documentMode ? document.documentMode : navigator.userAgent.match(/(?:MSIE) ([0-9.]+)/)[1]) ? alert("\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ube0c\ub77c\uc6b0\uc800\uc785\ub2c8\ub2e4.") : d.init(e, function(b) {
     0 == b && alert("\uc124\uce58\uc548\ub42c\uc5c9");
   }) : 0 < navigator.userAgent.indexOf("Firefox") ? b(e) : 0 < navigator.userAgent.indexOf("Chrome") || 0 < navigator.userAgent.indexOf("Safari") ? c(e) : alert("\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ube0c\ub77c\uc6b0\uc800\uc785\ub2c8\ub2e4.");
@@ -25495,10 +25502,10 @@ Entry.GlobalSvg = {};
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
-    this._offsetX = a;
-    this._offsetY = c;
-    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
+    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
+    this._offsetX = b;
+    this._offsetY = a;
+    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
   };
   a.show = function() {
     this._container.removeClass("entryRemove");
@@ -25507,11 +25514,11 @@ Entry.GlobalSvg = {};
     this._container.addClass("entryRemove");
   };
   a.position = function() {
-    var a = this._view;
-    if (a) {
-      var c = a.getAbsoluteCoordinate(), a = a.getBoard().offset();
-      this.left = c.x + a.left - this._offsetX;
-      this.top = c.y + a.top - this._offsetY;
+    var b = this._view;
+    if (b) {
+      var a = b.getAbsoluteCoordinate(), b = b.getBoard().offset();
+      this.left = a.x + b.left - this._offsetX;
+      this.top = a.y + b.top - this._offsetY;
       this.svgDom.css({transform:"translate3d(" + this.left + "px," + this.top + "px, 0px)"});
     }
   };

@@ -6,6 +6,12 @@
 goog.require("Entry.HWMontior");
 
 Entry.HW = function() {
+    this.sessionRoomId = sessionStorage.getItem('entryhwRoomId');
+    if(!this.sessionRoomId) {
+        this.sessionRoomId = this.createRandomRoomId();
+        sessionStorage.setItem('entryhwRoomId', this.sessionRoomId);
+    }
+
     this.connectTrial = 0;
     this.isFirstConnect = true;
 
@@ -51,6 +57,13 @@ Entry.HW.TRIAL_LIMIT = 1;
 
 var p = Entry.HW.prototype;
 
+p.createRandomRoomId = function() {
+    return 'xxxxxxxxyx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
+}
+
 p.initSocket = function() {
     try{
         if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
@@ -61,18 +74,17 @@ p.initSocket = function() {
             this.isFirstConnect = false;
             return;
         }
-        var hw = this;
 
+        var hw = this;
         var socket, socketSecurity;
         var protocol = '';
         this.connected = false;
-        this.connectTrial++;
-
+        
         if(location.protocol.indexOf('https') > -1) {
-            socketSecurity = io('https://hardware.play-entry.org:23518', {reconnectionAttempts: Entry.HW.TRIAL_LIMIT, query:{'client': true}});
+            socketSecurity = io('https://hardware.play-entry.org:23518', {query:{'client': true, 'roomId' : this.sessionRoomId}});
         } else {
             try{
-                socket = io('https://127.0.0.1:23518', {reconnectionAttempts: Entry.HW.TRIAL_LIMIT, query:{'client': true}});
+                socket = io('https://127.0.0.1:23518', {query:{'client': true, 'roomId' : this.sessionRoomId}});
                 socket.on('connect', function() {
                     socketSecurity.close();
                     hw.socketType = 'WebSocket';
@@ -91,30 +103,44 @@ p.initSocket = function() {
                     }
                 });
 
-                socket.on('disconnect reconnecting', function() {
+                socket.on('disconnect', function() {
                     if(hw.socketType === 'WebSocket') {
                         hw.socket = null;
                         hw.initSocket();
                     }
                 });
 
-                socket.on('reconnecting', function() {
-                    if(hw.socketType === 'WebSocket') {
-                        hw.socket = null;
-                        hw.initSocket();
-                    }
-                });
+                // socket.on('reconnecting', function() {
+                //     console.log('reconnecting', hw.connectTrial++);
+                //     if (hw.connectTrial >= Entry.HW.TRIAL_LIMIT) {
+                //         if (!hw.isFirstConnect)
+                //             Entry.toast.alert(Lang.Menus.connect_hw,
+                //                               Lang.Menus.connect_fail,
+                //                               false);
+                //         hw.isFirstConnect = false;
+                //         socket.close();
+                //     } else if(hw.socketType === 'WebSocket') {
+                //         // hw.socket = null;
+                //     }
+                // });
             } catch(e) {}
             try{
-                socketSecurity = io('https://hardware.play-entry.org:23518', {reconnectionAttempts: Entry.HW.TRIAL_LIMIT, query:{'client': true}});
+                socketSecurity = io('https://hardware.play-entry.org:23518', {query:{'client': true, 'roomId' : this.sessionRoomId}});
             } catch(e) {
             }
         }
 
         socketSecurity.on('connect', function() {
+            console.log('connect', socketSecurity.id);
             socket.close();
             hw.socketType = 'WebSocket';
             hw.initHardware(socketSecurity);
+        });
+
+        socketSecurity.on('matched', function (target) {
+            socketSecurity.emit('matchTarget', {
+                target: target,
+            });
         });
 
         socketSecurity.on('mode', function (mode) {
@@ -130,17 +156,26 @@ p.initSocket = function() {
         });
 
         socketSecurity.on('disconnect', function() {
+            console.log('disconnect');
             if(hw.socketType === 'WebSocket') {
                 hw.socket = null;
                 hw.initSocket();
             }
-        });
-        socketSecurity.on('reconnecting', function() {
-            if(hw.socketType === 'WebSocket') {
-                hw.socket = null;
-                hw.initSocket();
-            }
-        });
+        }); 
+
+        // socketSecurity.on('reconnecting', function() {
+        //     console.log('reconnecting', hw.connectTrial++);
+        //     if (hw.connectTrial >= Entry.HW.TRIAL_LIMIT) {
+        //         if (!hw.isFirstConnect)
+        //             Entry.toast.alert(Lang.Menus.connect_hw,
+        //                               Lang.Menus.connect_fail,
+        //                               false);
+        //         hw.isFirstConnect = false;
+        //         socketSecurity.close();
+        //     } else if(hw.socketType === 'WebSocket') {
+        //         // hw.socket = null;
+        //     }
+        // });
 
         Entry.dispatchEvent("hwChanged");
     } catch(e) {}
@@ -148,8 +183,10 @@ p.initSocket = function() {
 
 p.retryConnect = function() {
     if(this.socket) {
+        console.log('retry execHardware');
         this.executeHardware();
     } else {
+        console.log('retry initSocket');
         this.executeHardware();
         this.connectTrial = 0;
         this.initSocket();
@@ -184,8 +221,9 @@ p.getDigitalPortValue = function(port) {
     if (this.portData[port] !== undefined) {
         return this.portData[port];
     }
-    else
+    else {
         return 0;
+    }
 };
 
 p.setPortReadable = function(port) {
@@ -323,7 +361,6 @@ p.banHW = function() {
 };
 
 p.executeHardware = function() {
-
     var executeIeCustomLauncher = {
         _bNotInstalled : false,
         init : function(sUrl, fpCallback) {
@@ -375,8 +412,7 @@ p.executeHardware = function() {
             this._bNotInstalled = true;
         }
     };
-    var clientId = (this.socket) ? this.socket.id : '';
-    var entryHardwareUrl = 'entryhw://-clientId:' + clientId;
+    var entryHardwareUrl = 'entryhw://-roomId:' + this.sessionRoomId;
 
     if(navigator.userAgent.indexOf("MSIE") > 0 || navigator.userAgent.indexOf("Trident") > 0){
         if (navigator.msLaunchUri != undefined) {
