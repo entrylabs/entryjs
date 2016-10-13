@@ -53,9 +53,10 @@ Entry.PARAM = -1;
         return this;
     };
 
-    p.clear = function() {
+    p.clear = function(isNotForce) {
+        isNotForce = isNotForce === undefined ? false : isNotForce;
         for (var i = this._data.length - 1; i >= 0; i--)
-            this._data[i].destroy(false);
+            this._data[i].destroy(false, isNotForce);
 
         this.clearExecutors();
     };

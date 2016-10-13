@@ -21473,9 +21473,10 @@ Entry.PARAM = -1;
     }
     return this;
   };
-  b.clear = function() {
-    for (var a = this._data.length - 1;0 <= a;a--) {
-      this._data[a].destroy(!1);
+  b.clear = function(a) {
+    a = void 0 === a ? !1 : a;
+    for (var b = this._data.length - 1;0 <= b;b--) {
+      this._data[b].destroy(!1, a);
     }
     this.clearExecutors();
   };
@@ -23744,7 +23745,7 @@ Entry.Board.DRAG_RADIUS = 5;
     }}}, {activated:!0, option:{text:Lang.Blocks.tidy_up_block, callback:function() {
       a.alignThreads();
     }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, callback:function() {
-      a.code.clear();
+      a.code.clear(!0);
     }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome() && !Entry.isMobile(), option:{text:Lang.Menus.save_as_image_all, enable:!0, callback:function() {
       a.code.getThreads().forEach(function(a) {
         (a = a.getFirstBlock()) && a.view.downloadAsImage();
@@ -24083,12 +24084,12 @@ Entry.Thread = function(b, a, d) {
     }
     return e;
   };
-  b.destroy = function(a) {
+  b.destroy = function(a, b) {
     this.view && this.view.destroy(a);
-    for (var b = this._data, c = b.length - 1;0 <= c;c--) {
-      b[c].destroy(a);
+    for (var c = this._data, e = c.length - 1;0 <= e;e--) {
+      c[e].destroy(a, null, b);
     }
-    !b.length && this._code.destroyThread(this, !1);
+    !c.length && this._code.destroyThread(this, !1);
   };
   b.getBlock = function(a) {
     return this._data[a];
@@ -24305,31 +24306,31 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     });
     return c;
   };
-  b.destroy = function(a, b) {
-    if (this.deletable === Entry.Block.DELETABLE_TRUE) {
-      var c = this, e = this.params;
-      if (e) {
-        for (var f = 0;f < e.length;f++) {
-          var g = e[f];
+  b.destroy = function(a, b, c) {
+    if (!c || this.deletable === Entry.Block.DELETABLE_TRUE) {
+      var e = this, f = this.params;
+      if (f) {
+        for (c = 0;c < f.length;c++) {
+          var g = f[c];
           g instanceof Entry.Block && (g.doNotSplice = !0, g.destroy(a));
         }
       }
-      if (e = this.statements) {
-        for (f = 0;f < e.length;f++) {
-          e[f].destroy(a);
+      if (f = this.statements) {
+        for (c = 0;c < f.length;c++) {
+          f[c].destroy(a);
         }
       }
       g = this.getPrevBlock();
-      f = this.getNextBlock();
+      c = this.getNextBlock();
       this.getCode().unregisterBlock(this);
-      e = this.getThread();
-      this._schema && this._schema.event && e.unregisterEvent(this, this._schema.event);
-      f && (b ? f.destroy(a, b) : g ? f.view && f.view.bindPrev(g) : (g = this.getThread().view.getParent(), g.constructor === Entry.FieldStatement ? (f.view && f.view.bindPrev(g), g.insertTopBlock(f)) : g.constructor === Entry.FieldStatement ? f.replace(g._valueBlock) : f.view._toGlobalCoordinate()));
-      !this.doNotSplice && e.spliceBlock ? e.spliceBlock(this) : delete this.doNotSplice;
+      f = this.getThread();
+      this._schema && this._schema.event && f.unregisterEvent(this, this._schema.event);
+      c && (b ? c.destroy(a, b) : g ? c.view && c.view.bindPrev(g) : (b = this.getThread().view.getParent(), b.constructor === Entry.FieldStatement ? (c.view && c.view.bindPrev(b), b.insertTopBlock(c)) : b.constructor === Entry.FieldStatement ? c.replace(b._valueBlock) : c.view._toGlobalCoordinate()));
+      !this.doNotSplice && f.spliceBlock ? f.spliceBlock(this) : delete this.doNotSplice;
       this.view && this.view.destroy(a);
       this._schemaChangeEvent && this._schemaChangeEvent.destroy();
-      (f = this.events.dataDestroy) && this.getCode().object && f.forEach(function(a) {
-        Entry.Utils.isFunction(a) && a(c);
+      (a = this.events.dataDestroy) && this.getCode().object && a.forEach(function(a) {
+        Entry.Utils.isFunction(a) && a(e);
       });
     }
   };

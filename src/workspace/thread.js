@@ -127,13 +127,13 @@ Entry.Thread = function(thread, code, parent) {
         return array;
     };
 
-    p.destroy = function(animate) {
+    p.destroy = function(animate, isNotForce) {
         if (this.view) this.view.destroy(animate);
 
         var blocks = this._data;
 
         for (var i=blocks.length-1; i>=0; i--)
-            blocks[i].destroy(animate);
+            blocks[i].destroy(animate, null, isNotForce);
 
         !blocks.length && this._code.destroyThread(this, false);
     };

@@ -932,7 +932,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 option: {
                     text: Lang.Blocks.Clear_all_blocks,
                     callback: function(){
-                        that.code.clear();
+                        that.code.clear(true);
                     }
                 }
             },
