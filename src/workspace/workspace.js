@@ -54,8 +54,9 @@ Entry.Workspace = function(options) {
     this.changeEvent = new Entry.Event(this);
 
     Entry.commander.setCurrentEditor("board", this.board);
-    this.textType = Entry.Vim.TEXT_TYPE_PY;
-
+    if (options.textType !== undefined)
+        this.textType = options.textType;
+    else this.textType = Entry.Vim.TEXT_TYPE_PY;
 };
 
 Entry.Workspace.MODE_BOARD = 0;

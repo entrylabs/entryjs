@@ -24627,16 +24627,6 @@ Entry.FieldTrashcan = function(b) {
   };
 })(Entry.FieldTrashcan.prototype);
 Entry.Vim = function(b, a) {
-  Entry.Vim.MAZE_MODE = 1;
-  Entry.Vim.WORKSPACE_MODE = 2;
-  Entry.Vim.TEXT_TYPE_JS = 0;
-  Entry.Vim.TEXT_TYPE_PY = 1;
-  Entry.Vim.PARSER_TYPE_JS_TO_BLOCK = 0;
-  Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
-  Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
-  Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
-  Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
-  Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino, Dplay \n\t   Neobot, Nemoino, Robotis, Sensorboard, Xbot from Hw";
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -24648,6 +24638,16 @@ Entry.Vim = function(b, a) {
   Entry.Model(this, !1);
   window.eventset = [];
 };
+Entry.Vim.MAZE_MODE = 1;
+Entry.Vim.WORKSPACE_MODE = 2;
+Entry.Vim.TEXT_TYPE_JS = 0;
+Entry.Vim.TEXT_TYPE_PY = 1;
+Entry.Vim.PARSER_TYPE_JS_TO_BLOCK = 0;
+Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
+Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
+Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
+Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
+Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino, Dplay \n\t   Neobot, Nemoino, Robotis, Sensorboard, Xbot from Hw";
 (function(b) {
   b.createDom = function(a) {
     function b(a) {
@@ -24730,7 +24730,7 @@ Entry.Workspace = function(b) {
   Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
   this.changeEvent = new Entry.Event(this);
   Entry.commander.setCurrentEditor("board", this.board);
-  this.textType = Entry.Vim.TEXT_TYPE_PY;
+  this.textType = void 0 !== b.textType ? b.textType : Entry.Vim.TEXT_TYPE_PY;
 };
 Entry.Workspace.MODE_BOARD = 0;
 Entry.Workspace.MODE_VIMBOARD = 1;
