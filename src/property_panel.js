@@ -130,6 +130,7 @@ Entry.PropertyPanel = function() {
         var that = this;
         splitter.bind('mousedown touchstart', function(e) {
             that._cover.removeClass('entryRemove');
+            that._cover._isVisible = true;
             Entry.container.disableSort();
             Entry.container.splitterEnable = true;
             if (Entry.documentMousemove) {
@@ -148,8 +149,11 @@ Entry.PropertyPanel = function() {
             if (listener) {
                 Entry.container.splitterEnable = false;
                 Entry.documentMousemove.detach(listener);
-                that._cover.addClass('entryRemove');
                 delete Entry.container.resizeEvent;
+            }
+            if (that._cover._isVisible) {
+                that._cover._isVisible = false;
+                that._cover.addClass('entryRemove');
             }
             Entry.container.enableSort();
         });

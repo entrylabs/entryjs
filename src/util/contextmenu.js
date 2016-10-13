@@ -51,13 +51,13 @@ goog.provide('Entry.ContextMenu');
                 span.text(text);
 
                 if (enable && option.callback) {
-                    (function(span, cb) {
-                        span.mousedown(function(e){
+                    (function(elem, cb) {
+                        elem.mousedown(function(e){
                             e.preventDefault();
                             that.hide();
                             cb(e);
                         });
-                    })(span, option.callback);
+                    })(elem, option.callback);
                 }
             }
             elem.addClass(className);

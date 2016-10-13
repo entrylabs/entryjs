@@ -2896,6 +2896,7 @@ Entry.block = {
             ]
         }
     },
+    //2016-09-23 added start
     "CODEino_get_sensor_number": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -2925,8 +2926,7 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("PORT");
-        },
-        "syntax": {"js": [], "py": ["Codeino.sensor_number(%1)"]}
+        }
     },
     "CODEino_get_named_sensor_value": {
         "color": "#00979D",
@@ -2957,12 +2957,38 @@ Entry.block = {
         "paramsKeyMap": {
             "PORT": 0
         },
-        "class": "CODEino",
+        "class": "CODEino_sensor",
         "isNotFor": [ "CODEino" ],
         "func": function (sprite, script) {
-            return Entry.hw.getAnalogPortValue(script.getField("PORT", script));
-        },
-        "syntax": {"js": [], "py": ["Codeino.sensor_value(%1)"]}
+            var port = script.getField("PORT", script);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            var scope = script.executor.scope;
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                    port: port
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
+                return (ANALOG) ? ANALOG[port] || 0 : 0;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
+                return (ANALOG) ? ANALOG[port] || 0 : 0;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        }
     },
     "CODEino_get_sound_status": {
         "color": "#00979D",
@@ -2988,15 +3014,41 @@ Entry.block = {
         "paramsKeyMap": {
             "STATUS": 0
         },
-        "class": "CODEino",
+        "class": "CODEino_sensor",
         "isNotFor": [ "CODEino" ],
         "func": function (sprite, script) {
             var value1 = script.getField("STATUS", script);
-            var value2 = 0;
-            if (value1 == "GREAT") return Entry.hw.getAnalogPortValue(value2) > 600 ? 1 : 0;
-            else return Entry.hw.getAnalogPortValue(value2) < 600 ? 1 : 0;
-        },
-        "syntax": {"js": [], "py": ["Codeino.sound_status(%1)"]}
+            var value2 = 1;
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            var scope = script.executor.scope;
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                    port: 0
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
+                if (value1 == "GREAT") return ANALOG[0] > 600 ? 1 : 0;
+                 else return ANALOG[0] <= 600 ? 1 : 0;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
+                if (value1 == "GREAT") return ANALOG[0] > 600 ? 1 : 0;
+                 else return ANALOG[0] <= 600 ? 1 : 0;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        }
     },
     "CODEino_get_light_status": {
         "color": "#00979D",
@@ -3022,15 +3074,41 @@ Entry.block = {
         "paramsKeyMap": {
             "STATUS": 0
         },
-        "class": "CODEino",
+        "class": "CODEino_sensor",
         "isNotFor": [ "CODEino" ],
         "func": function (sprite, script) {
             var value1 = script.getField("STATUS", script);
             var value2 = 1;
-            if (value1 == "DARK") return Entry.hw.getAnalogPortValue(value2) > 800 ? 1 : 0;
-            else return Entry.hw.getAnalogPortValue(value2) < 800 ? 1 : 0;
-        },
-        "syntax": {"js": [], "py": ["Codeino.light_status(%1)"]}
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            var scope = script.executor.scope;
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                    port: 1
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
+                if (value1 == "GREAT") return ANALOG[value2] < 800 ? 1 : 0;
+                 else return ANALOG[value2] <= 800 ? 1 : 0;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
+                if (value1 == "GREAT") return ANALOG[value2] < 800 ? 1 : 0;
+                 else return ANALOG[value2] <= 800 ? 1 : 0;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        }
     },
     "CODEino_is_button_pressed": {
         "color": "#00979D",
@@ -3059,16 +3137,69 @@ Entry.block = {
         "paramsKeyMap": {
             "PORT": 0
         },
-        "class": "CODEino",
+        "class": "CODEino_sensor",
         "isNotFor": [ "CODEino" ],
         "func": function (sprite, script) {
-            var value = script.getNumberField("PORT", script);
-            if (value > 14) {
-                value = value - 14;
-                return !Entry.hw.getAnalogPortValue(value);
-            } else return !Entry.hw.getDigitalPortValue(value);
-        },
-        "syntax": {"js": [], "py": ["Codeino.is_button_pressed(%1)"]}
+                var port = script.getNumberField("PORT", script);
+              if (port < 10) {
+                var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
+                var hardwareTime = Entry.hw.portData['TIME'] || 0;
+                var scope = script.executor.scope;
+                var DIGITAL = Entry.hw.portData.DIGITAL;
+                if(!scope.isStart) {
+                    scope.isStart = true;
+                    scope.stamp = nowTime;
+                    Entry.hw.sendQueue['TIME'] = nowTime;
+                    Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                    Entry.hw.sendQueue['GET'] = {
+                        type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+                        port: 4
+                    };
+                    throw new Entry.Utils.AsyncError();
+                    return;
+                } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                    delete scope.isStart;
+                    delete scope.stamp;
+                    return (DIGITAL) ? !(DIGITAL[port] || 0): 0 ;
+                } else if(nowTime - scope.stamp > 64) {
+                    delete scope.isStart;
+                    delete scope.stamp;
+                    return (DIGITAL) ? !(DIGITAL[port] || 0) : 0;
+                } else {
+                    throw new Entry.Utils.AsyncError();
+                    return;
+                }
+            } else {
+                var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
+                var hardwareTime = Entry.hw.portData['TIME'] || 0;
+                var scope = script.executor.scope;
+                var ANALOG = Entry.hw.portData.ANALOG;
+                if(!scope.isStart) {
+                    scope.isStart = true;
+                    scope.stamp = nowTime;
+                    Entry.hw.sendQueue['TIME'] = nowTime;
+                    Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                    Entry.hw.sendQueue['GET'] = {
+                        type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                        port: port - 14
+                    };
+                    throw new Entry.Utils.AsyncError();
+                    return;
+                } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                    delete scope.isStart;
+                    delete scope.stamp;
+                    return ANALOG[port-14] < 1000 ? 1 : 0;
+                } else if(nowTime - scope.stamp > 64) {
+                    delete scope.isStart;
+                    delete scope.stamp;
+                    return ANALOG[port-14] < 1000 ? 1 : 0;
+
+                } else {
+                    throw new Entry.Utils.AsyncError();
+                    return;
+                }
+            }
+        }
     },
     "CODEino_get_accelerometer_direction": {
         "color": "#00979D",
@@ -3097,31 +3228,66 @@ Entry.block = {
         "paramsKeyMap": {
             "DIRECTION": 0
         },
-        "class": "CODEino",
+        "class": "CODEino_sensor",
         "isNotFor": [ "CODEino" ],
         "func": function (sprite, script) {
             var value1 = script.getField("DIRECTION", script);
-            var value2 = 0;
-            if (value1 == "LEFT" || value1 =="RIGHT") value2 = 3;
-            else if (value1 == "FRONT" || value1 =="REAR") value2 = 4;
-            else if (value1 == "REVERSE") value2 = 5;
-            var value3 = Entry.hw.getAnalogPortValue(value2);
+            var port = 0;
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            var scope = script.executor.scope;
+            var ANALOG = Entry.hw.portData.ANALOG;
             var value4 = 265;
             var value5 = 402;
             var value6 = -90;
             var value7 = 90;
-            var result = value3;
-            result -= value4;
-            result = result * ((value7 - value6) / (value5 - value4));
-            result += value6;
-            result = Math.min(value7, result);
-            result = Math.max(value6, result);
-            result = Math.round(result);
-            if (value1 == "LEFT" || value1 == "REAR") return result < -30 ? 1 : 0;
-            else if (value1 == "RIGHT" || value1 == "FRONT") return result > 30 ? 1 : 0;
-            else if (value1 == "REVERSE") return result < -50 ? 1 : 0;
-        },
-        "syntax": {"js": [], "py": ["Codeino.accelerometer_direction(%1)"]}
+            var result;
+            if (value1 == "LEFT" || value1 =="RIGHT") port = 3;
+            else if (value1 == "FRONT" || value1 =="REAR")port = 4;
+            else if (value1 == "REVERSE") port = 5;
+
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                    port: port
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
+                result = ANALOG[port];
+                result -= value4;
+                result = result * ((value7 - value6) / (value5 - value4));
+                result += value6;
+                result = Math.min(value7, result);
+                result = Math.max(value6, result);
+                result = Math.round(result);
+                if (value1 == "LEFT" || value1 == "REAR") return result < -30 ? 1 : 0;
+                else if (value1 == "RIGHT" || value1 == "FRONT") return result > 30 ? 1 : 0;
+                else if (value1 == "REVERSE") return result < -50 ? 1 : 0;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
+                result = ANALOG[port];
+                result -= value4;
+                result = result * ((value7 - value6) / (value5 - value4));
+                result += value6;
+                result = Math.min(value7, result);
+                result = Math.max(value6, result);
+                result = Math.round(result);
+                if (value1 == "LEFT" || value1 == "REAR") return result < -30 ? 1 : 0;
+                else if (value1 == "RIGHT" || value1 == "FRONT") return result > 30 ? 1 : 0;
+                else if (value1 == "REVERSE") return result < -50 ? 1 : 0;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        }
     },
     "CODEino_get_accelerometer_value": {
         "color": "#00979D",
@@ -3148,14 +3314,346 @@ Entry.block = {
         "paramsKeyMap": {
             "PORT": 0
         },
-        "class": "CODEino",
+        "class": "CODEino_sensor",
         "isNotFor": [ "CODEino" ],
         "func": function (sprite, script) {
-            var value1 = Entry.hw.getAnalogPortValue(script.getField("PORT", script));
-            var value2 = 265;
-            var value3 = 402;
-            var value4 = -90;
-            var value5 = 90;
+            var port = script.getNumberField("PORT", script);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            var scope = script.executor.scope;
+            var ANALOG = Entry.hw.portData.ANALOG;
+            var result = 0;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                    port: port
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
+                result = ANALOG[port];
+                result = (result - 333) * 1.46;
+                result = Math.min(90, result);
+                result = Math.max(-90, result);
+                return Math.round(result);
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
+                result = ANALOG[port];
+                result = (result - 333) * 1.46;
+                result = Math.min(90, result);
+                result = Math.max(-90, result);
+                return Math.round(result);
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        }
+    },
+    "CODEino_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "0", "0" ],
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "CODEino_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "CODEino_Adumode",
+        "isNotFor": [ "CODEino" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT", script);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            var scope = script.executor.scope;
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                    port: port
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
+                return (ANALOG) ? ANALOG[port] || 0 : 0;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
+                return (ANALOG) ? ANALOG[port] || 0 : 0;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        }
+    },
+    "CODEino_get_digital_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "CODEino_get_digital_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "CODEino_Adumode",
+        "isNotFor": [ "CODEino" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT", script);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            var scope = script.executor.scope;
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+                    port: port
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
+                return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
+                return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        }
+    },
+    "CODEino_set_digital_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ARDUINO_on,"255"],
+                    [Lang.Blocks.ARDUINO_off,"0"]
+                ],
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                '255',
+                null
+            ],
+            "type": "CODEino_set_digital_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "CODEino_Setmode",
+        "isNotFor": [ "CODEino" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberField("VALUE");
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
+            Entry.hw.sendQueue['TIME'] = nowTime;
+            Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+                data: value
+            };
+            return script.callReturn();
+        }
+    },
+    "CODEino_set_pwm_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "CODEino_set_pwm_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "CODEino_Setmode",
+        "isNotFor": [ "CODEino" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.PWM);
+            Entry.hw.sendQueue['TIME'] = nowTime;
+            Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.ArduinoExt.sensorTypes.PWM,
+                data: value
+            };
+            return script.callReturn();
+        }
+    },
+    "CODEino_convert_scale": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "CODEino_get_analog_value",
+                    "value": "0"
+
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "CODEino_convert_scale"
+        },
+        "paramsKeyMap": {
+            "VALUE1": 0,
+            "VALUE2": 1,
+            "VALUE3": 2,
+            "VALUE4": 3,
+            "VALUE5": 4
+        },
+        "class": "CODEino_extmode",
+        "isNotFor": [ "CODEino" ],
+        "func": function (sprite, script) {
+            var value1 = script.getNumberValue("VALUE1", script);
+            var value2 = script.getNumberValue("VALUE2", script);
+            var value3 = script.getNumberValue("VALUE3", script);
+            var value4 = script.getNumberValue("VALUE4", script);
+            var value5 = script.getNumberValue("VALUE5", script);
             var result = value1;
             if (value2 > value3) {
                 var swap = value2;
@@ -3173,8 +3671,461 @@ Entry.block = {
             result = Math.min(value5, result);
             result = Math.max(value4, result);
             return Math.round(result);
+        }
+    },
+    "CODEino_set_rgb_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Dropdown",
+                "options": [
+                    [ "빨강", "17" ],
+                    [ "초록", "18" ],
+                    [ "파랑", "19" ]
+                ],
+                "value": "17",
+                "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+
+            "type": "CODEino_set_rgb_value"
         },
-        "syntax": {"js": [], "py": ["Codeino.accelerometer_value(%1)"]}
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "CODEino_RGBLED_mode",
+        "isNotFor": [ "CODEino" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getNumberField("PORT", script);
+            var value = script.getNumberValue("VALUE", script);
+            value = Math.min(255, value);
+            value = Math.max(0, value);
+
+            if (port == 17) {
+              CODEINO_RED = value;
+            } else if (port == 18){
+              CODEINO_GREEN = value;
+              } else CODEINO_BLUE = value;
+
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: value
+            };
+            return script.callReturn();
+        }
+    },
+    "CODEino_set_rgb_add_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Dropdown",
+                "options": [
+                    [ "빨강", "17" ],
+                    [ "초록", "18" ],
+                    [ "파랑", "19" ]
+                ],
+                "value": "17",
+                "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+
+            "type": "CODEino_set_rgb_add_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "CODEino_RGBLED_mode",
+        "isNotFor": [ "CODEino" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getNumberField("PORT", script);
+            var value = script.getNumberValue("VALUE", script);
+            value = Math.min(255, value);
+            value = Math.max(0, value);
+            if (port == 17) {
+              CODEINO_RED = CODEINO_RED + value;
+              CODEINO_RED = Math.min(255, CODEINO_RED);
+              CODEINO_RED = Math.max(0, CODEINO_RED);
+              value = CODEINO_RED;
+            }
+            if (port == 18){
+              CODEINO_GREEN = CODEINO_GREEN + value;
+              CODEINO_GREEN = Math.min(255, CODEINO_GREEN);
+              CODEINO_GREEN = Math.max(0, CODEINO_GREEN);
+              value = CODEINO_GREEN;
+            }
+            if (port == 19) {
+                CODEINO_BLUE = CODEINO_BLUE + value;
+                CODEINO_BLUE = Math.min(255, CODEINO_BLUE);
+                CODEINO_BLUE = Math.max(0, CODEINO_BLUE);
+                value = CODEINO_BLUE;
+            }
+
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: value
+            };
+            return script.callReturn();
+        }
+    },
+    "CODEino_rgb_set_color": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Color"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/brush_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "CODEino_rgb_set_color"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "CODEino_RGBLED_mode",
+        "isNotFor": [ "CODEino" ],
+        "func": function (sprite, script) {
+            var value = script.getStringField("VALUE");
+            CODEINO_RED = parseInt(value.substr(1,2), 16);
+            CODEINO_GREEN = parseInt(value.substr(3,2), 16);
+            CODEINO_BLUE = parseInt(value.substr(5,2), 16);
+            var sq = Entry.hw.sendQueue;
+            var port = 17;
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: CODEINO_RED
+            };
+            var sq = Entry.hw.sendQueue;
+            var port = 18;
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: CODEINO_GREEN
+            };
+            var sq = Entry.hw.sendQueue;
+            var port = 19;
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: CODEINO_BLUE
+            };
+            return script.callReturn();
+        }
+    },
+    "CODEino_set_rgb_off": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "CODEino_set_rgb_off"
+        },
+        "class": "CODEino_RGBLED_mode",
+        "isNotFor": [ "CODEino" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            CODEINO_RED = 0;
+            CODEINO_BLUE = 0;
+            CODEINO_GREEN = 0;
+            var port = 17;
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: 0
+            };
+            var sq = Entry.hw.sendQueue;
+            var port = 18;
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: 0
+            };
+            var sq = Entry.hw.sendQueue;
+            var port = 19;
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: 0
+            };
+            return script.callReturn();
+        }
+    },
+    "CODEino_set__led_by_rgb": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "CODEino_set__led_by_rgb"
+        },
+        "paramsKeyMap": {
+            "rValue": 0,
+            "gValue": 1,
+            "bValue": 2
+        },
+        "class": "CODEino_RGBLED_mode",
+        "isNotFor": [ "CODEino" ],
+        "func": function (sprite, script) {
+            CODEINO_RED = script.getNumberValue("rValue");
+            CODEINO_GREEN = script.getNumberValue("gValue");
+            CODEINO_BLUE = script.getNumberValue("bValue");
+            var sq = Entry.hw.sendQueue;
+            var port = 17;
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: CODEINO_RED
+            };
+            var sq = Entry.hw.sendQueue;
+            var port = 18;
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: CODEINO_GREEN
+            };
+            var sq = Entry.hw.sendQueue;
+            var port = 19;
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: CODEINO_BLUE
+            };
+            return script.callReturn();
+
+        }
+    },
+    "CODEino_led_by_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "CODEino_led_by_value"
+        },
+        "class": "CODEino_RGBLED_mode",
+        "isNotFor": [ "CODEino" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = 17;
+            CODEINO_RED = 100;
+            CODEINO_GREEN = 100;
+            CODEINO_BLUE = 100;
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: 100
+            };
+            var sq = Entry.hw.sendQueue;
+            var port = 18;
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: 100
+            };
+            var sq = Entry.hw.sendQueue;
+            var port = 19;
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(4);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: 4,
+                data: 100
+            };
+            return script.callReturn();
+        }
+    },
+    //2016-09-23 added finish
+    //legacy
+    "CODEino_get_number_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_sensor_number"
+                }
+            ],
+            "type": "CODEino_get_number_sensor_value"
+        },
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.CODEino_get_number_sensor_value(%1)"]}
+    },
+    "CODEino_toggle_led": {
+        "parent": "arduino_toggle_led",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "CODEino_toggle_led"
+        },
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.CODEino_toggle_led(%1)"]}
+    },
+    "CODEino_toggle_pwm": {
+        "parent": "arduino_toggle_pwm",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "CODEino_toggle_pwm"
+        },
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.CODEino_toggle_pwm(%1, %2)"]}
     },
     "nemoino_get_named_sensor_value": {
         "color": "#00979D",
@@ -7714,6 +8665,7 @@ Entry.block = {
                 function(blockView) {
                     var mode = blockView.getBoard().workspace.getMode();
                     if (mode !== Entry.Workspace.MODE_BOARD) return;
+                    if (Entry.type !== "workspace") return;
                     var block = blockView.block;
                     var id = block.type.substr(5);
                     Entry.Func.edit(Entry.variableContainer.functions_[id]);
@@ -13604,7 +14556,6 @@ Entry.block = {
                 Entry.Robotis_carCont.update();
 
                 scope.data_default_address = data_default_address;
-                console.log(data_default_address);
                 throw new Entry.Utils.AsyncError();
             } else if(scope.count < 2) {
                 scope.count++;
@@ -16029,9 +16980,7 @@ Entry.block = {
             if (value == 'null' || !isExist)
                 throw new Error('value can not be null or undefined');
 
-            Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                                         ["when_message_cast", value]);
-                                                         return script.callReturn();
+            Entry.engine.raiseMessage(value);
         },
         "syntax": {"js": [], "py": ["Entry.send_signal(%1)"]}
     },
@@ -16096,10 +17045,7 @@ Entry.block = {
                 var isExist = Entry.isExist(value, 'id', arr);
                 if (value == 'null' || !isExist)
                     throw new Error('value can not be null or undefined');
-                var data = Entry.container.mapEntityIncludeCloneOnScene(
-                    Entry.engine.raiseKeyEvent,
-                    ["when_message_cast", value]
-                );
+                var data = Entry.engine.raiseMessage(value);
                 var runningScript = [];
                 while (data.length) {
                     var executor = data.shift();
@@ -18910,6 +19856,48 @@ Entry.block = {
             }
         }
     },
+    "maze_step_jump2": {
+        "parent": "maze_step_jump",
+        "template": Lang.template.maze_step_jump,
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var checkGrid = {
+                    x: unitGrid.x,
+                    y: unitGrid.y,
+                }
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_IRON], 2);
+                if(isCollisionPossible) {
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.FAIL_JUMP, callBack);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.CONTACT_IRON);
+                    return;
+                }
+
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
     "maze_step_for": {
         "skeleton": "basic_loop",
         "mode": "maze",
@@ -19365,7 +20353,7 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
-    func: function() {
+        func: function() {
             if (this.isContinue) return;
 
             var entities =
@@ -19516,6 +20504,1217 @@ Entry.block = {
                 delete this.isContinue;
             }
         }
+    },
+    "maze_step_forward": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/moveStep.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_rotate_left": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "left"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/turnL.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_rotate_right": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/turnR.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_moon_kick": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#2EB0E8",
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/moon_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            // TODO: func 내용은 변경해야 함.
+
+            if (!this.isContinue) {
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_BRICK], 1);
+
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    return;
+                }
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callback = function() {
+                    Ntry.dispatchEvent('destroyObstacle', 1, function (state) {
+                        switch(state) {
+                            case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
+                                self.isAction = false;
+                                break;
+                        }
+                    });
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, callback);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_cony_flower_throw": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#D8617D",
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/cony_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            var self = this;
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_SPIDER]);
+                var particleZIndex = 550;
+                if(unitComp.direction === Ntry.STATIC.NORTH) {
+                    particleZIndex = 450;
+                }
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    return;
+                }
+
+                var particle = Ntry.entityManager.addEntity();
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
+                    $.each(components, function(type, component) {
+                        if(+type === Ntry.STATIC.SPRITE) {
+                            var cloneComponent = $.extend({}, component);
+                            cloneComponent.zIndex = particleZIndex;
+                            Ntry.entityManager.addComponent(particle.id, cloneComponent);
+                        } else if(+type != Ntry.STATIC.UNIT) {
+                            Ntry.entityManager.addComponent(particle.id, component);
+                        } else {
+                            Ntry.entityManager.addComponent(particle.id, {
+                                type: Ntry.STATIC.PARTICLE,
+                                direction: component.direction,
+                                collisionList: [ Ntry.STATIC.OBSTACLE_SPIDER ],
+                            });
+                        }
+                    });
+                    Ntry.dispatchEvent("particleAction", {
+                        entityId: particle.id,
+                        actionType: Ntry.STATIC.FLOWER_ATTACK,
+                        callback: function () {
+                            Ntry.entityManager.removeEntity(particle.id);
+                            self.isAction = false;
+                        }
+                    });
+                });
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_cony_flower_throw2": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#D8617D",
+        "template": Lang.template.maze_cony_flower_throw,
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/cony_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            var self = this;
+            if (!this.isContinue) {
+
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY5, Ntry.STATIC.OBSTACLE_ENERMY4], 2, true);
+                var particleZIndex = 550;
+                if(unitComp.direction === Ntry.STATIC.NORTH) {
+                    particleZIndex = 450;
+                }
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    return;
+                }
+
+                this.isContinue = true;
+                this.isAction = true;
+
+                var particle = Ntry.entityManager.addEntity();
+
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
+                    $.each(components, function(type, component) {
+                        if(+type === Ntry.STATIC.SPRITE) {
+                            var cloneComponent = $.extend({}, component);
+                            cloneComponent.zIndex = particleZIndex;
+                            Ntry.entityManager.addComponent(particle.id, cloneComponent);
+                        } else if(+type != Ntry.STATIC.UNIT) {
+                            Ntry.entityManager.addComponent(particle.id, component);
+                        } else {
+                            Ntry.entityManager.addComponent(particle.id, {
+                                type: Ntry.STATIC.PARTICLE,
+                                direction: component.direction,
+                                collisionList: [Ntry.STATIC.OBSTACLE_ENERMY5, , Ntry.STATIC.OBSTACLE_ENERMY4],
+                                penetrationList: [Ntry.STATIC.WALL],
+                            });
+                        }
+                    });
+
+                    Ntry.dispatchEvent("particleAction", {
+                        entityId: particle.id,
+                        actionType: Ntry.STATIC.HEART_ATTACK,
+                        callback: function () {
+                            Ntry.entityManager.removeEntity(particle.id);
+                            self.isAction = false;
+                        }
+                    });
+                });
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_james_heart": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#D39D18",
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/james_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            var self = this;
+            if (!this.isContinue) {
+
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY2, Ntry.STATIC.OBSTACLE_ENERMY3, Ntry.STATIC.OBSTACLE_ENERMY5]);
+                var particleZIndex = 550;
+                if(unitComp.direction === Ntry.STATIC.NORTH) {
+                    particleZIndex = 450;
+                }
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    return;
+                }
+
+                this.isContinue = true;
+                this.isAction = true;
+
+                var particle = Ntry.entityManager.addEntity();
+
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
+                    $.each(components, function(type, component) {
+                        if(+type === Ntry.STATIC.SPRITE) {
+                            var cloneComponent = $.extend({}, component);
+                            cloneComponent.zIndex = particleZIndex;
+                            Ntry.entityManager.addComponent(particle.id, cloneComponent);
+                        } else if(+type != Ntry.STATIC.UNIT) {
+                            Ntry.entityManager.addComponent(particle.id, component);
+                        } else {
+                            Ntry.entityManager.addComponent(particle.id, {
+                                type: Ntry.STATIC.PARTICLE,
+                                direction: component.direction,
+                                collisionList: [ Ntry.STATIC.OBSTACLE_ENERMY1, Ntry.STATIC.OBSTACLE_ENERMY2, Ntry.STATIC.OBSTACLE_ENERMY3, Ntry.STATIC.OBSTACLE_ENERMY5 ],
+                            });
+                        }
+                    });
+
+                    Ntry.dispatchEvent("particleAction", {
+                        entityId: particle.id,
+                        actionType: Ntry.STATIC.HEART_ATTACK,
+                        callback: function () {
+                            Ntry.entityManager.removeEntity(particle.id);
+                            self.isAction = false;
+                        }
+                    });
+                });
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_james_heart2": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#D39D18",
+        "template": Lang.template.maze_james_heart,
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/james_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            var self = this;
+            if (!this.isContinue) {
+
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY3, Ntry.STATIC.OBSTACLE_ENERMY4], 2);
+                var particleZIndex = 550;
+                if(unitComp.direction === Ntry.STATIC.NORTH) {
+                    particleZIndex = 450;
+                }
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    return;
+                }
+
+                this.isContinue = true;
+                this.isAction = true;
+
+                var particle = Ntry.entityManager.addEntity();
+
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
+                    $.each(components, function(type, component) {
+                        if(+type === Ntry.STATIC.SPRITE) {
+                            var cloneComponent = $.extend({}, component);
+                            cloneComponent.zIndex = particleZIndex;
+                            Ntry.entityManager.addComponent(particle.id, cloneComponent);
+                        } else if(+type != Ntry.STATIC.UNIT) {
+                            Ntry.entityManager.addComponent(particle.id, component);
+                        } else {
+                            Ntry.entityManager.addComponent(particle.id, {
+                                type: Ntry.STATIC.PARTICLE,
+                                direction: component.direction,
+                                collisionList: [Ntry.STATIC.OBSTACLE_ENERMY3, Ntry.STATIC.OBSTACLE_ENERMY4, Ntry.STATIC.OBSTACLE_ENERMY_AREA],
+                                penetrationList: [Ntry.STATIC.OBSTACLE_ENERMY_AREA],
+                            });
+                        }
+                    });
+
+                    Ntry.dispatchEvent("particleAction", {
+                        entityId: particle.id,
+                        actionType: Ntry.STATIC.HEART_ATTACK,
+                        callback: function () {
+                            Ntry.entityManager.removeEntity(particle.id);
+                            self.isAction = false;
+                        }
+                    });
+                });
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_iron_switch": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#748d69",
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/iron_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var eventCount = 0;
+                var self = this;
+                var gridSize = Ntry.configManager.getConfig("gridSize");
+                var tileSize = Ntry.configManager.getConfig("tileSize").width;
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.OBSTACLE);
+
+                for(var id in entities) {
+                    var obstacleComp = Ntry.entityManager.getComponent(id, Ntry.STATIC.OBSTACLE);
+                    if(obstacleComp.tileType === Ntry.STATIC.OBSTACLE_IRON) {
+                        var obstacleGrid = Ntry.entityManager.getComponent(id, Ntry.STATIC.GRID);
+                        var obstaclePosition = Ntry.entityManager.getComponent(id, Ntry.STATIC.POSITION);
+                        var grid = {
+                            x: obstacleGrid.x,
+                            y: (obstacleGrid.y === 1) ? 3 : 1,
+                        }
+
+                        obstacleGrid.y = (obstacleGrid.y === 1) ? 3 : 1;
+
+                        var deltaY = tileSize * 2;
+
+                        if(obstacleGrid.y === 1) {
+                            deltaY = -deltaY;
+                        }
+
+                        var deltaPos = {
+                            x: 0,
+                            y: deltaY * 0.5,
+                        };
+
+                        var deltaPos2 = {
+                            x: 0,
+                            y: deltaY,
+                        };
+
+                        var targetPos = {
+                            minY: 0,
+                            maxY: gridSize.height * tileSize,
+                        };
+
+                        if(deltaY > 0) {
+                            targetPos.maxY = obstacleGrid.y * tileSize + (tileSize / 2);
+                        } else {
+                            targetPos.minY = obstacleGrid.y * tileSize + (tileSize / 2);
+                        }
+
+                        (function (_id, _deltaPos, _deltaPos2, _targetPos, obstacleGrid) {
+                            var comp = Ntry.entityManager.getComponent(_id, Ntry.STATIC.ANIMATE);
+                            if(comp) {
+                                if(eventCount === 0) {
+                                    self.isAction = false;
+                                }
+                                Ntry.entityManager.addComponent(
+                                    _id, {
+                                        type: Ntry.STATIC.ANIMATE,
+                                        animateType: Ntry.STATIC.TRANSITION,
+                                        duration: 20,
+                                        option: {
+                                            deltaPos: _deltaPos2,
+                                            targetPos: _targetPos,
+                                        },
+                                        afterAnimate: function() {
+                                            var unitGrid = Ntry.getUtilGrid();
+
+                                            if(obstacleGrid.x == unitGrid.x && obstacleGrid.y == unitGrid.y) {
+                                                Ntry.dispatchEvent("unitAction", Ntry.STATIC.CONTACT_IRON2);
+                                            }
+                                        }
+                                    }
+                                );
+                            } else {
+                                Ntry.entityManager.addComponent(
+                                    _id, {
+                                        type: Ntry.STATIC.ANIMATE,
+                                        animateType: Ntry.STATIC.TRANSITION,
+                                        duration: 10,
+                                        option: {
+                                            deltaPos: _deltaPos,
+                                        },
+                                        afterAnimate: function() {
+                                            if(eventCount === 0) {
+                                                self.isAction = false;
+                                            }
+                                            Ntry.entityManager.addComponent(
+                                                _id, {
+                                                    type: Ntry.STATIC.ANIMATE,
+                                                    animateType: Ntry.STATIC.TRANSITION,
+                                                    duration: 10,
+                                                    option: {
+                                                        deltaPos: _deltaPos,
+                                                        targetPos: _targetPos,
+                                                    },
+                                                    afterAnimate: function() {
+                                                        var unitGrid = Ntry.getUtilGrid();
+
+                                                        if(obstacleGrid.x == unitGrid.x && obstacleGrid.y == unitGrid.y) {
+                                                            console.log('충돌');
+                                                            // Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                                                            Ntry.dispatchEvent("unitAction", Ntry.STATIC.CONTACT_IRON2);
+                                                            // Ntry.dispatchEvent("complete", false, Ntry.STATIC.CONTACT_IRON2);
+                                                        }
+                                                    },
+                                                }
+                                            );
+                                        },
+                                    }
+                                );
+                            }
+                        })(id, deltaPos, deltaPos2, targetPos, obstacleGrid);
+                    }
+                }
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_brown_punch": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#6C483A",
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/brown_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                var self = this;
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ICE], 1);
+
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    return;
+                }
+                this.isContinue = true;
+                this.isAction = true;
+
+                var callback = function() {
+                    Ntry.dispatchEvent('destroyObstacle', 1, function (state) {
+                        switch(state) {
+                            case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
+                                self.isAction = false;
+                                break;
+                        }
+                    });
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, callback);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_repeat_until_3": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicWhile",
+            "true"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_01.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            var isGoal = false;
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0) {
+                return;
+            }
+
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+            var entity;
+            for (var key in entities){
+                entity = entities[key];
+            }
+            
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+
+            if(unitComp.isStartedUnit) {
+                var unitGrid = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+                var entities = Ntry.entityManager.getEntitiesByGrid(unitGrid.x, unitGrid.y);
+
+                for(var idx in entities) {
+                    var entity = entities[idx];
+                    var tile = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.TILE);
+                    var item = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.ITEM);
+
+                    if(tile && item && tile.tileType === Ntry.STATIC.GOAL && item.itemType === Ntry.STATIC.GOAL_ITEM) {
+                        isGoal = true;
+                        break;
+                    }
+                }
+            }
+
+            if(!isGoal) {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }                
+            // Ntry.dispatchEvent('executeEnd');
+        }
+    },
+    "maze_repeat_until_4": {
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_02.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_5": {
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_03.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_6": {
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-1.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_7": {
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-4.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_8": {
+        "template": Lang.template.maze_repeat_until_7,
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-5.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_9": {
+        "template": Lang.template.maze_repeat_until_7,
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-6.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_10": {
+        "template": Lang.template.maze_repeat_until_7,
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-7.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_11": {
+        "template": Lang.template.maze_repeat_until_7,
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-9.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_12": {
+        "template": Lang.template.maze_repeat_until_7,
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-10.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_13": {
+        "template": Lang.template.maze_repeat_until_7,
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-11.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_14": {
+        "template": Lang.template.maze_repeat_until_7,
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/blcok-12.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_15": {
+        "template": Lang.template.maze_repeat_until_7,
+        "parent": "maze_repeat_until_3",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/ws/tile_goal_04.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_radar_check": {
+        "skeleton": "basic_boolean_field",
+        "mode": "maze",
+        "color": "#AEB8FF",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.maze_distance1, "1"],
+                    [Lang.Menus.maze_distance2, "2"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            }, {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.maze_object_trap, "TRAP"],
+                    [Lang.Menus.maze_object_monster, "MONSTER"],
+                    [Lang.Menus.maze_object_obstacle1, "OBSTACLE"],
+                ],
+                "value": "TRAP",
+                "fontSize": 11
+            }
+        ],
+        "paramsKeyMap": {
+            "DISTANCE": 0,
+            "TYPE": 1,
+        },
+        func: function(sprite, script) {
+            var distance = script.getNumberField("DISTANCE", script);
+            var type = script.getField("TYPE", script);
+
+            var entityId = Ntry.getRadarEntityIdByDistance(distance);
+            var tileType;
+            if(entityId) {
+                var tileComp = Ntry.entityManager.getComponent(entityId, Ntry.STATIC.TILE);
+                switch(tileComp.tileType) {
+                    case Ntry.STATIC.OBSTACLE_HOLE:
+                        tileType = 'TRAP';
+                        break;
+                    case Ntry.STATIC.OBSTACLE_ENERMY1:
+                    case Ntry.STATIC.OBSTACLE_ENERMY2:
+                    case Ntry.STATIC.OBSTACLE_ENERMY3:
+                    case Ntry.STATIC.OBSTACLE_ENERMY4:
+                    case Ntry.STATIC.OBSTACLE_ENERMY5:
+                        tileType = 'MONSTER';
+                        break;
+                    case Ntry.STATIC.OBSTACLE_IRON:
+                        tileType = 'OBSTACLE';
+                        break;
+                }
+            } else {
+                tileType = 'TRAP';
+            }
+
+            if(type === tileType) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    },
+    // TODO: 해당 부분 수정 필요
+    "maze_step_if_5": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == bee"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "../../../img/assets/ntry/bitmap/maze2/obstacle_01.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var entities =
+                Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_BEE
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
+    },
+    // TODO: 해당 부분 수정 필요
+    "maze_step_if_6": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == bee"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "../../../img/assets/maze/bitmap/stage4/road_4_01.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.ROAD
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length > 0) {
+                return;
+            } else if (statement.getBlocks().length === 0){
+                return;
+            } else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
+    },
+    // TODO: 해당 부분 수정 필요
+    "maze_step_if_7": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == ice"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "../../../img/assets/maze/bitmap/stage4/obj_ice_01.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var entities =
+                Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_ICE
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
+    },
+    "maze_step_if_8": {
+        "parent": "_if",
+        "class": "",
+    },
+    "maze_step_if_else": {
+        "parent": "if_else",
+        "class": "",
     },
     "test_wrapper": {
         "skeleton": "basic",
@@ -20946,114 +23145,6 @@ Entry.block = {
         "class": "arduino",
         "syntax": {"js": [], "py": ["hw.sensorBoard_convert_scale(%1, %2, %3, %4, %5)"]}
     },
-    "CODEino_get_number_sensor_value": {
-        "parent": "arduino_get_number_sensor_value",
-        "isNotFor": [
-            "CODEino"
-        ],
-        "def": {
-            "params": [
-                {
-                    "type": "arduino_get_sensor_number"
-                }
-            ],
-            "type": "CODEino_get_number_sensor_value"
-        },
-        "class": "arduino_value",
-        "syntax": {"js": [], "py": ["hw.CODEino_get_number_sensor_value(%1)"]}
-    },
-    "CODEino_get_digital_value": {
-        "parent": "arduino_get_digital_value",
-        "isNotFor": [
-            "CODEino"
-        ],
-        "def": {
-            "params": [
-                {
-                    "type": "arduino_get_port_number"
-                }
-            ],
-            "type": "CODEino_get_digital_value"
-        },
-        "class": "arduino_value",
-        "syntax": {"js": [], "py": ["hw.CODEino_get_digital_value(%1)"]}
-    },
-    "CODEino_toggle_led": {
-        "parent": "arduino_toggle_led",
-        "isNotFor": [
-            "CODEino"
-        ],
-        "def": {
-            "params": [
-                {
-                    "type": "arduino_get_port_number"
-                },
-                null,
-                null
-            ],
-            "type": "CODEino_toggle_led"
-        },
-        "class": "arduino_set",
-        "syntax": {"js": [], "py": ["hw.CODEino_toggle_led(%1)"]}
-    },
-    "CODEino_toggle_pwm": {
-        "parent": "arduino_toggle_pwm",
-        "isNotFor": [
-            "CODEino"
-        ],
-        "def": {
-            "params": [
-                {
-                    "type": "arduino_get_pwm_port_number"
-                },
-                {
-                    "type": "arduino_text",
-                    "params": [ "255" ]
-                },
-                null
-            ],
-            "type": "CODEino_toggle_pwm"
-        },
-        "class": "arduino_set",
-        "syntax": {"js": [], "py": ["hw.CODEino_toggle_pwm(%1, %2)"]}
-    },
-    "CODEino_convert_scale": {
-        "parent": "arduino_convert_scale",
-        "isNotFor": [
-            "CODEino"
-        ],
-        "def": {
-            "params": [
-                {
-                    "type": "arduino_get_number_sensor_value",
-                    "params": [
-                        {
-                            "type": "arduino_get_sensor_number"
-                        }
-                    ]
-                },
-                {
-                    "type": "number",
-                    "params": [ "0" ]
-                },
-                {
-                    "type": "number",
-                    "params": [ "1023" ]
-                },
-                {
-                    "type": "number",
-                    "params": [ "0" ]
-                },
-                {
-                    "type": "number",
-                    "params": [ "100" ]
-                }
-            ],
-            "type": "CODEino_convert_scale"
-        },
-        "class": "arduino",
-        "syntax": {"js": [], "py": ["hw.CODEino_convert_scale(%1, %2, %3, %4, %5)"]}
-    },
     // ardublock Added 2016-06-01
     "ardublock_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
@@ -22380,7 +24471,7 @@ Entry.block = {
                 Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[1] - 2],
                 Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[2] - 2]
             ];
-            
+
             switch(signal) {
                 case "red":
                     if(value[0] == 1 && value[1] == 0 && value[2] == 0) {
@@ -22452,7 +24543,7 @@ Entry.block = {
             var pin = script.getNumberValue("VALUE", script);
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
-            
+
             Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, pin, value]);
             return script.callReturn();
         }
@@ -22466,7 +24557,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [ Lang.Blocks.roborobo_motor1, "motor1" ],
-                    [ Lang.Blocks.roborobo_motor2, "motor2" ]                    
+                    [ Lang.Blocks.roborobo_motor2, "motor2" ]
                 ],
                 "value": "motor1",
                 "fontSize": 11,
@@ -22509,7 +24600,7 @@ Entry.block = {
             var value1 = value2 = 0;
             var mode = script.getField("MODE");
             var operator = script.getField("OPERATOR");
-            
+
             if(mode == "motor1") {
                 pin1 = 9;
                 pin2 = 10;
@@ -22517,7 +24608,7 @@ Entry.block = {
                 pin1 = 11;
                 pin2 = 12;
             }
-            
+
             if (operator == "cw") {
                 value1 = 1;
                 value2 = 0;
@@ -22585,7 +24676,7 @@ Entry.block = {
             var redPin = script.getNumberValue("RED", script);
             var greenPin = script.getNumberValue("GREEN", script);
             var bluePin = script.getNumberValue("BLUE", script);
-            
+
             Entry.Roborobo_Roduino.ColorPin = [ redPin, greenPin, bluePin ];
             Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, redPin, greenPin, bluePin]);
             return script.callReturn();
@@ -22700,7 +24791,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getNumberField("PORT");
         }
-    },    
+    },
     "schoolkit_set_output": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -22747,7 +24838,7 @@ Entry.block = {
             var pin = script.getNumberValue("VALUE", script);
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
-            
+
             Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, pin, value]);
             return script.callReturn();
         }
@@ -22792,7 +24883,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [ Lang.Blocks.roborobo_motor1, "motor1" ],
-                    [ Lang.Blocks.roborobo_motor2, "motor2" ]                    
+                    [ Lang.Blocks.roborobo_motor2, "motor2" ]
                 ],
                 "value": "motor1",
                 "fontSize": 11,
@@ -22812,7 +24903,7 @@ Entry.block = {
                 "value": "cw",
                 "fontSize": 11,
                 'arrowColor': EntryStatic.ARROW_COLOR_HW
-            },            
+            },
             {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
@@ -22822,7 +24913,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                null,                
+                null,
                 {
                     "type": "number",
                     "params": [ "0" ]
@@ -22833,9 +24924,9 @@ Entry.block = {
             "type": "schoolkit_motor"
         },
         "paramsKeyMap": {
-            "MODE": 0,            
+            "MODE": 0,
             "VALUE": 1,
-            "OPERATOR": 2            
+            "OPERATOR": 2
         },
         "class": "schoolkit_set",
         "isNotFor": [ "roborobo_schoolkit" ],
@@ -22845,7 +24936,7 @@ Entry.block = {
             var mode = script.getField("MODE");
             var operator = script.getField("OPERATOR");
             var value = script.getNumberValue("VALUE");
-            
+
             if(mode == "motor1") {
                 pin = 7;
             } else {
@@ -22856,7 +24947,7 @@ Entry.block = {
             } else if(value < 0) {
                 value = 0;
             }
-            
+
             if (operator == "cw") {
                 operatorValue = 1;
                 Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
@@ -22911,17 +25002,569 @@ Entry.block = {
         "func": function (sprite, script) {
             var pin = script.getNumberValue("PIN", script);
             var value = script.getNumberValue("VALUE");
-            
+
             if(value < 0) {
                 value = 0;
             } else if(value > 180) {
                 value = 180;
             }
-            
+
             Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.SERVO, pin, value]);
             return script.callReturn();
         }
-    }     
+    },
+    codestar_color_single: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '%1 LED %2 %3',
+        params: [{
+            type: 'Dropdown',
+            options: [[Lang.Hw.leftEye, 7], [Lang.Hw.rightEye, 8]]
+        }, {
+            type: 'Dropdown',
+            options: [[Lang.Blocks.ARDUINO_on,"on"], [Lang.Blocks.ARDUINO_off,"off"]],
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [7, 'on', null],
+            type: 'codestar_color_single'
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            ONOFF: 1
+        },
+        class: 'codestar_output_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            var port = script.getField('PORT');
+            var onoff = script.getField('ONOFF');
+            var value = onoff == 'on' ? 255 : 0;
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    codestar_3color: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '3색 LED %1 밝기 %2 %3',
+        params: [{
+            type: 'Dropdown',
+            options: [['빨간색', 9],
+                ['초록색', 10],
+                ['파란색', 11]]
+        }, {
+            type: 'Block',
+            accept: 'string'
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [9, {type:'number', params: [120]}, null],
+            type: 'codestar_3color'
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            VALUE: 1
+        },
+        class: 'codestar_output_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            var port = script.getField('PORT');
+            var value = script.getNumberValue('VALUE');
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    codestar_vibration: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '진동모터 %1 %2',
+        params: [{
+            type: 'Dropdown',
+            options: [[Lang.Blocks.ARDUINO_on,"on"], [Lang.Blocks.ARDUINO_off,"off"]],
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: ['on', null],
+            type: 'codestar_vibration'
+        },
+        paramsKeyMap: {
+            ONOFF: 0
+        },
+        class: 'codestar_output_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            var port = 13;
+            var onoff = script.getField('ONOFF');
+            var value = onoff == 'on' ? 255 : 0;
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    codestar_buzzer: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '부저 톤%1 %2',
+        params: [{
+            type: 'Dropdown',
+            options: [['G3', 1], ['A3', 2], ['B3', 3], ['C4', 4], ['D4', 5], ['E4', 6], ['F4', 7], ['G4', 8], ['A4', 9], ['B4', 10], ['C5', 11], ['D5', 12], ['E5', 13], ['F5', 14]]
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [4, null],
+            type: 'codestar_buzzer'
+        },
+        paramsKeyMap: {
+            TONE: 0
+        },
+        class: 'codestar_output_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            var tone = script.getField('TONE');
+            Entry.hw.setDigitalPortValue(15, tone);
+            return script.callReturn();
+        }
+    },
+    codestar_buzzer_stop: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '부저 중지 %1',
+        params: [{
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [null],
+            type: 'codestar_buzzer_stop'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_output_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            Entry.hw.setDigitalPortValue(15, 24);
+            return script.callReturn();
+        }
+    },
+    codestar_servo: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '서버모터 %1 모터값 %2 %3',
+        params: [{
+            type: 'Dropdown',
+            options: [['D3', 'D3'], ['D5', 'D5'], ['D6', 'D6'], ['D9', 'D9'], ['D10', 'D10'], ['D11', 'D11']]
+        }, {
+            type: 'Block',
+            accept: 'string'
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: ['D3', {type:'number', params: [90]}, null],
+            type: 'codestar_servo'
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            VALUE: 1
+        },
+        class: 'codestar_motor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            var value = script.getNumberValue('VALUE');
+            var sq = Entry.hw.sendQueue;
+            sq.outport = script.getField('PORT');
+            sq.value = 0;
+            if(!isNaN(value)){
+                var tmp = value;
+                if(value < 0) tmp = 0;
+                if(value > 255) tmp = 255;
+                sq.value = tmp;
+            }
+            return script.callReturn();
+        }
+    },
+    codestar_drive: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '방향 %1 속도 %2 %3',
+        params: [{
+            type: 'Dropdown',
+            options: [['앞으로', '0'], ['뒤로', '1'], ['왼쪽', '2'], ['오른쪽', '3']]
+        }, {
+            type: 'Block',
+            accept: 'string'
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: ['0', {type:'number', params: [100]}, null],
+            type: 'codestar_drive'
+        },
+        paramsKeyMap: {
+            DIRECTION: 0,
+            VALUE: 1
+        },
+        class: 'codestar_motor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            var value = script.getNumberValue('VALUE');
+            var dir = Number(script.getField('DIRECTION'));
+            var id = 0;
+            //if(value == 0) value = 1;
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+
+            value = Math.round(value/30);
+            //if(value == 0) value = 1;
+            var query = (id << 7) + (dir << 5) + value;
+            Entry.hw.setDigitalPortValue(14, query);
+            return script.callReturn();
+        }
+    },
+    codestar_wheel: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '방향 %1 바퀴속도 %2 %3',
+        params: [{
+            type: 'Dropdown',
+            options: [['왼쪽', '0'], ['오른쪽', '1']]
+        }, {
+            type: 'Block',
+            accept: 'string'
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: ['0', {type:'number', params: [100]}, null],
+            type: 'codestar_wheel'
+        },
+        paramsKeyMap: {
+            DIRECTION: 0,
+            VALUE: 1
+        },
+        class: 'codestar_motor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            var value = script.getNumberValue('VALUE');
+            var dir = Number(script.getField('DIRECTION'));
+            var id = 1;
+            //if(value == 0)value = 1;
+            value = Math.round(value);
+            value = Math.max(value, -255);
+            value = Math.min(value, 255);
+            if( value < 0 ){
+                dir = 2+dir;
+                value *=-1;
+            }
+            value = Math.round(value/30);
+            //if(value == 0) value = 1;
+            var query = (id << 7) + (dir << 5) + value;
+            Entry.hw.setDigitalPortValue(14, query);
+            return script.callReturn();
+        }
+    },
+    codestar_light: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '밝기센서',
+        params: [],
+        events: {},
+        def: {
+            params: [],
+            type: 'codestar_light'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            return Entry.hw.getAnalogPortValue('6');
+        }
+    },
+    codestar_button: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '버튼',
+        params: [],
+        events: {},
+        def: {
+            params: [],
+            type: 'codestar_button'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            return Entry.hw.getDigitalPortValue('12');
+        }
+    },
+    codestar_ir: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: 'IR %1',
+        params: [{
+            type: 'Dropdown',
+            options: [['A0', '0'], ['A1', '1'], ['A4', '4'], ['A5', '5']]
+        }],
+        events: {},
+        def: {
+            params: ['0'],
+            type: 'codestar_ir'
+        },
+        paramsKeyMap: {
+            PORT: 0
+        },
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            var port = script.getField('PORT');
+            return Entry.hw.getAnalogPortValue(port);
+        }
+    },
+    codestar_sonar: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '초음파',
+        params: [],
+        events: {},
+        def: {
+            params: [],
+            type: 'codestar_sonar'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            return Entry.hw.portData.sonar;
+        }
+    },
+    codestar_variable_R: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '가변저항 %1',
+        params: [{
+            type: 'Dropdown',
+            options: [['A0', '0'], ['A1', '1'], ['A4', '4'], ['A5', '5']]
+        }],
+        events: {},
+        def: {
+            params: ['1'],
+            type: 'codestar_variable_R'
+        },
+        paramsKeyMap: {
+            PORT: 0
+        },
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            var port = script.getField('PORT');
+            return Entry.hw.getAnalogPortValue(port);
+        }
+    },
+    codestar_mic: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '마이크',
+        params: [],
+        events: {},
+        def: {
+            params: [],
+            type: 'codestar_mic'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            return Entry.hw.getAnalogPortValue('2');
+        }
+    },
+    codestar_temperature: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '온도',
+        params: [],
+        events: {},
+        def: {
+            params: [],
+            type: 'codestar_temperature'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            return Entry.hw.portData.temperature;
+        }
+    },
+    codestar_gyroscope: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '3축 자이로 %1 축 %2',
+        params: [{
+            type: 'Dropdown',
+            options: [['x', 'x'], ['y', 'y'], ['z', 'z']]
+        }, {
+            type: 'Indicator',
+            size: 11
+        }],
+        events: {},
+        def: {
+            params: ['x', null],
+            type: 'codestar_gyroscope'
+        },
+        paramsKeyMap: {
+            AXIS: 0
+        },
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            return Entry.hw.getAnalogPortValue('gyro_'+axis);
+        }
+    },
+    codestar_geomagnetic: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '3축 지자기 %1 축 %2',
+        params: [{
+            type: 'Dropdown',
+            options: [['x', 'x'], ['y', 'y'], ['z', 'z']]
+        },{
+            type: 'Indicator',
+            size: 11
+        }],
+        events: {},
+        def: {
+            params: ['x', null],
+            type: 'codestar_geomagnetic'
+        },
+        paramsKeyMap: {
+            AXIS: 0
+        },
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            var axis = script.getField('AXIS');
+            return Entry.hw.getAnalogPortValue('geo_'+axis);
+        }
+    },
+    codestar_irR: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: 'IR 리모콘',
+        params: [],
+        events: {},
+        def: {
+            params: [],
+            type: 'codestar_irR'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            return Entry.hw.getDigitalPortValue('4');
+        }
+    },
+    codestar_tilt: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '틸트',
+        params: [],
+        events: {},
+        def: {
+            params: [],
+            type: 'codestar_tilt'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            return Entry.hw.getDigitalPortValue('6');
+        }
+    },
+    "hidden": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "         ?       %1",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "hidden"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+        }
+    }
 };
 
 (function() {

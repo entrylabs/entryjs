@@ -31,6 +31,7 @@ Entry.BlockMenuScroller = function(board) {
     this.setOpacity(0);
     this._addControl();
 
+    this._domHeight = 0;
     if (Entry.windowResized)
         Entry.windowResized.attach(this, this.resizeScrollBar);
 };
@@ -54,9 +55,15 @@ Entry.BlockMenuScroller.RADIUS = 7;
 
     p.resizeScrollBar = function() {
         this._updateRatio();
+
+        var dom = this.board.blockMenuContainer;
+        var newHeight = dom.height();
+        if (newHeight !== this._domHeight) {
+            this._domHeight = newHeight;
+            return this.board.align();
+        }
         if (!this._visible || this.vRatio === 0) return;
         var that = this;
-        var dom = this.board.blockMenuContainer;
 
         this.vScrollbar.attr({
             width: 9,
@@ -123,7 +130,7 @@ Entry.BlockMenuScroller.RADIUS = 7;
                 height: bRect.height
             };
 
-        var vRatio = (bBox.height + bBox.y + 10)/realHeight;
+        var vRatio = (bBox.height + 20)/realHeight;
         this.vRatio = vRatio;
         if (vRatio <= 1)
             this.setVisible(false);

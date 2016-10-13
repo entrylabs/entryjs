@@ -781,6 +781,9 @@ svg .svgBlockGroup text {
 .entry-field-dropdown {
   cursor: default;
 }
+.guideGroup {
+  opacity: 0.3;
+}
 .entryWorkspaceBlockMenu {
   background-color: #e5e5e5;
   position: absolute;

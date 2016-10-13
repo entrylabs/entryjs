@@ -103,7 +103,6 @@ Entry.Board.DRAG_RADIUS = 5;
 
         Entry.Utils.addFilters(this.svg, this.suffix);
         var returnVal = Entry.Utils.addBlockPattern(this.svg, this.suffix);
-        this.patternRect = returnVal.rect;
         this.pattern = returnVal.pattern;
     };
 
@@ -214,8 +213,7 @@ Entry.Board.DRAG_RADIUS = 5;
                     }
                 }, 1000);
             }
-        } else if (Entry.Utils.isRightButton(e))
-            this._rightClick(e);
+        } else if (Entry.Utils.isRightButton(e)) this._rightClick(e);
 
         function onMouseMove(e) {
             if (e.stopPropagation) e.stopPropagation();
@@ -328,7 +326,7 @@ Entry.Board.DRAG_RADIUS = 5;
             }
             columWidth = Math.max(columWidth, bBox.width);
             top = acculmulatedTop + verticalGap;
-            blockView._moveTo(left, top, false);
+            blockView._moveTo(left - bBox.x, top, false);
             acculmulatedTop = acculmulatedTop + bBox.height + verticalGap;
         }
         this.scroller.resizeScrollBar();
@@ -809,13 +807,8 @@ Entry.Board.DRAG_RADIUS = 5;
         this.code.dominate(block.thread);
     };
 
-    p.setPatternRectFill = function(color) {
-        this.patternRect.attr({
-            fill:color
-        });
-        this.pattern.attr({
-            style: ""
-        });
+    p.enablePattern = function() {
+        this.pattern.removeAttribute('style');
     };
 
     p.disablePattern = function() {
@@ -945,7 +938,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 option: {
                     text: Lang.Blocks.Clear_all_blocks,
                     callback: function(){
-                        that.code.clear();
+                        that.code.clear(true);
                     }
                 }
             },
