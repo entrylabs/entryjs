@@ -192,8 +192,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var object = calleeData.object;
             var property = calleeData.property;
 
-            if(object.statements && property.name == "call" && property.userCode == false)
-            {
+            if(object.statements && property.name == "call" && property.userCode == false) {
                 var statements = object.statements;
                 console.log("CallExpression statement", statements);
                 result.statements = statements;

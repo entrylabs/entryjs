@@ -45,7 +45,7 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isNumeric = function(value) {
-        console.log("isNumeric value", Math.abs(value));
+        //console.log("isNumeric value", Math.abs(value));
         value = String(Math.abs(value));
         if(value.match(/^-?\d+$|^-\d+$/) || value.match(/^-?\d+\.\d+$/)) {
             return true;
