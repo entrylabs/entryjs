@@ -3294,6 +3294,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             // Func Create
             var newFunc = new Entry.Func();
             newFunc.generateBlock(true);
+            
 
             console.log("FunctionDeclaration newFunc before", newFunc);
             var templateArr = [];
@@ -3351,7 +3352,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("textFuncParams ppp", textFuncParams[p]);
                 paramInfo[textFuncParams[0]] = stringParam;
 
-              for(var p = 1; p < textFuncParams.length; p++) {
+            for(var p = 1; p < textFuncParams.length; p++) {
                     var paramFieldBlock = new Entry.Block({ type: "function_field_string" }, thread);
                     paramFieldBlock.data.params = [];
 
@@ -3391,6 +3392,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             Entry.Func.generateWsBlock(newFunc);
+            Entry.Func.setupMenuCode();
             Entry.variableContainer.saveFunction(newFunc);
             Entry.variableContainer.updateList();
 

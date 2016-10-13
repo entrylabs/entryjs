@@ -15036,6 +15036,7 @@ Entry.PyToBlockParser = function(b) {
           }
         }
         Entry.Func.generateWsBlock(m);
+        Entry.Func.setupMenuCode();
         Entry.variableContainer.saveFunction(m);
         Entry.variableContainer.updateList();
         k = c.length;
