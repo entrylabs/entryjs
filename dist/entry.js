@@ -25411,7 +25411,8 @@ Entry.Vim = function(b, a) {
   };
   b.getCodeToText = function(a, b) {
     console.log("parseType", b);
-    var c = this.workspace.oldTextType;
+    console.log("textType", this.workspace.textType);
+    var c = this.workspace.textType;
     c === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : c === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     return b ? this._parser.parse(a, b) : this._parser.parse(a, Entry.Parser.PARSE_SYNTAX);
   };
@@ -25466,7 +25467,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       case this.oldMode:
         return;
       case Entry.Workspace.MODE_VIMBOARD:
-        Entry.TextCodingUtil._currentObject = Entry.playground.object;
+        Entry.playground && Entry.playground.object && (Entry.TextCodingUtil._currentObject = Entry.playground.object);
         this.board && this.board.hide();
         this.overlayBoard && this.overlayBoard.hide();
         this.blockMenu.banClass("textMode");

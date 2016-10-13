@@ -96,7 +96,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 return;
 
             case Entry.Workspace.MODE_VIMBOARD:
-                    Entry.TextCodingUtil._currentObject = Entry.playground.object;
+                    if(Entry.playground && Entry.playground.object)
+                        Entry.TextCodingUtil._currentObject = Entry.playground.object;
                     if (this.board) this.board.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.banClass('textMode');

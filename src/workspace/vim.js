@@ -242,7 +242,8 @@ Entry.Vim = function(dom, textType) {
 
     p.getCodeToText = function(code, parseType) {
         console.log("parseType", parseType);
-        var textType = this.workspace.oldTextType;
+        console.log("textType", this.workspace.textType);
+        var textType = this.workspace.textType;
         if (textType === Entry.Vim.TEXT_TYPE_JS){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
