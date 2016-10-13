@@ -240,7 +240,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     };
 
     p.getTextByValue = function(value) {
-        if (!value || value === 'null') return Lang.Blocks.no_target;
+        if ((!value && typeof value !== 'number') || value === 'null')
+            return Lang.Blocks.no_target;
 
         var options = this._contents.options;
         for (var i=0, len=options.length; i<len; i++) {
@@ -249,6 +250,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 return option[0];
         }
         //no match found
+        if (value === "?") return value;
         return Lang.Blocks.no_target;
     };
 
