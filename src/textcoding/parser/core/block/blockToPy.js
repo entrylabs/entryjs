@@ -273,7 +273,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                            !Entry.TextCodingUtil.isBinaryOperator(param))
                            param = String("\"" + param + "\"");
 
-                        console.log("start None", param);
+                        console.log("param text", param);
 
                         if(param == String('\"None\"')) { 
                            var data = {None:"None"};

@@ -207,16 +207,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var calleeName = null;
             }
 
-            console.log("CallExpression calleeName", calleeName);
-
             type = this.getBlockType(calleeName);
-
-            console.log("CallExpression type before", type);
 
             if(calleeName)
                 var calleeTokens = calleeName.split('.');
-
-            console.log("CallExpression calleeTokens", calleeTokens);
 
             if(calleeName == "__pythonRuntime.functions.range"){
                 var syntax = String("%1number#");
@@ -316,6 +310,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var argument = arguments[i];
                 console.log("kkk argument", argument, "typeof", typeof argument);
 
+                if(calleeName == "_pythonRuntime.functions.range") {
+
+                    break;
+                }
+
                 if(argument) {
                     console.log("CallExpression argument", argument, "typeof", typeof argument);
                     var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
@@ -366,16 +365,61 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
 
                 console.log("calleeName2", calleeName, "param", param);
-                if(calleeName == "__pythonRuntime.functions.range" && param && param.type) {
-                    if(param && param != null) {
-                        type = param.type;
-                        params = param.params; 
+                
+                if(calleeName == "__pythonRuntime.functions.range" && param) {
+                    if(arguments.length > 2) {
+                        var error = {};
+                        error.title = "지원되지 않는 코드";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + "range() 함수의 파라미터 개수는 1개 또는 2개만 가능합니다.";
+                        error.line = this._blockCount;
+                        console.log("send error", error);
+                        throw error;
                     }
-                }
-                else if(calleeName == "__pythonRuntime.functions.range" && typeof param == "object") {
-                    result.name = param.name;
-                    return result;
 
+                    if(arguments.length == 2) {
+                        console.log("param param bban", param);
+                        if(typeof param != "object") {
+                            if(params.length == 1) {
+                                var count = parseInt(param) - parseInt(params[0]);
+                                if(!isNaN(count))
+                                    params.splice(0, 1, count);
+                                else
+                                    params.splice(0, 1, param);
+                            }
+                            else {
+                                params.push(param);
+                            }
+                        }
+                        else if(param.params && param.params.length != 0) { 
+                            if(params.length == 1) {
+                                var count = parseInt(param.params[0]) - parseInt(params[0]);
+                                console.log("range param count", count);
+                                if(!isNaN(count))
+                                    params.splice(0, 1, count);
+                                else
+                                    params.splice(0, 1, param.params[0]);
+                            }
+                            else {
+                                params.push(param.params[0]);
+                            } 
+                        }
+                        else {
+                            params.push(param);
+                        }
+                    }
+                    else {
+                        if(typeof param != "object") {
+                            params.push(param);
+                        }
+                        else if(param.type && param.params) {
+                            type = param.type;
+                            params = param.params;
+                        }
+                        else if(param.name != undefined || param.name != null) {
+                            result.name = param.name;
+                            return result;
+                        }
+                    }
                 } 
                 else {
                     if(param && param.data) {
@@ -3392,7 +3436,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             Entry.Func.generateWsBlock(newFunc);
-            Entry.Func.setupMenuCode();
             Entry.variableContainer.saveFunction(newFunc);
             Entry.variableContainer.updateList();
 

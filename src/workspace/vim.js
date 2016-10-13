@@ -241,7 +241,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
         doc.setCursor({ line: doc.lastLine() - 1});
     };
 
-    p.getCodeToText = function(code) {
+    p.getCodeToText = function(code, parseType) {
         var textType = this.workspace.oldTextType;
 
         if (textType === Entry.Vim.TEXT_TYPE_JS){

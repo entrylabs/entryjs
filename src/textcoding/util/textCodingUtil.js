@@ -45,6 +45,8 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isNumeric = function(value) {
+        console.log("isNumeric value", Math.abs(value));
+        value = String(Math.abs(value));
         if(value.match(/^-?\d+$|^-\d+$/) || value.match(/^-?\d+\.\d+$/)) {
             return true;
         }
@@ -372,6 +374,10 @@ Entry.TextCodingUtil = {};
 
     tu.variableListFilter = function(block, index, param) {
         console.log("paramFilter block index param", block.data.type, index, param);
+
+        if(param == "None")
+            return result = param;
+
         var result = param;
         var type = block.data.type;
         if(type == "change_variable" || type == "set_variable" || type == "get_variable" ) {

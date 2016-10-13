@@ -85,20 +85,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-<<<<<<< HEAD
-        if (typeof mode === 'number') {
-            this.mode = mode;
-        } else {
-=======
         if (!isNaN(mode)) this.mode = mode;
         else {
->>>>>>> feature/codingParty
             this.mode = mode.boardType;
             this.runType = mode.runType;
             this.textType = mode.textType;
         }
 
-<<<<<<< HEAD
+        this.mode = Number(this.mode);
         switch (this.mode) {
             case this.oldMode:
                 return;
@@ -130,40 +124,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     if (this.vimBoard) this.vimBoard.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.renderBlock(function() {
-=======
-        this.mode = Number(this.mode);
-
-        switch (this.mode) {
-           case this.oldMode:
-               return;
-
-           case Entry.Workspace.MODE_VIMBOARD:
-               try {
-                   if (this.board) this.board.hide();
-                   if (this.overlayBoard) this.overlayBoard.hide();
-                   this.set({selectedBoard:this.vimBoard});
-                   this.vimBoard.show();
-                   this.codeToText(this.board.code, mode);
-                   this.blockMenu.renderText(function() {
-                       this.blockMenu.reDraw();
-                   }.bind(this));
-                   this.board.clear();
-                   //this.oldMode = this.mode;
-                   this.oldTextType = this.textType;
-               } catch(e) {
-                   //console.log("vimBoard error");
-               }
-
-               break;
-           case Entry.Workspace.MODE_BOARD:
-               try {
-                   this.board.show();
-                   this.set({selectedBoard:this.board});
-                   this.textToCode(this.oldMode, this.oldTextType);
-                   if (this.vimBoard) this.vimBoard.hide();
-                   if (this.overlayBoard) this.overlayBoard.hide();
-                   this.blockMenu.renderBlock(function() {
->>>>>>> feature/codingParty
                        this.blockMenu.reDraw();
                        }.bind(this)
                    );
