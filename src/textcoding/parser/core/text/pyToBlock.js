@@ -221,10 +221,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 argumentData = {raw:"PLUS", type:"Literal", value:"PLUS"};
                 console.log("arguments geniuse", arguments);
+                
                 if(arguments.length == 2)
                     arguments.splice(1, 0, argumentData);
 
                 result.operator = "PLUS";
+                
+
+                console.log("callexpression arguments", arguments);
             }
             else if(calleeName == "__pythonRuntime.ops.multiply") {
                 var syntax = String("(%1 %2calc_basic# %3)");
@@ -305,12 +309,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             console.log("CallExpression arguments", arguments);
 
+            if(calleeName == "__pythonRuntime.ops.add")
+                var isParamAllString = true;
+            
             for(var i in arguments) {
                 var argument = arguments[i];
                 console.log("kkk argument", argument, "typeof", typeof argument);
 
                 if(calleeName == "_pythonRuntime.functions.range") {
-
                     break;
                 }
 
@@ -364,6 +370,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
 
                 console.log("calleeName2", calleeName, "param", param);
+
+                if(calleeName == "__pythonRuntime.ops.add") {
+                    if(param && (param.type == "text" || param.type == "number" || param.type == "combine_something" || param == "PLUS")) {
+                        if(param.type == "text" || param.type == "number") {
+                            if(param.params && param.params.length != 0) {
+                                var p = param.params[0];
+                                if(typeof p != "string") {
+                                    console.log("isParamAllString", param);
+                                    isParamAllString = false;
+                                }
+                            }
+                        }
+                    } else {
+                        isParamAllString = false;
+                    }
+                }
                 
                 if(calleeName == "__pythonRuntime.functions.range" && param) {
                     if(arguments.length > 2) {
@@ -424,13 +446,23 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(param && param.data) {
                         param = param.data;
                     }
-                    params.push(param);
+
+                    if(param)
+                        params.push(param);
                 }
 
             }
 
-            console.log("CallExpression syntax", syntax);
-            console.log("CallExpression argument params", params);
+            if(isParamAllString) {
+                var syntax = String("%2 + %4");
+                type = this.getBlockType(syntax);
+
+                params[1] = null;
+                params.splice(0, 0, null);
+                params.splice(4, 0, null);
+
+                console.log("isParamAllString params", params);
+            }
 
             if(syntax == String("%2.append") || syntax == String("%2.pop")) {
                 if(calleeTokens[0] == "self") {
@@ -474,7 +506,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params[0].params[0] = String(Number(params[0].params[0]) + 1);
                     }
                 }
-            } else if(syntax == String("%2.insert")) {
+            } 
+
+            if(syntax == String("%2.insert")) {
                 if(calleeTokens[0] == "self") {
                     var object = Entry.TextCodingUtil._currentObject;
                     var name = calleeTokens[1];
@@ -524,11 +558,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(params[2].type == "text") {
                     params[2].params[0] = String(Number(params[2].params[0]) + 1);
                 }
-            } else if(syntax == String("len")) {
+            } 
+
+            if(syntax == String("len")) {
                 var listName = this.ParamDropdownDynamic(params[1].name, paramsMeta[1], paramsDefMeta[1]);
                 delete params[1];
                 params[1] = listName;
-            } else if(syntax == String("%4 in %2")) {
+            } 
+
+            if(syntax == String("%4 in %2")) {
                 var argument = component.arguments[1];
                 var param = this[argument.type](argument, paramsMeta[3], paramsDefMeta[3], true);
                 var listName = component.arguments[3].name;

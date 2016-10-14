@@ -7653,7 +7653,7 @@ Entry.block = {
 
             return leftValue + rightValue;
         },
-        "syntax": {"js": [], "py": ["Entry.string_concat(%2, %4)"]}
+        "syntax": {"js": [], "py": ["%2 + %4"]}
     },
     "get_sound_volume": {
         "color": "#FFD974",
