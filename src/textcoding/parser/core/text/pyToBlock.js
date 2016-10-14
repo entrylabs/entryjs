@@ -446,9 +446,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(param && param.data) {
                         param = param.data;
                     }
-
-                    if(param)
-                        params.push(param);
+                    
+                    params.push(param);
                 }
 
             }
@@ -3023,9 +3022,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("BinaryExpression param", param);
                     console.log("check binary", typeof param, "$", param.type, "$", param.isCallParam);
 
-                    if(param && param != null) {
+                    if(param && typeof param == "object") {
                         if(param.name && !param.name.includes("__filbert")) {
-                            if(typeof param == "object" && !param.type && param.isCallParam) {
+                            if(!param.type && param.isCallParam) {
                                 if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
                                     var error = {};
                                     error.title = "지원되지 않는 코드";
@@ -3100,9 +3099,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("BinaryExpression param", param);
-                    if(param && param != null) {
+                    if(param && typeof param == "object") {
                         if(param.name && !param.name.includes("__filbert")) {
-                            if(typeof param == "object" && !param.type && param.isCallParam) {
+                            if(!param.type && param.isCallParam) {
                                 if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
                                     var error = {};
                                     error.title = "지원되지 않는 코드";

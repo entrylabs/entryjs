@@ -13870,7 +13870,7 @@ Entry.PyToBlockParser = function(b) {
               }
             }
           } else {
-            l && l.data && (l = l.data), l && f.push(l);
+            l && l.data && (l = l.data), f.push(l);
           }
         }
       }
@@ -14884,8 +14884,8 @@ Entry.PyToBlockParser = function(b) {
           n = this[n.type](n, h[m], k[m], !0);
           console.log("BinaryExpression param", n);
           console.log("check binary", typeof n, "$", n.type, "$", n.isCallParam);
-          if (n && null != n) {
-            if (n.name && !n.name.includes("__filbert") && "object" == typeof n && !n.type && n.isCallParam && !Entry.TextCodingUtil.isFuncParam(n.name)) {
+          if (n && "object" == typeof n) {
+            if (n.name && !n.name.includes("__filbert") && !n.type && n.isCallParam && !Entry.TextCodingUtil.isFuncParam(n.name)) {
               throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
             }
             b.push(n);
@@ -14913,8 +14913,8 @@ Entry.PyToBlockParser = function(b) {
           e = h[l].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, l < arguments.length && arguments.splice(l, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, l < arguments.length && arguments.splice(l, 0, e));
         }
         for (m in arguments) {
-          if (n = arguments[m], console.log("BinaryExpression argument", n), n = this[n.type](n, h[m], k[m], !0), console.log("BinaryExpression param", n), n && null != n) {
-            if (n.name && !n.name.includes("__filbert") && "object" == typeof n && !n.type && n.isCallParam && !Entry.TextCodingUtil.isFuncParam(n.name)) {
+          if (n = arguments[m], console.log("BinaryExpression argument", n), n = this[n.type](n, h[m], k[m], !0), console.log("BinaryExpression param", n), n && "object" == typeof n) {
+            if (n.name && !n.name.includes("__filbert") && !n.type && n.isCallParam && !Entry.TextCodingUtil.isFuncParam(n.name)) {
               throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
             }
             b.push(n);
