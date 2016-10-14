@@ -113,11 +113,11 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
 
                     Entry.TextCodingUtil.selectObjectForShortCut(currentScene, currentObject, option);
                     console.log("Alt-] shortcut", currentScene, currentObject, option);
-                }
-                /*"Tab": function(cm) {
+                },
+                "Tab": function(cm) {
                     var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
-                    cm.replaceSelection(spaces);
-                }*/
+                    cm.replaceSelection(spaces); 
+                } 
             },
             // gutters: ["CodeMirror-lint-markers"],
             lint: true,

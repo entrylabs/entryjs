@@ -13758,7 +13758,7 @@ Entry.PyToBlockParser = function(b) {
     console.log("CallExpression calleeData", k);
     arguments = a.arguments;
     if ("Identifier" == h.type) {
-      if (console.log("CallExpression Identifier calleeData", k), e.callee = k, u = Entry.TextCodingUtil.eventBlockSyntaxFilter(k.name), g = this.getBlockType(u), console.log("bb type", g), !g && !this._funcMap.contains(k.name + a.arguments.length) && k.name && 0 != arguments.length && "Literal" == arguments[0].type) {
+      if (console.log("CallExpression Identifier calleeData", k), e.callee = k, v = Entry.TextCodingUtil.eventBlockSyntaxFilter(k.name), g = this.getBlockType(v), console.log("bb type", g), !g && !this._funcMap.contains(k.name + a.arguments.length) && k.name && 0 != arguments.length && "Literal" == arguments[0].type) {
         throw console.log("callex error calleeData", k), f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. 'range()'\ub97c \uc0ac\uc6a9\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
       }
     } else {
@@ -13820,18 +13820,15 @@ Entry.PyToBlockParser = function(b) {
         l = h[t].type, "Indicator" == l ? (l = {raw:null, type:"Literal", value:null}, t < arguments.length && arguments.splice(t, 0, l)) : "Text" == l && (l = {raw:"", type:"Literal", value:""}, t < arguments.length && arguments.splice(t, 0, l));
       }
       console.log("CallExpression arguments", arguments);
-      if ("__pythonRuntime.ops.add" == m) {
-        var x = !0
-      }
-      for (var v in arguments) {
-        t = arguments[v];
-        console.log("kkk argument", t, "typeof", typeof t);
+      for (var x in arguments) {
+        l = arguments[x];
+        console.log("kkk argument", l, "typeof", typeof l);
         if ("_pythonRuntime.functions.range" == m) {
           break;
         }
-        if (t) {
-          console.log("CallExpression argument", t, "typeof", typeof t);
-          l = this[t.type](t, h[v], r[v], !0);
+        if (l) {
+          console.log("CallExpression argument", l, "typeof", typeof l);
+          l = this[l.type](l, h[x], r[x], !0);
           console.log("CallExpression param", l);
           console.log("top", typeof l);
           if (!c && l && "object" == typeof l && !l.type && l.isCallParam && l.name && !Entry.TextCodingUtil.isGlobalVariableExisted(l.name) && !Entry.TextCodingUtil.isFuncParam(l.name)) {
@@ -13849,95 +13846,133 @@ Entry.PyToBlockParser = function(b) {
             }
           }
           console.log("calleeName2", m, "param", l);
-          "__pythonRuntime.ops.add" == m && (!l || "text" != l.type && "number" != l.type && "combine_something" != l.type && "PLUS" != l ? x = !1 : "text" != l.type && "number" != l.type || !l.params || 0 == l.params.length || (t = l.params[0], "string" != typeof t && (console.log("isParamAllString", l), x = !1)));
-          if ("__pythonRuntime.functions.range" == m && l) {
-            if (2 < arguments.length) {
-              throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.range() \ud568\uc218\uc758 \ud30c\ub77c\ubbf8\ud130 \uac1c\uc218\ub294 1\uac1c \ub610\ub294 2\uac1c\ub9cc \uac00\ub2a5\ud569\ub2c8\ub2e4."}, f.line = this._blockCount, console.log("send error", f), f;
+          l && l.data && (l = l.data);
+          f.push(l);
+        }
+      }
+      if ("__pythonRuntime.functions.range" == m) {
+        if (2 < f.length) {
+          throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.range() \ud568\uc218\uc758 \ud30c\ub77c\ubbf8\ud130 \uac1c\uc218\ub294 1\uac1c \ub610\ub294 2\uac1c\ub9cc \uac00\ub2a5\ud569\ub2c8\ub2e4."}, f.line = this._blockCount, console.log("send error", f), f;
+        }
+        if (2 == f.length) {
+          for (t in f) {
+            if (l = f[t], console.log("range param", l), x = {}, b = [, "MINUS"], "object" != typeof l || "text" != l.type && "number" != l.type || (f[t] = l.params[0]), console.log("mid range params", f), 1 == t) {
+              if ("string" != typeof f[0] && "number" != typeof f[0] || "string" != typeof f[1] && "number" != typeof f[1]) {
+                if ("string" == typeof f[0] || "number" == typeof f[0]) {
+                  e = {}, c = [], c.push(f[0]), e.type = "text", e.params = c, f[0] = e;
+                }
+                if ("string" == typeof f[1] || "number" == typeof f[1]) {
+                  e = {}, c = [], c.push(f[1]), e.type = g, e.params = c, f[1] = e;
+                }
+                b[0] = f[1];
+                b[2] = f[0];
+                x.type = "calc_basic";
+                x.params = b;
+                return e = x;
+              }
+              console.log("came here jjj", parseInt(f[1]));
+              f = parseInt(f[1]) - parseInt(f[0]);
+              isNaN(f) ? (c = [], c.push(10)) : (c = [], c.push(f));
+              f = c;
             }
-            if (2 == arguments.length) {
-              console.log("param param bban", l), "object" != typeof l ? 1 == f.length ? (t = parseInt(l) - parseInt(f[0]), isNaN(t) ? f.splice(0, 1, l) : f.splice(0, 1, t)) : f.push(l) : l.params && 0 != l.params.length ? 1 == f.length ? (t = parseInt(l.params[0]) - parseInt(f[0]), console.log("range param count", t), isNaN(t) ? f.splice(0, 1, l.params[0]) : f.splice(0, 1, t)) : f.push(l.params[0]) : f.push(l);
+          }
+        } else {
+          if (1 == f.length) {
+            if (l = f[0], "object" != typeof l) {
+              f.splice(0, 1, l);
             } else {
-              if ("object" != typeof l) {
-                f.push(l);
+              if (l.type && l.params) {
+                g = l.type, f = l.params;
               } else {
-                if (l.type && l.params) {
-                  g = l.type, f = l.params;
-                } else {
-                  if (void 0 != l.name || null != l.name) {
-                    return e.name = l.name, e;
-                  }
+                if (!l.type && void 0 != l.name || null != l.name) {
+                  throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, f.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + l.name + "'\uc744(\ub97c) \ud655\uc778\ud558\uc138\uc694.", f.line = this._blockCount, console.log("send error", f), f;
                 }
               }
             }
+          }
+        }
+        console.log("range final params", f);
+      } else {
+        if ("__pythonRuntime.ops.add" == m) {
+          x = !0;
+          for (t in f) {
+            l = f[t], !l || "text" != l.type && "number" != l.type && "combine_something" != l.type && "PLUS" != l ? x = !1 : "text" != l.type && "number" != l.type || !l.params || 0 == l.params.length || (t = l.params[0], "string" != typeof t && (console.log("isParamAllString", l), x = !1));
+          }
+          x && (q = "%2 + %4", g = this.getBlockType(q));
+        }
+      }
+      if ("%2 + %4" == q) {
+        f[1] = null, f.splice(0, 0, null), f.splice(4, 0, null), console.log("isParamAllString params", f);
+      } else {
+        if ("random.randint" == q) {
+          console.log("random.randint params", f);
+        } else {
+          if ("%2.append" == q || "%2.pop" == q) {
+            if ("self" == n[0]) {
+              var l = Entry.TextCodingUtil._currentObject, v = n[1];
+              if (!Entry.TextCodingUtil.isLocalListExisted(v, l)) {
+                throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
+              }
+            } else {
+              if (v = n[0], !Entry.TextCodingUtil.isGlobalListExisted(v)) {
+                throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
+              }
+            }
+            console.log("CallExpression append calleeData", k);
+            k = this.ParamDropdownDynamic(v, h[1], r[1]);
+            console.log("CallExpression listName", k);
+            f.push(k);
+            console.log("CallExpression params[0]", f[0]);
+            "%2.pop" == q && ("number" == f[0].type ? f[0].params[0] += 1 : "text" == f[0].type && (f[0].params[0] = String(Number(f[0].params[0]) + 1)));
           } else {
-            l && l.data && (l = l.data), f.push(l);
+            if ("%2.insert" == q) {
+              if ("self" == n[0]) {
+                if (l = Entry.TextCodingUtil._currentObject, v = n[1], !Entry.TextCodingUtil.isLocalListExisted(v, l)) {
+                  throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
+                }
+              } else {
+                if (v = n[0], !Entry.TextCodingUtil.isGlobalListExisted(v)) {
+                  throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
+                }
+              }
+              console.log("CallExpression insert params", f);
+              f.pop();
+              console.log("CallExpression append calleeData", k);
+              k = this.ParamDropdownDynamic(v, h[1], r[1]);
+              console.log("CallExpression listName", k);
+              f.splice(0, 0, k);
+              console.log("CallExpression check arguments", arguments);
+              console.log("CallExpression arguments[1] 2", arguments[1]);
+              l = this[arguments[1].type](arguments[1], h[2], r[2], !0);
+              console.log("CallExpression check param", l);
+              f.splice(0, 0, l);
+              console.log("CallExpression insert params", f);
+              "number" == f[2].type ? f[2].params[0] += 1 : "text" == f[2].type && (f[2].params[0] = String(Number(f[2].params[0]) + 1));
+            } else {
+              "len" == q ? (k = this.ParamDropdownDynamic(f[1].name, h[1], r[1]), delete f[1], f[1] = k) : "%4 in %2" == q && (l = a.arguments[1], l = this[l.type](l, h[3], r[3], !0), k = a.arguments[3].name, k = this.ParamDropdownDynamic(k, h[1], r[1]), f = [], f.push(""), f.push(k), f.push(""), f.push(l), f.push(""));
+            }
           }
         }
       }
-      x && (q = "%2 + %4", g = this.getBlockType(q), f[1] = null, f.splice(0, 0, null), f.splice(4, 0, null), console.log("isParamAllString params", f));
-      if ("%2.append" == q || "%2.pop" == q) {
-        if ("self" == n[0]) {
-          var l = Entry.TextCodingUtil._currentObject, u = n[1];
-          if (!Entry.TextCodingUtil.isLocalListExisted(u, l)) {
-            throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
-          }
-        } else {
-          if (u = n[0], !Entry.TextCodingUtil.isGlobalListExisted(u)) {
-            throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
-          }
-        }
-        console.log("CallExpression append calleeData", k);
-        v = this.ParamDropdownDynamic(u, h[1], r[1]);
-        console.log("CallExpression listName", v);
-        f.push(v);
-        console.log("CallExpression params[0]", f[0]);
-        "%2.pop" == q && ("number" == f[0].type ? f[0].params[0] += 1 : "text" == f[0].type && (f[0].params[0] = String(Number(f[0].params[0]) + 1)));
-      }
-      if ("%2.insert" == q) {
-        if ("self" == n[0]) {
-          if (l = Entry.TextCodingUtil._currentObject, u = n[1], !Entry.TextCodingUtil.isLocalListExisted(u, l)) {
-            throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
-          }
-        } else {
-          if (u = n[0], !Entry.TextCodingUtil.isGlobalListExisted(u)) {
-            throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
-          }
-        }
-        console.log("CallExpression insert params", f);
-        f.pop();
-        console.log("CallExpression append calleeData", k);
-        v = this.ParamDropdownDynamic(u, h[1], r[1]);
-        console.log("CallExpression listName", v);
-        f.splice(0, 0, v);
-        console.log("CallExpression check arguments", arguments);
-        console.log("CallExpression arguments[1] 2", arguments[1]);
-        l = this[arguments[1].type](arguments[1], h[2], r[2], !0);
-        console.log("CallExpression check param", l);
-        f.splice(0, 0, l);
-        console.log("CallExpression insert params", f);
-        "number" == f[2].type ? f[2].params[0] += 1 : "text" == f[2].type && (f[2].params[0] = String(Number(f[2].params[0]) + 1));
-      }
-      "len" == q && (v = this.ParamDropdownDynamic(f[1].name, h[1], r[1]), delete f[1], f[1] = v);
-      "%4 in %2" == q && (t = a.arguments[1], l = this[t.type](t, h[3], r[3], !0), v = a.arguments[3].name, v = this.ParamDropdownDynamic(v, h[1], r[1]), f = [], f.push(""), f.push(v), f.push(""), f.push(l), f.push(""));
       g && (e.type = g);
       f && (e.params = f);
     } else {
-      k = [];
-      for (v in arguments) {
-        if (t = arguments[v], console.log("CallExpression argument", t, "typeof", typeof t), h = this[t.type](t), console.log("CallExpression argument", t), console.log("CallExpression argumentData", h, "??", h.type), "__pythonRuntime.utils.createParamsObj" == h.callee) {
-          k = h.arguments;
+      q = [];
+      for (x in arguments) {
+        if (l = arguments[x], console.log("CallExpression argument", l, "typeof", typeof l), h = this[l.type](l), console.log("CallExpression argument", l), console.log("CallExpression argumentData", h, "??", h.type), "__pythonRuntime.utils.createParamsObj" == h.callee) {
+          q = h.arguments;
         } else {
           if (!h.type && h.isCallParam) {
-            if ("ThisExpression" != t.type) {
+            if ("ThisExpression" != l.type) {
               throw f = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, f.line = this._blockCount, console.log("send error", f), f;
             }
           } else {
-            k.push(h);
+            q.push(h);
           }
         }
       }
-      console.log("CallExpression args", k);
-      e.arguments = k;
+      console.log("CallExpression args", q);
+      e.arguments = q;
     }
     console.log("CallExpression Function Check result", e);
     if (e.arguments && e.arguments[0] && "__pythonRuntime.utils.createParamsObj" == e.arguments[0].callee) {
@@ -13945,16 +13980,16 @@ Entry.PyToBlockParser = function(b) {
     }
     if (e.callee) {
       if (e.arguments) {
-        var k = e.arguments.length, f = [], arguments = e.arguments, y;
-        for (y in arguments) {
-          t = arguments[y], f.push(t);
+        var q = e.arguments.length, f = [], arguments = e.arguments, u;
+        for (u in arguments) {
+          l = arguments[u], f.push(l);
         }
       } else {
-        k = 0;
+        q = 0;
       }
-      y = e.callee.name + k;
-      console.log("funcKey", y);
-      if (g = this._funcMap.get(y)) {
+      u = e.callee.name + q;
+      console.log("funcKey", u);
+      if (g = this._funcMap.get(u)) {
         e = {}, e.type = g, f && 0 != f.length && (e.params = f);
       } else {
         if (0 == e.callee.isCallParam && !Entry.TextCodingUtil.isEntryEventFuncName(e.callee.name)) {
@@ -14253,7 +14288,7 @@ Entry.PyToBlockParser = function(b) {
       return "";
     }
     console.log("Literal paramMeta", b, "paramDefMeta", c);
-    "None" == a.raw ? (b = this["Param" + b.type]("None", b, c), console.log("Literal params", b), a = b) : a.value ? (b = this["Param" + b.type](e, b, c), console.log("Literal params", b), a = b) : a.left && a.operator && a.right ? (b = [], c = this[a.left.type](a.left), b.push(c), b.push(a.operator), a = this[a.right.type](a.right), b.push(a), a = b) : a = "None";
+    "None" == a.raw ? (b = this["Param" + b.type]("None", b, c), console.log("Literal params", b), a = b) : "0" == a.raw ? (b = this["Param" + b.type](0, b, c), console.log("Literal params", b), a = b) : a.value ? (b = this["Param" + b.type](e, b, c), console.log("Literal params", b), a = b) : a.left && a.operator && a.right ? (b = [], c = this[a.left.type](a.left), b.push(c), b.push(a.operator), a = this[a.right.type](a.right), b.push(a), a = b) : a = "None";
     console.log("Literal result", a);
     return a;
   };
@@ -25606,6 +25641,9 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
       var a = Entry.scene.selectedScene, b = Entry.playground.object;
       Entry.TextCodingUtil.selectObjectForShortCut(a, b, "next");
       console.log("Alt-] shortcut", a, b, "next");
+    }, Tab:function(a) {
+      var b = Array(a.getOption("indentUnit") + 1).join(" ");
+      a.replaceSelection(b);
     }}, lint:!0, viewportMargin:10});
     this.doc = this.codeMirror.getDoc();
     e = this;

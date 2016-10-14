@@ -309,9 +309,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             console.log("CallExpression arguments", arguments);
 
-            if(calleeName == "__pythonRuntime.ops.add")
-                var isParamAllString = true;
-            
             for(var i in arguments) {
                 var argument = arguments[i];
                 console.log("kkk argument", argument, "typeof", typeof argument);
@@ -371,7 +368,120 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 console.log("calleeName2", calleeName, "param", param);
 
-                if(calleeName == "__pythonRuntime.ops.add") {
+                if(param && param.data) {
+                    param = param.data;
+                }
+
+                params.push(param);
+            }
+
+            if(calleeName == "__pythonRuntime.functions.range") {
+                if(params.length > 2) {
+                    var error = {};
+                    error.title = "지원되지 않는 코드";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "range() 함수의 파라미터 개수는 1개 또는 2개만 가능합니다.";
+                    error.line = this._blockCount;
+                    console.log("send error", error);
+                    throw error;
+                }
+                else if(params.length == 2) {
+                    for(var p in params) {
+                        var param = params[p];
+                        console.log("range param", param);
+                        var rParamBlock = {};
+                        var rParamType = "calc_basic";
+                        var rParamParams = [];
+                        rParamParams[1] = "MINUS";
+                                    
+                        if(typeof param == "object") {
+                            if(param.type == "text" || param.type == "number") {
+                                params[p] = param.params[0];
+                            }
+                        }
+
+                        console.log("mid range params", params);
+                        if(p == 1) {
+                            if((typeof params[0] == "string" || typeof params[0] == "number") && 
+                                (typeof params[1] == "string" || typeof params[1] == "number")) {
+                                console.log("came here jjj", parseInt(params[1]));
+                                var count = parseInt(params[1]) - parseInt(params[0]);
+
+                                if(!isNaN(count)) {
+                                    var rParams = [];
+                                    rParams.push(count);
+                                    params = rParams;
+                                }
+                                else {
+                                    var rParams = [];
+                                    rParams.push(10);
+                                    params = rParams;
+                                }
+                            }
+                            else {
+                                if(typeof params[0] == "string" || typeof params[0] == "number") {
+                                    var rBlock = {};
+                                    var rType = "text";
+                                    var rParams = [];
+                                    rParams.push(params[0]);
+                                    rBlock.type = rType;
+                                    rBlock.params = rParams;
+
+                                    params[0] = rBlock;
+                                } 
+
+                                if(typeof params[1] == "string" || typeof params[1] == "number") {
+                                    var rBlock = {};
+                                    var rType = "text";
+                                    var rParams = [];
+                                    rParams.push(params[1]);
+                                    rBlock.type = type;
+                                    rBlock.params = rParams;
+
+                                    params[1] = rBlock;
+                                }
+
+                                rParamParams[0] = params[1];
+                                rParamParams[2] = params[0];
+
+                                rParamBlock.type = rParamType;
+                                rParamBlock.params = rParamParams;
+
+                                result = rParamBlock;
+                                return result;
+                            }
+                        }
+                    }
+                }
+                else if(params.length == 1) {
+                    var param = params[0];
+
+                    if(typeof param != "object") {
+                        params.splice(0, 1, param);
+                    }
+                    else {
+                       if(param.type && param.params) {
+                            type = param.type;
+                            params = param.params;
+                        }
+                        else if(!param.type && param.name != undefined || param.name != null) {
+                            var error = {};
+                            error.title = "지원되지 않는 코드";
+                            error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을(를) 확인하세요.";
+                            error.line = this._blockCount;
+                            console.log("send error", error);
+                            throw error;
+                            /*result.name = param.name;
+                            return result;*/
+                        }
+                    }
+                }
+
+                console.log("range final params", params);
+            } 
+            else if(calleeName == "__pythonRuntime.ops.add") {
+                var isParamAllString = true;
+                for(var p in params) {
+                    var param = params[p];
                     if(param && (param.type == "text" || param.type == "number" || param.type == "combine_something" || param == "PLUS")) {
                         if(param.type == "text" || param.type == "number") {
                             if(param.params && param.params.length != 0) {
@@ -386,84 +496,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         isParamAllString = false;
                     }
                 }
-                
-                if(calleeName == "__pythonRuntime.functions.range" && param) {
-                    if(arguments.length > 2) {
-                        var error = {};
-                        error.title = "지원되지 않는 코드";
-                        error.message = "블록으로 변환될 수 없는 코드입니다." + "range() 함수의 파라미터 개수는 1개 또는 2개만 가능합니다.";
-                        error.line = this._blockCount;
-                        console.log("send error", error);
-                        throw error;
-                    }
 
-                    if(arguments.length == 2) {
-                        console.log("param param bban", param);
-                        if(typeof param != "object") {
-                            if(params.length == 1) {
-                                var count = parseInt(param) - parseInt(params[0]);
-                                if(!isNaN(count))
-                                    params.splice(0, 1, count);
-                                else
-                                    params.splice(0, 1, param);
-                            }
-                            else {
-                                params.push(param);
-                            }
-                        }
-                        else if(param.params && param.params.length != 0) { 
-                            if(params.length == 1) {
-                                var count = parseInt(param.params[0]) - parseInt(params[0]);
-                                console.log("range param count", count);
-                                if(!isNaN(count))
-                                    params.splice(0, 1, count);
-                                else
-                                    params.splice(0, 1, param.params[0]);
-                            }
-                            else {
-                                params.push(param.params[0]);
-                            } 
-                        }
-                        else {
-                            params.push(param);
-                        }
-                    }
-                    else {
-                        if(typeof param != "object") {
-                            params.push(param);
-                        }
-                        else if(param.type && param.params) {
-                            type = param.type;
-                            params = param.params;
-                        }
-                        else if(param.name != undefined || param.name != null) {
-                            result.name = param.name;
-                            return result;
-                        }
-                    }
-                } 
-                else {
-                    if(param && param.data) {
-                        param = param.data;
-                    }
-                    
-                    params.push(param);
+                if(isParamAllString) { //retype considering parameter condition
+                    var syntax = String("%2 + %4");
+                    type = this.getBlockType(syntax);   
                 }
-
             }
 
-            if(isParamAllString) {
-                var syntax = String("%2 + %4");
-                type = this.getBlockType(syntax);
-
+            if(syntax == String("%2 + %4")) {
                 params[1] = null;
                 params.splice(0, 0, null);
                 params.splice(4, 0, null);
 
                 console.log("isParamAllString params", params);
+            } 
+            else if(syntax == String("random.randint")) {
+                console.log("random.randint params", params);
             }
-
-            if(syntax == String("%2.append") || syntax == String("%2.pop")) {
+            else if(syntax == String("%2.append") || syntax == String("%2.pop")) {
                 if(calleeTokens[0] == "self") {
                     var object = Entry.TextCodingUtil._currentObject;
                     var name = calleeTokens[1];
@@ -506,8 +556,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 }
             } 
-
-            if(syntax == String("%2.insert")) {
+            else if(syntax == String("%2.insert")) {
                 if(calleeTokens[0] == "self") {
                     var object = Entry.TextCodingUtil._currentObject;
                     var name = calleeTokens[1];
@@ -558,14 +607,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params[2].params[0] = String(Number(params[2].params[0]) + 1);
                 }
             } 
-
-            if(syntax == String("len")) {
+            else if(syntax == String("len")) {
                 var listName = this.ParamDropdownDynamic(params[1].name, paramsMeta[1], paramsDefMeta[1]);
                 delete params[1];
                 params[1] = listName;
             } 
-
-            if(syntax == String("%4 in %2")) {
+            else if(syntax == String("%4 in %2")) {
                 var argument = component.arguments[1];
                 var param = this[argument.type](argument, paramsMeta[3], paramsDefMeta[3], true);
                 var listName = component.arguments[3].name;
@@ -1650,6 +1697,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(component.raw == "None") {
             value = "None";
+            var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
+            console.log("Literal params", params);
+            result = params;
+        }
+        else if(component.raw == "0") {
+            value = 0;
             var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
             console.log("Literal params", params);
             result = params;
