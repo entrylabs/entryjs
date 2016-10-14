@@ -10153,7 +10153,7 @@ Entry.HW = function() {
   Entry.addEventListener("stop", this.setZero);
   this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "B.1":Entry.Codestar};
 };
-Entry.HW.TRIAL_LIMIT = 1;
+Entry.HW.TRIAL_LIMIT = 2;
 p = Entry.HW.prototype;
 p.createRandomRoomId = function() {
   return "xxxxxxxxyx".replace(/[xy]/g, function(a) {
@@ -10161,61 +10161,65 @@ p.createRandomRoomId = function() {
     return ("x" == a ? b : b & 3 | 8).toString(16);
   });
 };
-p.initSocket = function() {
-  try {
-    if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-      this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
+p.connectWebSocket = function(a, b) {
+  var c = this, d = io(a, b);
+  d.io.reconnectionAttempts(Entry.HW.TRIAL_LIMIT);
+  d.io.reconnectionDelayMax(1E3);
+  d.io.timeout(1E3);
+  d.on("connect", function() {
+    console.log("connect");
+    c.socketType = "WebSocket";
+    c.initHardware(d);
+  });
+  d.on("matched", function(b) {
+    d.emit("matchTarget", {target:b});
+  });
+  d.on("mode", function(b) {
+    d.mode = b;
+  });
+  d.on("message", function(b) {
+    if (b.data && "string" === typeof b.data) {
+      b = JSON.parse(b.data), c.checkDevice(b), c.updatePortData(b);
     } else {
-      var a = this, b, c;
-      this.connected = !1;
-      if (-1 < location.protocol.indexOf("https")) {
-        c = io("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-      } else {
-        try {
-          b = io("https://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}}), b.on("connect", function() {
-            c.close();
-            a.socketType = "WebSocket";
-            a.initHardware(b);
-          }), b.on("mode", function(a) {
-            b.mode = a;
-          }), b.on("message", function(b) {
-            b.data && "string" === typeof b.data && (b = JSON.parse(b.data), a.checkDevice(b), a.updatePortData(b));
-          }), b.on("disconnect", function() {
-            "WebSocket" === a.socketType && (a.socket = null, a.initSocket());
-          });
-        } catch (d) {
-        }
-        try {
-          c = io("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-        } catch (d) {
+      if ("string" === typeof b) {
+        switch(console.log(b), b) {
+          case "disconnectHardware":
+            c.disconnectHardware();
         }
       }
-      c.on("connect", function() {
-        console.log("connect", c.id);
-        b.close();
-        a.socketType = "WebSocket";
-        a.initHardware(c);
-      });
-      c.on("matched", function(b) {
-        c.emit("matchTarget", {target:b});
-      });
-      c.on("mode", function(b) {
-        c.mode = b;
-      });
-      c.on("message", function(b) {
-        b.data && "string" === typeof b.data && (b = JSON.parse(b.data), a.checkDevice(b), a.updatePortData(b));
-      });
-      c.on("disconnect", function() {
-        console.log("disconnect");
-        "WebSocket" === a.socketType && (a.socket = null, a.initSocket());
-      });
-      Entry.dispatchEvent("hwChanged");
     }
-  } catch (d) {
+  });
+  d.on("disconnect", function() {
+    console.log("disconnect");
+    c.aaa ? (c.aaa = !1, c.initSocket()) : "WebSocket" === c.socketType && c.disconnectedSocket();
+  });
+  return d;
+};
+p.initSocket = function() {
+  try {
+    this.connected = !1;
+    if (-1 < location.protocol.indexOf("https")) {
+      this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+    } else {
+      try {
+        this.socketIo = this.connectWebSocket("https://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+      } catch (a) {
+      }
+      try {
+        this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+      } catch (a) {
+      }
+    }
+    window.a = this.tlsSocketIo;
+    window.b = this.socketIo;
+    Entry.dispatchEvent("hwChanged");
+  } catch (a) {
   }
 };
 p.retryConnect = function() {
-  this.socket ? (console.log("retry execHardware"), this.executeHardware()) : (console.log("retry initSocket"), this.executeHardware(), this.connectTrial = 0, this.initSocket());
+  this.aaa = !0;
+  Entry.HW.TRIAL_LIMIT = 5;
+  this.socket ? this.executeHardware() : (this.executeHardware(), this.initSocket());
 };
 p.initHardware = function(a) {
   this.socket = a;
@@ -10223,6 +10227,23 @@ p.initHardware = function(a) {
   this.connected = !0;
   Entry.dispatchEvent("hwChanged");
   Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
+};
+p.disconnectHardware = function() {
+  Entry.propertyPanel.removeMode("hw");
+  this.hwModule = this.selectedDevice = void 0;
+  Entry.dispatchEvent("hwChanged");
+  Entry.toast.alert("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc885\ub8cc", "\ud558\ub4dc\uc6e8\uc5b4\uc758 \uc5f0\uacb0\uc774 \uc885\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4.", !1);
+};
+p.disconnectedSocket = function() {
+  this.tlsSocketIo.close();
+  this.socketIo && this.socketIo.close();
+  Entry.propertyPanel.removeMode("hw");
+  this.socket = void 0;
+  this.connectTrial = 0;
+  this.connected = !1;
+  this.hwModule = this.selectedDevice = void 0;
+  Entry.dispatchEvent("hwChanged");
+  Entry.toast.alert("\ud558\ub4dc\uc6e8\uc5b4 \ud504\ub85c\uadf8\ub7a8 \uc5f0\uacb0 \uc885\ub8cc", "\ud558\ub4dc\uc6e8\uc5b4 \ud504\ub85c\uadf8\ub7a8\uacfc \uc0ac\uc774\uc758 \uc5f0\uacb0\uc774 \uc885\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4.", !1);
 };
 p.setDigitalPortValue = function(a, b) {
   this.sendQueue[a] = b;
@@ -10262,7 +10283,7 @@ p.removePortReadable = function(a) {
   }
 };
 p.update = function() {
-  this.socket && this.socket.emit("message", {data:JSON.stringify(this.sendQueue), mode:this.socket.mode, type:"utf8"});
+  this.socket && (this.socket.disconnected || this.socket.emit("message", {data:JSON.stringify(this.sendQueue), mode:this.socket.mode, type:"utf8"}));
 };
 p.updatePortData = function(a) {
   this.portData = a;
@@ -10284,7 +10305,7 @@ p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(a) {
-  void 0 !== a.company && (a = [Entry.Utils.convertIntToHex(a.company), ".", Entry.Utils.convertIntToHex(a.model)].join(""), a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !0), this.hwModule.monitorTemplate && 
+  void 0 !== a.company && (a = [Entry.Utils.convertIntToHex(a.company), ".", Entry.Utils.convertIntToHex(a.model)].join(""), a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !1), this.hwModule.monitorTemplate && 
   (this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), a = this.hwModule.monitorTemplate, "both" == a.mode ? (a.mode = "list", this.hwMonitor.generateListView(), a.mode = "general", this.hwMonitor.generateView(), a.mode = "both") : "list" == a.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
 };
 p.banHW = function() {
@@ -10385,6 +10406,10 @@ Entry.PropertyPanel = function() {
     "hw" == b && $(".propertyTabhw").bind("dblclick", function() {
       Entry.dispatchEvent("hwModeChange");
     });
+  };
+  a.removeMode = function(b) {
+    this.modes[b] && (this.modes[b].tabDom.remove(), this.modes[b].contentDom.remove(), "hw" == b && ($(this.modes).removeClass(".propertyTabhw"), $(".propertyTabhw").unbind("dblclick")));
+    (b = Object.keys(this.modes)) && 0 < b.length && this.select(b[0]);
   };
   a.resize = function(b) {
     this._view.css({width:b + "px", top:9 * b / 16 + 123 - 22 + "px"});
@@ -25522,15 +25547,15 @@ Entry.GlobalSvg = {};
       this.svgDom.css({transform:"translate3d(" + this.left + "px," + this.top + "px, 0px)"});
     }
   };
-  a.terminateDrag = function(a) {
-    var b = Entry.mouseCoordinate, d = a.getBoard(), e = d.workspace.blockMenu, f = e.offset().left, g = e.offset().top, h = e.visible ? e.svgDom.width() : 0;
-    return b.y > d.offset().top - 20 && b.x > f + h ? this.DONE : b.y > g && b.x > f && e.visible ? a.block.isDeletable() ? this.REMOVE : this.RETURN : this.RETURN;
+  a.terminateDrag = function(b) {
+    var a = Entry.mouseCoordinate, d = b.getBoard(), e = d.workspace.blockMenu, f = e.offset().left, g = e.offset().top, h = e.visible ? e.svgDom.width() : 0;
+    return a.y > d.offset().top - 20 && a.x > f + h ? this.DONE : a.y > g && a.x > f && e.visible ? b.block.isDeletable() ? this.REMOVE : this.RETURN : this.RETURN;
   };
-  a.addControl = function(a) {
+  a.addControl = function(b) {
     this.onMouseDown.apply(this, arguments);
   };
-  a.onMouseDown = function(a) {
-    function b(a) {
+  a.onMouseDown = function(b) {
+    function a(a) {
       var b = a.pageX;
       a = a.pageY;
       var c = e.left + (b - e._startX), d = e.top + (a - e._startY);
@@ -25543,17 +25568,17 @@ Entry.GlobalSvg = {};
     function d(a) {
       $(document).unbind(".block");
     }
-    this._startY = a.pageY;
+    this._startY = b.pageY;
     var e = this;
-    a.stopPropagation();
-    a.preventDefault();
+    b.stopPropagation();
+    b.preventDefault();
     var f = $(document);
-    f.bind("mousemove.block", b);
+    f.bind("mousemove.block", a);
     f.bind("mouseup.block", d);
-    f.bind("touchmove.block", b);
+    f.bind("touchmove.block", a);
     f.bind("touchend.block", d);
-    this._startX = a.pageX;
-    this._startY = a.pageY;
+    this._startX = b.pageX;
+    this._startY = b.pageY;
   };
 })(Entry.GlobalSvg);
 Entry.Mutator = function() {

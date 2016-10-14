@@ -53,7 +53,7 @@ Entry.HW = function() {
     };
 };
 
-Entry.HW.TRIAL_LIMIT = 1;
+Entry.HW.TRIAL_LIMIT = 2;
 
 var p = Entry.HW.prototype;
 
@@ -64,131 +64,112 @@ p.createRandomRoomId = function() {
     });
 }
 
+p.connectWebSocket = function(url, option) {
+    var hw = this;
+    var socket = io(url, option);
+    socket.io.reconnectionAttempts(Entry.HW.TRIAL_LIMIT);
+    socket.io.reconnectionDelayMax(1000);
+    socket.io.timeout(1000);
+    socket.on('connect', function() {
+        console.log('connect');
+        hw.socketType = 'WebSocket';
+        hw.initHardware(socket);
+    });
+
+    socket.on('matched', function (target) {
+        socket.emit('matchTarget', {
+            target: target,
+        });
+    });
+
+    socket.on('mode', function (mode) {
+        socket.mode = mode;
+    });
+
+    socket.on('message', function(msg) {
+        if(msg.data && typeof msg.data === 'string') {
+            var data = JSON.parse(msg.data);
+            hw.checkDevice(data);
+            hw.updatePortData(data);
+        } else if(typeof msg === 'string') {
+            console.log(msg);
+            switch(msg) {
+                case 'disconnectHardware': {
+                    hw.disconnectHardware();
+                    break;
+                }
+            }
+        }
+    });
+
+    socket.on('disconnect', function() {
+        console.log('disconnect');
+        if(hw.aaa) {
+            hw.aaa = false;
+            hw.initSocket();
+        } else if(hw.socketType === 'WebSocket') {
+            hw.disconnectedSocket();
+        }
+    }); 
+
+    // socketSecurity.on('reconnecting', function() {
+    //     console.log('reconnecting', hw.connectTrial++);
+    //     if (hw.connectTrial >= Entry.HW.TRIAL_LIMIT) {
+    //         if (!hw.isFirstConnect)
+    //             Entry.toast.alert(Lang.Menus.connect_hw,
+    //                               Lang.Menus.connect_fail,
+    //                               false);
+    //         hw.isFirstConnect = false;
+    //         socketSecurity.close();
+    //     } else if(hw.socketType === 'WebSocket') {
+    //         // hw.socket = null;
+    //     }
+    // });
+
+    return socket;
+}
+
 p.initSocket = function() {
     try{
-        if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-            if (!this.isFirstConnect)
-                Entry.toast.alert(Lang.Menus.connect_hw,
-                                  Lang.Menus.connect_fail,
-                                  false);
-            this.isFirstConnect = false;
-            return;
-        }
+        // if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
+        //     if (!this.isFirstConnect)
+        //         Entry.toast.alert(Lang.Menus.connect_hw,
+        //                           Lang.Menus.connect_fail,
+        //                           false);
+        //     this.isFirstConnect = false;
+        //     return;
+        // }
 
         var hw = this;
-        var socket, socketSecurity;
         var protocol = '';
         this.connected = false;
         
         if(location.protocol.indexOf('https') > -1) {
-            socketSecurity = io('https://hardware.play-entry.org:23518', {query:{'client': true, 'roomId' : this.sessionRoomId}});
+            this.tlsSocketIo = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{ 'client': true, 'roomId' : this.sessionRoomId } });
         } else {
             try{
-                socket = io('https://127.0.0.1:23518', {query:{'client': true, 'roomId' : this.sessionRoomId}});
-                socket.on('connect', function() {
-                    socketSecurity.close();
-                    hw.socketType = 'WebSocket';
-                    hw.initHardware(socket);
-                });
+                this.socketIo = this.connectWebSocket('https://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
+            } catch(e) { }
 
-                socket.on('mode', function (mode) {
-                    socket.mode = mode;
-                });
-
-                socket.on('message', function(msg) {
-                    if(msg.data && typeof msg.data === 'string') {
-                        var data = JSON.parse(msg.data);
-                        hw.checkDevice(data);
-                        hw.updatePortData(data);
-                    }
-                });
-
-                socket.on('disconnect', function() {
-                    if(hw.socketType === 'WebSocket') {
-                        hw.socket = null;
-                        hw.initSocket();
-                    }
-                });
-
-                // socket.on('reconnecting', function() {
-                //     console.log('reconnecting', hw.connectTrial++);
-                //     if (hw.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-                //         if (!hw.isFirstConnect)
-                //             Entry.toast.alert(Lang.Menus.connect_hw,
-                //                               Lang.Menus.connect_fail,
-                //                               false);
-                //         hw.isFirstConnect = false;
-                //         socket.close();
-                //     } else if(hw.socketType === 'WebSocket') {
-                //         // hw.socket = null;
-                //     }
-                // });
-            } catch(e) {}
             try{
-                socketSecurity = io('https://hardware.play-entry.org:23518', {query:{'client': true, 'roomId' : this.sessionRoomId}});
-            } catch(e) {
-            }
+                this.tlsSocketIo = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
+            } catch(e) { }
         }
 
-        socketSecurity.on('connect', function() {
-            console.log('connect', socketSecurity.id);
-            socket.close();
-            hw.socketType = 'WebSocket';
-            hw.initHardware(socketSecurity);
-        });
-
-        socketSecurity.on('matched', function (target) {
-            socketSecurity.emit('matchTarget', {
-                target: target,
-            });
-        });
-
-        socketSecurity.on('mode', function (mode) {
-            socketSecurity.mode = mode;
-        });
-
-        socketSecurity.on('message', function(msg) {
-            if(msg.data && typeof msg.data === 'string') {
-                var data = JSON.parse(msg.data);
-                hw.checkDevice(data);
-                hw.updatePortData(data);
-            }
-        });
-
-        socketSecurity.on('disconnect', function() {
-            console.log('disconnect');
-            if(hw.socketType === 'WebSocket') {
-                hw.socket = null;
-                hw.initSocket();
-            }
-        }); 
-
-        // socketSecurity.on('reconnecting', function() {
-        //     console.log('reconnecting', hw.connectTrial++);
-        //     if (hw.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-        //         if (!hw.isFirstConnect)
-        //             Entry.toast.alert(Lang.Menus.connect_hw,
-        //                               Lang.Menus.connect_fail,
-        //                               false);
-        //         hw.isFirstConnect = false;
-        //         socketSecurity.close();
-        //     } else if(hw.socketType === 'WebSocket') {
-        //         // hw.socket = null;
-        //     }
-        // });
+        window.a = this.tlsSocketIo;
+        window.b = this.socketIo;
 
         Entry.dispatchEvent("hwChanged");
     } catch(e) {}
 };
 
 p.retryConnect = function() {
+    this.aaa = true;
+    Entry.HW.TRIAL_LIMIT = 5;
     if(this.socket) {
-        console.log('retry execHardware');
         this.executeHardware();
     } else {
-        console.log('retry initSocket');
         this.executeHardware();
-        this.connectTrial = 0;
         this.initSocket();
     }
 };
@@ -196,12 +177,43 @@ p.retryConnect = function() {
 p.initHardware = function(socket) {
     this.socket = socket;
     this.connectTrial = 0;
-
     this.connected = true;
     Entry.dispatchEvent("hwChanged");
-    if (Entry.playground && Entry.playground.object)
+    if (Entry.playground && Entry.playground.object) {
         Entry.playground.setMenu(Entry.playground.object.objectType);
+    }
 };
+
+p.disconnectHardware = function() {
+    Entry.propertyPanel.removeMode("hw");
+    this.selectedDevice = undefined;
+    this.hwModule = undefined;
+    Entry.dispatchEvent("hwChanged");
+    Entry.toast.alert(
+        "하드웨어 연결 종료",
+        "하드웨어의 연결이 종료되었습니다.",
+        false
+    );
+}
+p.disconnectedSocket = function() {
+    this.tlsSocketIo.close();
+    if(this.socketIo) {
+        this.socketIo.close();
+    }
+
+    Entry.propertyPanel.removeMode("hw");
+    this.socket = undefined;
+    this.connectTrial = 0;
+    this.connected = false;
+    this.selectedDevice = undefined;
+    this.hwModule = undefined;
+    Entry.dispatchEvent("hwChanged");
+    Entry.toast.alert(
+        "하드웨어 프로그램 연결 종료",
+        "하드웨어 프로그램과 사이의 연결이 종료되었습니다.",
+        false
+    );
+}
 
 p.setDigitalPortValue = function(port, value) {
     this.sendQueue[port] = value;
@@ -209,8 +221,9 @@ p.setDigitalPortValue = function(port, value) {
 };
 
 p.getAnalogPortValue = function(port) {
-    if (!this.connected)
+    if (!this.connected) {
         return 0;
+    }
     return this.portData['a'+port];
 };
 
@@ -227,8 +240,9 @@ p.getDigitalPortValue = function(port) {
 };
 
 p.setPortReadable = function(port) {
-    if (!this.sendQueue.readablePorts)
+    if (!this.sendQueue.readablePorts) {
         this.sendQueue.readablePorts = [];
+    }
 
     var isPass = false;
     for(var i in this.sendQueue.readablePorts) {
@@ -264,18 +278,15 @@ p.update = function() {
     if (!this.socket) {
         return;
     }
-
-    // if(this.socket.readyState != 1) {
-    //     return;
-    // }
-
-    this.socket.emit('message', {data:JSON.stringify(this.sendQueue), mode: this.socket.mode, type:'utf8'});
+    if(this.socket.disconnected) {
+        return;
+    }
+    this.socket.emit('message', { data:JSON.stringify(this.sendQueue), mode: this.socket.mode, type:'utf8' });
 };
 
 p.updatePortData = function(data) {
     this.portData = data;
-    if (this.hwMonitor
-        && Entry.propertyPanel.selected == 'hw') {
+    if (this.hwMonitor && Entry.propertyPanel.selected == 'hw') {
         this.hwMonitor.update();
     }
 };
@@ -321,23 +332,18 @@ p.checkDevice = function(data) {
     Entry.dispatchEvent("hwChanged");
     Entry.toast.success(
         "하드웨어 연결 성공",
-        /* Lang.Menus.connect_message.replace(
-            "%1",
-            Lang.Device[Entry.hw.hwModule.name]
-        ) +*/ "하드웨어 아이콘을 더블클릭하면, 센서값만 확인할 수 있습니다.",
-        true
+        "하드웨어 아이콘을 더블클릭하면, 센서값만 확인할 수 있습니다.",
+        false
     );
     if (this.hwModule.monitorTemplate) {
-
         if(!this.hwMonitor) {
-            this.hwMonitor =new Entry.HWMonitor(this.hwModule);
+            this.hwMonitor = new Entry.HWMonitor(this.hwModule);
         } else {
             this.hwMonitor._hwModule = this.hwModule;
             this.hwMonitor.initView();
         }
         Entry.propertyPanel.addMode("hw", this.hwMonitor);
         var mt = this.hwModule.monitorTemplate;
-
         if(mt.mode == "both") {
             mt.mode = "list";
             this.hwMonitor.generateListView();
@@ -349,7 +355,6 @@ p.checkDevice = function(data) {
         } else {
             this.hwMonitor.generateView();
         }
-
     }
 };
 
