@@ -21171,7 +21171,7 @@ Entry.BlockView.pngMap = {};
   b._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       var a = this.svgGroup;
-      if (this.magnet.next) {
+      if (this.magnet.next || this.magnet.previous) {
         if (a = this.magneting) {
           var b = this._board.dragBlock.getShadow(), c = this.getAbsoluteCoordinate(), e;
           if ("previous" === a) {
@@ -21243,15 +21243,17 @@ Entry.BlockView.pngMap = {};
       c._moveBy(a, a, !1);
     }, b) : c._moveBy(a, a, !1);
   };
-  b.bindPrev = function(a) {
+  b.bindPrev = function(a, b) {
     if (a) {
-      if (this._toLocalCoordinate(a.view._nextGroup), (a = a.getNextBlock()) && a !== this.block) {
-        var b = this.block.getLastBlock();
-        b.view.magnet.next ? a.view._toLocalCoordinate(b.view._nextGroup) : (a.view._toGlobalCoordinate(), a.separate(), a.view.bumpAway(null, 100));
+      this._toLocalCoordinate(a.view._nextGroup);
+      var c = a.getNextBlock();
+      if (c && c && c !== this.block) {
+        var e = this.block.getLastBlock();
+        b ? c.view._toLocalCoordinate(a.view._nextGroup) : e.view.magnet.next ? c.view._toLocalCoordinate(e.view._nextGroup) : (c.view._toGlobalCoordinate(), c.separate(), c.view.bumpAway(null, 100));
       }
     } else {
       if (a = this.block.getPrevBlock()) {
-        this._toLocalCoordinate(a.view._nextGroup), (a = this.block.getNextBlock()) && a.view && a.view._toLocalCoordinate(this._nextGroup);
+        this._toLocalCoordinate(a.view._nextGroup), (c = this.block.getNextBlock()) && c.view && c.view._toLocalCoordinate(this._nextGroup);
       }
     }
   };
@@ -23505,25 +23507,27 @@ Entry.Board.DRAG_RADIUS = 5;
     this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
   };
   b.generateCodeMagnetMap = function() {
-    var a = this.code;
-    if (a && this.dragBlock) {
-      for (var b in this.dragBlock.magnet) {
-        var c = this._getCodeBlocks(a, b);
-        c.sort(function(a, b) {
-          return a.point - b.point;
-        });
-        c.unshift({point:-Number.MAX_VALUE, blocks:[]});
-        for (var e = 1;e < c.length;e++) {
-          var f = c[e], g = f, h = f.startBlock;
-          if (h) {
-            for (var k = f.endPoint, l = e;k > g.point && (g.blocks.push(h), l++, g = c[l], g);) {
+    var a = this.code, b = this.dragBlock;
+    if (a && b) {
+      for (var c in b.magnet) {
+        if ("next" !== c || void 0 !== b.block.getLastBlock().view.magnet.next) {
+          var e = this._getCodeBlocks(a, c);
+          e.sort(function(a, b) {
+            return a.point - b.point;
+          });
+          e.unshift({point:-Number.MAX_VALUE, blocks:[]});
+          for (var f = 1;f < e.length;f++) {
+            var g = e[f], h = g, k = g.startBlock;
+            if (k) {
+              for (var l = g.endPoint, m = f;l > h.point && (h.blocks.push(k), m++, h = e[m], h);) {
+              }
+              delete g.startBlock;
             }
-            delete f.startBlock;
+            g.endPoint = Number.MAX_VALUE;
+            e[f - 1].endPoint = g.point;
           }
-          f.endPoint = Number.MAX_VALUE;
-          c[e - 1].endPoint = f.point;
+          this._magnetMap[c] = e;
         }
-        this._magnetMap[b] = c;
       }
     }
   };
@@ -23537,8 +23541,7 @@ Entry.Board.DRAG_RADIUS = 5;
         f = this._getPreviousMagnets;
         break;
       case "string":
-        f = this._getFieldMagnets;
-        break;
+      ;
       case "boolean":
         f = this._getFieldMagnets;
         break;

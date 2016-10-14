@@ -778,7 +778,7 @@ Entry.BlockView.pngMap = {};
             return;
         var blockView = this;
         var svgGroup = blockView.svgGroup;
-        if (!this.magnet.next) {// field block
+        if (!(this.magnet.next || this.magnet.previous)) {// field block
             if (this.magneting) {
                 svgGroup.attr({
                     filter: 'url(#entryBlockHighlightFilter_' + this.getBoard().suffix + ')'
@@ -921,13 +921,16 @@ Entry.BlockView.pngMap = {};
         } else that._moveBy(distance, distance, false);
     };
 
-    p.bindPrev = function(prevBlock) {
+    p.bindPrev = function(prevBlock, isDestroy) {
         if (prevBlock) {
             this._toLocalCoordinate(prevBlock.view._nextGroup);
             var nextBlock = prevBlock.getNextBlock();
+            if (nextBlock)
             if (nextBlock && nextBlock !== this.block) {
                 var endBlock = this.block.getLastBlock();
-                if (endBlock.view.magnet.next)
+                if (isDestroy)
+                    nextBlock.view._toLocalCoordinate(prevBlock.view._nextGroup);
+                else if (endBlock.view.magnet.next)
                     nextBlock.view._toLocalCoordinate(endBlock.view._nextGroup);
                 else {
                     nextBlock.view._toGlobalCoordinate();
