@@ -127,15 +127,18 @@ Entry.BlockView.pngMap = {};
 
         this._path = this.pathGroup.elem("path");
 
-        $(this._path).mouseenter(function(e) {
-            if (!that._mouseEnable) return;
-            that._changeFill(true);
-        });
+        //enable mouse pattern only for desktou
+        if (!Entry.isMobile()) {
+            $(this._path).mouseenter(function(e) {
+                if (!that._mouseEnable) return;
+                that._changeFill(true);
+            });
 
-        $(this._path).mouseleave(function(e) {
-            if (!that._mouseEnable) return;
-            that._changeFill(false);
-        });
+            $(this._path).mouseleave(function(e) {
+                if (!that._mouseEnable) return;
+                that._changeFill(false);
+            });
+        }
 
         var fillColor = this._schema.color;
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
