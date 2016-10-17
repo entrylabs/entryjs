@@ -246,7 +246,6 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   left: 0;
   overflow-y: hidden;
   overflow-x: scroll;
-  z-index: 9001;
 }
 .CodeMirror-scrollbar-filler {
   right: 0;
@@ -5606,9 +5605,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryToastContainer {
   position: fixed;
   right: 0px;
-  bottom: 0px;
+  bottom: 15px;
   margin: 0px;
-  padding: 10px;
+  padding: 2px;
   width: 300px;
   max-height: 100%;
   overflow: auto;
