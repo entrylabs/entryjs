@@ -286,7 +286,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             continue;
                         }
 
-                        //thread = Entry.TextCodingUtil.prototype.entryEventFuncFilter(thread);
+                        thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
                         threads[i] = thread;
                     }
 
@@ -320,7 +320,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 ast = pyAstGenerator.generate(thread);
                             }*/
                             console.log("success??", ast);
-                            thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
+                            //thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
                             console.log("real thread", thread);
                             ast = pyAstGenerator.generate(thread);
                         }

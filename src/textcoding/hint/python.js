@@ -16,6 +16,9 @@ Entry.PyHint = function() {
         var cur = editor.getCursor(), token = editor.getTokenAt(cur);
         // If it's not a 'word-style' token, ignore the token.
 
+        /////////////////////////////////////////////////////////////
+        //Entry Event added by jhlee
+        /////////////////////////////////////////////////////////////
         var defTokens = ["def entry_event_start", "def entry_event_mouse_up", "def entry_event_object_down", 
                         "def entry_event_object_up", "def entry_event_scene_start", "def entry_event_clone_create", 
                         "def entry_event_clone_create", "def entry_event_signal", "def entry_event_key"];
@@ -49,7 +52,10 @@ Entry.PyHint = function() {
             found = found.concat(fuzzySearch(
                     defMaps, current,
                     {extract: function(e) {return e.displayText}}));
-        }
+            /////////////////////////////////////////////////////////////
+            //end part of Entry Event added by jhlee
+            /////////////////////////////////////////////////////////////
+        } 
         else if (!/^[\w$_]*$/.test(token.string)) {
                 token = {start: cur.ch, end: cur.ch, string: "", state: token.state,
                     className: token.string == ":" ? "python-type" : null};

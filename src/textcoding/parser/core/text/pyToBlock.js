@@ -3228,8 +3228,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var body = component.body;
         var id = component.id;
 
-        if(id.name == "__getParam0")
+        if(id.name == "__getParam0") {
             return result;
+        }
+        else if(Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
+            var component = Entry.TextCodingUtil.makeExpressionStatement(id.name);
+            return this.ExpressionStatement(component);
+        }
+
 
         var bodyData = this[body.type](body);
         console.log("FunctionDeclaration bodyData", bodyData);

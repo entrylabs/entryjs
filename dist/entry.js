@@ -12499,8 +12499,13 @@ Entry.TextCodingUtil = {};
     a = a.split("\n");
     for (var c in a) {
       var e = a[c].trim();
-      "def entry_event_start():" == e || "def entry_event_mouse_down():" == e || "def entry_event_mouse_up():" == e || "def entry_event_object_down():" == e || "def entry_event_object_up():" == e || "def entry_event_scene_start():" == e || "def entry_event_clone_create():" == e ? (tokens = e.split("def"), e = tokens[1].substring(0, tokens[1].length - 1).trim(), a[c] = e, b = !0) : (new RegExp(/^def entry_event_key(.+):$/)).test(e) || (new RegExp(/^def entry_event_signal(.+):$/)).test(e) ? (tokens = 
-      e.split("def"), e = tokens[1].substring(0, tokens[1].length - 1).trim(), a[c] = e, b = !0) : b && (e = a[c], e = e.replace("\t", ""), a[c] = e);
+      console.log("thread check", e);
+      var f = e.indexOf(":"), g = "", h = "";
+      0 < f && (g = e.substring(0, f + 1), h = e.substring(f + 1, e.length));
+      console.log("funcPart", g);
+      console.log("restPart", h);
+      "def entry_event_start():" == g || "def entry_event_mouse_down():" == g || "def entry_event_mouse_up():" == g || "def entry_event_object_down():" == g || "def entry_event_object_up():" == g || "def entry_event_scene_start():" == g || "def entry_event_clone_create():" == g ? (b = [], b = g.split("def"), console.log("stupid1", b), g = b[1].substring(0, b[1].length - 1).trim(), g = g.concat("\n").concat(h.trim()), console.log("newThread funcPart", g), a[c] = g, b = !0) : g.match(/^def entry_event_key(.+):$/) || 
+      g.match(/^def entry_event_signal(.+):$/) ? (b = e.split("def"), console.log("stupid2", b), g = b[1].substring(0, b[1].length - 1).trim(), a[c] = g, b = !0) : b && (g = a[c], g = g.replace("\t", ""), a[c] = g);
     }
     return a.join("\n");
   };
@@ -12915,6 +12920,17 @@ Entry.TextCodingUtil = {};
         }
       }
     }
+  };
+  b.makeExpressionStatement = function(a) {
+    var b = {}, c = {type:"CallExpression"}, e = {};
+    e.name = a;
+    e.type = "Identifier";
+    c.callee = e;
+    arguments = [];
+    c.arguments = arguments;
+    b.expression = c;
+    b.type = "ExpressionStatement";
+    return b;
   };
 })(Entry.TextCodingUtil);
 Entry.BlockToJsParser = function(b) {
@@ -14989,6 +15005,9 @@ Entry.PyToBlockParser = function(b) {
     if ("__getParam0" == a.name) {
       return b;
     }
+    if (Entry.TextCodingUtil.isEntryEventFuncName(a.name)) {
+      return a = Entry.TextCodingUtil.makeExpressionStatement(a.name), this.ExpressionStatement(a);
+    }
     var e = this[c.type](c);
     console.log("FunctionDeclaration bodyData", e);
     if ("Identifier" == a.type) {
@@ -15453,7 +15472,7 @@ Entry.Parser = function(b, a, d, c) {
           var n = new Entry.PyAstGenerator, e = this.makeCodeToThreads(a);
           console.log("code", a);
           for (var q in e) {
-            h = e[q], -1 != h.search("import") ? e[q] = "" : "#" == h.charAt(0) ? e[q] = "" : e[q] = h;
+            h = e[q], -1 != h.search("import") ? e[q] = "" : "#" == h.charAt(0) ? e[q] = "" : (h = Entry.TextCodingUtil.entryEventFuncFilter(h), e[q] = h);
           }
           var f = [], r = 0;
           console.log("threads", e);
@@ -15463,7 +15482,7 @@ Entry.Parser = function(b, a, d, c) {
           }
           console.log("cleansedThreads", q);
           for (g in q) {
-            if (h = q[g], console.log("ttt thread", h), this._syntaxParsingCount = parseInt(g) + 1, 0 != h.length && "" != h && (r++, this._pyThreadCount = parseInt(r), console.log("success??", k), h = Entry.TextCodingUtil.entryEventFuncFilter(h), console.log("real thread", h), k = n.generate(h)), k) {
+            if (h = q[g], console.log("ttt thread", h), this._syntaxParsingCount = parseInt(g) + 1, 0 != h.length && "" != h && (r++, this._pyThreadCount = parseInt(r), console.log("success??", k), console.log("real thread", h), k = n.generate(h)), k) {
               if (0 != h.length && "" != h) {
                 var x = h.split("\n"), v = parseInt(this._pyThreadCount).toString();
                 this._pyBlockCount[v] = x.length - 1;

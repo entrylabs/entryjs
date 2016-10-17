@@ -787,33 +787,52 @@ Entry.TextCodingUtil = {};
 
         for(var i in threadArr) {
                 var thread = threadArr[i].trim();
+                console.log("thread check", thread);
+                var colonIndex = thread.indexOf(":");
+                var funcPart = "";
+                var restPart = "";
 
-                if( thread == "def entry_event_start():" ||
-                    thread == "def entry_event_mouse_down():" ||
-                    thread == "def entry_event_mouse_up():" ||
-                    thread == "def entry_event_object_down():" ||
-                    thread == "def entry_event_object_up():" ||
-                    thread == "def entry_event_scene_start():" ||
-                    thread == "def entry_event_clone_create():") {
+                if(colonIndex > 0) {
+                    funcPart = thread.substring(0, colonIndex+1);
+                    restPart = thread.substring(colonIndex+1, thread.length);
+                }
 
-                    tokens = thread.split("def");
-                    thread = tokens[1].substring(0, tokens[1].length-1).trim();
-                    threadArr[i] = thread;
+                console.log("funcPart", funcPart);
+                console.log("restPart", restPart);
+                
+                if( funcPart == "def entry_event_start():" ||
+                    funcPart == "def entry_event_mouse_down():" ||
+                    funcPart == "def entry_event_mouse_up():" ||
+                    funcPart == "def entry_event_object_down():" ||
+                    funcPart == "def entry_event_object_up():" ||
+                    funcPart == "def entry_event_scene_start():" ||
+                    funcPart == "def entry_event_clone_create():" ) {
+
+                    var tokens = [];
+                    tokens = funcPart.split("def");
+                    console.log("stupid1", tokens);
+                    funcPart = tokens[1].substring(0, tokens[1].length-1).trim();
+
+                    var newThread = funcPart.concat("\n").concat(restPart.trim());
+                    console.log("newThread funcPart", newThread); 
+                    threadArr[i] = newThread;
                     eventFound = true;
                 }
-                else if(new RegExp(/^def entry_event_key(.+):$/).test(thread) ||
-                    new RegExp(/^def entry_event_signal(.+):$/).test(thread)) {
+                else if(funcPart.match(/^def entry_event_key(.+):$/) ||
+                    funcPart.match(/^def entry_event_signal(.+):$/)) {
 
+                    var tokens = [];
                     tokens = thread.split("def");
-                    thread = tokens[1].substring(0, tokens[1].length-1).trim();
-                    threadArr[i] = thread;
+                    console.log("stupid2", tokens);
+                    var newThread = tokens[1].substring(0, tokens[1].length-1).trim();
+                    threadArr[i] = newThread;
                     eventFound = true;
                 }
                 else {
                     if(eventFound) {
-                        var thread = threadArr[i];
-                        thread = thread.replace('\t', '');
-                        threadArr[i] = thread;
+                        var newThread = threadArr[i];
+                        newThread = newThread.replace('\t', '');
+                        threadArr[i] = newThread;
                     }
                 }
         }
@@ -1517,7 +1536,7 @@ Entry.TextCodingUtil = {};
                 return "등록된 리스트중에 공백(띄어쓰기)이 포함된 리스트드가 있습니다.";
         }
 
-        //this is OK...
+        //this doesn't need for now
         //inspect messages
         /*targets = vc.messages_ || [];
         for (i=0; i<targets.length; i++) {
@@ -1660,5 +1679,27 @@ Entry.TextCodingUtil = {};
         console.log("targetObject", targetObject, "targetIndex", targetIndex);
 
         Entry.container.selectObject(targetObject.id);
+    };
+
+    tu.makeExpressionStatement = function(calleName) {
+        var expressionStatement = {};
+
+        var type = "ExpressionStatement";
+        var expression = {};
+        
+        expression.type = "CallExpression";
+        
+        var callee = {};
+        callee.name = calleName;
+        callee.type = "Identifier";
+        expression.callee = callee;
+
+        var arguments = [];
+        expression.arguments = arguments;
+
+        expressionStatement.expression = expression;
+        expressionStatement.type = type;
+
+        return expressionStatement;
     };
 })(Entry.TextCodingUtil);
