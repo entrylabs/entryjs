@@ -20865,12 +20865,11 @@ Entry.BlockView.pngMap = {};
     this.pathGroup = this.svgGroup.elem("g");
     this._updateMagnet();
     this._path = this.pathGroup.elem("path");
-    $(this._path).mouseenter(function(a) {
+    Entry.isMobile() || ($(this._path).mouseenter(function(a) {
       c._mouseEnable && c._changeFill(!0);
-    });
-    $(this._path).mouseleave(function(a) {
+    }), $(this._path).mouseleave(function(a) {
       c._mouseEnable && c._changeFill(!1);
-    });
+    }));
     var g = this._schema.color;
     this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN && (g = Entry.Utils.colorLighten(g));
     this._fillColor = g;
