@@ -260,7 +260,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                     } else if (parent.constructor === Entry.FieldStatement) {
                         nextBlock.replace(parent._valueBlock);
                     } else nextBlock.view._toGlobalCoordinate();
-                } else nextBlock.view && nextBlock.view.bindPrev(prevBlock);
+                } else nextBlock.view && nextBlock.view.bindPrev(prevBlock, true);
             }
         }
         if (!this.doNotSplice && thread.spliceBlock) thread.spliceBlock(this);

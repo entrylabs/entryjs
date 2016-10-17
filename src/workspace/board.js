@@ -398,6 +398,9 @@ Entry.Board.DRAG_RADIUS = 5;
         var dragBlock = this.dragBlock;
         if (!(code && dragBlock)) return;
 
+        //reset magnetMap
+        this._magnetMap = {};
+
         for (var targetType in dragBlock.magnet) {
             if (targetType === 'next' &&
                 dragBlock.block.getLastBlock().view.magnet.next === undefined) {

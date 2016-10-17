@@ -23509,6 +23509,7 @@ Entry.Board.DRAG_RADIUS = 5;
   b.generateCodeMagnetMap = function() {
     var a = this.code, b = this.dragBlock;
     if (a && b) {
+      this._magnetMap = {};
       for (var c in b.magnet) {
         if ("next" !== c || void 0 !== b.block.getLastBlock().view.magnet.next) {
           var e = this._getCodeBlocks(a, c);
@@ -24328,7 +24329,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       this.getCode().unregisterBlock(this);
       f = this.getThread();
       this._schema && this._schema.event && f.unregisterEvent(this, this._schema.event);
-      c && (b ? c.destroy(a, b) : g ? c.view && c.view.bindPrev(g) : (b = this.getThread().view.getParent(), b.constructor === Entry.FieldStatement ? (c.view && c.view.bindPrev(b), b.insertTopBlock(c)) : b.constructor === Entry.FieldStatement ? c.replace(b._valueBlock) : c.view._toGlobalCoordinate()));
+      c && (b ? c.destroy(a, b) : g ? c.view && c.view.bindPrev(g, !0) : (b = this.getThread().view.getParent(), b.constructor === Entry.FieldStatement ? (c.view && c.view.bindPrev(b), b.insertTopBlock(c)) : b.constructor === Entry.FieldStatement ? c.replace(b._valueBlock) : c.view._toGlobalCoordinate()));
       !this.doNotSplice && f.spliceBlock ? f.spliceBlock(this) : delete this.doNotSplice;
       this.view && this.view.destroy(a);
       this._schemaChangeEvent && this._schemaChangeEvent.destroy();
