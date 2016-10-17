@@ -21858,19 +21858,26 @@ Entry.ExtGuide = function(b, a, d) {
 };
 (function(b) {
   b.render = function() {
-    var a = this.blockView.getBoard();
-    this.svgGroup = this.blockView.svgGroup.elem("g", {class:"extension guideGroup"});
-    this.blockView.guideSvgGroup = this.svgGroup;
-    $(this.svgGroup).bind("mousedown touchstart", function(a) {
-      a.stopPropagation && a.stopPropagation();
-      a.preventDefault && a.preventDefault();
-    });
-    var b = this.block.getCode().createThread(this.model);
-    !b.view && b.createView(a);
-    this.svgGroup.appendChild(b.getFirstBlock().view.clone());
-    this.updatePos();
-    this.block.getThread().view.setHasGuide(!0);
-    b.destroy(!1);
+    if (this.model) {
+      var a = this.blockView.getBoard();
+      this.svgGroup = this.blockView.svgGroup.elem("g", {class:"extension guideGroup"});
+      this.blockView.guideSvgGroup = this.svgGroup;
+      $(this.svgGroup).bind("mousedown touchstart", function(a) {
+        a.stopPropagation && a.stopPropagation();
+        a.preventDefault && a.preventDefault();
+      });
+      var b = this.block.getCode();
+      this.model[0].x = -99999;
+      this.model[0].y = -99999;
+      b = b.createThread(this.model);
+      !b.view && b.createView(a);
+      a = b.getFirstBlock().view.clone();
+      a.removeAttribute("transform");
+      this.svgGroup.appendChild(a);
+      this.updatePos();
+      this.block.getThread().view.setHasGuide(!0);
+      b.destroy(!1);
+    }
   };
   b.updatePos = function() {
     this.svgGroup.attr("transform", this._getTransform());

@@ -11,7 +11,10 @@ Entry.ExtGuide = function(content, blockView, mode) {
 };
 
 (function(p) {
+    var TRANSFORM = "transform";
     p.render = function() {
+        if (!this.model) return;
+
         var board =  this.blockView.getBoard();
         this.svgGroup = this.blockView.svgGroup.elem("g", {
             class: 'extension guideGroup'
@@ -27,16 +30,24 @@ Entry.ExtGuide = function(content, blockView, mode) {
 
         var block = this.block;
         var code = block.getCode();
+
+        //move blocks off the screen
+        //in order to prevent magneting for some reasons
+        this.model[0].x = -99999;
+        this.model[0].y = -99999;
+
         var thread = code.createThread(this.model);
         !thread.view && thread.createView(board);
-        this.svgGroup.appendChild(thread.getFirstBlock().view.clone());
+        var cloned = thread.getFirstBlock().view.clone();
+        cloned.removeAttribute(TRANSFORM);
+        this.svgGroup.appendChild(cloned);
         this.updatePos();
         this.block.getThread().view.setHasGuide(true);
         thread.destroy(false);
     };
 
     p.updatePos = function() {
-        this.svgGroup.attr('transform', this._getTransform());
+        this.svgGroup.attr(TRANSFORM, this._getTransform());
     };
 
     p._getTransform = function() {
