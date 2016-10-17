@@ -6,11 +6,12 @@
 goog.require("Entry.HWMontior");
 
 Entry.HW = function() {
-    this.sessionRoomId = sessionStorage.getItem('entryhwRoomId');
+    this.sessionRoomId = localStorage.getItem('entryhwRoomId');
     if(!this.sessionRoomId) {
         this.sessionRoomId = this.createRandomRoomId();
-        sessionStorage.setItem('entryhwRoomId', this.sessionRoomId);
+        localStorage.setItem('entryhwRoomId', this.sessionRoomId);
     }
+    console.log(this.sessionRoomId);
 
     this.connectTrial = 0;
     this.isFirstConnect = true;
@@ -88,14 +89,15 @@ p.connectWebSocket = function(url, option) {
 
     socket.on('message', function(msg) {
         if(msg.data && typeof msg.data === 'string') {
-            var data = JSON.parse(msg.data);
-            hw.checkDevice(data);
-            hw.updatePortData(data);
-        } else if(typeof msg === 'string') {
-            console.log(msg);
-            switch(msg) {
+             switch(msg.data) {
                 case 'disconnectHardware': {
                     hw.disconnectHardware();
+                    break;
+                }
+                default: {
+                    var data = JSON.parse(msg.data);
+                    hw.checkDevice(data);
+                    hw.updatePortData(data);
                     break;
                 }
             }
@@ -104,8 +106,8 @@ p.connectWebSocket = function(url, option) {
 
     socket.on('disconnect', function() {
         console.log('disconnect');
-        if(hw.aaa) {
-            hw.aaa = false;
+        if(hw.isOpenHardware) {
+            hw.isOpenHardware = false;
             hw.initSocket();
         } else if(hw.socketType === 'WebSocket') {
             hw.disconnectedSocket();
@@ -131,18 +133,16 @@ p.connectWebSocket = function(url, option) {
 
 p.initSocket = function() {
     try{
-        // if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-        //     if (!this.isFirstConnect)
-        //         Entry.toast.alert(Lang.Menus.connect_hw,
-        //                           Lang.Menus.connect_fail,
-        //                           false);
-        //     this.isFirstConnect = false;
-        //     return;
-        // }
-
         var hw = this;
         var protocol = '';
         this.connected = false;
+
+        if(this.tlsSocketIo) {
+            this.tlsSocketIo.removeAllListeners();
+        }        
+        if(this.socketIo) {
+            this.socketIo.removeAllListeners();
+        }
         
         if(location.protocol.indexOf('https') > -1) {
             this.tlsSocketIo = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{ 'client': true, 'roomId' : this.sessionRoomId } });
@@ -156,15 +156,17 @@ p.initSocket = function() {
             } catch(e) { }
         }
 
-        window.a = this.tlsSocketIo;
-        window.b = this.socketIo;
-
         Entry.dispatchEvent("hwChanged");
     } catch(e) {}
 };
 
 p.retryConnect = function() {
-    this.aaa = true;
+    Entry.HW.TRIAL_LIMIT = 5;
+    this.initSocket();
+};
+
+p.openHardwareProgram = function() {
+    this.isOpenHardware = true;
     Entry.HW.TRIAL_LIMIT = 5;
     if(this.socket) {
         this.executeHardware();
@@ -172,7 +174,7 @@ p.retryConnect = function() {
         this.executeHardware();
         this.initSocket();
     }
-};
+}
 
 p.initHardware = function(socket) {
     this.socket = socket;
@@ -189,11 +191,11 @@ p.disconnectHardware = function() {
     this.selectedDevice = undefined;
     this.hwModule = undefined;
     Entry.dispatchEvent("hwChanged");
-    Entry.toast.alert(
-        "하드웨어 연결 종료",
-        "하드웨어의 연결이 종료되었습니다.",
-        false
-    );
+    // Entry.toast.alert(
+    //     "하드웨어 연결 종료",
+    //     "하드웨어의 연결이 종료되었습니다.",
+    //     false
+    // );
 }
 p.disconnectedSocket = function() {
     this.tlsSocketIo.close();

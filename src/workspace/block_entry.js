@@ -2879,7 +2879,7 @@ Entry.block = {
     "arduino_reconnect": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "isNotFor": [""],
+        "isNotFor": ["arduinoDisconnected"],
         "params": [
             {
                 "type": "Text",
@@ -2892,6 +2892,28 @@ Entry.block = {
             "mousedown": [
                 function() {
                     Entry.hw.retryConnect();
+                }
+            ]
+        }
+    },
+    "arduino_open": {
+        "skeleton": "basic_button",
+        "color": "#eee",
+        "isNotFor": [""],
+        "template": '%1',
+        "params": [
+            {
+                "type": "Text",
+                //TODO: 다국어 적용
+                "text": '하드웨어 프로그램 열기',
+                "color": "#333",
+                "align": "center"
+            }
+        ],
+        "events": {
+            "mousedown": [
+                function() {
+                    Entry.hw.openHardwareProgram();
                 }
             ]
         }

@@ -10139,8 +10139,9 @@ Entry.HWMonitor = function(a) {
   };
 })(Entry.HWMonitor.prototype);
 Entry.HW = function() {
-  this.sessionRoomId = sessionStorage.getItem("entryhwRoomId");
-  this.sessionRoomId || (this.sessionRoomId = this.createRandomRoomId(), sessionStorage.setItem("entryhwRoomId", this.sessionRoomId));
+  this.sessionRoomId = localStorage.getItem("entryhwRoomId");
+  this.sessionRoomId || (this.sessionRoomId = this.createRandomRoomId(), localStorage.setItem("entryhwRoomId", this.sessionRoomId));
+  console.log(this.sessionRoomId);
   this.connectTrial = 0;
   this.isFirstConnect = !0;
   this.initSocket();
@@ -10179,25 +10180,26 @@ p.connectWebSocket = function(a, b) {
   });
   d.on("message", function(b) {
     if (b.data && "string" === typeof b.data) {
-      b = JSON.parse(b.data), c.checkDevice(b), c.updatePortData(b);
-    } else {
-      if ("string" === typeof b) {
-        switch(console.log(b), b) {
-          case "disconnectHardware":
-            c.disconnectHardware();
-        }
+      switch(b.data) {
+        case "disconnectHardware":
+          c.disconnectHardware();
+          break;
+        default:
+          b = JSON.parse(b.data), c.checkDevice(b), c.updatePortData(b);
       }
     }
   });
   d.on("disconnect", function() {
     console.log("disconnect");
-    c.aaa ? (c.aaa = !1, c.initSocket()) : "WebSocket" === c.socketType && c.disconnectedSocket();
+    c.isOpenHardware ? (c.isOpenHardware = !1, c.initSocket()) : "WebSocket" === c.socketType && c.disconnectedSocket();
   });
   return d;
 };
 p.initSocket = function() {
   try {
     this.connected = !1;
+    this.tlsSocketIo && this.tlsSocketIo.removeAllListeners();
+    this.socketIo && this.socketIo.removeAllListeners();
     if (-1 < location.protocol.indexOf("https")) {
       this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
     } else {
@@ -10210,14 +10212,16 @@ p.initSocket = function() {
       } catch (a) {
       }
     }
-    window.a = this.tlsSocketIo;
-    window.b = this.socketIo;
     Entry.dispatchEvent("hwChanged");
   } catch (a) {
   }
 };
 p.retryConnect = function() {
-  this.aaa = !0;
+  Entry.HW.TRIAL_LIMIT = 5;
+  this.initSocket();
+};
+p.openHardwareProgram = function() {
+  this.isOpenHardware = !0;
   Entry.HW.TRIAL_LIMIT = 5;
   this.socket ? this.executeHardware() : (this.executeHardware(), this.initSocket());
 };
@@ -10232,7 +10236,6 @@ p.disconnectHardware = function() {
   Entry.propertyPanel.removeMode("hw");
   this.hwModule = this.selectedDevice = void 0;
   Entry.dispatchEvent("hwChanged");
-  Entry.toast.alert("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc885\ub8cc", "\ud558\ub4dc\uc6e8\uc5b4\uc758 \uc5f0\uacb0\uc774 \uc885\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4.", !1);
 };
 p.disconnectedSocket = function() {
   this.tlsSocketIo.close();
