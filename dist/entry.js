@@ -17153,7 +17153,7 @@ Entry.Model = function(b, a) {
 Entry.Func = function(b) {
   this.id = b ? b.id : Entry.generateHash();
   this.content = b ? new Entry.Code(b.content) : new Entry.Code([[{type:"function_create", copyable:!1, deletable:!1, x:40, y:40}]]);
-  this.blockMenuBlock = this.block = null;
+  this._backupContent = this.blockMenuBlock = this.block = null;
   this.hashMap = {};
   this.paramMap = {};
   Entry.generateFunctionSchema(this.id);
@@ -17199,6 +17199,9 @@ Entry.Func.edit = function(b) {
   this.initEditView(b.content);
   this.bindFuncChangeEvent();
   this.updateMenu();
+  window.setTimeout(function() {
+    this.targetFunc.content.board.reDraw();
+  }.bind(this), 0);
 };
 Entry.Func.initEditView = function(b) {
   this.menuCode || this.setupMenuCode();
@@ -17217,9 +17220,11 @@ Entry.Func.endEdit = function(b) {
   switch(b) {
     case "save":
       this.save();
+      break;
     case "cancelEdit":
       this.cancelEdit();
   }
+  this._backupContent = null;
 };
 Entry.Func.save = function() {
   this.targetFunc.generateBlock(!0);
@@ -17258,7 +17263,28 @@ Entry.Func.syncFuncName = function(b) {
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a);
 };
 Entry.Func.cancelEdit = function() {
-  this.targetFunc && (Entry.Func.isEdit = !1, this.targetFunc.block || (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList(), Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD));
+  if (this.targetFunc) {
+    var b = Entry.playground.mainWorkspace;
+    Entry.Func.isEdit = !1;
+    if (!this.targetFunc.block) {
+      this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected;
+    } else {
+      if (this._backupContent) {
+        b.overlayBoard.show();
+        this.targetFunc.content.load(this._backupContent);
+        Entry.generateFunctionSchema(this.targetFunc.id);
+        var a = this.targetFunc.content._blockMap, d;
+        for (d in a) {
+          Entry.Func.registerParamBlock(a[d].type);
+        }
+        b.overlayBoard.hide();
+      }
+    }
+    delete this.targetFunc;
+    this.updateMenu();
+    Entry.variableContainer.updateList();
+    b.setMode(Entry.Workspace.MODE_BOARD);
+  }
 };
 Entry.Func.getMenuXml = function() {
   var b = [];
@@ -21311,7 +21337,9 @@ Entry.BlockView.pngMap = {};
       if (b) {
         for (var c = 0;c < b.length;c++) {
           var e = b[c];
-          e instanceof Entry.Block && e.view && e.view.reDraw();
+          e instanceof Entry.Block && e.view && (e.view.reDraw(), (e = e.params) && e.forEach(function(a) {
+            a instanceof Entry.Block && a.view && a.view.reDraw();
+          }));
         }
       }
       if (a = a.statements) {

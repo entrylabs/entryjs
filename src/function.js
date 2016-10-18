@@ -24,6 +24,7 @@ Entry.Func = function(func) {
     ]);
     this.block = null;
     this.blockMenuBlock = null;
+    this._backupContent = null;
     this.hashMap = {};
 
     this.paramMap = {};
@@ -89,7 +90,11 @@ Entry.Func.edit = function(func) {
     this.targetFunc = func;
     this.initEditView(func.content);
     this.bindFuncChangeEvent();
+    //this._backupContent = func.content.stringify();
     this.updateMenu();
+    window.setTimeout(function() {
+        this.targetFunc.content.board.reDraw();
+    }.bind(this), 0);
 };
 
 Entry.Func.initEditView = function(content) {
@@ -111,9 +116,12 @@ Entry.Func.endEdit = function(message) {
     switch(message){
         case "save":
             this.save();
+            break;
         case "cancelEdit":
             this.cancelEdit();
+            break;
     }
+    this._backupContent = null;
 }
 
 Entry.Func.save = function() {
@@ -169,16 +177,27 @@ Entry.Func.syncFuncName = function(dstFName) {
 Entry.Func.cancelEdit = function() {
     if (!this.targetFunc)
         return;
+    var workspace = Entry.playground.mainWorkspace;
     Entry.Func.isEdit = false;
     if (!this.targetFunc.block) {
         this._targetFuncBlock.destroy();
         delete Entry.variableContainer.functions_[this.targetFunc.id];
         delete Entry.variableContainer.selected;
+    } else {
+        if (this._backupContent) {
+            workspace.overlayBoard.show();
+            this.targetFunc.content.load(this._backupContent);
+            Entry.generateFunctionSchema(this.targetFunc.id);
+            var blockMap = this.targetFunc.content._blockMap;
+            for (var key in blockMap) {
+                Entry.Func.registerParamBlock(blockMap[key].type);
+            }
+            workspace.overlayBoard.hide();
+        }
     }
     delete this.targetFunc;
     this.updateMenu();
     Entry.variableContainer.updateList();
-    var workspace = Entry.playground.mainWorkspace;
     workspace.setMode(Entry.Workspace.MODE_BOARD);
 };
 

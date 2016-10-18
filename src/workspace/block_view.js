@@ -281,7 +281,6 @@ Entry.BlockView.pngMap = {};
         var secondLineHeight = 0;
         for (var i = 0; i < this._contents.length; i++) {
             var c = this._contents[i];
-
             if (c instanceof Entry.FieldLineBreak) {
                 this._alignStatement(animate, statementIndex);
                 c.align(statementIndex);
@@ -1030,6 +1029,14 @@ Entry.BlockView.pngMap = {};
                 var param = params[i];
                 if (param instanceof Entry.Block && param.view) {
                     param.view.reDraw();
+                    var innerParams = param.params;
+                    if (innerParams) {
+                        innerParams.forEach(function(p) {
+                            if (p instanceof Entry.Block && p.view)  {
+                                p.view.reDraw();
+                            }
+                        });
+                    }
                 }
             }
         }
