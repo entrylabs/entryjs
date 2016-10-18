@@ -10176,6 +10176,7 @@ p.connectWebSocket = function(a, b) {
     d.emit("matchTarget", {target:b});
   });
   d.on("mode", function(b) {
+    0 === d.mode && 1 === b && c.disconnectHardware();
     d.mode = b;
   });
   d.on("message", function(b) {

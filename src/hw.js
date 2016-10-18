@@ -84,6 +84,9 @@ p.connectWebSocket = function(url, option) {
     });
 
     socket.on('mode', function (mode) {
+        if(socket.mode === 0 && mode === 1) {
+            hw.disconnectHardware();
+        }
         socket.mode = mode;
     });
 
