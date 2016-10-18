@@ -20892,9 +20892,9 @@ Entry.BlockView.pngMap = {};
   };
   b._startContentRender = function(a) {
     a = void 0 === a ? Entry.Workspace.MODE_BOARD : a;
-    this.contentSvgGroup && this.contentSvgGroup.remove();
     var b = this._schema;
-    b.statements && b.statements.length && this.statementSvgGroup && this.statementSvgGroup.remove();
+    this.contentSvgGroup && this.contentSvgGroup.remove();
+    this.statementSvgGroup && this.statementSvgGroup.remove();
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.elem("g", {class:"contentsGroup"});
     b.statements && b.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g", {class:"statementGroup"}));
@@ -21085,8 +21085,7 @@ Entry.BlockView.pngMap = {};
         var f = this.dragInstance && this.dragInstance.isNew, g = Entry.GlobalSvg;
         a = !1;
         var h = this.block.getPrevBlock(this.block);
-        a = !1;
-        switch(Entry.GlobalSvg.terminateDrag(this)) {
+        switch(g.terminateDrag(this)) {
           case g.DONE:
             g = b.magnetedBlockView;
             g instanceof Entry.BlockView && (g = g.block);
@@ -21144,6 +21143,9 @@ Entry.BlockView.pngMap = {};
     }) : b.remove();
     this._contents.forEach(function(a) {
       a.constructor !== Entry.Block && a.destroy();
+    });
+    this._statements.forEach(function(a) {
+      a.destroy();
     });
     var c = this.block;
     a = c.events.viewDestroy;
@@ -22810,6 +22812,7 @@ Entry.FieldStatement = function(b, a, d) {
   this.acceptType = b.accept;
   this._thread = this.statementSvgGroup = this.svgGroup = null;
   this._position = b.position;
+  this._events = [];
   this.observe(a, "alignContent", ["height"], !1);
   this.observe(this, "_updateBG", ["magneting"], !1);
   this.renderStart(a.getBoard());
@@ -22831,8 +22834,10 @@ Entry.FieldStatement = function(b, a, d) {
     if (a = b.getFirstBlock()) {
       a.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = a;
     }
-    b.changeEvent.attach(this, this.calcHeight);
-    b.changeEvent.attach(this, this.checkTopBlock);
+    a = b.changeEvent.attach(this, this.calcHeight);
+    var c = b.changeEvent.attach(this, this.checkTopBlock);
+    this._events.push([b.changeEvent, a]);
+    this._events.push([b.changeEvent, c]);
     this.calcHeight();
   };
   b.align = function(a, b, c) {
@@ -22860,6 +22865,10 @@ Entry.FieldStatement = function(b, a, d) {
     this._blockView.dominate();
   };
   b.destroy = function() {
+    for (;this._events.length;) {
+      var a = this._events.pop();
+      a[0].detach(a[1]);
+    }
   };
   b._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
@@ -24284,6 +24293,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     this.view || (this.set({view:new Entry.BlockView(this, a, b)}), this._updatePos());
   };
   b.destroyView = function() {
+    this.view.destroy();
     this.set({view:null});
   };
   b.clone = function(a) {

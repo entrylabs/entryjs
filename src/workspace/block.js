@@ -177,6 +177,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.destroyView = function() {
+        this.view.destroy();
         this.set({view: null});
     };
 
