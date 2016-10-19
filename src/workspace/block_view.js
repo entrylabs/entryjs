@@ -1195,11 +1195,14 @@ Entry.BlockView.pngMap = {};
         }
     };
 
-    p.downloadAsImage = function() {
+    p.downloadAsImage = function(i) {
         this.getDataUrl().then(function(data) {
             var download = document.createElement('a');
             download.href = data.src;
-            download.download = '엔트리 블록.png';
+            var name = '엔트리 블록';
+            if (i)
+                name += i;
+            download.download = name+'.png';
             download.click();
         });
     };

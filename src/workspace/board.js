@@ -942,10 +942,29 @@ Entry.Board.DRAG_RADIUS = 5;
                     text: Lang.Menus.save_as_image_all,
                     enable: true,
                     callback: function(){
-                        that.code.getThreads().forEach(function(t) {
+                        var threads = that.code.getThreads(); 
+                        var images = [];
+                        threads.forEach(function(t,i) {
                             var topBlock = t.getFirstBlock();
                             if (!topBlock) return;
-                            topBlock.view.downloadAsImage();
+                            console.log('threads.length=',threads.length);
+                            if (threads.length > 1 && Entry.isOffline) {
+                                topBlock.view.getDataUrl().then(function(data) {
+                                    images.push(data);
+                                    //console.log('add an image');
+                                    if (images.length == threads.length) {
+                                        //console.log('images completely added');
+                                        Entry.dispatchEvent(
+                                            'saveBlockImages', 
+                                            { images: images }
+                                        );
+                                    }
+
+                                });
+                            } else {
+                                topBlock.view.downloadAsImage(++i);
+                            }
+                            
                         });
                     }
                 }
