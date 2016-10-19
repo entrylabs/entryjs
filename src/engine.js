@@ -65,6 +65,8 @@ Entry.Engine = function() {
             this._mouseMoved = false;
         }
     }.bind(this), 100)
+
+    Entry.message = new Entry.Event(window);
 };
 
 /**
@@ -509,17 +511,19 @@ Entry.Engine.prototype.toggleRun = function() {
     if (Entry.type == 'mobile')
         this.view_.addClass('entryEngineBlueWorkspace');
 
-    this.pauseButton.innerHTML = Lang.Workspace.pause;
-    this.runButton.addClass('run');
-    this.runButton.addClass('entryRemove');
-    this.stopButton.removeClass('entryRemove');
-    if (this.pauseButton)
-        this.pauseButton.removeClass('entryRemove');
+    if (this.runButton) {
+        this.pauseButton.innerHTML = Lang.Workspace.pause;
+        this.runButton.addClass('run');
+        this.runButton.addClass('entryRemove');
+        this.stopButton.removeClass('entryRemove');
+        if (this.pauseButton)
+            this.pauseButton.removeClass('entryRemove');
 
-    if (this.runButton2)
-        this.runButton2.addClass('entryRemove');
-    if (this.stopButton2)
-        this.stopButton2.removeClass('entryRemove');
+        if (this.runButton2)
+            this.runButton2.addClass('entryRemove');
+        if (this.stopButton2)
+            this.stopButton2.removeClass('entryRemove');
+    }
 
     if (!this.isUpdating) {
         Entry.engine.update();
@@ -564,15 +568,17 @@ Entry.Engine.prototype.toggleStop = function() {
     createjs.Sound.setVolume(1);
     createjs.Sound.stop();
     this.view_.removeClass('entryEngineBlueWorkspace');
-    this.runButton.removeClass('entryRemove');
-    this.stopButton.addClass('entryRemove');
-    if (this.pauseButton)
-        this.pauseButton.addClass('entryRemove');
+    if (this.runButton) {
+        this.runButton.removeClass('entryRemove');
+        this.stopButton.addClass('entryRemove');
+        if (this.pauseButton)
+            this.pauseButton.addClass('entryRemove');
 
-    if (this.runButton2)
-        this.runButton2.removeClass('entryRemove');
-    if (this.stopButton2)
-        this.stopButton2.addClass('entryRemove');
+        if (this.runButton2)
+            this.runButton2.removeClass('entryRemove');
+        if (this.stopButton2)
+            this.stopButton2.addClass('entryRemove');
+    }
 
     this.state = 'stop';
     Entry.dispatchEvent('stop');
@@ -590,10 +596,12 @@ Entry.Engine.prototype.togglePause = function() {
             timer.pauseStart = (new Date()).getTime()
         else delete timer.pauseStart;
         this.state = 'run';
-        this.pauseButton.innerHTML = Lang.Workspace.pause;
-        this.runButton.addClass('entryRemove');
-        if (this.runButton2)
-            this.runButton2.addClass('entryRemove');
+        if (this.runButton) {
+            this.pauseButton.innerHTML = Lang.Workspace.pause;
+            this.runButton.addClass('entryRemove');
+            if (this.runButton2)
+                this.runButton2.addClass('entryRemove');
+        }
     } else {
         this.state = 'pause';
         if (!timer.isPaused)
@@ -602,11 +610,13 @@ Entry.Engine.prototype.togglePause = function() {
             timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
             timer.pauseStart = (new Date()).getTime();
         }
-        this.pauseButton.innerHTML = Lang.Workspace.restart;
-        this.runButton.removeClass('entryRemove');
-        this.stopButton.removeClass('entryRemove');
-        if (this.runButton2)
-            this.runButton2.removeClass('entryRemove');
+        if (this.runButton) {
+            this.pauseButton.innerHTML = Lang.Workspace.restart;
+            this.runButton.removeClass('entryRemove');
+            this.stopButton.removeClass('entryRemove');
+            if (this.runButton2)
+                this.runButton2.removeClass('entryRemove');
+        }
     }
 };
 
@@ -614,8 +624,8 @@ Entry.Engine.prototype.togglePause = function() {
  * @param {string} eventName
  */
 Entry.Engine.prototype.fireEvent = function(eventName) {
-    if (this.state == 'run')
-        Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, eventName);
+    if (this.state !== 'run') return;
+    Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, eventName);
 };
 
 /**
@@ -817,3 +827,9 @@ Entry.Engine.prototype.updateProjectTimer = function(value) {
     }
 };
 
+
+Entry.Engine.prototype.raiseMessage = function(value) {
+    Entry.message.notify(Entry.variableContainer.getMessage(value));
+    return Entry.container.mapEntityIncludeCloneOnScene(
+        this.raiseKeyEvent, ["when_message_cast", value]);
+};

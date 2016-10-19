@@ -18,24 +18,32 @@ Entry.BlockView = function(block, board, mode) {
     this.set(block);
     this.svgGroup = board.svgBlockGroup.elem("g");
 
-    this._schema = Entry.block[block.type];
+    this._schema = Entry.skinContainer.getSkin(block);
     if (this._schema === undefined) {
         this.block.destroy(false, false);
         return;
     }
 
+    if (this._schema.deletable)
+        this.block.setDeletable(this._schema.deletable)
+    if (this._schema.copyable)
+        this.block.setCopyable(this._schema.copyable)
+    if (this._schema.display === false)
+        this.set({display: false})
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
+
     var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
     this._statements = [];
+    this._extensions = [];
     this.magnet = {};
     this._paramMap = {};
 
     if (skeleton.magnets && skeleton.magnets(this).next) {
         this.svgGroup.nextMagnet = this.block;
-        this._nextGroup = this.svgGroup.elem("g");
+        this._nextGroup = this.svgGroup.elem("g", {class: 'entryBlockNextGroup'});
         this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"]));
     }
 
@@ -47,8 +55,6 @@ Entry.BlockView = function(block, board, mode) {
             events.mousedown.forEach(function(fn){fn(that);});
 
         that.onMouseDown.apply(that, arguments);
-
-
     };
     this._startRender(block, mode);
 
@@ -105,6 +111,11 @@ Entry.BlockView.pngMap = {};
             class: "block"
         });
 
+        if (this._schema.css)
+            this.svgGroup.attr({
+                style: this._schema.css
+            });
+
         var classes = skeleton.classes;
         if (classes && classes.length !== 0)
             classes.forEach(function(c){that.svgGroup.addClass(c);});
@@ -116,7 +127,8 @@ Entry.BlockView.pngMap = {};
 
         this._path = this.pathGroup.elem("path");
 
-        if (this.getBoard().patternRect) {
+        //enable mouse pattern only for desktou
+        if (!Entry.isMobile()) {
             $(this._path).mouseenter(function(e) {
                 if (!that._mouseEnable) return;
                 that._changeFill(true);
@@ -152,9 +164,13 @@ Entry.BlockView.pngMap = {};
 
         this._moveTo(this.x, this.y, false);
         this._startContentRender(mode);
+        this._startExtension(mode)
         if (this._board.disableMouseEvent !== true) {
             this._addControl();
         }
+
+        var guide = this.guideSvgGroup;
+        guide && this.svgGroup.insertBefore(guide, this.svgGroup.firstChild);
 
         this.bindPrev();
     };
@@ -169,9 +185,12 @@ Entry.BlockView.pngMap = {};
             this.statementSvgGroup.remove();
         this._contents = [];
 
-        this.contentSvgGroup = this.svgGroup.elem("g");
+        this.contentSvgGroup = this.svgGroup.elem("g", {class:'contentsGroup'});
         if (schema.statements && schema.statements.length)
-            this.statementSvgGroup = this.svgGroup.elem("g");
+            this.statementSvgGroup = this.svgGroup.elem("g", {
+                class: 'statementGroup'
+            });
+
         switch (mode) {
             case Entry.Workspace.MODE_BOARD:
             case Entry.Workspace.MODE_OVERLAYBOARD:
@@ -180,7 +199,9 @@ Entry.BlockView.pngMap = {};
                 var templateParams = template.split(reg);
                 var params = schema.params;
                 for (var i=0; i<templateParams.length; i++) {
-                    var param = templateParams[i].trim();
+                    var param = templateParams[i];
+                    if (param[0] === " ") param = param.substring(1);
+                    if (param[param.length - 1] === " ") param = param.substring(0, param.length - 1);
                     if (param.length === 0) continue;
 
                     if (reg.test(param)) {
@@ -230,6 +251,12 @@ Entry.BlockView.pngMap = {};
                 break;
         }
         this.alignContent(false);
+    };
+
+    p._startExtension = function(mode) {
+        this._extensions = this.block.extensions.map(function(e) {
+            return new Entry['Ext' + e.type](e, this, mode);
+        }.bind(this));
     };
 
     p._updateSchema = function() {
@@ -331,6 +358,7 @@ Entry.BlockView.pngMap = {};
 
             this.set({animating: false});
         }
+        this._setBackgroundPath();
     };
 
     p._setPosition = function(animate) {
@@ -367,7 +395,10 @@ Entry.BlockView.pngMap = {};
     };
 
     p._moveTo = function(x, y, animate) {
-        this.set({ x: x, y: y });
+        if (this.display)
+            this.set({ x: x, y: y });
+        else
+            this.set({ x: -99999, y: -99999 });
         this._lazyUpdatePos();
         if (this.visible && this.display)
             this._setPosition(animate);
@@ -969,17 +1000,15 @@ Entry.BlockView.pngMap = {};
 
     p._changeFill = function(isPattern) {
         var board = this.getBoard();
-        if (!board.patternRect || board.dragBlock) return;
+        if (board.dragBlock) return;
         var fillColor = this._fillColor;
         var path = this._path;
 
         var board = this.getBoard();
         if (isPattern) {
-            board.setPatternRectFill(fillColor);
             fillColor = "url(#blockHoverPattern_" + this.getBoard().suffix +")";
-        } else {
-            board.disablePattern();
-        }
+            board.enablePattern();
+        } else board.disablePattern();
         path.attr({fill:fillColor});
     };
 
@@ -999,7 +1028,7 @@ Entry.BlockView.pngMap = {};
         if (params) {
             for (var i=0; i<params.length; i++) {
                 var param = params[i];
-                if (param instanceof Entry.Block) {
+                if (param instanceof Entry.Block && param.view) {
                     param.view.reDraw();
                 }
             }
@@ -1009,6 +1038,13 @@ Entry.BlockView.pngMap = {};
             for (var i=0; i<statements.length; i++) {
                 var statement = statements[i];
                 statement.view.reDraw();
+            }
+        }
+        var extensions = this._extensions;
+        if (extensions) {
+            for (var i=0; i<extensions.length; i++) {
+                var ext = extensions[i];
+                ext.updatePos && ext.updatePos();
             }
         }
     };
@@ -1159,11 +1195,14 @@ Entry.BlockView.pngMap = {};
         }
     };
 
-    p.downloadAsImage = function() {
+    p.downloadAsImage = function(i) {
         this.getDataUrl().then(function(data) {
             var download = document.createElement('a');
             download.href = data.src;
-            download.download = '엔트리 블록.png';
+            var name = '엔트리 블록';
+            if (i)
+                name += i;
+            download.download = name+'.png';
             download.click();
         });
     };
@@ -1222,6 +1261,21 @@ Entry.BlockView.pngMap = {};
         Entry.ContextMenu.show(options, null,
             { x: e.clientX, y: e.clientY }
         );
+    };
+
+    p.clone = function() {
+        return this.svgGroup.cloneNode(true);
+    };
+
+    p._setBackgroundPath = function() {
+        this._backgroundPath && $(this._backgroundPath).remove();
+
+        var backgroundPath = this._path.cloneNode(true);
+        backgroundPath.setAttribute('class', 'blockBackgroundPath');
+        backgroundPath.setAttribute('fill', this._fillColor);
+
+        this._backgroundPath = backgroundPath;
+        this.pathGroup.insertBefore(backgroundPath, this._path);
     };
 
 })(Entry.BlockView.prototype);

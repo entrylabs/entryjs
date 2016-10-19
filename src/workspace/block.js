@@ -53,7 +53,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         deletable: Entry.Block.DELETABLE_TRUE,
         readOnly: null,
         copyable: true,
-        events: {}
+        events: {},
+        extensions: []
     };
 
     p.load = function(block) {
@@ -186,7 +187,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         );
     };
 
-    p.toJSON = function(isNew) {
+    p.toJSON = function(isNew, excludeData) {
         var json = this._toJSON();
         delete json.view;
         delete json.thread;
@@ -196,12 +197,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         json.params = json.params.map(function(p) {
             if (p instanceof Entry.Block)
-                p = p.toJSON(isNew);
+                p = p.toJSON(isNew, excludeData);
             return p;
         });
 
         json.statements = json.statements.map(
-            function(s) {return s.toJSON(isNew);}
+            function(s) {return s.toJSON(isNew, undefined, excludeData);}
         );
 
         json.x = this.x;
@@ -210,10 +211,17 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         json.movable = this.movable;
         json.deletable = this.deletable;
         json.readOnly = this.readOnly;
+
+        if (excludeData && excludeData instanceof Array) {
+            excludeData.forEach(function(i) { delete json[i]; });
+        }
+
         return json;
     };
 
-    p.destroy = function(animate, next) {
+    p.destroy = function(animate, next, isNotForce) {
+        if (isNotForce && this.deletable !== Entry.Block.DELETABLE_TRUE)
+            return;
         var that = this;
         var params = this.params;
         if (params) {
@@ -464,6 +472,18 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return pointer;
     };
 
+    p.getDataByPointer = function(pointer) {
+        pointer = pointer.concat()
+        var data = this.params[pointer.shift()];
+        if (pointer.length)
+            if (data.getDataByPointer)
+                return data.getDataByPointer(pointer);
+            else
+                return null;
+        else
+            return data;
+    };
+
     p.getBlockList = function(excludePrimitive, type) {
         var blocks = [];
         var currentType = type || this.type;
@@ -487,14 +507,17 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         var statements = this.statements;
         if (statements) {
             for (var j = 0; j < statements.length; j++) {
-                blocks = blocks.concat(statements[j].getBlockList(excludePrimitive, type));
+                var statement = statements[j];
+                if (statement.constructor !== Entry.Thread)
+                    continue;
+                blocks = blocks.concat(statement.getBlockList(excludePrimitive, type));
             }
         }
         return blocks;
     };
 
-    p.stringify = function() {
-        return JSON.stringify(this.toJSON());
+    p.stringify = function(excludeData) {
+        return JSON.stringify(this.toJSON(false, excludeData));
     };
 
 })(Entry.Block.prototype);

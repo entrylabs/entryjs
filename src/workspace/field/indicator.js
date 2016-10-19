@@ -17,9 +17,13 @@ Entry.FieldIndicator = function(content, blockView, index) {
     this.box = box;
 
     this._size = content.size;
-    if(this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
-        this._imgUrl = content.img.replace('.png', '_un.png');
-    else this._imgUrl = content.img;
+    if (content.img) {
+        if(this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
+            this._imgUrl = content.img.replace('.png', '_un.png');
+        else this._imgUrl = content.img;
+    } else if (content.color) {
+        this._color = content.color
+    }
     this._boxMultiplier = content.boxMultiplier || 2;
     this._highlightColor =
         content.highlightColor? content.highlightColor : "#F59900";
@@ -42,20 +46,24 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 
         this.svgGroup = this._blockView.contentSvgGroup.elem("g");
 
-        this._imgElement = this.svgGroup.elem("image", {
-            href: Entry.mediaFilePath + this._imgUrl,
-            x: this._position ? this._size * -1 : 0,
-            y: this._size * -1,
-            width: this._size * 2,
-            height: this._size * 2
-        });
+        if (this._imgUrl) {
+            this._imgElement = this.svgGroup.elem("image", {
+                href: Entry.mediaFilePath + this._imgUrl,
+                x: this._position ? this._size * -1 : 0,
+                y: this._size * -1,
+                width: this._size * 2,
+                height: this._size * 2
+            });
+        }
 
-        var path = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z"
+        var path = "m %s,-%s a %s,%s 0 1,1 -0.1,0 z"
             .replace(/%s/gi, this._size);
         this._path = this.svgGroup.elem("path", {
             d: path,
+            x: this._position ? this._size * -1 : 0,
+            y: this._size * -1,
             stroke: "none",
-            fill: "none"
+            fill: this._color ? this._color : "none"
         });
 
         this.box.set({
