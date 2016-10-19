@@ -395,9 +395,18 @@ Entry.Board.DRAG_RADIUS = 5;
 
     p.generateCodeMagnetMap = function() {
         var code = this.code;
-        if (!code || !this.dragBlock) return;
+        var dragBlock = this.dragBlock;
+        if (!(code && dragBlock)) return;
 
-        for (var targetType in this.dragBlock.magnet) {
+        //reset magnetMap
+        this._magnetMap = {};
+
+        for (var targetType in dragBlock.magnet) {
+            if (targetType === 'next' &&
+                dragBlock.block.getLastBlock().view.magnet.next === undefined) {
+                    continue;
+            }
+
             var metaData = this._getCodeBlocks(code, targetType);
             metaData.sort(function(a, b) {return a.point - b.point;});
 
@@ -441,8 +450,6 @@ Entry.Board.DRAG_RADIUS = 5;
                 func = this._getPreviousMagnets;
                 break;
             case "string":
-                func = this._getFieldMagnets;
-                break;
             case "boolean":
                 func = this._getFieldMagnets;
                 break;
