@@ -127,15 +127,18 @@ Entry.BlockView.pngMap = {};
 
         this._path = this.pathGroup.elem("path");
 
-        $(this._path).mouseenter(function(e) {
-            if (!that._mouseEnable) return;
-            that._changeFill(true);
-        });
+        //enable mouse pattern only for desktou
+        if (!Entry.isMobile()) {
+            $(this._path).mouseenter(function(e) {
+                if (!that._mouseEnable) return;
+                that._changeFill(true);
+            });
 
-        $(this._path).mouseleave(function(e) {
-            if (!that._mouseEnable) return;
-            that._changeFill(false);
-        });
+            $(this._path).mouseleave(function(e) {
+                if (!that._mouseEnable) return;
+                that._changeFill(false);
+            });
+        }
 
         var fillColor = this._schema.color;
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
@@ -1195,11 +1198,14 @@ Entry.BlockView.pngMap = {};
         }
     };
 
-    p.downloadAsImage = function() {
+    p.downloadAsImage = function(i) {
         this.getDataUrl().then(function(data) {
             var download = document.createElement('a');
             download.href = data.src;
-            download.download = '엔트리 블록.png';
+            var name = '엔트리 블록';
+            if (i)
+                name += i;
+            download.download = name+'.png';
             download.click();
         });
     };
