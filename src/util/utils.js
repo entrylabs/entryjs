@@ -1072,31 +1072,19 @@ Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
         style: "display: none"
     });
 
-    var group = pattern.elem('g');
-
-    //this rect should be controlled by the board
-    //according to the target block
-    var elem = group.elem("rect", {
-        x: 0, y: 0,
-        width: 125,
-        height: 33
-    });
-
     var imagePath = Entry.mediaFilePath + 'block_pattern_(order).png';
+    var order = '(order)';
     for (var i=1; i<5; i++) {
-        group.elem("image", {
+        pattern.elem("image", {
             class: 'pattern' + i,
-            href: imagePath.replace('(order)', i),
+            href: imagePath.replace(order, i),
             x: 0, y: 0,
             width: 125,
             height: 33
         });
     }
 
-    return {
-        pattern: pattern,
-        rect: elem
-    }
+    return { pattern: pattern };
 };
 
 Entry.Utils.COLLISION = {

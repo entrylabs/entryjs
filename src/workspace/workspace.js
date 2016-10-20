@@ -54,8 +54,9 @@ Entry.Workspace = function(options) {
     this.changeEvent = new Entry.Event(this);
 
     Entry.commander.setCurrentEditor("board", this.board);
-    this.textType = Entry.Vim.TEXT_TYPE_PY;
-
+    if (options.textType !== undefined)
+        this.textType = options.textType;
+    else this.textType = Entry.Vim.TEXT_TYPE_PY;
 };
 
 Entry.Workspace.MODE_BOARD = 0;
@@ -79,15 +80,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-       if (typeof mode === 'number')
-           this.mode = mode;
-       else {
-           this.mode = mode.boardType;
-           this.runType = mode.runType;
-           this.textType = mode.textType;
-       }
+        if (!isNaN(mode)) this.mode = mode;
+        else {
+            this.mode = mode.boardType;
+            this.runType = mode.runType;
+            this.textType = mode.textType;
+        }
 
-       switch (this.mode) {
+        this.mode = Number(this.mode);
+
+        switch (this.mode) {
            case this.oldMode:
                return;
 

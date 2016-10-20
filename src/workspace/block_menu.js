@@ -39,7 +39,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.svg = Entry.SVG(this._svgId);
     Entry.Utils.addFilters(this.svg, this.suffix);
     var returnVal = Entry.Utils.addBlockPattern(this.svg, this.suffix);
-    this.patternRect = returnVal.rect;
     this.pattern = returnVal.pattern;
 
     this.svgGroup = this.svg.elem("g");
@@ -250,7 +249,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                     .getFirstBlock().view;
 
                 var offset = this.offset();
-                var distance = offset.top - board.offset().top;
+                var distance = offset.top - board.offset().top - $(window).scrollTop();
 
                 var dx, dy;
 
@@ -633,13 +632,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         }
     };
 
-    p.setPatternRectFill = function(color) {
-        this.patternRect.attr({
-            fill:color
-        });
-        this.pattern.attr({
-            style: ""
-        });
+    p.enablePattern = function() {
+        this.pattern.removeAttribute('style');
     };
 
     p.disablePattern = function() {

@@ -16,6 +16,8 @@ Entry.ThreadView = function(thread, board) {
     this.svgGroup = board.svgThreadGroup.elem("g");
 
     this.parent = board; // statement
+
+    this._hasGuide = false;
 };
 
 (function(p) {
@@ -83,7 +85,7 @@ Entry.ThreadView = function(thread, board) {
     };
 
     p.dominate = function() {
-        this.parent.dominate(this.thread);
+        !this._hasGuide && this.parent.dominate(this.thread);
     };
 
     p.isGlobal = function() {
@@ -98,7 +100,11 @@ Entry.ThreadView = function(thread, board) {
     };
 
     p.setZIndex = function(zIndex) {
-         this.set({zIndex: zIndex});
-    }
+        this.set({zIndex: zIndex});
+    };
+
+    p.setHasGuide = function(bool) {
+        this._hasGuide = bool;
+    };
 
 })(Entry.ThreadView.prototype);
