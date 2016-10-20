@@ -17198,10 +17198,8 @@ Entry.Func.edit = function(b) {
   this.targetFunc = b;
   this.initEditView(b.content);
   this.bindFuncChangeEvent();
+  this._backupContent = b.content.stringify();
   this.updateMenu();
-  window.setTimeout(function() {
-    this.targetFunc.content.board.reDraw();
-  }.bind(this), 0);
 };
 Entry.Func.initEditView = function(b) {
   this.menuCode || this.setupMenuCode();
@@ -17225,6 +17223,9 @@ Entry.Func.endEdit = function(b) {
       this.cancelEdit();
   }
   this._backupContent = null;
+  Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD);
+  delete this.targetFunc;
+  this.updateMenu();
 };
 Entry.Func.save = function() {
   this.targetFunc.generateBlock(!0);
@@ -17263,28 +17264,7 @@ Entry.Func.syncFuncName = function(b) {
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a);
 };
 Entry.Func.cancelEdit = function() {
-  if (this.targetFunc) {
-    var b = Entry.playground.mainWorkspace;
-    Entry.Func.isEdit = !1;
-    if (!this.targetFunc.block) {
-      this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected;
-    } else {
-      if (this._backupContent) {
-        b.overlayBoard.show();
-        this.targetFunc.content.load(this._backupContent);
-        Entry.generateFunctionSchema(this.targetFunc.id);
-        var a = this.targetFunc.content._blockMap, d;
-        for (d in a) {
-          Entry.Func.registerParamBlock(a[d].type);
-        }
-        b.overlayBoard.hide();
-      }
-    }
-    delete this.targetFunc;
-    this.updateMenu();
-    Entry.variableContainer.updateList();
-    b.setMode(Entry.Workspace.MODE_BOARD);
-  }
+  this.targetFunc && (this.targetFunc.block ? this._backupContent && this._backupContent !== this.targetFunc.content.stringify() && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), Entry.variableContainer.updateList(), Entry.Func.isEdit = !1);
 };
 Entry.Func.getMenuXml = function() {
   var b = [];
@@ -17396,9 +17376,25 @@ Entry.Func.generateWsBlock = function(b) {
   d++;
   f += " %" + (d + c);
   e.push({type:"Indicator", img:"block_icon/function_03.png", size:12});
-  Entry.Mutator.mutate("func_" + b.id, {params:e, template:f});
-  for (var l in g) {
-    g[l] ? (a = -1 < l.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(l, {template:a})) : g[l] = !0;
+  a = "func_" + b.id;
+  d = Entry.block[a];
+  c = !1;
+  if (d.template !== f) {
+    c = !0;
+  } else {
+    if (d.params.length === e.length) {
+      for (h = 0;h < d.params.length - 1;h++) {
+        var k = d.params[h], l = e[h];
+        if (k.type !== l.type || k.accept !== l.accept) {
+          c = !0;
+          break;
+        }
+      }
+    }
+  }
+  c && Entry.Mutator.mutate(a, {params:e, template:f});
+  for (var m in g) {
+    g[m] ? (e = -1 < m.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(m, {template:e})) : g[m] = !0;
   }
   this.bindFuncChangeEvent(b);
 };
@@ -21305,9 +21301,9 @@ Entry.BlockView.pngMap = {};
     this._updateContents();
   };
   b._updateContents = function() {
-    for (var a = 0;a < this._contents.length;a++) {
-      this._contents[a].renderStart();
-    }
+    this._contents.forEach(function(a) {
+      a.renderStart();
+    }.bind(this));
     this.alignContent(!1);
   };
   b._destroyObservers = function() {
@@ -21332,24 +21328,17 @@ Entry.BlockView.pngMap = {};
   b.reDraw = function() {
     if (this.visible) {
       var a = this.block;
-      requestAnimFrame(this._updateContents.bind(this));
-      var b = a.params;
+      this._updateContents();
+      var b = a.statements;
       if (b) {
-        for (var c = 0;c < b.length;c++) {
-          var e = b[c];
-          e instanceof Entry.Block && e.view && (e.view.reDraw(), (e = e.params) && e.forEach(function(a) {
-            a instanceof Entry.Block && a.view && a.view.reDraw();
-          }));
+        for (a = 0;a < b.length;a++) {
+          b[a].view.reDraw();
         }
       }
-      if (a = a.statements) {
-        for (c = 0;c < a.length;c++) {
-          a[c].view.reDraw();
-        }
-      }
-      if (a = this._extensions) {
-        for (c = 0;c < a.length;c++) {
-          b = a[c], b.updatePos && b.updatePos();
+      if (b = this._extensions) {
+        for (a = 0;a < b.length;a++) {
+          var c = b[a];
+          c.updatePos && c.updatePos();
         }
       }
     }
@@ -22194,12 +22183,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 (function(b) {
   b.schema = {magneting:!1};
   b.renderStart = function(a, b) {
-    this.svgGroup = this._blockView.contentSvgGroup.elem("g");
+    this.svgGroup || (this.svgGroup = this._blockView.contentSvgGroup.elem("g"));
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
     var c = this.getValue();
-    c && !c.view && (c.setThread(this), c.createView(a, b), c.getThread().view.setParent(this));
+    c && !c.view ? (c.setThread(this), c.createView(a, b), c.getThread().view.setParent(this)) : c && c.view && (c.destroyView(), c.createView(this._blockView.getBoard()));
     this.updateValueBlock(c);
     this._blockView.getBoard().constructor !== Entry.Board && this._valueBlock.view.removeControl();
   };
@@ -22207,14 +22196,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     var e = this.svgGroup;
     this._position && (this._position.x && (a = this._position.x), this._position.y && (b = this._position.y));
     var f = this._valueBlock;
-    f && (b = -.5 * f.view.height);
+    f && f && f.view && (b = -.5 * f.view.height);
     f = "translate(" + a + "," + b + ")";
     void 0 === c || c ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
     this.box.set({x:a, y:b});
   };
   b.calcWH = function() {
     var a = this._valueBlock;
-    a ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:15, height:20});
+    a && a && a.view ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:15, height:20});
   };
   b.calcHeight = b.calcWH;
   b.destroy = function() {
@@ -22251,14 +22240,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   b.updateValueBlock = function(a) {
     a instanceof Entry.Block || (a = void 0);
-    this._destroyObservers();
-    a = this._setValueBlock(a).view;
-    a.bindPrev(this);
-    this._blockView.alignContent();
-    this._posObserver = a.observe(this, "updateValueBlock", ["x", "y"], !1);
-    this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]);
-    a = this._blockView.getBoard();
-    a.constructor === Entry.Board && a.generateCodeMagnetMap();
+    a && a === this._valueBlock ? this.calcWH() : (this._destroyObservers(), a = this._setValueBlock(a).view, a.bindPrev(this), this._blockView.alignContent(), this._posObserver = a.observe(this, "updateValueBlock", ["x", "y"], !1), this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]), a = this._blockView.getBoard(), a.constructor === Entry.Board && a.generateCodeMagnetMap());
   };
   b._destroyObservers = function() {
     this._sizeObserver && this._sizeObserver.destroy();
@@ -22730,12 +22712,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 (function(b) {
   b.schema = {magneting:!1};
   b.renderStart = function(a, b) {
+    this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
     var c = this.getValue();
-    c && !c.view && (c.setThread(this), c.createView(a, b));
+    c && !c.view ? (c.setThread(this), c.createView(a, b)) : c && c.view && (c.destroyView(), c.createView(this._blockView.getBoard()));
     this._updateValueBlock(c);
     this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock && this._valueBlock.view.removeControl();
   };
@@ -22766,10 +22749,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     a instanceof Entry.Block || (a = void 0);
     this._sizeObserver && this._sizeObserver.destroy();
     this._posObserver && this._posObserver.destroy();
-    (a = this._setValueBlock(a)) ? (a = a.view, a.bindPrev(), this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = a.observe(this, "calcWH", ["width", "height"])) : this.calcWH();
+    if (a = this._setValueBlock(a)) {
+      a = a.view, a.bindPrev(), this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]);
+    }
+    this.calcWH();
     this._blockView.alignContent();
-    a = this._blockView.getBoard();
-    a.constructor === Entry.Board && a.generateCodeMagnetMap();
   };
   b.getPrevBlock = function(a) {
     return this._valueBlock === a ? this : null;
@@ -24312,6 +24296,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     this.view || (this.set({view:new Entry.BlockView(this, a, b)}), this._updatePos());
   };
   b.destroyView = function() {
+    this.view.destroy();
     this.set({view:null});
   };
   b.clone = function(a) {

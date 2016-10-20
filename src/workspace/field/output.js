@@ -46,7 +46,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     };
 
     p.renderStart = function(board, mode) {
-        this.svgGroup = this._blockView.contentSvgGroup.elem("g");
+        if (this.svgGroup)
+            $(this.svgGroup).remove();
+
+        this.svgGroup =
+            this._blockView.contentSvgGroup.elem("g");
         this.view = this;
         this._nextGroup = this.svgGroup;
         this.box.set({
@@ -59,6 +63,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         if (block && !block.view) {
             block.setThread(this);
             block.createView(board, mode);
+        } else if (block && block.view) {
+            block.destroyView();
+            block.createView(this._blockView.getBoard());
         }
         this._updateValueBlock(block);
 
@@ -137,7 +144,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     };
 
     p._updateValueBlock = function(block) {
-        if (!(block instanceof Entry.Block)) block = undefined;
+        if (!(block instanceof Entry.Block))
+            block = undefined;
+
         if (this._sizeObserver) this._sizeObserver.destroy();
         if (this._posObserver) this._posObserver.destroy();
 
@@ -147,13 +156,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
             view.bindPrev();
             this._posObserver = view.observe(this, "_updateValueBlock", ["x", "y"], false);
             this._sizeObserver = view.observe(this, "calcWH", ["width", "height"]);
+            this.calcWH();
         } else {
             this.calcWH();
         }
         this._blockView.alignContent();
-        var board = this._blockView.getBoard();// performance issue
-        if (board.constructor === Entry.Board)
-            board.generateCodeMagnetMap();
     };
 
     p.getPrevBlock = function(block) {

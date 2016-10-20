@@ -984,8 +984,9 @@ Entry.BlockView.pngMap = {};
     };
 
     p._updateContents = function() {
-        for (var i=0; i<this._contents.length; i++)
-            this._contents[i].renderStart();
+        this._contents.forEach(function(c) {
+            c.renderStart();
+        }.bind(this));
         this.alignContent(false);
     };
 
@@ -1020,26 +1021,11 @@ Entry.BlockView.pngMap = {};
     };
 
     p.reDraw = function() {
-        if (!this.visible) return;
+        if (!this.visible)
+            return;
+
         var block = this.block;
-        requestAnimFrame(this._updateContents.bind(this));
-        var params = block.params;
-        if (params) {
-            for (var i=0; i<params.length; i++) {
-                var param = params[i];
-                if (param instanceof Entry.Block && param.view) {
-                    param.view.reDraw();
-                    var innerParams = param.params;
-                    if (innerParams) {
-                        innerParams.forEach(function(p) {
-                            if (p instanceof Entry.Block && p.view)  {
-                                p.view.reDraw();
-                            }
-                        });
-                    }
-                }
-            }
-        }
+        this._updateContents();
         var statements = block.statements;
         if (statements) {
             for (var i=0; i<statements.length; i++) {

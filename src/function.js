@@ -90,11 +90,8 @@ Entry.Func.edit = function(func) {
     this.targetFunc = func;
     this.initEditView(func.content);
     this.bindFuncChangeEvent();
-    //this._backupContent = func.content.stringify();
+    this._backupContent = func.content.stringify();
     this.updateMenu();
-    window.setTimeout(function() {
-        this.targetFunc.content.board.reDraw();
-    }.bind(this), 0);
 };
 
 Entry.Func.initEditView = function(content) {
@@ -122,6 +119,9 @@ Entry.Func.endEdit = function(message) {
             break;
     }
     this._backupContent = null;
+    Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD);
+    delete this.targetFunc;
+    this.updateMenu();
 }
 
 Entry.Func.save = function() {
@@ -175,30 +175,22 @@ Entry.Func.syncFuncName = function(dstFName) {
 };
 
 Entry.Func.cancelEdit = function() {
-    if (!this.targetFunc)
-        return;
-    var workspace = Entry.playground.mainWorkspace;
-    Entry.Func.isEdit = false;
+    if (!this.targetFunc) return;
+
     if (!this.targetFunc.block) {
         this._targetFuncBlock.destroy();
         delete Entry.variableContainer.functions_[this.targetFunc.id];
         delete Entry.variableContainer.selected;
     } else {
-        if (this._backupContent) {
-            workspace.overlayBoard.show();
+        if (this._backupContent &&
+            this._backupContent !== this.targetFunc.content.stringify()) {
             this.targetFunc.content.load(this._backupContent);
             Entry.generateFunctionSchema(this.targetFunc.id);
-            var blockMap = this.targetFunc.content._blockMap;
-            for (var key in blockMap) {
-                Entry.Func.registerParamBlock(blockMap[key].type);
-            }
-            workspace.overlayBoard.hide();
+            Entry.Func.generateWsBlock(this.targetFunc);
         }
     }
-    delete this.targetFunc;
-    this.updateMenu();
     Entry.variableContainer.updateList();
-    workspace.setMode(Entry.Workspace.MODE_BOARD);
+    Entry.Func.isEdit = false;
 };
 
 Entry.Func.getMenuXml = function() {
@@ -444,10 +436,34 @@ Entry.Func.generateWsBlock = function(targetFunc) {
         "img": "block_icon/function_03.png",
         "size": 12
     });
-    Entry.Mutator.mutate(
-        "func_" + targetFunc.id,
-        {params: schemaParams, template: schemaTemplate}
-    );
+
+    var funcName = "func_" + targetFunc.id;
+    var origin = Entry.block[funcName];
+
+    var shouldGenerate = false;
+
+    if (origin.template !== schemaTemplate)
+        shouldGenerate = true;
+    else if (origin.params.length === schemaParams.length) {
+        for (var i=0; i<origin.params.length-1; i++) {
+            var originParam = origin.params[i];
+            var newParam = schemaParams[i];
+            if (originParam.type === newParam.type &&
+                originParam.accept === newParam.accept)
+                continue;
+            else {
+                shouldGenerate = true;
+                break;
+            }
+        }
+    }
+
+    if (shouldGenerate) {
+        Entry.Mutator.mutate(
+            funcName,
+            {params: schemaParams, template: schemaTemplate}
+        );
+    }
 
     for (var key in hashMap) {
         var state = hashMap[key];

@@ -46,7 +46,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p.renderStart = function(board, mode) {
-        this.svgGroup = this._blockView.contentSvgGroup.elem("g");
+        if (!this.svgGroup)
+            this.svgGroup =
+                this._blockView.contentSvgGroup.elem("g");
         this.view = this;
         this._nextGroup = this.svgGroup;
         this.box.set({
@@ -60,7 +62,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             block.setThread(this);
             block.createView(board, mode);
             block.getThread().view.setParent(this);
+        } else if (block && block.view) {
+            block.destroyView();
+            block.createView(this._blockView.getBoard());
         }
+
         this.updateValueBlock(block);
 
         if (this._blockView.getBoard().constructor !== Entry.Board)
@@ -80,7 +86,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
         var block = this._valueBlock;
 
-        if (block) {
+        if (block && (block && block.view)) {
             y = block.view.height * -0.5;
         }
         var transform = "translate(" + x + "," + y + ")";
@@ -102,8 +108,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.calcWH = function() {
         var block = this._valueBlock;
-
-        if (block) {
+        if (block && (block && block.view)) {
             var blockView = block.view;
             this.box.set({
                 width: blockView.width,
@@ -159,7 +164,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.getValueBlock = function() {return this._valueBlock;};
 
     p.updateValueBlock = function(block) {
-        if (!(block instanceof Entry.Block)) block = undefined;
+        if (!(block instanceof Entry.Block))
+            block = undefined;
+
+        if (block && block === this._valueBlock) {
+            this.calcWH();
+            return;
+        }
+
         this._destroyObservers();
 
         var view = this._setValueBlock(block).view;
