@@ -439,30 +439,33 @@ Entry.Func.generateWsBlock = function(targetFunc) {
     });
 
     var funcName = "func_" + targetFunc.id;
-    var origin = Entry.block[funcName];
+    var originSchema = Entry.block[funcName];
 
-    var shouldGenerate = false;
+    var shouldFuncMutate = false;
 
-    if (origin.template !== schemaTemplate)
-        shouldGenerate = true;
-    else if (origin.params.length === schemaParams.length) {
-        for (var i=0; i<origin.params.length-1; i++) {
-            var originParam = origin.params[i];
+    if (originSchema.template !== schemaTemplate)
+        shouldFuncMutate = true;
+    else if (originSchema.params.length === schemaParams.length) {
+        for (var i=0; i<originSchema.params.length-1; i++) {
+            var originParam = originSchema.params[i];
             var newParam = schemaParams[i];
             if (originParam.type === newParam.type &&
                 originParam.accept === newParam.accept)
                 continue;
             else {
-                shouldGenerate = true;
+                shouldFuncMutate = true;
                 break;
             }
         }
     }
 
-    if (shouldGenerate) {
+    if (shouldFuncMutate) {
         Entry.Mutator.mutate(
             funcName,
-            {params: schemaParams, template: schemaTemplate}
+            {
+                params: schemaParams,
+                template: schemaTemplate
+            }
         );
     }
 
