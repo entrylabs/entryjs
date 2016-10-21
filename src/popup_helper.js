@@ -9,6 +9,7 @@
  */
 Entry.popupHelper = function(reset) {
     this.popupList = {};
+    this.nextPopupList = [];
     this.nowContent;
     if(reset) {
         window.popupHelper = null;
@@ -19,37 +20,26 @@ Entry.popupHelper = function(reset) {
     var spanArea = ['entryPopupHelperTopSpan', 'entryPopupHelperBottomSpan', 'entryPopupHelperLeftSpan', 'entryPopupHelperRightSpan'];
     this.body_ = Entry.Dom('div', {
         classes: ['entryPopup', 'hiddenPopup', 'popupHelper'],
-    })
+    });
     var that = this;
-    this.body_.bindOnClick(function(e) {
-        if(that.nowContent && ignoreCloseType.indexOf(that.nowContent.prop('type')) > -1) {
-            return;
-        }
-        var $target = $(e.target);
-        spanArea.forEach((function (className) {
-            if($target.hasClass(className)) {
-                this.popup.hide();
-            }
-        }).bind(this));
-        if (e.target==this) {
-            this.popup.hide();
-        }
-    });
 
-    this.body_.bind('touchstart', function(e) {
+    function popupClickEvent(e) {
         if(that.nowContent && ignoreCloseType.indexOf(that.nowContent.prop('type')) > -1) {
             return;
         }
         var $target = $(e.target);
-        spanArea.forEach((function (className) {
+        spanArea.forEach(function (className) {
             if($target.hasClass(className)) {
-                this.popup.hide();
+                that.hide();
             }
-        }).bind(this));
-        if (e.target==this) {
-            this.popup.hide();
+        });
+        if (e.target==that) {
+            that.hide();
         }
-    });
+    }
+
+    this.body_.bindOnClick(popupClickEvent);
+    this.body_.bind('touchstart', popupClickEvent);
 
     window.popupHelper = this;
     this.body_.prop('popup', this);
@@ -154,10 +144,14 @@ Entry.popupHelper.prototype.remove = function(key) {
     if(this.window_.children().length > 0) {
         this.window_.children().remove();   
     }
-    this.window_.remove();
+    // 지워지면 안되는 요소인데 지워지고 있었음. 이유는? 잠시동안만 유지.
+    // this.window_.remove();
     delete this.popupList[key];
     this.nowContent = undefined;
     this.body_.addClass('hiddenPopup');
+    if(this.nextPopupList.length > 0) {
+        this.show(this.nextPopupList.shift());
+    }
 };
 
 /**
@@ -168,17 +162,32 @@ Entry.popupHelper.prototype.resize = function(e) {
     
 };
 
-Entry.popupHelper.prototype.show = function(key) {
-    if(this.window_.children().length > 0) {
-        this.window_.children().detach();   
+Entry.popupHelper.prototype.show = function(key, isNext) {
+    var that = this;
+    function showContent(key) {
+        that.window_.append(that.popupList[key]);
+        that.nowContent = that.popupList[key];
+        that.body_.removeClass('hiddenPopup');
     }
-    this.window_.append(this.popupList[key]);
-    this.nowContent = this.popupList[key];
-    this.body_.removeClass('hiddenPopup');
+    if(!isNext) {
+        this.window_.children().detach();   
+        showContent(key);
+    } else {
+        if(this.window_.children().length > 0) {
+            this.nextPopupList.push(key)  
+        } else {
+            this.window_.children().detach();
+            showContent(key);
+        }
+    }
 };
 
 
 Entry.popupHelper.prototype.hide = function() {
     this.nowContent = undefined;
     this.body_.addClass('hiddenPopup');
+    this.window_.children().detach();
+    if(this.nextPopupList.length > 0) {
+        this.show(this.nextPopupList.shift());
+    }
 };

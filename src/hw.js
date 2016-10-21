@@ -11,11 +11,12 @@ Entry.HW = function() {
         this.sessionRoomId = this.createRandomRoomId();
         localStorage.setItem('entryhwRoomId', this.sessionRoomId);
     }
-    console.log(this.sessionRoomId);
 
     this.connectTrial = 0;
     this.isFirstConnect = true;
 
+    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.5.11_Setup.exe";
+    this.hwPopupCreate();
     this.initSocket();
     this.connected = false;
     this.portData = {};
@@ -147,14 +148,18 @@ p.initSocket = function() {
             this.socketIo.removeAllListeners();
         }
         
+        if(!this.isOpenHardware) {
+            this.checkOldClient();
+        }
         if(location.protocol.indexOf('https') > -1) {
             this.tlsSocketIo = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{ 'client': true, 'roomId' : this.sessionRoomId } });
+        } else if(Entry.isOffline){
+            this.tlsSocketIo = this.connectWebSocket('http://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
         } else {
-            try{
-                this.socketIo = this.connectWebSocket('https://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
+            try {
+                this.socketIo = this.connectWebSocket('http://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
             } catch(e) { }
-
-            try{
+            try {
                 this.tlsSocketIo = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
             } catch(e) { }
         }
@@ -163,7 +168,19 @@ p.initSocket = function() {
     } catch(e) {}
 };
 
+p.checkOldClient = function() {
+    try {
+        var hw = this;
+        var websocket = new WebSocket('wss://hardware.play-entry.org:23518');
+        websocket.onopen = function() {
+            hw.popupHelper.show('newVersion', true);
+            websocket.close();
+        }
+    } catch(e) {}
+};
+
 p.retryConnect = function() {
+    this.isOpenHardware = false;
     Entry.HW.TRIAL_LIMIT = 5;
     this.initSocket();
 };
@@ -187,19 +204,15 @@ p.initHardware = function(socket) {
     if (Entry.playground && Entry.playground.object) {
         Entry.playground.setMenu(Entry.playground.object.objectType);
     }
-};
+}
 
 p.disconnectHardware = function() {
     Entry.propertyPanel.removeMode("hw");
     this.selectedDevice = undefined;
     this.hwModule = undefined;
     Entry.dispatchEvent("hwChanged");
-    // Entry.toast.alert(
-    //     "하드웨어 연결 종료",
-    //     "하드웨어의 연결이 종료되었습니다.",
-    //     false
-    // );
 }
+
 p.disconnectedSocket = function() {
     this.tlsSocketIo.close();
     if(this.socketIo) {
@@ -215,7 +228,7 @@ p.disconnectedSocket = function() {
     Entry.dispatchEvent("hwChanged");
     Entry.toast.alert(
         "하드웨어 프로그램 연결 종료",
-        "하드웨어 프로그램과 사이의 연결이 종료되었습니다.",
+        "하드웨어 프로그램과의 연결이 종료되었습니다.",
         false
     );
 }
@@ -303,8 +316,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.11_Setup.exe";
-    var win = window.open(url, '_blank');
+    var win = window.open(this.downloadPath, '_blank');
     win.focus();
 };
 
@@ -365,12 +377,13 @@ p.checkDevice = function(data) {
 
 p.banHW = function() {
     var hwOptions = this.hwInfo;
-    for (var i in hwOptions)
+    for (var i in hwOptions) {
         Entry.playground.mainWorkspace.blockMenu.banClass(hwOptions[i].name, true);
-
+    }
 };
 
 p.executeHardware = function() {
+    var hw = this;
     var executeIeCustomLauncher = {
         _bNotInstalled : false,
         init : function(sUrl, fpCallback) {
@@ -379,7 +392,7 @@ p.executeHardware = function() {
             var left = window.screenLeft;
             var top = window.screenTop;
             var settings = 'width=' + width + ', height=' + height + ',  top=' + top + ', left=' + left;
-            this._w = window.open('', "comic_viewer_launcher", settings);
+            this._w = window.open('', "entry_hw_launcher", settings);
             var fnInterval = null;
             fnInterval = setTimeout(function() {
                 executeIeCustomLauncher.runViewer(sUrl, fpCallback);
@@ -422,8 +435,8 @@ p.executeHardware = function() {
             this._bNotInstalled = true;
         }
     };
-    var entryHardwareUrl = 'entryhw://-roomId:' + this.sessionRoomId;
 
+    var entryHardwareUrl = 'entryhw://-roomId:' + this.sessionRoomId;
     if(navigator.userAgent.indexOf("MSIE") > 0 || navigator.userAgent.indexOf("Trident") > 0){
         if (navigator.msLaunchUri != undefined) {
             executeIe(entryHardwareUrl);
@@ -436,13 +449,12 @@ p.executeHardware = function() {
             }
 
             if (ieVersion < 9) {
-                alert("지원하지 않는 브라우저입니다.");
+                alert(Lang.msgs.not_support_browser);
             } else {
                 executeIeCustomLauncher.init(entryHardwareUrl,
                     function(bInstalled) {
                         if (bInstalled == false) {
-                            alert('설치안됬엉');
-                             // window.open(VIWER_DOWNLOAD_URL, "comic_viewer_download", "width=530, height=400, resizable=yes");
+                            hw.popupHelper.show('hwDownload', true);
                         }
                     }
                 );
@@ -455,7 +467,7 @@ p.executeHardware = function() {
     else if(navigator.userAgent.indexOf("Chrome") > 0 || navigator.userAgent.indexOf("Safari") > 0) {
         executeChrome(entryHardwareUrl);
     } else {
-        alert("지원하지 않는 브라우저입니다.");
+        alert(Lang.msgs.not_support_browser);
     }
 
     function executeIe(customUrl) {
@@ -463,13 +475,7 @@ p.executeHardware = function() {
             function() {
             },
             function() {
-                alert('설치안됬엉');
-                // var popup = window.open(VIWER_DOWNLOAD_URL, "comic_viewer_launcher", "width=510, height=360, resizable=yes");
-                // if(window.focus){
-                //     setTimeout(function(){
-                //         popup.focus();
-                //     }, 500);
-                // }
+                hw.popupHelper.show('hwDownload', true);
             }
         );
     }
@@ -492,17 +498,7 @@ p.executeHardware = function() {
             }
 
             if(!isInstalled) {
-                alert('설치안됬엉');
-                // var popup = window.open(VIWER_DOWNLOAD_URL, "comic_viewer_launcher", "width=510, height=360, resizable=yes");
-                // if(window.focus){
-                //     setTimeout(function(){
-                //         if (popup == null || typeof(popup)=='undefined') {
-                //             alert("Firefox 설정에 팝업 창 차단을 해제해주세요.");
-                //         } else {
-                //             popup.focus();
-                //         }
-                //     }, 500);
-                // }
+                hw.popupHelper.show('hwDownload', true);
             }
 
             document.getElementsByTagName("body")[0].removeChild(iFrame);
@@ -520,16 +516,130 @@ p.executeHardware = function() {
         location.assign(encodeURI(customUrl));
         setTimeout(function() {
             if (isInstalled == false || navigator.userAgent.indexOf("Edge") > 0) {
-                alert('설치 안됬엉');
-                // var popup = window.open(VIWER_DOWNLOAD_URL, "comic_viewer_launcher", "width=530, height=400, resizable=yes");
-                // if(window.focus){
-                //     setTimeout(function(){
-                //         popup.focus();
-                //     }, 500);
-                // }
+                hw.popupHelper.show('hwDownload', true);
             }
             window.onblur = null;
         }, 1500);
     }
 }
 
+p.hwPopupCreate = function () {
+    var hw = this;
+    if(!this.popupHelper) {
+        if(window.popupHelper) {
+            this.popupHelper = window.popupHelper
+        } else {
+            this.popupHelper = new Entry.popupHelper(true);
+        }
+    }
+
+    this.popupHelper.addPopup('newVersion', {
+        type: 'confirm',
+        title: Lang.Msgs.new_version_title,
+        setPopupLayout : function (popup) {
+            var content = Entry.Dom('div', {
+                class: 'contentArea'
+            });
+            var text = Entry.Dom('div', {
+                class : 'textArea',
+                parent: content
+            });
+            var text1 = Entry.Dom('div', {
+                class : 'text1',
+                parent: text
+            });
+            var text2 = Entry.Dom('div', {
+                class : 'text2',
+                parent: text
+            });
+            var text3 = Entry.Dom('div', {
+                class : 'text3',
+                parent: text
+            });
+            var text4 = Entry.Dom('div', {
+                class : 'text4',
+                parent: text
+            });
+            var cancel = Entry.Dom('div', {
+                classes : ['popupCancelBtn', 'popupDefaultBtn'],
+                parent: content
+            });
+            var ok = Entry.Dom('div', {
+                classes : ['popupOkBtn', 'popupDefaultBtn'],
+                parent: content
+            });
+            text1.text(Lang.Msgs.new_version_text1);
+            text2.html(Lang.Msgs.new_version_text2);
+            text3.text(Lang.Msgs.new_version_text3);
+            text4.text(Lang.Msgs.new_version_text4);
+            cancel.text(Lang.Buttons.cancel);
+            ok.html(Lang.Msgs.new_version_download);
+
+            content.bindOnClick('.popupDefaultBtn', function (e) {
+                var $this = $(this);
+                if($this.hasClass('popupOkBtn')) {
+                    hw.downloadConnector();
+                } else {
+                    hw.popupHelper.hide('newVersion');
+                }
+            });
+
+            popup.append(content);
+        }
+    });
+
+    this.popupHelper.addPopup('hwDownload', {
+        type: 'confirm',
+        title: Lang.Msgs.not_install_title,
+        setPopupLayout : function (popup) {
+            var content = Entry.Dom('div', {
+                class: 'contentArea'
+            });
+            var text = Entry.Dom('div', {
+                class : 'textArea',
+                parent: content
+            });
+            var text1 = Entry.Dom('div', {
+                class : 'text1',
+                parent: text
+            });
+            var text2 = Entry.Dom('div', {
+                class : 'text2',
+                parent: text
+            });
+            var text3 = Entry.Dom('div', {
+                class : 'text3',
+                parent: text
+            });
+            var text4 = Entry.Dom('div', {
+                class : 'text4',
+                parent: text
+            });
+            var cancel = Entry.Dom('div', {
+                classes : ['popupCancelBtn', 'popupDefaultBtn'],
+                parent: content
+            });
+            var ok = Entry.Dom('div', {
+                classes : ['popupOkBtn', 'popupDefaultBtn'],
+                parent: content
+            });
+            text1.text(Lang.Msgs.hw_download_text1);
+            text2.html(Lang.Msgs.hw_download_text2);
+            text3.text(Lang.Msgs.hw_download_text3);
+            text4.text(Lang.Msgs.hw_download_text4);
+            cancel.text(Lang.Buttons.cancel);
+            ok.html(Lang.Msgs.hw_download_btn);
+
+            content.bindOnClick('.popupDefaultBtn', function (e) {
+                var $this = $(this);
+                if($this.hasClass('popupOkBtn')) {
+                    hw.downloadConnector();
+                } else {
+                    hw.popupHelper.hide('hwDownload');
+                }
+            });
+
+            popup.append(content);
+        }
+    });
+}
