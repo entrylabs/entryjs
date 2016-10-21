@@ -284,7 +284,6 @@ Entry.BlockView.pngMap = {};
         var secondLineHeight = 0;
         for (var i = 0; i < this._contents.length; i++) {
             var c = this._contents[i];
-
             if (c instanceof Entry.FieldLineBreak) {
                 this._alignStatement(animate, statementIndex);
                 c.align(statementIndex);
@@ -995,8 +994,9 @@ Entry.BlockView.pngMap = {};
     };
 
     p._updateContents = function() {
-        for (var i=0; i<this._contents.length; i++)
-            this._contents[i].renderStart();
+        this._contents.forEach(function(c) {
+            c.renderStart();
+        }.bind(this));
         this.alignContent(false);
     };
 
@@ -1031,18 +1031,11 @@ Entry.BlockView.pngMap = {};
     };
 
     p.reDraw = function() {
-        if (!this.visible) return;
+        if (!(this.visible && this.display))
+            return;
+
         var block = this.block;
-        requestAnimFrame(this._updateContents.bind(this));
-        var params = block.params;
-        if (params) {
-            for (var i=0; i<params.length; i++) {
-                var param = params[i];
-                if (param instanceof Entry.Block && param.view) {
-                    param.view.reDraw();
-                }
-            }
-        }
+        this._updateContents();
         var statements = block.statements;
         if (statements) {
             for (var i=0; i<statements.length; i++) {
