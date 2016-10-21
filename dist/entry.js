@@ -22758,17 +22758,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   };
   b._updateValueBlock = function(a) {
     a instanceof Entry.Block || (a = void 0);
-    if (a && a === this._valueBlock) {
-      this.calcWH();
-    } else {
-      this._sizeObserver && this._sizeObserver.destroy();
-      this._posObserver && this._posObserver.destroy();
-      if (a = this._setValueBlock(a)) {
-        a = a.view, a.bindPrev(), this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]);
-      }
-      this.calcWH();
-      this._blockView.alignContent();
-    }
+    a && a === this._valueBlock ? this.calcWH() : (this._sizeObserver && this._sizeObserver.destroy(), this._posObserver && this._posObserver.destroy(), (a = this._setValueBlock(a)) ? (a = a.view, a.bindPrev(), this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = a.observe(this, "calcWH", ["width", "height"])) : this.calcWH(), this._blockView.alignContent());
   };
   b.getPrevBlock = function(a) {
     return this._valueBlock === a ? this : null;

@@ -160,7 +160,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
             view.bindPrev();
             this._posObserver = view.observe(this, "_updateValueBlock", ["x", "y"], false);
             this._sizeObserver = view.observe(this, "calcWH", ["width", "height"]);
-            this.calcWH();
         } else {
             this.calcWH();
         }
