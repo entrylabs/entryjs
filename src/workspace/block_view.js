@@ -1021,7 +1021,7 @@ Entry.BlockView.pngMap = {};
     };
 
     p.reDraw = function() {
-        if (!this.visible)
+        if (!(this.visible && this.display))
             return;
 
         var block = this.block;

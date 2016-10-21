@@ -17208,8 +17208,9 @@ Entry.Func.initEditView = function(b) {
   a.changeOverlayBoardCode(b);
   b.recreateView();
   a.changeOverlayBoardCode(b);
-  b.view.board.alignThreads();
   this._workspaceStateEvent = a.changeEvent.attach(this, this.endEdit);
+  b.view.reDraw();
+  b.view.board.alignThreads();
 };
 Entry.Func.endEdit = function(b) {
   this.unbindFuncChangeEvent();
@@ -20317,6 +20318,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   this._bannedClass = [];
   this._categories = [];
   this.suffix = "blockMenu";
+  this._isSelectMenu = !1;
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -20392,7 +20394,7 @@ Entry.BlockMenu = function(b, a, d, c) {
     var b = this.code;
     if (b) {
       this._clearSplitters();
-      b.view && !a && b.view.reDraw();
+      !b.view || a || this._isSelectMenu || b.view.reDraw();
       a = b.getThreads();
       for (var b = 10, c = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
         var h = a[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
@@ -20517,6 +20519,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   b.selectMenu = function(a, b) {
     var c = this._convertSelector(a);
     if (c) {
+      this._isSelectMenu = !0;
       switch(c) {
         case "variable":
           Entry.playground.checkVariables();
@@ -20532,6 +20535,7 @@ Entry.BlockMenu = function(b, a, d, c) {
         k.removeClass("foldOut");
         Entry.windowResized.notify();
       });
+      this._isSelectMenu = !1;
       this.visible && (f = this._categoryCodes[c], this._selectedCategoryView = e, e.addClass("entrySelectedCategory"), f.constructor !== Entry.Code && (f = this._categoryCodes[c] = new Entry.Code(f)), this.changeCode(f));
       this.lastSelector = c;
     } else {
@@ -21326,7 +21330,7 @@ Entry.BlockView.pngMap = {};
     this.svgGroup.removeClass("activated");
   };
   b.reDraw = function() {
-    if (this.visible) {
+    if (this.visible && this.display) {
       var a = this.block;
       this._updateContents();
       var b = a.statements;
@@ -22188,7 +22192,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
     var c = this.getValue();
-    c && !c.view ? (c.setThread(this), c.createView(a, b), c.getThread().view.setParent(this)) : c && c.view && (c.destroyView(), c.createView(this._blockView.getBoard()));
+    c && !c.view ? (c.setThread(this), c.createView(a, b), c.getThread().view.setParent(this)) : c && c.view && c.view.reDraw();
     this.updateValueBlock(c);
     this._blockView.getBoard().constructor !== Entry.Board && this._valueBlock.view.removeControl();
   };
@@ -22712,13 +22716,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 (function(b) {
   b.schema = {magneting:!1};
   b.renderStart = function(a, b) {
-    this.svgGroup && $(this.svgGroup).remove();
-    this.svgGroup = this._blockView.contentSvgGroup.elem("g");
+    this.svgGroup || (this.svgGroup = this._blockView.contentSvgGroup.elem("g"));
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
     var c = this.getValue();
-    c && !c.view ? (c.setThread(this), c.createView(a, b)) : c && c.view && (c.destroyView(), c.createView(this._blockView.getBoard()));
+    c && !c.view ? (c.setThread(this), c.createView(a, b)) : c && c.view && c.view.reDraw();
     this._updateValueBlock(c);
     this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock && this._valueBlock.view.removeControl();
   };
@@ -22747,13 +22750,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   };
   b._updateValueBlock = function(a) {
     a instanceof Entry.Block || (a = void 0);
-    this._sizeObserver && this._sizeObserver.destroy();
-    this._posObserver && this._posObserver.destroy();
-    if (a = this._setValueBlock(a)) {
-      a = a.view, a.bindPrev(), this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]);
+    if (a && a === this._valueBlock) {
+      this.calcWH();
+    } else {
+      this._sizeObserver && this._sizeObserver.destroy();
+      this._posObserver && this._posObserver.destroy();
+      if (a = this._setValueBlock(a)) {
+        a = a.view, a.bindPrev(), this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]);
+      }
+      this.calcWH();
+      this._blockView.alignContent();
     }
-    this.calcWH();
-    this._blockView.alignContent();
   };
   b.getPrevBlock = function(a) {
     return this._valueBlock === a ? this : null;

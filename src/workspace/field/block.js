@@ -63,8 +63,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             block.createView(board, mode);
             block.getThread().view.setParent(this);
         } else if (block && block.view) {
-            block.destroyView();
-            block.createView(this._blockView.getBoard());
+            block.view.reDraw();
         }
 
         this.updateValueBlock(block);

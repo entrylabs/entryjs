@@ -18,6 +18,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._bannedClass = [];
     this._categories = [];
     this.suffix = 'blockMenu';
+    this._isSelectMenu = false;
 
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
@@ -179,7 +180,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (!code) return;
         this._clearSplitters();
 
-        if (code.view && !unReDraw)
+        if (code.view && !unReDraw && !this._isSelectMenu)
             code.view.reDraw();
 
         var threads = code.getThreads();
@@ -428,6 +429,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             this.align();
             return;
         }
+        this._isSelectMenu = true;
         switch (name) {
             case 'variable':
                 Entry.playground.checkVariables();
@@ -443,7 +445,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var board = this.workspace.board,
             boardView = board.view;
 
-        if (oldView) oldView.removeClass(className);
+        if (oldView)
+            oldView.removeClass(className);
 
         if (elem == oldView && !doNotFold) {
             boardView.addClass('folding');
@@ -469,6 +472,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 Entry.windowResized.notify();
             });
         }
+
+        this._isSelectMenu = false;
 
         if (this.visible) {
             var code = this._categoryCodes[name];

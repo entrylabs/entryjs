@@ -102,8 +102,9 @@ Entry.Func.initEditView = function(content) {
     workspace.changeOverlayBoardCode(content);
     content.recreateView();
     workspace.changeOverlayBoardCode(content);
-    content.view.board.alignThreads();
     this._workspaceStateEvent = workspace.changeEvent.attach(this, this.endEdit);
+    content.view.reDraw();
+    content.view.board.alignThreads();
 };
 
 Entry.Func.endEdit = function(message) {
