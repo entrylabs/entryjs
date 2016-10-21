@@ -178,18 +178,21 @@ Entry.BlockView.pngMap = {};
     p._startContentRender = function(mode) {
         mode = mode === undefined ?
             Entry.Workspace.MODE_BOARD : mode;
+
+        var schema = this._schema;
         if (this.contentSvgGroup)
             this.contentSvgGroup.remove();
-        var schema = this._schema;
-        if (schema.statements && schema.statements.length && this.statementSvgGroup)
+        if (this.statementSvgGroup)
             this.statementSvgGroup.remove();
+
         this._contents = [];
 
         this.contentSvgGroup = this.svgGroup.elem("g", {class:'contentsGroup'});
-        if (schema.statements && schema.statements.length)
+        if (schema.statements && schema.statements.length) {
             this.statementSvgGroup = this.svgGroup.elem("g", {
                 class: 'statementGroup'
             });
+        }
 
         switch (mode) {
             case Entry.Workspace.MODE_BOARD:
@@ -607,11 +610,11 @@ Entry.BlockView.pngMap = {};
                 var gs = Entry.GlobalSvg;
                 var ripple = false;
                 var prevBlock = this.block.getPrevBlock(this.block);
-                var ripple = false;
-                switch (Entry.GlobalSvg.terminateDrag(this)) {
+                switch (gs.terminateDrag(this)) {
                     case gs.DONE:
                         var closeBlock = board.magnetedBlockView;
-                        if (closeBlock instanceof Entry.BlockView) closeBlock = closeBlock.block;
+                        if (closeBlock instanceof Entry.BlockView)
+                            closeBlock = closeBlock.block;
                         if (prevBlock && !closeBlock) {
                             Entry.do("separateBlock", block);
                         } else if (!prevBlock && !closeBlock && !fromBlockMenu) {
@@ -735,6 +738,10 @@ Entry.BlockView.pngMap = {};
             if (c.constructor !== Entry.Block) c.destroy();
         });
 
+        this._statements.forEach(function(s) {
+            s.destroy();
+        });
+
         var block = this.block;
         var events = block.events.viewDestroy;
         if (Entry.type == 'workspace' && events && !this.isInBlockMenu)
@@ -780,7 +787,7 @@ Entry.BlockView.pngMap = {};
             return;
         var blockView = this;
         var svgGroup = blockView.svgGroup;
-        if (!this.magnet.next) {// field block
+        if (!(this.magnet.next || this.magnet.previous)) {// field block
             if (this.magneting) {
                 svgGroup.attr({
                     filter: 'url(#entryBlockHighlightFilter_' + this.getBoard().suffix + ')'
@@ -923,13 +930,16 @@ Entry.BlockView.pngMap = {};
         } else that._moveBy(distance, distance, false);
     };
 
-    p.bindPrev = function(prevBlock) {
+    p.bindPrev = function(prevBlock, isDestroy) {
         if (prevBlock) {
             this._toLocalCoordinate(prevBlock.view._nextGroup);
             var nextBlock = prevBlock.getNextBlock();
+            if (nextBlock)
             if (nextBlock && nextBlock !== this.block) {
                 var endBlock = this.block.getLastBlock();
-                if (endBlock.view.magnet.next)
+                if (isDestroy)
+                    nextBlock.view._toLocalCoordinate(prevBlock.view._nextGroup);
+                else if (endBlock.view.magnet.next)
                     nextBlock.view._toLocalCoordinate(endBlock.view._nextGroup);
                 else {
                     nextBlock.view._toGlobalCoordinate();
@@ -1188,11 +1198,14 @@ Entry.BlockView.pngMap = {};
         }
     };
 
-    p.downloadAsImage = function() {
+    p.downloadAsImage = function(i) {
         this.getDataUrl().then(function(data) {
             var download = document.createElement('a');
             download.href = data.src;
-            download.download = '엔트리 블록.png';
+            var name = '엔트리 블록';
+            if (i)
+                name += i;
+            download.download = name+'.png';
             download.click();
         });
     };
