@@ -139,8 +139,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
                     break;
             }
         }
-        var block = this._createBlockByType(blockType);
-        return block;
+        return this._createBlockByType(blockType);
     };
 
     p._setValueBlock = function(block) {

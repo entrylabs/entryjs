@@ -141,13 +141,33 @@ Entry.Field = function() {};
     };
 
     p.getValue = function() {
-        return this._block.params[this._index];
+        var data = this._block.params[this._index];
+        if (this._contents && this._contents.reference && this._contents.reference.length) {
+            var reference = this._contents.reference.concat();
+            if (reference[0][0] === "%")
+                data = this._block.params[parseInt(reference.shift().substr(1)) - 1];
+            if (!data)
+                return data;
+            return data.getDataByPointer(reference);
+        }
+        else
+            return data;
     };
 
     p.setValue = function(value, reDraw) {
         if (this.value == value) return;
         this.value = value;
-        this._block.params[this._index] = value;
+        if (this._contents && this._contents.reference && this._contents.reference.length) {
+            var ref = this._contents.reference.concat();
+            var index = ref.pop();
+            var targetBlock = this._block.params[this._index]
+            if (ref.length && ref[0][0] === "%")
+                targetBlock = this._block.params[parseInt(ref.shift().substr(1)) - 1];
+            if (ref.length)
+                targetBlock = targetBlock.getDataByPointer(ref)
+            targetBlock.params[index] = value;
+        } else
+            this._block.params[this._index] = value;
         if (reDraw) this._blockView.reDraw();
     };
 

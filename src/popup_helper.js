@@ -39,7 +39,6 @@ Entry.popupHelper = function(reset) {
     }
 
     this.body_.bindOnClick(popupClickEvent);
-    this.body_.bind('touchstart', popupClickEvent);
 
     window.popupHelper = this;
     this.body_.prop('popup', this);
@@ -95,14 +94,6 @@ Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
     }).bind(this));
 
     var self = this;
-    
-    titleButton_.bind('touchstart', function() {
-        if(popupObject.closeEvent) {
-            popupObject.closeEvent(self);   
-        } else {
-            self.hide();
-        }
-    });
 
     var popupWrapper_ = Entry.Dom('div', {
         class: 'entryPopupHelperWrapper'
@@ -125,6 +116,7 @@ Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
     if(typeof popupObject.setPopupLayout === 'function') {
         popupObject.setPopupLayout(content_);
     }
+    content_._obj = popupObject;
 
     this.popupList[key] = content_;
 };
@@ -180,8 +172,9 @@ Entry.popupHelper.prototype.show = function(key, isNext) {
             showContent(key);
         }
     }
+    if (this.nowContent && this.nowContent._obj && this.nowContent._obj.onShow)
+        this.nowContent._obj.onShow();
 };
-
 
 Entry.popupHelper.prototype.hide = function() {
     this.nowContent = undefined;

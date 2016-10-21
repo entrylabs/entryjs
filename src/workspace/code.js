@@ -53,12 +53,12 @@ Entry.PARAM = -1;
         return this;
     };
 
-    p.clear = function() {
+    p.clear = function(isNotForce) {
+        isNotForce = isNotForce === undefined ? false : isNotForce;
         for (var i = this._data.length - 1; i >= 0; i--)
-            this._data[i].destroy(false);
+            this._data[i].destroy(false, isNotForce);
 
         this.clearExecutors();
-        this._eventMap = {};
     };
 
     p.createView = function(board) {
@@ -176,6 +176,7 @@ Entry.PARAM = -1;
         if (index === undefined) this._data.push(thread);
         else this._data.insert(thread, index);
 
+        this.changeEvent.notify();
         return thread;
     };
 
@@ -205,11 +206,11 @@ Entry.PARAM = -1;
         return this._data.map(function(t){return t;});
     };
 
-    p.toJSON = function() {
+    p.toJSON = function(excludeData) {
         var threads = this.getThreads();
         var json = [];
         for (var i=0, len=threads.length; i<len; i++)
-            json.push(threads[i].toJSON());
+            json.push(threads[i].toJSON(false, undefined, excludeData));
         return json;
     };
 
@@ -233,8 +234,8 @@ Entry.PARAM = -1;
         if (board instanceof Entry.BlockMenu) board.updateSplitters(y);
     };
 
-    p.stringify = function() {
-        return JSON.stringify(this.toJSON());
+    p.stringify = function(excludeData) {
+        return JSON.stringify(this.toJSON(excludeData));
     };
 
     p.dominate = function(thread) {

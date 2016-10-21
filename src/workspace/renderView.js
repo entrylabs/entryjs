@@ -5,7 +5,7 @@ goog.provide("Entry.RenderView");
 goog.require("Entry.Dom");
 goog.require("Entry.Utils");
 
-Entry.RenderView = function(dom, align) {
+Entry.RenderView = function(dom, align, scale) {
     this._align = align || "CENTER";
 
     if (typeof dom === "string") dom = $('#' + dom);
@@ -17,6 +17,7 @@ Entry.RenderView = function(dom, align) {
     this.view = dom;
     this.viewOnly = true;
     this.suffix = 'renderView';
+    this._scale = scale === undefined ? 1 : scale;
 
     this.visible = true;
     this.disableMouseEvent = true;
@@ -24,10 +25,10 @@ Entry.RenderView = function(dom, align) {
     this._generateView();
 
     this.offset = this.svgDom.offset();
-    this.setWidth();
+    this._minBlockOffsetX = 0;
+    this._setSize();
 
-
-    this.svg = Entry.SVG(this._svgId);
+    this.svg = Entry.SVG(this._svgId , this.svgDom[0]);
     Entry.Utils.addFilters(this.svg, this.suffix);
 
     if (this.svg) {
@@ -70,8 +71,9 @@ Entry.RenderView = function(dom, align) {
             return console.error("You must inject code instance");
         var that = this;
         this.code = code;
+
         if (!this.svg) {
-            this.svg = Entry.SVG(this._svgId);
+            this.svg = Entry.SVG(this._svgId , this.svgDom[0]);
             this.svgGroup = this.svg.elem("g");
 
             this.svgThreadGroup = this.svgGroup.elem("g");
@@ -92,33 +94,46 @@ Entry.RenderView = function(dom, align) {
         var totalHeight = 0;
         var vPadding = 15,
             marginFromTop = 0,
-            hPadding = this._align == 'LEFT' ? 20 : this.svgDom.width()/2;
+            hPadding = this._getHorizontalPadding();
 
         for (var i=0,len=threads.length; i<len; i++) {
             var thread = threads[i];
             var block = thread.getFirstBlock();
             var blockView = block.view;
 
+            var height = blockView.svgGroup.getBBox().height;
             var className = Entry.block[block.type].class;
+            var xPos = 0;
+            var extensions = $(blockView.svgGroup).find('.extension');
+            if (extensions) {
+                for (var i=0; i<extensions.length; i++) {
+                    var ext = extensions[i];
+                    var currentXpos = parseFloat(ext.getAttribute('x'));
+                    xPos = Math.min(xPos, currentXpos);
+                }
+            }
+            this._minBlockOffsetX = Math.min(this._minBlockOffsetX, blockView.offsetX);
             blockView._moveTo(
-                hPadding,
+                hPadding - xPos - blockView.offsetX,
                 marginFromTop - blockView.offsetY,
                 false
             );
-            var height = blockView.svgGroup.getBBox().height;
             marginFromTop += height + vPadding;
         }
-        this._bBox = this.svgGroup.getBBox();
-        this.height = this._bBox.height;
+        this._setSize();
     };
 
     p.hide = function() {this.view.addClass('entryRemove');};
 
     p.show = function() {this.view.removeClass('entryRemove');};
 
-    p.setWidth = function() {
-        this._svgWidth = this.svgDom.width();
-        this.offset = this.svgDom.offset();
+    p._setSize = function() {
+        if (this.svgDom) {
+            this._svgWidth = this.svgDom.width();
+            this.offset = this.svgDom.offset();
+        }
+        if (this.svgGroup)
+            this._bBox = this.svgGroup.getBBox();
     };
 
     p.bindCodeView = function(codeView) {
@@ -132,7 +147,53 @@ Entry.RenderView = function(dom, align) {
 
     p.resize = function() {
         if (!this.svg || !this._bBox) return;
-        $(this.svg).css('height', this._bBox.height + 10);
+        setTimeout(function() {
+            this._setSize();
+            var width = Math.round(this._bBox.width);
+            var height = Math.round(this._bBox.height);
+            //svg is not on the screen
+            if (width === 0 || height === 0)
+                return;
+
+            $(this.svg).css({
+                'width': width + this._getHorizontalPadding() - this._minBlockOffsetX,
+                'height': height + 5
+            });
+
+            //double check
+            setTimeout(function() {
+                var bBox = this.svgGroup.getBBox();
+                if (Math.round(bBox.width) !== width ||
+                    Math.round(bBox.height) !== height)
+                    this.resize();
+            }.bind(this), 1000);
+        }.bind(this), 0);
     };
+
+    p.setDomSize = function() {
+        if (this.svgBlockGroup)
+            this.svgBlockGroup.attr('transform', 'scale(1)');
+        this.code.view.reDraw();
+        this.align();
+        this.resize();
+        if (this._scale !== 1) {
+            window.setTimeout(function() {
+                this.svgBlockGroup.attr('transform', 'scale(%scale)'.replace('%scale', this._scale));
+                this.align();
+                this.resize();
+            }.bind(this), 0);
+        }
+    };
+
+    p._getHorizontalPadding = function() {
+        var marginMap = {
+            'LEFT': 20,
+            'LEFT_MOST': 0
+        };
+        var ret = marginMap[this._align];
+
+        return ret !== undefined ? ret : this.svgDom.width()/2;
+    };
+
 
 })(Entry.RenderView.prototype);

@@ -341,29 +341,19 @@ Entry.Container.prototype.removeObject = function(object) {
             index
         );
     }
-    var state = new Entry.State(
-                                this.addObject,
-                                objectJSON,
-                                index
-                               );
+    var state =
+        new Entry.State(this.addObject, objectJSON, index);
+
     object.destroy();
     this.objects_.splice(index, 1);
     this.setCurrentObjects();
     Entry.stage.sortZorder();
+    var currentObjects = this.getCurrentObjects();
 
-    if (this.objects_.length && index !== 0) {
-        // Entry.container.selectObject(this.objects_[index -1].id);
-        var currentObjects_ = this.getCurrentObjects();
-        if(currentObjects_.length > 0) {
-            Entry.container.selectObject(this.getCurrentObjects()[0].id);
-        } else {
-            Entry.container.selectObject();
-        }
-    }
-    else if (this.objects_.length && index === 0)
-        Entry.container.selectObject(this.getCurrentObjects()[0].id);
+    if (currentObjects.length)
+        this.selectObject(currentObjects[0].id);
     else {
-        Entry.container.selectObject();
+        this.selectObject();
         Entry.playground.flushPlayground();
     }
 
