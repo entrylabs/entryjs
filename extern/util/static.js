@@ -73,7 +73,7 @@ EntryStatic.searchProjectOption = [
    {
        'key':'search_likeCnt',
        'lang':'search_likeCnt',
-       'value': 'likeCnt'
+       'value': 'recentLikeCnt'
    }
 ]
 

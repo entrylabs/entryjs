@@ -401,9 +401,18 @@ Entry.Board.DRAG_RADIUS = 5;
 
     p.generateCodeMagnetMap = function() {
         var code = this.code;
-        if (!code || !this.dragBlock) return;
+        var dragBlock = this.dragBlock;
+        if (!(code && dragBlock)) return;
 
-        for (var targetType in this.dragBlock.magnet) {
+        //reset magnetMap
+        this._magnetMap = {};
+
+        for (var targetType in dragBlock.magnet) {
+            if (targetType === 'next' &&
+                dragBlock.block.getLastBlock().view.magnet.next === undefined) {
+                    continue;
+            }
+
             var metaData = this._getCodeBlocks(code, targetType);
             metaData.sort(function(a, b) {return a.point - b.point;});
 
@@ -447,8 +456,6 @@ Entry.Board.DRAG_RADIUS = 5;
                 func = this._getPreviousMagnets;
                 break;
             case "string":
-                func = this._getFieldMagnets;
-                break;
             case "boolean":
                 func = this._getFieldMagnets;
                 break;
@@ -948,10 +955,29 @@ Entry.Board.DRAG_RADIUS = 5;
                     text: Lang.Menus.save_as_image_all,
                     enable: true,
                     callback: function(){
-                        that.code.getThreads().forEach(function(t) {
+                        var threads = that.code.getThreads(); 
+                        var images = [];
+                        threads.forEach(function(t,i) {
                             var topBlock = t.getFirstBlock();
                             if (!topBlock) return;
-                            topBlock.view.downloadAsImage();
+                            console.log('threads.length=',threads.length);
+                            if (threads.length > 1 && Entry.isOffline) {
+                                topBlock.view.getDataUrl().then(function(data) {
+                                    images.push(data);
+                                    //console.log('add an image');
+                                    if (images.length == threads.length) {
+                                        //console.log('images completely added');
+                                        Entry.dispatchEvent(
+                                            'saveBlockImages', 
+                                            { images: images }
+                                        );
+                                    }
+
+                                });
+                            } else {
+                                topBlock.view.downloadAsImage(++i);
+                            }
+                            
                         });
                     }
                 }

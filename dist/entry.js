@@ -7005,7 +7005,8 @@ Entry.Container.prototype.removeObject = function(b) {
   this.objects_.splice(a, 1);
   this.setCurrentObjects();
   Entry.stage.sortZorder();
-  this.objects_.length && 0 !== a ? 0 < this.getCurrentObjects().length ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : Entry.container.selectObject() : this.objects_.length && 0 === a ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : (Entry.container.selectObject(), Entry.playground.flushPlayground());
+  a = this.getCurrentObjects();
+  a.length ? this.selectObject(a[0].id) : (this.selectObject(), Entry.playground.flushPlayground());
   Entry.toast.success(Lang.Workspace.remove_object, b.name + " " + Lang.Workspace.remove_object_msg);
   Entry.variableContainer.removeLocalVariables(b.id);
   Entry.playground.reloadPlayground();
@@ -10668,6 +10669,7 @@ Entry.Painter.prototype.selectToolbox = function(b) {
 };
 Entry.Painter2 = function(b) {
   this.view = b;
+  this.baseUrl = Entry.painterBaseUrl || "/lib/literallycanvas/lib/img";
   this.file = {id:Entry.generateHash(), name:"\uc0c8\uadf8\ub9bc", modified:!1, mode:"new"};
   Entry.addEventListener("pictureImport", function(a) {
     this.addPicture(a);
@@ -10677,10 +10679,10 @@ Entry.Painter2 = function(b) {
 (function(b) {
   b.initialize = function() {
     if (!this.lc) {
-      var a = new Image;
-      a.src = "/lib/literallycanvas/lib/img/transparent-pattern.png";
-      this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", zoomMax:3, zoomMin:.5, toolbarPosition:"bottom", imageSize:{width:960, height:540}, backgroundShapes:[LC.createShape("Rectangle", {x:0, y:0, width:960, height:540, strokeWidth:0, strokeColor:"transparent"})]});
-      a.onload = function() {
+      var a = this.baseUrl, b = new Image;
+      b.src = a + "/transparent-pattern.png";
+      this.lc = LC.init(this.view, {imageURLPrefix:a, zoomMax:3, zoomMin:.5, toolbarPosition:"bottom", imageSize:{width:960, height:540}, backgroundShapes:[LC.createShape("Rectangle", {x:0, y:0, width:960, height:540, strokeWidth:0, strokeColor:"transparent"})]});
+      b.onload = function() {
         this.lc.repaintLayer("background");
       }.bind(this);
       a = function(a) {
@@ -18354,7 +18356,7 @@ Entry.Model = function(b, a) {
 Entry.Func = function(b) {
   this.id = b ? b.id : Entry.generateHash();
   this.content = b ? new Entry.Code(b.content) : new Entry.Code([[{type:"function_create", copyable:!1, deletable:!1, x:40, y:40}]]);
-  this.blockMenuBlock = this.block = null;
+  this._backupContent = this.blockMenuBlock = this.block = null;
   this.hashMap = {};
   this.paramMap = {};
   Entry.generateFunctionSchema(this.id);
@@ -18399,6 +18401,7 @@ Entry.Func.edit = function(b) {
   this.targetFunc = b;
   this.initEditView(b.content);
   this.bindFuncChangeEvent();
+  this._backupContent = b.content.stringify();
   this.updateMenu();
 };
 Entry.Func.initEditView = function(b) {
@@ -18408,8 +18411,9 @@ Entry.Func.initEditView = function(b) {
   a.changeOverlayBoardCode(b);
   b.recreateView();
   a.changeOverlayBoardCode(b);
-  b.view.board.alignThreads(!0);
   this._workspaceStateEvent = a.changeEvent.attach(this, this.endEdit);
+  b.view.reDraw();
+  b.view.board.alignThreads();
 };
 Entry.Func.endEdit = function(b) {
   this.unbindFuncChangeEvent();
@@ -18418,9 +18422,14 @@ Entry.Func.endEdit = function(b) {
   switch(b) {
     case "save":
       this.save();
+      break;
     case "cancelEdit":
       this.cancelEdit();
   }
+  this._backupContent = null;
+  Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD);
+  delete this.targetFunc;
+  this.updateMenu();
 };
 Entry.Func.save = function() {
   this.targetFunc.generateBlock(!0);
@@ -18459,7 +18468,7 @@ Entry.Func.syncFuncName = function(b) {
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a);
 };
 Entry.Func.cancelEdit = function() {
-  this.targetFunc && (Entry.Func.isEdit = !1, this.targetFunc.block || (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList(), Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD));
+  this.targetFunc && (this.targetFunc.block ? this._backupContent && this._backupContent !== this.targetFunc.content.stringify() && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), Entry.variableContainer.updateList(), Entry.Func.isEdit = !1);
 };
 Entry.Func.getMenuXml = function() {
   var b = [];
@@ -18571,9 +18580,25 @@ Entry.Func.generateWsBlock = function(b) {
   d++;
   f += " %" + (d + c);
   e.push({type:"Indicator", img:"block_icon/function_03.png", size:12});
-  Entry.Mutator.mutate("func_" + b.id, {params:e, template:f});
-  for (var l in g) {
-    g[l] ? (a = -1 < l.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(l, {template:a})) : g[l] = !0;
+  a = "func_" + b.id;
+  d = Entry.block[a];
+  c = !1;
+  if (d.template !== f) {
+    c = !0;
+  } else {
+    if (d.params.length === e.length) {
+      for (h = 0;h < d.params.length - 1;h++) {
+        var k = d.params[h], l = e[h];
+        if (k.type !== l.type || k.accept !== l.accept) {
+          c = !0;
+          break;
+        }
+      }
+    }
+  }
+  c && Entry.Mutator.mutate(a, {params:e, template:f});
+  for (var n in g) {
+    g[n] ? (e = -1 < n.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(n, {template:e})) : g[n] = !0;
   }
   this.bindFuncChangeEvent(b);
 };
@@ -21496,6 +21521,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   this._bannedClass = [];
   this._categories = [];
   this.suffix = "blockMenu";
+  this._isSelectingMenu = !1;
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -21571,7 +21597,7 @@ Entry.BlockMenu = function(b, a, d, c) {
     var b = this.code;
     if (b) {
       this._clearSplitters();
-      b.view && !a && b.view.reDraw();
+      !b.view || a || this._isSelectingMenu || b.view.reDraw();
       a = b.getThreads();
       for (var b = 10, c = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
         var h = a[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
@@ -21696,6 +21722,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   b.selectMenu = function(a, b) {
     var c = this._convertSelector(a);
     if (c) {
+      this._isSelectingMenu = !0;
       switch(c) {
         case "variable":
           Entry.playground.checkVariables();
@@ -21711,6 +21738,7 @@ Entry.BlockMenu = function(b, a, d, c) {
         k.removeClass("foldOut");
         Entry.windowResized.notify();
       });
+      this._isSelectingMenu = !1;
       this.visible && (f = this._categoryCodes[c], this._selectedCategoryView = e, e.addClass("entrySelectedCategory"), f.constructor !== Entry.Code && (f = this._categoryCodes[c] = new Entry.Code(f)), this.changeCode(f));
       this.lastSelector = c;
     } else {
@@ -22066,12 +22094,11 @@ Entry.BlockView.pngMap = {};
     this.pathGroup = this.svgGroup.elem("g");
     this._updateMagnet();
     this._path = this.pathGroup.elem("path");
-    $(this._path).mouseenter(function(a) {
+    Entry.isMobile() || ($(this._path).mouseenter(function(a) {
       c._mouseEnable && c._changeFill(!0);
-    });
-    $(this._path).mouseleave(function(a) {
+    }), $(this._path).mouseleave(function(a) {
       c._mouseEnable && c._changeFill(!1);
-    });
+    }));
     var g = this._schema.color;
     this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN && (g = Entry.Utils.colorLighten(g));
     this._fillColor = g;
@@ -22094,9 +22121,9 @@ Entry.BlockView.pngMap = {};
   };
   b._startContentRender = function(a) {
     a = void 0 === a ? Entry.Workspace.MODE_BOARD : a;
-    this.contentSvgGroup && this.contentSvgGroup.remove();
     var b = this._schema;
-    b.statements && b.statements.length && this.statementSvgGroup && this.statementSvgGroup.remove();
+    this.contentSvgGroup && this.contentSvgGroup.remove();
+    this.statementSvgGroup && this.statementSvgGroup.remove();
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.elem("g", {class:"contentsGroup"});
     b.statements && b.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g", {class:"statementGroup"}));
@@ -22288,8 +22315,7 @@ Entry.BlockView.pngMap = {};
         var f = this.dragInstance && this.dragInstance.isNew, g = Entry.GlobalSvg;
         a = !1;
         var h = this.block.getPrevBlock(this.block);
-        a = !1;
-        switch(Entry.GlobalSvg.terminateDrag(this)) {
+        switch(g.terminateDrag(this)) {
           case g.DONE:
             g = b.magnetedBlockView;
             g instanceof Entry.BlockView && (g = g.block);
@@ -22348,6 +22374,9 @@ Entry.BlockView.pngMap = {};
     this._contents.forEach(function(a) {
       a.constructor !== Entry.Block && a.destroy();
     });
+    this._statements.forEach(function(a) {
+      a.destroy();
+    });
     var c = this.block;
     a = c.events.viewDestroy;
     "workspace" == Entry.type && a && !this.isInBlockMenu && a.forEach(function(a) {
@@ -22373,7 +22402,7 @@ Entry.BlockView.pngMap = {};
   b._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       var a = this.svgGroup;
-      if (this.magnet.next) {
+      if (this.magnet.next || this.magnet.previous) {
         if (a = this.magneting) {
           var b = this._board.dragBlock.getShadow(), c = this.getAbsoluteCoordinate(), e;
           if ("previous" === a) {
@@ -22445,15 +22474,17 @@ Entry.BlockView.pngMap = {};
       c._moveBy(a, a, !1);
     }, b) : c._moveBy(a, a, !1);
   };
-  b.bindPrev = function(a) {
+  b.bindPrev = function(a, b) {
     if (a) {
-      if (this._toLocalCoordinate(a.view._nextGroup), (a = a.getNextBlock()) && a !== this.block) {
-        var b = this.block.getLastBlock();
-        b.view.magnet.next ? a.view._toLocalCoordinate(b.view._nextGroup) : (a.view._toGlobalCoordinate(), a.separate(), a.view.bumpAway(null, 100));
+      this._toLocalCoordinate(a.view._nextGroup);
+      var c = a.getNextBlock();
+      if (c && c && c !== this.block) {
+        var e = this.block.getLastBlock();
+        b ? c.view._toLocalCoordinate(a.view._nextGroup) : e.view.magnet.next ? c.view._toLocalCoordinate(e.view._nextGroup) : (c.view._toGlobalCoordinate(), c.separate(), c.view.bumpAway(null, 100));
       }
     } else {
       if (a = this.block.getPrevBlock()) {
-        this._toLocalCoordinate(a.view._nextGroup), (a = this.block.getNextBlock()) && a.view && a.view._toLocalCoordinate(this._nextGroup);
+        this._toLocalCoordinate(a.view._nextGroup), (c = this.block.getNextBlock()) && c.view && c.view._toLocalCoordinate(this._nextGroup);
       }
     }
   };
@@ -22482,9 +22513,9 @@ Entry.BlockView.pngMap = {};
     this._updateContents();
   };
   b._updateContents = function() {
-    for (var a = 0;a < this._contents.length;a++) {
-      this._contents[a].renderStart();
-    }
+    this._contents.forEach(function(a) {
+      a.renderStart();
+    }.bind(this));
     this.alignContent(!1);
   };
   b._destroyObservers = function() {
@@ -22507,24 +22538,19 @@ Entry.BlockView.pngMap = {};
     this.svgGroup.removeClass("activated");
   };
   b.reDraw = function() {
-    if (this.visible) {
+    if (this.visible && this.display) {
       var a = this.block;
-      requestAnimFrame(this._updateContents.bind(this));
-      var b = a.params;
+      this._updateContents();
+      var b = a.statements;
       if (b) {
-        for (var c = 0;c < b.length;c++) {
-          var e = b[c];
-          e instanceof Entry.Block && e.view && e.view.reDraw();
+        for (a = 0;a < b.length;a++) {
+          b[a].view.reDraw();
         }
       }
-      if (a = a.statements) {
-        for (c = 0;c < a.length;c++) {
-          a[c].view.reDraw();
-        }
-      }
-      if (a = this._extensions) {
-        for (c = 0;c < a.length;c++) {
-          b = a[c], b.updatePos && b.updatePos();
+      if (b = this._extensions) {
+        for (a = 0;a < b.length;a++) {
+          var c = b[a];
+          c.updatePos && c.updatePos();
         }
       }
     }
@@ -22608,12 +22634,14 @@ Entry.BlockView.pngMap = {};
     }
     return f.promise();
   };
-  b.downloadAsImage = function() {
-    this.getDataUrl().then(function(a) {
-      var b = document.createElement("a");
-      b.href = a.src;
-      b.download = "\uc5d4\ud2b8\ub9ac \ube14\ub85d.png";
-      b.click();
+  b.downloadAsImage = function(a) {
+    this.getDataUrl().then(function(b) {
+      var c = document.createElement("a");
+      c.href = b.src;
+      b = "\uc5d4\ud2b8\ub9ac \ube14\ub85d";
+      a && (b += a);
+      c.download = b + ".png";
+      c.click();
     });
   };
   b._rightClick = function(a) {
@@ -23060,19 +23088,26 @@ Entry.ExtGuide = function(b, a, d) {
 };
 (function(b) {
   b.render = function() {
-    var a = this.blockView.getBoard();
-    this.svgGroup = this.blockView.svgGroup.elem("g", {class:"extension guideGroup"});
-    this.blockView.guideSvgGroup = this.svgGroup;
-    $(this.svgGroup).bind("mousedown touchstart", function(a) {
-      a.stopPropagation && a.stopPropagation();
-      a.preventDefault && a.preventDefault();
-    });
-    var b = this.block.getCode().createThread(this.model);
-    !b.view && b.createView(a);
-    this.svgGroup.appendChild(b.getFirstBlock().view.clone());
-    this.updatePos();
-    this.block.getThread().view.setHasGuide(!0);
-    b.destroy(!1);
+    if (this.model) {
+      var a = this.blockView.getBoard();
+      this.svgGroup = this.blockView.svgGroup.elem("g", {class:"extension guideGroup"});
+      this.blockView.guideSvgGroup = this.svgGroup;
+      $(this.svgGroup).bind("mousedown touchstart", function(a) {
+        a.stopPropagation && a.stopPropagation();
+        a.preventDefault && a.preventDefault();
+      });
+      var b = this.block.getCode();
+      this.model[0].x = -99999;
+      this.model[0].y = -99999;
+      b = b.createThread(this.model);
+      !b.view && b.createView(a);
+      a = b.getFirstBlock().view.clone();
+      a.removeAttribute("transform");
+      this.svgGroup.appendChild(a);
+      this.updatePos();
+      this.block.getThread().view.setHasGuide(!0);
+      b.destroy(!1);
+    }
   };
   b.updatePos = function() {
     this.svgGroup.attr("transform", this._getTransform());
@@ -23362,12 +23397,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 (function(b) {
   b.schema = {magneting:!1};
   b.renderStart = function(a, b) {
-    this.svgGroup = this._blockView.contentSvgGroup.elem("g");
+    this.svgGroup || (this.svgGroup = this._blockView.contentSvgGroup.elem("g"));
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
     var c = this.getValue();
-    c && !c.view && (c.setThread(this), c.createView(a, b), c.getThread().view.setParent(this));
+    c && !c.view ? (c.setThread(this), c.createView(a, b), c.getThread().view.setParent(this)) : c && c.view && c.view.reDraw();
     this.updateValueBlock(c);
     this._blockView.getBoard().constructor !== Entry.Board && this._valueBlock.view.removeControl();
   };
@@ -23375,14 +23410,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     var e = this.svgGroup;
     this._position && (this._position.x && (a = this._position.x), this._position.y && (b = this._position.y));
     var f = this._valueBlock;
-    f && (b = -.5 * f.view.height);
+    f && f && f.view && (b = -.5 * f.view.height);
     f = "translate(" + a + "," + b + ")";
     void 0 === c || c ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
     this.box.set({x:a, y:b});
   };
   b.calcWH = function() {
     var a = this._valueBlock;
-    a ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:15, height:20});
+    a && a && a.view ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:15, height:20});
   };
   b.calcHeight = b.calcWH;
   b.destroy = function() {
@@ -23419,14 +23454,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   b.updateValueBlock = function(a) {
     a instanceof Entry.Block || (a = void 0);
-    this._destroyObservers();
-    a = this._setValueBlock(a).view;
-    a.bindPrev(this);
-    this._blockView.alignContent();
-    this._posObserver = a.observe(this, "updateValueBlock", ["x", "y"], !1);
-    this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]);
-    a = this._blockView.getBoard();
-    a.constructor === Entry.Board && a.generateCodeMagnetMap();
+    a && a === this._valueBlock ? this.calcWH() : (this._destroyObservers(), a = this._setValueBlock(a).view, a.bindPrev(this), this._blockView.alignContent(), this._posObserver = a.observe(this, "updateValueBlock", ["x", "y"], !1), this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]), a = this._blockView.getBoard(), a.constructor === Entry.Board && a.generateCodeMagnetMap());
   };
   b._destroyObservers = function() {
     this._sizeObserver && this._sizeObserver.destroy();
@@ -23898,12 +23926,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 (function(b) {
   b.schema = {magneting:!1};
   b.renderStart = function(a, b) {
-    this.svgGroup = this._blockView.contentSvgGroup.elem("g");
+    this.svgGroup || (this.svgGroup = this._blockView.contentSvgGroup.elem("g"));
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
     var c = this.getValue();
-    c && !c.view && (c.setThread(this), c.createView(a, b));
+    c && !c.view ? (c.setThread(this), c.createView(a, b)) : c && c.view && c.view.reDraw();
     this._updateValueBlock(c);
     this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock && this._valueBlock.view.removeControl();
   };
@@ -23932,12 +23960,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   };
   b._updateValueBlock = function(a) {
     a instanceof Entry.Block || (a = void 0);
-    this._sizeObserver && this._sizeObserver.destroy();
-    this._posObserver && this._posObserver.destroy();
-    (a = this._setValueBlock(a)) ? (a = a.view, a.bindPrev(), this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = a.observe(this, "calcWH", ["width", "height"])) : this.calcWH();
-    this._blockView.alignContent();
-    a = this._blockView.getBoard();
-    a.constructor === Entry.Board && a.generateCodeMagnetMap();
+    a && a === this._valueBlock ? this.calcWH() : (this._sizeObserver && this._sizeObserver.destroy(), this._posObserver && this._posObserver.destroy(), (a = this._setValueBlock(a)) ? (a = a.view, a.bindPrev(), this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = a.observe(this, "calcWH", ["width", "height"])) : this.calcWH(), this._blockView.alignContent());
   };
   b.getPrevBlock = function(a) {
     return this._valueBlock === a ? this : null;
@@ -24006,6 +24029,7 @@ Entry.FieldStatement = function(b, a, d) {
   this.acceptType = b.accept;
   this._thread = this.statementSvgGroup = this.svgGroup = null;
   this._position = b.position;
+  this._events = [];
   this.observe(a, "alignContent", ["height"], !1);
   this.observe(this, "_updateBG", ["magneting"], !1);
   this.renderStart(a.getBoard());
@@ -24027,8 +24051,10 @@ Entry.FieldStatement = function(b, a, d) {
     if (a = b.getFirstBlock()) {
       a.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = a;
     }
-    b.changeEvent.attach(this, this.calcHeight);
-    b.changeEvent.attach(this, this.checkTopBlock);
+    a = b.changeEvent.attach(this, this.calcHeight);
+    var c = b.changeEvent.attach(this, this.checkTopBlock);
+    this._events.push([b.changeEvent, a]);
+    this._events.push([b.changeEvent, c]);
     this.calcHeight();
   };
   b.align = function(a, b, c) {
@@ -24056,6 +24082,10 @@ Entry.FieldStatement = function(b, a, d) {
     this._blockView.dominate();
   };
   b.destroy = function() {
+    for (;this._events.length;) {
+      var a = this._events.pop();
+      a[0].detach(a[1]);
+    }
   };
   b._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
@@ -24135,7 +24165,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.textElement = this.svgGroup.elem("text", {x:3, y:4, "font-size":"12px"});
     this.textElement.textContent = this.truncate();
     var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0, c = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {width:a, height:c, y:b - c / 2, rx:3, ry:3, fill:"transparent"});
+    this._header = this.svgGroup.elem("rect", {width:a, height:c, y:b - c / 2, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
     this.box.set({x:0, y:0, width:a, height:c});
@@ -24709,25 +24739,28 @@ Entry.Board.DRAG_RADIUS = 5;
     this.workspace.setMode(a, "save");
   };
   b.generateCodeMagnetMap = function() {
-    var a = this.code;
-    if (a && this.dragBlock) {
-      for (var b in this.dragBlock.magnet) {
-        var c = this._getCodeBlocks(a, b);
-        c.sort(function(a, b) {
-          return a.point - b.point;
-        });
-        c.unshift({point:-Number.MAX_VALUE, blocks:[]});
-        for (var e = 1;e < c.length;e++) {
-          var f = c[e], g = f, h = f.startBlock;
-          if (h) {
-            for (var k = f.endPoint, l = e;k > g.point && (g.blocks.push(h), l++, g = c[l], g);) {
+    var a = this.code, b = this.dragBlock;
+    if (a && b) {
+      this._magnetMap = {};
+      for (var c in b.magnet) {
+        if ("next" !== c || void 0 !== b.block.getLastBlock().view.magnet.next) {
+          var e = this._getCodeBlocks(a, c);
+          e.sort(function(a, b) {
+            return a.point - b.point;
+          });
+          e.unshift({point:-Number.MAX_VALUE, blocks:[]});
+          for (var f = 1;f < e.length;f++) {
+            var g = e[f], h = g, k = g.startBlock;
+            if (k) {
+              for (var l = g.endPoint, n = f;l > h.point && (h.blocks.push(k), n++, h = e[n], h);) {
+              }
+              delete g.startBlock;
             }
-            delete f.startBlock;
+            g.endPoint = Number.MAX_VALUE;
+            e[f - 1].endPoint = g.point;
           }
-          f.endPoint = Number.MAX_VALUE;
-          c[e - 1].endPoint = f.point;
+          this._magnetMap[c] = e;
         }
-        this._magnetMap[b] = c;
       }
     }
   };
@@ -24741,8 +24774,7 @@ Entry.Board.DRAG_RADIUS = 5;
         f = this._getPreviousMagnets;
         break;
       case "string":
-        f = this._getFieldMagnets;
-        break;
+      ;
       case "boolean":
         f = this._getFieldMagnets;
         break;
@@ -24951,8 +24983,13 @@ Entry.Board.DRAG_RADIUS = 5;
     }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, callback:function() {
       a.code.clear(!0);
     }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome() && !Entry.isMobile(), option:{text:Lang.Menus.save_as_image_all, enable:!0, callback:function() {
-      a.code.getThreads().forEach(function(a) {
-        (a = a.getFirstBlock()) && a.view.downloadAsImage();
+      var b = a.code.getThreads(), c = [];
+      b.forEach(function(a, f) {
+        var g = a.getFirstBlock();
+        g && (console.log("threads.length=", b.length), 1 < b.length && Entry.isOffline ? g.view.getDataUrl().then(function(a) {
+          c.push(a);
+          c.length == b.length && Entry.dispatchEvent("saveBlockImages", {images:c});
+        }) : g.view.downloadAsImage(++f));
       });
     }}}];
   };
@@ -25482,6 +25519,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     this.view || (this.set({view:new Entry.BlockView(this, a, b)}), this._updatePos());
   };
   b.destroyView = function() {
+    this.view.destroy();
     this.set({view:null});
   };
   b.clone = function(a) {
@@ -25529,7 +25567,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       this.getCode().unregisterBlock(this);
       f = this.getThread();
       this._schema && this._schema.event && f.unregisterEvent(this, this._schema.event);
-      c && (b ? c.destroy(a, b) : g ? c.view && c.view.bindPrev(g) : (b = this.getThread().view.getParent(), b.constructor === Entry.FieldStatement ? (c.view && c.view.bindPrev(b), b.insertTopBlock(c)) : b.constructor === Entry.FieldStatement ? c.replace(b._valueBlock) : c.view._toGlobalCoordinate()));
+      c && (b ? c.destroy(a, b) : g ? c.view && c.view.bindPrev(g, !0) : (b = this.getThread().view.getParent(), b.constructor === Entry.FieldStatement ? (c.view && c.view.bindPrev(b), b.insertTopBlock(c)) : b.constructor === Entry.FieldStatement ? c.replace(b._valueBlock) : c.view._toGlobalCoordinate()));
       !this.doNotSplice && f.spliceBlock ? f.spliceBlock(this) : delete this.doNotSplice;
       this.view && this.view.destroy(a);
       this._schemaChangeEvent && this._schemaChangeEvent.destroy();

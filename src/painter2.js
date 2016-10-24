@@ -2,6 +2,7 @@
 
 Entry.Painter2 = function(view) {
     this.view = view;
+    this.baseUrl = Entry.painterBaseUrl || '/lib/literallycanvas/lib/img';
 
     this.file = {
         id: Entry.generateHash(),
@@ -22,7 +23,7 @@ Entry.Painter2 = function(view) {
 p.initialize = function() {
     if (this.lc)
         return;
-    var imgURL = '/lib/literallycanvas/lib/img';
+    var imgURL = this.baseUrl;
     var bgImage = new Image();
     bgImage.src = imgURL + '/transparent-pattern.png';
     this.lc = LC.init(this.view, {

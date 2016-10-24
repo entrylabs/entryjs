@@ -27,6 +27,8 @@ Entry.FieldStatement = function(content, blockView, index) {
 
     this._position = content.position;
 
+    this._events = [];
+
     this.observe(blockView, "alignContent", ["height"], false);
     this.observe(this, "_updateBG", ["magneting"], false);
 
@@ -42,13 +44,13 @@ Entry.FieldStatement = function(content, blockView, index) {
         magneting: false
     };
 
-    p.magnet = {
-        next: {x: 0, y: 0}
-    };
+    p.magnet = { next: {x: 0, y: 0} };
 
     p.renderStart = function(board) {
-        this.svgGroup = this._blockView.statementSvgGroup.elem('g');
-        this.statementSvgGroup = this.svgGroup.elem('g');
+        this.svgGroup =
+            this._blockView.statementSvgGroup.elem('g');
+        this.statementSvgGroup =
+            this.svgGroup.elem('g');
         this._nextGroup = this.statementSvgGroup;
         this._initThread(board);
         this._board = board;
@@ -64,8 +66,11 @@ Entry.FieldStatement = function(content, blockView, index) {
             firstBlock.view._toLocalCoordinate(this.statementSvgGroup);
             this.firstBlock = firstBlock;
         }
-        thread.changeEvent.attach(this, this.calcHeight);
-        thread.changeEvent.attach(this, this.checkTopBlock);
+
+        var calcEvent = thread.changeEvent.attach(this, this.calcHeight);
+        var checkTopEvent = thread.changeEvent.attach(this, this.checkTopBlock);
+        this._events.push([thread.changeEvent, calcEvent]);
+        this._events.push([thread.changeEvent, checkTopEvent]);
         this.calcHeight();
     };
 
@@ -113,7 +118,12 @@ Entry.FieldStatement = function(content, blockView, index) {
         this._blockView.dominate();
     };
 
-    p.destroy = function() {};
+    p.destroy = function() {
+        while (this._events.length) {
+            var evt = this._events.pop();
+            evt[0].detach(evt[1])
+        }
+    };
 
     p._updateBG = function() {
         if (!this._board.dragBlock || !this._board.dragBlock.dragInstance)
