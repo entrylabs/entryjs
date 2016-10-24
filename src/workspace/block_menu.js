@@ -20,6 +20,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.suffix = 'blockMenu';
     this._isSelectingMenu = false;
 
+    this._blockSvgs = [];
+
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
 
@@ -178,6 +180,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p.align = function(unReDraw) {
         var code = this.code;
         if (!code) return;
+        this._blockSvgs = [];
         this._clearSplitters();
 
         if (code.view && !unReDraw && !this._isSelectingMenu)
@@ -193,6 +196,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var thread = threads[i];
             var block = thread.getFirstBlock();
             var blockView = block.view;
+            this._blockSvgs.push(blockView.svgGroup);
 
             var blockInfo = Entry.block[block.type];
             if(this.checkBanClass(blockInfo)) {
@@ -314,16 +318,26 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p.renderText = function(cb) {
         var threads = this.code.getThreads();
         this.code.mode = 'text';
-        for (var i=0; i<threads.length; i++)
-            threads[i].view.renderText();
+        for (var i=0; i<threads.length; i++) {
+            var thread = threads[i];
+            if (thread.view)
+                thread.view.renderText();
+            else
+                thread.createView(this, Entry.Workspace.MODE_VIMBOARD)
+        }
         cb && cb();
     };
 
     p.renderBlock = function(cb) {
         var threads = this.code.getThreads();
         this.code.mode = 'code';
-        for (var i=0; i<threads.length; i++)
-            threads[i].view.renderBlock();
+        for (var i=0; i<threads.length; i++) {
+            var thread = threads[i];
+            if (thread.view)
+                thread.view.renderBlock();
+            else
+                thread.createView(this, Entry.Workspace.MODE_BOARD)
+        }
 
         cb && cb();
     };
@@ -382,7 +396,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             for (var i=0; i<threads.length; i++) {
                 var thread = threads[i];
                 var type;
-                if (thread instanceof Entry.Thread) type = thread.getFirstBlock().type;
+                if (thread instanceof Entry.Thread)
+                    type = thread.getFirstBlock().type;
                 else type = thread[0].type;
 
                 if(this.checkBanClass(Entry.block[type]))
@@ -618,6 +633,27 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.reDraw = function() {
         this.selectMenu(this.lastSelector, true);
+        this._inspectUseless();
+    };
+
+    p._inspectUseless = function() {
+        if (this._blockSvgs.length !== 0) {
+            var svgs = $(this.svgBlockGroup).children();
+            for (var i=0; i<svgs.length; i++) {
+                var svg = svgs[i];
+                if (svg.tagName !== "g"
+                    || svg.getAttribute("display") === "none"
+                    || !/block/.test(svg.getAttribute("class")))
+                    continue;
+
+                //destroy not matching with actual data
+                if (this._blockSvgs.indexOf(svg) < 0) {
+                    svg.blockView.block.getThread()
+                        .destroyView();
+                }
+            }
+        }
+        this._blockSvgs = [];
     };
 
     p._handleDragBlock = function() {

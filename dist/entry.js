@@ -21522,6 +21522,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   this._categories = [];
   this.suffix = "blockMenu";
   this._isSelectingMenu = !1;
+  this._blockSvgs = [];
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -21596,11 +21597,14 @@ Entry.BlockMenu = function(b, a, d, c) {
   b.align = function(a) {
     var b = this.code;
     if (b) {
+      this._blockSvgs = [];
       this._clearSplitters();
       !b.view || a || this._isSelectingMenu || b.view.reDraw();
       a = b.getThreads();
       for (var b = 10, c = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
-        var h = a[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
+        var h = a[f].getFirstBlock(), k = h.view;
+        this._blockSvgs.push(k.svgGroup);
+        h = Entry.block[h.type];
         this.checkBanClass(h) ? k.set({display:!1}) : (k.set({display:!0}), h = h.class, e && e !== h && (this._createSplitter(b), b += 15), e = h, h = c - k.offsetX, "CENTER" == this._align && (h -= k.width / 2), b -= k.offsetY, k._moveTo(h, b, !1), b += k.height + 15);
       }
       this.updateSplitters();
@@ -21657,7 +21661,8 @@ Entry.BlockMenu = function(b, a, d, c) {
     var b = this.code.getThreads();
     this.code.mode = "text";
     for (var c = 0;c < b.length;c++) {
-      b[c].view.renderText();
+      var e = b[c];
+      e.view ? e.view.renderText() : e.createView(this, Entry.Workspace.MODE_VIMBOARD);
     }
     a && a();
   };
@@ -21665,7 +21670,8 @@ Entry.BlockMenu = function(b, a, d, c) {
     var b = this.code.getThreads();
     this.code.mode = "code";
     for (var c = 0;c < b.length;c++) {
-      b[c].view.renderBlock();
+      var e = b[c];
+      e.view ? e.view.renderBlock() : e.createView(this, Entry.Workspace.MODE_BOARD);
     }
     a && a();
   };
@@ -21836,6 +21842,16 @@ Entry.BlockMenu = function(b, a, d, c) {
   };
   b.reDraw = function() {
     this.selectMenu(this.lastSelector, !0);
+    this._inspectUseless();
+  };
+  b._inspectUseless = function() {
+    if (0 !== this._blockSvgs.length) {
+      for (var a = $(this.svgBlockGroup).children(), b = 0;b < a.length;b++) {
+        var c = a[b];
+        "g" === c.tagName && "none" !== c.getAttribute("display") && /block/.test(c.getAttribute("class")) && 0 > this._blockSvgs.indexOf(c) && c.blockView.block.getThread().destroyView();
+      }
+    }
+    this._blockSvgs = [];
   };
   b._handleDragBlock = function() {
     this._boardBlockView = null;
@@ -22035,6 +22051,7 @@ Entry.BlockView = function(b, a, d) {
   this._observers = [];
   this.set(b);
   this.svgGroup = a.svgBlockGroup.elem("g");
+  this.svgGroup.blockView = this;
   this._schema = Entry.skinContainer.getSkin(b);
   if (void 0 === this._schema) {
     this.block.destroy(!1, !1);
@@ -22912,8 +22929,8 @@ Entry.CodeView = function(b, a) {
   };
   b.reDraw = function() {
     this.code.map(function(a) {
-      a.view.reDraw();
-    });
+      a.view ? a.view.reDraw() : a.createView(this.board);
+    }.bind(this));
   };
   b.destroy = function() {
     this.code.map(function(a) {
@@ -25519,7 +25536,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     this.view || (this.set({view:new Entry.BlockView(this, a, b)}), this._updatePos());
   };
   b.destroyView = function() {
-    this.view.destroy();
+    this.view && this.view.destroy();
     this.set({view:null});
   };
   b.clone = function(a) {
@@ -25785,7 +25802,8 @@ Entry.ThreadView = function(b, a) {
   };
   b.reDraw = function() {
     for (var a = this.thread._data, b = a.length - 1;0 <= b;b--) {
-      a[b].view.reDraw();
+      var c = a[b];
+      c.view ? c.view.reDraw() : c.createView(this.thread._code.view.board);
     }
   };
   b.setZIndex = function(a) {
