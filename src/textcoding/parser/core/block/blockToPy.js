@@ -267,13 +267,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
 
                         param = Entry.TextCodingUtil.binaryOperatorValueConvertor(param);
-                        param = String(param);
+                        param = String(param); 
 
                         if(!Entry.TextCodingUtil.isNumeric(param) &&
-                           !Entry.TextCodingUtil.isBinaryOperator(param))
-                           param = String("\"" + param + "\"");
+                            !Entry.TextCodingUtil.isBinaryOperator(param)) {
+                                param = String("\"" + param + "\"");
+                        }
 
-                        console.log("param text", param);
+                        console.log("result and param text", result, param);
 
                         if(param == String('\"None\"')) { 
                            var data = {None:"None"};

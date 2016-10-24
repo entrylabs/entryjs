@@ -786,52 +786,78 @@ Entry.TextCodingUtil = {};
         var threadArr = threads.split('\n');
 
         for(var i in threadArr) {
-                var thread = threadArr[i].trim();
-                console.log("thread check", thread);
-                var colonIndex = thread.indexOf(":");
-                var funcPart = "";
-                var restPart = "";
+                var thread = threadArr[i];
+                var trimedThread = threadArr[i].trim();
+                console.log("trimedThread check", trimedThread);
+                var index = trimedThread.indexOf(":");
+                var preText = "";
 
-                if(colonIndex > 0) {
-                    funcPart = thread.substring(0, colonIndex+1);
-                    restPart = thread.substring(colonIndex+1, thread.length);
+                if(index > 0) {
+                    preText = trimedThread.substring(0, colonIndex+1);
                 }
-
-                console.log("funcPart", funcPart);
-                console.log("restPart", restPart);
                 
-                if( funcPart == "def entry_event_start():" ||
-                    funcPart == "def entry_event_mouse_down():" ||
-                    funcPart == "def entry_event_mouse_up():" ||
-                    funcPart == "def entry_event_object_down():" ||
-                    funcPart == "def entry_event_object_up():" ||
-                    funcPart == "def entry_event_scene_start():" ||
-                    funcPart == "def entry_event_clone_create():" ) {
+                if( preText == "def entry_event_start():" ||
+                    preText == "def entry_event_mouse_down():" ||
+                    preText == "def entry_event_mouse_up():" ||
+                    preText == "def entry_event_object_down():" ||
+                    preText == "def entry_event_object_up():" ||
+                    preText == "def entry_event_scene_start():" ||
+                    preText == "def entry_event_clone_create():" ) {
 
-                    var tokens = [];
+                    /*var tokens = [];
                     tokens = funcPart.split("def");
-                    console.log("stupid1", tokens);
-                    funcPart = tokens[1].substring(0, tokens[1].length-1).trim();
+                    funcPart = tokens[1].substring(0, tokens[1].length-1).trim();*/
 
-                    var newThread = funcPart.concat("\n").concat(restPart.trim());
+                    thread = thread.replace(/def /, "");
+                    var colonIndex = thread.indexOf(":");
+                    var funcPart = ""; 
+                    var restPart = "";
+
+                    if(colonIndex > 0) {
+                        funcPart = thread.substring(0, colonIndex+1);
+                        restPart = thread.substring(colonIndex+1, thread.length);
+                    }
+
+                    if(restPart) {
+                        var newThread = funcPart.concat("\n").concat(restPart.trim());
+                    }
+                    else {
+                        var newThread = funcPart;   
+                    }
+
                     console.log("newThread funcPart", newThread); 
                     threadArr[i] = newThread;
                     eventFound = true;
                 }
-                else if(funcPart.match(/^def entry_event_key(.+):$/) ||
-                    funcPart.match(/^def entry_event_signal(.+):$/)) {
+                else if(preText.match(/^def entry_event_key(.+):$/) ||
+                    preText.match(/^def entry_event_signal(.+):$/)) {
 
-                    var tokens = [];
-                    tokens = thread.split("def");
-                    console.log("stupid2", tokens);
-                    var newThread = tokens[1].substring(0, tokens[1].length-1).trim();
+                    thread = thread.replace(/def /, "");
+                    var colonIndex = thread.indexOf(":");
+                    var funcPart = "";
+                    var restPart = "";
+
+                    if(colonIndex > 0) {
+                        funcPart = thread.substring(0, colonIndex+1);
+                        restPart = thread.substring(colonIndex+1, thread.length);
+                    }
+
+                    if(restPart) {
+                        var newThread = funcPart.concat("\n").concat(restPart.trim());
+                    }
+                    else {
+                        var newThread = funcPart;   
+                    }
+                    
+                    console.log("newThread funcPart", newThread); 
                     threadArr[i] = newThread;
                     eventFound = true;
                 }
                 else {
                     if(eventFound) {
                         var newThread = threadArr[i];
-                        newThread = newThread.replace('\t', '');
+                        newThread = newThread.replace(/\t/g, "    ");
+                        newThread = newThread.replace(/    /, "");
                         threadArr[i] = newThread;
                     }
                 }
@@ -857,6 +883,18 @@ Entry.TextCodingUtil = {};
             result = name;
             return name;
         }
+        /*else {
+            var index = name.lastIndexOf("_");
+            var preText = name.substring(0, index);
+            if(preText == "entry_event_key") {
+                name = "def " + preText + "_%2";
+                result = name;
+            }
+            else if(preText == "entry_event_signal") {
+                name = "def " + preText + "_%2";
+                result = name;
+            }
+        }*/
 
         return result;
 
@@ -904,6 +942,7 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isEntryEventFuncName = function(name) {
+        console.log("isEntryEventFuncName name", name);
         if( name == "entry_event_start" ||
             name == "entry_event_key" ||
             name == "entry_event_mouse_down" ||
@@ -914,6 +953,33 @@ Entry.TextCodingUtil = {};
             name == "entry_event_scene_start" ||
             name == "entry_event_clone_create") {
 
+            return true;
+        }
+        
+        console.log("isEntryEventFuncName result is NOT");
+        return false;
+    };
+
+    tu.isEntryEventFuncNameWithParam = function(name) {
+        console.log("isEntryEventFuncNameWithParam name", name);
+        var lastIndex = name.lastIndexOf("_");
+
+        if(lastIndex > 0) {
+            var preText = name.substring(0, lastIndex);
+            console.log("isEntryEventFuncNameWithParam preText", preText);
+            if( preText == "entry_event_key" ||
+                preText == "entry_event_signal") {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    tu.isEntryEventFuncWithParam = function(name) {
+        console.log("isEntryEventFuncNameWithParam name", name);
+        if( name == "def entry_event_key_" ||
+            name == "def entry_event_signal_") {
             return true;
         }
 
@@ -941,6 +1007,14 @@ Entry.TextCodingUtil = {};
         else {
             return block;
         }
+    };
+
+    tu.isEntryEventFuncTypeWithParam = function(block) {
+        if(block.type == "when_some_key_pressed" ||
+            block.type == "when_message_cast")
+            return true;
+
+        return false;
     };
 
     tu.gatherFuncDefParam = function(block) {

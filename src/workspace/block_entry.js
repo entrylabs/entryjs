@@ -16740,7 +16740,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "keyPress",
-        "syntax": {"js": [], "py": ["def entry_event_key(%2):"]}
+        "syntax": {"js": [], "py": ["def entry_event_key():\n\tif key == %2:"]}
     },
     "mouse_clicked": {
         "color": "#3BBD70",
@@ -16928,7 +16928,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_message_cast",
-        "syntax": {"js": [], "py": ["def entry_event_signal(%2):"]}
+        "syntax": {"js": [], "py": ["def entry_event_signal():\n\tif signal == %2:"]}
     },
     "message_cast": {
         "color": "#3BBD70",

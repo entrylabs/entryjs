@@ -286,7 +286,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             continue;
                         }
 
-                        thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
+                        //thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
                         threads[i] = thread;
                     }
 
@@ -322,6 +322,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             console.log("success??", ast);
                             //thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
                             console.log("real thread", thread);
+                            thread = thread.replace(/    /g, "\t");
+                            console.log("real real thread", thread);
                             ast = pyAstGenerator.generate(thread);
                         }
 
@@ -337,7 +339,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var tToken = thread.split('\n');
                             //tToken.pop();
                             var idx = parseInt(this._pyThreadCount).toString();
-                            this._pyBlockCount[idx] =  tToken.length-1;
+                            this._pyBlockCount[idx] =  tToken.length;
                             console.log("this._pyBlockCount", this._pyBlockCount);
                         }
 
@@ -483,6 +485,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
 
                 result += textCode;
+                //result = result.replace(/\t/g, "    "); 
 
                 break;
         }
@@ -794,15 +797,26 @@ Entry.Parser = function(mode, type, cm, syntax) {
         for(var i in codeArr) {
             var textLine = codeArr[i];
             console.log("textLine", textLine);
-            if(textLine.length != 0) {
+            var index = textLine.indexOf(":");
+            var preText = textLine.substring(0, index+1);
+            preText = preText.trim();
+            
+            if(Entry.TextCodingUtil.isEntryEventFuncByFullText(preText)) {
+                threadArr.push(thread);
+                thread = "";
                 thread += textLine + '\n';
-                console.log("jhlee thread", thread);
-                if(i == codeArr.length-1)
-                    threadArr.push(thread);
             }
             else {
-                threadArr.push(thread);
-                thread = '';
+                if(textLine.length != 0) {
+                    thread += textLine + '\n';
+                    console.log("jhlee thread", thread);
+                    if(i == codeArr.length-1)
+                        threadArr.push(thread);
+                }
+                else {
+                    threadArr.push(thread);
+                    thread = "";
+                }
             }
         }
 
