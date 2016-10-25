@@ -392,7 +392,7 @@ p.executeHardware = function() {
             var left = window.screenLeft;
             var top = window.screenTop;
             var settings = 'width=' + width + ', height=' + height + ',  top=' + top + ', left=' + left;
-            this._w = window.open('', "entry_hw_launcher", settings);
+            this._w = window.open('/views/hwLoading.html', "entry_hw_launcher", settings);
             var fnInterval = null;
             fnInterval = setTimeout(function() {
                 executeIeCustomLauncher.runViewer(sUrl, fpCallback);
@@ -400,7 +400,7 @@ p.executeHardware = function() {
             }, 1000);
         },
         runViewer : function(sUrl, fpCallback) {
-            this._w.document.write("<iframe src='"+ sUrl +"' onload='opener.ieCustomLaunch.set()' style='display:none;width:0;height:0'></iframe>");
+            this._w.document.write("<iframe src='"+ sUrl +"' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>");
             var nCounter = 0;
             var bNotInstalled = false;
             var nInterval = null;
@@ -435,6 +435,8 @@ p.executeHardware = function() {
             this._bNotInstalled = true;
         }
     };
+
+    hw.ieLauncher = executeIeCustomLauncher;
 
     var entryHardwareUrl = 'entryhw://-roomId:' + this.sessionRoomId;
     if(navigator.userAgent.indexOf("MSIE") > 0 || navigator.userAgent.indexOf("Trident") > 0){
