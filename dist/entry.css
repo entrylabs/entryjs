@@ -3421,6 +3421,11 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 #entryPainterTopMenuEdit {
   color: white;
+  width: auto;
+  position: relative;
+  vertical-align: top;
+  margin-top: -28px;
+  margin-left: 16px;
 }
 #entryPainterTopMenuFile > ul > li {
   border-bottom: solid 1px #643cd9;
@@ -3439,13 +3444,17 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 #entryPainterTopMenuFile {
   color: white;
+  position: relative;
+  width: auto;
+  vertical-align: top;
+  margin-left: 5px;
 }
 .entryPlaygroundPainterTopStageXY {
   position: absolute;
   width: 150px;
   height: 30px;
   top: 5px;
-  left: 280px;
+  left: 300px;
   font-size: 10pt;
   color: white;
 }
@@ -3762,6 +3771,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   height: 28px;
   cursor: pointer;
   list-style: none;
+  z-index: 101;
   font-family: nanumBarunBold !important;
 }
 .entryPlaygroundPainterTopMenuFileSave {
@@ -4451,8 +4461,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
   width: 120px;
 }
 .entryPlaygroundPainterTopMenu > ul {
-  position: absolute;
   top: 5px;
+  position: relative;
+  vertical-align: top;
 }
 .entryPainterTopMenuEditImport {
   height: 40px;
