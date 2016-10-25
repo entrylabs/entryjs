@@ -3283,10 +3283,6 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .tablet .entryObjectCoordinateInputWorkspace_size {
   width: 48px;
-  margin-left: 170px;
-}
-.tablet .entryObjectCoordinateInputWorkspace_right {
-  margin-left: 84px;
 }
 .tablet .entryObjectRotateInputWorkspace {
   width: 50px;
@@ -3294,11 +3290,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .tablet .entryObjectDirectionInputWorkspace {
   width: 38px;
 }
-.tablet .entryObjectCoordinateSpanWorkspace:nth-child(3) {
-  margin-left: 70px;
-}
 .tablet .entryObjectCoordinateSizeWorkspace {
-  margin-left: 139px;
   width: 30px;
 }
 .tablet .collapsed .entryObjectRotationWrapperWorkspace {
@@ -3306,7 +3298,8 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .tablet .collapsed .rotationMethodWrapper {
   float: left;
-  top: 39px;
+  position: absolute;
+  bottom: 9px;
 }
 /* tablet end */
 /* Painter css start */

@@ -2544,32 +2544,32 @@ EntryStatic.objectSubCategories = {
 
 EntryStatic.fonts = [
 {
-    name: '바탕체',
+    name: Lang.Fonts.batang,
     family: 'KoPub Batang',
     url: '/css/kopubbatang.css'
 },
 {
-    name: '명조체',
+    name: Lang.Fonts.myeongjo,
     family: 'Nanum Myeongjo',
     url: '/css/nanummyeongjo.css'
 },
 {
-    name: '고딕체',
+    name: Lang.Fonts.gothic,
     family: 'Nanum Gothic',
     url: '/css/nanumgothic.css'
 },
 {
-    name: '필기체',
+    name: Lang.Fonts.pen_script,
     family: 'Nanum Pen Script',
     url: '/css/nanumpenscript.css'
 },
 {
-    name: '한라산체',
+    name: Lang.Fonts.jeju_hallasan,
     family: 'Jeju Hallasan',
     url: '/css/jejuhallasan.css'
 },
 {
-    name: '코딩고딕체',
+    name: Lang.Fonts.gothic_coding,
     family: 'Nanum Gothic Coding',
     url: '/css/nanumgothiccoding.css'
 }
