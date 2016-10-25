@@ -88,6 +88,7 @@ p.connectWebSocket = function(url, option) {
         if(socket.mode === 0 && mode === 1) {
             hw.disconnectHardware();
         }
+        hw.socketMode = mode;
         socket.mode = mode;
     });
 
@@ -110,7 +111,7 @@ p.connectWebSocket = function(url, option) {
 
     socket.on('disconnect', function() {
         console.log('disconnect');
-        if(hw.isOpenHardware) {
+        if(hw.isOpenHardware || hw.socketMode === 1) {
             hw.isOpenHardware = false;
             hw.initSocket();
         } else if(hw.socketType === 'WebSocket') {

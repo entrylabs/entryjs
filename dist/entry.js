@@ -17685,6 +17685,7 @@ p.connectWebSocket = function(b, a) {
   });
   c.on("mode", function(a) {
     0 === c.mode && 1 === a && d.disconnectHardware();
+    d.socketMode = a;
     c.mode = a;
   });
   c.on("message", function(a) {
@@ -17700,7 +17701,7 @@ p.connectWebSocket = function(b, a) {
   });
   c.on("disconnect", function() {
     console.log("disconnect");
-    d.isOpenHardware ? (d.isOpenHardware = !1, d.initSocket()) : "WebSocket" === d.socketType && d.disconnectedSocket();
+    d.isOpenHardware || 1 === d.socketMode ? (d.isOpenHardware = !1, d.initSocket()) : "WebSocket" === d.socketType && d.disconnectedSocket();
   });
   return c;
 };
