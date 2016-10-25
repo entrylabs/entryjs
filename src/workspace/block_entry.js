@@ -2221,33 +2221,8 @@ Entry.block = {
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var port = script.getField("PORT", script);
-            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
-            var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            var scope = script.executor.scope;
             var ANALOG = Entry.hw.portData.ANALOG;
-            if(!scope.isStart) {
-                scope.isStart = true;
-                scope.stamp = nowTime;
-                Entry.hw.sendQueue['TIME'] = nowTime;
-                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
-                Entry.hw.sendQueue['GET'] = {
-                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
-                    port: port
-                };
-                throw new Entry.Utils.AsyncError();
-                return;
-            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return (ANALOG) ? ANALOG[port] || 0 : 0;
-            } else if(nowTime - scope.stamp > 64) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return (ANALOG) ? ANALOG[port] || 0 : 0;
-            } else {
-                throw new Entry.Utils.AsyncError();
-                return;
-            }
+            return (ANALOG) ? ANALOG[port] || 0 : 0;
         }
     },
     "arduino_ext_get_ultrasonic_value": {
