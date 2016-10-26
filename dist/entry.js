@@ -17659,6 +17659,7 @@ Entry.HW = function() {
   this.outputQueue = {};
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
+  this.isMatched = !1;
   Entry.addEventListener("stop", this.setZero);
   this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "B.1":Entry.Codestar};
 };
@@ -17671,25 +17672,25 @@ p.createRandomRoomId = function() {
   });
 };
 p.connectWebSocket = function(b, a) {
-  var d = this, c = !1, e = io(b, a);
-  e.io.reconnectionAttempts(Entry.HW.TRIAL_LIMIT);
-  e.io.reconnectionDelayMax(1E3);
-  e.io.timeout(1E3);
-  e.on("connect", function() {
+  var d = this, c = io(b, a);
+  c.io.reconnectionAttempts(Entry.HW.TRIAL_LIMIT);
+  c.io.reconnectionDelayMax(1E3);
+  c.io.timeout(1E3);
+  c.on("connect", function() {
     console.log("connect");
     d.socketType = "WebSocket";
-    d.initHardware(e);
+    d.initHardware(c);
   });
-  e.on("matched", function(a) {
-    c = !0;
-    e.emit("matchTarget", {target:a});
+  c.on("matched", function(a) {
+    d.isMatched = !0;
+    c.emit("matchTarget", {target:a});
   });
-  e.on("mode", function(a) {
-    0 === e.mode && 1 === a && d.disconnectHardware();
+  c.on("mode", function(a) {
+    0 === c.mode && 1 === a && d.disconnectHardware();
     d.socketMode = a;
-    e.mode = a;
+    c.mode = a;
   });
-  e.on("message", function(a) {
+  c.on("message", function(a) {
     if (a.data && "string" === typeof a.data) {
       switch(a.data) {
         case "disconnectHardware":
@@ -17700,12 +17701,11 @@ p.connectWebSocket = function(b, a) {
       }
     }
   });
-  e.on("disconnect", function() {
+  c.on("disconnect", function() {
     console.log("disconnect");
-    d.isOpenHardware || 1 === d.socketMode || c ? (d.isOpenHardware = !1, d.initSocket()) : "WebSocket" === d.socketType && d.disconnectedSocket();
-    c = !1;
+    d.isOpenHardware || 1 === d.socketMode || d.isMatched ? (d.isOpenHardware = !1, d.initSocket()) : "WebSocket" === d.socketType && d.disconnectedSocket();
   });
-  return e;
+  return c;
 };
 p.initSocket = function() {
   try {
@@ -17766,6 +17766,7 @@ p.disconnectHardware = function() {
   Entry.dispatchEvent("hwChanged");
 };
 p.disconnectedSocket = function() {
+  this.isMatched = !1;
   this.tlsSocketIo.close();
   this.socketIo && this.socketIo.close();
   Entry.propertyPanel.removeMode("hw");

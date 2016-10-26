@@ -26,6 +26,7 @@ Entry.HW = function() {
     this.selectedDevice = null;
     this.hwModule = null;
     this.socketType = null;
+    this.isMatched = false;
 
     Entry.addEventListener('stop', this.setZero);
 
@@ -68,7 +69,6 @@ p.createRandomRoomId = function() {
 
 p.connectWebSocket = function(url, option) {
     var hw = this;
-    var isMatched = false;
     var socket = io(url, option);
     socket.io.reconnectionAttempts(Entry.HW.TRIAL_LIMIT);
     socket.io.reconnectionDelayMax(1000);
@@ -80,7 +80,7 @@ p.connectWebSocket = function(url, option) {
     });
 
     socket.on('matched', function (target) {
-        isMatched = true;
+        hw.isMatched = true;
         socket.emit('matchTarget', {
             target: target,
         });
@@ -113,13 +113,12 @@ p.connectWebSocket = function(url, option) {
 
     socket.on('disconnect', function() {
         console.log('disconnect');
-        if(hw.isOpenHardware || hw.socketMode === 1 || isMatched) {
+        if(hw.isOpenHardware || hw.socketMode === 1 || hw.isMatched) {
             hw.isOpenHardware = false;
             hw.initSocket();
         } else if(hw.socketType === 'WebSocket') {
             hw.disconnectedSocket();
         }
-        isMatched = false;
     }); 
 
     // socketSecurity.on('reconnecting', function() {
@@ -218,6 +217,7 @@ p.disconnectHardware = function() {
 }
 
 p.disconnectedSocket = function() {
+    this.isMatched = false;
     this.tlsSocketIo.close();
     if(this.socketIo) {
         this.socketIo.close();
