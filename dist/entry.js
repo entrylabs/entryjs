@@ -17678,11 +17678,6 @@ p.connectWebSocket = function(b, a) {
   c.on("connect", function() {
     d.socketType = "WebSocket";
     d.initHardware(c);
-    d.lastTarget && c.emit("matchTarget", {target:d.lastTarget});
-  });
-  c.on("matched", function(a) {
-    d.lastTarget = a;
-    c.emit("matchTarget", {target:a});
   });
   c.on("mode", function(a) {
     0 === c.mode && 1 === a && d.disconnectHardware();

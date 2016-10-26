@@ -75,19 +75,6 @@ p.connectWebSocket = function(url, option) {
     socket.on('connect', function() {
         hw.socketType = 'WebSocket';
         hw.initHardware(socket);
-
-        if(hw.lastTarget) {
-            socket.emit('matchTarget', {
-                target: hw.lastTarget,
-            });
-        }
-    });
-
-    socket.on('matched', function (target) {
-        hw.lastTarget = target;
-        socket.emit('matchTarget', {
-            target: target,
-        });
     });
 
     socket.on('mode', function (mode) {
