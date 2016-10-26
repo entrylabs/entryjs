@@ -110,13 +110,14 @@ p.connectWebSocket = function(url, option) {
     });
 
     socket.on('disconnect', function() {
-        console.log('disconnect', socket, hw.isOpenHardware, hw.socketMode);
-        if(hw.isOpenHardware || hw.socketMode === 1) {
-            hw.isOpenHardware = false;
-            hw.initSocket();
-        } else if(hw.socketType === 'WebSocket') {
-            hw.disconnectedSocket();
-        }
+        // hw.isOpenHardware = false;
+        hw.initSocket();
+            
+        // console.log('disconnect', socket, hw.isOpenHardware, hw.socketMode);
+        // if(hw.isOpenHardware || hw.socketMode === 1) {
+        // } else if(hw.socketType === 'WebSocket') {
+        //     hw.disconnectedSocket();
+        // }
     }); 
 
     // socketSecurity.on('reconnecting', function() {

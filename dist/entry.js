@@ -17700,8 +17700,7 @@ p.connectWebSocket = function(b, a) {
     }
   });
   c.on("disconnect", function() {
-    console.log("disconnect", c, d.isOpenHardware, d.socketMode);
-    d.isOpenHardware || 1 === d.socketMode ? (d.isOpenHardware = !1, d.initSocket()) : "WebSocket" === d.socketType && d.disconnectedSocket();
+    d.initSocket();
   });
   return c;
 };
