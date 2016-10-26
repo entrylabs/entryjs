@@ -2905,7 +2905,7 @@ Entry.block = {
             {
                 "type": "Text",
                 //TODO: 다국어 적용
-                "text": '하드웨어 프로그램 열기',
+                "text": Lang.Blocks.ARDUINO_program,
                 "color": "#333",
                 "align": "center"
             }
