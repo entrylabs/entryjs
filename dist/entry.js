@@ -17671,24 +17671,25 @@ p.createRandomRoomId = function() {
   });
 };
 p.connectWebSocket = function(b, a) {
-  var d = this, c = io(b, a);
-  c.io.reconnectionAttempts(Entry.HW.TRIAL_LIMIT);
-  c.io.reconnectionDelayMax(1E3);
-  c.io.timeout(1E3);
-  c.on("connect", function() {
+  var d = this, c = !1, e = io(b, a);
+  e.io.reconnectionAttempts(Entry.HW.TRIAL_LIMIT);
+  e.io.reconnectionDelayMax(1E3);
+  e.io.timeout(1E3);
+  e.on("connect", function() {
     console.log("connect");
     d.socketType = "WebSocket";
-    d.initHardware(c);
+    d.initHardware(e);
   });
-  c.on("matched", function(a) {
-    c.emit("matchTarget", {target:a});
+  e.on("matched", function(a) {
+    c = !0;
+    e.emit("matchTarget", {target:a});
   });
-  c.on("mode", function(a) {
-    0 === c.mode && 1 === a && d.disconnectHardware();
+  e.on("mode", function(a) {
+    0 === e.mode && 1 === a && d.disconnectHardware();
     d.socketMode = a;
-    c.mode = a;
+    e.mode = a;
   });
-  c.on("message", function(a) {
+  e.on("message", function(a) {
     if (a.data && "string" === typeof a.data) {
       switch(a.data) {
         case "disconnectHardware":
@@ -17699,11 +17700,12 @@ p.connectWebSocket = function(b, a) {
       }
     }
   });
-  c.on("disconnect", function() {
+  e.on("disconnect", function() {
     console.log("disconnect");
-    d.isOpenHardware || 1 === d.socketMode ? (d.isOpenHardware = !1, d.initSocket()) : "WebSocket" === d.socketType && d.disconnectedSocket();
+    d.isOpenHardware || 1 === d.socketMode || c ? (d.isOpenHardware = !1, d.initSocket()) : "WebSocket" === d.socketType && d.disconnectedSocket();
+    c = !1;
   });
-  return c;
+  return e;
 };
 p.initSocket = function() {
   try {

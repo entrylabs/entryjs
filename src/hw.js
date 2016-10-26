@@ -68,6 +68,7 @@ p.createRandomRoomId = function() {
 
 p.connectWebSocket = function(url, option) {
     var hw = this;
+    var isMatched = false;
     var socket = io(url, option);
     socket.io.reconnectionAttempts(Entry.HW.TRIAL_LIMIT);
     socket.io.reconnectionDelayMax(1000);
@@ -79,6 +80,7 @@ p.connectWebSocket = function(url, option) {
     });
 
     socket.on('matched', function (target) {
+        isMatched = true;
         socket.emit('matchTarget', {
             target: target,
         });
@@ -111,12 +113,13 @@ p.connectWebSocket = function(url, option) {
 
     socket.on('disconnect', function() {
         console.log('disconnect');
-        if(hw.isOpenHardware || hw.socketMode === 1) {
+        if(hw.isOpenHardware || hw.socketMode === 1 || isMatched) {
             hw.isOpenHardware = false;
             hw.initSocket();
         } else if(hw.socketType === 'WebSocket') {
             hw.disconnectedSocket();
         }
+        isMatched = false;
     }); 
 
     // socketSecurity.on('reconnecting', function() {
