@@ -15,9 +15,9 @@
  *	장치와 연관된 변수 및 함수 정의
  ***************************************************************************************/
 
-Entry.Byrobot_DroneFighter =
+Entry.byrobot_dronefighter =
 {
-	name: 'DroneFighter',
+	name: 'byrobot_dronefighter',
 
 	// 하드웨어로 전송할 때 사용하는 변수 목록('setZero'에서 sendQueue에 등록하여 사용)
 	// 'entry-hw' 프로젝트 byrobot_dronefighter.js 파일 내부의 'var DataType'에 정의된 것과 동일하게 사용해야함
@@ -45,7 +45,7 @@ Entry.Byrobot_DroneFighter =
 	// 초기화
 	setZero: function()
 	{
-		var portMap = Entry.Hamster.PORT_MAP;
+		var portMap = Entry.byrobot_dronefighter.PORT_MAP;
 		var sq = Entry.hw.sendQueue;
 
 		for (var port in portMap)
@@ -54,7 +54,7 @@ Entry.Byrobot_DroneFighter =
 		}
 
 		Entry.hw.update();
-		var hamster = Entry.Hamster;
+		var byrobot_dronefighter = Entry.byrobot_dronefighter;
 	},
 
 	// Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성 
@@ -67,15 +67,17 @@ Entry.Byrobot_DroneFighter =
 		// 모니터 화면 상단에 차례대로 나열하는 값
         listPorts:
 		{
-            "attitude_roll"		:{name: Lang.Blocks.BYROBOT_dronefighter_attitude_roll,		type: "input", pos: {x: 0, y: 0}},
-            "attitude_pitch"	:{name: Lang.Blocks.BYROBOT_dronefighter_attitude_pitch,	type: "input", pos: {x: 0, y: 0}},
-            "attitude_yaw"		:{name: Lang.Blocks.BYROBOT_dronefighter_attitude_yaw,		type: "input", pos: {x: 0, y: 0}},
+            "attitude_roll"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_roll,		type: "input", pos: {x: 0, y: 0}},
+            "attitude_pitch"	:{name: Lang.Blocks.byrobot_dronefighter_attitude_pitch,	type: "input", pos: {x: 0, y: 0}},
+            "attitude_yaw"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_yaw,		type: "input", pos: {x: 0, y: 0}}
         },
 
 		// 모니터 화면 지정 위치에 표시하는 값
         ports:
 		{
-			
+            "attitude_roll"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_roll,		type: "input", pos: {x: 100, y: 30}},
+            "attitude_pitch"	:{name: Lang.Blocks.byrobot_dronefighter_attitude_pitch,	type: "input", pos: {x: 100, y: 60}},
+            "attitude_yaw"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_yaw,		type: "input", pos: {x: 100, y: 90}}
         },
 
 		mode : 'both'	// 표시 모드
@@ -103,9 +105,9 @@ Blockly.Blocks.byrobot_dronefighter_value =
 		this.appendDummyInput()
 			.appendField('')
 			.appendField(new Blockly.FieldDropdown([
-					[Lang.Blocks.BYROBOT_dronefighter_attitude_roll,	"attitude_roll"],
-					[Lang.Blocks.BYROBOT_dronefighter_attitude_pitch,	"attitude_pitch"],
-					[Lang.Blocks.BYROBOT_dronefighter_attitude_yaw,		"attitude_yaw"]
+					[Lang.Blocks.byrobot_dronefighter_attitude_roll,	"attitude_roll"],
+					[Lang.Blocks.byrobot_dronefighter_attitude_pitch,	"attitude_pitch"],
+					[Lang.Blocks.byrobot_dronefighter_attitude_yaw,		"attitude_yaw"]
 				]), "DEVICE");
 		this.setInputsInline(true);
 		this.setOutput(true, 'Number');
@@ -114,9 +116,9 @@ Blockly.Blocks.byrobot_dronefighter_value =
 
 Entry.block.byrobot_dronefighter_value = function (sprite, script)
 {
-	var pd = Entry.hw.portData;
-	var dev = script.getField('DEVICE');
-	return pd[dev];
+	var read	= Entry.hw.portData;
+	var device	= script.getField('DEVICE');
+	return read[device];
 };
 
 
@@ -130,22 +132,22 @@ Blockly.Blocks.byrobot_dronefighter_ledModeColor_team =
 		this.setColour("#00979D");
 		this.appendDummyInput()
 			.appendField(new Blockly.FieldDropdown([
-					[Lang.Blocks.BYROBOT_dronefighter_team_Red,		"RED"],
-					[Lang.Blocks.BYROBOT_dronefighter_team_Blue,	"BLUE"]
+					[Lang.Blocks.byrobot_dronefighter_team_Red,		"RED"],
+					[Lang.Blocks.byrobot_dronefighter_team_Blue,	"BLUE"]
 				]), "TEAM")
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_team)
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledModeColor_0)
+			.appendField(Lang.Blocks.byrobot_dronefighter_team)
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledModeColor_0)
 			.appendField(new Blockly.FieldDropdown([
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_TeamHold,			"17"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_TeamFlicker,		"19"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_TeamFlickerDouble,	"20"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_TeamDimming,		"21"]
+					[Lang.Blocks.byrobot_dronefighter_light_mode_TeamHold,			"17"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_TeamFlicker,		"19"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_TeamFlickerDouble,	"20"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_TeamDimming,		"21"]
 				]), "MODE")
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledModeColor_1);
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledModeColor_1);
 		this.appendValueInput("INTERVAL")
 			.setCheck(["Number", "String"]);
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledModeColor_2)
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledModeColor_2)
 			.appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
 		this.setInputsInline(true);
 		this.setPreviousStatement(true);
@@ -184,20 +186,20 @@ Blockly.Blocks.byrobot_dronefighter_ledModeColor =
 	{
 		this.setColour("#00979D");
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledModeColor_0)
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledModeColor_0)
 			.appendField(new Blockly.FieldDropdown([
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_ArmHold,			"65"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_ArmFlicker,		"67"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_ArmFlickerDouble,	"68"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_ArmDimming,		"69"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_AllEnergyBeamIn,	"151"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_AllEnergyBeamOut,	"152"]
+					[Lang.Blocks.byrobot_dronefighter_light_mode_ArmHold,			"65"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_ArmFlicker,		"67"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_ArmFlickerDouble,	"68"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_ArmDimming,		"69"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_AllEnergyBeamIn,	"151"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_AllEnergyBeamOut,	"152"]
 				]), "MODE")
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledModeColor_1);
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledModeColor_1);
 		this.appendValueInput("INTERVAL")
 			.setCheck(["Number", "String"]);
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledModeColor_2)
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledModeColor_2)
 			.appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
 		this.setInputsInline(true);
 		this.setPreviousStatement(true);
@@ -207,18 +209,18 @@ Blockly.Blocks.byrobot_dronefighter_ledModeColor =
 
 Entry.block.byrobot_dronefighter_ledModeColor = function (sprite, script)
 {
-	var send = Entry.hw.sendQueue;
+	var send		= Entry.hw.sendQueue;
 
-	var mode = script.getField('MODE');
-	var interval = script.getNumberValue('INTERVAL');
+	var mode		= script.getField('MODE');
+	var interval	= script.getNumberValue('INTERVAL');
 	
 	// 범위 조정
     interval = Math.max(interval, 0);
     interval = Math.min(interval, 255);
 	
 	// 전송
-	send.ledModeColor_mode = mode;
-	send.ledModeColor_interval = interval;
+	send.ledModeColor_mode		= mode;
+	send.ledModeColor_interval	= interval;
 
 	return script.callReturn();
 };
@@ -233,26 +235,26 @@ Blockly.Blocks.byrobot_dronefighter_ledEventColor_team =
 		this.setColour("#00979D");
 		this.appendDummyInput()
 			.appendField(new Blockly.FieldDropdown([
-					[Lang.Blocks.BYROBOT_dronefighter_team_Red,		"RED"],
-					[Lang.Blocks.BYROBOT_dronefighter_team_Blue,	"BLUE"]
+					[Lang.Blocks.byrobot_dronefighter_team_Red,		"RED"],
+					[Lang.Blocks.byrobot_dronefighter_team_Blue,	"BLUE"]
 				]), "TEAM")
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_team)
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledEventColor_0)
+			.appendField(Lang.Blocks.byrobot_dronefighter_team)
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledEventColor_0)
 			.appendField(new Blockly.FieldDropdown([
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_TeamHold,			"17"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_TeamFlicker,		"19"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_TeamFlickerDouble,	"20"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_TeamDimming,		"21"]
+					[Lang.Blocks.byrobot_dronefighter_light_mode_TeamHold,			"17"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_TeamFlicker,		"19"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_TeamFlickerDouble,	"20"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_TeamDimming,		"21"]
 				]), "EVENT")
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledEventColor_1);
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledEventColor_1);
 		this.appendValueInput("INTERVAL")
 			.setCheck(["Number", "String"]);
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledEventColor_2)
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledEventColor_2)
 		this.appendValueInput("REPEAT")
 			.setCheck(["Number", "String"]);
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledEventColor_3)
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledEventColor_3)
 			.appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
 		this.setInputsInline(true);
 		this.setPreviousStatement(true);
@@ -262,7 +264,7 @@ Blockly.Blocks.byrobot_dronefighter_ledEventColor_team =
 
 Entry.block.byrobot_dronefighter_ledEventColor_team = function (sprite, script)
 {
-	var send = Entry.hw.sendQueue;
+	var send		= Entry.hw.sendQueue;
 
 	var team		= script.getField('TEAM');
 	var event		= script.getField('EVENT');
@@ -278,9 +280,9 @@ Entry.block.byrobot_dronefighter_ledEventColor_team = function (sprite, script)
 	// 전송
 	send.ledEventColor_event	= event;
 	if ( team == 'RED' )
-		send.ledEventColor_r = 255;
+		send.ledEventColor_r	= 255;
 	else
-		send.ledEventColor_b = 255;
+		send.ledEventColor_b	= 255;
 	send.ledEventColor_interval	= interval;
 	send.ledEventColor_repeat	= repeat;
 
@@ -289,30 +291,30 @@ Entry.block.byrobot_dronefighter_ledEventColor_team = function (sprite, script)
 
 
 // LED 이벤트
-Blockly.Blocks.byrobot_dronefighter_ledModeColor =
+Blockly.Blocks.byrobot_dronefighter_ledEventColor =
 {
 	init: function()
 	{
 		this.setColour("#00979D");
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledEventColor_0)
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledEventColor_0)
 			.appendField(new Blockly.FieldDropdown([
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_ArmHold,			"65"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_ArmFlicker,		"67"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_ArmFlickerDouble,	"68"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_ArmDimming,		"69"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_AllEnergyBeamIn,	"151"],
-					[Lang.Blocks.BYROBOT_dronefighter_light_mode_AllEnergyBeamOut,	"152"]
+					[Lang.Blocks.byrobot_dronefighter_light_mode_ArmHold,			"65"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_ArmFlicker,		"67"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_ArmFlickerDouble,	"68"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_ArmDimming,		"69"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_AllEnergyBeamIn,	"151"],
+					[Lang.Blocks.byrobot_dronefighter_light_mode_AllEnergyBeamOut,	"152"]
 				]), "MODE")
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledEventColor_1);
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledEventColor_1);
 		this.appendValueInput("INTERVAL")
 			.setCheck(["Number", "String"]);
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledEventColor_2)
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledEventColor_2)
 		this.appendValueInput("REPEAT")
 			.setCheck(["Number", "String"]);
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_ledEventColor_3)
+			.appendField(Lang.Blocks.byrobot_dronefighter_ledEventColor_3)
 			.appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
 		this.setInputsInline(true);
 		this.setPreviousStatement(true);
@@ -320,9 +322,9 @@ Blockly.Blocks.byrobot_dronefighter_ledModeColor =
 	}
 };
 
-Entry.block.byrobot_dronefighter_ledModeColor = function (sprite, script)
+Entry.block.byrobot_dronefighter_ledEventColor = function (sprite, script)
 {
-	var send = Entry.hw.sendQueue;
+	var send		= Entry.hw.sendQueue;
 
 	var event		= script.getField('EVENT');
 	var interval	= script.getNumberValue('INTERVAL');
@@ -351,23 +353,23 @@ Blockly.Blocks.byrobot_dronefighter_control =
 	{
 		this.setColour("#00979D");
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_control_0)
+			.appendField(Lang.Blocks.byrobot_dronefighter_control_0)
 		this.appendValueInput("ROLL")
 			.setCheck(["Number", "String"]);
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_control_1)
+			.appendField(Lang.Blocks.byrobot_dronefighter_control_1)
 		this.appendValueInput("PITCH")
 			.setCheck(["Number", "String"]);
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_control_2)
+			.appendField(Lang.Blocks.byrobot_dronefighter_control_2)
 		this.appendValueInput("YAW")
 			.setCheck(["Number", "String"]);
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_control_3)
+			.appendField(Lang.Blocks.byrobot_dronefighter_control_3)
 		this.appendValueInput("THROTTLE")
 			.setCheck(["Number", "String"]);
 		this.appendDummyInput()
-			.appendField(Lang.Blocks.BYROBOT_dronefighter_control_4)
+			.appendField(Lang.Blocks.byrobot_dronefighter_control_4)
 			.appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
 		this.setInputsInline(true);
 		this.setPreviousStatement(true);
@@ -375,7 +377,7 @@ Blockly.Blocks.byrobot_dronefighter_control =
 	}
 };
 
-Entry.block.byrobot_dronefighter_ledModeColor = function (sprite, script)
+Entry.block.byrobot_dronefighter_control = function (sprite, script)
 {
 	var send		= Entry.hw.sendQueue;
 
