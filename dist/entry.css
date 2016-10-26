@@ -2325,7 +2325,8 @@ svg .svgBlockGroup text {
   background: url("../images/pause_btn.png");
   background-repeat: no-repeat;
   color: transparent;
-  width: 90px;
+  width: auto;
+  padding-left: 20px;
   left: 103px;
   color: #4b37a0;
   background-position: center left;
