@@ -3562,7 +3562,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryPlaygroundPainterAttrResize > legend {
   background-color: transparent;
   padding: 2px;
-  width: 30px;
+  width: auto !important;
   margin-bottom: 0;
   border-bottom: 0;
   font-size: 9pt;
@@ -3704,7 +3704,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryPlaygroundPainterAttrTop {
   position: absolute;
   top: 20px;
-  width: 93px;
+  width: auto !important;
+  min-width: 93px;
+  max-width: 120px;
   height: 40px;
   border-radius: 3px;
   color: white;
@@ -3742,9 +3744,11 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryPlaygroundPainterAttrFontStyleArea {
   position: absolute;
-  background-color: #643cd9 ;
+  background-color: #643cd9;
   top: 120px;
-  width: 67px;
+  width: auto !important;
+  min-width: 67px;
+  max-width: 80px;
   height: 40px;
   border-radius: 3px;
   color: white;
@@ -4105,7 +4109,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .painterAttrRotateName {
   top: 60px;
   left: 9px;
-  width: 30px;
+  width: auto !important;
 }
 .painterAttrOpacityName {
   top: 60px;
