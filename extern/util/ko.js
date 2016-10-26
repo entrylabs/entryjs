@@ -1021,6 +1021,7 @@ Lang.Menus = {
     "arduinoCompatible": "아두이노 호환보드",
     "bitBlock": "비트블록",
     "bitbrick": "비트브릭",
+    "byrobot_dronefighter": "드론파이터",
     "codeino": "코드이노",
     "e-sensor": "E-센서보드",
     "hamster": "햄스터",

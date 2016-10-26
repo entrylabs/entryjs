@@ -121,7 +121,6 @@ Entry.block.byrobot_dronefighter_value = function (sprite, script)
 	return read[device];
 };
 
-
 // -- 일반 제어 블럭 --------------------------------------------------------------------
 
 // 팀 LED 모드
@@ -177,7 +176,6 @@ Entry.block.byrobot_dronefighter_ledModeColor_team = function (sprite, script)
 
 	return script.callReturn();
 };
-
 
 // LED 모드
 Blockly.Blocks.byrobot_dronefighter_ledModeColor =
@@ -404,11 +402,6 @@ Entry.block.byrobot_dronefighter_control = function (sprite, script)
 
 	return script.callReturn();
 };
-
-
-
-
-
 
 
 
