@@ -388,8 +388,8 @@ p.executeHardware = function() {
     var executeIeCustomLauncher = {
         _bNotInstalled : false,
         init : function(sUrl, fpCallback) {
-            var width = 1;
-            var height = 1;
+            var width = 220;
+            var height = 225;
             var left = window.screenLeft;
             var top = window.screenTop;
             var settings = 'width=' + width + ', height=' + height + ',  top=' + top + ', left=' + left;

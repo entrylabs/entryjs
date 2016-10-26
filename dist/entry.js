@@ -17880,7 +17880,7 @@ p.executeHardware = function() {
     }, 1500);
   }
   var c = this, e = {_bNotInstalled:!1, init:function(a, b) {
-    this._w = window.open("/views/hwLoading.html", "entry_hw_launcher", "width=1, height=1,  top=" + window.screenTop + ", left=" + window.screenLeft);
+    this._w = window.open("/views/hwLoading.html", "entry_hw_launcher", "width=220, height=225,  top=" + window.screenTop + ", left=" + window.screenLeft);
     var c = null, c = setTimeout(function() {
       e.runViewer(a, b);
       clearInterval(c);
