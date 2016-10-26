@@ -17676,11 +17676,12 @@ p.connectWebSocket = function(b, a) {
   c.io.reconnectionDelayMax(1E3);
   c.io.timeout(1E3);
   c.on("connect", function() {
-    console.log("connect");
     d.socketType = "WebSocket";
     d.initHardware(c);
+    d.lastTarget && c.emit("matchTarget", {target:d.lastTarget});
   });
   c.on("matched", function(a) {
+    d.lastTarget = a;
     c.emit("matchTarget", {target:a});
   });
   c.on("mode", function(a) {

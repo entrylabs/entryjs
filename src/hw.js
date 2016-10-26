@@ -73,12 +73,18 @@ p.connectWebSocket = function(url, option) {
     socket.io.reconnectionDelayMax(1000);
     socket.io.timeout(1000);
     socket.on('connect', function() {
-        console.log('connect');
         hw.socketType = 'WebSocket';
         hw.initHardware(socket);
+
+        if(hw.lastTarget) {
+            socket.emit('matchTarget', {
+                target: hw.lastTarget,
+            });
+        }
     });
 
     socket.on('matched', function (target) {
+        hw.lastTarget = target;
         socket.emit('matchTarget', {
             target: target,
         });
@@ -110,29 +116,8 @@ p.connectWebSocket = function(url, option) {
     });
 
     socket.on('disconnect', function() {
-        // hw.isOpenHardware = false;
         hw.initSocket();
-            
-        // console.log('disconnect', socket, hw.isOpenHardware, hw.socketMode);
-        // if(hw.isOpenHardware || hw.socketMode === 1) {
-        // } else if(hw.socketType === 'WebSocket') {
-        //     hw.disconnectedSocket();
-        // }
     }); 
-
-    // socketSecurity.on('reconnecting', function() {
-    //     console.log('reconnecting', hw.connectTrial++);
-    //     if (hw.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-    //         if (!hw.isFirstConnect)
-    //             Entry.toast.alert(Lang.Menus.connect_hw,
-    //                               Lang.Menus.connect_fail,
-    //                               false);
-    //         hw.isFirstConnect = false;
-    //         socketSecurity.close();
-    //     } else if(hw.socketType === 'WebSocket') {
-    //         // hw.socket = null;
-    //     }
-    // });
 
     return socket;
 }
