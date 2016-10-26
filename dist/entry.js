@@ -17659,7 +17659,6 @@ Entry.HW = function() {
   this.outputQueue = {};
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
-  this.isMatched = !1;
   Entry.addEventListener("stop", this.setZero);
   this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "B.1":Entry.Codestar};
 };
@@ -17682,7 +17681,6 @@ p.connectWebSocket = function(b, a) {
     d.initHardware(c);
   });
   c.on("matched", function(a) {
-    d.isMatched = !0;
     c.emit("matchTarget", {target:a});
   });
   c.on("mode", function(a) {
@@ -17702,8 +17700,8 @@ p.connectWebSocket = function(b, a) {
     }
   });
   c.on("disconnect", function() {
-    console.log("disconnect");
-    d.isOpenHardware || 1 === d.socketMode || d.isMatched ? (d.isOpenHardware = !1, d.initSocket()) : "WebSocket" === d.socketType && d.disconnectedSocket();
+    console.log("disconnect", c, d.isOpenHardware, d.socketMode);
+    d.isOpenHardware || 1 === d.socketMode ? (d.isOpenHardware = !1, d.initSocket()) : "WebSocket" === d.socketType && d.disconnectedSocket();
   });
   return c;
 };
@@ -17766,7 +17764,6 @@ p.disconnectHardware = function() {
   Entry.dispatchEvent("hwChanged");
 };
 p.disconnectedSocket = function() {
-  this.isMatched = !1;
   this.tlsSocketIo.close();
   this.socketIo && this.socketIo.close();
   Entry.propertyPanel.removeMode("hw");

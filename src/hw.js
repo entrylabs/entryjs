@@ -26,7 +26,6 @@ Entry.HW = function() {
     this.selectedDevice = null;
     this.hwModule = null;
     this.socketType = null;
-    this.isMatched = false;
 
     Entry.addEventListener('stop', this.setZero);
 
@@ -80,7 +79,6 @@ p.connectWebSocket = function(url, option) {
     });
 
     socket.on('matched', function (target) {
-        hw.isMatched = true;
         socket.emit('matchTarget', {
             target: target,
         });
@@ -112,8 +110,8 @@ p.connectWebSocket = function(url, option) {
     });
 
     socket.on('disconnect', function() {
-        console.log('disconnect');
-        if(hw.isOpenHardware || hw.socketMode === 1 || hw.isMatched) {
+        console.log('disconnect', socket, hw.isOpenHardware, hw.socketMode);
+        if(hw.isOpenHardware || hw.socketMode === 1) {
             hw.isOpenHardware = false;
             hw.initSocket();
         } else if(hw.socketType === 'WebSocket') {
@@ -217,7 +215,6 @@ p.disconnectHardware = function() {
 }
 
 p.disconnectedSocket = function() {
-    this.isMatched = false;
     this.tlsSocketIo.close();
     if(this.socketIo) {
         this.socketIo.close();
