@@ -2248,7 +2248,129 @@ Entry.block = {
                 throw new Entry.Utils.AsyncError();
                 return;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.analogRead(%1)"]}
+    },
+    "arduino_ext_get_analog_value_map": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ],
+                    [ "A4", "4" ],
+                    [ "A5", "5" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ 
+                null,
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                } 
+            ],
+            "type": "arduino_ext_get_analog_value_map"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE2": 1,
+            "VALUE3": 2,
+            "VALUE4": 3,
+            "VALUE5": 4
+        },
+        "class": "ArduinoExtGet",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT", script);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            var scope = script.executor.scope;
+            var ANALOG = Entry.hw.portData.ANALOG;
+            var value2 = script.getNumberValue("VALUE2", script);
+            var value3 = script.getNumberValue("VALUE3", script);
+            var value4 = script.getNumberValue("VALUE4", script);
+            var value5 = script.getNumberValue("VALUE5", script);
+            var result = ANALOG[port] || 0;
+            if (value2 > value3) {
+                var swap = value2;
+                value2 = value3;
+                value3 = swap;
+            }
+            if (value4 > value5) {
+                var swap = value4;
+                value4 = value5;
+                value5 = swap;
+            }
+            result -= value2;
+            result = result * ((value5 - value4) / (value3 - value2));
+            result += value4;
+            result = Math.min(value5, result);
+            result = Math.max(value4, result);      
+
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                    port: port
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
+                return result;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
+                return result;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        },
+        "syntax": {"js": [], "py": ["Arduino.map(%1, %2, %3, %4, %5)"]}
     },
     "arduino_ext_get_ultrasonic_value": {
         "color": "#00979D",
@@ -2301,7 +2423,7 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ '13', '12' ],
+            "params": [ '2', '4' ],
             "type": "arduino_ext_get_ultrasonic_value"
         },
         "paramsKeyMap": {
@@ -2339,7 +2461,8 @@ Entry.block = {
                 throw new Entry.Utils.AsyncError();
                 return;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.ultrasonicRead(%1, %2)"]}
     },
     "arduino_ext_toggle_led": {
         "color": "#00979D",
@@ -2353,8 +2476,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.ARDUINO_on,"255"],
-                    [Lang.Blocks.ARDUINO_off,"0"]
+                    [Lang.Blocks.ARDUINO_on,"on"],
+                    [Lang.Blocks.ARDUINO_off,"off"]
                 ],
                 "fontSize": 11,
                 'arrowColor': EntryStatic.ARROW_COLOR_HW
@@ -2371,7 +2494,7 @@ Entry.block = {
                 {
                     "type": "arduino_get_port_number"
                 },
-                '255',
+                'on',
                 null
             ],
             "type": "arduino_ext_toggle_led"
@@ -2384,19 +2507,26 @@ Entry.block = {
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var port = script.getNumberValue("PORT");
-            var value = script.getNumberField("VALUE");
+            var value = script.getField("VALUE");
             var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
             Entry.hw.sendQueue['TIME'] = nowTime;
             Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
+
+            if(value == "on") {
+                value = 255;
+            } else {
+                value = 0;
+            }
             Entry.hw.sendQueue['SET'][port] = {
                 type: Entry.ArduinoExt.sensorTypes.DIGITAL,
                 data: value
             };
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.ultrasonicRead(%1, %2)"]}
     },
     "arduino_ext_digital_pwm": {
         "color": "#00979D",
@@ -2409,7 +2539,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "string"
+                "accept": "string",
             },
             {
                 "type": "Indicator",
@@ -2424,7 +2554,7 @@ Entry.block = {
                     "type": "arduino_get_pwm_port_number"
                 },
                 {
-                    "type": "arduino_text",
+                    "type": "text",
                     "params": [ "255" ]
                 },
                 null
@@ -2454,7 +2584,8 @@ Entry.block = {
                 data: value
             };
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
     },
     "arduino_ext_set_tone": {
         "color": "#00979D",
@@ -2495,16 +2626,8 @@ Entry.block = {
             "value": "3",
             "fontSize": 11
         }, {
-            "type": "Dropdown",
-            "options": [
-                ["온음표", "1"],
-                ["2분음표", "2"],
-                ["4분음표", "4"],
-                ["8분음표", "8"],
-                ["16분음표", "16"]
-            ],
-            "value": "2",
-            "fontSize": 11
+            "type": "Block",
+            "accept": "string"
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -2517,6 +2640,10 @@ Entry.block = {
                 },
                 null,
                 null,
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
                 null
             ],
             "type": "arduino_ext_set_tone"
@@ -2545,12 +2672,15 @@ Entry.block = {
                 }
 
                 var octave = script.getNumberField("OCTAVE", script);
-                var duration = script.getNumberField("DURATION", script);
+                var duration = script.getNumberValue("DURATION", script);
                 var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.TONE);
                 sq['TIME'] = nowTime;
                 sq['KEY'] = Entry.ArduinoExt.getSensorKey();
                 var value = Entry.ArduinoExt.toneMap[note][octave];
-                duration = 1 / duration * 2000;
+                if(duration < 0) {
+                    duration = 0;
+                }
+                duration = duration * 1000;
                 script.isStart = true;
                 script.timeFlag = 1;
 
@@ -2582,7 +2712,8 @@ Entry.block = {
                 Entry.engine.isContinue = false;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.tone(%1, %2, %3, %4)"]}
     },
     "arduino_ext_set_servo": {
         "color": "#00979D",
@@ -2632,7 +2763,8 @@ Entry.block = {
             };
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.servomotorWrite(%1, %2)"]}
     },
     "arduino_ext_get_digital": {
         "color": "#00979D",
@@ -2685,7 +2817,8 @@ Entry.block = {
                 throw new Entry.Utils.AsyncError();
                 return;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.digitalRead(%1)"]}
     },
     "sensorBoard_get_named_sensor_value": {
         "color": "#00979D",
