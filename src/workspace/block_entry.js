@@ -2221,6 +2221,10 @@ Entry.block = {
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var port = script.getField("PORT", script);
+            Entry.hw.sendQueue['GET'] = {
+                type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                port: port
+            };
             var ANALOG = Entry.hw.portData.ANALOG;
             return (ANALOG) ? ANALOG[port] || 0 : 0;
         }
@@ -2288,32 +2292,11 @@ Entry.block = {
         "func": function (sprite, script) {
             var port1 = script.getField("PORT1", script);
             var port2 = script.getField("PORT2", script);
-            var scope = script.executor.scope;
-            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ULTRASONIC);
-            var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            if(!scope.isStart) {
-                scope.isStart = true;
-                scope.stamp = nowTime;
-                Entry.hw.sendQueue['TIME'] = nowTime;
-                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
-                Entry.hw.sendQueue['GET'] = {
-                    type: Entry.ArduinoExt.sensorTypes.ULTRASONIC,
-                    port: [port1, port2]
-                };
-                throw new Entry.Utils.AsyncError();
-                return;
-            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return Entry.hw.portData.ULTRASONIC || 0;
-            } else if(nowTime - scope.stamp > 64) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return Entry.hw.portData.ULTRASONIC || 0;
-            } else {
-                throw new Entry.Utils.AsyncError();
-                return;
-            }
+            // Entry.hw.sendQueue['GET'] = {
+            //     type: Entry.ArduinoExt.sensorTypes.ULTRASONIC,
+            //     port: [port1, port2]
+            // };
+            return Entry.hw.portData.ULTRASONIC || 0;
         }
     },
     "arduino_ext_toggle_led": {
@@ -2633,33 +2616,12 @@ Entry.block = {
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var port = script.getNumberValue("PORT", script);
-            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
-            var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            var scope = script.executor.scope;
+            Entry.hw.sendQueue['GET'] = {
+                type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+                port: port
+            };
             var DIGITAL = Entry.hw.portData.DIGITAL;
-            if(!scope.isStart) {
-                scope.isStart = true;
-                scope.stamp = nowTime;
-                Entry.hw.sendQueue['TIME'] = nowTime;
-                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
-                Entry.hw.sendQueue['GET'] = {
-                    type: Entry.ArduinoExt.sensorTypes.DIGITAL,
-                    port: port
-                };
-                throw new Entry.Utils.AsyncError();
-                return;
-            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return (DIGITAL) ? DIGITAL[port] || 0 : 0;
-            } else if(nowTime - scope.stamp > 64) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return (DIGITAL) ? DIGITAL[port] || 0 : 0;
-            } else {
-                throw new Entry.Utils.AsyncError();
-                return;
-            }
+            return (DIGITAL) ? DIGITAL[port] || 0 : 0;
         }
     },
     "sensorBoard_get_named_sensor_value": {
