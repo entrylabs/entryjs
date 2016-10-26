@@ -17,10 +17,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._scroll = scroll !== undefined ? scroll : false;
     this._bannedClass = [];
     this._categories = [];
+    this._initedCodes = {};
     this.suffix = 'blockMenu';
     this._isSelectingMenu = false;
-
-    this._blockSvgs = [];
 
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
@@ -53,9 +52,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.svgBlockGroup.board = this;
 
     this.changeEvent = new Entry.Event(this);
-    if (categoryData) this._generateCategoryCodes(categoryData);
 
     this.observe(this, "_handleDragBlock", ["dragBlock"]);
+
+    this.changeCode(new Entry.Code([]));
 
     if (this._scroll) {
         this._scroller = new Entry.BlockMenuScroller(this);
@@ -64,7 +64,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
-    if (this._categoryCodes && Entry.keyPressed)
+    if (this.code && Entry.keyPressed)
         Entry.keyPressed.attach(this, this._captureKeyEvent);
     if (Entry.windowResized) {
         var dUpdateOffset = _.debounce(this.updateOffset, 200);
@@ -154,8 +154,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         );
         code.createView(this);
         var workspace = this.workspace;
-        var workspaceMode = workspace.getMode();
-        if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+        var mode = Entry.Workspace.MODE_BOARD;
+        if (workspace)
+            mode = workspace.getMode();
+
+        if (mode === Entry.Workspace.MODE_VIMBOARD) {
             if (!code.mode || code.mode === 'code')
                 this.renderText();
         } else {
@@ -180,7 +183,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p.align = function(unReDraw) {
         var code = this.code;
         if (!code) return;
-        this._blockSvgs = [];
         this._clearSplitters();
 
         if (code.view && !unReDraw && !this._isSelectingMenu)
@@ -196,10 +198,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var thread = threads[i];
             var block = thread.getFirstBlock();
             var blockView = block.view;
-            this._blockSvgs.push(blockView.svgGroup);
 
             var blockInfo = Entry.block[block.type];
-            if(this.checkBanClass(blockInfo)) {
+            if(this.checkCategory(blockInfo) || this.checkBanClass(blockInfo)) {
                 blockView.set({display:false});
                 continue;
             }
@@ -297,7 +298,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         return blockLeft < boardLeft - width;
     };
 
-    p.getCode = function(thread) {return this._code;};
+    p.getCode = function(thread) {return this.code;};
 
     p.setSelectedBlock = function(blockView) {
         var old = this.selectedBlockView;
@@ -382,32 +383,44 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         this.updateSplitters();
     };
 
-    p.setMenu = function() {
-        var categoryCodes = this._categoryCodes;
-        var elems = this._categoryElems;
-        for (var key in categoryCodes) {
-            var code = categoryCodes[key];
-            var threads;
-            if (code instanceof Entry.Code)
-                threads = code.getThreads();
-            else threads = code;
-
-            var count = threads.length;
-            for (var i=0; i<threads.length; i++) {
-                var thread = threads[i];
-                var type;
-                if (thread instanceof Entry.Thread)
-                    type = thread.getFirstBlock().type;
-                else type = thread[0].type;
-
-                if(this.checkBanClass(Entry.block[type]))
-                    count--;
+    p.setMenu = function(elems) {
+        if (!elems) {
+            elems = [];
+            for (var key in this._categoryElems) {
+                if (key !== 'arduino')
+                    elems.push(key);
             }
-
-            var elem = elems[key];
-            if (count === 0) elems[key].addClass('entryRemove');
-            else elems[key].removeClass('entryRemove');
         }
+        if (elems.length !== 0) {
+            var key = elems.shift();
+            if (!this._initedCodes[key]) {
+                this._generateCategoryCodes(key);
+            }
+            if (elems.length) {
+                window.setTimeout(function() {
+                    this.setMenu(elems);
+                }.bind(this), 0);
+            } else {
+                this._generateHwCode(true);
+            }
+        }
+
+        var threads = this.code.getThreadsByCategory(key);
+
+        var count = threads.length;
+        for (var i=0; i<threads.length; i++) {
+            var thread = threads[i];
+            var type;
+            if (thread instanceof Entry.Thread)
+                type = thread.getFirstBlock().type;
+            else type = thread[0].type;
+
+            if(this.checkBanClass(Entry.block[type]))
+                count--;
+        }
+        var elem = this._categoryElems[key];
+        if (count === 0) elem.addClass('entryRemove');
+        else elem.removeClass('entryRemove');
     };
 
     p.getCategoryCodes = function(selector) {
@@ -431,9 +444,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         for (var i = 0; i < categories.length; i++) {
             var key = categories[i];
             var visible = !elems[key].hasClass('entryRemove');
-            if (visible) {
+            if (visible)
                 if (selector-- === 0) return key;
-            }
         }
 
     };
@@ -444,6 +456,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             this.align();
             return;
         }
+        this.lastSelector = name;
         this._isSelectingMenu = true;
         switch (name) {
             case 'variable':
@@ -491,46 +504,60 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         this._isSelectingMenu = false;
 
         if (this.visible) {
-            var code = this._categoryCodes[name];
-
             this._selectedCategoryView = elem;
             elem.addClass(className);
-            if (code.constructor !== Entry.Code)
-                code = this._categoryCodes[name] = new Entry.Code(code);
-
-            this.changeCode(code);
         }
-
-        this.lastSelector = name;
+        this.align();
+        this.code.view.reDraw();
     };
 
 
-    p._generateCategoryCodes = function(categoryData) {
-        this._categoryCodes = {};
-        for (var i=0; i<categoryData.length; i++) {
-            var datum = categoryData[i];
-            var blocks = datum.blocks;
-            var codesJSON = [];
-            blocks.forEach(function(b){
-                var block = Entry.block[b];
-                if (!block || !block.def) {
-                    codesJSON.push([{type:b}]);
-                } else {
-                    if (block.defs) {
-                        for (var i =0; i <block.defs.length; i++)
-                            codesJSON.push([
-                                block.defs[i]
-                            ]);
-                    } else
-                        codesJSON.push([
-                            block.def
+    p._generateCategoryCodes = function(key) {
+        var code = this.code;
+        var codes = [];
+        var datum = this._categoryData.filter(function(obj) {
+            return obj.category == key;
+        })[0];
+        var category = key;
+        var blocks = datum.blocks;
+        blocks.forEach(function(b){
+            var block = Entry.block[b];
+            block.category = datum.category;
+            if (!block || !block.def) {
+                codes.push([{
+                    type:b,
+                    category: category
+                }]);
+            } else {
+                if (block.defs) {
+                    block.defs.forEach(function(d) {
+                        d.category = category;
+                    });
+                    for (var i =0; i <block.defs.length; i++)
+                        codes.push([
+                            block.defs[i]
                         ]);
-                }
-            });
-            var categoryName = datum.category;
-            this._categories.push(categoryName);
-            this._categoryCodes[categoryName] = codesJSON;
+                } else
+                    block.def.category = category;
+                    codes.push([
+                        block.def
+                    ]);
+            }
+        });
+        this._categories.push(category);
+        this._initedCodes[key] = true;
+        var index = undefined;
+        if (key == 'func') {
+            var threads = this.code.getThreadsByCategory('func');
+            if (threads.length)
+                index = this.code.getThreadIndex(threads[0]);
         }
+        codes.forEach(function(t) {
+            t[0].display = false;
+            t = code.createThread(t, index);
+            if (index !== undefined)
+                index++;
+        });
     };
 
     p.banClass = function(className, unReDraw) {
@@ -554,7 +581,19 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             if (isNotFor && isNotFor.indexOf(this._bannedClass[i]) > -1)
                 return true;
         }
+
         return false;
+    };
+
+    p.checkCategory = function(blockInfo) {
+        if (!blockInfo) return;
+        var category = 'category_' + this.lastSelector
+        var isFor = blockInfo.isFor;
+
+        if (this.lastSelector && isFor) {
+            if (isFor.indexOf(category) < 0)
+                return true;
+        }
     };
 
     p._addControl = function(dom) {
@@ -633,27 +672,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.reDraw = function() {
         this.selectMenu(this.lastSelector, true);
-        this._inspectUseless();
-    };
-
-    p._inspectUseless = function() {
-        if (this._blockSvgs.length !== 0) {
-            var svgs = $(this.svgBlockGroup).children();
-            for (var i=0; i<svgs.length; i++) {
-                var svg = svgs[i];
-                if (svg.tagName !== "g"
-                    || svg.getAttribute("display") === "none"
-                    || !/block/.test(svg.getAttribute("class")))
-                    continue;
-
-                //destroy not matching with actual data
-                if (this._blockSvgs.indexOf(svg) < 0) {
-                    svg.blockView.block.getThread()
-                        .destroyView();
-                }
-            }
-        }
-        this._blockSvgs = [];
     };
 
     p._handleDragBlock = function() {
@@ -692,20 +710,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             categories[key].remove();
         this._categoryElems = {};
 
-        categories = this._categoryCodes;
-        for (key in categories) {
-            var code = categories[key];
-            if (code.constructor == Entry.Code)
-                code.clear();
-        }
-        this._categoryCodes = null;
+        if (this.code && this.code.constructor == Entry.Code)
+            this.code.clear();
     };
 
     p.setCategoryData = function(data) {
         this._clearCategory();
         this._categoryData = data;
         this._generateCategoryView(data);
-        this._generateCategoryCodes(data);
     };
 
     p._generateCategoryView = function(data) {
@@ -746,42 +758,60 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         return this._offset;
     };
 
-    p._generateHwCode = function() {
-        var code = this._categoryCodes.arduino;
+    p._generateHwCode = function(shouldHide) {
+        var code = this.code;
+        var threads = code.getThreadsByCategory('arduino');
+        var CATEGORY = 'arduino';
 
-        if (code instanceof Entry.Code) code.clear();
+        threads.forEach(function(t) {
+            t.destroy();
+        });
 
         var data = this._categoryData;
         var blocks;
         for (var i = data.length-1; i >= 0; i--) {
             var category = data[i].category;
-            if (category === 'arduino') {
+            if (category === CATEGORY) {
                 blocks = data[i].blocks;
                 break;
             }
         }
 
-        var codesJSON = [];
+        var threads = [];
+
         for (i =0; i<blocks.length; i++) {
             var type = blocks[i];
             var block = Entry.block[type];
             if(!this.checkBanClass(block)) {
                 if (!block || !block.def) {
-                    codesJSON.push([{type:type}]);
+                    threads.push([{
+                        type:type,
+                        category: CATEGORY
+                    }]);
                 } else {
                     if (block.defs) {
+                        block.defs.forEach(function(d) {
+                            d.category = CATEGORY;
+                        });
                         for (var i =0; i <block.defs.length; i++)
-                            codesJSON.push([
+                            threads.push([
                                 block.defs[i]
                             ]);
-                    } else
-                        codesJSON.push([
+                    } else {
+                        block.def.category = CATEGORY;
+                        threads.push([
                             block.def
                         ]);
+                    }
                 }
             }
         }
-        this._categoryCodes.arduino = codesJSON;
+
+        threads.forEach(function(t) {
+            if (shouldHide)
+                t[0].display = false;
+            code.createThread(t);
+        });
     };
 
     p.setAlign = function(align) {

@@ -30,8 +30,9 @@ Entry.BlockView = function(block, board, mode) {
         this.block.setDeletable(this._schema.deletable)
     if (this._schema.copyable)
         this.block.setCopyable(this._schema.copyable)
-    if (this._schema.display === false)
+    if (this._schema.display === false || block.display === false) {
         this.set({display: false})
+    }
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
@@ -68,7 +69,7 @@ Entry.BlockView = function(block, board, mode) {
     this._observers.push(this.observe(this, "_updateBG", ["magneting"], false));
 
     this._observers.push(this.observe(this, "_updateOpacity", ["visible"], false));
-    this._observers.push(this.observe(this, "_updateDisplay", ["display"], false));
+    this._observers.push(this.observe(this, "_updateDisplay", ["display"]));
     this._observers.push(this.observe(this, "_updateShadow", ["shadow"]));
     this._observers.push(this.observe(this, "_updateMagnet", ["offsetY"]));
     this._observers.push(board.code.observe(this, '_setBoard', ['board'], false));

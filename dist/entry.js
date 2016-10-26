@@ -18374,7 +18374,7 @@ Entry.Func.threads = {};
 Entry.Func.registerFunction = function(b) {
   if (Entry.playground) {
     var a = Entry.playground.mainWorkspace;
-    a && (this._targetFuncBlock = a.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]), b.blockMenuBlock = this._targetFuncBlock);
+    a && (a = a.getBlockMenu().code, console.log("register"), this._targetFuncBlock = a.createThread([{type:"func_" + b.id, category:"func"}]), b.blockMenuBlock = this._targetFuncBlock);
   }
 };
 Entry.Func.executeFunction = function(b) {
@@ -18490,7 +18490,7 @@ Entry.Func.syncFunc = function() {
 };
 Entry.Func.setupMenuCode = function() {
   var b = Entry.playground.mainWorkspace;
-  b && (b = b.getBlockMenu().getCategoryCodes("func"), this._fieldLabel = b.createThread([{type:"function_field_label"}]).getFirstBlock(), this._fieldString = b.createThread([{type:"function_field_string", params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock(), this._fieldBoolean = b.createThread([{type:"function_field_boolean", params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock(), this.menuCode = b);
+  b && (b = b.getBlockMenu().code, this._fieldLabel = b.createThread([{type:"function_field_label", category:"func"}]).getFirstBlock(), this._fieldString = b.createThread([{type:"function_field_string", category:"func", params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock(), this._fieldBoolean = b.createThread([{type:"function_field_boolean", category:"func", params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock(), this.menuCode = b);
 };
 Entry.Func.refreshMenuCode = function() {
   if (Entry.playground.mainWorkspace) {
@@ -18534,7 +18534,7 @@ Entry.Func.createParamBlock = function(b, a, d) {
 Entry.Func.updateMenu = function() {
   if (Entry.playground && Entry.playground.mainWorkspace) {
     var b = Entry.playground.mainWorkspace.getBlockMenu();
-    this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit"), b.unbanClass("functionEdit")) : (b.unbanClass("functionInit"), b.banClass("functionEdit"));
+    this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit", !0), b.unbanClass("functionEdit", !0)) : (b.unbanClass("functionInit", !0), b.banClass("functionEdit", !0));
     b.reDraw();
   }
 };
@@ -21520,9 +21520,9 @@ Entry.BlockMenu = function(b, a, d, c) {
   this._scroll = void 0 !== c ? c : !1;
   this._bannedClass = [];
   this._categories = [];
+  this._initedCodes = {};
   this.suffix = "blockMenu";
   this._isSelectingMenu = !1;
-  this._blockSvgs = [];
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -21544,11 +21544,11 @@ Entry.BlockMenu = function(b, a, d, c) {
   this.svgBlockGroup = this.svgGroup.elem("g");
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
-  d && this._generateCategoryCodes(d);
   this.observe(this, "_handleDragBlock", ["dragBlock"]);
+  this.changeCode(new Entry.Code([]));
   this._scroll && (this._scroller = new Entry.BlockMenuScroller(this), this._addControl(b));
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
-  this._categoryCodes && Entry.keyPressed && Entry.keyPressed.attach(this, this._captureKeyEvent);
+  this.code && Entry.keyPressed && Entry.keyPressed.attach(this, this._captureKeyEvent);
   Entry.windowResized && (b = _.debounce(this.updateOffset, 200), Entry.windowResized.attach(this, b));
 };
 (function(b) {
@@ -21581,8 +21581,9 @@ Entry.BlockMenu = function(b, a, d, c) {
       b.changeEvent.notify();
     });
     a.createView(this);
-    this.workspace.getMode();
-    this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD ? a.mode && "code" !== a.mode || this.renderText() : "text" === a.mode && this.renderBlock();
+    var c = this.workspace, e = Entry.Workspace.MODE_BOARD;
+    c && (e = c.getMode());
+    e === Entry.Workspace.MODE_VIMBOARD ? a.mode && "code" !== a.mode || this.renderText() : "text" === a.mode && this.renderBlock();
     this.align();
   };
   b.bindCodeView = function(a) {
@@ -21597,15 +21598,12 @@ Entry.BlockMenu = function(b, a, d, c) {
   b.align = function(a) {
     var b = this.code;
     if (b) {
-      this._blockSvgs = [];
       this._clearSplitters();
       !b.view || a || this._isSelectingMenu || b.view.reDraw();
       a = b.getThreads();
       for (var b = 10, c = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
-        var h = a[f].getFirstBlock(), k = h.view;
-        this._blockSvgs.push(k.svgGroup);
-        h = Entry.block[h.type];
-        this.checkBanClass(h) ? k.set({display:!1}) : (k.set({display:!0}), h = h.class, e && e !== h && (this._createSplitter(b), b += 15), e = h, h = c - k.offsetX, "CENTER" == this._align && (h -= k.width / 2), b -= k.offsetY, k._moveTo(h, b, !1), b += k.height + 15);
+        var h = a[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
+        this.checkCategory(h) || this.checkBanClass(h) ? k.set({display:!1}) : (k.set({display:!0}), h = h.class, e && e !== h && (this._createSplitter(b), b += 15), e = h, h = c - k.offsetX, "CENTER" == this._align && (h -= k.width / 2), b -= k.offsetY, k._moveTo(h, b, !1), b += k.height + 15);
       }
       this.updateSplitters();
       this.changeEvent.notify();
@@ -21643,7 +21641,7 @@ Entry.BlockMenu = function(b, a, d, c) {
     }
   };
   b.getCode = function(a) {
-    return this._code;
+    return this.code;
   };
   b.setSelectedBlock = function(a) {
     var b = this.selectedBlockView;
@@ -21696,15 +21694,22 @@ Entry.BlockMenu = function(b, a, d, c) {
     this._svgWidth = this.blockMenuContainer.width();
     this.updateSplitters();
   };
-  b.setMenu = function() {
-    var a = this._categoryCodes, b = this._categoryElems, c;
-    for (c in a) {
-      for (var e = a[c], e = e instanceof Entry.Code ? e.getThreads() : e, f = e.length, g = 0;g < e.length;g++) {
-        var h = e[g], h = h instanceof Entry.Thread ? h.getFirstBlock().type : h[0].type;
-        this.checkBanClass(Entry.block[h]) && f--;
+  b.setMenu = function(a) {
+    if (!a) {
+      a = [];
+      for (var b in this._categoryElems) {
+        "arduino" !== b && a.push(b);
       }
-      0 === f ? b[c].addClass("entryRemove") : b[c].removeClass("entryRemove");
     }
+    0 !== a.length && (b = a.shift(), this._initedCodes[b] || this._generateCategoryCodes(b), a.length ? window.setTimeout(function() {
+      this.setMenu(a);
+    }.bind(this), 0) : this._generateHwCode(!0));
+    for (var c = this.code.getThreadsByCategory(b), e = c.length, f = 0;f < c.length;f++) {
+      var g = c[f], g = g instanceof Entry.Thread ? g.getFirstBlock().type : g[0].type;
+      this.checkBanClass(Entry.block[g]) && e--;
+    }
+    b = this._categoryElems[b];
+    0 === e ? b.addClass("entryRemove") : b.removeClass("entryRemove");
   };
   b.getCategoryCodes = function(a) {
     a = this._convertSelector(a);
@@ -21728,6 +21733,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   b.selectMenu = function(a, b) {
     var c = this._convertSelector(a);
     if (c) {
+      this.lastSelector = c;
       this._isSelectingMenu = !0;
       switch(c) {
         case "variable":
@@ -21736,43 +21742,56 @@ Entry.BlockMenu = function(b, a, d, c) {
         case "arduino":
           this._generateHwCode();
       }
-      var e = this._categoryElems[c], f = this._selectedCategoryView, g = !1, h = this.workspace.board, k = h.view;
-      f && f.removeClass("entrySelectedCategory");
-      e != f || b ? f || (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, e.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
-      g && Entry.bindAnimationCallbackOnce(k, function() {
-        h.scroller.resizeScrollBar.call(h.scroller);
-        k.removeClass("foldOut");
+      var c = this._categoryElems[c], e = this._selectedCategoryView, f = !1, g = this.workspace.board, h = g.view;
+      e && e.removeClass("entrySelectedCategory");
+      c != e || b ? e || (this.visible || (f = !0, h.addClass("foldOut"), Entry.playground.showTabs()), h.removeClass("folding"), this.visible = !0) : (h.addClass("folding"), this._selectedCategoryView = null, c.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), f = !0, this.visible = !1);
+      f && Entry.bindAnimationCallbackOnce(h, function() {
+        g.scroller.resizeScrollBar.call(g.scroller);
+        h.removeClass("foldOut");
         Entry.windowResized.notify();
       });
       this._isSelectingMenu = !1;
-      this.visible && (f = this._categoryCodes[c], this._selectedCategoryView = e, e.addClass("entrySelectedCategory"), f.constructor !== Entry.Code && (f = this._categoryCodes[c] = new Entry.Code(f)), this.changeCode(f));
-      this.lastSelector = c;
+      this.visible && (this._selectedCategoryView = c, c.addClass("entrySelectedCategory"));
+      this.align();
+      this.code.view.reDraw();
     } else {
       this.align();
     }
   };
   b._generateCategoryCodes = function(a) {
-    this._categoryCodes = {};
-    for (var b = 0;b < a.length;b++) {
-      var c = a[b], e = [];
-      c.blocks.forEach(function(a) {
-        var b = Entry.block[a];
-        if (b && b.def) {
-          if (b.defs) {
-            for (a = 0;a < b.defs.length;a++) {
-              e.push([b.defs[a]]);
-            }
-          } else {
-            e.push([b.def]);
+    var b = this.code, c = [], e = this._categoryData.filter(function(b) {
+      return b.category == a;
+    })[0];
+    e.blocks.forEach(function(b) {
+      var d = Entry.block[b];
+      d.category = e.category;
+      if (d && d.def) {
+        if (d.defs) {
+          for (d.defs.forEach(function(b) {
+            b.category = a;
+          }), b = 0;b < d.defs.length;b++) {
+            c.push([d.defs[b]]);
           }
         } else {
-          e.push([{type:a}]);
+          d.def.category = a;
         }
-      });
-      c = c.category;
-      this._categories.push(c);
-      this._categoryCodes[c] = e;
+        c.push([d.def]);
+      } else {
+        c.push([{type:b, category:a}]);
+      }
+    });
+    this._categories.push(a);
+    this._initedCodes[a] = !0;
+    var f = void 0;
+    if ("func" == a) {
+      var g = this.code.getThreadsByCategory("func");
+      g.length && (f = this.code.getThreadIndex(g[0]));
     }
+    c.forEach(function(a) {
+      a[0].display = !1;
+      b.createThread(a, f);
+      void 0 !== f && f++;
+    });
   };
   b.banClass = function(a, b) {
     0 > this._bannedClass.indexOf(a) && this._bannedClass.push(a);
@@ -21792,6 +21811,15 @@ Entry.BlockMenu = function(b, a, d, c) {
         }
       }
       return !1;
+    }
+  };
+  b.checkCategory = function(a) {
+    if (a) {
+      var b = "category_" + this.lastSelector;
+      a = a.isFor;
+      if (this.lastSelector && a && 0 > a.indexOf(b)) {
+        return !0;
+      }
     }
   };
   b._addControl = function(a) {
@@ -21842,16 +21870,6 @@ Entry.BlockMenu = function(b, a, d, c) {
   };
   b.reDraw = function() {
     this.selectMenu(this.lastSelector, !0);
-    this._inspectUseless();
-  };
-  b._inspectUseless = function() {
-    if (0 !== this._blockSvgs.length) {
-      for (var a = $(this.svgBlockGroup).children(), b = 0;b < a.length;b++) {
-        var c = a[b];
-        "g" === c.tagName && "none" !== c.getAttribute("display") && /block/.test(c.getAttribute("class")) && 0 > this._blockSvgs.indexOf(c) && c.blockView.block.getThread().destroyView();
-      }
-    }
-    this._blockSvgs = [];
   };
   b._handleDragBlock = function() {
     this._boardBlockView = null;
@@ -21875,18 +21893,12 @@ Entry.BlockMenu = function(b, a, d, c) {
       a[b].remove();
     }
     this._categoryElems = {};
-    a = this._categoryCodes;
-    for (b in a) {
-      var c = a[b];
-      c.constructor == Entry.Code && c.clear();
-    }
-    this._categoryCodes = null;
+    this.code && this.code.constructor == Entry.Code && this.code.clear();
   };
   b.setCategoryData = function(a) {
     this._clearCategory();
     this._categoryData = a;
     this._generateCategoryView(a);
-    this._generateCategoryCodes(a);
   };
   b._generateCategoryView = function(a) {
     if (a) {
@@ -21912,33 +21924,40 @@ Entry.BlockMenu = function(b, a, d, c) {
     (!this._offset || 0 === this._offset.top && 0 === this._offset.left) && this.updateOffset();
     return this._offset;
   };
-  b._generateHwCode = function() {
-    var a = this._categoryCodes.arduino;
-    a instanceof Entry.Code && a.clear();
-    for (var b = this._categoryData, c, a = b.length - 1;0 <= a;a--) {
-      if ("arduino" === b[a].category) {
-        c = b[a].blocks;
+  b._generateHwCode = function(a) {
+    var b = this.code, c = b.getThreadsByCategory("arduino");
+    c.forEach(function(a) {
+      a.destroy();
+    });
+    for (var c = this._categoryData, e, f = c.length - 1;0 <= f;f--) {
+      if ("arduino" === c[f].category) {
+        e = c[f].blocks;
         break;
       }
     }
-    b = [];
-    for (a = 0;a < c.length;a++) {
-      var e = c[a], f = Entry.block[e];
-      if (!this.checkBanClass(f)) {
-        if (f && f.def) {
-          if (f.defs) {
-            for (a = 0;a < f.defs.length;a++) {
-              b.push([f.defs[a]]);
+    c = [];
+    for (f = 0;f < e.length;f++) {
+      var g = e[f], h = Entry.block[g];
+      if (!this.checkBanClass(h)) {
+        if (h && h.def) {
+          if (h.defs) {
+            for (h.defs.forEach(function(a) {
+              a.category = "arduino";
+            }), f = 0;f < h.defs.length;f++) {
+              c.push([h.defs[f]]);
             }
           } else {
-            b.push([f.def]);
+            h.def.category = "arduino", c.push([h.def]);
           }
         } else {
-          b.push([{type:e}]);
+          c.push([{type:g, category:"arduino"}]);
         }
       }
     }
-    this._categoryCodes.arduino = b;
+    c.forEach(function(c) {
+      a && (c[0].display = !1);
+      b.createThread(c);
+    });
   };
   b.setAlign = function(a) {
     this._align = a || "CENTER";
@@ -22058,7 +22077,7 @@ Entry.BlockView = function(b, a, d) {
   } else {
     this._schema.deletable && this.block.setDeletable(this._schema.deletable);
     this._schema.copyable && this.block.setCopyable(this._schema.copyable);
-    !1 === this._schema.display && this.set({display:!1});
+    !1 !== this._schema.display && !1 !== b.display || this.set({display:!1});
     this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
     var e = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
@@ -22082,7 +22101,7 @@ Entry.BlockView = function(b, a, d) {
     this._observers.push(this.block.observe(this, "_updateColor", ["deletable"], !1));
     this._observers.push(this.observe(this, "_updateBG", ["magneting"], !1));
     this._observers.push(this.observe(this, "_updateOpacity", ["visible"], !1));
-    this._observers.push(this.observe(this, "_updateDisplay", ["display"], !1));
+    this._observers.push(this.observe(this, "_updateDisplay", ["display"]));
     this._observers.push(this.observe(this, "_updateShadow", ["shadow"]));
     this._observers.push(this.observe(this, "_updateMagnet", ["offsetY"]));
     this._observers.push(a.code.observe(this, "_setBoard", ["board"], !1));
@@ -22800,6 +22819,9 @@ Entry.PARAM = -1;
     this.changeEvent.notify();
     return c;
   };
+  b.getThreadIndex = function(a) {
+    return this._data.indexOf(a);
+  };
   b.cloneThread = function(a, b) {
     var c = a.clone(this, b);
     this._data.push(c);
@@ -22817,6 +22839,13 @@ Entry.PARAM = -1;
     return this._data.map(function(a) {
       return a;
     });
+  };
+  b.getThreadsByCategory = function(a) {
+    for (var b = [], c = 0;c < this._data.length;c++) {
+      var e = this._data[c], f = e.getFirstBlock();
+      f && f.category === a && b.push(e);
+    }
+    return b;
   };
   b.toJSON = function(a) {
     for (var b = this.getThreads(), c = [], e = 0, f = b.length;e < f;e++) {
@@ -25456,7 +25485,10 @@ Entry.Block = function(b, a) {
   this._schema = null;
   this.setThread(a);
   this.load(b);
-  var c = this.getCode();
+  var c = b.category;
+  c && (this.category = c, Entry.block[this.type] && (Entry.block[this.type].isFor = ["category_" + c]));
+  c = this.getCode();
+  void 0 !== b.display && (this.display = b.display);
   c.registerBlock(this);
   var e = this.events.dataAdd;
   e && c.object && e.forEach(function(a) {
