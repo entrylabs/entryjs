@@ -20,7 +20,7 @@ Entry.byrobot_dronefighter =
 	name: 'byrobot_dronefighter',
 
 	// 하드웨어로 전송할 때 사용하는 변수 목록('setZero'에서 sendQueue에 등록하여 사용)
-	// 'entry-hw' 프로젝트 byrobot_dronefighter.js 파일 내부의 'var DataType'에 정의된 것과 동일하게 사용해야함
+	// 'entry-hw' 프로젝트 byrobot_dronefighter.js 파일 내부의 'var DataType'에 정의된 것과 동일하게 사용해야 함
 	PORT_MAP:
 	{
 		ledModeColor_mode: 0,
@@ -58,6 +58,7 @@ Entry.byrobot_dronefighter =
 	},
 
 	// Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성 
+	// listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
     monitorTemplate:
 	{
         imgPath: "hw/byrobot_dronefighter.png",		// 배경 이미지
@@ -72,12 +73,14 @@ Entry.byrobot_dronefighter =
             "attitude_yaw"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_yaw,		type: "input", pos: {x: 0, y: 0}}
         },
 
-		// 모니터 화면 지정 위치에 표시하는 값
+		// 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
         ports:
 		{
+			/*
             "attitude_roll"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_roll,		type: "input", pos: {x: 100, y: 30}},
             "attitude_pitch"	:{name: Lang.Blocks.byrobot_dronefighter_attitude_pitch,	type: "input", pos: {x: 100, y: 60}},
             "attitude_yaw"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_yaw,		type: "input", pos: {x: 100, y: 90}}
+			*/
         },
 
 		mode : 'both'	// 표시 모드
@@ -95,8 +98,9 @@ Entry.byrobot_dronefighter =
 
 // -- 모니터 블럭 -----------------------------------------------------------------------
 
-// 드론과 컨트롤러로부터 읽어오는 데이터에 대한 정의 및 해당 데이터를 Entry.hw.portData에 등록
+// 드론과 컨트롤러로부터 읽어오는 데이터
 // 'entry-hw' 프로젝트 byrobot_dronefighter.js 파일 내부의 'var DataType'에 정의된 것과 동일하게 사용해야함
+/*
 Blockly.Blocks.byrobot_dronefighter_value =
 {
 	init: function()
@@ -120,10 +124,12 @@ Entry.block.byrobot_dronefighter_value = function (sprite, script)
 	var device	= script.getField('DEVICE');
 	return read[device];
 };
+// */
 
 // -- 일반 제어 블럭 --------------------------------------------------------------------
 
 // 팀 LED 모드
+/*
 Blockly.Blocks.byrobot_dronefighter_ledModeColor_team =
 {
 	init: function()
@@ -176,8 +182,11 @@ Entry.block.byrobot_dronefighter_ledModeColor_team = function (sprite, script)
 
 	return script.callReturn();
 };
+// */
+
 
 // LED 모드
+/*
 Blockly.Blocks.byrobot_dronefighter_ledModeColor =
 {
 	init: function()
@@ -222,10 +231,11 @@ Entry.block.byrobot_dronefighter_ledModeColor = function (sprite, script)
 
 	return script.callReturn();
 };
-
+// */
 
 
 // 팀 LED 이벤트
+/*
 Blockly.Blocks.byrobot_dronefighter_ledEventColor_team =
 {
 	init: function()
@@ -286,9 +296,11 @@ Entry.block.byrobot_dronefighter_ledEventColor_team = function (sprite, script)
 
 	return script.callReturn();
 };
+// */
 
 
 // LED 이벤트
+/*
 Blockly.Blocks.byrobot_dronefighter_ledEventColor =
 {
 	init: function()
@@ -341,10 +353,11 @@ Entry.block.byrobot_dronefighter_ledEventColor = function (sprite, script)
 
 	return script.callReturn();
 };
-
+// */
 
 
 // Control
+/*
 Blockly.Blocks.byrobot_dronefighter_control =
 {
 	init: function()
@@ -402,7 +415,7 @@ Entry.block.byrobot_dronefighter_control = function (sprite, script)
 
 	return script.callReturn();
 };
-
+// */
 
 
 

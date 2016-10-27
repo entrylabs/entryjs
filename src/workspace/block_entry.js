@@ -24265,6 +24265,7 @@ Entry.block = {
         }
     },
 	/* BYROBOT DroneFighter Start */
+	//*
     "byrobot_dronefighter_value":
 	{
         "color": "#00979D",
@@ -24300,6 +24301,8 @@ Entry.block = {
 			},
         "syntax": {"js": [], "py": ["byrobot_dronefighter.value(%1)"]}
     },
+	// */
+	//*
     "byrobot_dronefighter_ledModeColor_team":
 	{
         "color": "#00979D",
@@ -24380,7 +24383,8 @@ Entry.block = {
 			},
         "syntax": {"js": [], "py": ["byrobot_dronefighter.ledModeColor_team(%1, %2, %3)"]}
     },
-
+	// */
+	//*
     "byrobot_dronefighter_ledModeColor":
 	{
         "color": "#00979D",
@@ -24413,7 +24417,7 @@ Entry.block = {
         "events": {},
         "def": {
 				"params": [
-						null,
+						'65',
 						{
 							"type": "text",
 							"params": ["100"]
@@ -24432,8 +24436,8 @@ Entry.block = {
 			{
 				var send		= Entry.hw.sendQueue;
 
-				var mode		= script.getField('MODE');
-				var interval	= script.getNumberValue('INTERVAL');
+				var mode		= script.getField("MODE");
+				var interval	= script.getNumberValue("INTERVAL");
 				
 				// 범위 조정
 				interval = Math.max(interval, 0);
@@ -24447,7 +24451,8 @@ Entry.block = {
 			},
         "syntax": {"js": [], "py": ["byrobot_dronefighter.ledModeColor(%1, %2)"]}
     },
-
+	// */
+	//*
     "byrobot_dronefighter_ledEventColor_team":
 	{
         "color": "#00979D",
@@ -24517,10 +24522,10 @@ Entry.block = {
 			{
 				var send		= Entry.hw.sendQueue;
 
-				var team		= script.getField('TEAM');
-				var event		= script.getField('EVENT');
-				var interval	= script.getNumberValue('INTERVAL');
-				var repeat		= script.getNumberValue('REPEAT');
+				var team		= script.getField("TEAM");
+				var event		= script.getField("EVENT");
+				var interval	= script.getNumberValue("INTERVAL");
+				var repeat		= script.getNumberValue("REPEAT");
 				
 				// 범위 조정
 				interval = Math.max(interval, 0);
@@ -24541,7 +24546,8 @@ Entry.block = {
 			},
         "syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor_team(%1, %2, %3, %4)"]}
     },
-
+	// */
+	//*
     "byrobot_dronefighter_ledEventColor":
 	{
         "color": "#00979D",
@@ -24621,7 +24627,8 @@ Entry.block = {
 			},
         "syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
-
+	// */
+	//*
     "byrobot_dronefighter_control":
 	{
         "color": "#00979D",
@@ -24710,6 +24717,7 @@ Entry.block = {
 			},
         "syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     }
+	// */
 	/* BYROBOT DroneFighter End */
 };
 

@@ -26,6 +26,7 @@ Lang.Blocks = {
     "BITBRICK_UserSensor": "UserSensor",
     "BITBRICK_dc_direction_ccw": "CCW",
     "BITBRICK_dc_direction_cw": "CW",
+	/* BYROBOT Start */
 	/* BYROBOT Sensors */
 	"byrobot_dronefighter_attitude_roll"	: "Angle Roll",
 	"byrobot_dronefighter_attitude_pitch"	: "Angle Pitch",

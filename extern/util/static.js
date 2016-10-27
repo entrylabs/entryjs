@@ -536,6 +536,15 @@ EntryStatic.getAllBlocks = function() {
                 'codestar_temperature',
 
 				// BYROBOT - DroneFighter 2016.10.21
+				/*
+				'byrobot_dronefighter_value',
+				'byrobot_dronefighter_ledModeColor_team',
+				'byrobot_dronefighter_ledModeColor',
+				'byrobot_dronefighter_ledEventColor_team',
+				'byrobot_dronefighter_ledModeColor',
+				'byrobot_dronefighter_control'
+				// */
+				
 				'byrobot_dronefighter_value',
 				'byrobot_dronefighter_ledModeColor_team',
 				'byrobot_dronefighter_ledModeColor',
