@@ -17,6 +17,7 @@ Entry.BlockView = function(block, board, mode) {
     this._observers = [];
     this.set(block);
     this.svgGroup = board.svgBlockGroup.elem("g");
+    this.svgGroup.blockView = this;
 
     this._schema = Entry.skinContainer.getSkin(block);
 
@@ -1055,8 +1056,9 @@ Entry.BlockView.pngMap = {};
         }
     };
 
-    p.getParam = function(index) { return this._paramMap[index]; };
-
+    p.getParam = function(index) {
+        return this._paramMap[index];
+    };
 
     p.getDataUrl = function(notClone, notPng) {
         var deferred = $.Deferred();

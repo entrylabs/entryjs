@@ -95,8 +95,11 @@ Entry.ThreadView = function(thread, board) {
     p.reDraw = function() {
         var blocks = this.thread._data;
 
-        for (var i=blocks.length-1; i>=0; i--)
-            blocks[i].view.reDraw();
+        for (var i=blocks.length-1; i>=0; i--) {
+            var b = blocks[i];
+            if (b.view) b.view.reDraw();
+            else b.createView(this.thread._code.view.board);
+        }
     };
 
     p.setZIndex = function(zIndex) {
