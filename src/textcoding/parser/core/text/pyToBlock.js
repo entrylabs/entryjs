@@ -3771,7 +3771,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     block.params.push(value);
                 }
                 else if(ifStatementParamsType == "signal") {
+                    var signalValue = ifStatementParamsValue;
+                    
+                    console.log("signalValue", signalValue);
+            
+                    var targetBlock = Entry.block[block.type];
+                    
+                    var paramsMeta = targetBlock.params;
+                    var paramsDefMeta = targetBlock.def.params;
 
+                    var value = this.ParamDropdownDynamic(signalValue, paramsMeta[1], paramsDefMeta[1]);
+                    block.params.push(null);
+                    block.params.push(value);
                 } 
                 else {
                     var error = {};
@@ -3782,7 +3793,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     throw error;
                 }
                 
-                var ifStatementStatements = ifStatement.statements;
+                var ifStatementStatements = ifStatement.statements[0];
+
+                console.log("ifStatementStatements", ifStatementStatements);
                 for(var t in ifStatementStatements) {
                     var tfs = ifStatementStatements[t];
                     var sblock = {};

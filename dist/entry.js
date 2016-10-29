@@ -12482,6 +12482,10 @@ Entry.TextCodingUtil = {};
     a = a.data.type;
     return "when_run_button_click" == a || "when_some_key_pressed" == a || "mouse_clicked" == a || "mouse_click_cancled" == a || "when_object_click" == a || "when_object_click_canceled" == a || "when_message_cast" == a || "when_scene_start" == a || "when_clone_start" == a ? !0 : !1;
   };
+  b.isEntryEventBlockWithParam = function(a) {
+    a = a.data.type;
+    return "when_some_key_pressed" == a || "when_message_cast" == a ? !0 : !1;
+  };
   b.isEventBlockByType = function(a) {
     return "when_run_button_click" == a || "when_some_key_pressed" == a || "mouse_clicked" == a || "mouse_click_cancled" == a || "when_object_click" == a || "when_object_click_canceled" == a || "when_message_cast" == a || "when_scene_start" == a || "when_clone_start" == a ? !0 : !1;
   };
@@ -12543,10 +12547,6 @@ Entry.TextCodingUtil = {};
     console.log("isEntryEventFuncNameWithParam name", a);
     var b = a.lastIndexOf("_");
     return 0 < b && (a = a.substring(0, b), console.log("isEntryEventFuncNameWithParam preText", a), "entry_event_key" == a || "entry_event_signal" == a) ? !0 : !1;
-  };
-  b.isEntryEventFuncWithParam = function(a) {
-    console.log("isEntryEventFuncNameWithParam name", a);
-    return "def entry_event_key_" == a || "def entry_event_signal_" == a ? !0 : !1;
   };
   b.searchFuncDefParam = function(a) {
     "function_field_label" == a.data.type && this._funcNameQ.enqueue(a.data.params[0]);
@@ -13101,7 +13101,7 @@ Entry.BlockToPyParser = function(b) {
         if (Entry.TextCodingUtil.isNoPrintBlock(h)) {
           continue;
         }
-        0 == g ? (c = Entry.TextCodingUtil.isEventBlock(h)) ? e = this.Block(h) + "\n" : f += this.Block(h) + "\n" : 0 != g && (f += this.Block(h) + "\n");
+        0 == g ? (c = Entry.TextCodingUtil.isEventBlock(h)) ? (e = this.Block(h) + "\n", console.log("eventParamCheck", h), Entry.TextCodingUtil.isEntryEventBlockWithParam(h) && (e += "\t")) : f += this.Block(h) + "\n" : 0 != g && (f += this.Block(h) + "\n");
       } else {
         this._parseMode == Entry.Parser.PARSE_SYNTAX && (b = (c = Entry.TextCodingUtil.isEventBlock(h)) ? "" : this.Block(h) + "\n", console.log("syntax mode result", b));
       }
@@ -15289,17 +15289,21 @@ Entry.PyToBlockParser = function(b) {
         }
         console.log("entry event block ifStatement", l);
         console.log("entry event block ifStatement param detail", l.params[0].params[1]);
-        g = l.params[0];
-        c = g.params[0].params[0];
-        g = g.params[2].params[0];
-        if ("key" == c) {
-          c = g, "string" == typeof g && (c = g.toLowerCase()), console.log("keyCodeValue", c), c = Entry.KeyboardCode.keyCharToCode[c], b.params.push(null), b.params.push(c);
+        c = l.params[0];
+        g = c.params[0].params[0];
+        c = c.params[2].params[0];
+        if ("key" == g) {
+          g = c, "string" == typeof c && (g = c.toLowerCase()), console.log("keyCodeValue", g), c = Entry.KeyboardCode.keyCharToCode[g], b.params.push(null), b.params.push(c);
         } else {
-          if ("signal" != c) {
+          if ("signal" == g) {
+            console.log("signalValue", c), g = Entry.block[b.type], c = this.ParamDropdownDynamic(c, g.params[1], g.def.params[1]), b.params.push(null), b.params.push(c);
+          } else {
             throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'if'\ubb38\uc744 \ud655\uc778\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
           }
         }
-        var c = l.statements, m;
+        c = l.statements[0];
+        console.log("ifStatementStatements", c);
+        var m;
       }
       for (m in c) {
         b = c[m], l = {}, l.type = b.type, b.params && (l.params = b.params), b.statements && (l.statements = b.statements), this._thread.push(l);

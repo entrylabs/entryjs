@@ -738,6 +738,15 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
+    tu.isEntryEventBlockWithParam = function(block) {
+        var blockType = block.data.type;
+        if( blockType == "when_some_key_pressed" ||
+            blockType == "when_message_cast")
+            return true;
+
+        return false;
+    };
+
     tu.isEventBlockByType = function(blockType) {
         if( blockType == "when_run_button_click" ||
             blockType == "when_some_key_pressed" ||
@@ -971,16 +980,6 @@ Entry.TextCodingUtil = {};
                 preText == "entry_event_signal") {
                 return true;
             }
-        }
-
-        return false;
-    };
-
-    tu.isEntryEventFuncWithParam = function(name) {
-        console.log("isEntryEventFuncNameWithParam name", name);
-        if( name == "def entry_event_key_" ||
-            name == "def entry_event_signal_") {
-            return true;
         }
 
         return false;

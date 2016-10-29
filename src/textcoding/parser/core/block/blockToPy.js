@@ -72,12 +72,18 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     continue;
                 if(i == 0) {
                     isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
+
                     if(isEventBlock) {
                         rootResult = this.Block(block) + '\n';
+                        console.log("eventParamCheck", block);
+                        if(Entry.TextCodingUtil.isEntryEventBlockWithParam(block)) {
+                            rootResult += "\t";
+                        }
                         //definition = Entry.TextCodingUtil.prototype.makeDefinition(block) + '\n';
                     }
-                    else
+                    else {
                         contentResult += this.Block(block) + '\n';
+                    }
                 }
                 else if(i != 0) {
                     contentResult += this.Block(block) + '\n';
