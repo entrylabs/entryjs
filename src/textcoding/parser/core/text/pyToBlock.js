@@ -3265,11 +3265,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(type) {
             console.log("BinaryExpression type", type);
-
             var params = [];
-
             var left = component.left;
-
+            var currentObject = Entry.TextCodingUtil._currentObject;
             console.log("BinaryExpression left", left);
 
             if(left.type == "Literal" || left.type == "Identifier") {
@@ -3304,14 +3302,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(param && typeof param == "object") {
                         if(param.name && !param.name.includes("__filbert")) {
-                            if(!param.type && param.isCallParam) {
-                                if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
-                                    var error = {};
-                                    error.title = "지원되지 않는 코드";
-                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                    error.line = this._blockCount;
-                                    console.log("send error", error);
-                                    throw error;
+                            if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
+                                if(!Entry.TextCodingUtil.isEntryEventDesignatedParamName(param.name)) {
+                                    if(!Entry.TextCodingUtil.isGlobalVariableExisted(param.name)) {
+                                        var error = {};
+                                        error.title = "지원되지 않는 코드";
+                                        error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                        error.line = this._blockCount;
+                                        console.log("send error", error);
+                                        throw error;
+                                    }
                                 }
                             }
                         }
@@ -3320,6 +3320,26 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(param && param.type)
                         params.push(param);
+                    else {
+                        if(param.name == "key") {
+                            var keyBlock = {};
+                            keyBlock.type = "get_variable";
+                            var keyParams = [];
+                            keyParams.push(param.name);
+                            keyBlock.params = keyParams;
+
+                            params.push(keyBlock);
+                        }
+                        else if(param.name == "signal") {
+                            var keyBlock = {};
+                            keyBlock.type = "get_variable";
+                            var keyParams = [];
+                            keyParams.push(param.name);
+                            keyBlock.params = keyParams;
+
+                            params.push(keyBlock);
+                        }
+                    }
                 }
             } 
             else if(left.type == "MemberExpression") {
@@ -3329,7 +3349,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params.push(param);
                 }
                 else if(param.object && param.property) {
-                    var currentObject = Entry.TextCodingUtil._currentObject;
+                    
 
                     if(param.property.callee == "__pythonRuntime.ops.subscriptIndex") { // In Case of List
                         if(param.object && param.object.object) {
@@ -3691,13 +3711,89 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(Entry.TextCodingUtil.isEntryEventFuncName(id.name)) { 
             var component = Entry.TextCodingUtil.makeExpressionStatement(id.name);
             var block = this.ExpressionStatement(component);
+            block.params = [];
             this._thread.push(block);
 
             console.log("entry event block", block);
 
             if(Entry.TextCodingUtil.isEntryEventFuncTypeWithParam(block)) {
                 var ifStatement = textFuncStatements[0];
+
+                if(textFuncStatements.length > 1) {
+                    var error = {};
+                    error.title = "지원되지 않는 코드";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'if\'문을 확인하세요.";
+                    error.line = this._blockCount;
+                    console.log("send error", error);
+                    throw error;
+                }
+                else if(!ifStatement) {
+                    var error = {};
+                    error.title = "지원되지 않는 코드";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'if\'문을 확인하세요.";
+                    error.line = this._blockCount;
+                    console.log("send error", error);
+                    throw error;
+                }
+                else if(ifStatement.type != "_if") {
+                    var error = {};
+                    error.title = "지원되지 않는 코드";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'if\'문을 확인하세요.";
+                    error.line = this._blockCount;
+                    console.log("send error", error);
+                    throw error;
+                }
+                else if(ifStatement.params[0].type != "boolean_basic_operator") {
+                    var error = {};
+                    error.title = "지원되지 않는 코드";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'if\'문을 확인하세요.";
+                    error.line = this._blockCount;
+                    console.log("send error", error);
+                    throw error;
+                }
+
                 console.log("entry event block ifStatement", ifStatement);
+                console.log("entry event block ifStatement param detail", ifStatement.params[0].params[1]);
+
+
+                var ifStatementParams = ifStatement.params[0];
+
+                var ifStatementParamsType = ifStatementParams.params[0].params[0];
+                var ifStatementParamsValue = ifStatementParams.params[2].params[0]
+                if(ifStatementParamsType == "key") {
+                    var keyCodeValue = ifStatementParamsValue;
+                    if(typeof ifStatementParamsValue == "string")
+                        keyCodeValue = ifStatementParamsValue.toLowerCase();
+
+                    console.log("keyCodeValue", keyCodeValue)
+                    var value = Entry.KeyboardCode.keyCharToCode[keyCodeValue];
+                    block.params.push(null);
+                    block.params.push(value);
+                }
+                else if(ifStatementParamsType == "signal") {
+
+                } 
+                else {
+                    var error = {};
+                    error.title = "지원되지 않는 코드";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'if\'문을 확인하세요.";
+                    error.line = this._blockCount;
+                    console.log("send error", error);
+                    throw error;
+                }
+                
+                var ifStatementStatements = ifStatement.statements;
+                for(var t in ifStatementStatements) {
+                    var tfs = ifStatementStatements[t];
+                    var sblock = {};
+                    sblock.type = tfs.type;
+                    if(tfs.params)
+                        sblock.params = tfs.params;
+                    if(tfs.statements)
+                        sblock.statements = tfs.statements;
+
+                    this._thread.push(sblock);
+                }
             }
             else { 
                 for(var t in textFuncStatements) {

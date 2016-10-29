@@ -2526,7 +2526,7 @@ Entry.block = {
             };
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Arduino.ultrasonicRead(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Arduino.digitalWrite(%1, %2)"]}
     },
     "arduino_ext_digital_pwm": {
         "color": "#00979D",

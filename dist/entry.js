@@ -12555,6 +12555,11 @@ Entry.TextCodingUtil = {};
   b.isEntryEventFuncTypeWithParam = function(a) {
     return "when_some_key_pressed" == a.type || "when_message_cast" == a.type ? !0 : !1;
   };
+  b.isEntryEventDesignatedParamName = function(a) {
+    var b = !1;
+    "key" == a ? b = !0 : "signal" == a && (b = !0);
+    return b;
+  };
   b.gatherFuncDefParam = function(a) {
     if (a && a.data) {
       if (a.data.params[0]) {
@@ -15063,7 +15068,7 @@ Entry.PyToBlockParser = function(b) {
     console.log("BinaryExpression syntax", f);
     if (f = this.getBlockType(f)) {
       console.log("BinaryExpression type", f);
-      var b = [], g = a.left;
+      var b = [], g = a.left, e = Entry.TextCodingUtil._currentObject;
       console.log("BinaryExpression left", g);
       if ("Literal" == g.type || "Identifier" == g.type) {
         arguments = [];
@@ -15080,10 +15085,21 @@ Entry.PyToBlockParser = function(b) {
           m = this[m.type](m, h[n], k[n], !0);
           console.log("BinaryExpression param", m);
           console.log("check binary", typeof m, "$", m.type, "$", m.isCallParam);
-          if (m && "object" == typeof m && m.name && !m.name.includes("__filbert") && !m.type && m.isCallParam && !Entry.TextCodingUtil.isFuncParam(m.name)) {
+          if (m && "object" == typeof m && m.name && !m.name.includes("__filbert") && !Entry.TextCodingUtil.isFuncParam(m.name) && !Entry.TextCodingUtil.isEntryEventDesignatedParamName(m.name) && !Entry.TextCodingUtil.isGlobalVariableExisted(m.name)) {
             throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
           }
-          m && m.type && b.push(m);
+          if (m && m.type) {
+            b.push(m);
+          } else {
+            if ("key" == m.name) {
+              var e = {type:"get_variable"}, q = [];
+              q.push(m.name);
+              e.params = q;
+              b.push(e);
+            } else {
+              "signal" == m.name && (e = {type:"get_variable"}, q = [], q.push(m.name), e.params = q, b.push(e));
+            }
+          }
         }
       } else {
         if ("MemberExpression" == g.type) {
@@ -15091,7 +15107,6 @@ Entry.PyToBlockParser = function(b) {
             b.push(m);
           } else {
             if (m.object && m.property) {
-              e = Entry.TextCodingUtil._currentObject;
               if ("__pythonRuntime.ops.subscriptIndex" == m.property.callee) {
                 if (m.object && m.object.object) {
                   if ("self" != m.object.object) {
@@ -15115,12 +15130,7 @@ Entry.PyToBlockParser = function(b) {
                   }
                 }
               }
-              if (!m.object.name.includes("__filbert")) {
-                var e = {type:"text"}, q = [];
-                q.push(m.object.name + "." + m.property.name);
-                e.params = q;
-                b.push(e);
-              }
+              m.object.name.includes("__filbert") || (e = {type:"text"}, q = [], q.push(m.object.name + "." + m.property.name), e.params = q, b.push(e));
             }
           }
         } else {
@@ -15259,14 +15269,40 @@ Entry.PyToBlockParser = function(b) {
     if (Entry.TextCodingUtil.isEntryEventFuncName(e.name)) {
       a = Entry.TextCodingUtil.makeExpressionStatement(e.name);
       b = this.ExpressionStatement(a);
+      b.params = [];
       this._thread.push(b);
       console.log("entry event block", b);
       if (Entry.TextCodingUtil.isEntryEventFuncTypeWithParam(b)) {
-        console.log("entry event block ifStatement", c[0]);
-      } else {
-        for (var m in c) {
-          b = c[m], l = {}, l.type = b.type, b.params && (l.params = b.params), b.statements && (l.statements = b.statements), this._thread.push(l);
+        l = c[0];
+        if (1 < c.length) {
+          throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'if'\ubb38\uc744 \ud655\uc778\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
         }
+        if (l) {
+          if ("_if" != l.type) {
+            throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'if'\ubb38\uc744 \ud655\uc778\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
+          }
+          if ("boolean_basic_operator" != l.params[0].type) {
+            throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'if'\ubb38\uc744 \ud655\uc778\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
+          }
+        } else {
+          throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'if'\ubb38\uc744 \ud655\uc778\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
+        }
+        console.log("entry event block ifStatement", l);
+        console.log("entry event block ifStatement param detail", l.params[0].params[1]);
+        g = l.params[0];
+        c = g.params[0].params[0];
+        g = g.params[2].params[0];
+        if ("key" == c) {
+          c = g, "string" == typeof g && (c = g.toLowerCase()), console.log("keyCodeValue", c), c = Entry.KeyboardCode.keyCharToCode[c], b.params.push(null), b.params.push(c);
+        } else {
+          if ("signal" != c) {
+            throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'if'\ubb38\uc744 \ud655\uc778\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
+          }
+        }
+        var c = l.statements, m;
+      }
+      for (m in c) {
+        b = c[m], l = {}, l.type = b.type, b.params && (l.params = b.params), b.statements && (l.statements = b.statements), this._thread.push(l);
       }
       return null;
     }

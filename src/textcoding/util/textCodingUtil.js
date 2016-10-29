@@ -1017,6 +1017,19 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
+    tu.isEntryEventDesignatedParamName = function(paramName) {
+        var result = false;
+
+        if(paramName == "key") {
+            result = true;
+        }
+        else if(paramName == "signal") {
+            result = true;
+        }
+
+        return result;
+    };
+
     tu.gatherFuncDefParam = function(block) {
         if(block && block.data) {
             if(block.data.params[0]) {
