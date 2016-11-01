@@ -25598,8 +25598,15 @@ Entry.Playground.prototype.generatePictureElement = function(b) {
           return;
         }
       }
-      this.picture.name = this.value;
-      Entry.playground.reloadPlayground();
+      b = this.value;
+      this.picture.name = b;
+      if (c = Entry.playground) {
+        if (c.object) {
+          var d = c.object.getPicture(this.picture.id);
+          d && (d.name = b);
+        }
+        c.reloadPlayground();
+      }
       Entry.dispatchEvent("pictureNameChanged", this.picture);
     }
   }
