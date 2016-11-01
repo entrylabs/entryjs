@@ -51,6 +51,7 @@ Entry.ArduinoExt = {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach(function (key) {
                 Entry.hw.sendQueue.SET[key].data = 0;
+                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             });
         }
         Entry.hw.update();
