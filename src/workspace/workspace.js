@@ -126,7 +126,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.blockMenu.renderBlock(function() {
                        this.blockMenu.reDraw();
                        }.bind(this)
-                   );
+                    );
                     //this.oldMode = this.mode;
                     this.oldTextType = this.textType;
                 } catch(e) {
@@ -323,7 +323,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         alert(message);
                         return;
                     }
-                } 
+                }
 
                 var message;
                 message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
@@ -347,7 +347,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             }
         }
 
-        if(altKey) { 
+        if(altKey) {
             if(this.mode == Entry.Workspace.MODE_VIMBOARD) {
                 if (keyCode == 219) { //Previous Object
                     if(!Entry.playground.object) {

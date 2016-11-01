@@ -180,6 +180,10 @@ Entry.PARAM = -1;
         return thread;
     };
 
+    p.getThreadIndex = function(thread) {
+        return this._data.indexOf(thread);
+    };
+
     p.cloneThread = function(thread, mode) {
         var newThread = thread.clone(this, mode);
         this._data.push(newThread);
@@ -204,6 +208,18 @@ Entry.PARAM = -1;
 
     p.getThreads = function() {
         return this._data.map(function(t){return t;});
+    };
+
+    p.getThreadsByCategory = function(category) {
+        var arr = [];
+
+        for (var i=0; i<this._data.length; i++) {
+            var thread = this._data[i];
+            var b = thread.getFirstBlock();
+            if (b && b.category === category)
+                arr.push(thread);
+        }
+        return arr;
     };
 
     p.toJSON = function(excludeData) {
@@ -231,7 +247,8 @@ Entry.PARAM = -1;
         }
 
         var board = this.board;
-        if (board instanceof Entry.BlockMenu) board.updateSplitters(y);
+        if (board instanceof Entry.BlockMenu)
+            board.updateSplitters(y);
     };
 
     p.stringify = function(excludeData) {
