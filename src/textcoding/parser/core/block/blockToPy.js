@@ -368,6 +368,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 }
 
                 result += blockToken;
+                
+
                 console.log("btop parser block result", result);
 
                 //console.log("check result", result);
@@ -388,7 +390,11 @@ Entry.BlockToPyParser = function(blockSyntax) {
             }
         }
 
+        console.log("block result check", result);
 
+        if(Entry.TextCodingUtil.isMathExpression(result)) {
+            result = Entry.TextCodingUtil.makeMathExpression(result);
+        }
 
         return result;
     };
