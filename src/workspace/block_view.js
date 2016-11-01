@@ -22,6 +22,17 @@ Entry.BlockView = function(block, board, mode) {
 
     this._schema = Entry.skinContainer.getSkin(block);
 
+    switch (mode) {
+        case undefined:
+        case Entry.Workspace.MODE_BOARD:
+        case Entry.Workspace.MODE_OVERLAYBOARD:
+            this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
+            break;
+        case Entry.Workspace.MODE_VIMBOARD:
+            this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
+            break;
+    }
+
     if (this._schema === undefined) {
         this.block.destroy(false, false);
         return;
@@ -60,6 +71,7 @@ Entry.BlockView = function(block, board, mode) {
 
         that.onMouseDown.apply(that, arguments);
     };
+
     this._startRender(block, mode);
 
     // observe
@@ -89,6 +101,10 @@ Entry.BlockView.PARAM_SPACE = 5;
 Entry.BlockView.DRAG_RADIUS = 5;
 Entry.BlockView.pngMap = {};
 
+Entry.BlockView.RENDER_MODE_BLOCK = 1;
+Entry.BlockView.RENDER_MODE_TEXT = 2;
+
+
 (function(p) {
     p.schema = {
         id: 0,
@@ -111,9 +127,12 @@ Entry.BlockView.pngMap = {};
     p._startRender = function(block, mode) {
         var that = this;
         var skeleton = this._skeleton;
-        this.svgGroup.attr({
-            class: "block"
-        });
+        var attr = { class: "block" };
+
+        if (this.display === false)
+            attr.display = 'none'
+
+        this.svgGroup.attr(attr);
 
         if (this._schema.css)
             this.svgGroup.attr({
@@ -889,10 +908,12 @@ Entry.BlockView.pngMap = {};
 
     p.renderText = function() {
         this._startContentRender(Entry.Workspace.MODE_VIMBOARD);
+        this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
     };
 
     p.renderBlock = function() {
         this._startContentRender(Entry.Workspace.MODE_BOARD);
+        this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
     };
 
     p._updateOpacity = function() {
@@ -1287,5 +1308,6 @@ Entry.BlockView.pngMap = {};
         this._backgroundPath = backgroundPath;
         this.pathGroup.insertBefore(backgroundPath, this._path);
     };
+
 
 })(Entry.BlockView.prototype);

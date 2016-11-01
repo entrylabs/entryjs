@@ -14,7 +14,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     Entry.Model(this, false);
 
     this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
-    this._dAlign = Entry.Utils.debounce(this.align, 50);
+    this._dAlign = Entry.Utils.debounce(this.align, 100);
 
     this._align = align || "CENTER";
     this.setAlign(this._align);
@@ -159,16 +159,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         );
         code.createView(this);
         var workspace = this.workspace;
-        var mode = Entry.Workspace.MODE_BOARD;
-        if (workspace)
-            mode = workspace.getMode();
-
-        if (mode === Entry.Workspace.MODE_VIMBOARD) {
-            this.renderText();
-        } else {
-            if (code.mode === 'text')
-                this.renderBlock();
-        }
 
         this._dAlign();
     };
@@ -189,6 +179,21 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (!code) return;
         this._clearSplitters();
 
+        if (this.workspace) {
+            var mode = this.workspace.getMode()
+            switch (mode) {
+                case Entry.Workspace.MODE_BOARD:
+                case Entry.Workspace.MODE_OVERLAYBOARD:
+                    this.renderBlock();
+                    break;
+                case Entry.Workspace.MODE_VIMBOARD:
+                    this.renderText();
+                    break;
+                default:
+                    this.renderBlock();
+            }
+        }
+
         var threads = code.getThreads();
         var vPadding = 15,
             marginFromTop = 10,
@@ -202,7 +207,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var blockView = block.view;
 
             var blockInfo = Entry.block[block.type];
-            if(this.checkCategory(blockInfo) || this.checkBanClass(blockInfo)) {
+            if(this._isNotVisible(blockInfo)) {
                 blockView.set({display:false});
                 continue;
             }
@@ -219,7 +224,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             pastClass = className;
 
             var left = hPadding - blockView.offsetX;
-            if (this._align == 'CENTER') left -= blockView.width /2;
+            if (this._align == 'CENTER')
+                left -= blockView.width /2;
 
             marginFromTop -= blockView.offsetY;
             blockView._moveTo(
@@ -322,9 +328,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.renderText = function(cb) {
         var threads = this.code.getThreads();
-        this.code.mode = 'text';
+        var targetMode = Entry.BlockView.RENDER_MODE_TEXT;
         for (var i=0; i<threads.length; i++) {
             var thread = threads[i];
+            var block = thread.getFirstBlock();
+            var blockInfo = Entry.block[block.type]
+            if (this._isNotVisible(blockInfo) || targetMode === block.view.renderMode)
+                continue;
             if (thread.view)
                 thread.view.renderText();
             else
@@ -335,9 +345,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.renderBlock = function(cb) {
         var threads = this.code.getThreads();
-        this.code.mode = 'code';
+        var targetMode = Entry.BlockView.RENDER_MODE_BLOCK;
         for (var i=0; i<threads.length; i++) {
             var thread = threads[i];
+            var block = thread.getFirstBlock();
+            var blockInfo = Entry.block[block.type]
+            if (this._isNotVisible(blockInfo) || targetMode === block.view.renderMode)
+                continue;
+
             if (thread.view)
                 thread.view.renderBlock();
             else
@@ -435,8 +450,12 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             return;
         }
 
-        if (name)
+        if (name) {
             this.lastSelector = name;
+            this.selectDynamic = false;
+        } else
+            this.selectDynamic = true;
+
         this._isSelectingMenu = true;
         switch (name) {
             case 'variable':
@@ -590,6 +609,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.checkCategory = function(blockInfo) {
         if (!blockInfo) return;
+
+        if (!this.lastSelector || this.selectDynamic)
+            return true;
+
         var category = 'category_' + this.lastSelector
         var isFor = blockInfo.isFor;
 
@@ -825,5 +848,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p.setAlign = function(align) {
         this._align = align || "CENTER";
     };
+
+    p._isNotVisible = function(blockInfo) {
+        return this.checkCategory(blockInfo) ||
+            this.checkBanClass(blockInfo)
+    }
 
 })(Entry.BlockMenu.prototype);
