@@ -12,7 +12,8 @@ Entry.BlockView = function(block, board, mode) {
     var that = this;
     Entry.Model(this, false);
     this.block = block;
-    this._lazyUpdatePos = _.debounce(block._updatePos.bind(block), 200);
+    this._lazyUpdatePos =
+        Entry.Utils.debounce(block._updatePos.bind(block), 200);
     this._board = board;
     this._observers = [];
     this.set(block);

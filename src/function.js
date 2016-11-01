@@ -52,10 +52,10 @@ Entry.Func.registerFunction = function(func) {
     if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
     var menuCode = blockMenu.code;
-    console.log('register');
     this._targetFuncBlock = menuCode.createThread([{
         type: "func_" + func.id,
-        category: 'func'
+        category: 'func',
+        display: false
     }]);
     func.blockMenuBlock = this._targetFuncBlock;
 };
@@ -331,7 +331,7 @@ Entry.Func.updateMenu = function() {
         blockMenu.unbanClass("functionInit", true);
         blockMenu.banClass("functionEdit", true);
     }
-    blockMenu.reDraw();
+    blockMenu.align();
 };
 
 Entry.Func.prototype.edit = function() {

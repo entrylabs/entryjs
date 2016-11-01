@@ -12,12 +12,15 @@ goog.require("Entry.Utils");
  */
 Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     Entry.Model(this, false);
+
+    this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
+    this._dAlign = Entry.Utils.debounce(this.align, 50);
+
     this._align = align || "CENTER";
     this.setAlign(this._align);
     this._scroll = scroll !== undefined ? scroll : false;
     this._bannedClass = [];
     this._categories = [];
-    this._initedCodes = {};
     this.suffix = 'blockMenu';
     this._isSelectingMenu = false;
 
@@ -34,6 +37,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._clearCategory();
     this._categoryData = categoryData;
     this._generateView(categoryData);
+
 
     this._splitters = [];
     this.setWidth();
@@ -56,6 +60,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.observe(this, "_handleDragBlock", ["dragBlock"]);
 
     this.changeCode(new Entry.Code([]));
+    categoryData && this._generateCategoryCodes()
 
     if (this._scroll) {
         this._scroller = new Entry.BlockMenuScroller(this);
@@ -159,14 +164,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             mode = workspace.getMode();
 
         if (mode === Entry.Workspace.MODE_VIMBOARD) {
-            if (!code.mode || code.mode === 'code')
-                this.renderText();
+            this.renderText();
         } else {
             if (code.mode === 'text')
                 this.renderBlock();
         }
 
-        this.align();
+        this._dAlign();
     };
 
     p.bindCodeView = function(codeView) {
@@ -185,9 +189,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (!code) return;
         this._clearSplitters();
 
-        if (code.view && !unReDraw && !this._isSelectingMenu)
-            code.view.reDraw();
-
         var threads = code.getThreads();
         var vPadding = 15,
             marginFromTop = 10,
@@ -197,6 +198,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         for (var i=0,len=threads.length; i<len; i++) {
             var thread = threads[i];
             var block = thread.getFirstBlock();
+            if (!block) continue;
             var blockView = block.view;
 
             var blockInfo = Entry.block[block.type];
@@ -206,6 +208,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             }
 
             blockView.set({display:true});
+            if (code.view && !unReDraw && !this._isSelectingMenu)
+                blockView.reDraw();
+
             var className = blockInfo.class;
             if (pastClass && pastClass !== className) {
                 this._createSplitter(marginFromTop);
@@ -222,7 +227,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 marginFromTop,
                 false);
             marginFromTop += blockView.height + vPadding;
-
         }
 
         this.updateSplitters();
@@ -383,56 +387,27 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         this.updateSplitters();
     };
 
-    p.setMenu = function(elems) {
-        if (!elems) {
-            elems = [];
-            for (var key in this._categoryElems) {
-                if (key !== 'arduino')
-                    elems.push(key);
-            }
-        }
-        if (elems.length !== 0) {
-            var key = elems.shift();
-            if (!this._initedCodes[key]) {
-                this._generateCategoryCodes(key);
-            }
-            if (elems.length) {
-                window.setTimeout(function() {
-                    this.setMenu(elems);
-                }.bind(this), 0);
-            } else {
-                this._generateHwCode(true);
-            }
-        }
+    p.setMenu = function() {
+        var elems = Object.keys(this._categoryElems);
 
-        var threads = this.code.getThreadsByCategory(key);
+        this._categoryData.forEach(function(data) {
+            var category = data.category;
+            var threads = data.blocks;
 
-        var count = threads.length;
-        for (var i=0; i<threads.length; i++) {
-            var thread = threads[i];
-            var type;
-            if (thread instanceof Entry.Thread)
-                type = thread.getFirstBlock().type;
-            else type = thread[0].type;
-
-            if(this.checkBanClass(Entry.block[type]))
-                count--;
-        }
-        var elem = this._categoryElems[key];
-        if (count === 0) elem.addClass('entryRemove');
-        else elem.removeClass('entryRemove');
+            var count = threads.length;
+            for (var i=0; i<threads.length; i++) {
+                if(this.checkBanClass(Entry.block[threads[i]]))
+                    count--;
+            }
+            var elem = this._categoryElems[category];
+            if (count === 0) elem.addClass('entryRemove');
+            else elem.removeClass('entryRemove');
+        }.bind(this));
     };
 
+
     p.getCategoryCodes = function(selector) {
-        var name = this._convertSelector(selector);
-        var code = this._categoryCodes[name];
-        if (!code) {
-            this._generateCategoryElement(name);
-            code = [];
-        }
-        if (!(code instanceof Entry.Code))
-            code = this._categoryCodes[name] = new Entry.Code(code);
-        return code;
+        //TODO if needed
     };
 
     p._convertSelector = function(selector) {
@@ -451,12 +426,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.selectMenu = function(selector, doNotFold) {
+        var className = 'entrySelectedCategory';
+        var oldView = this._selectedCategoryView;
+
         var name = this._convertSelector(selector);
-        if (!name) {
-            this.align();
+        if (selector !== undefined && !name) {
+            this._dAlign();
             return;
         }
-        this.lastSelector = name;
+
+        if (name)
+            this.lastSelector = name;
         this._isSelectingMenu = true;
         switch (name) {
             case 'variable':
@@ -464,11 +444,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 break;
             case 'arduino':
                 this._generateHwCode();
+                this.align();
                 break;
         }
         var elem = this._categoryElems[name];
-        var oldView = this._selectedCategoryView;
-        var className = 'entrySelectedCategory';
         var animate = false;
         var board = this.workspace.board,
             boardView = board.view;
@@ -479,7 +458,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (elem == oldView && !doNotFold) {
             boardView.addClass('folding');
             this._selectedCategoryView = null;
-            elem.removeClass(className);
+            elem && elem.removeClass(className);
             Entry.playground.hideTabs();
             animate = true;
             this.visible = false;
@@ -491,7 +470,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             }
             boardView.removeClass('folding');
             this.visible = true;
-        }
+        } else if (!name)
+            this._selectedCategoryView = null;
 
         if (animate) {
             Entry.bindAnimationCallbackOnce(boardView, function(){
@@ -505,14 +485,34 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
         if (this.visible) {
             this._selectedCategoryView = elem;
-            elem.addClass(className);
+            elem && elem.addClass(className);
         }
-        this.align();
-        this.code.view.reDraw();
+        this._dAlign();
     };
 
+    p._generateCategoryCodes = function(elems) {
+        if (!elems)
+            elems = Object.keys(this._categoryElems);
 
-    p._generateCategoryCodes = function(key) {
+        if (elems.length) {
+            var key = elems.shift();
+            if (key !== 'arduino') {
+                this._generateCategoryCode(key);
+            }  else this._generateHwCode(true);
+
+            if (elems.length) {
+                this._generateCodesTimer =
+                    setTimeout(function() {
+                        this._generateCategoryCodes(elems);
+                }.bind(this), 0);
+            } else {
+                this._generateCodesTimer = null;
+                this.align();
+            }
+        }
+    };
+
+    p._generateCategoryCode = function(key) {
         var code = this.code;
         var codes = [];
         var datum = this._categoryData.filter(function(obj) {
@@ -544,9 +544,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                     ]);
             }
         });
+
         this._categories.push(category);
-        this._initedCodes[key] = true;
-        var index = undefined;
+
+        var index;
         if (key == 'func') {
             var threads = this.code.getThreadsByCategory('func');
             if (threads.length)
@@ -562,16 +563,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.banClass = function(className, unReDraw) {
         var index = this._bannedClass.indexOf(className);
-        if (index < 0)
+        if (index < 0) {
             this._bannedClass.push(className);
-        this.align(unReDraw);
+            this._dAlign(unReDraw);
+        }
     };
 
     p.unbanClass = function(className, unReDraw) {
         var index = this._bannedClass.indexOf(className);
-        if (index > -1)
+        if (index > -1) {
             this._bannedClass.splice(index, 1);
-        this.align(unReDraw);
+            this._dAlign(unReDraw);
+        }
     };
 
     p.checkBanClass = function(blockInfo) {
@@ -718,6 +721,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         this._clearCategory();
         this._categoryData = data;
         this._generateCategoryView(data);
+        this._generateCategoryCodes();
+        if (this._generateCodesTimer) {
+            clearTimeout(this._generateCodesTimer);
+            this._generateCodesTimer = null;
+        }
     };
 
     p._generateCategoryView = function(data) {
@@ -733,7 +741,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var that = this;
         var element = Entry.Dom('li', {
             id: 'entryCategory' + name,
-            class: 'entryCategoryElementWorkspace',
+            class: 'entryCategoryElementWorkspace entryRemove',
             parent: this._categoryCol
         });
 

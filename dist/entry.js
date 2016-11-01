@@ -18281,6 +18281,18 @@ Entry.Utils.convertIntToHex = function(b) {
 Entry.Utils.hasSpecialCharacter = function(b) {
   return /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g.test(b);
 };
+Entry.Utils.debounce = function(b, a, d) {
+  var c;
+  return function() {
+    var e = this, f = arguments, g = d && !c;
+    clearTimeout(c);
+    c = setTimeout(function() {
+      c = null;
+      d || b.apply(e, f);
+    }, a);
+    g && b.apply(e, f);
+  };
+};
 Entry.Model = function(b, a) {
   var d = Entry.Model;
   d.generateSchema(b);
@@ -18374,7 +18386,7 @@ Entry.Func.threads = {};
 Entry.Func.registerFunction = function(b) {
   if (Entry.playground) {
     var a = Entry.playground.mainWorkspace;
-    a && (a = a.getBlockMenu().code, console.log("register"), this._targetFuncBlock = a.createThread([{type:"func_" + b.id, category:"func"}]), b.blockMenuBlock = this._targetFuncBlock);
+    a && (this._targetFuncBlock = a.getBlockMenu().code.createThread([{type:"func_" + b.id, category:"func", display:!1}]), b.blockMenuBlock = this._targetFuncBlock);
   }
 };
 Entry.Func.executeFunction = function(b) {
@@ -18535,7 +18547,7 @@ Entry.Func.updateMenu = function() {
   if (Entry.playground && Entry.playground.mainWorkspace) {
     var b = Entry.playground.mainWorkspace.getBlockMenu();
     this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit", !0), b.unbanClass("functionEdit", !0)) : (b.unbanClass("functionInit", !0), b.banClass("functionEdit", !0));
-    b.reDraw();
+    b.align();
   }
 };
 Entry.Func.prototype.edit = function() {
@@ -21515,12 +21527,13 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
 }};
 Entry.BlockMenu = function(b, a, d, c) {
   Entry.Model(this, !1);
+  this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
+  this._dAlign = Entry.Utils.debounce(this.align, 50);
   this._align = a || "CENTER";
   this.setAlign(this._align);
   this._scroll = void 0 !== c ? c : !1;
   this._bannedClass = [];
   this._categories = [];
-  this._initedCodes = {};
   this.suffix = "blockMenu";
   this._isSelectingMenu = !1;
   b = "string" === typeof b ? $("#" + b) : $(b);
@@ -21546,6 +21559,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   this.changeEvent = new Entry.Event(this);
   this.observe(this, "_handleDragBlock", ["dragBlock"]);
   this.changeCode(new Entry.Code([]));
+  d && this._generateCategoryCodes();
   this._scroll && (this._scroller = new Entry.BlockMenuScroller(this), this._addControl(b));
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
   this.code && Entry.keyPressed && Entry.keyPressed.attach(this, this._captureKeyEvent);
@@ -21583,8 +21597,8 @@ Entry.BlockMenu = function(b, a, d, c) {
     a.createView(this);
     var c = this.workspace, e = Entry.Workspace.MODE_BOARD;
     c && (e = c.getMode());
-    e === Entry.Workspace.MODE_VIMBOARD ? a.mode && "code" !== a.mode || this.renderText() : "text" === a.mode && this.renderBlock();
-    this.align();
+    e === Entry.Workspace.MODE_VIMBOARD ? this.renderText() : "text" === a.mode && this.renderBlock();
+    this._dAlign();
   };
   b.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
@@ -21599,11 +21613,12 @@ Entry.BlockMenu = function(b, a, d, c) {
     var b = this.code;
     if (b) {
       this._clearSplitters();
-      !b.view || a || this._isSelectingMenu || b.view.reDraw();
-      a = b.getThreads();
-      for (var b = 10, c = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
-        var h = a[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
-        this.checkCategory(h) || this.checkBanClass(h) ? k.set({display:!1}) : (k.set({display:!0}), h = h.class, e && e !== h && (this._createSplitter(b), b += 15), e = h, h = c - k.offsetX, "CENTER" == this._align && (h -= k.width / 2), b -= k.offsetY, k._moveTo(h, b, !1), b += k.height + 15);
+      for (var c = b.getThreads(), e = 10, f = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, g, h = 0, k = c.length;h < k;h++) {
+        var l = c[h].getFirstBlock();
+        if (l) {
+          var n = l.view, l = Entry.block[l.type];
+          this.checkCategory(l) || this.checkBanClass(l) ? n.set({display:!1}) : (n.set({display:!0}), !b.view || a || this._isSelectingMenu || n.reDraw(), l = l.class, g && g !== l && (this._createSplitter(e), e += 15), g = l, l = f - n.offsetX, "CENTER" == this._align && (l -= n.width / 2), e -= n.offsetY, n._moveTo(l, e, !1), e += n.height + 15);
+        }
       }
       this.updateSplitters();
       this.changeEvent.notify();
@@ -21694,29 +21709,19 @@ Entry.BlockMenu = function(b, a, d, c) {
     this._svgWidth = this.blockMenuContainer.width();
     this.updateSplitters();
   };
-  b.setMenu = function(a) {
-    if (!a) {
-      a = [];
-      for (var b in this._categoryElems) {
-        "arduino" !== b && a.push(b);
+  b.setMenu = function() {
+    Object.keys(this._categoryElems);
+    this._categoryData.forEach(function(a) {
+      var b = a.category, c = a.blocks;
+      a = c.length;
+      for (var e = 0;e < c.length;e++) {
+        this.checkBanClass(Entry.block[c[e]]) && a--;
       }
-    }
-    0 !== a.length && (b = a.shift(), this._initedCodes[b] || this._generateCategoryCodes(b), a.length ? window.setTimeout(function() {
-      this.setMenu(a);
-    }.bind(this), 0) : this._generateHwCode(!0));
-    for (var c = this.code.getThreadsByCategory(b), e = c.length, f = 0;f < c.length;f++) {
-      var g = c[f], g = g instanceof Entry.Thread ? g.getFirstBlock().type : g[0].type;
-      this.checkBanClass(Entry.block[g]) && e--;
-    }
-    b = this._categoryElems[b];
-    0 === e ? b.addClass("entryRemove") : b.removeClass("entryRemove");
+      b = this._categoryElems[b];
+      0 === a ? b.addClass("entryRemove") : b.removeClass("entryRemove");
+    }.bind(this));
   };
   b.getCategoryCodes = function(a) {
-    a = this._convertSelector(a);
-    var b = this._categoryCodes[a];
-    b || (this._generateCategoryElement(a), b = []);
-    b instanceof Entry.Code || (b = this._categoryCodes[a] = new Entry.Code(b));
-    return b;
   };
   b._convertSelector = function(a) {
     if (isNaN(a)) {
@@ -21731,34 +21736,41 @@ Entry.BlockMenu = function(b, a, d, c) {
     }
   };
   b.selectMenu = function(a, b) {
-    var c = this._convertSelector(a);
-    if (c) {
-      this.lastSelector = c;
+    var c = this._selectedCategoryView, e = this._convertSelector(a);
+    if (void 0 === a || e) {
+      e && (this.lastSelector = e);
       this._isSelectingMenu = !0;
-      switch(c) {
+      switch(e) {
         case "variable":
           Entry.playground.checkVariables();
           break;
         case "arduino":
-          this._generateHwCode();
+          this._generateHwCode(), this.align();
       }
-      var c = this._categoryElems[c], e = this._selectedCategoryView, f = !1, g = this.workspace.board, h = g.view;
-      e && e.removeClass("entrySelectedCategory");
-      c != e || b ? e || (this.visible || (f = !0, h.addClass("foldOut"), Entry.playground.showTabs()), h.removeClass("folding"), this.visible = !0) : (h.addClass("folding"), this._selectedCategoryView = null, c.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), f = !0, this.visible = !1);
-      f && Entry.bindAnimationCallbackOnce(h, function() {
-        g.scroller.resizeScrollBar.call(g.scroller);
-        h.removeClass("foldOut");
+      var f = this._categoryElems[e], g = !1, h = this.workspace.board, k = h.view;
+      c && c.removeClass("entrySelectedCategory");
+      f != c || b ? c ? e || (this._selectedCategoryView = null) : (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, f && f.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
+      g && Entry.bindAnimationCallbackOnce(k, function() {
+        h.scroller.resizeScrollBar.call(h.scroller);
+        k.removeClass("foldOut");
         Entry.windowResized.notify();
       });
       this._isSelectingMenu = !1;
-      this.visible && (this._selectedCategoryView = c, c.addClass("entrySelectedCategory"));
-      this.align();
-      this.code.view.reDraw();
-    } else {
-      this.align();
+      this.visible && (this._selectedCategoryView = f) && f.addClass("entrySelectedCategory");
     }
+    this._dAlign();
   };
   b._generateCategoryCodes = function(a) {
+    a || (a = Object.keys(this._categoryElems));
+    if (a.length) {
+      var b = a.shift();
+      "arduino" !== b ? this._generateCategoryCode(b) : this._generateHwCode(!0);
+      a.length ? this._generateCodesTimer = setTimeout(function() {
+        this._generateCategoryCodes(a);
+      }.bind(this), 0) : (this._generateCodesTimer = null, this.align());
+    }
+  };
+  b._generateCategoryCode = function(a) {
     var b = this.code, c = [], e = this._categoryData.filter(function(b) {
       return b.category == a;
     })[0];
@@ -21781,8 +21793,7 @@ Entry.BlockMenu = function(b, a, d, c) {
       }
     });
     this._categories.push(a);
-    this._initedCodes[a] = !0;
-    var f = void 0;
+    var f;
     if ("func" == a) {
       var g = this.code.getThreadsByCategory("func");
       g.length && (f = this.code.getThreadIndex(g[0]));
@@ -21794,13 +21805,11 @@ Entry.BlockMenu = function(b, a, d, c) {
     });
   };
   b.banClass = function(a, b) {
-    0 > this._bannedClass.indexOf(a) && this._bannedClass.push(a);
-    this.align(b);
+    0 > this._bannedClass.indexOf(a) && (this._bannedClass.push(a), this._dAlign(b));
   };
   b.unbanClass = function(a, b) {
     var c = this._bannedClass.indexOf(a);
-    -1 < c && this._bannedClass.splice(c, 1);
-    this.align(b);
+    -1 < c && (this._bannedClass.splice(c, 1), this._dAlign(b));
   };
   b.checkBanClass = function(a) {
     if (a) {
@@ -21899,6 +21908,8 @@ Entry.BlockMenu = function(b, a, d, c) {
     this._clearCategory();
     this._categoryData = a;
     this._generateCategoryView(a);
+    this._generateCategoryCodes();
+    this._generateCodesTimer && (clearTimeout(this._generateCodesTimer), this._generateCodesTimer = null);
   };
   b._generateCategoryView = function(a) {
     if (a) {
@@ -21915,7 +21926,7 @@ Entry.BlockMenu = function(b, a, d, c) {
       a.bindOnClick(function(a) {
         b.selectMenu(e);
       });
-    })(Entry.Dom("li", {id:"entryCategory" + a, class:"entryCategoryElementWorkspace", parent:this._categoryCol}), a);
+    })(Entry.Dom("li", {id:"entryCategory" + a, class:"entryCategoryElementWorkspace entryRemove", parent:this._categoryCol}), a);
   };
   b.updateOffset = function() {
     this._offset = this.svgDom.offset();
@@ -22065,7 +22076,7 @@ Entry.BlockView = function(b, a, d) {
   var c = this;
   Entry.Model(this, !1);
   this.block = b;
-  this._lazyUpdatePos = _.debounce(b._updatePos.bind(b), 200);
+  this._lazyUpdatePos = Entry.Utils.debounce(b._updatePos.bind(b), 200);
   this._board = a;
   this._observers = [];
   this.set(b);
