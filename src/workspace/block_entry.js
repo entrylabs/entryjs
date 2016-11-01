@@ -2896,6 +2896,28 @@ Entry.block = {
             ]
         }
     },
+    "arduino_open": {
+        "skeleton": "basic_button",
+        "color": "#eee",
+        "isNotFor": [""],
+        "template": '%1',
+        "params": [
+            {
+                "type": "Text",
+                //TODO: 다국어 적용
+                "text": Lang.Blocks.ARDUINO_program,
+                "color": "#333",
+                "align": "center"
+            }
+        ],
+        "events": {
+            "mousedown": [
+                function() {
+                    Entry.hw.openHardwareProgram();
+                }
+            ]
+        }
+    },
     //2016-09-23 added start
     "CODEino_get_sensor_number": {
         "color": "#00979D",
