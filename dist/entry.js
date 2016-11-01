@@ -13787,13 +13787,13 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ExpressionStatement = function(a) {
     console.log("ExpressionStatement component", a);
-    this._blockCount++;
-    console.log("ExpressionStatement blockCount++");
-    var b = {};
+    var b = this._blockCountMap.get("ExpressionStatement"), c = this._blockCountMap.get("FunctionExpression");
+    "S" != b && "S" != c && (this._blockCount++, this._blockCountMap.put("ExpressionStatement", "S"), console.log("ExpressionStatement blockCount++"));
+    b = {};
     a = a.expression;
     a.type && (a = this[a.type](a), console.log("ExpressionStatement expressionData", a), a.type && a.params ? (b.type = a.type, b.params = a.params, result = b) : a.type ? (b.type = a.type, result = b) : result = a);
     if (!result.type && result.name) {
-      throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + result.name + "'\uc744 \uc0ad\uc81c\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
+      throw a = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, a.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + result.name + "'\uc744 \uc0ad\uc81c\ud558\uc138\uc694.", a.line = this._blockCount, console.log("send error", a), a;
     }
     this._blockCountMap.put("ExpressionStatement", "E");
     console.log("ExpressionStatement result", result);
@@ -14162,9 +14162,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.AssignmentExpression = function(a) {
     console.log("AssignmentExpression component", a);
-    var b = {}, c = {}, e = [], f;
-    "S" != this._blockCountMap.get("AssignmentExpression") && (this._blockCount++, this._blockCountMap.put("AssignmentExpression", "S"), console.log("AssignmentExpression blockCount++"));
-    var g = a.left;
+    var b = {}, c = {}, e = [], f, g = a.left;
     if (g.type) {
       var h = this[g.type](g);
       console.log("AssignmentExpression leftData", h);

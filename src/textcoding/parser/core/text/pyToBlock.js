@@ -102,8 +102,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ExpressionStatement = function(component) {
         console.log("ExpressionStatement component", component);
-        this._blockCount++;
-        console.log("ExpressionStatement blockCount++");
+        
+        var esBlockCountStatus = this._blockCountMap.get("ExpressionStatement");
+        var feBlockCountStatus = this._blockCountMap.get("FunctionExpression");
+        
+        if(esBlockCountStatus != "S" && feBlockCountStatus != "S") {
+            this._blockCount++;
+            this._blockCountMap.put("ExpressionStatement", "S"); 
+            console.log("ExpressionStatement blockCount++");
+        }
+        
         var reusult;
         var structure = {};
 
@@ -1150,12 +1158,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var param;
 
-        var blockCountStatus = this._blockCountMap.get("AssignmentExpression");
+        /*var blockCountStatus = this._blockCountMap.get("AssignmentExpression");
         if(blockCountStatus != "S") {
             this._blockCount++;
             this._blockCountMap.put("AssignmentExpression", "S"); 
             console.log("AssignmentExpression blockCount++");
-        }
+        }*/
 
         var left = component.left;
         if(left.type) {
