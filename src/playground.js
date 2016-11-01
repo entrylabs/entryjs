@@ -1427,6 +1427,10 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
                 var pic = playground.object.getPicture(this.picture.id);
                 if (pic) pic.name = newValue;
             }
+            var painter = playground.painter;
+            if (painter && painter.file)
+                painter.file.name = newValue;
+
             playground.reloadPlayground();
         }
         Entry.dispatchEvent('pictureNameChanged', this.picture);
