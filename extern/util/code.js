@@ -26,26 +26,6 @@ Lang.Blocks = {
     "BITBRICK_UserSensor": "UserSensor",
     "BITBRICK_dc_direction_ccw": "CCW",
     "BITBRICK_dc_direction_cw": "CW",
-	/* BYROBOT Start */
-	/* BYROBOT Sensors */
-	"byrobot_dronefighter_attitude_roll"	: "Angle Roll",
-	"byrobot_dronefighter_attitude_pitch"	: "Angle Pitch",
-	"byrobot_dronefighter_attitude_yaw"		: "Angle Yaw",
-	/* BYROBOT Options */
-	"byrobot_dronefighter_team"				: "팀 ",
-	"byrobot_dronefighter_team_Red"			: "레드",
-    "byrobot_dronefighter_team_Blue"		: "블루",
-	"byrobot_dronefighter_light_mode_TeamHold"			: "팀 - 고정",
-	"byrobot_dronefighter_light_mode_TeamFlicker"		: "팀 - 깜빡임",
-	"byrobot_dronefighter_light_mode_TeamFlickerDouble"	: "팀 - 두 번 깜빡임",
-	"byrobot_dronefighter_light_mode_TeamDimming"		: "팀 - 부드럽게 깜빡임",
-	"byrobot_dronefighter_light_mode_ArmHold"			: "팔 - 고정",
-	"byrobot_dronefighter_light_mode_ArmFlicker"		: "팔 - 깜빡임",
-	"byrobot_dronefighter_light_mode_ArmFlickerDouble"	: "팔 - 두 번 깜빡임",
-	"byrobot_dronefighter_light_mode_ArmDimming"		: "팔 - 부드럽게 깜빡임",
-	"byrobot_dronefighter_light_mode_AllEnergyBeamIn"	: "전체 - 빛의 흐름을 안으로",
-	"byrobot_dronefighter_light_mode_AllEnergyBeamOut"	: "전체 - 빛의 흐름을 바깥으로",
-	/* BYROBOT End */
     "CODEino_get_sensor_number_0": "0",
     "CODEino_get_sensor_number_1": "1",
     "CODEino_get_sensor_number_2": "2",
@@ -1008,7 +988,6 @@ Lang.Menus = {
     "arduinoCompatible": "아두이노 호환보드",
     "bitBlock": "비트블록",
     "bitbrick": "비트브릭",
-    "byrobot_dronefighter": "드론파이터",
     "codeino": "코드이노",
     "e-sensor": "E-센서보드",
     "hamster": "햄스터",
@@ -2822,7 +2801,6 @@ Lang.Category = {
 };
 Lang.Device = {
     "arduino": "아두이노",
-	"byrobot_dronefighter": "바이로봇 드론파이터",
     "hamster": "햄스터",
     "albert": "알버트",
     "robotis_carCont": "로보티즈 자동차 로봇",

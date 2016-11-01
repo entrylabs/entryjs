@@ -24310,12 +24310,12 @@ Entry.block = {
         "statements": [],
         "params": [
 				{
-					"type": "Dropdown",
+					"type": "Dropdown",		// 콤보 박스 형태의 입력창
 					"options": [
 						[Lang.Blocks.byrobot_dronefighter_team_Red,		"RED"],
 						[Lang.Blocks.byrobot_dronefighter_team_Blue,	"BLUE"]
 					],
-					"value": "RED",
+					"value": "RED",			// 콤보 박스의 기본 선택값
 					"fontSize": 11
 				},
 				{
@@ -24335,7 +24335,7 @@ Entry.block = {
 				},
 				{
 					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
+					"img": "block_icon/hardware_03.png",	// 하드웨어 명령임을 의미하는 아이콘
 					"size": 12
 				}
 			],
@@ -24350,35 +24350,42 @@ Entry.block = {
 						},
 						null
 					],
-				"type": "byrobot_dronefighter_ledModeColor_team"
-			},
+				"type": "byrobot_dronefighter_ledModeColor_team"	// 블럭 이름과 동일
+			},	// 초기 값 정의
         "paramsKeyMap": {
 				"TEAM": 0,
-				"MODE": 0,
-				"INTERVAL": 0
-			},
-        "class": "byrobot_dronefighter_led",
-        "isNotFor": [ "byrobot_dronefighter" ],
+				"MODE": 1,
+				"INTERVAL": 2
+			},	// 파라메터 "이름": 순서
+        "class": "byrobot_dronefighter_led",		// 블럭의 종류를 구분하기 위한 태그
+        "isNotFor": [ "byrobot_dronefighter" ],		// 해당 블럭을 소유하는 개체 이름
         "func": function (sprite, script)
 			{
-				var send = Entry.hw.sendQueue;
-
-				var team = script.getField('TEAM');
-				var mode = script.getField('MODE');
-				var interval = script.getNumberValue('INTERVAL');
+				var team		= script.getField('TEAM');	// 콤보 박스에서 값을 가져올 때 사용
+				var mode		= script.getField('MODE');
+				var interval	= script.getNumberValue('INTERVAL');
+				var r			= 0;
+				var b			= 0;
 				
 				// 범위 조정
+				if ( team == 'RED' )	r	= 255;
+				else					b	= 255;
 				interval = Math.max(interval, 0);
 				interval = Math.min(interval, 255);
 				
 				// 전송
-				send.ledModeColor_mode = mode;
-				if ( team == 'RED' )
-					send.ledModeColor_r = 255;
-				else
-					send.ledModeColor_b = 255;
-				send.ledModeColor_interval = interval;
+				Entry.hw.setDigitalPortValue("ledModeColor_mode", mode);
+				Entry.hw.setDigitalPortValue("ledModeColor_r", r);
+				Entry.hw.setDigitalPortValue("ledModeColor_b", b);
+				Entry.hw.setDigitalPortValue("ledModeColor_interval", interval);
 
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["ledModeColor_mode"];
+				delete Entry.hw.sendQueue["ledModeColor_r"];
+				delete Entry.hw.sendQueue["ledModeColor_b"];
+				delete Entry.hw.sendQueue["ledModeColor_interval"];
+				
 				return script.callReturn();
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledModeColor_team(%1, %2, %3)"]}
@@ -24428,24 +24435,27 @@ Entry.block = {
 			},
         "paramsKeyMap": {
 				"MODE": 0,
-				"INTERVAL": 0
+				"INTERVAL": 1
 			},
         "class": "byrobot_dronefighter_led",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var send		= Entry.hw.sendQueue;
-
 				var mode		= script.getField("MODE");
 				var interval	= script.getNumberValue("INTERVAL");
 				
 				// 범위 조정
 				interval = Math.max(interval, 0);
 				interval = Math.min(interval, 255);
-				
+								
 				// 전송
-				send.ledModeColor_mode		= mode;
-				send.ledModeColor_interval	= interval;
+				Entry.hw.setDigitalPortValue("ledModeColor_mode", mode);
+				Entry.hw.setDigitalPortValue("ledModeColor_interval", interval);
+
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["ledModeColor_mode"];
+				delete Entry.hw.sendQueue["ledModeColor_interval"];
 
 				return script.callReturn();
 			},
@@ -24512,36 +24522,45 @@ Entry.block = {
 			},
         "paramsKeyMap": {
 				"TEAM": 0,
-				"EVENT": 0,
-				"INTERVAL": 0,
-				"REPEAT": 0
+				"EVENT": 1,
+				"INTERVAL": 2,
+				"REPEAT": 3
 			},
         "class": "byrobot_dronefighter_led",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var send		= Entry.hw.sendQueue;
-
 				var team		= script.getField("TEAM");
 				var event		= script.getField("EVENT");
 				var interval	= script.getNumberValue("INTERVAL");
 				var repeat		= script.getNumberValue("REPEAT");
+				var r			= 0;
+				var b			= 0;
+				
 				
 				// 범위 조정
+				if ( team == 'RED' )	r	= 255;
+				else					b	= 255;
 				interval = Math.max(interval, 0);
 				interval = Math.min(interval, 255);
 				repeat = Math.max(repeat, 0);
 				repeat = Math.min(repeat, 255);
 				
 				// 전송
-				send.ledEventColor_event	= event;
-				if ( team == 'RED' )
-					send.ledEventColor_r	= 255;
-				else
-					send.ledEventColor_b	= 255;
-				send.ledEventColor_interval	= interval;
-				send.ledEventColor_repeat	= repeat;
+				Entry.hw.setDigitalPortValue("ledEventColor_event", event);
+				Entry.hw.setDigitalPortValue("ledEventColor_r", r);
+				Entry.hw.setDigitalPortValue("ledEventColor_b", b);
+				Entry.hw.setDigitalPortValue("ledEventColor_interval", interval);
+				Entry.hw.setDigitalPortValue("ledEventColor_repeat", repeat);
 
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["ledEventColor_event"];
+				delete Entry.hw.sendQueue["ledEventColor_r"];
+				delete Entry.hw.sendQueue["ledEventColor_b"];
+				delete Entry.hw.sendQueue["ledEventColor_interval"];
+				delete Entry.hw.sendQueue["ledEventColor_repeat"];
+				
 				return script.callReturn();
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor_team(%1, %2, %3, %4)"]}
@@ -24564,7 +24583,7 @@ Entry.block = {
 						[Lang.Blocks.byrobot_dronefighter_light_mode_AllEnergyBeamIn,	"151"],
 						[Lang.Blocks.byrobot_dronefighter_light_mode_AllEnergyBeamOut,	"152"]
 					],
-					"value": "17",
+					"value": "65",
 					"fontSize": 11
 				},
 				{
@@ -24598,31 +24617,35 @@ Entry.block = {
 				"type": "byrobot_dronefighter_ledEventColor"
 			},
         "paramsKeyMap": {
-				"MODE": 0,
-				"INTERVAL": 0,
-				"REPEAT": 0
+				"EVENT": 0,
+				"INTERVAL": 1,
+				"REPEAT": 2
 			},
         "class": "byrobot_dronefighter_led",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var send		= Entry.hw.sendQueue;
-
 				var event		= script.getField('EVENT');
 				var interval	= script.getNumberValue('INTERVAL');
 				var repeat		= script.getNumberValue('REPEAT');
 				
 				// 범위 조정
-				interval = Math.max(interval, 0);
-				interval = Math.min(interval, 255);
-				repeat = Math.max(repeat, 0);
-				repeat = Math.min(repeat, 255);
+				interval	= Math.max(interval, 0);
+				interval	= Math.min(interval, 255);
+				repeat		= Math.max(repeat, 0);
+				repeat		= Math.min(repeat, 255);
 				
 				// 전송
-				send.ledEventColor_event	= event;
-				send.ledEventColor_interval	= interval;
-				send.ledEventColor_repeat	= repeat;
+				Entry.hw.setDigitalPortValue("ledEventColor_event", event);
+				Entry.hw.setDigitalPortValue("ledEventColor_interval", interval);
+				Entry.hw.setDigitalPortValue("ledEventColor_repeat", repeat);
 
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["ledEventColor_event"];
+				delete Entry.hw.sendQueue["ledEventColor_interval"];
+				delete Entry.hw.sendQueue["ledEventColor_repeat"];
+				
 				return script.callReturn();
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
@@ -24661,19 +24684,19 @@ Entry.block = {
         "def": {
 				"params": [
 						{
-							"type": "text",
+							"type": "number",
 							"params": ["0"]
 						},
 						{
-							"type": "text",
+							"type": "number",
 							"params": ["0"]
 						},
 						{
-							"type": "text",
+							"type": "number",
 							"params": ["0"]
 						},
 						{
-							"type": "text",
+							"type": "number",
 							"params": ["0"]
 						},
 						null
@@ -24681,10 +24704,10 @@ Entry.block = {
 				"type": "byrobot_dronefighter_control"
 			},
         "paramsKeyMap": {
-				"ROLL": 0,
-				"PITCH": 0,
-				"YAW": 0,
-				"THROTTLE": 0
+				"ROLL":		0,
+				"PITCH":	1,
+				"YAW":		2,
+				"THROTTLE":	3
 			},
         "class": "byrobot_dronefighter_input",
         "isNotFor": [ "byrobot_dronefighter" ],
@@ -24692,10 +24715,10 @@ Entry.block = {
 			{
 				var send		= Entry.hw.sendQueue;
 
-				var roll		= script.getNumberValue('ROLL');
-				var pitch		= script.getNumberValue('PITCH');
-				var yaw			= script.getNumberValue('YAW');
-				var throttle	= script.getNumberValue('THROTTLE');
+				var roll		= script.getNumberValue("ROLL", script);
+				var pitch		= script.getNumberValue("PITCH", script);
+				var yaw			= script.getNumberValue("YAW", script);
+				var throttle	= script.getNumberValue("THROTTLE", script);
 				
 				// 범위 조정
 				roll		= Math.max(roll, 0);
@@ -24708,11 +24731,18 @@ Entry.block = {
 				throttle	= Math.min(throttle, 100);
 				
 				// 전송
-				send.control_roll		= roll;
-				send.control_pitch		= pitch;
-				send.control_yaw		= yaw;
-				send.control_throttle	= throttle;
+				Entry.hw.setDigitalPortValue("control_roll", roll);
+				Entry.hw.setDigitalPortValue("control_pitch", pitch);
+				Entry.hw.setDigitalPortValue("control_yaw", yaw);
+				Entry.hw.setDigitalPortValue("control_throttle", throttle);
 
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["control_roll"];
+				delete Entry.hw.sendQueue["control_pitch"];
+				delete Entry.hw.sendQueue["control_yaw"];
+				delete Entry.hw.sendQueue["control_throttle"];
+				
 				return script.callReturn();
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}

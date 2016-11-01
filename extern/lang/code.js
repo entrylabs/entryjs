@@ -3563,7 +3563,7 @@ Lang.template = {
     "byrobot_dronefighter_ledModeColor":		"LED 모드를 %1 (으)로 속도 %2 (으)로 바꾸기 %3",
     "byrobot_dronefighter_ledEventColor_team":	"%1 팀 LED 이벤트를 %2 (으)로 속도 %3 (으)로 %4 번 실행 %5",
     "byrobot_dronefighter_ledEventColor":		"LED 이벤트를 %1 (으)로 속도 %2 (으)로 %3 번 실행 %4",
-    "byrobot_dronefighter_control":				"조종 입력을 좌우 %1 앞뒤 %2 좌우회전 %3 위아래 %4 (으)로 전달 %5",
+    "byrobot_dronefighter_control":				"조종 입력을 좌우 %1, 앞뒤 %2, 좌우회전 %3, 위아래 %4 (으)로 전달 %5",
 	/* BYROBOT End */
     "dplay_get_number_sensor_value": "아날로그 %1 번 센서값  ",
     "nemoino_get_number_sensor_value": "아날로그 %1 번 센서값  ",
