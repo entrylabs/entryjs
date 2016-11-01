@@ -102,10 +102,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ExpressionStatement = function(component) {
         console.log("ExpressionStatement component", component);
-        var blockCountStatus = this._blockCountMap.get("ExpressionStatement");
-        var blockCountStatus = this._blockCountMap.get("FunctionExpression");
         
-        if(blockCountStatus != "S") {
+        var esBlockCountStatus = this._blockCountMap.get("ExpressionStatement");
+        var feBlockCountStatus = this._blockCountMap.get("FunctionExpression");
+        
+        if(esBlockCountStatus != "S" && feBlockCountStatus != "S") {
             this._blockCount++;
             this._blockCountMap.put("ExpressionStatement", "S"); 
             console.log("ExpressionStatement blockCount++");
