@@ -17650,7 +17650,7 @@ Entry.HW = function() {
   this.sessionRoomId || (this.sessionRoomId = this.createRandomRoomId(), localStorage.setItem("entryhwRoomId", this.sessionRoomId));
   this.connectTrial = 0;
   this.isFirstConnect = !0;
-  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.5.11_Setup.exe";
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.0_Setup.exe";
   this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
