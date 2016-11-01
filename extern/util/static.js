@@ -474,6 +474,7 @@ EntryStatic.getAllBlocks = function() {
                 "robotis_carCont_cm_led",
                 "robotis_carCont_cm_sound_detected_clear",
                 "robotis_carCont_aux_motor_speed",
+                "robotis_carCont_aux_motor_speed2",
                 "robotis_carCont_cm_calibration",
 
                 //XBOT Blocks added

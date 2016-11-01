@@ -15693,6 +15693,95 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": ["Robotis.carcont_aux_motor_speed(%1, %2, %3)"]}
     },
+    "robotis_carCont_aux_motor_speed2": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "왼쪽 감속모터 속도를 %1, 출력값을 %2 (으)로 오른쪽 감속모터 속도를 %3, 출력값을 %4 (으)로 정하기 %5",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotis_common_clockwhise,"CW"],
+                    [Lang.Blocks.robotis_common_counter_clockwhise,"CCW"]
+                ],
+                "value": "CW",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotis_common_clockwhise,"CW"],
+                    [Lang.Blocks.robotis_common_counter_clockwhise,"CCW"]
+                ],
+                "value": "CW",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "500" ]
+                },
+                null,
+                {
+                    "type": "number",
+                    "params": [ "500" ]
+                },
+                null
+            ],
+            "type": "robotis_carCont_aux_motor_speed2"
+        },
+        "paramsKeyMap": {
+            "LEFT_ANGLE": 0,
+            "LEFT_VALUE": 1,
+            "RIGHT_ANGLE": 2,
+            "RIGHT_VALUE": 3,
+        },
+        "class": "robotis_carCont_cm",
+        "isNotFor": [ "robotis_carCont" ],
+        "func": function (sprite, script) {
+             var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE,
+                address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0];
+
+            var leftAngle = script.getField("LEFT_ANGLE", script);
+            var leftValue = script.getNumberValue('LEFT_VALUE');
+            var rightAngle = script.getField("RIGHT_ANGLE", script);
+            var rightValue = script.getNumberValue('RIGHT_VALUE');
+
+            leftValue = Math.min(leftValue, 1023);
+            leftValue = Math.max(leftValue, 0);
+            rightValue = Math.min(rightValue, 1023);
+            rightValue = Math.max(rightValue, 0);
+
+            if(leftAngle === 'CW') {
+                leftValue += 1024;
+            }
+            if(rightAngle === 'CW') {
+                rightValue += 1024;
+            }
+
+            var value = leftValue + (rightValue << 16);
+            var data_sendqueue = [[data_instruction, address, 4, value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
+        }
+    },
     "robotis_carCont_cm_calibration": {
         "color": "#00979D",
         "skeleton": "basic",
