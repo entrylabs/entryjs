@@ -21962,7 +21962,12 @@ Entry.Field = function() {
   b.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
-    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    if (this.optionGroup) {
+      var a = this.optionGroup.blur;
+      a && Entry.Utils.isFunction(a) && this.optionGroup.blur();
+      this.optionGroup.remove();
+      delete this.optionGroup;
+    }
     this.command();
   };
   b._attachDisposeEvent = function(a) {
