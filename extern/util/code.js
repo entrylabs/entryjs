@@ -45,19 +45,6 @@ Lang.Blocks = {
 	"byrobot_dronefighter_light_mode_ArmDimming"		: "팔 - 부드럽게 깜빡임",
 	"byrobot_dronefighter_light_mode_AllEnergyBeamIn"	: "전체 - 빛의 흐름을 안으로",
 	"byrobot_dronefighter_light_mode_AllEnergyBeamOut"	: "전체 - 빛의 흐름을 바깥으로",
-	/* BYROBOT Blocks */
-    "byrobot_dronefighter_ledModeColor_0"	: "LED 모드",
-	"byrobot_dronefighter_ledModeColor_1"	: "를 속도",
-	"byrobot_dronefighter_ledModeColor_2"	: "으로 실행",
-    "byrobot_dronefighter_ledEventColor_0"	: "LED 이벤트",
-	"byrobot_dronefighter_ledEventColor_1"	: "를 속도",
-	"byrobot_dronefighter_ledEventColor_2"	: "으로",
-	"byrobot_dronefighter_ledEventColor_3"	: "번 실행",
-	"byrobot_dronefighter_control_0"		: "드론 조종 Roll",
-	"byrobot_dronefighter_control_1"		: ", Pitch",
-	"byrobot_dronefighter_control_2"		: ", Yaw",
-	"byrobot_dronefighter_control_3"		: ", Throttle",
-	"byrobot_dronefighter_control_4"		: "실행",
 	/* BYROBOT End */
     "CODEino_get_sensor_number_0": "0",
     "CODEino_get_sensor_number_1": "1",
@@ -2835,6 +2822,7 @@ Lang.Category = {
 };
 Lang.Device = {
     "arduino": "아두이노",
+	"byrobot_dronefighter": "바이로봇 드론파이터",
     "hamster": "햄스터",
     "albert": "알버트",
     "robotis_carCont": "로보티즈 자동차 로봇",

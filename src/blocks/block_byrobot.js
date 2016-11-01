@@ -46,15 +46,15 @@ Entry.byrobot_dronefighter =
 	setZero: function()
 	{
 		var portMap = Entry.byrobot_dronefighter.PORT_MAP;
-		var sq = Entry.hw.sendQueue;
+		var send = Entry.hw.sendQueue;
 
 		for (var port in portMap)
 		{
-			sq[port] = portMap[port];
+			send[port] = portMap[port];
 		}
 
 		Entry.hw.update();
-		var byrobot_dronefighter = Entry.byrobot_dronefighter;
+		//var byrobot_dronefighter = Entry.byrobot_dronefighter;
 	},
 
 	// Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성 

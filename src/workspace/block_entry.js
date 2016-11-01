@@ -24299,7 +24299,7 @@ Entry.block = {
 				var device	= script.getField('DEVICE');
 				return read[device];
 			},
-        "syntax": {"js": [], "py": ["byrobot_dronefighter.value(%1)"]}
+        //"syntax": {"js": [], "py": ["byrobot_dronefighter.value(%1)"]}
     },
 	// */
 	//*
@@ -24381,7 +24381,7 @@ Entry.block = {
 
 				return script.callReturn();
 			},
-        "syntax": {"js": [], "py": ["byrobot_dronefighter.ledModeColor_team(%1, %2, %3)"]}
+        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledModeColor_team(%1, %2, %3)"]}
     },
 	// */
 	//*
@@ -24449,7 +24449,7 @@ Entry.block = {
 
 				return script.callReturn();
 			},
-        "syntax": {"js": [], "py": ["byrobot_dronefighter.ledModeColor(%1, %2)"]}
+		//"syntax": {"js": [], "py": ["byrobot_dronefighter.ledModeColor(%1, %2)"]}
     },
 	// */
 	//*
@@ -24544,7 +24544,7 @@ Entry.block = {
 
 				return script.callReturn();
 			},
-        "syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor_team(%1, %2, %3, %4)"]}
+        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor_team(%1, %2, %3, %4)"]}
     },
 	// */
 	//*
@@ -24619,13 +24619,13 @@ Entry.block = {
 				repeat = Math.min(repeat, 255);
 				
 				// 전송
-				send.ledModeColor_mode		= mode;
+				send.ledEventColor_event	= event;
 				send.ledEventColor_interval	= interval;
 				send.ledEventColor_repeat	= repeat;
 
 				return script.callReturn();
 			},
-        "syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
+        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
 	// */
 	//*
@@ -24686,7 +24686,7 @@ Entry.block = {
 				"YAW": 0,
 				"THROTTLE": 0
 			},
-        "class": "byrobot_dronefighter_control",
+        "class": "byrobot_dronefighter_input",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
@@ -24715,7 +24715,7 @@ Entry.block = {
 
 				return script.callReturn();
 			},
-        "syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
+        //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     }
 	// */
 	/* BYROBOT DroneFighter End */

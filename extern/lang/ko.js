@@ -48,19 +48,6 @@ Lang.Blocks = {
 	"byrobot_dronefighter_light_mode_ArmDimming"		: "팔 - 부드럽게 깜빡임",
 	"byrobot_dronefighter_light_mode_AllEnergyBeamIn"	: "전체 - 빛의 흐름을 안으로",
 	"byrobot_dronefighter_light_mode_AllEnergyBeamOut"	: "전체 - 빛의 흐름을 바깥으로",
-	/* BYROBOT Blocks */
-    "byrobot_dronefighter_ledModeColor_0"	: "LED 모드",
-	"byrobot_dronefighter_ledModeColor_1"	: "를 속도",
-	"byrobot_dronefighter_ledModeColor_2"	: "으로 실행",
-    "byrobot_dronefighter_ledEventColor_0"	: "LED 이벤트",
-	"byrobot_dronefighter_ledEventColor_1"	: "를 속도",
-	"byrobot_dronefighter_ledEventColor_2"	: "으로",
-	"byrobot_dronefighter_ledEventColor_3"	: "번 실행",
-	"byrobot_dronefighter_control_0"		: "드론 조종 Roll",
-	"byrobot_dronefighter_control_1"		: ", Pitch",
-	"byrobot_dronefighter_control_2"		: ", Yaw",
-	"byrobot_dronefighter_control_3"		: ", Throttle",
-	"byrobot_dronefighter_control_4"		: "실행",
 	/* BYROBOT End */
     "CODEino_get_sensor_number_0": "0",
     "CODEino_get_sensor_number_1": "1",
@@ -1499,6 +1486,7 @@ Lang.Menus = {
     "arduinoCompatible": "아두이노 호환보드",
     "bitBlock": "비트블록",
     "bitbrick": "비트브릭",
+	"byrobot_dronefighter": "바이로봇 드론파이터",
     "codeino": "코드이노",
     "e-sensor": "E-센서보드",
     "e-sensorUsb": "E-센서보드(유선연결)",
@@ -3441,6 +3429,7 @@ Lang.Category = {
 };
 Lang.Device = {
     "arduino": "아두이노",
+	"byrobot_dronefighter": "바이로봇 드론파이터",
     "hamster": "햄스터",
     "albert": "알버트",
     "robotis_carCont": "로보티즈 자동차 로봇",
@@ -3568,6 +3557,14 @@ Lang.template = {
     "arduino_ext_set_tone": "디지털 %1 번 핀을 %2 음으로 %3의 옥타르보 %4 만큼 연주하기 %5",
     "arduino_ext_set_servo": "서보모터 %1 번 핀을 %2 의 각도로 정하기 %3",
     "arduino_ext_get_digital": "디지털 %1 번 센서값",
+	/* BYROBOT Start */
+    "byrobot_dronefighter_value":				"%1",
+    "byrobot_dronefighter_ledModeColor_team":	"%1 팀 LED 모드를 %2 (으)로 속도 %3 (으)로 바꾸기 %4",
+    "byrobot_dronefighter_ledModeColor":		"LED 모드를 %1 (으)로 속도 %2 (으)로 바꾸기 %3",
+    "byrobot_dronefighter_ledEventColor_team":	"%1 팀 LED 이벤트를 %2 (으)로 속도 %3 (으)로 %4 번 실행 %5",
+    "byrobot_dronefighter_ledEventColor":		"LED 이벤트를 %1 (으)로 속도 %2 (으)로 %3 번 실행 %4",
+    "byrobot_dronefighter_control":				"조종 입력을 좌우 %1 앞뒤 %2 좌우회전 %3 위아래 %4 (으)로 전달 %5",
+	/* BYROBOT End */
     "dplay_get_number_sensor_value": "아날로그 %1 번 센서값  ",
     "nemoino_get_number_sensor_value": "아날로그 %1 번 센서값  ",
     "sensorBoard_get_number_sensor_value": "아날로그 %1 번 센서값  ",
