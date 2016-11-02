@@ -570,8 +570,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         pySyntax.map(function(s) {
                             var result, tokens;
                             if (typeof s === "string") {
-                                result = key;
+                                var bs = {};
+                                result = bs;
                                 tokens = s;
+                                bs.key = key;
+                                bs.syntax = s;
+                                /*result = key;
+                                tokens = s;*/
                             } else {
                                 result = s;
                                 tokens = s.syntax;
@@ -580,6 +585,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             tokens = tokens.split('(');
                             if(tokens[0].length != 0)
                                 tokens = tokens[0];
+                            else
+                                tokens = tokens.join('(')
 
                             syntax[tokens] = result;
                         })

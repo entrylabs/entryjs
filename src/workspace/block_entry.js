@@ -8885,7 +8885,20 @@ Entry.block = {
             var dev = script.getField('DEVICE');
             return pd[dev];
         },
-        "syntax": {"js": [], "py": ["Hamster.value(%1)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.left_proximity()", params: ["leftProximity"]},
+            {syntax: "Hamster.right_proximity()", params: ["rightProximity"]},
+            {syntax: "Hamster.left_floor()", params: ["leftFloor"]},
+            {syntax: "Hamster.right_floor()", params: ["rightFloor"]},
+            {syntax: "Hamster.acceleration_x()", params: ["accelerationX"]},
+            {syntax: "Hamster.acceleration_y()", params: ["accelerationY"]},
+            {syntax: "Hamster.acceleration_z()", params: ["accelerationZ"]},
+            {syntax: "Hamster.light()", params: ["light"]},
+            {syntax: "Hamster.temperature()", params: ["temperature"]},
+            {syntax: "Hamster.signal_strength()", params: ["signalStrength"]},
+            {syntax: "Hamster.input_a()", params: ["inputA"]},
+            {syntax: "Hamster.input_b()", params: ["inputB"]}
+        ]}
     },
     "hamster_move_forward_once": {
         "color": "#00979D",
@@ -8972,7 +8985,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.move_forward()"]}
+        "syntax": {"js": [], "py": ["Hamster.move_forward_on_boaard()"]}
     },
     "hamster_turn_once": {
         "color": "#00979D",
@@ -9135,7 +9148,10 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.turn(%1)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.turn_left_on_board()", params: ["LEFT"]},
+            {syntax: "Hamster.turn_right_on_board()", params: ["RIGHT"]}
+        ]}
     },
     "hamster_move_forward_for_secs": {
         "color": "#00979D",
@@ -9194,7 +9210,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.move_forward_for_secs(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.move_forward(%1)"]}
     },
     "hamster_move_backward_for_secs": {
         "color": "#00979D",
@@ -9253,7 +9269,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.move_backward_for_secs(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.move_backward(%1)"]}
     },
     "hamster_turn_for_secs": {
         "color": "#00979D",
@@ -9329,7 +9345,10 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.turn_for_secs(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.turn_left(%2)", params: ["LEFT"]},
+            {syntax: "Hamster.turn_right(%2))", params: ["RIGHT"]}
+        ]}
     },
     "hamster_change_both_wheels_by": {
         "color": "#00979D",
@@ -9380,7 +9399,7 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.add_wheels(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.wheels_by(%1, %2)"]}
     },
     "hamster_set_both_wheels_to": {
         "color": "#00979D",
@@ -9429,7 +9448,7 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_wheels(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.wheels(%1, %2)"]}
     },
     "hamster_change_wheel_by": {
         "color": "#00979D",
@@ -9489,7 +9508,11 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.add_wheel(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.left_wheel_by(%2)", params: ["LEFT"]},
+            {syntax: "Hamster.right_wheel_by(%2))", params: ["RIGHT"]},
+            {syntax: "Hamster.both_wheels_by(%2))", params: ["BOTH"]}
+        ]}
     },
     "hamster_set_wheel_to": {
         "color": "#00979D",
@@ -9549,7 +9572,11 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_wheel(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.left_wheel(%2)", params: ["LEFT"]},
+            {syntax: "Hamster.right_wheel(%2))", params: ["RIGHT"]},
+            {syntax: "Hamster.both_wheels(%2))", params: ["BOTH"]}
+        ]}
     },
     "hamster_follow_line_using": {
         "color": "#00979D",
@@ -9607,7 +9634,13 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, mode);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.follow_line(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_LEFT_SENSOR)", params: ["BLACK", "LEFT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_WHITE_LEFT_SENSOR)", params: ["WHITE", "LEFT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_RIGHT_SENSOR)", params: ["BLACK", "RIGHT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_BOTH_SENSORS)", params: ["BLACK", "BOTH"]}
+            
+        ]}
     },
     "hamster_follow_line_until": {
         "color": "#00979D",
@@ -9683,7 +9716,13 @@ Entry.block = {
                 return script;
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.follow_line_until(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_TURN_LEFT)", params: ["BLACK", "LEFT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_WHITE_TURN_LEFT)", params: ["WHITE", "LEFT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_TURN_RIGHT)", params: ["BLACK", "RIGHT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_MOVE_FORWARD)", params: ["BLACK", "FRONT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_UTURN)", params: ["BLACK", "REAR"]}
+        ]}
     },
     "hamster_set_following_speed_to": {
         "color": "#00979D",
@@ -9726,7 +9765,7 @@ Entry.block = {
             sq.lineTracerSpeed = Number(script.getField("SPEED", script));
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_follow_speed(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.line_tracer_speed(%1)"]}
     },
     "hamster_stop": {
         "color": "#00979D",
@@ -9815,7 +9854,17 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.led_on(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.left_led(Hamster.LED_RED)", params: ["LEFT", "4"]},
+            {syntax: "Hamster.right_led(Hamster.LED_RED)", params: ["RIGHT", "4"]},
+            {syntax: "Hamster.leds(Hamster.LED_RED, Hamster.LED_RED)", params: ["BOTH", "4"]},
+            {syntax: "Hamster.left_led(Hamster.LED_YELLOW)", params: ["LEFT", "6"]},
+            {syntax: "Hamster.left_led(Hamster.LED_GREEN)", params: ["LEFT", "2"]},
+            {syntax: "Hamster.left_led(Hamster.LED_CYAN)", params: ["LEFT", "3"]},
+            {syntax: "Hamster.left_led(Hamster.LED_BLUE)", params: ["LEFT", "1"]},
+            {syntax: "Hamster.left_led(Hamster.LED_MAGENTA)", params: ["LEFT", "5"]},
+            {syntax: "Hamster.left_led(Hamster.LED_WHITE)", params: ["LEFT", "7"]}
+        ]}
     },
     "hamster_clear_led": {
         "color": "#00979D",
@@ -9861,7 +9910,11 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.led_off(%1)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.left_led(Hamster.LED_OFF)", params: ["LEFT"]},
+            {syntax: "Hamster.right_led(Hamster.LED_OFF)", params: ["RIGHT"]},
+            {syntax: "Hamster.leds(Hamster.LED_OFF, Hamster.LED_OFF)", params: ["BOTH"]}
+        ]}
     },
     "hamster_beep": {
         "color": "#00979D",
@@ -9945,7 +9998,7 @@ Entry.block = {
             sq.note = 0;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.add_buzzer(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.buzzer_by(%1)"]}
     },
     "hamster_set_buzzer_to": {
         "color": "#00979D",
@@ -9984,7 +10037,7 @@ Entry.block = {
             sq.note = 0;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_buzzer(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.buzzer(%1)"]}
     },
     "hamster_clear_buzzer": {
         "color": "#00979D",
@@ -10010,7 +10063,7 @@ Entry.block = {
             sq.note = 0;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.stop_buzzer()"]}
+        "syntax": {"js": [], "py": ["Hamster.buzzer(0)"]}
     },
     "hamster_play_note_for": {
         "color": "#00979D",
@@ -10173,7 +10226,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.rest(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.rest_note(%1)"]}
     },
     "hamster_change_tempo_by": {
         "color": "#00979D",
@@ -10211,7 +10264,7 @@ Entry.block = {
             if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.add_tempo(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.tempo_by(%1)"]}
     },
     "hamster_set_tempo_to": {
         "color": "#00979D",
@@ -10249,7 +10302,7 @@ Entry.block = {
             if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_tempo(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.tempo(%1)"]}
     },
     "hamster_set_port_to": {
         "color": "#00979D",
@@ -10309,7 +10362,15 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_port(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_ANALOG_INPUT)", params: ["A", "0"]},
+            {syntax: "Hamster.io_mode_b(Hamster.IO_MODE_ANALOG_INPUT)", params: ["B", "0"]},
+            {syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT, Hamster.IO_MODE_ANALOG_INPUT)", params: ["AB", "0"]},
+            {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_DIGITAL_INPUT)", params: ["A", "1"]},
+            {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_SERVO_OUTPUT)", params: ["A", "8"]},
+            {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_PWM_OUTPUT)", params: ["A", "9"]},
+            {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_DIGITAL_OUTPUT)", params: ["A", "10"]}
+        ]}
     },
     "hamster_change_output_by": {
         "color": "#00979D",
@@ -10368,7 +10429,11 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.add_output(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.output_a_by(%2)", params: ["A"]},
+            {syntax: "Hamster.output_a_by(%2)", params: ["B"]},
+            {syntax: "Hamster.outputs_by(%2)", params: ["AB"]}
+        ]}
     },
     "hamster_set_output_to": {
         "color": "#00979D",

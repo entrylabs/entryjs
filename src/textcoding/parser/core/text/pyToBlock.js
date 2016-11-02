@@ -174,7 +174,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result.callee = calleeData;
 
             var calleeName = Entry.TextCodingUtil.eventBlockSyntaxFilter(calleeData.name);
-            type = this.getBlockType(calleeName);
+            var syntax = calleeName;
+            
+            var blockSyntax = this.getBlockSyntax(syntax);
+            if(blockSyntax) 
+                type = blockSyntax.key;
 
             console.log("callee type", type);
 
@@ -222,16 +226,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
             /*if(calleeName)
                 var calleeTokens = calleeName.split('.');*/
 
-            type = this.getBlockType(calleeName);
+            var syntax = calleeName;
+            var blockSyntax = this.getBlockSyntax(syntax);
 
+            if(blockSyntax)
+                type = blockSyntax.key;
+            
             if(callee.property) {
                 if(callee.property.name == "range"){
                     var syntax = String("%1number#");
-                    type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;
                 }
                 else if(callee.property.name == "add") {
                     var syntax = String("(%1 %2calc_basic# %3)");
-                    type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;
                     argumentData = {raw:"PLUS", type:"Literal", value:"PLUS"};
                     console.log("arguments geniuse", arguments);
 
@@ -244,7 +256,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 else if(callee.property.name == "multiply") {
                     var syntax = String("(%1 %2calc_basic# %3)");
-                    type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;
 
                     argumentData = {raw:"MULTI", type:"Literal", value:"MULTI"};
                     if(arguments.length == 2)
@@ -254,23 +268,33 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 else if(callee.property.name == "in") {
                     var syntax = String("%4 in %2");
-                    type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;
                 }
                 else if(callee.property.name == "len") {
                     var syntax = String("len");
-                    type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;
                 }
                 else if(callee.property.name == "append") {
                     var syntax = String("%2.append");
-                    type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;
                 }
                 else if(callee.property.name  == "insert") {
                     var syntax = String("%2.insert");
-                    type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;
                 }
                 else if(callee.property.name == "pop") {
                     var syntax = String("%2.pop");
-                    type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;
                 }
 
                 if(!type) {
@@ -300,7 +324,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("CallExpression paramsDefMeta", paramsDefMeta);
 
             for(var p in paramsMeta) {
-                var paramType = paramsMeta[p].type;
+                /*var paramType = paramsMeta[p].type;
                 if(paramType == "Indicator") {
                     var pendingArg = {raw: null, type: "Literal", value: null};
                     if(p < arguments.length)
@@ -310,10 +334,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var pendingArg = {raw: "", type: "Literal", value: ""};
                     if(p < arguments.length)
                         arguments.splice(p, 0, pendingArg);
-                }
+                }*/
+                params[p] = paramsMeta[p];
             }
 
             console.log("CallExpression arguments", arguments);
+
+            if(blockSyntax.params && blockSyntax.params.length != 0) {
+                for(var p in blockSyntax.params) {
+                    var param = blockSyntax.params[p];
+                    if(param)
+                        params[p] = param;
+                }
+            }
+
 
             for(var i in arguments) {
                 var argument = arguments[i];
@@ -325,7 +359,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 if(argument) {
                     console.log("CallExpression argument", argument, "typeof", typeof argument);
-                    var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
+                    var paramIndex = this.getParamIndex(syntax);
+                    var param = this[argument.type](argument, paramsMeta[paramIndex[i]], paramsDefMeta[paramIndex[i]], true);
 
                     console.log("callexpression callee", callee, "param", param);
 
@@ -335,7 +370,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         param = param.data;
                     }
 
-                    params.push(param);
+                    console.log("callex block one multi", block);
+
+                    //params.push(param);
+                    console.log("callex param syntax", syntax, "order", paramIndex, "value", paramIndex[i]);
+                    
+                    params[paramIndex[i]] = param;
 
                     if(callee.property && callee.property.name == "range") {
                         continue;
@@ -405,6 +445,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             throw error;
                                         }
                                     } else {
+                                        if(param.object.name == "Hamster")
+                                            continue;
                                         var error = {};
                                         error.title = "지원되지 않는 코드";
                                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.name + "\'" + " 변수 객체는 지원하지 않습니다.";
@@ -572,7 +614,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(isParamAllString) { //retype considering parameter condition
                         var syntax = String("%2 + %4");
-                        type = this.getBlockType(syntax);
+                        var blockSyntax = this.getBlockSyntax(syntax);
+                        if(blockSyntax)
+                            type = blockSyntax.key;
 
                         params[1] = null;
                         params.splice(0, 0, null);
@@ -846,8 +890,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result.userCode = component.userCode;
 
         var syntax = String("%1");
-        var type = this.getBlockType(syntax);
-
+        var blockSyntax = this.getBlockSyntax(syntax);
+        var type;
+        if(blockSyntax)
+            type = blockSyntax.key;
+        
         if(type) {
             structure.type = type;
             var name = component.name;
@@ -1059,7 +1106,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("VariableDeclarator init.type", init.type);
             if(init.type == "Literal") {
                 var syntax = String("%1 = %2");
-                var type = this.getBlockType(syntax);
+                var blockSyntax = this.getBlockSyntax(syntax);
+                var type;
+                if(blockSyntax)
+                    type = blockSyntax.key;
                 structure.type = type;
 
                 /*if(idData && idData.name && !idData.name.includes("__filbert")) {
@@ -1077,14 +1127,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
                     var syntax = String("%1 = %1 + %2");
-                    var type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    var type;
+                    if(blockSyntax)
+                        type = blockSyntax.key;
+        
                     structure.type = type;
-
                     this._blockCount++;
                     console.log("VariableDeclarator blockCount++");
                 } else {
                     var syntax = String("%1 = %2");
-                    var type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    var type;
+                    if(blockSyntax)
+                        type = blockSyntax.key;
+
                     structure.type = type;
 
                     /*if(idData && idData.name && !idData.name.includes("__filbert")) {
@@ -1247,17 +1304,29 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 if(leftData && leftData.property && leftData.property.callee == "__pythonRuntime.ops.subscriptIndex") {
                     var syntax = String("%1\[%2\] = %3");
-                    var type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    var type;
+                    if(blockSyntax)
+                        type = blockSyntax.key;
+
                     structure.type = type;
                 }
                 else if(leftEx && rightEx && leftEx == rightEx) {
                     var syntax = String("%1 = %1 + %2");
-                    var type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    var type;
+                    if(blockSyntax)
+                        type = blockSyntax.key;
+
                     structure.type = type;
                 }
                 else {
                     var syntax = String("%1 = %2");
-                    var type = this.getBlockType(syntax);
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    var type;
+                    if(blockSyntax)
+                        type = blockSyntax.key;
+
                     structure.type = type;
                 }
 
@@ -1265,22 +1334,38 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
             case "+=":
                 var syntax = String("%1 = %1 + %2");
-                var type = this.getBlockType(syntax);
+                var blockSyntax = this.getBlockSyntax(syntax);
+                var type;
+                if(blockSyntax)
+                    type = blockSyntax.key;
+
                 structure.type = type;
                 break;
             case "-=":
                 var syntax = String("%1 = %1 + %2");
-                var type = this.getBlockType(syntax);
+                var blockSyntax = this.getBlockSyntax(syntax);
+                var type;
+                if(blockSyntax)
+                    type = blockSyntax.key;
+
                 structure.type = type;
                 break;
             case "*=":
                 var syntax = String("%1 = %1 + %2");
-                var type = this.getBlockType(syntax);
+                var blockSyntax = this.getBlockSyntax(syntax);
+                var type;
+                if(blockSyntax)
+                    type = blockSyntax.key;
+
                 structure.type = type;
                 break;
             case "/=":
                 var syntax = String("%1 = %1 + %2");
-                var type = this.getBlockType(syntax);
+                var blockSyntax = this.getBlockSyntax(syntax);
+                var type;
+                if(blockSyntax)
+                    type = blockSyntax.key;
+                
                 structure.type = type;
                 break;
             case "%=":
@@ -2143,7 +2228,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
 
                 var syntax = String("%2\[%4\]");
-                var type = this.getBlockType(syntax);
+                var blockSyntax = this.getBlockSyntax(syntax);
+                var type;
+                if(blockSyntax)
+                    type = blockSyntax.key;
+                
                 structure.type = type;
 
                 var arguments = propertyData.arguments;
@@ -2183,8 +2272,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 if(objectData.name == "self") {
                     var syntax = String("%1");
-                    var type = this.getBlockType(syntax);
-
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    var type;
+                    if(blockSyntax)
+                        type = blockSyntax.key;
+                
                     structure.type = type;
 
                     var block = Entry.block[type];
@@ -2237,8 +2329,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if(test.type == "Literal") {
                 if(test.value === true) {
                     var syntax = String("while True:\n$1");
-                    var type = this.getBlockType(syntax);
-
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    var type;
+                    if(blockSyntax)
+                        type = blockSyntax.key;
                 }
                 else {
                     var error = {};
@@ -2251,7 +2345,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
             else if(test.type == "Identifier") {
                 var syntax = String("while %1 %2\n$1");
-                var type = this.getBlockType(syntax);
+                var blockSyntax = this.getBlockSyntax(syntax);
+                var type;
+                if(blockSyntax)
+                    type = blockSyntax.key;
+
                 if(!Entry.TextCodingUtil.isFuncParam(test.name)) {
                     var error = {};
                     error.title = "지원되지 않는 코드";
@@ -2263,7 +2361,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
             else {
                 var syntax = String("while %1 %2\n$1");
-                var type = this.getBlockType(syntax);
+                var blockSyntax = this.getBlockSyntax(syntax);
+                var type;
+                if(blockSyntax)
+                    type = blockSyntax.key;
             }
         }
 
@@ -2763,7 +2864,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         structure.statements = [];
 
         var syntax = String("for i in range");
-        var type = this.getBlockType(syntax);
+        var blockSyntax = this.getBlockSyntax(syntax);
+        var type;
+        if(blockSyntax)
+            type = blockSyntax.key;
 
         structure.type = type;
 
@@ -2837,7 +2941,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var structure = {};
 
         var syntax = String("break");
-        var type = this.getBlockType(syntax);
+        var blockSyntax = this.getBlockSyntax(syntax);
+        var type;
+        if(blockSyntax)
+            type = blockSyntax.key;
 
         console.log("BreakStatement type", type);
 
@@ -3009,7 +3116,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
         }
 
-        var type = this.getBlockType(syntax);
+        var blockSyntax = this.getBlockSyntax(syntax);
+        var type;
+        if(blockSyntax)
+            type = blockSyntax.key;
+
         var params = [];
         var left = component.left;
 
@@ -3269,7 +3380,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("BinaryExpression operator", operator);
         console.log("BinaryExpression syntax", syntax);
 
-        var type = this.getBlockType(syntax);
+        var blockSyntax = this.getBlockSyntax(syntax);
+        var type;
+        if(blockSyntax)
+            type = blockSyntax.key;
 
         if(type) {
             console.log("BinaryExpression type", type);
@@ -3730,7 +3844,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(textFuncStatements.length > 1) {
                     var error = {};
                     error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'if\'문을 확인하세요.";
+                    error.message = "블록으로 변환될 수 없는 코드입니다1." + "\'if\'문을 확인하세요.";
                     error.line = this._blockCount;
                     console.log("send error", error);
                     throw error;
@@ -3738,7 +3852,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(!ifStatement) {
                     var error = {};
                     error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'if\'문을 확인하세요.";
+                    error.message = "블록으로 변환될 수 없는 코드입니다2." + "\'if\'문을 확인하세요.";
                     error.line = this._blockCount;
                     console.log("send error", error);
                     throw error;
@@ -3746,7 +3860,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(ifStatement.type != "_if") {
                     var error = {};
                     error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'if\'문을 확인하세요.";
+                    error.message = "블록으로 변환될 수 없는 코드입니다3." + "\'if\'문을 확인하세요.";
                     error.line = this._blockCount;
                     console.log("send error", error);
                     throw error;
@@ -3754,7 +3868,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(ifStatement.params[0].type != "boolean_basic_operator") {
                     var error = {};
                     error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'if\'문을 확인하세요.";
+                    error.message = "블록으로 변환될 수 없는 코드입니다4." + "\'if\'문을 확인하세요.";
                     error.line = this._blockCount;
                     console.log("send error", error);
                     throw error;
@@ -3795,7 +3909,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else {
                     var error = {};
                     error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'if\'문을 확인하세요.";
+                    error.message = "블록으로 변환될 수 없는 코드입니다5." + "\'if\'문을 확인하세요.";
                     error.line = this._blockCount;
                     console.log("send error", error);
                     throw error;
@@ -4174,7 +4288,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
-    p.getBlockType = function(syntax) {
+    p.getBlockSyntax = function(syntax) {
         console.log("why syntax", syntax);
         var syntax = this.blockSyntax[syntax];
         if (!syntax)
@@ -4182,8 +4296,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
         else if (typeof syntax === "string")
             return syntax;
         else
-            return syntax.key;
+            return syntax;
     };
+
+    p.getParamIndex = function(syntax) {
+        var result = {};
+        var blockSyntax = this.getBlockSyntax(syntax);
+        var fullSyntax = blockSyntax.syntax;
+        var paramReg = /(%.)/mi;
+        var paramTokens = fullSyntax.split(paramReg);
+
+        var index = 0;
+        for(var i in paramTokens) {
+            var paramToken = paramTokens[i];
+            if(paramReg.test(paramToken)) {
+                var paramIndex = paramToken.split('%')[1];
+                result[index++] = Number(paramIndex)-1;
+            }
+        }
+
+        console.log("getParamIndex result", result);
+        return result;
+    }
 
     ///////////////////////////////////////////////////////////
     //Not Yet Used Syntax
