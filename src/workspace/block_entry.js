@@ -10428,9 +10428,9 @@ Entry.block = {
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
-            {syntax: "Hamster.output_a(%1, %2)", params: ["A"]},
-            {syntax: "Hamster.output_b(%1, %2)", params: ["B"]},
-            {syntax: "Hamster.outputs(%1, %2)", params: ["AB"]}
+            {syntax: "Hamster.output_a(%2)", params: ["A"]},
+            {syntax: "Hamster.output_b(%2)", params: ["B"]},
+            {syntax: "Hamster.outputs(%2)", params: ["AB"]}
         ]}
     },
     "is_clicked": {

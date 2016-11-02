@@ -128,13 +128,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var result = "";
         var syntaxObj, syntax;
 
-        if(block._schema && block._schema.syntax) {
-            syntaxObj = block._schema.syntax.py[0];
-            if (typeof syntaxObj === "string")
-                syntax = syntaxObj;
-            else
-                syntax = syntaxObj.syntax;
-        }
+        syntaxObj = this.searchSyntax(block);
+        if (syntaxObj)
+            syntax = syntaxObj.syntax;
 
         // User Function
         if(this.isFunc(block)) {
@@ -396,7 +392,30 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return result;
     };
 
-    p.searchSyntax = function(syntaxes, block) {
+    p.searchSyntax = function(block) {
+        if(block._schema && block._schema.syntax) {
+            var syntaxes = block._schema.syntax.py.concat();
+            while (syntaxes.length) {
+                var isFail = false;
+                var syntax = syntaxes.shift();
+                if (typeof syntax === "string")
+                    return {syntax: syntax};
+                if (syntax.params) {
+                    var params = block.params;
+                    for (var i = 0; i < syntax.params.length; i++) {
+                        if (syntax.params[i] && syntax.params[i] !== block.params[i]) {
+                            isFail = true;
+                            break;
+                        }
+                    }
+                }
+                if (isFail) {
+                    continue;
+                }
+                return syntax;
+            }
+        }
+        return null;
     };
 
     p.FieldAngle = function(dataParam) {

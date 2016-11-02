@@ -16683,7 +16683,9 @@ Entry.BlockToPyParser = function(a) {
   a.Block = function(b) {
     console.log("this._parseMode", this._parseMode);
     var a = "", c, e;
-    b._schema && b._schema.syntax && (c = b._schema.syntax.py[0], e = "string" === typeof c ? c : c.syntax);
+    if (c = this.searchSyntax(b)) {
+      e = c.syntax;
+    }
     if (this.isFunc(b)) {
       if (console.log("Block isFunc", b), console.log("Block makeFuncDef", this.makeFuncDef(b)), this._funcDefMap[b.data.type] = this.makeFuncDef(b), console.log("result0", a), this.isRegisteredFunc(b) && (e = this.makeFuncSyntax(b), console.log("Func Fianl Syntax", e), this._parseMode == Entry.Parser.PARSE_SYNTAX)) {
         return e;
@@ -16738,7 +16740,27 @@ Entry.BlockToPyParser = function(a) {
     this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (b = Object.keys(l).length) && (a = this.makeExpressionWithVariable(a, b));
     return a;
   };
-  a.searchSyntax = function(b, a) {
+  a.searchSyntax = function(b) {
+    if (b._schema && b._schema.syntax) {
+      for (var a = b._schema.syntax.py.concat();a.length;) {
+        var c = !1, e = a.shift();
+        if ("string" === typeof e) {
+          return {syntax:e};
+        }
+        if (e.params) {
+          for (var f = 0;f < e.params.length;f++) {
+            if (e.params[f] && e.params[f] !== b.params[f]) {
+              c = !0;
+              break;
+            }
+          }
+        }
+        if (!c) {
+          return e;
+        }
+      }
+    }
+    return null;
   };
   a.FieldAngle = function(b) {
     return b;
@@ -19041,7 +19063,7 @@ Entry.PyToBlockParser = function(a) {
   };
   a.getBlockType = function(b) {
     console.log("why syntax", b);
-    return this.blockSyntax[b];
+    return (b = this.blockSyntax[b]) ? "string" === typeof b ? b : b.key : null;
   };
   a.RegExp = function(b) {
     console.log("RegExp", b);
@@ -19455,7 +19477,13 @@ Entry.Parser = function(a, b, d, c) {
       } else {
         if (b === Entry.Vim.WORKSPACE_MODE) {
           for (l in f = Entry.block, f) {
-            g = f[l], h = null, g.syntax && g.syntax.py && (h = g.syntax.py), h && (h = String(h), g = h.split("("), 0 != g[0].length && (h = g[0]), c[h] = l);
+            g = f[l], h = null, g.syntax && g.syntax.py && (h = g.syntax.py), h && h.map(function(b) {
+              var a, d;
+              "string" === typeof b ? (a = l, d = b) : (a = b, d = b.syntax, b.key = l);
+              d = d.split("(");
+              0 != d[0].length && (d = d[0]);
+              c[d] = a;
+            });
           }
         }
       }
@@ -27067,26 +27095,26 @@ Entry.RenderView = function(a, b, d) {
     }.bind(this), 0);
   };
   a._getHorizontalPadding = function() {
-    var a = {LEFT:20, LEFT_MOST:0}[this._align];
-    return void 0 !== a ? a : this.svgDom.width() / 2;
+    var b = {LEFT:20, LEFT_MOST:0}[this._align];
+    return void 0 !== b ? b : this.svgDom.width() / 2;
   };
 })(Entry.RenderView.prototype);
 Entry.skinContainer = {_skins:{}};
 (function(a) {
   a.skinSchema = {type:"", condition:[]};
-  a.loadSkins = function(a) {
-    a.map(this.addSkin.bind(this));
+  a.loadSkins = function(b) {
+    b.map(this.addSkin.bind(this));
   };
-  a.addSkin = function(a) {
-    var d = function() {
+  a.addSkin = function(b) {
+    var a = function() {
     };
-    d.prototype = Entry.block[a.type];
-    var d = new d, c;
-    for (c in a) {
-      d[c] = a[c];
+    a.prototype = Entry.block[b.type];
+    var a = new a, c;
+    for (c in b) {
+      a[c] = b[c];
     }
-    this._skins[a.type] || (this._skins[a.type] = []);
-    this._skins[a.type].push(d);
+    this._skins[b.type] || (this._skins[b.type] = []);
+    this._skins[b.type].push(a);
   };
   a.getSkin = function(a) {
     if (this._skins[a.type]) {
