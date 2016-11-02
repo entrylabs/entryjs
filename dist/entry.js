@@ -26490,7 +26490,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     a && a.constructor === Entry.Board && this.trashcan.setBoard(a);
   };
   b._syncTextCode = function() {
-    console.log("_syncTextCode current object", Entry.TextCodingUtil._currentObject);
     if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
       console.log("workspace textType", this.textType);
       var a = this.vimBoard.textToCode(this.textType), b = this.board, c = b.code;
