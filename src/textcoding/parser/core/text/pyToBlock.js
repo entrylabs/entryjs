@@ -178,17 +178,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var calleeName = Entry.TextCodingUtil.eventBlockSyntaxFilter(calleeData.name);
             type = this.getBlockType(calleeName);
 
-            console.log("callee type", type);
+            console.log("callee type", type); 
 
             if(!type) {
                 var funcNameKey = calleeData.name + component.arguments.length;
                 if(calleeData.name && arguments.length != 0 && arguments[0].type == "Literal") {
                     if(!this._funcMap.contains(funcNameKey)) {
+                        console.log("error", Entry.TextCodingUtilError.TC_ERR_TITLE_CONVERTING);
                         Entry.TextCodingUtilError.error(
                             Entry.TextCodingUtilError.TC_ERR_TITLE_CONVERTING,
                             Entry.TextCodingUtilError.TC_ERR_MESSAGE_NO_BLOCK,
-                            calleeName,
-                            blockCount);
+                            calleeData.name,
+                            this._blockCount); 
                     }
                 }
             }

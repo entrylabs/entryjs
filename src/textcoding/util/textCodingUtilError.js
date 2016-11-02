@@ -8,30 +8,33 @@ goog.provide("Entry.TextCodingUtilError");
 Entry.TextCodingUtilError = {};
 
 (function(tue) {
-	this.TC_ERR_TITLE_SYNTAX = "title_syntax";
-	this.TC_ERR_TITLE_CONVERTING = "title_converting";
+	tue.TC_ERROR_TITLE_SYNTAX = "tc_error_title_syntax";
+	tue.TC_ERROR_TITLE_CONVERTING = "tc_error_title_converting";
 
-	this.TC_ERR_MESSAGE_NO_BLOCK = "message_no_block";
-	this.TC_ERR_MESSAGE_NO_VARIABLE = "message_no_variable";
-	this.TC_ERR_MESSAGE_NO_LIST = "message_no_list";
-	this.TC_ERR_MESSAGE_OBJECT ="message_no_object";
+	tue.TC_ERROR_MESSAGE_NO_BLOCK = "tc_error_message_no_block";
+	tue.TC_ERROR_MESSAGE_NO_VARIABLE = "tc_error_message_no_variable";
+	tue.TC_ERROR_MESSAGE_NO_LIST = "tc_error_message_no_list";
+	tue.TC_ERROR_MESSAGE_OBJECT ="tc_error_message_no_object";
 
 	var error = {};
+ 
 	tue.error = function(title, message, keyword, line) {
 		console.log("error control", title, message, keyword, line);
 		var errorInfo = this.getErrorInfo(title, message, keyword);
+		console.log("errorInfo", errorInfo);
 		error.title = errorInfo.title;
-		error.message = errorInfo.message;
+		error.message = errorInfo.message; 
 		error.line = line;
 		throw error;
 	};
 
 	tue.getErrorInfo = function(title, message, keyword) {
 		var info = {};
-		info.title = Lang.TextCoding.Error[title];
-		info.message = "\'" + keyword + "\'" + Lang.textcoding[message];
+		console.log("getErrorInfo", Lang.TextCoding[title]);
+		info.title = Lang.TextCoding[title];
+		info.message = "\'" + keyword + "\'" + Lang.TextCoding[message];
 
 		return info;
 
 	};
-})(Entry.TextCodingUtilError);
+})(Entry.TextCodingUtilError); 

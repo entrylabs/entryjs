@@ -1854,7 +1854,7 @@ Entry.TextCodingUtil = {};
             return true;
 
         return false;
-    }
+    };
 
     tu.makeMathExpression = function(text) {
         console.log("makeMathExpression text", text);
@@ -1948,5 +1948,5 @@ Entry.TextCodingUtil = {};
         console.log("makeMathExpression result", result);
 
         return result;
-    }
+    };
 })(Entry.TextCodingUtil);

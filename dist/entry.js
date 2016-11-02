@@ -14762,16 +14762,17 @@ Entry.PyToBlockParserTemp = function(b) {
 })(Entry.PyToBlockParserTemp.prototype);
 Entry.TextCodingUtilError = {};
 (function(b) {
-  this.TC_ERR_TITLE_SYNTAX = "title_syntax";
-  this.TC_ERR_TITLE_CONVERTING = "title_converting";
-  this.TC_ERR_MESSAGE_NO_BLOCK = "message_no_block";
-  this.TC_ERR_MESSAGE_NO_VARIABLE = "message_no_variable";
-  this.TC_ERR_MESSAGE_NO_LIST = "message_no_list";
-  this.TC_ERR_MESSAGE_OBJECT = "message_no_object";
+  b.TC_ERROR_TITLE_SYNTAX = "tc_error_title_syntax";
+  b.TC_ERROR_TITLE_CONVERTING = "tc_error_title_converting";
+  b.TC_ERROR_MESSAGE_NO_BLOCK = "tc_error_message_no_block";
+  b.TC_ERROR_MESSAGE_NO_VARIABLE = "tc_error_message_no_variable";
+  b.TC_ERROR_MESSAGE_NO_LIST = "tc_error_message_no_list";
+  b.TC_ERROR_MESSAGE_OBJECT = "tc_error_message_no_object";
   var a = {};
   b.error = function(b, c, e, f) {
     console.log("error control", b, c, e, f);
     b = this.getErrorInfo(b, c, e);
+    console.log("errorInfo", b);
     a.title = b.title;
     a.message = b.message;
     a.line = f;
@@ -14779,8 +14780,9 @@ Entry.TextCodingUtilError = {};
   };
   b.getErrorInfo = function(a, b, e) {
     var f = {};
-    f.title = Lang.TextCoding.Error[a];
-    f.message = "'" + e + "'" + Lang.textcoding[b];
+    console.log("getErrorInfo", Lang.TextCoding[a]);
+    f.title = Lang.TextCoding[a];
+    f.message = "'" + e + "'" + Lang.TextCoding[b];
     return f;
   };
 })(Entry.TextCodingUtilError);
@@ -14860,7 +14862,7 @@ Entry.PyToBlockParser = function(b) {
       console.log("callee type", e);
       if (!e) {
         var k = g.name + a.arguments.length;
-        g.name && 0 != arguments.length && "Literal" == arguments[0].type && (this._funcMap.contains(k) || Entry.TextCodingUtilError.error(Entry.TextCodingUtilError.TC_ERR_TITLE_CONVERTING, Entry.TextCodingUtilError.TC_ERR_MESSAGE_NO_BLOCK, h, blockCount));
+        g.name && 0 != arguments.length && "Literal" == arguments[0].type && !this._funcMap.contains(k) && (console.log("error", Entry.TextCodingUtilError.TC_ERR_TITLE_CONVERTING), Entry.TextCodingUtilError.error(Entry.TextCodingUtilError.TC_ERR_TITLE_CONVERTING, Entry.TextCodingUtilError.TC_ERR_MESSAGE_NO_BLOCK, g.name, this._blockCount));
       }
     } else {
       var l = g.object, h = null;
