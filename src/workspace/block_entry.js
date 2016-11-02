@@ -2289,7 +2289,7 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ 
+            "params": [
                 null,
                 {
                     "type": "number",
@@ -2306,7 +2306,7 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "100" ]
-                } 
+                }
             ],
             "type": "arduino_ext_get_analog_value_map"
         },
@@ -2344,7 +2344,7 @@ Entry.block = {
             result = result * ((value5 - value4) / (value3 - value2));
             result += value4;
             result = Math.min(value5, result);
-            result = Math.max(value4, result);      
+            result = Math.max(value4, result);
 
             if(!scope.isStart) {
                 scope.isStart = true;
@@ -10427,7 +10427,11 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_output(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.output_a(%1, %2)", params: ["A"]},
+            {syntax: "Hamster.output_b(%1, %2)", params: ["B"]},
+            {syntax: "Hamster.outputs(%1, %2)", params: ["AB"]}
+        ]}
     },
     "is_clicked": {
         "color": "#AEB8FF",
@@ -21359,7 +21363,7 @@ Entry.block = {
             for (var key in entities){
                 entity = entities[key];
             }
-            
+
             var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
 
             if(unitComp.isStartedUnit) {
@@ -21381,7 +21385,7 @@ Entry.block = {
             if(!isGoal) {
                 this.executor.stepInto(statement);
                 return Entry.STATIC.BREAK;
-            }                
+            }
             // Ntry.dispatchEvent('executeEnd');
         }
     },

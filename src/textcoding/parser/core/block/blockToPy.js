@@ -11,8 +11,6 @@ goog.require("Entry.Map");
 goog.require("Entry.Queue");
 
 Entry.BlockToPyParser = function(blockSyntax) {
-    this.blockSyntax = blockSyntax;
-
     var variableMap = new Entry.Map();
     this._variableMap = variableMap;
 
@@ -128,10 +126,15 @@ Entry.BlockToPyParser = function(blockSyntax) {
         /*if(!block._schema)
             return "";*/
         var result = "";
-        var syntax;
+        var syntaxObj, syntax;
 
-        if(block._schema && block._schema.syntax)
-            syntax = block._schema.syntax.py[0];
+        if(block._schema && block._schema.syntax) {
+            syntaxObj = block._schema.syntax.py[0];
+            if (typeof syntaxObj === "string")
+                syntax = syntaxObj;
+            else
+                syntax = syntaxObj.syntax;
+        }
 
         // User Function
         if(this.isFunc(block)) {
@@ -273,7 +276,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
 
                         param = Entry.TextCodingUtil.binaryOperatorValueConvertor(param);
-                        param = String(param); 
+                        param = String(param);
 
                         if(!Entry.TextCodingUtil.isNumeric(param) &&
                             !Entry.TextCodingUtil.isBinaryOperator(param)) {
@@ -282,7 +285,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                         console.log("result and param text", result, param);
 
-                        if(param == String('\"None\"')) { 
+                        if(param == String('\"None\"')) {
                            var data = {None:"None"};
                            var x = "None";
                            param = data[x];
@@ -393,6 +396,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return result;
     };
 
+    p.searchSyntax = function(syntaxes, block) {
+    };
+
     p.FieldAngle = function(dataParam) {
         //console.log("FieldAngle", dataParam);
 
@@ -416,9 +422,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var object = Entry.playground.object;
         console.log("FieldDropdownDynamic Object", object);
 
-        if(dataParam == "None") {   
-            dataParam = "None"; 
-        } 
+        if(dataParam == "None") {
+            dataParam = "None";
+        }
         else if(dataParam == "null") {
             dataParam = "None";
         }
@@ -483,10 +489,6 @@ Entry.BlockToPyParser = function(blockSyntax) {
         //console.log("FieldKeyboard After", dataParam);
 
         return dataParam;
-    };
-
-    p.getBlockType = function(syntax) {
-        return this.blockSyntax[syntax];
     };
 
     p.makeExpressionWithVariable = function(blockExp, paramCount) {
