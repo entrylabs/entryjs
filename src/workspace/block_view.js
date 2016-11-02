@@ -12,7 +12,8 @@ Entry.BlockView = function(block, board, mode) {
     var that = this;
     Entry.Model(this, false);
     this.block = block;
-    this._lazyUpdatePos = _.debounce(block._updatePos.bind(block), 200);
+    this._lazyUpdatePos =
+        Entry.Utils.debounce(block._updatePos.bind(block), 200);
     this._board = board;
     this._observers = [];
     this.set(block);
@@ -20,6 +21,17 @@ Entry.BlockView = function(block, board, mode) {
     this.svgGroup.blockView = this;
 
     this._schema = Entry.skinContainer.getSkin(block);
+
+    switch (mode) {
+        case undefined:
+        case Entry.Workspace.MODE_BOARD:
+        case Entry.Workspace.MODE_OVERLAYBOARD:
+            this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
+            break;
+        case Entry.Workspace.MODE_VIMBOARD:
+            this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
+            break;
+    }
 
     if (this._schema === undefined) {
         this.block.destroy(false, false);
@@ -30,8 +42,9 @@ Entry.BlockView = function(block, board, mode) {
         this.block.setDeletable(this._schema.deletable)
     if (this._schema.copyable)
         this.block.setCopyable(this._schema.copyable)
-    if (this._schema.display === false)
+    if (this._schema.display === false || block.display === false) {
         this.set({display: false})
+    }
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
@@ -58,6 +71,7 @@ Entry.BlockView = function(block, board, mode) {
 
         that.onMouseDown.apply(that, arguments);
     };
+
     this._startRender(block, mode);
 
     // observe
@@ -68,7 +82,7 @@ Entry.BlockView = function(block, board, mode) {
     this._observers.push(this.observe(this, "_updateBG", ["magneting"], false));
 
     this._observers.push(this.observe(this, "_updateOpacity", ["visible"], false));
-    this._observers.push(this.observe(this, "_updateDisplay", ["display"], false));
+    this._observers.push(this.observe(this, "_updateDisplay", ["display"]));
     this._observers.push(this.observe(this, "_updateShadow", ["shadow"]));
     this._observers.push(this.observe(this, "_updateMagnet", ["offsetY"]));
     this._observers.push(board.code.observe(this, '_setBoard', ['board'], false));
@@ -86,6 +100,10 @@ Entry.BlockView = function(block, board, mode) {
 Entry.BlockView.PARAM_SPACE = 5;
 Entry.BlockView.DRAG_RADIUS = 5;
 Entry.BlockView.pngMap = {};
+
+Entry.BlockView.RENDER_MODE_BLOCK = 1;
+Entry.BlockView.RENDER_MODE_TEXT = 2;
+
 
 (function(p) {
     p.schema = {
@@ -109,9 +127,12 @@ Entry.BlockView.pngMap = {};
     p._startRender = function(block, mode) {
         var that = this;
         var skeleton = this._skeleton;
-        this.svgGroup.attr({
-            class: "block"
-        });
+        var attr = { class: "block" };
+
+        if (this.display === false)
+            attr.display = 'none'
+
+        this.svgGroup.attr(attr);
 
         if (this._schema.css)
             this.svgGroup.attr({
@@ -887,10 +908,12 @@ Entry.BlockView.pngMap = {};
 
     p.renderText = function() {
         this._startContentRender(Entry.Workspace.MODE_VIMBOARD);
+        this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
     };
 
     p.renderBlock = function() {
         this._startContentRender(Entry.Workspace.MODE_BOARD);
+        this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
     };
 
     p._updateOpacity = function() {
@@ -1285,5 +1308,6 @@ Entry.BlockView.pngMap = {};
         this._backgroundPath = backgroundPath;
         this.pathGroup.insertBefore(backgroundPath, this._path);
     };
+
 
 })(Entry.BlockView.prototype);

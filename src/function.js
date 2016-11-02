@@ -51,9 +51,11 @@ Entry.Func.registerFunction = function(func) {
     var workspace = Entry.playground.mainWorkspace;
     if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
-    var menuCode = blockMenu.getCategoryCodes("func");
+    var menuCode = blockMenu.code;
     this._targetFuncBlock = menuCode.createThread([{
-        type: "func_" + func.id
+        type: "func_" + func.id,
+        category: 'func',
+        display: false
     }]);
     func.blockMenuBlock = this._targetFuncBlock;
 };
@@ -238,18 +240,22 @@ Entry.Func.setupMenuCode = function() {
     var workspace = Entry.playground.mainWorkspace;
     if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
-    var menuCode = blockMenu.getCategoryCodes("func");
+    var menuCode = blockMenu.code;
+    var CATEGORY = 'func';
     this._fieldLabel = menuCode.createThread([{
-        type: "function_field_label"
+        type: "function_field_label",
+        category: CATEGORY
     }]).getFirstBlock();
     this._fieldString = menuCode.createThread([{
         type: "function_field_string",
+        category: CATEGORY,
         params: [
             {type: this.requestParamBlock("string")}
         ]
     }]).getFirstBlock();
     this._fieldBoolean = menuCode.createThread([{
         type: "function_field_boolean",
+        category: CATEGORY,
         params: [
             {type: this.requestParamBlock("boolean")}
         ]
@@ -319,13 +325,13 @@ Entry.Func.updateMenu = function() {
     if (this.targetFunc) {
         if (!this.menuCode)
             this.setupMenuCode();
-        blockMenu.banClass("functionInit");
-        blockMenu.unbanClass("functionEdit");
+        blockMenu.banClass("functionInit", true);
+        blockMenu.unbanClass("functionEdit", true);
     } else {
-        blockMenu.unbanClass("functionInit");
-        blockMenu.banClass("functionEdit");
+        blockMenu.unbanClass("functionInit", true);
+        blockMenu.banClass("functionEdit", true);
     }
-    blockMenu.reDraw();
+    blockMenu.align();
 };
 
 Entry.Func.prototype.edit = function() {

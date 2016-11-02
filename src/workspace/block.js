@@ -21,7 +21,18 @@ Entry.Block = function(block, thread) {
     this.setThread(thread);
     this.load(block);
 
+    var category = block.category;
+    if (category) {
+        this.category = category;
+        if (Entry.block[this.type])
+            Entry.block[this.type].isFor =
+                ['category_' + category];
+    }
+
     var code = this.getCode();
+
+    if (block.display !== undefined)
+        this.display = block.display;
 
     code.registerBlock(this);
     var events = this.events.dataAdd;
