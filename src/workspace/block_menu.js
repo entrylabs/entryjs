@@ -332,6 +332,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         for (var i=0; i<threads.length; i++) {
             var thread = threads[i];
             var block = thread.getFirstBlock();
+            if (!block) continue;
             var blockInfo = Entry.block[block.type]
             if (this._isNotVisible(blockInfo) || targetMode === block.view.renderMode)
                 continue;
@@ -349,6 +350,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         for (var i=0; i<threads.length; i++) {
             var thread = threads[i];
             var block = thread.getFirstBlock();
+            if (!block) continue;
             var blockInfo = Entry.block[block.type]
             if (this._isNotVisible(blockInfo) || targetMode === block.view.renderMode)
                 continue;

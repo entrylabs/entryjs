@@ -1008,8 +1008,8 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isEntryEventFuncTypeWithParam = function(block) {
-        if(block.type == "when_press_key" ||
-            block.type == "when_get_signal")
+        if(block.type == "when_some_key_pressed" ||
+            block.type == "when_message_cast")
             return true;
 
         return false;

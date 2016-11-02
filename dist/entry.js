@@ -12564,7 +12564,7 @@ Entry.TextCodingUtil = {};
     return a && a.data && a.data.params && a.data.params[1] ? ("function_field_string" != a.data.type && "function_field_boolean" != a.data.type || this._funcParamQ.enqueue(a.data.params[0].data.type), this.searchFuncDefParam(a.data.params[1])) : a;
   };
   b.isEntryEventFuncTypeWithParam = function(a) {
-    return "when_press_key" == a.type || "when_get_signal" == a.type ? !0 : !1;
+    return "when_some_key_pressed" == a.type || "when_message_cast" == a.type ? !0 : !1;
   };
   b.isEntryEventDesignatedParamName = function(a) {
     var b = !1;
@@ -21939,14 +21939,14 @@ Entry.BlockMenu = function(b, a, d, c) {
   b.renderText = function(a) {
     for (var b = this.code.getThreads(), c = Entry.BlockView.RENDER_MODE_TEXT, e = 0;e < b.length;e++) {
       var f = b[e], g = f.getFirstBlock();
-      this._isNotVisible(Entry.block[g.type]) || c === g.view.renderMode || (f.view ? f.view.renderText() : f.createView(this, Entry.Workspace.MODE_VIMBOARD));
+      g && (this._isNotVisible(Entry.block[g.type]) || c === g.view.renderMode || (f.view ? f.view.renderText() : f.createView(this, Entry.Workspace.MODE_VIMBOARD)));
     }
     a && a();
   };
   b.renderBlock = function(a) {
     for (var b = this.code.getThreads(), c = Entry.BlockView.RENDER_MODE_BLOCK, e = 0;e < b.length;e++) {
       var f = b[e], g = f.getFirstBlock();
-      this._isNotVisible(Entry.block[g.type]) || c === g.view.renderMode || (f.view ? f.view.renderBlock() : f.createView(this, Entry.Workspace.MODE_BOARD));
+      g && (this._isNotVisible(Entry.block[g.type]) || c === g.view.renderMode || (f.view ? f.view.renderBlock() : f.createView(this, Entry.Workspace.MODE_BOARD)));
     }
     a && a();
   };

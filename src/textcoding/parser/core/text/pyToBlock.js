@@ -173,7 +173,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(callee.type == "Identifier") {
             console.log("CallExpression Identifier calleeData", calleeData);
-            result.callee = calleeData;
+            result.callee = calleeData; 
 
             var calleeName = Entry.TextCodingUtil.eventBlockSyntaxFilter(calleeData.name);
             type = this.getBlockType(calleeName);
