@@ -7,6 +7,7 @@ goog.provide("Entry.PyToBlockParser");
 
 goog.require("Entry.KeyboardCode");
 goog.require("Entry.TextCodingUtil");
+goog.require("Entry.TextCodingUtilError");
 goog.require("Entry.Map");
 goog.require("Entry.Queue");
 
@@ -183,13 +184,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var funcNameKey = calleeData.name + component.arguments.length;
                 if(calleeData.name && arguments.length != 0 && arguments[0].type == "Literal") {
                     if(!this._funcMap.contains(funcNameKey)) {
-                        console.log("callex error calleeData", calleeData);
-                        var error = {};
-                        error.title = "지원되지 않는 코드";
-                        error.message = "블록으로 변환될 수 없는 코드입니다. \'range()\'를 사용하세요.";
-                        error.line = this._blockCount;
-                        console.log("send error", error);
-                        throw error;
+                        Entry.TextCodingUtilError.error(
+                            Entry.TextCodingUtilError.TC_ERR_TITLE_CONVERTING,
+                            Entry.TextCodingUtilError.TC_ERR_MESSAGE_NO_BLOCK,
+                            calleeName,
+                            blockCount);
                     }
                 }
             }

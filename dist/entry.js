@@ -13762,6 +13762,1028 @@ Entry.JsToBlockParser = function(b) {
     }
   };
 })(Entry.JsToBlockParser.prototype);
+Entry.PyBlockAssembler = function(b) {
+  this.blockSyntax = b;
+  this._blockStatmentIndex = 0;
+  this._blockStatments = [];
+};
+(function(b) {
+  b.Program = function(a) {
+    var b = [], c;
+    for (c in a) {
+      if ("Program" != a[c].type) {
+        return;
+      }
+      var e = [], f = a[c].body;
+      console.log("nodes", f);
+      for (c in f) {
+        var g = f[c], g = this[g.type](g);
+        console.log("checkitout", g);
+        g = this._assembler[g.type](g);
+        e.push(g);
+      }
+      console.log("thread", e);
+      b.push(e);
+    }
+    return b;
+  };
+  b.ExpressionStatement = function(a) {
+    console.log("ExpressionStatement component", a);
+    var b = {};
+    a = a.expression;
+    "Literal" == a.type ? (a = this[a.type]({type:"Block", accept:"booleanMagnet"}, a), b.type = a.type, result = b, console.log("ExpressionStatement type literal", result)) : (a = this[a.type](a), b.type = a.type, b.params = a.params, result = b, console.log("ExpressionStatement type not literal", result));
+    console.log("ExpressionStatement result", result);
+    return result;
+  };
+  b.AssignmentExpression = function(a) {
+    console.log("AssignmentExpression component", a);
+    var b = [], c;
+    c = a.left;
+    c.type ? ("Literal" == c.type ? (c = this[c.type](paramsMeta[0], c), console.log("AssignmentExpression left Literal param", c)) : c = this[c.type](c), c && b.push(c), console.log("AssignmentExpression left param", c)) : (c = a.left, this[c.type](c));
+    operator = String(a.operator);
+    console.log("AssignmentExpression operator", operator);
+    operator && (c = operator = Entry.TextCodingUtil.logicalExpressionConvert(operator), b.push(c));
+    c = a.right;
+    c.type ? ("Literal" == c.type ? (c = this[c.type](paramsMeta[2], c), console.log("AssignmentExpression right Literal param", c)) : c = this[c.type](c), c && b.push(c), console.log("AssignmentExpression right param", c)) : (c = a.right, this[c.type](c));
+    console.log("AssignmentExpression params", b);
+    console.log("AssignmentExpression result", result);
+    return result;
+  };
+  b.CallExpression = function(a) {
+    console.log("CallExpression component", a);
+    var b;
+    b = {};
+    var c = a.callee, c = this[c.type](c);
+    console.log("CallExpression calleeData", c, "calleeData typeof", typeof c);
+    var e = "object" != typeof c.object ? String(c.object).concat(".").concat(String(c.property)) : String(c.object.object).concat(".").concat(String(c.object.property)).concat(".").concat(String(c.property));
+    console.log("CallExpression syntax", e);
+    c = this.getBlockType(e);
+    console.log("CallExpression type1", c);
+    c || "__pythonRuntime.functions.range" == e && (c = "repeat_basic");
+    console.log("CallExpression type2", c);
+    e = Entry.block[c].params;
+    console.log("CallExpression paramsMeta", e);
+    var arguments = a.arguments, f = [], g;
+    for (g in arguments) {
+      var h = arguments[g];
+      console.log("CallExpression argument", h);
+      if ("Literal" == h.type) {
+        var k = e[g];
+        "Indicator" == k.type ? (h = null, f.push(h), g--) : (console.log("CallExpression argument index", h.type, g), h = this[h.type](k, h, c, g), f.push(h));
+        g == arguments.length - 1 && (console.log("CallExpression in1"), g < e.length && (console.log("CallExpression in2"), f.push(null)));
+        console.log("CallExpression i", g);
+      }
+    }
+    console.log("CallExpression params", f);
+    b.type = c;
+    b.params = f;
+    console.log("CallExpression result", b);
+    return b;
+  };
+  b.Literal = function(a, b, c, e) {
+    console.log("Literal paramMeta component particularIndex blockType", a, b, c, e);
+    b = b.value;
+    a = c ? this["Param" + a.type](a, b, c, e) : this["Param" + a.type](a, b);
+    console.log("Literal result", a);
+    return a;
+  };
+  b.ParamColor = function(a, b) {
+    console.log("ParamColor paramMeta value", a, b);
+    console.log("ParamColor result", b);
+    return b;
+  };
+  b.ParamDropdown = function(a, b) {
+    console.log("ParamDropdown paramMeta value", a, b);
+    console.log("ParamDropdownDynamic result", b);
+    return b;
+  };
+  b.ParamDropdownDynamic = function(a, b) {
+    console.log("ParamDropdownDynamic paramMeta value", a, b);
+    var c;
+    if ("mouse" == b) {
+      return "mouse";
+    }
+    var e = a.options, f;
+    for (f in e) {
+      if (console.log("options", e), b == e[f][0]) {
+        console.log("options[i][0]", e[f][0]);
+        c = e[f][1];
+        break;
+      }
+    }
+    console.log("ParamDropdownDynamic result", c);
+    return c;
+  };
+  b.ParamKeyboard = function(a, b) {
+    console.log("ParamKeyboard paramMeta value", a, b);
+    var c;
+    c = Entry.KeyboardCodeMap.prototype.keyCharToCode[b];
+    console.log("ParamKeyboard result", c);
+    return c;
+  };
+  b.ParamBlock = function(a, b, c, e) {
+    console.log("ParamBlock paramMeta value blockType", a, b, c, e);
+    var f = {}, g = [];
+    c = Entry.TextCodingUtil.particularParam(c);
+    if (null != c) {
+      var h = c[e];
+      if (h) {
+        h = c[e];
+        console.log("ParamBlock particularType", h);
+        e = h;
+        f.type = e;
+        c = Entry.block[e].params;
+        console.log("ParamBlock particular block paramsMeta", a);
+        var k, l;
+        for (l in c) {
+          a = c[l];
+          a = a.options;
+          for (var m in a) {
+            h = a[m], b == h[0] && (k = h[1]);
+          }
+        }
+        g.push(k);
+        f.params = g;
+      } else {
+        switch(e = typeof b, e) {
+          case "number":
+            f.type = "number";
+            g.push(b);
+            f.params = g;
+            break;
+          case "boolean":
+            1 == b ? f.type = "True" : 0 == b && (f.type = "False");
+            break;
+          default:
+            f.type = "text", g.push(b), f.params = g;
+        }
+      }
+    } else {
+      switch(e = typeof b, e) {
+        case "number":
+          f.type = "number";
+          g.push(b);
+          f.params = g;
+          break;
+        case "boolean":
+          1 == b ? f.type = "True" : 0 == b && (f.type = "False");
+          break;
+        default:
+          f.type = "text", g.push(b), f.params = g;
+      }
+    }
+    console.log("ParamBlock valueType", e);
+    console.log("ParamBlock result", f);
+    return f;
+  };
+  b.Indicator = function(a, b, c) {
+  };
+  b.MemberExpression = function(a) {
+    console.log("MemberExpression component", a);
+    var b = {}, c = a.object;
+    a = a.property;
+    c = this[c.type](c);
+    a = this[a.type](a);
+    console.log("MemberExpression objectData", c);
+    console.log("MemberExpression structure", a);
+    b.object = c;
+    b.property = a;
+    console.log("MemberExpression result", b);
+    return b;
+  };
+  b.Identifier = function(a) {
+    console.log("Identifiler component", a);
+    a = a.name;
+    console.log("Identifiler result", a);
+    return a;
+  };
+  b.WhileStatement = function(a) {
+    console.log("WhileStatement component", a);
+    var b = {}, c = a.test, e;
+    1 == c.value && (e = this.getBlockType("while True:\n$1"));
+    console.log("WhileStatement type", e);
+    var f = Entry.block[e].params;
+    console.log("WhileStatement paramsMeta", f);
+    var g = [];
+    c && (c.type = "Literal", f = f[0], c = "Indicator" == f.type ? null : this[c.type](f, c), g.push(c));
+    c = [];
+    a = a.body.body;
+    for (var h in a) {
+      f = a[h], f = this[f.type](f), c.push(f);
+    }
+    b.type = e;
+    b.params = g;
+    b.statements = [];
+    b.statements.push(c);
+    console.log("WhileStatement result", b);
+    return b;
+  };
+  b.BlockStatement = function(a) {
+    console.log("BlockStatement component", a);
+    this._blockStatmentIndex = 0;
+    this._blockStatments = [];
+    var b = {};
+    a = a.body;
+    for (var c in a) {
+      var e = a[c];
+      console.log("BlockStatement body", e, "i", c);
+      e = this[e.type](e);
+      console.log("BlockStatement bodyData", e, "i", c);
+      if (e.declarations) {
+        console.log("BlockStatement statements type params bodyData", c, e);
+        var e = e.declarations, f;
+        for (f in e) {
+          var g = e[f];
+          g.init.type && (b.type = g.init.type);
+          g.init.params && (console.log("BlockStatement params", g.init.params), b.params = g.init.params);
+          console.log("BlockStatement structure", b, "j", f);
+        }
+      } else {
+        0 == this._blockStatmentIndex && this._blockStatments.push(e);
+      }
+    }
+    b.statements = [this._blockStatments];
+    console.log("BlockStatement result", b);
+    this._blockStatmentIndex++;
+    return b;
+  };
+  b.IfStatement = function(a) {
+    console.log("IfStatement component", a);
+    var b = {}, c = [], e = [], f = [], g = [], h = a.test, k = a.alternate, l = a.consequent;
+    a = this.getBlockType(null == k ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2");
+    if (null != h) {
+      var m = Entry.block[a].params;
+      console.log("IfStatement paramsMeta", m);
+      c = [];
+      h.type = "Literal";
+      m = m[0];
+      h = "Indicator" == m.type ? null : this[h.type](m, h);
+      c.push(h);
+    }
+    if (null != l) {
+      for (var n in l.body) {
+        if (h = l.body[n]) {
+          h = this[h.type](h), console.log("IfStatement consequent bodyData", h), e.push(h);
+        }
+      }
+    }
+    if (null != k) {
+      for (n in k.body) {
+        if (h = k.body[n]) {
+          h = this[h.type](h), console.log("IfStatement alternate bodyData", h), f.push(h);
+        }
+      }
+    }
+    0 != e.length && g.push(e);
+    0 != f.length && g.push(f);
+    b.type = a;
+    0 != c.length && (b.params = c);
+    0 != g.length && (b.statements = g);
+    console.log("IfStatement result", b);
+    return b;
+  };
+  b.VariableDeclaration = function(a) {
+    console.log("VariableDeclaration component", a);
+    var b = {}, c = [];
+    a = a.declarations;
+    for (var e in a) {
+      var f = a[e], f = this[f.type](f);
+      console.log("VariableDeclaration declarationData", f);
+      c.push(f);
+    }
+    b.declarations = c;
+    console.log("VariableDeclaration result", b);
+    return b;
+  };
+  b.VariableDeclarator = function(a) {
+    console.log("VariableDeclarator component", a);
+    var b = {}, c = a.id, e = this[c.type](c);
+    console.log("VariableDeclarator idData", e);
+    a = a.init;
+    a = this[a.type](a);
+    console.log("VariableDeclarator initData", a);
+    b.id = c;
+    b.init = a;
+    console.log("VariableDeclarator result", b);
+    return b;
+  };
+  b.BreakStatement = function(a) {
+    console.log("BreakStatement component", a);
+    a = {};
+    var b = this.getBlockType("break");
+    a.type = b;
+    console.log("BreakStatement result", a);
+    return a;
+  };
+  b.UnaryExpression = function(a) {
+    console.log("UnaryExpression component", a);
+    var b = [];
+    a.prefix && (a = a.operator.concat(a.argument.value), b.push(a));
+    result.params = b;
+    console.log("UnaryExpression result", result);
+    return result;
+  };
+  b.LogicalExpression = function(a) {
+    console.log("LogicalExpression component", a);
+    var b = {}, c = String(a.operator);
+    switch(c) {
+      case "&&":
+        var e = "%1 and %3";
+        break;
+      case "||":
+        e = "%1 or %3";
+        break;
+      default:
+        e = "%1 and %3";
+    }
+    var e = this.getBlockType(e), f = Entry.block[e].params;
+    console.log("LogicalExpression paramsMeta", f);
+    var g = [], c = a.left;
+    c.type ? ("Literal" == c.type ? (c = this[c.type](f[0], c), console.log("LogicalExpression left Literal param", c)) : c = this[c.type](c), c && g.push(c), console.log("LogicalExpression left param", c)) : (c = a.left, this[c.type](c));
+    c = String(a.operator);
+    console.log("LogicalExpression operator", c);
+    c && (c = Entry.TextCodingUtil.logicalExpressionConvert(c), g.push(c));
+    c = a.right;
+    c.type ? ("Literal" == c.type ? (c = this[c.type](f[2], c), console.log("LogicalExpression right Literal param", c)) : c = this[c.type](c), c && g.push(c), console.log("LogicalExpression right param", c)) : (c = a.right, this[c.type](c));
+    b.type = e;
+    b.params = g;
+    console.log("LogicalExpression result", b);
+    return b;
+  };
+  b.BinaryExpression = function(a) {
+    console.log("BinaryExpression component", a);
+    var b = {params:[]}, c = String(a.operator);
+    console.log("BinaryExpression operator", c);
+    if (c) {
+      var e = "(%1 %2 %3)"
+    }
+    console.log("BinaryExpression syntax", e);
+    e = this.getBlockType(e);
+    console.log("BinaryExpression type", e);
+    var f = Entry.block[e].params;
+    console.log("BinaryExpression paramsMeta", f);
+    var g = [], c = a.left;
+    c.type ? ("Literal" == c.type ? (c = this[c.type](f[0], c), console.log("BinaryExpression left Literal param", c)) : c = this[c.type](c), c && g.push(c), console.log("BinaryExpression left param", c)) : (c = a.left, this[c.type](c));
+    if (c = String(a.operator)) {
+      console.log("BinaryExpression operator", c), (c = Entry.TextCodingUtil.binaryOperatorConvert(c)) && g.push(c);
+    }
+    c = a.right;
+    c.type ? ("Literal" == c.type ? (c = this[c.type](f[2], c), console.log("BinaryExpression right Literal param", c)) : c = this[c.type](c), c && g.push(c), console.log("BinaryExpression right param", c)) : (c = a.right, this[c.type](c));
+    console.log("BinaryExpression params", g);
+    b.type = e;
+    b.params = g;
+    console.log("BinaryExpression result", b);
+    return b;
+  };
+  b.getBlockType = function(a) {
+    return this.blockSyntax[a];
+  };
+  b.FunctionDeclaration = function(a) {
+    console.log("FunctionDeclaration component", a);
+    console.log("FunctionDeclaration result", void 0);
+    return a;
+  };
+  b.RegExp = function(a) {
+    console.log("RegExp", a);
+    console.log("RegExp result", void 0);
+    return a;
+  };
+  b.Function = function(a) {
+    console.log("Function", a);
+    console.log("Function result", void 0);
+    return a;
+  };
+  b.EmptyStatement = function(a) {
+    console.log("EmptyStatement", a);
+    console.log("EmptyStatement result", void 0);
+    return a;
+  };
+  b.DebuggerStatement = function(a) {
+    console.log("DebuggerStatement", a);
+    console.log("DebuggerStatement result", void 0);
+    return a;
+  };
+  b.WithStatement = function(a) {
+    console.log("WithStatement", a);
+    console.log("WithStatement result", void 0);
+    return a;
+  };
+  b.ReturnStaement = function(a) {
+    console.log("ReturnStaement", a);
+    console.log("ReturnStaement result", void 0);
+    return a;
+  };
+  b.LabeledStatement = function(a) {
+    console.log("LabeledStatement", a);
+    console.log("LabeledStatement result", void 0);
+    return a;
+  };
+  b.BreakStatement = function(a) {
+    console.log("BreakStatement", a);
+    console.log("BreakStatement result", void 0);
+    return a;
+  };
+  b.ContinueStatement = function(a) {
+    console.log("ContinueStatement", a);
+    console.log("ContinueStatement result", void 0);
+    return a;
+  };
+  b.SwitchStatement = function(a) {
+    console.log("SwitchStatement", a);
+    console.log("SwitchStatement result", void 0);
+    return a;
+  };
+  b.SwitchCase = function(a) {
+    console.log("SwitchCase", a);
+    console.log("SwitchCase result", void 0);
+    return a;
+  };
+  b.ThrowStatement = function(a) {
+    console.log("ThrowStatement", a);
+    console.log("ThrowStatement result", void 0);
+    return a;
+  };
+  b.TryStatement = function(a) {
+    console.log("TryStatement", a);
+    console.log("TryStatement result", void 0);
+    return a;
+  };
+  b.CatchClause = function(a) {
+    console.log("CatchClause", a);
+    console.log("CatchClause result", void 0);
+    return a;
+  };
+  b.DoWhileStatement = function(a) {
+    console.log("DoWhileStatement", a);
+    console.log("DoWhileStatement result", void 0);
+    return a;
+  };
+  b.ForInStatement = function(a) {
+    console.log("ForInStatement", a);
+    console.log("ForInStatement result", void 0);
+    return a;
+  };
+  b.FunctionDeclaration = function(a) {
+    console.log("FunctionDeclaration", a);
+    console.log("FunctionDeclaration result", void 0);
+    return a;
+  };
+  b.ThisExpression = function(a) {
+    console.log("ThisExpression", a);
+    console.log("ThisExpression result", void 0);
+    return a;
+  };
+  b.ArrayExpression = function(a) {
+    console.log("ArrayExpression", a);
+    console.log("ArrayExpression result", void 0);
+    return a;
+  };
+  b.ObjectExpression = function(a) {
+    console.log("ObjectExpression", a);
+    console.log("ObjectExpression result", void 0);
+    return a;
+  };
+  b.Property = function(a) {
+    console.log("Property", a);
+    console.log("Property result", void 0);
+    return a;
+  };
+  b.FunctionExpression = function(a) {
+    console.log("FunctionExpression", a);
+    console.log("FunctionExpression result", void 0);
+    return a;
+  };
+  b.UpdateExpression = function(a) {
+    console.log("UpdateExpression", a);
+    console.log("UpdateExpression result", void 0);
+    return a;
+  };
+  b.ConditionalExpression = function(a) {
+    console.log("ConditionalExpression", a);
+    console.log("ConditionalExpression result", void 0);
+    return a;
+  };
+  b.NewExpression = function(a) {
+    console.log("NewExpression", a);
+    console.log("NewExpression result", void 0);
+    return a;
+  };
+  b.SequenceExpression = function(a) {
+    console.log("SequenceExpression", a);
+    console.log("SequenceExpression result", void 0);
+    return a;
+  };
+})(Entry.PyBlockAssembler.prototype);
+Entry.PyToBlockParserTemp = function(b) {
+  this._assembler = new Entry.PyBlockAssembler(b);
+};
+(function(b) {
+  b.Program = function(a) {
+    var b = [], c;
+    for (c in a) {
+      if ("Program" != a[c].type) {
+        return;
+      }
+      var e = [], f = a[c].body;
+      console.log("nodes", f);
+      for (c in f) {
+        var g = f[c], g = this[g.type](g);
+        console.log("checkitout", g);
+        g = this._assembler[g.type](g);
+        e.push(g);
+      }
+      console.log("thread", e);
+      b.push(e);
+    }
+    return b;
+  };
+  b.Identifier = function(a) {
+    console.log("Identifier", a);
+    return {type:a.type, name:a.name};
+  };
+  b.FunctionDeclaration = function(a) {
+    console.log("FunctionDeclaration", a);
+    var b = this[a.id.type](a.id);
+    return {type:a.type, id:b};
+  };
+  b.Literal = function(a) {
+    console.log("Literal", a);
+    console.log("typeof node at Literal", typeof a.value);
+    var b;
+    "string" === typeof a.value ? b = a.value : "boolean" === typeof a.value ? b = a.value : "number" === typeof a.value ? b = a.value : "RegExp" === typeof a.value ? (b = this[typeof a.value](a), b = b.regex.pattern) : b = null;
+    console.log("value", b);
+    return {type:a.type, value:b};
+  };
+  b.RegExp = function(a) {
+    console.log("RegExp", a);
+    return {regex:a.regex};
+  };
+  b.Function = function(a) {
+    console.log("Function", a);
+    var b = this[a.id](a), c = [], e;
+    for (e in a.params) {
+      c.push(a.params[e]);
+    }
+    a = this[a.body](a);
+    return {id:b, params:c, body:a};
+  };
+  b.ExpressionStatement = function(a) {
+    var b = this[a.expression.type](a.expression);
+    return {type:a.type, expression:b};
+  };
+  b.BlockStatement = function(a) {
+    console.log("BlockStatement", a);
+    var b = [], c;
+    for (c in a.body) {
+      var e = a.body[c];
+      console.log("BlockStatement statement", e);
+      e = this[e.type](e);
+      console.log("BlockStatement body", e);
+      b.push(e);
+    }
+    console.log("bodies", b);
+    return {type:a.type, body:b};
+  };
+  b.EmptyStatement = function(a) {
+    console.log("EmptyStatement", a);
+    return {type:a.type};
+  };
+  b.DebuggerStatement = function(a) {
+    console.log("DebuggerStatement", a);
+    return {type:a.type};
+  };
+  b.WithStatement = function(a) {
+    console.log("WithStatement", a);
+    var b = this[a.object.type](a.object), c = this[a.body.type](a.body);
+    return {type:a.type, object:b, body:c};
+  };
+  b.ReturnStaement = function(a) {
+    console.log("ReturnStaement", a);
+    var b;
+    b = null === a.argument ? null : this[a.argument.type](a.argument);
+    return {type:a.type, argument:b};
+  };
+  b.LabeledStatement = function(a) {
+    console.log("LabeledStatement", a);
+    var b = this[a.label.type](a.label), c = this[a.body.type](a.body);
+    return {type:a.type, label:b, body:c};
+  };
+  b.BreakStatement = function(a) {
+    console.log("BreakStatement", a);
+    var b;
+    console.log("node.label", a.label);
+    a.label && null !== a.label ? (console.log("node.label2", a.label), b = this[a.label.type](a.label)) : (console.log("node.lable1", a.label), b = null);
+    console.log("label", b);
+    return {type:a.type, label:b};
+  };
+  b.ContinueStatement = function(a) {
+    console.log("ContinueStatement", a);
+    var b;
+    b = null === a.label ? null : this[a.label.type](a.label);
+    return {type:a.type, label:b};
+  };
+  b.IfStatement = function(a) {
+    console.log("IfStatement", a);
+    var b = this[a.test.type](a.test), c = {body:[]};
+    if (null === a.alternate) {
+      c = null;
+    } else {
+      for (var e in a.alternate.body) {
+        var f = a.alternate.body[e], g = this[f.type](f);
+        c.body.push(g);
+      }
+    }
+    g = {body:[]};
+    for (e in a.consequent.body) {
+      f = a.consequent.body[e], f = this[f.type](f), g.body.push(f);
+    }
+    console.log("alternate", c);
+    console.log("consequent", g);
+    return {type:a.type, test:b, consequent:g, alternate:c};
+  };
+  b.SwitchStatement = function(a) {
+    console.log("SwitchStatement", a);
+    var b = this[a.discriminant.type](a.discriminant), c = [], e;
+    for (e in a.cases) {
+      var f = a.cases[e], f = this[f.type](f);
+      c.push(f);
+    }
+    return {type:a.type, discriminant:b, cases:c};
+  };
+  b.SwitchCase = function(a) {
+    console.log("SwitchCase", a);
+    var b;
+    b = null === a.test ? null : this[a.test.type](a.test);
+    for (var c in a.consequent) {
+      a = this[statment.type](statment), (void 0).push(a);
+    }
+    return {test:b, consequent:void 0};
+  };
+  b.ThrowStatement = function(a) {
+    console.log("ThrowStatement", a);
+    var b = this[a.argument.type](a.argument);
+    return {type:a.type, argument:b};
+  };
+  b.TryStatement = function(a) {
+    console.log("TryStatement", a);
+    var b = this[a.block.type](a.block), c;
+    c = null === a.handler ? null : this[a.handler.type](a.handler);
+    var e;
+    e = null === a.finalizer ? null : this[a.finalizer.type](a.finalizer);
+    return {type:a.type, block:b, handler:c, finalizer:e};
+  };
+  b.CatchClause = function(a) {
+    console.log("CatchClause", a);
+    var b = a.param;
+    a = this[a.body.type](a.body);
+    return {param:b, body:a};
+  };
+  b.WhileStatement = function(a) {
+    console.log("WhileStatement", a);
+    var b = this[a.test.type](a.test), c = this[a.body.type](a.body);
+    console.log("WhileStatement test", b);
+    console.log("WhileStatement body", c);
+    return {type:a.type, test:b, body:c};
+  };
+  b.DoWhileStatement = function(a) {
+    console.log("DoWhileStatement", a);
+    var b;
+    b = this[a.init.type](a.init);
+    var c;
+    c = null === a.test ? null : this[a.test.type](a.test);
+    var e;
+    e = null === a.update ? null : this[a.update.type](a.update);
+    var f = this[a.body.type](a.body);
+    return {type:a.type, init:b, test:c, update:e, body:f};
+  };
+  b.ForStatement = function(a) {
+    console.log("ForStatement", a);
+    var b;
+    if (null === a.init) {
+      b = null;
+    } else {
+      this[a.init.type](a.init);
+    }
+    var c;
+    c = null === a.test ? null : this[a.test.type](a.test);
+    var e;
+    e = null === a.update ? null : this[a.update.type](a.update);
+    var f = this[a.body.type](a.body);
+    console.log("ForStatement body", f);
+    return {type:a.type, init:b, test:c, update:e, body:f};
+  };
+  b.ForInStatement = function(a) {
+    console.log("ForInStatement", a);
+    var b;
+    b = this[a.left.type](a.left);
+    var c = this[a.right.type](a.right), e = this[a.body.type](a.body);
+    return {type:a.type, left:b, right:c, body:e};
+  };
+  b.FunctionDeclaration = function(a) {
+    console.log("FunctionDeclaration", a);
+    return {id:this[a.id.type](a.id)};
+  };
+  b.VariableDeclaration = function(a) {
+    console.log("VariableDeclaration", a);
+    var b = [], c;
+    for (c in a.declarations) {
+      var e = a.declarations[c], e = this[e.type](e);
+      console.log("declaration", e);
+      b.push(e);
+    }
+    console.log("VariableDeclaration declarations", b);
+    return {type:a.type, declarations:b, kind:"var"};
+  };
+  b.VariableDeclarator = function(a) {
+    console.log("VariableDeclarator", a);
+    var b = this[a.id.type](a.id), c;
+    c = null === a.init ? null : this[a.init.type](a.init);
+    console.log("id", b);
+    console.log("init", c);
+    return {type:a.type, id:b, init:c};
+  };
+  b.ThisExpression = function(a) {
+    console.log("ThisExpression", a);
+    return {type:a.type};
+  };
+  b.ArrayExpression = function(a) {
+    console.log("ArrayExpression", a);
+    var b;
+    if (null === a.elements) {
+      b = null;
+    } else {
+      for (var c in a.elements) {
+        var e = a.elements[c], e = this[e.type](e);
+        b.push(e);
+      }
+    }
+    return {type:a.type, elements:b};
+  };
+  b.ObjectExpression = function(a) {
+    console.log("ObjectExpression", a);
+    for (var b in a.properties) {
+      var c = a.properties[b], c = this[c.type](c);
+      (void 0).push(c);
+    }
+    return {type:a.type, properties:void 0};
+  };
+  b.Property = function(a) {
+    console.log("Property", a);
+    var b = this[a.key.type](a.key), c = this[a.value.type](a.value);
+    return {type:a.type, key:b, value:c, kind:a.kind};
+  };
+  b.FunctionExpression = function(a) {
+    console.log("FunctionExpression", a);
+    return {type:a.type};
+  };
+  b.UnaryExpression = function(a) {
+    console.log("UnaryExpression", a);
+    var b;
+    switch(a.operator) {
+      case "-":
+        b = a.operator;
+        break;
+      case "+":
+        b = a.operator;
+        break;
+      case "!":
+        b = a.operator;
+        break;
+      case "~":
+        b = a.operator;
+        break;
+      case "typeof":
+        b = a.operator;
+        break;
+      case "void":
+        b = a.operator;
+        break;
+      case "delete":
+        b = a.operator;
+        break;
+      default:
+        b = null;
+    }
+    var c = a.prefix, e = this[a.argument.type](a.argument);
+    return {type:a.type, operator:b, prefix:c, argument:e};
+  };
+  b.UpdateExpression = function(a) {
+    console.log("UpdateExpression", a);
+    var b;
+    switch(a.operator) {
+      case "++":
+        b = a.operator;
+        break;
+      case "--":
+        b = a.operator;
+        break;
+      default:
+        b = null;
+    }
+    var c = this[a.argument.type](a.argument);
+    return {type:a.type, operator:b, prefix:a.prefix, argument:c};
+  };
+  b.BinaryExpression = function(a) {
+    console.log("BinaryExpression", a);
+    var b;
+    switch(a.operator) {
+      case "==":
+        b = a.operator;
+        break;
+      case "!=":
+        b = a.operator;
+        break;
+      case "===":
+        b = a.operator;
+        break;
+      case "!==":
+        b = a.operator;
+        break;
+      case "<":
+        b = a.operator;
+        break;
+      case "<=":
+        b = a.operator;
+        break;
+      case ">":
+        b = a.operator;
+        break;
+      case ">=":
+        b = a.operator;
+        break;
+      case "<<":
+        b = a.operator;
+        break;
+      case ">>":
+        b = a.operator;
+        break;
+      case ">>>":
+        b = a.operator;
+        break;
+      case "+":
+        b = a.operator;
+        break;
+      case "-":
+        b = a.operator;
+        break;
+      case "*":
+        b = a.operator;
+        break;
+      case "/":
+        b = a.operator;
+        break;
+      case "%":
+        b = a.operator;
+        break;
+      case "|":
+        b = a.operator;
+        break;
+      case "^":
+        b = a.operator;
+        break;
+      case "|":
+        b = a.operator;
+        break;
+      case "&":
+        b = a.operator;
+        break;
+      case "in":
+        b = a.operator;
+        break;
+      case "instanceof":
+        b = a.operator;
+        break;
+      default:
+        b = null;
+    }
+    var c = this[a.left.type](a.left), e = this[a.right.type](a.right);
+    return {type:a.type, operator:b, left:c, right:e};
+  };
+  b.AssignmentExpression = function(a) {
+    console.log("AssignmentExpression", a);
+    var b;
+    switch(a.operator) {
+      case "=":
+        b = a.operator;
+        break;
+      case "+=":
+        b = a.operator;
+        break;
+      case "-=":
+        b = a.operator;
+        break;
+      case "*=":
+        b = a.operator;
+        break;
+      case "/=":
+        b = a.operator;
+        break;
+      case "%=":
+        b = a.operator;
+        break;
+      case "<<=":
+        b = a.operator;
+        break;
+      case ">>=":
+        b = a.operator;
+        break;
+      case "|=":
+        b = a.operator;
+        break;
+      case "^=":
+        b = a.operator;
+        break;
+      case "&=":
+        b = a.operator;
+        break;
+      default:
+        b = null;
+    }
+    var c;
+    c = a.left;
+    var e = this[a.right.type](a.right);
+    return {type:a.type, operator:b, left:c, right:e};
+  };
+  b.LogicalExpression = function(a) {
+    console.log("LogicalExpression", a);
+    var b;
+    switch(a.operator) {
+      case "||":
+        b = a.operator;
+        break;
+      case "&&":
+        b = a.operator;
+        break;
+      default:
+        b = null;
+    }
+    var c = this[a.left.type](a.left), e = this[a.right.type](a.right);
+    return {type:a.type, operator:b, left:c, right:e};
+  };
+  b.MemberExpression = function(a) {
+    console.log("MemberExpression", a);
+    var b = this[a.object.type](a.object), c = this[a.property.type](a.property), e = a.computed;
+    console.log("object", b);
+    console.log("property", c);
+    return {type:a.type, object:b, property:c, computed:e};
+  };
+  b.ConditionalExpression = function(a) {
+    console.log("ConditionalExpression", a);
+    var b = this[a.callee.type](a.callee), c;
+    for (c in a.arguments) {
+      var e = a.arguments[c], e = this[e.type](e);
+      (void 0).push(e);
+    }
+    return {type:a.type, callee:b, arguments:void 0};
+  };
+  b.CallExpression = function(a) {
+    console.log("CallExpression", a);
+    var b = this[a.callee.type](a.callee), c = [], e;
+    for (e in a.arguments) {
+      var f = a.arguments[e], f = this[f.type](f);
+      c.push(f);
+    }
+    console.log("callee", b);
+    console.log("arguments", c);
+    return {type:a.type, callee:b, arguments:c};
+  };
+  b.NewExpression = function(a) {
+    console.log("NewExpression", a);
+    return {type:a.type};
+  };
+  b.SequenceExpression = function(a) {
+    console.log("SequenceExpression", a);
+    for (var b in a.expressions) {
+      var c = a.expressions[b], c = this[c.type](c);
+      (void 0).push(c);
+    }
+    return {type:a.type, expressions:void 0};
+  };
+})(Entry.PyToBlockParserTemp.prototype);
+Entry.TextCodingUtilError = {};
+(function(b) {
+  this.TC_ERR_TITLE_SYNTAX = "title_syntax";
+  this.TC_ERR_TITLE_CONVERTING = "title_converting";
+  this.TC_ERR_MESSAGE_NO_BLOCK = "message_no_block";
+  this.TC_ERR_MESSAGE_NO_VARIABLE = "message_no_variable";
+  this.TC_ERR_MESSAGE_NO_LIST = "message_no_list";
+  this.TC_ERR_MESSAGE_OBJECT = "message_no_object";
+  var a = {};
+  b.error = function(b, c, e, f) {
+    console.log("error control", b, c, e, f);
+    b = this.getErrorInfo(b, c, e);
+    a.title = b.title;
+    a.message = b.message;
+    a.line = f;
+    throw a;
+  };
+  b.getErrorInfo = function(a, b, e) {
+    var f = {};
+    f.title = Lang.TextCoding.Error[a];
+    f.message = "'" + e + "'" + Lang.textcoding[b];
+    return f;
+  };
+})(Entry.TextCodingUtilError);
 Entry.PyToBlockParser = function(b) {
   this.blockSyntax = b;
   this._blockStatmentIndex = 0;
@@ -13838,9 +14860,7 @@ Entry.PyToBlockParser = function(b) {
       console.log("callee type", e);
       if (!e) {
         var k = g.name + a.arguments.length;
-        if (g.name && 0 != arguments.length && "Literal" == arguments[0].type && !this._funcMap.contains(k)) {
-          throw console.log("callex error calleeData", g), c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. 'range()'\ub97c \uc0ac\uc6a9\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
-        }
+        g.name && 0 != arguments.length && "Literal" == arguments[0].type && (this._funcMap.contains(k) || Entry.TextCodingUtilError.error(Entry.TextCodingUtilError.TC_ERR_TITLE_CONVERTING, Entry.TextCodingUtilError.TC_ERR_MESSAGE_NO_BLOCK, h, blockCount));
       }
     } else {
       var l = g.object, h = null;
@@ -15992,1004 +17012,6 @@ Entry.Parser = function(b, a, d, c) {
     return c;
   };
 })(Entry.Parser.prototype);
-Entry.PyBlockAssembler = function(b) {
-  this.blockSyntax = b;
-  this._blockStatmentIndex = 0;
-  this._blockStatments = [];
-};
-(function(b) {
-  b.Program = function(a) {
-    var b = [], c;
-    for (c in a) {
-      if ("Program" != a[c].type) {
-        return;
-      }
-      var e = [], f = a[c].body;
-      console.log("nodes", f);
-      for (c in f) {
-        var g = f[c], g = this[g.type](g);
-        console.log("checkitout", g);
-        g = this._assembler[g.type](g);
-        e.push(g);
-      }
-      console.log("thread", e);
-      b.push(e);
-    }
-    return b;
-  };
-  b.ExpressionStatement = function(a) {
-    console.log("ExpressionStatement component", a);
-    var b = {};
-    a = a.expression;
-    "Literal" == a.type ? (a = this[a.type]({type:"Block", accept:"booleanMagnet"}, a), b.type = a.type, result = b, console.log("ExpressionStatement type literal", result)) : (a = this[a.type](a), b.type = a.type, b.params = a.params, result = b, console.log("ExpressionStatement type not literal", result));
-    console.log("ExpressionStatement result", result);
-    return result;
-  };
-  b.AssignmentExpression = function(a) {
-    console.log("AssignmentExpression component", a);
-    var b = [], c;
-    c = a.left;
-    c.type ? ("Literal" == c.type ? (c = this[c.type](paramsMeta[0], c), console.log("AssignmentExpression left Literal param", c)) : c = this[c.type](c), c && b.push(c), console.log("AssignmentExpression left param", c)) : (c = a.left, this[c.type](c));
-    operator = String(a.operator);
-    console.log("AssignmentExpression operator", operator);
-    operator && (c = operator = Entry.TextCodingUtil.logicalExpressionConvert(operator), b.push(c));
-    c = a.right;
-    c.type ? ("Literal" == c.type ? (c = this[c.type](paramsMeta[2], c), console.log("AssignmentExpression right Literal param", c)) : c = this[c.type](c), c && b.push(c), console.log("AssignmentExpression right param", c)) : (c = a.right, this[c.type](c));
-    console.log("AssignmentExpression params", b);
-    console.log("AssignmentExpression result", result);
-    return result;
-  };
-  b.CallExpression = function(a) {
-    console.log("CallExpression component", a);
-    var b;
-    b = {};
-    var c = a.callee, c = this[c.type](c);
-    console.log("CallExpression calleeData", c, "calleeData typeof", typeof c);
-    var e = "object" != typeof c.object ? String(c.object).concat(".").concat(String(c.property)) : String(c.object.object).concat(".").concat(String(c.object.property)).concat(".").concat(String(c.property));
-    console.log("CallExpression syntax", e);
-    c = this.getBlockType(e);
-    console.log("CallExpression type1", c);
-    c || "__pythonRuntime.functions.range" == e && (c = "repeat_basic");
-    console.log("CallExpression type2", c);
-    e = Entry.block[c].params;
-    console.log("CallExpression paramsMeta", e);
-    var arguments = a.arguments, f = [], g;
-    for (g in arguments) {
-      var h = arguments[g];
-      console.log("CallExpression argument", h);
-      if ("Literal" == h.type) {
-        var k = e[g];
-        "Indicator" == k.type ? (h = null, f.push(h), g--) : (console.log("CallExpression argument index", h.type, g), h = this[h.type](k, h, c, g), f.push(h));
-        g == arguments.length - 1 && (console.log("CallExpression in1"), g < e.length && (console.log("CallExpression in2"), f.push(null)));
-        console.log("CallExpression i", g);
-      }
-    }
-    console.log("CallExpression params", f);
-    b.type = c;
-    b.params = f;
-    console.log("CallExpression result", b);
-    return b;
-  };
-  b.Literal = function(a, b, c, e) {
-    console.log("Literal paramMeta component particularIndex blockType", a, b, c, e);
-    b = b.value;
-    a = c ? this["Param" + a.type](a, b, c, e) : this["Param" + a.type](a, b);
-    console.log("Literal result", a);
-    return a;
-  };
-  b.ParamColor = function(a, b) {
-    console.log("ParamColor paramMeta value", a, b);
-    console.log("ParamColor result", b);
-    return b;
-  };
-  b.ParamDropdown = function(a, b) {
-    console.log("ParamDropdown paramMeta value", a, b);
-    console.log("ParamDropdownDynamic result", b);
-    return b;
-  };
-  b.ParamDropdownDynamic = function(a, b) {
-    console.log("ParamDropdownDynamic paramMeta value", a, b);
-    var c;
-    if ("mouse" == b) {
-      return "mouse";
-    }
-    var e = a.options, f;
-    for (f in e) {
-      if (console.log("options", e), b == e[f][0]) {
-        console.log("options[i][0]", e[f][0]);
-        c = e[f][1];
-        break;
-      }
-    }
-    console.log("ParamDropdownDynamic result", c);
-    return c;
-  };
-  b.ParamKeyboard = function(a, b) {
-    console.log("ParamKeyboard paramMeta value", a, b);
-    var c;
-    c = Entry.KeyboardCodeMap.prototype.keyCharToCode[b];
-    console.log("ParamKeyboard result", c);
-    return c;
-  };
-  b.ParamBlock = function(a, b, c, e) {
-    console.log("ParamBlock paramMeta value blockType", a, b, c, e);
-    var f = {}, g = [];
-    c = Entry.TextCodingUtil.particularParam(c);
-    if (null != c) {
-      var h = c[e];
-      if (h) {
-        h = c[e];
-        console.log("ParamBlock particularType", h);
-        e = h;
-        f.type = e;
-        c = Entry.block[e].params;
-        console.log("ParamBlock particular block paramsMeta", a);
-        var k, l;
-        for (l in c) {
-          a = c[l];
-          a = a.options;
-          for (var m in a) {
-            h = a[m], b == h[0] && (k = h[1]);
-          }
-        }
-        g.push(k);
-        f.params = g;
-      } else {
-        switch(e = typeof b, e) {
-          case "number":
-            f.type = "number";
-            g.push(b);
-            f.params = g;
-            break;
-          case "boolean":
-            1 == b ? f.type = "True" : 0 == b && (f.type = "False");
-            break;
-          default:
-            f.type = "text", g.push(b), f.params = g;
-        }
-      }
-    } else {
-      switch(e = typeof b, e) {
-        case "number":
-          f.type = "number";
-          g.push(b);
-          f.params = g;
-          break;
-        case "boolean":
-          1 == b ? f.type = "True" : 0 == b && (f.type = "False");
-          break;
-        default:
-          f.type = "text", g.push(b), f.params = g;
-      }
-    }
-    console.log("ParamBlock valueType", e);
-    console.log("ParamBlock result", f);
-    return f;
-  };
-  b.Indicator = function(a, b, c) {
-  };
-  b.MemberExpression = function(a) {
-    console.log("MemberExpression component", a);
-    var b = {}, c = a.object;
-    a = a.property;
-    c = this[c.type](c);
-    a = this[a.type](a);
-    console.log("MemberExpression objectData", c);
-    console.log("MemberExpression structure", a);
-    b.object = c;
-    b.property = a;
-    console.log("MemberExpression result", b);
-    return b;
-  };
-  b.Identifier = function(a) {
-    console.log("Identifiler component", a);
-    a = a.name;
-    console.log("Identifiler result", a);
-    return a;
-  };
-  b.WhileStatement = function(a) {
-    console.log("WhileStatement component", a);
-    var b = {}, c = a.test, e;
-    1 == c.value && (e = this.getBlockType("while True:\n$1"));
-    console.log("WhileStatement type", e);
-    var f = Entry.block[e].params;
-    console.log("WhileStatement paramsMeta", f);
-    var g = [];
-    c && (c.type = "Literal", f = f[0], c = "Indicator" == f.type ? null : this[c.type](f, c), g.push(c));
-    c = [];
-    a = a.body.body;
-    for (var h in a) {
-      f = a[h], f = this[f.type](f), c.push(f);
-    }
-    b.type = e;
-    b.params = g;
-    b.statements = [];
-    b.statements.push(c);
-    console.log("WhileStatement result", b);
-    return b;
-  };
-  b.BlockStatement = function(a) {
-    console.log("BlockStatement component", a);
-    this._blockStatmentIndex = 0;
-    this._blockStatments = [];
-    var b = {};
-    a = a.body;
-    for (var c in a) {
-      var e = a[c];
-      console.log("BlockStatement body", e, "i", c);
-      e = this[e.type](e);
-      console.log("BlockStatement bodyData", e, "i", c);
-      if (e.declarations) {
-        console.log("BlockStatement statements type params bodyData", c, e);
-        var e = e.declarations, f;
-        for (f in e) {
-          var g = e[f];
-          g.init.type && (b.type = g.init.type);
-          g.init.params && (console.log("BlockStatement params", g.init.params), b.params = g.init.params);
-          console.log("BlockStatement structure", b, "j", f);
-        }
-      } else {
-        0 == this._blockStatmentIndex && this._blockStatments.push(e);
-      }
-    }
-    b.statements = [this._blockStatments];
-    console.log("BlockStatement result", b);
-    this._blockStatmentIndex++;
-    return b;
-  };
-  b.IfStatement = function(a) {
-    console.log("IfStatement component", a);
-    var b = {}, c = [], e = [], f = [], g = [], h = a.test, k = a.alternate, l = a.consequent;
-    a = this.getBlockType(null == k ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2");
-    if (null != h) {
-      var m = Entry.block[a].params;
-      console.log("IfStatement paramsMeta", m);
-      c = [];
-      h.type = "Literal";
-      m = m[0];
-      h = "Indicator" == m.type ? null : this[h.type](m, h);
-      c.push(h);
-    }
-    if (null != l) {
-      for (var n in l.body) {
-        if (h = l.body[n]) {
-          h = this[h.type](h), console.log("IfStatement consequent bodyData", h), e.push(h);
-        }
-      }
-    }
-    if (null != k) {
-      for (n in k.body) {
-        if (h = k.body[n]) {
-          h = this[h.type](h), console.log("IfStatement alternate bodyData", h), f.push(h);
-        }
-      }
-    }
-    0 != e.length && g.push(e);
-    0 != f.length && g.push(f);
-    b.type = a;
-    0 != c.length && (b.params = c);
-    0 != g.length && (b.statements = g);
-    console.log("IfStatement result", b);
-    return b;
-  };
-  b.VariableDeclaration = function(a) {
-    console.log("VariableDeclaration component", a);
-    var b = {}, c = [];
-    a = a.declarations;
-    for (var e in a) {
-      var f = a[e], f = this[f.type](f);
-      console.log("VariableDeclaration declarationData", f);
-      c.push(f);
-    }
-    b.declarations = c;
-    console.log("VariableDeclaration result", b);
-    return b;
-  };
-  b.VariableDeclarator = function(a) {
-    console.log("VariableDeclarator component", a);
-    var b = {}, c = a.id, e = this[c.type](c);
-    console.log("VariableDeclarator idData", e);
-    a = a.init;
-    a = this[a.type](a);
-    console.log("VariableDeclarator initData", a);
-    b.id = c;
-    b.init = a;
-    console.log("VariableDeclarator result", b);
-    return b;
-  };
-  b.BreakStatement = function(a) {
-    console.log("BreakStatement component", a);
-    a = {};
-    var b = this.getBlockType("break");
-    a.type = b;
-    console.log("BreakStatement result", a);
-    return a;
-  };
-  b.UnaryExpression = function(a) {
-    console.log("UnaryExpression component", a);
-    var b = [];
-    a.prefix && (a = a.operator.concat(a.argument.value), b.push(a));
-    result.params = b;
-    console.log("UnaryExpression result", result);
-    return result;
-  };
-  b.LogicalExpression = function(a) {
-    console.log("LogicalExpression component", a);
-    var b = {}, c = String(a.operator);
-    switch(c) {
-      case "&&":
-        var e = "%1 and %3";
-        break;
-      case "||":
-        e = "%1 or %3";
-        break;
-      default:
-        e = "%1 and %3";
-    }
-    var e = this.getBlockType(e), f = Entry.block[e].params;
-    console.log("LogicalExpression paramsMeta", f);
-    var g = [], c = a.left;
-    c.type ? ("Literal" == c.type ? (c = this[c.type](f[0], c), console.log("LogicalExpression left Literal param", c)) : c = this[c.type](c), c && g.push(c), console.log("LogicalExpression left param", c)) : (c = a.left, this[c.type](c));
-    c = String(a.operator);
-    console.log("LogicalExpression operator", c);
-    c && (c = Entry.TextCodingUtil.logicalExpressionConvert(c), g.push(c));
-    c = a.right;
-    c.type ? ("Literal" == c.type ? (c = this[c.type](f[2], c), console.log("LogicalExpression right Literal param", c)) : c = this[c.type](c), c && g.push(c), console.log("LogicalExpression right param", c)) : (c = a.right, this[c.type](c));
-    b.type = e;
-    b.params = g;
-    console.log("LogicalExpression result", b);
-    return b;
-  };
-  b.BinaryExpression = function(a) {
-    console.log("BinaryExpression component", a);
-    var b = {params:[]}, c = String(a.operator);
-    console.log("BinaryExpression operator", c);
-    if (c) {
-      var e = "(%1 %2 %3)"
-    }
-    console.log("BinaryExpression syntax", e);
-    e = this.getBlockType(e);
-    console.log("BinaryExpression type", e);
-    var f = Entry.block[e].params;
-    console.log("BinaryExpression paramsMeta", f);
-    var g = [], c = a.left;
-    c.type ? ("Literal" == c.type ? (c = this[c.type](f[0], c), console.log("BinaryExpression left Literal param", c)) : c = this[c.type](c), c && g.push(c), console.log("BinaryExpression left param", c)) : (c = a.left, this[c.type](c));
-    if (c = String(a.operator)) {
-      console.log("BinaryExpression operator", c), (c = Entry.TextCodingUtil.binaryOperatorConvert(c)) && g.push(c);
-    }
-    c = a.right;
-    c.type ? ("Literal" == c.type ? (c = this[c.type](f[2], c), console.log("BinaryExpression right Literal param", c)) : c = this[c.type](c), c && g.push(c), console.log("BinaryExpression right param", c)) : (c = a.right, this[c.type](c));
-    console.log("BinaryExpression params", g);
-    b.type = e;
-    b.params = g;
-    console.log("BinaryExpression result", b);
-    return b;
-  };
-  b.getBlockType = function(a) {
-    return this.blockSyntax[a];
-  };
-  b.FunctionDeclaration = function(a) {
-    console.log("FunctionDeclaration component", a);
-    console.log("FunctionDeclaration result", void 0);
-    return a;
-  };
-  b.RegExp = function(a) {
-    console.log("RegExp", a);
-    console.log("RegExp result", void 0);
-    return a;
-  };
-  b.Function = function(a) {
-    console.log("Function", a);
-    console.log("Function result", void 0);
-    return a;
-  };
-  b.EmptyStatement = function(a) {
-    console.log("EmptyStatement", a);
-    console.log("EmptyStatement result", void 0);
-    return a;
-  };
-  b.DebuggerStatement = function(a) {
-    console.log("DebuggerStatement", a);
-    console.log("DebuggerStatement result", void 0);
-    return a;
-  };
-  b.WithStatement = function(a) {
-    console.log("WithStatement", a);
-    console.log("WithStatement result", void 0);
-    return a;
-  };
-  b.ReturnStaement = function(a) {
-    console.log("ReturnStaement", a);
-    console.log("ReturnStaement result", void 0);
-    return a;
-  };
-  b.LabeledStatement = function(a) {
-    console.log("LabeledStatement", a);
-    console.log("LabeledStatement result", void 0);
-    return a;
-  };
-  b.BreakStatement = function(a) {
-    console.log("BreakStatement", a);
-    console.log("BreakStatement result", void 0);
-    return a;
-  };
-  b.ContinueStatement = function(a) {
-    console.log("ContinueStatement", a);
-    console.log("ContinueStatement result", void 0);
-    return a;
-  };
-  b.SwitchStatement = function(a) {
-    console.log("SwitchStatement", a);
-    console.log("SwitchStatement result", void 0);
-    return a;
-  };
-  b.SwitchCase = function(a) {
-    console.log("SwitchCase", a);
-    console.log("SwitchCase result", void 0);
-    return a;
-  };
-  b.ThrowStatement = function(a) {
-    console.log("ThrowStatement", a);
-    console.log("ThrowStatement result", void 0);
-    return a;
-  };
-  b.TryStatement = function(a) {
-    console.log("TryStatement", a);
-    console.log("TryStatement result", void 0);
-    return a;
-  };
-  b.CatchClause = function(a) {
-    console.log("CatchClause", a);
-    console.log("CatchClause result", void 0);
-    return a;
-  };
-  b.DoWhileStatement = function(a) {
-    console.log("DoWhileStatement", a);
-    console.log("DoWhileStatement result", void 0);
-    return a;
-  };
-  b.ForInStatement = function(a) {
-    console.log("ForInStatement", a);
-    console.log("ForInStatement result", void 0);
-    return a;
-  };
-  b.FunctionDeclaration = function(a) {
-    console.log("FunctionDeclaration", a);
-    console.log("FunctionDeclaration result", void 0);
-    return a;
-  };
-  b.ThisExpression = function(a) {
-    console.log("ThisExpression", a);
-    console.log("ThisExpression result", void 0);
-    return a;
-  };
-  b.ArrayExpression = function(a) {
-    console.log("ArrayExpression", a);
-    console.log("ArrayExpression result", void 0);
-    return a;
-  };
-  b.ObjectExpression = function(a) {
-    console.log("ObjectExpression", a);
-    console.log("ObjectExpression result", void 0);
-    return a;
-  };
-  b.Property = function(a) {
-    console.log("Property", a);
-    console.log("Property result", void 0);
-    return a;
-  };
-  b.FunctionExpression = function(a) {
-    console.log("FunctionExpression", a);
-    console.log("FunctionExpression result", void 0);
-    return a;
-  };
-  b.UpdateExpression = function(a) {
-    console.log("UpdateExpression", a);
-    console.log("UpdateExpression result", void 0);
-    return a;
-  };
-  b.ConditionalExpression = function(a) {
-    console.log("ConditionalExpression", a);
-    console.log("ConditionalExpression result", void 0);
-    return a;
-  };
-  b.NewExpression = function(a) {
-    console.log("NewExpression", a);
-    console.log("NewExpression result", void 0);
-    return a;
-  };
-  b.SequenceExpression = function(a) {
-    console.log("SequenceExpression", a);
-    console.log("SequenceExpression result", void 0);
-    return a;
-  };
-})(Entry.PyBlockAssembler.prototype);
-Entry.PyToBlockParserTemp = function(b) {
-  this._assembler = new Entry.PyBlockAssembler(b);
-};
-(function(b) {
-  b.Program = function(a) {
-    var b = [], c;
-    for (c in a) {
-      if ("Program" != a[c].type) {
-        return;
-      }
-      var e = [], f = a[c].body;
-      console.log("nodes", f);
-      for (c in f) {
-        var g = f[c], g = this[g.type](g);
-        console.log("checkitout", g);
-        g = this._assembler[g.type](g);
-        e.push(g);
-      }
-      console.log("thread", e);
-      b.push(e);
-    }
-    return b;
-  };
-  b.Identifier = function(a) {
-    console.log("Identifier", a);
-    return {type:a.type, name:a.name};
-  };
-  b.FunctionDeclaration = function(a) {
-    console.log("FunctionDeclaration", a);
-    var b = this[a.id.type](a.id);
-    return {type:a.type, id:b};
-  };
-  b.Literal = function(a) {
-    console.log("Literal", a);
-    console.log("typeof node at Literal", typeof a.value);
-    var b;
-    "string" === typeof a.value ? b = a.value : "boolean" === typeof a.value ? b = a.value : "number" === typeof a.value ? b = a.value : "RegExp" === typeof a.value ? (b = this[typeof a.value](a), b = b.regex.pattern) : b = null;
-    console.log("value", b);
-    return {type:a.type, value:b};
-  };
-  b.RegExp = function(a) {
-    console.log("RegExp", a);
-    return {regex:a.regex};
-  };
-  b.Function = function(a) {
-    console.log("Function", a);
-    var b = this[a.id](a), c = [], e;
-    for (e in a.params) {
-      c.push(a.params[e]);
-    }
-    a = this[a.body](a);
-    return {id:b, params:c, body:a};
-  };
-  b.ExpressionStatement = function(a) {
-    var b = this[a.expression.type](a.expression);
-    return {type:a.type, expression:b};
-  };
-  b.BlockStatement = function(a) {
-    console.log("BlockStatement", a);
-    var b = [], c;
-    for (c in a.body) {
-      var e = a.body[c];
-      console.log("BlockStatement statement", e);
-      e = this[e.type](e);
-      console.log("BlockStatement body", e);
-      b.push(e);
-    }
-    console.log("bodies", b);
-    return {type:a.type, body:b};
-  };
-  b.EmptyStatement = function(a) {
-    console.log("EmptyStatement", a);
-    return {type:a.type};
-  };
-  b.DebuggerStatement = function(a) {
-    console.log("DebuggerStatement", a);
-    return {type:a.type};
-  };
-  b.WithStatement = function(a) {
-    console.log("WithStatement", a);
-    var b = this[a.object.type](a.object), c = this[a.body.type](a.body);
-    return {type:a.type, object:b, body:c};
-  };
-  b.ReturnStaement = function(a) {
-    console.log("ReturnStaement", a);
-    var b;
-    b = null === a.argument ? null : this[a.argument.type](a.argument);
-    return {type:a.type, argument:b};
-  };
-  b.LabeledStatement = function(a) {
-    console.log("LabeledStatement", a);
-    var b = this[a.label.type](a.label), c = this[a.body.type](a.body);
-    return {type:a.type, label:b, body:c};
-  };
-  b.BreakStatement = function(a) {
-    console.log("BreakStatement", a);
-    var b;
-    console.log("node.label", a.label);
-    a.label && null !== a.label ? (console.log("node.label2", a.label), b = this[a.label.type](a.label)) : (console.log("node.lable1", a.label), b = null);
-    console.log("label", b);
-    return {type:a.type, label:b};
-  };
-  b.ContinueStatement = function(a) {
-    console.log("ContinueStatement", a);
-    var b;
-    b = null === a.label ? null : this[a.label.type](a.label);
-    return {type:a.type, label:b};
-  };
-  b.IfStatement = function(a) {
-    console.log("IfStatement", a);
-    var b = this[a.test.type](a.test), c = {body:[]};
-    if (null === a.alternate) {
-      c = null;
-    } else {
-      for (var e in a.alternate.body) {
-        var f = a.alternate.body[e], g = this[f.type](f);
-        c.body.push(g);
-      }
-    }
-    g = {body:[]};
-    for (e in a.consequent.body) {
-      f = a.consequent.body[e], f = this[f.type](f), g.body.push(f);
-    }
-    console.log("alternate", c);
-    console.log("consequent", g);
-    return {type:a.type, test:b, consequent:g, alternate:c};
-  };
-  b.SwitchStatement = function(a) {
-    console.log("SwitchStatement", a);
-    var b = this[a.discriminant.type](a.discriminant), c = [], e;
-    for (e in a.cases) {
-      var f = a.cases[e], f = this[f.type](f);
-      c.push(f);
-    }
-    return {type:a.type, discriminant:b, cases:c};
-  };
-  b.SwitchCase = function(a) {
-    console.log("SwitchCase", a);
-    var b;
-    b = null === a.test ? null : this[a.test.type](a.test);
-    for (var c in a.consequent) {
-      a = this[statment.type](statment), (void 0).push(a);
-    }
-    return {test:b, consequent:void 0};
-  };
-  b.ThrowStatement = function(a) {
-    console.log("ThrowStatement", a);
-    var b = this[a.argument.type](a.argument);
-    return {type:a.type, argument:b};
-  };
-  b.TryStatement = function(a) {
-    console.log("TryStatement", a);
-    var b = this[a.block.type](a.block), c;
-    c = null === a.handler ? null : this[a.handler.type](a.handler);
-    var e;
-    e = null === a.finalizer ? null : this[a.finalizer.type](a.finalizer);
-    return {type:a.type, block:b, handler:c, finalizer:e};
-  };
-  b.CatchClause = function(a) {
-    console.log("CatchClause", a);
-    var b = a.param;
-    a = this[a.body.type](a.body);
-    return {param:b, body:a};
-  };
-  b.WhileStatement = function(a) {
-    console.log("WhileStatement", a);
-    var b = this[a.test.type](a.test), c = this[a.body.type](a.body);
-    console.log("WhileStatement test", b);
-    console.log("WhileStatement body", c);
-    return {type:a.type, test:b, body:c};
-  };
-  b.DoWhileStatement = function(a) {
-    console.log("DoWhileStatement", a);
-    var b;
-    b = this[a.init.type](a.init);
-    var c;
-    c = null === a.test ? null : this[a.test.type](a.test);
-    var e;
-    e = null === a.update ? null : this[a.update.type](a.update);
-    var f = this[a.body.type](a.body);
-    return {type:a.type, init:b, test:c, update:e, body:f};
-  };
-  b.ForStatement = function(a) {
-    console.log("ForStatement", a);
-    var b;
-    if (null === a.init) {
-      b = null;
-    } else {
-      this[a.init.type](a.init);
-    }
-    var c;
-    c = null === a.test ? null : this[a.test.type](a.test);
-    var e;
-    e = null === a.update ? null : this[a.update.type](a.update);
-    var f = this[a.body.type](a.body);
-    console.log("ForStatement body", f);
-    return {type:a.type, init:b, test:c, update:e, body:f};
-  };
-  b.ForInStatement = function(a) {
-    console.log("ForInStatement", a);
-    var b;
-    b = this[a.left.type](a.left);
-    var c = this[a.right.type](a.right), e = this[a.body.type](a.body);
-    return {type:a.type, left:b, right:c, body:e};
-  };
-  b.FunctionDeclaration = function(a) {
-    console.log("FunctionDeclaration", a);
-    return {id:this[a.id.type](a.id)};
-  };
-  b.VariableDeclaration = function(a) {
-    console.log("VariableDeclaration", a);
-    var b = [], c;
-    for (c in a.declarations) {
-      var e = a.declarations[c], e = this[e.type](e);
-      console.log("declaration", e);
-      b.push(e);
-    }
-    console.log("VariableDeclaration declarations", b);
-    return {type:a.type, declarations:b, kind:"var"};
-  };
-  b.VariableDeclarator = function(a) {
-    console.log("VariableDeclarator", a);
-    var b = this[a.id.type](a.id), c;
-    c = null === a.init ? null : this[a.init.type](a.init);
-    console.log("id", b);
-    console.log("init", c);
-    return {type:a.type, id:b, init:c};
-  };
-  b.ThisExpression = function(a) {
-    console.log("ThisExpression", a);
-    return {type:a.type};
-  };
-  b.ArrayExpression = function(a) {
-    console.log("ArrayExpression", a);
-    var b;
-    if (null === a.elements) {
-      b = null;
-    } else {
-      for (var c in a.elements) {
-        var e = a.elements[c], e = this[e.type](e);
-        b.push(e);
-      }
-    }
-    return {type:a.type, elements:b};
-  };
-  b.ObjectExpression = function(a) {
-    console.log("ObjectExpression", a);
-    for (var b in a.properties) {
-      var c = a.properties[b], c = this[c.type](c);
-      (void 0).push(c);
-    }
-    return {type:a.type, properties:void 0};
-  };
-  b.Property = function(a) {
-    console.log("Property", a);
-    var b = this[a.key.type](a.key), c = this[a.value.type](a.value);
-    return {type:a.type, key:b, value:c, kind:a.kind};
-  };
-  b.FunctionExpression = function(a) {
-    console.log("FunctionExpression", a);
-    return {type:a.type};
-  };
-  b.UnaryExpression = function(a) {
-    console.log("UnaryExpression", a);
-    var b;
-    switch(a.operator) {
-      case "-":
-        b = a.operator;
-        break;
-      case "+":
-        b = a.operator;
-        break;
-      case "!":
-        b = a.operator;
-        break;
-      case "~":
-        b = a.operator;
-        break;
-      case "typeof":
-        b = a.operator;
-        break;
-      case "void":
-        b = a.operator;
-        break;
-      case "delete":
-        b = a.operator;
-        break;
-      default:
-        b = null;
-    }
-    var c = a.prefix, e = this[a.argument.type](a.argument);
-    return {type:a.type, operator:b, prefix:c, argument:e};
-  };
-  b.UpdateExpression = function(a) {
-    console.log("UpdateExpression", a);
-    var b;
-    switch(a.operator) {
-      case "++":
-        b = a.operator;
-        break;
-      case "--":
-        b = a.operator;
-        break;
-      default:
-        b = null;
-    }
-    var c = this[a.argument.type](a.argument);
-    return {type:a.type, operator:b, prefix:a.prefix, argument:c};
-  };
-  b.BinaryExpression = function(a) {
-    console.log("BinaryExpression", a);
-    var b;
-    switch(a.operator) {
-      case "==":
-        b = a.operator;
-        break;
-      case "!=":
-        b = a.operator;
-        break;
-      case "===":
-        b = a.operator;
-        break;
-      case "!==":
-        b = a.operator;
-        break;
-      case "<":
-        b = a.operator;
-        break;
-      case "<=":
-        b = a.operator;
-        break;
-      case ">":
-        b = a.operator;
-        break;
-      case ">=":
-        b = a.operator;
-        break;
-      case "<<":
-        b = a.operator;
-        break;
-      case ">>":
-        b = a.operator;
-        break;
-      case ">>>":
-        b = a.operator;
-        break;
-      case "+":
-        b = a.operator;
-        break;
-      case "-":
-        b = a.operator;
-        break;
-      case "*":
-        b = a.operator;
-        break;
-      case "/":
-        b = a.operator;
-        break;
-      case "%":
-        b = a.operator;
-        break;
-      case "|":
-        b = a.operator;
-        break;
-      case "^":
-        b = a.operator;
-        break;
-      case "|":
-        b = a.operator;
-        break;
-      case "&":
-        b = a.operator;
-        break;
-      case "in":
-        b = a.operator;
-        break;
-      case "instanceof":
-        b = a.operator;
-        break;
-      default:
-        b = null;
-    }
-    var c = this[a.left.type](a.left), e = this[a.right.type](a.right);
-    return {type:a.type, operator:b, left:c, right:e};
-  };
-  b.AssignmentExpression = function(a) {
-    console.log("AssignmentExpression", a);
-    var b;
-    switch(a.operator) {
-      case "=":
-        b = a.operator;
-        break;
-      case "+=":
-        b = a.operator;
-        break;
-      case "-=":
-        b = a.operator;
-        break;
-      case "*=":
-        b = a.operator;
-        break;
-      case "/=":
-        b = a.operator;
-        break;
-      case "%=":
-        b = a.operator;
-        break;
-      case "<<=":
-        b = a.operator;
-        break;
-      case ">>=":
-        b = a.operator;
-        break;
-      case "|=":
-        b = a.operator;
-        break;
-      case "^=":
-        b = a.operator;
-        break;
-      case "&=":
-        b = a.operator;
-        break;
-      default:
-        b = null;
-    }
-    var c;
-    c = a.left;
-    var e = this[a.right.type](a.right);
-    return {type:a.type, operator:b, left:c, right:e};
-  };
-  b.LogicalExpression = function(a) {
-    console.log("LogicalExpression", a);
-    var b;
-    switch(a.operator) {
-      case "||":
-        b = a.operator;
-        break;
-      case "&&":
-        b = a.operator;
-        break;
-      default:
-        b = null;
-    }
-    var c = this[a.left.type](a.left), e = this[a.right.type](a.right);
-    return {type:a.type, operator:b, left:c, right:e};
-  };
-  b.MemberExpression = function(a) {
-    console.log("MemberExpression", a);
-    var b = this[a.object.type](a.object), c = this[a.property.type](a.property), e = a.computed;
-    console.log("object", b);
-    console.log("property", c);
-    return {type:a.type, object:b, property:c, computed:e};
-  };
-  b.ConditionalExpression = function(a) {
-    console.log("ConditionalExpression", a);
-    var b = this[a.callee.type](a.callee), c;
-    for (c in a.arguments) {
-      var e = a.arguments[c], e = this[e.type](e);
-      (void 0).push(e);
-    }
-    return {type:a.type, callee:b, arguments:void 0};
-  };
-  b.CallExpression = function(a) {
-    console.log("CallExpression", a);
-    var b = this[a.callee.type](a.callee), c = [], e;
-    for (e in a.arguments) {
-      var f = a.arguments[e], f = this[f.type](f);
-      c.push(f);
-    }
-    console.log("callee", b);
-    console.log("arguments", c);
-    return {type:a.type, callee:b, arguments:c};
-  };
-  b.NewExpression = function(a) {
-    console.log("NewExpression", a);
-    return {type:a.type};
-  };
-  b.SequenceExpression = function(a) {
-    console.log("SequenceExpression", a);
-    for (var b in a.expressions) {
-      var c = a.expressions[b], c = this[c.type](c);
-      (void 0).push(c);
-    }
-    return {type:a.type, expressions:void 0};
-  };
-})(Entry.PyToBlockParserTemp.prototype);
 Entry.Toast = function() {
   this.toasts_ = [];
   var b = document.getElementById("entryToastContainer");
