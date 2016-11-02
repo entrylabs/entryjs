@@ -2391,8 +2391,11 @@ Entry.block = {
             }
             delete Entry.hw.sendQueue['SET'][port1];
             delete Entry.hw.sendQueue['SET'][port2];
-            Entry.hw.sendQueue['GET'] = {
-                type: Entry.ArduinoExt.sensorTypes.ULTRASONIC,
+
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.ULTRASONIC] = {
                 port: [port1, port2],
                 time: new Date().getTime()
             };
@@ -2425,6 +2428,13 @@ Entry.block = {
         "func": function (sprite, script) {
             var port = script.getNumberValue("PORT", script);
             var DIGITAL = Entry.hw.portData.DIGITAL;
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
             return (DIGITAL) ? DIGITAL[port] || 0 : 0;
         },
         "syntax": {"js": [], "py": ["Arduino.digitalRead(%1)"]}
