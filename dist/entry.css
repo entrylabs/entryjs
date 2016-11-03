@@ -790,6 +790,11 @@ svg .svgBlockGroup text {
   top: 45px;
   bottom: 0px;
 }
+.entryWorkspaceBlockMenu.entryRemove.init {
+  opacity: 0 !important;
+  display: block !important;
+  z-index: -9999;
+}
 .entryCategoryListWorkspace {
   width: 64px;
   height: 100%;

@@ -177,6 +177,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.createView = function(board, mode) {
+        board = board || this.getCode().view.board;
         if (!this.view) {
             this.set({view: new Entry.BlockView(
                 this,
