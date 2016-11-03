@@ -9510,8 +9510,8 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.left_wheel_by(%2)", params: ["LEFT"]},
-            {syntax: "Hamster.right_wheel_by(%2))", params: ["RIGHT"]},
-            {syntax: "Hamster.both_wheels_by(%2))", params: ["BOTH"]}
+            {syntax: "Hamster.right_wheel_by(%2)", params: ["RIGHT"]},
+            {syntax: "Hamster.both_wheels_by(%2)", params: ["BOTH"]} 
         ]}
     },
     "hamster_set_wheel_to": {
@@ -9574,8 +9574,8 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.left_wheel(%2)", params: ["LEFT"]},
-            {syntax: "Hamster.right_wheel(%2))", params: ["RIGHT"]},
-            {syntax: "Hamster.both_wheels(%2))", params: ["BOTH"]}
+            {syntax: "Hamster.right_wheel(%2)", params: ["RIGHT"]},
+            {syntax: "Hamster.both_wheels(%2)", params: ["BOTH"]}
         ]}
     },
     "hamster_follow_line_using": {
@@ -9857,7 +9857,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.left_led(Hamster.LED_RED)", params: ["LEFT", "4"]},
             {syntax: "Hamster.right_led(Hamster.LED_RED)", params: ["RIGHT", "4"]},
-            {syntax: "Hamster.leds(Hamster.LED_RED, Hamster.LED_RED)", params: ["BOTH", "4"]},
+            {syntax: "Hamster.leds(Hamster.LED_RED,Hamster.LED_RED)", params: ["BOTH", "4"]},
             {syntax: "Hamster.left_led(Hamster.LED_YELLOW)", params: ["LEFT", "6"]},
             {syntax: "Hamster.left_led(Hamster.LED_GREEN)", params: ["LEFT", "2"]},
             {syntax: "Hamster.left_led(Hamster.LED_CYAN)", params: ["LEFT", "3"]},
@@ -10365,7 +10365,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_ANALOG_INPUT)", params: ["A", "0"]},
             {syntax: "Hamster.io_mode_b(Hamster.IO_MODE_ANALOG_INPUT)", params: ["B", "0"]},
-            {syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT, Hamster.IO_MODE_ANALOG_INPUT)", params: ["AB", "0"]},
+            {syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT,Hamster.IO_MODE_ANALOG_INPUT)", params: ["AB", "0"]},
             {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_DIGITAL_INPUT)", params: ["A", "1"]},
             {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_SERVO_OUTPUT)", params: ["A", "8"]},
             {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_PWM_OUTPUT)", params: ["A", "9"]},
@@ -10432,7 +10432,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.output_a_by(%2)", params: ["A"]},
             {syntax: "Hamster.output_a_by(%2)", params: ["B"]},
-            {syntax: "Hamster.outputs_by(%2)", params: ["AB"]}
+            {syntax: "Hamster.outputs_by(%2,%2)", params: ["AB"]}
         ]}
     },
     "hamster_set_output_to": {
@@ -10488,14 +10488,14 @@ Entry.block = {
                 sq.outputB = value;
             } else {
                 sq.outputA = value;
-                sq.outputB = value;
+                sq.outputB = value
             }
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.output_a(%2)", params: ["A"]},
             {syntax: "Hamster.output_b(%2)", params: ["B"]},
-            {syntax: "Hamster.outputs(%2)", params: ["AB"]}
+            {syntax: "Hamster.outputs(%2,%2)", params: ["AB"]}
         ]}
     },
     "is_clicked": {

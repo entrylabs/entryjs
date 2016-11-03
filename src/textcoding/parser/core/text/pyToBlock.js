@@ -41,6 +41,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         try {
             this._code = [];
 
+            this._blockCountMap.put("ExpressionStatement", 0);
+            this._blockCountMap.put("VariableDeclarator", 0);
+            this._blockCountMap.put("ForStatement", 0);
+            this._blockCountMap.put("WhileStatement", 0);
+            this._blockCountMap.put("IfStatement", 0);
+
             this._threadCount = 0;
             this._blockCount = 0;
             var isEventBlockExisted = false;
@@ -88,6 +94,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(this._thread.length != 0)
                     this._code.push(this._thread);
             }
+
+            console.log("this._blockCountMap", this._blockCountMap);
+            console.log("this._blockCount", this._blockCount);
+
             return this._code;
         } catch(error) {
             console.log("error", error);
@@ -103,14 +113,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ExpressionStatement = function(component) {
         console.log("ExpressionStatement component", component);
 
-        var esBlockCountStatus = this._blockCountMap.get("ExpressionStatement");
-        var feBlockCountStatus = this._blockCountMap.get("FunctionExpression");
+        console.log("Ex A", this._blockCountMap.get("ExpressionStatement"));
 
-        if(esBlockCountStatus != "S" && feBlockCountStatus != "S") {
+        var bcmIndex = this._blockCountMap.get("ExpressionStatement");
+        if(!bcmIndex) bcmIndex = 0;
+        if(bcmIndex == 0) {
             this._blockCount++;
-            this._blockCountMap.put("ExpressionStatement", "S");
-            console.log("ExpressionStatement blockCount++");
+            console.log("ExpressionStatement this._blockCount++", component);
         }
+        this._blockCountMap.put("ExpressionStatement", bcmIndex+1);
 
         var reusult;
         var structure = {};
@@ -147,7 +158,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             throw error;
         }
 
-        this._blockCountMap.put("ExpressionStatement", "E");
+
+        var bcmIndex = this._blockCountMap.get("ExpressionStatement");
+        if(!bcmIndex) bcmIndex = 0;
+        this._blockCountMap.put("ExpressionStatement", bcmIndex-1);
 
         console.log("ExpressionStatement result", result);
 
@@ -174,11 +188,40 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result.callee = calleeData;
 
             var calleeName = Entry.TextCodingUtil.eventBlockSyntaxFilter(calleeData.name);
-            var syntax = calleeName;
             
+            
+            var syntax = calleeName;
+                
             var blockSyntax = this.getBlockSyntax(syntax);
-            if(blockSyntax) 
+            if(blockSyntax) { 
                 type = blockSyntax.key;
+            }
+            
+            if(!type) {
+                if(arguments && arguments.length != 0) {
+                    var argKey = "";
+                    for(var a in arguments) {
+                        var arg = arguments[a];
+                        if(arg.type == "Identifier") {
+                            argKey += arg.name;
+                        }
+                        else if(arg.type == "MemberExpression") {
+                            argKey += arg.object.name + "." + arg.property.name;
+                        }
+
+                        if(a != arguments.length-1)
+                            argKey += ",";
+                    }
+
+                } 
+
+                syntax = calleeName + "(" + argKey + ")";
+                blockSyntax = this.getBlockSyntax(syntax);
+                if(blockSyntax) { 
+                    type = blockSyntax.key;
+                }
+                 
+            }
 
             console.log("callee type", type);
 
@@ -231,6 +274,34 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if(blockSyntax)
                 type = blockSyntax.key;
+
+            if(!type) {
+                if(arguments && arguments.length != 0) {
+                    var argKey = "";
+                    for(var a in arguments) {
+                        var arg = arguments[a];
+                        if(arg.type == "Identifier") {
+                            argKey += arg.name;
+                        }
+                        else if(arg.type == "MemberExpression") {
+                            argKey += arg.object.name + "." + arg.property.name;
+                        }
+
+                        if(a != arguments.length-1)
+                            argKey += ",";
+                    }
+
+                } 
+
+                console.log("argKey", argKey);
+
+                syntax = calleeName + "(" + argKey + ")";
+                blockSyntax = this.getBlockSyntax(syntax);
+                if(blockSyntax) { 
+                    type = blockSyntax.key;
+                }
+                 
+            }
             
             if(callee.property) {
                 if(callee.property.name == "range"){
@@ -348,6 +419,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
 
+            var paramIndex = this.getParamIndex(syntax);
 
             for(var i in arguments) {
                 var argument = arguments[i];
@@ -359,7 +431,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 if(argument) {
                     console.log("CallExpression argument", argument, "typeof", typeof argument);
-                    var paramIndex = this.getParamIndex(syntax);
+                    
                     var param = this[argument.type](argument, paramsMeta[paramIndex[i]], paramsDefMeta[paramIndex[i]], true);
 
                     console.log("callexpression callee", callee, "param", param);
@@ -373,9 +445,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("callex block one multi", block);
 
                     //params.push(param);
-                    console.log("callex param syntax", syntax, "order", paramIndex, "value", paramIndex[i]);
-                    
+                    console.log("callex param syntax", syntax, "order", paramIndex, "value", paramIndex[i], "param", param);
                     params[paramIndex[i]] = param;
+
+                    console.log("callex realtime params", params);
 
                     if(callee.property && callee.property.name == "range") {
                         continue;
@@ -990,12 +1063,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var variableFlag = true;*/
 
         if(component.id.name && !component.id.name.includes("__filbert")) {
-            var blockCountStatus = this._blockCountMap.get("VariableDeclarator");
-            if(blockCountStatus != "S") {
+            var bcmIndex = this._blockCountMap.get("VariableDeclarator");
+            if(!bcmIndex) bcmIndex = 0;
+            console.log("VariableDeclarator bcmIndex", bcmIndex, "this._blockCountMap", this._blockCountMap);
+            if(bcmIndex == 0) {
                 this._blockCount++;
-                this._blockCountMap.put("VariableDeclarator", "S");
-                console.log("VariableDeclarator blockCount++");
+                console.log("VariableDeclarator this._blockCount++");
             }
+            this._blockCountMap.put("VariableDeclarator", bcmIndex+1);
         }
 
         var id = component.id;
@@ -1133,8 +1208,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         type = blockSyntax.key;
         
                     structure.type = type;
-                    this._blockCount++;
-                    console.log("VariableDeclarator blockCount++");
+                    //this._blockCount++;
+                    //console.log("VariableDeclarator blockCount++");
                 } else {
                     var syntax = String("%1 = %2");
                     var blockSyntax = this.getBlockSyntax(syntax);
@@ -1201,7 +1276,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result.params = structure.params;
         }
 
-        this._blockCountMap.put("VariableDeclarator", "E");
+        var bcmIndex = this._blockCountMap.get("VariableDeclarator");
+        if(!bcmIndex) bcmIndex = 0;
+        this._blockCountMap.put("VariableDeclarator", bcmIndex-1);
+
         console.log("VariableDeclarator result", result);
         return result;
 
@@ -1215,12 +1293,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var param;
 
-        /*var blockCountStatus = this._blockCountMap.get("AssignmentExpression");
-        if(blockCountStatus != "S") {
+        /*var bcmIndex = this._blockCountMap.get("AssignmentExpression");
+        if(!bcmIndex) bcmIndex = 0;
+        if(bcmIndex == 0) {
             this._blockCount++;
-            this._blockCountMap.put("AssignmentExpression", "S");
-            console.log("AssignmentExpression blockCount++");
-        }*/
+            console.log("AssignmentExpression this._blockCount++");
+        }
+
+        console.log("AssignmentExpression blockCount", this._blockCount);
+        this._blockCountMap.put("AssignmentExpression", bcmIndex+1);*/
 
         var left = component.left;
         if(left.type) {
@@ -1976,8 +2057,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result.type = structure.type;
         result.params = structure.params;
 
-        this._blockCountMap.put("AssignmentExpression", "E");
-
+        var bcmIndex = this._blockCountMap.get("AssignmentExpression");
+        if(!bcmIndex) bcmIndex = 0;
+        this._blockCountMap.put("AssignmentExpression", bcmIndex-1);
+        
         console.log("AssignmentExpression result", result);
 
         return result;
@@ -2313,8 +2396,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.WhileStatement = function(component) {
         console.log("WhileStatement component", component);
         this._blockCount++;
-        this._blockCountMap.put("WhileStatement", "S");
-        console.log("WhileStatement blockCount++");
+        console.log("WhileStatement this._blockCount++");
+        var bcmIndex = this._blockCountMap.get("WhileStatement");
+        if(!bcmIndex) bcmIndex = 0;
+        this._blockCountMap.put("WhileStatement", bcmIndex+1);
+
         var result;
         var structure = {};
         structure.statements = [];
@@ -2452,7 +2538,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result = structure;
 
-        this._blockCountMap.put("WhileStatement", "E");
+        var bcmIndex = this._blockCountMap.get("WhileStatement");
+        if(!bcmIndex) bcmIndex = 0;
+        this._blockCountMap.put("WhileStatement", bcmIndex-1);
 
         console.log("WhileStatement result", result);
         return result;
@@ -2460,14 +2548,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.BlockStatement = function(component) {
         console.log("BlockStatement component", component);
-        if(component.body && component.body.length != 0 &&
+        /*if(component.body && component.body.length != 0 &&
             component.body[0].declarations &&
             component.body[0].declarations[0].init &&
             component.body[0].declarations[0].init.callee &&
             component.body[0].declarations[0].init.callee.name) {
             this._blockCount++;
             console.log("BlockStatement blockCount++");
-        }
+        }*/
 
         var result = {};
         result.statements = [];
@@ -2725,8 +2813,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(test.operator !== 'instanceof') {
             this._blockCount++;
-            this._blockCountMap.put("IfStatement", "S");
-            console.log("IfStatement blockCount++");
+            console.log("ifStatement this._blockCount++");
+            var bcmIndex = this._blockCountMap.get("IfStatement");
+            if(!bcmIndex) bcmIndex = 0;
+            this._blockCountMap.put("IfStatement", bcmIndex+1);
         }
 
         if(alternate != null) {
@@ -2847,7 +2937,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result = structure;
 
-        this._blockCountMap.put("IfStatement", "E");
+        var bcmIndex = this._blockCountMap.get("IfStatement");
+        if(!bcmIndex) bcmIndex = 0;
+        this._blockCountMap.put("IfStatement", bcmIndex-1);
 
         console.log("IfStatement result", result);
         return result;
@@ -2856,7 +2948,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
      p.ForStatement = function(component) {
         console.log("ForStatement component", component);
         this._blockCount++;
-        this._blockCountMap.put("ForStatement", "S");
+        console.log("ForStatement this._blockCount++");
+        var bcmIndex = this._blockCountMap.get("ForStatement");
+        if(!bcmIndex) bcmIndex = 0;
+        this._blockCountMap.put("ForStatement", bcmIndex+1);
 
         console.log("ForStatement blockCount++");
         var result;
@@ -2911,7 +3006,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result = structure;
 
-        this._blockCountMap.put("ForStatement", "E");
+        var bcmIndex = this._blockCountMap.get("ForStatement");
+        if(!bcmIndex) bcmIndex = 0;
+        this._blockCountMap.put("ForStatement", bcmIndex-1);
 
         console.log("ForStatement result", result);
 
@@ -2936,7 +3033,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.BreakStatement = function(component) {
         console.log("BreakStatement component", component);
         this._blockCount++;
-        console.log("BreakStatement blockCount++");
+        console.log("BreakStatement this._blockCount++");
+       
         var result;
         var structure = {};
 
@@ -4219,8 +4317,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.FunctionExpression = function(component) {
         console.log("FunctionExpression component", component);
-        this._blockCount++;
-        console.log("FunctionExpression blockCount++");
         var result = {};
 
         var body = component.body;

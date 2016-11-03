@@ -582,11 +582,22 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 tokens = s.syntax;
                                 s.key = key;
                             }
-                            tokens = tokens.split('(');
-                            if(tokens[0].length != 0)
-                                tokens = tokens[0];
-                            else
-                                tokens = tokens.join('(')
+                            
+                            tokens = tokens.split('(');                        
+
+                            if(tokens[1] && tokens[1].includes('%')) {
+                                if(tokens[0].length != 0)
+                                    tokens = tokens[0];
+                                else
+                                    tokens = tokens.join('(');
+                            }
+                            else {
+                                tokens = tokens.join('(');
+                            }
+
+                            tokens = tokens.replace("():", "");
+                            tokens = tokens.replace("()", "");
+
 
                             syntax[tokens] = result;
                         })
