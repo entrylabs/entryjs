@@ -576,8 +576,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("callex param syntax", syntax, "order", paramIndex, "value", paramIndex[pi], "param", param);
                     console.log("pi", pi);
                     
-                    if(typeof param == "object" && !param.type && param.name)
-                        param = this.ParamDropdownDynamic(param.name, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]]);
+                    //if(typeof param == "object" && !param.type && param.name)
+                    //    param = this.ParamDropdownDynamic(param.name, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]]);
                     params[paramIndex[pi]] = param;
 
                     console.log("callex realtime params", params);
@@ -843,6 +843,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     else if(params[2].type == "text") {
                         params[2].params[0] = String(Number(params[2].params[0]) + 1);
                     }
+                } 
+                else if(callee.property.name == "len") {
+                    var p = params[1];
+                    p = this.ParamDropdownDynamic(p.name, paramsMeta[1], paramsDefMeta[1]);
+                    params[1] = p;
+                }
+                else if(callee.property.name == "in") {
+                    var p = params[1];
+                    p = this.ParamDropdownDynamic(p.name, paramsMeta[1], paramsDefMeta[1]);
+                    params[1] = p;  
                 }
             }
 
@@ -2226,13 +2236,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return result;
         }
 
-        var options = paramMeta.options;
-        console.log("ParamDropdownDynamic options", options);
-        for(var i in options) {
-            if(value == options[i][0]){
-                console.log("options[i][0]", options[i][0]);
-                result = options[i][1];
-                break;
+        if(paramMeta) {
+            var options = paramMeta.options;
+            console.log("ParamDropdownDynamic options", options);
+            for(var i in options) {
+                if(value == options[i][0]){
+                    console.log("options[i][0]", options[i][0]);
+                    result = options[i][1];
+                    break;
+                }
             }
         }
 

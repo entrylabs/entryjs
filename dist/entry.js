@@ -14011,8 +14011,8 @@ Entry.PyToBlockParser = function(b) {
         }
       }
       for (var z in arguments) {
-        if (g = arguments[z], console.log("kkk argument", g, "typeof", typeof g), g && (y = Number(z) + h, console.log("CallExpression argument", g, "typeof", typeof g), q = this[g.type](g, v[n[y]], u[n[y]], !0), console.log("callexpression callee", f, "param", q), console.log("calleeName", k, "param", q), q && q.data && (q = q.data), console.log("callex block one multi", x), console.log("callex param syntax", l, "order", n, "value", n[y], "param", q), console.log("pi", y), "object" == typeof q && 
-        !q.type && q.name && (q = this.ParamDropdownDynamic(q.name, v[n[y]], u[n[y]])), c[n[y]] = q, console.log("callex realtime params", c), (!f.property || "range" != f.property.name) && q)) {
+        if (g = arguments[z], console.log("kkk argument", g, "typeof", typeof g), g && (y = Number(z) + h, console.log("CallExpression argument", g, "typeof", typeof g), q = this[g.type](g, v[n[y]], u[n[y]], !0), console.log("callexpression callee", f, "param", q), console.log("calleeName", k, "param", q), q && q.data && (q = q.data), console.log("callex block one multi", x), console.log("callex param syntax", l, "order", n, "value", n[y], "param", q), console.log("pi", y), c[n[y]] = q, console.log("callex realtime params", 
+        c), (!f.property || "range" != f.property.name) && q)) {
           if (q.object && q.object.object) {
             if ("self" == q.object.object.name) {
               if (!Entry.TextCodingUtil.isLocalListExisted(q.object.property.name, m)) {
@@ -14124,7 +14124,8 @@ Entry.PyToBlockParser = function(b) {
               console.log("isParamAllString params", c);
             }
           } else {
-            "pop" == f.property.name ? "number" == c[0].type ? c[0].params[0] += 1 : "text" == c[0].type && (c[0].params[0] = String(Number(c[0].params[0]) + 1)) : "insert" == f.property.name && ("number" == c[2].type ? c[2].params[0] += 1 : "text" == c[2].type && (c[2].params[0] = String(Number(c[2].params[0]) + 1)));
+            "pop" == f.property.name ? "number" == c[0].type ? c[0].params[0] += 1 : "text" == c[0].type && (c[0].params[0] = String(Number(c[0].params[0]) + 1)) : "insert" == f.property.name ? "number" == c[2].type ? c[2].params[0] += 1 : "text" == c[2].type && (c[2].params[0] = String(Number(c[2].params[0]) + 1)) : "len" == f.property.name ? (t = c[1], t = this.ParamDropdownDynamic(t.name, v[1], u[1]), c[1] = t) : "in" == f.property.name && (t = c[1], t = this.ParamDropdownDynamic(t.name, v[1], 
+            u[1]), c[1] = t);
           }
         }
       }
@@ -14667,13 +14668,15 @@ Entry.PyToBlockParser = function(b) {
     if ("mouse" == a || "wall" == a || "wall_up" == a || "wall_down" == a || "wall_right" == a || "wall_left" == a) {
       return a;
     }
-    c = b.options;
-    console.log("ParamDropdownDynamic options", c);
-    for (var f in c) {
-      if (a == c[f][0]) {
-        console.log("options[i][0]", c[f][0]);
-        e = c[f][1];
-        break;
+    if (b) {
+      c = b.options;
+      console.log("ParamDropdownDynamic options", c);
+      for (var f in c) {
+        if (a == c[f][0]) {
+          console.log("options[i][0]", c[f][0]);
+          e = c[f][1];
+          break;
+        }
       }
     }
     e = e ? String(e) : Entry.TextCodingUtil.dropdownDynmaicNameToIdConvertor(a, b.menuName);
