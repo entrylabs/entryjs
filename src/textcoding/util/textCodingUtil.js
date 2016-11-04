@@ -1316,7 +1316,9 @@ Entry.TextCodingUtil = {};
         for(var p in params) {
             var param = params[p];
             console.log("makeParamBlock param", param);
-            
+            if(!param)
+                continue;
+
             if(typeof param != "object")  
                 continue;
 

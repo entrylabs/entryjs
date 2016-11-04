@@ -183,6 +183,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var arguments = component.arguments;
 
+        var addedParamIndex = 0;
+
         if(callee.type == "Identifier") {
             console.log("CallExpression Identifier calleeData", calleeData);
             result.callee = calleeData;
@@ -406,10 +408,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(p < arguments.length)
                         arguments.splice(p, 0, pendingArg);
                 }*/
-                params[p] = paramsMeta[p];
-            }
+                var paramType = paramsMeta[p].type;
+                if(paramType == "Indicator")
+                    continue;
+                else if(paramType == "Text")
+                    params[p] = null;
+                else
+                    params[p] = paramsMeta[p];
+            } 
 
             console.log("CallExpression arguments", arguments);
+
 
             if(blockSyntax.params && blockSyntax.params.length != 0) {
                 for(var p in blockSyntax.params) {
@@ -418,8 +427,128 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params[p] = param;
                 }
             }
+            
 
             var paramIndex = this.getParamIndex(syntax);
+
+            if(callee && callee.property) {
+                if(callee.property.name == "append") {
+                    if(callee.object) {
+                        if(callee.object.object) {
+                            if(callee.object.object.name == "self") {
+                                var object = Entry.TextCodingUtil._currentObject;
+                                var name = callee.object.property.name;
+                                if(!Entry.TextCodingUtil.isLocalListExisted(name, object)){
+                                    var error = {};
+                                    error.title = "지원되지 않는 코드";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                    error.line = this._blockCount;
+                                    console.log("send error", error);
+                                    throw error;
+
+                                    return result;
+                                }
+                            }
+                        }
+                        else {
+                            var name = callee.object.name;
+                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
+                                var error = {};
+                                error.title = "지원되지 않는 코드";
+                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                error.line = this._blockCount;
+                                console.log("send error", error);
+                                throw error;
+
+                                return result;
+                            }
+                        }
+                    }
+
+                    console.log("CallExpression append calleeData", calleeData);
+
+                    var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
+                    params[paramIndex[0]] = listName;
+                    addedParamIndex++;
+                }
+                else if(callee.property.name == "pop") {
+                    if(callee.object) {
+                        if(callee.object.object) {
+                            if(callee.object.object.name == "self") {
+                                var name = callee.object.property.name;
+                                if(!Entry.TextCodingUtil.isLocalListExisted(name, currentObject)){
+                                    var error = {};
+                                    error.title = "지원되지 않는 코드";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                    error.line = this._blockCount;
+                                    console.log("send error", error);
+                                    throw error;
+
+                                    return result;
+                                }
+                            }
+                        }
+                        else {
+                            var name = callee.object.name;
+                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
+                                var error = {};
+                                error.title = "지원되지 않는 코드";
+                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                error.line = this._blockCount;
+                                console.log("send error", error);
+                                throw error;
+
+                                return result;
+                            }
+                        }
+                    }
+
+                    console.log("CallExpression append calleeData", calleeData);
+
+                    var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
+                    params[paramIndex[0]] = listName;
+                    addedParamIndex++;
+                }
+                else if(callee.property.name == "insert") {
+                    if(callee.object) {
+                        if(callee.object.object) {
+                            if(callee.object.object.name == "self") {
+                                var name = callee.object.property.name;
+                                if(!Entry.TextCodingUtil.isLocalListExisted(name, currentObject)){
+                                    var error = {};
+                                    error.title = "지원되지 않는 코드";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                    error.line = this._blockCount;
+                                    console.log("send error", error);
+                                    throw error;
+
+                                    return result;
+                                }
+                            }
+                        }
+                        else {
+                            var name = callee.object.name;
+                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
+                                var error = {};
+                                error.title = "지원되지 않는 코드";
+                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                error.line = this._blockCount;
+                                console.log("send error", error);
+                                throw error;
+
+                                return result;
+                            }
+                        }
+                    }
+
+                    console.log("CallExpression insert params", params);
+
+                    var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
+                    params[paramIndex[0]] = listName;
+                    addedParamIndex++;
+                }
+            }
+            
 
             for(var i in arguments) {
                 var argument = arguments[i];
@@ -430,9 +559,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }*/
 
                 if(argument) {
+                    var pi = Number(i)+addedParamIndex;
                     console.log("CallExpression argument", argument, "typeof", typeof argument);
                     
-                    var param = this[argument.type](argument, paramsMeta[paramIndex[i]], paramsDefMeta[paramIndex[i]], true);
+                    var param = this[argument.type](argument, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], true);
 
                     console.log("callexpression callee", callee, "param", param);
 
@@ -443,10 +573,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
 
                     console.log("callex block one multi", block);
-
-                    //params.push(param);
-                    console.log("callex param syntax", syntax, "order", paramIndex, "value", paramIndex[i], "param", param);
-                    params[paramIndex[i]] = param;
+                    console.log("callex param syntax", syntax, "order", paramIndex, "value", paramIndex[pi], "param", param);
+                    console.log("pi", pi);
+                    
+                    if(typeof param == "object" && !param.type && param.name)
+                        param = this.ParamDropdownDynamic(param.name, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]]);
+                    params[paramIndex[pi]] = param;
 
                     console.log("callex realtime params", params);
 
@@ -698,167 +830,44 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         console.log("isParamAllString params", params);
                     }
                 }
-                else if(callee.property.name == "randint") {
-                    console.log("random.randint params", params);
-                }
-                else if(callee.property.name == "append") {
-                    if(callee.object) {
-                        if(callee.object.object) {
-                            if(callee.object.object.name == "self") {
-                                var object = Entry.TextCodingUtil._currentObject;
-                                var name = callee.object.property.name;
-                                if(!Entry.TextCodingUtil.isLocalListExisted(name, object)){
-                                    var error = {};
-                                    error.title = "지원되지 않는 코드";
-                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                    error.line = this._blockCount;
-                                    console.log("send error", error);
-                                    throw error;
-
-                                    return result;
-                                }
-                            }
-                        }
-                        else {
-                            var name = callee.object.name;
-                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
-                                var error = {};
-                                error.title = "지원되지 않는 코드";
-                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                error.line = this._blockCount;
-                                console.log("send error", error);
-                                throw error;
-
-                                return result;
-                            }
-                        }
-                    }
-
-                    console.log("CallExpression append calleeData", calleeData);
-
-                    var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
-                    console.log("CallExpression listName", listName);
-                    params.push(listName);
-                    console.log("CallExpression params[0]", params[0]);
-                }
                 else if(callee.property.name == "pop") {
-                    if(callee.object) {
-                        if(callee.object.object) {
-                            if(callee.object.object.name == "self") {
-                                var name = callee.object.property.name;
-                                if(!Entry.TextCodingUtil.isLocalListExisted(name, currentObject)){
-                                    var error = {};
-                                    error.title = "지원되지 않는 코드";
-                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                    error.line = this._blockCount;
-                                    console.log("send error", error);
-                                    throw error;
-
-                                    return result;
-                                }
-                            }
-                        }
-                        else {
-                            var name = callee.object.name;
-                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
-                                var error = {};
-                                error.title = "지원되지 않는 코드";
-                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                error.line = this._blockCount;
-                                console.log("send error", error);
-                                throw error;
-
-                                return result;
-                            }
-                        }
-                    }
-
-                    console.log("CallExpression append calleeData", calleeData);
-
-                    var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
-                    console.log("CallExpression listName", listName);
-                    params.push(listName);
-                    console.log("CallExpression params[0]", params[0]);
-
                     if(params[0].type == "number")
                         params[0].params[0] += 1;
                     else if(params[0].type == "text") {
                         params[0].params[0] = String(Number(params[0].params[0]) + 1);
                     }
-
                 }
                 else if(callee.property.name == "insert") {
-                    if(callee.object) {
-                        if(callee.object.object) {
-                            if(callee.object.object.name == "self") {
-                                var name = callee.object.property.name;
-                                if(!Entry.TextCodingUtil.isLocalListExisted(name, currentObject)){
-                                    var error = {};
-                                    error.title = "지원되지 않는 코드";
-                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                    error.line = this._blockCount;
-                                    console.log("send error", error);
-                                    throw error;
-
-                                    return result;
-                                }
-                            }
-                        }
-                        else {
-                            var name = callee.object.name;
-                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
-                                var error = {};
-                                error.title = "지원되지 않는 코드";
-                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                error.line = this._blockCount;
-                                console.log("send error", error);
-                                throw error;
-
-                                return result;
-                            }
-                        }
-                    }
-
-                    console.log("CallExpression insert params", params);
-
-                    params.pop();
-                    console.log("CallExpression append calleeData", calleeData);
-                    var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
-                    console.log("CallExpression listName", listName);
-                    params.splice(0, 0, listName);
-                    console.log("CallExpression check arguments", arguments);
-
-                    console.log("CallExpression arguments[1] 2", arguments[1]);
-                    var param = this[arguments[1].type](arguments[1], paramsMeta[2], paramsDefMeta[2], true);
-                    console.log("CallExpression check param", param);
-
-
-                    params.splice(0, 0, param);
-                    console.log("CallExpression insert params", params);
                     if(params[2].type == "number")
                         params[2].params[0] += 1;
                     else if(params[2].type == "text") {
                         params[2].params[0] = String(Number(params[2].params[0]) + 1);
                     }
                 }
+                else if(callee.property.name == "randint") {
+                    console.log("random.randint params", params);
+                }
                 else if(callee.property.name == "len") {
-                    var listName = this.ParamDropdownDynamic(params[1].name, paramsMeta[1], paramsDefMeta[1]);
-                    delete params[1];
-                    params[1] = listName;
+                    params[0] = null;
+                    params[2] = null;
                 }
                 else if(callee.property.name == "in") {
-                    var argument = component.arguments[1];
-                    var param = this[argument.type](argument, paramsMeta[3], paramsDefMeta[3], true);
-                    var listName = component.arguments[3].name;
-                    listName = this.ParamDropdownDynamic(listName, paramsMeta[1], paramsDefMeta[1]);
-                    params = [];
-                    params.push("");
-                    params.push(listName);
-                    params.push("");
-                    params.push(param);
-                    params.push("");
+                    params[0] = null;
+                    params[2] = null;
+                    params[4] = null;
+                }
+                else if(callee.property.name == "is_mouse_clicked") {
+                    params[0] = null;
+                }
+                else if(callee.property.name == "is_pressed") {
+                    params[1] = null;
+                }
+                else if(callee.property.name == "is_reached") {
+                    params[0] = null;
+                    params[2] = null;
                 }
             }
+
 
             if(type) {
                 structure.type = type;
@@ -2223,6 +2232,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
         if(result)
             result = String(result);
+        else
+            result = "None";
         console.log("ParamDropdown result", result);
 
         return result;
@@ -2252,6 +2263,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result = String(result);
         else
             result = Entry.TextCodingUtil.dropdownDynmaicNameToIdConvertor(value, paramMeta.menuName);
+
 
         console.log("ParamDropdownDynamic result", result);
 
