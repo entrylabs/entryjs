@@ -1622,15 +1622,14 @@ Entry.Playground.prototype.updateHW = function() {
 
     var hw = Entry.hw;
     if (hw && hw.connected) {
-        blockMenu.unbanClass("arduinoConnected", true);
-        blockMenu.banClass("arduinoDisconnected", true);
-
+        blockMenu.unbanClass("arduinoConnected");
+        blockMenu.banClass("arduinoDisconnected");
         hw.banHW();
         if (hw.hwModule)
             blockMenu.unbanClass(hw.hwModule.name);
     } else {
-        blockMenu.banClass("arduinoConnected", true);
-        blockMenu.unbanClass("arduinoDisconnected", true);
+        blockMenu.banClass("arduinoConnected");
+        blockMenu.unbanClass("arduinoDisconnected");
         Entry.hw.banHW();
     }
     blockMenu.reDraw();

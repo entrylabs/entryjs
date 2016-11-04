@@ -55,7 +55,7 @@ Entry.Func.registerFunction = function(func) {
     this._targetFuncBlock = menuCode.createThread([{
         type: "func_" + func.id,
         category: 'func',
-        display: false
+        x: -9999
     }]);
     func.blockMenuBlock = this._targetFuncBlock;
 };
@@ -92,8 +92,10 @@ Entry.Func.edit = function(func) {
     this.targetFunc = func;
     this.initEditView(func.content);
     this.bindFuncChangeEvent();
-    this._backupContent = func.content.stringify();
     this.updateMenu();
+    setTimeout(function() {
+        this._backupContent = func.content.stringify();
+    }.bind(this), 0);
 };
 
 Entry.Func.initEditView = function(content) {
@@ -185,8 +187,7 @@ Entry.Func.cancelEdit = function() {
         delete Entry.variableContainer.functions_[this.targetFunc.id];
         delete Entry.variableContainer.selected;
     } else {
-        if (this._backupContent &&
-            this._backupContent !== this.targetFunc.content.stringify()) {
+        if (this._backupContent) {
             this.targetFunc.content.load(this._backupContent);
             Entry.generateFunctionSchema(this.targetFunc.id);
             Entry.Func.generateWsBlock(this.targetFunc);
@@ -244,11 +245,13 @@ Entry.Func.setupMenuCode = function() {
     var CATEGORY = 'func';
     this._fieldLabel = menuCode.createThread([{
         type: "function_field_label",
-        category: CATEGORY
+        category: CATEGORY,
+        x: -9999
     }]).getFirstBlock();
     this._fieldString = menuCode.createThread([{
         type: "function_field_string",
         category: CATEGORY,
+        x: -9999,
         params: [
             {type: this.requestParamBlock("string")}
         ]
@@ -256,11 +259,13 @@ Entry.Func.setupMenuCode = function() {
     this._fieldBoolean = menuCode.createThread([{
         type: "function_field_boolean",
         category: CATEGORY,
+        x: -9999,
         params: [
             {type: this.requestParamBlock("boolean")}
         ]
     }]).getFirstBlock();
     this.menuCode = menuCode;
+    blockMenu.align();
 }
 
 Entry.Func.refreshMenuCode = function() {

@@ -242,7 +242,7 @@ Entry.PARAM = -1;
         var threads = this.getThreads();
         for (var i=0, len=threads.length; i<len; i++) {
             var firstBlock = threads[i].getFirstBlock();
-            if (firstBlock)
+            if (firstBlock && firstBlock.view && firstBlock.view.display)
                 firstBlock.view._moveBy(x, y, false);
         }
 
