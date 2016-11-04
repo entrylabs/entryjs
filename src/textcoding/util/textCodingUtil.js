@@ -805,13 +805,13 @@ Entry.TextCodingUtil = {};
                     preText = trimedThread.substring(0, colonIndex+1);
                 }
                 
-                if( preText == "def entry_event_start():" ||
-                    preText == "def entry_event_mouse_down():" ||
-                    preText == "def entry_event_mouse_up():" ||
-                    preText == "def entry_event_object_down():" ||
-                    preText == "def entry_event_object_up():" ||
-                    preText == "def entry_event_scene_start():" ||
-                    preText == "def entry_event_clone_create():" ) {
+                if( preText == "def when_start():" ||
+                    preText == "def when_click_mouse_on():" ||
+                    preText == "def when_click_mouse_off():" ||
+                    preText == "def when_click_object_on():" ||
+                    preText == "def when_click_object_off():" ||
+                    preText == "def when_start_scene():" ||
+                    preText == "def when_make_clone():" ) {
 
                     /*var tokens = [];
                     tokens = funcPart.split("def");
@@ -838,9 +838,8 @@ Entry.TextCodingUtil = {};
                     threadArr[i] = newThread;
                     eventFound = true;
                 }
-                else if(preText.match(/^def entry_event_key(.+):$/) ||
-                    preText.match(/^def entry_event_signal(.+):$/)) {
-
+                else if(preText == "def when_press_key():" || 
+                        preText == "def when_get_signal():") {
                     thread = thread.replace(/def /, "");
                     var colonIndex = thread.indexOf(":");
                     var funcPart = "";
@@ -878,15 +877,15 @@ Entry.TextCodingUtil = {};
 
     tu.eventBlockSyntaxFilter = function(name) {
         var result;
-        if( name == "entry_event_start" ||
-            name == "entry_event_key" ||
-            name == "entry_event_mouse_down" ||
-            name == "entry_event_mouse_up" ||
-            name == "entry_event_object_down" ||
-            name == "entry_event_object_up" ||
-            name == "entry_event_signal" ||
-            name == "entry_event_scene_start" ||
-            name == "entry_event_clone_create") {
+        if( name == "when_start" ||
+            name == "when_press_key" ||
+            name == "when_click_mouse_on" ||
+            name == "when_click_mouse_off" ||
+            name == "when_click_object_on" ||
+            name == "when_click_object_off" ||
+            name == "when_get_signal" ||
+            name == "when_start_scene" ||
+            name == "when_make_clone") {
 
             name = "def " + name;
             result = name;
@@ -911,15 +910,15 @@ Entry.TextCodingUtil = {};
 
 
     tu.isEntryEventFunc = function(name) {
-        if( name == "def entry_event_start" ||
-            name == "def entry_event_key" ||
-            name == "def entry_event_mouse_down" ||
-            name == "def entry_event_mouse_up" ||
-            name == "def entry_event_object_down" ||
-            name == "def entry_event_object_up" ||
-            name == "def entry_event_signal" ||
-            name == "def entry_event_scene_start" ||
-            name == "def entry_event_clone_create") {
+        if( name == "def when_start" ||
+            name == "def when_press_key" ||
+            name == "def when_click_mouse_on" ||
+            name == "def when_click_mouse_off" ||
+            name == "def when_click_object_on" ||
+            name == "def when_click_object_off" ||
+            name == "def when_get_signal" ||
+            name == "def when_start_scene" ||
+            name == "def when_make_clone") {
 
             return true;
         }
@@ -933,15 +932,15 @@ Entry.TextCodingUtil = {};
         var name = text.substring(0, index);
         console.log("isEntryEventFuncByFullText name", name);
 
-        if( name == "def entry_event_start" ||
-            name == "def entry_event_key" ||
-            name == "def entry_event_mouse_down" ||
-            name == "def entry_event_mouse_up" ||
-            name == "def entry_event_object_down" ||
-            name == "def entry_event_object_up" ||
-            name == "def entry_event_signal" ||
-            name == "def entry_event_scene_start" ||
-            name == "def entry_event_clone_create") {
+        if( name == "def when_start" ||
+            name == "def when_press_key" ||
+            name == "def when_click_mouse_on" ||
+            name == "def when_click_mouse_off" ||
+            name == "def when_click_object_on" ||
+            name == "def when_click_object_off" ||
+            name == "def when_get_signal" ||
+            name == "def when_start_scene" ||
+            name == "def when_make_clone") { 
 
             return true;
         }
@@ -950,17 +949,17 @@ Entry.TextCodingUtil = {};
 
     };
 
-    tu.isEntryEventFuncName = function(name) {
+    tu.isEntryEventFuncName = function(name) { 
         console.log("isEntryEventFuncName name", name);
-        if( name == "entry_event_start" ||
-            name == "entry_event_key" ||
-            name == "entry_event_mouse_down" ||
-            name == "entry_event_mouse_up" ||
-            name == "entry_event_object_down" ||
-            name == "entry_event_object_up" ||
-            name == "entry_event_signal" ||
-            name == "entry_event_scene_start" ||
-            name == "entry_event_clone_create") {
+        if( name == "when_start" ||
+            name == "when_press_key" ||
+            name == "when_click_mouse_on" ||
+            name == "when_click_mouse_off" ||
+            name == "when_click_object_on" ||
+            name == "when_click_object_off" ||
+            name == "when_get_signal" ||
+            name == "when_start_scene" ||
+            name == "when_make_clone") {
 
             return true;
         }
@@ -976,8 +975,8 @@ Entry.TextCodingUtil = {};
         if(lastIndex > 0) {
             var preText = name.substring(0, lastIndex);
             console.log("isEntryEventFuncNameWithParam preText", preText);
-            if( preText == "entry_event_key" ||
-                preText == "entry_event_signal") {
+            if( preText == "when_press_key" ||
+                preText == "when_get_signal") {
                 return true;
             }
         }
@@ -1009,8 +1008,8 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isEntryEventFuncTypeWithParam = function(block) {
-        if(block.type == "when_some_key_pressed" ||
-            block.type == "when_message_cast")
+        if(block.type == "when_press_key" ||
+            block.type == "when_get_signal")
             return true;
 
         return false;
@@ -1320,17 +1319,7 @@ Entry.TextCodingUtil = {};
             if(typeof param != "object")  
                 continue;
 
-            if(param.type && param.params) {//) && param.params.length != 0 && param.params[0].name) {
-                /*var paramKey = param.params[0].name;
-                var paramBlockType = paramInfo[paramKey];
-                console.log("paramBlockType1", paramBlockType);
-                if(paramBlockType) {
-                    var paramBlock = {};
-                    paramBlock.type = paramBlockType;
-                    paramBlock.params = [];
-
-                    params[p] = paramBlock;
-                }*/
+            if(param.type && param.params) {
                 this.makeParamBlock(param, paramInfo);
             }
             else if(param.name) {
@@ -1576,7 +1565,7 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.includeEntryEventKeyBlock = function(thread) {
+    /*tu.includeEntryEventKeyBlock = function(thread) {
         var result = false;
         var threadArr = thread.split('\n');
         for(var i in threadArr) {
@@ -1590,7 +1579,7 @@ Entry.TextCodingUtil = {};
         console.log("includeEntryEventKeyBlock result", result);
 
         return result;
-    };
+    };*/
 
     tu.canConvertTextModeForOverlayMode = function(convertingMode) {
         var message;
@@ -1788,4 +1777,176 @@ Entry.TextCodingUtil = {};
 
         return expressionStatement;
     };
+
+    tu.setMathParams = function(propertyName, params) {
+        var optionParam;
+
+        if(propertyName == "pow") {
+            optionParam = "square";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "sqrt") {
+            optionParam = "root";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "sin") {
+            optionParam = "sin";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "cos") {
+            optionParam = "cos";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "tan") {
+            optionParam = "tan";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "asin") {
+            optionParam = "asin_radian";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "acos") {
+            optionParam = "acos_radian";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "atan") {
+            optionParam = "atan_radian";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "log") {
+            optionParam = "ln";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "log10") {
+            optionParam = "log";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "floor") {
+            optionParam = "floor";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "ceil") {
+            optionParam = "ceil";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "round") {
+            optionParam = "round";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "factorial") {
+            optionParam = "factorial";
+            params[3] = optionParam;
+        }
+        else if(propertyName == "fabs") {
+            optionParam = "abs";
+            params[3] = optionParam;
+        } 
+
+        return optionParam;
+    };
+
+    tu.isMathExpression = function(text) {
+        var textTokens = text.split("(");
+        var textName = textTokens[0];
+        
+        console.log("isMathExpression textName", textName);
+        if(textName == "Entry.math_operation")
+            return true;
+
+        return false;
+    }
+
+    tu.makeMathExpression = function(text) {
+        console.log("makeMathExpression text", text);
+        var result = text;
+        var textTokens = text.split("(");
+        var paramsParts = textTokens[1];
+        var paramsTokens = paramsParts.split(",");
+        var mathValue = paramsTokens[0];
+        var mathOption = paramsTokens[1];
+
+        mathOption = mathOption.substring(2, mathOption.length-2).trim();
+
+        console.log("makeMathExpression mathOption", mathOption);
+        
+        if(mathOption == "square") {
+            mathProperty = "pow";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "root") {
+            mathProperty = "sqrt";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "sin") {
+            mathProperty = "sin";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "cos") {
+            mathProperty = "cos";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "tan") {
+            mathProperty = "tan";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "asin_radian") {
+            mathProperty = "asin";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "acos_radian") {
+            mathProperty = "acos";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "atan_radian") {
+            mathProperty = "atan";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "ln") {
+            mathProperty = "log";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "log") {
+            mathProperty = "log10";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "floor") {
+            mathProperty = "floor";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "ceil") {
+            mathProperty = "ceil";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "round") {
+            mathProperty = "round";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "factorial") {
+            mathProperty = "factorial";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+        else if(mathOption == "abs") {
+            mathProperty = "fabs";
+            var mathText = "math" + "." + mathProperty;
+            result = mathText + "(" + mathValue + ")";
+        }
+
+        console.log("makeMathExpression result", result);
+
+        return result;
+    }
 })(Entry.TextCodingUtil);

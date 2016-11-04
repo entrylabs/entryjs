@@ -387,8 +387,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p._syncTextCode = function() {
-        console.log("_syncTextCode current object", Entry.TextCodingUtil._currentObject);
-
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
             return;
 

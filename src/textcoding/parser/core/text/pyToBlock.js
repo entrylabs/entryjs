@@ -102,7 +102,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ExpressionStatement = function(component) {
         console.log("ExpressionStatement component", component);
-        this._blockCount++;
+        
+        var esBlockCountStatus = this._blockCountMap.get("ExpressionStatement");
+        var feBlockCountStatus = this._blockCountMap.get("FunctionExpression");
+        
+        if(esBlockCountStatus != "S" && feBlockCountStatus != "S") {
+            this._blockCount++;
+            this._blockCountMap.put("ExpressionStatement", "S"); 
+            console.log("ExpressionStatement blockCount++");
+        }
+        
         console.log("ExpressionStatement blockCount++");
         var reusult;
         var structure = {};
@@ -216,54 +225,61 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             type = this.getBlockType(calleeName);
 
-            if(callee.property) {
-                if(callee.property.name == "range"){
-                    var syntax = String("%1number#");
+            
+            if(callee.object && callee.property) { 
+                if(callee.object.name == "math") {
+                    var syntax = String("Entry.math_operation");
                     type = this.getBlockType(syntax);
                 }
-                else if(callee.property.name == "add") {
-                    var syntax = String("(%1 %2calc_basic# %3)");
-                    type = this.getBlockType(syntax);
-                    argumentData = {raw:"PLUS", type:"Literal", value:"PLUS"};
-                    console.log("arguments geniuse", arguments);
-                    
-                    if(arguments.length == 2)
-                        arguments.splice(1, 0, argumentData);
+                else {
+                    if(callee.property.name == "range"){
+                        var syntax = String("%1number#");
+                        type = this.getBlockType(syntax);
+                    }
+                    else if(callee.property.name == "add") {
+                        var syntax = String("(%1 %2calc_basic# %3)");
+                        type = this.getBlockType(syntax);
+                        argumentData = {raw:"PLUS", type:"Literal", value:"PLUS"};
+                        console.log("arguments geniuse", arguments);
+                        
+                        if(arguments.length == 2)
+                            arguments.splice(1, 0, argumentData);
 
-                    result.operator = "PLUS";
-                    
-                    console.log("callexpression arguments", arguments);
-                }
-                else if(callee.property.name == "multiply") {
-                    var syntax = String("(%1 %2calc_basic# %3)");
-                    type = this.getBlockType(syntax);
+                        result.operator = "PLUS";
+                        
+                        console.log("callexpression arguments", arguments);
+                    }
+                    else if(callee.property.name == "multiply") {
+                        var syntax = String("(%1 %2calc_basic# %3)");
+                        type = this.getBlockType(syntax);
 
-                    argumentData = {raw:"MULTI", type:"Literal", value:"MULTI"};
-                    if(arguments.length == 2)
-                        arguments.splice(1, 0, argumentData);
+                        argumentData = {raw:"MULTI", type:"Literal", value:"MULTI"};
+                        if(arguments.length == 2)
+                            arguments.splice(1, 0, argumentData);
 
-                    result.operator = "MULTI";
-                }
-                else if(callee.property.name == "in") {
-                    var syntax = String("%4 in %2");
-                    type = this.getBlockType(syntax);
-                }
-                else if(callee.property.name == "len") {
-                    var syntax = String("len");
-                    type = this.getBlockType(syntax);
-                }
-                else if(callee.property.name == "append") {
-                    var syntax = String("%2.append");
-                    type = this.getBlockType(syntax);
-                }
-                else if(callee.property.name  == "insert") {
-                    var syntax = String("%2.insert");
-                    type = this.getBlockType(syntax);
-                }
-                else if(callee.property.name == "pop") {
-                    var syntax = String("%2.pop");
-                    type = this.getBlockType(syntax);
-                }
+                        result.operator = "MULTI";
+                    }
+                    else if(callee.property.name == "in") {
+                        var syntax = String("%4 in %2");
+                        type = this.getBlockType(syntax);
+                    }
+                    else if(callee.property.name == "len") {
+                        var syntax = String("len");
+                        type = this.getBlockType(syntax);
+                    }
+                    else if(callee.property.name == "append") {
+                        var syntax = String("%2.append");
+                        type = this.getBlockType(syntax);
+                    }
+                    else if(callee.property.name  == "insert") {
+                        var syntax = String("%2.insert");
+                        type = this.getBlockType(syntax);
+                    }
+                    else if(callee.property.name == "pop") {
+                        var syntax = String("%2.pop");
+                        type = this.getBlockType(syntax);
+                    } 
+                } 
 
                 if(!type) {
                     if(calleeData.object.name) {
@@ -276,7 +292,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         throw error;
                     }
                 }
-            } 
+            }
+            
         }
 
         console.log("CallExpression type after", type);
@@ -438,151 +455,263 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             console.log("call call params", params);
-            if(callee.property) {
-                if(callee.property.name == "range") {
-                    if(params.length > 2) {
+
+            if(callee.object && callee.property) {
+                if(callee.object.name == "math") {
+                    var isMath = Entry.TextCodingUtil.setMathParams(callee.property.name, params);
+                    if (!isMath) {
                         var error = {};
                         error.title = "지원되지 않는 코드";
-                        error.message = "블록으로 변환될 수 없는 코드입니다." + "range() 함수의 파라미터 개수는 1개 또는 2개만 가능합니다.";
+                        error.message = "블록으로 변환될 수 없는 코드입니다. " + "\'math." + callee.property.name + "\'" + " 함수는 지원하지 않습니다.";
                         error.line = this._blockCount;
                         console.log("send error", error);
                         throw error;
                     }
-                    else if(params.length == 2) {
-                        for(var p in params) {
-                            var param = params[p];
-                            console.log("range param", param);
-                            var rParamBlock = {};
-                            var rParamType = "calc_basic";
-                            var rParamParams = [];
-                            rParamParams[1] = "MINUS";
-                                        
-                            if(typeof param == "object") {
-                                if(param.type == "text" || param.type == "number") {
-                                    params[p] = param.params[0];
+                }
+                else {
+                    if(callee.property.name == "range") {
+                        if(params.length > 2) {
+                            var error = {};
+                            error.title = "지원되지 않는 코드";
+                            error.message = "블록으로 변환될 수 없는 코드입니다." + "range() 함수의 파라미터 개수는 1개 또는 2개만 가능합니다.";
+                            error.line = this._blockCount;
+                            console.log("send error", error);
+                            throw error;
+                        }
+                        else if(params.length == 2) {
+                            for(var p in params) {
+                                var param = params[p];
+                                console.log("range param", param);
+                                var rParamBlock = {};
+                                var rParamType = "calc_basic";
+                                var rParamParams = [];
+                                rParamParams[1] = "MINUS";
+                                            
+                                if(typeof param == "object") {
+                                    if(param.type == "text" || param.type == "number") {
+                                        params[p] = param.params[0];
+                                    }
                                 }
-                            }
 
-                            console.log("mid range params", params);
-                            if(p == 1) {
-                                if((typeof params[0] == "string" || typeof params[0] == "number") && 
-                                    (typeof params[1] == "string" || typeof params[1] == "number")) {
-                                    console.log("came here jjj", parseInt(params[1]));
-                                    var count = parseInt(params[1]) - parseInt(params[0]);
+                                console.log("mid range params", params);
+                                if(p == 1) {
+                                    if((typeof params[0] == "string" || typeof params[0] == "number") && 
+                                        (typeof params[1] == "string" || typeof params[1] == "number")) {
+                                        console.log("came here jjj", parseInt(params[1]));
+                                        var count = parseInt(params[1]) - parseInt(params[0]);
 
-                                    if(!isNaN(count)) {
-                                        var rParams = [];
-                                        rParams.push(count);
-                                        params = rParams;
+                                        if(!isNaN(count)) {
+                                            var rParams = [];
+                                            rParams.push(count);
+                                            params = rParams;
+                                        }
+                                        else {
+                                            var rParams = [];
+                                            rParams.push(10);
+                                            params = rParams;
+                                        }
                                     }
                                     else {
-                                        var rParams = [];
-                                        rParams.push(10);
-                                        params = rParams;
+                                        if(typeof params[0] == "string" || typeof params[0] == "number") {
+                                            var rBlock = {};
+                                            var rType = "text";
+                                            var rParams = [];
+                                            rParams.push(params[0]);
+                                            rBlock.type = rType;
+                                            rBlock.params = rParams;
+
+                                            params[0] = rBlock;
+                                        } 
+
+                                        if(typeof params[1] == "string" || typeof params[1] == "number") {
+                                            var rBlock = {};
+                                            var rType = "text";
+                                            var rParams = [];
+                                            rParams.push(params[1]);
+                                            rBlock.type = type;
+                                            rBlock.params = rParams;
+
+                                            params[1] = rBlock;
+                                        }
+
+                                        rParamParams[0] = params[1];
+                                        rParamParams[2] = params[0];
+
+                                        rParamBlock.type = rParamType;
+                                        rParamBlock.params = rParamParams;
+
+                                        result = rParamBlock;
+                                        return result;
                                     }
                                 }
-                                else {
-                                    if(typeof params[0] == "string" || typeof params[0] == "number") {
-                                        var rBlock = {};
-                                        var rType = "text";
-                                        var rParams = [];
-                                        rParams.push(params[0]);
-                                        rBlock.type = rType;
-                                        rBlock.params = rParams;
+                            }
+                        }
+                        else if(params.length == 1) {
+                            console.log("call range params", params);
+                            var param = params[0];
 
-                                        params[0] = rBlock;
-                                    } 
+                            if(typeof param != "object") {
+                                params.splice(0, 1, param);
+                            }
+                            else {
+                                if(param.type && param.params) {
+                                    type = param.type;
+                                    params = param.params;
+                                }
+                                else if(!param.type && param.name != undefined || param.name != null) {
+                                    var error = {};
+                                    error.title = "지원되지 않는 코드";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을(를) 확인하세요.";
+                                    error.line = this._blockCount;
+                                    console.log("send error", error);
+                                    throw error;
+                                    /*result.name = param.name;
+                                    return result;*/
+                                }
+                            }
+                        }
 
-                                    if(typeof params[1] == "string" || typeof params[1] == "number") {
-                                        var rBlock = {};
-                                        var rType = "text";
-                                        var rParams = [];
-                                        rParams.push(params[1]);
-                                        rBlock.type = type;
-                                        rBlock.params = rParams;
-
-                                        params[1] = rBlock;
+                        console.log("range final params", params);
+                    } 
+                    else if(callee.property.name == "add") {
+                        var isParamAllString = true;
+                        for(var p in params) {
+                            var param = params[p];
+                            if(param && (param.type == "text" || param.type == "number" || param.type == "combine_something" || param == "PLUS")) {
+                                if(param.type == "text" || param.type == "number") {
+                                    if(param.params && param.params.length != 0) {
+                                        var p = param.params[0];
+                                        if(typeof p != "string") {
+                                            console.log("isParamAllString", param);
+                                            isParamAllString = false;
+                                        }
                                     }
+                                }
+                            } else {
+                                isParamAllString = false;
+                            }
+                        }
 
-                                    rParamParams[0] = params[1];
-                                    rParamParams[2] = params[0];
+                        if(isParamAllString) { //retype considering parameter condition
+                            var syntax = String("%2 + %4");
+                            type = this.getBlockType(syntax);   
+                            
+                            params[1] = null;
+                            params.splice(0, 0, null);
+                            params.splice(4, 0, null);
 
-                                    rParamBlock.type = rParamType;
-                                    rParamBlock.params = rParamParams;
+                            console.log("isParamAllString params", params);
+                        }
+                    }
+                    else if(callee.property.name == "randint") {
+                        console.log("random.randint params", params);
+                    }
+                    else if(callee.property.name == "append") {
+                        if(callee.object) {
+                            if(callee.object.object) {
+                                if(callee.object.object.name == "self") {
+                                    var object = Entry.TextCodingUtil._currentObject;
+                                    var name = callee.object.property.name;
+                                    if(!Entry.TextCodingUtil.isLocalListExisted(name, object)){
+                                        var error = {};
+                                        error.title = "지원되지 않는 코드";
+                                        error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                        error.line = this._blockCount;
+                                        console.log("send error", error);
+                                        throw error;
 
-                                    result = rParamBlock;
+                                        return result;
+                                    }
+                                }
+                            }
+                            else {
+                                var name = callee.object.name;
+                                if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
+                                    var error = {};
+                                    error.title = "지원되지 않는 코드";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                    error.line = this._blockCount;
+                                    console.log("send error", error);
+                                    throw error;
+
                                     return result;
                                 }
                             }
                         }
-                    }
-                    else if(params.length == 1) {
-                        console.log("call range params", params);
-                        var param = params[0];
 
-                        if(typeof param != "object") {
-                            params.splice(0, 1, param);
-                        }
-                        else {
-                            if(param.type && param.params) {
-                                type = param.type;
-                                params = param.params;
-                            }
-                            else if(!param.type && param.name != undefined || param.name != null) {
-                                var error = {};
-                                error.title = "지원되지 않는 코드";
-                                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을(를) 확인하세요.";
-                                error.line = this._blockCount;
-                                console.log("send error", error);
-                                throw error;
-                                /*result.name = param.name;
-                                return result;*/
-                            }
-                        }
-                    }
+                        console.log("CallExpression append calleeData", calleeData);
 
-                    console.log("range final params", params);
-                } 
-                else if(callee.property.name == "add") {
-                    var isParamAllString = true;
-                    for(var p in params) {
-                        var param = params[p];
-                        if(param && (param.type == "text" || param.type == "number" || param.type == "combine_something" || param == "PLUS")) {
-                            if(param.type == "text" || param.type == "number") {
-                                if(param.params && param.params.length != 0) {
-                                    var p = param.params[0];
-                                    if(typeof p != "string") {
-                                        console.log("isParamAllString", param);
-                                        isParamAllString = false;
+                        var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
+                        console.log("CallExpression listName", listName);
+                        params.push(listName);
+                        console.log("CallExpression params[0]", params[0]);
+                    } 
+                    else if(callee.property.name == "pop") {
+                        if(callee.object) {
+                            if(callee.object.object) {
+                                if(callee.object.object.name == "self") {
+                                    var name = callee.object.property.name;
+                                    if(!Entry.TextCodingUtil.isLocalListExisted(name, currentObject)){
+                                        var error = {};
+                                        error.title = "지원되지 않는 코드";
+                                        error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                        error.line = this._blockCount;
+                                        console.log("send error", error);
+                                        throw error;
+
+                                        return result;
                                     }
                                 }
                             }
-                        } else {
-                            isParamAllString = false;
-                        }
-                    }
+                            else {
+                                var name = callee.object.name;
+                                if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
+                                    var error = {};
+                                    error.title = "지원되지 않는 코드";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                    error.line = this._blockCount;
+                                    console.log("send error", error);
+                                    throw error;
 
-                    if(isParamAllString) { //retype considering parameter condition
-                        var syntax = String("%2 + %4");
-                        type = this.getBlockType(syntax);   
+                                    return result;
+                                }
+                            }
+                        }
+
+                        console.log("CallExpression append calleeData", calleeData);
+
+                        var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
+                        console.log("CallExpression listName", listName);
+                        params.push(listName);
+                        console.log("CallExpression params[0]", params[0]);
+                       
+                        if(params[0].type == "number")
+                            params[0].params[0] += 1;
+                        else if(params[0].type == "text") {
+                            params[0].params[0] = String(Number(params[0].params[0]) + 1);
+                        }
                         
-                        params[1] = null;
-                        params.splice(0, 0, null);
-                        params.splice(4, 0, null);
-
-                        console.log("isParamAllString params", params);
                     }
-                }
-                else if(callee.property.name == "randint") {
-                    console.log("random.randint params", params);
-                }
-                else if(callee.property.name == "append") {
-                    if(callee.object) {
-                        if(callee.object.object) {
-                            if(callee.object.object.name == "self") {
-                                var object = Entry.TextCodingUtil._currentObject;
-                                var name = callee.object.property.name;
-                                if(!Entry.TextCodingUtil.isLocalListExisted(name, object)){
+                    else if(callee.property.name == "insert") {
+                        if(callee.object) {
+                            if(callee.object.object) {
+                                if(callee.object.object.name == "self") {
+                                    var name = callee.object.property.name;
+                                    if(!Entry.TextCodingUtil.isLocalListExisted(name, currentObject)){
+                                        var error = {};
+                                        error.title = "지원되지 않는 코드";
+                                        error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                        error.line = this._blockCount;
+                                        console.log("send error", error);
+                                        throw error;
+
+                                        return result;
+                                    }
+                                }
+                            }
+                            else {
+                                var name = callee.object.name;
+                                if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
                                     var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
@@ -594,144 +723,46 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 }
                             }
                         }
-                        else {
-                            var name = callee.object.name;
-                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
-                                var error = {};
-                                error.title = "지원되지 않는 코드";
-                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                error.line = this._blockCount;
-                                console.log("send error", error);
-                                throw error;
 
-                                return result;
-                            }
+                        console.log("CallExpression insert params", params);
+
+                        params.pop();
+                        console.log("CallExpression append calleeData", calleeData);
+                        var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
+                        console.log("CallExpression listName", listName);
+                        params.splice(0, 0, listName);
+                        console.log("CallExpression check arguments", arguments);
+
+                        console.log("CallExpression arguments[1] 2", arguments[1]);
+                        var param = this[arguments[1].type](arguments[1], paramsMeta[2], paramsDefMeta[2], true);
+                        console.log("CallExpression check param", param);
+
+
+                        params.splice(0, 0, param);
+                        console.log("CallExpression insert params", params);
+                        if(params[2].type == "number")
+                            params[2].params[0] += 1;
+                        else if(params[2].type == "text") {
+                            params[2].params[0] = String(Number(params[2].params[0]) + 1);
                         }
+                    } 
+                    else if(callee.property.name == "len") {
+                        var listName = this.ParamDropdownDynamic(params[1].name, paramsMeta[1], paramsDefMeta[1]);
+                        delete params[1];
+                        params[1] = listName;
+                    } 
+                    else if(callee.property.name == "in") {
+                        var argument = component.arguments[1];
+                        var param = this[argument.type](argument, paramsMeta[3], paramsDefMeta[3], true);
+                        var listName = component.arguments[3].name;
+                        listName = this.ParamDropdownDynamic(listName, paramsMeta[1], paramsDefMeta[1]);
+                        params = [];
+                        params.push("");
+                        params.push(listName);
+                        params.push("");
+                        params.push(param);
+                        params.push("");
                     }
-
-                    console.log("CallExpression append calleeData", calleeData);
-
-                    var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
-                    console.log("CallExpression listName", listName);
-                    params.push(listName);
-                    console.log("CallExpression params[0]", params[0]);
-                } 
-                else if(callee.property.name == "pop") {
-                    if(callee.object) {
-                        if(callee.object.object) {
-                            if(callee.object.object.name == "self") {
-                                var name = callee.object.property.name;
-                                if(!Entry.TextCodingUtil.isLocalListExisted(name, currentObject)){
-                                    var error = {};
-                                    error.title = "지원되지 않는 코드";
-                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                    error.line = this._blockCount;
-                                    console.log("send error", error);
-                                    throw error;
-
-                                    return result;
-                                }
-                            }
-                        }
-                        else {
-                            var name = callee.object.name;
-                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
-                                var error = {};
-                                error.title = "지원되지 않는 코드";
-                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                error.line = this._blockCount;
-                                console.log("send error", error);
-                                throw error;
-
-                                return result;
-                            }
-                        }
-                    }
-
-                    console.log("CallExpression append calleeData", calleeData);
-
-                    var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
-                    console.log("CallExpression listName", listName);
-                    params.push(listName);
-                    console.log("CallExpression params[0]", params[0]);
-                   
-                    if(params[0].type == "number")
-                        params[0].params[0] += 1;
-                    else if(params[0].type == "text") {
-                        params[0].params[0] = String(Number(params[0].params[0]) + 1);
-                    }
-                    
-                }
-                else if(callee.property.name == "insert") {
-                    if(callee.object) {
-                        if(callee.object.object) {
-                            if(callee.object.object.name == "self") {
-                                var name = callee.object.property.name;
-                                if(!Entry.TextCodingUtil.isLocalListExisted(name, currentObject)){
-                                    var error = {};
-                                    error.title = "지원되지 않는 코드";
-                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                    error.line = this._blockCount;
-                                    console.log("send error", error);
-                                    throw error;
-
-                                    return result;
-                                }
-                            }
-                        }
-                        else {
-                            var name = callee.object.name;
-                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
-                                var error = {};
-                                error.title = "지원되지 않는 코드";
-                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                error.line = this._blockCount;
-                                console.log("send error", error);
-                                throw error;
-
-                                return result;
-                            }
-                        }
-                    }
-
-                    console.log("CallExpression insert params", params);
-
-                    params.pop();
-                    console.log("CallExpression append calleeData", calleeData);
-                    var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
-                    console.log("CallExpression listName", listName);
-                    params.splice(0, 0, listName);
-                    console.log("CallExpression check arguments", arguments);
-
-                    console.log("CallExpression arguments[1] 2", arguments[1]);
-                    var param = this[arguments[1].type](arguments[1], paramsMeta[2], paramsDefMeta[2], true);
-                    console.log("CallExpression check param", param);
-
-
-                    params.splice(0, 0, param);
-                    console.log("CallExpression insert params", params);
-                    if(params[2].type == "number")
-                        params[2].params[0] += 1;
-                    else if(params[2].type == "text") {
-                        params[2].params[0] = String(Number(params[2].params[0]) + 1);
-                    }
-                } 
-                else if(callee.property.name == "len") {
-                    var listName = this.ParamDropdownDynamic(params[1].name, paramsMeta[1], paramsDefMeta[1]);
-                    delete params[1];
-                    params[1] = listName;
-                } 
-                else if(callee.property.name == "in") {
-                    var argument = component.arguments[1];
-                    var param = this[argument.type](argument, paramsMeta[3], paramsDefMeta[3], true);
-                    var listName = component.arguments[3].name;
-                    listName = this.ParamDropdownDynamic(listName, paramsMeta[1], paramsDefMeta[1]);
-                    params = [];
-                    params.push("");
-                    params.push(listName);
-                    params.push("");
-                    params.push(param);
-                    params.push("");
                 }
             }
 
@@ -1150,12 +1181,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var param;
 
-        var blockCountStatus = this._blockCountMap.get("AssignmentExpression");
+        /*var blockCountStatus = this._blockCountMap.get("AssignmentExpression");
         if(blockCountStatus != "S") {
             this._blockCount++;
             this._blockCountMap.put("AssignmentExpression", "S"); 
-            console.log("AssignmentExpression blockCount++");
-        }
+            console.log("AssignmentExpression blockCount++", this._blockCountMap);
+        }*/
 
         var left = component.left;
         if(left.type) {
@@ -1883,7 +1914,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result.type = structure.type;
         result.params = structure.params;
 
-        this._blockCountMap.put("AssignmentExpression", "E");
+        //this._blockCountMap.put("AssignmentExpression", "E");
 
         console.log("AssignmentExpression result", result);
 
