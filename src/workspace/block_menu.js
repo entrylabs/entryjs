@@ -447,7 +447,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     };
 
-    p.selectMenu = function(selector, doNotFold) {
+    p.selectMenu = function(selector, doNotFold, doNotAlign) {
         var className = 'entrySelectedCategory';
         var oldView = this._selectedCategoryView;
 
@@ -510,7 +510,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             this._selectedCategoryView = elem;
             elem && elem.addClass(className);
         }
-        this._dAlign();
+
+        doNotAlign !== true && this._dAlign();
     };
 
     p._generateCategoryCodes = function(elems) {
@@ -787,7 +788,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             that._categoryElems[name] = elem;
             elem.bindOnClick(function(e) {
                 that._cancelDynamic(true, function() {
-                    that.selectMenu(name);
+                    that.selectMenu(name, undefined, true);
+                    that.align();
                 });
             });
         })(element, name);

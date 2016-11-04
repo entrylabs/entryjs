@@ -21821,30 +21821,33 @@ Entry.BlockMenu = function(b, a, d, c) {
       }
     }
   };
-  b.selectMenu = function(a, b) {
-    var c = this._selectedCategoryView, e = this._convertSelector(a);
-    if (void 0 === a || e) {
-      e && (this.lastSelector = e);
+  b.selectMenu = function(a, b, c) {
+    var e = this._selectedCategoryView, f = this._convertSelector(a);
+    if (void 0 === a || f) {
+      f && (this.lastSelector = f);
       this._isSelectingMenu = !0;
-      switch(e) {
+      switch(f) {
         case "variable":
           Entry.playground.checkVariables();
           break;
         case "arduino":
           this._generateHwCode(), this.align();
       }
-      var f = this._categoryElems[e], g = !1, h = this.workspace.board, k = h.view;
-      c && c.removeClass("entrySelectedCategory");
-      f != c || b ? c ? e || (this._selectedCategoryView = null) : (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, f && f.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
+      a = this._categoryElems[f];
+      var g = !1, h = this.workspace.board, k = h.view;
+      e && e.removeClass("entrySelectedCategory");
+      a != e || b ? e ? f || (this._selectedCategoryView = null) : (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, a && a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
       g && Entry.bindAnimationCallbackOnce(k, function() {
         h.scroller.resizeScrollBar.call(h.scroller);
         k.removeClass("foldOut");
         Entry.windowResized.notify();
       });
       this._isSelectingMenu = !1;
-      this.visible && (this._selectedCategoryView = f) && f.addClass("entrySelectedCategory");
+      this.visible && (this._selectedCategoryView = a) && a.addClass("entrySelectedCategory");
+      !0 !== c && this._dAlign();
+    } else {
+      this._dAlign();
     }
-    this._dAlign();
   };
   b._generateCategoryCodes = function(a) {
     a || (this.view.addClass("init"), a = Object.keys(this._categoryElems));
@@ -22022,7 +22025,8 @@ Entry.BlockMenu = function(b, a, d, c) {
       b._categoryElems[e] = a;
       a.bindOnClick(function(a) {
         b._cancelDynamic(!0, function() {
-          b.selectMenu(e);
+          b.selectMenu(e, void 0, !0);
+          b.align();
         });
       });
     })(Entry.Dom("li", {id:"entryCategory" + a, class:"entryCategoryElementWorkspace entryRemove", parent:this._categoryCol}), a);
@@ -22124,7 +22128,8 @@ Entry.BlockMenuScroller = function(b) {
   this.setOpacity(0);
   this._addControl();
   this._domHeight = 0;
-  Entry.windowResized && Entry.windowResized.attach(this, this.resizeScrollBar);
+  this._dResizeScrollBar = Entry.Utils.debounce(this.resizeScrollBar, 50);
+  Entry.windowResized && Entry.windowResized.attach(this, this._dResizeScrollBar);
 };
 Entry.BlockMenuScroller.RADIUS = 7;
 (function(b) {
@@ -22164,10 +22169,9 @@ Entry.BlockMenuScroller.RADIUS = 7;
     return this._visible;
   };
   b._updateRatio = function() {
-    var a = this.board, b = a.svgBlockGroup.getBoundingClientRect(), c = a.blockMenuContainer.height();
-    a.offset();
-    this.vRatio = a = (b.height + 20) / c;
-    1 >= a ? this.setVisible(!1) : this.setVisible(!0);
+    var a = this.board, b = a.svgBlockGroup.getBBox(), a = a.blockMenuContainer.height();
+    this.vRatio = b = (b.height + 20) / a;
+    1 >= b ? this.setVisible(!1) : this.setVisible(!0);
   };
   b._reset = function() {
     this.vY = 0;
@@ -22422,7 +22426,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
   };
   b._moveTo = function(a, b, c) {
-    this.display ? this.set({x:a, y:b}) : this.set({x:-99999, y:-99999});
+    var e = this.x, f = this.y;
+    this.display || (b = a = -99999);
+    e === a && f === b || this.set({x:a, y:b});
     this._lazyUpdatePos();
     this.visible && this.display && this._setPosition(c);
   };

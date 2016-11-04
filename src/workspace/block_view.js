@@ -422,10 +422,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._moveTo = function(x, y, animate) {
-        if (this.display)
+        var thisX = this.x;
+        var thisY = this.y;
+        if (!this.display) {
+            x = -99999;
+            y = -99999;
+        }
+        if (thisX !== x || thisY !== y)
             this.set({ x: x, y: y });
-        else
-            this.set({ x: -99999, y: -99999 });
         this._lazyUpdatePos();
         if (this.visible && this.display)
             this._setPosition(animate);
