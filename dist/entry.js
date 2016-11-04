@@ -14124,8 +14124,7 @@ Entry.PyToBlockParser = function(b) {
               console.log("isParamAllString params", c);
             }
           } else {
-            "pop" == f.property.name ? "number" == c[0].type ? c[0].params[0] += 1 : "text" == c[0].type && (c[0].params[0] = String(Number(c[0].params[0]) + 1)) : "insert" == f.property.name ? "number" == c[2].type ? c[2].params[0] += 1 : "text" == c[2].type && (c[2].params[0] = String(Number(c[2].params[0]) + 1)) : "randint" == f.property.name ? console.log("random.randint params", c) : "len" == f.property.name ? (c[0] = null, c[2] = null) : "in" == f.property.name ? (c[0] = null, c[2] = null, 
-            c[4] = null) : "is_mouse_clicked" == f.property.name ? c[0] = null : "is_pressed" == f.property.name ? c[1] = null : "is_reached" == f.property.name && (c[0] = null, c[2] = null);
+            "pop" == f.property.name ? "number" == c[0].type ? c[0].params[0] += 1 : "text" == c[0].type && (c[0].params[0] = String(Number(c[0].params[0]) + 1)) : "insert" == f.property.name && ("number" == c[2].type ? c[2].params[0] += 1 : "text" == c[2].type && (c[2].params[0] = String(Number(c[2].params[0]) + 1)));
           }
         }
       }

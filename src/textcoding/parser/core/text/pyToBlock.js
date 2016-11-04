@@ -844,30 +844,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params[2].params[0] = String(Number(params[2].params[0]) + 1);
                     }
                 }
-                else if(callee.property.name == "randint") {
-                    console.log("random.randint params", params);
-                }
-                else if(callee.property.name == "len") {
-                    params[0] = null;
-                    params[2] = null;
-                }
-                else if(callee.property.name == "in") {
-                    params[0] = null;
-                    params[2] = null;
-                    params[4] = null;
-                }
-                else if(callee.property.name == "is_mouse_clicked") {
-                    params[0] = null;
-                }
-                else if(callee.property.name == "is_pressed") {
-                    params[1] = null;
-                }
-                else if(callee.property.name == "is_reached") {
-                    params[0] = null;
-                    params[2] = null;
-                }
             }
-
 
             if(type) {
                 structure.type = type;
