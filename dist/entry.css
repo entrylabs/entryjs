@@ -5230,6 +5230,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   background-color: rgba(0, 0, 0, 0.6);
 }
 .entryPopup.popupHelper {
+  position: fixed;
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;

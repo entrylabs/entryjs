@@ -118,8 +118,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.board.show();
                     this.blockMenu.unbanClass('textMode');
                     this.set({selectedBoard:this.board});
-                    this.textToCode(this.oldMode, this.oldTextType);
-                    if (this.vimBoard) this.vimBoard.hide();
+                    if (this.vimBoard) {
+                        this.textToCode(this.oldMode, this.oldTextType);
+                        this.vimBoard.hide();
+                    }
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.renderBlock();
                     //this.oldMode = this.mode;
@@ -221,16 +223,19 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p.codeToText = function(code, mode) {
+        if (!this.vimBoard) return;
+
         try {
             this.vimBoard.codeToText(code, mode);
             console.log("codeToText not show");
-        }
-        catch(error) {
+        } catch(error) {
             throw error;
         }
     };
 
     p.getCodeToText = function(code) {
+        if (!this.vimBoard)
+            return;
         return this.vimBoard.getCodeToText(code);
     };
 

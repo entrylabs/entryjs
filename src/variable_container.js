@@ -753,9 +753,11 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
     var blockMenu = this._getBlockMenu();
     editButton.bindOnClick(function (e) {
         e.stopPropagation();
-        if (Entry.playground) {
-            Entry.playground.changeViewMode('code');
-            if (blockMenu.lastSelector != 'func') blockMenu.selectMenu('func');
+        var playground = Entry.playground;
+        if (playground) {
+            playground.changeViewMode('code');
+            if (blockMenu.lastSelector != 'func')
+                blockMenu.selectMenu('func');
         }
         Entry.Func.edit(func);
     });

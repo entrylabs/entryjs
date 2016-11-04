@@ -45,6 +45,9 @@ Entry.Field = function() {};
         }
 
         if (this.optionGroup) {
+            var blur = this.optionGroup.blur;
+            if (blur && Entry.Utils.isFunction(blur))
+                this.optionGroup.blur();
             this.optionGroup.remove();
             delete this.optionGroup;
         }

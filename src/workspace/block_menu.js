@@ -882,6 +882,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             visibles = new Array(this._dynamicThreads.length)
             for (var i=0; i<threads.length; i++) {
                 var block = threads[i].getFirstBlock();
+
+                if (!block) continue;
+
                 var type = block.type;
                 var index = this._dynamicThreads.indexOf(type);
                 if (index > -1)
@@ -894,6 +897,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         } else {
             for (var i=0; i<threads.length; i++) {
                 var block = threads[i].getFirstBlock();
+
+                if (!block) continue;
+
                 var type = block.type;
                 var blockInfo = Entry.block[type];
                 if (this._isNotVisible(blockInfo))

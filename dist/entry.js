@@ -810,6 +810,7 @@ Entry.ArduinoExt = {name:"ArduinoExt", getSensorKey:function() {
   Entry.hw.update();
 }, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 
 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, BlockState:{}};
+Entry.SmartBoard = {name:"smartBoard", setZero:Entry.Arduino.setZero};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
 Entry.ardublock = {name:"ardublock", setZero:Entry.Arduino.setZero};
 Entry.dplay = {name:"dplay", vel_value:255, Left_value:255, Right_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
@@ -11365,6 +11366,7 @@ Entry.Popup.prototype.resize = function(b) {
 };
 Entry.popupHelper = function(b) {
   this.popupList = {};
+  this.nextPopupList = [];
   this.nowContent;
   b && (window.popupHelper = null);
   Entry.assert(!window.popupHelper, "Popup exist");
@@ -11375,9 +11377,9 @@ Entry.popupHelper = function(b) {
     if (!(c.nowContent && -1 < a.indexOf(c.nowContent.prop("type")))) {
       var f = $(b.target);
       d.forEach(function(a) {
-        f.hasClass(a) && this.popup.hide();
-      }.bind(this));
-      b.target == this && this.popup.hide();
+        f.hasClass(a) && c.hide();
+      });
+      b.target == c && c.hide();
     }
   });
   window.popupHelper = this;
@@ -11418,18 +11420,21 @@ Entry.popupHelper.prototype.setPopup = function(b) {
 };
 Entry.popupHelper.prototype.remove = function(b) {
   0 < this.window_.children().length && this.window_.children().remove();
-  this.window_.remove();
   delete this.popupList[b];
   this.nowContent = void 0;
   this.body_.addClass("hiddenPopup");
+  0 < this.nextPopupList.length && this.show(this.nextPopupList.shift());
 };
 Entry.popupHelper.prototype.resize = function(b) {
 };
-Entry.popupHelper.prototype.show = function(b) {
-  0 < this.window_.children().length && this.window_.children().detach();
-  this.window_.append(this.popupList[b]);
-  this.nowContent = this.popupList[b];
-  this.body_.removeClass("hiddenPopup");
+Entry.popupHelper.prototype.show = function(b, a) {
+  function d(a) {
+    c.window_.append(c.popupList[a]);
+    c.nowContent = c.popupList[a];
+    c.body_.removeClass("hiddenPopup");
+  }
+  var c = this;
+  a ? 0 < this.window_.children().length ? this.nextPopupList.push(b) : (this.window_.children().detach(), d(b)) : (this.window_.children().detach(), d(b));
   if (this.nowContent && this.nowContent._obj && this.nowContent._obj.onShow) {
     this.nowContent._obj.onShow();
   }
@@ -11437,6 +11442,8 @@ Entry.popupHelper.prototype.show = function(b) {
 Entry.popupHelper.prototype.hide = function() {
   this.nowContent = void 0;
   this.body_.addClass("hiddenPopup");
+  this.window_.children().detach();
+  0 < this.nextPopupList.length && this.show(this.nextPopupList.shift());
 };
 Entry.getStartProject = function(b) {
   return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"when_run_button_click", x:40, y:50}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}]], 
@@ -11468,6 +11475,10 @@ Entry.PropertyPanel = function() {
     "hw" == a && $(".propertyTabhw").bind("dblclick", function() {
       Entry.dispatchEvent("hwModeChange");
     });
+  };
+  b.removeMode = function(a) {
+    this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove(), "hw" == a && ($(this.modes).removeClass(".propertyTabhw"), $(".propertyTabhw").unbind("dblclick")));
+    (a = Object.keys(this.modes)) && 0 < a.length && this.select(a[0]);
   };
   b.resize = function(a) {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
@@ -18464,8 +18475,10 @@ Entry.Func.edit = function(b) {
   this.targetFunc = b;
   this.initEditView(b.content);
   this.bindFuncChangeEvent();
-  this._backupContent = b.content.stringify();
   this.updateMenu();
+  setTimeout(function() {
+    this._backupContent = b.content.stringify();
+  }.bind(this), 0);
 };
 Entry.Func.initEditView = function(b) {
   this.menuCode || this.setupMenuCode();
@@ -18531,7 +18544,7 @@ Entry.Func.syncFuncName = function(b) {
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a);
 };
 Entry.Func.cancelEdit = function() {
-  this.targetFunc && (this.targetFunc.block ? this._backupContent && this._backupContent !== this.targetFunc.content.stringify() && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), Entry.variableContainer.updateList(), Entry.Func.isEdit = !1);
+  this.targetFunc && (this.targetFunc.block ? this._backupContent && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), Entry.variableContainer.updateList(), Entry.Func.isEdit = !1);
 };
 Entry.Func.getMenuXml = function() {
   var b = [];
@@ -18923,8 +18936,12 @@ Entry.HWMonitor = function(b) {
   };
 })(Entry.HWMonitor.prototype);
 Entry.HW = function() {
+  this.sessionRoomId = localStorage.getItem("entryhwRoomId");
+  this.sessionRoomId || (this.sessionRoomId = this.createRandomRoomId(), localStorage.setItem("entryhwRoomId", this.sessionRoomId));
   this.connectTrial = 0;
   this.isFirstConnect = !0;
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.0_Setup.exe";
+  this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
   this.portData = {};
@@ -18933,60 +18950,92 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "B.1":Entry.Codestar};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "B.1":Entry.Codestar, 
+  "A.1":Entry.SmartBoard};
 };
-Entry.HW.TRIAL_LIMIT = 1;
+Entry.HW.TRIAL_LIMIT = 2;
 p = Entry.HW.prototype;
+p.createRandomRoomId = function() {
+  return "xxxxxxxxyx".replace(/[xy]/g, function(b) {
+    var a = 16 * Math.random() | 0;
+    return ("x" == b ? a : a & 3 | 8).toString(16);
+  });
+};
+p.connectWebSocket = function(b, a) {
+  var d = this, c = io(b, a);
+  c.io.reconnectionAttempts(Entry.HW.TRIAL_LIMIT);
+  c.io.reconnectionDelayMax(1E3);
+  c.io.timeout(1E3);
+  c.on("connect", function() {
+    d.socketType = "WebSocket";
+    d.initHardware(c);
+  });
+  c.on("mode", function(a) {
+    0 === c.mode && 1 === a && d.disconnectHardware();
+    d.socketMode = a;
+    c.mode = a;
+  });
+  c.on("message", function(a) {
+    if (a.data && "string" === typeof a.data) {
+      switch(a.data) {
+        case "disconnectHardware":
+          d.disconnectHardware();
+          break;
+        default:
+          a = JSON.parse(a.data), d.checkDevice(a), d.updatePortData(a);
+      }
+    }
+  });
+  c.on("disconnect", function() {
+    d.initSocket();
+  });
+  return c;
+};
 p.initSocket = function() {
   try {
-    if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-      this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
+    this.connected = !1;
+    this.tlsSocketIo && this.tlsSocketIo.removeAllListeners();
+    this.socketIo && this.socketIo.removeAllListeners();
+    this.isOpenHardware || this.checkOldClient();
+    if (-1 < location.protocol.indexOf("https")) {
+      this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
     } else {
-      var b = this, a, d;
-      this.connected = !1;
-      this.connectTrial++;
-      if (-1 < location.protocol.indexOf("https")) {
-        d = new WebSocket("wss://hardware.play-entry.org:23518");
+      if (Entry.isOffline) {
+        this.tlsSocketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
       } else {
         try {
-          a = new WebSocket("ws://127.0.0.1:23518"), a.binaryType = "arraybuffer", a.onopen = function() {
-            b.socketType = "WebSocket";
-            b.initHardware(a);
-          }.bind(this), a.onmessage = function(a) {
-            a = JSON.parse(a.data);
-            b.checkDevice(a);
-            b.updatePortData(a);
-          }.bind(this), a.onclose = function() {
-            "WebSocket" === b.socketType && (this.socket = null, b.initSocket());
-          };
-        } catch (c) {
+          this.socketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+        } catch (b) {
         }
         try {
-          d = new WebSocket("wss://hardware.play-entry.org:23518");
-        } catch (c) {
+          this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+        } catch (b) {
         }
       }
-      d.binaryType = "arraybuffer";
-      d.onopen = function() {
-        b.socketType = "WebSocketSecurity";
-        b.initHardware(d);
-      };
-      d.onmessage = function(a) {
-        a = JSON.parse(a.data);
-        b.checkDevice(a);
-        b.updatePortData(a);
-      };
-      d.onclose = function() {
-        "WebSocketSecurity" === b.socketType && (this.socket = null, b.initSocket());
-      };
-      Entry.dispatchEvent("hwChanged");
     }
-  } catch (c) {
+    Entry.dispatchEvent("hwChanged");
+  } catch (b) {
+  }
+};
+p.checkOldClient = function() {
+  try {
+    var b = this, a = new WebSocket("wss://hardware.play-entry.org:23518");
+    a.onopen = function() {
+      b.popupHelper.show("newVersion", !0);
+      a.close();
+    };
+  } catch (d) {
   }
 };
 p.retryConnect = function() {
-  this.connectTrial = 0;
+  this.isOpenHardware = !1;
+  Entry.HW.TRIAL_LIMIT = 5;
   this.initSocket();
+};
+p.openHardwareProgram = function() {
+  this.isOpenHardware = !0;
+  Entry.HW.TRIAL_LIMIT = 5;
+  this.socket ? this.executeHardware() : (this.executeHardware(), this.initSocket());
 };
 p.initHardware = function(b) {
   this.socket = b;
@@ -18994,6 +19043,22 @@ p.initHardware = function(b) {
   this.connected = !0;
   Entry.dispatchEvent("hwChanged");
   Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
+};
+p.disconnectHardware = function() {
+  Entry.propertyPanel.removeMode("hw");
+  this.hwModule = this.selectedDevice = void 0;
+  Entry.dispatchEvent("hwChanged");
+};
+p.disconnectedSocket = function() {
+  this.tlsSocketIo.close();
+  this.socketIo && this.socketIo.close();
+  Entry.propertyPanel.removeMode("hw");
+  this.socket = void 0;
+  this.connectTrial = 0;
+  this.connected = !1;
+  this.hwModule = this.selectedDevice = void 0;
+  Entry.dispatchEvent("hwChanged");
+  Entry.toast.alert("\ud558\ub4dc\uc6e8\uc5b4 \ud504\ub85c\uadf8\ub7a8 \uc5f0\uacb0 \uc885\ub8cc", "\ud558\ub4dc\uc6e8\uc5b4 \ud504\ub85c\uadf8\ub7a8\uacfc\uc758 \uc5f0\uacb0\uc774 \uc885\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4.", !1);
 };
 p.setDigitalPortValue = function(b, a) {
   this.sendQueue[b] = a;
@@ -19033,7 +19098,7 @@ p.removePortReadable = function(b) {
   }
 };
 p.update = function() {
-  this.socket && 1 == this.socket.readyState && this.socket.send(JSON.stringify(this.sendQueue));
+  this.socket && (this.socket.disconnected || this.socket.emit("message", {data:JSON.stringify(this.sendQueue), mode:this.socket.mode, type:"utf8"}));
 };
 p.updatePortData = function(b) {
   this.portData = b;
@@ -19043,7 +19108,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.11_Setup.exe", "_blank").focus();
+  window.open(this.downloadPath, "_blank").focus();
 };
 p.downloadGuide = function() {
   window.open("http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC-%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%EC%97%B0%EA%B2%B0%EB%A7%A4%EB%89%B4%EC%96%BC_16_08_17.hwp", "_blank").focus();
@@ -19055,7 +19120,7 @@ p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(b) {
-  void 0 !== b.company && (b = [Entry.Utils.convertIntToHex(b.company), ".", Entry.Utils.convertIntToHex(b.model)].join(""), b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !0), this.hwModule.monitorTemplate && 
+  void 0 !== b.company && (b = [Entry.Utils.convertIntToHex(b.company), ".", Entry.Utils.convertIntToHex(b.model)].join(""), b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !1), this.hwModule.monitorTemplate && 
   (this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
 };
 p.banHW = function() {
@@ -19063,6 +19128,107 @@ p.banHW = function() {
   for (a in b) {
     Entry.playground.mainWorkspace.blockMenu.banClass(b[a].name, !0);
   }
+};
+p.executeHardware = function() {
+  function b(a) {
+    navigator.msLaunchUri(a, function() {
+    }, function() {
+      c.popupHelper.show("hwDownload", !0);
+    });
+  }
+  function a(a) {
+    var b = document.createElement("iframe");
+    b.src = "about:blank";
+    b.style = "display:none";
+    document.getElementsByTagName("body")[0].appendChild(b);
+    var d = null, d = setTimeout(function() {
+      var e = !1;
+      try {
+        b.contentWindow.location.href = a, e = !0;
+      } catch (f) {
+        "NS_ERROR_UNKNOWN_PROTOCOL" == f.name && (e = !1);
+      }
+      e || c.popupHelper.show("hwDownload", !0);
+      document.getElementsByTagName("body")[0].removeChild(b);
+      clearTimeout(d);
+    }, 500);
+  }
+  function d(a) {
+    var b = !1;
+    window.focus();
+    window.onblur = function() {
+      b = !0;
+    };
+    location.assign(encodeURI(a));
+    setTimeout(function() {
+      (0 == b || 0 < navigator.userAgent.indexOf("Edge")) && c.popupHelper.show("hwDownload", !0);
+      window.onblur = null;
+    }, 1500);
+  }
+  var c = this, e = {_bNotInstalled:!1, init:function(a, b) {
+    this._w = window.open("/views/hwLoading.html", "entry_hw_launcher", "width=220, height=225,  top=" + window.screenTop + ", left=" + window.screenLeft);
+    var c = null, c = setTimeout(function() {
+      e.runViewer(a, b);
+      clearInterval(c);
+    }, 1E3);
+  }, runViewer:function(a, b) {
+    this._w.document.write("<iframe src='" + a + "' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>");
+    var c = 0, d = null, d = setInterval(function() {
+      try {
+        this._w.location.href;
+      } catch (a) {
+        this._bNotInstalled = !0;
+      }
+      if (10 < c) {
+        clearInterval(d);
+        var e = 0, f = null, f = setInterval(function() {
+          e++;
+          this._w.closed || 2 < e ? clearInterval(f) : this._w.close();
+          this._bNotInstalled = !1;
+          c = 0;
+        }.bind(this), 5E3);
+        b(!this._bNotInstalled);
+      }
+      c++;
+    }.bind(this), 100);
+  }, set:function() {
+    this._bNotInstalled = !0;
+  }};
+  c.ieLauncher = e;
+  var f = "entryhw://-roomId:" + this.sessionRoomId;
+  0 < navigator.userAgent.indexOf("MSIE") || 0 < navigator.userAgent.indexOf("Trident") ? void 0 != navigator.msLaunchUri ? b(f) : 9 > (0 < document.documentMode ? document.documentMode : navigator.userAgent.match(/(?:MSIE) ([0-9.]+)/)[1]) ? alert(Lang.msgs.not_support_browser) : e.init(f, function(a) {
+    0 == a && c.popupHelper.show("hwDownload", !0);
+  }) : 0 < navigator.userAgent.indexOf("Firefox") ? a(f) : 0 < navigator.userAgent.indexOf("Chrome") || 0 < navigator.userAgent.indexOf("Safari") ? d(f) : alert(Lang.msgs.not_support_browser);
+};
+p.hwPopupCreate = function() {
+  var b = this;
+  this.popupHelper || (this.popupHelper = window.popupHelper ? window.popupHelper : new Entry.popupHelper(!0));
+  this.popupHelper.addPopup("newVersion", {type:"confirm", title:Lang.Msgs.new_version_title, setPopupLayout:function(a) {
+    var d = Entry.Dom("div", {class:"contentArea"}), c = Entry.Dom("div", {class:"textArea", parent:d}), e = Entry.Dom("div", {class:"text1", parent:c}), f = Entry.Dom("div", {class:"text2", parent:c}), g = Entry.Dom("div", {class:"text3", parent:c}), c = Entry.Dom("div", {class:"text4", parent:c}), h = Entry.Dom("div", {classes:["popupCancelBtn", "popupDefaultBtn"], parent:d}), k = Entry.Dom("div", {classes:["popupOkBtn", "popupDefaultBtn"], parent:d});
+    e.text(Lang.Msgs.new_version_text1);
+    f.html(Lang.Msgs.new_version_text2);
+    g.text(Lang.Msgs.new_version_text3);
+    c.text(Lang.Msgs.new_version_text4);
+    h.text(Lang.Buttons.cancel);
+    k.html(Lang.Msgs.new_version_download);
+    d.bindOnClick(".popupDefaultBtn", function(a) {
+      $(this).hasClass("popupOkBtn") ? b.downloadConnector() : b.popupHelper.hide("newVersion");
+    });
+    a.append(d);
+  }});
+  this.popupHelper.addPopup("hwDownload", {type:"confirm", title:Lang.Msgs.not_install_title, setPopupLayout:function(a) {
+    var d = Entry.Dom("div", {class:"contentArea"}), c = Entry.Dom("div", {class:"textArea", parent:d}), e = Entry.Dom("div", {class:"text1", parent:c}), f = Entry.Dom("div", {class:"text2", parent:c}), g = Entry.Dom("div", {class:"text3", parent:c}), c = Entry.Dom("div", {class:"text4", parent:c}), h = Entry.Dom("div", {classes:["popupCancelBtn", "popupDefaultBtn"], parent:d}), k = Entry.Dom("div", {classes:["popupOkBtn", "popupDefaultBtn"], parent:d});
+    e.text(Lang.Msgs.hw_download_text1);
+    f.html(Lang.Msgs.hw_download_text2);
+    g.text(Lang.Msgs.hw_download_text3);
+    c.text(Lang.Msgs.hw_download_text4);
+    h.text(Lang.Buttons.cancel);
+    k.html(Lang.Msgs.hw_download_btn);
+    d.bindOnClick(".popupDefaultBtn", function(a) {
+      $(this).hasClass("popupOkBtn") ? b.downloadConnector() : b.popupHelper.hide("hwDownload");
+    });
+    a.append(d);
+  }});
 };
 Entry.BlockModel = function() {
   Entry.Model(this);
@@ -20188,7 +20354,9 @@ Entry.VariableContainer.prototype.createFunctionView = function(b) {
     var f = this._getBlockMenu();
     e.bindOnClick(function(a) {
       a.stopPropagation();
-      Entry.playground && (Entry.playground.changeViewMode("code"), "func" != f.lastSelector && f.selectMenu("func"));
+      if (a = Entry.playground) {
+        a.changeViewMode("code"), "func" != f.lastSelector && f.selectMenu("func");
+      }
       Entry.Func.edit(b);
     });
     var g = Entry.createElement("div");
@@ -22084,15 +22252,20 @@ Entry.BlockMenu = function(b, a, d, c) {
     var a = [], b = [], c = this.code.getThreads();
     if (this._selectDynamic) {
       for (var a = Array(this._dynamicThreads.length), e = 0;e < c.length;e++) {
-        var f = c[e].getFirstBlock(), g = f.type, g = this._dynamicThreads.indexOf(g);
-        -1 < g ? a[g] = f : b.push(f);
+        var f = c[e].getFirstBlock();
+        if (f) {
+          var g = f.type, g = this._dynamicThreads.indexOf(g);
+          -1 < g ? a[g] = f : b.push(f);
+        }
       }
       a = a.filter(function(a) {
         return a instanceof Entry.Block;
       });
     } else {
       for (e = 0;e < c.length;e++) {
-        f = c[e].getFirstBlock(), g = f.type, this._isNotVisible(Entry.block[g]) ? b.push(f) : a.push(f);
+        if (f = c[e].getFirstBlock()) {
+          g = f.type, this._isNotVisible(Entry.block[g]) ? b.push(f) : a.push(f);
+        }
       }
     }
     return [a, b];
@@ -23377,7 +23550,12 @@ Entry.Field = function() {
   b.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
-    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    if (this.optionGroup) {
+      var a = this.optionGroup.blur;
+      a && Entry.Utils.isFunction(a) && this.optionGroup.blur();
+      this.optionGroup.remove();
+      delete this.optionGroup;
+    }
     this.command();
   };
   b._attachDisposeEvent = function(a) {
@@ -26256,7 +26434,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         break;
       case Entry.Workspace.MODE_BOARD:
         try {
-          this.board.show(), this.blockMenu.unbanClass("textMode"), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldTextType = this.textType;
+          this.board.show(), this.blockMenu.unbanClass("textMode"), this.set({selectedBoard:this.board}), this.vimBoard && (this.textToCode(this.oldMode, this.oldTextType), this.vimBoard.hide()), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldTextType = this.textType;
         } catch (c) {
           this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.TEXT_TYPE_JS ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_JS, Entry.dispatchEvent("changeMode", a), Ntry.dispatchEvent("textError", a)) : this.oldTextType == Entry.Vim.TEXT_TYPE_PY && 
           (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_PY, Entry.dispatchEvent("changeMode", a));
@@ -26302,14 +26480,18 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     a == Entry.Workspace.MODE_VIMBOARD && (a = this.vimBoard.textToCode(this.textType), this.board.code.load(a));
   };
   b.codeToText = function(a, b) {
-    try {
-      this.vimBoard.codeToText(a, b), console.log("codeToText not show");
-    } catch (c) {
-      throw c;
+    if (this.vimBoard) {
+      try {
+        this.vimBoard.codeToText(a, b), console.log("codeToText not show");
+      } catch (c) {
+        throw c;
+      }
     }
   };
   b.getCodeToText = function(a) {
-    return this.vimBoard.getCodeToText(a);
+    if (this.vimBoard) {
+      return this.vimBoard.getCodeToText(a);
+    }
   };
   b._setSelectedBlockView = function() {
     this.set({selectedBlockView:this.board.selectedBlockView || this.blockMenu.selectedBlockView || (this.overlayBoard ? this.overlayBoard.selectedBlockView : null)});
@@ -27108,8 +27290,16 @@ Entry.Playground.prototype.generatePictureElement = function(b) {
           return;
         }
       }
-      this.picture.name = this.value;
-      Entry.playground.reloadPlayground();
+      b = this.value;
+      this.picture.name = b;
+      if (c = Entry.playground) {
+        if (c.object) {
+          var d = c.object.getPicture(this.picture.id);
+          d && (d.name = b);
+        }
+        (d = c.painter) && d.file && (d.file.name = b);
+        c.reloadPlayground();
+      }
       Entry.dispatchEvent("pictureNameChanged", this.picture);
     }
   }
