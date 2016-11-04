@@ -13776,6 +13776,7 @@ Entry.PyToBlockParser = function(b) {
     try {
       this._code = [];
       this._blockCountMap.put("ExpressionStatement", 0);
+      this._blockCountMap.put("FunctionDeclaration", 0);
       this._blockCountMap.put("VariableDeclarator", 0);
       this._blockCountMap.put("ForStatement", 0);
       this._blockCountMap.put("WhileStatement", 0);
@@ -13816,18 +13817,17 @@ Entry.PyToBlockParser = function(b) {
   b.ExpressionStatement = function(a) {
     console.log("ExpressionStatement component", a);
     console.log("Ex A", this._blockCountMap.get("ExpressionStatement"));
-    var b = this._blockCountMap.get("ExpressionStatement");
-    b || (b = 0);
-    0 == b && (this._blockCount++, console.log("ExpressionStatement this._blockCount++", a));
-    this._blockCountMap.put("ExpressionStatement", b + 1);
-    b = {};
-    a = a.expression;
-    a.type && (a = this[a.type](a), console.log("ExpressionStatement expressionData", a), a.type && a.params ? (b.type = a.type, b.params = a.params, result = b) : a.type ? (b.type = a.type, result = b) : result = a);
+    var b = {}, c = a.expression, e = this._blockCountMap.get("ExpressionStatement");
+    console.log("ExpressionStatement bcmIndex", e);
+    e || (e = 0);
+    0 == e && (c && c.callee && c.callee.name ? Entry.TextCodingUtil.isEntryEventFuncName(c.callee.name) || (this._blockCount++, console.log("ExpressionStatement this._blockCount++ if", a)) : (this._blockCount++, console.log("ExpressionStatement this._blockCount++ else", a)));
+    c && c.callee && c.callee.name ? Entry.TextCodingUtil.isEntryEventFuncName(c.callee.name) || this._blockCountMap.put("ExpressionStatement", e + 1) : this._blockCountMap.put("ExpressionStatement", e + 1);
+    c.type && (a = this[c.type](c), console.log("ExpressionStatement expressionData", a), a.type && a.params ? (b.type = a.type, b.params = a.params, result = b) : a.type ? (b.type = a.type, result = b) : result = a);
     if (!result.type && result.name) {
       throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + result.name + "'\uc744 \uc0ad\uc81c\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
     }
-    (b = this._blockCountMap.get("ExpressionStatement")) || (b = 0);
-    this._blockCountMap.put("ExpressionStatement", b - 1);
+    (e = this._blockCountMap.get("ExpressionStatement")) || (e = 0);
+    c && c.callee && c.callee.name ? Entry.TextCodingUtil.isEntryEventFuncName(c.callee.name) || this._blockCountMap.put("ExpressionStatement", e - 1) : this._blockCountMap.put("ExpressionStatement", e - 1);
     console.log("ExpressionStatement result", result);
     return result;
   };
@@ -15424,6 +15424,7 @@ Entry.PyToBlockParser = function(b) {
     if ("__getParam0" == e.name) {
       return b;
     }
+    Entry.TextCodingUtil.isEntryEventFuncName(e.name) && ((a = this._blockCountMap.get("FunctionDeclaration")) || (a = 0), console.log("FunctionDeclaration bcmIndex", a, "this._blockCountMap", this._blockCountMap), 0 == a && (this._blockCount++, console.log("FunctionDeclaration this._blockCount++")), this._blockCountMap.put("FunctionDeclaration", a + 1));
     var f = this[c.type](c);
     console.log("FunctionDeclaration bodyData", f);
     if ("Identifier" == e.type) {
@@ -15494,6 +15495,8 @@ Entry.PyToBlockParser = function(b) {
       for (m in c) {
         b = c[m], l = {}, l.type = b.type, b.params && (l.params = b.params), b.statements && (l.statements = b.statements), this._thread.push(l);
       }
+      (a = this._blockCountMap.get("FunctionDeclaration")) || (a = 0);
+      this._blockCountMap.put("FunctionDeclaration", a - 1);
       return null;
     }
     var r, q, x, e = {};

@@ -42,6 +42,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             this._code = [];
 
             this._blockCountMap.put("ExpressionStatement", 0);
+            this._blockCountMap.put("FunctionDeclaration", 0);
             this._blockCountMap.put("VariableDeclarator", 0);
             this._blockCountMap.put("ForStatement", 0);
             this._blockCountMap.put("WhileStatement", 0);
@@ -112,21 +113,38 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ExpressionStatement = function(component) {
         console.log("ExpressionStatement component", component);
-
         console.log("Ex A", this._blockCountMap.get("ExpressionStatement"));
-
-        var bcmIndex = this._blockCountMap.get("ExpressionStatement");
-        if(!bcmIndex) bcmIndex = 0;
-        if(bcmIndex == 0) {
-            this._blockCount++;
-            console.log("ExpressionStatement this._blockCount++", component);
-        }
-        this._blockCountMap.put("ExpressionStatement", bcmIndex+1);
 
         var reusult;
         var structure = {};
 
         var expression = component.expression;
+
+        var bcmIndex = this._blockCountMap.get("ExpressionStatement");
+        console.log("ExpressionStatement bcmIndex", bcmIndex);
+        if(!bcmIndex) bcmIndex = 0;
+        if(bcmIndex == 0) {
+            if(expression && expression.callee && expression.callee.name) {
+                if(!Entry.TextCodingUtil.isEntryEventFuncName(expression.callee.name)) {
+                    this._blockCount++;
+                    console.log("ExpressionStatement this._blockCount++ if", component);
+                }
+            }
+            else {
+                this._blockCount++;
+                
+                console.log("ExpressionStatement this._blockCount++ else", component);
+            }
+        }
+
+        if(expression && expression.callee && expression.callee.name) {
+            if(!Entry.TextCodingUtil.isEntryEventFuncName(expression.callee.name)) {
+                this._blockCountMap.put("ExpressionStatement", bcmIndex+1);
+            }
+        }
+        else {
+            this._blockCountMap.put("ExpressionStatement", bcmIndex+1);
+        }
 
         if(expression.type) {
             var expressionData = this[expression.type](expression);
@@ -159,9 +177,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
 
-        var bcmIndex = this._blockCountMap.get("ExpressionStatement");
+        bcmIndex = this._blockCountMap.get("ExpressionStatement");
         if(!bcmIndex) bcmIndex = 0;
-        this._blockCountMap.put("ExpressionStatement", bcmIndex-1);
+        if(expression && expression.callee && expression.callee.name) {
+            if(!Entry.TextCodingUtil.isEntryEventFuncName(expression.callee.name)) {
+                this._blockCountMap.put("ExpressionStatement", bcmIndex-1);
+            }
+        }
+        else {
+            this._blockCountMap.put("ExpressionStatement", bcmIndex-1);
+        }
 
         console.log("ExpressionStatement result", result);
 
@@ -3883,6 +3908,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return result;
         }
 
+        if(Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
+            var bcmIndex = this._blockCountMap.get("FunctionDeclaration");
+            if(!bcmIndex) bcmIndex = 0;
+            console.log("FunctionDeclaration bcmIndex", bcmIndex, "this._blockCountMap", this._blockCountMap);
+            if(bcmIndex == 0) {
+                this._blockCount++;
+                console.log("FunctionDeclaration this._blockCount++");
+            }
+            this._blockCountMap.put("FunctionDeclaration", bcmIndex+1);
+        }
+
         var bodyData = this[body.type](body);
         console.log("FunctionDeclaration bodyData", bodyData);
 
@@ -4042,6 +4078,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     this._thread.push(sblock);
                 }
             }
+
+            var bcmIndex = this._blockCountMap.get("FunctionDeclaration");
+            if(!bcmIndex) bcmIndex = 0;
+                this._blockCountMap.put("FunctionDeclaration", bcmIndex-1);
 
             return null;
         }
