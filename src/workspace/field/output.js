@@ -46,7 +46,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     };
 
     p.renderStart = function(board, mode) {
-        this.svgGroup = this._blockView.contentSvgGroup.elem("g");
+        if (!this.svgGroup)
+            this.svgGroup =
+                this._blockView.contentSvgGroup.elem("g");
+
         this.view = this;
         this._nextGroup = this.svgGroup;
         this.box.set({
@@ -59,7 +62,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         if (block && !block.view) {
             block.setThread(this);
             block.createView(board, mode);
+        } else if (block && block.view) {
+            block.view.reDraw();
         }
+
         this._updateValueBlock(block);
 
         if (this._blockView.getBoard().constructor == Entry.BlockMenu &&
@@ -137,7 +143,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     };
 
     p._updateValueBlock = function(block) {
-        if (!(block instanceof Entry.Block)) block = undefined;
+        if (!(block instanceof Entry.Block))
+            block = undefined;
+
+        if (block && block === this._valueBlock) {
+            this.calcWH();
+            return;
+        }
+
         if (this._sizeObserver) this._sizeObserver.destroy();
         if (this._posObserver) this._posObserver.destroy();
 
@@ -151,9 +164,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
             this.calcWH();
         }
         this._blockView.alignContent();
-        var board = this._blockView.getBoard();// performance issue
-        if (board.constructor === Entry.Board)
-            board.generateCodeMagnetMap();
     };
 
     p.getPrevBlock = function(block) {

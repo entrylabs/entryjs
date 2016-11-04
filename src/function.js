@@ -24,6 +24,7 @@ Entry.Func = function(func) {
     ]);
     this.block = null;
     this.blockMenuBlock = null;
+    this._backupContent = null;
     this.hashMap = {};
 
     this.paramMap = {};
@@ -90,6 +91,9 @@ Entry.Func.edit = function(func) {
     this.initEditView(func.content);
     this.bindFuncChangeEvent();
     this.updateMenu();
+    setTimeout(function() {
+        this._backupContent = func.content.stringify();
+    }.bind(this), 0);
 };
 
 Entry.Func.initEditView = function(content) {
@@ -100,8 +104,9 @@ Entry.Func.initEditView = function(content) {
     workspace.changeOverlayBoardCode(content);
     content.recreateView();
     workspace.changeOverlayBoardCode(content);
-    content.view.board.alignThreads();
     this._workspaceStateEvent = workspace.changeEvent.attach(this, this.endEdit);
+    content.view.reDraw();
+    content.view.board.alignThreads();
 };
 
 Entry.Func.endEdit = function(message) {
@@ -111,9 +116,15 @@ Entry.Func.endEdit = function(message) {
     switch(message){
         case "save":
             this.save();
+            break;
         case "cancelEdit":
             this.cancelEdit();
+            break;
     }
+    this._backupContent = null;
+    Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD);
+    delete this.targetFunc;
+    this.updateMenu();
 }
 
 Entry.Func.save = function() {
@@ -167,19 +178,21 @@ Entry.Func.syncFuncName = function(dstFName) {
 };
 
 Entry.Func.cancelEdit = function() {
-    if (!this.targetFunc)
-        return;
-    Entry.Func.isEdit = false;
+    if (!this.targetFunc) return;
+
     if (!this.targetFunc.block) {
         this._targetFuncBlock.destroy();
         delete Entry.variableContainer.functions_[this.targetFunc.id];
         delete Entry.variableContainer.selected;
+    } else {
+        if (this._backupContent) {
+            this.targetFunc.content.load(this._backupContent);
+            Entry.generateFunctionSchema(this.targetFunc.id);
+            Entry.Func.generateWsBlock(this.targetFunc);
+        }
     }
-    delete this.targetFunc;
-    this.updateMenu();
     Entry.variableContainer.updateList();
-    var workspace = Entry.playground.mainWorkspace;
-    workspace.setMode(Entry.Workspace.MODE_BOARD);
+    Entry.Func.isEdit = false;
 };
 
 Entry.Func.getMenuXml = function() {
@@ -307,11 +320,11 @@ Entry.Func.updateMenu = function() {
     if (this.targetFunc) {
         if (!this.menuCode)
             this.setupMenuCode();
-        blockMenu.banClass("functionInit");
-        blockMenu.unbanClass("functionEdit");
+        blockMenu.banClass("functionInit", true);
+        blockMenu.unbanClass("functionEdit", true);
     } else {
-        blockMenu.unbanClass("functionInit");
-        blockMenu.banClass("functionEdit");
+        blockMenu.unbanClass("functionInit", true);
+        blockMenu.banClass("functionEdit", true);
     }
     blockMenu.reDraw();
 };
@@ -425,10 +438,37 @@ Entry.Func.generateWsBlock = function(targetFunc) {
         "img": "block_icon/function_03.png",
         "size": 12
     });
-    Entry.Mutator.mutate(
-        "func_" + targetFunc.id,
-        {params: schemaParams, template: schemaTemplate}
-    );
+
+    var funcName = "func_" + targetFunc.id;
+    var originSchema = Entry.block[funcName];
+
+    var shouldFuncMutate = false;
+
+    if (originSchema.template !== schemaTemplate)
+        shouldFuncMutate = true;
+    else if (originSchema.params.length === schemaParams.length) {
+        for (var i=0; i<originSchema.params.length-1; i++) {
+            var originParam = originSchema.params[i];
+            var newParam = schemaParams[i];
+            if (originParam.type === newParam.type &&
+                originParam.accept === newParam.accept)
+                continue;
+            else {
+                shouldFuncMutate = true;
+                break;
+            }
+        }
+    }
+
+    if (shouldFuncMutate) {
+        Entry.Mutator.mutate(
+            funcName,
+            {
+                params: schemaParams,
+                template: schemaTemplate
+            }
+        );
+    }
 
     for (var key in hashMap) {
         var state = hashMap[key];

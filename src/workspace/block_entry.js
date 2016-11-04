@@ -2896,6 +2896,28 @@ Entry.block = {
             ]
         }
     },
+    "arduino_open": {
+        "skeleton": "basic_button",
+        "color": "#eee",
+        "isNotFor": [""],
+        "template": '%1',
+        "params": [
+            {
+                "type": "Text",
+                //TODO: 다국어 적용
+                "text": Lang.Blocks.ARDUINO_program,
+                "color": "#333",
+                "align": "center"
+            }
+        ],
+        "events": {
+            "mousedown": [
+                function() {
+                    Entry.hw.openHardwareProgram();
+                }
+            ]
+        }
+    },
     //2016-09-23 added start
     "CODEino_get_sensor_number": {
         "color": "#00979D",
@@ -15693,6 +15715,95 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": ["Robotis.carcont_aux_motor_speed(%1, %2, %3)"]}
     },
+    "robotis_carCont_aux_motor_speed2": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "왼쪽 감속모터 속도를 %1, 출력값을 %2 (으)로 오른쪽 감속모터 속도를 %3, 출력값을 %4 (으)로 정하기 %5",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotis_common_clockwhise,"CW"],
+                    [Lang.Blocks.robotis_common_counter_clockwhise,"CCW"]
+                ],
+                "value": "CW",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotis_common_clockwhise,"CW"],
+                    [Lang.Blocks.robotis_common_counter_clockwhise,"CCW"]
+                ],
+                "value": "CW",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "500" ]
+                },
+                null,
+                {
+                    "type": "number",
+                    "params": [ "500" ]
+                },
+                null
+            ],
+            "type": "robotis_carCont_aux_motor_speed2"
+        },
+        "paramsKeyMap": {
+            "LEFT_ANGLE": 0,
+            "LEFT_VALUE": 1,
+            "RIGHT_ANGLE": 2,
+            "RIGHT_VALUE": 3,
+        },
+        "class": "robotis_carCont_cm",
+        "isNotFor": [ "robotis_carCont" ],
+        "func": function (sprite, script) {
+             var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE,
+                address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0];
+
+            var leftAngle = script.getField("LEFT_ANGLE", script);
+            var leftValue = script.getNumberValue('LEFT_VALUE');
+            var rightAngle = script.getField("RIGHT_ANGLE", script);
+            var rightValue = script.getNumberValue('RIGHT_VALUE');
+
+            leftValue = Math.min(leftValue, 1023);
+            leftValue = Math.max(leftValue, 0);
+            rightValue = Math.min(rightValue, 1023);
+            rightValue = Math.max(rightValue, 0);
+
+            if(leftAngle === 'CW') {
+                leftValue += 1024;
+            }
+            if(rightAngle === 'CW') {
+                rightValue += 1024;
+            }
+
+            var value = leftValue + (rightValue << 16);
+            var data_sendqueue = [[data_instruction, address, 4, value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
+        }
+    },
     "robotis_carCont_cm_calibration": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -25510,6 +25621,471 @@ Entry.block = {
         isNotFor: ['codestar'],
         func: function (sprite, script) {
             return Entry.hw.getDigitalPortValue('6');
+        }
+    },
+    "smartBoard_get_named_sensor_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "소리", "3" ],
+                    [ "빛", "4" ],
+                    [ "가변저항", "5" ],
+                    [ "확장포트", "2"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "smartBoard_get_named_sensor_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "smartBoard",
+        "isNotFor": [ "smartBoard" ],
+        "func": function (sprite, script) {
+            return Entry.hw.getAnalogPortValue(script.getField("PORT", script));
+        }
+    },
+    "smartBoard_is_button_pressed": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "빨간", "12" ],
+                    [ "노란", "13" ],
+                    [ "초록", "14" ],
+                    [ "파랑", "15" ]
+                ],
+                "value": "12",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "smartBoard_is_button_pressed"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "smartBoard",
+        "isNotFor": [ "smartBoard" ],
+        "func": function (sprite, script) {
+            return Entry.hw.getDigitalPortValue(script.getNumberField("PORT", script));
+        }
+    },
+    "smartBoard_set_dc_motor_direction": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "MT1", "4" ],
+                    [ "MT2", "7" ],
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "정", "0" ],
+                    [ "역", "255" ],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null
+            ],
+            "type": "smartBoard_set_dc_motor_direction"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OPERATOR": 1
+        },
+        "class": "smartBoard",
+        "isNotFor": [ "smartBoard" ],
+        "func": function (sprite, script) {
+            Entry.hw.setDigitalPortValue(script.getField("PORT"),
+                                         script.getNumberField("OPERATOR"));
+                                         return script.callReturn();
+        }
+    },
+    "smartBoard_set_dc_motor_speed": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "MT1", "5" ],
+                    [ "MT2", "6" ]
+                ],
+                "value": "5",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "정지 시키기", "0"],
+                    [ "매우 느린 속도로 돌리기", "160"],
+                    [ "느린 속도로 돌리기", "185" ],
+                    [ "보통 속도로 돌리기", "210" ],
+                    [ "빠른 속도로 돌리기", "235" ],
+                    [ "매우 빠른 속도로 돌리기", "255"]
+                ],
+                "value": "210",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null, null ],
+            "type": "smartBoard_set_dc_motor_speed"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OPERATOR": 1
+        },
+        "class": "smartBoard",
+        "isNotFor": [ "smartBoard" ],
+        "func": function (sprite, script) {
+            Entry.hw.setDigitalPortValue(script.getField("PORT"),
+                                         script.getNumberField("OPERATOR"));
+                                         return script.callReturn();
+        }
+    },
+    "smartBoard_set_dc_motor_pwm": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "MT1", "5" ],
+                    [ "MT2", "6" ]
+                ],
+                "value": "5",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "smartBoard_set_dc_motor_pwm"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "smartBoard",
+        "isNotFor": [ "smartBoard" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    "smartBoard_set_servo_port_power": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "SM3", "9" ],
+                    [ "SM2", "10" ],
+                    [ "SM1", "11" ]
+                ],
+                "value": "11",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "끄기", "2"],
+                    [ "어둡게 켜기", "40"],
+                    [ "보통 밝기로 켜기    ", "124" ],
+                    [ "밝게 켜기", "254" ]
+                ],
+                "value": "124",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null, null ],
+            "type": "smartBoard_set_servo_port_power"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OPERATOR": 1
+        },
+        "class": "smartBoard",
+        "isNotFor": [ "smartBoard" ],
+        "func": function (sprite, script) {
+            Entry.hw.setDigitalPortValue(script.getField("PORT"),
+                                         script.getNumberField("OPERATOR"));
+                                         return script.callReturn();
+        }
+    },
+    "smartBoard_set_servo_port_pwm": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "SM3", "9" ],
+                    [ "SM2", "10" ],
+                    [ "SM1", "11" ]
+                ],
+                "value": "9",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "smartBoard_set_servo_port_pwm"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "smartBoard",
+        "isNotFor": [ "smartBoard" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT"); //script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            if(value%2 == 1) value = value + 1;
+            value = Math.max(value, 2);
+            value = Math.min(value, 254);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    "smartBoard_set_servo_speed": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "SM3", "9" ],
+                    [ "SM2", "10" ],
+                    [ "SM1", "11" ]
+                ],
+                "value": "9",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "느린 속도로", "193" ],
+                    [ "보통 속도로", "201" ],
+                    [ "빠른 속도로", "243" ]
+                ],
+                "value": "193",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null, null ],
+            "type": "smartBoard_set_servo_speed"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OPERATOR": 1
+        },
+        "class": "smartBoard",
+        "isNotFor": [ "smartBoard" ],
+        "func": function (sprite, script) {
+            Entry.hw.setDigitalPortValue(script.getField("PORT"),
+                                         script.getNumberField("OPERATOR"));
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, 250);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                return script.callReturn();
+            }
+        }
+    },
+    "smartBoard_set_servo_angle": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "SM3", "9" ],
+                    [ "SM2", "10" ],
+                    [ "SM1", "11" ]
+                ],
+                "value": "9",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "arduino_text",
+                    "params": [ "180" ]
+                },
+                null
+            ],
+            "type": "smartBoard_set_servo_angle"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "smartBoard",
+        "isNotFor": [ "smartBoard" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT"); //script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            if( value%2 == 0 ) value = value + 1;
+            value = Math.max(value, 1);
+            value = Math.min(value, 179);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    "smartBoard_set_number_eight_pin": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                [ "끄기", "0"],
+                [ "켜기", "255"]
+            ],
+            "value": "255",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "def": {
+            "params": [ null ],
+            "type": "smartBoard_set_number_eight_pin"
+        },
+        "paramsKeyMap": {
+            "OPERATOR": 0
+        },
+        "class": "smartBoard",
+        "isNotFor": ["smartBoard"],
+        "func": function (sprite, script) {
+            Entry.hw.setDigitalPortValue(8, script.getNumberField("OPERATOR"));
+            return script.callReturn();
         }
     },
     "hidden": {

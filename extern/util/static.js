@@ -73,7 +73,7 @@ EntryStatic.searchProjectOption = [
    {
        'key':'search_likeCnt',
        'lang':'search_likeCnt',
-       'value': 'likeCnt'
+       'value': 'recentLikeCnt'
    }
 ]
 
@@ -272,6 +272,7 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_download_source",
                 "arduino_connected",
                 "arduino_reconnect",
+                "arduino_open",
                 "arduino_get_number_sensor_value",
                 "arduino_get_digital_value",
                 "arduino_toggle_led",
@@ -474,6 +475,7 @@ EntryStatic.getAllBlocks = function() {
                 "robotis_carCont_cm_led",
                 "robotis_carCont_cm_sound_detected_clear",
                 "robotis_carCont_aux_motor_speed",
+                "robotis_carCont_aux_motor_speed2",
                 "robotis_carCont_cm_calibration",
 
                 //XBOT Blocks added
@@ -533,7 +535,25 @@ EntryStatic.getAllBlocks = function() {
                 'codestar_ir',
                 'codestar_sonar',
                 'codestar_mic',
-                'codestar_temperature'
+                'codestar_temperature',
+
+                //jeil science smartBoard. 2016-11-03
+                //smartBoard
+                "smartBoard_get_named_sensor_value",
+                "smartBoard_is_button_pressed",
+                "smartBoard_set_dc_motor_direction",
+                "smartBoard_set_dc_motor_speed",
+                "smartBoard_set_dc_motor_pwm",
+                "smartBoard_set_servo_port_power",
+                "smartBoard_set_servo_port_pwm",
+                "smartBoard_set_servo_speed",
+                "smartBoard_set_servo_angle",
+                "smartBoard_set_number_eight_pin",
+                "smartBoard_get_number_sensor_value",
+                "smartBoard_get_digital_value",
+                "smartBoard_toggle_led",
+                "smartBoard_toggle_pwm",
+                "smartBoard_convert_scale"
             ]
         }
     ]
