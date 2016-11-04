@@ -21862,28 +21862,11 @@ Entry.BlockMenu = function(b, a, d, c) {
     var a = this.code;
     if (this._isOn() && a) {
       this._clearSplitters();
-      var b;
-      if (this.workspace) {
-        switch(this.workspace.getMode()) {
-          case Entry.Workspace.MODE_BOARD:
-          ;
-          case Entry.Workspace.MODE_OVERLAYBOARD:
-            b = this.renderBlock();
-            break;
-          case Entry.Workspace.MODE_VIMBOARD:
-            b = this.renderText();
-            break;
-          default:
-            b = this.renderBlock();
-        }
-      }
-      b = b || this._getSortedBlocks();
-      var c = 10, e = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, f, a = b.pop();
-      b = b.pop();
-      a.forEach(function(a) {
+      var b = b || this._getSortedBlocks(), c = 10, e = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, f, a = b[0];
+      b[1].forEach(function(a) {
         a.view.set({display:!1});
       });
-      b.forEach(function(a) {
+      a.forEach(function(a) {
         var b = a.view;
         b.set({display:!0});
         a = Entry.block[a.type].class;
@@ -21896,6 +21879,20 @@ Entry.BlockMenu = function(b, a, d, c) {
         c += b.height + 15;
       }.bind(this));
       this.updateSplitters();
+      if (this.workspace) {
+        switch(this.workspace.getMode()) {
+          case Entry.Workspace.MODE_BOARD:
+          ;
+          case Entry.Workspace.MODE_OVERLAYBOARD:
+            b = this.renderBlock(b);
+            break;
+          case Entry.Workspace.MODE_VIMBOARD:
+            b = this.renderText(b);
+            break;
+          default:
+            b = this.renderBlock(b);
+        }
+      }
       this.changeEvent.notify();
     }
   };
@@ -21946,15 +21943,15 @@ Entry.BlockMenu = function(b, a, d, c) {
     this.view.removeClass("entryRemove");
   };
   b.renderText = function(a) {
-    var b = this._getSortedBlocks(), c = Entry.BlockView.RENDER_MODE_TEXT;
-    b[0].forEach(function(a) {
-      c !== a.view.renderMode && (a = a.getThread(), a.view ? a.view.renderText() : a.createView(this, Entry.Workspace.MODE_VIMBOARD));
+    a = a || this._getSortedBlocks();
+    var b = Entry.BlockView.RENDER_MODE_TEXT;
+    a[0].forEach(function(a) {
+      b !== a.view.renderMode && (a = a.getThread(), a.view ? (a.view.renderText(), a.view.reDraw()) : a.createView(this, Entry.Workspace.MODE_VIMBOARD));
     }.bind(this));
-    a && a();
-    return b;
+    return a;
   };
   b.renderBlock = function(a) {
-    a = this._getSortedBlocks();
+    a = a || this._getSortedBlocks();
     var b = Entry.BlockView.RENDER_MODE_BLOCK;
     a[0].forEach(function(a) {
       b !== a.view.renderMode && (a = a.getThread(), a.view ? (a.view.renderBlock(), a.view.reDraw()) : a.createView(this, Entry.Workspace.MODE_BOARD));
@@ -22697,34 +22694,35 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     a && (a = Entry.Utils.createMouseEvent(b, a), c && (a.block = c), $(".entryVimBoard>.CodeMirror")[0].dispatchEvent(a));
   };
   b.terminateDrag = function(a) {
-    var b = this.getBoard(), c = this.dragMode, e = this.block, f = b.workspace.getMode();
+    var b = Entry.GlobalSvg, c = this.getBoard(), e = this.dragMode, f = this.block, g = c.workspace.getMode();
     this.removeDragging();
     this.set({visible:!0});
     this.dragMode = Entry.DRAG_MODE_NONE;
-    if (f === Entry.Workspace.MODE_VIMBOARD) {
-      b instanceof Entry.BlockMenu ? (b.terminateDrag(), this.vimBoardEvent(a, "dragEnd", e)) : b.clear();
+    var h = b.terminateDrag(this);
+    if (g === Entry.Workspace.MODE_VIMBOARD) {
+      c instanceof Entry.BlockMenu ? (c.terminateDrag(), h === b.DONE && this.vimBoardEvent(a, "dragEnd", f)) : c.clear();
     } else {
-      if (c === Entry.DRAG_MODE_DRAG) {
-        var f = this.dragInstance && this.dragInstance.isNew, g = Entry.GlobalSvg;
+      if (e === Entry.DRAG_MODE_DRAG) {
+        g = this.dragInstance && this.dragInstance.isNew;
         a = !1;
-        var h = this.block.getPrevBlock(this.block);
-        switch(g.terminateDrag(this)) {
-          case g.DONE:
-            g = b.magnetedBlockView;
-            g instanceof Entry.BlockView && (g = g.block);
-            h && !g ? Entry.do("separateBlock", e) : h || g || f ? g ? ("next" === g.view.magneting ? (h = e.getLastBlock(), this.dragMode = c, b.separate(e), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock", g, h).isPass(f), Entry.ConnectionRipple.setView(g.view).dispose()) : (Entry.do("insertBlock", e, g).isPass(f), a = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock", e).isPass(f) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", 
-            e);
+        var k = this.block.getPrevBlock(this.block);
+        switch(h) {
+          case b.DONE:
+            b = c.magnetedBlockView;
+            b instanceof Entry.BlockView && (b = b.block);
+            k && !b ? Entry.do("separateBlock", f) : k || b || g ? b ? ("next" === b.view.magneting ? (h = f.getLastBlock(), this.dragMode = e, c.separate(f), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock", b, h).isPass(g), Entry.ConnectionRipple.setView(b.view).dispose()) : (Entry.do("insertBlock", f, b).isPass(g), a = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock", f).isPass(g) : f.getThread().view.isGlobal() ? Entry.do("moveBlock", f) : Entry.do("separateBlock", 
+            f);
             break;
-          case g.RETURN:
-            e = this.block;
-            c = this.originPos;
-            h ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(h), e.insert(h)) : (f = e.getThread().view.getParent(), f instanceof Entry.Board ? this._moveTo(c.x, c.y, !1) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", e, f)));
+          case b.RETURN:
+            f = this.block;
+            e = this.originPos;
+            k ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(k), f.insert(k)) : (b = f.getThread().view.getParent(), b instanceof Entry.Board ? this._moveTo(e.x, e.y, !1) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", f, b)));
             break;
-          case g.REMOVE:
-            createjs.Sound.play("entryDelete"), f ? this.block.destroy(!1, !0) : this.block.doDestroyBelow(!1);
+          case b.REMOVE:
+            createjs.Sound.play("entryDelete"), g ? this.block.destroy(!1, !0) : this.block.doDestroyBelow(!1);
         }
-        b.setMagnetedBlock(null);
-        a && Entry.ConnectionRipple.setView(e.view).dispose();
+        c.setMagnetedBlock(null);
+        a && Entry.ConnectionRipple.setView(f.view).dispose();
       }
     }
     this.destroyShadow();
@@ -24764,8 +24762,8 @@ Entry.RenderView = function(b, a, d) {
       for (var b = 0, c = this._getHorizontalPadding(), e = 0, f = a.length;e < f;e++) {
         var g = a[e].getFirstBlock().view, h = g.svgGroup.getBBox().height, k = 0, l = $(g.svgGroup).find(".extension");
         if (l) {
-          for (e = 0;e < l.length;e++) {
-            var n = parseFloat(l[e].getAttribute("x")), k = Math.min(k, n)
+          for (var n = 0;n < l.length;n++) {
+            var m = parseFloat(l[n].getAttribute("x")), k = Math.min(k, m)
           }
         }
         this._minBlockOffsetX = Math.min(this._minBlockOffsetX, g.offsetX);

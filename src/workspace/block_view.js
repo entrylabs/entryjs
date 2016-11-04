@@ -620,6 +620,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.terminateDrag = function(e) {
+        var gs = Entry.GlobalSvg;
         var board = this.getBoard();
         var dragMode = this.dragMode;
         var block = this.block;
@@ -628,18 +629,19 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this.set({visible:true});
         this.dragMode = Entry.DRAG_MODE_NONE;
 
+        var gsRet = gs.terminateDrag(this);
+
         if (workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
             if (board instanceof Entry.BlockMenu) {
                 board.terminateDrag();
-                this.vimBoardEvent(e, 'dragEnd', block);
+                gsRet === gs.DONE && this.vimBoardEvent(e, 'dragEnd', block);
             } else board.clear();
         } else {
             if (dragMode === Entry.DRAG_MODE_DRAG) {
                 var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
-                var gs = Entry.GlobalSvg;
                 var ripple = false;
                 var prevBlock = this.block.getPrevBlock(this.block);
-                switch (gs.terminateDrag(this)) {
+                switch (gsRet) {
                     case gs.DONE:
                         var closeBlock = board.magnetedBlockView;
                         if (closeBlock instanceof Entry.BlockView)

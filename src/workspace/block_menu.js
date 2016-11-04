@@ -190,32 +190,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (!(this._isOn() && code)) return;
         this._clearSplitters();
 
-        var blocks;
-
-        if (this.workspace) {
-            var mode = this.workspace.getMode()
-            switch (mode) {
-                case Entry.Workspace.MODE_BOARD:
-                case Entry.Workspace.MODE_OVERLAYBOARD:
-                    blocks = this.renderBlock();
-                    break;
-                case Entry.Workspace.MODE_VIMBOARD:
-                    blocks = this.renderText();
-                    break;
-                default:
-                    blocks = this.renderBlock();
-            }
-        }
-
-        blocks = blocks || this._getSortedBlocks();
+        var blocks = blocks || this._getSortedBlocks();
 
         var vPadding = 15,
             marginFromTop = 10,
             hPadding = this._align == 'LEFT' ? 10 : this.svgDom.width()/2;
 
         var pastClass;
-        var inVisibles = blocks.pop();
-        var visibles = blocks.pop();
+        var inVisibles = blocks[1];
+        var visibles = blocks[0];
 
         inVisibles.forEach(function(block) {
             block.view.set({display:false});
@@ -245,6 +228,22 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         }.bind(this));
 
         this.updateSplitters();
+
+        if (this.workspace) {
+            var mode = this.workspace.getMode()
+            switch (mode) {
+                case Entry.Workspace.MODE_BOARD:
+                case Entry.Workspace.MODE_OVERLAYBOARD:
+                    blocks = this.renderBlock(blocks);
+                    break;
+                case Entry.Workspace.MODE_VIMBOARD:
+                    blocks = this.renderText(blocks);
+                    break;
+                default:
+                    blocks = this.renderBlock(blocks);
+            }
+        }
+
         this.changeEvent.notify();
     };
 
@@ -335,25 +334,25 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.show = function() {this.view.removeClass('entryRemove');};
 
-    p.renderText = function(cb) {
-        var blocks = this._getSortedBlocks();
+    p.renderText = function(blocks) {
+        var blocks = blocks || this._getSortedBlocks();
         var targetMode = Entry.BlockView.RENDER_MODE_TEXT;
 
         blocks[0].forEach(function(block) {
             if (targetMode === block.view.renderMode)
                 return;
             var thread = block.getThread();
-            if (thread.view)
+            if (thread.view) {
                 thread.view.renderText();
-            else
+                thread.view.reDraw();
+            } else
                 thread.createView(this, Entry.Workspace.MODE_VIMBOARD)
         }.bind(this));
-        cb && cb();
         return blocks;
     };
 
-    p.renderBlock = function(cb) {
-        var blocks = this._getSortedBlocks();
+    p.renderBlock = function(blocks) {
+        blocks = blocks ||this._getSortedBlocks();
         var targetMode = Entry.BlockView.RENDER_MODE_BLOCK;
 
         blocks[0].forEach(function(block) {
