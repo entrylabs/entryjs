@@ -18560,7 +18560,6 @@ Entry.Func.setupMenuCode = function() {
     this._fieldBoolean = a.createThread([{type:"function_field_boolean", category:"func", x:-9999, params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock();
     this.menuCode = a;
     b.align();
-    b.reDraw();
   }
 };
 Entry.Func.refreshMenuCode = function() {
@@ -20189,8 +20188,8 @@ Entry.VariableContainer.prototype.createFunctionView = function(b) {
     var f = this._getBlockMenu();
     e.bindOnClick(function(a) {
       a.stopPropagation();
-      Entry.Func.edit(b);
       Entry.playground && (Entry.playground.changeViewMode("code"), "func" != f.lastSelector && f.selectMenu("func"));
+      Entry.Func.edit(b);
     });
     var g = Entry.createElement("div");
     g.addClass("entryVariableFunctionElementNameWorkspace");

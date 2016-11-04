@@ -265,7 +265,6 @@ Entry.Func.setupMenuCode = function() {
     }]).getFirstBlock();
     this.menuCode = menuCode;
     blockMenu.align();
-    blockMenu.reDraw();
 }
 
 Entry.Func.refreshMenuCode = function() {
