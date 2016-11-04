@@ -23325,8 +23325,8 @@ Entry.RenderView = function(b, a, d) {
       for (var b = 0, c = this._getHorizontalPadding(), e = 0, f = a.length;e < f;e++) {
         var g = a[e].getFirstBlock().view, h = g.svgGroup.getBBox().height, k = 0, l = $(g.svgGroup).find(".extension");
         if (l) {
-          for (e = 0;e < l.length;e++) {
-            var m = parseFloat(l[e].getAttribute("x")), k = Math.min(k, m)
+          for (var m = 0;m < l.length;m++) {
+            var n = parseFloat(l[m].getAttribute("x")), k = Math.min(k, n)
           }
         }
         this._minBlockOffsetX = Math.min(this._minBlockOffsetX, g.offsetX);
