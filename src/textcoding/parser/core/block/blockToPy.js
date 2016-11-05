@@ -59,6 +59,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             //console.log("blocks", blocks);
 
         var isEventBlock = false;
+        var rootBlock;
         var rootResult = '';
         var contentResult = '';
         var definition = '';
@@ -72,8 +73,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
 
                     if(isEventBlock) {
+                        rootBlock = block;
                         rootResult = this.Block(block) + '\n';
-                        console.log("eventParamCheck", block);
+                        console.log("eventParamCheck first", block);
                         if(Entry.TextCodingUtil.isEntryEventBlockWithParam(block)) {
                             rootResult += "\t";
                         }
@@ -85,6 +87,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 }
                 else if(i != 0) {
                     contentResult += this.Block(block) + '\n';
+
+                    if(Entry.TextCodingUtil.isEntryEventBlockWithParam(rootBlock)) {
+                        contentResult += "\t";
+                    }
                 }
             } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
                 isEventBlock = Entry.TextCodingUtil.isEventBlock(block);

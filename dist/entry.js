@@ -13109,21 +13109,21 @@ Entry.BlockToPyParser = function(b) {
     }
     var b = "";
     a = a.getBlocks();
-    for (var c = !1, e = "", f = "", g = 0;g < a.length;g++) {
-      var h = a[g];
-      console.log("blockToPy block", h, "this._parseMode", this._parseMode);
+    for (var c = !1, e, f = "", g = "", h = 0;h < a.length;h++) {
+      var k = a[h];
+      console.log("blockToPy block", k, "this._parseMode", this._parseMode);
       if (this._parseMode == Entry.Parser.PARSE_GENERAL) {
-        if (Entry.TextCodingUtil.isNoPrintBlock(h)) {
+        if (Entry.TextCodingUtil.isNoPrintBlock(k)) {
           continue;
         }
-        0 == g ? (c = Entry.TextCodingUtil.isEventBlock(h)) ? (e = this.Block(h) + "\n", console.log("eventParamCheck", h), Entry.TextCodingUtil.isEntryEventBlockWithParam(h) && (e += "\t")) : f += this.Block(h) + "\n" : 0 != g && (f += this.Block(h) + "\n");
+        0 == h ? (c = Entry.TextCodingUtil.isEventBlock(k)) ? (e = k, f = this.Block(k) + "\n", console.log("eventParamCheck first", k), Entry.TextCodingUtil.isEntryEventBlockWithParam(k) && (f += "\t")) : g += this.Block(k) + "\n" : 0 != h && (g += this.Block(k) + "\n", Entry.TextCodingUtil.isEntryEventBlockWithParam(e) && (g += "\t"));
       } else {
-        this._parseMode == Entry.Parser.PARSE_SYNTAX && (b = (c = Entry.TextCodingUtil.isEventBlock(h)) ? "" : this.Block(h) + "\n", console.log("syntax mode result", b));
+        this._parseMode == Entry.Parser.PARSE_SYNTAX && (b = (c = Entry.TextCodingUtil.isEventBlock(k)) ? "" : this.Block(k) + "\n", console.log("syntax mode result", b));
       }
       this._queue.clear();
       this._variableMap.clear();
     }
-    this._parseMode == Entry.Parser.PARSE_GENERAL && (b = c ? e + Entry.TextCodingUtil.indent(f) + "\n" : e + f + "\n");
+    this._parseMode == Entry.Parser.PARSE_GENERAL && (b = c ? f + Entry.TextCodingUtil.indent(g) + "\n" : f + g + "\n");
     return b = b.trim() + "\n";
   };
   b.Block = function(a) {
