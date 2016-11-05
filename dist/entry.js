@@ -13959,7 +13959,7 @@ Entry.PyToBlockParser = function(b) {
       console.log("CallExpression paramsMeta", v);
       console.log("CallExpression paramsDefMeta", u);
       for (var t in v) {
-        q = v[t].type, "Indicator" != q && (c[t] = "Text" == q ? null : v[t]);
+        q = v[t].type, "Indicator" != q && "Text" == q && (c[t] = null);
       }
       console.log("CallExpression arguments", arguments);
       if (n.params && 0 != n.params.length) {

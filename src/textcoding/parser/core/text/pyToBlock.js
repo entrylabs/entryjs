@@ -438,8 +438,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     continue;
                 else if(paramType == "Text")
                     params[p] = null;
-                else
-                    params[p] = paramsMeta[p];
+                /*else
+                    params[p] = paramsMeta[p];*/
             } 
 
             console.log("CallExpression arguments", arguments);
