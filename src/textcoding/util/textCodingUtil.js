@@ -1706,6 +1706,26 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
+    tu.getFuncParamType = function(paramName) {
+        var result = paramName; 
+        console.log("getFuncParamType", this._funcParams);
+
+        var funcParams = this._funcParams;
+
+        if(funcParams.length == 0)
+            return paramName;
+
+        for(var p in funcParams) {
+            var funcParam = funcParams[p];
+            if(funcParam == paramName) {
+                result = funcParam;
+                break;
+            }
+        }
+
+        return result;
+    };
+
     tu.selectObjectForShortCut = function(currentScene, currentObject, option) {
         if(!currentScene)
             return;

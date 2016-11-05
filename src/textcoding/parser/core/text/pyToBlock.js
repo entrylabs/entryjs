@@ -795,29 +795,57 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 }
                             }
                         }
-                    }
+                    } 
                     else if(params.length == 1) {
                         console.log("call range params", params);
-                        var param = params[0];
+                        param = params[0];
+                        console.log("range here param", param);
 
                         if(typeof param != "object") {
                             params.splice(0, 1, param);
                         }
                         else {
                             if(param.type && param.params) {
+                                console.log("rangeparam param.type", param.type, "param.params", param.params);
                                 type = param.type;
                                 params = param.params;
                             }
-                            else if(!param.type && param.name != undefined || param.name != null) {
-                                var error = {};
-                                error.title = "지원되지 않는 코드";
-                                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을(를) 확인하세요.";
-                                error.line = this._blockCount;
-                                console.log("send error", error);
-                                throw error;
-                                /*result.name = param.name;
-                                return result;*/
+                            else {
+                                if(typeof param.name == "string") {
+                                    if(Entry.TextCodingUtil.isFuncParam(param.name)) {
+                                        console.log("kekeke", param);
+                                        type = Entry.TextCodingUtil.getFuncParamType(param.name);
+                                    }
+                                    else { 
+                                        var error = {};
+                                        error.title = "지원되지 않는 코드";
+                                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을(를) 확인하세요.";
+                                        error.line = this._blockCount;
+                                        console.log("send error", error);
+                                        throw error;
+                                    }
+                                }
+                                else {
+                                    var error = {};
+                                    error.title = "지원되지 않는 코드";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을(를) 확인하세요.";
+                                    error.line = this._blockCount;
+                                    console.log("send error", error);
+                                    throw error;
+                                }
                             }
+                            /*else {
+                                if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
+                                    var error = {};
+                                    error.title = "지원되지 않는 코드";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을(를) 확인하세요.";
+                                    error.line = this._blockCount;
+                                    console.log("send error", error);
+                                    throw error;
+                                    /*result.name = param.name;
+                                    return result;
+                                }
+                            }*/
                         }
                     }
 
@@ -945,7 +973,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var idNumber = 0;
             }
             var funcKey = result.callee.name + idNumber;
-            console.log("funcKey", funcKey);
+            //console.log("funcKey", funcKey);
             var type = this._funcMap.get(funcKey);
             if(type) {
                 result = {};

@@ -12921,6 +12921,22 @@ Entry.TextCodingUtil = {};
     }
     return b;
   };
+  b.getFuncParamType = function(a) {
+    var b = a;
+    console.log("getFuncParamType", this._funcParams);
+    var c = this._funcParams;
+    if (0 == c.length) {
+      return a;
+    }
+    for (var e in c) {
+      var f = c[e];
+      if (f == a) {
+        b = f;
+        break;
+      }
+    }
+    return b;
+  };
   b.selectObjectForShortCut = function(a, b, c) {
     if (a && b) {
       var e = Entry.container.objects_, f = [], g;
@@ -14094,13 +14110,19 @@ Entry.PyToBlockParser = function(b) {
             }
           } else {
             if (1 == c.length) {
-              if (console.log("call range params", c), q = c[0], "object" != typeof q) {
+              if (console.log("call range params", c), q = c[0], console.log("range here param", q), "object" != typeof q) {
                 c.splice(0, 1, q);
               } else {
                 if (q.type && q.params) {
-                  e = q.type, c = q.params;
+                  console.log("rangeparam param.type", q.type, "param.params", q.params), e = q.type, c = q.params;
                 } else {
-                  if (!q.type && void 0 != q.name || null != q.name) {
+                  if ("string" == typeof q.name) {
+                    if (Entry.TextCodingUtil.isFuncParam(q.name)) {
+                      console.log("kekeke", q), e = Entry.TextCodingUtil.getFuncParamType(q.name);
+                    } else {
+                      throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + q.name + "'\uc744(\ub97c) \ud655\uc778\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
+                    }
+                  } else {
                     throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + q.name + "'\uc744(\ub97c) \ud655\uc778\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
                   }
                 }
@@ -14161,9 +14183,7 @@ Entry.PyToBlockParser = function(b) {
       } else {
         e = 0;
       }
-      r = b.callee.name + e;
-      console.log("funcKey", r);
-      if (e = this._funcMap.get(r)) {
+      if (e = this._funcMap.get(b.callee.name + e)) {
         b = {}, b.type = e, c && 0 != c.length && (b.params = c);
       } else {
         if (0 == b.callee.isCallParam && !Entry.TextCodingUtil.isEntryEventFuncName(b.callee.name)) {
