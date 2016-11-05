@@ -14639,17 +14639,20 @@ Entry.PyToBlockParser = function(b) {
     if (!1 === a) {
       return b.type = "False", b;
     }
-    var g = Entry.block[c.type], h = g.params, g = g.def.params;
-    if (h && 0 != h.length) {
-      for (var k in h) {
-        console.log("aaa", h[k], "bbb", g[k]), e = this["Param" + h[k].type](a, h[k], g[k]);
+    paramDefMetaType = c ? c.type : "text";
+    var g = Entry.block[paramDefMetaType];
+    c = g.params;
+    g = g.def.params;
+    if (c && 0 != c.length) {
+      for (var h in c) {
+        console.log("aaa", c[h], "bbb", g[h]), e = this["Param" + c[h].type](a, c[h], g[h]);
       }
     } else {
       e = a;
     }
     console.log("ParamBlock param", e);
     f.push(e);
-    b.type = c.type;
+    b.type = paramDefMetaType;
     b.params = f;
     console.log("ParamBlock result", b);
     return b;

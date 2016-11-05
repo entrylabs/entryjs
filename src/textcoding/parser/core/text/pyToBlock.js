@@ -2202,7 +2202,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return result;
         }
 
-        var paramBlock = Entry.block[paramDefMeta.type];
+        if(paramDefMeta)
+            paramDefMetaType = paramDefMeta.type;
+        else
+            paramDefMetaType = "text";
+
+        var paramBlock = Entry.block[paramDefMetaType];
         var paramsMeta = paramBlock.params;
         var paramsDefMeta = paramBlock.def.params;
 
@@ -2218,7 +2223,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("ParamBlock param", param);
         params.push(param);
 
-        structure.type = paramDefMeta.type;
+        structure.type = paramDefMetaType;
         structure.params = params;
 
         result = structure;
