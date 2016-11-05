@@ -13116,14 +13116,14 @@ Entry.BlockToPyParser = function(b) {
         if (Entry.TextCodingUtil.isNoPrintBlock(k)) {
           continue;
         }
-        0 == h ? (c = Entry.TextCodingUtil.isEventBlock(k)) ? (e = k, f = this.Block(k) + "\n", console.log("eventParamCheck first", k), Entry.TextCodingUtil.isEntryEventBlockWithParam(k) && (f += "\t")) : g += this.Block(k) + "\n" : 0 != h && (g += this.Block(k) + "\n", Entry.TextCodingUtil.isEntryEventBlockWithParam(e) && (g += "\t"));
+        0 == h ? (e = k, (c = Entry.TextCodingUtil.isEventBlock(k)) ? (f = this.Block(k) + "\n", console.log("eventParamCheck first", k)) : g += this.Block(k) + "\n") : 0 != h && (k = this.Block(k) + "\n", Entry.TextCodingUtil.isEntryEventBlockWithParam(e) && (console.log("contentResult1", k), k = "\t" + k, console.log("contentResult2", k)), g += k);
       } else {
         this._parseMode == Entry.Parser.PARSE_SYNTAX && (b = (c = Entry.TextCodingUtil.isEventBlock(k)) ? "" : this.Block(k) + "\n", console.log("syntax mode result", b));
       }
       this._queue.clear();
       this._variableMap.clear();
     }
-    this._parseMode == Entry.Parser.PARSE_GENERAL && (b = c ? f + Entry.TextCodingUtil.indent(g) + "\n" : f + g + "\n");
+    this._parseMode == Entry.Parser.PARSE_GENERAL && (c && (g = Entry.TextCodingUtil.indent(g), Entry.TextCodingUtil.isEntryEventBlockWithParam(e) && (g = "\t" + g)), b = f + g + "\n");
     return b = b.trim() + "\n";
   };
   b.Block = function(a) {

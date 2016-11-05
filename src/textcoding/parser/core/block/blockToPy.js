@@ -70,15 +70,15 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 if(Entry.TextCodingUtil.isNoPrintBlock(block))
                     continue;
                 if(i == 0) {
+                    rootBlock = block;
                     isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
 
                     if(isEventBlock) {
-                        rootBlock = block;
                         rootResult = this.Block(block) + '\n';
                         console.log("eventParamCheck first", block);
-                        if(Entry.TextCodingUtil.isEntryEventBlockWithParam(block)) {
+                        /*if(Entry.TextCodingUtil.isEntryEventBlockWithParam(block)) {
                             rootResult += "\t";
-                        }
+                        }*/
                         //definition = Entry.TextCodingUtil.prototype.makeDefinition(block) + '\n';
                     }
                     else {
@@ -86,11 +86,15 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     }
                 }
                 else if(i != 0) {
-                    contentResult += this.Block(block) + '\n';
-
+                    var content = this.Block(block) + '\n';
                     if(Entry.TextCodingUtil.isEntryEventBlockWithParam(rootBlock)) {
-                        contentResult += "\t";
+                        console.log("contentResult1", content);
+                        content = "\t" + content;
+                        console.log("contentResult2", content);
                     }
+                    contentResult += content;
+
+                    
                 }
             } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
                 isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
@@ -110,7 +114,13 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
             if(isEventBlock) {
-                result = rootResult + Entry.TextCodingUtil.indent(contentResult) + '\n';
+                contentResult = Entry.TextCodingUtil.indent(contentResult);
+                if(Entry.TextCodingUtil.isEntryEventBlockWithParam(rootBlock)) {
+                    contentResult = "\t" + contentResult;
+                }
+                
+                result = rootResult + contentResult + '\n';
+
                 // Declaration
                 /*var declaration = rootResult.split('def')[1];
                 declaration = declaration.substring(0, declaration.length-1);
