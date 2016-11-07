@@ -4,7 +4,7 @@ goog.provide("Entry.HWMontior");
 goog.require("Entry.Utils");
 
 Entry.HWMonitor = function(hwModule) {
-     this.svgDom = Entry.Dom(
+    this.svgDom = Entry.Dom(
         $('<svg id="hwMonitor" width="100%" height="100%"' +
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>')
     );
@@ -16,27 +16,27 @@ Entry.HWMonitor = function(hwModule) {
         if(mode == 'both'){
             that.resize();
             that.resizeList();
-        }if(mode == 'list') {
+        }
+
+        if(mode == 'list') {
             that.resizeList();
         } else {
             that.resize();
         }
-   });
-   Entry.addEventListener('hwModeChange', function() {
-       that.changeMode();
-   });
+    });
+    Entry.addEventListener('hwModeChange', function() {
+        that.changeMode();
+    });
     this.changeOffset = 0; // 0 : off 1: on
     this.scale = 0.5;
     this._listPortViews = {};
 };
 
 (function(p) {
-    /**
-    */
-    p.initView =function() {
+    p.initView = function() {
         this.svgDom = Entry.Dom(
             $('<svg id="hwMonitor" width="100%" height="100%"' + 'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>')
-         );
+        );
     };
     p.generateView = function() {
         this.snap = Entry.SVG('hwMonitor');
@@ -47,8 +47,6 @@ Entry.HWMonitor = function(hwModule) {
             s: [],
             w: []
         };
-
-
 
         var monitorTemplate = this._hwModule.monitorTemplate;
 
@@ -87,16 +85,12 @@ Entry.HWMonitor = function(hwModule) {
         portsTemp.map(function(v) {
             var degree = (Math.atan2(-v.box.y, v.box.x)/Math.PI + 2) % 2;
             var map;
-            /*
-            if (degree >= 0.25 && degree < 0.75) map = portMap.n;
-            else if (degree >= 0.75 && degree < 1.25) map = portMap.w;
-            else if (degree >= 1.25 && degree < 1.75) map = portMap.s;
-            else map = portMap.e;
-            */
-            if (degree < 1)
+
+            if (degree < 1) {
                 map = portMap.n;
-            else
+            } else {
                 map = portMap.s;
+            }
             map.push(v);
 
        });
@@ -114,9 +108,9 @@ Entry.HWMonitor = function(hwModule) {
 
             $(this._svglistGroup).remove();
 
-            if(this._svgGroup)
+            if(this._svgGroup) {
                 $(this._svgGroup).remove();
-
+            }
 
             $(this._pathGroup).remove();
             this._hwModule.monitorTemplate.mode = 'list';
@@ -133,10 +127,11 @@ Entry.HWMonitor = function(hwModule) {
             this.generateView();
         }
     };
-    p.setHwmonitor = function(module){
 
+    p.setHwmonitor = function(module) {
         this._hwmodule = module;
     }
+
     p.changeMode = function(e) {
         if(this._hwModule.monitorTemplate.mode == 'both') {
             this.toggleMode('list');
@@ -147,23 +142,26 @@ Entry.HWMonitor = function(hwModule) {
         }
     };
 
-
     p.addPortEle = function(listPort , ports ) {
-        if(typeof ports != 'object')
+        if(typeof ports != 'object') {
             return listPort;
+        }
 
-        for (var item in ports)
+        for (var item in ports) {
             listPort[item] = ports[item];
+        }
 
         return listPort;
     };
 
     p.removePortEle = function(listPort, ports) {
-        if(typeof ports != 'object')
+        if(typeof ports != 'object'){
             return listPort;
+        }
 
-        for(var item in ports)
+        for(var item in ports) {
             delete listPort[item]
+        }
         return listPort;
     }
 
@@ -210,7 +208,6 @@ Entry.HWMonitor = function(hwModule) {
             "stroke": port.type === "input" ? "#00979d" : "#A751E3",
             "stroke-width": 3
         });
-
 
         var wrapperRect = svgGroup.elem("rect").attr({
             "x" : 0,
@@ -345,11 +342,15 @@ Entry.HWMonitor = function(hwModule) {
     };
 
     p.resize = function() {
-        if(this.hwView)
-            this.hwView.attr({ "transform" : "scale(" + this.scale + ")" });
+        if(this.hwView) {
+            this.hwView.attr({ 
+                "transform" : "scale(" + this.scale + ")" 
+            });
+        }
 
-        if(this.svgDom)
+        if(this.svgDom) {
             var bRect = this.svgDom.get(0).getBoundingClientRect();
+        }
 
         var mode = this._hwModule.monitorTemplate.mode;
 
@@ -359,52 +360,18 @@ Entry.HWMonitor = function(hwModule) {
 
         this._rect = bRect;
 
-        if(this._template.height <=0 || bRect.height <=0)
+        if(this._template.height <=0 || bRect.height <=0) {
             return;
-//        this.scale =  (this._template.height/100 *(bRect.height /1000));
-        this.scale =  (this._template.height *(bRect.height /this._template.height))/1000;
+        }
+
+        this.scale = (this._template.height * (bRect.height /this._template.height)) / 1000;
         var temp = (1-this.scale)/2;
-
-    //if(this.scale + (this.scale/2) < 1)
-     //       this.scale += (this.scale/2);
-       /* if((this._template.height * (this.scale + temp) > bRect.height)) {
-            this.scale += temp;
-        }else {
-            this.scale -= temp;
-        }
-*/
-       // if(this.scale < 0)
-       //     this.scale = 0.1;
-     /*   else {
-             this.scale -= temp/2;
-
-             if(this.scale < 0.1)
-                 this.scale = 0.1;
-        }
-        */
-        //        var temp = (this._template.height - bRect.height)/bRect.height;
-
-/*        if(this._template.height*this.scale > bRect.height) {
-            this.scale = (bRect.height/this._template.height - temp/2);
-            this.scale = this.scale <0 ? -this.scale : this.scale;
-
-        }
-*/
-        //if(mode == 'both'){
-        //    var imageBoxHeight = this._svgGroup.getBBox().height;
-        //    var listHeight = this._svglistGroup.getBBox().height;
-        //    var height = imageBoxHeight + (listHeight*0.565);
-        ////    if(bRect.height < height)
-        //        this.toastmsg.warning('알립니다!' ,"하드웨어아이콘을 더블클릭하면, 센서값만 확인할 수 있습니다. ");
-       // }
         this.align();
     };
 
     p.resizeList = function() {
         var bRect = this.svgDom.get(0).getBoundingClientRect();
-        this._svglistGroup.attr({
-          "transform"  : "translate(" + bRect.width / 2 + "," + bRect.height / 2 + ")"
-         });
+        this._svglistGroup.attr({ "transform"  : "translate(" + bRect.width / 2 + "," + bRect.height / 2 + ")" });
         this._rect = bRect;
         this.alignList();
     };
@@ -427,8 +394,6 @@ Entry.HWMonitor = function(hwModule) {
     };
 
     p.alignList = function() {
-        //for (var direction in this._portMap) {
-            //var ports = this._portMap[direction];
         var mode = this._hwModule.monitorTemplate.mode;
         var ports = {};
         ports = this._hwModule.monitorTemplate.listPorts;
@@ -437,8 +402,7 @@ Entry.HWMonitor = function(hwModule) {
             var port = ports[i];
 
             port.group.attr({
-                "transform"  : "translate(" + this._template.width * (i / length - 0.5) + "," +
-                    (- this._template.width/2 - 30) + ")"
+                "transform"  : "translate(" + this._template.width * (i / length - 0.5) + "," + (- this._template.width/2 - 30) + ")"
             });
         }
 
@@ -457,50 +421,47 @@ Entry.HWMonitor = function(hwModule) {
             listVLine = 0,
             mode = this._hwModule.monitorTemplate;
 
-            for(var i=0; i < length; i++) {
-                wholeHeight += ports[i].height + 5;
+        for(var i=0; i < length; i++) {
+            wholeHeight += ports[i].height + 5;
+        }
+
+        if (wholeHeight < bP - tP) {
+            bP = wholeHeight / 2 + 3;
+            tP = - wholeHeight / 2 - 3;
+        }
+
+        while (length > 1) {
+            var tPort = ports.shift(),
+                bPort = ports.pop(),
+                prevTP = tP,
+                prevBP = bP,
+                gapTemp = gap;
+            if (wholeWidth <= bP - tP) {
+                tP += tPort.width + 5;
+                bP -= bPort.width + 5;
+                gapTemp = 0;
+            } else if (ports.length === 0) {
+                tP = (tP + bP) / 2 - 3;
+                bP = tP + 6;
+            } else {
+                tP = Math.max(tP, - width / 2 + tPort.width) + 15;
+                bP = Math.min(bP, width / 2 - bPort.width) - 15;
             }
 
-            if (wholeHeight < bP - tP) {
-                bP = wholeHeight / 2 + 3;
-                tP = - wholeHeight / 2 - 3;
-            }
-
-            while (length > 1) {
-                var tPort = ports.shift(),
-                    bPort = ports.pop(),
-                    prevTP = tP,
-                    prevBP = bP,
-                    gapTemp = gap;
-                if (wholeWidth <= bP - tP) {
-                    tP += tPort.width + 5;
-                    bP -= bPort.width + 5;
-                    gapTemp = 0;
-                } else if (ports.length === 0) {
-                    tP = (tP + bP) / 2 - 3;
-                    bP = tP + 6;
-                } else {
-                    tP = Math.max(tP, - width / 2 + tPort.width) + 15;
-                    bP = Math.min(bP, width / 2 - bPort.width) - 15;
-                }
-
-                wholeWidth -= tPort.width + bPort.width + 10;
-                xCursor += gapTemp;
-            };
-
-
-        //
+            wholeWidth -= tPort.width + bPort.width + 10;
+            xCursor += gapTemp;
+        };
 
         if (ports.length) {
             ports[0].group.attr({
                 "transform"  : "translate(" + xCursor + "," + 60
             + ")" });
         }
+
         if(tPort && rPort) {
             this._movePort(tPort, xCursor, tP, prevTP);
             this._movePort(rPort, xCursor, bP, prevBP);
         }
-
     };
 
     p._alignNS = function(ports, yCursor, gap) {
@@ -550,11 +511,6 @@ Entry.HWMonitor = function(hwModule) {
         if (ports.length) {
             this._movePort(ports[0], (rP + lP - ports[0].width) / 2, yCursor, 100);
         };
-
-
-
-
-
     };
 
      p._alignNSList = function(ports, yCursor) {
@@ -566,8 +522,9 @@ Entry.HWMonitor = function(hwModule) {
             wholeWidth = 0,
             listLine = 0;
 
-        for (var i = 0; i < ports.length; i++)
+        for (var i = 0; i < ports.length; i++) {
             wholeWidth += ports[i].width;    // 전체 width
+        }
 
         var lineIndent = 0;
         var currentWidth = 0;
@@ -594,7 +551,6 @@ Entry.HWMonitor = function(hwModule) {
                 initX = tempXpos;
                 currentWidth = 0;
             }
-
         }
     };
 
@@ -604,7 +560,6 @@ Entry.HWMonitor = function(hwModule) {
         var path;
         var portX = port.box.x * this.scale,
             portY = port.box.y * this.scale;
-
 
         if (x > prevPointer) { // left side
             groupX = x - port.width;

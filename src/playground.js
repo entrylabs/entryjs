@@ -1419,14 +1419,28 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
                 return;
             }
         }
-        this.picture.name = this.value;
-        Entry.playground.reloadPlayground();
+        var newValue = this.value;
+        this.picture.name = newValue;
+        var playground = Entry.playground;
+        if (playground) {
+            if (playground.object) {
+                var pic = playground.object.getPicture(this.picture.id);
+                if (pic) pic.name = newValue;
+            }
+            var painter = playground.painter;
+            if (painter && painter.file)
+                painter.file.name = newValue;
+
+            playground.reloadPlayground();
+        }
         Entry.dispatchEvent('pictureNameChanged', this.picture);
     }
+
     nameView.onkeypress = function(e) {
         if (e.keyCode == 13)
             this.blur();
     };
+
     element.appendChild(nameView);
     var sizeView = Entry.createElement('div', 's_'+picture.id);
     sizeView.addClass('entryPlaygroundPictureSize');

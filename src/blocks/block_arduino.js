@@ -85,6 +85,11 @@ Entry.ArduinoExt = {
     }
 }
 
+Entry.SmartBoard = {
+    name: 'smartBoard',
+    setZero: Entry.Arduino.setZero
+};
+
 Entry.SensorBoard = {
     name: 'sensorBoard',
     setZero: Entry.Arduino.setZero
