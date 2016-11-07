@@ -1781,7 +1781,7 @@ svg .svgBlockGroup text {
   border-width: 1px;
   outline: none;
   font-size: 13px;
-  z-index: 300;
+  z-index: 1100;
 }
 #entry-contextmenu span {
   width: 100%;
