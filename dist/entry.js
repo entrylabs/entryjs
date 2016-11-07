@@ -24389,7 +24389,7 @@ Entry.Thread = function(b, a, d) {
     var c = this.indexOf(b);
     a.unshift(c);
     this.parent instanceof Entry.Block && a.unshift(this.parent.indexOfStatements(this));
-    return this._code === this.parent ? (a.unshift(this._code.indexOf(this)), c = this._data[0], a.unshift(c.y), a.unshift(c.x), a) : this.parent.pointer(a);
+    return this._code === this.parent ? (1 === this._data.length && a.shift(), a.unshift(this._code.indexOf(this)), c = this._data[0], a.unshift(c.y), a.unshift(c.x), a) : this.parent.pointer(a);
   };
   b.getBlockList = function(a, b) {
     for (var c = [], e = 0;e < this._data.length;e++) {

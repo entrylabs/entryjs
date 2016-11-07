@@ -247,6 +247,7 @@ Entry.Thread = function(thread, code, parent) {
         if (this.parent instanceof Entry.Block)
             pointer.unshift(this.parent.indexOfStatements(this));
         if (this._code === this.parent) {
+            this._data.length === 1 && pointer.shift();
             pointer.unshift(this._code.indexOf(this));
             var topBlock = this._data[0];
             pointer.unshift(topBlock.y);
