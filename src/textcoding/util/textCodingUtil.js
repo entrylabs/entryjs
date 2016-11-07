@@ -1202,26 +1202,44 @@ Entry.TextCodingUtil = {};
         var tfspType = textFuncStatementParam.type;
         var bfcpType = blockFuncContentParam.data.type;
 
-        if(tfspType == "text" || tfspType == "number")
+        if(tfspType == "text") {
             tfspType = "literal";
+        }
+        else if(tfspType == "number") {
+            tfspType = "literal";
+        } 
+        else {
+            if(textFuncStatementParam.isParamFromFunc)
+                tfspType = paramInfo[tfspType];
+        }
 
-        if(bfcpType == "text" || bfcpType == "number")
+
+        if(bfcpType == "text") {
             bfcpType = "literal";
+        }
+        else if(bfcpType == "number") {
+            bfcpType = "literal";
+        }
+        
+        console.log("tfspType", tfspType, "bfcpType", bfcpType);
 
         if(tfspType == bfcpType) {
             var textSubParams = textFuncStatementParam.params;
-            var blockSubParamsUncleansed = blockFuncContentParam.data.params;
-            var blockSubParams = [];
+            //var blockSubParamsUncleansed = blockFuncContentParam.data.params;
+            var blockSubParams = blockFuncContentParam.data.params;
 
-            for(var b in blockSubParamsUncleansed) {
+            /*for(var b in blockSubParamsUncleansed) {
                 var blockSubParamUncleansed = blockSubParamsUncleansed[b];
                 if(blockSubParamUncleansed)
                     blockSubParams.push(blockSubParamUncleansed);
-            }
+            }*/
 
             console.log("textSubParams", textSubParams);
             console.log("blockSubParams", blockSubParams);
-            if(textSubParams.length == blockSubParams.length) {
+            if(!textSubParams && !blockSubParams) {
+                matchFlag = true;
+            }
+            else if(textSubParams.length == blockSubParams.length) {
                 matchFlag = true;
                 for(var t in textSubParams) {
                     if(!matchFlag)
@@ -1231,7 +1249,10 @@ Entry.TextCodingUtil = {};
                     var blockSubParam = blockSubParams[t];
                     console.log("textSubParam", textSubParam);
                     console.log("blockSubParam", blockSubParam);
-                    if(typeof textSubParam !== "object") {
+                    if(!textSubParam && !blockSubParam) {
+                        matchFlag = true;
+                    }
+                    else if(typeof textSubParam !== "object") {
                         if(textSubParam == blockSubParam) {
                             matchFlag = true;
                         }
@@ -1699,26 +1720,6 @@ Entry.TextCodingUtil = {};
             var funcParam = funcParams[p];
             if(funcParam == paramName) {
                 result = true;
-                break;
-            }
-        }
-
-        return result;
-    };
-
-    tu.getFuncParamType = function(paramName) {
-        var result = paramName; 
-        console.log("getFuncParamType", this._funcParams);
-
-        var funcParams = this._funcParams;
-
-        if(funcParams.length == 0)
-            return paramName;
-
-        for(var p in funcParams) {
-            var funcParam = funcParams[p];
-            if(funcParam == paramName) {
-                result = funcParam;
                 break;
             }
         }

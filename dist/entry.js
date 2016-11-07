@@ -12640,47 +12640,42 @@ Entry.TextCodingUtil = {};
     console.log("blockFuncContentParam", a);
     console.log("textFuncStatementParam", b);
     var f = !1, f = b.type, g = a.data.type;
-    if ("text" == f || "number" == f) {
-      f = "literal";
-    }
-    if ("text" == g || "number" == g) {
-      g = "literal";
-    }
+    "text" == f ? f = "literal" : "number" == f ? f = "literal" : b.isParamFromFunc && (f = e[f]);
+    "text" == g ? g = "literal" : "number" == g && (g = "literal");
+    console.log("tfspType", f, "bfcpType", g);
     if (f == g) {
-      b = b.params;
-      f = a.data.params;
-      a = [];
-      for (var h in f) {
-        (g = f[h]) && a.push(g);
-      }
-      console.log("textSubParams", b);
-      console.log("blockSubParams", a);
-      if (b.length == a.length) {
-        var f = !0, k;
-        for (k in b) {
-          if (!f) {
-            break;
-          }
-          f = !1;
-          h = b[k];
-          g = a[k];
-          console.log("textSubParam", h);
-          console.log("blockSubParam", g);
-          if ("object" !== typeof h) {
-            h == g && (f = !0);
-          } else {
-            if (h.name) {
-              console.log("paramInfo", e);
-              var l = e[h.name];
-              console.log("blockSubParam.data.type", g.data.type, "paramBlockType", l);
-              l ? g.data.type == l && (f = !0) : h.params[0] == g.data.params[0] && (f = !0);
+      if (b = b.params, a = a.data.params, console.log("textSubParams", b), console.log("blockSubParams", a), b || a) {
+        if (b.length == a.length) {
+          var f = !0, h;
+          for (h in b) {
+            if (!f) {
+              break;
+            }
+            var f = !1, g = b[h], k = a[h];
+            console.log("textSubParam", g);
+            console.log("blockSubParam", k);
+            if (g || k) {
+              if ("object" !== typeof g) {
+                g == k && (f = !0);
+              } else {
+                if (g.name) {
+                  console.log("paramInfo", e);
+                  var l = e[g.name];
+                  console.log("blockSubParam.data.type", k.data.type, "paramBlockType", l);
+                  l ? k.data.type == l && (f = !0) : g.params[0] == k.data.params[0] && (f = !0);
+                } else {
+                  "True" == g.type || "False" == g.type ? k.data ? g.type == k.data.type && (f = !0) : g.type == k.type && (f = !0) : g.type && g.params && (f = this.isFuncContentsParamsMatch(k, g, c, e));
+                }
+              }
             } else {
-              "True" == h.type || "False" == h.type ? g.data ? h.type == g.data.type && (f = !0) : h.type == g.type && (f = !0) : h.type && h.params && (f = this.isFuncContentsParamsMatch(g, h, c, e));
+              f = !0;
             }
           }
+        } else {
+          f = !1;
         }
       } else {
-        f = !1;
+        f = !0;
       }
     } else {
       f = !1;
@@ -12916,22 +12911,6 @@ Entry.TextCodingUtil = {};
     for (var e in c) {
       if (c[e] == a) {
         b = !0;
-        break;
-      }
-    }
-    return b;
-  };
-  b.getFuncParamType = function(a) {
-    var b = a;
-    console.log("getFuncParamType", this._funcParams);
-    var c = this._funcParams;
-    if (0 == c.length) {
-      return a;
-    }
-    for (var e in c) {
-      var f = c[e];
-      if (f == a) {
-        b = f;
         break;
       }
     }
@@ -14026,9 +14005,10 @@ Entry.PyToBlockParser = function(b) {
           }
         }
       }
+      f.property && "range" == f.property.name && this._blockCount++;
       for (var z in arguments) {
         if (g = arguments[z], console.log("kkk argument", g, "typeof", typeof g), g && (y = Number(z) + h, console.log("CallExpression argument", g, "typeof", typeof g), q = this[g.type](g, v[n[y]], u[n[y]], !0), console.log("callexpression callee", f, "param", q), console.log("calleeName", k, "param", q), q && q.data && (q = q.data), console.log("callex block one multi", x), console.log("callex param syntax", l, "order", n, "value", n[y], "param", q), console.log("pi", y), c[n[y]] = q, console.log("callex realtime params", 
-        c), (!f.property || "range" != f.property.name) && q)) {
+        c), q)) {
           if (q.object && q.object.object) {
             if ("self" == q.object.object.name) {
               if (!Entry.TextCodingUtil.isLocalListExisted(q.object.property.name, m)) {
@@ -14080,6 +14060,7 @@ Entry.PyToBlockParser = function(b) {
           }
         }
       }
+      f.property && "range" == f.property.name && this._blockCount--;
       console.log("call call params", c);
       if (f.property) {
         if ("range" == f.property.name) {
@@ -14109,25 +14090,7 @@ Entry.PyToBlockParser = function(b) {
               }
             }
           } else {
-            if (1 == c.length) {
-              if (console.log("call range params", c), q = c[0], console.log("range here param", q), "object" != typeof q) {
-                c.splice(0, 1, q);
-              } else {
-                if (q.type && q.params) {
-                  console.log("rangeparam param.type", q.type, "param.params", q.params), e = q.type, c = q.params;
-                } else {
-                  if ("string" == typeof q.name) {
-                    if (Entry.TextCodingUtil.isFuncParam(q.name)) {
-                      console.log("kekeke", q), e = Entry.TextCodingUtil.getFuncParamType(q.name);
-                    } else {
-                      throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + q.name + "'\uc744(\ub97c) \ud655\uc778\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
-                    }
-                  } else {
-                    throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + q.name + "'\uc744(\ub97c) \ud655\uc778\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
-                  }
-                }
-              }
-            }
+            1 == c.length && (console.log("call range params", c), q = c[0], console.log("range here param", q), "object" != typeof q ? c.splice(0, 1, q) : q.type && q.params && (console.log("rangeparam param.type", q.type, "param.params", q.params), e = q.type, c = q.params));
           }
           console.log("range final params", c);
         } else {
@@ -14625,7 +14588,8 @@ Entry.PyToBlockParser = function(b) {
       return "";
     }
     console.log("Literal paramMeta", b, "paramDefMeta", c);
-    "None" == a.raw ? (b = this["Param" + b.type]("None", b, c), console.log("Literal params", b), a = b) : "0" == a.raw ? (b = this["Param" + b.type](0, b, c), console.log("Literal params", b), a = b) : a.value ? (b = this["Param" + b.type](e, b, c), console.log("Literal params", b), a = b) : a.left && a.operator && a.right ? (b = [], c = this[a.left.type](a.left), b.push(c), b.push(a.operator), a = this[a.right.type](a.right), b.push(a), a = b) : a = "None";
+    "None" == a.raw ? (b = this["Param" + b.type]("None", b, c), console.log("Literal params", b), a = b) : "0" == a.raw ? (b = this["Param" + b.type](0, b, c), console.log("Literal params", b), a = b) : 1 == a.value || 0 == a.value ? (b = this["Param" + b.type](e, b, c), console.log("Literal params", b), a = b) : a.value ? (b = this["Param" + b.type](e, b, c), console.log("Literal params", b), a = b) : a.left && a.operator && a.right ? (b = [], c = this[a.left.type](a.left), b.push(c), b.push(a.operator), 
+    a = this[a.right.type](a.right), b.push(a), a = b) : a = "None";
     console.log("Literal result", a);
     return a;
   };
@@ -14873,29 +14837,9 @@ Entry.PyToBlockParser = function(b) {
           if (f[k].declarations) {
             a = f[0].declarations;
             for (k in a) {
-              if (h = a[k], h = h.init, console.log("ppp param", h), h) {
-                if (h.params && h.params[0]) {
-                  if ("number" == h.type || "text" == h.type) {
-                    var l = h.params[0];
-                    if ("number" == l.type && l.params && l.params[0]) {
-                      if (l = l.params[0], 0 <= l) {
-                        c.push(h);
-                      } else {
-                        throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud30c\ub77c\ubbf8\ud130 '" + l + "'\uc744(\ub97c) \uc591\uc218\uac12\uc73c\ub85c \ubcc0\uacbd\ud574\uc8fc\uc138\uc694.", b.line = this._blockCount--, console.log("send error", b), b;
-                      }
-                    } else {
-                      if ("__pythonRuntime.functions.range" == h.callee && h.isCallParam && (l = h.params[0], "number" != typeof l)) {
-                        throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud30c\ub77c\ubbf8\ud130 '" + l + "'\uc744(\ub97c) \uc22b\uc790\ud0c0\uc785(\uc591\uc218\uac12)\uc73c\ub85c \ubcc0\uacbd\ud574\uc8fc\uc138\uc694.", b.line = this._blockCount--, console.log("send error", b), b;
-                      }
-                      c.push(h);
-                    }
-                  } else {
-                    console.log("ttt param1", h), c.push(h);
-                  }
-                } else {
-                  console.log("ttt param2", h), c.push(h);
-                }
-              }
+              var h = a[k], l = h.init;
+              console.log("ppp param", l);
+              l && (l.params && l.params[0] ? "number" == l.type || "text" == l.type ? (h = l.params[0], console.log("param kekeke", l), "__pythonRuntime.functions.range" == l.callee && ("object" == typeof h && "string" == typeof h.name && Entry.TextCodingUtil.isFuncParam(h.name) && (l = {}, l.type = h.name, l.params = [], l.isParamFromFunc = !0, console.log("range func param", l)), c.push(l))) : (console.log("ttt param1", l), c.push(l)) : (console.log("ttt param2", l), c.push(l)));
             }
             b.params = c;
           }
@@ -14924,7 +14868,7 @@ Entry.PyToBlockParser = function(b) {
           if (0 == k) {
             if (f[k] && f[k].declarations) {
               for (k in console.log("statement2 declarations", f[k]), a = f[k].declarations, a) {
-                h = a[k], (h = h.init) && c.push(h);
+                h = a[k], (l = h.init) && c.push(l);
               }
             } else {
               if ((a = f[k]) && a.type) {
@@ -15046,6 +14990,7 @@ Entry.PyToBlockParser = function(b) {
     if (g = a.test) {
       var h = this[g.type](g)
     }
+    console.log("for test", h);
     c.test = h;
     console.log("ForStatement testData", h);
     if (a = a.update) {
