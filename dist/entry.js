@@ -7845,7 +7845,6 @@ Entry.Engine.prototype.toggleStop = function() {
   });
   a.mapList(function(a) {
     a.loadSnapshot();
-    a.updateView();
   });
   this.stopProjectTimer();
   b.clearRunningState();
@@ -18612,17 +18611,17 @@ Entry.Variable.prototype.takeSnapshot = function() {
   this.snapshot_ = this.toJSON();
 };
 Entry.Variable.prototype.loadSnapshot = function() {
-  this.snapshot_ && !this.isCloud_ && this.syncModel_(this.snapshot_);
+  this.snapshot_ && this.syncModel_(this.snapshot_);
+  delete this.snapshot_;
 };
 Entry.Variable.prototype.syncModel_ = function(b) {
   this.setX(b.x);
   this.setY(b.y);
-  this.id_ = b.id;
   this.setVisible(b.visible);
-  this.setValue(b.value);
+  this.isCloud_ || this.setValue(b.value);
   this.setName(b.name);
   this.isCloud_ = b.isCloud;
-  "list" == this.type && (this.setWidth(b.width), this.setHeight(b.height), this.array_ = b.array);
+  "list" == this.type && (this.isCloud_ || (this.array_ = b.array), this.setWidth(b.width), this.setHeight(b.height));
 };
 Entry.Variable.prototype.toJSON = function() {
   var b = {};
