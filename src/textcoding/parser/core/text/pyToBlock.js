@@ -216,39 +216,45 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             var calleeName = Entry.TextCodingUtil.eventBlockSyntaxFilter(calleeData.name);
             
-            
-            var syntax = calleeName;
-                
+            if(arguments && arguments.length != 0) {
+                var argKey = "";
+                for(var a in arguments) {
+                    var arg = arguments[a];
+                    if(arg.type == "Identifier") {
+                        argKey += arg.name;
+                    }
+                    else if(arg.type == "Literal") {
+                        argKey += arg.raw;
+                    }
+                    else if(arg.type == "MemberExpression") {
+                        argKey += arg.object.name + "." + arg.property.name;
+                    }
+
+                    if(a != arguments.length-1)
+                        argKey += ",";
+                }
+
+            } 
+
+            var syntax = calleeName + "(" + argKey + ")";
             var blockSyntax = this.getBlockSyntax(syntax);
             if(blockSyntax) { 
                 type = blockSyntax.key;
             }
-            
+
             if(!type) {
-                if(arguments && arguments.length != 0) {
-                    var argKey = "";
-                    for(var a in arguments) {
-                        var arg = arguments[a];
-                        if(arg.type == "Identifier") {
-                            argKey += arg.name;
-                        }
-                        else if(arg.type == "MemberExpression") {
-                            argKey += arg.object.name + "." + arg.property.name;
-                        }
-
-                        if(a != arguments.length-1)
-                            argKey += ",";
-                    }
-
-                } 
-
-                syntax = calleeName + "(" + argKey + ")";
-                blockSyntax = this.getBlockSyntax(syntax);
+                var syntax = calleeName;
+                    
+                var blockSyntax = this.getBlockSyntax(syntax);
                 if(blockSyntax) { 
                     type = blockSyntax.key;
                 }
-                 
             }
+            
+            //if(!type) {
+                
+                 
+            //}
 
             console.log("callee type", type);
 
@@ -296,38 +302,44 @@ Entry.PyToBlockParser = function(blockSyntax) {
             /*if(calleeName)
                 var calleeTokens = calleeName.split('.');*/
 
-            var syntax = calleeName;
-            var blockSyntax = this.getBlockSyntax(syntax);
 
-            if(blockSyntax)
-                type = blockSyntax.key;
-
-            if(!type) {
-                if(arguments && arguments.length != 0) {
-                    var argKey = "";
-                    for(var a in arguments) {
-                        var arg = arguments[a];
-                        if(arg.type == "Identifier") {
-                            argKey += arg.name;
-                        }
-                        else if(arg.type == "MemberExpression") {
-                            argKey += arg.object.name + "." + arg.property.name;
-                        }
-
-                        if(a != arguments.length-1)
-                            argKey += ",";
+            if(arguments && arguments.length != 0) {
+                var argKey = "";
+                for(var a in arguments) {
+                    var arg = arguments[a];
+                    console.log("arg arg", arg);
+                    if(arg.type == "Identifier") {
+                        argKey += arg.name;
+                    }
+                    else if(arg.type == "Literal") {
+                        argKey += arg.raw;
+                    }
+                    else if(arg.type == "MemberExpression") {
+                        argKey += arg.object.name + "." + arg.property.name;
                     }
 
-                } 
-
-                console.log("argKey", argKey);
-
-                syntax = calleeName + "(" + argKey + ")";
-                blockSyntax = this.getBlockSyntax(syntax);
-                if(blockSyntax) { 
-                    type = blockSyntax.key;
+                    if(a != arguments.length-1)
+                        argKey += ",";
                 }
-                 
+
+            } 
+
+            console.log("argKey", argKey);
+
+            var syntax = calleeName + "(" + String(argKey) + ")";
+            console.log("argKey syntax", syntax);
+            var blockSyntax = this.getBlockSyntax(syntax);
+            if(blockSyntax) { 
+                type = blockSyntax.key;
+            }
+
+
+            if(!type) {
+                syntax = calleeName;
+                blockSyntax = this.getBlockSyntax(syntax);
+
+                if(blockSyntax)
+                    type = blockSyntax.key;
             }
             
             if(callee.property) {
@@ -443,6 +455,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             } 
 
             console.log("CallExpression arguments", arguments);
+            console.log("callex blockSyntax", blockSyntax);
 
 
             if(blockSyntax.params && blockSyntax.params.length != 0) {
@@ -876,6 +889,44 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     p = this.ParamDropdownDynamic(p.name, paramsMeta[1], paramsDefMeta[1]);
                     params[1] = p;  
                 }
+            }
+
+            console.log("params checkit", params);
+
+            //HW Param Processing
+            if(blockSyntax.paramCodes) {
+                var paramCodes = blockSyntax.paramCodes;
+                for(var pcs in paramCodes) {
+                    var paramCode = paramCodes[pcs];
+                    if(paramCode) {
+                        var pCode = params[pcs];
+                        console.log("pCode", pCode);
+                        if(typeof pCode == "string") {
+                            pCode = "\"" + pCode + "\"";
+                            for(var key in paramCode) {
+                                var value = paramCode[key];
+                                console.log("checkit key", key, "value", value, "pCode", pCode);
+                                if(value == pCode) {
+                                    params[pcs] = key;
+                                }
+                            }
+                        }
+                        else if(typeof pCode == "object") {
+                            if(pCode.object && pCode.property) {
+                                var objectCode = pCode.object.name + "." + pCode.property.name;
+                                for(var key in paramCode) {
+                                    var value = paramCode[key];
+                                    console.log("checkit key", key, "value", value);
+                                    console.log("object code", objectCode);
+                                    if(value == objectCode) {
+                                        params[pcs] = key;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
 
             if(type) {
@@ -2253,7 +2304,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(result)
             result = String(result);
         else
-            result = "None";
+            result = value;
         console.log("ParamDropdown result", result);
 
         return result;

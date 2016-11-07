@@ -224,7 +224,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         //console.log("funcMap", this._funcMap.toString());
                         var funcParam = this._funcMap.get(param);
 
-                        //console.log("param", param, "func param", funcParam);
+                        console.log("param", param, "func param", funcParam);
                         if(funcParam) {
                             //console.log("func param current result", result);
                             result += funcParam;
@@ -242,7 +242,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                             }
                         }
 
-                        //console.log("Block param current block2", currentBlock);
+                        console.log("Block param current block2", currentBlock);
 
                         param = Entry.TextCodingUtil.variableListFilter(block, blockParamIndex, param);
 
@@ -313,6 +313,19 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         //console.log("param variableFilter", param);
 
                         console.log("currentBlock", currentBlock);
+                        syntaxObj = this.searchSyntax(currentBlock);
+                        if (syntaxObj) {
+                            console.log("syntaxObj", syntaxObj, "i", i, "index", index);
+                            if(syntaxObj.paramCodes) {
+                                var paramCodes = syntaxObj.paramCodes;
+                                var paramCode = paramCodes[index];
+                                if(paramCode) {
+                                    var pCode = paramCode[param];
+                                    if(pCode)
+                                        param = pCode;
+                                }
+                            }
+                        }
 
                         result += param;
                         console.log("btop parser param result", result);
