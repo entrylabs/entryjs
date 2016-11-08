@@ -798,14 +798,19 @@ Entry.TextCodingUtil = {};
                 var thread = threadArr[i];
                 var trimedThread = threadArr[i].trim();
                 console.log("trimedThread check", trimedThread);
-                var index = trimedThread.indexOf(":");
+                var colonIndex = trimedThread.indexOf(":");
                 var preText = "";
 
-                if(index > 0) {
+                if(colonIndex > 0) {
                     preText = trimedThread.substring(0, colonIndex+1);
                 }
+
+                console.log("preText", preText);
                 
-                if( preText == "def entry_event_start():" ||
+                preText = preText.split("(");
+                preText = preText[0];
+
+                /*if( preText == "def entry_event_start():" ||
                     preText == "def entry_event_mouse_down():" ||
                     preText == "def entry_event_mouse_up():" ||
                     preText == "def entry_event_object_down():" ||
@@ -813,9 +818,9 @@ Entry.TextCodingUtil = {};
                     preText == "def entry_event_scene_start():" ||
                     preText == "def entry_event_clone_create():" ) {
 
-                    /*var tokens = [];
-                    tokens = funcPart.split("def");
-                    funcPart = tokens[1].substring(0, tokens[1].length-1).trim();*/
+                    //var tokens = [];
+                    //tokens = funcPart.split("def");
+                    //funcPart = tokens[1].substring(0, tokens[1].length-1).trim();
 
                     thread = thread.replace(/def /, "");
                     var colonIndex = thread.indexOf(":");
@@ -836,10 +841,10 @@ Entry.TextCodingUtil = {};
 
                     console.log("newThread funcPart", newThread); 
                     threadArr[i] = newThread;
-                    eventFound = true;
+                    eventFound = true; 
                 }
-                else if(preText.match(/^def entry_event_key(.+):$/) ||
-                    preText.match(/^def entry_event_signal(.+):$/)) {
+                else */if(preText == "def entry_event_key" ||
+                    preText == "def entry_event_signal") { 
 
                     thread = thread.replace(/def /, "");
                     var colonIndex = thread.indexOf(":");
@@ -847,7 +852,7 @@ Entry.TextCodingUtil = {};
                     var restPart = "";
 
                     if(colonIndex > 0) {
-                        funcPart = thread.substring(0, colonIndex+1);
+                        funcPart = thread.substring(0, colonIndex);
                         restPart = thread.substring(colonIndex+1, thread.length);
                     }
 
@@ -871,6 +876,8 @@ Entry.TextCodingUtil = {};
                     }
                 }
         }
+
+        console.log("newEventFunction result", threadArr);
 
         result = threadArr.join('\n');
         return result;

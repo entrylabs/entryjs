@@ -87,11 +87,11 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 }
                 else if(i != 0) {
                     var content = this.Block(block) + '\n';
-                    if(Entry.TextCodingUtil.isEntryEventBlockWithParam(rootBlock)) {
+                    /*if(Entry.TextCodingUtil.isEntryEventBlockWithParam(rootBlock)) {
                         console.log("contentResult1", content);
                         content = "\t" + content;
                         console.log("contentResult2", content);
-                    }
+                    }*/
                     contentResult += content;
 
                     
@@ -115,9 +115,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
         if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
             if(isEventBlock) {
                 contentResult = Entry.TextCodingUtil.indent(contentResult);
-                if(Entry.TextCodingUtil.isEntryEventBlockWithParam(rootBlock)) {
+                /*if(Entry.TextCodingUtil.isEntryEventBlockWithParam(rootBlock)) {
                     contentResult = "\t" + contentResult;
-                }
+                }*/
                 
                 result = rootResult + contentResult + '\n';
 
@@ -297,10 +297,12 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                         console.log("result and param text", result, param);
 
-                        if(param == String('\"None\"')) {
-                           var data = {None:"None"};
-                           var x = "None";
-                           param = data[x];
+                        if(currentBlock.data.type != "when_message_cast") {                        
+                            if(param == String('\"None\"')) {
+                               var data = {None:"None"};
+                               var x = "None";
+                               param = data[x];
+                            }
                         }
 
                         param = Entry.TextCodingUtil.variableListFilter(block, blockParamIndex, param);

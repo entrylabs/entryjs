@@ -320,7 +320,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 ast = pyAstGenerator.generate(thread);
                             }*/
                             console.log("success??", ast);
-                            //thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
+                            thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
                             console.log("real thread", thread);
                             thread = thread.replace(/    /g, "\t");
                             console.log("real real thread", thread);
