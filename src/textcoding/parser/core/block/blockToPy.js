@@ -295,16 +295,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
                                 param = String("\"" + param + "\"");
                         }
 
-                        console.log("result and param text", result, param);
-
-                        if(currentBlock.data.type != "when_message_cast") {                        
-                            if(param == String('\"None\"')) {
-                               var data = {None:"None"};
-                               var x = "None";
-                               param = data[x];
-                            }
+                        console.log("result and param text", result, param); 
+           
+                        if(param == String('\"None\"')) {
+                           var data = {None:"None"};
+                           var x = "None";
+                           param = data[x];
                         }
-
+                        
                         param = Entry.TextCodingUtil.variableListFilter(block, blockParamIndex, param);
 
                         console.log("here pa param", param);

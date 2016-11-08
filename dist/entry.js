@@ -13138,7 +13138,7 @@ Entry.BlockToPyParser = function(b) {
               m = String(m);
               Entry.TextCodingUtil.isNumeric(m) || Entry.TextCodingUtil.isBinaryOperator(m) || (m = String('"' + m + '"'));
               console.log("result and param text", b, m);
-              "when_message_cast" != a.data.type && '"None"' == m && (m = "None");
+              '"None"' == m && (m = "None");
               m = Entry.TextCodingUtil.variableListFilter(a, q, m);
               console.log("here pa param", m);
               Entry.TextCodingUtil.isLocalType(a, k[u]) && (m = "self".concat(".").concat(m));
