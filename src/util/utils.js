@@ -1268,3 +1268,31 @@ Entry.Utils.hasSpecialCharacter = function(str) {
     var reg = /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g;
     return reg.test(str);
 }
+
+Entry.Utils.isNewVersion = function(old_version, new_version) {
+    try {
+        old_version = old_version.replace('v', '');
+        new_version = new_version.replace('v', '');
+        var arrOld = old_version.split('.');
+        var arrNew = new_version.split('.');
+        var count = (arrOld.length < arrNew.length) ? arrOld.length : arrNew.length;
+        var isNew = false;
+        var isSame = true;
+        for(var i = 0; i < count; i++) {
+            if(Number(arrOld[i]) < Number(arrNew[i])) {
+                isNew = true;
+                isSame = false;
+            } else if(Number(arrOld[i]) > Number(arrNew[i])) {
+                isSame = false;
+            }
+        }
+
+        if(isSame && (arrOld.length < arrNew.length)) {
+            isNew = true;
+        }
+
+        return isNew;
+    } catch(e) {
+        return false;
+    }
+}

@@ -14,7 +14,7 @@ Entry.HW = function() {
 
     this.connectTrial = 0;
     this.isFirstConnect = true;
-
+    this.requireVerion = 'v1.6.1';
     this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.0_Setup.exe";
     this.hwPopupCreate();
     this.initSocket();
@@ -95,7 +95,7 @@ p.connectWebSocket = function(url, option) {
                 }
                 default: {
                     var data = JSON.parse(msg.data);
-                    hw.checkDevice(data);
+                    hw.checkDevice(data, msg.version);
                     hw.updatePortData(data);
                     break;
                 }
@@ -128,9 +128,12 @@ p.initSocket = function() {
         }
         if(location.protocol.indexOf('https') > -1) {
             this.tlsSocketIo = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{ 'client': true, 'roomId' : this.sessionRoomId } });
-        } else if(Entry.isOffline){
+        } 
+        // 일단 보류(?)
+        /*else if(Entry.isOffline){
             this.tlsSocketIo = this.connectWebSocket('http://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
-        } else {
+        }*/ 
+        else {
             try {
                 this.socketIo = this.connectWebSocket('http://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
             } catch(e) { }
@@ -313,12 +316,17 @@ p.setZero = function() {
     Entry.hw.hwModule.setZero();
 };
 
-p.checkDevice = function(data) {
+p.checkDevice = function(data, version) {
     if (data.company === undefined)
         return;
     var key = [Entry.Utils.convertIntToHex(data.company), '.', Entry.Utils.convertIntToHex(data.model)].join('');
     if (key == this.selectedDevice)
         return;
+
+    if(Entry.Utils.isNewVersion(version, this.requireVerion)) {
+        this.popupHelper.show('newVersion', true);
+    }
+
     this.selectedDevice = key;
     this.hwModule = this.hwInfo[key];
     Entry.dispatchEvent("hwChanged");

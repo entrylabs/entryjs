@@ -17089,6 +17089,19 @@ Entry.Utils.convertIntToHex = function(b) {
 Entry.Utils.hasSpecialCharacter = function(b) {
   return /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g.test(b);
 };
+Entry.Utils.isNewVersion = function(b, a) {
+  try {
+    b = b.replace("v", "");
+    a = a.replace("v", "");
+    for (var d = b.split("."), c = a.split("."), e = d.length < c.length ? d.length : c.length, f = !1, g = !0, h = 0;h < e;h++) {
+      +d[h] < +c[h] ? (f = !0, g = !1) : +d[h] > +c[h] && (g = !1);
+    }
+    g && d.length < c.length && (f = !0);
+    return f;
+  } catch (k) {
+    return !1;
+  }
+};
 Entry.Model = function(b, a) {
   var d = Entry.Model;
   d.generateSchema(b);
@@ -17667,6 +17680,7 @@ Entry.HW = function() {
   this.sessionRoomId || (this.sessionRoomId = this.createRandomRoomId(), localStorage.setItem("entryhwRoomId", this.sessionRoomId));
   this.connectTrial = 0;
   this.isFirstConnect = !0;
+  this.requireVerion = "v1.6.1";
   this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.0_Setup.exe";
   this.hwPopupCreate();
   this.initSocket();
@@ -17709,7 +17723,9 @@ p.connectWebSocket = function(b, a) {
           d.disconnectHardware();
           break;
         default:
-          a = JSON.parse(a.data), d.checkDevice(a), d.updatePortData(a);
+          var b = JSON.parse(a.data);
+          d.checkDevice(b, a.version);
+          d.updatePortData(b);
       }
     }
   });
@@ -17727,17 +17743,13 @@ p.initSocket = function() {
     if (-1 < location.protocol.indexOf("https")) {
       this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
     } else {
-      if (Entry.isOffline) {
-        this.tlsSocketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-      } else {
-        try {
-          this.socketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-        } catch (b) {
-        }
-        try {
-          this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-        } catch (b) {
-        }
+      try {
+        this.socketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+      } catch (b) {
+      }
+      try {
+        this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+      } catch (b) {
       }
     }
     Entry.dispatchEvent("hwChanged");
@@ -17846,9 +17858,12 @@ p.downloadSource = function() {
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
-p.checkDevice = function(b) {
-  void 0 !== b.company && (b = [Entry.Utils.convertIntToHex(b.company), ".", Entry.Utils.convertIntToHex(b.model)].join(""), b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !1), this.hwModule.monitorTemplate && 
-  (this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
+p.checkDevice = function(b, a) {
+  if (void 0 !== b.company) {
+    var d = [Entry.Utils.convertIntToHex(b.company), ".", Entry.Utils.convertIntToHex(b.model)].join("");
+    d != this.selectedDevice && (Entry.Utils.isNewVersion(a, this.requireVerion) && this.popupHelper.show("newVersion", !0), this.selectedDevice = d, this.hwModule = this.hwInfo[d], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !1), this.hwModule.monitorTemplate && (this.hwMonitor ? 
+    (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), d = this.hwModule.monitorTemplate, "both" == d.mode ? (d.mode = "list", this.hwMonitor.generateListView(), d.mode = "general", this.hwMonitor.generateView(), d.mode = "both") : "list" == d.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView()));
+  }
 };
 p.banHW = function() {
   var b = this.hwInfo, a;
