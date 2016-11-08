@@ -518,6 +518,22 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         }
     };
 
+    p.banCategory = function(categoryName) {
+        var categoryElem;
+        if(categoryName in this._categoryElems) {
+            categoryElem = this._categoryElems[categoryName];
+            categoryElem.addClass('entryRemove');            
+        }
+    }
+
+    p.unbanCategory = function(categoryName) {
+        var categoryElem;
+        if(categoryName in this._categoryElems) {
+            categoryElem = this._categoryElems[categoryName];
+            categoryElem.removeClass('entryRemove');            
+        }
+    }
+
     p.banClass = function(className, unReDraw) {
         var index = this._bannedClass.indexOf(className);
         if (index < 0)
@@ -677,7 +693,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
         for (var i=0; i<data.length; i++) {
             var name = data[i].category;
-            this._generateCategoryElement(name);
+            var visible = data[i].visible;
+            this._generateCategoryElement(name, visible);
         }
     };
 
@@ -685,9 +702,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var that = this;
         var element = Entry.Dom('li', {
             id: 'entryCategory' + name,
-            class: 'entryCategoryElementWorkspace',
+            classes: ['entryCategoryElementWorkspace'],
             parent: this._categoryCol
         });
+
+        if(visible === false) {
+            element.classes.push('entryRemove');
+        }
 
         (function(elem, name){
             elem.text(Lang.Blocks[name.toUpperCase()]);
