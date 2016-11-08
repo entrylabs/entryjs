@@ -17038,31 +17038,36 @@ Entry.Utils.isChrome = function() {
   return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 };
 Entry.Utils.waitForWebfonts = function(b, a) {
-  for (var d = 0, c = 0, e = b.length;c < e;++c) {
-    (function(c) {
-      function e() {
-        h && h.offsetWidth != k && (++d, h.parentNode.removeChild(h), h = null);
-        if (d >= b.length && (l && clearInterval(l), d == b.length)) {
-          return a(), !0;
+  var d = 0;
+  if (b && b.length) {
+    for (var c = 0, e = b.length;c < e;++c) {
+      (function(c) {
+        function e() {
+          h && h.offsetWidth != k && (++d, h.parentNode.removeChild(h), h = null);
+          if (d >= b.length && (l && clearInterval(l), d == b.length)) {
+            return a(), !0;
+          }
         }
-      }
-      var h = document.createElement("span");
-      h.innerHTML = "giItT1WQy@!-/#";
-      h.style.position = "absolute";
-      h.style.left = "-10000px";
-      h.style.top = "-10000px";
-      h.style.fontSize = "300px";
-      h.style.fontFamily = "sans-serif";
-      h.style.fontVariant = "normal";
-      h.style.fontStyle = "normal";
-      h.style.fontWeight = "normal";
-      h.style.letterSpacing = "0";
-      document.body.appendChild(h);
-      var k = h.offsetWidth;
-      h.style.fontFamily = c;
-      var l;
-      e() || (l = setInterval(e, 50));
-    })(b[c]);
+        var h = document.createElement("span");
+        h.innerHTML = "giItT1WQy@!-/#";
+        h.style.position = "absolute";
+        h.style.left = "-10000px";
+        h.style.top = "-10000px";
+        h.style.fontSize = "300px";
+        h.style.fontFamily = "sans-serif";
+        h.style.fontVariant = "normal";
+        h.style.fontStyle = "normal";
+        h.style.fontWeight = "normal";
+        h.style.letterSpacing = "0";
+        document.body.appendChild(h);
+        var k = h.offsetWidth;
+        h.style.fontFamily = c;
+        var l;
+        e() || (l = setInterval(e, 50));
+      })(b[c]);
+    }
+  } else {
+    return a && a(), !0;
   }
 };
 window.requestAnimFrame = function() {
