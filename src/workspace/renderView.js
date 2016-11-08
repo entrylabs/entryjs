@@ -106,8 +106,8 @@ Entry.RenderView = function(dom, align, scale) {
             var xPos = 0;
             var extensions = $(blockView.svgGroup).find('.extension');
             if (extensions) {
-                for (var i=0; i<extensions.length; i++) {
-                    var ext = extensions[i];
+                for (var j=0; j<extensions.length; j++) {
+                    var ext = extensions[j];
                     var currentXpos = parseFloat(ext.getAttribute('x'));
                     xPos = Math.min(xPos, currentXpos);
                 }
