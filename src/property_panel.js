@@ -84,7 +84,23 @@ Entry.PropertyPanel = function() {
                 Entry.dispatchEvent('hwModeChange');
             }));
         }
-     };
+    };
+
+    p.removeMode = function(mode) {
+        if (this.modes[mode]) {
+            this.modes[mode].tabDom.remove();
+            this.modes[mode].contentDom.remove();
+            if(mode == 'hw'){
+                $(this.modes).removeClass('.propertyTabhw');
+                $('.propertyTabhw').unbind('dblclick');
+            }
+        }
+
+        var keys = Object.keys(this.modes);
+        if(keys && keys.length > 0) {
+            this.select(keys[0]);
+        }
+    }
 
     p.resize = function(canvasSize) {
         var canvasHeight = canvasSize*9/16;

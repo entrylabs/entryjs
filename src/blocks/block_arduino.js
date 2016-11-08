@@ -41,43 +41,17 @@ Entry.Arduino = {
 
 Entry.ArduinoExt = {
     name: 'ArduinoExt',
-    getSensorKey: function () {
-        return "xxxxxxxx".replace(/[xy]/g, function(f) {
-            var e = Math.random() * 16 | 0, d = f == "x" ? e : (e & 0 * 3 | 0 * 8);
-            return d.toString(16)
-        }).toUpperCase()
-    },
-    getSensorTime: function (type) {
-        return new Date().getTime() + type;
-    },
     setZero: function () {
         if(!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
-                SET: {
-                    '0': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '1': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '2': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '3': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '4': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '5': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '6': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '7': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '8': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '9': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '10': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '11': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '12': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
-                    '13': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 }
-                },
-                TIME: Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL),
-                KEY: Entry.ArduinoExt.getSensorKey()
+                GET: {},
+                SET: {},
             }
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach(function (key) {
                 Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.TIME = Entry.ArduinoExt.getSensorTime(Entry.hw.sendQueue.SET[key].type);
-                Entry.hw.sendQueue.KEY = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             });
         }
         Entry.hw.update();
@@ -110,6 +84,11 @@ Entry.ArduinoExt = {
     BlockState: {
     }
 }
+
+Entry.SmartBoard = {
+    name: 'smartBoard',
+    setZero: Entry.Arduino.setZero
+};
 
 Entry.SensorBoard = {
     name: 'sensorBoard',
