@@ -20858,16 +20858,16 @@ Entry.BlockMenu = function(b, a, d, c) {
       }
     }
   };
-  b._generateCategoryElement = function(a) {
-    var b = this, c = Entry.Dom("li", {id:"entryCategory" + a, classes:["entryCategoryElementWorkspace"], parent:this._categoryCol});
-    !1 === visible && c.classes.push("entryRemove");
-    (function(a, c) {
-      a.text(Lang.Blocks[c.toUpperCase()]);
-      b._categoryElems[c] = a;
+  b._generateCategoryElement = function(a, b) {
+    var c = this, e = Entry.Dom("li", {id:"entryCategory" + a, classes:["entryCategoryElementWorkspace"], parent:this._categoryCol});
+    !1 === b && e.classes.push("entryRemove");
+    (function(a, b) {
+      a.text(Lang.Blocks[b.toUpperCase()]);
+      c._categoryElems[b] = a;
       a.bindOnClick(function(a) {
-        b.selectMenu(c);
+        c.selectMenu(b);
       });
-    })(c, a);
+    })(e, a);
   };
   b.updateOffset = function() {
     this._offset = this.svgDom.offset();

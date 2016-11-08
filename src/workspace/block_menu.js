@@ -698,7 +698,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         }
     };
 
-    p._generateCategoryElement = function(name) {
+    p._generateCategoryElement = function(name, visible) {
         var that = this;
         var element = Entry.Dom('li', {
             id: 'entryCategory' + name,
