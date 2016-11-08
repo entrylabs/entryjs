@@ -13955,53 +13955,53 @@ Entry.PyToBlockParser = function(b) {
           if (f.object) {
             if (f.object.object) {
               if ("self" == f.object.object.name) {
-                var r = Entry.TextCodingUtil._currentObject, y = f.object.property.name;
-                if (!Entry.TextCodingUtil.isLocalListExisted(y, r)) {
+                var r = Entry.TextCodingUtil._currentObject, z = f.object.property.name;
+                if (!Entry.TextCodingUtil.isLocalListExisted(z, r)) {
                   throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
                 }
               }
             } else {
-              if (y = f.object.name, !Entry.TextCodingUtil.isGlobalListExisted(y)) {
+              if (z = f.object.name, !Entry.TextCodingUtil.isGlobalListExisted(z)) {
                 throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
               }
             }
           }
           console.log("CallExpression append calleeData", g);
-          g = this.ParamDropdownDynamic(y, x[1], v[1]);
+          g = this.ParamDropdownDynamic(z, x[1], v[1]);
           c[A[0]] = g;
           h++;
         } else {
           if ("pop" == f.property.name) {
             if (f.object) {
               if (f.object.object) {
-                if ("self" == f.object.object.name && (y = f.object.property.name, !Entry.TextCodingUtil.isLocalListExisted(y, q))) {
+                if ("self" == f.object.object.name && (z = f.object.property.name, !Entry.TextCodingUtil.isLocalListExisted(z, q))) {
                   throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
                 }
               } else {
-                if (y = f.object.name, !Entry.TextCodingUtil.isGlobalListExisted(y)) {
+                if (z = f.object.name, !Entry.TextCodingUtil.isGlobalListExisted(z)) {
                   throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
                 }
               }
             }
             console.log("CallExpression append calleeData", g);
-            g = this.ParamDropdownDynamic(y, x[1], v[1]);
+            g = this.ParamDropdownDynamic(z, x[1], v[1]);
             c[A[0]] = g;
             h++;
           } else {
             if ("insert" == f.property.name) {
               if (f.object) {
                 if (f.object.object) {
-                  if ("self" == f.object.object.name && (y = f.object.property.name, !Entry.TextCodingUtil.isLocalListExisted(y, q))) {
+                  if ("self" == f.object.object.name && (z = f.object.property.name, !Entry.TextCodingUtil.isLocalListExisted(z, q))) {
                     throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
                   }
                 } else {
-                  if (y = f.object.name, !Entry.TextCodingUtil.isGlobalListExisted(y)) {
+                  if (z = f.object.name, !Entry.TextCodingUtil.isGlobalListExisted(z)) {
                     throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
                   }
                 }
               }
               console.log("CallExpression insert params", c);
-              g = this.ParamDropdownDynamic(y, x[1], v[1]);
+              g = this.ParamDropdownDynamic(z, x[1], v[1]);
               c[A[0]] = g;
               h++;
             }
@@ -14009,8 +14009,9 @@ Entry.PyToBlockParser = function(b) {
         }
       }
       f.property && "range" == f.property.name && this._blockCount++;
-      for (var z in arguments) {
-        if (g = arguments[z], console.log("kkk argument", g, "typeof", typeof g), g && (y = Number(z) + h, console.log("CallExpression argument", g, "typeof", typeof g), r = this[g.type](g, x[A[y]], v[A[y]], !0), console.log("callexpression callee", f, "param", r), console.log("calleeName", k, "param", r), r && r.data && (r = r.data), console.log("callex block one multi", u), console.log("callex param syntax", m, "order", A, "value", A[y], "param", r), console.log("pi", y), c[A[y]] = r, console.log("callex realtime params", 
+      var g = 0 + h, y;
+      for (y in arguments) {
+        if (h = arguments[y], console.log("kkk argument", h, "typeof", typeof h), h && (console.log("CallExpression argument", h, "typeof", typeof h), r = this[h.type](h, x[A[g]], v[A[g]], !0), console.log("callexpression callee", f, "param", r), console.log("calleeName", k, "param", r), r && r.data && (r = r.data), console.log("callex block one multi", u), console.log("callex param syntax", m, "order", A, "value", A[g], "param", r), console.log("pi", g), c[A[g++]] = r, console.log("callex realtime params", 
         c), r)) {
           if (r.object && r.object.object) {
             if ("self" == r.object.object.name) {
@@ -14072,24 +14073,24 @@ Entry.PyToBlockParser = function(b) {
           }
           if (2 == c.length) {
             for (t in c) {
-              if (r = c[t], console.log("range param", r), z = {}, f = [, "MINUS"], "object" != typeof r || "text" != r.type && "number" != r.type || (c[t] = r.params[0]), console.log("mid range params", c), 1 == t) {
+              if (r = c[t], console.log("range param", r), y = {}, f = [, "MINUS"], "object" != typeof r || "text" != r.type && "number" != r.type || (c[t] = r.params[0]), console.log("mid range params", c), 1 == t) {
                 if ("string" != typeof c[0] && "number" != typeof c[0] || "string" != typeof c[1] && "number" != typeof c[1]) {
                   if ("string" == typeof c[0] || "number" == typeof c[0]) {
-                    b = {}, h = [], h.push(c[0]), b.type = "text", b.params = h, c[0] = b;
+                    b = {}, k = [], k.push(c[0]), b.type = "text", b.params = k, c[0] = b;
                   }
                   if ("string" == typeof c[1] || "number" == typeof c[1]) {
-                    b = {}, h = [], h.push(c[1]), b.type = e, b.params = h, c[1] = b;
+                    b = {}, k = [], k.push(c[1]), b.type = e, b.params = k, c[1] = b;
                   }
                   f[0] = c[1];
                   f[2] = c[0];
-                  z.type = "calc_basic";
-                  z.params = f;
-                  return b = z;
+                  y.type = "calc_basic";
+                  y.params = f;
+                  return b = y;
                 }
                 console.log("came here jjj", parseInt(c[1]));
                 c = parseInt(c[1]) - parseInt(c[0]);
-                isNaN(c) ? (h = [], h.push(10)) : (h = [], h.push(c));
-                c = h;
+                isNaN(c) ? (k = [], k.push(10)) : (k = [], k.push(c));
+                c = k;
               }
             }
           } else {
@@ -14098,11 +14099,11 @@ Entry.PyToBlockParser = function(b) {
           console.log("range final params", c);
         } else {
           if ("add" == f.property.name) {
-            z = !0;
+            y = !0;
             for (t in c) {
-              r = c[t], !r || "text" != r.type && "number" != r.type && "combine_something" != r.type && "PLUS" != r ? z = !1 : "text" != r.type && "number" != r.type || !r.params || 0 == r.params.length || (t = r.params[0], "string" != typeof t && (console.log("isParamAllString", r), z = !1));
+              r = c[t], !r || "text" != r.type && "number" != r.type && "combine_something" != r.type && "PLUS" != r ? y = !1 : "text" != r.type && "number" != r.type || !r.params || 0 == r.params.length || (t = r.params[0], "string" != typeof t && (console.log("isParamAllString", r), y = !1));
             }
-            if (z) {
+            if (y) {
               if (l = this.getBlockSyntax("%2 + %4")) {
                 e = l.key;
               }
@@ -14125,12 +14126,12 @@ Entry.PyToBlockParser = function(b) {
             if (f = c[C], console.log("pCode", f), "string" == typeof f) {
               var f = '"' + f + '"', B;
               for (B in l) {
-                z = l[B], console.log("checkit key", B, "value", z, "pCode", f), z == f && (c[C] = B);
+                y = l[B], console.log("checkit key", B, "value", y, "pCode", f), y == f && (c[C] = B);
               }
             } else {
               if ("object" == typeof f && f.object && f.property) {
                 for (B in f = f.object.name + "." + f.property.name, l) {
-                  z = l[B], console.log("checkit key", B, "value", z), console.log("object code", f), z == f && (c[C] = B);
+                  y = l[B], console.log("checkit key", B, "value", y), console.log("object code", f), y == f && (c[C] = B);
                 }
               }
             }
@@ -14141,12 +14142,12 @@ Entry.PyToBlockParser = function(b) {
       c && (b.params = c);
     } else {
       e = [];
-      for (z in arguments) {
-        if (g = arguments[z], console.log("CallExpression argument", g, "typeof", typeof g), q = this[g.type](g), console.log("CallExpression argument", g), console.log("CallExpression argumentData", q, "??", q.type), "__pythonRuntime.utils.createParamsObj" == q.callee) {
+      for (y in arguments) {
+        if (h = arguments[y], console.log("CallExpression argument", h, "typeof", typeof h), q = this[h.type](h), console.log("CallExpression argument", h), console.log("CallExpression argumentData", q, "??", q.type), "__pythonRuntime.utils.createParamsObj" == q.callee) {
           e = q.arguments;
         } else {
           if (!q.type && q.isCallParam) {
-            if ("ThisExpression" != g.type) {
+            if ("ThisExpression" != h.type) {
               throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
             }
           } else {
@@ -14164,7 +14165,7 @@ Entry.PyToBlockParser = function(b) {
     if (b.callee) {
       if (b.arguments) {
         for (n in e = b.arguments.length, c = [], arguments = b.arguments, arguments) {
-          g = arguments[n], c.push(g);
+          h = arguments[n], c.push(h);
         }
       } else {
         e = 0;
@@ -16038,6 +16039,9 @@ Entry.Parser = function(b, a, d, c) {
               d = d[1] && d[1].includes("%") ? 0 != d[0].length ? d[0] : d.join("(") : d.join("(");
               d = d.replace("():", "");
               d = d.replace("()", "");
+              a.paramOptions && a.paramOptions.map(function(a) {
+                d += "#" + a;
+              });
               c[d] = b;
             });
           }
@@ -19109,8 +19113,13 @@ Entry.HWMonitor = function(b) {
   };
 })(Entry.HWMonitor.prototype);
 Entry.HW = function() {
+  this.sessionRoomId = localStorage.getItem("entryhwRoomId");
+  this.sessionRoomId || (this.sessionRoomId = this.createRandomRoomId(), localStorage.setItem("entryhwRoomId", this.sessionRoomId));
   this.connectTrial = 0;
   this.isFirstConnect = !0;
+  this.requireVerion = "v1.6.1";
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.0_Setup.exe";
+  this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
   this.portData = {};
@@ -19119,60 +19128,90 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "B.1":Entry.Codestar};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "B.1":Entry.Codestar, 
+  "A.1":Entry.SmartBoard};
 };
-Entry.HW.TRIAL_LIMIT = 1;
+Entry.HW.TRIAL_LIMIT = 2;
 p = Entry.HW.prototype;
+p.createRandomRoomId = function() {
+  return "xxxxxxxxyx".replace(/[xy]/g, function(b) {
+    var a = 16 * Math.random() | 0;
+    return ("x" == b ? a : a & 3 | 8).toString(16);
+  });
+};
+p.connectWebSocket = function(b, a) {
+  var d = this, c = io(b, a);
+  c.io.reconnectionAttempts(Entry.HW.TRIAL_LIMIT);
+  c.io.reconnectionDelayMax(1E3);
+  c.io.timeout(1E3);
+  c.on("connect", function() {
+    d.socketType = "WebSocket";
+    d.initHardware(c);
+  });
+  c.on("mode", function(a) {
+    0 === c.mode && 1 === a && d.disconnectHardware();
+    d.socketMode = a;
+    c.mode = a;
+  });
+  c.on("message", function(a) {
+    if (a.data && "string" === typeof a.data) {
+      switch(a.data) {
+        case "disconnectHardware":
+          d.disconnectHardware();
+          break;
+        default:
+          var b = JSON.parse(a.data);
+          d.checkDevice(b, a.version);
+          d.updatePortData(b);
+      }
+    }
+  });
+  c.on("disconnect", function() {
+    d.initSocket();
+  });
+  return c;
+};
 p.initSocket = function() {
   try {
-    if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-      this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
+    this.connected = !1;
+    this.tlsSocketIo && this.tlsSocketIo.removeAllListeners();
+    this.socketIo && this.socketIo.removeAllListeners();
+    this.isOpenHardware || this.checkOldClient();
+    if (-1 < location.protocol.indexOf("https")) {
+      this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
     } else {
-      var b = this, a, d;
-      this.connected = !1;
-      this.connectTrial++;
-      if (-1 < location.protocol.indexOf("https")) {
-        d = new WebSocket("wss://hardware.play-entry.org:23518");
-      } else {
-        try {
-          a = new WebSocket("ws://127.0.0.1:23518"), a.binaryType = "arraybuffer", a.onopen = function() {
-            b.socketType = "WebSocket";
-            b.initHardware(a);
-          }.bind(this), a.onmessage = function(a) {
-            a = JSON.parse(a.data);
-            b.checkDevice(a);
-            b.updatePortData(a);
-          }.bind(this), a.onclose = function() {
-            "WebSocket" === b.socketType && (this.socket = null, b.initSocket());
-          };
-        } catch (c) {
-        }
-        try {
-          d = new WebSocket("wss://hardware.play-entry.org:23518");
-        } catch (c) {
-        }
+      try {
+        this.socketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+      } catch (b) {
       }
-      d.binaryType = "arraybuffer";
-      d.onopen = function() {
-        b.socketType = "WebSocketSecurity";
-        b.initHardware(d);
-      };
-      d.onmessage = function(a) {
-        a = JSON.parse(a.data);
-        b.checkDevice(a);
-        b.updatePortData(a);
-      };
-      d.onclose = function() {
-        "WebSocketSecurity" === b.socketType && (this.socket = null, b.initSocket());
-      };
-      Entry.dispatchEvent("hwChanged");
+      try {
+        this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+      } catch (b) {
+      }
     }
-  } catch (c) {
+    Entry.dispatchEvent("hwChanged");
+  } catch (b) {
+  }
+};
+p.checkOldClient = function() {
+  try {
+    var b = this, a = new WebSocket("wss://hardware.play-entry.org:23518");
+    a.onopen = function() {
+      b.popupHelper.show("newVersion", !0);
+      a.close();
+    };
+  } catch (d) {
   }
 };
 p.retryConnect = function() {
-  this.connectTrial = 0;
+  this.isOpenHardware = !1;
+  Entry.HW.TRIAL_LIMIT = 5;
   this.initSocket();
+};
+p.openHardwareProgram = function() {
+  this.isOpenHardware = !0;
+  Entry.HW.TRIAL_LIMIT = 5;
+  this.socket ? this.executeHardware() : (this.executeHardware(), this.initSocket());
 };
 p.initHardware = function(b) {
   this.socket = b;
@@ -19180,6 +19219,22 @@ p.initHardware = function(b) {
   this.connected = !0;
   Entry.dispatchEvent("hwChanged");
   Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
+};
+p.disconnectHardware = function() {
+  Entry.propertyPanel.removeMode("hw");
+  this.hwModule = this.selectedDevice = void 0;
+  Entry.dispatchEvent("hwChanged");
+};
+p.disconnectedSocket = function() {
+  this.tlsSocketIo.close();
+  this.socketIo && this.socketIo.close();
+  Entry.propertyPanel.removeMode("hw");
+  this.socket = void 0;
+  this.connectTrial = 0;
+  this.connected = !1;
+  this.hwModule = this.selectedDevice = void 0;
+  Entry.dispatchEvent("hwChanged");
+  Entry.toast.alert("\ud558\ub4dc\uc6e8\uc5b4 \ud504\ub85c\uadf8\ub7a8 \uc5f0\uacb0 \uc885\ub8cc", "\ud558\ub4dc\uc6e8\uc5b4 \ud504\ub85c\uadf8\ub7a8\uacfc\uc758 \uc5f0\uacb0\uc774 \uc885\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4.", !1);
 };
 p.setDigitalPortValue = function(b, a) {
   this.sendQueue[b] = a;
@@ -19219,7 +19274,7 @@ p.removePortReadable = function(b) {
   }
 };
 p.update = function() {
-  this.socket && 1 == this.socket.readyState && this.socket.send(JSON.stringify(this.sendQueue));
+  this.socket && (this.socket.disconnected || this.socket.emit("message", {data:JSON.stringify(this.sendQueue), mode:this.socket.mode, type:"utf8"}));
 };
 p.updatePortData = function(b) {
   this.portData = b;
@@ -19229,7 +19284,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.11_Setup.exe", "_blank").focus();
+  window.open(this.downloadPath, "_blank").focus();
 };
 p.downloadGuide = function() {
   window.open("http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC-%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%EC%97%B0%EA%B2%B0%EB%A7%A4%EB%89%B4%EC%96%BC_16_08_17.hwp", "_blank").focus();
@@ -19240,15 +19295,119 @@ p.downloadSource = function() {
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
-p.checkDevice = function(b) {
-  void 0 !== b.company && (b = [Entry.Utils.convertIntToHex(b.company), ".", Entry.Utils.convertIntToHex(b.model)].join(""), b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !0), this.hwModule.monitorTemplate && 
-  (this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
+p.checkDevice = function(b, a) {
+  if (void 0 !== b.company) {
+    var d = [Entry.Utils.convertIntToHex(b.company), ".", Entry.Utils.convertIntToHex(b.model)].join("");
+    d != this.selectedDevice && (Entry.Utils.isNewVersion(a, this.requireVerion) && this.popupHelper.show("newVersion", !0), this.selectedDevice = d, this.hwModule = this.hwInfo[d], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !1), this.hwModule.monitorTemplate && (this.hwMonitor ? 
+    (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), d = this.hwModule.monitorTemplate, "both" == d.mode ? (d.mode = "list", this.hwMonitor.generateListView(), d.mode = "general", this.hwMonitor.generateView(), d.mode = "both") : "list" == d.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView()));
+  }
 };
 p.banHW = function() {
   var b = this.hwInfo, a;
   for (a in b) {
     Entry.playground.mainWorkspace.blockMenu.banClass(b[a].name, !0);
   }
+};
+p.executeHardware = function() {
+  function b(a) {
+    navigator.msLaunchUri(a, function() {
+    }, function() {
+      c.popupHelper.show("hwDownload", !0);
+    });
+  }
+  function a(a) {
+    var b = document.createElement("iframe");
+    b.src = "about:blank";
+    b.style = "display:none";
+    document.getElementsByTagName("body")[0].appendChild(b);
+    var d = null, d = setTimeout(function() {
+      var e = !1;
+      try {
+        b.contentWindow.location.href = a, e = !0;
+      } catch (f) {
+        "NS_ERROR_UNKNOWN_PROTOCOL" == f.name && (e = !1);
+      }
+      e || c.popupHelper.show("hwDownload", !0);
+      document.getElementsByTagName("body")[0].removeChild(b);
+      clearTimeout(d);
+    }, 500);
+  }
+  function d(a) {
+    var b = !1;
+    window.focus();
+    window.onblur = function() {
+      b = !0;
+    };
+    location.assign(encodeURI(a));
+    setTimeout(function() {
+      (0 == b || 0 < navigator.userAgent.indexOf("Edge")) && c.popupHelper.show("hwDownload", !0);
+      window.onblur = null;
+    }, 1500);
+  }
+  var c = this, e = {_bNotInstalled:!1, init:function(a, b) {
+    this._w = window.open("/views/hwLoading.html", "entry_hw_launcher", "width=220, height=225,  top=" + window.screenTop + ", left=" + window.screenLeft);
+    var c = null, c = setTimeout(function() {
+      e.runViewer(a, b);
+      clearInterval(c);
+    }, 1E3);
+  }, runViewer:function(a, b) {
+    this._w.document.write("<iframe src='" + a + "' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>");
+    var c = 0, d = null, d = setInterval(function() {
+      try {
+        this._w.location.href;
+      } catch (a) {
+        this._bNotInstalled = !0;
+      }
+      if (10 < c) {
+        clearInterval(d);
+        var e = 0, f = null, f = setInterval(function() {
+          e++;
+          this._w.closed || 2 < e ? clearInterval(f) : this._w.close();
+          this._bNotInstalled = !1;
+          c = 0;
+        }.bind(this), 5E3);
+        b(!this._bNotInstalled);
+      }
+      c++;
+    }.bind(this), 100);
+  }, set:function() {
+    this._bNotInstalled = !0;
+  }};
+  c.ieLauncher = e;
+  var f = "entryhw://-roomId:" + this.sessionRoomId;
+  0 < navigator.userAgent.indexOf("MSIE") || 0 < navigator.userAgent.indexOf("Trident") ? void 0 != navigator.msLaunchUri ? b(f) : 9 > (0 < document.documentMode ? document.documentMode : navigator.userAgent.match(/(?:MSIE) ([0-9.]+)/)[1]) ? alert(Lang.msgs.not_support_browser) : e.init(f, function(a) {
+    0 == a && c.popupHelper.show("hwDownload", !0);
+  }) : 0 < navigator.userAgent.indexOf("Firefox") ? a(f) : 0 < navigator.userAgent.indexOf("Chrome") || 0 < navigator.userAgent.indexOf("Safari") ? d(f) : alert(Lang.msgs.not_support_browser);
+};
+p.hwPopupCreate = function() {
+  var b = this;
+  this.popupHelper || (this.popupHelper = window.popupHelper ? window.popupHelper : new Entry.popupHelper(!0));
+  this.popupHelper.addPopup("newVersion", {type:"confirm", title:Lang.Msgs.new_version_title, setPopupLayout:function(a) {
+    var d = Entry.Dom("div", {class:"contentArea"}), c = Entry.Dom("div", {class:"textArea", parent:d}), e = Entry.Dom("div", {class:"text1", parent:c}), f = Entry.Dom("div", {class:"text2", parent:c}), g = Entry.Dom("div", {class:"text3", parent:c}), c = Entry.Dom("div", {class:"text4", parent:c}), h = Entry.Dom("div", {classes:["popupCancelBtn", "popupDefaultBtn"], parent:d}), k = Entry.Dom("div", {classes:["popupOkBtn", "popupDefaultBtn"], parent:d});
+    e.text(Lang.Msgs.new_version_text1);
+    f.html(Lang.Msgs.new_version_text2);
+    g.text(Lang.Msgs.new_version_text3);
+    c.text(Lang.Msgs.new_version_text4);
+    h.text(Lang.Buttons.cancel);
+    k.html(Lang.Msgs.new_version_download);
+    d.bindOnClick(".popupDefaultBtn", function(a) {
+      $(this).hasClass("popupOkBtn") ? b.downloadConnector() : b.popupHelper.hide("newVersion");
+    });
+    a.append(d);
+  }});
+  this.popupHelper.addPopup("hwDownload", {type:"confirm", title:Lang.Msgs.not_install_title, setPopupLayout:function(a) {
+    var d = Entry.Dom("div", {class:"contentArea"}), c = Entry.Dom("div", {class:"textArea", parent:d}), e = Entry.Dom("div", {class:"text1", parent:c}), f = Entry.Dom("div", {class:"text2", parent:c}), g = Entry.Dom("div", {class:"text3", parent:c}), c = Entry.Dom("div", {class:"text4", parent:c}), h = Entry.Dom("div", {classes:["popupCancelBtn", "popupDefaultBtn"], parent:d}), k = Entry.Dom("div", {classes:["popupOkBtn", "popupDefaultBtn"], parent:d});
+    e.text(Lang.Msgs.hw_download_text1);
+    f.html(Lang.Msgs.hw_download_text2);
+    g.text(Lang.Msgs.hw_download_text3);
+    c.text(Lang.Msgs.hw_download_text4);
+    h.text(Lang.Buttons.cancel);
+    k.html(Lang.Msgs.hw_download_btn);
+    d.bindOnClick(".popupDefaultBtn", function(a) {
+      $(this).hasClass("popupOkBtn") ? b.downloadConnector() : b.popupHelper.hide("hwDownload");
+    });
+    a.append(d);
+  }});
 };
 Entry.BlockModel = function() {
   Entry.Model(this);

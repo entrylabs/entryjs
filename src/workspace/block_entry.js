@@ -10173,7 +10173,7 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": [
-            {syntax: "Hamster.rest_note(%1, %2, %3)"}
+            {syntax: "Hamster.note(Hamster.NOTE_OFF,%1)", paramOptions: ["Hamster.NOTE_OFF"]}
         ]}
     },
     "hamster_change_tempo_by": {

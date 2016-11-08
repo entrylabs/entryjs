@@ -589,6 +589,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             
             if(callee.property && callee.property.name == "range")
                 this._blockCount++;
+            var pi = 0;
+            pi = pi + addedParamIndex;
             
             for(var i in arguments) {
                 var argument = arguments[i];
@@ -599,7 +601,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }*/
 
                 if(argument) {
-                    var pi = Number(i)+addedParamIndex;
                     console.log("CallExpression argument", argument, "typeof", typeof argument);
                     
                     var param = this[argument.type](argument, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], true);
@@ -618,7 +619,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     
                     //if(typeof param == "object" && !param.type && param.name)
                     //    param = this.ParamDropdownDynamic(param.name, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]]);
-                    params[paramIndex[pi]] = param;
+                    params[paramIndex[pi++]] = param;
 
                     console.log("callex realtime params", params);
 

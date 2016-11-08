@@ -272,6 +272,7 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_download_source",
                 "arduino_connected",
                 "arduino_reconnect",
+                "arduino_open",
                 "arduino_get_number_sensor_value",
                 "arduino_get_digital_value",
                 "arduino_toggle_led",

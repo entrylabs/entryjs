@@ -580,7 +580,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             } else {
                                 result = s;
                                 tokens = s.syntax;
-                                s.key = key;
+                                s.key = key;  
                             }
                             
                             tokens = tokens.split('(');                        
@@ -598,6 +598,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             tokens = tokens.replace("():", "");
                             tokens = tokens.replace("()", "");
 
+                            if(s.paramOptions){
+                                s.paramOptions.map(function(op){
+                                    tokens += "#" + op;
+                                });  
+                            }
 
                             syntax[tokens] = result;
                         })
