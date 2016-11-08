@@ -298,9 +298,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         console.log("result and param text", result, param); 
            
                         if(param == String('\"None\"')) {
-                           var data = {None:"None"};
-                           var x = "None";
-                           param = data[x];
+                            var data = {None:"None"};
+                            var x = "None";
+                            param = data[x];
                         }
                         
                         param = Entry.TextCodingUtil.variableListFilter(block, blockParamIndex, param);
@@ -460,7 +460,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldDropdown = function(dataParam) {
-        //console.log("FieldDropdown", dataParam);
+        console.log("FieldDropdown", dataParam, typeof dataParam);
+
+        if(typeof dataParam == "object")
+            return "None";
 
         return dataParam;
     };

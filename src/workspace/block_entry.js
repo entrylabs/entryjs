@@ -10117,22 +10117,27 @@ Entry.block = {
                 sq.note = 0;
                 return script.callReturn();
             }
-        },
+        }, 
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.note(%1, %2, %3)",
             paramCodes:[
                 {"4":"Hamster.NOTE_C",
                 "5":"Hamster.NOTE_C_SHARP",
+                "5":"Hamster.NOTE_D_FLAT",
                 "6":"Hamster.NOTE_D",
+                "7":"Hamster.NOTE_D_SHARP",
                 "7":"Hamster.NOTE_E_FLAT",
                 "8":"Hamster.NOTE_E",
                 "9":"Hamster.NOTE_F",
                 "10":"Hamster.NOTE_F_SHART",
+                "10":"Hamster.NOTE_G_FLAT",
                 "11":"Hamster.NOTE_G",
                 "12":"Hamster.NOTE_G_SHARP",
+                "12":"Hamster.NOTE_A_FLAT",
                 "13":"Hamster.NOTE_A",
+                "14":"Hamster.NOTE_A_SHARP",
                 "14":"Hamster.NOTE_B_FLAT",
-                "15":"Hamster.NOTE_B",
+                "15":"Hamster.NOTE_B"
                 },
                 null,
                 null
@@ -10195,7 +10200,7 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": [
-            {syntax: "Hamster.note(Hamster.NOTE_OFF,%1)", paramOptions: ["Hamster.NOTE_OFF"]}
+            {syntax: "Hamster.note(Hamster.NOTE_OFF,%1)", paramOption: "Hamster.NOTE_OFF"}
         ]}
     },
     "hamster_change_tempo_by": {

@@ -216,30 +216,55 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             var calleeName = Entry.TextCodingUtil.eventBlockSyntaxFilter(calleeData.name);
             
-            if(arguments && arguments.length != 0) {
-                var argKey = "";
-                for(var a in arguments) {
-                    var arg = arguments[a];
-                    if(arg.type == "Identifier") {
-                        argKey += arg.name;
+            if(!type) {
+                if(arguments && arguments.length != 0) {
+                    for(var a in arguments) {
+                        var arg = arguments[a];
+                        if(arg.type == "Identifier") {
+                            var option = arg.name;
+                        }
+                        else if(arg.type == "Literal") {
+                            var option = arg.raw;
+                        }
+                        else if(arg.type == "MemberExpression") {
+                            var option = arg.object.name + "." + arg.property.name;
+                        }
+                        var syntax = calleeName + "#" + option;
+                        var blockSyntax = this.getBlockSyntax(syntax);
+                        if(blockSyntax) { 
+                            type = blockSyntax.key;
+                            break;
+                        }
                     }
-                    else if(arg.type == "Literal") {
-                        argKey += arg.raw;
-                    }
-                    else if(arg.type == "MemberExpression") {
-                        argKey += arg.object.name + "." + arg.property.name;
+                }
+            }
+
+            if(!type) {
+                if(arguments && arguments.length != 0) {
+                    var argKey = "";
+                    for(var a in arguments) {
+                        var arg = arguments[a];
+                        if(arg.type == "Identifier") {
+                            argKey += arg.name;
+                        }
+                        else if(arg.type == "Literal") {
+                            argKey += arg.raw;
+                        }
+                        else if(arg.type == "MemberExpression") {
+                            argKey += arg.object.name + "." + arg.property.name;
+                        }
+
+                        if(a != arguments.length-1)
+                            argKey += ",";
                     }
 
-                    if(a != arguments.length-1)
-                        argKey += ",";
                 }
 
-            } 
-
-            var syntax = calleeName + "(" + argKey + ")";
-            var blockSyntax = this.getBlockSyntax(syntax);
-            if(blockSyntax) { 
-                type = blockSyntax.key;
+                var syntax = calleeName + "(" + argKey + ")";
+                var blockSyntax = this.getBlockSyntax(syntax);
+                if(blockSyntax) { 
+                    type = blockSyntax.key;
+                }
             }
 
             if(!type) {
@@ -302,41 +327,65 @@ Entry.PyToBlockParser = function(blockSyntax) {
             /*if(calleeName)
                 var calleeTokens = calleeName.split('.');*/
 
-
-            if(arguments && arguments.length != 0) {
-                var argKey = "";
-                for(var a in arguments) {
-                    var arg = arguments[a];
-                    console.log("arg arg", arg);
-                    if(arg.type == "Identifier") {
-                        argKey += arg.name;
+            if(!type) {
+                if(arguments && arguments.length != 0) {
+                    for(var a in arguments) {
+                        var arg = arguments[a];
+                        if(arg.type == "Identifier") {
+                            var option = arg.name;
+                        }
+                        else if(arg.type == "Literal") {
+                            var option = arg.raw;
+                        }
+                        else if(arg.type == "MemberExpression") {
+                            var option = arg.object.name + "." + arg.property.name;
+                        }
+                        var syntax = calleeName + "#" + option;
+                        console.log("argKey syntax", syntax);
+                        var blockSyntax = this.getBlockSyntax(syntax);
+                        if(blockSyntax) { 
+                            type = blockSyntax.key;
+                            break;
+                        }
                     }
-                    else if(arg.type == "Literal") {
-                        argKey += arg.raw;
-                    }
-                    else if(arg.type == "MemberExpression") {
-                        argKey += arg.object.name + "." + arg.property.name;
-                    }
-
-                    if(a != arguments.length-1)
-                        argKey += ",";
                 }
-
-            } 
-
-            console.log("argKey", argKey);
-
-            var syntax = calleeName + "(" + String(argKey) + ")";
-            console.log("argKey syntax", syntax);
-            var blockSyntax = this.getBlockSyntax(syntax);
-            if(blockSyntax) { 
-                type = blockSyntax.key;
             }
 
+            if(!type) {
+                if(arguments && arguments.length != 0) {
+                    var argKey = "";
+                    for(var a in arguments) {
+                        var arg = arguments[a];
+                        console.log("arg arg", arg);
+                        if(arg.type == "Identifier") {
+                            argKey += arg.name;
+                        }
+                        else if(arg.type == "Literal") {
+                            argKey += arg.raw;
+                        }
+                        else if(arg.type == "MemberExpression") {
+                            argKey += arg.object.name + "." + arg.property.name;
+                        }
+
+                        if(a != arguments.length-1)
+                            argKey += ",";
+                    }
+
+                } 
+
+                console.log("argKey", argKey);
+
+                var syntax = calleeName + "(" + String(argKey) + ")";
+                console.log("argKey syntax", syntax);
+                var blockSyntax = this.getBlockSyntax(syntax);
+                if(blockSyntax) { 
+                    type = blockSyntax.key;
+                }
+            }
 
             if(!type) {
-                syntax = calleeName;
-                blockSyntax = this.getBlockSyntax(syntax);
+                var syntax = calleeName;
+                var blockSyntax = this.getBlockSyntax(syntax);
 
                 if(blockSyntax)
                     type = blockSyntax.key;
@@ -589,10 +638,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             
             if(callee.property && callee.property.name == "range")
                 this._blockCount++;
+            
             var pi = 0;
             pi = pi + addedParamIndex;
             
             for(var i in arguments) {
+                var isParamOption = false;
                 var argument = arguments[i];
                 console.log("kkk argument", argument, "typeof", typeof argument);
 
@@ -609,7 +660,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     console.log("calleeName", calleeName, "param", param);
 
-                    if(param && param.data) {
+                    if(param && param.data) { 
                         param = param.data;
                     }
 
@@ -619,6 +670,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     
                     //if(typeof param == "object" && !param.type && param.name)
                     //    param = this.ParamDropdownDynamic(param.name, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]]);
+                    
+                    if(param.object && param.property) {
+                        var paramOption = blockSyntax.paramOption;
+                        if(paramOption) {
+                            var pName = param.object.name + "." + param.property.name;
+                            if(paramOption == pName) {
+                                isParamOption = true;
+                            } 
+                        }
+                    }
+
+                    if(isParamOption)
+                        continue;
+
                     params[paramIndex[pi++]] = param;
 
                     console.log("callex realtime params", params);

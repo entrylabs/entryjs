@@ -598,12 +598,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             tokens = tokens.replace("():", "");
                             tokens = tokens.replace("()", "");
 
-                            if(s.paramOptions){
-                                s.paramOptions.map(function(op){
-                                    tokens += "#" + op;
-                                });  
-                            }
-
+                            if(s.paramOption)
+                                tokens += "#" + s.paramOption;
+                                
                             syntax[tokens] = result;
                         })
                     }
