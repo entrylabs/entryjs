@@ -17240,9 +17240,10 @@ Entry.block = {
         "isNotFor": [ "sprite" ],
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
-            sprite.setText(Entry.convertToRoundedDecimals(sprite.getText(),3) +
-                           Entry.convertToRoundedDecimals(text, 3));
-                           return script.callReturn();
+            sprite.setText(
+                Entry.convertToRoundedDecimals(sprite.getText(),3) +
+                "" + Entry.convertToRoundedDecimals(text, 3));
+            return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.append_text(%1)"]}
     },
@@ -17279,9 +17280,11 @@ Entry.block = {
         "isNotFor": [ "sprite" ],
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
-            sprite.setText(Entry.convertToRoundedDecimals(text, 3) +
-                           Entry.convertToRoundedDecimals(sprite.getText(), 3));
-                           return script.callReturn();
+            sprite.setText(
+                Entry.convertToRoundedDecimals(text, 3) +
+                "" + Entry.convertToRoundedDecimals(sprite.getText(), 3)
+            );
+            return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.prepend_text(%1)"]}
     },
@@ -21311,7 +21314,7 @@ Entry.block = {
             for (var key in entities){
                 entity = entities[key];
             }
-            
+
             var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
 
             if(unitComp.isStartedUnit) {
@@ -21333,7 +21336,7 @@ Entry.block = {
             if(!isGoal) {
                 this.executor.stepInto(statement);
                 return Entry.STATIC.BREAK;
-            }                
+            }
             // Ntry.dispatchEvent('executeEnd');
         }
     },
