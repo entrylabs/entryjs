@@ -322,7 +322,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                                 if(paramCode) {
                                     var pCode = paramCode[param];
                                     if(pCode)
-                                        param = pCode;
+                                        param = pCode[0];
                                 }
                             }
                         }

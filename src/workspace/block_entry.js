@@ -2689,7 +2689,9 @@ Entry.block = {
             {syntax: "Arduino.tone(%1, %2, %3, %4)", 
             paramCodes:[
                 null,
-                {"0": 0,"1":"\"C\"","2": "\"CS\"","3": "\"D\"","4": "\"DS\"","5": "\"E\"","6": "\"F\"","7": "\"FS\"","8": "\"G\"","9": "\"GS\"","10": "\"A\"","11": "\"AS\"","12": "\"B\""},
+                {"0": [0],"1":["\"C\""],"2": ["\"CS\""],"3": ["\"D\""],"4": ["\"DS\""],
+                "5": ["\"E\""],"6": ["\"F\""],"7": ["\"FS\""],"8": ["\"G\""],"9": ["\"GS\""],
+                "10": ["\"A\""],"11": ["\"AS\""],"12": ["\"B\""]},
                 null,
                 null
             ]}
@@ -9346,7 +9348,9 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.wheels_by(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.wheels_by(%1, %2)"}
+        ]}
     },
     "hamster_set_both_wheels_to": {
         "color": "#00979D",
@@ -9395,7 +9399,9 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.wheels(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.wheels(%1, %2)"}
+        ]}
     },
     "hamster_change_wheel_by": {
         "color": "#00979D",
@@ -9458,7 +9464,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.left_wheel_by(%2)", params: ["LEFT"]},
             {syntax: "Hamster.right_wheel_by(%2)", params: ["RIGHT"]},
-            {syntax: "Hamster.both_wheels_by(%2)", params: ["BOTH"]} 
+            {syntax: "Hamster.wheels_by(%2, %2)", params: ["BOTH"], paramOption: "SAME"} 
         ]}
     },
     "hamster_set_wheel_to": {
@@ -9522,7 +9528,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.left_wheel(%2)", params: ["LEFT"]},
             {syntax: "Hamster.right_wheel(%2)", params: ["RIGHT"]},
-            {syntax: "Hamster.both_wheels(%2)", params: ["BOTH"]}
+            {syntax: "Hamster.wheels(%2, %2)", params: ["BOTH"], paramOption: "SAME"}
         ]}
     },
     "hamster_follow_line_using": {
@@ -10121,23 +10127,18 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.note(%1, %2, %3)",
             paramCodes:[
-                {"4":"Hamster.NOTE_C",
-                "5":"Hamster.NOTE_C_SHARP",
-                "5":"Hamster.NOTE_D_FLAT",
-                "6":"Hamster.NOTE_D",
-                "7":"Hamster.NOTE_D_SHARP",
-                "7":"Hamster.NOTE_E_FLAT",
-                "8":"Hamster.NOTE_E",
-                "9":"Hamster.NOTE_F",
-                "10":"Hamster.NOTE_F_SHART",
-                "10":"Hamster.NOTE_G_FLAT",
-                "11":"Hamster.NOTE_G",
-                "12":"Hamster.NOTE_G_SHARP",
-                "12":"Hamster.NOTE_A_FLAT",
-                "13":"Hamster.NOTE_A",
-                "14":"Hamster.NOTE_A_SHARP",
-                "14":"Hamster.NOTE_B_FLAT",
-                "15":"Hamster.NOTE_B"
+                {"4":["Hamster.NOTE_C"],
+                "5":["Hamster.NOTE_C_SHARP","Hamster.NOTE_D_FLAT"],
+                "6":["Hamster.NOTE_D"],
+                "7":["Hamster.NOTE_E_FLAT","Hamster.NOTE_D_SHARP"],
+                "8":["Hamster.NOTE_E"],
+                "9":["Hamster.NOTE_F"],
+                "10":["Hamster.NOTE_F_SHARP","Hamster.NOTE_G_FLAT"],
+                "11":["Hamster.NOTE_G"],
+                "12":["Hamster.NOTE_G_SHARP","Hamster.NOTE_A_FLAT"],
+                "13":["Hamster.NOTE_A"],
+                "14":["Hamster.NOTE_B_FLAT","Hamster.NOTE_A_SHARP"],
+                "15":["Hamster.NOTE_B"]
                 },
                 null,
                 null

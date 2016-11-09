@@ -215,7 +215,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result.callee = calleeData;
 
             var calleeName = Entry.TextCodingUtil.eventBlockSyntaxFilter(calleeData.name);
-            
+
             if(!type) {
                 if(arguments && arguments.length != 0) {
                     for(var a in arguments) {
@@ -323,9 +323,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             result.callee = calleeName;
-
-            /*if(calleeName)
-                var calleeTokens = calleeName.split('.');*/
 
             if(!type) {
                 if(arguments && arguments.length != 0) {
@@ -505,16 +502,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             console.log("CallExpression arguments", arguments);
             console.log("callex blockSyntax", blockSyntax);
-
-
-            if(blockSyntax.params && blockSyntax.params.length != 0) {
-                for(var p in blockSyntax.params) {
-                    var param = blockSyntax.params[p];
-                    if(param)
-                        params[p] = param;
-                }
-            }
-            
 
             var paramIndex = this.getParamIndex(syntax);
 
@@ -957,6 +944,36 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
 
+            //HW
+            if(callee.object && callee.property) {
+                if(callee.object.name == "Hamster") {
+                    if(callee.property.name == "wheels") {
+                        var calleeName = callee.object.name + "." + callee.property.name;
+                        var param1 = params[0];
+                        var param2 = params[1];
+                        if(param1.params[0] == param2.params[0]) {
+                            var syntax = calleeName + "#" + "SAME";
+                            var blockSyntax = this.getBlockSyntax(syntax);
+                            if(blockSyntax) { 
+                                type = blockSyntax.key;
+                            }
+                        }
+                    }
+                    else if(callee.property.name == "wheels_by") {
+                        var calleeName = callee.object.name + "." + callee.property.name;
+                        var param1 = params[0];
+                        var param2 = params[1];
+                        if(param1.params[0] == param2.params[0]) {
+                            var syntax = calleeName + "#" + "SAME";
+                            var blockSyntax = this.getBlockSyntax(syntax);
+                            if(blockSyntax) { 
+                                type = blockSyntax.key;
+                            }
+                        }
+                    }
+                }
+            }
+
             console.log("params checkit", params);
 
             //HW Param Processing
@@ -972,27 +989,38 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             for(var key in paramCode) {
                                 var value = paramCode[key];
                                 console.log("checkit key", key, "value", value, "pCode", pCode);
-                                if(value == pCode) {
-                                    params[pcs] = key;
+                                for(var v in value) {
+                                    if(value[v] == pCode) {
+                                        params[pcs] = key; 
+                                    }
                                 }
                             }
                         }
                         else if(typeof pCode == "object") {
-                            if(pCode.object && pCode.property) {
+                            if(pCode.object && pCode.property) { 
                                 var objectCode = pCode.object.name + "." + pCode.property.name;
                                 for(var key in paramCode) {
                                     var value = paramCode[key];
                                     console.log("checkit key", key, "value", value);
                                     console.log("object code", objectCode);
-                                    if(value == objectCode) {
-                                        params[pcs] = key;
+                                    for(var v in value) {
+                                        if(value[v] == objectCode) {
+                                            params[pcs] = key; 
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+            }
 
+            if(blockSyntax.params && blockSyntax.params.length != 0) {
+                for(var p in blockSyntax.params) {
+                    var param = blockSyntax.params[p];
+                    if(param)
+                        params[p] = param;
+                }
             }
 
             if(type) {
