@@ -1899,7 +1899,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("PORT");
         },
-        "syntax": {"js": [], "py": ["%1arduino_get_sensor_number#"]}
+        "syntax": {"js": [], "py": ["%1arduino_get_port_number#"]}
     },
     "arduino_get_pwm_port_number": {
         "color": "#00979D",
@@ -2557,6 +2557,73 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
     },
+    "arduino_ext_tone_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.silent, "0"],
+                    [Lang.Blocks.do_name, "1"],
+                    [Lang.Blocks.do_sharp_name, "2"],
+                    [Lang.Blocks.re_name, "3"],
+                    [Lang.Blocks.re_sharp_name, "4"],
+                    [Lang.Blocks.mi_name, "5"],
+                    [Lang.Blocks.fa_name, "6"],
+                    [Lang.Blocks.fa_sharp_name, "7"],
+                    [Lang.Blocks.sol_name, "8"],
+                    [Lang.Blocks.sol_sharp_name, "9"],
+                    [Lang.Blocks.la_name, "10"],
+                    [Lang.Blocks.la_sharp_name, "11"],
+                    [Lang.Blocks.si_name, "12"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "NOTE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getNumberField("NOTE");
+        },
+        "syntax": {"js": [], "py": ["%1arduino_ext_tone_list#"]}
+    },
+    "arduino_ext_tone_value": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_ext_tone_list"
+                }
+            ],
+            "type": "arduino_ext_tone_value"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getNumberValue("NOTE");
+        },
+        "syntax": {"js": [], "py": ["%1arduino_ext_tone_value#"]}
+    },
     "arduino_ext_set_tone": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -2565,24 +2632,8 @@ Entry.block = {
             "type": "Block",
             "accept": "string"
         }, {
-            "type": "Dropdown",
-            "options": [
-                [Lang.Blocks.silent, "0"],
-                [Lang.Blocks.do_name, "1"],
-                [Lang.Blocks.do_sharp_name, "2"],
-                [Lang.Blocks.re_name, "3"],
-                [Lang.Blocks.re_sharp_name, "4"],
-                [Lang.Blocks.mi_name, "5"],
-                [Lang.Blocks.fa_name, "6"],
-                [Lang.Blocks.fa_sharp_name, "7"],
-                [Lang.Blocks.sol_name, "8"],
-                [Lang.Blocks.sol_sharp_name, "9"],
-                [Lang.Blocks.la_name, "10"],
-                [Lang.Blocks.la_sharp_name, "11"],
-                [Lang.Blocks.si_name, "12"]
-            ],
-            "value": "1",
-            "fontSize": 11
+            "type": "Block",
+            "accept": "string"
         }, {
             "type": "Dropdown",
             "options": [
@@ -2608,7 +2659,14 @@ Entry.block = {
             "params": [{
                     "type": "arduino_get_port_number"
                 },
-                null,
+                {
+                    "type": "arduino_ext_tone_list"/*,
+                    "params": [
+                        {
+                            "type": "arduino_ext_tone_list"
+                        }
+                    ]*/
+                },
                 null,
                 {
                     "type": "text",
@@ -2631,7 +2689,14 @@ Entry.block = {
             var port = script.getNumberValue("PORT", script);
 
             if (!script.isStart) {
-                var note = script.getNumberField("NOTE", script);
+                var note = script.getNumberValue("NOTE", script);
+
+                if(note < 0) {
+                    note = 0;
+                } else if(note > 12) {
+                    note = 12;
+                }
+
                 var duration = script.getNumberValue("DURATION", script);
 
                 if(duration < 0) {

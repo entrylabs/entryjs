@@ -246,6 +246,22 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                         param = Entry.TextCodingUtil.variableListFilter(block, blockParamIndex, param);
 
+                        console.log("currentBlock", currentBlock);
+                        syntaxObj = this.searchSyntax(currentBlock);
+                        console.log("syntaxObj", syntaxObj);
+                        if (syntaxObj) {
+                            console.log("syntaxObj", syntaxObj, "i", i, "index", index);
+                            if(syntaxObj.paramCodes) {
+                                var paramCodes = syntaxObj.paramCodes;
+                                var paramCode = paramCodes[index];
+                                if(paramCode) {
+                                    var pCode = paramCode[param];
+                                    if(pCode)
+                                        param = pCode[0];
+                                }
+                            }
+                        }
+
                         result += param;
 
                         console.log("block param", param);

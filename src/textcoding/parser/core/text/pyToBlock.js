@@ -641,6 +641,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(argument) {
                     console.log("CallExpression argument", argument, "typeof", typeof argument);
                     
+                    argument.calleeName = calleeName;
                     var param = this[argument.type](argument, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], true);
 
                     console.log("callexpression callee", callee, "param", param);
@@ -984,28 +985,39 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(paramCode) {
                         var pCode = params[pcs];
                         console.log("pCode", pCode);
-                        if(typeof pCode == "string") {
-                            pCode = "\"" + pCode + "\"";
+                        if(pCode.type)
+                            var code = pCode.params[0];
+                        else 
+                            var code = pCode;
+
+                        if(typeof code == "string") {
+                            code = "\"" + code + "\"";
                             for(var key in paramCode) {
                                 var value = paramCode[key];
-                                console.log("checkit key", key, "value", value, "pCode", pCode);
+                                console.log("checkit key", key, "value", value, "code", code);
                                 for(var v in value) {
-                                    if(value[v] == pCode) {
-                                        params[pcs] = key; 
+                                    if(value[v] == code) {
+                                        if(pCode.type)
+                                            params[pcs].params[0] = key;
+                                        else
+                                            params[pcs] = key; 
                                     }
                                 }
                             }
                         }
-                        else if(typeof pCode == "object") {
-                            if(pCode.object && pCode.property) { 
-                                var objectCode = pCode.object.name + "." + pCode.property.name;
+                        else if(typeof code == "object") {
+                            if(code.object && code.property) { 
+                                var objectCode = code.object.name + "." + code.property.name;
                                 for(var key in paramCode) {
                                     var value = paramCode[key];
                                     console.log("checkit key", key, "value", value);
                                     console.log("object code", objectCode);
                                     for(var v in value) {
                                         if(value[v] == objectCode) {
-                                            params[pcs] = key; 
+                                            if(pCode.type)
+                                                params[pcs].params[0] = key;
+                                            else
+                                                params[pcs] = key; 
                                         }
                                     }
                                 }
