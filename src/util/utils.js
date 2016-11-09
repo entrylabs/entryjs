@@ -1281,6 +1281,7 @@ Entry.Utils.debounce = function(func, wait, immediate) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
         if (callNow) func.apply(context, args);
+        return timeout;
     };
 }
 

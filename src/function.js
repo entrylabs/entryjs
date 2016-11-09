@@ -55,7 +55,7 @@ Entry.Func.registerFunction = function(func) {
     this._targetFuncBlock = menuCode.createThread([{
         type: "func_" + func.id,
         category: 'func',
-        display: false
+        x: -9999
     }]);
     func.blockMenuBlock = this._targetFuncBlock;
 };
@@ -245,11 +245,13 @@ Entry.Func.setupMenuCode = function() {
     var CATEGORY = 'func';
     this._fieldLabel = menuCode.createThread([{
         type: "function_field_label",
-        category: CATEGORY
+        category: CATEGORY,
+        x: -9999
     }]).getFirstBlock();
     this._fieldString = menuCode.createThread([{
         type: "function_field_string",
         category: CATEGORY,
+        x: -9999,
         params: [
             {type: this.requestParamBlock("string")}
         ]
@@ -257,11 +259,13 @@ Entry.Func.setupMenuCode = function() {
     this._fieldBoolean = menuCode.createThread([{
         type: "function_field_boolean",
         category: CATEGORY,
+        x: -9999,
         params: [
             {type: this.requestParamBlock("boolean")}
         ]
     }]).getFirstBlock();
     this.menuCode = menuCode;
+    blockMenu.align();
 }
 
 Entry.Func.refreshMenuCode = function() {
