@@ -843,7 +843,7 @@ Entry.TextCodingUtil = {};
                     threadArr[i] = newThread;
                     eventFound = true; 
                 }
-                else */if(preText == "def entry_event_key" || preText == "def entry_event_signal") { 
+                else */if(preText == "def when_press_key" || preText == "def when_get_signal") { 
                     thread = thread.replace(/def /, "");
                     var colonIndex = thread.indexOf(":");
                     var funcPart = "";

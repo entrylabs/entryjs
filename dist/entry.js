@@ -12513,7 +12513,7 @@ Entry.TextCodingUtil = {};
       console.log("preText", h);
       h = h.split("(");
       h = h[0];
-      "def entry_event_key" == h || "def entry_event_signal" == h ? (e = e.replace(/def /, ""), g = e.indexOf(":"), f = b = "", 0 < g && (b = e.substring(0, g), f = e.substring(g + 1, e.length)), e = f ? b.concat("\n").concat(f.trim()) : b, console.log("newThread funcPart", e), a[c] = e, b = !0) : b && (e = a[c], e = e.replace(/\t/g, "    "), e = e.replace(/    /, ""), a[c] = e);
+      "def when_press_key" == h || "def when_get_signal" == h ? (e = e.replace(/def /, ""), g = e.indexOf(":"), f = b = "", 0 < g && (b = e.substring(0, g), f = e.substring(g + 1, e.length)), e = f ? b.concat("\n").concat(f.trim()) : b, console.log("newThread funcPart", e), a[c] = e, b = !0) : b && (e = a[c], e = e.replace(/\t/g, "    "), e = e.replace(/    /, ""), a[c] = e);
     }
     console.log("newEventFunction result", a);
     return a.join("\n");
