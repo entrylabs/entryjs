@@ -92,8 +92,10 @@ Entry.Func.edit = function(func) {
     this.targetFunc = func;
     this.initEditView(func.content);
     this.bindFuncChangeEvent();
-    this._backupContent = func.content.stringify();
     this.updateMenu();
+    setTimeout(function() {
+        this._backupContent = func.content.stringify();
+    }.bind(this), 0);
 };
 
 Entry.Func.initEditView = function(content) {
@@ -185,8 +187,7 @@ Entry.Func.cancelEdit = function() {
         delete Entry.variableContainer.functions_[this.targetFunc.id];
         delete Entry.variableContainer.selected;
     } else {
-        if (this._backupContent &&
-            this._backupContent !== this.targetFunc.content.stringify()) {
+        if (this._backupContent) {
             this.targetFunc.content.load(this._backupContent);
             Entry.generateFunctionSchema(this.targetFunc.id);
             Entry.Func.generateWsBlock(this.targetFunc);

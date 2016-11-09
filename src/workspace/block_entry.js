@@ -1899,7 +1899,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("PORT");
         },
-        "syntax": {"js": [], "py": ["%1arduino_get_sensor_number#"]}
+        "syntax": {"js": [], "py": ["%1arduino_get_port_number#"]}
     },
     "arduino_get_pwm_port_number": {
         "color": "#00979D",
@@ -2221,33 +2221,8 @@ Entry.block = {
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var port = script.getField("PORT", script);
-            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
-            var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            var scope = script.executor.scope;
             var ANALOG = Entry.hw.portData.ANALOG;
-            if(!scope.isStart) {
-                scope.isStart = true;
-                scope.stamp = nowTime;
-                Entry.hw.sendQueue['TIME'] = nowTime;
-                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
-                Entry.hw.sendQueue['GET'] = {
-                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
-                    port: port
-                };
-                throw new Entry.Utils.AsyncError();
-                return;
-            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return (ANALOG) ? ANALOG[port] || 0 : 0;
-            } else if(nowTime - scope.stamp > 64) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return (ANALOG) ? ANALOG[port] || 0 : 0;
-            } else {
-                throw new Entry.Utils.AsyncError();
-                return;
-            }
+            return (ANALOG) ? ANALOG[port] || 0 : 0;
         },
         "syntax": {"js": [], "py": ["Arduino.analogRead(%1)"]}
     },
@@ -2321,14 +2296,12 @@ Entry.block = {
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var port = script.getField("PORT", script);
-            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
-            var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            var scope = script.executor.scope;
             var ANALOG = Entry.hw.portData.ANALOG;
             var value2 = script.getNumberValue("VALUE2", script);
             var value3 = script.getNumberValue("VALUE3", script);
             var value4 = script.getNumberValue("VALUE4", script);
             var value5 = script.getNumberValue("VALUE5", script);
+
             var result = ANALOG[port] || 0;
             if (value2 > value3) {
                 var swap = value2;
@@ -2344,31 +2317,9 @@ Entry.block = {
             result = result * ((value5 - value4) / (value3 - value2));
             result += value4;
             result = Math.min(value5, result);
-            result = Math.max(value4, result);      
+            result = Math.max(value4, result);
 
-            if(!scope.isStart) {
-                scope.isStart = true;
-                scope.stamp = nowTime;
-                Entry.hw.sendQueue['TIME'] = nowTime;
-                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
-                Entry.hw.sendQueue['GET'] = {
-                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
-                    port: port
-                };
-                throw new Entry.Utils.AsyncError();
-                return;
-            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return result;
-            } else if(nowTime - scope.stamp > 64) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return result;
-            } else {
-                throw new Entry.Utils.AsyncError();
-                return;
-            }
+            return result
         },
         "syntax": {"js": [], "py": ["Arduino.map(%1, %2, %3, %4, %5)"]}
     },
@@ -2435,34 +2386,58 @@ Entry.block = {
         "func": function (sprite, script) {
             var port1 = script.getField("PORT1", script);
             var port2 = script.getField("PORT2", script);
-            var scope = script.executor.scope;
-            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ULTRASONIC);
-            var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            if(!scope.isStart) {
-                scope.isStart = true;
-                scope.stamp = nowTime;
-                Entry.hw.sendQueue['TIME'] = nowTime;
-                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
-                Entry.hw.sendQueue['GET'] = {
-                    type: Entry.ArduinoExt.sensorTypes.ULTRASONIC,
-                    port: [port1, port2]
-                };
-                throw new Entry.Utils.AsyncError();
-                return;
-            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return Entry.hw.portData.ULTRASONIC || 0;
-            } else if(nowTime - scope.stamp > 64) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return Entry.hw.portData.ULTRASONIC || 0;
-            } else {
-                throw new Entry.Utils.AsyncError();
-                return;
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
             }
+            delete Entry.hw.sendQueue['SET'][port1];
+            delete Entry.hw.sendQueue['SET'][port2];
+
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.ULTRASONIC] = {
+                port: [port1, port2],
+                time: new Date().getTime()
+            };
+            return Entry.hw.portData.ULTRASONIC || 0;
         },
         "syntax": {"js": [], "py": ["Arduino.ultrasonicRead(%1, %2)"]}
+    },
+    "arduino_ext_get_digital": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "arduino_ext_get_digital"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ArduinoExtGet",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT", script);
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
+            return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": ["Arduino.digitalRead(%1)"]}
     },
     "arduino_ext_toggle_led": {
         "color": "#00979D",
@@ -2508,21 +2483,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var port = script.getNumberValue("PORT");
             var value = script.getField("VALUE");
-            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
-            Entry.hw.sendQueue['TIME'] = nowTime;
-            Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
-            if(!Entry.hw.sendQueue['SET']) {
-                Entry.hw.sendQueue['SET'] = {};
-            }
-
-            if(value == "on") {
+             if(value == "on") {
                 value = 255;
             } else {
                 value = 0;
             }
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
             Entry.hw.sendQueue['SET'][port] = {
                 type: Entry.ArduinoExt.sensorTypes.DIGITAL,
-                data: value
+                data: value,
+                time: new Date().getTime()
             };
             return script.callReturn();
         },
@@ -2539,7 +2511,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "string",
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -2573,19 +2545,84 @@ Entry.block = {
             value = Math.round(value);
             value = Math.max(value, 0);
             value = Math.min(value, 255);
-            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.PWM);
-            Entry.hw.sendQueue['TIME'] = nowTime;
-            Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
             Entry.hw.sendQueue['SET'][port] = {
                 type: Entry.ArduinoExt.sensorTypes.PWM,
-                data: value
+                data: value,
+                time: new Date().getTime()
             };
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
+    },
+    "arduino_ext_tone_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.silent, "0"],
+                    [Lang.Blocks.do_name, "1"],
+                    [Lang.Blocks.do_sharp_name, "2"],
+                    [Lang.Blocks.re_name, "3"],
+                    [Lang.Blocks.re_sharp_name, "4"],
+                    [Lang.Blocks.mi_name, "5"],
+                    [Lang.Blocks.fa_name, "6"],
+                    [Lang.Blocks.fa_sharp_name, "7"],
+                    [Lang.Blocks.sol_name, "8"],
+                    [Lang.Blocks.sol_sharp_name, "9"],
+                    [Lang.Blocks.la_name, "10"],
+                    [Lang.Blocks.la_sharp_name, "11"],
+                    [Lang.Blocks.si_name, "12"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "NOTE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getNumberField("NOTE");
+        },
+        "syntax": {"js": [], "py": ["%1arduino_ext_tone_list#"]}
+    },
+    "arduino_ext_tone_value": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_ext_tone_list"
+                }
+            ],
+            "type": "arduino_ext_tone_value"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getNumberValue("NOTE");
+        },
+        "syntax": {"js": [], "py": ["%1arduino_ext_tone_value#"]}
     },
     "arduino_ext_set_tone": {
         "color": "#00979D",
@@ -2595,24 +2632,8 @@ Entry.block = {
             "type": "Block",
             "accept": "string"
         }, {
-            "type": "Dropdown",
-            "options": [
-                ["무음", "0"],
-                ["도", "1"],
-                ["도#", "2"],
-                ["레", "3"],
-                ["레#", "4"],
-                ["미", "5"],
-                ["파", "6"],
-                ["파#", "7"],
-                ["솔", "8"],
-                ["솔#", "9"],
-                ["라", "10"],
-                ["라#", "11"],
-                ["시", "12"]
-            ],
-            "value": "1",
-            "fontSize": 11
+            "type": "Block",
+            "accept": "string"
         }, {
             "type": "Dropdown",
             "options": [
@@ -2638,7 +2659,14 @@ Entry.block = {
             "params": [{
                     "type": "arduino_get_port_number"
                 },
-                null,
+                {
+                    "type": "arduino_ext_tone_list"/*,
+                    "params": [
+                        {
+                            "type": "arduino_ext_tone_list"
+                        }
+                    ]*/
+                },
                 null,
                 {
                     "type": "text",
@@ -2661,25 +2689,32 @@ Entry.block = {
             var port = script.getNumberValue("PORT", script);
 
             if (!script.isStart) {
-                var note = script.getNumberField("NOTE", script);
+                var note = script.getNumberValue("NOTE", script);
 
-                if(note === 0) {
+                if(note < 0) {
+                    note = 0;
+                } else if(note > 12) {
+                    note = 12;
+                }
+
+                var duration = script.getNumberValue("DURATION", script);
+
+                if(duration < 0) {
+                    duration = 0;
+                }
+
+                if(note === 0 || duration === 0) {
                     sq['SET'][port] = {
                         type: Entry.ArduinoExt.sensorTypes.TONE,
-                        data: 0
+                        data: 0,
+                        time: new Date().getTime()
                     };
                     return script.callReturn();
                 }
 
                 var octave = script.getNumberField("OCTAVE", script);
-                var duration = script.getNumberValue("DURATION", script);
-                var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.TONE);
-                sq['TIME'] = nowTime;
-                sq['KEY'] = Entry.ArduinoExt.getSensorKey();
                 var value = Entry.ArduinoExt.toneMap[note][octave];
-                if(duration < 0) {
-                    duration = 0;
-                }
+                
                 duration = duration * 1000;
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -2693,7 +2728,8 @@ Entry.block = {
                     data: {
                         value: value,
                         duration: duration
-                    }
+                    },
+                    time: new Date().getTime()
                 };
 
                 setTimeout(function() {
@@ -2707,13 +2743,24 @@ Entry.block = {
                 delete script.isStart;
                 sq['SET'][port] = {
                     type: Entry.ArduinoExt.sensorTypes.TONE,
-                    data: 0
+                    data: 0,
+                    time: new Date().getTime()
                 };
                 Entry.engine.isContinue = false;
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Arduino.tone(%1, %2, %3, %4)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Arduino.tone(%1, %2, %3, %4)", 
+            paramCodes:[
+                null,
+                {"0": [0],"1":["\"C\""],"2": ["\"CS\""],"3": ["\"D\""],"4": ["\"DS\""],
+                "5": ["\"E\""],"6": ["\"F\""],"7": ["\"FS\""],"8": ["\"G\""],"9": ["\"GS\""],
+                "10": ["\"A\""],"11": ["\"AS\""],"12": ["\"B\""]},
+                null,
+                null
+            ]}
+        ]}
     },
     "arduino_ext_set_servo": {
         "color": "#00979D",
@@ -2752,73 +2799,18 @@ Entry.block = {
             value = Math.min(180, value);
             value = Math.max(0, value);
 
-            sq['TIME'] = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.SERVO_PIN);
-            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
             if(!sq['SET']) {
                 sq['SET'] = {};
             }
             sq['SET'][port] = {
                 type: Entry.ArduinoExt.sensorTypes.SERVO_PIN,
-                data: value
+                data: value,
+                time: new Date().getTime()
             };
 
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Arduino.servomotorWrite(%1, %2)"]}
-    },
-    "arduino_ext_get_digital": {
-        "color": "#00979D",
-        "fontColor": "#fff",
-        "skeleton": "basic_boolean_field",
-        "params": [{
-            "type": "Block",
-            "accept": "string"
-        }],
-        "events": {},
-        "def": {
-            "params": [
-                {
-                    "type": "arduino_get_port_number"
-                }
-            ],
-            "type": "arduino_ext_get_digital"
-        },
-        "paramsKeyMap": {
-            "PORT": 0
-        },
-        "class": "ArduinoExtGet",
-        "isNotFor": [ "ArduinoExt" ],
-        "func": function (sprite, script) {
-            var port = script.getNumberValue("PORT", script);
-            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
-            var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            var scope = script.executor.scope;
-            var DIGITAL = Entry.hw.portData.DIGITAL;
-            if(!scope.isStart) {
-                scope.isStart = true;
-                scope.stamp = nowTime;
-                Entry.hw.sendQueue['TIME'] = nowTime;
-                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
-                Entry.hw.sendQueue['GET'] = {
-                    type: Entry.ArduinoExt.sensorTypes.DIGITAL,
-                    port: port
-                };
-                throw new Entry.Utils.AsyncError();
-                return;
-            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return (DIGITAL) ? DIGITAL[port] || 0 : 0;
-            } else if(nowTime - scope.stamp > 64) {
-                delete scope.isStart;
-                delete scope.stamp;
-                return (DIGITAL) ? DIGITAL[port] || 0 : 0;
-            } else {
-                throw new Entry.Utils.AsyncError();
-                return;
-            }
-        },
-        "syntax": {"js": [], "py": ["Arduino.digitalRead(%1)"]}
     },
     "sensorBoard_get_named_sensor_value": {
         "color": "#00979D",
@@ -8907,7 +8899,20 @@ Entry.block = {
             var dev = script.getField('DEVICE');
             return pd[dev];
         },
-        "syntax": {"js": [], "py": ["Hamster.value(%1)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.left_proximity()", params: ["leftProximity"]},
+            {syntax: "Hamster.right_proximity()", params: ["rightProximity"]},
+            {syntax: "Hamster.left_floor()", params: ["leftFloor"]},
+            {syntax: "Hamster.right_floor()", params: ["rightFloor"]},
+            {syntax: "Hamster.acceleration_x()", params: ["accelerationX"]},
+            {syntax: "Hamster.acceleration_y()", params: ["accelerationY"]},
+            {syntax: "Hamster.acceleration_z()", params: ["accelerationZ"]},
+            {syntax: "Hamster.light()", params: ["light"]},
+            {syntax: "Hamster.temperature()", params: ["temperature"]},
+            {syntax: "Hamster.signal_strength()", params: ["signalStrength"]},
+            {syntax: "Hamster.input_a()", params: ["inputA"]},
+            {syntax: "Hamster.input_b()", params: ["inputB"]}
+        ]}
     },
     "hamster_move_forward_once": {
         "color": "#00979D",
@@ -8994,7 +8999,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.move_forward()"]}
+        "syntax": {"js": [], "py": ["Hamster.move_forward_on_boaard()"]}
     },
     "hamster_turn_once": {
         "color": "#00979D",
@@ -9157,7 +9162,10 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.turn(%1)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.turn_left_on_board()", params: ["LEFT"]},
+            {syntax: "Hamster.turn_right_on_board()", params: ["RIGHT"]}
+        ]}
     },
     "hamster_move_forward_for_secs": {
         "color": "#00979D",
@@ -9216,7 +9224,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.move_forward_for_secs(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.move_forward(%1)"]}
     },
     "hamster_move_backward_for_secs": {
         "color": "#00979D",
@@ -9275,7 +9283,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.move_backward_for_secs(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.move_backward(%1)"]}
     },
     "hamster_turn_for_secs": {
         "color": "#00979D",
@@ -9351,7 +9359,10 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.turn_for_secs(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.turn_left(%2)", params: ["LEFT"]},
+            {syntax: "Hamster.turn_right(%2))", params: ["RIGHT"]}
+        ]}
     },
     "hamster_change_both_wheels_by": {
         "color": "#00979D",
@@ -9402,7 +9413,9 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.add_wheels(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.wheels_by(%1, %2)"}
+        ]}
     },
     "hamster_set_both_wheels_to": {
         "color": "#00979D",
@@ -9451,7 +9464,9 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_wheels(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.wheels(%1, %2)"}
+        ]}
     },
     "hamster_change_wheel_by": {
         "color": "#00979D",
@@ -9511,7 +9526,11 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.add_wheel(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.left_wheel_by(%2)", params: ["LEFT"]},
+            {syntax: "Hamster.right_wheel_by(%2)", params: ["RIGHT"]},
+            {syntax: "Hamster.wheels_by(%2, %2)", params: ["BOTH"], paramOption: "SAME"} 
+        ]}
     },
     "hamster_set_wheel_to": {
         "color": "#00979D",
@@ -9571,7 +9590,11 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_wheel(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.left_wheel(%2)", params: ["LEFT"]},
+            {syntax: "Hamster.right_wheel(%2)", params: ["RIGHT"]},
+            {syntax: "Hamster.wheels(%2, %2)", params: ["BOTH"], paramOption: "SAME"}
+        ]}
     },
     "hamster_follow_line_using": {
         "color": "#00979D",
@@ -9629,7 +9652,13 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, mode);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.follow_line(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_LEFT_SENSOR)", params: ["BLACK", "LEFT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_WHITE_LEFT_SENSOR)", params: ["WHITE", "LEFT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_RIGHT_SENSOR)", params: ["BLACK", "RIGHT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_BOTH_SENSORS)", params: ["BLACK", "BOTH"]}
+            
+        ]}
     },
     "hamster_follow_line_until": {
         "color": "#00979D",
@@ -9705,7 +9734,13 @@ Entry.block = {
                 return script;
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.follow_line_until(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_TURN_LEFT)", params: ["BLACK", "LEFT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_WHITE_TURN_LEFT)", params: ["WHITE", "LEFT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_TURN_RIGHT)", params: ["BLACK", "RIGHT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_MOVE_FORWARD)", params: ["BLACK", "FRONT"]},
+            {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_UTURN)", params: ["BLACK", "REAR"]}
+        ]}
     },
     "hamster_set_following_speed_to": {
         "color": "#00979D",
@@ -9748,7 +9783,7 @@ Entry.block = {
             sq.lineTracerSpeed = Number(script.getField("SPEED", script));
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_follow_speed(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.line_tracer_speed(%1)"]}
     },
     "hamster_stop": {
         "color": "#00979D",
@@ -9837,7 +9872,17 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.led_on(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.left_led(Hamster.LED_RED)", params: ["LEFT", "4"]},
+            {syntax: "Hamster.right_led(Hamster.LED_RED)", params: ["RIGHT", "4"]},
+            {syntax: "Hamster.leds(Hamster.LED_RED,Hamster.LED_RED)", params: ["BOTH", "4"]},
+            {syntax: "Hamster.left_led(Hamster.LED_YELLOW)", params: ["LEFT", "6"]},
+            {syntax: "Hamster.left_led(Hamster.LED_GREEN)", params: ["LEFT", "2"]},
+            {syntax: "Hamster.left_led(Hamster.LED_CYAN)", params: ["LEFT", "3"]},
+            {syntax: "Hamster.left_led(Hamster.LED_BLUE)", params: ["LEFT", "1"]},
+            {syntax: "Hamster.left_led(Hamster.LED_MAGENTA)", params: ["LEFT", "5"]},
+            {syntax: "Hamster.left_led(Hamster.LED_WHITE)", params: ["LEFT", "7"]}
+        ]}
     },
     "hamster_clear_led": {
         "color": "#00979D",
@@ -9883,7 +9928,11 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.led_off(%1)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.left_led(Hamster.LED_OFF)", params: ["LEFT"]},
+            {syntax: "Hamster.right_led(Hamster.LED_OFF)", params: ["RIGHT"]},
+            {syntax: "Hamster.leds(Hamster.LED_OFF, Hamster.LED_OFF)", params: ["BOTH"]}
+        ]}
     },
     "hamster_beep": {
         "color": "#00979D",
@@ -10032,7 +10081,9 @@ Entry.block = {
             sq.note = 0;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.stop_buzzer()"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.buzzer(0)", params: [null]},
+        ]}
     },
     "hamster_play_note_for": {
         "color": "#00979D",
@@ -10137,8 +10188,27 @@ Entry.block = {
                 sq.note = 0;
                 return script.callReturn();
             }
-        },
-        "syntax": {"js": [], "py": ["Hamster.play_note_for_beat(%1, %2, %3)"]}
+        }, 
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.note(%1, %2, %3)",
+            paramCodes:[
+                {"4":["Hamster.NOTE_C"],
+                "5":["Hamster.NOTE_C_SHARP","Hamster.NOTE_D_FLAT"],
+                "6":["Hamster.NOTE_D"],
+                "7":["Hamster.NOTE_E_FLAT","Hamster.NOTE_D_SHARP"],
+                "8":["Hamster.NOTE_E"],
+                "9":["Hamster.NOTE_F"],
+                "10":["Hamster.NOTE_F_SHARP","Hamster.NOTE_G_FLAT"],
+                "11":["Hamster.NOTE_G"],
+                "12":["Hamster.NOTE_G_SHARP","Hamster.NOTE_A_FLAT"],
+                "13":["Hamster.NOTE_A"],
+                "14":["Hamster.NOTE_B_FLAT","Hamster.NOTE_A_SHARP"],
+                "15":["Hamster.NOTE_B"]
+                },
+                null,
+                null
+            ]},
+        ]}
     },
     "hamster_rest_for": {
         "color": "#00979D",
@@ -10195,7 +10265,9 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.rest(%1)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.note(Hamster.NOTE_OFF,%1)", paramOption: "Hamster.NOTE_OFF"}
+        ]}
     },
     "hamster_change_tempo_by": {
         "color": "#00979D",
@@ -10233,7 +10305,7 @@ Entry.block = {
             if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.add_tempo(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.tempo_by(%1)"]}
     },
     "hamster_set_tempo_to": {
         "color": "#00979D",
@@ -10271,7 +10343,7 @@ Entry.block = {
             if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_tempo(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.tempo(%1)"]}
     },
     "hamster_set_port_to": {
         "color": "#00979D",
@@ -10331,7 +10403,23 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_port_as(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_ANALOG_INPUT)", params: ["A", "0"]},
+            {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_DIGITAL_INPUT)", params: ["A", "1"]},
+            {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_SERVO_OUTPUT)", params: ["A", "8"]},
+            {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_PWM_OUTPUT)", params: ["A", "9"]},
+            {syntax: "Hamster.io_mode_a(Hamster.IO_MODE_DIGITAL_OUTPUT)", params: ["A", "10"]},
+            {syntax: "Hamster.io_mode_b(Hamster.IO_MODE_ANALOG_INPUT)", params: ["B", "0"]},
+            {syntax: "Hamster.io_mode_b(Hamster.IO_MODE_DIGITAL_INPUT)", params: ["B", "1"]},
+            {syntax: "Hamster.io_mode_b(Hamster.IO_MODE_SERVO_OUTPUT)", params: ["B", "8"]},
+            {syntax: "Hamster.io_mode_b(Hamster.IO_MODE_PWM_OUTPUT)", params: ["B", "9"]},
+            {syntax: "Hamster.io_mode_b(Hamster.IO_MODE_DIGITAL_OUTPUT)", params: ["B", "10"]},
+            {syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT,Hamster.IO_MODE_ANALOG_INPUT)", params: ["AB", "0"]},
+            {syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT,Hamster.IO_MODE_DIGITAL_INPUT)", params: ["AB", "1"]},
+            {syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT,Hamster.IO_MODE_SERVO_OUTPUT)", params: ["AB", "8"]},
+            {syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT,Hamster.IO_MODE_PWM_OUTPUT)", params: ["AB", "9"]},
+            {syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT,Hamster.IO_MODE_DIGITAL_OUTPUT)", params: ["AB", "10"]},
+        ]}
     },
     "hamster_change_output_by": {
         "color": "#00979D",
@@ -10390,7 +10478,11 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.add_output(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.output_a_by(%2)", params: ["A"]},
+            {syntax: "Hamster.output_b_by(%2)", params: ["B"]},
+            {syntax: "Hamster.outputs_by(%2,%2)", params: ["AB"]}
+        ]}
     },
     "hamster_set_output_to": {
         "color": "#00979D",
@@ -10445,11 +10537,15 @@ Entry.block = {
                 sq.outputB = value;
             } else {
                 sq.outputA = value;
-                sq.outputB = value;
+                sq.outputB = value
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Hamster.set_output(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Hamster.output_a(%2)", params: ["A"]},
+            {syntax: "Hamster.output_b(%2)", params: ["B"]},
+            {syntax: "Hamster.outputs(%2,%2)", params: ["AB"]}
+        ]}
     },
     "is_clicked": {
         "color": "#AEB8FF",
@@ -16984,7 +17080,9 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "keyPress",
-        "syntax": {"js": [], "py": ["def when_press_key():\n\tif key == %2:"]}
+
+        //"syntax": {"js": [], "py": ["def entry_event_key():\n\tif key == %2:"]}
+        "syntax": {"js": [], "py": ["def entry_event_key(%2):"]}
     },
     "mouse_clicked": {
         "color": "#3BBD70",
@@ -17172,7 +17270,9 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_message_cast",
-        "syntax": {"js": [], "py": ["def when_get_signal():\n\tif signal == %2:"]}
+
+        //"syntax": {"js": [], "py": ["def entry_event_signal():\n\tif signal == %2:"]}
+        "syntax": {"js": [], "py": ["def entry_event_signal(%2):"]}
     },
     "message_cast": {
         "color": "#3BBD70",
@@ -21470,7 +21570,7 @@ Entry.block = {
             for (var key in entities){
                 entity = entities[key];
             }
-            
+
             var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
 
             if(unitComp.isStartedUnit) {
@@ -21492,7 +21592,7 @@ Entry.block = {
             if(!isGoal) {
                 this.executor.stepInto(statement);
                 return Entry.STATIC.BREAK;
-            }                
+            }
             // Ntry.dispatchEvent('executeEnd');
         }
     },

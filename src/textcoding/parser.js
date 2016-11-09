@@ -294,13 +294,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var tCount = 0;
                     var ast;
                     console.log("threads", threads);
-                    
+
                     var cleansedThreads = [];
                     for(var t in threads) {
                         var thread = threads[t];
                         if(thread.length == 0)
-                            continue; 
-                        
+                            continue;
+
                         thread = thread.trim();
                         if(thread.length != 0)
                             cleansedThreads.push(thread);
@@ -320,7 +320,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 ast = pyAstGenerator.generate(thread);
                             }*/
                             console.log("success??", ast);
-                            //thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
+                            thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
                             console.log("real thread", thread);
                             thread = thread.replace(/    /g, "\t");
                             console.log("real real thread", thread);
@@ -429,7 +429,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             if(error.type == 1)
                                 var errorMsg = '파이썬에서 지원하지 않는 문법입니다.';
                             else if(error.type == 2)
-                                var errorMsg = '블록으로 변환되는 코드인지 확인해주세요'; 
+                                var errorMsg = '블록으로 변환되는 코드인지 확인해주세요';
                         }
 
                         Entry.toast.alert(errorTitle, errorMsg);
@@ -479,13 +479,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var funcDefMap = this._parser._funcDefMap;
                     console.log("funcDefMap", funcDefMap);
                     for(var f in funcDefMap) {
-                        var funcDef = funcDefMap[f]; 
+                        var funcDef = funcDefMap[f];
                         result += funcDef + '\n';
                     }
                 }
 
                 result += textCode;
-                //result = result.replace(/\t/g, "    "); 
+                //result = result.replace(/\t/g, "    ");
 
                 break;
         }
@@ -567,12 +567,42 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if (!pySyntax)
                             continue;
 
-                        pySyntax = String(pySyntax);
-                        var tokens = pySyntax.split('(');
-                        if(tokens[0].length != 0)
-                            pySyntax = tokens[0];
+                        pySyntax.map(function(s) {
+                            var result, tokens;
+                            if (typeof s === "string") {
+                                var bs = {};
+                                result = bs;
+                                tokens = s;
+                                bs.key = key;
+                                bs.syntax = s;
+                                /*result = key;
+                                tokens = s;*/
+                            } else {
+                                result = s;
+                                tokens = s.syntax;
+                                s.key = key;  
+                            }
+                            
+                            tokens = tokens.split('(');                        
 
-                        syntax[pySyntax] = key;
+                            if(tokens[1] && tokens[1].includes('%')) {
+                                if(tokens[0].length != 0)
+                                    tokens = tokens[0];
+                                else
+                                    tokens = tokens.join('(');
+                            }
+                            else {
+                                tokens = tokens.join('(');
+                            }
+
+                            tokens = tokens.replace("():", "");
+                            tokens = tokens.replace("()", "");
+
+                            if(s.paramOption)
+                                tokens += "#" + s.paramOption;
+                                
+                            syntax[tokens] = result;
+                        })
                     }
                 }
             }
@@ -663,7 +693,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
         var currentLineCount = 0;
-    
+
         for(var c = 1; c < this._pyThreadCount; c++) {
             var idx = c.toString();
             var count = this._pyBlockCount[idx];
@@ -694,7 +724,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var errorline = error.loc.line;
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
-        
+
 
         console.log("findSyntaxErrorInfo contentsArr1", contentsArr);
         console.log("this._pyThreadCount", this._pyThreadCount);
@@ -800,7 +830,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             var index = textLine.indexOf(":");
             var preText = textLine.substring(0, index+1);
             preText = preText.trim();
-            
+
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(preText)) {
                 threadArr.push(thread);
                 thread = "";

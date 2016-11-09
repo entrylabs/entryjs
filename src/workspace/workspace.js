@@ -112,7 +112,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.board.clear();
                     //this.oldMode = this.mode;
                     this.oldTextType = this.textType;
-
                 break;
 
             case Entry.Workspace.MODE_BOARD:
@@ -226,16 +225,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p.codeToText = function(code, mode) {
-        try {
-            this.vimBoard.codeToText(code, mode);
-            console.log("codeToText not show");
-        }
-        catch(error) {
-            throw error;
-        }
+        if (!this.vimBoard)
+            return;
+        return this.vimBoard.codeToText(code, mode);
     };
 
     p.getCodeToText = function(code) {
+        if (!this.vimBoard)
+            return;
         return this.vimBoard.getCodeToText(code);
     };
 

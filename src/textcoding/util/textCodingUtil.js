@@ -798,24 +798,29 @@ Entry.TextCodingUtil = {};
                 var thread = threadArr[i];
                 var trimedThread = threadArr[i].trim();
                 console.log("trimedThread check", trimedThread);
-                var index = trimedThread.indexOf(":");
+                var colonIndex = trimedThread.indexOf(":");
                 var preText = "";
 
-                if(index > 0) {
+                if(colonIndex > 0) {
                     preText = trimedThread.substring(0, colonIndex+1);
                 }
-                
-                if( preText == "def when_start():" ||
-                    preText == "def when_click_mouse_on():" ||
-                    preText == "def when_click_mouse_off():" ||
-                    preText == "def when_click_object_on():" ||
-                    preText == "def when_click_object_off():" ||
-                    preText == "def when_start_scene():" ||
-                    preText == "def when_make_clone():" ) {
 
-                    /*var tokens = [];
-                    tokens = funcPart.split("def");
-                    funcPart = tokens[1].substring(0, tokens[1].length-1).trim();*/
+                console.log("preText", preText);
+
+                preText = preText.split("(");
+                preText = preText[0];
+
+                /*if( preText == "def entry_event_start():" ||
+                    preText == "def entry_event_mouse_down():" ||
+                    preText == "def entry_event_mouse_up():" ||
+                    preText == "def entry_event_object_down():" ||
+                    preText == "def entry_event_object_up():" ||
+                    preText == "def entry_event_scene_start():" ||
+                    preText == "def entry_event_clone_create():" ) {
+
+                    //var tokens = [];
+                    //tokens = funcPart.split("def");
+                    //funcPart = tokens[1].substring(0, tokens[1].length-1).trim();
 
                     thread = thread.replace(/def /, "");
                     var colonIndex = thread.indexOf(":");
@@ -836,17 +841,16 @@ Entry.TextCodingUtil = {};
 
                     console.log("newThread funcPart", newThread); 
                     threadArr[i] = newThread;
-                    eventFound = true;
+                    eventFound = true; 
                 }
-                else if(preText == "def when_press_key():" || 
-                        preText == "def when_get_signal():") {
+                else */if(preText == "def entry_event_key" || preText == "def entry_event_signal") { 
                     thread = thread.replace(/def /, "");
                     var colonIndex = thread.indexOf(":");
                     var funcPart = "";
                     var restPart = "";
 
                     if(colonIndex > 0) {
-                        funcPart = thread.substring(0, colonIndex+1);
+                        funcPart = thread.substring(0, colonIndex);
                         restPart = thread.substring(colonIndex+1, thread.length);
                     }
 
@@ -871,6 +875,8 @@ Entry.TextCodingUtil = {};
                 }
         }
 
+        console.log("newEventFunction result", threadArr);
+
         result = threadArr.join('\n');
         return result;
     };
@@ -891,18 +897,6 @@ Entry.TextCodingUtil = {};
             result = name;
             return name;
         }
-        /*else {
-            var index = name.lastIndexOf("_");
-            var preText = name.substring(0, index);
-            if(preText == "entry_event_key") {
-                name = "def " + preText + "_%2";
-                result = name;
-            }
-            else if(preText == "entry_event_signal") {
-                name = "def " + preText + "_%2";
-                result = name;
-            }
-        }*/
 
         return result;
 
@@ -1201,26 +1195,44 @@ Entry.TextCodingUtil = {};
         var tfspType = textFuncStatementParam.type;
         var bfcpType = blockFuncContentParam.data.type;
 
-        if(tfspType == "text" || tfspType == "number")
+        if(tfspType == "text") {
             tfspType = "literal";
+        }
+        else if(tfspType == "number") {
+            tfspType = "literal";
+        } 
+        else {
+            if(textFuncStatementParam.isParamFromFunc)
+                tfspType = paramInfo[tfspType];
+        }
 
-        if(bfcpType == "text" || bfcpType == "number")
+
+        if(bfcpType == "text") {
             bfcpType = "literal";
+        }
+        else if(bfcpType == "number") {
+            bfcpType = "literal";
+        }
+        
+        console.log("tfspType", tfspType, "bfcpType", bfcpType);
 
         if(tfspType == bfcpType) {
             var textSubParams = textFuncStatementParam.params;
-            var blockSubParamsUncleansed = blockFuncContentParam.data.params;
-            var blockSubParams = [];
+            //var blockSubParamsUncleansed = blockFuncContentParam.data.params;
+            var blockSubParams = blockFuncContentParam.data.params;
 
-            for(var b in blockSubParamsUncleansed) {
+            /*for(var b in blockSubParamsUncleansed) {
                 var blockSubParamUncleansed = blockSubParamsUncleansed[b];
                 if(blockSubParamUncleansed)
                     blockSubParams.push(blockSubParamUncleansed);
-            }
+            }*/
 
             console.log("textSubParams", textSubParams);
             console.log("blockSubParams", blockSubParams);
-            if(textSubParams.length == blockSubParams.length) {
+            if(!textSubParams && !blockSubParams) {
+                matchFlag = true;
+            }
+            else if(textSubParams.length == blockSubParams.length) {
                 matchFlag = true;
                 for(var t in textSubParams) {
                     if(!matchFlag)
@@ -1230,7 +1242,10 @@ Entry.TextCodingUtil = {};
                     var blockSubParam = blockSubParams[t];
                     console.log("textSubParam", textSubParam);
                     console.log("blockSubParam", blockSubParam);
-                    if(typeof textSubParam !== "object") {
+                    if(!textSubParam && !blockSubParam) {
+                        matchFlag = true;
+                    }
+                    else if(typeof textSubParam !== "object") {
                         if(textSubParam == blockSubParam) {
                             matchFlag = true;
                         }
@@ -1315,7 +1330,9 @@ Entry.TextCodingUtil = {};
         for(var p in params) {
             var param = params[p];
             console.log("makeParamBlock param", param);
-            
+            if(!param)
+                continue;
+
             if(typeof param != "object")  
                 continue;
 
@@ -1564,22 +1581,6 @@ Entry.TextCodingUtil = {};
 
         return result;
     };
-
-    /*tu.includeEntryEventKeyBlock = function(thread) {
-        var result = false;
-        var threadArr = thread.split('\n');
-        for(var i in threadArr) {
-            var text = threadArr[i];
-            if(new RegExp(/^def entry_event_key(.+):$/).test(text)) {
-                result = true;
-                break;
-            }
-        }
-
-        console.log("includeEntryEventKeyBlock result", result);
-
-        return result;
-    };*/
 
     tu.canConvertTextModeForOverlayMode = function(convertingMode) {
         var message;
