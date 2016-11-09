@@ -2224,7 +2224,12 @@ Entry.block = {
             var ANALOG = Entry.hw.portData.ANALOG;
             return (ANALOG) ? ANALOG[port] || 0 : 0;
         },
-        "syntax": {"js": [], "py": ["Arduino.analogRead(%1)"]}
+        "syntax": {"js": [], "py": [
+        {syntax: "Arduino.analogRead(%1)", 
+            paramCodes: [
+                {0:["\"A0\""], 1:["\"A1\""], 2:["\"A2\""], 3:["\"A3\""], 4:["\"A4\""], 5:["\"A5\""]},
+            ]}
+        ]}
     },
     "arduino_ext_get_analog_value_map": {
         "color": "#00979D",
@@ -2321,7 +2326,16 @@ Entry.block = {
 
             return result
         },
-        "syntax": {"js": [], "py": ["Arduino.map(%1, %2, %3, %4, %5)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Arduino.map(%1, %2, %3, %4, %5)", 
+            paramCodes: [
+                {0:["\"A0\""], 1:["\"A1\""], 2:["\"A2\""], 3:["\"A3\""], 4:["\"A4\""], 5:["\"A5\""]},
+                null,
+                null,
+                null,
+                null
+            ]}
+        ]}
     },
     "arduino_ext_get_ultrasonic_value": {
         "color": "#00979D",
