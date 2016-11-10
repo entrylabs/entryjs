@@ -22809,13 +22809,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
       case Entry.Workspace.MODE_BOARD:
       ;
       case Entry.Workspace.MODE_OVERLAYBOARD:
-        for (var c = /(%\d)/mi, e = (b.template ? b.template : Lang.template[this.block.type]).split(c), f = b.params, g = 0;g < e.length;g++) {
-          var h = e[g];
+        for (var c = /(%\d)/mi, e = b.template ? b.template : Lang.template[this.block.type], e = Entry.block[this.type].syntax.py[0], f = e.split(c), g = b.params, e = 0;e < f.length;e++) {
+          var h = f[e];
           " " === h[0] && (h = h.substring(1));
           " " === h[h.length - 1] && (h = h.substring(0, h.length - 1));
           if (0 !== h.length) {
             if (c.test(h)) {
-              var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
+              var k = Number(h.split("%")[1]) - 1, h = g[k], h = new Entry["Field" + h.type](h, this, k, a, e);
               this._contents.push(h);
               this._paramMap[k] = h;
             } else {
@@ -22824,8 +22824,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
           }
         }
         if ((a = b.statements) && a.length) {
-          for (g = 0;g < a.length;g++) {
-            this._statements.push(new Entry.FieldStatement(a[g], this, g));
+          for (e = 0;e < a.length;e++) {
+            this._statements.push(new Entry.FieldStatement(a[e], this, e));
           }
         }
         break;
@@ -22834,14 +22834,15 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
           this._startContentRender(Entry.Workspace.MODE_BOARD);
           return;
         }
+        debugger;
         b = this.getBoard().workspace.getCodeToText(this.block);
         a = !1;
-        /(if)+(.|\n)+(else)+/.test(b) && (g = b.split("\n"), b = g.shift() + " " + g.shift(), a = !0, g = g.join(" "));
+        /(if)+(.|\n)+(else)+/.test(b) && (c = b.split("\n"), b = c.shift() + " " + c.shift(), a = !0, c = c.join(" "));
         console.log("this.block._schema", this.block._schema);
         b = {text:b, color:"white"};
         this.block._schema.vimModeFontColor && (b.color = this.block._schema.vimModeFontColor);
         this._contents.push(new Entry.FieldText(b, this));
-        a && (this._contents.push(new Entry.FieldLineBreak(null, this)), b.text = g, this._contents.push(new Entry.FieldText(b, this)));
+        a && (this._contents.push(new Entry.FieldLineBreak(null, this)), b.text = c, this._contents.push(new Entry.FieldText(b, this)));
     }
     this.alignContent(!1);
   };

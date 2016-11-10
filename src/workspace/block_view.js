@@ -222,8 +222,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             case Entry.Workspace.MODE_OVERLAYBOARD:
                 var reg = /(%\d)/mi;
                 var template = schema.template ? schema.template : Lang.template[this.block.type];
+
+                template = Entry.block[this.type].syntax.py[0];
+
                 var templateParams = template.split(reg);
                 var params = schema.params;
+
                 for (var i=0; i<templateParams.length; i++) {
                     var param = templateParams[i];
                     if (param[0] === " ") param = param.substring(1);
@@ -250,6 +254,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     this._startContentRender(Entry.Workspace.MODE_BOARD);
                     return;
                 }
+
+                debugger;
 
                 var text = this.getBoard().workspace.getCodeToText(this.block);
                 var lineBreak = false;
