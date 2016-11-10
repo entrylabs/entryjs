@@ -7,7 +7,7 @@ goog.provide("Entry.PyToBlockParser");
 
 goog.require("Entry.KeyboardCode");
 goog.require("Entry.TextCodingUtil");
-goog.require("Entry.TextCodingUtilError");
+goog.require("Entry.TextCodingError");
 goog.require("Entry.Map");
 goog.require("Entry.Queue");
 
@@ -273,17 +273,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var blockSyntax = this.getBlockSyntax(syntax);
                 if(blockSyntax) { 
                     type = blockSyntax.key;
-                }
+                } 
             }
 
             if(!type) {
                 var funcNameKey = calleeData.name + component.arguments.length;
                 if(calleeData.name && arguments.length != 0 && arguments[0].type == "Literal") {
                     if(!this._funcMap.contains(funcNameKey)) {
-                        console.log("error", Entry.TextCodingUtilError.TC_ERR_TITLE_CONVERTING);
-                        Entry.TextCodingUtilError.error(
-                            Entry.TextCodingUtilError.TC_ERR_TITLE_CONVERTING,
-                            Entry.TextCodingUtilError.TC_ERR_MESSAGE_NO_BLOCK,
+                        console.log("error", Entry.TextCodingError.TITLE_CONVERTING);
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_NO_BLOCK,
                             calleeData.name,
                             this._blockCount); 
                     }
