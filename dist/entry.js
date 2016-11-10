@@ -20860,7 +20860,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   };
   b._generateCategoryElement = function(a, b) {
     var c = this, e = Entry.Dom("li", {id:"entryCategory" + a, classes:["entryCategoryElementWorkspace"], parent:this._categoryCol});
-    !1 === b && e.classes.push("entryRemove");
+    !1 === b && e.addClass("entryRemove");
     (function(a, b) {
       a.text(Lang.Blocks[b.toUpperCase()]);
       c._categoryElems[b] = a;

@@ -707,7 +707,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         });
 
         if(visible === false) {
-            element.classes.push('entryRemove');
+            element.addClass('entryRemove');
         }
 
         (function(elem, name){
