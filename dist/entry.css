@@ -431,6 +431,9 @@ span.CodeMirror-selectedtext {
 .entryRemove {
   display: none !important;
 }
+.entryRemoveCategory {
+  display: none !important;
+}
 .entryRemoveElement {
   display: none !important;
 }
@@ -455,6 +458,9 @@ span.CodeMirror-selectedtext {
   visibility: hidden;
 }
 .entryRemove {
+  display: none !important;
+}
+.entryRemoveCategory {
   display: none !important;
 }
 .entryRemoveElement {

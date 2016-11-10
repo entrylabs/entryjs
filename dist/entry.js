@@ -20742,10 +20742,10 @@ Entry.BlockMenu = function(b, a, d, c) {
     }
   };
   b.banCategory = function(a) {
-    a in this._categoryElems && (a = this._categoryElems[a], a.addClass("entryRemove"));
+    a in this._categoryElems && (a = this._categoryElems[a], a.addClass("entryRemoveCategory"));
   };
   b.unbanCategory = function(a) {
-    a in this._categoryElems && (a = this._categoryElems[a], a.removeClass("entryRemove"));
+    a in this._categoryElems && (a = this._categoryElems[a], a.removeClass("entryRemoveCategory"));
   };
   b.banClass = function(a, b) {
     0 > this._bannedClass.indexOf(a) && this._bannedClass.push(a);
@@ -20860,7 +20860,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   };
   b._generateCategoryElement = function(a, b) {
     var c = this, e = Entry.Dom("li", {id:"entryCategory" + a, classes:["entryCategoryElementWorkspace"], parent:this._categoryCol});
-    !1 === b && e.addClass("entryRemove");
+    !1 === b && e.addClass("entryRemoveCategory");
     (function(a, b) {
       a.text(Lang.Blocks[b.toUpperCase()]);
       c._categoryElems[b] = a;

@@ -522,7 +522,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var categoryElem;
         if(categoryName in this._categoryElems) {
             categoryElem = this._categoryElems[categoryName];
-            categoryElem.addClass('entryRemove');            
+            categoryElem.addClass('entryRemoveCategory');            
         }
     }
 
@@ -530,7 +530,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var categoryElem;
         if(categoryName in this._categoryElems) {
             categoryElem = this._categoryElems[categoryName];
-            categoryElem.removeClass('entryRemove');            
+            categoryElem.removeClass('entryRemoveCategory');
         }
     }
 
@@ -707,7 +707,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         });
 
         if(visible === false) {
-            element.addClass('entryRemove');
+            element.addClass('entryRemoveCategory');
         }
 
         (function(elem, name){
