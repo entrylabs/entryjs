@@ -174,7 +174,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
     };
 
     p.textToCode = function(textType) {
-        console.log("textToCode", textType);
         var type = textType;
         if (type === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
@@ -185,8 +184,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
         }
 
         var textCode = this.codeMirror.getValue();
-        console.log("textCode 111", textCode);
-        console.log("type", type);
         var code = this._parser.parse(textCode);
         //console.log("code", code);
         /*if(code.length === 0) {
@@ -198,7 +195,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
     };
 
     p.codeToText = function(code, mode) {
-        console.log("mode", mode);
         var object;
         var codeDescription;
         if(mode)
@@ -208,8 +204,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
             object = Entry.playground.object;
             codeDescription = "# " + object.name + " 오브젝트의 파이썬 코드";
         }
-
-        ////console.log("codeToText mode", mode);
 
         var textType = mode.textType;
 
@@ -262,6 +256,26 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
 
     p.setParserAvailableCode = function(blockMenuCode, boardCode) {
         this._parser.setAvailableCode(blockMenuCode, boardCode);
+    };
+
+    p.getBlockSyntax = function(datum) {
+        var syntax = null;
+        var textType = this.workspace.oldTextType;
+        if (textType === Entry.Vim.TEXT_TYPE_JS){
+            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+        } else if(textType === Entry.Vim.TEXT_TYPE_PY){
+            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+        }
+
+        if(this._parser)
+            syntax = this._parser._execParser.searchSyntax(datum);
+        
+        if(syntax)
+            return syntax.syntax;
+
+        return syntax; 
     };
 
 })(Entry.Vim.prototype);

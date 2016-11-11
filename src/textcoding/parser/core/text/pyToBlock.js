@@ -12,6 +12,7 @@ goog.require("Entry.Map");
 goog.require("Entry.Queue");
 
 Entry.PyToBlockParser = function(blockSyntax) {
+    this._type ="PyToBlockParser";
     this.blockSyntax = blockSyntax;
     this._blockStatmentIndex = 0;
     this._blockStatments = [];
@@ -4946,6 +4947,40 @@ Entry.PyToBlockParser = function(blockSyntax) {
         //Converting Error Control
 
         return result;
+    };
+
+    p.searchSyntax = function(datum) {
+        var schema;
+        console.log("datum", datum);
+        if(datum instanceof Entry.BlockView) {
+            schema = datum.block._schema;
+        } else if (datum instanceof Entry.Block)
+            schema = datum._schema;
+        else schema = datum;
+
+        if(schema && schema.syntax) {
+            var syntaxes = schema.syntax.py.concat();
+            while (syntaxes.length) {
+                var isFail = false;
+                var syntax = syntaxes.shift();
+                if (typeof syntax === "string")
+                    return {syntax: syntax};
+                if (syntax.params) {
+                    var params = block.params;
+                    for (var i = 0; i < syntax.params.length; i++) {
+                        if (syntax.params[i] && syntax.params[i] !== block.params[i]) {
+                            isFail = true;
+                            break;
+                        }
+                    }
+                }
+                if (isFail) {
+                    continue;
+                }
+                return syntax;
+            }
+        }
+        return null;
     };
 
 })(Entry.PyToBlockParser.prototype);

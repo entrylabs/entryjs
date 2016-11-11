@@ -11,6 +11,7 @@ goog.require("Entry.Map");
 goog.require("Entry.Queue");
 
 Entry.BlockToPyParser = function(blockSyntax) {
+    this._type ="BlockToPyParser";
     var variableMap = new Entry.Map();
     this._variableMap = variableMap;
 
@@ -405,14 +406,13 @@ Entry.BlockToPyParser = function(blockSyntax) {
             } else {
                 var tagIndex = 0;
                 console.log("block Token shit", blockToken);
-                var bb = blockToken.search('#');
+                
                 if(blockToken.search('#') != -1) {
                     var tagIndex = blockToken.indexOf('#');
                     blockToken = blockToken.substring(tagIndex+1);
                 }
 
                 result += blockToken;
-                
 
                 console.log("btop parser block result", result);
 
@@ -443,9 +443,17 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return result;
     };
 
-    p.searchSyntax = function(block) {
-        if(block._schema && block._schema.syntax) {
-            var syntaxes = block._schema.syntax.py.concat();
+    p.searchSyntax = function(datum) {
+        var schema;
+        console.log("datum", datum);
+        if(datum instanceof Entry.BlockView) {
+            schema = datum.block._schema;
+        } else if (datum instanceof Entry.Block)
+            schema = datum._schema;
+        else schema = datum;
+
+        if(schema && schema.syntax) {
+            var syntaxes = schema.syntax.py.concat();
             while (syntaxes.length) {
                 var isFail = false;
                 var syntax = syntaxes.shift();

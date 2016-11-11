@@ -12994,6 +12994,7 @@ Entry.TextCodingUtil = {};
   };
 })(Entry.TextCodingUtil);
 Entry.BlockToJsParser = function(b) {
+  this._type = "BlockToJsParser";
   this.syntax = b;
   this._iterVariableCount = 0;
   this._iterVariableChunk = ["i", "j", "k"];
@@ -13096,8 +13097,12 @@ Entry.BlockToJsParser = function(b) {
   b.DropdownDynamic = function(a, b) {
     return a = "null" == a ? "none" : Entry.TextCodingUtil.dropdownDynamicValueConvertor(a, b);
   };
+  b.searchSyntax = function(a) {
+    return null;
+  };
 })(Entry.BlockToJsParser.prototype);
 Entry.BlockToPyParser = function(b) {
+  this._type = "BlockToPyParser";
   this._variableMap = new Entry.Map;
   this._funcMap = new Entry.Map;
   this._queue = new Entry.Queue;
@@ -13214,7 +13219,7 @@ Entry.BlockToPyParser = function(b) {
               n = q[t], 0 !== n.length && (g.test(n) ? (n = Number(n.split("$")[1]) - 1, b += Entry.TextCodingUtil.indent(this.Thread(a.statements[n]))) : b += n);
             }
           } else {
-            n = 0, console.log("block Token shit", q), q.search("#"), -1 != q.search("#") && (n = q.indexOf("#"), q = q.substring(n + 1)), b += q, console.log("btop parser block result", b);
+            n = 0, console.log("block Token shit", q), -1 != q.search("#") && (n = q.indexOf("#"), q = q.substring(n + 1)), b += q, console.log("btop parser block result", b);
           }
         }
       }
@@ -13225,22 +13230,23 @@ Entry.BlockToPyParser = function(b) {
     return b;
   };
   b.searchSyntax = function(a) {
-    if (a._schema && a._schema.syntax) {
-      for (var b = a._schema.syntax.py.concat();b.length;) {
-        var c = !1, e = b.shift();
-        if ("string" === typeof e) {
-          return {syntax:e};
+    console.log("datum", a);
+    if ((a = a instanceof Entry.BlockView ? a.block._schema : a instanceof Entry.Block ? a._schema : a) && a.syntax) {
+      for (a = a.syntax.py.concat();a.length;) {
+        var b = !1, c = a.shift();
+        if ("string" === typeof c) {
+          return {syntax:c};
         }
-        if (e.params) {
-          for (var f = 0;f < e.params.length;f++) {
-            if (e.params[f] && e.params[f] !== a.params[f]) {
-              c = !0;
+        if (c.params) {
+          for (var e = 0;e < c.params.length;e++) {
+            if (c.params[e] && c.params[e] !== block.params[e]) {
+              b = !0;
               break;
             }
           }
         }
-        if (!c) {
-          return e;
+        if (!b) {
+          return c;
         }
       }
     }
@@ -13411,6 +13417,7 @@ Entry.BlockToPyParser = function(b) {
   };
 })(Entry.BlockToPyParser.prototype);
 Entry.JsToBlockParser = function(b) {
+  this._type = "JsToBlockParser";
   this.syntax = b;
   this.scopeChain = [];
   this.scope = null;
@@ -13813,8 +13820,12 @@ Entry.JsToBlockParser = function(b) {
       throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
     }
   };
+  b.searchSyntax = function(a) {
+    return null;
+  };
 })(Entry.JsToBlockParser.prototype);
 Entry.PyToBlockParser = function(b) {
+  this._type = "PyToBlockParser";
   this.blockSyntax = b;
   this._blockStatmentIndex = 0;
   this._blockStatments = [];
@@ -15907,12 +15918,35 @@ Entry.PyToBlockParser = function(b) {
     console.log("send error", a);
     throw a;
   };
+  b.searchSyntax = function(a) {
+    console.log("datum", a);
+    if ((a = a instanceof Entry.BlockView ? a.block._schema : a instanceof Entry.Block ? a._schema : a) && a.syntax) {
+      for (a = a.syntax.py.concat();a.length;) {
+        var b = !1, c = a.shift();
+        if ("string" === typeof c) {
+          return {syntax:c};
+        }
+        if (c.params) {
+          for (var e = 0;e < c.params.length;e++) {
+            if (c.params[e] && c.params[e] !== block.params[e]) {
+              b = !0;
+              break;
+            }
+          }
+        }
+        if (!b) {
+          return c;
+        }
+      }
+    }
+    return null;
+  };
 })(Entry.PyToBlockParser.prototype);
 Entry.Parser = function(b, a, d, c) {
   this._mode = b;
   this.syntax = {};
   this.codeMirror = d;
-  this._lang = c || "js";
+  this._lang = c || "blockPy";
   this._type = a;
   this.availableCode = [];
   this._syntax_cache = {};
@@ -15927,7 +15961,7 @@ Entry.Parser = function(b, a, d, c) {
   this._console = new Entry.Console;
   switch(this._lang) {
     case "js":
-      this._parser = new Entry.JsToBlockParser(this.syntax);
+      this._execParser = new Entry.JsToBlockParser(this.syntax);
       c = this.syntax;
       var e = {}, f;
       for (f in c.Scope) {
@@ -15939,7 +15973,7 @@ Entry.Parser = function(b, a, d, c) {
       });
       break;
     case "py":
-      this._parser = new Entry.PyToBlockParser(this.syntax);
+      this._execParser = new Entry.PyToBlockParser(this.syntax);
       c = this.syntax;
       e = {};
       for (f in c.Scope) {
@@ -15954,11 +15988,11 @@ Entry.Parser = function(b, a, d, c) {
       });
       break;
     case "blockJs":
-      this._parser = new Entry.BlockToJsParser(this.syntax);
+      this._execParser = new Entry.BlockToJsParser(this.syntax);
       c = this.syntax;
       break;
     case "blockPy":
-      this._parser = new Entry.BlockToPyParser(this.syntax), c = this.syntax;
+      this._execParser = new Entry.BlockToPyParser(this.syntax), c = this.syntax;
   }
 };
 (function(b) {
@@ -15970,15 +16004,15 @@ Entry.Parser = function(b, a, d, c) {
     this.syntax = this.mappingSyntax(a);
     switch(b) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-        this._parser = new Entry.JsToBlockParser(this.syntax);
-        this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
+        this._execParser = new Entry.JsToBlockParser(this.syntax);
+        this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-        this._parser = new Entry.PyToBlockParser(this.syntax);
-        this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
+        this._execParser = new Entry.PyToBlockParser(this.syntax);
+        this._execParserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        this._parser = new Entry.BlockToJsParser(this.syntax);
+        this._execParser = new Entry.BlockToJsParser(this.syntax);
         a = this.syntax;
         var e = {}, f;
         for (f in a.Scope) {
@@ -15988,10 +16022,10 @@ Entry.Parser = function(b, a, d, c) {
           var c = b.keyCode;
           (65 <= c && 95 >= c || 167 == c || !b.shiftKey && 190 == c) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
         });
-        this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
+        this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        this._parser = new Entry.BlockToPyParser(this.syntax), c.setOption("mode", {name:"python", globalVars:!0}), c.markText({line:0, ch:0}, {line:3}, {readOnly:!0}), this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+        this._execParser = new Entry.BlockToPyParser(this.syntax), c.setOption("mode", {name:"python", globalVars:!0}), c.markText({line:0, ch:0}, {line:3}, {readOnly:!0}), this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
     }
   };
   b.parse = function(a, b) {
@@ -16008,7 +16042,7 @@ Entry.Parser = function(b, a, d, c) {
             var h = e[g], h = h.trim(), k = acorn.parse(h);
             f.push(k);
           }
-          c = this._parser.Program(f);
+          c = this._execParser.Program(f);
         } catch (u) {
           if (this.codeMirror) {
             u instanceof SyntaxError ? (c = {from:{line:u.loc.line - 1, ch:0}, to:{line:u.loc.line - 1, ch:u.loc.column}}, u.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", u.type = 1) : (c = this.getLineNumber(u.node.start, u.node.end), c.message = u.message, c.severity = "converting error", u.type = 2);
@@ -16059,8 +16093,8 @@ Entry.Parser = function(b, a, d, c) {
               1 < this._pyThreadCount && (r--, this._pyThreadCount--);
             }
           }
-          c = this._parser.Program(f);
-          this._parser._variableMap.clear();
+          c = this._execParser.Program(f);
+          this._execParser._variableMap.clear();
         } catch (u) {
           if (this.codeMirror) {
             throw this._threeLine = !1, console.log("came here error", u), u instanceof SyntaxError ? (console.log("py error type 1", u.loc), c = {}, c = this.findSyntaxErrorLine(u), u.message = "\ud574\ub2f9\uad6c\ubb38 \ubc94\uc704 \ub610\ub294 \uc8fc\uc704 \ub77c\uc778\uc5d0\uc11c '\ubb38\ubc95\uc624\ub958 \ubc0f \ub4e4\uc5ec\uc4f0\uae30(Indentation)\uc624\ub958'\ub97c \ud655\uc778\ud558\uc138\uc694.", c = {from:{line:c.from.line, ch:c.from.ch}, to:{line:c.to.line, ch:c.to.ch}}, u.message || (u.message = 
@@ -16072,15 +16106,15 @@ Entry.Parser = function(b, a, d, c) {
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        c = l = this._parser.Code(a, b);
+        c = l = this._execParser.Code(a, b);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
         console.log("parser parsemode", b);
         c = "";
-        l = this._parser.Code(a, b);
+        l = this._execParser.Code(a, b);
         this._pyHinter || (this._pyHinter = new Entry.PyHint);
         if (b == Entry.Parser.PARSE_GENERAL) {
-          for (r in m = this._parser._funcDefMap, console.log("funcDefMap", m), m) {
+          for (r in m = this._execParser._funcDefMap, console.log("funcDefMap", m), m) {
             c += m[r] + "\n";
           }
         }
@@ -26650,15 +26684,11 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
     this.codeMirror.setValue("");
   };
   b.textToCode = function(a) {
-    console.log("textToCode", a);
     a === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : a === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
-    var b = this.codeMirror.getValue();
-    console.log("textCode 111", b);
-    console.log("type", a);
-    return this._parser.parse(b);
+    a = this.codeMirror.getValue();
+    return this._parser.parse(a);
   };
   b.codeToText = function(a, b) {
-    console.log("mode", b);
     var c;
     b && (this._mode = b.runType);
     Entry.playground && (c = Entry.playground.object, c = "# " + c.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc");
@@ -26678,6 +26708,12 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
   };
   b.setParserAvailableCode = function(a, b) {
     this._parser.setAvailableCode(a, b);
+  };
+  b.getBlockSyntax = function(a) {
+    var b = null, c = this.workspace.oldTextType;
+    c === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : c === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
+    this._parser && (b = this._parser._execParser.searchSyntax(a));
+    return b ? b.syntax : b;
   };
 })(Entry.Vim.prototype);
 Entry.Workspace = function(b) {
