@@ -11624,11 +11624,11 @@ Entry.Scene.prototype.generateElement = function(b) {
   }
   Entry.Utils.disableContextmenu(d);
   $(d).on("contextmenu", function() {
-    var a = [{text:Lang.Workspace.duplicate_scene, enable:Entry.engine.isState("stop"), callback:function() {
+    var a = [{text:Lang.Workspace.duplicate_scene, enable:Entry.engine.isState("stop") && !this.isMax(), callback:function() {
       Entry.scene.cloneScene(b);
     }}];
     Entry.ContextMenu.show(a, "workspace-contextmenu");
-  });
+  }.bind(this));
   return b.view = d;
 };
 Entry.Scene.prototype.updateView = function() {
@@ -11636,7 +11636,7 @@ Entry.Scene.prototype.updateView = function() {
     for (var b = this.listView_, a = $(b).children().length;a < this.getScenes().length;a++) {
       b.appendChild(this.getScenes()[a].view);
     }
-    this.addButton_ && (this.getScenes().length < this.maxCount ? this.addButton_.removeClass("entryRemove") : this.addButton_.addClass("entryRemove"));
+    this.addButton_ && (this.getScenes(), this.isMax() ? this.addButton_.addClass("entryRemove") : this.addButton_.removeClass("entryRemove"));
   }
   this.resize();
 };
@@ -11733,7 +11733,7 @@ Entry.Scene.prototype.createScene = function() {
   return b;
 };
 Entry.Scene.prototype.cloneScene = function(b) {
-  if (this.scenes_.length >= this.maxCount) {
+  if (this.isMax()) {
     Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_add_error, !1);
   } else {
     var a = {name:b.name + Lang.Workspace.replica_of_object, id:Entry.generateHash()};
@@ -11766,6 +11766,9 @@ Entry.Scene.prototype.resize = function() {
 Entry.Scene.prototype.getNextScene = function() {
   var b = this.getScenes();
   return b[b.indexOf(this.selectedScene) + 1];
+};
+Entry.Scene.prototype.isMax = function() {
+  return this.scenes_.length >= this.maxCount;
 };
 Entry.Script = function(b) {
   this.entity = b;
