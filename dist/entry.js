@@ -22839,43 +22839,26 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.elem("g", {class:"contentsGroup"});
     b.statements && b.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g", {class:"statementGroup"}));
-    switch(a) {
-      case Entry.Workspace.MODE_BOARD:
-      ;
-      case Entry.Workspace.MODE_OVERLAYBOARD:
-        for (var c = /(%\d)/mi, e = b.template ? b.template : Lang.template[this.block.type], e = Entry.block[this.type].syntax.py[0], f = e.split(c), g = b.params, e = 0;e < f.length;e++) {
-          var h = f[e];
-          " " === h[0] && (h = h.substring(1));
-          " " === h[h.length - 1] && (h = h.substring(0, h.length - 1));
-          if (0 !== h.length) {
-            if (c.test(h)) {
-              var k = Number(h.split("%")[1]) - 1, h = g[k], h = new Entry["Field" + h.type](h, this, k, a, e);
-              this._contents.push(h);
-              this._paramMap[k] = h;
-            } else {
-              this._contents.push(new Entry.FieldText({text:h}, this));
-            }
-          }
+    var c = /(%\d)/mi;
+    template = this._getTemplate(a);
+    for (var e = template.split(c), f = b.params, g = 0;g < e.length;g++) {
+      var h = e[g];
+      " " === h[0] && (h = h.substring(1));
+      " " === h[h.length - 1] && (h = h.substring(0, h.length - 1));
+      if (0 !== h.length) {
+        if (c.test(h)) {
+          var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
+          this._contents.push(h);
+          this._paramMap[k] = h;
+        } else {
+          this._contents.push(new Entry.FieldText({text:h}, this));
         }
-        if ((a = b.statements) && a.length) {
-          for (e = 0;e < a.length;e++) {
-            this._statements.push(new Entry.FieldStatement(a[e], this, e));
-          }
-        }
-        break;
-      case Entry.Workspace.MODE_VIMBOARD:
-        if ("basic_button" === this._schema.skeleton) {
-          this._startContentRender(Entry.Workspace.MODE_BOARD);
-          return;
-        }
-        b = this.getBoard().workspace.getCodeToText(this.block);
-        a = !1;
-        /(if)+(.|\n)+(else)+/.test(b) && (c = b.split("\n"), b = c.shift() + " " + c.shift(), a = !0, c = c.join(" "));
-        console.log("this.block._schema", this.block._schema);
-        b = {text:b, color:"white"};
-        this.block._schema.vimModeFontColor && (b.color = this.block._schema.vimModeFontColor);
-        this._contents.push(new Entry.FieldText(b, this));
-        a && (this._contents.push(new Entry.FieldLineBreak(null, this)), b.text = c, this._contents.push(new Entry.FieldText(b, this)));
+      }
+    }
+    if ((a = b.statements) && a.length) {
+      for (g = 0;g < a.length;g++) {
+        this._statements.push(new Entry.FieldStatement(a[g], this, g));
+      }
     }
     this.alignContent(!1);
   };
@@ -23393,6 +23376,11 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     a.setAttribute("fill", this._fillColor);
     this._backgroundPath = a;
     this.pathGroup.insertBefore(a, this._path);
+  };
+  b._getTemplate = function(a) {
+    var b = this._schema, b = b.template ? b.template : Lang.template[this.block.type], c;
+    a === Entry.Workspace.MODE_VIMBOARD && this.getBoard().workspace.vimBoard && Entry.block[this.type].syntax && Entry.block[this.type].syntax.py && (c = Entry.block[this.type].syntax.py[0]);
+    return c || b;
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(b, a) {
@@ -26908,6 +26896,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.addVimBoard = function(a) {
     this.vimBoard || (this.vimBoard = new Entry.Vim(a), this.vimBoard.workspace = this, this.vimBoard.hide());
+  };
+  b.getParserType = function() {
+    return this.vimBoard._parserType;
   };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {

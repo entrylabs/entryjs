@@ -217,72 +217,34 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             });
         }
 
-        switch (mode) {
-            case Entry.Workspace.MODE_BOARD:
-            case Entry.Workspace.MODE_OVERLAYBOARD:
-                var reg = /(%\d)/mi;
-                var template = schema.template ? schema.template : Lang.template[this.block.type];
+        var reg = /(%\d)/mi;
 
-                template = Entry.block[this.type].syntax.py[0];
+        template = this._getTemplate(mode);
 
-                var templateParams = template.split(reg);
-                var params = schema.params;
+        var templateParams = template.split(reg);
+        var params = schema.params;
 
-                for (var i=0; i<templateParams.length; i++) {
-                    var param = templateParams[i];
-                    if (param[0] === " ") param = param.substring(1);
-                    if (param[param.length - 1] === " ") param = param.substring(0, param.length - 1);
-                    if (param.length === 0) continue;
+        for (var i=0; i<templateParams.length; i++) {
+            var param = templateParams[i];
+            if (param[0] === " ") param = param.substring(1);
+            if (param[param.length - 1] === " ") param = param.substring(0, param.length - 1);
+            if (param.length === 0) continue;
 
-                    if (reg.test(param)) {
-                        var paramIndex = Number(param.split('%')[1]) - 1;
-                        param = params[paramIndex];
-                        var field = new Entry['Field' + param.type](param, this, paramIndex, mode, i);
-                        this._contents.push(field);
-                        this._paramMap[paramIndex] = field;
-                    } else this._contents.push(new Entry.FieldText({text: param}, this));
-                }
-
-                var statements = schema.statements;
-                if (statements && statements.length) {
-                    for (i=0; i<statements.length; i++)
-                        this._statements.push(new Entry.FieldStatement(statements[i], this, i));
-                }
-                break;
-            case Entry.Workspace.MODE_VIMBOARD:
-                if (this._schema.skeleton === 'basic_button') {
-                    this._startContentRender(Entry.Workspace.MODE_BOARD);
-                    return;
-                }
-
-
-                var text = this.getBoard().workspace.getCodeToText(this.block);
-                var lineBreak = false;
-                var secondLineText;
-                if (/(if)+(.|\n)+(else)+/.test(text)) {
-                    var contents = text.split('\n');
-                    text = contents.shift() + ' ' + contents.shift();
-
-                    lineBreak = true;
-                    secondLineText = contents.join(" ");
-                }
-
-                console.log("this.block._schema", this.block._schema);
-
-                var fieldText = {text:text, color: 'white'};
-                if (this.block._schema.vimModeFontColor)
-                    fieldText.color = this.block._schema.vimModeFontColor;
-                this._contents.push(
-                    new Entry.FieldText(fieldText, this)
-                );
-
-                if (lineBreak) {
-                    this._contents.push(new Entry.FieldLineBreak(null, this));
-                    fieldText.text = secondLineText;
-                    this._contents.push(new Entry.FieldText(fieldText, this));
-                }
-                break;
+            if (reg.test(param)) {
+                var paramIndex = Number(param.split('%')[1]) - 1;
+                param = params[paramIndex];
+                var field = new Entry['Field' + param.type](param, this, paramIndex, mode, i);
+                this._contents.push(field);
+                this._paramMap[paramIndex] = field;
+            } else this._contents.push(new Entry.FieldText({text: param}, this));
         }
+
+        var statements = schema.statements;
+        if (statements && statements.length) {
+            for (i=0; i<statements.length; i++)
+                this._statements.push(new Entry.FieldStatement(statements[i], this, i));
+        }
+
         this.alignContent(false);
     };
 
@@ -1318,6 +1280,21 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this._backgroundPath = backgroundPath;
         this.pathGroup.insertBefore(backgroundPath, this._path);
+    };
+
+    p._getTemplate = function(renderMode) {
+        var schema = this._schema;
+        var defaultTemplate = schema.template ? schema.template : Lang.template[this.block.type];
+        var template;
+
+        if (renderMode === Entry.Workspace.MODE_VIMBOARD) {
+            var workspace = this.getBoard().workspace;
+            if (workspace.vimBoard) {
+                if (Entry.block[this.type].syntax && Entry.block[this.type].syntax.py)
+                    template = Entry.block[this.type].syntax.py[0];
+            }
+        }
+        return template || defaultTemplate;
     };
 
 
