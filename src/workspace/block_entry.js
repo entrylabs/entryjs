@@ -8387,31 +8387,32 @@ Entry.block = {
         "class": "terminate",
         "isNotFor": [],
         "func": function (sprite, script) {
-            var target = script.getField("TARGET", script);
-            var container = Entry.container;
+            var object = sprite.parent;
 
-            switch(target) {
+            switch(script.getField("TARGET", script)) {
                 case 'all':
-                    container.mapObject(function(obj) {
+                    Entry.container.mapObject(function(obj) {
                         obj.script.clearExecutors();
                     }, null);
                     return this.die();
                 case 'thisOnly':
-                    sprite.parent.script.clearExecutorsByEntity(sprite);
+                    object.script.clearExecutorsByEntity(sprite);
                     return this.die();
                 case 'thisObject':
-                    sprite.parent.script.clearExecutors();
+                    object.script.clearExecutors();
                 return this.die();
                 case 'thisThread':
                     return this.die();
                 case 'otherThread':
                     var executor = this.executor;
-                    var code = sprite.parent.script;
+                    var code = object.script;
                     var executors = code.executors;
+                    var spriteId = sprite.id;
 
                     for (var i = 0 ; i < executors.length; i++) {
                         var currentExecutor = executors[i];
-                        if (currentExecutor !== executor) {
+                        if (currentExecutor !== executor &&
+                            currentExecutor.entity.id === spriteId) {
                             code.removeExecutor(currentExecutor);
                             --i;
                         }
