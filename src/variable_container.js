@@ -131,8 +131,9 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     //functionAddButton.innerHTML = '+ ' + Lang.Msgs.to_be_continue;
     this.functionAddButton_ = functionAddButton;
     functionAddButton.bindOnClick(function(e) {
+        var playground = Entry.playground;
         var blockMenu = that._getBlockMenu();
-        Entry.playground.changeViewMode('code');
+        playground.changeViewMode('code');
         if (blockMenu.lastSelector != 'func')
             blockMenu.selectMenu('func');
         that.createFunction();
@@ -528,6 +529,15 @@ Entry.VariableContainer.prototype.updateList = function() {
 
     if (viewMode == 'all' || viewMode == 'func') {
         if (viewMode == 'func'){
+            var mode = Entry.Workspace.MODE_BOARD;
+            if (Entry.playground && Entry.playground.mainWorkspace)
+                mode = Entry.playground.mainWorkspace.getMode();
+
+            if (mode === Entry.Workspace.MODE_OVERLAYBOARD) {
+                this.functionAddButton_.addClass('disable');
+            } else
+                this.functionAddButton_.removeClass('disable');
+
             this.listView_.appendChild(this.functionAddButton_);
         }
         for (var i in this.functions_) {

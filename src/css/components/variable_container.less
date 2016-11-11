@@ -93,7 +93,13 @@
     text-align: center;
 }
 
-.entryVariableAddWorkspace:hover {
+.entryVariableAddWorkspace.disable {
+    color: #bdbdbd;
+    cursor: default;
+    pointer-events:none;
+}
+
+.entryVariableAddWorkspace:not(.disable):hover {
     background-color: #d3d3d3;
     color: #333;
 }

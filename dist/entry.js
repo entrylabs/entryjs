@@ -17214,14 +17214,9 @@ Entry.Func.prototype.destroy = function() {
   this.blockMenuBlock.destroy();
 };
 Entry.Func.edit = function(b) {
-  this.cancelEdit();
-  this.targetFunc = b;
-  this.initEditView(b.content);
-  this.bindFuncChangeEvent();
-  this.updateMenu();
-  setTimeout(function() {
+  this.targetFunc !== b && (this.unbindFuncChangeEvent(), this.unbindWorkspaceStateChangeEvent(), this.cancelEdit(), Entry.Func.isEdit = !0, this.targetFunc = b, this.initEditView(b.content), this.bindFuncChangeEvent(), this.updateMenu(), setTimeout(function() {
     this._backupContent = b.content.stringify();
-  }.bind(this), 0);
+  }.bind(this), 0));
 };
 Entry.Func.initEditView = function(b) {
   this.menuCode || this.setupMenuCode();
@@ -17236,8 +17231,7 @@ Entry.Func.initEditView = function(b) {
 };
 Entry.Func.endEdit = function(b) {
   this.unbindFuncChangeEvent();
-  this._workspaceStateEvent.destroy();
-  delete this._workspaceStateEvent;
+  this.unbindWorkspaceStateChangeEvent();
   switch(b) {
     case "save":
       this.save();
@@ -17246,9 +17240,9 @@ Entry.Func.endEdit = function(b) {
       this.cancelEdit();
   }
   this._backupContent = null;
-  Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD);
   delete this.targetFunc;
   this.updateMenu();
+  Entry.Func.isEdit = !1;
 };
 Entry.Func.save = function() {
   this.targetFunc.generateBlock(!0);
@@ -17287,7 +17281,7 @@ Entry.Func.syncFuncName = function(b) {
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a);
 };
 Entry.Func.cancelEdit = function() {
-  this.targetFunc && (this.targetFunc.block ? this._backupContent && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), Entry.variableContainer.updateList(), Entry.Func.isEdit = !1);
+  this.targetFunc && (this.targetFunc.block ? this._backupContent && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), Entry.variableContainer.updateList());
 };
 Entry.Func.getMenuXml = function() {
   var b = [];
@@ -17426,8 +17420,10 @@ Entry.Func.bindFuncChangeEvent = function(b) {
   !this._funcChangeEvent && b.content.getEventMap("funcDef")[0].view && (this._funcChangeEvent = b.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
 };
 Entry.Func.unbindFuncChangeEvent = function() {
-  this._funcChangeEvent && this._funcChangeEvent.destroy();
-  delete this._funcChangeEvent;
+  this._funcChangeEvent && (this._funcChangeEvent.destroy(), delete this._funcChangeEvent);
+};
+Entry.Func.unbindWorkspaceStateChangeEvent = function() {
+  this._workspaceStateEvent && (this._workspaceStateEvent.destroy(), delete this._workspaceStateEvent);
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(b) {
@@ -18776,9 +18772,10 @@ Entry.VariableContainer.prototype.createDom = function(b) {
   d.innerHTML = "+ " + Lang.Workspace.function_add;
   this.functionAddButton_ = d;
   d.bindOnClick(function(b) {
-    b = a._getBlockMenu();
-    Entry.playground.changeViewMode("code");
-    "func" != b.lastSelector && b.selectMenu("func");
+    b = Entry.playground;
+    var c = a._getBlockMenu();
+    b.changeViewMode("code");
+    "func" != c.lastSelector && c.selectMenu("func");
     a.createFunction();
   });
   return b;
@@ -18978,7 +18975,7 @@ Entry.VariableContainer.prototype.updateList = function() {
       }
     }
     if ("all" == b || "func" == b) {
-      for (d in "func" == b && this.listView_.appendChild(this.functionAddButton_), this.functions_) {
+      for (d in "func" == b && (b = Entry.Workspace.MODE_BOARD, Entry.playground && Entry.playground.mainWorkspace && (b = Entry.playground.mainWorkspace.getMode()), b === Entry.Workspace.MODE_OVERLAYBOARD ? this.functionAddButton_.addClass("disable") : this.functionAddButton_.removeClass("disable"), this.listView_.appendChild(this.functionAddButton_)), this.functions_) {
         b = this.functions_[d], a.push(b), e = b.listElement, this.listView_.appendChild(e), b.callerListElement && this.listView_.appendChild(b.callerListElement);
       }
     }
