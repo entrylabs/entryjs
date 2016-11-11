@@ -44,6 +44,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             this._blockCountMap.put("ExpressionStatement", 0);
             this._blockCountMap.put("FunctionDeclaration", 0);
             this._blockCountMap.put("VariableDeclarator", 0);
+            this._blockCountMap.put("AssignmentExpression", 0);;
             this._blockCountMap.put("ForStatement", 0);
             this._blockCountMap.put("WhileStatement", 0);
             this._blockCountMap.put("IfStatement", 0);
@@ -1241,10 +1242,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var bcmIndex = this._blockCountMap.get("VariableDeclarator");
             if(!bcmIndex) bcmIndex = 0;
             console.log("VariableDeclarator bcmIndex", bcmIndex, "this._blockCountMap", this._blockCountMap);
-            if(bcmIndex == 0) {
+            //if(bcmIndex == 0) {
                 this._blockCount++;
                 console.log("VariableDeclarator this._blockCount++");
-            }
+            //}
             this._blockCountMap.put("VariableDeclarator", bcmIndex+1);
         }
 
@@ -1560,7 +1561,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var param;
 
-        /*var bcmIndex = this._blockCountMap.get("AssignmentExpression");
+        var bcmIndex = this._blockCountMap.get("AssignmentExpression");
         if(!bcmIndex) bcmIndex = 0;
         if(bcmIndex == 0) {
             this._blockCount++;
@@ -1568,7 +1569,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         console.log("AssignmentExpression blockCount", this._blockCount);
-        this._blockCountMap.put("AssignmentExpression", bcmIndex+1);*/
+        this._blockCountMap.put("AssignmentExpression", bcmIndex+1);
 
         var left = component.left;
         if(left.type) {
