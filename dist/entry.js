@@ -14327,47 +14327,47 @@ Entry.PyToBlockParser = function(b) {
   b.VariableDeclarator = function(a) {
     console.log("VariableDeclarator component", a);
     var b = {}, c, e = [];
-    a.id.name && !a.id.name.includes("__filbert") && ((e = this._blockCountMap.get("VariableDeclarator")) || (e = 0), console.log("VariableDeclarator bcmIndex", e, "this._blockCountMap", this._blockCountMap), 0 == e && (this._blockCount++, console.log("VariableDeclarator this._blockCount++")), this._blockCountMap.put("VariableDeclarator", e + 1));
-    var f = a.id, g = a.init;
-    if ("__params0" != f.name && "__formalsIndex0" != f.name && "__args0" != f.name) {
+    if (a.id.name && !a.id.name.includes("__filbert")) {
+      var f = this._blockCountMap.get("VariableDeclarator");
+      f || (f = 0);
+      console.log("VariableDeclarator bcmIndex", f, "this._blockCountMap", this._blockCountMap);
+      0 == f && (this._blockCount++, console.log("VariableDeclarator this._blockCount++"));
+      this._blockCountMap.put("VariableDeclarator", f + 1);
+    }
+    var e = a.id, g = a.init;
+    if ("__params0" != e.name && "__formalsIndex0" != e.name && "__args0" != e.name) {
       if (g.callee && "__getParam0" == g.callee.name) {
-        return b.isFuncParam = !0, b.name = f.name, b;
+        return b.isFuncParam = !0, b.name = e.name, b;
       }
-      var h = this[f.type](f), k = this[g.type](g), e = [];
-      if ("Literal" == g.type) {
-        h.params && h.params[0] ? e.push(h.params[0]) : e.push(x), k = '"' + k + '"', e.push(k);
-      } else {
-        if ("Identifier" == g.type || "MemberExpression" == g.type) {
-          if (x = Entry.TextCodingUtil._currentObject, k.property && "__pythonRuntime.ops.subscriptIndex" == k.property.callee) {
-            if (k.object && k.object.object) {
-              if ("self" != k.object.object) {
-                throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + k.object.object.name + "' \uac1d\uccb4 \ub9ac\uc2a4\ud2b8\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;
-              }
-              if (k.object.property && !Entry.TextCodingUtil.isLocalListExisted(k.object.property.name, x)) {
-                throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + k.object.property.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
-              }
-            } else {
-              if (k.object && !Entry.TextCodingUtil.isGlobalListExisted(k.object.name)) {
-                throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + k.object.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
-              }
+      var h = this[e.type](e), f = this[g.type](g);
+      if ("Identifier" == g.type || "MemberExpression" == g.type) {
+        var k = Entry.TextCodingUtil._currentObject;
+        if (f.property && "__pythonRuntime.ops.subscriptIndex" == f.property.callee) {
+          if (f.object && f.object.object) {
+            if ("self" != f.object.object) {
+              throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f.object.object.name + "' \uac1d\uccb4 \ub9ac\uc2a4\ud2b8\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;
+            }
+            if (f.object.property && !Entry.TextCodingUtil.isLocalListExisted(f.object.property.name, k)) {
+              throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f.object.property.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
             }
           } else {
-            if (k.object) {
-              if ("self" != k.object.name) {
-                throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + k.object.name + "' \uac1d\uccb4 \ubcc0\uc218\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;
-              }
-              if (k.property.name && (console.log("initData.property.name", k), !Entry.TextCodingUtil.isLocalVariableExisted(k.property.name, x))) {
-                throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + k.property.name + "' \ubcc0\uc218\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
-              }
-            } else {
-              if (!Entry.TextCodingUtil.isGlobalVariableExisted(k.name)) {
-                throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + k.name + "' \ubcc0\uc218\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;
-              }
+            if (f.object && !Entry.TextCodingUtil.isGlobalListExisted(f.object.name)) {
+              throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f.object.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
             }
           }
         } else {
-          console.log("VariableDeclarator idData", h, "initData", k), k.params && k.params[0] && h.name == k.params[0].name && "PLUS" == k.operator || "MINUS" == k.operator ? (console.log("in initData.params[0]"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(x), "MINUS" == k.operator && 0 != k.params[2].params[0] && (k.params[2].params[0] = "-" + k.params[2].params[0]), e.push(k.params[2])) : (console.log("in initData"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(x), e.push(k))
-          ;
+          if (f.object) {
+            if ("self" != f.object.name) {
+              throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f.object.name + "' \uac1d\uccb4 \ubcc0\uc218\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;
+            }
+            if (f.property.name && (console.log("initData.property.name", f), !Entry.TextCodingUtil.isLocalVariableExisted(f.property.name, k))) {
+              throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f.property.name + "' \ubcc0\uc218\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
+            }
+          } else {
+            if (!Entry.TextCodingUtil.isGlobalVariableExisted(f.name)) {
+              throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f.name + "' \ubcc0\uc218\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;
+            }
+          }
         }
       }
       var l;
@@ -14388,50 +14388,55 @@ Entry.PyToBlockParser = function(b) {
       if ("__pythonRuntime.objects.list" == l) {
         console.log("VariableDeclarator idData", h);
         b.id = h;
-        console.log("VariableDeclarator initData", k);
-        b.init = k;
-        h = f.name;
-        e = [];
-        arguments = k.arguments;
+        console.log("VariableDeclarator initData", f);
+        b.init = f;
+        var h = e.name, r = [], arguments = f.arguments;
         for (c in arguments) {
-          var r = arguments[c], k = {};
-          if (r.type) {
-            k.data = String(r.params[0]);
+          f = arguments[c];
+          g = {};
+          if (f.type) {
+            g.data = String(f.params[0]);
           } else {
-            if (r.name) {
-              throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + r.name + "' \ubcc0\uc218\ub294 \ub9ac\uc2a4\ud2b8\uc5d0 \ud3ec\ud568\ub420 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;
+            if (f.name) {
+              throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f.name + "' \ubcc0\uc218\ub294 \ub9ac\uc2a4\ud2b8\uc5d0 \ud3ec\ud568\ub420 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;
             }
           }
-          e.push(k);
+          r.push(g);
         }
-        Entry.TextCodingUtil.isGlobalListExisted(h) ? Entry.TextCodingUtil.updateGlobalList(h, e) : Entry.TextCodingUtil.createGlobalList(h, e);
+        Entry.TextCodingUtil.isGlobalListExisted(h) ? Entry.TextCodingUtil.updateGlobalList(h, r) : Entry.TextCodingUtil.createGlobalList(h, r);
       } else {
-        h = f.name;
-        "Literal" == g.type ? (c = g.value, "string" === typeof c && (c = '"' + c + '"')) : "Identifier" == g.type ? c = g.name : "UnaryExpression" == g.type ? (k = this[g.type](g), console.log("VariableDeclarator initData UnaryExpression", k), c = k.params[0], console.log("gl initData", k, "type", typeof c), "string" != typeof c && "number" != typeof c && (c = NaN)) : c = 0;
+        h = e.name;
+        "Literal" == g.type ? (c = g.value, "string" === typeof c && (c = '"' + c + '"')) : "Identifier" == g.type ? c = g.name : "UnaryExpression" == g.type ? (f = this[g.type](g), console.log("VariableDeclarator initData UnaryExpression", f), c = f.params[0], console.log("gl initData", f, "type", typeof c), "string" != typeof c && "number" != typeof c && (c = NaN)) : c = 0;
         console.log("variable name", h, "value", c);
         void 0 != c && null != c && NaN != c && h && !h.includes("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(h) ? Entry.TextCodingUtil.updateGlobalVariable(h, c) : Entry.TextCodingUtil.createGlobalVariable(h, c));
-        h = this[f.type](f);
+        h = this[e.type](e);
         console.log("VariableDeclarator idData", h);
         b.id = h;
-        k = this[g.type](g);
-        console.log("VariableDeclarator initData", k);
-        b.init = k;
+        f = this[g.type](g);
+        console.log("VariableDeclarator initData", f);
+        b.init = f;
         console.log("VariableDeclarator init.type", g.type);
-        "Literal" == g.type ? c = this.getBlockSyntax("%1 = %2") : (k.params && k.params[0] && k.params[0].name && h.name == k.params[0].name && "PLUS" == k.operator || "MINUS" == k.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", k.params[0].name), c = "%1 = %1 + %2") : c = "%1 = %2", c = this.getBlockSyntax(c));
-        c && (r = c.key);
-        c = r;
-        k = Entry.block[r];
-        console.log("vblock", k);
-        r = k.params;
-        k = k.def.params;
-        if (h.name) {
-          var x = this.ParamDropdownDynamic(h.name, r[0], k[0])
+        if ("Literal" == g.type) {
+          c = this.getBlockSyntax("%1 = %2");
+          var x;
+        } else {
+          f.params && f.params[0] && f.params[0].name && h.name == f.params[0].name && "PLUS" == f.operator || "MINUS" == f.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", f.params[0].name), c = "%1 = %1 + %2") : c = "%1 = %2", c = this.getBlockSyntax(c);
         }
+        c && (x = c.key);
+        c = x;
+        e = Entry.block[x];
+        console.log("vblock", e);
+        x = e.params;
+        e = e.def.params;
+        h.name && (r = this.ParamDropdownDynamic(h.name, x[0], e[0]));
+        e = [];
+        "Literal" == g.type ? (h.params && h.params[0] ? e.push(h.params[0]) : e.push(r), r = f.params[0], "string" == typeof r && (r = '"' + r + '"'), f.params[0] = r, e.push(f)) : (console.log("VariableDeclarator idData", h, "initData", f), f.params && f.params[0] && h.name == f.params[0].name && "PLUS" == f.operator || "MINUS" == f.operator ? (console.log("in initData.params[0]"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(r), "MINUS" == f.operator && 0 != f.params[2].params[0] && 
+        (f.params[2].params[0] = "-" + f.params[2].params[0]), e.push(f.params[2])) : (console.log("in initData"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(r), e.push(f)));
         b.type = c;
         b.params = e;
       }
-      (e = this._blockCountMap.get("VariableDeclarator")) || (e = 0);
-      this._blockCountMap.put("VariableDeclarator", e - 1);
+      (f = this._blockCountMap.get("VariableDeclarator")) || (f = 0);
+      this._blockCountMap.put("VariableDeclarator", f - 1);
       console.log("VariableDeclarator result", b);
       return b;
     }
