@@ -2227,7 +2227,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
         {syntax: "Arduino.analogRead(%1)", 
             paramCodes: [
-                {0:["\"A0\""], 1:["\"A1\""], 2:["\"A2\""], 3:["\"A3\""], 4:["\"A4\""], 5:["\"A5\""]},
+                {"\"0\"":["A0"], "\"1\"":["A1"], "\"2\"":["A2"], "\"3\"":["A3"], "\"4\"":["A4"], "\"5\"":["A5"]}
             ]}
         ]}
     },
@@ -2328,12 +2328,12 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {syntax: "Arduino.map(%1, %2, %3, %4, %5)", 
-            paramCodes: [
-                {0:["\"A0\""], 1:["\"A1\""], 2:["\"A2\""], 3:["\"A3\""], 4:["\"A4\""], 5:["\"A5\""]},
-                null,
-                null,
-                null,
-                null
+                paramCodes: [
+                    {"\"0\"":["A0"], "\"1\"":["A1"], "\"2\"":["A2"], "\"3\"":["A3"], "\"4\"":["A4"], "\"5\"":["A5"]},
+                    null,
+                    null,
+                    null,
+                    null
             ]}
         ]}
     },
@@ -2581,20 +2581,20 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.silent, "0"],
-                    [Lang.Blocks.do_name, "1"],
-                    [Lang.Blocks.do_sharp_name, "2"],
-                    [Lang.Blocks.re_name, "3"],
-                    [Lang.Blocks.re_sharp_name, "4"],
-                    [Lang.Blocks.mi_name, "5"],
-                    [Lang.Blocks.fa_name, "6"],
-                    [Lang.Blocks.fa_sharp_name, "7"],
-                    [Lang.Blocks.sol_name, "8"],
-                    [Lang.Blocks.sol_sharp_name, "9"],
-                    [Lang.Blocks.la_name, "10"],
-                    [Lang.Blocks.la_sharp_name, "11"],
-                    [Lang.Blocks.si_name, "12"]
+                    [Lang.Blocks.do_name, "C"],
+                    [Lang.Blocks.do_sharp_name, "CS"],
+                    [Lang.Blocks.re_name, "D"],
+                    [Lang.Blocks.re_sharp_name, "DS"],
+                    [Lang.Blocks.mi_name, "E"],
+                    [Lang.Blocks.fa_name, "F"],
+                    [Lang.Blocks.fa_sharp_name, "FS"],
+                    [Lang.Blocks.sol_name, "G"],
+                    [Lang.Blocks.sol_sharp_name, "GS"],
+                    [Lang.Blocks.la_name, "A"],
+                    [Lang.Blocks.la_sharp_name, "AS"],
+                    [Lang.Blocks.si_name, "B"]
                 ],
-                "value": "1",
+                "value": "C",
                 "fontSize": 11
             }
         ],
@@ -2606,7 +2606,7 @@ Entry.block = {
             "NOTE": 0
         },
         "func": function (sprite, script) {
-            return script.getNumberField("NOTE");
+            return script.getField("NOTE");
         },
         "syntax": {"js": [], "py": ["%1arduino_ext_tone_list#"]}
     },
@@ -2674,12 +2674,7 @@ Entry.block = {
                     "type": "arduino_get_port_number"
                 },
                 {
-                    "type": "arduino_ext_tone_list"/*,
-                    "params": [
-                        {
-                            "type": "arduino_ext_tone_list"
-                        }
-                    ]*/
+                    "type": "arduino_ext_tone_list"
                 },
                 null,
                 {
@@ -2703,7 +2698,8 @@ Entry.block = {
             var port = script.getNumberValue("PORT", script);
 
             if (!script.isStart) {
-                var note = script.getNumberValue("NOTE", script);
+                var note = script.getValue("NOTE", script);
+                note = Entry.ArduinoExt.toneTable[note];
 
                 if(note < 0) {
                     note = 0;
@@ -2765,15 +2761,7 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": [
-            {syntax: "Arduino.tone(%1, %2, %3, %4)", 
-            paramCodes:[
-                null,
-                {"0": [0],"1":["\"C\""],"2": ["\"CS\""],"3": ["\"D\""],"4": ["\"DS\""],
-                "5": ["\"E\""],"6": ["\"F\""],"7": ["\"FS\""],"8": ["\"G\""],"9": ["\"GS\""],
-                "10": ["\"A\""],"11": ["\"AS\""],"12": ["\"B\""]},
-                null,
-                null
-            ]}
+            {syntax: "Arduino.tone(%1, %2, %3, %4)"}
         ]}
     },
     "arduino_ext_set_servo": {

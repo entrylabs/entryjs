@@ -224,7 +224,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         //console.log("funcMap", this._funcMap.toString());
                         var funcParam = this._funcMap.get(param);
 
-                        console.log("param", param, "func param", funcParam);
+                        console.log("param", param);
+                        console.log("func param", funcParam);
                         if(funcParam) {
                             //console.log("func param current result", result);
                             result += funcParam;
@@ -247,7 +248,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         param = Entry.TextCodingUtil.variableListFilter(block, blockParamIndex, param);
 
                         console.log("currentBlock", currentBlock);
-                        syntaxObj = this.searchSyntax(currentBlock);
+                        /*syntaxObj = this.searchSyntax(currentBlock);
                         console.log("syntaxObj", syntaxObj);
                         if (syntaxObj) {
                             console.log("syntaxObj", syntaxObj, "i", i, "index", index);
@@ -256,11 +257,12 @@ Entry.BlockToPyParser = function(blockSyntax) {
                                 var paramCode = paramCodes[index];
                                 if(paramCode) {
                                     var pCode = paramCode[param];
+                                    console.log("pCode", pCode);
                                     if(pCode)
-                                        param = pCode[0];
+                                        param = pCode[0]; 
                                 }
                             }
-                        }
+                        } */
 
                         result += param;
 
@@ -292,7 +294,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
                     } else {
                         var param = this['Field' + schemaParams[index].type]
-                                                    (dataParams[index], schemaParams[index]);
+                                                    (dataParams[index], schemaParams[index], currentBlock, index);
 
                         if(param == null) {
                             if(schemaParams[index].text) {
@@ -303,21 +305,22 @@ Entry.BlockToPyParser = function(blockSyntax) {
                             }
                         }
 
+                        console.log("binary param", param);
                         param = Entry.TextCodingUtil.binaryOperatorValueConvertor(param);
-                        param = String(param);
+                        //param = String(param);
 
-                        if(!Entry.TextCodingUtil.isNumeric(param) &&
+                        /*if(!Entry.TextCodingUtil.isNumeric(param) &&
                             !Entry.TextCodingUtil.isBinaryOperator(param)) {
                                 param = String("\"" + param + "\"");
-                        }
+                        }*/
 
                         console.log("result and param text", result, param); 
            
-                        if(param == String('\"None\"')) {
+                        if(param == '\"None\"') {
                             var data = {None:"None"};
                             var x = "None";
                             param = data[x];
-                        }
+                        } 
                         
                         param = Entry.TextCodingUtil.variableListFilter(block, blockParamIndex, param);
 
@@ -328,20 +331,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                         //console.log("param variableFilter", param);
 
-                        console.log("currentBlock", currentBlock);
-                        syntaxObj = this.searchSyntax(currentBlock);
-                        if (syntaxObj) {
-                            console.log("syntaxObj", syntaxObj, "i", i, "index", index);
-                            if(syntaxObj.paramCodes) {
-                                var paramCodes = syntaxObj.paramCodes;
-                                var paramCode = paramCodes[index];
-                                if(paramCode) {
-                                    var pCode = paramCode[param];
-                                    if(pCode)
-                                        param = pCode[0];
-                                }
-                            }
-                        }
+                        
 
                         result += param;
                         console.log("btop parser param result", result);
@@ -475,16 +465,37 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return dataParam;
     };
 
-    p.FieldDropdown = function(dataParam) {
+    p.FieldDropdown = function(dataParam, schemaParam, currentBlock, index) {
         console.log("FieldDropdown", dataParam, typeof dataParam);
 
         if(typeof dataParam == "object")
             return "None";
 
+        console.log("currentBlock", currentBlock);
+        syntaxObj = this.searchSyntax(currentBlock);
+        if (syntaxObj) {
+            if(syntaxObj.paramCodes) {
+                var paramCodes = syntaxObj.paramCodes;
+                var paramCode = paramCodes[index];
+                if(paramCode) {
+                    console.log("paramCode", paramCode, "param", dataParam);
+
+                    var pCode = paramCode[dataParam];
+                    console.log("pCode", pCode);
+                    if(pCode)
+                        dataParam = pCode[0];
+                }
+            }
+        }
+
+        if(!Entry.TextCodingUtil.isBinaryOperator(dataParam)) {
+                dataParam = "\"" + dataParam + "\"";
+        }
+
         return dataParam;
     };
 
-    p.FieldDropdownDynamic = function(dataParam, schemaParam) {
+    p.FieldDropdownDynamic = function(dataParam, schemaParam, currentBlock, index) {
         console.log("FieldDropdownDynamic", dataParam, schemaParam);
         var object = Entry.playground.object;
         console.log("FieldDropdownDynamic Object", object);
@@ -497,6 +508,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
         }
         else {
             dataParam = Entry.TextCodingUtil.dropdownDynamicValueConvertor(dataParam, schemaParam);
+        }
+
+        if(!Entry.TextCodingUtil.isBinaryOperator(dataParam)) {
+                dataParam = "\"" + dataParam + "\"";
         }
 
         console.log("FieldDropdownDynamic result ", dataParam);
@@ -528,19 +543,22 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldText = function(dataParam) {
-        //console.log("FieldText", dataParam);
+        console.log("FieldText", dataParam);
 
         return dataParam;
     };
 
     p.FieldTextInput = function(dataParam) {
-        //console.log("FieldTextInput", dataParam);
+        console.log("FieldTextInput", dataParam);
+
+        if(!Entry.TextCodingUtil.isNumeric(dataParam))
+            dataParam = "\"" + dataParam + "\"";            
 
         return dataParam;
     };
 
     p.FieldNumber = function(dataParam) {
-        //console.log("FieldNumber", dataParam);
+        console.log("FieldNumber", dataParam);
 
         return dataParam;
     };

@@ -318,48 +318,48 @@ Entry.TextCodingUtil = {};
     tu.binaryOperatorValueConvertor = function(operator) {
         var result;
         switch(operator) {
-            case 'EQUAL': {
+            case '\"EQUAL\"': {
                 //console.log("EQUAL");
                 result = "==";
                 break;
             }
-            case 'GREATER': {
+            case '\"GREATER\"': {
                 result = ">";
                 break;
             }
-            case 'LESS': {
+            case '\"LESS\"': {
                 result = "<";
                 break;
             }
-            case 'GREATER_OR_EQUAL': {
+            case '\"GREATER_OR_EQUAL\"': {
                 result = ">=";
                 break;
             }
-            case 'LESS_OR_EQUAL': {
+            case '\"LESS_OR_EQUAL\"': {
                 result = "<=";
                 break;
             }
-            case '그리고': {
+            case '\"그리고\"': {
                 result = "&&";
                 break;
             }
-            case '또는': {
+            case '\"또는\"': {
                 result = "||";
                 break;
             }
-            case 'PLUS': {
+            case '\"PLUS\"': {
                 result = "+";
                 break;
             }
-            case 'MINUS': {
+            case '\"MINUS\"': {
                 result = "-";
                 break;
             }
-            case 'MULTI': {
+            case '\"MULTI\"': {
                 result = "*";
                 break;
             }
-            case 'DIVIDE': {
+            case '\"DIVIDE\"': {
                 result = "/";
                 break;
             }
