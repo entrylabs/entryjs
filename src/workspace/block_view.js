@@ -255,7 +255,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     return;
                 }
 
-                debugger;
 
                 var text = this.getBoard().workspace.getCodeToText(this.block);
                 var lineBreak = false;

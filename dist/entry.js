@@ -22834,7 +22834,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
           this._startContentRender(Entry.Workspace.MODE_BOARD);
           return;
         }
-        debugger;
         b = this.getBoard().workspace.getCodeToText(this.block);
         a = !1;
         /(if)+(.|\n)+(else)+/.test(b) && (c = b.split("\n"), b = c.shift() + " " + c.shift(), a = !0, c = c.join(" "));
