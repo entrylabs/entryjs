@@ -473,9 +473,17 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 var textCode = this._parser.Code(code, parseMode);
 
                 if (!this._pyHinter)
-                    this._pyHinter = new Entry.PyHint();
+                    this._pyHinter = new Entry.PyHint(); 
 
                 if(parseMode == Entry.Parser.PARSE_GENERAL) {
+                    var vd = Entry.TextCodingUtil.generateVariablesDeclaration();
+                    if(vd)
+                        result += vd + '\n';
+
+                    var ld = Entry.TextCodingUtil.generateListsDeclaration();
+                    if(ld)
+                        result += ld + '\n';
+
                     var funcDefMap = this._parser._funcDefMap;
                     console.log("funcDefMap", funcDefMap);
                     for(var f in funcDefMap) {

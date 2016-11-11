@@ -1818,4 +1818,74 @@ Entry.TextCodingUtil = {};
 
         return expressionStatement;
     };
+
+    tu.generateVariablesDeclaration = function() {
+        var result = "";
+        var currentObject = this._currentObject;
+        var vc = Entry.variableContainer;
+        if(!vc)
+            return;
+        //inspect variables
+        var targets = vc.variables_ || [];
+        for (var i=targets.length-1; i>=0; i--) {
+            var v = targets[i];
+            var name = v.name_;
+            var value = v.value_;
+            if(v.object_) {
+                if(v.object_ == currentObject.id) {
+                    name = "self." + name;
+                }
+                else 
+                    continue;
+            }
+
+            /*if(typeof value === "string")
+                value = "\"" + value + "\"";*/
+            result += name + " = " + value + "\n";
+        }
+
+        return result;
+    };
+
+    tu.generateListsDeclaration = function() {
+        var result = "";
+        var currentObject = this._currentObject;
+        var vc = Entry.variableContainer;
+        if(!vc)
+            return;
+
+        //inspect lists
+        targets = vc.lists_ || [];
+        for (var i=targets.length-1; i>=0; i--) {
+            var l = targets[i];
+            var name = l.name_;
+            if(l.object_) {
+                if(l.object_ == currentObject.id) {
+                    name = "self." + name;
+                }
+                else 
+                    continue;
+            }
+            var value = "";
+            var lArray = l.array_;
+
+            for(var va in lArray) {
+                var vItem = lArray[va];
+                var data = vItem.data;
+                var pData = parseInt(data);
+                if(!isNaN(pData))
+                    data = pData;
+                if(typeof data === "string")
+                    data = "\"" + data + "\"";
+                value += data;
+                if(va != lArray.length-1)
+                    value += ", ";
+            }
+            
+            result = name + " = [" + value + "]";
+        }
+
+        return result;
+
+    };
 })(Entry.TextCodingUtil);
