@@ -13230,7 +13230,6 @@ Entry.BlockToPyParser = function(b) {
     return b;
   };
   b.searchSyntax = function(a) {
-    console.log("datum", a);
     if ((a = a instanceof Entry.BlockView ? a.block._schema : a instanceof Entry.Block ? a._schema : a) && a.syntax) {
       for (a = a.syntax.py.concat();a.length;) {
         var b = !1, c = a.shift();
@@ -16000,7 +15999,6 @@ Entry.Parser = function(b, a, d, c) {
     this._mode = a;
     this._type = b;
     this._cm = c;
-    console.log("real mode", a);
     this.syntax = this.mappingSyntax(a);
     switch(b) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -22839,9 +22837,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.elem("g", {class:"contentsGroup"});
     b.statements && b.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g", {class:"statementGroup"}));
-    var c = /(%\d)/mi;
-    template = this._getTemplate(a);
-    for (var e = template.split(c), f = b.params, g = 0;g < e.length;g++) {
+    for (var c = /(%\d)/mi, e = this._getTemplate(a).split(c), f = b.params, g = 0;g < e.length;g++) {
       var h = e[g];
       " " === h[0] && (h = h.substring(1));
       " " === h[h.length - 1] && (h = h.substring(0, h.length - 1));
@@ -23379,7 +23375,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   };
   b._getTemplate = function(a) {
     var b = this._schema, b = b.template ? b.template : Lang.template[this.block.type], c;
-    a === Entry.Workspace.MODE_VIMBOARD && this.getBoard().workspace.vimBoard && Entry.block[this.type].syntax && Entry.block[this.type].syntax.py && (c = Entry.block[this.type].syntax.py[0]);
+    a === Entry.Workspace.MODE_VIMBOARD && (a = this.getBoard().workspace) && a.vimBoard && (c = a.vimBoard.getBlockSyntax(this));
     return c || b;
   };
 })(Entry.BlockView.prototype);

@@ -95,7 +95,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     }*/
                     contentResult += content;
 
-                    
+
                 }
             } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
                 isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
@@ -119,7 +119,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 /*if(Entry.TextCodingUtil.isEntryEventBlockWithParam(rootBlock)) {
                     contentResult = "\t" + contentResult;
                 }*/
-                
+
                 result = rootResult + contentResult + '\n';
 
                 // Declaration
@@ -312,14 +312,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
                                 param = String("\"" + param + "\"");
                         }
 
-                        console.log("result and param text", result, param); 
-           
+                        console.log("result and param text", result, param);
+
                         if(param == String('\"None\"')) {
                             var data = {None:"None"};
                             var x = "None";
                             param = data[x];
                         }
-                        
+
                         param = Entry.TextCodingUtil.variableListFilter(block, blockParamIndex, param);
 
                         console.log("here pa param", param);
@@ -406,7 +406,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             } else {
                 var tagIndex = 0;
                 console.log("block Token shit", blockToken);
-                
+
                 if(blockToken.search('#') != -1) {
                     var tagIndex = blockToken.indexOf('#');
                     blockToken = blockToken.substring(tagIndex+1);
@@ -445,7 +445,6 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     p.searchSyntax = function(datum) {
         var schema;
-        console.log("datum", datum);
         if(datum instanceof Entry.BlockView) {
             schema = datum.block._schema;
         } else if (datum instanceof Entry.Block)

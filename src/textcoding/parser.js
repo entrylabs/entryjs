@@ -22,7 +22,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._mode = mode; // maze ai workspace
     this.syntax = {}; //for maze
     this.codeMirror = cm;
-    this._lang = syntax || "blockPy"; 
+    this._lang = syntax || "blockPy";
     this._type = type;
     this.availableCode = [];
     this._syntax_cache = {};
@@ -117,13 +117,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
             this.setAvailableCode(configCode, playerCode);
         }*/
 
-        console.log("real mode", mode);
-
         this.syntax = this.mappingSyntax(mode);
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-                this._execParser = new Entry.JsToBlockParser(this.syntax); 
+                this._execParser = new Entry.JsToBlockParser(this.syntax);
 
                 this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
 
@@ -580,10 +578,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             } else {
                                 result = s;
                                 tokens = s.syntax;
-                                s.key = key;  
+                                s.key = key;
                             }
-                            
-                            tokens = tokens.split('(');                        
+
+                            tokens = tokens.split('(');
 
                             if(tokens[1] && tokens[1].includes('%')) {
                                 if(tokens[0].length != 0)
@@ -600,7 +598,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                             if(s.paramOption)
                                 tokens += "#" + s.paramOption;
-                                
+
                             syntax[tokens] = result;
                         })
                     }

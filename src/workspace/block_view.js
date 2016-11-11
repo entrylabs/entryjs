@@ -212,15 +212,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this.contentSvgGroup = this.svgGroup.elem("g", {class:'contentsGroup'});
         if (schema.statements && schema.statements.length) {
-            this.statementSvgGroup = this.svgGroup.elem("g", {
-                class: 'statementGroup'
-            });
+            this.statementSvgGroup =
+                this.svgGroup.elem("g", { class: 'statementGroup' });
         }
 
         var reg = /(%\d)/mi;
 
-        template = this._getTemplate(mode);
-
+        var template = this._getTemplate(mode);
         var templateParams = template.split(reg);
         var params = schema.params;
 
@@ -332,7 +330,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     p._render = function() {
         this._renderPath();
         this.set(this._skeleton.box(this));
-
     };
 
     p._renderPath = function() {
@@ -1289,11 +1286,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         if (renderMode === Entry.Workspace.MODE_VIMBOARD) {
             var workspace = this.getBoard().workspace;
-            if (workspace.vimBoard) {
-                if (Entry.block[this.type].syntax && Entry.block[this.type].syntax.py)
-                    template = Entry.block[this.type].syntax.py[0];
-            }
+            if (workspace && workspace.vimBoard)
+                template = workspace.vimBoard.getBlockSyntax(this);
         }
+
         return template || defaultTemplate;
     };
 
