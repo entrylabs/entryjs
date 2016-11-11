@@ -13197,7 +13197,7 @@ Entry.BlockToPyParser = function(b) {
       return "None";
     }
     console.log("currentBlock", c);
-    (syntaxObj = this.searchSyntax(c)) && syntaxObj.paramCodes && (b = syntaxObj.paramCodes[e]) && (console.log("paramCode", b, "param", a), b = b[a], console.log("pCode", b), b && (a = b[0]));
+    (syntaxObj = this.searchSyntax(c)) && syntaxObj.paramCodes && (b = syntaxObj.paramCodes[e]) && (console.log("paramCode", b, "param", a), b = b[a], console.log("pCode", b), b && (a = b[0], a = a.replace(/\"/g, "")));
     Entry.TextCodingUtil.isBinaryOperator(a) || (a = '"' + a + '"');
     return a;
   };

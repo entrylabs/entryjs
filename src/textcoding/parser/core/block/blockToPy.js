@@ -482,8 +482,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                     var pCode = paramCode[dataParam];
                     console.log("pCode", pCode);
-                    if(pCode)
+                    if(pCode) {
                         dataParam = pCode[0];
+                        dataParam = dataParam.replace(/\"/g, "");
+                    }
                 }
             }
         }
