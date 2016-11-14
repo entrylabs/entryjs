@@ -13219,7 +13219,7 @@ Entry.BlockToPyParser = function(b) {
               n = q[t], 0 !== n.length && (g.test(n) ? (n = Number(n.split("$")[1]) - 1, b += Entry.TextCodingUtil.indent(this.Thread(a.statements[n]))) : b += n);
             }
           } else {
-            n = 0, console.log("block Token shit", q), -1 != q.search("#") && (n = q.indexOf("#"), q = q.substring(n + 1)), b += q, console.log("btop parser block result", b);
+            console.log("block Token shit", q), b += q, console.log("btop parser block result", b);
           }
         }
       }
@@ -13339,7 +13339,7 @@ Entry.BlockToPyParser = function(b) {
   };
   b.makeFuncDef = function(a) {
     var b = "def ", c = this.getFuncInfo(a);
-    this.isRegisteredFunc(a) || (c.name = "f");
+    this.isRegisteredFunc(a) || (c.name = "F");
     if (c.name) {
       b += c.name;
     } else {
@@ -13968,12 +13968,12 @@ Entry.PyToBlockParser = function(b) {
       !e && (q = k, m = this.getBlockSyntax(q)) && (e = m.key);
       if (f.property) {
         if ("range" == f.property.name) {
-          if (q = "%1number#", m = this.getBlockSyntax(q)) {
+          if (q = "%1#number", m = this.getBlockSyntax(q)) {
             e = m.key;
           }
         } else {
           if ("add" == f.property.name) {
-            q = "(%1 %2calc_basic# %3)";
+            q = "(%1 %2 %3)#calc_basic";
             if (m = this.getBlockSyntax(q)) {
               e = m.key;
             }
@@ -13984,7 +13984,7 @@ Entry.PyToBlockParser = function(b) {
             console.log("callexpression arguments", arguments);
           } else {
             if ("multiply" == f.property.name) {
-              q = "(%1 %2calc_basic# %3)";
+              q = "(%1 %2 %3)#calc_basic";
               if (m = this.getBlockSyntax(q)) {
                 e = m.key;
               }
@@ -14296,7 +14296,7 @@ Entry.PyToBlockParser = function(b) {
     if (!0 === a.userCode || !1 === a.userCode) {
       e.userCode = a.userCode;
     }
-    f = this.getBlockSyntax("%1");
+    f = this.getBlockSyntax("%1#get_variable");
     var g;
     f && (g = f.key);
     if (g) {

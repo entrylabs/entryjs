@@ -1744,7 +1744,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("NAME");
         },
-        "syntax": {"js": [], "py": ["%1arduino_text#"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "%1", paramOption: "arduino_text"}
+        ]}
     },
     "arduino_send": {
         "color": "#00979D",
@@ -1859,7 +1861,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("PORT");
         },
-        "syntax": {"js": [], "py": ["%1arduino_get_sensor_number#"]}
+        "syntax": {"js": [], "py": [
+            {syntax:"%1", paramOption: "arduino_get_sensor_number"}
+        ]}
     },
     "arduino_get_port_number": {
         "color": "#00979D",
@@ -1899,7 +1903,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("PORT");
         },
-        "syntax": {"js": [], "py": ["%1arduino_get_port_number#"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "%1", paramOption: "arduino_get_port_number"}
+        ]}
     },
     "arduino_get_pwm_port_number": {
         "color": "#00979D",
@@ -1931,7 +1937,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("PORT");
         },
-        "syntax": {"js": [], "py": ["%1arduino_get_pwm_port_number#"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "%1", paramOption: "arduino_get_pwm_port_number"}
+        ]}
     },
     "arduino_get_number_sensor_value": {
         "color": "#00979D",
@@ -2608,7 +2616,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getNumberField("NOTE");
         },
-        "syntax": {"js": [], "py": ["%1arduino_ext_tone_list#"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "%1", paramOption: "arduino_ext_tone_list"}
+        ]}
     },
     "arduino_ext_tone_value": {
         "color": "#00979D",
@@ -2636,7 +2646,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getNumberValue("NOTE");
         },
-        "syntax": {"js": [], "py": ["%1arduino_ext_tone_value#"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "%1", paramOption: "arduino_ext_tone_value"}
+        ]}
     },
     "arduino_ext_set_tone": {
         "color": "#00979D",
@@ -6250,7 +6262,9 @@ Entry.block = {
             return script.getField('NUM', script);
         },
         "isPrimitive": true,
-        "syntax": {"js": ["Scope", "%1"], "py": ["%1number#"]}
+        "syntax": {"js": ["Scope", "%1"], "py": [
+            {syntax: "%1", paramOption: "number"}
+        ]}
     },
     "angle": {
         "color": "#FFD974",
@@ -6272,7 +6286,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getNumberField("ANGLE");
         },
-        "syntax": {"js": [], "py": ["%1angle#"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "%1", paramOption: "angle"}
+        ]}
     },
     "get_x_coordinate": {
         "color": "#FFD974",
@@ -6676,7 +6692,9 @@ Entry.block = {
             else
                 return leftValue / rightValue;
         },
-        "syntax": {"js": [], "py": ["(%1 %2calc_basic# %3)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "(%1 %2 %3)", paramOption: "calc_basic"}
+        ]}
     },
     "calc_plus": {
         "color": "#FFD974",
@@ -8797,7 +8815,9 @@ Entry.block = {
         },
         func: function() {
         },
-        "syntax": {"js": [], "py": ["%1function_create#"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "%1", paramOption: "function_create"}
+        ]}
     },
     "function_general": {
         "skeleton": "basic",
@@ -11285,7 +11305,9 @@ Entry.block = {
                     return Number(leftValue) <= Number(rightValue);
             }
         },
-        "syntax": {"js": [], "py": ["(%1 %2boolean_compare# %3)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "(%1 %2 %3)", paramOption:"boolean_basic_operator"}
+        ]}
     },
     "show": {
         "color": "#EC4466",
@@ -11996,7 +12018,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("VALUE");
         },
-        "syntax": {"js": [], "py": ["%1get_pictures#"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "%1", paramOption: "get_pictures"}
+        ]}
     },
     "change_to_some_shape": {
         "color": "#EC4466",
@@ -16612,7 +16636,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("VALUE");
         },
-        "syntax": {"js": [], "py": ["%1get_sounds#"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "%1", paramOption: "get_sounds"}
+        ]}
     },
     "sound_something_with_block": {
         "color": "#A4D01D",
@@ -17439,7 +17465,9 @@ Entry.block = {
             return script.getField('NAME', script);
         },
         "isPrimitive": true,
-        "syntax": {"js": ["Scope", "%1"], "py": ["%1text#"]}
+        "syntax": {"js": ["Scope", "%1"], "py": [
+            {syntax: "%1", paramOption: "text"}
+        ]}
     },
     "text_write": {
         "color": "#FFCA36",
@@ -17896,7 +17924,9 @@ Entry.block = {
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
             return variable.getValue();
         },
-        "syntax": {"js": [], "py": ["%1"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "%1", paramOption: "get_variable"}
+        ]}
     },
     "ask_and_wait": {
         "color": "#E457DC",

@@ -407,10 +407,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 var tagIndex = 0;
                 console.log("block Token shit", blockToken);
                 
-                if(blockToken.search('#') != -1) {
+                /*if(blockToken.search('#') != -1) {
                     var tagIndex = blockToken.indexOf('#');
                     blockToken = blockToken.substring(tagIndex+1);
-                }
+                }*/
 
                 result += blockToken;
 
@@ -701,7 +701,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         //console.log("makeFuncDef func", func);
 
         if(!this.isRegisteredFunc(funcBlock))
-            func.name = "f";
+            func.name = "F";
 
 
         if(!func.name) {

@@ -383,13 +383,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
             
             if(callee.property) {
                 if(callee.property.name == "range"){
-                    var syntax = String("%1number#");
+                    var syntax = String("%1#number");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if(blockSyntax)
                         type = blockSyntax.key;
                 }
                 else if(callee.property.name == "add") {
-                    var syntax = String("(%1 %2calc_basic# %3)");
+                    var syntax = String("(%1 %2 %3)#calc_basic");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if(blockSyntax)
                         type = blockSyntax.key;
@@ -404,7 +404,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("callexpression arguments", arguments);
                 }
                 else if(callee.property.name == "multiply") {
-                    var syntax = String("(%1 %2calc_basic# %3)");
+                    var syntax = String("(%1 %2 %3)#calc_basic");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if(blockSyntax)
                         type = blockSyntax.key;
@@ -1127,7 +1127,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(component.userCode === true || component.userCode === false)
             result.userCode = component.userCode;
 
-        var syntax = String("%1");
+        var syntax = String("%1#get_variable");
         var blockSyntax = this.getBlockSyntax(syntax);
         var type;
         if(blockSyntax)
@@ -2301,7 +2301,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var type;
         var param = value;
-        var params = [];
+        var params = []; 
 
         if(value === true){
             structure.type = "True";
