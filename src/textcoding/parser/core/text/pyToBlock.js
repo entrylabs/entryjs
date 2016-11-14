@@ -3504,13 +3504,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         switch(operator){
             case "==":
-                var syntax = String("(%1 %2boolean_compare# %3)");
+                var syntax = String("(%1 %2 %3)#boolean_basic_operator");
                 break;
             case "!=":
                 var syntax = String("not (%2)");
                 break;
             case "===":
-                var syntax = String("(%1 %2boolean_compare# %3)");
+                var syntax = String("(%1 %2 %3)#boolean_basic_operator");
                 break;
             case "!==":
                 var error = {};
@@ -3521,16 +3521,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 throw error;
                 break;
             case "<":
-                var syntax = String("(%1 %2boolean_compare# %3)");
+                var syntax = String("(%1 %2 %3)#boolean_basic_operator");
                 break;
             case "<=":
-                var syntax = String("(%1 %2boolean_compare# %3)");
+                var syntax = String("(%1 %2 %3)#boolean_basic_operator");
                 break;
             case ">":
-                var syntax = String("(%1 %2boolean_compare# %3)");
+                var syntax = String("(%1 %2 %3)#boolean_basic_operator");
                 break;
             case ">=":
-                var syntax = String("(%1 %2boolean_compare# %3)");
+                var syntax = String("(%1 %2 %3)#boolean_basic_operator");
                 break;
             case "<<":
                 var error = {};
@@ -3557,16 +3557,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 throw error;
                 break;
             case "+":
-                var syntax = String("(%1 %2calc_basic# %3)");
+                var syntax = String("(%1 %2 %3)#calc_basic");
                 break;
             case "-":
-                var syntax = String("(%1 %2calc_basic# %3)");
+                var syntax = String("(%1 %2 %3)#calc_basic");
                 break;
             case "*":
-                var syntax = String("(%1 %2calc_basic# %3)");
+                var syntax = String("(%1 %2 %3)#calc_basic");
                 break;
             case "/":
-                var syntax = String("(%1 %2calc_basic# %3)");
+                var syntax = String("(%1 %2 %3)#calc_basic");
                 break;
             case "%":
                 var error = {};
@@ -3807,7 +3807,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     error.line = this._blockCount;
                     console.log("send error", error);
                     throw error;
-                }
+                } 
 
             }
             console.log("BinaryExpression left params", params);

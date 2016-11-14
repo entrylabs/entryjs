@@ -229,8 +229,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p.getCodeToText = function(code) {
-        if (!this.vimBoard)
-            return;
+        if (!this.vimBoard) return;
+
         return this.vimBoard.getCodeToText(code);
     };
 
@@ -404,6 +404,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.vimBoard = new Entry.Vim(dom);
         this.vimBoard.workspace = this;
         this.vimBoard.hide();
+    };
+
+    p.getParserType = function() {
+        return this.vimBoard._parserType;
     };
 
 })(Entry.Workspace.prototype);

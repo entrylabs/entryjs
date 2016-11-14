@@ -13230,7 +13230,6 @@ Entry.BlockToPyParser = function(b) {
     return b;
   };
   b.searchSyntax = function(a) {
-    console.log("datum", a);
     if ((a = a instanceof Entry.BlockView ? a.block._schema : a instanceof Entry.Block ? a._schema : a) && a.syntax) {
       for (a = a.syntax.py.concat();a.length;) {
         var b = !1, c = a.shift();
@@ -15290,27 +15289,27 @@ Entry.PyToBlockParser = function(b) {
     var b = {}, c = {}, e = String(a.operator);
     switch(e) {
       case "==":
-        var f = "(%1 %2boolean_compare# %3)";
+        var f = "(%1 %2 %3)#boolean_basic_operator";
         break;
       case "!=":
         f = "not (%2)";
         break;
       case "===":
-        f = "(%1 %2boolean_compare# %3)";
+        f = "(%1 %2 %3)#boolean_basic_operator";
         break;
       case "!==":
         throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + e + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;;
       case "<":
-        f = "(%1 %2boolean_compare# %3)";
+        f = "(%1 %2 %3)#boolean_basic_operator";
         break;
       case "<=":
-        f = "(%1 %2boolean_compare# %3)";
+        f = "(%1 %2 %3)#boolean_basic_operator";
         break;
       case ">":
-        f = "(%1 %2boolean_compare# %3)";
+        f = "(%1 %2 %3)#boolean_basic_operator";
         break;
       case ">=":
-        f = "(%1 %2boolean_compare# %3)";
+        f = "(%1 %2 %3)#boolean_basic_operator";
         break;
       case "<<":
         throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + e + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;;
@@ -15319,16 +15318,16 @@ Entry.PyToBlockParser = function(b) {
       case ">>>":
         throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + e + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;;
       case "+":
-        f = "(%1 %2calc_basic# %3)";
+        f = "(%1 %2 %3)#calc_basic";
         break;
       case "-":
-        f = "(%1 %2calc_basic# %3)";
+        f = "(%1 %2 %3)#calc_basic";
         break;
       case "*":
-        f = "(%1 %2calc_basic# %3)";
+        f = "(%1 %2 %3)#calc_basic";
         break;
       case "/":
-        f = "(%1 %2calc_basic# %3)";
+        f = "(%1 %2 %3)#calc_basic";
         break;
       case "%":
         throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + e + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;;
@@ -16000,7 +15999,6 @@ Entry.Parser = function(b, a, d, c) {
     this._mode = a;
     this._type = b;
     this._cm = c;
-    console.log("real mode", a);
     this.syntax = this.mappingSyntax(a);
     switch(b) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -22839,43 +22837,24 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.elem("g", {class:"contentsGroup"});
     b.statements && b.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g", {class:"statementGroup"}));
-    switch(a) {
-      case Entry.Workspace.MODE_BOARD:
-      ;
-      case Entry.Workspace.MODE_OVERLAYBOARD:
-        for (var c = /(%\d)/mi, e = b.template ? b.template : Lang.template[this.block.type], e = Entry.block[this.type].syntax.py[0], f = e.split(c), g = b.params, e = 0;e < f.length;e++) {
-          var h = f[e];
-          " " === h[0] && (h = h.substring(1));
-          " " === h[h.length - 1] && (h = h.substring(0, h.length - 1));
-          if (0 !== h.length) {
-            if (c.test(h)) {
-              var k = Number(h.split("%")[1]) - 1, h = g[k], h = new Entry["Field" + h.type](h, this, k, a, e);
-              this._contents.push(h);
-              this._paramMap[k] = h;
-            } else {
-              this._contents.push(new Entry.FieldText({text:h}, this));
-            }
-          }
+    for (var c = /(%\d)/mi, e = this._getTemplate(a).split(c), f = b.params, g = 0;g < e.length;g++) {
+      var h = e[g];
+      " " === h[0] && (h = h.substring(1));
+      " " === h[h.length - 1] && (h = h.substring(0, h.length - 1));
+      if (0 !== h.length) {
+        if (c.test(h)) {
+          var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
+          this._contents.push(h);
+          this._paramMap[k] = h;
+        } else {
+          this._contents.push(new Entry.FieldText({text:h}, this));
         }
-        if ((a = b.statements) && a.length) {
-          for (e = 0;e < a.length;e++) {
-            this._statements.push(new Entry.FieldStatement(a[e], this, e));
-          }
-        }
-        break;
-      case Entry.Workspace.MODE_VIMBOARD:
-        if ("basic_button" === this._schema.skeleton) {
-          this._startContentRender(Entry.Workspace.MODE_BOARD);
-          return;
-        }
-        b = this.getBoard().workspace.getCodeToText(this.block);
-        a = !1;
-        /(if)+(.|\n)+(else)+/.test(b) && (c = b.split("\n"), b = c.shift() + " " + c.shift(), a = !0, c = c.join(" "));
-        console.log("this.block._schema", this.block._schema);
-        b = {text:b, color:"white"};
-        this.block._schema.vimModeFontColor && (b.color = this.block._schema.vimModeFontColor);
-        this._contents.push(new Entry.FieldText(b, this));
-        a && (this._contents.push(new Entry.FieldLineBreak(null, this)), b.text = c, this._contents.push(new Entry.FieldText(b, this)));
+      }
+    }
+    if ((a = b.statements) && a.length) {
+      for (g = 0;g < a.length;g++) {
+        this._statements.push(new Entry.FieldStatement(a[g], this, g));
+      }
     }
     this.alignContent(!1);
   };
@@ -23393,6 +23372,11 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     a.setAttribute("fill", this._fillColor);
     this._backgroundPath = a;
     this.pathGroup.insertBefore(a, this._path);
+  };
+  b._getTemplate = function(a) {
+    var b = this._schema, b = b.template ? b.template : Lang.template[this.block.type], c;
+    a === Entry.Workspace.MODE_VIMBOARD && (a = this.getBoard().workspace) && a.vimBoard && (c = a.vimBoard.getBlockSyntax(this));
+    return c || b;
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(b, a) {
@@ -23991,6 +23975,10 @@ Entry.Field = function() {
   };
   b.getContentHeight = function() {
     return Entry.isMobile() ? 22 : 16;
+  };
+  b._getRenderMode = function() {
+    var a = this._blockView.renderMode;
+    return void 0 !== a ? a : Entry.BlockView.RENDER_MODE_BLOCK;
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, d) {
@@ -26908,6 +26896,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.addVimBoard = function(a) {
     this.vimBoard || (this.vimBoard = new Entry.Vim(a), this.vimBoard.workspace = this, this.vimBoard.hide());
+  };
+  b.getParserType = function() {
+    return this.vimBoard._parserType;
   };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {
