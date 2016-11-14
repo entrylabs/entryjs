@@ -20743,6 +20743,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   };
   b.banCategory = function(a) {
     a in this._categoryElems && (a = this._categoryElems[a], a.addClass("entryRemoveCategory"));
+    this.selectMenu(this.firstSelector, !0);
   };
   b.unbanCategory = function(a) {
     a in this._categoryElems && (a = this._categoryElems[a], a.removeClass("entryRemoveCategory"));
@@ -20854,7 +20855,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   b._generateCategoryView = function(a) {
     if (a) {
       for (var b = 0;b < a.length;b++) {
-        this._generateCategoryElement(a[b].category, a[b].visible);
+        0 === b && (this.firstSelector = a[b].category), this._generateCategoryElement(a[b].category, a[b].visible);
       }
     }
   };

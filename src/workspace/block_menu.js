@@ -524,6 +524,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             categoryElem = this._categoryElems[categoryName];
             categoryElem.addClass('entryRemoveCategory');            
         }
+        this.selectMenu(this.firstSelector, true);
     }
 
     p.unbanCategory = function(categoryName) {
@@ -691,7 +692,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p._generateCategoryView = function(data) {
         if (!data) return;
 
+        var that = this;
         for (var i=0; i<data.length; i++) {
+            if(i === 0) {
+                that.firstSelector = data[i].category;
+            }
             var name = data[i].category;
             var visible = data[i].visible;
             this._generateCategoryElement(name, visible);
