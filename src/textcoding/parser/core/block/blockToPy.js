@@ -22,6 +22,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     var funcDefMap = {};
     this._funcDefMap = {};
+
+    this._variableDeclaration = null;
+    this._listDeclaration = null; 
 };
 
 (function(p){

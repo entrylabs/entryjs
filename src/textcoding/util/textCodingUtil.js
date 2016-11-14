@@ -148,8 +148,8 @@ Entry.TextCodingUtil = {};
             }
         }
         else if(menuName == "lists") {
-            var entryLists = Entry.variableContainer.lists;
-            //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
+            var entryLists = Entry.variableContainer.lists_;
+            console.log("dropdownDynamicValueConvertor entryLists", entryLists);
             for(var e in entryLists) {
                 var entryList = entryLists[e];
                 if(entryList.name_ == name) {

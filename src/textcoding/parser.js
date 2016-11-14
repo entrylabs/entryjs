@@ -22,7 +22,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._mode = mode; // maze ai workspace
     this.syntax = {}; //for maze
     this.codeMirror = cm;
-    this._lang = syntax || "js"; //for maze
+    this._lang = syntax || "blockPy"; //for maze
     this._type = type;
     this.availableCode = [];
     this._syntax_cache = {};
@@ -118,6 +118,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
         }*/
 
         console.log("real mode", mode);
+        if(type == this._parserType)
+            return;
 
         this.syntax = this.mappingSyntax(mode);
 
@@ -139,7 +141,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 this._parser = new Entry.BlockToJsParser(this.syntax);
 
-                var syntax = this.syntax;
+                var syntax = this.syntax; 
                 var assistScope = {};
 
                 for(var key in syntax.Scope) {
@@ -476,20 +478,35 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     this._pyHinter = new Entry.PyHint(); 
 
                 if(parseMode == Entry.Parser.PARSE_GENERAL) {
-                    var vd = Entry.TextCodingUtil.generateVariablesDeclaration();
-                    if(vd)
-                        result += vd + '\n';
-
-                    var ld = Entry.TextCodingUtil.generateListsDeclaration();
-                    if(ld)
-                        result += ld + '\n';
-
-                    var funcDefMap = this._parser._funcDefMap;
-                    console.log("funcDefMap", funcDefMap);
-                    for(var f in funcDefMap) {
-                        var funcDef = funcDefMap[f];
-                        result += funcDef + '\n';
+                    console.log("this._parser._variableDeclaration", this._parser._variableDeclaration);
+                    if(!this._parser._variableDeclaration) {
+                        var vd = Entry.TextCodingUtil.generateVariablesDeclaration();
+                        this._parser._variableDeclaration = vd; 
+                        if(vd)
+                            result += vd;
                     }
+
+                    if(!this._parser._listDeclaration) {
+                        var ld = Entry.TextCodingUtil.generateListsDeclaration();
+                        this._parser._listDeclaration = ld;
+                        if(ld)
+                            result += ld + '\n';
+                    }
+
+                    if(!this._parser._funcDeclaration) {
+                        var funcDefMap = this._parser._funcDefMap;
+                        var fd = "";
+                        console.log("funcDefMap", funcDefMap);
+                        
+                        for(var f in funcDefMap) {
+                            var funcDef = funcDefMap[f];
+                            fd += funcDef + '\n';
+                        }
+                        this._parser._funcDeclaration = fd;
+                        if(fd)
+                            result += fd;
+                    }
+                    
                 }
 
                 result += textCode;
