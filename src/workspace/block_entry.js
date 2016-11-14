@@ -2899,13 +2899,33 @@ Entry.block = {
     "arduino_open": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "isNotFor": [""],
+        "isNotFor": ["arduinoDisconnected"],
         "template": '%1',
         "params": [
             {
                 "type": "Text",
-                //TODO: 다국어 적용
-                "text": Lang.Blocks.ARDUINO_program,
+                "text": Lang.Blocks.ARDUINO_open_connector,
+                "color": "#333",
+                "align": "center"
+            }
+        ],
+        "events": {
+            "mousedown": [
+                function() {
+                    Entry.hw.openHardwareProgram();
+                }
+            ]
+        }
+    },
+    "arduino_cloud_pc_open": {
+        "skeleton": "basic_button",
+        "color": "#eee",
+        "isNotFor": ["arduinoConnected"],
+        "template": '%1',
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.ARDUINO_cloud_pc_connector,
                 "color": "#333",
                 "align": "center"
             }
