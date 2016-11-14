@@ -23976,6 +23976,10 @@ Entry.Field = function() {
   b.getContentHeight = function() {
     return Entry.isMobile() ? 22 : 16;
   };
+  b._getRenderMode = function() {
+    var a = this._blockView.renderMode;
+    return void 0 !== a ? a : Entry.BlockView.RENDER_MODE_BLOCK;
+  };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, d) {
   this._block = a.block;

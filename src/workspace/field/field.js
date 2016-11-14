@@ -223,6 +223,12 @@ Entry.Field = function() {};
     };
 
     p.getContentHeight = function() {
-        return Entry.isMobile() ? 22: 16;
+        return Entry.isMobile() ? 22 : 16;
+    };
+
+    p._getRenderMode = function() {
+        var mode = this._blockView.renderMode;
+        return mode !== undefined ?
+            mode : Entry.BlockView.RENDER_MODE_BLOCK;
     };
 })(Entry.Field.prototype);
