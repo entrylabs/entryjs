@@ -1745,7 +1745,7 @@ Entry.block = {
             return script.getStringField("NAME");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "arduino_text"}
+            {syntax: "%1", keyOption: "arduino_text"}
         ]}
     },
     "arduino_send": {
@@ -1862,7 +1862,7 @@ Entry.block = {
             return script.getStringField("PORT");
         },
         "syntax": {"js": [], "py": [
-            {syntax:"%1", paramOption: "arduino_get_sensor_number"}
+            {syntax:"%1", keyOption: "arduino_get_sensor_number"}
         ]}
     },
     "arduino_get_port_number": {
@@ -1904,7 +1904,7 @@ Entry.block = {
             return script.getStringField("PORT");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "arduino_get_port_number"}
+            {syntax: "%1", keyOption: "arduino_get_port_number"}
         ]}
     },
     "arduino_get_pwm_port_number": {
@@ -1938,7 +1938,7 @@ Entry.block = {
             return script.getStringField("PORT");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "arduino_get_pwm_port_number"}
+            {syntax: "%1", keyOption: "arduino_get_pwm_port_number"}
         ]}
     },
     "arduino_get_number_sensor_value": {
@@ -2617,7 +2617,7 @@ Entry.block = {
             return script.getNumberField("NOTE");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "arduino_ext_tone_list"}
+            {syntax: "%1", keyOption: "arduino_ext_tone_list"}
         ]}
     },
     "arduino_ext_tone_value": {
@@ -2647,7 +2647,7 @@ Entry.block = {
             return script.getNumberValue("NOTE");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "arduino_ext_tone_value"}
+            {syntax: "%1", keyOption: "arduino_ext_tone_value"}
         ]}
     },
     "arduino_ext_set_tone": {
@@ -6263,7 +6263,7 @@ Entry.block = {
         },
         "isPrimitive": true,
         "syntax": {"js": ["Scope", "%1"], "py": [
-            {syntax: "%1", paramOption: "number"}
+            {syntax: "%1", keyOption: "number"}
         ]}
     },
     "angle": {
@@ -6287,7 +6287,7 @@ Entry.block = {
             return script.getNumberField("ANGLE");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "angle"}
+            {syntax: "%1", keyOption: "angle"}
         ]}
     },
     "get_x_coordinate": {
@@ -6693,7 +6693,7 @@ Entry.block = {
                 return leftValue / rightValue;
         },
         "syntax": {"js": [], "py": [
-            {syntax: "(%1 %2 %3)", paramOption: "calc_basic"}
+            {syntax: "(%1 %2 %3)", keyOption: "calc_basic"}
         ]}
     },
     "calc_plus": {
@@ -8143,7 +8143,9 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["for i in range(%1):\n$1"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "for i in range(%1):\n$1", template: "for i in range(%1):"}
+        ]}
     },
     "repeat_inf": {
         "color": "#498deb",
@@ -8175,7 +8177,9 @@ Entry.block = {
             script.isLooped = true;
             return script.getStatement('DO');
         },
-        "syntax": {"js": [], "py": ["while True:\n$1"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "while True:\n$1", template: "while True:"}
+        ]}
     },
     "stop_repeat": {
         "color": "#498deb",
@@ -8292,7 +8296,9 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["if %1:\n$1"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "if %1:\n$1", template: "if %1:"}
+        ]}
     },
     "if_else": {
         "color": "#498deb",
@@ -8350,7 +8356,9 @@ Entry.block = {
             else
                 return script.getStatement("STACK_ELSE", script);
         },
-        "syntax": {"js": [], "py": ["if %1:\n$1\nelse:\n$2"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "if %1:\n$1\nelse:\n$2", template: "if %1: else:"}
+        ]} 
     },
     "create_clone": {
         "color": "#498deb",
@@ -8526,7 +8534,9 @@ Entry.block = {
             return value ? script.getStatement("DO", script) :
                 script.callReturn();
         },
-        "syntax": {"js": [], "py": ["while %1 %2\n$1"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "while %1 %2:\n$1", template: "while %1 %2:"}
+        ]}
     },
     "stop_object": {
         "color": "#498deb",
@@ -8816,7 +8826,7 @@ Entry.block = {
         func: function() {
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "function_create"}
+            {syntax: "%1", keyOption: "function_create"}
         ]}
     },
     "function_general": {
@@ -9563,7 +9573,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.left_wheel_by(%2)", params: ["LEFT"]},
             {syntax: "Hamster.right_wheel_by(%2)", params: ["RIGHT"]},
-            {syntax: "Hamster.wheels_by(%2, %2)", params: ["BOTH"], paramOption: "SAME"} 
+            {syntax: "Hamster.wheels_by(%2, %2)", params: ["BOTH"], keyOption: "SAME"} 
         ]}
     },
     "hamster_set_wheel_to": {
@@ -9627,7 +9637,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.left_wheel(%2)", params: ["LEFT"]},
             {syntax: "Hamster.right_wheel(%2)", params: ["RIGHT"]},
-            {syntax: "Hamster.wheels(%2, %2)", params: ["BOTH"], paramOption: "SAME"}
+            {syntax: "Hamster.wheels(%2, %2)", params: ["BOTH"], keyOption: "SAME"}
         ]}
     },
     "hamster_follow_line_using": {
@@ -10300,7 +10310,7 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": [
-            {syntax: "Hamster.note(Hamster.NOTE_OFF,%1)", paramOption: "Hamster.NOTE_OFF"}
+            {syntax: "Hamster.note(Hamster.NOTE_OFF,%1)", keyOption: "Hamster.NOTE_OFF"}
         ]}
     },
     "hamster_change_tempo_by": {
@@ -11306,7 +11316,7 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": [
-            {syntax: "(%1 %2 %3)", paramOption:"boolean_basic_operator"}
+            {syntax: "(%1 %2 %3)", keyOption:"boolean_basic_operator"}
         ]}
     },
     "show": {
@@ -12019,7 +12029,7 @@ Entry.block = {
             return script.getStringField("VALUE");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "get_pictures"}
+            {syntax: "%1", keyOption: "get_pictures"}
         ]}
     },
     "change_to_some_shape": {
@@ -16637,7 +16647,7 @@ Entry.block = {
             return script.getStringField("VALUE");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "get_sounds"}
+            {syntax: "%1", keyOption: "get_sounds"}
         ]}
     },
     "sound_something_with_block": {
@@ -17466,7 +17476,7 @@ Entry.block = {
         },
         "isPrimitive": true,
         "syntax": {"js": ["Scope", "%1"], "py": [
-            {syntax: "%1", paramOption: "text"}
+            {syntax: "%1", keyOption: "text"}
         ]}
     },
     "text_write": {
@@ -17925,7 +17935,7 @@ Entry.block = {
             return variable.getValue();
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "get_variable"}
+            {syntax: "%1", keyOption: "get_variable"}
         ]}
     },
     "ask_and_wait": {

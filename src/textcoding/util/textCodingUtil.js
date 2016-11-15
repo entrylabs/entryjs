@@ -1412,11 +1412,11 @@ Entry.TextCodingUtil = {};
                 blockArr.splice(1, 0, condition);
                 lastIndex += 1;
                 blockArr.splice(lastIndex, 1);
-                result = blockArr.join(" ") + ":";
+                result = blockArr.join(" ");
             }
             else if(option == '\"while\"') {
                 blockArr.splice(lastIndex, 1);
-                result = blockArr.join(" ") + ":";
+                result = blockArr.join(" ");
             }
             else {
                 result = syntax;
