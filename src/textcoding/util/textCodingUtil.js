@@ -462,9 +462,9 @@ Entry.TextCodingUtil = {};
 
     tu.updateGlobalVariable = function(name, value) {
         var entryVariables = Entry.variableContainer.variables_;
-        for(var i in entryVariables) {
+        for(var i in entryVariables) { 
             var entryVariable = entryVariables[i];
-            //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
+            console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === null && entryVariable.name_ == name) {
                 variable = {
                     x: entryVariable.x_,

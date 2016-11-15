@@ -1435,9 +1435,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             console.log("variable name", name, "value", value);
 
-            if(value != undefined && value != null && value != NaN) {
+            if(value && !isNaN(value)) {
                 if(name && !name.includes('__filbert')) {
                     if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                        console.log("this is update", name, value);
                         Entry.TextCodingUtil.updateGlobalVariable(name, value);
                     }
                     else {
@@ -2878,7 +2879,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var bodies = component.body; 
         console.log("BlockStatement bodies", bodies);
 
-        if(bodies[1])
+        if(bodies[1] && bodies[1].consequent && bodies[1].consequent.body)
             if(bodies[1].consequent.body[0].type == "ForStatement") {
                 this._blockCount++;
                 console.log("BlockCount ForStatement in BlockStatement", this._blockCount);

@@ -12361,6 +12361,7 @@ Entry.TextCodingUtil = {};
     var c = Entry.variableContainer.variables_, e;
     for (e in c) {
       var f = c[e];
+      console.log("TextCodingUtil updateGlobalVariable", f);
       if (null === f.object_ && f.name_ == a) {
         variable = {x:f.x_, y:f.y_, id:f.id_, visible:f.visible_, value:b, name:a, isCloud:f.isClud_};
         f.syncModel_(variable);
@@ -14393,7 +14394,7 @@ Entry.PyToBlockParser = function(b) {
         g = e.name;
         "Literal" == f.type ? (c = f.value, "string" === typeof c && (c = '"' + c + '"')) : "Identifier" == f.type ? c = f.name : "UnaryExpression" == f.type ? (h = this[f.type](f), console.log("VariableDeclarator initData UnaryExpression", h), c = h.params[0], console.log("gl initData", h, "type", typeof c), "string" != typeof c && "number" != typeof c && (c = 0)) : c = 0;
         console.log("variable name", g, "value", c);
-        void 0 != c && null != c && NaN != c && g && !g.includes("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(g) ? Entry.TextCodingUtil.updateGlobalVariable(g, c) : Entry.TextCodingUtil.createGlobalVariable(g, c));
+        c && !isNaN(c) && g && !g.includes("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(g) ? (console.log("this is update", g, c), Entry.TextCodingUtil.updateGlobalVariable(g, c)) : Entry.TextCodingUtil.createGlobalVariable(g, c));
         g = this[e.type](e);
         console.log("VariableDeclarator idData", g);
         b.id = g;
@@ -14954,7 +14955,7 @@ Entry.PyToBlockParser = function(b) {
     var b = {statements:[], data:[]}, c = [], e = [], f = [];
     a = a.body;
     console.log("BlockStatement bodies", a);
-    a[1] && "ForStatement" == a[1].consequent.body[0].type && (this._blockCount++, console.log("BlockCount ForStatement in BlockStatement", this._blockCount));
+    a[1] && a[1].consequent && a[1].consequent.body && "ForStatement" == a[1].consequent.body[0].type && (this._blockCount++, console.log("BlockCount ForStatement in BlockStatement", this._blockCount));
     for (var g in a) {
       var h = a[g], h = this[h.type](h);
       console.log("BlockStatement bodyData", h);
