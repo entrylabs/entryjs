@@ -361,7 +361,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         var line;
                         var isSyntaxLineEmpty = false;
                         if (error instanceof SyntaxError) {
-                            console.log("py error type 1", error.loc);
+                            console.log("py error raisedAt", error.raisedAt);
                             var errorLine = {};
 
                             errorLine = this.findSyntaxErrorLine(error);
@@ -579,6 +579,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             else {
                 if(mode === Entry.Vim.WORKSPACE_MODE) {
                     var blockList = Entry.block;
+                    console.log("double loop");
 
                     for (var key in blockList) {
                         var pyBlockSyntax = {};
