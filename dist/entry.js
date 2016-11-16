@@ -17853,7 +17853,10 @@ p.downloadConnector = function() {
   window.open(this.downloadPath, "_blank").focus();
 };
 p.downloadGuide = function() {
-  window.open("http://download.play-entry.org/data/%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%90%E1%85%B3%E1%84%85%E1%85%B5%20%E1%84%92%E1%85%A1%E1%84%83%E1%85%B3%E1%84%8B%E1%85%B0%E1%84%8B%E1%85%A5%20%E1%84%8B%E1%85%A7%E1%86%AB%E1%84%80%E1%85%A7%E1%86%AF%20%E1%84%86%E1%85%A2%E1%84%82%E1%85%B2%E1%84%8B%E1%85%A5%E1%86%AF(%E1%84%8B%E1%85%A9%E1%86%AB%E1%84%85%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%AB%E1%84%8B%E1%85%AD%E1%86%BC).pdf", "_blank").focus();
+  var b = document.createElement("a");
+  b.href = "http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC%20%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%20%EC%97%B0%EA%B2%B0%20%EB%A7%A4%EB%89%B4%EC%96%BC(%EC%98%A8%EB%9D%BC%EC%9D%B8%EC%9A%A9).pdf";
+  b.download = "download";
+  b.click();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
