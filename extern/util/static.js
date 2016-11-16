@@ -281,6 +281,7 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_convert_scale",
                 //arduinoExt
                 "arduino_ext_get_analog_value",
+                "arduino_ext_get_analog_value_map",
                 "arduino_ext_get_ultrasonic_value",
                 "arduino_ext_get_digital",
                 "arduino_ext_toggle_led",
