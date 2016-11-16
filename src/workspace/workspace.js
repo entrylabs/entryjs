@@ -279,7 +279,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             }
         }
 
-        console.log("keyCode", keyCode);
         if (ctrlKey) {
             if (keyCode == 86) { //paste
                 var board = this.selectedBoard;

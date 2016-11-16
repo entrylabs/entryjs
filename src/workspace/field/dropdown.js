@@ -54,7 +54,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         this.textElement =
             this.svgGroup.elem("text", { x: 5 });
-        this.textElement.textContent = this.getTextByValue(this.getValue());
+        this._setTextValue();
 
         var bBox = this.textElement.getBBox();
         this.textElement.attr({
@@ -143,8 +143,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             e.stopPropagation();
         });
 
-        var options = this._contents.options;
-
         var OPTION_X_PADDING = 30;
         var maxWidth = 0;
         var options = this._contents.options;
@@ -153,7 +151,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         for (var i=0, len=options.length; i<len; i++) {
             var option = options[i];
-            var text = option[0];
+            var text = option[0] = this._convert(option[0], option[1]);
             var value = option[1];
             var element = Entry.Dom('li', {
                 class: 'rect',
@@ -235,7 +233,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     p.applyValue = function(value) {
         if (this.value != value)
             this.setValue(value);
-        this.textElement.textContent = this.getTextByValue(value);
+        this._setTextValue();
         this.resize();
     };
 
@@ -275,5 +273,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             height: height,
             width: width
         };
+    };
+
+    p._setTextValue = function() {
+        var textValue = this.getTextByValue(this.getValue());
+        this.textElement.textContent =
+            this._convert(textValue, this.getValue());
     };
 })(Entry.FieldDropdown.prototype);

@@ -22268,7 +22268,7 @@ Entry.BlockMenu = function(b, a, d, c) {
     a = a || this._getSortedBlocks();
     var b = Entry.BlockView.RENDER_MODE_TEXT;
     a[0].forEach(function(a) {
-      b !== a.view.renderMode && (a = a.getThread(), a.view ? (a.view.renderText(), a.view.reDraw()) : a.createView(this, Entry.Workspace.MODE_VIMBOARD));
+      b !== a.view.renderMode && (a = a.getThread(), a.view ? (a.view.renderText(), a.view.reDraw()) : a.createView(this, Entry.BlockView.RENDER_MODE_TEXT));
     }.bind(this));
     return a;
   };
@@ -22276,7 +22276,7 @@ Entry.BlockMenu = function(b, a, d, c) {
     a = a || this._getSortedBlocks();
     var b = Entry.BlockView.RENDER_MODE_BLOCK;
     a[0].forEach(function(a) {
-      b !== a.view.renderMode && (a = a.getThread(), a.view ? (a.view.renderBlock(), a.view.reDraw()) : a.createView(this, Entry.Workspace.MODE_BOARD));
+      b !== a.view.renderMode && (a = a.getThread(), a.view ? (a.view.renderBlock(), a.view.reDraw()) : a.createView(this, Entry.BlockView.RENDER_MODE_BLOCK));
     }.bind(this));
     return a;
   };
@@ -22380,9 +22380,8 @@ Entry.BlockMenu = function(b, a, d, c) {
             c.push([d.defs[b]]);
           }
         } else {
-          d.def.category = a;
+          d.def.category = a, c.push([d.def]);
         }
-        c.push([d.def]);
       } else {
         c.push([{type:b, category:a}]);
       }
@@ -22394,10 +22393,7 @@ Entry.BlockMenu = function(b, a, d, c) {
       g.length && (f = this.code.getThreadIndex(g[0]));
     }
     c.forEach(function(a) {
-      a[0].x = -99999;
-      b.createThread(a, f);
-      void 0 !== f && f++;
-      delete a[0].x;
+      a && a[0] && (a[0].x = -99999, b.createThread(a, f), void 0 !== f && f++, delete a[0].x);
     });
   };
   b.banClass = function(a) {
@@ -22736,12 +22732,10 @@ Entry.BlockView = function(b, a, d) {
   switch(d) {
     case void 0:
     ;
-    case Entry.Workspace.MODE_BOARD:
-    ;
-    case Entry.Workspace.MODE_OVERLAYBOARD:
+    case Entry.BlockView.RENDER_MODE_BLOCK:
       this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
       break;
-    case Entry.Workspace.MODE_VIMBOARD:
+    case Entry.BlockView.RENDER_MODE_TEXT:
       this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
   }
   if (void 0 === this._schema) {
@@ -22830,20 +22824,20 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this.bindPrev();
   };
   b._startContentRender = function(a) {
-    a = void 0 === a ? Entry.Workspace.MODE_BOARD : a;
+    a = void 0 === a ? Entry.BlockView.RENDER_MODE_BLOCK : a;
     var b = this._schema;
     this.contentSvgGroup && this.contentSvgGroup.remove();
     this.statementSvgGroup && this.statementSvgGroup.remove();
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.elem("g", {class:"contentsGroup"});
     b.statements && b.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g", {class:"statementGroup"}));
-    for (var c = /(%\d)/mi, e = this._getTemplate(a).split(c), f = b.params, g = 0;g < e.length;g++) {
+    for (var c = /(%\d)/mi, e = this._getTemplate(a).split(c), f = this._getSchemaParams(a), g = 0;g < e.length;g++) {
       var h = e[g];
       " " === h[0] && (h = h.substring(1));
       " " === h[h.length - 1] && (h = h.substring(0, h.length - 1));
       if (0 !== h.length) {
         if (c.test(h)) {
-          var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
+          var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a || this.renderMode, g);
           this._contents.push(h);
           this._paramMap[k] = h;
         } else {
@@ -23140,12 +23134,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     return this._skeleton.contentPos(this);
   };
   b.renderText = function() {
-    this._startContentRender(Entry.Workspace.MODE_VIMBOARD);
     this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
+    this._startContentRender(Entry.BlockView.RENDER_MODE_TEXT);
   };
   b.renderBlock = function() {
-    this._startContentRender(Entry.Workspace.MODE_BOARD);
     this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
+    this._startContentRender(Entry.BlockView.RENDER_MODE_BLOCK);
   };
   b._updateOpacity = function() {
     this.svgGroup.attr({opacity:!1 === this.visible ? 0 : 1});
@@ -23210,7 +23204,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   };
   b._updateContents = function() {
     this._contents.forEach(function(a) {
-      a.renderStart();
+      a.renderStart(void 0, void 0, this.renderMode);
     }.bind(this));
     this.alignContent(!1);
   };
@@ -23375,8 +23369,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   };
   b._getTemplate = function(a) {
     var b = this._schema, b = b.template ? b.template : Lang.template[this.block.type], c;
-    a === Entry.Workspace.MODE_VIMBOARD && (a = this.getBoard().workspace) && a.vimBoard && (c = a.vimBoard.getBlockSyntax(this));
+    a === Entry.BlockView.RENDER_MODE_TEXT && (a = this.getBoard().workspace) && a.vimBoard && (c = a.vimBoard.getBlockSyntax(this));
     return c || b;
+  };
+  b._getSchemaParams = function(a) {
+    var b = this._schema, c = b.params;
+    a === Entry.BlockView.RENDER_MODE_TEXT && b.syntax.py[0].textParams && (c = b.syntax.py[0].textParams);
+    return c;
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(b, a) {
@@ -23909,7 +23908,7 @@ Entry.Field = function() {
     return {x:b.x + a.x, y:b.y + a.y};
   };
   b.truncate = function() {
-    var a = String(this.getValue()), b = this.TEXT_LIMIT_LENGTH, c = a.substring(0, b);
+    var a = String(this._convert(this.getValue())), b = this.TEXT_LIMIT_LENGTH, c = a.substring(0, b);
     a.length > b && (c += "...");
     return c;
   };
@@ -23980,6 +23979,10 @@ Entry.Field = function() {
     var a = this._blockView.renderMode;
     return void 0 !== a ? a : Entry.BlockView.RENDER_MODE_BLOCK;
   };
+  b._convert = function(a, b) {
+    b = void 0 !== b ? b : this.getValue();
+    return this._contents.converter ? this._contents.converter(a, b) : a;
+  };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, d) {
   this._block = a.block;
@@ -23996,16 +23999,16 @@ Entry.FieldAngle = function(b, a, d) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 (function(b) {
-  b.renderStart = function() {
+  b.renderStart = function(a, b) {
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"11px"});
     this.textElement.textContent = this.getText();
-    var a = this.getTextWidth(), b = this._CONTENT_HEIGHT, c = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {x:0, y:c - b / 2, rx:3, ry:3, width:a, height:b, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    var c = this.getTextWidth(), e = this._CONTENT_HEIGHT, f = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.elem("rect", {x:0, y:f - e / 2, rx:3, ry:3, width:c, height:e, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:a, height:b});
+    this.box.set({x:0, y:0, width:c, height:e});
   };
   b.renderOptions = function() {
     var a = this;
@@ -24118,12 +24121,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   b.schema = {magneting:!1};
   b.renderStart = function(a, b) {
     this.svgGroup || (this.svgGroup = this._blockView.contentSvgGroup.elem("g"));
+    this.renderMode = void 0 !== b ? b : this._blockView.renderMode;
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
     var c = this.getValue();
-    c && !c.view ? (c.setThread(this), c.createView(a, b), c.getThread().view.setParent(this)) : c && c.view && c.view.reDraw();
+    c && !c.view ? (c.setThread(this), c.createView(a, this.renderMode), c.getThread().view.setParent(this)) : c && c.view && c.view.reDraw();
     this.updateValueBlock(c);
+    this._valueBlock.view._startContentRender(this.renderMode);
     this._blockView.getBoard().constructor !== Entry.Board && this._valueBlock.view.removeControl();
   };
   b.align = function(a, b, c) {
@@ -24230,9 +24235,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._block.getThread();
     var b = this._blockView.getBoard();
     a = new Entry.Block({type:a}, this);
-    var c = b.workspace, e;
-    c && (e = c.getMode());
-    a.createView(b, e);
+    a.createView(b, this.renderMode);
     return a;
   };
   b.spliceBlock = function() {
@@ -24335,7 +24338,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     var a = this._blockView, b = Entry.isMobile(), c = b ? 33 : 20, b = b ? 24 : 10;
     this.svgGroup = a.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
     this.textElement = this.svgGroup.elem("text", {x:5});
-    this.textElement.textContent = this.getTextByValue(this.getValue());
+    this._setTextValue();
     a = this.textElement.getBBox();
     this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.23 * a.height});
     c = this.textElement.getBoundingClientRect().width + c;
@@ -24361,8 +24364,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.optionGroup.bind("mousedown touchstart", function(a) {
       a.stopPropagation();
     });
-    for (var b = this._contents.options, b = this._contents.options, c = 0, e = b.length;c < e;c++) {
-      var f = b[c], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = Entry.Dom("span", {class:"left", parent:h});
+    for (var b = this._contents.options, c = 0, e = b.length;c < e;c++) {
+      var f = b[c], g = f[0] = this._convert(f[0], f[1]), f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = Entry.Dom("span", {class:"left", parent:h});
       Entry.Dom("span", {class:"right", parent:h}).text(g);
       this.getValue() == f && k.text("\u2713");
       (function(b, c) {
@@ -24395,7 +24398,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   };
   b.applyValue = function(a) {
     this.value != a && this.setValue(a);
-    this.textElement.textContent = this.getTextByValue(a);
+    this._setTextValue();
     this.resize();
   };
   b.getTextByValue = function(a) {
@@ -24416,6 +24419,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b.getArrow = function() {
     var a = Entry.isMobile();
     return {color:this._arrowColor || this._blockView._schema.color, points:a ? "0,0 19,0 9.5,13" : "0,0 6.4,0 3.2,4.2", height:a ? 13 : 4.2, width:a ? 19 : 6.4};
+  };
+  b._setTextValue = function() {
+    var a = this.getTextByValue(this.getValue());
+    this.textElement.textContent = this._convert(a, this.getValue());
   };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldDropdownDynamic = function(b, a, d) {
@@ -24457,7 +24464,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     b = this._menuName ? Entry.container.getDropdownList(this._contents.menuName) : this._menuGenerator();
     this._contents.options = b;
     for (var c = 0;c < b.length;c++) {
-      var e = b[c], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = Entry.Dom("span", {class:"left", parent:g});
+      var e = b[c], f = e[0] = this._convert(e[0], e[1]), e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = Entry.Dom("span", {class:"left", parent:g});
       Entry.Dom("span", {class:"right", parent:g}).text(f);
       this.getValue() == e && h.text("\u2713");
       (function(b, c) {
@@ -24555,7 +24562,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text").attr({x:5, y:4, "font-size":"11px"});
-    this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
+    this._setTextValue();
     var a = this.getTextWidth() + 1, b = this._CONTENT_HEIGHT, c = this.position && this.position.y ? this.position.y : 0;
     this._header = this.svgGroup.elem("rect", {x:0, y:c - b / 2, width:a, height:b, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
@@ -24590,7 +24597,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   b.applyValue = function(a, b) {
     this.setValue(String(b));
     this.destroyOption();
-    this.textElement.textContent = a;
+    this._setTextValue();
     this.resize();
   };
   b.resize = function() {
@@ -24605,6 +24612,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   b.destroy = function() {
     this.destroyOption();
     Entry.keyPressed && this.keyPressed && Entry.keyPressed.detach(this.keyPressed);
+  };
+  b._setTextValue = function() {
+    var a = Entry.getKeyCodeMap()[this.getValue()], a = this._convert(a, this.getValue());
+    this.textElement.textContent = a;
   };
 })(Entry.FieldKeyboard.prototype);
 Entry.FieldLineBreak = function(b, a, d) {
@@ -26835,7 +26846,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (!Entry.Utils.isInInput(a)) {
       var e = this.selectedBlockView;
       e && !e.isInBlockMenu && e.block.isDeletable() && (8 == b || 46 == b ? (Entry.do("destroyBlock", e.block), a.preventDefault()) : c && (67 == b ? e.block.copyToClipboard() : 88 == b && (a = e.block, a.copyToClipboard(), a.destroy(!0, !0), e.getBoard().setSelectedBlock(null))));
-      console.log("keyCode", b);
       if (c) {
         86 == b && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
         if (219 == b) {

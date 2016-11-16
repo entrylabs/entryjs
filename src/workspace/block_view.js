@@ -24,11 +24,10 @@ Entry.BlockView = function(block, board, mode) {
 
     switch (mode) {
         case undefined:
-        case Entry.Workspace.MODE_BOARD:
-        case Entry.Workspace.MODE_OVERLAYBOARD:
+        case Entry.BlockView.RENDER_MODE_BLOCK:
             this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
             break;
-        case Entry.Workspace.MODE_VIMBOARD:
+        case Entry.BlockView.RENDER_MODE_TEXT:
             this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
             break;
     }
@@ -200,7 +199,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._startContentRender = function(mode) {
         mode = mode === undefined ?
-            Entry.Workspace.MODE_BOARD : mode;
+            Entry.BlockView.RENDER_MODE_BLOCK : mode;
 
         var schema = this._schema;
         if (this.contentSvgGroup)
@@ -220,7 +219,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         var template = this._getTemplate(mode);
         var templateParams = template.split(reg);
-        var params = schema.params;
+        var params = this._getSchemaParams(mode);
 
         for (var i=0; i<templateParams.length; i++) {
             var param = templateParams[i];
@@ -231,7 +230,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             if (reg.test(param)) {
                 var paramIndex = Number(param.split('%')[1]) - 1;
                 param = params[paramIndex];
-                var field = new Entry['Field' + param.type](param, this, paramIndex, mode, i);
+                var field = new Entry['Field' + param.type](param, this, paramIndex, mode || this.renderMode, i);
+
                 this._contents.push(field);
                 this._paramMap[paramIndex] = field;
             } else this._contents.push(new Entry.FieldText({text: param}, this));
@@ -877,13 +877,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.renderText = function() {
-        this._startContentRender(Entry.Workspace.MODE_VIMBOARD);
         this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
+        this._startContentRender(Entry.BlockView.RENDER_MODE_TEXT);
     };
 
     p.renderBlock = function() {
-        this._startContentRender(Entry.Workspace.MODE_BOARD);
         this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
+        this._startContentRender(Entry.BlockView.RENDER_MODE_BLOCK);
     };
 
     p._updateOpacity = function() {
@@ -992,7 +992,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._updateContents = function() {
         this._contents.forEach(function(c) {
-            c.renderStart();
+            c.renderStart(undefined, undefined,  this.renderMode);
         }.bind(this));
         this.alignContent(false);
     };
@@ -1284,7 +1284,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var defaultTemplate = schema.template ? schema.template : Lang.template[this.block.type];
         var template;
 
-        if (renderMode === Entry.Workspace.MODE_VIMBOARD) {
+        if (renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
             var workspace = this.getBoard().workspace;
             if (workspace && workspace.vimBoard)
                 template = workspace.vimBoard.getBlockSyntax(this);
@@ -1292,6 +1292,17 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         return template || defaultTemplate;
     };
+
+    p._getSchemaParams = function(mode) {
+        var schema = this._schema;
+        var params = schema.params;
+        if (mode === Entry.BlockView.RENDER_MODE_TEXT) {
+            if (schema.syntax.py[0].textParams) {
+                params = schema.syntax.py[0].textParams
+            }
+        }
+        return params;
+    }
 
 
 })(Entry.BlockView.prototype);

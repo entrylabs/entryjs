@@ -346,7 +346,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 thread.view.renderText();
                 thread.view.reDraw();
             } else
-                thread.createView(this, Entry.Workspace.MODE_VIMBOARD)
+                thread.createView(this, Entry.BlockView.RENDER_MODE_TEXT)
         }.bind(this));
         return blocks;
     };
@@ -363,7 +363,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 thread.view.renderBlock();
                 thread.view.reDraw();
             } else
-                thread.createView(this, Entry.Workspace.MODE_BOARD)
+                thread.createView(this, Entry.BlockView.RENDER_MODE_BLOCK)
         }.bind(this));
         return blocks;
     };
@@ -558,15 +558,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                     block.defs.forEach(function(d) {
                         d.category = category;
                     });
-                    for (var i =0; i <block.defs.length; i++)
+                    for (var i =0; i <block.defs.length; i++) {
                         codes.push([
                             block.defs[i]
                         ]);
-                } else
+                    }
+                } else {
                     block.def.category = category;
                     codes.push([
                         block.def
                     ]);
+                }
             }
         });
 
@@ -579,6 +581,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 index = this.code.getThreadIndex(threads[0]);
         }
         codes.forEach(function(t) {
+            if (!t || !t[0]) return;
             t[0].x = -99999;
             code.createThread(t, index);
             if (index !== undefined)

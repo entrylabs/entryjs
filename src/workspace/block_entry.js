@@ -8,6 +8,45 @@ if (typeof exports == "object") {
     Entry.Bitbrick = {};
     EntryStatic = {};
 }
+if (!Entry.block)
+    Entry.block = {};
+
+if (!Entry.block.converters)
+    Entry.block.converters = {};
+
+
+if (Entry && Entry.block) {
+    Entry.block.converters = {};
+
+    (function(c) {
+        c.keyboardInput = function(key, value) {
+            return '"()"'.replace('()',
+                Entry.KeyboardCode.keyCodeToChar[value]);
+        };
+        c.returnStringKey = function(key, value) {
+            if ((!value && typeof value !== 'number') || value === 'null')
+                return "None";
+            key = key.replace(/\"/gi, '');
+            return '"()"'.replace('()', key);
+        };
+
+        c.returnStringValue = function(key, value) {
+            return '"()"'.replace('()', value);
+        };
+
+        c.returnOperator = function(key, value) {
+            var map = {
+                "EQUAL": '==',
+                "GREATER": '>',
+                "LESS": '<',
+                "GREATER_OR_EQUAL": '>=',
+                "LESS_OR_EQUAL": '<='
+            };
+            return map[value];
+        };
+
+    })(Entry.block.converters);
+}
 
 Entry.block = {
     "albert_hand_found": {
@@ -2233,7 +2272,7 @@ Entry.block = {
             return (ANALOG) ? ANALOG[port] || 0 : 0;
         },
         "syntax": {"js": [], "py": [
-        {syntax: "Arduino.analogRead(%1)", 
+        {syntax: "Arduino.analogRead(%1)",
             paramCodes: [
                 {0:["\"A0\""], 1:["\"A1\""], 2:["\"A2\""], 3:["\"A3\""], 4:["\"A4\""], 5:["\"A5\""]},
             ]}
@@ -2277,7 +2316,7 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ 
+            "params": [
                 null,
                 {
                     "type": "number",
@@ -2294,7 +2333,7 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "100" ]
-                } 
+                }
             ],
             "type": "arduino_ext_get_analog_value_map"
         },
@@ -2335,7 +2374,7 @@ Entry.block = {
             return result
         },
         "syntax": {"js": [], "py": [
-            {syntax: "Arduino.map(%1, %2, %3, %4, %5)", 
+            {syntax: "Arduino.map(%1, %2, %3, %4, %5)",
             paramCodes: [
                 {0:["\"A0\""], 1:["\"A1\""], 2:["\"A2\""], 3:["\"A3\""], 4:["\"A4\""], 5:["\"A5\""]},
                 null,
@@ -2740,7 +2779,7 @@ Entry.block = {
 
                 var octave = script.getNumberField("OCTAVE", script);
                 var value = Entry.ArduinoExt.toneMap[note][octave];
-                
+
                 duration = duration * 1000;
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -2777,7 +2816,7 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": [
-            {syntax: "Arduino.tone(%1, %2, %3, %4)", 
+            {syntax: "Arduino.tone(%1, %2, %3, %4)",
             paramCodes:[
                 null,
                 {"0": [0],"1":["\"C\""],"2": ["\"CS\""],"3": ["\"D\""],"4": ["\"DS\""],
@@ -8526,7 +8565,7 @@ Entry.block = {
             return value ? script.getStatement("DO", script) :
                 script.callReturn();
         },
-        "syntax": {"js": [], "py": ["while %1 %2\n$1"]}
+        "syntax": {"js": [], "py": [ "while %1 %2\n$1"]}
     },
     "stop_object": {
         "color": "#498deb",
@@ -9563,7 +9602,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.left_wheel_by(%2)", params: ["LEFT"]},
             {syntax: "Hamster.right_wheel_by(%2)", params: ["RIGHT"]},
-            {syntax: "Hamster.wheels_by(%2, %2)", params: ["BOTH"], paramOption: "SAME"} 
+            {syntax: "Hamster.wheels_by(%2, %2)", params: ["BOTH"], paramOption: "SAME"}
         ]}
     },
     "hamster_set_wheel_to": {
@@ -9691,7 +9730,7 @@ Entry.block = {
             {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_WHITE_LEFT_SENSOR)", params: ["WHITE", "LEFT"]},
             {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_RIGHT_SENSOR)", params: ["BLACK", "RIGHT"]},
             {syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_BOTH_SENSORS)", params: ["BLACK", "BOTH"]}
-            
+
         ]}
     },
     "hamster_follow_line_until": {
@@ -10222,7 +10261,7 @@ Entry.block = {
                 sq.note = 0;
                 return script.callReturn();
             }
-        }, 
+        },
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.note(%1, %2, %3)",
             paramCodes:[
@@ -11306,7 +11345,33 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": [
-            {syntax: "(%1 %2 %3)", paramOption:"boolean_basic_operator"}
+            {
+                syntax: "(%1 %2 %3)", paramOption:"boolean_basic_operator",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "=", "EQUAL" ],
+                            [ ">", "GREATER" ],
+                            [ "<", "LESS" ],
+                            [ "≥", "GREATER_OR_EQUAL" ],
+                            [ "≤", "LESS_OR_EQUAL" ]
+                        ],
+                        "value": "EQUAL",
+                        "fontSize": 11,
+                        noArrow: true,
+                        converter: Entry.block.converters.returnOperator
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
         ]}
     },
     "show": {
@@ -16233,7 +16298,21 @@ Entry.block = {
             }
             return null;
         },
-        "syntax": {"js": [], "py": ["Entry.start_scene_of(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.start_scene_of(%1)",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "scenes",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_START,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "start_neighbor_scene": {
         "color": "#3BBD70",
@@ -16290,7 +16369,24 @@ Entry.block = {
             }
             return null;
         },
-        "syntax": {"js": [], "py": ["Entry.start_scene_to(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.start_scene_to(%1)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ Lang.Blocks.SCENE_start_scene_next, "next" ],
+                            [ Lang.Blocks.SCENE_start_scene_pre, "pre" ]
+                        ],
+                        "value": "next",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_START,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ]
+            }
+        ]}
     },
     "sound_something": {
         "color": "#A4D01D",
@@ -16637,7 +16733,20 @@ Entry.block = {
             return script.getStringField("VALUE");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "get_sounds"}
+            {
+                syntax: "%1", paramOption: "get_sounds",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "sounds",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_SOUNDS,
+                        converter: Entry.block.converters.returnStringKey
+                    }
+                ]
+
+            }
         ]}
     },
     "sound_something_with_block": {
@@ -17122,7 +17231,19 @@ Entry.block = {
         "event": "keyPress",
 
         //"syntax": {"js": [], "py": ["def entry_event_key():\n\tif key == %2:"]}
-        "syntax": {"js": [], "py": ["def when_press_key(%2):"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "def when_press_key(%2):",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Keyboard",
+                        "value": '81',
+                        converter: Entry.block.converters.keyboardInput
+                    }
+                ]
+            }
+        ]}
     },
     "mouse_clicked": {
         "color": "#3BBD70",
@@ -17312,7 +17433,22 @@ Entry.block = {
         "event": "when_message_cast",
 
         //"syntax": {"js": [], "py": ["def entry_event_signal():\n\tif signal == %2:"]}
-        "syntax": {"js": [], "py": ["def when_get_signal(%2):"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "def when_get_signal(%2):",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "messages",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_START,
+                        converter: Entry.block.converters.returnStringKey
+                    }
+                ]
+            }
+        ]}
     },
     "message_cast": {
         "color": "#3BBD70",
@@ -17366,7 +17502,22 @@ Entry.block = {
 
             Entry.engine.raiseMessage(value);
         },
-        "syntax": {"js": [], "py": ["Entry.send_signal(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.send_signal(%1)",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "messages",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_START,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                    undefined
+                ]
+            }
+        ]}
     },
     "message_cast_wait": {
         "color": "#3BBD70",
@@ -17441,7 +17592,21 @@ Entry.block = {
                 return script;
             }
         },
-        "syntax": {"js": [], "py": ["Entry.send_signal_wait(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.send_signal_wait(%1)",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "messages",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_START,
+                        converter: Entry.block.converters.returnStringKey
+                    }
+                ]
+            }
+        ]}
     },
     "text": {
         "color": "#FFD974",
@@ -23472,7 +23637,7 @@ Entry.block = {
             "type": "sensorBoard_toggle_led"
         },
         "class": "arduino_set",
-        "syntax": {"js": [], "py": ["hw.sensorBoard_toggle_led(%1)"]} 
+        "syntax": {"js": [], "py": ["hw.sensorBoard_toggle_led(%1)"]}
     },
     "sensorBoard_toggle_pwm": {
         "parent": "arduino_toggle_pwm",
