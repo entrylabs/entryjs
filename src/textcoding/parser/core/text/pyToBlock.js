@@ -2618,7 +2618,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
             else {
-                var syntax = String("while %1 %2\n$1");
+                var syntax = String("while %1 %2:\n$1");
                 var blockSyntax = this.getBlockSyntax(syntax);
                 var type;
                 if(blockSyntax)
@@ -4951,7 +4951,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.searchSyntax = function(datum) {
         var schema;
-        console.log("datum", datum);
         if(datum instanceof Entry.BlockView) {
             schema = datum.block._schema;
         } else if (datum instanceof Entry.Block)
@@ -4964,7 +4963,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var isFail = false;
                 var syntax = syntaxes.shift();
                 if (typeof syntax === "string")
-                    return {syntax: syntax};
+                    return {syntax: syntax, template: syntax};
                 if (syntax.params) {
                     var params = block.params;
                     for (var i = 0; i < syntax.params.length; i++) {
@@ -4974,6 +4973,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                     }
                 }
+                if(!syntax.template)
+                    syntax.template = syntax.syntax;
                 if (isFail) {
                     continue;
                 }

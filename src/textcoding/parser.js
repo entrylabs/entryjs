@@ -106,9 +106,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
 (function(p) {
     p.setParser = function(mode, type, cm) {
+        console.log("setParser this._type", this._type, "type", type);
         this._mode = mode;
         this._type = type;
-        this._cm = cm;
+        this._cm = cm; 
 
         /*if (mode === Entry.Vim.MAZE_MODE) {
             this._stageId = Number(Ntry.configManager.getConfig('stageId'));
@@ -116,6 +117,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
             var playerCode = NtryData.player[this._stageId].code;
             this.setAvailableCode(configCode, playerCode);
         }*/
+
+        /*if(this._type == type)
+            return;*/
 
         this.syntax = this.mappingSyntax(mode);
 
@@ -510,6 +514,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.mappingSyntax = function(mode) {
+        console.log("this._syntax_cache[mode]", this._syntax_cache[mode]);
         if (this._syntax_cache[mode])
             return this._syntax_cache[mode];
 
@@ -538,7 +543,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             syntaxTemp[key] = syntaxArray[j + 1];
                             break;
                         }
-                        if (!syntaxTemp[key]) {
+                        if (!syntaxTemp[key]) { 
                             syntaxTemp[key] = {};
                         }
                         if (j === syntaxArray.length - 1) {
@@ -549,13 +554,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     }
                 }
             }
-            else {
+            else { 
+                console.log("blockkkk", block);
                 if(mode === Entry.Vim.WORKSPACE_MODE) {
-                    var blockList = Entry.block;
+                    //var blockList = Entry.block;
 
-                    for (var key in blockList) {
+                    /*for (var key in blockList) {
                         var pyBlockSyntax = {};
-                        var block = blockList[key];
+                        var block = blockList[key];*/
+                        var key = type;
                         var pySyntax = null;
 
                         if(block.syntax && block.syntax.py) {
@@ -565,6 +572,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if (!pySyntax)
                             continue;
 
+                        console.log("pySyntax.length", pySyntax.length); 
                         pySyntax.map(function(s) {
                             var result, tokens;
                             if (typeof s === "string") {
@@ -573,35 +581,38 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 tokens = s;
                                 bs.key = key;
                                 bs.syntax = s;
-                                /*result = key;
-                                tokens = s;*/
+                                bs.template = s;
+                                //result = key;
+                                //tokens = s;
                             } else {
                                 result = s;
-                                tokens = s.syntax;
+                                tokens = s.syntax; 
                                 s.key = key;
+                                if(!s.template)
+                                    result.template = s.syntax;
                             }
 
-                            tokens = tokens.split('(');
+                            tokens = tokens.split('('); 
 
-                            if(tokens[1] && tokens[1].includes('%')) {
+                            if(tokens[1] && tokens[1].includes('%')) { 
                                 if(tokens[0].length != 0)
                                     tokens = tokens[0];
                                 else
                                     tokens = tokens.join('(');
                             }
                             else {
-                                tokens = tokens.join('(');
+                                tokens = tokens.join('('); 
                             }
 
-                            tokens = tokens.replace("():", "");
+                            tokens = tokens.replace("():", ""); 
                             tokens = tokens.replace("()", "");
 
-                            if(s.paramOption)
-                                tokens += "#" + s.paramOption;
+                            if(s.keyOption)  
+                                tokens += "#" + s.keyOption;   
 
-                            syntax[tokens] = result;
-                        })
-                    }
+                            syntax[tokens] = result;  
+                        });
+                    //}
                 }
             }
         }

@@ -12779,7 +12779,7 @@ Entry.TextCodingUtil = {};
     if ("repeat_while_true" == a.data.type) {
       var c = b.split(" "), e = c.length - 1, f = c[e];
       console.log("option", f, "option.length", f.length);
-      '"until"' == f ? (c.splice(1, 0, "not"), c.splice(e + 1, 1), c = c.join(" ") + ":") : '"while"' == f ? (c.splice(e, 1), c = c.join(" ") + ":") : c = b;
+      '"until"' == f ? (c.splice(1, 0, "not"), c.splice(e + 1, 1), c = c.join(" ")) : '"while"' == f ? (c.splice(e, 1), c = c.join(" ")) : c = b;
     } else {
       c = b;
     }
@@ -13234,7 +13234,7 @@ Entry.BlockToPyParser = function(b) {
       for (a = a.syntax.py.concat();a.length;) {
         var b = !1, c = a.shift();
         if ("string" === typeof c) {
-          return {syntax:c};
+          return {syntax:c, template:c};
         }
         if (c.params) {
           for (var e = 0;e < c.params.length;e++) {
@@ -13244,6 +13244,7 @@ Entry.BlockToPyParser = function(b) {
             }
           }
         }
+        c.template || (c.template = c.syntax);
         if (!b) {
           return c;
         }
@@ -14906,7 +14907,7 @@ Entry.PyToBlockParser = function(b) {
             throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. \ud30c\ub77c\ubbf8\ud130\ub97c \ud655\uc778\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
           }
         } else {
-          if (f = this.getBlockSyntax("while %1 %2\n$1")) {
+          if (f = this.getBlockSyntax("while %1 %2:\n$1")) {
             c = f.key;
           }
         }
@@ -15918,12 +15919,11 @@ Entry.PyToBlockParser = function(b) {
     throw a;
   };
   b.searchSyntax = function(a) {
-    console.log("datum", a);
     if ((a = a instanceof Entry.BlockView ? a.block._schema : a instanceof Entry.Block ? a._schema : a) && a.syntax) {
       for (a = a.syntax.py.concat();a.length;) {
         var b = !1, c = a.shift();
         if ("string" === typeof c) {
-          return {syntax:c};
+          return {syntax:c, template:c};
         }
         if (c.params) {
           for (var e = 0;e < c.params.length;e++) {
@@ -15933,6 +15933,7 @@ Entry.PyToBlockParser = function(b) {
             }
           }
         }
+        c.template || (c.template = c.syntax);
         if (!b) {
           return c;
         }
@@ -15996,6 +15997,7 @@ Entry.Parser = function(b, a, d, c) {
 };
 (function(b) {
   b.setParser = function(a, b, c) {
+    console.log("setParser this._type", this._type, "type", b);
     this._mode = a;
     this._type = b;
     this._cm = c;
@@ -16130,6 +16132,7 @@ Entry.Parser = function(b, a, d, c) {
     return e;
   };
   b.mappingSyntax = function(a) {
+    console.log("this._syntax_cache[mode]", this._syntax_cache[a]);
     if (this._syntax_cache[a]) {
       return this._syntax_cache[a];
     }
@@ -16151,28 +16154,25 @@ Entry.Parser = function(b, a, d, c) {
           }
         }
       } else {
-        if (a === Entry.Vim.WORKSPACE_MODE) {
-          for (l in f = Entry.block, f) {
-            g = f[l], h = null, g.syntax && g.syntax.py && (h = g.syntax.py), h && h.map(function(a) {
-              var b, d;
-              if ("string" === typeof a) {
-                var e = {};
-                b = e;
-                d = a;
-                e.key = l;
-                e.syntax = a;
-              } else {
-                b = a, d = a.syntax, a.key = l;
-              }
-              d = d.split("(");
-              d = d[1] && d[1].includes("%") ? 0 != d[0].length ? d[0] : d.join("(") : d.join("(");
-              d = d.replace("():", "");
-              d = d.replace("()", "");
-              a.paramOption && (d += "#" + a.paramOption);
-              c[d] = b;
-            });
+        console.log("blockkkk", g), a === Entry.Vim.WORKSPACE_MODE && (l = f, f = null, g.syntax && g.syntax.py && (f = g.syntax.py), f && (console.log("pySyntax.length", f.length), f.map(function(a) {
+          var b, d;
+          if ("string" === typeof a) {
+            var e = {};
+            b = e;
+            d = a;
+            e.key = l;
+            e.syntax = a;
+            e.template = a;
+          } else {
+            b = a, d = a.syntax, a.key = l, a.template || (b.template = a.syntax);
           }
-        }
+          d = d.split("(");
+          d = d[1] && d[1].includes("%") ? 0 != d[0].length ? d[0] : d.join("(") : d.join("(");
+          d = d.replace("():", "");
+          d = d.replace("()", "");
+          a.keyOption && (d += "#" + a.keyOption);
+          c[d] = b;
+        })));
       }
     }
     return this._syntax_cache[a] = c;
@@ -23369,7 +23369,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   };
   b._getTemplate = function(a) {
     var b = this._schema, b = b.template ? b.template : Lang.template[this.block.type], c;
-    a === Entry.BlockView.RENDER_MODE_TEXT && (a = this.getBoard().workspace) && a.vimBoard && (c = a.vimBoard.getBlockSyntax(this));
+    a === Entry.BlockView.RENDER_MODE_TEXT && (a = this.getBoard().workspace) && a.vimBoard && (c = a.vimBoard.getBlockSyntax(this).template);
     return c || b;
   };
   b._getSchemaParams = function(a) {
@@ -24003,7 +24003,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"11px"});
-    this.textElement.textContent = this.getText();
+    this._setTextValue();
     var c = this.getTextWidth(), e = this._CONTENT_HEIGHT, f = this.position && this.position.y ? this.position.y : 0;
     this._header = this.svgGroup.elem("rect", {x:0, y:f - e / 2, rx:3, ry:3, width:c, height:e, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
@@ -24093,8 +24093,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
-    this.textElement.textContent = this.getText();
+    this._setTextValue();
     this.command();
+  };
+  b._setTextValue = function() {
+    var a = this._convert(this.getText(), this.getValue());
+    this.textElement.textContent = a;
   };
 })(Entry.FieldAngle.prototype);
 Entry.FieldBlock = function(b, a, d, c, e) {
@@ -24894,7 +24898,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:3, y:4, "font-size":"12px"});
-    this.textElement.textContent = this.truncate();
+    this._setTextValue();
     var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0, c = this._CONTENT_HEIGHT;
     this._header = this.svgGroup.elem("rect", {width:a, height:c, y:b - c / 2, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
@@ -24927,7 +24931,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
   b.applyValue = function(a) {
     a = this.optionGroup.val();
     this.setValue(a);
-    this.textElement.textContent = this.truncate();
+    this._setTextValue();
     this.resize();
   };
   b.resize = function() {
@@ -24939,6 +24943,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
   };
   b.getTextWidth = function() {
     return this.textElement.getBoundingClientRect().width + 6 + 2;
+  };
+  b._setTextValue = function() {
+    this.textElement.textContent = this._convert(this.getValue(), this.getValue());
   };
 })(Entry.FieldTextInput.prototype);
 Entry.GlobalSvg = {};
@@ -26712,7 +26719,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
     var b = null, c = this.workspace.oldTextType;
     c === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : c === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     this._parser && (b = this._parser._execParser.searchSyntax(a));
-    return b ? b.syntax : b;
+    return b;
   };
 })(Entry.Vim.prototype);
 Entry.Workspace = function(b) {

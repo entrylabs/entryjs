@@ -452,7 +452,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 var isFail = false;
                 var syntax = syntaxes.shift();
                 if (typeof syntax === "string")
-                    return {syntax: syntax};
+                    return {syntax: syntax, template: syntax};
                 if (syntax.params) {
                     var params = block.params;
                     for (var i = 0; i < syntax.params.length; i++) {
@@ -462,6 +462,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
                     }
                 }
+                if(!syntax.template)
+                    syntax.template = syntax.syntax;
                 if (isFail) {
                     continue;
                 }

@@ -1287,7 +1287,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
             var workspace = this.getBoard().workspace;
             if (workspace && workspace.vimBoard)
-                template = workspace.vimBoard.getBlockSyntax(this);
+                template = workspace.vimBoard.getBlockSyntax(this).template;
         }
 
         return template || defaultTemplate;

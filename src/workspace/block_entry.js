@@ -23,9 +23,13 @@ if (Entry && Entry.block) {
             return '"()"'.replace('()',
                 Entry.KeyboardCode.keyCodeToChar[value]);
         };
+
         c.returnStringKey = function(key, value) {
             if ((!value && typeof value !== 'number') || value === 'null')
                 return "None";
+            key  = String(key);
+            if (value === 'mouse')
+                key = value;
             key = key.replace(/\"/gi, '');
             return '"()"'.replace('()', key);
         };
@@ -43,6 +47,17 @@ if (Entry && Entry.block) {
                 "LESS_OR_EQUAL": '<='
             };
             return map[value];
+        };
+
+        c.returnRawNumberValueByKey = function(key, value) {
+            return String(key).replace(/\D/, '');
+        };
+
+        c.returnStringOrNumberByValue = function(key, value) {
+            if (isNaN(value)) {
+                value = value.replace(/\"/gi, '');
+                return '"()"'.replace('()', key);
+            } else return value;
         };
 
     })(Entry.block.converters);
@@ -1784,7 +1799,7 @@ Entry.block = {
             return script.getStringField("NAME");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "arduino_text"}
+            {syntax: "%1", keyOption: "arduino_text"}
         ]}
     },
     "arduino_send": {
@@ -1901,7 +1916,7 @@ Entry.block = {
             return script.getStringField("PORT");
         },
         "syntax": {"js": [], "py": [
-            {syntax:"%1", paramOption: "arduino_get_sensor_number"}
+            {syntax:"%1", keyOption: "arduino_get_sensor_number"}
         ]}
     },
     "arduino_get_port_number": {
@@ -1943,7 +1958,7 @@ Entry.block = {
             return script.getStringField("PORT");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "arduino_get_port_number"}
+            {syntax: "%1", keyOption: "arduino_get_port_number"}
         ]}
     },
     "arduino_get_pwm_port_number": {
@@ -1977,7 +1992,7 @@ Entry.block = {
             return script.getStringField("PORT");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "arduino_get_pwm_port_number"}
+            {syntax: "%1", keyOption: "arduino_get_pwm_port_number"}
         ]}
     },
     "arduino_get_number_sensor_value": {
@@ -2656,7 +2671,7 @@ Entry.block = {
             return script.getNumberField("NOTE");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "arduino_ext_tone_list"}
+            {syntax: "%1", keyOption: "arduino_ext_tone_list"}
         ]}
     },
     "arduino_ext_tone_value": {
@@ -2686,7 +2701,7 @@ Entry.block = {
             return script.getNumberValue("NOTE");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "arduino_ext_tone_value"}
+            {syntax: "%1", keyOption: "arduino_ext_tone_value"}
         ]}
     },
     "arduino_ext_set_tone": {
@@ -6302,7 +6317,16 @@ Entry.block = {
         },
         "isPrimitive": true,
         "syntax": {"js": ["Scope", "%1"], "py": [
-            {syntax: "%1", paramOption: "number"}
+            {
+                syntax: "%1",
+                keyOption: "number",
+                textParams: [
+                    {
+                        "type": "TextInput",
+                        converter: Entry.block.converters.returnStringOrNumberByValue
+                    },
+                ]
+            }
         ]}
     },
     "angle": {
@@ -6326,7 +6350,16 @@ Entry.block = {
             return script.getNumberField("ANGLE");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "angle"}
+            {
+                syntax: "%1",
+                keyOption: "angle",
+                textParams: [
+                    {
+                        "type": "Angle",
+                        converter: Entry.block.converters.returnRawNumberValueByKey
+                    },
+                ]
+            }
         ]}
     },
     "get_x_coordinate": {
@@ -6732,7 +6765,7 @@ Entry.block = {
                 return leftValue / rightValue;
         },
         "syntax": {"js": [], "py": [
-            {syntax: "(%1 %2 %3)", paramOption: "calc_basic"}
+            {syntax: "(%1 %2 %3)", keyOption: "calc_basic"}
         ]}
     },
     "calc_plus": {
@@ -8182,7 +8215,9 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["for i in range(%1):\n$1"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "for i in range(%1):\n$1", template: "for i in range(%1):"}
+        ]}
     },
     "repeat_inf": {
         "color": "#498deb",
@@ -8214,7 +8249,9 @@ Entry.block = {
             script.isLooped = true;
             return script.getStatement('DO');
         },
-        "syntax": {"js": [], "py": ["while True:\n$1"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "while True:\n$1", template: "while True:"}
+        ]}
     },
     "stop_repeat": {
         "color": "#498deb",
@@ -8331,7 +8368,9 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["if %1:\n$1"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "if %1:\n$1", template: "if %1:"}
+        ]}
     },
     "if_else": {
         "color": "#498deb",
@@ -8389,7 +8428,22 @@ Entry.block = {
             else
                 return script.getStatement("STACK_ELSE", script);
         },
-        "syntax": {"js": [], "py": ["if %1:\n$1\nelse:\n$2"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "if %1:\n$1\nelse:\n$2",
+                template: "if %1: %3 else:",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "boolean"
+                    },
+                    undefined,
+                    {
+                        "type": "LineBreak"
+                    }
+                ]
+            }
+        ]}
     },
     "create_clone": {
         "color": "#498deb",
@@ -8430,7 +8484,21 @@ Entry.block = {
             }
             return returnBlock;
         },
-        "syntax": {"js": [], "py": ["Entry.make_clone_of(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.make_clone_of(%1)",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "clone",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_FLOW,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "delete_clone": {
         "color": "#498deb",
@@ -8565,7 +8633,9 @@ Entry.block = {
             return value ? script.getStatement("DO", script) :
                 script.callReturn();
         },
-        "syntax": {"js": [], "py": [ "while %1 %2\n$1"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "while %1 %2:\n$1", template: "while %1 %2:"}
+        ]}
     },
     "stop_object": {
         "color": "#498deb",
@@ -8633,7 +8703,27 @@ Entry.block = {
                     return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.stop_code(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.stop_code(%1)", //paramOption:"boolean_basic_operator",
+                keyOption:"boolean_basic_operator",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ Lang.Blocks.FLOW_stop_object_all, "all" ],
+                            [ Lang.Blocks.FLOW_stop_object_this_object, "thisOnly" ],
+                            [ Lang.Blocks.FLOW_stop_object_this_thread, "thisThread" ],
+                            [ Lang.Blocks.FLOW_stop_object_other_thread, "otherThread" ]
+                        ],
+                        "value": "all",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_FLOW,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ]
+            }
+        ]}
     },
     "restart_project": {
         "color": "#498deb",
@@ -8855,7 +8945,7 @@ Entry.block = {
         func: function() {
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "function_create"}
+            {syntax: "%1", keyOption: "function_create"}
         ]}
     },
     "function_general": {
@@ -9602,7 +9692,8 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.left_wheel_by(%2)", params: ["LEFT"]},
             {syntax: "Hamster.right_wheel_by(%2)", params: ["RIGHT"]},
-            {syntax: "Hamster.wheels_by(%2, %2)", params: ["BOTH"], paramOption: "SAME"}
+            {syntax: "Hamster.wheels_by(%2, %2)", params: ["BOTH"], paramOption: "SAME"},
+            {syntax: "Hamster.wheels_by(%2, %2)", params: ["BOTH"], keyOption: "SAME"}
         ]}
     },
     "hamster_set_wheel_to": {
@@ -9666,7 +9757,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.left_wheel(%2)", params: ["LEFT"]},
             {syntax: "Hamster.right_wheel(%2)", params: ["RIGHT"]},
-            {syntax: "Hamster.wheels(%2, %2)", params: ["BOTH"], paramOption: "SAME"}
+            {syntax: "Hamster.wheels(%2, %2)", params: ["BOTH"], keyOption: "SAME"}
         ]}
     },
     "hamster_follow_line_using": {
@@ -10339,7 +10430,7 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": [
-            {syntax: "Hamster.note(Hamster.NOTE_OFF,%1)", paramOption: "Hamster.NOTE_OFF"}
+            {syntax: "Hamster.note(Hamster.NOTE_OFF,%1)", keyOption: "Hamster.NOTE_OFF"}
         ]}
     },
     "hamster_change_tempo_by": {
@@ -11346,7 +11437,8 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "(%1 %2 %3)", paramOption:"boolean_basic_operator",
+                syntax: "(%1 %2 %3)", //paramOption:"boolean_basic_operator",
+                keyOption:"boolean_basic_operator",
                 textParams: [
                     {
                         "type": "Block",
@@ -12084,7 +12176,7 @@ Entry.block = {
             return script.getStringField("VALUE");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "get_pictures"}
+            {syntax: "%1", keyOption: "get_pictures"}
         ]}
     },
     "change_to_some_shape": {
@@ -12969,7 +13061,21 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.move_to(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.move_to(%1)",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "spritesWithMouse",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_MOVING,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "move_xy_time": {
         "color": "#A751E3",
@@ -13397,7 +13503,21 @@ Entry.block = {
             sprite.setRotation(sprite.getRotation() + value - nativeDirection);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.look_at(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.look_at(%1)",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "spritesWithMouse",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_MOVING,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "see_angle_direction": {
         "color": "#A751E3",
@@ -13568,7 +13688,25 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.move_to_for_sec(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.move_to_for_sec(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "spritesWithMouse",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_MOVING,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "rotate_absolute": {
         "color": "#A751E3",
@@ -16745,7 +16883,6 @@ Entry.block = {
                         converter: Entry.block.converters.returnStringKey
                     }
                 ]
-
             }
         ]}
     },
@@ -17631,7 +17768,16 @@ Entry.block = {
         },
         "isPrimitive": true,
         "syntax": {"js": ["Scope", "%1"], "py": [
-            {syntax: "%1", paramOption: "text"}
+            {
+                syntax: "%1",
+                keyOption: "text",
+                textParams: [
+                    {
+                        "type": "TextInput",
+                        converter: Entry.block.converters.returnStringOrNumberByValue
+                    },
+                ]
+            }
         ]}
     },
     "text_write": {
@@ -18090,7 +18236,7 @@ Entry.block = {
             return variable.getValue();
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", paramOption: "get_variable"}
+            {syntax: "%1", keyOption: "get_variable"}
         ]}
     },
     "ask_and_wait": {
