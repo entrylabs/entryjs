@@ -2949,13 +2949,33 @@ Entry.block = {
     "arduino_open": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "isNotFor": [""],
+        "isNotFor": ["arduinoDisconnected"],
         "template": '%1',
         "params": [
             {
                 "type": "Text",
-                //TODO: 다국어 적용
-                "text": Lang.Blocks.ARDUINO_program,
+                "text": Lang.Blocks.ARDUINO_open_connector,
+                "color": "#333",
+                "align": "center"
+            }
+        ],
+        "events": {
+            "mousedown": [
+                function() {
+                    Entry.hw.openHardwareProgram();
+                }
+            ]
+        }
+    },
+    "arduino_cloud_pc_open": {
+        "skeleton": "basic_button",
+        "color": "#eee",
+        "isNotFor": ["arduinoConnected"],
+        "template": '%1',
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.ARDUINO_cloud_pc_connector,
                 "color": "#333",
                 "align": "center"
             }
@@ -8437,31 +8457,32 @@ Entry.block = {
         "class": "terminate",
         "isNotFor": [],
         "func": function (sprite, script) {
-            var target = script.getField("TARGET", script);
-            var container = Entry.container;
+            var object = sprite.parent;
 
-            switch(target) {
+            switch(script.getField("TARGET", script)) {
                 case 'all':
-                    container.mapObject(function(obj) {
+                    Entry.container.mapObject(function(obj) {
                         obj.script.clearExecutors();
                     }, null);
                     return this.die();
                 case 'thisOnly':
-                    sprite.parent.script.clearExecutorsByEntity(sprite);
+                    object.script.clearExecutorsByEntity(sprite);
                     return this.die();
                 case 'thisObject':
-                    sprite.parent.script.clearExecutors();
+                    object.script.clearExecutors();
                 return this.die();
                 case 'thisThread':
                     return this.die();
                 case 'otherThread':
                     var executor = this.executor;
-                    var code = sprite.parent.script;
+                    var code = object.script;
                     var executors = code.executors;
+                    var spriteId = sprite.id;
 
                     for (var i = 0 ; i < executors.length; i++) {
                         var currentExecutor = executors[i];
-                        if (currentExecutor !== executor) {
+                        if (currentExecutor !== executor &&
+                            currentExecutor.entity.id === spriteId) {
                             code.removeExecutor(currentExecutor);
                             --i;
                         }
@@ -17290,9 +17311,10 @@ Entry.block = {
         "isNotFor": [ "sprite" ],
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
-            sprite.setText(Entry.convertToRoundedDecimals(sprite.getText(),3) +
-                           Entry.convertToRoundedDecimals(text, 3));
-                           return script.callReturn();
+            sprite.setText(
+                Entry.convertToRoundedDecimals(sprite.getText(),3) +
+                "" + Entry.convertToRoundedDecimals(text, 3));
+            return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.append_text(%1)"]}
     },
@@ -17329,9 +17351,11 @@ Entry.block = {
         "isNotFor": [ "sprite" ],
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
-            sprite.setText(Entry.convertToRoundedDecimals(text, 3) +
-                           Entry.convertToRoundedDecimals(sprite.getText(), 3));
-                           return script.callReturn();
+            sprite.setText(
+                Entry.convertToRoundedDecimals(text, 3) +
+                "" + Entry.convertToRoundedDecimals(sprite.getText(), 3)
+            );
+            return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.prepend_text(%1)"]}
     },
@@ -21361,7 +21385,7 @@ Entry.block = {
             for (var key in entities){
                 entity = entities[key];
             }
-            
+
             var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
 
             if(unitComp.isStartedUnit) {
@@ -21383,7 +21407,7 @@ Entry.block = {
             if(!isGoal) {
                 this.executor.stepInto(statement);
                 return Entry.STATIC.BREAK;
-            }                
+            }
             // Ntry.dispatchEvent('executeEnd');
         }
     },

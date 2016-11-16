@@ -131,6 +131,11 @@
 }
 #entryPainterTopMenuEdit{
     color: white;
+    width: auto;
+    position: relative;
+    vertical-align: top;
+    margin-top: -28px;
+    margin-left: 16px;
 }
 
 #entryPainterTopMenuFile>ul>li{
@@ -150,6 +155,11 @@
 }
 #entryPainterTopMenuFile{
     color: white;
+
+    position: relative;
+    width: auto;
+    vertical-align: top;
+    margin-left: 5px;
 }
 
 
@@ -158,7 +168,7 @@
     width: 150px;
     height: 30px;
     top: 5px;
-    left: 280px;
+    left: 300px;
     font-size: 10pt;
     color:white;
 }
@@ -279,7 +289,7 @@
 .entryPlaygroundPainterAttrResize>legend {
     background-color: transparent;
     padding: 2px;
-    width: 30px;
+    width: auto !important;
     margin-bottom: 0;
     border-bottom: 0;
     font-size: 9pt;
@@ -422,7 +432,9 @@
 .entryPlaygroundPainterAttrTop {
     position: absolute;
     top:20px;
-    width:93px;
+    width: auto !important;
+    min-width:93px;
+    max-width: 120px;
     height:40px;
     border-radius: 3px;
     color: white;
@@ -459,9 +471,11 @@
 }
 .entryPlaygroundPainterAttrFontStyleArea {
     position:absolute;
-    background-color: #643cd9 ;
+    background-color: #643cd9;
     top:120px;
-    width:67px;
+    width:auto !important;
+    min-width:67px;
+    max-width: 80px;
     height: 40px;
     border-radius: 3px;
     color:white;
@@ -489,6 +503,7 @@
     height:28px;
     cursor: pointer;
     list-style: none;
+    z-index: 101;
     font-family: nanumBarunBold !important;
 }
 .entryPlaygroundPainterTopMenuFileSave {
@@ -862,7 +877,7 @@
 .painterAttrRotateName{
     top:60px;
     left:9px;
-    width:30px;
+    width: auto !important;
 }
 
 .painterAttrOpacityName{

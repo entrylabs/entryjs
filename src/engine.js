@@ -556,7 +556,6 @@ Entry.Engine.prototype.toggleStop = function() {
     });
     variableContainer.mapList(function(variable){
         variable.loadSnapshot();
-        variable.updateView();
     });
     this.stopProjectTimer();
     container.clearRunningState();

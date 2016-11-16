@@ -198,9 +198,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
     position: relative;
     font-size: 9pt;
     color: #000000;
-    top: 12px;
+    top: 8px;
     left: 28px;
-    width: 150px;
+    width: auto;
 }
 
 .selectedObject>.entryObjectWrapperWorkspace>.entryObjectCoordinateWorkspace{
@@ -311,7 +311,8 @@ input.entryObjectNameWorkspace:-moz-read-only {
 
 .collapsed .rotationMethodWrapper {
     float: left;
-    top: 39px;
+    position: absolute;
+    bottom: 9px;
 }
 
 .entryObjectRotateMethodLabelWorkspace {
@@ -319,9 +320,10 @@ input.entryObjectNameWorkspace:-moz-read-only {
     line-height: 20px;
     font-size: 9pt;
     color: #000000;
-    position: absolute;
     padding-left: 20px;
     padding-top: 20px;
+    position: relative;
+    float: left;
 }
 
 /*.entryObjectRotateLabelWorkspace {
@@ -365,7 +367,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 
 .entryObjectRotateModeAWorkspace {
-    margin-left: 80px;
+    margin-left: 6px;
     .backgroundImage("layers_icon_rotate01_nor.png");
 }
 
@@ -390,41 +392,31 @@ input.entryObjectNameWorkspace:-moz-read-only {
     .backgroundImage("layers_icon_rotate03_sel.png");
 }
 
-.entryObjectCoordinateSpanWorkspace {
-    float: left;
-    position: absolute;
-}
-
 .entryObjectCoordinateSpanWorkspace:nth-child(3) {
-    float: left;
-    margin-left: 57px;
+    margin-left: 5px;
+    position: relative;
 }
 
 .entryObjectCoordinateSizeWorkspace {
-    float: left;
-    margin-left: 113px;
-    position: absolute;
+    margin: 0;
+    position: relative;
+    float: none;
 }
 
 .entryObjectCoordinateInputWorkspace {
     width: 40px;
     height: 20px;
-    position: absolute;
-    float: left;
-    margin: -2px 5px 0px 15px;
     background-color: #e5e5e5;
     border: none;
     border: 1px solid transparent;
+    margin-left: 4px;
 }
 
-.entryObjectCoordinateInputWorkspace_right {
-    margin-left: 70px;
-}
 
 .entryObjectCoordinateInputWorkspace_size {
-    float: left;
-    position: absolute;
-    margin-left: 145px;
+    margin: 0;
+    float: none;
+    position: relative;
 }
 
 .entryObjectCoordinateInputWorkspace:disabled,
@@ -564,11 +556,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
 
     .entryObjectCoordinateInputWorkspace_size {
         width: 48px;
-        margin-left: 170px
     }
 
     .entryObjectCoordinateInputWorkspace_right {
-        margin-left: 84px;
     }
 
     .entryObjectRotateInputWorkspace {
@@ -580,11 +570,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
     }
 
     .entryObjectCoordinateSpanWorkspace:nth-child(3) {
-        margin-left: 70px;
     }
 
     .entryObjectCoordinateSizeWorkspace {
-        margin-left: 139px;
         width: 30px;
     }
 
@@ -594,7 +582,8 @@ input.entryObjectNameWorkspace:-moz-read-only {
 
     .collapsed .rotationMethodWrapper {
         float: left;
-        top: 39px;
+        position: absolute;
+        bottom: 9px;
     }
 }
 

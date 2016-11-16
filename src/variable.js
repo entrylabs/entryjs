@@ -707,8 +707,8 @@ Entry.Variable.prototype.takeSnapshot = function() {
  * load snapshot to current variable
  */
 Entry.Variable.prototype.loadSnapshot = function() {
-    if (this.snapshot_ && !this.isCloud_)
-        this.syncModel_(this.snapshot_);
+    this.snapshot_ && this.syncModel_(this.snapshot_);
+    delete this.snapshot_;
 };
 
 /**
@@ -719,15 +719,16 @@ Entry.Variable.prototype.loadSnapshot = function() {
 Entry.Variable.prototype.syncModel_ = function(variableModel) {
     this.setX(variableModel.x);
     this.setY(variableModel.y);
-    this.id_ = variableModel.id;
     this.setVisible(variableModel.visible);
-    this.setValue(variableModel.value);
+    if (!this.isCloud_)
+        this.setValue(variableModel.value);
     this.setName(variableModel.name);
     this.isCloud_ = variableModel.isCloud;
     if (this.type == 'list') {
+        if (!this.isCloud_)
+            this.array_ = variableModel.array;
         this.setWidth(variableModel.width);
         this.setHeight(variableModel.height);
-        this.array_ = variableModel.array;
     }
 };
 
