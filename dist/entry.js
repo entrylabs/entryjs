@@ -23369,12 +23369,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   };
   b._getTemplate = function(a) {
     var b = this._schema, b = b.template ? b.template : Lang.template[this.block.type], c;
-    a === Entry.BlockView.RENDER_MODE_TEXT && (a = this.getBoard().workspace) && a.vimBoard && (c = a.vimBoard.getBlockSyntax(this).template);
+    a === Entry.BlockView.RENDER_MODE_TEXT && (a = this.getBoard().workspace) && a.vimBoard && (a = a.vimBoard.getBlockSyntax(this)) && (c = a.template);
     return c || b;
   };
   b._getSchemaParams = function(a) {
     var b = this._schema, c = b.params;
-    a === Entry.BlockView.RENDER_MODE_TEXT && b.syntax.py[0].textParams && (c = b.syntax.py[0].textParams);
+    a === Entry.BlockView.RENDER_MODE_TEXT && b.syntax && b.syntax.py[0].textParams && (c = b.syntax.py[0].textParams);
     return c;
   };
 })(Entry.BlockView.prototype);
@@ -24265,6 +24265,8 @@ Entry.FieldColor = function(b, a, d) {
   this._contents = b;
   this._index = d;
   this._position = b.position;
+  this._fontSize = b.fontSize || a.getSkeleton().fontSize || 12;
+  this._color = b.color || this._block.getSchema().fontColor || a.getSkeleton().color || "black";
   this.key = b.key;
   this.setValue(this.getValue() || "#FF0000");
   this._CONTENT_HEIGHT = this.getContentHeight();
@@ -24276,11 +24278,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-field-color"});
-    var a = this._CONTENT_HEIGHT, b = this._CONTENT_WIDTH, c = this._position, e;
-    c ? (e = c.x || 0, c = c.y || 0) : (e = 0, c = -a / 2);
-    this._header = this.svgGroup.elem("rect", {x:e, y:c, width:b, height:a, fill:this.getValue()});
+    if (this._blockView.renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
+      var a = this.svgGroup.elem("rect", {x:0, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+      this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre;", "font-size":this._fontSize + "px", "font-family":"nanumBarunRegular", "class":"dragNone", fill:this._color});
+      this.textElement.textContent = this._convert(this.getValue(), this.getValue());
+      var b = this.textElement.getBoundingClientRect(), c = b.width + 12, e = b.height;
+      a.attr({y:-e / 2, width:c, height:e});
+      this.textElement.attr({x:6, y:.25 * b.height});
+    } else {
+      var e = this._CONTENT_HEIGHT, c = this._CONTENT_WIDTH, a = this._position, f, g;
+      a ? (f = a.x || 0, g = a.y || 0) : (f = 0, g = -e / 2);
+      this._header = this.svgGroup.elem("rect", {x:f, y:g, width:c, height:e, fill:this.getValue()});
+    }
     this._bindRenderOptions();
-    this.box.set({x:e, y:c, width:b, height:a});
+    this.box.set({x:f, y:g, width:c, height:e});
   };
   b.renderOptions = function() {
     var a = this;
@@ -24309,7 +24320,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     this.optionGroup.css({left:b.x, top:b.y});
   };
   b.applyValue = function(a) {
-    this.value != a && (this.setValue(a), this._header.attr({fill:a}));
+    this.value != a && (this.setValue(a), this._header ? this._header.attr({fill:a}) : this.textElement && (this.textElement.textContent = this._convert(this.getValue(), this.getValue())));
   };
   b.getContentWidth = function() {
     return Entry.isMobile() ? 20 : 14.5;

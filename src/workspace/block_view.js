@@ -1286,8 +1286,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         if (renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
             var workspace = this.getBoard().workspace;
-            if (workspace && workspace.vimBoard)
-                template = workspace.vimBoard.getBlockSyntax(this).template;
+            if (workspace && workspace.vimBoard) {
+                var syntax = workspace.vimBoard.getBlockSyntax(this);
+                if (syntax) template = syntax.template;
+            }
         }
 
         return template || defaultTemplate;
@@ -1297,7 +1299,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var schema = this._schema;
         var params = schema.params;
         if (mode === Entry.BlockView.RENDER_MODE_TEXT) {
-            if (schema.syntax.py[0].textParams) {
+            if (schema.syntax && schema.syntax.py[0].textParams) {
                 params = schema.syntax.py[0].textParams
             }
         }

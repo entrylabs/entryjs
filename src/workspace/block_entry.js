@@ -5884,7 +5884,17 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.set_brush_color_to(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.set_brush_color_to(%1)",
+                textParams: [
+                    {
+                        "type": "Color",
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ]
+            }
+        ]}
     },
     "set_random_color": {
         "color": "#FF9E20",
@@ -6512,7 +6522,22 @@ Entry.block = {
                 );
             }
         },
-        "syntax": {"js": [], "py": ["Entry.value_of_distance_to(%2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.value_of_distance_to(%2)",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "spritesWithMouse",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "coordinate_mouse": {
         "color": "#FFD974",
@@ -6559,7 +6584,34 @@ Entry.block = {
                 return Number(Entry.stage.mouseCoordinate.y);
             }
         },
-        "syntax": {"js": [], "py": ["Entry.value_of_mouse_pointer(%2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.value_of_mouse_pointer(%2)",
+                textParams: [
+                    {
+                        "type": "Text",
+                        "text": Lang.Blocks.CALC_coordinate_mouse_1,
+                        "color": "#3D3D3D"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "x", "x" ],
+                            [ "y", "y" ]
+                        ],
+                        "value": "x",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                    {
+                        "type": "Text",
+                        "text": Lang.Blocks.CALC_coordinate_mouse_2,
+                        "color": "#3D3D3D"
+                    }
+                ]
+            }
+        ]}
     },
     "coordinate_object": {
         "color": "#FFD974",
@@ -6642,7 +6694,39 @@ Entry.block = {
                     return picture.name;
             }
         },
-        "syntax": {"js": [], "py": ["Entry.value_of_object(%2, %4)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.value_of_object(%2, %4)",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "spritesWithSelf",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                    undefined,
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.CALC_coordinate_x_value,"x"],
+                            [Lang.Blocks.CALC_coordinate_y_value, "y"],
+                            [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"],
+                            [Lang.Blocks.CALC_coordinate_direction_value, "direction"],
+                            [Lang.Blocks.CALC_coordinate_size_value, "size"],
+                            [Lang.Blocks.CALC_picture_index, "picture_index"],
+                            [Lang.Blocks.CALC_picture_name, "picture_name"]
+                        ],
+                        "value": "x",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ]
+            }
+        ]}
     },
     "calc_basic": {
         "color": "#FFD974",
@@ -7122,7 +7206,44 @@ Entry.block = {
 
             return returnVal;
         },
-        "syntax": {"js": [], "py": ["Entry.math_operation(%2, %4)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.math_operation(%2, %4)",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.CALC_calc_operation_square,"square"],
+                            [Lang.Blocks.CALC_calc_operation_root, "root"],
+                            [Lang.Blocks.CALC_calc_operation_sin, "sin"],
+                            [Lang.Blocks.CALC_calc_operation_cos,"cos"],
+                            [Lang.Blocks.CALC_calc_operation_tan,"tan"],
+                            [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"],
+                            [Lang.Blocks.CALC_calc_operation_acos,"acos_radian"],
+                            [Lang.Blocks.CALC_calc_operation_atan,"atan_radian"],
+                            [Lang.Blocks.CALC_calc_operation_log,"log"],
+                            [Lang.Blocks.CALC_calc_operation_ln,"ln"],
+                            [Lang.Blocks.CALC_calc_operation_unnatural,"unnatural"],
+                            [Lang.Blocks.CALC_calc_operation_floor,"floor"],
+                            [Lang.Blocks.CALC_calc_operation_ceil,"ceil"],
+                            [Lang.Blocks.CALC_calc_operation_round,"round"],
+                            [Lang.Blocks.CALC_calc_operation_factorial,"factorial"],
+                            [Lang.Blocks.CALC_calc_operation_abs,"abs"]
+                        ],
+                        "value": "square",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ]
+            }
+        ]}
     },
     "calc_rand": {
         "color": "#FFD974",
@@ -7248,7 +7369,29 @@ Entry.block = {
             else
                 return dateTime.getSeconds();
         },
-        "syntax": {"js": [], "py": ["Entry.value_of_current_time(%2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.value_of_current_time(%2)",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.CALC_get_date_year,"YEAR"],
+                            [Lang.Blocks.CALC_get_date_month,"MONTH"],
+                            [Lang.Blocks.CALC_get_date_day,"DAY"],
+                            [Lang.Blocks.CALC_get_date_hour,"HOUR"],
+                            [Lang.Blocks.CALC_get_date_minute,"MINUTE"],
+                            [Lang.Blocks.CALC_get_date_second,"SECOND"]
+                        ],
+                        "value": "YEAR",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ]
+            }
+        ]}
     },
     "get_sound_duration": {
         "color": "#FFD974",
@@ -7293,7 +7436,22 @@ Entry.block = {
                     return soundsArr[i].duration;
             }
         },
-        "syntax": {"js": [], "py": ["Entry.value_of_sound_length_of(%2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.value_of_sound_length_of(%2)",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "sounds",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "reset_project_timer": {
         "color": "#FFD974",
@@ -7393,7 +7551,25 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.timer_view(%2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.timer_view(%2)",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.CALC_timer_visible_show,"SHOW"],
+                            [Lang.Blocks.CALC_timer_visible_hide,"HIDE"]
+                        ],
+                        "value": "SHOW",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ]
+            }
+        ]}
     },
     "timer_variable": {
         "color": "#FFD974",
@@ -7782,7 +7958,30 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringValue("STRING", script)[script.getField("CASE", script)]();
         },
-        "syntax": {"js": [], "py": ["Entry.string_case(%2, %4)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.string_case(%2, %4)",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.CALC_change_string_case_sub_1,"toUpperCase"],
+                            [Lang.Blocks.CALC_change_string_case_sub_2,"toLowerCase"]
+                        ],
+                        "value": "toUpperCase",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ]
+            }
+        ]}
     },
     "index_of_string": {
         "color": "#FFD974",
@@ -8013,7 +8212,35 @@ Entry.block = {
             else
                 return left % right;
         },
-        "syntax": {"js": [], "py": ["Entry.value_div(%2, %4, %6)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.value_div(%2, %4, %6)",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                              [Lang.Blocks.CALC_quotient_and_mod_sub_1,"QUOTIENT"],
+                              [Lang.Blocks.CALC_quotient_and_mod_sub_2,"MOD"]
+                        ],
+                        "value": "QUOTIENT",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ]
+            }
+        ]}
     },
     "choose_project_timer_action": {
         "color": "#FFD974",
@@ -8105,7 +8332,26 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.timer(%2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.timer(%2)",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.CALC_choose_project_timer_action_sub_1,"START"],
+                            [Lang.Blocks.CALC_choose_project_timer_action_sub_2,"STOP"],
+                            [Lang.Blocks.CALC_choose_project_timer_action_sub_3,"RESET"]
+                        ],
+                        "value": "START",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ]
+            }
+        ]}
     },
     "wait_second": {
         "color": "#498deb",
@@ -10765,7 +11011,18 @@ Entry.block = {
             var keycode = Number(script.getField("VALUE", script));
             return Entry.pressedKeys.indexOf(keycode) >= 0;
         },
-        "syntax": {"js": [], "py": ["Entry.is_key_pressed(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.is_key_pressed(%1)",
+                textParams: [
+                    {
+                        "type": "Keyboard",
+                        "value": '81',
+                        converter: Entry.block.converters.keyboardInput
+                    }
+                ]
+            }
+        ]}
     },
     "reach_something": {
         "color": "#AEB8FF",
@@ -11599,7 +11856,31 @@ Entry.block = {
                 return script;
             }
         },
-        "syntax": {"js": [], "py": ["Entry.print_for_sec(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.print_for_sec(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ Lang.Blocks.speak, "speak" ]
+                        ],
+                        "value": "speak",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "dialog": {
         "color": "#EC4466",
@@ -11755,7 +12036,24 @@ Entry.block = {
             sprite.setImage(picture);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.set_shape_to(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.set_shape_to(%1)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ Lang.Blocks.LOOKS_change_shape_next, "next" ],
+                            [ Lang.Blocks.LOOKS_change_shape_prev, "prev" ]
+                        ],
+                        "value": "next",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ]
+            }
+        ]}
     },
     "set_effect_volume": {
         "color": "#EC4466",
@@ -12176,7 +12474,19 @@ Entry.block = {
             return script.getStringField("VALUE");
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", keyOption: "get_pictures"}
+            {
+                syntax: "%1", keyOption: "get_pictures",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "pictures",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
+                        converter: Entry.block.converters.returnStringKey
+                    }
+                ]
+            }
         ]}
     },
     "change_to_some_shape": {
@@ -12277,7 +12587,29 @@ Entry.block = {
             sprite.applyFilter(true);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.add_effect(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.add_effect(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ Lang.Blocks.color, "color" ],
+                            [ Lang.Blocks.brightness, "brightness" ],
+                            [ Lang.Blocks.transparency, "transparency" ]
+                        ],
+                        "value": "color",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                ]
+            }
+        ]}
     },
     "change_effect_amount": {
         "color": "#EC4466",
@@ -12336,7 +12668,29 @@ Entry.block = {
             sprite.applyFilter(true);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.set_effect(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.set_effect(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ Lang.Blocks.color, "color" ],
+                            [ Lang.Blocks.brightness, "brightness" ],
+                            [ Lang.Blocks.transparency, "transparency" ]
+                        ],
+                        "value": "color",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                ]
+            }
+        ]}
     },
     "set_effect_amount": {
         "color": "#EC4466",
@@ -12516,7 +12870,26 @@ Entry.block = {
             Entry.container.moveElementByBlock(currentIndex, targetIndex);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_layer_to(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.change_layer_to(%1)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ Lang.Blocks.LOOKS_change_object_index_sub_1, "FRONT" ],
+                            [ Lang.Blocks.LOOKS_change_object_index_sub_2, "FORWARD" ],
+                            [ Lang.Blocks.LOOKS_change_object_index_sub_3, "BACKWARD" ],
+                            [ Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK" ]
+                        ],
+                        "value": "FRONT",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ]
+            }
+        ]}
     },
     "move_direction": {
         "color": "#A751E3",
@@ -18982,7 +19355,24 @@ Entry.block = {
                 Entry.container.inputValue.setVisible(true);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.answer_view(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.answer_view(%1)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.CALC_timer_visible_show,"SHOW"],
+                            [Lang.Blocks.CALC_timer_visible_hide,"HIDE"]
+                        ],
+                        "value": "SHOW",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ]
+            }
+        ]}
     },
     "is_included_in_list": {
         "color": "#E457DC",
