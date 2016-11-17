@@ -11876,7 +11876,7 @@ Entry.block = {
                         "value": "speak",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringValue
                     },
                 ]
             }
