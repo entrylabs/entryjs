@@ -88,8 +88,8 @@ Entry.Func.prototype.destroy = function() {
 Entry.Func.edit = function(func) {
     //same as currently editing func
     //no change needed
-    if (this.targetFunc === func)
-        return;
+    //if (this.targetFunc === func)
+        //return;
 
     this.unbindFuncChangeEvent();
     this.unbindWorkspaceStateChangeEvent();
