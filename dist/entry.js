@@ -17218,9 +17218,17 @@ Entry.Func.prototype.destroy = function() {
   this.blockMenuBlock.destroy();
 };
 Entry.Func.edit = function(b) {
-  this.targetFunc !== b && (this.unbindFuncChangeEvent(), this.unbindWorkspaceStateChangeEvent(), this.cancelEdit(), Entry.Func.isEdit = !0, this.targetFunc = b, this.initEditView(b.content), this.bindFuncChangeEvent(), this.updateMenu(), setTimeout(function() {
+  this.unbindFuncChangeEvent();
+  this.unbindWorkspaceStateChangeEvent();
+  this.cancelEdit();
+  Entry.Func.isEdit = !0;
+  this.targetFunc = b;
+  this.initEditView(b.content);
+  this.bindFuncChangeEvent();
+  this.updateMenu();
+  setTimeout(function() {
     this._backupContent = b.content.stringify();
-  }.bind(this), 0));
+  }.bind(this), 0);
 };
 Entry.Func.initEditView = function(b) {
   this.menuCode || this.setupMenuCode();
