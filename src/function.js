@@ -86,7 +86,17 @@ Entry.Func.prototype.destroy = function() {
 };
 
 Entry.Func.edit = function(func) {
+    //same as currently editing func
+    //no change needed
+    //if (this.targetFunc === func)
+        //return;
+
+    this.unbindFuncChangeEvent();
+    this.unbindWorkspaceStateChangeEvent();
+
     this.cancelEdit();
+
+    Entry.Func.isEdit = true;
     this.targetFunc = func;
     this.initEditView(func.content);
     this.bindFuncChangeEvent();
@@ -104,16 +114,17 @@ Entry.Func.initEditView = function(content) {
     workspace.changeOverlayBoardCode(content);
     content.recreateView();
     workspace.changeOverlayBoardCode(content);
-    this._workspaceStateEvent = workspace.changeEvent.attach(this, this.endEdit);
+    this._workspaceStateEvent =
+        workspace.changeEvent.attach(this, this.endEdit);
     content.view.reDraw();
     content.view.board.alignThreads();
 };
 
 Entry.Func.endEdit = function(message) {
     this.unbindFuncChangeEvent();
-    this._workspaceStateEvent.destroy();
-    delete this._workspaceStateEvent;
-    switch(message){
+    this.unbindWorkspaceStateChangeEvent();
+
+    switch(message) {
         case "save":
             this.save();
             break;
@@ -121,11 +132,12 @@ Entry.Func.endEdit = function(message) {
             this.cancelEdit();
             break;
     }
+
     this._backupContent = null;
-    Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD);
     delete this.targetFunc;
     this.updateMenu();
-}
+    Entry.Func.isEdit = false;
+};
 
 Entry.Func.save = function() {
     this.targetFunc.generateBlock(true);
@@ -147,8 +159,8 @@ Entry.Func.syncFuncName = function(dstFName) {
             for(var j=0; j < iList.length; j++) {
                 var input = iList[j];
                 if(input.fieldRow.length > 0 && (input.fieldRow[0] instanceof Blockly.FieldLabel) && (input.fieldRow[0].text_ != undefined)) {
-                    name+=input.fieldRow[0].text_;
-                    name+=" ";
+                    name += input.fieldRow[0].text_;
+                    name += " ";
                 }
             }
             name = name.trim();
@@ -159,11 +171,9 @@ Entry.Func.syncFuncName = function(dstFName) {
                         if(dstFNameTokens[index] === undefined) {
                             iList.splice(k,1);
                             break;
-                        }
-                        else {
+                        } else {
                            input.fieldRow[0].text_ = dstFNameTokens[index];
                         }
-
                         index++;
                     }
                 }
@@ -172,6 +182,7 @@ Entry.Func.syncFuncName = function(dstFName) {
             index = 0;
         }
     }
+
     var updatedDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace)
     Blockly.mainWorkspace.clear();
     Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, updatedDom);
@@ -192,7 +203,6 @@ Entry.Func.cancelEdit = function() {
         }
     }
     Entry.variableContainer.updateList();
-    Entry.Func.isEdit = false;
 };
 
 Entry.Func.getMenuXml = function() {
@@ -345,7 +355,7 @@ Entry.Func.generateBlock = function(func) {
     var block = {
         template: blockSchema.template,
         params: blockSchema.params
-    }
+    };
 
     var reg = /(%\d)/mi;
     var templateParams = blockSchema.template.split(reg);
@@ -371,7 +381,6 @@ Entry.Func.generateBlock = function(func) {
         } else {
             description += templateChunk
         }
-
     }
 
     return {block: block, description: description};
@@ -498,8 +507,16 @@ Entry.Func.bindFuncChangeEvent = function(targetFunc) {
 };
 
 Entry.Func.unbindFuncChangeEvent = function() {
-    if (this._funcChangeEvent)
-        this._funcChangeEvent.destroy();
+    if (!this._funcChangeEvent)
+        return;
+    this._funcChangeEvent.destroy();
     delete this._funcChangeEvent;
+};
+
+Entry.Func.unbindWorkspaceStateChangeEvent = function() {
+    if (!this._workspaceStateEvent)
+        return;
+    this._workspaceStateEvent.destroy();
+    delete this._workspaceStateEvent;
 };
 

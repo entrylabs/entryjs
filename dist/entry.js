@@ -793,20 +793,11 @@ Entry.Arduino = {name:"arduino", setZero:function() {
 " 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 8:{name:Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
-Entry.ArduinoExt = {name:"ArduinoExt", getSensorKey:function() {
-  return "xxxxxxxx".replace(/[xy]/g, function(b) {
-    var a = 16 * Math.random() | 0;
-    return ("x" == b ? a : a & 0 | 0).toString(16);
-  }).toUpperCase();
-}, getSensorTime:function(b) {
-  return (new Date).getTime() + b;
-}, setZero:function() {
+Entry.ArduinoExt = {name:"ArduinoExt", setZero:function() {
   Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(b) {
     Entry.hw.sendQueue.SET[b].data = 0;
-    Entry.hw.sendQueue.TIME = Entry.ArduinoExt.getSensorTime(Entry.hw.sendQueue.SET[b].type);
-    Entry.hw.sendQueue.KEY = Entry.ArduinoExt.getSensorKey();
-  }) : Entry.hw.sendQueue = {SET:{0:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 1:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 2:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 3:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 4:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 5:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 6:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 7:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 8:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, 
-  data:0}, 9:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 10:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 11:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 12:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 13:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}}, TIME:Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL), KEY:Entry.ArduinoExt.getSensorKey()};
+    Entry.hw.sendQueue.SET[b].time = (new Date).getTime();
+  }) : Entry.hw.sendQueue = {GET:{}, SET:{}};
   Entry.hw.update();
 }, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 
 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, BlockState:{}};
@@ -7845,7 +7836,6 @@ Entry.Engine.prototype.toggleStop = function() {
   });
   a.mapList(function(a) {
     a.loadSnapshot();
-    a.updateView();
   });
   this.stopProjectTimer();
   b.clearRunningState();
@@ -11625,11 +11615,11 @@ Entry.Scene.prototype.generateElement = function(b) {
   }
   Entry.Utils.disableContextmenu(d);
   $(d).on("contextmenu", function() {
-    var a = [{text:Lang.Workspace.duplicate_scene, enable:Entry.engine.isState("stop"), callback:function() {
+    var a = [{text:Lang.Workspace.duplicate_scene, enable:Entry.engine.isState("stop") && !this.isMax(), callback:function() {
       Entry.scene.cloneScene(b);
     }}];
     Entry.ContextMenu.show(a, "workspace-contextmenu");
-  });
+  }.bind(this));
   return b.view = d;
 };
 Entry.Scene.prototype.updateView = function() {
@@ -11637,7 +11627,7 @@ Entry.Scene.prototype.updateView = function() {
     for (var b = this.listView_, a = $(b).children().length;a < this.getScenes().length;a++) {
       b.appendChild(this.getScenes()[a].view);
     }
-    this.addButton_ && (this.getScenes().length < this.maxCount ? this.addButton_.removeClass("entryRemove") : this.addButton_.addClass("entryRemove"));
+    this.addButton_ && (this.getScenes(), this.isMax() ? this.addButton_.addClass("entryRemove") : this.addButton_.removeClass("entryRemove"));
   }
   this.resize();
 };
@@ -11734,7 +11724,7 @@ Entry.Scene.prototype.createScene = function() {
   return b;
 };
 Entry.Scene.prototype.cloneScene = function(b) {
-  if (this.scenes_.length >= this.maxCount) {
+  if (this.isMax()) {
     Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_add_error, !1);
   } else {
     var a = {name:b.name + Lang.Workspace.replica_of_object, id:Entry.generateHash()};
@@ -11767,6 +11757,9 @@ Entry.Scene.prototype.resize = function() {
 Entry.Scene.prototype.getNextScene = function() {
   var b = this.getScenes();
   return b[b.indexOf(this.selectedScene) + 1];
+};
+Entry.Scene.prototype.isMax = function() {
+  return this.scenes_.length >= this.maxCount;
 };
 Entry.Script = function(b) {
   this.entity = b;
@@ -17039,31 +17032,36 @@ Entry.Utils.isChrome = function() {
   return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 };
 Entry.Utils.waitForWebfonts = function(b, a) {
-  for (var d = 0, c = 0, e = b.length;c < e;++c) {
-    (function(c) {
-      function e() {
-        h && h.offsetWidth != k && (++d, h.parentNode.removeChild(h), h = null);
-        if (d >= b.length && (l && clearInterval(l), d == b.length)) {
-          return a(), !0;
+  var d = 0;
+  if (b && b.length) {
+    for (var c = 0, e = b.length;c < e;++c) {
+      (function(c) {
+        function e() {
+          h && h.offsetWidth != k && (++d, h.parentNode.removeChild(h), h = null);
+          if (d >= b.length && (l && clearInterval(l), d == b.length)) {
+            return a(), !0;
+          }
         }
-      }
-      var h = document.createElement("span");
-      h.innerHTML = "giItT1WQy@!-/#";
-      h.style.position = "absolute";
-      h.style.left = "-10000px";
-      h.style.top = "-10000px";
-      h.style.fontSize = "300px";
-      h.style.fontFamily = "sans-serif";
-      h.style.fontVariant = "normal";
-      h.style.fontStyle = "normal";
-      h.style.fontWeight = "normal";
-      h.style.letterSpacing = "0";
-      document.body.appendChild(h);
-      var k = h.offsetWidth;
-      h.style.fontFamily = c;
-      var l;
-      e() || (l = setInterval(e, 50));
-    })(b[c]);
+        var h = document.createElement("span");
+        h.innerHTML = "giItT1WQy@!-/#";
+        h.style.position = "absolute";
+        h.style.left = "-10000px";
+        h.style.top = "-10000px";
+        h.style.fontSize = "300px";
+        h.style.fontFamily = "sans-serif";
+        h.style.fontVariant = "normal";
+        h.style.fontStyle = "normal";
+        h.style.fontWeight = "normal";
+        h.style.letterSpacing = "0";
+        document.body.appendChild(h);
+        var k = h.offsetWidth;
+        h.style.fontFamily = c;
+        var l;
+        e() || (l = setInterval(e, 50));
+      })(b[c]);
+    }
+  } else {
+    return a && a(), !0;
   }
 };
 window.requestAnimFrame = function() {
@@ -17090,6 +17088,19 @@ Entry.Utils.convertIntToHex = function(b) {
 };
 Entry.Utils.hasSpecialCharacter = function(b) {
   return /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g.test(b);
+};
+Entry.Utils.isNewVersion = function(b, a) {
+  try {
+    b = b.replace("v", "");
+    a = a.replace("v", "");
+    for (var d = b.split("."), c = a.split("."), e = d.length < c.length ? d.length : c.length, f = !1, g = !0, h = 0;h < e;h++) {
+      Number(d[h]) < Number(c[h]) ? (f = !0, g = !1) : Number(d[h]) > Number(c[h]) && (g = !1);
+    }
+    g && d.length < c.length && (f = !0);
+    return f;
+  } catch (k) {
+    return !1;
+  }
 };
 Entry.Model = function(b, a) {
   var d = Entry.Model;
@@ -17207,7 +17218,10 @@ Entry.Func.prototype.destroy = function() {
   this.blockMenuBlock.destroy();
 };
 Entry.Func.edit = function(b) {
+  this.unbindFuncChangeEvent();
+  this.unbindWorkspaceStateChangeEvent();
   this.cancelEdit();
+  Entry.Func.isEdit = !0;
   this.targetFunc = b;
   this.initEditView(b.content);
   this.bindFuncChangeEvent();
@@ -17229,8 +17243,7 @@ Entry.Func.initEditView = function(b) {
 };
 Entry.Func.endEdit = function(b) {
   this.unbindFuncChangeEvent();
-  this._workspaceStateEvent.destroy();
-  delete this._workspaceStateEvent;
+  this.unbindWorkspaceStateChangeEvent();
   switch(b) {
     case "save":
       this.save();
@@ -17239,9 +17252,9 @@ Entry.Func.endEdit = function(b) {
       this.cancelEdit();
   }
   this._backupContent = null;
-  Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD);
   delete this.targetFunc;
   this.updateMenu();
+  Entry.Func.isEdit = !1;
 };
 Entry.Func.save = function() {
   this.targetFunc.generateBlock(!0);
@@ -17280,7 +17293,7 @@ Entry.Func.syncFuncName = function(b) {
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a);
 };
 Entry.Func.cancelEdit = function() {
-  this.targetFunc && (this.targetFunc.block ? this._backupContent && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), Entry.variableContainer.updateList(), Entry.Func.isEdit = !1);
+  this.targetFunc && (this.targetFunc.block ? this._backupContent && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), Entry.variableContainer.updateList());
 };
 Entry.Func.getMenuXml = function() {
   var b = [];
@@ -17419,8 +17432,10 @@ Entry.Func.bindFuncChangeEvent = function(b) {
   !this._funcChangeEvent && b.content.getEventMap("funcDef")[0].view && (this._funcChangeEvent = b.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
 };
 Entry.Func.unbindFuncChangeEvent = function() {
-  this._funcChangeEvent && this._funcChangeEvent.destroy();
-  delete this._funcChangeEvent;
+  this._funcChangeEvent && (this._funcChangeEvent.destroy(), delete this._funcChangeEvent);
+};
+Entry.Func.unbindWorkspaceStateChangeEvent = function() {
+  this._workspaceStateEvent && (this._workspaceStateEvent.destroy(), delete this._workspaceStateEvent);
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(b) {
@@ -17669,7 +17684,8 @@ Entry.HW = function() {
   this.sessionRoomId || (this.sessionRoomId = this.createRandomRoomId(), localStorage.setItem("entryhwRoomId", this.sessionRoomId));
   this.connectTrial = 0;
   this.isFirstConnect = !0;
-  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.0_Setup.exe";
+  this.requireVerion = "v1.6.1";
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.1_Setup.exe";
   this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
@@ -17711,7 +17727,9 @@ p.connectWebSocket = function(b, a) {
           d.disconnectHardware();
           break;
         default:
-          a = JSON.parse(a.data), d.checkDevice(a), d.updatePortData(a);
+          var b = JSON.parse(a.data);
+          d.checkDevice(b, a.version);
+          d.updatePortData(b);
       }
     }
   });
@@ -17729,17 +17747,13 @@ p.initSocket = function() {
     if (-1 < location.protocol.indexOf("https")) {
       this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
     } else {
-      if (Entry.isOffline) {
-        this.tlsSocketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-      } else {
-        try {
-          this.socketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-        } catch (b) {
-        }
-        try {
-          this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-        } catch (b) {
-        }
+      try {
+        this.socketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+      } catch (b) {
+      }
+      try {
+        this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+      } catch (b) {
       }
     }
     Entry.dispatchEvent("hwChanged");
@@ -17840,7 +17854,10 @@ p.downloadConnector = function() {
   window.open(this.downloadPath, "_blank").focus();
 };
 p.downloadGuide = function() {
-  window.open("http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC-%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%EC%97%B0%EA%B2%B0%EB%A7%A4%EB%89%B4%EC%96%BC_16_08_17.hwp", "_blank").focus();
+  var b = document.createElement("a");
+  b.href = "http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC%20%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%20%EC%97%B0%EA%B2%B0%20%EB%A7%A4%EB%89%B4%EC%96%BC(%EC%98%A8%EB%9D%BC%EC%9D%B8%EC%9A%A9).pdf";
+  b.download = "download";
+  b.click();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -17848,9 +17865,12 @@ p.downloadSource = function() {
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
-p.checkDevice = function(b) {
-  void 0 !== b.company && (b = [Entry.Utils.convertIntToHex(b.company), ".", Entry.Utils.convertIntToHex(b.model)].join(""), b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !1), this.hwModule.monitorTemplate && 
-  (this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
+p.checkDevice = function(b, a) {
+  if (void 0 !== b.company) {
+    var d = [Entry.Utils.convertIntToHex(b.company), ".", Entry.Utils.convertIntToHex(b.model)].join("");
+    d != this.selectedDevice && (Entry.Utils.isNewVersion(a, this.requireVerion) && this.popupHelper.show("newVersion", !0), this.selectedDevice = d, this.hwModule = this.hwInfo[d], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !1), this.hwModule.monitorTemplate && (this.hwMonitor ? 
+    (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), d = this.hwModule.monitorTemplate, "both" == d.mode ? (d.mode = "list", this.hwMonitor.generateListView(), d.mode = "general", this.hwMonitor.generateView(), d.mode = "both") : "list" == d.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView()));
+  }
 };
 p.banHW = function() {
   var b = this.hwInfo, a;
@@ -18612,17 +18632,17 @@ Entry.Variable.prototype.takeSnapshot = function() {
   this.snapshot_ = this.toJSON();
 };
 Entry.Variable.prototype.loadSnapshot = function() {
-  this.snapshot_ && !this.isCloud_ && this.syncModel_(this.snapshot_);
+  this.snapshot_ && this.syncModel_(this.snapshot_);
+  delete this.snapshot_;
 };
 Entry.Variable.prototype.syncModel_ = function(b) {
   this.setX(b.x);
   this.setY(b.y);
-  this.id_ = b.id;
   this.setVisible(b.visible);
-  this.setValue(b.value);
+  this.isCloud_ || this.setValue(b.value);
   this.setName(b.name);
   this.isCloud_ = b.isCloud;
-  "list" == this.type && (this.setWidth(b.width), this.setHeight(b.height), this.array_ = b.array);
+  "list" == this.type && (this.isCloud_ || (this.array_ = b.array), this.setWidth(b.width), this.setHeight(b.height));
 };
 Entry.Variable.prototype.toJSON = function() {
   var b = {};
@@ -18769,9 +18789,10 @@ Entry.VariableContainer.prototype.createDom = function(b) {
   d.innerHTML = "+ " + Lang.Workspace.function_add;
   this.functionAddButton_ = d;
   d.bindOnClick(function(b) {
-    b = a._getBlockMenu();
-    Entry.playground.changeViewMode("code");
-    "func" != b.lastSelector && b.selectMenu("func");
+    b = Entry.playground;
+    var c = a._getBlockMenu();
+    b.changeViewMode("code");
+    "func" != c.lastSelector && c.selectMenu("func");
     a.createFunction();
   });
   return b;
@@ -18971,7 +18992,7 @@ Entry.VariableContainer.prototype.updateList = function() {
       }
     }
     if ("all" == b || "func" == b) {
-      for (d in "func" == b && this.listView_.appendChild(this.functionAddButton_), this.functions_) {
+      for (d in "func" == b && (b = Entry.Workspace.MODE_BOARD, Entry.playground && Entry.playground.mainWorkspace && (b = Entry.playground.mainWorkspace.getMode()), b === Entry.Workspace.MODE_OVERLAYBOARD ? this.functionAddButton_.addClass("disable") : this.functionAddButton_.removeClass("disable"), this.listView_.appendChild(this.functionAddButton_)), this.functions_) {
         b = this.functions_[d], a.push(b), e = b.listElement, this.listView_.appendChild(e), b.callerListElement && this.listView_.appendChild(b.callerListElement);
       }
     }
@@ -24389,7 +24410,7 @@ Entry.Thread = function(b, a, d) {
     var c = this.indexOf(b);
     a.unshift(c);
     this.parent instanceof Entry.Block && a.unshift(this.parent.indexOfStatements(this));
-    return this._code === this.parent ? (a.unshift(this._code.indexOf(this)), c = this._data[0], a.unshift(c.y), a.unshift(c.x), a) : this.parent.pointer(a);
+    return this._code === this.parent ? (1 === this._data.length && a.shift(), a.unshift(this._code.indexOf(this)), c = this._data[0], a.unshift(c.y), a.unshift(c.x), a) : this.parent.pointer(a);
   };
   b.getBlockList = function(a, b) {
     for (var c = [], e = 0;e < this._data.length;e++) {
