@@ -121,12 +121,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var expression = component.expression;
 
         this._blockCount++;
-        console.log("BlockCount ExpressionStatement", this._blockCount);
+        console.log("BlockCount ExpressionStatement this._blockCount++", this._blockCount);
 
         if(expression.callee) {
-            if(Entry.TextCodingUtil.isEntryEventFuncName(expression.callee.name)) {
+            if(Entry.TextCodingUtil.isEntryEventFuncNameWithoutParam(expression.callee.name)) {
                 this._blockCount--;
-                console.log("BlockCount ExpressionStatement --", this._blockCount);
+                console.log("BlockCount ExpressionStatement --", "callee.name", expression.callee.name, this._blockCount);
             }
         }
         /*var bcmIndex = this._blockCountMap.get("ExpressionStatement");
@@ -770,7 +770,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                         else {
                             if(param.name && typeof param == "object") {
-                                if(callee.property && callee.property.name == "len" || callee.property.name == "in") {
+                                if(callee.property && (callee.property.name == "len" || callee.property.name == "in")) {
                                     if(!Entry.TextCodingUtil.isGlobalListExisted(param.name, currentObject)) {
                                         var error = {};
                                         error.title = "지원되지 않는 코드";
@@ -2906,7 +2906,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         //The Optimized Code
         for(var d in data) {
             if(data[1] && data[1].type == "repeat_basic") {
-                if(d == 0) {
+                if(d == 0 && data[d]) {
                     if(data[d].declarations) {
                         var declarations = data[0].declarations;
                         for(var d in declarations){
@@ -4419,9 +4419,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
 
-            /*var bcmIndex = this._blockCountMap.get("FunctionDeclaration");
-            if(!bcmIndex) bcmIndex = 0;
-                this._blockCountMap.put("FunctionDeclaration", bcmIndex-1);*/
+            //var bcmIndex = this._blockCountMap.get("FunctionDeclaration");
+            //if(!bcmIndex) bcmIndex = 0;
+                //this._blockCountMap.put("FunctionDeclaration", bcmIndex-1);
 
             return null;
         }

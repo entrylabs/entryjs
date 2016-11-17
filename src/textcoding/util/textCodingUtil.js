@@ -958,7 +958,7 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isEntryEventFuncName = function(name) {
-        console.log("isEntryEventFuncName name", name);
+        console.log("isEntryEventFuncName name", name); 
         if( name == "entry_event_start" ||
             name == "entry_event_key" ||
             name == "entry_event_mouse_down" ||
@@ -966,6 +966,23 @@ Entry.TextCodingUtil = {};
             name == "entry_event_object_down" ||
             name == "entry_event_object_up" ||
             name == "entry_event_signal" ||
+            name == "entry_event_scene_start" ||
+            name == "entry_event_clone_create") {
+
+            return true;
+        }
+        
+        console.log("isEntryEventFuncName result is NOT");
+        return false;
+    };
+
+    tu.isEntryEventFuncNameWithoutParam = function(name) {
+        console.log("isEntryEventFuncName name", name); 
+        if( name == "entry_event_start" ||
+            name == "entry_event_mouse_down" ||
+            name == "entry_event_mouse_up" ||
+            name == "entry_event_object_down" ||
+            name == "entry_event_object_up" ||
             name == "entry_event_scene_start" ||
             name == "entry_event_clone_create") {
 
@@ -1882,7 +1899,7 @@ Entry.TextCodingUtil = {};
                     value += ", ";
             }
             
-            result = name + " = [" + value + "]";
+            result = name + " = [" + value + "]" + "\n";
         }
 
         return result;

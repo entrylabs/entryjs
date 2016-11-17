@@ -28,6 +28,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._syntax_cache = {};
     this._pyThreadCount = 1;
     this._pyBlockCount = {};
+    this._currentEmptyLineCount = 0;
 
     Entry.Parser.PARSE_GENERAL = 1;
     Entry.Parser.PARSE_SYNTAX = 2;
@@ -265,20 +266,22 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
+                //var threadCount = 0;
                 try {
                     this._pyBlockCount = {};
                     this._pyThreadCount = 1;
-                    this._syntaxParsingCount = 0;
+                    this._currentEmptyLineCount = 0;
+                    //this._syntaxParsingCount = 0;
                     //this._marker.clear();
 
                     var pyAstGenerator = new Entry.PyAstGenerator();
+                    var threads = this.makeThreads(code);
+                    console.log("threads", threads);
 
-                    //Entry.TextCodingUtil.prototype.makeThreads(code);
-                    //var threads = code.split('\n\n');
-                    var threads = this.makeCodeToThreads(code);
-                    console.log("code", code);
-
-                    for(var i in threads) {
+                    ///////////////////////////////////////////////////
+                    //cleansing step 1
+                    ///////////////////////////////////////////////////
+                    /*for(var i in threads) {
                         var thread = threads[i];
                         if(thread.search("import") != -1) {
                             threads[i] = "";
@@ -287,17 +290,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             threads[i] = "";
                             continue;
                         }
-
-                        //thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
                         threads[i] = thread;
-                    }
+                    }*/
 
-                    var astArray = [];
-                    var tCount = 0;
-                    var ast;
-                    console.log("threads", threads);
-
-                    var cleansedThreads = [];
+                    //////////////////////////////////////////////////
+                    //cleansing step 2
+                    ///////////////////////////////////////////////////
+                    /*var cleansedThreads = [];
                     for(var t in threads) {
                         var thread = threads[t];
                         if(thread.length == 0)
@@ -306,32 +305,35 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         thread = thread.trim();
                         if(thread.length != 0)
                             cleansedThreads.push(thread);
-                    }
+                    }*/
 
-                    console.log("cleansedThreads", cleansedThreads);
-
-                    for(var index in cleansedThreads) {
-                        var thread = cleansedThreads[index];
-                        console.log("ttt thread", thread);
-                        this._syntaxParsingCount = parseInt(index) + 1;
-                        if(thread.length != 0 && thread != "") {
-                            tCount++;
-                            this._pyThreadCount = parseInt(tCount);
-
-                            /*if(!Entry.TextCodingUtil.prototype.includeEntryEventKeyBlock(thread)) {
-                                ast = pyAstGenerator.generate(thread);
-                            }*/
-                            console.log("success??", ast);
+                    //////////////////////////////////////////////////
+                    //parsing
+                    ///////////////////////////////////////////////////
+                    var astArray = [];
+                    var threadCount = 0;
+                    var ast;
+                    for(var index = 4; index < threads.length; index++) {
+                        var thread = threads[index];
+                        thread = thread.trim();
+                        console.log("thread", thread, "thread.length", thread.length);
+                        
+                        if(thread.length != 0) {
+                            //var threadCount = parseInt(index) + 1;
+                            threadCount++;
+                            this._pyThreadCount = parseInt(threadCount);
                             thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
-                            console.log("real thread", thread);
                             thread = thread.replace(/    /g, "\t");
-                            console.log("real real thread", thread);
                             ast = pyAstGenerator.generate(thread);
+                        }
+                        else {
+                            ast = null;
+                            this._currentEmptyLineCount++
                         }
 
                         if(!ast) {
                             if(this._pyThreadCount > 1) {
-                                tCount--;
+                                threadCount--;
                                 this._pyThreadCount--;
                             }
                             continue;
@@ -339,13 +341,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         if(thread.length != 0 && thread != "") {
                             var tToken = thread.split('\n');
-                            //tToken.pop();
                             var idx = parseInt(this._pyThreadCount).toString();
                             this._pyBlockCount[idx] =  tToken.length;
-                            console.log("this._pyBlockCount", this._pyBlockCount);
                         }
 
-                        if(ast.type == "Program" && ast.body.length != 0)
+                        if(ast && ast.type == "Program" && ast.body.length != 0)
                             astArray.push(ast);
                     }
 
@@ -355,46 +355,24 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     break;
                 } catch(error) {
                     if (this.codeMirror) {
-                        this._threeLine = false;
-                        console.log("came here error", error);
-                        var annotation;
-                        var line;
-                        var isSyntaxLineEmpty = false;
+                        var line; 
+                        console.log("errerr", error);
                         if (error instanceof SyntaxError) {
-                            console.log("py error raisedAt", error.raisedAt);
-                            var errorLine = {};
-
-                            errorLine = this.findSyntaxErrorLine(error);
-                            error.message = '해당구문 범위 또는 주위 라인에서 \'문법오류 및 들여쓰기(Indentation)오류\'를 확인하세요.';
-
-                            annotation = {
-                                from: {line: errorLine.from.line, ch: errorLine.from.ch},
-                                to: {line: errorLine.to.line, ch: errorLine.to.ch}
+                            var err = this.findSyntaxError(error, threadCount);
+                            console.log("err1", err);
+                            var annotation = {
+                                from: {line: err.from.line-1, ch: err.from.ch},
+                                to: {line: err.to.line-1, ch: err.to.ch}
                             }
-
-                            if(!error.message)
-                                error.message = "파이썬 문법 오류입니다.";
-
-                            error.type = 1;
                         } else {
-                            console.log("py error type 2", error);
-                            var errorLine = this.findConvertingErrorLine(error.line);
-                            var ch = this.findConvertingErrorLineCh(errorLine.from.line);
-
-                            console.log("type2 errorLine", errorLine);
-
-                            annotation = {
-                                from: {line: errorLine.from.line - 1, ch: ch.start},
-                                to: {line: errorLine.to.line - 1, ch: ch.end}
+                            var err = this.findConvError(error);
+                            console.log("err2", err);
+                            //var ch = this.findConvertingErrorLineCh(errorLine.from.line);
+                            var annotation = {
+                                from: {line: err.from.line-1, ch: err.from.ch},
+                                to: {line: err.to.line-1, ch: err.to.ch}
                             }
-
-                            if(!error.message)
-                                error.message = "지원하지 않는 코드입니다.";
-
-                            error.type = 2;
                         }
-
-                        console.log("annotation", annotation);
 
                         var option = {
                             className: "CodeMirror-lint-mark-error",
@@ -405,16 +383,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             clearWhenEmpty: false
                         };
 
-                        console.log("this._threeLine", this._threeLine);
-
                         this._marker = this.codeMirror.markText(
                             annotation.from, annotation.to, option);
-
-
-                        console.log("came here error2", error);
-                        console.log("came here error2 title", error.title);
-                        console.log("came here error2 message", error.message);
-
 
                         if(error.title)
                             var errorTitle = error.title;
@@ -425,16 +395,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 var errorTitle = '지원되지 않는 코드';
                         }
 
-                        if(error.message)
-                            var errorMsg = error.message + ' \n(line: ' + (annotation.from.line+1) + '~' + (annotation.to.line+1)  + ')';
-                        else {
-                            if(error.type == 1)
-                                var errorMsg = '파이썬에서 지원하지 않는 문법입니다.';
-                            else if(error.type == 2)
-                                var errorMsg = '블록으로 변환되는 코드인지 확인해주세요';
-                        }
-
-                        Entry.toast.alert(errorTitle, errorMsg);
+                        Entry.toast.alert("ERROR", error.message);
                         throw error;
                     }
 
@@ -470,13 +431,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                console.log("parser parsemode", parseMode);
-                result = "";
+                var result = "";
                 var textCode = this._parser.Code(code, parseMode);
-
                 if (!this._pyHinter)
                     this._pyHinter = new Entry.PyHint(); 
-
                 if(parseMode == Entry.Parser.PARSE_GENERAL) {
                     console.log("this._parser._variableDeclaration", this._parser._variableDeclaration);
                     if(!this._parser._variableDeclaration) {
@@ -485,14 +443,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if(vd)
                             result += vd;
                     }
-
                     if(!this._parser._listDeclaration) {
                         var ld = Entry.TextCodingUtil.generateListsDeclaration();
                         this._parser._listDeclaration = ld;
                         if(ld)
-                            result += ld + '\n';
+                            result += ld;
                     }
-
+                    
+                    if(vd || ld)
+                        result += "\n";
+                    
                     if(!this._parser._funcDeclaration) {
                         var funcDefMap = this._parser._funcDefMap;
                         var fd = "";
@@ -504,13 +464,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         }
                         this._parser._funcDeclaration = fd;
                         if(fd)
-                            result += fd;
-                    }
-                    
+                            result += fd + "\n";
+                    } 
                 }
-
-                result += textCode;
-                //result = result.replace(/\t/g, "    ");
+                result += textCode.trim();
+                result = result.replace(/\t/g, "    ");
 
                 break;
         }
@@ -671,49 +629,127 @@ Entry.Parser = function(mode, type, cm, syntax) {
         this.availableCode = this.availableCode.concat(availableList);
     };
 
-    p.findConvertingErrorLine = function(blockCount) {
-        console.log("blockCount", blockCount);
-        var result = {};
-        var errorLine = 0;
+    p.findSyntaxError = function(error, threadCount) {
+        console.log("error.loc", error.loc, "error.pos", error.pos, "error.raisedAt", error.raisedAt);
+        var err = {};
+        err.from = {};
+        err.to = {}
 
+        var errorLine = error.loc.line;
+        var errorColumn = error.loc.column;
+        var errorPos = error.pos;
+        var errorRaisedAt = error.raisedAt;
+        var errorMessage = error.message;
+
+        console.log("this._pyThreadCount", this._pyThreadCount, "this._pyBlockCount", this._pyBlockCount, "this._currentEmptyLineCount", this._currentEmptyLineCount);
+            
+        if(errorMessage == "Unexpected token") {
+            if(errorLine == 2)
+                if(errorColumn == 1)
+                    if(errorRaisedAt - errorPos == 4)
+                        errorLine -= 1;
+        }
+        
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
-        console.log("contentsArr44", contentsArr);
+        console.log("contentsArr", contentsArr);
+        var currentThreadCount = 0;
+        var currentLineCount = 0;
+        //var emptyLineCount = 0;
+        //var currentText;
+        //var isInThread = false;
 
-        if(blockCount > contentsArr.length - 4) {
-            errorLine = contentsArr.length;
-            return errorLine;
+        
+        for(var key in this._pyBlockCount) {
+            var count = parseInt(this._pyBlockCount[key]);
+            currentLineCount += count;
         }
 
-        var index = 0;
+        console.log("currentLineCount", currentLineCount);
+        
+        currentLineCount += this._currentEmptyLineCount;
+
+        console.log("currentLineCount2", currentLineCount);
+        /*for(var i = 4; i < contentsArr.length; i++) {
+            currentText = contentsArr[i];
+
+            var textLength = currentText.trim().length;
+            if(textLength == 0) {
+                emptyLineCount++;
+            }
+            
+            console.log("currentText", currentText);
+            console.log("currentText.charAt(0).trim()",currentText.charAt(0).trim());
+            var rootTextLength = currentText.charAt(0).trim().length;
+            if(rootTextLength == 0) {
+                isInThread = false;
+            }
+            else {
+                if(!isInThread)
+                    currentThreadCount++;
+                isInThread = true;
+            }
+
+           
+
+            if(threadCount == currentThreadCount) 
+                break;
+            currentLineCount++;
+        }*/
+
+        var targetLine = errorLine + currentLineCount + 4;
+        var targetText = contentsArr[targetLine-1];
+        
+        err.from.line = targetLine;
+        err.from.ch = 0;
+        err.to.line = targetLine;
+        err.to.ch = targetText.length;
+
+        console.log("findSyntaxError err", err);
+        return err;
+
+    };
+
+    p.findConvError = function(error) {
+        console.log("error123", error);
+        var err = {};
+        err.from = {};
+        err.to = {}
+
+        var errorLine = error.line-1;
+        var contents = this.codeMirror.getValue();
+        var contentsArr = contents.split("\n");
+        console.log("contentsArr", contentsArr);
+        var currentLineCount = 0;
+        var emptyLineCount = 0;
+        var currentText;
+        var targetLine;
+        
         for(var i = 4; i < contentsArr.length; i++) {
-            var line = contentsArr[i];
-            console.log("ljh line", line);
+            currentText = contentsArr[i];
 
-            if(line.trim().length == 0 || line.trim() == "else:" || line.trim().charAt(0) == "#")
-                errorLine++;
-            else
-                index++;
+            var length = currentText.trim().length;
+            if(length == 0) 
+                emptyLineCount++;
 
-            if(index == blockCount) {
-                errorLine += index;
+            console.log("errorLine", errorLine, "emptyLineCount", emptyLineCount, "i", i);
+
+            if(errorLine + emptyLineCount + 4 == i) {
+                targetLine = i+1;
                 break;
             }
         }
+        
+        err.from.line = targetLine;
+        err.from.ch = 0;
+        err.to.line = targetLine;
+        err.to.ch = currentText.length;
 
-        errorLine += 4;
-        console.log("errorLine kk", errorLine);
-
-        result.from = {};
-        result.to = {};
-
-        result.from.line = errorLine;
-        result.to.line = errorLine;
-
-        return result;
+        console.log("findConvError err", err);
+        return err;
     };
 
-    p.findConvertingErrorLineCh = function(errorLine) {
+    /*p.findConvertingErrorLineCh = function(errorLine) {
         var result = {};
 
         var contents = this.codeMirror.getValue();
@@ -743,77 +779,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         console.log("findConvertingErrorInfo result", result);
         return result;
 
-    };
-
-    p.findSyntaxErrorLine = function(error) {
-        var result = {};
-        var errorline = error.loc.line;
-        var contents = this.codeMirror.getValue();
-        var contentsArr = contents.split("\n");
-
-
-        console.log("findSyntaxErrorInfo contentsArr1", contentsArr);
-        console.log("this._pyThreadCount", this._pyThreadCount);
-        console.log("this._pyBlockCount", this._pyBlockCount);
-        console.log("findSyntaxErrorInfo contentsArr2", contentsArr);
-
-        var currentLineCount = 0;
-        console.log("this._pythre", this._pyThreadCount);
-        for(var c = 1; c < this._pyThreadCount; c++) {
-            console.log("aaa", this._pyBlockCount);
-            var idx = c.toString();
-            console.log("idx", idx);
-            var count = this._pyBlockCount[idx];
-            console.log("count c", count);
-            currentLineCount += count;
-        }
-
-        console.log("currentLineCount", currentLineCount);
-        console.log("this._pyBlockcount", this._pyBlockCount);
-
-        var currentThreadCount = 0;
-        var lineCount = 0;
-        var isInThread = false;
-        var targetText = "";
-        for(var i = 4; i < contentsArr.length; i++) {
-            targetText = contentsArr[i];
-            console.log("targetText", targetText.charAt(0), targetText.charAt(0).trim().length);
-            console.log("this._pyThreadCount", this._pyThreadCount);
-
-            var lineCharLength = targetText.charAt(0).trim().length;
-            if(lineCharLength == 0) {
-                isInThread = false;
-            }
-            else {
-                if(!isInThread)
-                    currentThreadCount++;
-                isInThread = true;
-            }
-
-            lineCount++;
-
-            console.log("baby this._syntaxParsingCount", this._syntaxParsingCount);
-            console.log("baby currentThreadCount", currentThreadCount);
-            console.log("baby lineCount", lineCount);
-
-            if(this._syntaxParsingCount == currentThreadCount) {
-                break;
-
-            }
-        }
-
-        var eLine = errorline + lineCount + 4 - 1 - 1;
-        result.from = {}
-        result.from.line = eLine -1;
-        result.from.ch = 0;
-        result.to = {};
-        result.to.line = eLine + 1;
-        result.to.ch = targetText.length - 1;
-
-        console.log("findSyntaxErrorInfo result", result);
-        return result;
-
-    };
+    };*/
 
     p.updateLineEmpty = function(lineNumber) {
         console.log("lineNumber", lineNumber);
@@ -843,42 +809,50 @@ Entry.Parser = function(mode, type, cm, syntax) {
         return result;
     };
 
-    p.makeCodeToThreads = function(code) {
-        console.log("mct code", code);
-        var codeArr = code.split("\n");
-        console.log("codeArr", codeArr);
-        var thread = '';
-        var threadArr = [];
+    
 
-        for(var i in codeArr) {
-            var textLine = codeArr[i];
+    p.makeThreads = function(text) {
+        console.log("makeThreads text", text);
+        var textArr = text.split("\n");
+        var thread = "";
+        var threads = [];
+        var threadMark = false;
+
+        for(var i = 0; i < textArr.length; i++) {
+            var textLine = textArr[i];
             console.log("textLine", textLine);
-            var index = textLine.indexOf(":");
-            var preText = textLine.substring(0, index+1);
-            preText = preText.trim();
+            
+            /*var index = codeLine.indexOf(":");
+            if(index > 0)
+                var indexedText = textLine.substring(0, index+1);
+            else
+                var indexedText = textLine;
 
-            if(Entry.TextCodingUtil.isEntryEventFuncByFullText(preText)) {
-                threadArr.push(thread);
-                thread = "";
-                thread += textLine + '\n';
+            indexedText = indexedText.trim();*/
+
+            console.log("i", i, "textLine", textLine, "threadMark", threadMark);
+
+            if(textLine.charAt(0).length != 0) {
+                if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {
+                    if(thread.length != 0) {
+                        threads.push(thread.trim());
+                        thread = "";
+                    }
+                }
+                
+                thread += textLine + "\n";
             }
             else {
-                if(textLine.length != 0) {
-                    thread += textLine + '\n';
-                    console.log("jhlee thread", thread);
-                    if(i == codeArr.length-1)
-                        threadArr.push(thread);
-                }
-                else {
-                    threadArr.push(thread);
-                    thread = "";
-                }
+                if(thread.length != 0)
+                    threads.push(thread.trim());
+                thread = "";
+                threads.push(textLine + "\n");                 
             }
         }
 
-        console.log("threadArr", threadArr);
+        console.log("makeThreads threads", threads);
 
-        return threadArr;
+        return threads;
 
     };
 

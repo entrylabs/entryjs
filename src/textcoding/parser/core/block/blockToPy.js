@@ -535,12 +535,6 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return dataParam;
     };
 
-    p.FieldKeyboard = function(dataParam) {
-        //console.log("FieldKeyboardInput", dataParam);
-
-        return dataParam;
-    };
-
     p.FieldOutput = function(dataParam) {
         //console.log("FieldOutput", dataParam);
 
@@ -569,13 +563,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldKeyboard = function(dataParam) {
-        //console.log("FieldKeyboard Before", dataParam);
+        console.log("FieldKeyboard Before", dataParam);
 
         dataParam = Entry.KeyboardCode.keyCodeToChar[dataParam];
 
-        if(!dataParam || dataParam == null)
+        if(!dataParam)
             dataParam = "Q";
 
+        dataParam = "\"" + dataParam + "\"";
         //console.log("FieldKeyboard After", dataParam);
 
         return dataParam;
