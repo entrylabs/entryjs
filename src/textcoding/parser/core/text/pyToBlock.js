@@ -4310,7 +4310,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
             if(textFuncParams.length != 0) {
                 var arg = textFuncParams[0];
-                arg = arg.replace(/_space_/, " ");
+                arg = arg.replace(/_space_/g, " ");
+                console.log("event arg", arg);
                 if(arg == "none")
                     arg = "None";
                 var param = arg;

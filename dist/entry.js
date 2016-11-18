@@ -12508,7 +12508,7 @@ Entry.TextCodingUtil = {};
   };
   b.entryEventFilter = function(a) {
     a = a.split('"');
-    a[1] = a[1].replace(" ", "_space_");
+    a[1] && (a[1] = a[1].replace(/ /g, "_space_"));
     a = a.join('"');
     a = a.replace(/\"/g, "");
     a = a.replace("None", "none");
@@ -15573,6 +15573,8 @@ Entry.PyToBlockParser = function(b) {
     if (Entry.TextCodingUtil.isEntryEventFuncName(e.name)) {
       if (0 != a.length) {
         b = a[0];
+        b = b.replace(/_space_/g, " ");
+        console.log("event arg", b);
         "none" == b && (b = "None");
         var m = b;
       }

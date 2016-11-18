@@ -791,7 +791,8 @@ Entry.TextCodingUtil = {};
 
     tu.entryEventFilter = function(text) {
         var textArr = text.split("\"");
-        textArr[1] = textArr[1].replace(" ", "_space_");
+        if(textArr[1])
+            textArr[1] = textArr[1].replace(/ /g, "_space_");
 
         text = textArr.join("\"");
         text = text.replace(/\"/g, "");
