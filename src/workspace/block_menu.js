@@ -186,7 +186,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             this.svgGroup.appendChild(this._scroller.svgGroup);
     };
 
-    p.align = function() {
+    p.align = function(reDraw) {
         var code = this.code;
         if (!(this._isOn() && code)) return;
         this._clearSplitters();
@@ -205,11 +205,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             block.view.set({display:false});
         });
 
+        var shouldReDraw = !this._renderedCategories[this.lastSelector];
         visibles.forEach(function(block) {
             var blockView = block.view;
             blockView.set({display:true});
-            if (!this._renderedCategories[this.lastSelector])
-                blockView.reDraw();
+            shouldReDraw && blockView.reDraw();
 
             var className = Entry.block[block.type].class;
             if (pastClass && pastClass !== className) {
@@ -935,6 +935,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._isOn = function() {
         return this.view.css('display') !== 'none';
+    };
+
+    p.deleteRendered = function(name) {
+        delete this._renderedCategories[name];
     };
 
 })(Entry.BlockMenu.prototype);
