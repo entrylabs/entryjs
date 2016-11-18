@@ -67,7 +67,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
             styleActiveLine: true,
             extraKeys: {
                 "Ctrl-Space": "autocomplete",
-                "Ctrl-[": function(e) { 
+                "Ctrl-[": function(e) {
                     if(!Entry.playground.object) {
                             var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
                             alert(message);
@@ -84,7 +84,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
                     that.workspace.setMode(mode);
                     $('.entryModeSelector span ul li:eq(0)').triggerHandler('click');
                 },
-                "Ctrl-]": function(e) { 
+                "Ctrl-]": function(e) {
                     var message =Entry.TextCodingUtil.isNamesIncludeSpace()
                     if(message) {
                         alert(message);
@@ -116,8 +116,8 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
                 },
                 "Tab": function(cm) {
                     var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
-                    cm.replaceSelection(spaces); 
-                } 
+                    cm.replaceSelection(spaces);
+                }
             },
             // gutters: ["CodeMirror-lint-markers"],
             lint: true,
@@ -272,11 +272,10 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
         if(this._parser)
             syntax = this._parser._execParser.searchSyntax(datum);
 
-        
         if(syntax)
             return syntax;
 
-        return syntax; 
+        return syntax;
     };
 
 })(Entry.Vim.prototype);

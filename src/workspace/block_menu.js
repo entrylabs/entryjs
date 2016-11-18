@@ -26,6 +26,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._isSelectingMenu = false;
     this._dynamicThreads = [];
     this._setDynamicTimer = null;
+    this._renderedCategories = {};
 
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
@@ -207,6 +208,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         visibles.forEach(function(block) {
             var blockView = block.view;
             blockView.set({display:true});
+            if (!this._renderedCategories[this.lastSelector])
+                blockView.reDraw();
 
             var className = Entry.block[block.type].class;
             if (pastClass && pastClass !== className) {
@@ -244,6 +247,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             }
         }
 
+        this._renderedCategories[this.lastSelector] = true;
         this.changeEvent.notify();
     };
 
@@ -344,7 +348,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var thread = block.getThread();
             if (thread.view) {
                 thread.view.renderText();
-                thread.view.reDraw();
             } else
                 thread.createView(this, Entry.BlockView.RENDER_MODE_TEXT)
         }.bind(this));
@@ -361,7 +364,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var thread = block.getThread();
             if (thread.view) {
                 thread.view.renderBlock();
-                thread.view.reDraw();
             } else
                 thread.createView(this, Entry.BlockView.RENDER_MODE_BLOCK)
         }.bind(this));
@@ -511,6 +513,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         }
 
         doNotAlign !== true && this._dAlign();
+
     };
 
     p._generateCategoryCodes = function(elems) {
@@ -726,9 +729,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._captureKeyEvent = function(e) {
         var keyCode = e.keyCode;
-        var type = Entry.type;
 
-        if (e.ctrlKey && type == 'workspace') {
+        if (e.ctrlKey && Entry.type == 'workspace') {
             if (keyCode > 48 && keyCode < 58) {
                 e.preventDefault();
                 this.selectMenu(keyCode - 49);

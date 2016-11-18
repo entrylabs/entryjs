@@ -8483,7 +8483,7 @@ p.generateView = function(b, a) {
   }
 };
 p.bindWorkspace = function(b) {
-  b && (this._blockViewObserver && this._blockViewObserver.destroy(), this.workspace = b, this._blockViewObserver = b.observe(this, "_updateSelectedBlock", ["selectedBlockView"]));
+  b && (this._blockViewObserver && this._blockViewObserver.destroy(), this.workspace = b, this._renderView && (this._renderView.workspace = b), this._blockViewObserver = b.observe(this, "_updateSelectedBlock", ["selectedBlockView"]));
 };
 p._updateSelectedBlock = function() {
   var b = this.workspace.selectedBlockView;
@@ -15997,35 +15997,32 @@ Entry.Parser = function(b, a, d, c) {
 };
 (function(b) {
   b.setParser = function(a, b, c) {
-    console.log("setParser this._type", this._type, "type", b);
-    this._mode = a;
-    this._type = b;
-    this._cm = c;
-    this.syntax = this.mappingSyntax(a);
-    switch(b) {
-      case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-        this._execParser = new Entry.JsToBlockParser(this.syntax);
-        this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
-        break;
-      case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-        this._execParser = new Entry.PyToBlockParser(this.syntax);
-        this._execParserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
-        break;
-      case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        this._execParser = new Entry.BlockToJsParser(this.syntax);
-        a = this.syntax;
-        var e = {}, f;
-        for (f in a.Scope) {
-          e[f + "();\n"] = a.Scope[f];
-        }
-        c.on("keydown", function(a, b) {
-          var c = b.keyCode;
-          (65 <= c && 95 >= c || 167 == c || !b.shiftKey && 190 == c) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
-        });
-        this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
-        break;
-      case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        this._execParser = new Entry.BlockToPyParser(this.syntax), c.setOption("mode", {name:"python", globalVars:!0}), c.markText({line:0, ch:0}, {line:3}, {readOnly:!0}), this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+    if (this._mode !== a || this._type !== b) {
+      switch(console.log("setParser this._type", this._type, "type", b), this._mode = a, this._type = b, this._cm = c, this.syntax = this.mappingSyntax(a), b) {
+        case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
+          this._execParser = new Entry.JsToBlockParser(this.syntax);
+          this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
+          break;
+        case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
+          this._execParser = new Entry.PyToBlockParser(this.syntax);
+          this._execParserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
+          break;
+        case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
+          this._execParser = new Entry.BlockToJsParser(this.syntax);
+          a = this.syntax;
+          var e = {}, f;
+          for (f in a.Scope) {
+            e[f + "();\n"] = a.Scope[f];
+          }
+          c.on("keydown", function(a, b) {
+            var c = b.keyCode;
+            (65 <= c && 95 >= c || 167 == c || !b.shiftKey && 190 == c) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
+          });
+          this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
+          break;
+        case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
+          this._execParser = new Entry.BlockToPyParser(this.syntax), c.setOption("mode", {name:"python", globalVars:!0}), c.markText({line:0, ch:0}, {line:3}, {readOnly:!0}), this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+      }
     }
   };
   b.parse = function(a, b) {
@@ -22106,6 +22103,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   this._isSelectingMenu = !1;
   this._dynamicThreads = [];
   this._setDynamicTimer = null;
+  this._renderedCategories = {};
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -22191,6 +22189,7 @@ Entry.BlockMenu = function(b, a, d, c) {
       a.forEach(function(a) {
         var b = a.view;
         b.set({display:!0});
+        this._renderedCategories[this.lastSelector] || b.reDraw();
         a = Entry.block[a.type].class;
         f && f !== a && (this._createSplitter(c), c += 15);
         f = a;
@@ -22215,6 +22214,7 @@ Entry.BlockMenu = function(b, a, d, c) {
             b = this.renderBlock(b);
         }
       }
+      this._renderedCategories[this.lastSelector] = !0;
       this.changeEvent.notify();
     }
   };
@@ -22268,7 +22268,7 @@ Entry.BlockMenu = function(b, a, d, c) {
     a = a || this._getSortedBlocks();
     var b = Entry.BlockView.RENDER_MODE_TEXT;
     a[0].forEach(function(a) {
-      b !== a.view.renderMode && (a = a.getThread(), a.view ? (a.view.renderText(), a.view.reDraw()) : a.createView(this, Entry.BlockView.RENDER_MODE_TEXT));
+      b !== a.view.renderMode && (a = a.getThread(), a.view ? a.view.renderText() : a.createView(this, Entry.BlockView.RENDER_MODE_TEXT));
     }.bind(this));
     return a;
   };
@@ -22276,7 +22276,7 @@ Entry.BlockMenu = function(b, a, d, c) {
     a = a || this._getSortedBlocks();
     var b = Entry.BlockView.RENDER_MODE_BLOCK;
     a[0].forEach(function(a) {
-      b !== a.view.renderMode && (a = a.getThread(), a.view ? (a.view.renderBlock(), a.view.reDraw()) : a.createView(this, Entry.BlockView.RENDER_MODE_BLOCK));
+      b !== a.view.renderMode && (a = a.getThread(), a.view ? a.view.renderBlock() : a.createView(this, Entry.BlockView.RENDER_MODE_BLOCK));
     }.bind(this));
     return a;
   };
@@ -22487,8 +22487,8 @@ Entry.BlockMenu = function(b, a, d, c) {
     this._scroller && this._scroller.setOpacity(0);
   };
   b._captureKeyEvent = function(a) {
-    var b = a.keyCode, c = Entry.type;
-    a.ctrlKey && "workspace" == c && 48 < b && 58 > b && (a.preventDefault(), this.selectMenu(b - 49));
+    var b = a.keyCode;
+    a.ctrlKey && "workspace" == Entry.type && 48 < b && 58 > b && (a.preventDefault(), this.selectMenu(b - 49));
   };
   b.enablePattern = function() {
     this.pattern.removeAttribute("style");
@@ -22729,23 +22729,20 @@ Entry.BlockView = function(b, a, d) {
   this.svgGroup = a.svgBlockGroup.elem("g");
   this.svgGroup.blockView = this;
   this._schema = Entry.skinContainer.getSkin(b);
-  switch(d) {
-    case void 0:
-    ;
-    case Entry.BlockView.RENDER_MODE_BLOCK:
-      this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
-      break;
-    case Entry.BlockView.RENDER_MODE_TEXT:
-      this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
-  }
   if (void 0 === this._schema) {
     this.block.destroy(!1, !1);
   } else {
+    if (void 0 === d) {
+      var e = this.getBoard().workspace;
+      this.renderMode = e && e.getBlockViewRenderMode ? e.getBlockViewRenderMode() : Entry.BlockView.RENDER_MODE_BLOCK;
+    } else {
+      this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
+    }
     this._schema.deletable && this.block.setDeletable(this._schema.deletable);
     this._schema.copyable && this.block.setCopyable(this._schema.copyable);
     !1 !== this._schema.display && !1 !== b.display || this.set({display:!1});
     this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
-    var e = this._skeleton = Entry.skeleton[this._schema.skeleton];
+    e = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
     this._statements = [];
     this._extensions = [];
@@ -22824,7 +22821,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this.bindPrev();
   };
   b._startContentRender = function(a) {
-    a = void 0 === a ? Entry.BlockView.RENDER_MODE_BLOCK : a;
+    a = void 0 === a ? this.renderMode : a;
     var b = this._schema;
     this.contentSvgGroup && this.contentSvgGroup.remove();
     this.statementSvgGroup && this.statementSvgGroup.remove();
@@ -26927,6 +26924,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.getParserType = function() {
     return this.vimBoard._parserType;
+  };
+  b.getBlockViewRenderMode = function() {
+    switch(this.mode) {
+      case Entry.Workspace.MODE_BOARD:
+      ;
+      case Entry.Workspace.MODE_OVERLAYBOARD:
+        return Entry.BlockView.RENDER_MODE_BLOCK;
+      case Entry.Workspace.MODE_VIMBOARD:
+        return Entry.BlockView.RENDER_MODE_TEXT;
+    }
   };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {

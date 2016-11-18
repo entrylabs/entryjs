@@ -62,6 +62,8 @@ p.bindWorkspace = function(workspace) {
     if (this._blockViewObserver) this._blockViewObserver.destroy();
 
     this.workspace = workspace;
+    if (this._renderView)
+        this._renderView.workspace = workspace;
     this._blockViewObserver =
         workspace.observe(this, "_updateSelectedBlock", ['selectedBlockView']);
 };
@@ -96,7 +98,6 @@ p.renderBlock = function(type) {
 
     this.code.board.align();
     this.code.board.resize();
-
 
     var blockView = this.code.getThreads()[0].getFirstBlock().view;
     var bBox = blockView.svgGroup.getBBox();

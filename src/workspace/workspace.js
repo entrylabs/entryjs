@@ -409,4 +409,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         return this.vimBoard._parserType;
     };
 
+    p.getBlockViewRenderMode = function() {
+        switch (this.mode) {
+            case Entry.Workspace.MODE_BOARD:
+            case Entry.Workspace.MODE_OVERLAYBOARD:
+                return Entry.BlockView.RENDER_MODE_BLOCK;
+            case Entry.Workspace.MODE_VIMBOARD:
+                return Entry.BlockView.RENDER_MODE_TEXT;
+        }
+    };
+
 })(Entry.Workspace.prototype);

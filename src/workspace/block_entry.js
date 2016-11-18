@@ -56,8 +56,17 @@ if (Entry && Entry.block) {
         c.returnStringOrNumberByValue = function(key, value) {
             if (isNaN(value)) {
                 value = value.replace(/\"/gi, '');
-                return '"()"'.replace('()', key);
+                return '"()"'.replace('()', value);
             } else return value;
+        };
+
+        c.returnObjectOrStringValue = function(key, value) {
+            if (Entry.container && Entry.container.getObject(value))
+                return Entry.container.getObject(value).name;
+            else {
+                value = value.replace(/\"/gi, '');
+                return '"()"'.replace('()', value);
+            }
         };
 
     })(Entry.block.converters);
@@ -11117,7 +11126,22 @@ Entry.block = {
             }
             return false;
         },
-        "syntax": {"js": [], "py": ["Entry.is_touched(%2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.is_touched(%2)",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "collision",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_JUDGE,
+                        converter: Entry.block.converters.returnObjectOrStringValue
+                    },
+                ]
+            }
+        ]}
     },
     "boolean_comparison": {
         "color": "#AEB8FF",
@@ -18399,7 +18423,25 @@ Entry.block = {
             variable.setValue((value + variable.getValue()).toFixed(fixed));
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["%1 = %1 + %2"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%1 = %1 + %2",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "variables",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                ]
+            }
+        ]}
     },
     "set_variable": {
         "color": "#E457DC",
@@ -18461,7 +18503,25 @@ Entry.block = {
             variable.setValue(value);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["%1 = %2"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%1 = %2",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "variables",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                ]
+            }
+        ]}
     },
     "show_variable": {
         "color": "#E457DC",
@@ -18511,7 +18571,21 @@ Entry.block = {
             variable.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.show_variable(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.show_variable(%1)",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "variables",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "hide_variable": {
         "color": "#E457DC",
@@ -18560,7 +18634,21 @@ Entry.block = {
             variable.setVisible(false);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.hide_variable(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.hide_variable(%1)",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "variables",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "get_variable": {
         "color": "#E457DC",
@@ -18609,7 +18697,20 @@ Entry.block = {
             return variable.getValue();
         },
         "syntax": {"js": [], "py": [
-            {syntax: "%1", keyOption: "get_variable"}
+            {
+                syntax: "%1",
+                keyOption: "get_variable",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "variables",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
         ]}
     },
     "ask_and_wait": {
@@ -18822,7 +18923,25 @@ Entry.block = {
             list.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["%2.append(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%2.append(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "lists",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "remove_value_from_list": {
         "color": "#E457DC",
@@ -18890,7 +19009,25 @@ Entry.block = {
             list.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["%2.pop(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%2.pop(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "lists",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "insert_value_to_list": {
         "color": "#E457DC",
@@ -18967,7 +19104,29 @@ Entry.block = {
             list.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["%2.insert(%3, %1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%2.insert(%3, %1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "lists",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                ]
+            }
+        ]}
     },
     "change_value_list_index": {
         "color": "#E457DC",
@@ -19044,7 +19203,29 @@ Entry.block = {
             list.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["%1\[%2\] = %3"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%1\[%2\] = %3",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "lists",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                ]
+            }
+        ]}
     },
     "value_of_index_from_list": {
         "color": "#E457DC",
@@ -19121,7 +19302,27 @@ Entry.block = {
 
             return list.array_[index-1].data
         },
-        "syntax": {"js": [], "py": ["%2\[%4\]"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%2\[%4\]",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "lists",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                ]
+            }
+        ]}
     },
     "length_of_list": {
         "color": "#E457DC",
@@ -19175,7 +19376,22 @@ Entry.block = {
 
             return list.array_.length;
         },
-        "syntax": {"js": [], "py": ["len(%2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "len(%2)",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "lists",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "show_list": {
         "color": "#E457DC",
@@ -19225,7 +19441,21 @@ Entry.block = {
             list.setVisible(true);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.show_list(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.show_list(%1)",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "lists",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "hide_list": {
         "color": "#E457DC",
@@ -19275,7 +19505,21 @@ Entry.block = {
             list.setVisible(false);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.hide_list(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.hide_list(%1)",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "lists",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                ]
+            }
+        ]}
     },
     "options_for_list": {
         "color": "#E457DC",
@@ -19450,7 +19694,27 @@ Entry.block = {
             }
             return false;
         },
-        "syntax": {"js": [], "py": ["%4 in %2"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%4 in %2",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "lists",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnStringKey
+                    },
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                ]
+            }
+        ]}
     },
     "xbot_digitalInput": {
         "color": "#00979D",

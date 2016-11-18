@@ -22,20 +22,19 @@ Entry.BlockView = function(block, board, mode) {
 
     this._schema = Entry.skinContainer.getSkin(block);
 
-    switch (mode) {
-        case undefined:
-        case Entry.BlockView.RENDER_MODE_BLOCK:
-            this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
-            break;
-        case Entry.BlockView.RENDER_MODE_TEXT:
-            this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
-            break;
-    }
-
     if (this._schema === undefined) {
         this.block.destroy(false, false);
         return;
     }
+
+    if (mode === undefined) {
+        var workspace = this.getBoard().workspace
+        if (workspace && workspace.getBlockViewRenderMode)
+            this.renderMode = workspace.getBlockViewRenderMode();
+        else
+            this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
+    } else
+        this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
 
     if (this._schema.deletable)
         this.block.setDeletable(this._schema.deletable)
@@ -199,7 +198,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._startContentRender = function(mode) {
         mode = mode === undefined ?
-            Entry.BlockView.RENDER_MODE_BLOCK : mode;
+            this.renderMode : mode;
 
         var schema = this._schema;
         if (this.contentSvgGroup)
@@ -1295,6 +1294,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         return template || defaultTemplate;
     };
 
+    //TODO
     p._getSchemaParams = function(mode) {
         var schema = this._schema;
         var params = schema.params;
