@@ -502,7 +502,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }*/
                 var paramType = paramsMeta[p].type;
                 if(paramType == "Indicator")
-                    continue;
+                    params[p] = null;
                 else if(paramType == "Text")
                     params[p] = null;
                 /*else
@@ -2573,6 +2573,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var result;
 
         value = value.toLowerCase();
+        //value = "\"" + value + "\"";
+        console.log("keycode value", value);
         result = Entry.KeyboardCode.keyCharToCode[value];
         console.log("ParamKeyboard result", result);
         return result;
@@ -4299,21 +4301,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
 
-        console.log("FunctionDeclaration textFuncName", textFuncName);
+        console.log("FunctionDeclaration textFuncName", textFuncName); 
         console.log("FunctionDeclaration textFuncParams", textFuncParams);
         console.log("FunctionDeclaration textFuncStatements", textFuncStatements);
 
 
         //In case of Entry Event Function
         if(Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
-            var component = Entry.TextCodingUtil.makeExpressionStatement(id.name);
-            var block = this.ExpressionStatement(component);
-            block.params = [];
-            this._thread.push(block);
+            if(textFuncParams.length != 0) {
+                var arg = textFuncParams[0];
+                arg = arg.replace(/_space_/, " ");
+                if(arg == "none")
+                    arg = "None";
+                var param = arg;
+            }
+            var component = Entry.TextCodingUtil.makeExpressionStatementForEntryEvent(id.name, param);
+            var entryEventBlock = this.ExpressionStatement(component);
+            
+            this._thread.push(entryEventBlock);
 
-            console.log("entry event block", block);
+            console.log("entry event block", entryEventBlock);
 
-            if(Entry.TextCodingUtil.isEntryEventFuncTypeWithParam(block)) {
+            /*if(Entry.TextCodingUtil.isEntryEventFuncTypeWithParam(block)) {
                 var ifStatement = textFuncStatements[0];
 
                 if(textFuncStatements.length > 1) {
@@ -4404,8 +4413,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     this._thread.push(sblock);
                 }
-            }
-            else {
+            }*/
+            //else {
                 for(var t in textFuncStatements) {
                     var tfs = textFuncStatements[t];
                     var sblock = {};
@@ -4416,7 +4425,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         sblock.statements = tfs.statements;
 
                     this._thread.push(sblock);
-                }
+                //}
             }
 
             //var bcmIndex = this._blockCountMap.get("FunctionDeclaration");

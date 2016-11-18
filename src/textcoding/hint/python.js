@@ -47,6 +47,8 @@ Entry.PyHint = function() {
         }
 
         var found = [], current = token.string;
+
+        console.log("token", token);
         
         if(token.string.includes("def")) {
             found = found.concat(fuzzySearch(
@@ -118,6 +120,9 @@ Entry.PyHint = function() {
 
     var syntaxMap = {_global: []};
 
+    //the start of temporary implementation by jhlee
+    console.log("fuzzy this.syntax", syntax);
+
     var blocks = Entry.block; 
     for (var key in blocks) {
         var block = blocks[key];
@@ -127,7 +132,6 @@ Entry.PyHint = function() {
 
         syntax = syntax.py.join("");
         syntax = syntax.split('.');
-        //console.log("syntax", syntax, "include", syntax[0].indexOf("def"));
         
         if(syntax[0].indexOf("def ") > -1) { 
             syntax = syntax[0].split(' ');

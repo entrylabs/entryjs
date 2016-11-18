@@ -463,7 +463,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldColor = function(dataParam) {
-        //console.log("FieldColor", dataParam);
+        console.log("FieldColor", dataParam);
+
+        if(dataParam && dataParam != "None")
+            dataParam = "\"" + dataParam + "\"";
 
         return dataParam;
     };

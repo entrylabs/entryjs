@@ -789,6 +789,18 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
+    tu.entryEventFilter = function(text) {
+        var textArr = text.split("\"");
+        textArr[1] = textArr[1].replace(" ", "_space_");
+
+        text = textArr.join("\"");
+        text = text.replace(/\"/g, "");
+        text = text.replace("None", "none");
+
+        console.log("entryEventFilter text", text);
+        return text;
+    }
+
     tu.entryEventFuncFilter = function(threads) {
         var result;
         var eventFound = false;
@@ -1814,7 +1826,7 @@ Entry.TextCodingUtil = {};
         Entry.container.selectObject(targetObject.id);
     };
 
-    tu.makeExpressionStatement = function(calleName) {
+    tu.makeExpressionStatementForEntryEvent = function(calleName, arg) {
         var expressionStatement = {};
 
         var type = "ExpressionStatement";
@@ -1828,6 +1840,10 @@ Entry.TextCodingUtil = {};
         expression.callee = callee;
 
         var arguments = [];
+        var argument = {};
+        argument.type = "Literal";
+        argument.value = arg;
+        arguments.push(argument);
         expression.arguments = arguments;
 
         expressionStatement.expression = expression;

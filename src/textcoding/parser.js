@@ -43,6 +43,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     this._console = new Entry.Console();
 
+    cm.on("keyup", function (cm, event) {
+        if ((event.keyCode >= 65 && event.keyCode <= 95) ||
+            event.keyCode == 167 || event.keyCode == 190) {
+            CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
+        }
+    });
+
     switch (this._lang) {
         case "js":
             this._parser = new Entry.JsToBlockParser(this.syntax);
@@ -313,16 +320,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var astArray = [];
                     var threadCount = 0;
                     var ast;
-                    for(var index = 4; index < threads.length; index++) {
+                    for(var index = 0; index < threads.length; index++) {
                         var thread = threads[index];
                         thread = thread.trim();
                         console.log("thread", thread, "thread.length", thread.length);
                         
                         if(thread.length != 0) {
-                            //var threadCount = parseInt(index) + 1;
                             threadCount++;
                             this._pyThreadCount = parseInt(threadCount);
-                            thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
+                            //thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
                             thread = thread.replace(/    /g, "\t");
                             ast = pyAstGenerator.generate(thread);
                         }
@@ -364,14 +370,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 from: {line: err.from.line-1, ch: err.from.ch},
                                 to: {line: err.to.line-1, ch: err.to.ch}
                             }
+                            err.type = "syntax";
                         } else {
                             var err = this.findConvError(error);
                             console.log("err2", err);
-                            //var ch = this.findConvertingErrorLineCh(errorLine.from.line);
                             var annotation = {
                                 from: {line: err.from.line-1, ch: err.from.ch},
                                 to: {line: err.to.line-1, ch: err.to.ch}
                             }
+                            err.type = "converting"
                         }
 
                         var option = {
@@ -386,16 +393,17 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         this._marker = this.codeMirror.markText(
                             annotation.from, annotation.to, option);
 
-                        if(error.title)
-                            var errorTitle = error.title;
-                        else {
-                            if(error.type == 1)
-                                var errorTitle = '문법 오류(Syntax Error)';
-                            else if(error.type == 2)
-                                var errorTitle = '지원되지 않는 코드';
+                        if(err.type == "syntax") {
+                            var title = "문법오류";
+                            var message = error.message;
                         }
+                        else if(err.type == "converting") {
+                            var title = "변환오류"
+                            var message = "변환할수 없는 코드입니다";
+                        }
+                        
 
-                        Entry.toast.alert("ERROR", error.message);
+                        Entry.toast.alert(title, message);
                         throw error;
                     }
 
@@ -433,8 +441,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 var result = "";
                 var textCode = this._parser.Code(code, parseMode);
+                console.log("fuzzy in this.syntax", this.syntax);
                 if (!this._pyHinter)
-                    this._pyHinter = new Entry.PyHint(); 
+                    this._pyHinter = new Entry.PyHint();  
+                console.log("this._pyHinter", this._pyHinter);
                 if(parseMode == Entry.Parser.PARSE_GENERAL) {
                     console.log("this._parser._variableDeclaration", this._parser._variableDeclaration);
                     if(!this._parser._variableDeclaration) {
@@ -462,7 +472,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var funcDef = funcDefMap[f];
                             fd += funcDef + '\n';
                         }
-                        this._parser._funcDeclaration = fd;
+                        this._parser._funcDeclaration = fd; 
                         if(fd)
                             result += fd + "\n";
                     } 
@@ -630,7 +640,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.findSyntaxError = function(error, threadCount) {
-        console.log("error.loc", error.loc, "error.pos", error.pos, "error.raisedAt", error.raisedAt);
+        console.log("error.loc", error.loc, "error.pos", error.pos, "error.raisedAt", error.raisedAt, "error.message", error.message);
         var err = {};
         err.from = {};
         err.to = {}
@@ -642,13 +652,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var errorMessage = error.message;
 
         console.log("this._pyThreadCount", this._pyThreadCount, "this._pyBlockCount", this._pyBlockCount, "this._currentEmptyLineCount", this._currentEmptyLineCount);
-            
-        if(errorMessage == "Unexpected token") {
-            if(errorLine == 2)
-                if(errorColumn == 1)
-                    if(errorRaisedAt - errorPos == 4)
-                        errorLine -= 1;
-        }
         
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
@@ -781,7 +784,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     };*/
 
-    p.updateLineEmpty = function(lineNumber) {
+    /*p.updateLineEmpty = function(lineNumber) {
         console.log("lineNumber", lineNumber);
         var result = {};
         var contents = this.codeMirror.getValue();
@@ -807,7 +810,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         result.isLineEmpty = false;
 
         return result;
-    };
+    };*/
 
     
 
@@ -818,37 +821,23 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var threads = [];
         var threadMark = false;
 
-        for(var i = 0; i < textArr.length; i++) {
-            var textLine = textArr[i];
-            console.log("textLine", textLine);
+        var optText = "";
+        for(var i = 4; i < textArr.length; i++) {
+            var textLine = textArr[i] + "\n";
             
-            /*var index = codeLine.indexOf(":");
-            if(index > 0)
-                var indexedText = textLine.substring(0, index+1);
-            else
-                var indexedText = textLine;
-
-            indexedText = indexedText.trim();*/
-
-            console.log("i", i, "textLine", textLine, "threadMark", threadMark);
-
-            if(textLine.charAt(0).length != 0) {
-                if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {
-                    if(thread.length != 0) {
-                        threads.push(thread.trim());
-                        thread = "";
-                    }
+            if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {
+                textLine = Entry.TextCodingUtil.entryEventFilter(textLine);
+                if(optText.length != 0) {
+                    threads.push(optText);
                 }
-                
-                thread += textLine + "\n";
+                optText = "";
+                optText += textLine;
             }
             else {
-                if(thread.length != 0)
-                    threads.push(thread.trim());
-                thread = "";
-                threads.push(textLine + "\n");                 
+                optText += textLine;
             }
         }
+        threads.push(optText);
 
         console.log("makeThreads threads", threads);
 
