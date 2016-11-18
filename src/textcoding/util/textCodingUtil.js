@@ -15,7 +15,7 @@ Entry.TextCodingUtil = {};
     this._currentObject;
 
     tu.init = function() {
-        this._funcParams = [];
+        this._funcParams = []; 
     };
 
     tu.initQueue = function() {
