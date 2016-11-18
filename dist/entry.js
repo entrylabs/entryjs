@@ -10954,7 +10954,7 @@ Entry.EntryObject.prototype.generateView = function() {
     $(a).bind("mousedown touchstart", function(a) {
       function d(b) {
         b.stopPropagation();
-        h && 5 < Math.sqrt(Math.pow(b.pageX - h.x, 2) + Math.pow(b.pageY - h.y, 2)) && longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
+        g && 5 < Math.sqrt(Math.pow(b.pageX - g.x, 2) + Math.pow(b.pageY - g.y, 2)) && longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
       }
       function c(b) {
         b.stopPropagation();
@@ -10962,12 +10962,12 @@ Entry.EntryObject.prototype.generateView = function() {
         longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
       }
       Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
-      var e = $(document), f = a.type, g = !1;
+      var e = $(document), f = a.type, h = !1;
       if (Entry.Utils.isRightButton(a)) {
-        a.stopPropagation(), Entry.documentMousedown.notify(a), g = !0, b._rightClick(a);
+        a.stopPropagation(), Entry.documentMousedown.notify(a), h = !0, b._rightClick(a);
       } else {
-        var h = {x:a.clientX, y:a.clientY};
-        "touchstart" !== f || g || (a.stopPropagation(), Entry.documentMousedown.notify(a), longPressTimer = setTimeout(function() {
+        var g = {x:a.clientX, y:a.clientY};
+        "touchstart" !== f || h || (a.stopPropagation(), Entry.documentMousedown.notify(a), longPressTimer = setTimeout(function() {
           longPressTimer && (longPressTimer = null, b._rightClick(a));
         }, 1E3), e.bind("mousemove.object touchmove.object", d), e.bind("mouseup.object touchend.object", c));
       }
@@ -16675,45 +16675,45 @@ Entry.PyHint = function() {
   CodeMirror.registerHelper("hint", "python", function(b) {
     var e = b.getCursor(), f = b.getTokenAt(e);
     console.log(f);
-    var g = "def entry_event_start;def entry_event_mouse_up;def entry_event_object_down;def entry_event_object_up;def entry_event_scene_start;def entry_event_clone_create;def entry_event_clone_create;def entry_event_signal;def entry_event_key".split(";"), h = [], k;
-    for (k in g) {
-      var l = g[k];
-      "def entry_event_signal" == l ? h.push({displayText:l, text:l + '("None"):'}) : "def entry_event_key" == l ? h.push({displayText:l, text:l + '("Q"):'}) : h.push({displayText:l, text:l + "():"});
+    var h = "def entry_event_start;def entry_event_mouse_up;def entry_event_object_down;def entry_event_object_up;def entry_event_scene_start;def entry_event_clone_create;def entry_event_clone_create;def entry_event_signal;def entry_event_key".split(";"), g = [], k;
+    for (k in h) {
+      var l = h[k];
+      "def entry_event_signal" == l ? g.push({displayText:l, text:l + '("None"):'}) : "def entry_event_key" == l ? g.push({displayText:l, text:l + '("Q"):'}) : g.push({displayText:l, text:l + "():"});
     }
-    g = [];
+    h = [];
     k = f.string;
-    f.string.includes("def") ? g = g.concat(a(h, k, {extract:function(b) {
+    f.string.includes("def") ? h = h.concat(a(g, k, {extract:function(b) {
       return b.displayText;
     }})) : /^[\w$_]*$/.test(f.string) || (f = {start:e.ch, end:e.ch, string:"", state:f.state, className:":" == f.string ? "python-type" : null});
     if ("def" == f.type) {
-      h.map(function(b, a) {
+      g.map(function(b, a) {
         console.log("def keyoword", b);
         b.displayText = b.displayText.split("def")[1].trim();
         b.text = b.text.split("def")[1].trim();
-      }), g = g.concat(a(h, k, {extract:function(b) {
+      }), h = h.concat(a(g, k, {extract:function(b) {
         return b.displayText;
       }}));
     } else {
       if ("variable" == f.type || "set" == f.string || "print" == f.string || "is" == f.string) {
-        h = f.string, null != h && (g = g.concat(a(d, k)), g = g.concat(a(c._global, k, {extract:function(b) {
+        g = f.string, null != g && (h = h.concat(a(d, k)), h = h.concat(a(c._global, k, {extract:function(b) {
           return b.displayText;
         }})));
       } else {
         if ("property" == f.type || "variable-2" == f.type || "." == f.state.lastToken) {
-          h = f.string;
+          g = f.string;
           b = b.getLineTokens(e.line);
           for (l = b.shift();"variable" !== l.type && "variable-2" !== l.type;) {
             l = b.shift();
           }
           b = l.string;
-          null != h && c[b] && (g = g.concat(a(c[b], k, {extract:function(b) {
+          null != g && c[b] && (h = h.concat(a(c[b], k, {extract:function(b) {
             return b.displayText;
           }})));
-          "." == f.state.lastToken && (g = g.concat(c[b]));
+          "." == f.state.lastToken && (h = h.concat(c[b]));
         }
       }
     }
-    return {list:g.slice(0, 25), from:CodeMirror.Pos(e.line, f.start), to:CodeMirror.Pos(e.line, f.end)};
+    return {list:h.slice(0, 25), from:CodeMirror.Pos(e.line, f.start), to:CodeMirror.Pos(e.line, f.end)};
   });
   this.syntax = g;
   var b = "Codeino Arduino Xbot Dplay Sensorboard Nemoino Hamster Albert Bitbrick Neobot Robotis".split(" "), d = "Entry;self;Hw;while True;True;False;break;for i in range();if;if else;len;random.randint".split(";"), c = {_global:[]}, e = Entry.block, f;
@@ -19803,7 +19803,6 @@ Entry.Parser = function(a, b, d, c) {
 };
 (function(a) {
   a.setParser = function(b, a, c) {
-    console.log("this._mode", this._mode, "this._type", this._type);
     if (this._mode !== b || this._type !== a) {
       switch(console.log("setParser this._type", this._type, "type", a), this._mode = b, this._type = a, this._cm = c, this.syntax = this.mappingSyntax(b), a) {
         case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -22047,6 +22046,7 @@ Entry.VariableContainer.prototype.addVariable = function(a) {
   a.generateView(this.variables_.length);
   this.createVariableView(a);
   this.variables_.unshift(a);
+  Entry.playground && Entry.playground.blockMenu && Entry.playground.blockMenu.deleteRendered("variable");
   Entry.playground.reloadPlayground();
   this.updateList();
   return new Entry.State(this, this.removeVariable, a);
@@ -22142,6 +22142,7 @@ Entry.VariableContainer.prototype.addMessage = function(a) {
   Entry.stateManager && Entry.stateManager.addCommand("add message", this, this.removeMessage, a);
   this.createMessageView(a);
   this.messages_.unshift(a);
+  Entry.playground && Entry.playground.blockMenu && Entry.playground.blockMenu.deleteRendered("start");
   Entry.playground.reloadPlayground();
   this.updateList();
   a.listElement.nameField.focus();
@@ -22226,6 +22227,7 @@ Entry.VariableContainer.prototype.addList = function(a) {
   a.generateView(this.lists_.length);
   this.createListView(a);
   this.lists_.unshift(a);
+  Entry.playground && Entry.playground.blockMenu && Entry.playground.blockMenu.deleteRendered("variable");
   Entry.playground.reloadPlayground();
   this.updateList();
   return new Entry.State(this, this.removelist, a);
@@ -24160,18 +24162,20 @@ Entry.BlockMenu = function(a, b, d, c) {
     this.svgGroup.appendChild(this.svgBlockGroup);
     this._scroller && this.svgGroup.appendChild(this._scroller.svgGroup);
   };
-  a.align = function() {
-    var b = this.code;
+  a.align = function(b) {
+    b = this.code;
     if (this._isOn() && b) {
       this._clearSplitters();
-      var a = a || this._getSortedBlocks(), c = 10, e = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, f, b = a[0];
+      var a = a || this._getSortedBlocks(), c = 10, e = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, f;
+      b = a[0];
       a[1].forEach(function(b) {
         b.view.set({display:!1});
       });
+      var g = !this._renderedCategories[this.lastSelector];
       b.forEach(function(b) {
         var a = b.view;
         a.set({display:!0});
-        this._renderedCategories[this.lastSelector] || a.reDraw();
+        g && a.reDraw();
         b = Entry.block[b.type].class;
         f && f !== b && (this._createSplitter(c), c += 15);
         f = b;
@@ -24599,6 +24603,9 @@ Entry.BlockMenu = function(a, b, d, c) {
   };
   a._isOn = function() {
     return "none" !== this.view.css("display");
+  };
+  a.deleteRendered = function(b) {
+    delete this._renderedCategories[b];
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(a) {
