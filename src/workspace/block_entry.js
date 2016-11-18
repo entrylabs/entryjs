@@ -2510,9 +2510,16 @@ Entry.block = {
                 data: value,
                 time: new Date().getTime()
             };
-            return script.callReturn();
+            return script.callReturn(); 
         },
-        "syntax": {"js": [], "py": ["Arduino.digitalWrite(%1, %2)"]}
+        "syntax": {"js": [], "py": [
+            {syntax: "Arduino.digitalWrite(%1, %2)", 
+            paramCodes:[
+                null,
+                {"on":["\"HIGH\""],"off":["\"LOW\""]}
+            ]}
+        ]}
+
     },
     "arduino_ext_digital_pwm": {
         "color": "#00979D",
