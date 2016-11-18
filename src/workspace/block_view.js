@@ -22,21 +22,19 @@ Entry.BlockView = function(block, board, mode) {
 
     this._schema = Entry.skinContainer.getSkin(block);
 
-    switch (mode) {
-        case undefined:
-        case Entry.Workspace.MODE_BOARD:
-        case Entry.Workspace.MODE_OVERLAYBOARD:
-            this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
-            break;
-        case Entry.Workspace.MODE_VIMBOARD:
-            this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
-            break;
-    }
-
     if (this._schema === undefined) {
         this.block.destroy(false, false);
         return;
     }
+
+    if (mode === undefined) {
+        var workspace = this.getBoard().workspace
+        if (workspace && workspace.getBlockViewRenderMode)
+            this.renderMode = workspace.getBlockViewRenderMode();
+        else
+            this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
+    } else
+        this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
 
     if (this._schema.deletable)
         this.block.setDeletable(this._schema.deletable)
@@ -200,7 +198,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._startContentRender = function(mode) {
         mode = mode === undefined ?
-            Entry.Workspace.MODE_BOARD : mode;
+            this.renderMode : mode;
 
         var schema = this._schema;
         if (this.contentSvgGroup)
@@ -212,72 +210,38 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this.contentSvgGroup = this.svgGroup.elem("g", {class:'contentsGroup'});
         if (schema.statements && schema.statements.length) {
-            this.statementSvgGroup = this.svgGroup.elem("g", {
-                class: 'statementGroup'
-            });
+            this.statementSvgGroup =
+                this.svgGroup.elem("g", { class: 'statementGroup' });
         }
 
-        switch (mode) {
-            case Entry.Workspace.MODE_BOARD:
-            case Entry.Workspace.MODE_OVERLAYBOARD:
-                var reg = /(%\d)/mi;
-                var template = schema.template ? schema.template : Lang.template[this.block.type];
-                var templateParams = template.split(reg);
-                var params = schema.params;
-                for (var i=0; i<templateParams.length; i++) {
-                    var param = templateParams[i];
-                    if (param[0] === " ") param = param.substring(1);
-                    if (param[param.length - 1] === " ") param = param.substring(0, param.length - 1);
-                    if (param.length === 0) continue;
+        var reg = /(%\d)/mi;
 
-                    if (reg.test(param)) {
-                        var paramIndex = Number(param.split('%')[1]) - 1;
-                        param = params[paramIndex];
-                        var field = new Entry['Field' + param.type](param, this, paramIndex, mode, i);
-                        this._contents.push(field);
-                        this._paramMap[paramIndex] = field;
-                    } else this._contents.push(new Entry.FieldText({text: param}, this));
-                }
+        var template = this._getTemplate(mode);
+        var templateParams = template.split(reg);
+        var params = this._getSchemaParams(mode);
 
-                var statements = schema.statements;
-                if (statements && statements.length) {
-                    for (i=0; i<statements.length; i++)
-                        this._statements.push(new Entry.FieldStatement(statements[i], this, i));
-                }
-                break;
-            case Entry.Workspace.MODE_VIMBOARD:
-                if (this._schema.skeleton === 'basic_button') {
-                    this._startContentRender(Entry.Workspace.MODE_BOARD);
-                    return;
-                }
+        for (var i=0; i<templateParams.length; i++) {
+            var param = templateParams[i];
+            if (param[0] === " ") param = param.substring(1);
+            if (param[param.length - 1] === " ") param = param.substring(0, param.length - 1);
+            if (param.length === 0) continue;
 
-                var text = this.getBoard().workspace.getCodeToText(this.block);
-                var lineBreak = false;
-                var secondLineText;
-                if (/(if)+(.|\n)+(else)+/.test(text)) {
-                    var contents = text.split('\n');
-                    text = contents.shift() + ' ' + contents.shift();
+            if (reg.test(param)) {
+                var paramIndex = Number(param.split('%')[1]) - 1;
+                param = params[paramIndex];
+                var field = new Entry['Field' + param.type](param, this, paramIndex, mode || this.renderMode, i);
 
-                    lineBreak = true;
-                    secondLineText = contents.join(" ");
-                }
-
-                console.log("this.block._schema", this.block._schema);
-
-                var fieldText = {text:text, color: 'white'};
-                if (this.block._schema.vimModeFontColor)
-                    fieldText.color = this.block._schema.vimModeFontColor;
-                this._contents.push(
-                    new Entry.FieldText(fieldText, this)
-                );
-
-                if (lineBreak) {
-                    this._contents.push(new Entry.FieldLineBreak(null, this));
-                    fieldText.text = secondLineText;
-                    this._contents.push(new Entry.FieldText(fieldText, this));
-                }
-                break;
+                this._contents.push(field);
+                this._paramMap[paramIndex] = field;
+            } else this._contents.push(new Entry.FieldText({text: param}, this));
         }
+
+        var statements = schema.statements;
+        if (statements && statements.length) {
+            for (i=0; i<statements.length; i++)
+                this._statements.push(new Entry.FieldStatement(statements[i], this, i));
+        }
+
         this.alignContent(false);
     };
 
@@ -365,7 +329,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     p._render = function() {
         this._renderPath();
         this.set(this._skeleton.box(this));
-
     };
 
     p._renderPath = function() {
@@ -913,13 +876,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.renderText = function() {
-        this._startContentRender(Entry.Workspace.MODE_VIMBOARD);
         this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
+        this._startContentRender(Entry.BlockView.RENDER_MODE_TEXT);
     };
 
     p.renderBlock = function() {
-        this._startContentRender(Entry.Workspace.MODE_BOARD);
         this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
+        this._startContentRender(Entry.BlockView.RENDER_MODE_BLOCK);
     };
 
     p._updateOpacity = function() {
@@ -1028,7 +991,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._updateContents = function() {
         this._contents.forEach(function(c) {
-            c.renderStart();
+            c.renderStart(undefined, undefined,  this.renderMode);
         }.bind(this));
         this.alignContent(false);
     };
@@ -1314,6 +1277,34 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this._backgroundPath = backgroundPath;
         this.pathGroup.insertBefore(backgroundPath, this._path);
     };
+
+    p._getTemplate = function(renderMode) {
+        var schema = this._schema;
+        var defaultTemplate = schema.template ? schema.template : Lang.template[this.block.type];
+        var template;
+
+        if (renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
+            var workspace = this.getBoard().workspace;
+            if (workspace && workspace.vimBoard) {
+                var syntax = workspace.vimBoard.getBlockSyntax(this);
+                if (syntax) template = syntax.template;
+            }
+        }
+
+        return template || defaultTemplate;
+    };
+
+    //TODO
+    p._getSchemaParams = function(mode) {
+        var schema = this._schema;
+        var params = schema.params;
+        if (mode === Entry.BlockView.RENDER_MODE_TEXT) {
+            if (schema.syntax && schema.syntax.py[0].textParams) {
+                params = schema.syntax.py[0].textParams
+            }
+        }
+        return params;
+    }
 
 
 })(Entry.BlockView.prototype);

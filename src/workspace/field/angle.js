@@ -38,7 +38,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         RADIUS = 49,
         FILL_PATH = 'M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
 
-    p.renderStart = function() {
+    p.renderStart = function(board, mode) {
         if (this.svgGroup) $(this.svgGroup).remove();
         var blockView = this._blockView;
         var that = this;
@@ -54,7 +54,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
                 'font-size': '11px'
             });
 
-        this.textElement.textContent = this.getText();
+        this._setTextValue();
 
         var width = this.getTextWidth();
 
@@ -268,8 +268,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             this.svgOptionGroup.remove();
             delete this.svgOptionGroup;
         }
-        this.textElement.textContent = this.getText();
+        this._setTextValue();
         this.command();
+    };
+
+    p._setTextValue = function() {
+        var value = this._convert(this.getText(), this.getValue());
+
+        this.textElement.textContent = value;
     };
 
 })(Entry.FieldAngle.prototype);

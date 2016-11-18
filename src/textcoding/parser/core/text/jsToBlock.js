@@ -7,6 +7,7 @@ goog.provide("Entry.JsToBlockParser");
 goog.require("Entry.TextCodingUtil");
 
 Entry.JsToBlockParser = function(syntax) {
+    this._type ="JsToBlockParser";
     this.syntax = syntax;
 
     this.scopeChain = [];
@@ -1073,4 +1074,6 @@ Entry.JsToBlockParser = function(syntax) {
             };
         }
     };
+
+    p.searchSyntax = function(datum) { return null; };
 })(Entry.JsToBlockParser.prototype);

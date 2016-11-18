@@ -11,6 +11,7 @@ goog.require("Entry.Map");
 goog.require("Entry.Queue");
 
 Entry.BlockToPyParser = function(blockSyntax) {
+    this._type ="BlockToPyParser";
     var variableMap = new Entry.Map();
     this._variableMap = variableMap;
 
@@ -94,7 +95,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     }*/
                     contentResult += content;
 
-                    
+
                 }
             } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
                 isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
@@ -118,7 +119,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 /*if(Entry.TextCodingUtil.isEntryEventBlockWithParam(rootBlock)) {
                     contentResult = "\t" + contentResult;
                 }*/
-                
+
                 result = rootResult + contentResult + '\n';
 
                 // Declaration
@@ -311,14 +312,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
                                 param = String("\"" + param + "\"");
                         }
 
-                        console.log("result and param text", result, param); 
-           
+                        console.log("result and param text", result, param);
+
                         if(param == String('\"None\"')) {
                             var data = {None:"None"};
                             var x = "None";
                             param = data[x];
                         }
-                        
+
                         param = Entry.TextCodingUtil.variableListFilter(block, blockParamIndex, param);
 
                         console.log("here pa param", param);
@@ -405,14 +406,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
             } else {
                 var tagIndex = 0;
                 console.log("block Token shit", blockToken);
-                var bb = blockToken.search('#');
-                if(blockToken.search('#') != -1) {
-                    var tagIndex = blockToken.indexOf('#');
-                    blockToken = blockToken.substring(tagIndex+1);
-                }
 
                 result += blockToken;
-                
 
                 console.log("btop parser block result", result);
 
@@ -443,14 +438,21 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return result;
     };
 
-    p.searchSyntax = function(block) {
-        if(block._schema && block._schema.syntax) {
-            var syntaxes = block._schema.syntax.py.concat();
+    p.searchSyntax = function(datum) {
+        var schema;
+        if(datum instanceof Entry.BlockView) {
+            schema = datum.block._schema;
+        } else if (datum instanceof Entry.Block)
+            schema = datum._schema;
+        else schema = datum;
+
+        if(schema && schema.syntax) {
+            var syntaxes = schema.syntax.py.concat();
             while (syntaxes.length) {
                 var isFail = false;
                 var syntax = syntaxes.shift();
                 if (typeof syntax === "string")
-                    return {syntax: syntax};
+                    return {syntax: syntax, template: syntax};
                 if (syntax.params) {
                     var params = block.params;
                     for (var i = 0; i < syntax.params.length; i++) {
@@ -460,6 +462,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
                     }
                 }
+                if(!syntax.template)
+                    syntax.template = syntax.syntax;
                 if (isFail) {
                     continue;
                 }
@@ -693,7 +697,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         //console.log("makeFuncDef func", func);
 
         if(!this.isRegisteredFunc(funcBlock))
-            func.name = "f";
+            func.name = "F";
 
 
         if(!func.name) {

@@ -87,7 +87,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         for (var i=0; i<options.length; i++) {
             var option = options[i];
-            var text = option[0];
+            var text = option[0] = this._convert(option[0], option[1]);
             var value = option[1];
             var element = Entry.Dom('li', {
                 class: 'rect',

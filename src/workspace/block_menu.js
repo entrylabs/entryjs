@@ -26,6 +26,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._isSelectingMenu = false;
     this._dynamicThreads = [];
     this._setDynamicTimer = null;
+    this._renderedCategories = {};
 
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
@@ -207,6 +208,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         visibles.forEach(function(block) {
             var blockView = block.view;
             blockView.set({display:true});
+            if (!this._renderedCategories[this.lastSelector])
+                blockView.reDraw();
 
             var className = Entry.block[block.type].class;
             if (pastClass && pastClass !== className) {
@@ -244,6 +247,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             }
         }
 
+        this._renderedCategories[this.lastSelector] = true;
         this.changeEvent.notify();
     };
 
@@ -344,9 +348,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var thread = block.getThread();
             if (thread.view) {
                 thread.view.renderText();
-                thread.view.reDraw();
             } else
-                thread.createView(this, Entry.Workspace.MODE_VIMBOARD)
+                thread.createView(this, Entry.BlockView.RENDER_MODE_TEXT)
         }.bind(this));
         return blocks;
     };
@@ -361,9 +364,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var thread = block.getThread();
             if (thread.view) {
                 thread.view.renderBlock();
-                thread.view.reDraw();
             } else
-                thread.createView(this, Entry.Workspace.MODE_BOARD)
+                thread.createView(this, Entry.BlockView.RENDER_MODE_BLOCK)
         }.bind(this));
         return blocks;
     };
@@ -511,6 +513,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         }
 
         doNotAlign !== true && this._dAlign();
+
     };
 
     p._generateCategoryCodes = function(elems) {
@@ -558,15 +561,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                     block.defs.forEach(function(d) {
                         d.category = category;
                     });
-                    for (var i =0; i <block.defs.length; i++)
+                    for (var i =0; i <block.defs.length; i++) {
                         codes.push([
                             block.defs[i]
                         ]);
-                } else
+                    }
+                } else {
                     block.def.category = category;
                     codes.push([
                         block.def
                     ]);
+                }
             }
         });
 
@@ -579,6 +584,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 index = this.code.getThreadIndex(threads[0]);
         }
         codes.forEach(function(t) {
+            if (!t || !t[0]) return;
             t[0].x = -99999;
             code.createThread(t, index);
             if (index !== undefined)
@@ -723,9 +729,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._captureKeyEvent = function(e) {
         var keyCode = e.keyCode;
-        var type = Entry.type;
 
-        if (e.ctrlKey && type == 'workspace') {
+        if (e.ctrlKey && Entry.type == 'workspace') {
             if (keyCode > 48 && keyCode < 58) {
                 e.preventDefault();
                 this.selectMenu(keyCode - 49);

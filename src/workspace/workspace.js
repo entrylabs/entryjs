@@ -229,8 +229,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p.getCodeToText = function(code) {
-        if (!this.vimBoard)
-            return;
+        if (!this.vimBoard) return;
+
         return this.vimBoard.getCodeToText(code);
     };
 
@@ -279,7 +279,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             }
         }
 
-        console.log("keyCode", keyCode);
         if (ctrlKey) {
             if (keyCode == 86) { //paste
                 var board = this.selectedBoard;
@@ -404,6 +403,20 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.vimBoard = new Entry.Vim(dom);
         this.vimBoard.workspace = this;
         this.vimBoard.hide();
+    };
+
+    p.getParserType = function() {
+        return this.vimBoard._parserType;
+    };
+
+    p.getBlockViewRenderMode = function() {
+        switch (this.mode) {
+            case Entry.Workspace.MODE_BOARD:
+            case Entry.Workspace.MODE_OVERLAYBOARD:
+                return Entry.BlockView.RENDER_MODE_BLOCK;
+            case Entry.Workspace.MODE_VIMBOARD:
+                return Entry.BlockView.RENDER_MODE_TEXT;
+        }
     };
 
 })(Entry.Workspace.prototype);

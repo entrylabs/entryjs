@@ -49,6 +49,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (!this.svgGroup)
             this.svgGroup =
                 this._blockView.contentSvgGroup.elem("g");
+        this.renderMode = mode !== undefined ?
+            mode : this._blockView.renderMode;
+
         this.view = this;
         this._nextGroup = this.svgGroup;
         this.box.set({
@@ -60,13 +63,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         var block = this.getValue();
         if (block && !block.view) {
             block.setThread(this);
-            block.createView(board, mode);
+            block.createView(board, this.renderMode);
             block.getThread().view.setParent(this);
         } else if (block && block.view) {
             block.view.reDraw();
         }
 
         this.updateValueBlock(block);
+        this._valueBlock.view._startContentRender(this.renderMode);
 
         if (this._blockView.getBoard().constructor !== Entry.Board)
             this._valueBlock.view.removeControl();
@@ -268,12 +272,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         var board = this._blockView.getBoard();
 
         var block = new Entry.Block({type: blockType}, this);
-        var workspace = board.workspace;
-        var mode;
-        if (workspace)
-            mode = workspace.getMode();
-
-        block.createView(board, mode);
+        block.createView(board, this.renderMode);
         return block;
     };
 

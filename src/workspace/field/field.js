@@ -131,7 +131,7 @@ Entry.Field = function() {};
     };
 
     p.truncate = function() {
-        var value = String(this.getValue());
+        var value = String(this._convert(this.getValue()));
         var limit = this.TEXT_LIMIT_LENGTH;
         var ret = value.substring(0, limit);
         if (value.length > limit)
@@ -223,6 +223,20 @@ Entry.Field = function() {};
     };
 
     p.getContentHeight = function() {
-        return Entry.isMobile() ? 22: 16;
+        return Entry.isMobile() ? 22 : 16;
     };
+
+    p._getRenderMode = function() {
+        var mode = this._blockView.renderMode;
+        return mode !== undefined ?
+            mode : Entry.BlockView.RENDER_MODE_BLOCK;
+    };
+
+    p._convert = function(key, value) {
+        value = value !== undefined ? value : this.getValue();
+        if (this._contents.converter) {
+            return this._contents.converter(key, value);
+        } else return key;
+    };
+
 })(Entry.Field.prototype);

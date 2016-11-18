@@ -51,7 +51,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
                 'font-size' : '11px'
             });
 
-        this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
+        this._setTextValue();
 
         var width = this.getTextWidth() + 1;
 
@@ -134,7 +134,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     p.applyValue = function(text, value) {
         this.setValue(String(value));
         this.destroyOption();
-        this.textElement.textContent = text;
+        this._setTextValue();
         this.resize();
     };
 
@@ -156,6 +156,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
         if (Entry.keyPressed && this.keyPressed)
            Entry.keyPressed.detach(this.keyPressed);
+    };
+
+    p._setTextValue = function() {
+        var value = Entry.getKeyCodeMap()[this.getValue()];
+        value = this._convert(value, this.getValue());
+        this.textElement.textContent = value;
     };
 
 })(Entry.FieldKeyboard.prototype);

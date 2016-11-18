@@ -7,6 +7,7 @@ goog.provide("Entry.BlockToJsParser");
 goog.require("Entry.TextCodingUtil");
 
 Entry.BlockToJsParser = function(syntax) {
+    this._type = "BlockToJsParser";
     this.syntax = syntax;
 
     this._iterVariableCount = 0;
@@ -276,5 +277,7 @@ Entry.BlockToJsParser = function(syntax) {
 
         return dataParam;
     };
+
+    p.searchSyntax = function(datum) { return null; }
 
 })(Entry.BlockToJsParser.prototype);

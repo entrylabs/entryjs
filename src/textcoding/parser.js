@@ -22,7 +22,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._mode = mode; // maze ai workspace
     this.syntax = {}; //for maze
     this.codeMirror = cm;
-    this._lang = syntax || "js"; //for maze
+    this._lang = syntax || "blockPy";
     this._type = type;
     this.availableCode = [];
     this._syntax_cache = {};
@@ -44,7 +44,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     switch (this._lang) {
         case "js":
-            this._parser = new Entry.JsToBlockParser(this.syntax);
+            this._execParser = new Entry.JsToBlockParser(this.syntax);
             var syntax = this.syntax;
 
             var assistScope = {};
@@ -66,7 +66,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
             break;
         case "py":
-            this._parser = new Entry.PyToBlockParser(this.syntax);
+            this._execParser = new Entry.PyToBlockParser(this.syntax);
 
             var syntax = this.syntax;
 
@@ -93,12 +93,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
             break;
 
         case "blockJs":
-            this._parser = new Entry.BlockToJsParser(this.syntax);
+            this._execParser = new Entry.BlockToJsParser(this.syntax);
             var syntax = this.syntax;
             break;
 
         case "blockPy":
-            this._parser = new Entry.BlockToPyParser(this.syntax);
+            this._execParser = new Entry.BlockToPyParser(this.syntax);
             var syntax = this.syntax;
             break;
     }
@@ -106,6 +106,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
 (function(p) {
     p.setParser = function(mode, type, cm) {
+        if (this._mode === mode && this._type === type)
+            return;
+        console.log("setParser this._type", this._type, "type", type);
         this._mode = mode;
         this._type = type;
         this._cm = cm;
@@ -117,27 +120,28 @@ Entry.Parser = function(mode, type, cm, syntax) {
             this.setAvailableCode(configCode, playerCode);
         }*/
 
-        console.log("real mode", mode);
+        /*if(this._type == type)
+            return;*/
 
         this.syntax = this.mappingSyntax(mode);
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-                this._parser = new Entry.JsToBlockParser(this.syntax);
+                this._execParser = new Entry.JsToBlockParser(this.syntax);
 
-                this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
+                this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
 
                 break;
 
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-                this._parser = new Entry.PyToBlockParser(this.syntax);
+                this._execParser = new Entry.PyToBlockParser(this.syntax);
 
-                this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
+                this._execParserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
 
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-                this._parser = new Entry.BlockToJsParser(this.syntax);
+                this._execParser = new Entry.BlockToJsParser(this.syntax);
 
                 var syntax = this.syntax;
                 var assistScope = {};
@@ -161,15 +165,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     }
                 });
 
-                this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
+                this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
 
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                this._parser = new Entry.BlockToPyParser(this.syntax);
+                this._execParser = new Entry.BlockToPyParser(this.syntax);
                 cm.setOption("mode", {name: "python", globalVars: true});
                 cm.markText({line: 0, ch: 0}, {line: 3}, {readOnly: true});
-                this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+                this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
 
                 break;
         }
@@ -204,7 +208,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         astArray.push(ast);
                     }
 
-                    result = this._parser.Program(astArray);
+                    result = this._execParser.Program(astArray);
                 } catch (error) {
                     if (this.codeMirror) {
                         //console.log("error.loc", error.loc);
@@ -347,8 +351,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             astArray.push(ast);
                     }
 
-                    result = this._parser.Program(astArray);
-                    this._parser._variableMap.clear();
+                    result = this._execParser.Program(astArray);
+                    this._execParser._variableMap.clear();
 
                     break;
                 } catch(error) {
@@ -442,7 +446,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-                var textCode = this._parser.Code(code, parseMode);
+                var textCode = this._execParser.Code(code, parseMode);
                 /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 ////console.log("textCode", textCode);
                 if(Array.isArray(textArr)) {
@@ -470,13 +474,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 console.log("parser parsemode", parseMode);
                 result = "";
-                var textCode = this._parser.Code(code, parseMode);
+                var textCode = this._execParser.Code(code, parseMode);
 
                 if (!this._pyHinter)
                     this._pyHinter = new Entry.PyHint();
 
                 if(parseMode == Entry.Parser.PARSE_GENERAL) {
-                    var funcDefMap = this._parser._funcDefMap;
+                    var funcDefMap = this._execParser._funcDefMap;
                     console.log("funcDefMap", funcDefMap);
                     for(var f in funcDefMap) {
                         var funcDef = funcDefMap[f];
@@ -512,6 +516,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.mappingSyntax = function(mode) {
+        console.log("this._syntax_cache[mode]", this._syntax_cache[mode]);
         if (this._syntax_cache[mode])
             return this._syntax_cache[mode];
 
@@ -552,12 +557,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
             }
             else {
+                console.log("blockkkk", block);
                 if(mode === Entry.Vim.WORKSPACE_MODE) {
-                    var blockList = Entry.block;
+                    //var blockList = Entry.block;
 
-                    for (var key in blockList) {
+                    /*for (var key in blockList) {
                         var pyBlockSyntax = {};
-                        var block = blockList[key];
+                        var block = blockList[key];*/
+                        var key = type;
                         var pySyntax = null;
 
                         if(block.syntax && block.syntax.py) {
@@ -567,6 +574,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if (!pySyntax)
                             continue;
 
+                        console.log("pySyntax.length", pySyntax.length);
                         pySyntax.map(function(s) {
                             var result, tokens;
                             if (typeof s === "string") {
@@ -575,15 +583,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 tokens = s;
                                 bs.key = key;
                                 bs.syntax = s;
-                                /*result = key;
-                                tokens = s;*/
+                                bs.template = s;
+                                //result = key;
+                                //tokens = s;
                             } else {
                                 result = s;
                                 tokens = s.syntax;
-                                s.key = key;  
+                                s.key = key;
+                                if(!s.template)
+                                    result.template = s.syntax;
                             }
-                            
-                            tokens = tokens.split('(');                        
+
+                            tokens = tokens.split('(');
 
                             if(tokens[1] && tokens[1].includes('%')) {
                                 if(tokens[0].length != 0)
@@ -598,12 +609,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             tokens = tokens.replace("():", "");
                             tokens = tokens.replace("()", "");
 
-                            if(s.paramOption)
-                                tokens += "#" + s.paramOption;
-                                
+                            if(s.keyOption)
+                                tokens += "#" + s.keyOption;
+
                             syntax[tokens] = result;
-                        })
-                    }
+                        });
+                    //}
                 }
             }
         }
