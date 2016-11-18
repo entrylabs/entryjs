@@ -15,12 +15,13 @@ Entry.PyHint = function() {
     function pythonHint(editor) {
         var cur = editor.getCursor(), token = editor.getTokenAt(cur);
         // If it's not a 'word-style' token, ignore the token.
+        console.log(token)
 
         /////////////////////////////////////////////////////////////
         //Entry Event added by jhlee
         /////////////////////////////////////////////////////////////
-        var defTokens = ["def entry_event_start", "def entry_event_mouse_up", "def entry_event_object_down", 
-                        "def entry_event_object_up", "def entry_event_scene_start", "def entry_event_clone_create", 
+        var defTokens = ["def entry_event_start", "def entry_event_mouse_up", "def entry_event_object_down",
+                        "def entry_event_object_up", "def entry_event_scene_start", "def entry_event_clone_create",
                         "def entry_event_clone_create", "def entry_event_signal", "def entry_event_key"];
 
         var defMaps = [];
@@ -37,7 +38,7 @@ Entry.PyHint = function() {
                     displayText: defToken,
                     text: defToken + "(\"Q\"):"
                 });
-            } 
+            }
             else {
                 defMaps.push({
                     displayText: defToken,
@@ -47,7 +48,7 @@ Entry.PyHint = function() {
         }
 
         var found = [], current = token.string;
-        
+
         if(token.string.includes("def")) {
             found = found.concat(fuzzySearch(
                     defMaps, current,
@@ -55,7 +56,7 @@ Entry.PyHint = function() {
             /////////////////////////////////////////////////////////////
             //end part of Entry Event added by jhlee
             /////////////////////////////////////////////////////////////
-        } 
+        }
         else if (!/^[\w$_]*$/.test(token.string)) {
                 token = {start: cur.ch, end: cur.ch, string: "", state: token.state,
                     className: token.string == ":" ? "python-type" : null};
@@ -110,7 +111,7 @@ Entry.PyHint = function() {
             to: CodeMirror.Pos(cur.line, token.end)};
     }
 
-    var hwObjects = ["Codeino", "Arduino", "Xbot", "Dplay", "Sensorboard", 
+    var hwObjects = ["Codeino", "Arduino", "Xbot", "Dplay", "Sensorboard",
                     "Nemoino", "Hamster", "Albert", "Bitbrick", "Neobot", "Robotis"];
     var globalKeywords =
         "Entry,self,Hw,while True,True,False,break,for i in range(),if,if else,len,random.randint";
@@ -118,7 +119,7 @@ Entry.PyHint = function() {
 
     var syntaxMap = {_global: []};
 
-    var blocks = Entry.block; 
+    var blocks = Entry.block;
     for (var key in blocks) {
         var block = blocks[key];
         var syntax = block.syntax;
@@ -128,8 +129,8 @@ Entry.PyHint = function() {
         syntax = syntax.py.join("");
         syntax = syntax.split('.');
         //console.log("syntax", syntax, "include", syntax[0].indexOf("def"));
-        
-        if(syntax[0].indexOf("def ") > -1) { 
+
+        if(syntax[0].indexOf("def ") > -1) {
             syntax = syntax[0].split(' ');
         }
         else if(syntax.length === 1)
@@ -179,7 +180,7 @@ Entry.PyHint = function() {
                 displayText: objName + " " + operator,
                 text: objName + " " + operator + paramPart + ":"
             });
-        } 
+        }
         else {
             syntaxMap._global.push({
                 displayText: objName + "." + operator,

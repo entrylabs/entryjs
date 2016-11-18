@@ -65,7 +65,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
                 x: 0, y: y,
                 rx: 3, ry: 3,
                 width: width,
-                height: CONTENT_HEIGHT, 'rx':3, 'ry': 3,
+                height: CONTENT_HEIGHT,
                 fill: "#fff",
                 'fill-opacity': 0.4
                 });

@@ -4745,8 +4745,8 @@ Entry.Neobot = {name:"neobot", LOCAL_MAP:["IN1", "IN2", "IN3", "IR", "BAT"], REM
     Entry.hw.sendQueue[Entry.Neobot.REMOTE_MAP[b]] = 0;
   }
   Entry.hw.update();
-}, name:"neobot", monitorTemplate:{imgPath:"hw/neobot.png", width:700, height:700, listPorts:{IR:{name:"\ub9ac\ubaa8\ucee8", type:"input", pos:{x:0, y:0}}, BAT:{name:"\ubca0\ud130\ub9ac", type:"input", pos:{x:0, y:0}}, SND:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, FND:{name:"FND", type:"output", pos:{x:0, y:0}}}, ports:{IN1:{name:"IN1", type:"input", pos:{x:270, y:200}}, IN2:{name:"IN2", type:"input", pos:{x:325, y:200}}, IN3:{name:"IN3", type:"input", pos:{x:325, y:500}}, DCL:{name:"L-Motor", 
-type:"output", pos:{x:270, y:500}}, DCR:{name:"R-Motor", type:"output", pos:{x:435, y:500}}, OUT1:{name:"OUT1", type:"output", pos:{x:380, y:200}}, OUT2:{name:"OUT2", type:"output", pos:{x:435, y:200}}, OUT3:{name:"OUT3", type:"output", pos:{x:380, y:500}}}, mode:"both"}};
+}, monitorTemplate:{imgPath:"hw/neobot.png", width:700, height:700, listPorts:{IR:{name:"\ub9ac\ubaa8\ucee8", type:"input", pos:{x:0, y:0}}, BAT:{name:"\ubca0\ud130\ub9ac", type:"input", pos:{x:0, y:0}}, SND:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, FND:{name:"FND", type:"output", pos:{x:0, y:0}}}, ports:{IN1:{name:"IN1", type:"input", pos:{x:270, y:200}}, IN2:{name:"IN2", type:"input", pos:{x:325, y:200}}, IN3:{name:"IN3", type:"input", pos:{x:325, y:500}}, DCL:{name:"L-Motor", type:"output", 
+pos:{x:270, y:500}}, DCR:{name:"R-Motor", type:"output", pos:{x:435, y:500}}, OUT1:{name:"OUT1", type:"output", pos:{x:380, y:200}}, OUT2:{name:"OUT2", type:"output", pos:{x:435, y:200}}, OUT3:{name:"OUT3", type:"output", pos:{x:380, y:500}}}, mode:"both"}};
 Blockly.Blocks.neobot_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1\ubc88 \ud3ec\ud2b8", "IN1"], ["2\ubc88 \ud3ec\ud2b8", "IN2"], ["3\ubc88 \ud3ec\ud2b8", "IN3"], ["\ub9ac\ubaa8\ucee8", "IR"], ["\ubc30\ud130\ub9ac", "BAT"]]), "PORT").appendField(" \uac12");
@@ -11983,7 +11983,9 @@ Entry.PyHint = function() {
     });
   }
   CodeMirror.registerHelper("hint", "python", function(a) {
-    var e = a.getCursor(), f = a.getTokenAt(e), g = "def entry_event_start;def entry_event_mouse_up;def entry_event_object_down;def entry_event_object_up;def entry_event_scene_start;def entry_event_clone_create;def entry_event_clone_create;def entry_event_signal;def entry_event_key".split(";"), h = [], k;
+    var e = a.getCursor(), f = a.getTokenAt(e);
+    console.log(f);
+    var g = "def entry_event_start;def entry_event_mouse_up;def entry_event_object_down;def entry_event_object_up;def entry_event_scene_start;def entry_event_clone_create;def entry_event_clone_create;def entry_event_signal;def entry_event_key".split(";"), h = [], k;
     for (k in g) {
       var l = g[k];
       "def entry_event_signal" == l ? h.push({displayText:l, text:l + '("None"):'}) : "def entry_event_key" == l ? h.push({displayText:l, text:l + '("Q"):'}) : h.push({displayText:l, text:l + "():"});
@@ -24003,7 +24005,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"11px"});
     this._setTextValue();
     var c = this.getTextWidth(), e = this._CONTENT_HEIGHT, f = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {x:0, y:f - e / 2, rx:3, ry:3, width:c, height:e, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.elem("rect", {x:0, y:f - e / 2, rx:3, ry:3, width:c, height:e, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
     this.box.set({x:0, y:0, width:c, height:e});
