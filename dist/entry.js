@@ -15999,7 +15999,6 @@ Entry.Parser = function(b, a, d, c) {
 };
 (function(b) {
   b.setParser = function(a, b, c) {
-    console.log("this._mode", this._mode, "this._type", this._type);
     if (this._mode !== a || this._type !== b) {
       switch(console.log("setParser this._type", this._type, "type", b), this._mode = a, this._type = b, this._cm = c, this.syntax = this.mappingSyntax(a), b) {
         case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
