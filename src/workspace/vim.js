@@ -18,9 +18,9 @@ Entry.Vim = function(dom, textType) {
     //this._parser = new Entry.Parser("maze", "js", this.codeMirror);
     //this._blockParser = new Entry.Parser("maze", "block");
 
-    this._mode = Entry.Vim.WORKSPACE_MODE;
-    this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-    this._parser = new Entry.Parser(this._mode, this._parserType, this.codeMirror);
+    //this._mode = Entry.Vim.WORKSPACE_MODE;
+    //this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+    this._parser = new Entry.Parser(null, null, this.codeMirror);
 
     //this._pyBlockParser = new Entry.Parser("ws", "blockPy", this.codeMirror);
     //this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);

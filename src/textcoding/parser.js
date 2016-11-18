@@ -106,6 +106,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
 (function(p) {
     p.setParser = function(mode, type, cm) {
+        console.log("this._mode", this._mode, "this._type", this._type);
         if (this._mode === mode && this._type === type)
             return;
         console.log("setParser this._type", this._type, "type", type);

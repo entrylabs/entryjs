@@ -15997,6 +15997,7 @@ Entry.Parser = function(b, a, d, c) {
 };
 (function(b) {
   b.setParser = function(a, b, c) {
+    console.log("this._mode", this._mode, "this._type", this._type);
     if (this._mode !== a || this._type !== b) {
       switch(console.log("setParser this._type", this._type, "type", b), this._mode = a, this._type = b, this._cm = c, this.syntax = this.mappingSyntax(a), b) {
         case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -26625,9 +26626,7 @@ Entry.Vim = function(b, a) {
     return console.error("Dom is not div element");
   }
   this.createDom(b);
-  this._mode = Entry.Vim.WORKSPACE_MODE;
-  this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-  this._parser = new Entry.Parser(this._mode, this._parserType, this.codeMirror);
+  this._parser = new Entry.Parser(null, null, this.codeMirror);
   Entry.Model(this, !1);
   window.eventset = [];
 };
