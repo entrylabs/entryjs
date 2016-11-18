@@ -497,6 +497,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         }
 
         if(!Entry.TextCodingUtil.isBinaryOperator(dataParam)) {
+            if(!Entry.TextCodingUtil.isNumeric(dataParam))
                 dataParam = "\"" + dataParam + "\"";
         }
 

@@ -78,8 +78,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             continue;
                         }
 
-                        if(Entry.TextCodingUtil.isEventBlockByType(block.type))
+                        if(Entry.TextCodingUtil.isEventBlockByType(block.type)) {
                             isEntryEventExisted = true;
+                            console.log("isEntryEventExisted", isEntryEventExisted);
+                        }
 
                         if(Entry.TextCodingUtil.isVariableDeclarationBlock(block.type)) {
                             console.log("isVariableDeclarationBlock block.type", block.type)
@@ -1435,7 +1437,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             console.log("variable name", name, "value", value);
 
-            if(value && !isNaN(value)) {
+            if((value && !isNaN(value)) || value == 0) {
                 if(name && !name.includes('__filbert')) {
                     if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                         console.log("this is update", name, value);

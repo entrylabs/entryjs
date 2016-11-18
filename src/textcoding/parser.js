@@ -28,7 +28,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._syntax_cache = {};
     this._pyThreadCount = 1;
     this._pyBlockCount = {};
-    this._currentEmptyLineCount = 0;
 
     Entry.Parser.PARSE_GENERAL = 1;
     Entry.Parser.PARSE_SYNTAX = 2;
@@ -277,84 +276,31 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 try {
                     this._pyBlockCount = {};
                     this._pyThreadCount = 1;
-                    this._currentEmptyLineCount = 0;
-                    //this._syntaxParsingCount = 0;
-                    //this._marker.clear();
 
                     var pyAstGenerator = new Entry.PyAstGenerator();
                     var threads = this.makeThreads(code);
                     console.log("threads", threads);
 
-                    ///////////////////////////////////////////////////
-                    //cleansing step 1
-                    ///////////////////////////////////////////////////
-                    /*for(var i in threads) {
-                        var thread = threads[i];
-                        if(thread.search("import") != -1) {
-                            threads[i] = "";
-                            continue;
-                        } else if(thread.charAt(0) == '#') {
-                            threads[i] = "";
-                            continue;
-                        }
-                        threads[i] = thread;
-                    }*/
-
-                    //////////////////////////////////////////////////
-                    //cleansing step 2
-                    ///////////////////////////////////////////////////
-                    /*var cleansedThreads = [];
-                    for(var t in threads) {
-                        var thread = threads[t];
-                        if(thread.length == 0)
-                            continue;
-
-                        thread = thread.trim();
-                        if(thread.length != 0)
-                            cleansedThreads.push(thread);
-                    }*/
-
-                    //////////////////////////////////////////////////
-                    //parsing
-                    ///////////////////////////////////////////////////
                     var astArray = [];
                     var threadCount = 0;
                     var ast;
                     for(var index = 0; index < threads.length; index++) {
                         var thread = threads[index];
-                        thread = thread.trim();
                         console.log("thread", thread, "thread.length", thread.length);
-                        
-                        if(thread.length != 0) {
-                            threadCount++;
-                            this._pyThreadCount = parseInt(threadCount);
-                            //thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
-                            thread = thread.replace(/    /g, "\t");
-                            ast = pyAstGenerator.generate(thread);
-                        }
-                        else {
-                            ast = null;
-                            this._currentEmptyLineCount++
-                        }
-
-                        if(!ast) {
-                            if(this._pyThreadCount > 1) {
-                                threadCount--;
-                                this._pyThreadCount--;
-                            }
+                        if(thread.length == 0)
                             continue;
-                        }
 
-                        if(thread.length != 0 && thread != "") {
-                            var tToken = thread.split('\n');
-                            var idx = parseInt(this._pyThreadCount).toString();
-                            this._pyBlockCount[idx] =  tToken.length;
-                        }
+                        thread = thread.replace(/    /g, "\t");
+                        ast = pyAstGenerator.generate(thread);
 
-                        if(ast && ast.type == "Program" && ast.body.length != 0)
+                        if(!ast)
+                            continue;
+
+                        this._pyThreadCount = threadCount++;
+                        this._pyBlockCount[threadCount] = thread.split("\n").length-1;
+                        if(ast.body.length != 0)
                             astArray.push(ast);
                     }
-
                     result = this._parser.Program(astArray);
                     this._parser._variableMap.clear();
 
@@ -651,54 +597,17 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var errorRaisedAt = error.raisedAt;
         var errorMessage = error.message;
 
-        console.log("this._pyThreadCount", this._pyThreadCount, "this._pyBlockCount", this._pyBlockCount, "this._currentEmptyLineCount", this._currentEmptyLineCount);
+        console.log("this._pyThreadCount", this._pyThreadCount, "this._pyBlockCount", this._pyBlockCount);
         
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
-        console.log("contentsArr", contentsArr);
         var currentThreadCount = 0;
         var currentLineCount = 0;
-        //var emptyLineCount = 0;
-        //var currentText;
-        //var isInThread = false;
 
-        
         for(var key in this._pyBlockCount) {
             var count = parseInt(this._pyBlockCount[key]);
             currentLineCount += count;
         }
-
-        console.log("currentLineCount", currentLineCount);
-        
-        currentLineCount += this._currentEmptyLineCount;
-
-        console.log("currentLineCount2", currentLineCount);
-        /*for(var i = 4; i < contentsArr.length; i++) {
-            currentText = contentsArr[i];
-
-            var textLength = currentText.trim().length;
-            if(textLength == 0) {
-                emptyLineCount++;
-            }
-            
-            console.log("currentText", currentText);
-            console.log("currentText.charAt(0).trim()",currentText.charAt(0).trim());
-            var rootTextLength = currentText.charAt(0).trim().length;
-            if(rootTextLength == 0) {
-                isInThread = false;
-            }
-            else {
-                if(!isInThread)
-                    currentThreadCount++;
-                isInThread = true;
-            }
-
-           
-
-            if(threadCount == currentThreadCount) 
-                break;
-            currentLineCount++;
-        }*/
 
         var targetLine = errorLine + currentLineCount + 4;
         var targetText = contentsArr[targetLine-1];
@@ -752,74 +661,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
         return err;
     };
 
-    /*p.findConvertingErrorLineCh = function(errorLine) {
-        var result = {};
-
-        var contents = this.codeMirror.getValue();
-        var contentsArr = contents.split("\n");
-        var currentLineCount = 0;
-
-        for(var c = 1; c < this._pyThreadCount; c++) {
-            var idx = c.toString();
-            var count = this._pyBlockCount[idx];
-            currentLineCount += count;
-        }
-
-        result.line = currentLineCount + (this._pyThreadCount-1);
-
-        for(var i = 0; i < contentsArr.length; i++) {
-            var targetText = contentsArr[i];
-
-            if(targetText.trim().length != 0) {
-                if((i+1) == errorLine) {
-                    result.start = 0;
-                    result.end = targetText.length;
-                    break;
-                }
-            }
-        }
-
-        console.log("findConvertingErrorInfo result", result);
-        return result;
-
-    };*/
-
-    /*p.updateLineEmpty = function(lineNumber) {
-        console.log("lineNumber", lineNumber);
-        var result = {};
-        var contents = this.codeMirror.getValue();
-        var contentsArr = contents.split("\n");
-        console.log("contentsArr222", contentsArr);
-
-        var text = contentsArr[lineNumber-1];
-
-        if(text.trim().length == 0 && lineNumber > 3) {
-            contentsArr[lineNumber-1] = "     ";
-            var newContents = contentsArr.join("\n");
-            console.log("newContents", newContents);
-            this.codeMirror.setValue(newContents);
-            result.isLineEmpty = true;
-            result.line = lineNumber;
-            result.start = 0;
-            result.end = contentsArr[lineNumber-1].length;
-            result.message = '들여쓰기(Indentation)가 정확한지 확인해주세요.';
-
-            return result;
-        }
-
-        result.isLineEmpty = false;
-
-        return result;
-    };*/
-
-    
-
     p.makeThreads = function(text) {
         console.log("makeThreads text", text);
         var textArr = text.split("\n");
         var thread = "";
         var threads = [];
-        var threadMark = false;
 
         var optText = "";
         for(var i = 4; i < textArr.length; i++) {
@@ -838,9 +684,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
             }
         }
         threads.push(optText);
-
-        console.log("makeThreads threads", threads);
-
         return threads;
 
     };

@@ -9001,7 +9001,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Hamster.move_forward_on_boaard()"]}
+        "syntax": {"js": [], "py": ["Hamster.move_forward_on_board()"]}
     },
     "hamster_turn_once": {
         "color": "#00979D",
@@ -9363,7 +9363,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.turn_left(%2)", params: ["LEFT"]},
-            {syntax: "Hamster.turn_right(%2))", params: ["RIGHT"]}
+            {syntax: "Hamster.turn_right(%2)", params: ["RIGHT"]}
         ]}
     },
     "hamster_change_both_wheels_by": {
@@ -9933,7 +9933,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {syntax: "Hamster.left_led(Hamster.LED_OFF)", params: ["LEFT"]},
             {syntax: "Hamster.right_led(Hamster.LED_OFF)", params: ["RIGHT"]},
-            {syntax: "Hamster.leds(Hamster.LED_OFF, Hamster.LED_OFF)", params: ["BOTH"]}
+            {syntax: "Hamster.leds(Hamster.LED_OFF,Hamster.LED_OFF)", params: ["BOTH"]}
         ]}
     },
     "hamster_beep": {
