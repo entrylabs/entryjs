@@ -34,6 +34,16 @@ if (Entry && Entry.block) {
             return '"()"'.replace('()', key);
         };
 
+        c.returnRawStringKey = function(key, value) {
+            if ((!value && typeof value !== 'number') || value === 'null')
+                return "None";
+            key  = String(key);
+            if (value === 'mouse')
+                key = value;
+            key = key.replace(/\"/gi, '');
+            return '"()"'.replace('"()"', key);
+        };
+
         c.returnStringValue = function(key, value) {
             return '"()"'.replace('()', value);
         };
@@ -44,7 +54,11 @@ if (Entry && Entry.block) {
                 "GREATER": '>',
                 "LESS": '<',
                 "GREATER_OR_EQUAL": '>=',
-                "LESS_OR_EQUAL": '<='
+                "LESS_OR_EQUAL": '<=',
+                "PLUS": '+',
+                "MINUS": '-',
+                "MULTI": '*',
+                "DIVIDE": '/'
             };
             return map[value];
         };
@@ -6858,7 +6872,33 @@ Entry.block = {
                 return leftValue / rightValue;
         },
         "syntax": {"js": [], "py": [
-            {syntax: "(%1 %2 %3)", keyOption: "calc_basic"}
+            {
+                syntax: "(%1 %2 %3)", 
+                keyOption: "calc_basic",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "+", "PLUS" ],
+                            [ "-", "MINUS" ],
+                            [ "x", "MULTI" ],
+                            [ "/", "DIVIDE" ]
+                        ],
+                        "value": "PLUS",
+                        "fontSize": 11,
+                        noArrow: true,
+                        converter: Entry.block.converters.returnOperator
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                ]
+            }
         ]}
     },
     "calc_plus": {
@@ -18433,7 +18473,7 @@ Entry.block = {
                         "menuName": "variables",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                     {
                         "type": "Block",
@@ -18513,7 +18553,7 @@ Entry.block = {
                         "menuName": "variables",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                     {
                         "type": "Block",
@@ -18707,7 +18747,7 @@ Entry.block = {
                         "menuName": "variables",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                 ]
             }
@@ -18937,7 +18977,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                 ]
             }
@@ -19023,7 +19063,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                 ]
             }
@@ -19118,7 +19158,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                     {
                         "type": "Block",
@@ -19213,7 +19253,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                     {
                         "type": "Block",
@@ -19313,7 +19353,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                     undefined,
                     {
@@ -19387,7 +19427,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                 ]
             }
@@ -19451,7 +19491,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                 ]
             }
@@ -19515,7 +19555,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                 ]
             }
@@ -19705,7 +19745,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                     undefined,
                     {
