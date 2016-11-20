@@ -12122,6 +12122,30 @@ Entry.Console = function() {
     this._isEditing !== a && (this._isEditing = a);
   };
 })(Entry.Console.prototype);
+Entry.TextCodingExampleHelper = {};
+Entry.TextCodingHelper = function() {
+  Entry.propertyPanel && this.createView();
+};
+(function(b) {
+  b.createView = function() {
+    this.parentView_ = Entry.propertyPanel.modes.helper.obj.blockHelperContent_;
+    this.view = Entry.createElement("div", "textCodingExampleView");
+    this.codeMirror = CodeMirror(this.view, {lineNumbers:!1, lineWrapping:!0, value:"", mode:{}, theme:"default", styleActiveLine:!1, lint:!1});
+    this._doc = this.codeMirror.getDoc();
+    this.codeMirror.setValue("Hi! TextCoding...");
+    this.codeMirror.on("keyup", function(a, b) {
+      this._isEditing && 13 === b.keyCode && this.endInput();
+    }.bind(this));
+    this.codeMirror.on("cursorActivity", function(a, b) {
+      a.execCommand("goDocEnd");
+    });
+    this.parentView_.appendChild(this.view);
+    console.log("added text Helper");
+  };
+  b.getView = function() {
+    return this.view;
+  };
+})(Entry.TextCodingHelper.prototype);
 Entry.TextCodingUtil = {};
 (function(b) {
   this._funcParams;
@@ -26654,6 +26678,7 @@ Entry.Vim = function(b, a) {
   }
   this.createDom(b);
   this._parser = new Entry.Parser(null, null, this.codeMirror);
+  this._helper = new Entry.TextCodingHelper;
   Entry.Model(this, !1);
   window.eventset = [];
 };

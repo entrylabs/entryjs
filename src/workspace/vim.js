@@ -21,6 +21,7 @@ Entry.Vim = function(dom, textType) {
     //this._mode = Entry.Vim.WORKSPACE_MODE;
     //this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
     this._parser = new Entry.Parser(null, null, this.codeMirror);
+    this._helper = new Entry.TextCodingHelper();
 
     //this._pyBlockParser = new Entry.Parser("ws", "blockPy", this.codeMirror);
     //this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
