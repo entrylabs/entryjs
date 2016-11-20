@@ -16055,7 +16055,10 @@ Entry.Parser = function(b, a, d, c) {
           this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
           break;
         case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-          this._execParser = new Entry.BlockToPyParser(this.syntax), c.setOption("mode", {name:"python", globalVars:!0}), c.markText({line:0, ch:0}, {line:3}, {readOnly:!0}), this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+          this._execParser = new Entry.BlockToPyParser(this.syntax), c.setOption("mode", {name:"python", globalVars:!0}), c.markText({line:0, ch:0}, {line:3}, {readOnly:!0}), c.on("keydown", function(a, b) {
+            var c = b.keyCode;
+            (65 <= c && 95 >= c || 167 == c || !b.shiftKey && 190 == c) && CodeMirror.showHint(a, null, {completeSingle:!1});
+          }), this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
       }
     }
   };
@@ -16185,7 +16188,7 @@ Entry.Parser = function(b, a, d, c) {
           }
         }
       } else {
-        console.log("blockkkk", g), a === Entry.Vim.WORKSPACE_MODE && (l = f, f = null, g.syntax && g.syntax.py && (f = g.syntax.py), f && (console.log("pySyntax.length", f.length), f.map(function(a) {
+        a === Entry.Vim.WORKSPACE_MODE && (l = f, f = null, g.syntax && g.syntax.py && (f = g.syntax.py), f && f.map(function(a) {
           var b, d;
           if ("string" === typeof a) {
             var e = {};
@@ -16213,7 +16216,7 @@ Entry.Parser = function(b, a, d, c) {
             a[f] || (a[f] = {});
             a = a[f];
           }
-        })));
+        }));
       }
     }
     return this._syntax_cache[a] = c;

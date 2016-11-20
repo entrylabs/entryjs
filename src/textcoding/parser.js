@@ -173,6 +173,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 this._execParser = new Entry.BlockToPyParser(this.syntax);
                 cm.setOption("mode", {name: "python", globalVars: true});
                 cm.markText({line: 0, ch: 0}, {line: 3}, {readOnly: true});
+                cm.on("keydown", function (cm, event) {
+                    var keyCode = event.keyCode;
+                    if ((keyCode >= 65 && keyCode <= 95) ||
+                        keyCode == 167 || (!event.shiftKey && keyCode == 190)) {
+                        CodeMirror.showHint(cm, null, {completeSingle: false});
+                    }
+                });
                 this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
 
                 break;
@@ -557,7 +564,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
             }
             else {
-                console.log("blockkkk", block);
                 if(mode === Entry.Vim.WORKSPACE_MODE) {
                     //var blockList = Entry.block;
 
@@ -574,7 +580,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if (!pySyntax)
                             continue;
 
-                        console.log("pySyntax.length", pySyntax.length);
                         pySyntax.map(function(s) {
                             var result, tokens;
                             if (typeof s === "string") {
