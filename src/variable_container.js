@@ -821,6 +821,8 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
     variable.generateView(this.variables_.length);
     this.createVariableView(variable);
     this.variables_.unshift(variable);
+    if (Entry.playground && Entry.playground.blockMenu)
+        Entry.playground.blockMenu.deleteRendered('variable')
     Entry.playground.reloadPlayground();
 
     this.updateList();
@@ -1039,6 +1041,8 @@ Entry.VariableContainer.prototype.addMessage = function(message) {
         );
     this.createMessageView(message);
     this.messages_.unshift(message);
+    if (Entry.playground && Entry.playground.blockMenu)
+        Entry.playground.blockMenu.deleteRendered('start')
     Entry.playground.reloadPlayground();
     this.updateList();
     message.listElement.nameField.focus();
@@ -1206,6 +1210,8 @@ Entry.VariableContainer.prototype.addList = function(list) {
     list.generateView(this.lists_.length);
     this.createListView(list);
     this.lists_.unshift(list);
+    if (Entry.playground && Entry.playground.blockMenu)
+        Entry.playground.blockMenu.deleteRendered('variable')
     Entry.playground.reloadPlayground();
 
     this.updateList();

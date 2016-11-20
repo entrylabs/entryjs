@@ -15761,7 +15761,17 @@ Entry.PyToBlockParser = function(b) {
   };
   b.getBlockSyntax = function(a) {
     console.log("why syntax", a);
-    return (a = this.blockSyntax[a]) ? a : null;
+    if (!a) {
+      return null;
+    }
+    a = a.split(".");
+    for (var b = this.blockSyntax;a.length;) {
+      var c = a.shift(), b = b[c];
+      if (!b) {
+        return null;
+      }
+    }
+    return b ? b : null;
   };
   b.getParamIndex = function(a) {
     var b = {}, c = /(%.)/mi;
@@ -15997,7 +16007,6 @@ Entry.Parser = function(b, a, d, c) {
 };
 (function(b) {
   b.setParser = function(a, b, c) {
-    console.log("this._mode", this._mode, "this._type", this._type);
     if (this._mode !== a || this._type !== b) {
       switch(console.log("setParser this._type", this._type, "type", b), this._mode = a, this._type = b, this._cm = c, this.syntax = this.mappingSyntax(a), b) {
         case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -16169,7 +16178,17 @@ Entry.Parser = function(b, a, d, c) {
           d = d.replace("():", "");
           d = d.replace("()", "");
           a.keyOption && (d += "#" + a.keyOption);
-          c[d] = b;
+          d = d.split(".");
+          a = c;
+          for (e = 0;e < d.length;e++) {
+            var f = d[e];
+            if (e === d.length - 1) {
+              a[f] = b;
+              break;
+            }
+            a[f] || (a[f] = {});
+            a = a[f];
+          }
         })));
       }
     }
@@ -20734,6 +20753,7 @@ Entry.VariableContainer.prototype.addVariable = function(b) {
   b.generateView(this.variables_.length);
   this.createVariableView(b);
   this.variables_.unshift(b);
+  Entry.playground && Entry.playground.blockMenu && Entry.playground.blockMenu.deleteRendered("variable");
   Entry.playground.reloadPlayground();
   this.updateList();
   return new Entry.State(this, this.removeVariable, b);
@@ -20829,6 +20849,7 @@ Entry.VariableContainer.prototype.addMessage = function(b) {
   Entry.stateManager && Entry.stateManager.addCommand("add message", this, this.removeMessage, b);
   this.createMessageView(b);
   this.messages_.unshift(b);
+  Entry.playground && Entry.playground.blockMenu && Entry.playground.blockMenu.deleteRendered("start");
   Entry.playground.reloadPlayground();
   this.updateList();
   b.listElement.nameField.focus();
@@ -20913,6 +20934,7 @@ Entry.VariableContainer.prototype.addList = function(b) {
   b.generateView(this.lists_.length);
   this.createListView(b);
   this.lists_.unshift(b);
+  Entry.playground && Entry.playground.blockMenu && Entry.playground.blockMenu.deleteRendered("variable");
   Entry.playground.reloadPlayground();
   this.updateList();
   return new Entry.State(this, this.removelist, b);
@@ -22179,18 +22201,20 @@ Entry.BlockMenu = function(b, a, d, c) {
     this.svgGroup.appendChild(this.svgBlockGroup);
     this._scroller && this.svgGroup.appendChild(this._scroller.svgGroup);
   };
-  b.align = function() {
-    var a = this.code;
+  b.align = function(a) {
+    a = this.code;
     if (this._isOn() && a) {
       this._clearSplitters();
-      var b = b || this._getSortedBlocks(), c = 10, e = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, f, a = b[0];
+      var b = b || this._getSortedBlocks(), c = 10, e = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, f;
+      a = b[0];
       b[1].forEach(function(a) {
         a.view.set({display:!1});
       });
+      var g = !this._renderedCategories[this.lastSelector];
       a.forEach(function(a) {
         var b = a.view;
         b.set({display:!0});
-        this._renderedCategories[this.lastSelector] || b.reDraw();
+        g && b.reDraw();
         a = Entry.block[a.type].class;
         f && f !== a && (this._createSplitter(c), c += 15);
         f = a;
@@ -22619,6 +22643,9 @@ Entry.BlockMenu = function(b, a, d, c) {
   };
   b._isOn = function() {
     return "none" !== this.view.css("display");
+  };
+  b.deleteRendered = function(a) {
+    delete this._renderedCategories[a];
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(b) {

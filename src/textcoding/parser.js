@@ -106,7 +106,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
 (function(p) {
     p.setParser = function(mode, type, cm) {
-        console.log("this._mode", this._mode, "this._type", this._type);
         if (this._mode === mode && this._type === type)
             return;
         console.log("setParser this._type", this._type, "type", type);
@@ -613,7 +612,17 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             if(s.keyOption)
                                 tokens += "#" + s.keyOption;
 
-                            syntax[tokens] = result;
+                            tokens = tokens.split(".");
+                            var syntaxPointer = syntax
+                            for (var i = 0; i < tokens.length; i++) {
+                                var syntaxKey = tokens[i];
+                                if (i === tokens.length - 1) {
+                                    syntaxPointer[syntaxKey] = result;
+                                    break;
+                                }
+                                if (!syntaxPointer[syntaxKey]) syntaxPointer[syntaxKey] = {};
+                                syntaxPointer = syntaxPointer[syntaxKey];
+                            }
                         });
                     //}
                 }
