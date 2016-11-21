@@ -14,15 +14,16 @@ if (!Entry.block)
 if (!Entry.block.converters)
     Entry.block.converters = {};
 
-
 if (Entry && Entry.block) {
     Entry.block.converters = {};
 
     (function(c) {
-        c.keyboardInput = function(key, value) {
-            return '"()"'.replace('()',
-                Entry.KeyboardCode.keyCodeToChar[value]);
-        };
+        c.keyboardCode = function(key, value) {
+            var code;
+            if(key)
+                code = key.toUpperCase();
+            return '"()"'.replace('()', code);
+        }; 
 
         c.returnStringKey = function(key, value) {
             if ((!value && typeof value !== 'number') || value === 'null')
@@ -11067,7 +11068,7 @@ Entry.block = {
                     {
                         "type": "Keyboard",
                         "value": '81',
-                        converter: Entry.block.converters.keyboardInput
+                        converter: Entry.block.converters.keyboardCode
                     }
                 ]
             }
@@ -17813,7 +17814,7 @@ Entry.block = {
                     {
                         "type": "Keyboard",
                         "value": '81',
-                        converter: Entry.block.converters.keyboardInput
+                        converter: Entry.block.converters.keyboardCode
                     }
                 ]
             }

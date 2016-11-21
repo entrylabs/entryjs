@@ -473,8 +473,17 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     p.FieldKeyboard = function(dataParam, textParam) {
         //console.log("FieldKeyboardInput", dataParam);
+        var value;
+        var map = Entry.KeyboardCode.map;
+        for(var key in map) {
+            var value = map[key];
+            if(value == dataParam) {
+                dataParam = key;
+                break;
+            }
+        }
         if(textParam && textParam.converter)
-            dataParam = textParam.converter(null, dataParam);
+            dataParam = textParam.converter(dataParam, null);
 
         return dataParam;
     };

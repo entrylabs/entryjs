@@ -2221,8 +2221,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
-    p.Literal = function(component, paramMeta, paramDefMeta, aflag) {
-        console.log("Literal component", component, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta, "aflag", aflag);
+    p.Literal = function(component, paramMeta, paramDefMeta) {
+        console.log("Literal component", component, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta);
         var result;
         var value = component.value;
 
@@ -2253,28 +2253,23 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(component.raw == "None") {
             value = "None";
             var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
-            console.log("Literal params", params);
             result = params;
         }
         else if(component.raw == "0") {
             value = 0;
             var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
-            console.log("Literal params", params);
             result = params;
         }
-        else if(component.value == true || component.value == false)
+        else if(value == true || value == false)
         {
             var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
-            console.log("Literal params", params);
             result = params;
         }
-        else if(component.value) {
+        else if(value) {
             var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
-            console.log("Literal params", params);
             result = params;
         }
-        else if(component.left && component.operator && component.right){
-            // If 'Literal' doesn't have value
+        else if(component.left && component.operator && component.right){ // If 'Literal' doesn't have value
             var params = [];
             var leftParam = this[component.left.type](component.left);
             params.push(leftParam);
@@ -2424,18 +2419,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result = Entry.TextCodingUtil.dropdownDynmaicNameToIdConvertor(value, paramMeta.menuName);
 
 
-        console.log("ParamDropdownDynamic result", result);
+        console.log("ParamDropdownDynamic result", result); 
 
         return result;
     };
 
     p.ParamKeyboard = function(value, paramMeta, paramDefMeta) {
         console.log("ParamKeyboard value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
-        var result;
+        var result = Entry.KeyboardCode.map[value.toLowerCase()];
 
-        value = value.toLowerCase();
-        result = Entry.KeyboardCode.keyCharToCode[value];
-        console.log("ParamKeyboard result", result);
         return result;
     };
 
