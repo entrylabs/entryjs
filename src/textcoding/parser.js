@@ -57,14 +57,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
             if('BasicIf' in syntax) {
                 assistScope['front'] = 'BasicIf';
             }
-
-            /*cm.on("keyup", function (cm, event) {
-                if ((event.keyCode >= 65 && event.keyCode <= 95) ||
-                    event.keyCode == 167 || event.keyCode == 190) {
-                    CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
-                }
-            });*/
-
             break;
         case "py":
             this._execParser = new Entry.PyToBlockParser(this.syntax);
@@ -79,17 +71,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
             if('BasicIf' in syntax) {
                 assistScope['front'] = 'BasicIf';
             }
-
-            CodeMirror.commands.javascriptComplete = function (cm) {
-                CodeMirror.showHint(cm, null, {globalScope:assistScope});
-            }
-
-            /*cm.on("keyup", function (cm, event) {
-                if ((event.keyCode >= 65 && event.keyCode <= 95) ||
-                    event.keyCode == 167 || event.keyCode == 190) {
-                    CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
-                }
-            });*/
             break;
 
         case "blockJs":
@@ -162,20 +143,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 });
 
                 this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
-
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 this._execParser = new Entry.BlockToPyParser(this.syntax);
                 cm.setOption("mode", {name: "python", globalVars: true});
                 cm.markText({line: 0, ch: 0}, {line: 3}, {readOnly: true});
-                cm.on("keydown", function (cm, event) {
-                    var keyCode = event.keyCode;
-                    if ((keyCode >= 65 && keyCode <= 95) ||
-                        keyCode == 167 || (!event.shiftKey && keyCode == 190)) {
-                        CodeMirror.showHint(cm, null, {completeSingle: false});
-                    }
-                });
                 this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
 
                 break;
@@ -368,8 +341,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 result = "";
                 var textCode = this._execParser.Code(code, parseMode);
                 if (!this._pyHinter)
-                    this._pyHinter = new Entry.PyHint();  
-    
+                    this._pyHinter = new Entry.PyHint(this.syntax);
+
+
                 if(parseMode == Entry.Parser.PARSE_GENERAL) {
                     if(!this._execParser._variableDeclaration) {
                         var vd = Entry.TextCodingUtil.generateVariablesDeclaration();
