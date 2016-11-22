@@ -11,23 +11,17 @@ Entry.PyAstGenerator = function() {
 
 (function(p){
     p.generate = function(code) {
-        //var filbertParse = filbert.parse;
     	var filbertParse = filbert.parse;
-        var ranges = false;
-        var locations = false;
+        var locations = true;
+        var ranges = true;
         var options = { locations: locations, ranges: ranges };
-        var astTree;
         try {
-            astTree = filbertParse(code, options);
-            console.log("astTree", astTree);
+            var astTree = filbertParse(code, options);
             return astTree;
         }
         catch (error) {
-            error.message = "  파이썬 문법을 확인해주세요";
+            console.log("ast error", error);
             throw error;
-
-            //Entry.toast.alert('에러(Error)', error.message);
-            console.log("AST Error", error.toString());
         }
     }
 })(Entry.PyAstGenerator.prototype);

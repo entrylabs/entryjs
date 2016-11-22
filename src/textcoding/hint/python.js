@@ -120,6 +120,7 @@ Entry.PyHint = function() {
     var syntaxMap = {_global: []};
 
     var blocks = Entry.block;
+
     for (var key in blocks) {
         var block = blocks[key];
         var syntax = block.syntax;
@@ -128,7 +129,6 @@ Entry.PyHint = function() {
 
         syntax = syntax.py.join("");
         syntax = syntax.split('.');
-        //console.log("syntax", syntax, "include", syntax[0].indexOf("def"));
 
         if(syntax[0].indexOf("def ") > -1) {
             syntax = syntax[0].split(' ');
