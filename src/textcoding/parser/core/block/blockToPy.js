@@ -199,7 +199,11 @@ Entry.BlockToPyParser = function(blockSyntax) {
                             }
                         }*/
                     } else {                 
-                            param = this['Field' + schemaParams[index].type](dataParams[index], syntaxObj, index);
+                            if(syntaxObj.textParams)
+                                var textParams = syntaxObj.textParams
+                            else var textParams = []; 
+
+                            param = this['Field' + schemaParams[index].type](dataParams[index], textParams[index]);
                         /*else 
                             param = this['Field' + schemaParams[index].type](dataParams[index], syntaxObj, index);*/
 
@@ -325,31 +329,24 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return null;
     };
 
-    p.FieldAngle = function(dataParam, syntaxObj, index) {
-        console.log("FieldAngle", dataParam, syntaxObj, index);
-        if(syntaxObj.textParams)
-            var textParam = syntaxObj.textParams[index];
+    p.FieldAngle = function(dataParam, textParam) {
+        console.log("FieldAngle", dataParam, textParam);
         if(textParam && textParam.converter)
             dataParam = textParam.converter(dataParam);
 
         return dataParam;
     };
 
-    p.FieldColor = function(dataParam, syntaxObj, index) {
-        console.log("FieldColor", dataParam, syntaxObj, index);
-        if(syntaxObj.textParams)
-            var textParam = syntaxObj.textParams[index];
+    p.FieldColor = function(dataParam, textParam) {
+        console.log("FieldColor", dataParam, textParam);
         if(textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
         return dataParam;
     };
 
-    p.FieldDropdown = function(dataParam, syntaxObj, index) { 
-        console.log("FieldDropdown", dataParam, syntaxObj, index);
+    p.FieldDropdown = function(dataParam, textParam) { 
+        console.log("FieldDropdown", dataParam, textParam);
         var key, value;
-
-        if(syntaxObj.textParams)
-            var textParam = syntaxObj.textParams[index];
 
         if(textParam && textParam.converter && textParam.options) {
             for(var i in textParam.options) {
@@ -360,13 +357,21 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 if(dataParam === op1) {
                     key = op0;
                     value = op1;
-                    dataParam = textParam.converter(key, value);
-                    break;
+                    if(textParam.codeMap) {
+                        var codeMap = eval(textParam.codeMap);
+                        console.log("codeMap", codeMap);
+                        value = value.toLowerCase();
+                        
+                        console.log("value", value);
+                        value = codeMap[value].toUpperCase();
+                        dataParam = textParam.converter(key, value);
+                        break;
+                    }
                 }
             } 
         }
 
-        if(syntaxObj.codeMaps) {
+        /*if(syntaxObj.codeMaps) {
             var codeMap = syntaxObj.codeMaps[index];
             console.log("codeMap", codeMap);
             if(codeMap) {
@@ -375,15 +380,13 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 value = map[value][0];
             }
             dataParam = textParam.converter(key, value);
-        } 
+        }*/
         
         return dataParam; 
     };
 
-    p.FieldDropdownDynamic = function(dataParam, syntaxObj, index) {
-        console.log("FieldDropdownDynamic", dataParam, syntaxObj, index);
-        if(syntaxObj.textParams)
-            var textParam = syntaxObj.textParams[index];
+    p.FieldDropdownDynamic = function(dataParam, textParam) {
+        console.log("FieldDropdownDynamic", dataParam, textParam);
         if(textParam && textParam.converter && textParam.options) {
             for(var i in textParam.options) {
                 var option = textParam.options[i];
@@ -456,24 +459,22 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return dataParam;
     };*/
 
-    p.FieldImage = function(dataParam, syntaxObj, index) {
-        console.log("FieldImage", dataParam, syntaxObj, index);
-        if(syntaxObj.textParams)
-            var textParam = syntaxObj.textParams[index];
+    p.FieldImage = function(dataParam, textParam) {
+        console.log("FieldImage", dataParam, textParam);
         if(textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
 
         return dataParam;
     };
 
-    p.FieldIndicator = function(dataParam, syntaxObj, index) {
-        console.log("FieldIndicator", dataParam, syntaxObj, index);
+    p.FieldIndicator = function(dataParam, textParam) {
+        console.log("FieldIndicator", dataParam, textParam);
 
         return dataParam;
     };
 
-    p.FieldKeyboard = function(dataParam, syntaxObj, index) {
-        console.log("FieldKeyboardInput", dataParam, syntaxObj, index);
+    p.FieldKeyboard = function(dataParam, textParam) {
+        console.log("FieldKeyboardInput", dataParam, textParam);
         var map = Entry.KeyboardCode.map;
         for(var key in map) {
             var value = map[key];
@@ -483,44 +484,37 @@ Entry.BlockToPyParser = function(blockSyntax) {
             }
         }
 
-        if(syntaxObj.textParams)
-            var textParam = syntaxObj.textParams[index];
         if(textParam && textParam.converter)
             dataParam = textParam.converter(dataParam, null);
 
         return dataParam;
     };
 
-    p.FieldOutput = function(dataParam, syntaxObj, index) {
-        console.log("FieldOutput", dataParam, syntaxObj, index);
+    p.FieldOutput = function(dataParam, textParam) {
+        console.log("FieldOutput", dataParam, textParam);
 
         return dataParam;
     };
 
-    p.FieldText = function(dataParam, syntaxObj, index) {
-        console.log("FieldText", dataParam, syntaxObj, index);
-        if(syntaxObj.textParams)
-            var textParam = syntaxObj.textParams[index];
+    p.FieldText = function(dataParam, textParam) {
+        console.log("FieldText", dataParam, textParam);
         if(textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
         
         return dataParam;
     };
 
-    p.FieldTextInput = function(dataParam, syntaxObj, index) {
-        console.log("FieldTextInput", dataParam, syntaxObj, index);
-        if(syntaxObj.textParams)
-            var textParam = syntaxObj.textParams[index];
+    p.FieldTextInput = function(dataParam, textParam) {
+        console.log("FieldTextInput", dataParam, textParam);
         if(textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
         
         return dataParam;
     };
 
-    p.FieldNumber = function(dataParam, syntaxObj, index) {
-        console.log("FieldNumber", dataParam, syntaxObj, index);
-        if(syntaxObj.textParams)
-            var textParam = syntaxObj.textParams[index];
+    p.FieldNumber = function(dataParam, textParam) {
+        console.log("FieldNumber", dataParam, textParam);
+        
         if(textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
 

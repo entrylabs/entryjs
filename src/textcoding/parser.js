@@ -491,17 +491,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         tokens = tokens.split(".");
                         
-                        var propertyToken = '';
                         var newTokens = [];
-                        newTokens.push(tokens[0]);
-                        for(var t in tokens) {
-                            if(t != 0) {
-                                if(tokens[t] != '')
-                                    propertyToken += tokens[t];
-                            }
-                        }
-                        if(propertyToken != '')
-                            newTokens.push(propertyToken);
+                        newTokens.push(tokens.shift()); 
+                        var restToken = tokens.join('.'); 
+                        if(restToken != '')
+                            newTokens.push(restToken); 
                         tokens = newTokens;
 
                         var syntaxPointer = syntax;

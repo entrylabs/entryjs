@@ -630,6 +630,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var pi = 0;
             pi += addedParamIndex;
 
+            if(blockSyntax.textParams)
+                var textParams = blockSyntax.textParams;
+
             for(var i in arguments) {
                 var isParamOption = false;
                 var argument = arguments[i];
@@ -639,11 +642,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("CallExpression argument", argument, "typeof", typeof argument);
 
                     argument.calleeName = calleeName;
-                    if(blockSyntax.codeMaps)
-                        var codeMap = blockSyntax.codeMaps[pi];
+                    if(!textParams)
+                        var textParams = [];
 
                     var param = this[argument.type]
-                        (argument, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], codeMap);
+                        (argument, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], textParams[pi]);
 
                     
                     console.log("callexpression callee", callee, "param", param);
@@ -670,7 +673,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(isParamOption) continue;
                     var pIndex = paramIndex[pi++];
-                    if(!pIndex) continue;
+                    if(pIndex === undefined) continue;
 
                     params[pIndex] = param;
 
@@ -981,7 +984,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("params checkit", params);
 
             //HW Param Processing
-            if(blockSyntax.paramCodes) {
+            /*if(blockSyntax.paramCodes) {
                 var paramCodes = blockSyntax.paramCodes;
                 for(var pcs in paramCodes) {
                     var paramCode = paramCodes[pcs];
@@ -1028,7 +1031,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                     }
                 }
-            }
+            }*/
 
             if(blockSyntax.params && blockSyntax.params.length != 0) {
                 for(var p in blockSyntax.params) {
@@ -2336,8 +2339,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
-    p.Literal = function(component, paramMeta, paramDefMeta, codeMap) {
-        console.log("Literal component", component, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta, "codeMap", codeMap);
+    p.Literal = function(component, paramMeta, paramDefMeta, textParam) {
+        console.log("Literal component", component, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta, "textParam", textParam);
         var result;
         var value = component.value;
 
@@ -2377,7 +2380,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
         else */if(value == true || value == false || value)
         {
-            var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta, codeMap);
+            var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta, textParam);
             result = params;
         }
         /*else if(value) {
@@ -2484,8 +2487,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
-    p.ParamDropdown = function(value, paramMeta, paramDefMeta, codeMap) {
-        console.log("ParamDropdown value, paramMeta, paramDefMeta blockSyntax", value, paramMeta, paramDefMeta, codeMap);
+    p.ParamDropdown = function(value, paramMeta, paramDefMeta, textParam) {
+        console.log("ParamDropdown value, paramMeta, paramDefMeta textParam", value, paramMeta, paramDefMeta, textParam);
         var result;
 
         var options = paramMeta.options;
@@ -2501,19 +2504,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(!result)
             result = value;
 
-        if(codeMap) {
+        if(textParam && textParam.codeMap) {
+            var codeMap = textParam.codeMap;
             console.log("codeMap", codeMap);
             var map = eval(codeMap);
             console.log("codeMap", map);
-            for(var mkey in map) {
-                var items = map[mkey];
-                for(var ikey in items) {
-                    var item = items[ikey];
-                    if(value == item) {
-                        result = ikey;
-                    }
-                }
-            }
+            result = result.toLowerCase();
+            result = map[result];
         }
 
         console.log("ParamDropdown result", result);
@@ -4703,6 +4700,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (!syntax)
             return null;
         syntax = syntax.split(".");
+
+        var syntaxTokens = [];
+        syntaxTokens.push(syntax.shift()); 
+        var restSyntax = syntax.join('.');
+        if(restSyntax != '')
+            syntaxTokens.push(restSyntax);
+        syntax = syntaxTokens;
+
         var blockSyntax = this.blockSyntax;
         while (syntax.length) {
             var key = syntax.shift();

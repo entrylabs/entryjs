@@ -2460,11 +2460,11 @@ Entry.block = {
                             [ "A5", "5" ]
                         ],
                         "value": "0",
-                        "fontSize": 11
-                        ,converter: Entry.block.converters.returnStringValue
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringKey,
+                        //codeMap: "Entry.CodeMap.Arduino.analogRead[0]"
                     }
-                ],
-                codeMaps: ["Entry.CodeMap.Arduino.analogRead[0]"]
+                ]
             }
         ]}
     },
@@ -2579,7 +2579,8 @@ Entry.block = {
                         ],
                         "value": "0",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringKey,
+                        //codeMap: "Entry.CodeMap.Arduino.map[0]"
                     },
                     {
                         "type": "Block",
@@ -2597,8 +2598,7 @@ Entry.block = {
                         "type": "Block",
                         "accept": "string"
                     }
-                ],
-                codeMaps: ["Entry.CodeMap.Arduino.map[0]",null,null,null,null]
+                ]
             }
         ]}
     },
@@ -2704,7 +2704,7 @@ Entry.block = {
                         ],
                         "value": "0",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringOrNumberByValue
                     },
                     {
                         "type": "Dropdown",
@@ -2726,7 +2726,7 @@ Entry.block = {
                         ],
                         "value": "0",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringOrNumberByValue
                     }
                 ]
             }
@@ -2854,10 +2854,10 @@ Entry.block = {
                         ],
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Arduino.digitalWrite[1]"
                     },
-                ],
-                codeMaps: [null,"Entry.CodeMap.Arduino.digitalWrite[1]"]
+                ]
             }
         ]}
 
@@ -12134,7 +12134,8 @@ Entry.block = {
                         ],
                         "value": "4",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Hamster.note[0]"
                     },
                     {
                         "type": "Dropdown",
@@ -12155,11 +12156,6 @@ Entry.block = {
                         "type": "Block",
                         "accept": "string"
                     }
-                ],
-                codeMaps:[
-                    "Entry.CodeMap.Hamster.note[0]",
-                    null,
-                    null
                 ]
             },
         ]}

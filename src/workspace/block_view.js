@@ -230,7 +230,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 var paramIndex = Number(param.split('%')[1]) - 1;
                 param = params[paramIndex];
                 var field = new Entry['Field' + param.type](param, this, paramIndex, mode || this.renderMode, i);
-
                 this._contents.push(field);
                 this._paramMap[paramIndex] = field;
             } else this._contents.push(new Entry.FieldText({text: param}, this));
