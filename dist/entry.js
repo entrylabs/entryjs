@@ -12561,14 +12561,6 @@ Entry.TextCodingUtil = {};
     console.log("isEntryEventFuncName result is NOT");
     return !1;
   };
-  b.isEntryEventFuncNameWithoutParam = function(a) {
-    console.log("isEntryEventFuncName name", a);
-    if ("entry_event_start" == a || "entry_event_mouse_down" == a || "entry_event_mouse_up" == a || "entry_event_object_down" == a || "entry_event_object_up" == a || "entry_event_scene_start" == a || "entry_event_clone_create" == a) {
-      return !0;
-    }
-    console.log("isEntryEventFuncName result is NOT");
-    return !1;
-  };
   b.isEntryEventFuncNameWithParam = function(a) {
     console.log("isEntryEventFuncNameWithParam name", a);
     var b = a.lastIndexOf("_");
@@ -13923,7 +13915,7 @@ Entry.PyToBlockParser = function(b) {
     a = a.expression;
     this._blockCount++;
     console.log("BlockCount ExpressionStatement this._blockCount++", this._blockCount);
-    a.callee && Entry.TextCodingUtil.isEntryEventFuncNameWithoutParam(a.callee.name) && (this._blockCount--, console.log("BlockCount ExpressionStatement --", "callee.name", a.callee.name, this._blockCount));
+    a.callee && Entry.TextCodingUtil.isEntryEventFuncName(a.callee.name) && (this._blockCount--, console.log("BlockCount ExpressionStatement --", "callee.name", a.callee.name, this._blockCount));
     a.type && (a = this[a.type](a), console.log("ExpressionStatement expressionData", a), a.type && a.params ? (b.type = a.type, b.params = a.params, result = b) : a.type ? (b.type = a.type, result = b) : result = a);
     if (!result.type && result.name) {
       throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + result.name + "'\uc744 \uc0ad\uc81c\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
@@ -14449,7 +14441,11 @@ Entry.PyToBlockParser = function(b) {
   b.VariableDeclarator = function(a) {
     console.log("VariableDeclarator component", a);
     var b = {}, c, e = [];
-    a.id.name && !a.id.name.includes("__filbert") && (this._blockCount++, console.log("BlockCount VariableDeclarator", this._blockCount));
+    this._blockCount++;
+    console.log("BlockCount VariableDeclarator ++", this._blockCount);
+    if (a.id.name && -1 != a.id.name.search("__") || a.init && a.init.callee && a.init.callee.name && -1 != a.init.callee.name.search("__")) {
+      this._blockCount--, console.log("BlockCount VariableDeclarator --", this._blockCount);
+    }
     var e = a.id, f = a.init;
     if ("__params0" != e.name && "__formalsIndex0" != e.name && "__args0" != e.name) {
       if (f.callee && "__getParam0" == f.callee.name) {

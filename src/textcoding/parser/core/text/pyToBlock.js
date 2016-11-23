@@ -123,7 +123,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("BlockCount ExpressionStatement this._blockCount++", this._blockCount);
 
         if(expression.callee) {
-            if(Entry.TextCodingUtil.isEntryEventFuncNameWithoutParam(expression.callee.name)) {
+            if(Entry.TextCodingUtil.isEntryEventFuncName(expression.callee.name)) {
                 this._blockCount--;
                 console.log("BlockCount ExpressionStatement --", "callee.name", expression.callee.name, this._blockCount);
             }
@@ -1280,10 +1280,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var structure = {};
         var params = [];
 
-        if(component.id.name && !component.id.name.includes("__filbert")) {
-            this._blockCount++;
-            console.log("BlockCount VariableDeclarator", this._blockCount);
-        }
+        this._blockCount++; 
+        console.log("BlockCount VariableDeclarator ++", this._blockCount);
+        if((component.id.name && component.id.name.search("__") != -1) ||
+            (component.init && component.init.callee && component.init.callee.name &&
+             component.init.callee.name.search("__") != -1)) {
+            this._blockCount--; 
+            console.log("BlockCount VariableDeclarator --", this._blockCount);
+        } 
 
         var id = component.id;
         var init = component.init;

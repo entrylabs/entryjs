@@ -976,23 +976,6 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
-    tu.isEntryEventFuncNameWithoutParam = function(name) {
-        console.log("isEntryEventFuncName name", name); 
-        if( name == "entry_event_start" ||
-            name == "entry_event_mouse_down" ||
-            name == "entry_event_mouse_up" ||
-            name == "entry_event_object_down" ||
-            name == "entry_event_object_up" ||
-            name == "entry_event_scene_start" ||
-            name == "entry_event_clone_create") {
-
-            return true;
-        }
-        
-        console.log("isEntryEventFuncName result is NOT");
-        return false;
-    };
-
     tu.isEntryEventFuncNameWithParam = function(name) {
         console.log("isEntryEventFuncNameWithParam name", name);
         var lastIndex = name.lastIndexOf("_");
