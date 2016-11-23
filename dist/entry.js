@@ -12798,6 +12798,9 @@ Entry.TextCodingUtil = {};
   b.isVariableDeclarationBlock = function(a) {
     return "set_variable" == a ? !0 : !1;
   };
+  b.isHWParamBlock = function(a) {
+    return "hamster_hand_found" == a || "hamster_value" == a || "arduino_get_number_sensor_value" == a || "arduino_get_digital_value" == a || "arduino_convert_scale" == a || "arduino_ext_get_analog_value" == a || "arduino_ext_get_analog_value_map" == a || "arduino_ext_get_ultrasonic_value" == a || "arduino_ext_get_digital" == a ? !0 : !1;
+  };
   b.isMaterialBlock = function(a) {
     return "get_canvas_input_value" == a || "get_variable" == a || "value_of_index_from_list" == a || "length_of_list" == a || "is_included_in_list" == a ? !0 : !1;
   };
@@ -13896,7 +13899,7 @@ Entry.PyToBlockParser = function(b) {
           console.log("Program node", e);
           var f = this[e.type](e);
           console.log("result block", f);
-          if (f && f.type && (console.log("block.type", f.type), !Entry.TextCodingUtil.isJudgementBlock(f.type) && !Entry.TextCodingUtil.isCalculationBlock(f.type) && !Entry.TextCodingUtil.isMaterialBlock(f.type))) {
+          if (f && f.type && (console.log("block.type", f.type), !(Entry.TextCodingUtil.isJudgementBlock(f.type) || Entry.TextCodingUtil.isCalculationBlock(f.type) || Entry.TextCodingUtil.isMaterialBlock(f.type) || Entry.TextCodingUtil.isHWParamBlock(f.type)))) {
             Entry.TextCodingUtil.isEventBlockByType(f.type) && (isEntryEventExisted = !0, console.log("isEntryEventExisted", isEntryEventExisted));
             if (Entry.TextCodingUtil.isVariableDeclarationBlock(f.type) && (console.log("isVariableDeclarationBlock block.type", f.type), !isEntryEventExisted)) {
               continue;

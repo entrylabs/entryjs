@@ -72,6 +72,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         else if(Entry.TextCodingUtil.isMaterialBlock(block.type)) {
                             continue;
                         }
+                        else if(Entry.TextCodingUtil.isHWParamBlock(block.type)) {
+                            continue;
+                        }
 
                         if(Entry.TextCodingUtil.isEventBlockByType(block.type)) {
                             isEntryEventExisted = true;
