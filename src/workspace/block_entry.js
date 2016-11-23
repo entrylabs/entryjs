@@ -59,7 +59,16 @@ if (Entry && Entry.block) {
                 "PLUS": '+',
                 "MINUS": '-',
                 "MULTI": '*',
-                "DIVIDE": '/'
+                "DIVIDE": '/',
+                '==':"EQUAL",
+                '>':"GREATER",
+                '<':"LESS",
+                '>=':"GREATER_OR_EQUAL",
+                '<=':"LESS_OR_EQUAL",
+                '+':"PLUS",
+                '-':"MINUS",
+                '*':"MULTI",
+                '/':"DIVIDE"
             };
             return map[value];
         };
@@ -2050,7 +2059,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "%1",
+                syntax: "%1", 
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -2065,7 +2074,7 @@ Entry.block = {
                         "value": "3",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringOrNumberByValue
                     }
                 ],
                 keyOption: "arduino_get_pwm_port_number"
@@ -2973,6 +2982,29 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1", 
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.silent, "0"],
+                            [Lang.Blocks.do_name, "C"],
+                            [Lang.Blocks.do_sharp_name, "CS"],
+                            [Lang.Blocks.re_name, "D"],
+                            [Lang.Blocks.re_sharp_name, "DS"],
+                            [Lang.Blocks.mi_name, "E"],
+                            [Lang.Blocks.fa_name, "F"],
+                            [Lang.Blocks.fa_sharp_name, "FS"],
+                            [Lang.Blocks.sol_name, "G"],
+                            [Lang.Blocks.sol_sharp_name, "GS"],
+                            [Lang.Blocks.la_name, "A"],
+                            [Lang.Blocks.la_sharp_name, "AS"],
+                            [Lang.Blocks.si_name, "B"]
+                        ],
+                        "value": "C",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
                 keyOption: "arduino_ext_tone_list"
             }
         ]}
@@ -3154,7 +3186,7 @@ Entry.block = {
                         ],
                         "value": "3",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringOrNumberByValue
                     }, {
                         "type": "Block",
                         "accept": "string"
@@ -7569,41 +7601,185 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.math_operation(%2, %4)",
-                textParams: [
-                    undefined,
+                syntax: "(%2**2)", 
+                params: [null, null, null, "square"],
+                textParams: [undefined, 
                     {
                         "type": "Block",
                         "accept": "string"
                     },
                     undefined,
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.CALC_calc_operation_square,"square"],
-                            [Lang.Blocks.CALC_calc_operation_root, "root"],
-                            [Lang.Blocks.CALC_calc_operation_sin, "sin"],
-                            [Lang.Blocks.CALC_calc_operation_cos,"cos"],
-                            [Lang.Blocks.CALC_calc_operation_tan,"tan"],
-                            [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"],
-                            [Lang.Blocks.CALC_calc_operation_acos,"acos_radian"],
-                            [Lang.Blocks.CALC_calc_operation_atan,"atan_radian"],
-                            [Lang.Blocks.CALC_calc_operation_log,"log"],
-                            [Lang.Blocks.CALC_calc_operation_ln,"ln"],
-                            [Lang.Blocks.CALC_calc_operation_unnatural,"unnatural"],
-                            [Lang.Blocks.CALC_calc_operation_floor,"floor"],
-                            [Lang.Blocks.CALC_calc_operation_ceil,"ceil"],
-                            [Lang.Blocks.CALC_calc_operation_round,"round"],
-                            [Lang.Blocks.CALC_calc_operation_factorial,"factorial"],
-                            [Lang.Blocks.CALC_calc_operation_abs,"abs"]
-                        ],
-                        "value": "square",
-                        "fontSize": 11,
-                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnStringValue
-                    }
+                    null
                 ]
-            }
+            },
+            {
+                syntax: "math.sqrt(%2)", 
+                params: [null, null, null, "root"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.sin(%2)", 
+                params: [null, null, null, "sin"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.cos(%2)", 
+                params: [null, null, null, "cos"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.tan(%2)", 
+                params: [null, null, null, "tan"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.asin(%2)", 
+                params: [null, null, null, "asin_radian"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.acos(%2)", 
+                params: [null, null, null, "acos_radian"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.atan(%2)", 
+                params: [null, null, null, "atan_radian"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.log10(%2)", 
+                params: [null, null, null, "log"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.log(%2)", 
+                params: [null, null, null, "ln"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.floor(%2)", 
+                params: [null, null, null, "floor"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.ceil(%2)", 
+                params: [null, null, null, "ceil"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.round(%2)", 
+                params: [null, null, null, "round"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.factorial(%2)", 
+                params: [null, null, null, "factorial"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "math.fabs(%2)", 
+                params: [null, null, null, "abs"],
+                textParams: [undefined, 
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
         ]}
     },
     "calc_rand": {
@@ -8575,7 +8751,36 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.value_div(%2, %4, %6)",
+                syntax: "(%2 // %4)",
+                params: [null,null,null,null,null,"QUOTIENT"],
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                              [Lang.Blocks.CALC_quotient_and_mod_sub_1,"QUOTIENT"],
+                              [Lang.Blocks.CALC_quotient_and_mod_sub_2,"MOD"]
+                        ],
+                        "value": "QUOTIENT",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ]
+            },
+            {
+                syntax: "(%2 % %4)",
+                params: [null,null,null,null,null,"MOD"],
                 textParams: [
                     undefined,
                     {
@@ -11356,7 +11561,7 @@ Entry.block = {
                         ],
                         "value": "1",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringOrNumberByValue
                     }
                 ]
             }
@@ -12150,7 +12355,7 @@ Entry.block = {
                         ],
                         "value": "1",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringOrNumberByValue
                     },
                     {
                         "type": "Block",
