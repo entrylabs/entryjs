@@ -3740,7 +3740,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 result = structure;
 
-                return result;
+                return result; 
             }
 
             operator = String(component.operator);

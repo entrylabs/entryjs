@@ -7847,7 +7847,14 @@ Entry.block = {
             else
                 return  Math.floor((Math.random() * (right - left +1) + left));
         },
-        "syntax": {"js": [], "py": ["random.randint(%2, %4)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "random.randint(%2, %4)"
+            },
+            {
+                syntax: "random.uniform(%2, %4)"
+            }
+        ]}
     },
     "get_date": {
         "color": "#FFD974",
@@ -13827,7 +13834,8 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.print_for_sec(%1, %2, %3)",
+                syntax: "Entry.print_for_sec(%1, %2)",
+                params: [null,null,"speak"],  
                 textParams: [
                     {
                         "type": "Block",
@@ -13903,7 +13911,12 @@ Entry.block = {
             sprite.syncDialogVisible(sprite.getVisible());
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.print(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.print(%1)",
+                params: [null,"speak"]
+            }
+        ]}
     },
     "remove_dialog": {
         "color": "#EC4466",
@@ -15067,7 +15080,7 @@ Entry.block = {
                 }
             }
         },
-        "syntax": {"js": [], "py": ["Entry.set_xy_for_sec(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["Entry.set_xy_for_sec(%2, %3, %1)"]}
     },
     "rotate_by_angle": {
         "color": "#A751E3",
@@ -15500,7 +15513,7 @@ Entry.block = {
                 }
             };
         },
-        "syntax": {"js": [], "py": ["Entry.add_xy_for_sec(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["Entry.add_xy_for_sec(%2, %3, %1)"]}
     },
     "rotate_by_angle_time": {
         "color": "#A751E3",
@@ -16032,7 +16045,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.move_to_for_sec(%1, %2)",
+                syntax: "Entry.move_to_for_sec(%2, %1)",
                 textParams: [
                     {
                         "type": "Block",
@@ -16237,7 +16250,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.move_to_degree(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.move_to_degree(%2, %1)"]}
     },
     "rotate_by_time": {
         "color": "#A751E3",
@@ -16303,7 +16316,7 @@ Entry.block = {
                 script.frameCount--;
             }
         },
-        "syntax": {"js": [], "py": ["Entry.add_rotation_for_sec(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.add_rotation_for_sec(%2, %1)"]}
     },
     "direction_relative_duration": {
         "color": "#A751E3",
@@ -16368,7 +16381,7 @@ Entry.block = {
                 script.frameCount--;
             }
         },
-        "syntax": {"js": [], "py": ["Entry.add_direction_for_sec(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.add_direction_for_sec(%2, %1)"]}
 
     },
     "neobot_sensor_value": {

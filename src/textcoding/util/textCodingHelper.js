@@ -24,34 +24,19 @@ Entry.TextCodingHelper = function() {
             lineNumbers: false,
             lineWrapping: true,
             value: "",
-            mode: {},
+            mode: {name: "python"},
             theme: "default",
             styleActiveLine: false,
-            //gutters: ["CodeMirror-lint-markers"],
             lint: false
         });
-        this._doc = this.codeMirror.getDoc(); 
-        this.codeMirror.setValue("Hi! TextCoding...");
-
-        /*this.codeMirror.on('beforeChange', function(cm, change) {
-            if (!this._isEditing)
-                change.cancel();
-            else if (change.origin === "+delete" && change.to.ch === 0) {
-                change.cancel();
-            }
-        }.bind(this));*/
-
-        this.codeMirror.on("keyup", function (cm, event) {
-            if (this._isEditing && event.keyCode === 13) {
-                this.endInput();
-            }
-        }.bind(this));
 
         this.codeMirror.on("cursorActivity", function(cm, event) {
             cm.execCommand("goDocEnd");                                     
         });
 
         this.parentView_.appendChild(this.view);
+
+        this._ExamplePanel = this.codeMirror;
 
         console.log("added text Helper");
     };

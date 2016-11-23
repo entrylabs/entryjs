@@ -262,10 +262,11 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         var codeMap = eval(textParam.codeMap);
                         console.log("codeMap", codeMap);
                         value = value.toLowerCase();
+                        console.log("value123", value);
                         var cmValue = codeMap[value].toUpperCase();
+                        console.log("cmValue", cmValue);
                         if(cmValue)
-                            value = codeMap[value].toUpperCase();
-                        break;
+                            value = cmValue;
                     }
                     dataParam = textParam.converter(key, value);
                 }

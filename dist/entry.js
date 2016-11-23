@@ -12093,16 +12093,12 @@ Entry.TextCodingHelper = function() {
   b.createView = function() {
     this.parentView_ = Entry.propertyPanel.modes.helper.obj.blockHelperContent_;
     this.view = Entry.createElement("div", "textCodingExampleView");
-    this.codeMirror = CodeMirror(this.view, {lineNumbers:!1, lineWrapping:!0, value:"", mode:{}, theme:"default", styleActiveLine:!1, lint:!1});
-    this._doc = this.codeMirror.getDoc();
-    this.codeMirror.setValue("Hi! TextCoding...");
-    this.codeMirror.on("keyup", function(a, b) {
-      this._isEditing && 13 === b.keyCode && this.endInput();
-    }.bind(this));
+    this.codeMirror = CodeMirror(this.view, {lineNumbers:!1, lineWrapping:!0, value:"", mode:{name:"python"}, theme:"default", styleActiveLine:!1, lint:!1});
     this.codeMirror.on("cursorActivity", function(a, b) {
       a.execCommand("goDocEnd");
     });
     this.parentView_.appendChild(this.view);
+    this._ExamplePanel = this.codeMirror;
     console.log("added text Helper");
   };
   b.getView = function() {
@@ -13282,11 +13278,13 @@ Entry.BlockToPyParser = function(b) {
       for (var f in b.options) {
         if (e = b.options[f], console.log("option", e), c = e[0], e = e[1], a === e) {
           if (b.codeMap) {
-            f = eval(b.codeMap);
-            console.log("codeMap", f);
+            var g = eval(b.codeMap);
+            console.log("codeMap", g);
             e = e.toLowerCase();
-            f[e].toUpperCase() && f[e].toUpperCase();
-            break;
+            console.log("value123", e);
+            g = g[e].toUpperCase();
+            console.log("cmValue", g);
+            g && (e = g);
           }
           a = b.converter(c, e);
         }
