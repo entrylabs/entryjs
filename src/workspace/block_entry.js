@@ -2419,11 +2419,11 @@ Entry.block = {
             }
         ]}
     },
-    "arduino_ext_get_analog_value": {
+    "arduino_ext_analog_list": {
         "color": "#00979D",
-        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
+        "template": "%1",
         "params": [
             {
                 "type": "Dropdown",
@@ -2441,7 +2441,34 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ null ],
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("PORT");
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "arduino_ext_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_ext_analog_list"
+                }
+            ],
             "type": "arduino_ext_get_analog_value"
         },
         "paramsKeyMap": {
@@ -2484,17 +2511,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Dropdown",
-                "options": [
-                    [ "A0", "0" ],
-                    [ "A1", "1" ],
-                    [ "A2", "2" ],
-                    [ "A3", "3" ],
-                    [ "A4", "4" ],
-                    [ "A5", "5" ]
-                ],
-                "value": "0",
-                "fontSize": 11
+                "type": "Block",
+                "accept": "string"
             },
             {
                 "type": "Block",
@@ -2516,7 +2534,14 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                null,
+                {
+                    "type": "arduino_ext_get_analog_value",
+                    "params": [
+                        {
+                            "type": "arduino_ext_analog_list"
+                        }
+                    ]
+                },
                 {
                     "type": "number",
                     "params": [ "0" ]
