@@ -124,6 +124,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var statementReg = /(\$.)/mi;
         var blockTokens = syntax.split(blockReg);
         var schemaParams = block._schema.params;
+        console.log("first schema", schemaParams);
         var dataParams = block.data.params;
         var currentBlock = block;
         var currentBlockSkeleton = currentBlock._schema.skeleton;
@@ -142,12 +143,17 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         index++;
                     } else if(schemaParams[index].type == "Block") {
                         var param = this.Block(dataParams[index]).trim();
+                        if((syntaxObj.key == "char_at" || syntaxObj.key == "value_of_index_from_list") && index == 3)
+                            param = String(parseInt(param) - 1); 
+                        else if(syntaxObj.key == "substring" && (index == 3 || index == 5)) 
+                            param = String(parseInt(param) - 1); 
+                        
                         var funcParam = this._funcMap.get(param);
                         if(funcParam) {
                             result += funcParam;
                             continue;
                         } else {
-                            var funcParamTokens = param.split('_');
+                            var funcParamTokens = param.split('_'); 
                             var prefix = funcParamTokens[0];
                             if(funcParamTokens.length == 2) {
                                 if(prefix == "stringParam"){
@@ -165,6 +171,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         else var textParams = []; 
 
                         param = this['Field' + schemaParams[index].type](dataParams[index], textParams[index]);
+
 
                         if(Entry.TextCodingUtil.isLocalType(currentBlock, dataParams[index]))
                             param = "self".concat('.').concat(param);
@@ -235,7 +242,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         if(textParam && textParam.converter)
             dataParam = textParam.converter(dataParam);
 
-        return dataParam;
+        return dataParam; 
     };
 
     p.FieldColor = function(dataParam, textParam) {

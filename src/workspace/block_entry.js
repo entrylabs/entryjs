@@ -4680,7 +4680,7 @@ Entry.block = {
             "type": "CODEino_get_number_sensor_value"
         },
         "class": "arduino_value",
-        "syntax": {"js": [], "py": ["hw.CODEino_get_number_sensor_value(%1)"]}
+        "syntax": {"js": [], "py": ["CODEino.get_number_sensor_value(%1)"]}
     },
     "CODEino_toggle_led": {
         "parent": "arduino_toggle_led",
@@ -4698,7 +4698,7 @@ Entry.block = {
             "type": "CODEino_toggle_led"
         },
         "class": "arduino_set",
-        "syntax": {"js": [], "py": ["hw.CODEino_toggle_led(%1)"]}
+        "syntax": {"js": [], "py": ["CODEino.toggle_led(%1)"]}
     },
     "CODEino_toggle_pwm": {
         "parent": "arduino_toggle_pwm",
@@ -4719,7 +4719,7 @@ Entry.block = {
             "type": "CODEino_toggle_pwm"
         },
         "class": "arduino_set",
-        "syntax": {"js": [], "py": ["hw.CODEino_toggle_pwm(%1, %2)"]}
+        "syntax": {"js": [], "py": ["CODEino.toggle_pwm(%1, %2)"]}
     },
     "nemoino_get_named_sensor_value": {
         "color": "#00979D",
@@ -8241,7 +8241,37 @@ Entry.block = {
             else
                 return str[index];
         },
-        "syntax": {"js": [], "py": ["Entry.string_index_of(%2, %4)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%2\[%4\]",
+                textParams: [
+                    {
+                        "type": "Text",
+                        "text": Lang.Blocks.CALC_char_at_1,
+                        "color": "#3D3D3D"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Text",
+                        "text": Lang.Blocks.CALC_char_at_2,
+                        "color": "#3D3D3D"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Text",
+                        "text": Lang.Blocks.CALC_char_at_3,
+                        "color": "#3D3D3D"
+                    }   
+                ],
+                keyOption: "char_at"
+            }
+        ]}
     },
     "length_of_string": {
         "color": "#FFD974",
@@ -8284,7 +8314,12 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringValue("STRING", script).length;
         },
-        "syntax": {"js": [], "py": ["Entry.string_length(%2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "len(%2)",
+                keyOption: "length_of_string"
+            }
+        ]}
     },
     "substring": {
         "color": "#FFD974",
@@ -8364,7 +8399,11 @@ Entry.block = {
             else
                 return str.substring(Math.min(start, end), Math.max(start, end)+1);
         },
-        "syntax": {"js": [], "py": ["Entry.string_substring(%2, %4, %6)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%2\[%4:%6\]"
+            }
+        ]}
     },
     "replace_string": {
         "color": "#FFD974",
@@ -8441,7 +8480,7 @@ Entry.block = {
                     script.getStringValue("NEW_WORD", script)
                 );
         },
-        "syntax": {"js": [], "py": ["Entry.string_replace(%2, %4, %6)"]}
+        "syntax": {"js": [], "py": ["%2.replace(%4, %6)"]}
     },
     "change_string_case": {
         "color": "#FFD974",
@@ -8504,7 +8543,31 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.string_case(%2, %4)",
+                syntax: "%2.upper()",
+                params: [null,null,null,"toUpperCase",null],
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.CALC_change_string_case_sub_1,"toUpperCase"],
+                            [Lang.Blocks.CALC_change_string_case_sub_2,"toLowerCase"]
+                        ],
+                        "value": "toUpperCase",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ]
+            },
+            {
+                syntax: "%2.lower()",
+                params: [null,null,null,"toLowerCase",null],
                 textParams: [
                     undefined,
                     {
@@ -8586,7 +8649,7 @@ Entry.block = {
             var index = str.indexOf(target);
             return index > -1 ? index + 1 : 0;
         },
-        "syntax": {"js": [], "py": ["Entry.string_start_index(%2, %4)"]}
+        "syntax": {"js": [], "py": ["%2.find(%4)"]}
     },
     "combine_something": {
         "color": "#FFD974",
@@ -8647,7 +8710,7 @@ Entry.block = {
 
             return leftValue + rightValue;
         },
-        "syntax": {"js": [], "py": ["%2 + %4"]}
+        "syntax": {"js": [], "py": ["(%2 + %4)"]}
     },
     "get_sound_volume": {
         "color": "#FFD974",
@@ -10291,7 +10354,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Hamster.move_forward_on_board()"
+                syntax: "Hamster.move_forward()"
             }
         ]}
     },
@@ -10458,7 +10521,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Hamster.turn_left_on_board()",  
+                syntax: "Hamster.board_left()",  
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -10474,7 +10537,7 @@ Entry.block = {
                 params: ["LEFT"]
             },
             {
-                syntax: "Hamster.turn_right_on_board()", 
+                syntax: "Hamster.board_right()", 
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -10976,7 +11039,7 @@ Entry.block = {
                 params: ["RIGHT"]
             },
             {
-                syntax: "Hamster.wheels_by(%2, %2)", 
+                syntax: "Hamster.wheels_by(%2)", 
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -11101,7 +11164,7 @@ Entry.block = {
                 params: ["RIGHT"]
             },
             {
-                syntax: "Hamster.wheels(%2, %2)",
+                syntax: "Hamster.wheels(%2)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -11732,7 +11795,7 @@ Entry.block = {
                 params: ["RIGHT", "4"]
             },
             {
-                syntax: "Hamster.leds(Hamster.LED_RED,Hamster.LED_RED)", 
+                syntax: "Hamster.leds(Hamster.LED_RED)", 
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -19635,7 +19698,11 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "start",
-        "syntax": {"js": [], "py": ["def when_start():"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "def when_start():" 
+            }
+        ]}
     },
     "press_some_key": {
         "color": "#3BBD70",
@@ -26362,7 +26429,7 @@ Entry.block = {
             "type": "sensorBoard_get_number_sensor_value"
         },
         "class": "arduino_value",
-        "syntax": {"js": [], "py": ["hw.sensorBoard_get_number_sensor_value(%1)"]}
+        "syntax": {"js": [], "py": ["SensorBoard.get_number_sensor_value(%1)"]}
     },
     "sensorBoard_get_digital_value": {
         "parent": "arduino_get_digital_value",
@@ -26378,7 +26445,7 @@ Entry.block = {
             "type": "sensorBoard_get_digital_value"
         },
         "class": "arduino_value",
-        "syntax": {"js": [], "py": ["hw.sensorBoard_get_digital_value(%1)"]}
+        "syntax": {"js": [], "py": ["SensorBoard.get_digital_value(%1)"]}
     },
     "sensorBoard_toggle_led": {
         "parent": "arduino_toggle_led",
@@ -26396,7 +26463,7 @@ Entry.block = {
             "type": "sensorBoard_toggle_led"
         },
         "class": "arduino_set",
-        "syntax": {"js": [], "py": ["hw.sensorBoard_toggle_led(%1)"]}
+        "syntax": {"js": [], "py": ["SensorBoard.toggle_led(%1)"]}
     },
     "sensorBoard_toggle_pwm": {
         "parent": "arduino_toggle_pwm",
@@ -26417,7 +26484,7 @@ Entry.block = {
             "type": "sensorBoard_toggle_pwm"
         },
         "class": "arduino_set",
-        "syntax": {"js": [], "py": ["hw.sensorBoard_toggle_pwm(%1, %2)"]}
+        "syntax": {"js": [], "py": ["SensorBoard.toggle_pwm(%1, %2)"]}
     },
     "sensorBoard_convert_scale": {
         "parent": "arduino_convert_scale",
@@ -26455,7 +26522,7 @@ Entry.block = {
             "type": "sensorBoard_convert_scale"
         },
         "class": "arduino",
-        "syntax": {"js": [], "py": ["hw.sensorBoard_convert_scale(%1, %2, %3, %4, %5)"]}
+        "syntax": {"js": [], "py": ["SensorBoard.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     // ardublock Added 2016-06-01
     "ardublock_get_number_sensor_value": {

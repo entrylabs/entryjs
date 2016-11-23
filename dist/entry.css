@@ -6189,5 +6189,10 @@ input.entryObjectNameWorkspace:-moz-read-only {
 #entryConsole .ask span {
   color: #bdd1ff;
 }
+#textCodingExampleView {
+  position: absolute;
+  width: 100%;
+  top: 150px;
+}
 
 

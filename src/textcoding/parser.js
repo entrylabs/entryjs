@@ -148,7 +148,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 this._execParser = new Entry.BlockToPyParser(this.syntax);
                 cm.setOption("mode", {name: "python", globalVars: true});
-                cm.markText({line: 0, ch: 0}, {line: 3}, {readOnly: true});
+                cm.markText({line: 0, ch: 0}, {line: 3, ch: 0}, {readOnly: true});
                 this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
 
                 break;
@@ -338,6 +338,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
+                Entry.playground.blockMenu.renderText();
                 result = "";
                 var textCode = this._execParser.Code(code, parseMode);
                 if (!this._pyHinter)
