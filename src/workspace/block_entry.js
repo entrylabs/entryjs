@@ -2419,11 +2419,11 @@ Entry.block = {
             }
         ]}
     },
-    "arduino_ext_get_analog_value": {
+    "arduino_ext_analog_list": {
         "color": "#00979D",
-        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
+        "template": "%1",
         "params": [
             {
                 "type": "Dropdown",
@@ -2441,7 +2441,34 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ null ],
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("PORT");
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "arduino_ext_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_ext_analog_list"
+                }
+            ],
             "type": "arduino_ext_get_analog_value"
         },
         "paramsKeyMap": {
@@ -2450,7 +2477,7 @@ Entry.block = {
         "class": "ArduinoExtGet",
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
-            var port = script.getField("PORT", script);
+            var port = script.getValue("PORT", script);
             var ANALOG = Entry.hw.portData.ANALOG;
             return (ANALOG) ? ANALOG[port] || 0 : 0;
         },
@@ -2484,17 +2511,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Dropdown",
-                "options": [
-                    [ "A0", "0" ],
-                    [ "A1", "1" ],
-                    [ "A2", "2" ],
-                    [ "A3", "3" ],
-                    [ "A4", "4" ],
-                    [ "A5", "5" ]
-                ],
-                "value": "0",
-                "fontSize": 11
+                "type": "Block",
+                "accept": "string"
             },
             {
                 "type": "Block",
@@ -2516,7 +2534,14 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                null,
+                {
+                    "type": "arduino_ext_get_analog_value",
+                    "params": [
+                        {
+                            "type": "arduino_ext_analog_list"
+                        }
+                    ]
+                },
                 {
                     "type": "number",
                     "params": [ "0" ]
@@ -3042,6 +3067,38 @@ Entry.block = {
             }
         ]}
     },
+    "arduino_ext_octave_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "0"],
+                    ["2", "1"],
+                    ["3", "2"],
+                    ["4", "3"],
+                    ["5", "4"],
+                    ["6", "5"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "OCTAVE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("OCTAVE");
+        },
+        "syntax": {"js": [], "py": []}
+    },
     "arduino_ext_set_tone": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -3053,17 +3110,8 @@ Entry.block = {
             "type": "Block",
             "accept": "string"
         }, {
-            "type": "Dropdown",
-            "options": [
-                ["1", "0"],
-                ["2", "1"],
-                ["3", "2"],
-                ["4", "3"],
-                ["5", "4"],
-                ["6", "5"]
-            ],
-            "value": "3",
-            "fontSize": 11
+            "type": "Block",
+            "accept": "string"
         }, {
             "type": "Block",
             "accept": "string"
@@ -3080,7 +3128,9 @@ Entry.block = {
                 {
                     "type": "arduino_ext_tone_list"
                 },
-                null,
+                {
+                    "type": "arduino_ext_octave_list"
+                },
                 {
                     "type": "text",
                     "params": [ "1" ]
@@ -3126,7 +3176,12 @@ Entry.block = {
                     return script.callReturn();
                 }
 
-                var octave = script.getNumberField("OCTAVE", script);
+                var octave = script.getNumberValue("OCTAVE", script);
+                if(octave < 0) {
+                    octave = 0;
+                } else if(octave > 5) {
+                    octave = 5;
+                }
                 var value = Entry.ArduinoExt.toneMap[note][octave];
 
                 duration = duration * 1000;
