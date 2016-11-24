@@ -60,8 +60,9 @@ Entry.PyHint = function(syntax) {
                 console.log(searchString)
                 result = this.fuzzySearch(this.getScope("_global"), searchString).slice(0,20);
                 result = result.map(function(key) {
+                    var displayText = key.split("#")[0];
                     return {
-                        displayText: key,
+                        displayText: displayText,
                         hint: hintFunc,
                         syntax: syntax[key]
                     }
@@ -73,8 +74,9 @@ Entry.PyHint = function(syntax) {
                     break;
                 var searchResult = this.fuzzySearch(this.getScope(variableToken.string), lastToken.string).slice(0,20);
                 result = searchResult.map(function(key) {
+                    var displayText = key.split("#")[0];
                     return {
-                        displayText: key,
+                        displayText: displayText,
                         hint: hintFunc,
                         syntax: syntax[variableToken.string][key]
                     }

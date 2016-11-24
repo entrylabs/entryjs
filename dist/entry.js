@@ -16758,7 +16758,7 @@ Entry.PyHint = function(b) {
         console.log(g);
         e = this.fuzzySearch(this.getScope("_global"), g).slice(0, 20);
         e = e.map(function(a) {
-          return {displayText:a, hint:k, syntax:l[a]};
+          return {displayText:a.split("#")[0], hint:k, syntax:l[a]};
         });
         break;
       case "property":
@@ -16766,7 +16766,7 @@ Entry.PyHint = function(b) {
         if (n) {
           g = this.fuzzySearch(this.getScope(n.string), a.string).slice(0, 20);
           var e = g.map(function(a) {
-            return {displayText:a, hint:k, syntax:l[n.string][a]};
+            return {displayText:a.split("#")[0], hint:k, syntax:l[n.string][a]};
           }), q = this.syntax[n.string], f = g.map(function(a) {
             return q[a].key;
           });
