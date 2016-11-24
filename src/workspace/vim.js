@@ -125,8 +125,13 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
             viewportMargin: 10
         });
 
+        this.codeMirror.on("keydown", function(cm, event) {
+            if (event.key.length === 1) {
+                this.codeMirror.showHint({completeSingle: false});
+            }
+        }.bind(this))
         this.codeMirror.on("keyup", function(cm, event) {
-            if (event.key.length === 1 || event.key === "Backspace") {
+            if (event.key === "Backspace") {
                 this.codeMirror.showHint({completeSingle: false});
             }
         }.bind(this))

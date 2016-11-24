@@ -10954,7 +10954,7 @@ Entry.EntryObject.prototype.generateView = function() {
     $(a).bind("mousedown touchstart", function(a) {
       function d(b) {
         b.stopPropagation();
-        g && 5 < Math.sqrt(Math.pow(b.pageX - g.x, 2) + Math.pow(b.pageY - g.y, 2)) && longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
+        h && 5 < Math.sqrt(Math.pow(b.pageX - h.x, 2) + Math.pow(b.pageY - h.y, 2)) && longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
       }
       function c(b) {
         b.stopPropagation();
@@ -10962,12 +10962,12 @@ Entry.EntryObject.prototype.generateView = function() {
         longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
       }
       Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
-      var e = $(document), f = a.type, h = !1;
+      var e = $(document), f = a.type, g = !1;
       if (Entry.Utils.isRightButton(a)) {
-        a.stopPropagation(), Entry.documentMousedown.notify(a), h = !0, b._rightClick(a);
+        a.stopPropagation(), Entry.documentMousedown.notify(a), g = !0, b._rightClick(a);
       } else {
-        var g = {x:a.clientX, y:a.clientY};
-        "touchstart" !== f || h || (a.stopPropagation(), Entry.documentMousedown.notify(a), longPressTimer = setTimeout(function() {
+        var h = {x:a.clientX, y:a.clientY};
+        "touchstart" !== f || g || (a.stopPropagation(), Entry.documentMousedown.notify(a), longPressTimer = setTimeout(function() {
           longPressTimer && (longPressTimer = null, b._rightClick(a));
         }, 1E3), e.bind("mousemove.object touchmove.object", d), e.bind("mouseup.object touchend.object", c));
       }
@@ -16669,7 +16669,11 @@ Entry.PyHint = function(a) {
   console.log(Entry.playground.mainWorkspace.vimBoard._parser.syntax);
   this.syntax = a;
   this.scope = {};
-  this.scope._global = Object.keys(a);
+  this.scope._global = [];
+  for (var b in a) {
+    a[b].syntax && 0 > b.indexOf("%") && this.scope._global.push(b);
+  }
+  this.addScope("Entry");
   this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
   CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
 };
@@ -16678,36 +16682,58 @@ Entry.PyHint = function(a) {
     var a = b.getCursor(), c = b.getLineTokens(a.line);
     b = c[c.length - 1];
     var e = [], f = [];
+    console.log(c);
     if (!b) {
       return null;
     }
+    var g, h = b.start, k = this.hintFunc, l = this.syntax;
     switch(b.type) {
+      case "def":
+        if (e = c[c.length - 3]) {
+          g = "def " + b.string, h = e.start;
+        }
+      case "keyword":
+        g || (g = b.string);
       case "variable":
-        e = this.fuzzySearch(this.getScope("_global"), b.string).slice(0, 20);
+        g || (g = b.string);
+        console.log(g);
+        e = this.fuzzySearch(this.getScope("_global"), g).slice(0, 20);
         e = e.map(function(b) {
-          return {displayText:b, text:b};
+          return {displayText:b, hint:k, syntax:l[b]};
         });
         break;
       case "property":
-        if (c = c[c.length - 3]) {
-          var f = this.fuzzySearch(this.getScope(c.string), b.string).slice(0, 20), e = f.map(function(b) {
-            return {displayText:b, text:b};
-          }), g = this.syntax[c.string], f = f.map(function(b) {
-            return g[b].key;
+        var m = c[c.length - 3];
+        if (m) {
+          g = this.fuzzySearch(this.getScope(m.string), b.string).slice(0, 20);
+          var e = g.map(function(b) {
+            return {displayText:b, hint:k, syntax:l[m.string][b]};
+          }), n = this.syntax[m.string], f = g.map(function(b) {
+            return n[b].key;
           });
         }
     }
     f.length ? this._blockMenu._setDynamic(f) : this._blockMenu._cancelDynamic();
-    return {list:e, from:CodeMirror.Pos(a.line, b.start), to:CodeMirror.Pos(a.line, b.end)};
+    return {list:e, from:CodeMirror.Pos(a.line, h), to:CodeMirror.Pos(a.line, b.end)};
+  };
+  a.addScope = function(b) {
+    this.syntax[b] && (this.scope[b] = Object.keys(this.syntax[b]), this.scope._global.unshift(b));
   };
   a.getScope = function(b) {
-    return this.scope[b] ? this.scope[b] : this.syntax[b] ? (this.scope[b] = Object.keys(this.syntax[b]), this.scope[b]) : [];
+    return this.scope[b] ? this.scope[b] : [];
   };
   a.fuzzySearch = function(b, a, c) {
     b = fuzzy.filter(a, b, c);
     return b = b.map(function(b) {
       return b.original;
     });
+  };
+  a.hintFunc = function(b, a, c) {
+    console.log(b, a, c);
+    var d = c.syntax, f = a.from.ch;
+    d.syntax ? (c = d.syntax.split("."), 1 < c.length && c.shift(), c = c.join("."), -1 < c.indexOf("%") ? (c = c.replace(/%\d+/gi, ""), f += c.indexOf("(") + 1) : f += c.length) : (c = c.displayText + ".", f += c.length);
+    b.replaceRange(c, a.from, a.to);
+    b.setCursor({line:a.from.line, ch:f});
   };
 })(Entry.PyHint.prototype);
 Entry.BlockToJsParser = function(a) {
@@ -21235,6 +21261,41 @@ Entry.ContextMenu = {};
     this._hideEvent && (Entry.documentMousedown.detach(this._hideEvent), this._hideEvent = null);
   };
 })(Entry.ContextMenu);
+Entry.fuzzy = {};
+(function(a) {
+  var b = {};
+  a.fuzzy = b;
+  b.simpleFilter = function(a, c) {
+    return c.filter(function(d) {
+      return b.test(a, d);
+    });
+  };
+  b.test = function(a, c) {
+    return null !== b.match(a, c);
+  };
+  b.match = function(b, a, e) {
+    e = e || {};
+    var d = 0, c = [], h = a.length, k = 0, l = 0, m = e.pre || "", n = e.post || "", q = e.caseSensitive && a || a.toLowerCase();
+    b = e.caseSensitive && b || b.toLowerCase();
+    for (var r = 0;r < h;r++) {
+      e = a[r], q[r] === b[d] ? (e = m + e + n, d += 1, l += 1 + l) : l = 0, k += l, c[c.length] = e;
+    }
+    return d === b.length ? {rendered:c.join(""), score:k} : null;
+  };
+  b.filter = function(a, c, e) {
+    e = e || {};
+    return c.reduce(function(d, c, h, k) {
+      k = c;
+      e.extract && (k = e.extract(c));
+      k = b.match(a, k, e);
+      null != k && (d[d.length] = {string:k.rendered, score:k.score, index:h, original:c});
+      return d;
+    }, []).sort(function(b, a) {
+      var d = a.score - b.score;
+      return d ? d : b.index - a.index;
+    });
+  };
+})(Entry.Utils);
 Entry.Loader = {queueCount:0, totalCount:0, loaded:!1};
 Entry.Loader.addQueue = function(a) {
   this.queueCount || Entry.dispatchEvent("loadStart");
@@ -27319,8 +27380,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
   };
-  a.setParent = function(a) {
-    this._parent = a;
+  a.setParent = function(b) {
+    this._parent = b;
   };
   a.getParent = function() {
     return this._parent;
@@ -27331,10 +27392,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   a.getValueBlock = function() {
     return this._valueBlock;
   };
-  a.pointer = function(a) {
-    a.unshift(this._index);
-    a.unshift(Entry.PARAM);
-    return this._block.pointer(a);
+  a.pointer = function(b) {
+    b.unshift(this._index);
+    b.unshift(Entry.PARAM);
+    return this._block.pointer(b);
   };
 })(Entry.FieldOutput.prototype);
 Entry.FieldStatement = function(a, b, d) {
@@ -27354,24 +27415,24 @@ Entry.FieldStatement = function(a, b, d) {
 (function(a) {
   a.schema = {x:0, y:0, width:100, height:20, magneting:!1};
   a.magnet = {next:{x:0, y:0}};
-  a.renderStart = function(a) {
+  a.renderStart = function(b) {
     this.svgGroup = this._blockView.statementSvgGroup.elem("g");
     this._nextGroup = this.statementSvgGroup = this.svgGroup.elem("g");
-    this._initThread(a);
-    this._board = a;
+    this._initThread(b);
+    this._board = b;
   };
-  a._initThread = function(a) {
-    var b = this.getValue();
-    this._thread = b;
-    b.createView(a);
-    b.view.setParent(this);
-    if (a = b.getFirstBlock()) {
-      a.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = a;
+  a._initThread = function(b) {
+    var a = this.getValue();
+    this._thread = a;
+    a.createView(b);
+    a.view.setParent(this);
+    if (b = a.getFirstBlock()) {
+      b.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = b;
     }
-    a = b.changeEvent.attach(this, this.calcHeight);
-    var c = b.changeEvent.attach(this, this.checkTopBlock);
-    this._events.push([b.changeEvent, a]);
-    this._events.push([b.changeEvent, c]);
+    b = a.changeEvent.attach(this, this.calcHeight);
+    var c = a.changeEvent.attach(this, this.checkTopBlock);
+    this._events.push([a.changeEvent, b]);
+    this._events.push([a.changeEvent, c]);
     this.calcHeight();
   };
   a.align = function(a, d, c) {
@@ -27888,8 +27949,11 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
       var b = Array(a.getOption("indentUnit") + 1).join(" ");
       a.replaceSelection(b);
     }}, lint:!0, viewportMargin:10});
+    this.codeMirror.on("keydown", function(a, b) {
+      1 === b.key.length && this.codeMirror.showHint({completeSingle:!1});
+    }.bind(this));
     this.codeMirror.on("keyup", function(a, b) {
-      1 !== b.key.length && "Backspace" !== b.key || this.codeMirror.showHint({completeSingle:!1});
+      "Backspace" === b.key && this.codeMirror.showHint({completeSingle:!1});
     }.bind(this));
     this.doc = this.codeMirror.getDoc();
     e = this;
