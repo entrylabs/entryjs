@@ -262,6 +262,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     this._execParser._variableMap.clear();
                     break;
                 } catch(error) {
+                    result = [];
+                    if(Entry.playground && Entry.playground.mainWorkspace){
+                        var board = Entry.playground.mainWorkspace.board;
+                        if(board) board.code.clear();
+                    }
+
                     if (this.codeMirror) {
                         var line; 
                         if (error instanceof SyntaxError) {
@@ -305,8 +311,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         Entry.toast.alert(title, message);
                         throw error;
                     }
-
-                    result = [];
                 }
 
                 break;

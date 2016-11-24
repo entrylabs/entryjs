@@ -691,12 +691,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("callex param syntax", syntax, "order", paramIndex, "value", paramIndex[pi], "param", param);
                     console.log("pi", pi);
 
-                    if(param && param.object && param.property) {
+                    if(param) {
                         var keyOption = blockSyntax.keyOption;
-                        if(keyOption) {
-                            var pName = param.object.name + "." + param.property.name;
-                            if(keyOption == pName) {
-                                isParamOption = true;
+                        console.log("keyOption", keyOption);
+                        if(keyOption || keyOption === 0) {
+                            console.log("param", param)
+                            if(param.object && param.property.name) {
+                                var pName = param.object.name + "." + param.property.name;
+                                if(keyOption == pName) 
+                                    isParamOption = true;
+                            }
+                            else if((param.type == "text" || param.type =="number") && param.params && param.params.length != 0) {
+                                var pName = param.params[0];
+                                console.log("pName", pName);
+                                if(keyOption == pName)
+                                    isParamOption = true;
                             }
                         }
                     }
@@ -2455,7 +2464,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("codeMap", codeMap);
             var map = eval(codeMap);
             console.log("codeMap", map);
-            result = result.toLowerCase();
+            result = result.toUpperCase();
             result = map[result];
         }
 

@@ -270,7 +270,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         console.log("codeMap", codeMap);
                         value = value.toLowerCase();
                         console.log("value123", value);
-                        var cmValue = codeMap[value].toUpperCase();
+                        if(codeMap[value])
+                            var cmValue = codeMap[value].toUpperCase();
                         console.log("cmValue", cmValue);
                         if(cmValue)
                             value = cmValue;

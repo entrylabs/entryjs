@@ -12,7 +12,10 @@ Entry.CodeMap = {};
     cc.Arduino = {
         digitalWrite: [
             null,
-            {"on":"high", "off":"low", "high":"on", "low":"off"}
+            {"on":"high", "off":"low", "HIGH":"on", "LOW":"off"}
+        ], 
+        analogRead: [
+            {"A0":"0", "A1":"1", "A2":"2", "A3":"3", "A4":"4", "A5":"5"}
         ]
     };
 

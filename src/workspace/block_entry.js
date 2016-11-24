@@ -2471,7 +2471,7 @@ Entry.block = {
                         "value": "0",
                         "fontSize": 11,
                         converter: Entry.block.converters.returnStringKey,
-                        //codeMap: "Entry.CodeMap.Arduino.analogRead[0]"
+                        codeMap: "Entry.CodeMap.Arduino.analogRead[0]"
                     }
                 ]
             }
@@ -12062,9 +12062,26 @@ Entry.block = {
                 sq.leftLed = 0;
                 sq.rightLed = 0;
             }
-            return script.callReturn();
+            return script.callReturn(); 
         },
         "syntax": {"js": [], "py": [
+            {
+                syntax: "Hamster.left_led(0)", 
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT"]
+            },
             {
                 syntax: "Hamster.left_led(Hamster.LED_OFF)", 
                 textParams: [
@@ -12081,6 +12098,23 @@ Entry.block = {
                     }
                 ],
                 params: ["LEFT"]
+            },
+            {
+                syntax: "Hamster.right_led(0)", 
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT"]
             },
             {
                 syntax: "Hamster.right_led(Hamster.LED_OFF)", 
@@ -12100,7 +12134,24 @@ Entry.block = {
                 params: ["RIGHT"]
             },
             {
-                syntax: "Hamster.leds(Hamster.LED_OFF,Hamster.LED_OFF)", 
+                syntax: "Hamster.leds(0)", 
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_OFF)", 
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12492,6 +12543,16 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
+                syntax: "Hamster.note(0,%1)", 
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                keyOption: "0"
+            },
+            {
                 syntax: "Hamster.note(Hamster.NOTE_OFF,%1)", 
                 textParams: [
                     {
@@ -12709,7 +12770,7 @@ Entry.block = {
                 params: ["B", "10"]
             },
             {
-                syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT,Hamster.IO_MODE_ANALOG_INPUT)", 
+                syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT)", 
                 textParams: [{converter: Entry.block.converters.returnStringValue}],
                 params: ["AB", "0"]
             },
@@ -12836,7 +12897,7 @@ Entry.block = {
                 params: ["B"]
             },
             {
-                syntax: "Hamster.outputs_by(%2,%2)", 
+                syntax: "Hamster.outputs_by(%2)", 
                 textParams: [
                     {
                         "type": "Dropdown",

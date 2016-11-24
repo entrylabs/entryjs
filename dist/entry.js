@@ -12023,7 +12023,7 @@ Entry.PyHint = function(b) {
 })(Entry.PyHint.prototype);
 Entry.CodeMap = {};
 (function(b) {
-  b.Arduino = {digitalWrite:[null, {on:"high", off:"low", high:"on", low:"off"}]};
+  b.Arduino = {digitalWrite:[null, {on:"high", off:"low", HIGH:"on", LOW:"off"}], analogRead:[{A0:"0", A1:"1", A2:"2", A3:"3", A4:"4", A5:"5"}]};
   b.Hamster = {note:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F_SHARP", 10:"Hamster.NOTE_G", 11:"Hamster.NOTE_G_SHARP", 12:"Hamster.NOTE_A", 13:"Hamster.NOTE_B_FLAT", 14:"Hamster.NOTE_B", "Hamster.NOTE_C":4, "Hamster.NOTE_C_SHARP":5, "Hamster.NOTE_D_FLAT":5, "Hamster.NOTE_D":6, "Hamster.NOTE_E_FLAT":7, "Hamster.NOTE_D_SHARP":7, "Hamster.NOTE_E":8, "Hamster.NOTE_F":8, "Hamster.NOTE_F_SHARP":9, "Hamster.NOTE_G_FLAT":9, 
   "Hamster.NOTE_G":10, "Hamster.NOTE_G_SHARP":11, "Hamster.NOTE_A_FLAT":11, "Hamster.NOTE_A":12, "Hamster.NOTE_B_FLAT":13, "Hamster.NOTE_A_SHARP":13, "Hamster.NOTE_B":14}, null, null]};
 })(Entry.CodeMap);
@@ -13279,9 +13279,11 @@ Entry.BlockToPyParser = function(b) {
             console.log("codeMap", g);
             e = e.toLowerCase();
             console.log("value123", e);
-            g = g[e].toUpperCase();
-            console.log("cmValue", g);
-            g && (e = g);
+            if (g[e]) {
+              var h = g[e].toUpperCase()
+            }
+            console.log("cmValue", h);
+            h && (e = h);
           }
           a = b.converter(c, e);
         }
@@ -14178,55 +14180,74 @@ Entry.PyToBlockParser = function(b) {
       }
       z = 0 + h;
       if (r.textParams) {
-        var A = r.textParams
+        var B = r.textParams
       }
       for (var y in arguments) {
-        if (n = !1, g = arguments[y], console.log("kkk argument", g, "typeof", typeof g), g && (console.log("CallExpression argument", g, "typeof", typeof g), g.calleeName = k, A || (A = []), h = this[g.type](g, v[u[z]], x[u[z]], A[z]), console.log("callexpression callee", f, "param", h), console.log("calleeName", k, "param", h), h && h.data && (h = h.data), console.log("callex block one multi", q), console.log("callex param syntax", m, "order", u, "value", u[z], "param", h), console.log("pi", z), 
-        h && h.object && h.property && (g = r.keyOption) && g == h.object.name + "." + h.property.name && (n = !0), !n && (g = u[z++], void 0 !== g && (c[g] = h, console.log("callex realtime params", c), h)))) {
-          if (h.object && h.object.object) {
-            if ("self" == h.object.object.name) {
-              if (!Entry.TextCodingUtil.isLocalListExisted(h.object.property.name, this._currentObject)) {
-                throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.object.property.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
-              }
+        if (n = !1, g = arguments[y], console.log("kkk argument", g, "typeof", typeof g), g) {
+          console.log("CallExpression argument", g, "typeof", typeof g);
+          g.calleeName = k;
+          B || (B = []);
+          h = this[g.type](g, v[u[z]], x[u[z]], B[z]);
+          console.log("callexpression callee", f, "param", h);
+          console.log("calleeName", k, "param", h);
+          h && h.data && (h = h.data);
+          console.log("callex block one multi", q);
+          console.log("callex param syntax", m, "order", u, "value", u[z], "param", h);
+          console.log("pi", z);
+          if (h && (g = r.keyOption, console.log("keyOption", g), g || 0 === g)) {
+            if (console.log("param", h), h.object && h.property.name) {
+              var A = h.object.name + "." + h.property.name;
+              g == A && (n = !0);
             } else {
-              throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.object.object.name + "' \ub9ac\uc2a4\ud2b8 \uac1d\uccb4\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;
+              "text" != h.type && "number" != h.type || !h.params || 0 == h.params.length || (A = h.params[0], console.log("pName", A), g == A && (n = !0));
             }
-          } else {
-            if (h.object) {
-              if (f.property && "len" == f.property.name || "in" == f.property.name) {
-                if ("self" == h.object.name) {
-                  if (!Entry.TextCodingUtil.isLocalListExisted(h.property.name, this._currentObject)) {
-                    throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.property.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
-                  }
-                } else {
-                  throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.object.name + "' \ub9ac\uc2a4\ud2b8 \uac1d\uccb4\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;
+          }
+          if (!n && (g = u[z++], void 0 !== g && (c[g] = h, console.log("callex realtime params", c), h))) {
+            if (h.object && h.object.object) {
+              if ("self" == h.object.object.name) {
+                if (!Entry.TextCodingUtil.isLocalListExisted(h.object.property.name, this._currentObject)) {
+                  throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.object.property.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
                 }
               } else {
-                if ("__pythonRuntime.ops.subscriptIndex" == h.property.callee) {
-                  if ("char_at" != h.type && !Entry.TextCodingUtil.isGlobalListExisted(h.object.name, this._currentObject)) {
-                    throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.object.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
-                  }
-                } else {
+                throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.object.object.name + "' \ub9ac\uc2a4\ud2b8 \uac1d\uccb4\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;
+              }
+            } else {
+              if (h.object) {
+                if (f.property && "len" == f.property.name || "in" == f.property.name) {
                   if ("self" == h.object.name) {
-                    if (!Entry.TextCodingUtil.isLocalVariableExisted(h.property.name, this._currentObject)) {
-                      throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.property.name + "' \ubcc0\uc218\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
+                    if (!Entry.TextCodingUtil.isLocalListExisted(h.property.name, this._currentObject)) {
+                      throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.property.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
                     }
                   } else {
-                    if ("Hamster" != h.object.name) {
-                      throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.object.name + "' \ubcc0\uc218 \uac1d\uccb4\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;
+                    throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.object.name + "' \ub9ac\uc2a4\ud2b8 \uac1d\uccb4\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;
+                  }
+                } else {
+                  if ("__pythonRuntime.ops.subscriptIndex" == h.property.callee) {
+                    if ("char_at" != h.type && !Entry.TextCodingUtil.isGlobalListExisted(h.object.name, this._currentObject)) {
+                      throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.object.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
+                    }
+                  } else {
+                    if ("self" == h.object.name) {
+                      if (!Entry.TextCodingUtil.isLocalVariableExisted(h.property.name, this._currentObject)) {
+                        throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.property.name + "' \ubcc0\uc218\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
+                      }
+                    } else {
+                      if ("Hamster" != h.object.name) {
+                        throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.object.name + "' \ubcc0\uc218 \uac1d\uccb4\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;
+                      }
                     }
                   }
                 }
-              }
-            } else {
-              if (h.name && "object" == typeof h) {
-                if (f.property && ("len" == f.property.name || "in" == f.property.name)) {
-                  if (!Entry.TextCodingUtil.isGlobalListExisted(h.name, this._currentObject)) {
-                    throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
-                  }
-                } else {
-                  if (!Entry.TextCodingUtil.isGlobalVariableExisted(h.name) && !Entry.TextCodingUtil.isFuncParam(h.name)) {
-                    throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.name + "' \ubcc0\uc218\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
+              } else {
+                if (h.name && "object" == typeof h) {
+                  if (f.property && ("len" == f.property.name || "in" == f.property.name)) {
+                    if (!Entry.TextCodingUtil.isGlobalListExisted(h.name, this._currentObject)) {
+                      throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
+                    }
+                  } else {
+                    if (!Entry.TextCodingUtil.isGlobalVariableExisted(h.name) && !Entry.TextCodingUtil.isFuncParam(h.name)) {
+                      throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.name + "' \ubcc0\uc218\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
+                    }
                   }
                 }
               }
@@ -14903,7 +14924,7 @@ Entry.PyToBlockParser = function(b) {
       }
     }
     f || (f = a);
-    e && e.codeMap && (a = e.codeMap, console.log("codeMap", a), a = eval(a), console.log("codeMap", a), f = f.toLowerCase(), f = a[f]);
+    e && e.codeMap && (a = e.codeMap, console.log("codeMap", a), a = eval(a), console.log("codeMap", a), f = f.toUpperCase(), f = a[f]);
     console.log("ParamDropdown result", f);
     return f;
   };
@@ -16149,13 +16170,13 @@ Entry.Parser = function(b, a, d, c) {
           c = this._execParser.Program(f);
           this._execParser._variableMap.clear();
         } catch (t) {
+          c = [];
+          if (Entry.playground && Entry.playground.mainWorkspace) {
+            var m = Entry.playground.mainWorkspace.board;
+            m && m.code.clear();
+          }
           if (this.codeMirror) {
-            if (t instanceof SyntaxError) {
-              var m = this.findSyntaxError(t, q), c = {from:{line:m.from.line - 1, ch:m.from.ch}, to:{line:m.to.line - 1, ch:m.to.ch}};
-              m.type = "syntax";
-            } else {
-              m = this.findConvError(t), c = {from:{line:m.from.line - 1, ch:m.from.ch}, to:{line:m.to.line - 1, ch:m.to.ch}}, m.type = "converting";
-            }
+            t instanceof SyntaxError ? (m = this.findSyntaxError(t, q), c = {from:{line:m.from.line - 1, ch:m.from.ch}, to:{line:m.to.line - 1, ch:m.to.ch}}, m.type = "syntax") : (m = this.findConvError(t), c = {from:{line:m.from.line - 1, ch:m.from.ch}, to:{line:m.to.line - 1, ch:m.to.ch}}, m.type = "converting");
             this._marker = this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1});
             if ("syntax" == m.type) {
               var r = "\ubb38\ubc95\uc624\ub958", u = t.message
@@ -16165,16 +16186,15 @@ Entry.Parser = function(b, a, d, c) {
             Entry.toast.alert(r, u);
             throw t;
           }
-          c = [];
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        c = l = this._execParser.Code(a, b);
+        c = r = this._execParser.Code(a, b);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
         Entry.playground.blockMenu.renderText();
         c = "";
-        l = this._execParser.Code(a, b);
+        r = this._execParser.Code(a, b);
         this._pyHinter || (this._pyHinter = new Entry.PyHint(this.syntax));
         if (b == Entry.Parser.PARSE_GENERAL) {
           if (!this._execParser._variableDeclaration) {
@@ -16189,15 +16209,15 @@ Entry.Parser = function(b, a, d, c) {
             c += "\n";
           }
           if (!this._execParser._funcDeclaration) {
-            r = this._execParser._funcDefMap;
-            u = "";
-            for (m in r) {
-              u += r[m] + "\n";
+            u = this._execParser._funcDefMap;
+            l = "";
+            for (m in u) {
+              l += u[m] + "\n";
             }
-            (this._execParser._funcDeclaration = u) && (c += u + "\n");
+            (this._execParser._funcDeclaration = l) && (c += l + "\n");
           }
         }
-        c += l.trim();
+        c += r.trim();
         c = c.replace(/\t/g, "    ");
     }
     return c;
