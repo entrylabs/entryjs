@@ -1299,7 +1299,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var params = schema.params;
         if (mode === Entry.BlockView.RENDER_MODE_TEXT) {
             if (schema.syntax && schema.syntax.py[0].textParams) {
-                params = schema.syntax.py[0].textParams
+                params = schema.syntax.py[0].textParams;
             }
         }
         return params;

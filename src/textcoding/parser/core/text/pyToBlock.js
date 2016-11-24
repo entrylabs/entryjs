@@ -2428,7 +2428,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result = value;
 
-        return result;
+        return result; 
     };
 
     p.ParamColor = function(value, paramMeta, paramDefMeta) {

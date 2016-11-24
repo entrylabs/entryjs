@@ -11979,7 +11979,11 @@ Entry.PyHint = function(b) {
   console.log(Entry.playground.mainWorkspace.vimBoard._parser.syntax);
   this.syntax = b;
   this.scope = {};
-  this.scope._global = Object.keys(b);
+  this.scope._global = [];
+  for (var a in b) {
+    b[a].syntax && 0 > a.indexOf("%") && this.scope._global.push(a);
+  }
+  this.addScope("Entry");
   this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
   CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
 };
@@ -11988,37 +11992,60 @@ Entry.PyHint = function(b) {
     var b = a.getCursor(), c = a.getLineTokens(b.line);
     a = c[c.length - 1];
     var e = [], f = [];
+    console.log(c);
     if (!a) {
       return null;
     }
+    var g, h = a.start, k = this.hintFunc, l = this.syntax;
     switch(a.type) {
+      case "def":
+        if (e = c[c.length - 3]) {
+          g = "def " + a.string, h = e.start;
+        }
+      ;
+      case "keyword":
+        g || (g = a.string);
       case "variable":
-        e = this.fuzzySearch(this.getScope("_global"), a.string).slice(0, 20);
+        g || (g = a.string);
+        console.log(g);
+        e = this.fuzzySearch(this.getScope("_global"), g).slice(0, 20);
         e = e.map(function(a) {
-          return {displayText:a, text:a};
+          return {displayText:a.split("#")[0], hint:k, syntax:l[a]};
         });
         break;
       case "property":
-        if (c = c[c.length - 3]) {
-          var f = this.fuzzySearch(this.getScope(c.string), a.string).slice(0, 20), e = f.map(function(a) {
-            return {displayText:a, text:a};
-          }), g = this.syntax[c.string], f = f.map(function(a) {
-            return g[a].key;
-          })
+        var n = c[c.length - 3];
+        if (n) {
+          g = this.fuzzySearch(this.getScope(n.string), a.string).slice(0, 20);
+          var e = g.map(function(a) {
+            return {displayText:a.split("#")[0], hint:k, syntax:l[n.string][a]};
+          }), q = this.syntax[n.string], f = g.map(function(a) {
+            return q[a].key;
+          });
         }
       ;
     }
     f.length ? this._blockMenu._setDynamic(f) : this._blockMenu._cancelDynamic();
-    return {list:e, from:CodeMirror.Pos(b.line, a.start), to:CodeMirror.Pos(b.line, a.end)};
+    return {list:e, from:CodeMirror.Pos(b.line, h), to:CodeMirror.Pos(b.line, a.end)};
+  };
+  b.addScope = function(a) {
+    this.syntax[a] && (this.scope[a] = Object.keys(this.syntax[a]), this.scope._global.unshift(a));
   };
   b.getScope = function(a) {
-    return this.scope[a] ? this.scope[a] : this.syntax[a] ? (this.scope[a] = Object.keys(this.syntax[a]), this.scope[a]) : [];
+    return this.scope[a] ? this.scope[a] : [];
   };
   b.fuzzySearch = function(a, b, c) {
     a = fuzzy.filter(b, a, c);
     return a = a.map(function(a) {
       return a.original;
     });
+  };
+  b.hintFunc = function(a, b, c) {
+    console.log(a, b, c);
+    var e = c.syntax, f = b.from.ch;
+    e.syntax ? (c = e.syntax.split("\n"), c = c[0], c = c.split("."), 1 < c.length && c.shift(), c = c.join("."), -1 < c.indexOf("%") ? (c = c.replace(/%\d+/gi, ""), f += c.indexOf("(") + 1) : f += c.length) : (c = c.displayText + ".", f += c.length);
+    a.replaceRange(c, b.from, b.to);
+    a.setCursor({line:b.from.line, ch:f});
   };
 })(Entry.PyHint.prototype);
 Entry.CodeMap = {};
@@ -17664,6 +17691,43 @@ Entry.ContextMenu = {};
     this._hideEvent && (Entry.documentMousedown.detach(this._hideEvent), this._hideEvent = null);
   };
 })(Entry.ContextMenu);
+Entry.fuzzy = {};
+$(function() {
+  (function(b) {
+    var a = {};
+    b.fuzzy = a;
+    a.simpleFilter = function(b, c) {
+      return c.filter(function(c) {
+        return a.test(b, c);
+      });
+    };
+    a.test = function(b, c) {
+      return null !== a.match(b, c);
+    };
+    a.match = function(a, b, e) {
+      e = e || {};
+      var f = 0, g = [], h = b.length, k = 0, l = 0, n = e.pre || "", q = e.post || "", m = e.caseSensitive && b || b.toLowerCase();
+      a = e.caseSensitive && a || a.toLowerCase();
+      for (var r = 0;r < h;r++) {
+        e = b[r], m[r] === a[f] ? (e = n + e + q, f += 1, l += 1 + l) : l = 0, k += l, g[g.length] = e;
+      }
+      return f === a.length ? {rendered:g.join(""), score:k} : null;
+    };
+    a.filter = function(b, c, e) {
+      e = e || {};
+      return c.reduce(function(c, g, h, k) {
+        k = g;
+        e.extract && (k = e.extract(g));
+        k = a.match(b, k, e);
+        null != k && (c[c.length] = {string:k.rendered, score:k.score, index:h, original:g});
+        return c;
+      }, []).sort(function(a, b) {
+        var c = b.score - a.score;
+        return c ? c : a.index - b.index;
+      });
+    };
+  })(Entry.Utils);
+});
 Entry.Loader = {queueCount:0, totalCount:0, loaded:!1};
 Entry.Loader.addQueue = function(b) {
   this.queueCount || Entry.dispatchEvent("loadStart");
@@ -24047,15 +24111,7 @@ Entry.Field = function() {
   };
   b._convert = function(a, b) {
     b = void 0 !== b ? b : this.getValue();
-    if (this._contents.converter) {
-      if (this._contents.codeMap) {
-        var c = eval(this._contents.codeMap);
-        b = b.toLowerCase();
-        (c = c[b]) && (b = c.toUpperCase());
-      }
-      return this._contents.converter(a, b);
-    }
-    return a;
+    return this._contents.converter ? (this._contents.codeMap && eval(this._contents.codeMap), this._contents.converter(a, b)) : a;
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, d) {
@@ -26755,8 +26811,11 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
       var b = Array(a.getOption("indentUnit") + 1).join(" ");
       a.replaceSelection(b);
     }}, lint:!0, viewportMargin:10});
+    this.codeMirror.on("keydown", function(a, b) {
+      1 === b.key.length && this.codeMirror.showHint({completeSingle:!1});
+    }.bind(this));
     this.codeMirror.on("keyup", function(a, b) {
-      1 !== b.key.length && "Backspace" !== b.key || this.codeMirror.showHint({completeSingle:!1});
+      "Backspace" === b.key && this.codeMirror.showHint({completeSingle:!1});
     }.bind(this));
     this.doc = this.codeMirror.getDoc();
     e = this;
