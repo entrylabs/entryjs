@@ -26114,7 +26114,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
         }
-    },    "practical_arts_motor_speed": {
+    },    
+    "practical_course_motor_speed": {
         "color": "#00B200",
         "skeleton": "basic_string_field",
         "statements": [],
@@ -26154,7 +26155,7 @@ Entry.block = {
             return script.getStringField("VALUE");
         }
     },
-    "practical_arts_set_servo2": {
+    "practical_course_set_servo2": {
         "color": "#D126BD",
         "skeleton": "basic",
         "statements": [],
@@ -26173,19 +26174,19 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "block_icon/practical_arts/servo.png",
+            "img": "block_icon/practical_course/servo.png",
             "size": 12
         }],
         "events": {},
         "def": {
             "params": [null, null, null],
-            "type": "practical_arts_set_servo2"
+            "type": "practical_course_set_servo2"
         },
         "paramsKeyMap": {
             "PORT": 0,
             "DEGREE": 1
         },
-        "class": "practical_arts_servo",
+        "class": "practical_course_servo",
         "func": function (sprite, script) {
             var port = script.getNumberField('PORT');
             var degree = script.getNumberValue('DEGREE');
@@ -26203,7 +26204,7 @@ Entry.block = {
             return script.callReturn();
         }
     },
-    "practical_arts_move_for_secs": {
+    "practical_course_move_for_secs": {
         "color": "#00B200",
         "skeleton": "basic",
         "fontColor": "#fff",
@@ -26234,18 +26235,18 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "block_icon/practical_arts/dcmotor.png",
+            "img": "block_icon/practical_course/dcmotor.png",
             "size": 12
         }],
         "events": {},
         "def": {
             "params": [null, null, {
-                "type": "practical_arts_motor_speed",
+                "type": "practical_course_motor_speed",
             }, {
                 "type": "number",
                 "params": ["2"],
             }, null],
-            "type": "practical_arts_move_for_secs"
+            "type": "practical_course_move_for_secs"
         },
         "paramsKeyMap": {
             "WHEEL": 0,
@@ -26253,7 +26254,7 @@ Entry.block = {
             "SPEED": 2,
             "DURATION": 3
         },
-        "class": "practical_arts_motor",
+        "class": "practical_course_motor",
         "func": function (sprite, script) {
             if (!script.isStart) {
                 var wheel = script.getNumberField('WHEEL');
@@ -26314,7 +26315,7 @@ Entry.block = {
             }
         }
     },
-    "practical_arts_move_for": {
+    "practical_course_move_for": {
         "color": "#00B200",
         "skeleton": "basic",
         "fontColor": "#fff",
@@ -26342,22 +26343,22 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "block_icon/practical_arts/dcmotor.png",
+            "img": "block_icon/practical_course/dcmotor.png",
             "size": 12
         }],
         "events": {},
         "def": {
             "params": [null, null, {
-                "type": "practical_arts_motor_speed",
+                "type": "practical_course_motor_speed",
             }, null],
-            "type": "practical_arts_move_for"
+            "type": "practical_course_move_for"
         },
         "paramsKeyMap": {
             "WHEEL": 0,
             "DIRECTION": 1,
             "SPEED": 2
         },
-        "class": "practical_arts_motor",
+        "class": "practical_course_motor",
         //"isNotFor": ["mini"],
         "func": function (sprite, script) {
             var wheel = script.getNumberField('WHEEL');
@@ -26386,7 +26387,7 @@ Entry.block = {
             return script.callReturn();
         }
     },
-    "practical_arts_stop_for": {
+    "practical_course_stop_for": {
         "color": "#00B200",
         "skeleton": "basic",
         "fontColor": "#fff",
@@ -26403,18 +26404,18 @@ Entry.block = {
             "fontSize": 11
         }, {
             "type": "Indicator",
-            "img": "block_icon/practical_arts/dcmotor.png",
+            "img": "block_icon/practical_course/dcmotor.png",
             "size": 12
         }],
         "events": {},
         "def": {
             "params": [null, null],
-            "type": "practical_arts_stop_for"
+            "type": "practical_course_stop_for"
         },
         "paramsKeyMap": {
             "WHEEL": 0
         },
-        "class": "practical_arts_motor",
+        "class": "practical_course_motor",
         "func": function (sprite, script) {
             var wheel = script.getNumberField('WHEEL');
             if (wheel == 2) {
@@ -26428,7 +26429,7 @@ Entry.block = {
             return script.callReturn();
         }
     },
-    "practical_arts_touch_value": {
+    "practical_course_touch_value": {
         "color": "#2AB4D3",
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
@@ -26447,19 +26448,19 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null],
-            "type": "practical_arts_touch_value"
+            "type": "practical_course_touch_value"
         },
         "paramsKeyMap": {
             "PORT": 0
         },
-        "class": "practical_arts_touch",
+        "class": "practical_course_touch",
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             var value = (Entry.hw.portData['IN' + port] > 125) ? 1 : 0;
             return value;
         }
     },
-    "practical_arts_touch_value_boolean": {
+    "practical_course_touch_value_boolean": {
         "color": "#2AB4D3",
         "skeleton": "basic_boolean_field",
         "fontColor": "#fff",
@@ -26485,13 +26486,13 @@ Entry.block = {
         }],
         "def": {
             "params": [null, null, null],
-            "type": "practical_arts_touch_value_boolean"
+            "type": "practical_course_touch_value_boolean"
         },
         "paramsKeyMap": {
             "PORT": 0,
             "TOUCH": 1
         },
-        "class": "practical_arts_touch",
+        "class": "practical_course_touch",
         "func": function(sprite, script) {
             var port = script.getStringField('PORT');
             var touch = script.getNumberField("TOUCH", script);
@@ -26501,7 +26502,7 @@ Entry.block = {
             return isTouch;
         }
     },
-    "practical_arts_light_value": {
+    "practical_course_light_value": {
         "color": "#498DEB",
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
@@ -26520,18 +26521,18 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null],
-            "type": "practical_arts_light_value"
+            "type": "practical_course_light_value"
         },
         "paramsKeyMap": {
             "PORT": 0
         },
-        "class": "practical_arts_light",
+        "class": "practical_course_light",
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             return Entry.hw.portData['IN' + port];
         }
     },
-    "practical_arts_light_value_boolean": {
+    "practical_course_light_value_boolean": {
         "color": "#498DEB",
         "skeleton": "basic_boolean_field",
         "fontColor": "#fff",
@@ -26568,14 +26569,14 @@ Entry.block = {
                 "type": "number",
                 "params": ["100"]
             }],
-            "type": "practical_arts_light_value_boolean"
+            "type": "practical_course_light_value_boolean"
         },
         "paramsKeyMap": {
             "PORT": 0,
             "OPERATOR": 1,
             "RIGHTVALUE": 2
         },
-        "class": "practical_arts_light",
+        "class": "practical_course_light",
         "func": function(sprite, script) {
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
@@ -26604,7 +26605,7 @@ Entry.block = {
             return isCheck;
         }
     },
-    "practical_arts_sound_value": {
+    "practical_course_sound_value": {
         "color": "#00D67F",
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
@@ -26623,18 +26624,18 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null],
-            "type": "practical_arts_sound_value"
+            "type": "practical_course_sound_value"
         },
         "paramsKeyMap": {
             "PORT": 0
         },
-        "class": "practical_arts_sound",
+        "class": "practical_course_sound",
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             return Entry.hw.portData['IN' + port];
         }
     },
-    "practical_arts_sound_value_boolean": {
+    "practical_course_sound_value_boolean": {
         "color": "#00D67F",
         "skeleton": "basic_boolean_field",
         "fontColor": "#fff",
@@ -26672,14 +26673,14 @@ Entry.block = {
                 "type": "number",
                 "params": ["100"]
             }],
-            "type": "practical_arts_sound_value_boolean"
+            "type": "practical_course_sound_value_boolean"
         },
         "paramsKeyMap": {
             "PORT": 0,
             "OPERATOR": 1,
             "RIGHTVALUE": 2
         },
-        "class": "practical_arts_sound",
+        "class": "practical_course_sound",
         "func": function(sprite, script) {
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
@@ -26708,7 +26709,7 @@ Entry.block = {
             return isCheck;
         }
     },
-    "practical_arts_irs_value": {
+    "practical_course_irs_value": {
         "color": "#C4065C",
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
@@ -26727,19 +26728,19 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null],
-            "type": "practical_arts_irs_value"
+            "type": "practical_course_irs_value"
         },
         "paramsKeyMap": {
             "PORT": 0
         },
-        "class": "practical_arts_irs",
+        "class": "practical_course_irs",
         //"isNotFor": ["mini"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             return Entry.hw.portData['IN' + port];
         }
     },
-    "practical_arts_irs_value_boolean": {
+    "practical_course_irs_value_boolean": {
         "color": "#C4065C",
         "skeleton": "basic_boolean_field",
         "fontColor": "#fff",
@@ -26777,14 +26778,14 @@ Entry.block = {
                 "type": "number",
                 "params": ["100"]
             }],
-            "type": "practical_arts_irs_value_boolean"
+            "type": "practical_course_irs_value_boolean"
         },
         "paramsKeyMap": {
             "PORT": 0,
             "OPERATOR": 1,
             "RIGHTVALUE": 2
         },
-        "class": "practical_arts_irs",
+        "class": "practical_course_irs",
         //"isNotFor": ['mini'],
         "func": function(sprite, script) {
             var port = script.getNumberField('PORT', script);
@@ -26814,7 +26815,7 @@ Entry.block = {
             return isCheck;
         }
     },
-    "practical_arts_diode_secs_toggle": {
+    "practical_course_diode_secs_toggle": {
         "color": "#FF8D10",
         "skeleton": "basic",
         "fontColor": "#fff",
@@ -26842,7 +26843,7 @@ Entry.block = {
             "fontSize": 11
         },{
             "type": "Indicator",
-            "img": "block_icon/practical_arts/diode.png",
+            "img": "block_icon/practical_course/diode.png",
             "size": 12
         }],
         "events": {},
@@ -26851,14 +26852,14 @@ Entry.block = {
                 "type": "number",
                 "params": ["2"]
             }, null, null],
-            "type": "practical_arts_diode_secs_toggle"
+            "type": "practical_course_diode_secs_toggle"
         },
         "paramsKeyMap": {
             "PORT": 0,
             "DURATION": 1,
             "VALUE": 2
         },
-        "class": "practical_arts_diode",
+        "class": "practical_course_diode",
         "func": function (sprite, script) {
              if (!script.isStart) {
                 var port = script.getNumberField('PORT');
@@ -26900,7 +26901,7 @@ Entry.block = {
             }
         }
     },
-    "practical_arts_diode_toggle": {
+    "practical_course_diode_toggle": {
         "color": "#FF8D10",
         "skeleton": "basic",
         "fontColor": "#fff",
@@ -26925,19 +26926,19 @@ Entry.block = {
             "fontSize": 11
         },{
             "type": "Indicator",
-            "img": "block_icon/practical_arts/diode.png",
+            "img": "block_icon/practical_course/diode.png",
             "size": 12
         }],
         "events": {},
         "def": {
             "params": [null, null, null],
-            "type": "practical_arts_diode_toggle"
+            "type": "practical_course_diode_toggle"
         },
         "paramsKeyMap": {
             "PORT": 0,
             "VALUE": 1
         },
-        "class": "practical_arts_diode",
+        "class": "practical_course_diode",
         //"isNotFor": ["mini"],
         "func": function (sprite, script) {
             var port = script.getNumberField('PORT');
@@ -26960,7 +26961,7 @@ Entry.block = {
             return script.callReturn();
         }
     },
-    "practical_arts_diode_inout_toggle": {
+    "practical_course_diode_inout_toggle": {
         "color": "#FF8D10",
         "skeleton": "basic",
         "fontColor": "#fff",
@@ -26992,7 +26993,7 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "block_icon/practical_arts/diode.png",
+            "img": "block_icon/practical_course/diode.png",
             "size": 12
         }],
         "events": {},
@@ -27001,7 +27002,7 @@ Entry.block = {
                     { "type": "number", "params": ["0"] },
                     { "type": "number", "params": ["255"] },
                     null],
-            "type": "practical_arts_diode_inout_toggle"
+            "type": "practical_course_diode_inout_toggle"
         },
         "paramsKeyMap": {
             "OUTPUT": 0,
@@ -27009,7 +27010,7 @@ Entry.block = {
             "MIN": 2,
             "MAX": 3
         },
-        "class": "practical_arts_diode",
+        "class": "practical_course_diode",
         //"isNotFor": ["mini"],
         "func": function (sprite, script) {
             var outputPort = script.getNumberField('OUTPUT');
@@ -27036,7 +27037,7 @@ Entry.block = {
             return script.callReturn();
         }
     },
-    "practical_arts_diode_set_output": {
+    "practical_course_diode_set_output": {
         "color": "#FF8D10",
         "skeleton": "basic",
         "statements": [],
@@ -27055,7 +27056,7 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "block_icon/practical_arts/diode.png",
+            "img": "block_icon/practical_course/diode.png",
             "size": 12
         }],
         "events": {},
@@ -27064,13 +27065,13 @@ Entry.block = {
                 "type": "number",
                 "params": ["255"]
             }, null],
-            "type": "practical_arts_diode_set_output",
+            "type": "practical_course_diode_set_output",
         },
         "paramsKeyMap": {
             "PORT": 0,
             "VALUE": 1
         },
-        "class": "practical_arts_diode",
+        "class": "practical_course_diode",
         //"isNotFor": ["mini"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT', script);
@@ -27089,7 +27090,7 @@ Entry.block = {
             return script.callReturn();
         }
     },
-    "practical_arts_diode_input_value": {
+    "practical_course_diode_input_value": {
         "color": "#FF8D10",
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
@@ -27108,18 +27109,18 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null],
-            "type": "practical_arts_diode_input_value"
+            "type": "practical_course_diode_input_value"
         },
         "paramsKeyMap": {
             "PORT": 0
         },
-        "class": "practical_arts_diode",
+        "class": "practical_course_diode",
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             return Entry.hw.portData['IN' + port];
         }
     },
-    "practical_arts_melody_note_for": {
+    "practical_course_melody_note_for": {
         "color": "#FC327F",
         "skeleton": "basic",
         "statements": [],
@@ -27168,20 +27169,20 @@ Entry.block = {
             "fontSize": 11
         }, {
             "type": "Indicator",
-            "img": "block_icon/practical_arts/melody.png",
+            "img": "block_icon/practical_course/melody.png",
             "size": 12
         }],
         "events": {},
         "def": {
             "params": [null, null, null, null],
-            "type": "practical_arts_melody_note_for"
+            "type": "practical_course_melody_note_for"
         },
         "paramsKeyMap": {
             "NOTE": 0,
             "OCTAVE": 1,
             "DURATION": 2
         },
-        "class": "practical_arts_melody",
+        "class": "practical_course_melody",
         //"isNotFor": ["mini"],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
