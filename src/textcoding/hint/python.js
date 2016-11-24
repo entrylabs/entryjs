@@ -13,7 +13,14 @@ Entry.PyHint = function(syntax) {
 
     this.syntax = syntax;
     this.scope = {};
-    this.scope._global = Object.keys(syntax);
+
+    this.scope._global = [];
+    for (var key in syntax) {
+        if (syntax[key].syntax && key.indexOf("%") < 0)
+            this.scope._global.push(key)
+    }
+    this.addScope("Entry");
+
     this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
 
     CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
@@ -25,18 +32,38 @@ Entry.PyHint = function(syntax) {
         var lastToken = tokens[tokens.length - 1];
         var result = [], menuResult = [];
 
+        console.log(tokens)
+
         // If it's not a 'word-style' token, ignore the token.
 
 
         if (!lastToken) return null;
 
+        var searchString;
+        var start = lastToken.start;
+        var hintFunc = this.hintFunc;
+        var syntax = this.syntax;
+
         switch(lastToken.type) {
+            case "def":
+                var defToken = tokens[tokens.length - 3];
+                if (defToken) {
+                    searchString = "def " + lastToken.string;
+                    start = defToken.start;
+                }
+            case "keyword":
+                if (!searchString)
+                    searchString = lastToken.string;
             case "variable":
-                result = this.fuzzySearch(this.getScope("_global"), lastToken.string).slice(0,20);
+                if (!searchString)
+                    searchString = lastToken.string;
+                console.log(searchString)
+                result = this.fuzzySearch(this.getScope("_global"), searchString).slice(0,20);
                 result = result.map(function(key) {
                     return {
                         displayText: key,
-                        text: key
+                        hint: hintFunc,
+                        syntax: syntax[key]
                     }
                 })
                 break;
@@ -48,7 +75,8 @@ Entry.PyHint = function(syntax) {
                 result = searchResult.map(function(key) {
                     return {
                         displayText: key,
-                        text: key
+                        hint: hintFunc,
+                        syntax: syntax[variableToken.string][key]
                     }
                 })
                 var scope = this.syntax[variableToken.string];
@@ -65,26 +93,53 @@ Entry.PyHint = function(syntax) {
         else
             this._blockMenu._cancelDynamic()
         return {list: result, // for optimize
-            from: CodeMirror.Pos(cur.line, lastToken.start),
+            from: CodeMirror.Pos(cur.line, start),
             to: CodeMirror.Pos(cur.line, lastToken.end)};
     }
 
+    p.addScope = function(name) {
+        if (this.syntax[name]) {
+            this.scope[name] = Object.keys(this.syntax[name]);
+            this.scope._global.unshift(name);
+        }
+    };
 
     p.getScope = function(name) {
         if (this.scope[name]) return this.scope[name];
-        else if (this.syntax[name]) {
-            this.scope[name] = Object.keys(this.syntax[name]);
-            return this.scope[name]
-        } else {
-            return [];
-        }
-
+        else return [];
     }
 
     p.fuzzySearch = function(arr, start, options) {
         var result = fuzzy.filter(start, arr, options);
         result = result.map(function(o){return o.original});
         return result;
+    };
+
+    p.hintFunc = function(cm, self, data) {
+        console.log(cm, self, data);
+        var text;
+        var syntax = data.syntax;
+        var ch = self.from.ch;
+        if (!syntax.syntax) {
+            text = data.displayText + ".";
+            ch += text.length;
+        } else {
+            text = syntax.syntax.split("\n");
+            text = text[0];
+            text = text.split(".");
+            if (text.length > 1)
+                text.shift();
+            text = text.join(".");
+            if (text.indexOf("%") > -1) {
+                text = text.replace(/%\d+/gi, "");
+                ch += text.indexOf("(") + 1;
+            } else {
+                ch += text.length;
+            }
+        }
+
+        cm.replaceRange(text, self.from, self.to)
+        cm.setCursor({line: self.from.line, ch: ch})
     };
 
 })(Entry.PyHint.prototype);
