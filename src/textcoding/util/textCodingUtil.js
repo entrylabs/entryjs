@@ -976,23 +976,6 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
-    tu.isEntryEventFuncNameWithoutParam = function(name) {
-        console.log("isEntryEventFuncName name", name); 
-        if( name == "entry_event_start" ||
-            name == "entry_event_mouse_down" ||
-            name == "entry_event_mouse_up" ||
-            name == "entry_event_object_down" ||
-            name == "entry_event_object_up" ||
-            name == "entry_event_scene_start" ||
-            name == "entry_event_clone_create") {
-
-            return true;
-        }
-        
-        console.log("isEntryEventFuncName result is NOT");
-        return false;
-    };
-
     tu.isEntryEventFuncNameWithParam = function(name) {
         console.log("isEntryEventFuncNameWithParam name", name);
         var lastIndex = name.lastIndexOf("_");
@@ -1508,7 +1491,24 @@ Entry.TextCodingUtil = {};
             return true;
 
         return false;
-    }
+    };
+
+    tu.isHWParamBlock = function(blockType) {
+        if(blockType == "hamster_hand_found" ||
+            blockType == "hamster_value" ||
+            blockType == "arduino_get_number_sensor_value" ||
+            blockType == "arduino_get_digital_value" ||
+            blockType == "arduino_convert_scale" ||
+            blockType == "arduino_ext_get_analog_value" ||
+            blockType == "arduino_ext_get_analog_value_map" ||
+            blockType == "arduino_ext_get_ultrasonic_value" ||
+            blockType == "arduino_ext_get_digital") {
+
+            return true;
+        }
+
+        return false;
+    };
 
     tu.isMaterialBlock = function(blockType) {
         if(blockType == "get_canvas_input_value" ||
