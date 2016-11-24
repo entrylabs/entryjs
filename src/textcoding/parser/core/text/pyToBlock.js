@@ -14,8 +14,8 @@ goog.require("Entry.Queue");
 Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
     this.blockSyntax = blockSyntax;
-    this._blockStatmentIndex = 0;
-    this._blockStatments = [];
+
+    this._currentObject = Entry.playground.object;
 
     var variableMap = new Entry.Map();
     this._variableMap = variableMap;
@@ -42,13 +42,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("this.syntax", this.blockSyntax);
         try {
             this._code = [];
-
-            this._blockCountMap.put("ExpressionStatement", 0);
-            this._blockCountMap.put("FunctionDeclaration", 0);
-            this._blockCountMap.put("VariableDeclarator", 0);
-            this._blockCountMap.put("ForStatement", 0);
-            this._blockCountMap.put("WhileStatement", 0);
-            this._blockCountMap.put("IfStatement", 0);
 
             this._threadCount = 0;
             this._blockCount = 0;
@@ -79,9 +72,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         else if(Entry.TextCodingUtil.isMaterialBlock(block.type)) {
                             continue;
                         }
+                        else if(Entry.TextCodingUtil.isHWParamBlock(block.type)) {
+                            continue;
+                        }
 
-                        if(Entry.TextCodingUtil.isEventBlockByType(block.type))
+                        if(Entry.TextCodingUtil.isEventBlockByType(block.type)) {
                             isEntryEventExisted = true;
+                            console.log("isEntryEventExisted", isEntryEventExisted);
+                        }
 
                         if(Entry.TextCodingUtil.isVariableDeclarationBlock(block.type)) {
                             console.log("isVariableDeclarationBlock block.type", block.type)
@@ -121,30 +119,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var expression = component.expression;
 
-        var bcmIndex = this._blockCountMap.get("ExpressionStatement");
-        console.log("ExpressionStatement bcmIndex", bcmIndex);
-        if(!bcmIndex) bcmIndex = 0;
-        if(bcmIndex == 0) {
-            if(expression && expression.callee && expression.callee.name) {
-                if(!Entry.TextCodingUtil.isEntryEventFuncName(expression.callee.name)) {
-                    this._blockCount++;
-                    console.log("ExpressionStatement this._blockCount++ if", component);
-                }
-            }
-            else {
-                this._blockCount++;
+        this._blockCount++;
+        console.log("BlockCount ExpressionStatement this._blockCount++", this._blockCount);
 
-                console.log("ExpressionStatement this._blockCount++ else", component);
+        if(expression.callee) {
+            if(Entry.TextCodingUtil.isEntryEventFuncName(expression.callee.name)) {
+                this._blockCount--;
+                console.log("BlockCount ExpressionStatement --", "callee.name", expression.callee.name, this._blockCount);
             }
-        }
-
-        if(expression && expression.callee && expression.callee.name) {
-            if(!Entry.TextCodingUtil.isEntryEventFuncName(expression.callee.name)) {
-                this._blockCountMap.put("ExpressionStatement", bcmIndex+1);
-            }
-        }
-        else {
-            this._blockCountMap.put("ExpressionStatement", bcmIndex+1);
         }
 
         if(expression.type) {
@@ -175,18 +157,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             error.line = this._blockCount;
             console.log("send error", error);
             throw error;
-        }
-
-
-        bcmIndex = this._blockCountMap.get("ExpressionStatement");
-        if(!bcmIndex) bcmIndex = 0;
-        if(expression && expression.callee && expression.callee.name) {
-            if(!Entry.TextCodingUtil.isEntryEventFuncName(expression.callee.name)) {
-                this._blockCountMap.put("ExpressionStatement", bcmIndex-1);
-            }
-        }
-        else {
-            this._blockCountMap.put("ExpressionStatement", bcmIndex-1);
         }
 
         console.log("ExpressionStatement result", result);
@@ -225,7 +195,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             var option = arg.name;
                         }
                         else if(arg.type == "Literal") {
-                            var option = arg.raw;
+                            var option = arg.value;
                         }
                         else if(arg.type == "MemberExpression") {
                             var option = arg.object.name + "." + arg.property.name;
@@ -249,7 +219,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             argKey += arg.name;
                         }
                         else if(arg.type == "Literal") {
-                            argKey += arg.raw;
+                            argKey += arg.value;
                         }
                         else if(arg.type == "MemberExpression") {
                             argKey += arg.object.name + "." + arg.property.name;
@@ -325,7 +295,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             var option = arg.name;
                         }
                         else if(arg.type == "Literal") {
-                            var option = arg.raw;
+                            var option = arg.value;
                         }
                         else if(arg.type == "MemberExpression") {
                             var option = arg.object.name + "." + arg.property.name;
@@ -351,7 +321,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             argKey += arg.name;
                         }
                         else if(arg.type == "Literal") {
-                            argKey += arg.raw;
+                            argKey += arg.value;
                         }
                         else if(arg.type == "MemberExpression") {
                             argKey += arg.object.name + "." + arg.property.name;
@@ -381,6 +351,45 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     type = blockSyntax.key;
             }
 
+            console.log("callee", callee);
+            
+            if(callee.object) {
+                if(callee.object.name === "Math") {
+                    if(callee.property.name === "pow") {
+                        var syntax = String("(%2 ** 2");
+                        var blockSyntax = this.getBlockSyntax(syntax);
+                        if(blockSyntax)
+                            type = blockSyntax.key;
+                    }
+                    else if(callee.property.name === "floor") { 
+                        var syntax = String("(%2 // %4)");
+                        var blockSyntax = this.getBlockSyntax(syntax);
+                        if(blockSyntax) {
+                            type = blockSyntax.key;
+                            var block = Entry.block[type];
+                            var paramsMeta = block.params;
+                            var paramsDefMeta = block.def.params;
+                        }
+
+                        if(component.arguments && component.arguments[0]) {
+                            var argument = component.arguments[0];    
+                            if(argument.left) {
+                                param = this[argument.left.type](argument.left.value, paramsMeta, paramsDefMeta, blockSyntax.textParams[1]);
+                                params.push(param);
+                            }
+                            if(argument.right) {
+                                param = this[argument.left.type](argument.left.value, paramsMeta, paramsDefMeta, blockSyntax.textParams[3]);
+                                params.push(param);
+                            }
+
+                            result.type = type;
+                            result.params = params;
+                            return result; 
+                        }
+                    } 
+                }
+            }
+            
             if(callee.property) {
                 if(callee.property.name == "range"){
                     var syntax = String("%1#number");
@@ -415,7 +424,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     result.operator = "MULTI";
                 }
-                else if(callee.property.name == "in") {
+                else if(callee.property.name == "in") {  
                     var syntax = String("%4 in %2");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if(blockSyntax)
@@ -423,6 +432,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 else if(callee.property.name == "len") {
                     var syntax = String("len");
+                    if(component.arguments && component.arguments[0]) {
+                        var arg = component.arguments[0];
+                        if(arg.type == "Literal")
+                            syntax = String("len#length_of_string");
+                    }
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if(blockSyntax)
                         type = blockSyntax.key;
@@ -441,30 +455,70 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 else if(callee.property.name == "pop") {
                     var syntax = String("%2.pop");
-
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if(blockSyntax)
                         type = blockSyntax.key;
                 }
-
-                if(!type) {
-                    if(calleeData.object.name) {
-                        console.log("callex error calleeData", calleeData);
-                        var error = {};
-                        error.title = "지원되지 않는 코드";
-                        error.message = "블록으로 변환될 수 없는 코드입니다. 변환가능한 함수를 사용하세요.";
-                        error.line = this._blockCount;
-                        console.log("send error", error);
-                        throw error;
-                    }
+                else if(callee.property.name == "subscriptIndex") {
+                    if(component.arguments && component.arguments[0]) {
+                        var arg = component.arguments[0];
+                        if(arg.type == "Literal") {
+                            syntax = String("%2\[%4\]#char_at");
+                            var blockSyntax = this.getBlockSyntax(syntax);
+                            if(blockSyntax)
+                                type = blockSyntax.key;
+                        }
+                    }        
+                }
+                else if(callee.property.name == "_pySlice") {
+                    var syntax = String("%2\[%4:%6\]");
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;  
+                }
+                else if(callee.property.name == "find") {
+                    var syntax = String("%2.find");
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;  
+                }
+                else if(callee.property.name == "replace") {
+                    var syntax = String("%2.replace");
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;  
+                }
+                else if(callee.property.name == "upper") {
+                    var syntax = String("%2.upper");
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;  
+                }
+                else if(callee.property.name == "lower") {
+                    var syntax = String("%2.lower");
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax)
+                        type = blockSyntax.key;  
                 }
             }
+
+            if(!type) {
+                if(calleeData.object.name) {
+                    console.log("callex error calleeData", calleeData);
+                    var error = {};
+                    error.title = "지원되지 않는 코드";
+                    error.message = "블록으로 변환될 수 없는 코드입니다. 변환가능한 함수를 사용하세요.";
+                    error.line = this._blockCount;
+                    console.log("send error", error);
+                    throw error;
+                }
+            }
+            
         }
 
         console.log("CallExpression type after", type);
 
-        if(type) {
-            var currentObject = Entry.TextCodingUtil._currentObject;
+        if(type) {    
             var block = Entry.block[type];
             var paramsMeta = block.params;
             var paramsDefMeta = block.def.params;
@@ -474,20 +528,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("CallExpression paramsDefMeta", paramsDefMeta);
 
             for(var p in paramsMeta) {
-                /*var paramType = paramsMeta[p].type;
-                if(paramType == "Indicator") {
-                    var pendingArg = {raw: null, type: "Literal", value: null};
-                    if(p < arguments.length)
-                        arguments.splice(p, 0, pendingArg);
-                }
-                else if(paramType == "Text") {
-                    var pendingArg = {raw: "", type: "Literal", value: ""};
-                    if(p < arguments.length)
-                        arguments.splice(p, 0, pendingArg);
-                }*/
                 var paramType = paramsMeta[p].type;
                 if(paramType == "Indicator")
-                    continue;
+                    params[p] = null;
                 else if(paramType == "Text")
                     params[p] = null;
             }
@@ -502,9 +545,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(callee.object) {
                         if(callee.object.object) {
                             if(callee.object.object.name == "self") {
-                                var object = Entry.TextCodingUtil._currentObject;
                                 var name = callee.object.property.name;
-                                if(!Entry.TextCodingUtil.isLocalListExisted(name, object)){
+                                if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)){
                                     var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
@@ -542,7 +584,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         if(callee.object.object) {
                             if(callee.object.object.name == "self") {
                                 var name = callee.object.property.name;
-                                if(!Entry.TextCodingUtil.isLocalListExisted(name, currentObject)){
+                                if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)){
                                     var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
@@ -580,7 +622,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         if(callee.object.object) {
                             if(callee.object.object.name == "self") {
                                 var name = callee.object.property.name;
-                                if(!Entry.TextCodingUtil.isLocalListExisted(name, currentObject)){
+                                if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)){
                                     var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
@@ -615,27 +657,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
 
-            if(callee.property && callee.property.name == "range")
-                this._blockCount++;
-
             var pi = 0;
-            pi = pi + addedParamIndex;
+            pi += addedParamIndex;
+
+            if(blockSyntax.textParams)
+                var textParams = blockSyntax.textParams;
 
             for(var i in arguments) {
                 var isParamOption = false;
                 var argument = arguments[i];
                 console.log("kkk argument", argument, "typeof", typeof argument);
 
-                /*if(callee.property && callee.property.name == "range") {
-                    break;
-                }*/
-
                 if(argument) {
                     console.log("CallExpression argument", argument, "typeof", typeof argument);
 
                     argument.calleeName = calleeName;
-                    var param = this[argument.type](argument, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], true);
+                    if(!textParams)
+                        var textParams = [];
 
+                    var param = this[argument.type]
+                        (argument, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], textParams[pi]);
+
+                    
                     console.log("callexpression callee", callee, "param", param);
 
                     console.log("calleeName", calleeName, "param", param);
@@ -648,32 +691,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("callex param syntax", syntax, "order", paramIndex, "value", paramIndex[pi], "param", param);
                     console.log("pi", pi);
 
-                    if(param.object && param.property) {
-                        var paramOption = blockSyntax.paramOption;
-                        if(paramOption) {
+                    if(param && param.object && param.property) {
+                        var keyOption = blockSyntax.keyOption;
+                        if(keyOption) {
                             var pName = param.object.name + "." + param.property.name;
-                            if(paramOption == pName) {
+                            if(keyOption == pName) {
                                 isParamOption = true;
                             }
                         }
                     }
 
-                    if(isParamOption)
-                        continue;
+                    if(isParamOption) continue;
+                    var pIndex = paramIndex[pi++];
+                    if(pIndex === undefined) continue;
 
-                    params[paramIndex[pi++]] = param;
+                    params[pIndex] = param;
 
                     console.log("callex realtime params", params);
-
-                    /*if(callee.property && callee.property.name == "range") {
-                        console.log("call range param is", param);
-                        continue;
-                    }*/
 
                     if(param) {
                         if(param.object && param.object.object) {
                             if(param.object.object.name == "self") {
-                                if(!Entry.TextCodingUtil.isLocalListExisted(param.object.property.name, currentObject)) {
+                                if(!Entry.TextCodingUtil.isLocalListExisted(param.object.property.name, this._currentObject)) {
                                     var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.property.name + "\'" + " 리스트를 생성하세요.";
@@ -694,7 +733,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         else if(param.object) {
                             if(callee.property && callee.property.name == "len" || callee.property.name == "in") {
                                 if(param.object.name == "self") {
-                                    if(!Entry.TextCodingUtil.isLocalListExisted(param.property.name, currentObject)) {
+                                    if(!Entry.TextCodingUtil.isLocalListExisted(param.property.name, this._currentObject)) {
                                         var error = {};
                                         error.title = "지원되지 않는 코드";
                                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.property.name + "\'" + " 리스트를 생성하세요.";
@@ -714,18 +753,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             }
                             else {
                                 if(param.property.callee == "__pythonRuntime.ops.subscriptIndex") {
-                                    if(!Entry.TextCodingUtil.isGlobalListExisted(param.object.name, currentObject)) {
-                                        var error = {};
-                                        error.title = "지원되지 않는 코드";
-                                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.name + "\'" + " 리스트를 생성하세요.";
-                                        error.line = this._blockCount;
-                                        console.log("send error", error);
-                                        throw error;
-                                    }
+                                    if(param.type != "char_at")
+                                        if(!Entry.TextCodingUtil.isGlobalListExisted(param.object.name, this._currentObject)) {
+                                            var error = {};
+                                            error.title = "지원되지 않는 코드";
+                                            error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.name + "\'" + " 리스트를 생성하세요.";
+                                            error.line = this._blockCount;
+                                            console.log("send error", error);
+                                            throw error;
+                                        }
                                 }
                                 else {
                                     if(param.object.name == "self") {
-                                        if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, currentObject)) {
+                                        if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, this._currentObject)) {
                                             var error = {};
                                             error.title = "지원되지 않는 코드";
                                             error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.property.name + "\'" + " 변수를 생성하세요.";
@@ -748,8 +788,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                         else {
                             if(param.name && typeof param == "object") {
-                                if(callee.property && callee.property.name == "len" || callee.property.name == "in") {
-                                    if(!Entry.TextCodingUtil.isGlobalListExisted(param.name, currentObject)) {
+                                if(callee.property && (callee.property.name == "len" || callee.property.name == "in")) {
+                                    if(!Entry.TextCodingUtil.isGlobalListExisted(param.name, this._currentObject)) {
                                         var error = {};
                                         error.title = "지원되지 않는 코드";
                                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + " 리스트를 생성하세요.";
@@ -775,9 +815,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 }
             }
-
-            if(callee.property && callee.property.name == "range")
-                this._blockCount--;
 
             console.log("call call params", params);
 
@@ -897,7 +934,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
 
                     if(isParamAllString) { //retype considering parameter condition
-                        var syntax = String("%2 + %4");
+                        var syntax = String("(%2 + %4)");
                         var blockSyntax = this.getBlockSyntax(syntax);
                         if(blockSyntax)
                             type = blockSyntax.key;
@@ -923,27 +960,94 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params[2].params[0] = String(Number(params[2].params[0]) + 1);
                     }
                 }
-                else if(callee.property.name == "len") {
-                    var p = params[1];
-                    p = this.ParamDropdownDynamic(p.name, paramsMeta[1], paramsDefMeta[1]);
-                    params[1] = p;
+                else if(callee.property.name == "len") { 
+                    if(syntax == String("len")) {
+                        var p = params[1];
+                        p = this.ParamDropdownDynamic(p.name, paramsMeta[1], paramsDefMeta[1]);
+                        params[1] = p;
+                    }
                 }
                 else if(callee.property.name == "in") {
                     var p = params[1];
                     p = this.ParamDropdownDynamic(p.name, paramsMeta[1], paramsDefMeta[1]);
                     params[1] = p;
                 }
+                else if(callee.property.name == "subscriptIndex") {
+                    var p = params[3];
+                    if(p.type == "number" || p.type == "text")
+                        p.params[0] += 1;
+                    params[3] = p;
+                }
+                else if(callee.property.name == "_pySlice") {
+                    if(callee.object) {
+                        var objectData = this[callee.object.type](callee.object);
+                        console.log("objectData", objectData);
+                        var newParams = [];
+                        newParams[1] = objectData;
+                        if(params[1].type == "number" || params[1].type == "text")
+                            params[1].params[0] += 1; 
+                        newParams[3] = params[1];
+                        if(params[3].type == "number" || params[3].type == "text")
+                            params[3].params[0] += 1;
+                        newParams[5] = params[3];
+                        params = newParams;
+                    }  
+                }
+                else if(callee.property.name == "find") { 
+                    if(callee.object) {
+                        var objectData = this[callee.object.type](callee.object);
+                        console.log("objectData", objectData);
+                        var newParams = [];
+                        newParams[1] = objectData;
+                        newParams[3] = params[1];
+                        params = newParams; 
+                    }  
+                }
+                else if(callee.property.name == "replace") {
+                    if(callee.object) {
+                        var objectData = this[callee.object.type](callee.object);
+                        console.log("objectData", objectData);
+                        var newParams = [];
+                        newParams[1] = objectData;
+                        newParams[3] = params[1];
+                        newParams[5] = params[3];
+                        params = newParams;
+                    }  
+                }
+                else if(callee.property.name == "upper") {
+                    if(callee.object) {
+                        var objectData = this[callee.object.type](callee.object);
+                        console.log("objectData", objectData);
+                        var newParams = [];
+                        newParams[1] = objectData;
+                        newParams[3] = params[1];
+                        params = newParams;
+                    }  
+                }
+                else if(callee.property.name == "lower") {
+                    if(callee.object) {
+                        var objectData = this[callee.object.type](callee.object);
+                        console.log("objectData", objectData);
+                        var newParams = [];
+                        newParams[1] = objectData;
+                        newParams[3] = params[1];
+                        params = newParams;
+                    }  
+                }
             }
 
             //HW
             if(callee.object && callee.property) {
                 if(callee.object.name == "Hamster") {
+                    console.log("params", params);
                     if(callee.property.name == "wheels") {
                         var calleeName = callee.object.name + "." + callee.property.name;
                         var param1 = params[0];
                         var param2 = params[1];
-                        if(param1.params[0] == param2.params[0]) {
-                            var syntax = calleeName + "#" + "SAME";
+                        //if(param1.params[0] == param2.params[0]) {
+                        if(!params[1]) {
+                            var keyOption = "SAME";
+                            var syntax = calleeName + "#" + keyOption;
                             var blockSyntax = this.getBlockSyntax(syntax);
                             if(blockSyntax) {
                                 type = blockSyntax.key;
@@ -954,8 +1058,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var calleeName = callee.object.name + "." + callee.property.name;
                         var param1 = params[0];
                         var param2 = params[1];
-                        if(param1.params[0] == param2.params[0]) {
-                            var syntax = calleeName + "#" + "SAME";
+                        //if(param1.params[0] == param2.params[0]) {
+                            if(!params[1]) {
+                            var keyOption = "SAME";
+                            var syntax = calleeName + "#" + keyOption;
                             var blockSyntax = this.getBlockSyntax(syntax);
                             if(blockSyntax) {
                                 type = blockSyntax.key;
@@ -966,56 +1072,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             console.log("params checkit", params);
-
-            //HW Param Processing
-            if(blockSyntax.paramCodes) {
-                var paramCodes = blockSyntax.paramCodes;
-                for(var pcs in paramCodes) {
-                    var paramCode = paramCodes[pcs];
-                    if(paramCode) {
-                        var pCode = params[pcs];
-                        console.log("pCode", pCode);
-                        if(pCode.type)
-                            var code = pCode.params[0];
-                        else
-                            var code = pCode;
-
-                        if(typeof code == "string") {
-                            code = "\"" + code + "\"";
-                            for(var key in paramCode) {
-                                var value = paramCode[key];
-                                console.log("checkit key", key, "value", value, "code", code);
-                                for(var v in value) {
-                                    if(value[v] == code) {
-                                        if(pCode.type)
-                                            params[pcs].params[0] = key;
-                                        else
-                                            params[pcs] = key;
-                                    }
-                                }
-                            }
-                        }
-                        else if(typeof code == "object") {
-                            if(code.object && code.property) {
-                                var objectCode = code.object.name + "." + code.property.name;
-                                for(var key in paramCode) {
-                                    var value = paramCode[key];
-                                    console.log("checkit key", key, "value", value);
-                                    console.log("object code", objectCode);
-                                    for(var v in value) {
-                                        if(value[v] == objectCode) {
-                                            if(pCode.type)
-                                                params[pcs].params[0] = key;
-                                            else
-                                                params[pcs] = key;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
 
             if(blockSyntax.params && blockSyntax.params.length != 0) {
                 for(var p in blockSyntax.params) {
@@ -1038,6 +1094,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var args = [];
             for(var i in arguments) {
                 var argument = arguments[i];
+                if(!argument) continue;
                 console.log("CallExpression argument", argument, "typeof", typeof argument);
 
                 var argumentData = this[argument.type](argument);
@@ -1140,10 +1197,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var paramsMeta = block.params;
             var paramsDefMeta = block.def.params;
 
-            var object = Entry.TextCodingUtil._currentObject;
-
             if(!Entry.TextCodingUtil.isGlobalVariableExisted(name) &&
-                !Entry.TextCodingUtil.isLocalVariableExisted(name, object)) {
+                !Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
                 if(paramMeta && paramDefMeta) {
                     result.isCallParam = true;
                 } else {
@@ -1224,19 +1279,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var result = {};
         var structure = {};
         var params = [];
-        /*var existed = false;
-        var variableFlag = true;*/
 
-        if(component.id.name && !component.id.name.includes("__filbert")) {
-            var bcmIndex = this._blockCountMap.get("VariableDeclarator");
-            if(!bcmIndex) bcmIndex = 0;
-            console.log("VariableDeclarator bcmIndex", bcmIndex, "this._blockCountMap", this._blockCountMap);
-            if(bcmIndex == 0) {
-                this._blockCount++;
-                console.log("VariableDeclarator this._blockCount++");
-            }
-            this._blockCountMap.put("VariableDeclarator", bcmIndex+1);
-        }
+        this._blockCount++; 
+        console.log("BlockCount VariableDeclarator ++", this._blockCount);
+        if((component.id.name && component.id.name.search("__") != -1) ||
+            (component.init && component.init.callee && component.init.callee.name &&
+             component.init.callee.name.search("__") != -1)) {
+            this._blockCount--; 
+            console.log("BlockCount VariableDeclarator --", this._blockCount);
+        } 
 
         var id = component.id;
         var init = component.init;
@@ -1253,10 +1304,78 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return result;
         }
 
-        /*if(id.name.includes('__filbert'))
-            return undefined;*/
+        var idData = this[id.type](id);
+        var initData = this[init.type](init);
 
-
+        //var params = [];
+        if(init.type == "Identifier" || init.type == "MemberExpression") {
+            if(initData.property && initData.property.callee == "__pythonRuntime.ops.subscriptIndex") {
+                if(initData.object && initData.object.object) {
+                    if(initData.object.object.name != "self") { // Not Self List
+                        var error = {};
+                        error.title = "지원되지 않는 코드";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + initData.object.object.name + "\'" + " 객체 리스트는 지원하지 않습니다.";
+                        error.line = this._blockCount;
+                        console.log("send error", error);
+                        throw error;
+                    }
+                    else if(initData.object.property) { // Self List
+                        if(!Entry.TextCodingUtil.isLocalListExisted(initData.object.property.name, this._currentObject)) {
+                            var error = {};
+                            error.title = "지원되지 않는 코드";
+                            error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + initData.object.property.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                            error.line = this._blockCount;
+                            console.log("send error", error);
+                            throw error;
+                        }
+                    }
+                }
+                else if(initData.object) { // List
+                    if(!Entry.TextCodingUtil.isGlobalListExisted(initData.object.name)) {
+                        var error = {};
+                        error.title = "지원되지 않는 코드";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + initData.object.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                        error.line = this._blockCount;
+                        console.log("send error", error);
+                        throw error;
+                    }
+                }
+            }
+            else {
+                if(initData.object) {
+                    if(initData.object.name != "self") { // Not Self List
+                        var error = {};
+                        error.title = "지원되지 않는 코드";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + initData.object.name + "\'" + " 객체 변수는 지원하지 않습니다.";
+                        error.line = this._blockCount;
+                        console.log("send error", error);
+                        throw error;
+                    }
+                    else if(initData.property.name) { // Self List
+                        console.log("initData.property.name", initData)
+                        if(!Entry.TextCodingUtil.isLocalVariableExisted(initData.property.name, this._currentObject)) {
+                            var error = {};
+                            error.title = "지원되지 않는 코드";
+                            error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + initData.property.name + "\'" + " 변수를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                            error.line = this._blockCount;
+                            console.log("send error", error);
+                            throw error;
+                        }
+                    }
+                }
+                else {
+                    if(!Entry.TextCodingUtil.isGlobalVariableExisted(initData.name)) {
+                        var error = {};
+                        error.title = "지원되지 않는 코드";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + initData.name + "\'" + " 변수는 지원하지 않습니다.";
+                        error.line = this._blockCount;
+                        console.log("send error", error);
+                        throw error;
+                    }
+                }
+            }
+        }
+        
         var calleeName;
 
         console.log("VariableDeclarator init", init);
@@ -1276,11 +1395,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("calleeName", calleeName);
 
         if(calleeName == "__pythonRuntime.objects.list") {
-            var idData = this[id.type](id);
             console.log("VariableDeclarator idData", idData);
             result.id = idData;
 
-            var initData = this[init.type](init);
             console.log("VariableDeclarator initData", initData);
             result.init = initData;
 
@@ -1291,7 +1408,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
             for(var a in arguments) {
                 var argument = arguments[a];
                 var item = {};
-                item.data = String(argument.params[0]);
+                if(argument.type) {
+                    var arg = argument.params[0];
+                    if(typeof arg === "string")
+                        arg = "\"" + arg + "\"";
+                    item.data = String(argument.params[0]); 
+                }
+                else if(argument.name) {
+                    var error = {};
+                    error.title = "지원되지 않는 코드";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + argument.name + "\'" + " 변수는 리스트에 포함될 수 없습니다.";
+                    error.line = this._blockCount;
+                    console.log("send error", error);
+                    throw error;
+                }
+
                 array.push(item);
             }
 
@@ -1305,6 +1436,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var name = id.name;
             if(init.type == "Literal") {
                 var value = init.value;
+                if(typeof value === "string")
+                    value = "\"" + value + "\"";
             }
             else if(init.type == "Identifier") {
                 var value = init.name;
@@ -1316,6 +1449,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("gl initData", initData, "type", typeof value);
                 if(typeof value != "string" && typeof value != "number") {
                     value = NaN;
+                    value = 0;
                 }
             }
             else {
@@ -1324,9 +1458,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             console.log("variable name", name, "value", value);
 
-            if(value != undefined && value != null && value != NaN) {
+            if((value && !isNaN(value)) || value == 0) {
                 if(name && !name.includes('__filbert')) {
                     if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                        console.log("this is update", name, value);
                         Entry.TextCodingUtil.updateGlobalVariable(name, value);
                     }
                     else {
@@ -1351,19 +1486,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(blockSyntax)
                     type = blockSyntax.key;
                 structure.type = type;
-
-                /*if(idData && idData.name && !idData.name.includes("__filbert")) {
-                    this._blockCount++;
-                    console.log("VariableDeclarator blockCount++");
-                }*/
-
             }
             else {
                 if(initData.params && initData.params[0] && initData.params[0].name &&
                     idData.name == initData.params[0].name &&
                     initData.operator == "PLUS" || initData.operator == "MINUS") {
-                    /*if(initData.operator != "PLUS")
-                        return result;*/
 
                     console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
                     var syntax = String("%1 = %1 + %2");
@@ -1373,8 +1500,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         type = blockSyntax.key;
 
                     structure.type = type;
-                    //this._blockCount++;
-                    //console.log("VariableDeclarator blockCount++");
                 } else {
                     var syntax = String("%1 = %2");
                     var blockSyntax = this.getBlockSyntax(syntax);
@@ -1383,12 +1508,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         type = blockSyntax.key;
 
                     structure.type = type;
-
-                    /*if(idData && idData.name && !idData.name.includes("__filbert")) {
-                        this._blockCount++;
-                        console.log("VariableDeclarator blockCount++");
-                    }*/
-
                 }
 
             }
@@ -1407,6 +1526,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params.push(idData.params[0]);
                 else
                     params.push(variableId);
+                var pData = initData.params[0];
+                if(typeof pData == "string")
+                    pData = "\"" + pData + "\"";
+                initData.params[0] = pData;
                 params.push(initData);
             }
             else {
@@ -1440,10 +1563,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result.type = structure.type;
             result.params = structure.params;
         }
-
-        var bcmIndex = this._blockCountMap.get("VariableDeclarator");
-        if(!bcmIndex) bcmIndex = 0;
-        this._blockCountMap.put("VariableDeclarator", bcmIndex-1);
 
         console.log("VariableDeclarator result", result);
         return result;
@@ -1502,9 +1621,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 array.push(item);
                             }
 
-                            var object = Entry.TextCodingUtil._currentObject;
-
-                            if(Entry.TextCodingUtil.isLocalListExisted(name, object)) {
+                            if(Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)) {
                                 Entry.TextCodingUtil.updateLocalList(name, array, object);
                             }
                             else {
@@ -1669,21 +1786,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result.operator = operatorData;
 
-        /*//save the variable to map
-        var variable = leftData;
-        var value = rightData;
-        console.log("variable", variable, "value", value);
-        if(variable && value)
-            this._variableMap.put(variable, value);*/
-        //save the variable to map
-
         console.log("AssignmentExpression syntax", syntax);
-
-        var currentObject = Entry.TextCodingUtil._currentObject;
 
         if(leftData && leftData.property && leftData.property.callee == "__pythonRuntime.ops.subscriptIndex") { // In Case of List
             if(leftData.object && leftData.object.object) {
-                if(leftData.object.object != "self") { // Not Self List
+                if(leftData.object.object.name != "self") { // Not Self List
                     var error = {};
                     error.title = "지원되지 않는 코드";
                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + leftData.object.object.name + "\'" + " 객체 리스트는 지원하지 않습니다.";
@@ -1691,15 +1798,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("send error", error);
                     throw error;
                 }
-                else if(leftData.object.property) { // Self List
-                    if(!Entry.TextCodingUtil.isLocalListExisted(leftData.object.property.name, object)) {
-                        var error = {};
-                        error.title = "지원되지 않는 코드";
-                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + leftData.object.property.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                        error.line = this._blockCount;
-                        console.log("send error", error);
-                        throw error;
-                    }
+                else if(leftData.object.property) { // Self List, Because of Left Variable
                 }
             }
             else if(leftData.object) { // List
@@ -1723,11 +1822,70 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("send error", error);
                     throw error;
                 }
-                else if(leftData.property) {
-                    if(!Entry.TextCodingUtil.isLocalVariableExisted(leftData.property.name, currentObject)) {
+                else if(leftData.property) { //Because of Left Variable
+                }
+            }
+        }
+
+        if(right.type == "Identifier" || right.type == "MemberExpression") {
+            if(rightData && rightData.property && rightData.property.callee == "__pythonRuntime.ops.subscriptIndex") { // In Case of List
+                if(rightData.object && rightData.object.object) {
+                    if(rightData.object.object != "self") { // Not Self List
                         var error = {};
                         error.title = "지원되지 않는 코드";
-                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + leftData.property.name + "\'" + "변수를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.object.object.name + "\'" + " 객체 리스트는 지원하지 않습니다.";
+                        error.line = this._blockCount;
+                        console.log("send error", error);
+                        throw error;
+                    }
+                    else if(rightData.object.property) { // Self List
+                        if(!Entry.TextCodingUtil.isLocalListExisted(rightData.object.property.name, this._currentObject)) {
+                            var error = {};
+                            error.title = "지원되지 않는 코드";
+                            error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.object.property.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                            error.line = this._blockCount;
+                            console.log("send error", error);
+                            throw error;
+                        }
+                    }
+                }
+                else if(rightData.object) { // List
+                    if(!Entry.TextCodingUtil.isGlobalListExisted(rightData.object.name)) {
+                        var error = {};
+                        error.title = "지원되지 않는 코드";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.object.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                        error.line = this._blockCount;
+                        console.log("send error", error);
+                        throw error;
+                    }
+                }
+            }
+            else { // In Case of Variable
+                if(rightData.object) {
+                    if(rightData.object.name != "self") {
+                        var error = {};
+                        error.title = "지원되지 않는 코드";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.object.name + "\'" + " 객체 변수는 지원하지 않습니다.";
+                        error.line = this._blockCount;
+                        console.log("send error", error);
+                        throw error;
+                    }
+                    else if(rightData.property) {
+                        if(!Entry.TextCodingUtil.isLocalVariableExisted(rightData.property.name, this._currentObject)) {
+                            var error = {};
+                            error.title = "지원되지 않는 코드";
+                            error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.property.name + "\'" + "변수를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                            error.line = this._blockCount;
+                            console.log("send error", error);
+                            throw error;
+                        }
+                    }
+                }
+                else {
+                    if(!Entry.TextCodingUtil.isGlobalVariableExisted(rightData.name)) {
+                        var error = {};
+                        error.title = "지원되지 않는 코드";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.name + "\'" + " 변수는 지원하지 않습니다.";
                         error.line = this._blockCount;
                         console.log("send error", error);
                         throw error;
@@ -1735,73 +1893,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
         }
-
-        if(rightData && rightData.property && rightData.property.callee == "__pythonRuntime.ops.subscriptIndex") { // In Case of List
-            if(rightData.object && rightData.object.object) {
-                if(rightData.object.object != "self") { // Not Self List
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.object.object.name + "\'" + " 객체 리스트는 지원하지 않습니다.";
-                    error.line = this._blockCount;
-                    console.log("send error", error);
-                    throw error;
-                }
-                else if(rightData.object.property) { // Self List
-                    if(!Entry.TextCodingUtil.isLocalListExisted(rightData.object.property.name, object)) {
-                        var error = {};
-                        error.title = "지원되지 않는 코드";
-                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.object.property.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                        error.line = this._blockCount;
-                        console.log("send error", error);
-                        throw error;
-                    }
-                }
-            }
-            else if(rightData.object) { // List
-                if(!Entry.TextCodingUtil.isGlobalListExisted(rightData.object.name)) {
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.object.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                    error.line = this._blockCount;
-                    console.log("send error", error);
-                    throw error;
-                }
-            }
-        }
-        else { // In Case of Variable
-            if(rightData.object) {
-                if(rightData.object.name != "self") {
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.object.name + "\'" + " 객체 변수는 지원하지 않습니다.";
-                    error.line = this._blockCount;
-                    console.log("send error", error);
-                    throw error;
-                }
-                else if(rightData.property) {
-                    if(!Entry.TextCodingUtil.isLocalVariableExisted(rightData.property.name, currentObject)) {
-                        var error = {};
-                        error.title = "지원되지 않는 코드";
-                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.property.name + "\'" + "변수를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                        error.line = this._blockCount;
-                        console.log("send error", error);
-                        throw error;
-                    }
-                }
-            }
-        }
-
-        /*if(leftData) {
-            if(leftData.object)
-                var leftObject = leftData.object;
-            else if(leftData.name)
-                var leftObject = leftData.name;
-
-            if(leftData.property)
-                var leftProperty = leftData.property;
-            else if(leftData.name)
-                var leftProperty = leftData.name;
-        }*/
 
         console.log("leftData yyy", leftData);
 
@@ -1846,7 +1937,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
         else if(syntax == String("%1 = %2")) {
             console.log("AssignmentExpression calleeName check", calleeName);
-            //if(object && object.name == "self" && calleeName != "__pythonRuntime.objects.list") {
             if(leftData && leftData.object && leftData.property) {
                 var block = Entry.block[type];
                 var paramsMeta = block.params;
@@ -1862,16 +1952,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var value = NaN;
 
                     if(value != NaN) {
-                        var currentObject = Entry.TextCodingUtil._currentObject;
                         console.log("final value", value);
                         console.log("final currentObject", currentObject);
 
 
-                        if(Entry.TextCodingUtil.isLocalVariableExisted(name, currentObject)) {
-                            Entry.TextCodingUtil.updateLocalVariable(name, value, currentObject);
+                        if(Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
+                            Entry.TextCodingUtil.updateLocalVariable(name, value, this._currentObject);
                         }
                         else {
-                            Entry.TextCodingUtil.createLocalVariable(name, value, currentObject);
+                            Entry.TextCodingUtil.createLocalVariable(name, value, this._currentObject);
                         }
                     }
 
@@ -1892,15 +1981,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var value = NaN;
 
                 if(value != NaN) {
-                    var currentObject = Entry.TextCodingUtil._currentObject;
-                    console.log("final currentObject", currentObject);
+                    console.log("final currentObject", this._currentObject);
                     console.log("final value", value);
 
-                    if(Entry.TextCodingUtil.isGlobalVariableExisted(name, currentObject)) {
-                        Entry.TextCodingUtil.updateGlobalVariable(name, value, currentObject);
+                    if(Entry.TextCodingUtil.isGlobalVariableExisted(name, this._currentObject)) {
+                        Entry.TextCodingUtil.updateGlobalVariable(name, value, this._currentObject);
                     }
                     else {
-                        Entry.TextCodingUtil.createGlobalVariable(name, value, currentObject);
+                        Entry.TextCodingUtil.createGlobalVariable(name, value, this._currentObject);
                     }
                 }
 
@@ -1920,11 +2008,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var paramsDefMeta = block.def.params;
 
                     var name = leftData.property.name;
+                    console.log("final currentObject", this._currentObject);
 
-                    var currentObject = Entry.TextCodingUtil._currentObject;
-                    console.log("final currentObject", currentObject);
-
-                    if(!Entry.TextCodingUtil.isLocalVariableExisted(name, currentObject))
+                    if(!Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject))
                         return result;
 
                     name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
@@ -2208,21 +2294,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         structure.params = params;
-
         result.type = structure.type;
         result.params = structure.params;
-
-        var bcmIndex = this._blockCountMap.get("AssignmentExpression");
-        if(!bcmIndex) bcmIndex = 0;
-        this._blockCountMap.put("AssignmentExpression", bcmIndex-1);
 
         console.log("AssignmentExpression result", result);
 
         return result;
     };
 
-    p.Literal = function(component, paramMeta, paramDefMeta, aflag) {
-        console.log("Literal component", component, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta, "aflag", aflag);
+    p.Literal = function(component, paramMeta, paramDefMeta, textParam) {
+        console.log("Literal component", component, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta, "textParam", textParam);
         var result;
         var value = component.value;
 
@@ -2250,31 +2331,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("Literal paramMeta", paramMeta, "paramDefMeta", paramDefMeta);
 
-        if(component.raw == "None") {
-            value = "None";
-            var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
-            console.log("Literal params", params);
-            result = params;
-        }
-        else if(component.raw == "0") {
-            value = 0;
-            var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
-            console.log("Literal params", params);
-            result = params;
-        }
-        else if(component.value == true || component.value == false)
+        if(value == true || value == false || value)
         {
-            var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
-            console.log("Literal params", params);
+            var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta, textParam);
             result = params;
         }
-        else if(component.value) {
-            var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
-            console.log("Literal params", params);
-            result = params;
-        }
-        else if(component.left && component.operator && component.right){
-            // If 'Literal' doesn't have value
+        else if(component.left && component.operator && component.right) {//If 'Literal' doesn't have value
             var params = [];
             var leftParam = this[component.left.type](component.left);
             params.push(leftParam);
@@ -2284,9 +2346,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             params.push(rightParam);
 
             result = params;
-        }
-        else {
-            result = "None";
         }
         console.log("Literal result", result);
 
@@ -2374,8 +2433,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
-    p.ParamDropdown = function(value, paramMeta, paramDefMeta) {
-        console.log("ParamDropdown value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
+    p.ParamDropdown = function(value, paramMeta, paramDefMeta, textParam) {
+        console.log("ParamDropdown value, paramMeta, paramDefMeta textParam", value, paramMeta, paramDefMeta, textParam);
         var result;
 
         var options = paramMeta.options;
@@ -2387,10 +2446,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             }
         }
-        if(result)
-            result = String(result);
-        else
+        
+        if(!result)
             result = value;
+
+        if(textParam && textParam.codeMap) {
+            var codeMap = textParam.codeMap;
+            console.log("codeMap", codeMap);
+            var map = eval(codeMap);
+            console.log("codeMap", map);
+            result = result.toLowerCase();
+            result = map[result];
+        }
+
         console.log("ParamDropdown result", result);
 
         return result;
@@ -2418,24 +2486,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
 
-        if(result)
-            result = String(result);
-        else
+        if(!result)
             result = Entry.TextCodingUtil.dropdownDynmaicNameToIdConvertor(value, paramMeta.menuName);
 
 
-        console.log("ParamDropdownDynamic result", result);
+        console.log("ParamDropdownDynamic result", result); 
 
         return result;
     };
 
     p.ParamKeyboard = function(value, paramMeta, paramDefMeta) {
         console.log("ParamKeyboard value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
-        var result;
-
-        value = value.toLowerCase();
-        result = Entry.KeyboardCode.keyCharToCode[value];
-        console.log("ParamKeyboard result", result);
+        var result = Entry.KeyboardCode.map[value.toLowerCase()];
         return result;
     };
 
@@ -2462,8 +2524,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("MemberExpression objectData", objectData);
         console.log("MemberExpression propertyData", propertyData);
 
-        var currentObject = Entry.TextCodingUtil._currentObject;
-
         if(propertyData.name == "call" && propertyData.userCode == false) {
             return result;
         }
@@ -2472,15 +2532,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(objectData.object) {
                     if(objectData.object.name == "self") {
                         var name = objectData.property.name;
-                        if(!Entry.TextCodingUtil.isLocalListExisted(name, currentObject))
+                        if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject))
                             return result;
                     }
                 }
                 else {
                     var name = objectData.name;
-                    if(!Entry.TextCodingUtil.isGlobalListExisted(name))
+                    if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
+                        result.type = propertyData.type;
+                        result.params = propertyData.params;
                         return result;
+                    }
                 }
+
+                var arguments = propertyData.arguments;
+                console.log("member ex args", arguments);
 
                 var syntax = String("%2\[%4\]");
                 var blockSyntax = this.getBlockSyntax(syntax);
@@ -2489,8 +2555,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     type = blockSyntax.key;
 
                 structure.type = type;
-
-                var arguments = propertyData.arguments;
 
                 var block = Entry.block[type];
                 var paramsMeta = block.params;
@@ -2540,7 +2604,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     var name = propertyData.name;
 
-                    if(!Entry.TextCodingUtil.isLocalVariableExisted(name, currentObject))
+                    if(!Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject))
                         return result;
 
                     var convertedName = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
@@ -2569,9 +2633,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("WhileStatement component", component);
         this._blockCount++;
         console.log("WhileStatement this._blockCount++");
-        var bcmIndex = this._blockCountMap.get("WhileStatement");
-        if(!bcmIndex) bcmIndex = 0;
-        this._blockCountMap.put("WhileStatement", bcmIndex+1);
 
         var result;
         var structure = {};
@@ -2709,25 +2770,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         structure.params = params;
 
         result = structure;
-
-        var bcmIndex = this._blockCountMap.get("WhileStatement");
-        if(!bcmIndex) bcmIndex = 0;
-        this._blockCountMap.put("WhileStatement", bcmIndex-1);
-
         console.log("WhileStatement result", result);
         return result;
     };
 
     p.BlockStatement = function(component) {
         console.log("BlockStatement component", component);
-        /*if(component.body && component.body.length != 0 &&
-            component.body[0].declarations &&
-            component.body[0].declarations[0].init &&
-            component.body[0].declarations[0].init.callee &&
-            component.body[0].declarations[0].init.callee.name) {
-            this._blockCount++;
-            console.log("BlockStatement blockCount++");
-        }*/
 
         var result = {};
         result.statements = [];
@@ -2737,8 +2785,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var statements = [];
         var data = [];
 
-        var bodies = component.body;
+        var bodies = component.body; 
         console.log("BlockStatement bodies", bodies);
+
+        if(bodies[1] && bodies[1].consequent && bodies[1].consequent.body)
+            if(bodies[1].consequent.body[0].type == "ForStatement") {
+                this._blockCount++;
+                console.log("BlockCount ForStatement in BlockStatement", this._blockCount);
+            }
 
         for(var i in bodies) {
             var body = bodies[i];
@@ -2761,7 +2815,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         //The Optimized Code
         for(var d in data) {
             if(data[1] && data[1].type == "repeat_basic") {
-                if(d == 0) {
+                if(d == 0 && data[d]) {
                     if(data[d].declarations) {
                         var declarations = data[0].declarations;
                         for(var d in declarations){
@@ -2865,7 +2919,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 if(param)
                                     params.push(param);
                             }
-                            //result.params = params;
                         } else {
                             var statement = data[d];
                             if(statement && statement.type) {
@@ -2962,16 +3015,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var consequent = component.consequent;
         var alternate = component.alternate;
-
         var test = component.test;
-
-        if(test.operator !== 'instanceof') {
-            this._blockCount++;
-            console.log("ifStatement this._blockCount++");
-            var bcmIndex = this._blockCountMap.get("IfStatement");
-            if(!bcmIndex) bcmIndex = 0;
-            this._blockCountMap.put("IfStatement", bcmIndex+1);
-        }
 
         if(alternate != null) {
             var type = String("if_else");
@@ -3043,6 +3087,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("IfStatement params result", params);
 
         if(consequent != null) {
+            if(test.operator !== 'instanceof') {
+                this._blockCount++;
+                console.log("BlockCount IfStatement If", this._blockCount);
+            }
+
             var consStmts = [];
             console.log("IfStatement consequent", consequent);
             var consequents = this[consequent.type](consequent);
@@ -3073,6 +3122,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         if(alternate != null) {
+            if(test.operator !== 'instanceof') {
+                this._blockCount++;
+                console.log("BlockCount IfStatement Else", this._blockCount);
+            }
             var altStmts = [];
             console.log("IfStatement alternate", alternate);
             var alternates = this[alternate.type](alternate);
@@ -3090,24 +3143,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         result = structure;
-
-        var bcmIndex = this._blockCountMap.get("IfStatement");
-        if(!bcmIndex) bcmIndex = 0;
-        this._blockCountMap.put("IfStatement", bcmIndex-1);
-
         console.log("IfStatement result", result);
         return result;
     };
 
      p.ForStatement = function(component) {
         console.log("ForStatement component", component);
-        this._blockCount++;
-        console.log("ForStatement this._blockCount++");
-        var bcmIndex = this._blockCountMap.get("ForStatement");
-        if(!bcmIndex) bcmIndex = 0;
-        this._blockCountMap.put("ForStatement", bcmIndex+1);
-
-        console.log("ForStatement blockCount++");
         var result;
         var structure = {};
         structure.statements = [];
@@ -3160,10 +3201,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("ForStatement updateData", updateData);
 
         result = structure;
-
-        var bcmIndex = this._blockCountMap.get("ForStatement");
-        if(!bcmIndex) bcmIndex = 0;
-        this._blockCountMap.put("ForStatement", bcmIndex-1);
 
         console.log("ForStatement result", result);
 
@@ -3278,9 +3315,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("UnaryExpression operator", operator);
             var params = [];
             if(operator == "+" || operator == "-") {
-                /*console.log("UnaryExpression argument", argument.value);
-                console.log("aaa", Number(operator.concat(argument.value)));
-                argument.value = Number(operator.concat(argument.value));*/
                 if(argument.value >= 0)
                     argument.value = operator + argument.value;
 
@@ -3569,6 +3603,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var syntax = String("(%1 %2 %3)#calc_basic");
                 break;
             case "%":
+                var syntax = String("(%2 % %4)");
+                break;
+                break;
+            case "|": 
                 var error = {};
                 error.title = "지원되지 않는 코드";
                 error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
@@ -3576,15 +3614,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("send error", error);
                 throw error;
                 break;
-            case "|":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
-                break;
-            case "^":
+            case "^": 
                 var error = {};
                 error.title = "지원되지 않는 코드";
                 error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
@@ -3642,7 +3672,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("BinaryExpression type", type);
             var params = [];
             var left = component.left;
-            var currentObject = Entry.TextCodingUtil._currentObject;
+           
             console.log("BinaryExpression left", left);
 
             if(left.type == "Literal" || left.type == "Identifier") {
@@ -3690,12 +3720,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 }
                             }
                         }
-                        //params.push(param);
                     }
 
                     if(param && param.type)
                         params.push(param);
-                    else {
+                    /*else {
                         if(param.name == "key") {
                             var keyBlock = {};
                             keyBlock.type = "get_variable";
@@ -3714,7 +3743,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                             params.push(keyBlock);
                         }
-                    }
+                    }*/
                 }
             }
             else if(left.type == "MemberExpression") {
@@ -3724,8 +3753,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params.push(param);
                 }
                 else if(param.object && param.property) {
-
-
                     if(param.property.callee == "__pythonRuntime.ops.subscriptIndex") { // In Case of List
                         if(param.object && param.object.object) {
                             if(param.object.object != "self") { // Not Self List
@@ -3737,7 +3764,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 throw error;
                             }
                             else if(param.object.property) { // Self List
-                                if(!Entry.TextCodingUtil.isLocalListExisted(param.object.property.name, currentObject)) {
+                                if(!Entry.TextCodingUtil.isLocalListExisted(param.object.property.name, this._currentObject)) {
                                     var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.property.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
@@ -3770,7 +3797,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     throw error;
                                 }
                                 else if(param.property) {
-                                    if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, currentObject)) {
+                                    if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, this._currentObject)) {
                                         var error = {};
                                         error.title = "지원되지 않는 코드";
                                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.property.name + "\'" + "변수를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
@@ -3822,16 +3849,23 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 result = structure;
 
-                return result;
+                return result; 
             }
 
             operator = String(component.operator);
             if(operator) {
                 console.log("BinaryExpression operator", operator);
-                operator = Entry.TextCodingUtil.binaryOperatorConvert(operator);
-                param = operator;
-                if(param)
-                    params.push(param);
+                //operator = Entry.TextCodingUtil.binaryOperatorConvert(operator);
+                if(operator != '%') {
+                    var textParam = blockSyntax.textParams[1];
+                    console.log("textParam", textParam);
+                    if(textParam.converter)
+                        param = textParam.converter(null, operator);
+                    else
+                        param = operator;
+                    if(param)
+                        params.push(param);
+                }
 
                 structure.operator = operator;
             }
@@ -3892,7 +3926,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params.push(param);
                 }
                 else if(param.object && param.property) {
-                    var currentObject = Entry.TextCodingUtil._currentObject;
                     if(param.property.callee == "__pythonRuntime.ops.subscriptIndex") { // In Case of List
                         if(param.object.object) {
                             if(param.object.object.name != "self") { // Object Name
@@ -3904,7 +3937,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 throw error;
                             }
                             else if(param.object.property) { // List Name
-                                if(!Entry.TextCodingUtil.isLocalListExisted(param.object.property.name, currentObject)) {
+                                if(!Entry.TextCodingUtil.isLocalListExisted(param.object.property.name, this._currentObject)) {
                                     var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.property.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
@@ -3939,7 +3972,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     throw error;
                                 }
                                 else if(param.property) {
-                                    if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, currentObject)) {
+                                    if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, this._currentObject)) {
                                         var error = {};
                                         error.title = "지원되지 않는 코드";
                                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.property.name + "\'" + "변수를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
@@ -3980,11 +4013,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
             console.log("BinaryExpression right param", param);
 
-            if(type == "boolean_not") {
+            /*if(syntax == "not (%2)") {
                 params = [];
                 params[0] = "";
                 params[1] = this[left.type](left, paramsMeta[1], paramsDefMeta[1], true);
                 params[2] = "";
+            }
+            else */if(syntax == "(%2 % %4)") {
+                tempParams = [];
+                tempParams[1] = params[0];
+                tempParams[3] = params[1];
+                tempParams[5] = "MOD";
+                params = tempParams;
             }
 
             structure.type = type;
@@ -4037,17 +4077,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return result;
         }
 
-        if(Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
-            var bcmIndex = this._blockCountMap.get("FunctionDeclaration");
-            if(!bcmIndex) bcmIndex = 0;
-            console.log("FunctionDeclaration bcmIndex", bcmIndex, "this._blockCountMap", this._blockCountMap);
-            if(bcmIndex == 0) {
-                this._blockCount++;
-                console.log("FunctionDeclaration this._blockCount++");
-            }
-            this._blockCountMap.put("FunctionDeclaration", bcmIndex+1);
-        }
-
+        this._blockCount++;
+        console.log("BlockCount FunctionDeclaration", this._blockCount);
+    
         var bodyData = this[body.type](body);
         console.log("FunctionDeclaration bodyData", bodyData);
 
@@ -4088,21 +4120,29 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
 
-        console.log("FunctionDeclaration textFuncName", textFuncName);
+        console.log("FunctionDeclaration textFuncName", textFuncName); 
         console.log("FunctionDeclaration textFuncParams", textFuncParams);
         console.log("FunctionDeclaration textFuncStatements", textFuncStatements);
 
 
         //In case of Entry Event Function
         if(Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
-            var component = Entry.TextCodingUtil.makeExpressionStatement(id.name);
-            var block = this.ExpressionStatement(component);
-            block.params = [];
-            this._thread.push(block);
+            if(textFuncParams.length != 0) {
+                var arg = textFuncParams[0];
+                arg = arg.replace(/_space_/g, " ");
+                console.log("event arg", arg);
+                if(arg == "none")
+                    arg = "None";
+                var param = arg;
+            }
+            var component = Entry.TextCodingUtil.makeExpressionStatementForEntryEvent(id.name, param);
+            var entryEventBlock = this.ExpressionStatement(component);
+            
+            this._thread.push(entryEventBlock);
 
-            console.log("entry event block", block);
+            console.log("entry event block", entryEventBlock);
 
-            if(Entry.TextCodingUtil.isEntryEventFuncTypeWithParam(block)) {
+            /*if(Entry.TextCodingUtil.isEntryEventFuncTypeWithParam(block)) {
                 var ifStatement = textFuncStatements[0];
 
                 if(textFuncStatements.length > 1) {
@@ -4193,24 +4233,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     this._thread.push(sblock);
                 }
-            }
-            else {
-                for(var t in textFuncStatements) {
-                    var tfs = textFuncStatements[t];
-                    var sblock = {};
-                    sblock.type = tfs.type;
-                    if(tfs.params)
-                        sblock.params = tfs.params;
-                    if(tfs.statements)
-                        sblock.statements = tfs.statements;
+            }*/
+            
+            for(var t in textFuncStatements) {
+                var tfs = textFuncStatements[t];
+                var sblock = {};
+                sblock.type = tfs.type;
+                if(tfs.params)
+                    sblock.params = tfs.params;
+                if(tfs.statements)
+                    sblock.statements = tfs.statements;
 
-                    this._thread.push(sblock);
-                }
+                this._thread.push(sblock);   
             }
-
-            var bcmIndex = this._blockCountMap.get("FunctionDeclaration");
-            if(!bcmIndex) bcmIndex = 0;
-                this._blockCountMap.put("FunctionDeclaration", bcmIndex-1);
 
             return null;
         }
@@ -4246,9 +4281,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             console.log("paramMap", paramMap);
-            /*var tokens = blockFunc.block.template.split('%');
-            var blockFuncName = tokens[0].trim();*/
-
             console.log("funcNameQueue", Entry.TextCodingUtil._funcNameQ);
             var funcNames = [];
             while(nameToken = Entry.TextCodingUtil._funcNameQ.dequeue()) {
@@ -4262,7 +4294,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("first textFuncName", textFuncName);
 
             if(textFuncName == blockFuncName) {
-                //foundFlag = true;
                 console.log("textFuncName", textFuncName);
                 console.log("blockFuncName", blockFuncName);
                 console.log("textFuncParams.length", textFuncParams.length);
@@ -4300,10 +4331,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     targetFuncId = funcId;
                     break;
                 }
-                /*else {
-                    foundFlag = false;
-                    matchFlag = false;
-                } */
             }
         }
 
@@ -4446,12 +4473,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     paramInfo[textFuncParams[p]] = stringParam;
                     console.log("FunctionDeclaration paramBlock", newFunc);
                 }
-
-                /*var paramMap = newFunc.paramMap;
-                var paramMapKeys = Object.keys(paramMap);
-                for(var i in paramMapKeys) {
-                    newFunc.block.template += String(' %' + Number(i+1));
-                }*/
             }
 
             if(textFuncStatements.length > 0) {
@@ -4559,6 +4580,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (!syntax)
             return null;
         syntax = syntax.split(".");
+
+        var syntaxTokens = [];
+        syntaxTokens.push(syntax.shift()); 
+        var restSyntax = syntax.join('.');
+        if(restSyntax != '')
+            syntaxTokens.push(restSyntax);
+        syntax = syntaxTokens;
+
         var blockSyntax = this.blockSyntax;
         while (syntax.length) {
             var key = syntax.shift();
@@ -4959,10 +4988,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.searchSyntax = function(datum) {
         var schema;
+        var appliedParams;
         if(datum instanceof Entry.BlockView) {
             schema = datum.block._schema;
-        } else if (datum instanceof Entry.Block)
+            applliedParams = datum.block.data.params;
+        } else if (datum instanceof Entry.Block) {
             schema = datum._schema;
+            applliedParams = datum.params;
+        }
         else schema = datum;
 
         if(schema && schema.syntax) {
@@ -4973,9 +5006,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if (typeof syntax === "string")
                     return {syntax: syntax, template: syntax};
                 if (syntax.params) {
-                    var params = block.params;
                     for (var i = 0; i < syntax.params.length; i++) {
-                        if (syntax.params[i] && syntax.params[i] !== block.params[i]) {
+                        if (syntax.params[i] && syntax.params[i] !== applliedParams[i]) {
                             isFail = true;
                             break;
                         }
@@ -4986,7 +5018,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if (isFail) {
                     continue;
                 }
-                return syntax;
+                return syntax; 
             }
         }
         return null;

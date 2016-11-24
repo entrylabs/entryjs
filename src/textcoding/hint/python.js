@@ -124,7 +124,9 @@ Entry.PyHint = function(syntax) {
             text = data.displayText + ".";
             ch += text.length;
         } else {
-            text = syntax.syntax.split(".");
+            text = syntax.syntax.split("\n");
+            text = text[0];
+            text = text.split(".");
             if (text.length > 1)
                 text.shift();
             text = text.join(".");

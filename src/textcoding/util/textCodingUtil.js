@@ -148,8 +148,8 @@ Entry.TextCodingUtil = {};
             }
         }
         else if(menuName == "lists") {
-            var entryLists = Entry.variableContainer.lists;
-            //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
+            var entryLists = Entry.variableContainer.lists_;
+            console.log("dropdownDynamicValueConvertor entryLists", entryLists);
             for(var e in entryLists) {
                 var entryList = entryLists[e];
                 if(entryList.name_ == name) {
@@ -318,48 +318,48 @@ Entry.TextCodingUtil = {};
     tu.binaryOperatorValueConvertor = function(operator) {
         var result;
         switch(operator) {
-            case 'EQUAL': {
+            case '\"EQUAL\"': {
                 //console.log("EQUAL");
                 result = "==";
                 break;
             }
-            case 'GREATER': {
+            case '\"GREATER\"': {
                 result = ">";
                 break;
             }
-            case 'LESS': {
+            case '\"LESS\"': {
                 result = "<";
                 break;
             }
-            case 'GREATER_OR_EQUAL': {
+            case '\"GREATER_OR_EQUAL\"': {
                 result = ">=";
                 break;
             }
-            case 'LESS_OR_EQUAL': {
+            case '\"LESS_OR_EQUAL\"': {
                 result = "<=";
                 break;
             }
-            case '그리고': {
+            case '\"그리고\"': {
                 result = "&&";
                 break;
             }
-            case '또는': {
+            case '\"또는\"': {
                 result = "||";
                 break;
             }
-            case 'PLUS': {
+            case '\"PLUS\"': {
                 result = "+";
                 break;
             }
-            case 'MINUS': {
+            case '\"MINUS\"': {
                 result = "-";
                 break;
             }
-            case 'MULTI': {
+            case '\"MULTI\"': {
                 result = "*";
                 break;
             }
-            case 'DIVIDE': {
+            case '\"DIVIDE\"': {
                 result = "/";
                 break;
             }
@@ -462,9 +462,9 @@ Entry.TextCodingUtil = {};
 
     tu.updateGlobalVariable = function(name, value) {
         var entryVariables = Entry.variableContainer.variables_;
-        for(var i in entryVariables) {
+        for(var i in entryVariables) { 
             var entryVariable = entryVariables[i];
-            //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
+            console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === null && entryVariable.name_ == name) {
                 variable = {
                     x: entryVariable.x_,
@@ -789,6 +789,19 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
+    tu.entryEventFilter = function(text) {
+        var textArr = text.split("\"");
+        if(textArr[1])
+            textArr[1] = textArr[1].replace(/ /g, "_space_");
+
+        text = textArr.join("\"");
+        text = text.replace(/\"/g, "");
+        text = text.replace("None", "none");
+
+        console.log("entryEventFilter text", text);
+        return text;
+    }
+
     tu.entryEventFuncFilter = function(threads) {
         var result;
         var eventFound = false;
@@ -954,6 +967,7 @@ Entry.TextCodingUtil = {};
             name == "when_get_signal" ||
             name == "when_start_scene" ||
             name == "when_make_clone") {
+
 
             return true;
         }
@@ -1477,7 +1491,24 @@ Entry.TextCodingUtil = {};
             return true;
 
         return false;
-    }
+    };
+
+    tu.isHWParamBlock = function(blockType) {
+        if(blockType == "hamster_hand_found" ||
+            blockType == "hamster_value" ||
+            blockType == "arduino_get_number_sensor_value" ||
+            blockType == "arduino_get_digital_value" ||
+            blockType == "arduino_convert_scale" ||
+            blockType == "arduino_ext_get_analog_value" ||
+            blockType == "arduino_ext_get_analog_value_map" ||
+            blockType == "arduino_ext_get_ultrasonic_value" ||
+            blockType == "arduino_ext_get_digital") {
+
+            return true;
+        }
+
+        return false;
+    };
 
     tu.isMaterialBlock = function(blockType) {
         if(blockType == "get_canvas_input_value" ||
@@ -1757,7 +1788,7 @@ Entry.TextCodingUtil = {};
         Entry.container.selectObject(targetObject.id);
     };
 
-    tu.makeExpressionStatement = function(calleName) {
+    tu.makeExpressionStatementForEntryEvent = function(calleName, arg) {
         var expressionStatement = {};
 
         var type = "ExpressionStatement";
@@ -1771,6 +1802,10 @@ Entry.TextCodingUtil = {};
         expression.callee = callee;
 
         var arguments = [];
+        var argument = {};
+        argument.type = "Literal";
+        argument.value = arg;
+        arguments.push(argument);
         expression.arguments = arguments;
 
         expressionStatement.expression = expression;
@@ -1947,6 +1982,75 @@ Entry.TextCodingUtil = {};
         }
 
         console.log("makeMathExpression result", result);
+
+        return result;
+    };
+
+    tu.generateVariablesDeclaration = function() {
+        var result = "";
+        var currentObject = this._currentObject;
+        var vc = Entry.variableContainer;
+        if(!vc)
+            return;
+        //inspect variables
+        var targets = vc.variables_ || [];
+        for (var i=targets.length-1; i>=0; i--) {
+            var v = targets[i];
+            var name = v.name_;
+            var value = v.value_;
+            if(v.object_) {
+                if(v.object_ == currentObject.id) {
+                    name = "self." + name;
+                }
+                else 
+                    continue;
+            }
+
+            /*if(typeof value === "string")
+                value = "\"" + value + "\"";*/
+            result += name + " = " + value + "\n";
+        }
+
+        return result;
+    };
+
+    tu.generateListsDeclaration = function() {
+        var result = "";
+        var currentObject = this._currentObject;
+        var vc = Entry.variableContainer;
+        if(!vc)
+            return;
+
+        //inspect lists
+        targets = vc.lists_ || [];
+        for (var i=targets.length-1; i>=0; i--) {
+            var l = targets[i];
+            var name = l.name_;
+            if(l.object_) {
+                if(l.object_ == currentObject.id) {
+                    name = "self." + name;
+                }
+                else 
+                    continue;
+            }
+            var value = "";
+            var lArray = l.array_;
+
+            for(var va in lArray) {
+                var vItem = lArray[va];
+                var data = vItem.data;
+                var pData = parseInt(data);
+                if(!isNaN(pData))
+                    data = pData;
+                if(typeof data === "string")
+                    data = "\"" + data + "\"";
+                value += data;
+                if(va != lArray.length-1)
+                    value += ", ";
+            }
+            
+            result = name + " = [" + value + "]" + "\n";
+        }
 
         return result;
     };

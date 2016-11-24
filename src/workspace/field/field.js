@@ -235,6 +235,13 @@ Entry.Field = function() {};
     p._convert = function(key, value) {
         value = value !== undefined ? value : this.getValue();
         if (this._contents.converter) {
+            if(this._contents.codeMap) {
+                var codeMap = eval(this._contents.codeMap);
+                value = value.toLowerCase();
+                var cmValue = codeMap[value];
+                if(cmValue)
+                    value = cmValue.toUpperCase();
+            }
             return this._contents.converter(key, value);
         } else return key;
     };

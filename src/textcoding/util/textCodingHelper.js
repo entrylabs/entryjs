@@ -3,7 +3,7 @@
  */
 "use strict";
 
-goog.provide("Entry.TextCodingExampleHelper");
+goog.provide("Entry.TextCodingHelper");
 
 goog.require("Entry.Dom")
 
@@ -11,53 +11,39 @@ Entry.TextCodingHelper = function() {
     if (!Entry.propertyPanel)
         return;
     this.createView();
+    Entry.textCodingHelper = this;
     
 };
 
 (function (p) {
     p.createView = function() {
         this.parentView_ = Entry.propertyPanel.modes.helper.obj.blockHelperContent_;
-
         this.view = Entry.createElement('div', 'textCodingExampleView');
 
-        this.codeMirror = CodeMirror(this.view, {
-            lineNumbers: false,
-            lineWrapping: true,
-            value: "",
-            mode: {},
+        this.codeMirror = CodeMirror(this.view, { 
+            lineNumbers: true,
+            lineWrapping: true, 
+            value: "", 
+            mode: {name: "python"},
             theme: "default",
-            styleActiveLine: false,
-            //gutters: ["CodeMirror-lint-markers"],
-            lint: false
-        });
-        this._doc = this.codeMirror.getDoc(); 
-        this.codeMirror.setValue("Hi! TextCoding...");
-
-        /*this.codeMirror.on('beforeChange', function(cm, change) {
-            if (!this._isEditing)
-                change.cancel();
-            else if (change.origin === "+delete" && change.to.ch === 0) {
-                change.cancel();
-            }
-        }.bind(this));*/
-
-        this.codeMirror.on("keyup", function (cm, event) {
-            if (this._isEditing && event.keyCode === 13) {
-                this.endInput();
-            }
-        }.bind(this));
-
-        this.codeMirror.on("cursorActivity", function(cm, event) {
-            cm.execCommand("goDocEnd");                                     
+            styleActiveLine: false
         });
 
+        
         this.parentView_.appendChild(this.view);
+        this._doc = this.codeMirror.getDoc();
+        this._codeMirror = this.codeMirror; 
 
-        console.log("added text Helper");
+        var exampleText = "def when_start():"; 
+        this._codeMirror.setValue(exampleText);
     };
 
     p.getView = function() { 
         return this.view;
+    };
+
+    p.removeView = function() {
+        this.parentView_.removeChild(this.view);
     };
 
 })(Entry.TextCodingHelper.prototype)

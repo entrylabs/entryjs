@@ -141,7 +141,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
         _self = this;
         target = this.view[0];
         function eventDragEnd(e) {
-            console.log("drag");
             var textCode = _self.getCodeToText(e.block, Entry.Parser.PARSE_GENERAL);
             _self.codeMirror.display.dragFunctions.leave(e);
             var mousedown = Entry.Utils.createMouseEvent('mousedown', e);
