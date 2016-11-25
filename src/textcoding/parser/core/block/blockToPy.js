@@ -271,17 +271,19 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         if(code)
                             value = code;
                     }
-                    if(textParam.caseType == "no") {
-                        key = key;
-                        value = value;
-                    }
-                    else if(textParam.caseType == "upper") {
-                        key = key.toUpperCase();
-                        value = value.toUpperCase();
-                    }
-                    else {
-                        key = key.toLowerCase();
-                        value = value.toLowerCase();
+                    if(isNaN(key) && isNaN(value)) {
+                        if(textParam.caseType == "no") {
+                            key = key;
+                            value = value;
+                        }
+                        else if(textParam.caseType == "upper") {
+                            key = key.toUpperCase();
+                            value = value.toUpperCase();
+                        }
+                        else {
+                            key = key.toLowerCase();
+                            value = value.toLowerCase();
+                        }
                     }
 
                     dataParam = textParam.converter(key, value);
