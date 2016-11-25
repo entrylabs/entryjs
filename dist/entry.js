@@ -16735,6 +16735,9 @@ Entry.PyHint = function(b) {
   this.addScope("Entry");
   this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
   CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
+  Entry.addEventListener("hwChanged", function(a) {
+    Entry.hw.hwModule && (a = Entry.hw.hwModule.name, a = a[0].toUpperCase() + a.slice(1), this.addScope(a));
+  }.bind(this));
 };
 (function(b) {
   b.pythonHint = function(a) {
