@@ -76,6 +76,8 @@ Entry.PyHint = function(syntax) {
                         localKey = key[0];
                         key = key[1];
                     }
+                    if (localSyntax[key].key)
+                        menuResult.push(localSyntax[key].key)
                     return {
                         displayText: displayText,
                         hint: hintFunc,

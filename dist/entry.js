@@ -16762,6 +16762,7 @@ Entry.PyHint = function(b) {
         e = e.map(function(a) {
           var b = l, d = a.split("#")[0], c;
           -1 < a.indexOf(".") && (a = a.split("."), b = l[a[0]], c = a[0], a = a[1]);
+          b[a].key && f.push(b[a].key);
           return {displayText:d, hint:k, syntax:b[a], localKey:c};
         });
         break;
