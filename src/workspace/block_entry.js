@@ -1975,7 +1975,8 @@ Entry.block = {
                         "value": "A0",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        caseType: "no"
                     }
                 ],
                 keyOption: "arduino_get_sensor_number"
@@ -2023,6 +2024,30 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1", 
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "0", "0" ],
+                            [ "1", "1" ],
+                            [ "2", "2" ],
+                            [ "3", "3" ],
+                            [ "4", "4" ],
+                            [ "5", "5" ],
+                            [ "6", "6" ],
+                            [ "7", "7" ],
+                            [ "8", "8" ],
+                            [ "9", "9" ],
+                            [ "10", "10" ],
+                            [ "11", "11" ],
+                            [ "12", "12" ],
+                            [ "13", "13" ]
+                        ],
+                        "value": "0",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_HW
+                    }
+                ],
                 keyOption: "arduino_get_port_number"
             }
         ]}
@@ -2153,7 +2178,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Arduino.sensor_value(%1)",
+                syntax: "Arduino.digitalRead(%1)",
                 textParams: [
                     {
                         "type": "Block",
@@ -2449,7 +2474,28 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("PORT");
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%1",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "A0", "0" ],
+                            [ "A1", "1" ],
+                            [ "A2", "2" ],
+                            [ "A3", "3" ],
+                            [ "A4", "4" ],
+                            [ "A5", "5" ]
+                        ],
+                        "value": "0",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringKey
+                    }
+                ],
+                keyOption: "arduino_ext_analog_list"
+            }
+        ]}
     },
     "arduino_ext_get_analog_value": {
         "color": "#00979D",
@@ -2458,18 +2504,9 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Dropdown",
-                "options": [
-                    [ "A0", "0" ],
-                    [ "A1", "1" ],
-                    [ "A2", "2" ],
-                    [ "A3", "3" ],
-                    [ "A4", "4" ],
-                    [ "A5", "5" ]
-                ],
-                "value": "0",
-                "fontSize": 11
-            }
+                "type": "Block",
+                "accept": "string"
+            }   
         ],
         "events": {},
         "def": {
@@ -2495,20 +2532,9 @@ Entry.block = {
                 syntax: "Arduino.analogRead(%1)",
                 textParams: [
                     {
-                        "type": "Dropdown",
-                        "options": [
-                            [ "A0", "0" ],
-                            [ "A1", "1" ],
-                            [ "A2", "2" ],
-                            [ "A3", "3" ],
-                            [ "A4", "4" ],
-                            [ "A5", "5" ]
-                        ],
-                        "value": "0",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringKey,
-                        codeMap: "Entry.CodeMap.Arduino.analogRead[0]"
-                    }
+                        "type": "Block",
+                        "accept": "string"
+                    } 
                 ]
             }
         ]}
@@ -2611,19 +2637,8 @@ Entry.block = {
                 syntax: "Arduino.map(%1, %2, %3, %4, %5)", 
                 textParams: [
                     {
-                        "type": "Dropdown",
-                        "options": [
-                            [ "A0", "0" ],
-                            [ "A1", "1" ],
-                            [ "A2", "2" ],
-                            [ "A3", "3" ],
-                            [ "A4", "4" ],
-                            [ "A5", "5" ]
-                        ],
-                        "value": "0",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringKey,
-                        //codeMap: "Entry.CodeMap.Arduino.map[0]"
+                        "type": "Block",
+                        "accept": "string"
                     },
                     {
                         "type": "Block",
@@ -2898,7 +2913,8 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_HW,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Arduino.digitalWrite[1]"
+                        codeMap: "Entry.CodeMap.Arduino.digitalWrite[1]",
+                        caseType: "no"
                     },
                 ]
             }
@@ -3036,7 +3052,8 @@ Entry.block = {
                         ],
                         "value": "C",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        caseType: "no"
                     }
                 ],
                 keyOption: "arduino_ext_tone_list"
@@ -3167,7 +3184,8 @@ Entry.block = {
 
             if (!script.isStart) {
                 var note = script.getValue("NOTE", script);
-                note = Entry.ArduinoExt.toneTable[note];
+                if(isNaN(note))
+                    note = Entry.ArduinoExt.toneTable[note];
 
                 if(note < 0) {
                     note = 0;
@@ -10593,7 +10611,7 @@ Entry.block = {
                         ],
                         "value": "LEFT",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
                     }
                 ],
                 params: ["LEFT"]
@@ -10840,7 +10858,7 @@ Entry.block = {
                         ],
                         "value": "LEFT",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
                     },
                     {
                         "type": "Block",
@@ -12523,7 +12541,10 @@ Entry.block = {
                         "value": "4",
                         "fontSize": 11,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Hamster.note[0]"
+                        codeMap: "Entry.CodeMap.Hamster.note[0]",
+                        caseType: "no",
+                        paramType: "variable"
+
                     },
                     {
                         "type": "Dropdown",

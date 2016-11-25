@@ -12050,9 +12050,9 @@ Entry.PyHint = function(b) {
 })(Entry.PyHint.prototype);
 Entry.CodeMap = {};
 (function(b) {
-  b.Arduino = {digitalWrite:[null, {on:"high", off:"low", HIGH:"on", LOW:"off"}], analogRead:[{A0:"0", A1:"1", A2:"2", A3:"3", A4:"4", A5:"5"}]};
-  b.Hamster = {note:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F_SHARP", 10:"Hamster.NOTE_G", 11:"Hamster.NOTE_G_SHARP", 12:"Hamster.NOTE_A", 13:"Hamster.NOTE_B_FLAT", 14:"Hamster.NOTE_B", "Hamster.NOTE_C":4, "Hamster.NOTE_C_SHARP":5, "Hamster.NOTE_D_FLAT":5, "Hamster.NOTE_D":6, "Hamster.NOTE_E_FLAT":7, "Hamster.NOTE_D_SHARP":7, "Hamster.NOTE_E":8, "Hamster.NOTE_F":8, "Hamster.NOTE_F_SHARP":9, "Hamster.NOTE_G_FLAT":9, 
-  "Hamster.NOTE_G":10, "Hamster.NOTE_G_SHARP":11, "Hamster.NOTE_A_FLAT":11, "Hamster.NOTE_A":12, "Hamster.NOTE_B_FLAT":13, "Hamster.NOTE_A_SHARP":13, "Hamster.NOTE_B":14}, null, null]};
+  b.Arduino = {digitalWrite:[null, {on:"HIGH", off:"LOW", high:"on", low:"off"}], analogRead:[{A0:"0", A1:"1", A2:"2", A3:"3", A4:"4", A5:"5"}]};
+  b.Hamster = {note:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F", 10:"Hamster.NOTE_F_SHARP", 11:"Hamster.NOTE_G", 12:"Hamster.NOTE_G_SHARP", 13:"Hamster.NOTE_A", 14:"Hamster.NOTE_B_FLAT", 15:"Hamster.NOTE_B", "Hamster.NOTE_C":4, "Hamster.NOTE_C_SHARP":5, "Hamster.NOTE_D_FLAT":5, "Hamster.NOTE_D":6, "Hamster.NOTE_E_FLAT":7, "Hamster.NOTE_D_SHARP":7, "Hamster.NOTE_E":8, "Hamster.NOTE_F":8, "Hamster.NOTE_F":9, "Hamster.NOTE_F_SHARP":10, 
+  "Hamster.NOTE_G_FLAT":10, "Hamster.NOTE_G":11, "Hamster.NOTE_G_SHARP":12, "Hamster.NOTE_A_FLAT":12, "Hamster.NOTE_A":13, "Hamster.NOTE_B_FLAT":14, "Hamster.NOTE_A_SHARP":14, "Hamster.NOTE_B":15}, null, null]};
 })(Entry.CodeMap);
 Entry.KeyboardCode = {};
 (function(b) {
@@ -13302,17 +13302,12 @@ Entry.BlockToPyParser = function(b) {
       for (var f in b.options) {
         if (e = b.options[f], console.log("option", e), c = e[0], e = e[1], a === e) {
           if (b.codeMap) {
-            var g = eval(b.codeMap);
-            console.log("codeMap", g);
-            e = e.toLowerCase();
-            console.log("value123", e);
-            if (g[e]) {
-              var h = g[e].toUpperCase()
-            }
-            console.log("cmValue", h);
-            h && (e = h);
+            var g = eval(b.codeMap)[e];
+            g && (e = g);
           }
+          "no" != b.caseType && ("upper" == b.caseType ? (c = c.toUpperCase(), e = e.toUpperCase()) : (c = c.toLowerCase(), e = e.toLowerCase()));
           a = b.converter(c, e);
+          "variable" == b.paramType && (a = a.replace(/\"/g, ""));
         }
       }
     }
@@ -24111,7 +24106,17 @@ Entry.Field = function() {
   };
   b._convert = function(a, b) {
     b = void 0 !== b ? b : this.getValue();
-    return this._contents.converter ? (this._contents.codeMap && eval(this._contents.codeMap), this._contents.converter(a, b)) : a;
+    if (this._contents.converter) {
+      if (this._contents.codeMap) {
+        var c = eval(this._contents.codeMap)[b];
+        c && (b = c);
+      }
+      isNaN(a) && isNaN(b) && "no" != this._contents.caseType && ("upper" == this._contents.caseType ? (a = a.toUpperCase(), b = b.toUpperCase()) : (a = a.toLowerCase(), b = b.toLowerCase()));
+      c = this._contents.converter(a, b);
+      "variable" == this._contents.paramType && (c = c.replace(/\"/g, ""));
+      return c;
+    }
+    return a;
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, d) {
