@@ -24,6 +24,14 @@ Entry.PyHint = function(syntax) {
     this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
 
     CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
+
+    Entry.addEventListener('hwChanged', function(e){
+        if (Entry.hw.hwModule) {
+            var name = Entry.hw.hwModule.name;
+            name = name[0].toUpperCase() + name.slice(1);
+            this.addScope(name);
+        }
+    }.bind(this));
 };
 
 (function(p) {
@@ -57,14 +65,24 @@ Entry.PyHint = function(syntax) {
             case "variable":
                 if (!searchString)
                     searchString = lastToken.string;
-                console.log(searchString)
                 result = this.fuzzySearch(this.getScope("_global"), searchString).slice(0,20);
                 result = result.map(function(key) {
+                    var localSyntax = syntax;
                     var displayText = key.split("#")[0];
+                    var localKey;
+                    if (key.indexOf(".") > -1) {
+                        key = key.split(".");
+                        localSyntax = syntax[key[0]]
+                        localKey = key[0];
+                        key = key[1];
+                    }
+                    if (localSyntax[key].key)
+                        menuResult.push(localSyntax[key].key)
                     return {
                         displayText: displayText,
                         hint: hintFunc,
-                        syntax: syntax[key]
+                        syntax: localSyntax[key],
+                        localKey: localKey
                     }
                 })
                 break;
@@ -101,8 +119,11 @@ Entry.PyHint = function(syntax) {
 
     p.addScope = function(name) {
         if (this.syntax[name]) {
-            this.scope[name] = Object.keys(this.syntax[name]);
+            var keys = Object.keys(this.syntax[name]);
+            this.scope[name] = keys;
             this.scope._global.unshift(name);
+            keys = keys.map(function(k) {return name + "." + k});
+            this.scope._global = this.scope._global.concat(keys)
         }
     };
 
@@ -128,6 +149,10 @@ Entry.PyHint = function(syntax) {
         } else {
             text = syntax.syntax.split("\n");
             text = text[0];
+            if (data.localKey) {
+                text = data.localKey + "." + text;
+            }
+            console.log(text);
             text = text.split(".");
             if (text.length > 1)
                 text.shift();

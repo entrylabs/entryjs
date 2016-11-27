@@ -11986,6 +11986,9 @@ Entry.PyHint = function(b) {
   this.addScope("Entry");
   this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
   CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
+  Entry.addEventListener("hwChanged", function(a) {
+    Entry.hw.hwModule && (a = Entry.hw.hwModule.name, a = a[0].toUpperCase() + a.slice(1), this.addScope(a));
+  }.bind(this));
 };
 (function(b) {
   b.pythonHint = function(a) {
@@ -12007,10 +12010,12 @@ Entry.PyHint = function(b) {
         g || (g = a.string);
       case "variable":
         g || (g = a.string);
-        console.log(g);
         e = this.fuzzySearch(this.getScope("_global"), g).slice(0, 20);
         e = e.map(function(a) {
-          return {displayText:a.split("#")[0], hint:k, syntax:l[a]};
+          var b = l, d = a.split("#")[0], c;
+          -1 < a.indexOf(".") && (a = a.split("."), b = l[a[0]], c = a[0], a = a[1]);
+          b[a].key && f.push(b[a].key);
+          return {displayText:d, hint:k, syntax:b[a], localKey:c};
         });
         break;
       case "property":
@@ -12029,7 +12034,15 @@ Entry.PyHint = function(b) {
     return {list:e, from:CodeMirror.Pos(b.line, h), to:CodeMirror.Pos(b.line, a.end)};
   };
   b.addScope = function(a) {
-    this.syntax[a] && (this.scope[a] = Object.keys(this.syntax[a]), this.scope._global.unshift(a));
+    if (this.syntax[a]) {
+      var b = Object.keys(this.syntax[a]);
+      this.scope[a] = b;
+      this.scope._global.unshift(a);
+      b = b.map(function(b) {
+        return a + "." + b;
+      });
+      this.scope._global = this.scope._global.concat(b);
+    }
   };
   b.getScope = function(a) {
     return this.scope[a] ? this.scope[a] : [];
@@ -12042,9 +12055,11 @@ Entry.PyHint = function(b) {
   };
   b.hintFunc = function(a, b, c) {
     console.log(a, b, c);
-    var e = c.syntax, f = b.from.ch;
-    e.syntax ? (c = e.syntax.split("\n"), c = c[0], c = c.split("."), 1 < c.length && c.shift(), c = c.join("."), -1 < c.indexOf("%") ? (c = c.replace(/%\d+/gi, ""), f += c.indexOf("(") + 1) : f += c.length) : (c = c.displayText + ".", f += c.length);
-    a.replaceRange(c, b.from, b.to);
+    var e;
+    e = c.syntax;
+    var f = b.from.ch;
+    e.syntax ? (e = e.syntax.split("\n"), e = e[0], c.localKey && (e = c.localKey + "." + e), console.log(e), e = e.split("."), 1 < e.length && e.shift(), e = e.join("."), -1 < e.indexOf("%") ? (e = e.replace(/%\d+/gi, ""), f += e.indexOf("(") + 1) : f += e.length) : (e = c.displayText + ".", f += e.length);
+    a.replaceRange(e, b.from, b.to);
     a.setCursor({line:b.from.line, ch:f});
   };
 })(Entry.PyHint.prototype);
