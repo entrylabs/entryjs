@@ -306,8 +306,13 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 var key = option[0];
                 var value = option[1];
                 if(dataParam === value) {
+                    console.log("ddd", value);
+                    if(value == 'mouse') {
+                        key = 'mouse_pointer';
+                        value = 'mouse_pointer';
+                    }
                     dataParam = textParam.converter(key, value);
-                    break;
+                    break; 
                 }
             }
         }

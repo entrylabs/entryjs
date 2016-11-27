@@ -9,6 +9,17 @@ goog.provide("Entry.CodeMap");
 Entry.CodeMap = {};
 
 (function(cc) {
+    cc.Entry = {
+        start_scene_to: [
+            {"다음": "next", "이전": "pre"}
+        ],
+        stop_code: [
+            {"thisOnly": "self", "thisThread": "this", "otherThread": "others",
+             "self": "thisOnly", "this": "thisThread", "others": "otherThread",
+             "모든": "all", "자신": "thisOnly", "이": "thisThread", "자신의 다른": "otherThread"}
+        ]
+    };
+
     cc.Arduino = {
         digitalWrite: [
             null,

@@ -30,7 +30,7 @@ if (Entry && Entry.block) {
                 return "None";
             key  = String(key);
             if (value === 'mouse')
-                key = value;
+                key = 'mouse';
             key = key.replace(/\"/gi, '');
             return '"()"'.replace('()', key);
         };
@@ -9668,7 +9668,6 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Entry.stop_code(%1)",
-                keyOption:"boolean_basic_operator",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -9681,7 +9680,8 @@ Entry.block = {
                         "value": "all",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_FLOW,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Entry.stop_code[0]"
                     }
                 ]
             }
@@ -19082,7 +19082,8 @@ Entry.block = {
                         "value": "next",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_START,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Entry.start_scene_to[0]"
                     },
                 ]
             }

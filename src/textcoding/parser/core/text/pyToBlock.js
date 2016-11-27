@@ -2464,7 +2464,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("codeMap", codeMap);
             var map = eval(codeMap);
             console.log("codeMap", map);
-            result = result.toUpperCase();
+            result = result.toLowerCase();
+            console.log("codeMap result", result);
             result = map[result];
         }
 
@@ -2490,6 +2491,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(value == options[i][0]){
                     console.log("options[i][0]", options[i][0]);
                     result = options[i][1];
+                    break;
+                }
+                else if(value == 'mouse_pointer' || value == '마우스포인터') {
+                    result = 'mouse';
                     break;
                 }
             }

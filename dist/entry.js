@@ -12050,6 +12050,7 @@ Entry.PyHint = function(b) {
 })(Entry.PyHint.prototype);
 Entry.CodeMap = {};
 (function(b) {
+  b.Entry = {start_scene_to:[{"\ub2e4\uc74c":"next", "\uc774\uc804":"pre"}], stop_code:[{thisOnly:"self", thisThread:"this", otherThread:"others", self:"thisOnly", "this":"thisThread", others:"otherThread", "\ubaa8\ub4e0":"all", "\uc790\uc2e0":"thisOnly", "\uc774":"thisThread", "\uc790\uc2e0\uc758 \ub2e4\ub978":"otherThread"}]};
   b.Arduino = {digitalWrite:[null, {on:"HIGH", off:"LOW", high:"on", low:"off"}], analogRead:[{A0:"0", A1:"1", A2:"2", A3:"3", A4:"4", A5:"5"}]};
   b.Hamster = {note:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F", 10:"Hamster.NOTE_F_SHARP", 11:"Hamster.NOTE_G", 12:"Hamster.NOTE_G_SHARP", 13:"Hamster.NOTE_A", 14:"Hamster.NOTE_B_FLAT", 15:"Hamster.NOTE_B", "Hamster.NOTE_C":4, "Hamster.NOTE_C_SHARP":5, "Hamster.NOTE_D_FLAT":5, "Hamster.NOTE_D":6, "Hamster.NOTE_E_FLAT":7, "Hamster.NOTE_D_SHARP":7, "Hamster.NOTE_E":8, "Hamster.NOTE_F":8, "Hamster.NOTE_F":9, "Hamster.NOTE_F_SHARP":10, 
   "Hamster.NOTE_G_FLAT":10, "Hamster.NOTE_G":11, "Hamster.NOTE_G_SHARP":12, "Hamster.NOTE_A_FLAT":12, "Hamster.NOTE_A":13, "Hamster.NOTE_B_FLAT":14, "Hamster.NOTE_A_SHARP":14, "Hamster.NOTE_B":15}, null, null]};
@@ -13305,7 +13306,7 @@ Entry.BlockToPyParser = function(b) {
             var g = eval(b.codeMap)[e];
             g && (e = g);
           }
-          "no" != b.caseType && ("upper" == b.caseType ? (c = c.toUpperCase(), e = e.toUpperCase()) : (c = c.toLowerCase(), e = e.toLowerCase()));
+          isNaN(c) && isNaN(e) && "no" != b.caseType && ("upper" == b.caseType ? (c = c.toUpperCase(), e = e.toUpperCase()) : (c = c.toLowerCase(), e = e.toLowerCase()));
           a = b.converter(c, e);
           "variable" == b.paramType && (a = a.replace(/\"/g, ""));
         }
@@ -13321,6 +13322,8 @@ Entry.BlockToPyParser = function(b) {
         console.log("option", e);
         var f = e[0], e = e[1];
         if (a === e) {
+          console.log("ddd", e);
+          "mouse" == e && (e = f = "mouse_pointer");
           a = b.converter(f, e);
           break;
         }
@@ -14946,7 +14949,7 @@ Entry.PyToBlockParser = function(b) {
       }
     }
     f || (f = a);
-    e && e.codeMap && (a = e.codeMap, console.log("codeMap", a), a = eval(a), console.log("codeMap", a), f = f.toUpperCase(), f = a[f]);
+    e && e.codeMap && (a = e.codeMap, console.log("codeMap", a), a = eval(a), console.log("codeMap", a), f = f.toLowerCase(), console.log("codeMap result", f), f = a[f]);
     console.log("ParamDropdown result", f);
     return f;
   };
@@ -14964,6 +14967,11 @@ Entry.PyToBlockParser = function(b) {
           console.log("options[i][0]", c[f][0]);
           e = c[f][1];
           break;
+        } else {
+          if ("mouse_pointer" == a || "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130" == a) {
+            e = "mouse";
+            break;
+          }
         }
       }
     }
