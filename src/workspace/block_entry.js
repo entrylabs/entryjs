@@ -30,7 +30,7 @@ if (Entry && Entry.block) {
                 return "None";
             key  = String(key);
             if (value === 'mouse')
-                key = value;
+                key = 'mouse';
             key = key.replace(/\"/gi, '');
             return '"()"'.replace('()', key);
         };
@@ -1975,7 +1975,8 @@ Entry.block = {
                         "value": "A0",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        caseType: "no"
                     }
                 ],
                 keyOption: "arduino_get_sensor_number"
@@ -2023,6 +2024,30 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1", 
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "0", "0" ],
+                            [ "1", "1" ],
+                            [ "2", "2" ],
+                            [ "3", "3" ],
+                            [ "4", "4" ],
+                            [ "5", "5" ],
+                            [ "6", "6" ],
+                            [ "7", "7" ],
+                            [ "8", "8" ],
+                            [ "9", "9" ],
+                            [ "10", "10" ],
+                            [ "11", "11" ],
+                            [ "12", "12" ],
+                            [ "13", "13" ]
+                        ],
+                        "value": "0",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_HW
+                    }
+                ],
                 keyOption: "arduino_get_port_number"
             }
         ]}
@@ -2153,7 +2178,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Arduino.sensor_value(%1)",
+                syntax: "Arduino.digitalRead(%1)",
                 textParams: [
                     {
                         "type": "Block",
@@ -2449,7 +2474,28 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("PORT");
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%1",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "A0", "0" ],
+                            [ "A1", "1" ],
+                            [ "A2", "2" ],
+                            [ "A3", "3" ],
+                            [ "A4", "4" ],
+                            [ "A5", "5" ]
+                        ],
+                        "value": "0",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringKey
+                    }
+                ],
+                keyOption: "arduino_ext_analog_list"
+            }
+        ]}
     },
     "arduino_ext_get_analog_value": {
         "color": "#00979D",
@@ -2460,7 +2506,7 @@ Entry.block = {
             {
                 "type": "Block",
                 "accept": "string"
-            }
+            }   
         ],
         "events": {},
         "def": {
@@ -2486,20 +2532,9 @@ Entry.block = {
                 syntax: "Arduino.analogRead(%1)",
                 textParams: [
                     {
-                        "type": "Dropdown",
-                        "options": [
-                            [ "A0", "0" ],
-                            [ "A1", "1" ],
-                            [ "A2", "2" ],
-                            [ "A3", "3" ],
-                            [ "A4", "4" ],
-                            [ "A5", "5" ]
-                        ],
-                        "value": "0",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringKey,
-                        //codeMap: "Entry.CodeMap.Arduino.analogRead[0]"
-                    }
+                        "type": "Block",
+                        "accept": "string"
+                    } 
                 ]
             }
         ]}
@@ -2602,19 +2637,8 @@ Entry.block = {
                 syntax: "Arduino.map(%1, %2, %3, %4, %5)", 
                 textParams: [
                     {
-                        "type": "Dropdown",
-                        "options": [
-                            [ "A0", "0" ],
-                            [ "A1", "1" ],
-                            [ "A2", "2" ],
-                            [ "A3", "3" ],
-                            [ "A4", "4" ],
-                            [ "A5", "5" ]
-                        ],
-                        "value": "0",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringKey,
-                        //codeMap: "Entry.CodeMap.Arduino.map[0]"
+                        "type": "Block",
+                        "accept": "string"
                     },
                     {
                         "type": "Block",
@@ -2889,7 +2913,8 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_HW,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Arduino.digitalWrite[1]"
+                        codeMap: "Entry.CodeMap.Arduino.digitalWrite[1]",
+                        caseType: "no"
                     },
                 ]
             }
@@ -3027,7 +3052,8 @@ Entry.block = {
                         ],
                         "value": "C",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        caseType: "no"
                     }
                 ],
                 keyOption: "arduino_ext_tone_list"
@@ -3097,7 +3123,12 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("OCTAVE");
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%1", 
+                keyOption: "arduino_ext_octave_list"
+            }
+        ]}
     },
     "arduino_ext_set_tone": {
         "color": "#00979D",
@@ -3153,7 +3184,8 @@ Entry.block = {
 
             if (!script.isStart) {
                 var note = script.getValue("NOTE", script);
-                note = Entry.ArduinoExt.toneTable[note];
+                if(isNaN(note))
+                    note = Entry.ArduinoExt.toneTable[note];
 
                 if(note < 0) {
                     note = 0;
@@ -3226,23 +3258,16 @@ Entry.block = {
                     {
                         "type": "Block",
                         "accept": "string"
-                    }, {
+                    }, 
+                    {
+                        "type": "Block",
+                        "accept": "string" 
+                    }, 
+                    {
                         "type": "Block",
                         "accept": "string"
-                    }, {
-                        "type": "Dropdown",
-                        "options": [
-                            ["1", "0"],
-                            ["2", "1"],
-                            ["3", "2"],
-                            ["4", "3"],
-                            ["5", "4"],
-                            ["6", "5"]
-                        ],
-                        "value": "3",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringOrNumberByValue
-                    }, {
+                    }, 
+                    {
                         "type": "Block",
                         "accept": "string"
                     }
@@ -6312,7 +6337,8 @@ Entry.block = {
                 textParams: [
                     {
                         "type": "Color",
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Entry.set_brush_color_to[0]" 
                     }
                 ]
             }
@@ -9643,7 +9669,6 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Entry.stop_code(%1)",
-                keyOption:"boolean_basic_operator",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -9656,7 +9681,8 @@ Entry.block = {
                         "value": "all",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_FLOW,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Entry.stop_code[0]"
                     }
                 ]
             }
@@ -10586,7 +10612,7 @@ Entry.block = {
                         ],
                         "value": "LEFT",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
                     }
                 ],
                 params: ["LEFT"]
@@ -10833,7 +10859,7 @@ Entry.block = {
                         ],
                         "value": "LEFT",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
                     },
                     {
                         "type": "Block",
@@ -12117,9 +12143,26 @@ Entry.block = {
                 sq.leftLed = 0;
                 sq.rightLed = 0;
             }
-            return script.callReturn();
+            return script.callReturn(); 
         },
         "syntax": {"js": [], "py": [
+            {
+                syntax: "Hamster.left_led(0)", 
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT"]
+            },
             {
                 syntax: "Hamster.left_led(Hamster.LED_OFF)", 
                 textParams: [
@@ -12136,6 +12179,23 @@ Entry.block = {
                     }
                 ],
                 params: ["LEFT"]
+            },
+            {
+                syntax: "Hamster.right_led(0)", 
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT"]
             },
             {
                 syntax: "Hamster.right_led(Hamster.LED_OFF)", 
@@ -12155,7 +12215,24 @@ Entry.block = {
                 params: ["RIGHT"]
             },
             {
-                syntax: "Hamster.leds(Hamster.LED_OFF,Hamster.LED_OFF)", 
+                syntax: "Hamster.leds(0)", 
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_OFF)", 
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12465,7 +12542,10 @@ Entry.block = {
                         "value": "4",
                         "fontSize": 11,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Hamster.note[0]"
+                        codeMap: "Entry.CodeMap.Hamster.note[0]",
+                        caseType: "no",
+                        paramType: "variable"
+
                     },
                     {
                         "type": "Dropdown",
@@ -12546,6 +12626,16 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": [
+            {
+                syntax: "Hamster.note(0,%1)", 
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                keyOption: "0"
+            },
             {
                 syntax: "Hamster.note(Hamster.NOTE_OFF,%1)", 
                 textParams: [
@@ -12764,7 +12854,7 @@ Entry.block = {
                 params: ["B", "10"]
             },
             {
-                syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT,Hamster.IO_MODE_ANALOG_INPUT)", 
+                syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT)", 
                 textParams: [{converter: Entry.block.converters.returnStringValue}],
                 params: ["AB", "0"]
             },
@@ -12891,7 +12981,7 @@ Entry.block = {
                 params: ["B"]
             },
             {
-                syntax: "Hamster.outputs_by(%2,%2)", 
+                syntax: "Hamster.outputs_by(%2)", 
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -14138,7 +14228,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.set_shape_to(%1)",
+                syntax: "Entry.change_shape_to(%1)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -14149,7 +14239,8 @@ Entry.block = {
                         "value": "next",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: Entry.CodeMap.Entry.change_shape_to[0]
                     },
                 ]
             }
@@ -14216,7 +14307,7 @@ Entry.block = {
             sprite.applyFilter(true);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.add_effect(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.set_effect_volume(%1, %2)"]}
     },
     "set_effect": {
         "color": "#EC4466",
@@ -14628,7 +14719,7 @@ Entry.block = {
             sprite.setImage(picture);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.set_shape(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.change_shape(%1)"]}
     },
     "add_effect_amount": {
         "color": "#EC4466",
@@ -14701,7 +14792,8 @@ Entry.block = {
                         "value": "color",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: Entry.CodeMap.Entry.add_effect[0]
                     },
                     {
                         "type": "Block",
@@ -14782,7 +14874,8 @@ Entry.block = {
                         "value": "color",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: Entry.CodeMap.Entry.set_effect[0]
                     },
                     {
                         "type": "Block",
@@ -14972,7 +15065,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.change_layer_to(%1)",
+                syntax: "Entry.send_layer_to(%1)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -14985,7 +15078,8 @@ Entry.block = {
                         "value": "FRONT",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: Entry.CodeMap.Entry.send_layer_to[0]
                     },
                 ]
             }
@@ -18993,7 +19087,8 @@ Entry.block = {
                         "value": "next",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_START,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Entry.start_scene_to[0]"
                     },
                 ]
             }

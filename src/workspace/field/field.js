@@ -237,12 +237,29 @@ Entry.Field = function() {};
         if (this._contents.converter) {
             if(this._contents.codeMap) {
                 var codeMap = eval(this._contents.codeMap);
-                value = value.toLowerCase();
-                var cmValue = codeMap[value];
-                if(cmValue)
-                    value = cmValue.toUpperCase();
+                var code = codeMap[value];
+                if(code)
+                    value = code;
             }
-            return this._contents.converter(key, value);
+            if(isNaN(key) && isNaN(value)) {
+                if(this._contents.caseType == "no") {
+                    key = key; 
+                    value = value;
+                }
+                else if(this._contents.caseType == "upper") {
+                    key = key.toUpperCase();
+                    value = value.toUpperCase();
+                }
+                else {
+                    key = key.toLowerCase();
+                    value = value.toLowerCase();
+                }
+            }
+            var result = this._contents.converter(key, value);
+            if(this._contents.paramType == "variable") {
+                result = result.replace(/\"/g, "");
+            }
+            return result;
         } else return key;
     };
 

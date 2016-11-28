@@ -691,12 +691,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("callex param syntax", syntax, "order", paramIndex, "value", paramIndex[pi], "param", param);
                     console.log("pi", pi);
 
-                    if(param && param.object && param.property) {
+                    if(param) {
                         var keyOption = blockSyntax.keyOption;
-                        if(keyOption) {
-                            var pName = param.object.name + "." + param.property.name;
-                            if(keyOption == pName) {
-                                isParamOption = true;
+                        console.log("keyOption", keyOption);
+                        if(keyOption || keyOption === 0) {
+                            console.log("param", param)
+                            if(param.object && param.property.name) {
+                                var pName = param.object.name + "." + param.property.name;
+                                if(keyOption == pName) 
+                                    isParamOption = true;
+                            }
+                            else if((param.type == "text" || param.type =="number") && param.params && param.params.length != 0) {
+                                var pName = param.params[0];
+                                console.log("pName", pName);
+                                if(keyOption == pName)
+                                    isParamOption = true;
                             }
                         }
                     }
@@ -1448,12 +1457,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var value = initData.params[0];
                 console.log("gl initData", initData, "type", typeof value);
                 if(typeof value != "string" && typeof value != "number") {
-                    value = NaN;
                     value = 0;
                 }
-            }
-            else {
-                var value = 0;
             }
 
             console.log("variable name", name, "value", value);
@@ -2419,7 +2424,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result = value;
 
-        return result;
+        return result; 
     };
 
     p.ParamColor = function(value, paramMeta, paramDefMeta) {
@@ -2456,6 +2461,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var map = eval(codeMap);
             console.log("codeMap", map);
             result = result.toLowerCase();
+            console.log("codeMap result", result);
             result = map[result];
         }
 
@@ -2481,6 +2487,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(value == options[i][0]){
                     console.log("options[i][0]", options[i][0]);
                     result = options[i][1];
+                    break;
+                }
+                else if(value == 'mouse_pointer' || value == '마우스포인터') {
+                    result = 'mouse';
                     break;
                 }
             }

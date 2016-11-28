@@ -267,15 +267,29 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     value = op1;
                     if(textParam.codeMap) {
                         var codeMap = eval(textParam.codeMap);
-                        console.log("codeMap", codeMap);
-                        value = value.toLowerCase();
-                        console.log("value123", value);
-                        var cmValue = codeMap[value].toUpperCase();
-                        console.log("cmValue", cmValue);
-                        if(cmValue)
-                            value = cmValue;
+                        var code = codeMap[value];
+                        if(code)
+                            value = code;
                     }
+                    if(isNaN(key) && isNaN(value)) {
+                        if(textParam.caseType == "no") {
+                            key = key;
+                            value = value;
+                        }
+                        else if(textParam.caseType == "upper") {
+                            key = key.toUpperCase();
+                            value = value.toUpperCase();
+                        }
+                        else {
+                            key = key.toLowerCase();
+                            value = value.toLowerCase();
+                        }
+                    }
+
                     dataParam = textParam.converter(key, value);
+                    if(textParam.paramType == "variable") {
+                        dataParam = dataParam.replace(/\"/g, "");
+                    }
                 }
             } 
         }
@@ -292,8 +306,13 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 var key = option[0];
                 var value = option[1];
                 if(dataParam === value) {
+                    console.log("ddd", value);
+                    if(value == 'mouse') {
+                        key = 'mouse_pointer';
+                        value = 'mouse_pointer';
+                    }
                     dataParam = textParam.converter(key, value);
-                    break;
+                    break; 
                 }
             }
         }

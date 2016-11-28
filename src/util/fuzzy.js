@@ -134,4 +134,3 @@ fuzzy.filter = function(pattern, arr, opts) {
 
 }(Entry.Utils));
 
-
