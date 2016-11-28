@@ -32,9 +32,12 @@ Entry.CodeMap = {};
             "맨 앞": "FRONT", "앞": "FORWARD", "뒤": "BACKWARD", "맨 뒤": "BACK"}
         ],
         set_brush_color_to: [
-            {"red": "#FF0000", "orange": "#FF0000", "yellow": "#FF0000", "green": "#FF0000", 
-             "blue": "#FF0000", "navy": "#FF0000", "purple": "#FF0000", "black": "#FF0000", 
-             "white": "#FF0000", "brown": "#FF0000"}
+            {"red": "#FF0000", "orange": "#FF9966", "yellow": "#FFFF66", "green": "#009900", 
+             "blue": "#3333FF", "navy": "#000099", "purple": "#993399", "black": "#000000", 
+             "white": "#FFFFFF", "brown": "#990000"}
+        ],
+        reach_something: [
+            {"mouse": "mouse_pointer", "mouse_pointer": "mouse"}
         ]
     };
 

@@ -12080,7 +12080,8 @@ Entry.PyHint = function(b) {
 Entry.CodeMap = {};
 (function(b) {
   b.Entry = {start_scene_to:[{"\ub2e4\uc74c":"next", "\uc774\uc804":"pre"}], stop_code:[{thisOnly:"self", thisThread:"this", otherThread:"others", self:"thisOnly", "this":"thisThread", others:"otherThread", "\ubaa8\ub4e0":"all", "\uc790\uc2e0":"thisOnly", "\uc774":"thisThread", "\uc790\uc2e0\uc758 \ub2e4\ub978":"otherThread"}], change_shape_to:[{prev:"pre", pre:"prev", "\ub2e4\uc74c":"next", "\uc774\uc804":"prev"}], add_effect:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", "\ud22c\uba85\ub3c4":"transparency"}], 
-  set_effect:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", "\ud22c\uba85\ub3c4":"transparency"}], send_layer_to:[{front:"FRONT", forward:"FORWARD", backward:"BACKWARD", back:"BACK", "\ub9e8 \uc55e":"FRONT", "\uc55e":"FORWARD", "\ub4a4":"BACKWARD", "\ub9e8 \ub4a4":"BACK"}], set_brush_color_to:[{red:"#FF0000", orange:"#FF0000", yellow:"#FF0000", green:"#FF0000", blue:"#FF0000", navy:"#FF0000", purple:"#FF0000", black:"#FF0000", white:"#FF0000", brown:"#FF0000"}]};
+  set_effect:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", "\ud22c\uba85\ub3c4":"transparency"}], send_layer_to:[{front:"FRONT", forward:"FORWARD", backward:"BACKWARD", back:"BACK", "\ub9e8 \uc55e":"FRONT", "\uc55e":"FORWARD", "\ub4a4":"BACKWARD", "\ub9e8 \ub4a4":"BACK"}], set_brush_color_to:[{red:"#FF0000", orange:"#FF9966", yellow:"#FFFF66", green:"#009900", blue:"#3333FF", navy:"#000099", purple:"#993399", black:"#000000", white:"#FFFFFF", brown:"#990000"}], reach_something:[{mouse:"mouse_pointer", 
+  mouse_pointer:"mouse"}]};
   b.Arduino = {digitalWrite:[null, {on:"HIGH", off:"LOW", high:"on", low:"off"}], analogRead:[{A0:"0", A1:"1", A2:"2", A3:"3", A4:"4", A5:"5"}]};
   b.Hamster = {note:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F", 10:"Hamster.NOTE_F_SHARP", 11:"Hamster.NOTE_G", 12:"Hamster.NOTE_G_SHARP", 13:"Hamster.NOTE_A", 14:"Hamster.NOTE_B_FLAT", 15:"Hamster.NOTE_B", "Hamster.NOTE_C":4, "Hamster.NOTE_C_SHARP":5, "Hamster.NOTE_D_FLAT":5, "Hamster.NOTE_D":6, "Hamster.NOTE_E_FLAT":7, "Hamster.NOTE_D_SHARP":7, "Hamster.NOTE_E":8, "Hamster.NOTE_F":8, "Hamster.NOTE_F":9, "Hamster.NOTE_F_SHARP":10, 
   "Hamster.NOTE_G_FLAT":10, "Hamster.NOTE_G":11, "Hamster.NOTE_G_SHARP":12, "Hamster.NOTE_A_FLAT":12, "Hamster.NOTE_A":13, "Hamster.NOTE_B_FLAT":14, "Hamster.NOTE_A_SHARP":14, "Hamster.NOTE_B":15}, null, null]};
@@ -13322,8 +13323,6 @@ Entry.BlockToPyParser = function(b) {
         console.log("option", e);
         var f = e[0], e = e[1];
         if (a === e) {
-          console.log("ddd", e);
-          "mouse" == e && (e = f = "mouse_pointer");
           a = b.converter(f, e);
           break;
         }
@@ -16194,6 +16193,7 @@ Entry.Parser = function(b, a, d, c) {
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
         try {
+          Entry.playground.blockMenu.reDraw();
           this._pyBlockCount = {};
           this._pyThreadCount = 1;
           var n = new Entry.PyAstGenerator, e = this.makeThreads(a);

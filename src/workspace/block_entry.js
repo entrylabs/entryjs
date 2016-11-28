@@ -13297,7 +13297,8 @@ Entry.block = {
                         "menuName": "collision",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_JUDGE,
-                        converter: Entry.block.converters.returnObjectOrStringValue
+                        converter: Entry.block.converters.returnObjectOrStringValue,
+                        codeMap: "Entry.CodeMap.Entry.is_touched[1]"
                     },
                 ]
             }
