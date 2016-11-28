@@ -13318,24 +13318,13 @@ Entry.BlockToPyParser = function(b) {
   b.FieldDropdownDynamic = function(a, b) {
     var c, e = a;
     if (b && b.converter && b.options) {
-<<<<<<< HEAD
-      for (var c in b.options) {
-        var e = b.options[c];
-        console.log("option", e);
-        var f = e[0], e = e[1];
-        if (a === e) {
-          a = b.converter(f, e);
-=======
       c = b.options;
       for (var f in c) {
         var g = c[f];
         console.log("option", g);
         var h = g[0], g = g[1];
         if (a === g) {
-          console.log("ddd", g);
-          "mouse" == g && (g = h = "mouse_pointer");
           e = b.converter(h, g);
->>>>>>> 2fab544b8675b954c57722f5c8beee5f25dd07c2
           break;
         }
       }

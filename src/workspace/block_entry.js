@@ -14238,11 +14238,11 @@ Entry.block = {
                             [ Lang.Blocks.LOOKS_change_shape_prev, "prev" ]
                         ],
                         "value": "next",
-                        "fontSize": 11,
+                        "fontSize": 11, 
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: Entry.CodeMap.Entry.change_shape_to[0]
-                    },
+                        codeMap: "Entry.CodeMap.Entry.change_shape_to[0]"
+                    }
                 ]
             }
         ]}
@@ -14794,7 +14794,7 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: Entry.CodeMap.Entry.add_effect[0]
+                        codeMap: "Entry.CodeMap.Entry.add_effect[0]"
                     },
                     {
                         "type": "Block",
@@ -14876,7 +14876,7 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: Entry.CodeMap.Entry.set_effect[0]
+                        codeMap: "Entry.CodeMap.Entry.set_effect[0]"
                     },
                     {
                         "type": "Block",
@@ -15080,7 +15080,7 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: Entry.CodeMap.Entry.send_layer_to[0]
+                        codeMap: "Entry.CodeMap.Entry.send_layer_to[0]"
                     },
                 ]
             }

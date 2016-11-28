@@ -309,18 +309,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 var key = option[0];
                 var value = option[1];
                 if(dataParam === value) {
-                    /*if(value == 'mouse') {
-                        key = 'mouse_pointer';
-                        value = 'mouse_pointer';
-<<<<<<< HEAD
-                    }*/
-                    dataParam = textParam.converter(key, value);
-                    break; 
-=======
-                    }
                     returnValue = textParam.converter(key, value);
                     break;
->>>>>>> 2fab544b8675b954c57722f5c8beee5f25dd07c2
                 }
             }
         }
@@ -524,7 +514,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         Entry.TextCodingUtil.gatherFuncDefParam(func.content._data[0]._data[0].data.params[0]);
         var funcParams = [];
 
-        var paramMap = {};
+        var paramMap = {}; 
         while(param = Entry.TextCodingUtil._funcParamQ.dequeue()) {
             funcParams.push(param);
         }
