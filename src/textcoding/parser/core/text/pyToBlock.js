@@ -1457,12 +1457,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var value = initData.params[0];
                 console.log("gl initData", initData, "type", typeof value);
                 if(typeof value != "string" && typeof value != "number") {
-                    value = NaN;
                     value = 0;
                 }
-            }
-            else {
-                var value = 0;
             }
 
             console.log("variable name", name, "value", value);

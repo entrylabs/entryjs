@@ -22,10 +22,19 @@ Entry.CodeMap = {};
             {"prev": "pre", "pre": "prev", "다음": "next", "이전": "prev"}
         ],
         add_effect: [
-            {"색깔": "color", "밝기": "brightness", "transparency": "투명도"}
+            {"색깔": "color", "밝기": "brightness", "투명도": "transparency"}
         ],
         set_effect: [
-            {"색깔": "color", "밝기": "brightness", "transparency": "투명도"}
+            {"색깔": "color", "밝기": "brightness", "투명도": "transparency"}
+        ],
+        send_layer_to: [
+            {"front": "FRONT", "forward": "FORWARD", "backward": "BACKWARD", "back": "BACK", 
+            "맨 앞": "FRONT", "앞": "FORWARD", "뒤": "BACKWARD", "맨 뒤": "BACK"}
+        ],
+        set_brush_color_to: [
+            {"red": "#FF0000", "orange": "#FF0000", "yellow": "#FF0000", "green": "#FF0000", 
+             "blue": "#FF0000", "navy": "#FF0000", "purple": "#FF0000", "black": "#FF0000", 
+             "white": "#FF0000", "brown": "#FF0000"}
         ]
     };
 

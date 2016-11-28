@@ -6337,7 +6337,8 @@ Entry.block = {
                 textParams: [
                     {
                         "type": "Color",
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Entry.set_brush_color_to[0]" 
                     }
                 ]
             }
@@ -15064,7 +15065,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.change_layer_to(%1)",
+                syntax: "Entry.send_layer_to(%1)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -15077,7 +15078,8 @@ Entry.block = {
                         "value": "FRONT",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: Entry.CodeMap.Entry.send_layer_to[0]
                     },
                 ]
             }
