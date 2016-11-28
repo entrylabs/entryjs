@@ -1496,13 +1496,16 @@ Entry.TextCodingUtil = {};
     tu.isHWParamBlock = function(blockType) {
         if(blockType == "hamster_hand_found" ||
             blockType == "hamster_value" ||
+            blockType == "arduino_get_port_number" ||
             blockType == "arduino_get_number_sensor_value" ||
             blockType == "arduino_get_digital_value" ||
             blockType == "arduino_convert_scale" ||
             blockType == "arduino_ext_get_analog_value" ||
             blockType == "arduino_ext_get_analog_value_map" ||
             blockType == "arduino_ext_get_ultrasonic_value" ||
-            blockType == "arduino_ext_get_digital") {
+            blockType == "arduino_ext_get_digital" ||
+            blockType == "arduino_ext_tone_list" ||
+            blockType == "arduino_ext_octave_list") {
 
             return true;
         }

@@ -12835,7 +12835,7 @@ Entry.TextCodingUtil = {};
     return "set_variable" == a ? !0 : !1;
   };
   b.isHWParamBlock = function(a) {
-    return "hamster_hand_found" == a || "hamster_value" == a || "arduino_get_number_sensor_value" == a || "arduino_get_digital_value" == a || "arduino_convert_scale" == a || "arduino_ext_get_analog_value" == a || "arduino_ext_get_analog_value_map" == a || "arduino_ext_get_ultrasonic_value" == a || "arduino_ext_get_digital" == a ? !0 : !1;
+    return "hamster_hand_found" == a || "hamster_value" == a || "arduino_get_port_number" == a || "arduino_get_number_sensor_value" == a || "arduino_get_digital_value" == a || "arduino_convert_scale" == a || "arduino_ext_get_analog_value" == a || "arduino_ext_get_analog_value_map" == a || "arduino_ext_get_ultrasonic_value" == a || "arduino_ext_get_digital" == a || "arduino_ext_tone_list" == a || "arduino_ext_octave_list" == a ? !0 : !1;
   };
   b.isMaterialBlock = function(a) {
     return "get_canvas_input_value" == a || "get_variable" == a || "value_of_index_from_list" == a || "length_of_list" == a || "is_included_in_list" == a ? !0 : !1;
