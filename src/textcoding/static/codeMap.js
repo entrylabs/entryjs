@@ -17,6 +17,15 @@ Entry.CodeMap = {};
             {"thisOnly": "self", "thisThread": "this", "otherThread": "others",
              "self": "thisOnly", "this": "thisThread", "others": "otherThread",
              "모든": "all", "자신": "thisOnly", "이": "thisThread", "자신의 다른": "otherThread"}
+        ],
+        change_shape_to: [
+            {"prev": "pre", "pre": "prev", "다음": "next", "이전": "prev"}
+        ],
+        add_effect: [
+            {"색깔": "color", "밝기": "brightness", "transparency": "투명도"}
+        ],
+        set_effect: [
+            {"색깔": "color", "밝기": "brightness", "transparency": "투명도"}
         ]
     };
 

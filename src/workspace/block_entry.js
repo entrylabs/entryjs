@@ -14227,7 +14227,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.set_shape_to(%1)",
+                syntax: "Entry.change_shape_to(%1)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -14238,7 +14238,8 @@ Entry.block = {
                         "value": "next",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: Entry.CodeMap.Entry.change_shape_to[0]
                     },
                 ]
             }
@@ -14305,7 +14306,7 @@ Entry.block = {
             sprite.applyFilter(true);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.add_effect(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.set_effect_volume(%1, %2)"]}
     },
     "set_effect": {
         "color": "#EC4466",
@@ -14717,7 +14718,7 @@ Entry.block = {
             sprite.setImage(picture);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.set_shape(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.change_shape(%1)"]}
     },
     "add_effect_amount": {
         "color": "#EC4466",
@@ -14790,7 +14791,8 @@ Entry.block = {
                         "value": "color",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: Entry.CodeMap.Entry.add_effect[0]
                     },
                     {
                         "type": "Block",
@@ -14871,7 +14873,8 @@ Entry.block = {
                         "value": "color",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: Entry.CodeMap.Entry.set_effect[0]
                     },
                     {
                         "type": "Block",
