@@ -93,10 +93,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         }
 
         this.mode = Number(this.mode);
-        switch (this.mode) {
-            case this.oldMode:
-                return;
+        if (this.oldMode === this.mode)
+            return;
 
+
+        switch (this.mode) {
             case Entry.Workspace.MODE_VIMBOARD:
                     if(Entry.playground && Entry.playground.object)
                         Entry.TextCodingUtil._currentObject = Entry.playground.object;

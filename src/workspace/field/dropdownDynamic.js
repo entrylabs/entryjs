@@ -33,6 +33,11 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     this._ROUND = content.roundValue || 3;
     this.renderStart(blockView);
+    if (blockView && blockView.getBoard() && blockView.getBoard().workspace
+        && blockView.getBoard().workspace.changeEvent) {
+        blockView.getBoard().workspace.changeEvent.attach(
+            this, this._updateValue);
+    }
 };
 
 Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
@@ -49,12 +54,12 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
             else options = this._menuGenerator();
         }
 
-
         this._contents.options = options;
         var value = this.getValue();
         if (this._blockView.isInBlockMenu || !value || value == 'null')
             value = (options.length !== 0 ? options[0][1] : null);
 
+        this._updateOptions();
         this.setValue(value);
     };
 
