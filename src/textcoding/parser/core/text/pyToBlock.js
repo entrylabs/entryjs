@@ -352,7 +352,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             console.log("callee", callee);
-            
+
             if(callee.object) {
                 if(callee.object.name === "Math") {
                     if(callee.property.name === "pow") {
@@ -361,7 +361,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         if(blockSyntax)
                             type = blockSyntax.key;
                     }
-                    else if(callee.property.name === "floor") { 
+                    else if(callee.property.name === "floor") {
                         var syntax = String("(%2 // %4)");
                         var blockSyntax = this.getBlockSyntax(syntax);
                         if(blockSyntax) {
@@ -372,7 +372,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
 
                         if(component.arguments && component.arguments[0]) {
-                            var argument = component.arguments[0];    
+                            var argument = component.arguments[0];
                             if(argument.left) {
                                 param = this[argument.left.type](argument.left.value, paramsMeta, paramsDefMeta, blockSyntax.textParams[1]);
                                 params.push(param);
@@ -384,12 +384,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                             result.type = type;
                             result.params = params;
-                            return result; 
+                            return result;
                         }
-                    } 
+                    }
                 }
             }
-            
+
             if(callee.property) {
                 if(callee.property.name == "range"){
                     var syntax = String("%1#number");
@@ -424,7 +424,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     result.operator = "MULTI";
                 }
-                else if(callee.property.name == "in") {  
+                else if(callee.property.name == "in") {
                     var syntax = String("%4 in %2");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if(blockSyntax)
@@ -468,37 +468,37 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             if(blockSyntax)
                                 type = blockSyntax.key;
                         }
-                    }        
+                    }
                 }
                 else if(callee.property.name == "_pySlice") {
                     var syntax = String("%2\[%4:%6\]");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if(blockSyntax)
-                        type = blockSyntax.key;  
+                        type = blockSyntax.key;
                 }
                 else if(callee.property.name == "find") {
                     var syntax = String("%2.find");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if(blockSyntax)
-                        type = blockSyntax.key;  
+                        type = blockSyntax.key;
                 }
                 else if(callee.property.name == "replace") {
                     var syntax = String("%2.replace");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if(blockSyntax)
-                        type = blockSyntax.key;  
+                        type = blockSyntax.key;
                 }
                 else if(callee.property.name == "upper") {
                     var syntax = String("%2.upper");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if(blockSyntax)
-                        type = blockSyntax.key;  
+                        type = blockSyntax.key;
                 }
                 else if(callee.property.name == "lower") {
                     var syntax = String("%2.lower");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if(blockSyntax)
-                        type = blockSyntax.key;  
+                        type = blockSyntax.key;
                 }
             }
 
@@ -513,12 +513,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     throw error;
                 }
             }
-            
+
         }
 
         console.log("CallExpression type after", type);
 
-        if(type) {    
+        if(type) {
             var block = Entry.block[type];
             var paramsMeta = block.params;
             var paramsDefMeta = block.def.params;
@@ -678,7 +678,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var param = this[argument.type]
                         (argument, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], textParams[pi]);
 
-                    
+
                     console.log("callexpression callee", callee, "param", param);
 
                     console.log("calleeName", calleeName, "param", param);
@@ -698,7 +698,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             console.log("param", param)
                             if(param.object && param.property.name) {
                                 var pName = param.object.name + "." + param.property.name;
-                                if(keyOption == pName) 
+                                if(keyOption == pName)
                                     isParamOption = true;
                             }
                             else if((param.type == "text" || param.type =="number") && param.params && param.params.length != 0) {
@@ -969,7 +969,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params[2].params[0] = String(Number(params[2].params[0]) + 1);
                     }
                 }
-                else if(callee.property.name == "len") { 
+                else if(callee.property.name == "len") {
                     if(syntax == String("len")) {
                         var p = params[1];
                         p = this.ParamDropdownDynamic(p.name, paramsMeta[1], paramsDefMeta[1]);
@@ -994,23 +994,23 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var newParams = [];
                         newParams[1] = objectData;
                         if(params[1].type == "number" || params[1].type == "text")
-                            params[1].params[0] += 1; 
+                            params[1].params[0] += 1;
                         newParams[3] = params[1];
                         if(params[3].type == "number" || params[3].type == "text")
                             params[3].params[0] += 1;
                         newParams[5] = params[3];
                         params = newParams;
-                    }  
+                    }
                 }
-                else if(callee.property.name == "find") { 
+                else if(callee.property.name == "find") {
                     if(callee.object) {
                         var objectData = this[callee.object.type](callee.object);
                         console.log("objectData", objectData);
                         var newParams = [];
                         newParams[1] = objectData;
                         newParams[3] = params[1];
-                        params = newParams; 
-                    }  
+                        params = newParams;
+                    }
                 }
                 else if(callee.property.name == "replace") {
                     if(callee.object) {
@@ -1021,7 +1021,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         newParams[3] = params[1];
                         newParams[5] = params[3];
                         params = newParams;
-                    }  
+                    }
                 }
                 else if(callee.property.name == "upper") {
                     if(callee.object) {
@@ -1031,7 +1031,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         newParams[1] = objectData;
                         newParams[3] = params[1];
                         params = newParams;
-                    }  
+                    }
                 }
                 else if(callee.property.name == "lower") {
                     if(callee.object) {
@@ -1041,7 +1041,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         newParams[1] = objectData;
                         newParams[3] = params[1];
                         params = newParams;
-                    }  
+                    }
                 }
             }
 
@@ -1289,14 +1289,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var structure = {};
         var params = [];
 
-        this._blockCount++; 
+        this._blockCount++;
         console.log("BlockCount VariableDeclarator ++", this._blockCount);
         if((component.id.name && component.id.name.search("__") != -1) ||
             (component.init && component.init.callee && component.init.callee.name &&
              component.init.callee.name.search("__") != -1)) {
-            this._blockCount--; 
+            this._blockCount--;
             console.log("BlockCount VariableDeclarator --", this._blockCount);
-        } 
+        }
 
         var id = component.id;
         var init = component.init;
@@ -1384,7 +1384,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
         }
-        
+
         var calleeName;
 
         console.log("VariableDeclarator init", init);
@@ -1421,7 +1421,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var arg = argument.params[0];
                     if(typeof arg === "string")
                         arg = "\"" + arg + "\"";
-                    item.data = String(argument.params[0]); 
+                    item.data = String(argument.params[0]);
                 }
                 else if(argument.name) {
                     var error = {};
@@ -2424,7 +2424,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result = value;
 
-        return result; 
+        return result;
     };
 
     p.ParamColor = function(value, paramMeta, paramDefMeta, textParam) {
@@ -2459,7 +2459,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             }
         }
-        
+
         if(!result)
             result = value;
 
@@ -2508,7 +2508,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result = Entry.TextCodingUtil.dropdownDynmaicNameToIdConvertor(value, paramMeta.menuName);
 
 
-        console.log("ParamDropdownDynamic result", result); 
+        console.log("ParamDropdownDynamic result", result);
 
         return result;
     };
@@ -2803,7 +2803,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var statements = [];
         var data = [];
 
-        var bodies = component.body; 
+        var bodies = component.body;
         console.log("BlockStatement bodies", bodies);
 
         if(bodies[1] && bodies[1].consequent && bodies[1].consequent.body)
@@ -3624,7 +3624,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var syntax = String("(%2 % %4)");
                 break;
                 break;
-            case "|": 
+            case "|":
                 var error = {};
                 error.title = "지원되지 않는 코드";
                 error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
@@ -3632,7 +3632,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("send error", error);
                 throw error;
                 break;
-            case "^": 
+            case "^":
                 var error = {};
                 error.title = "지원되지 않는 코드";
                 error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
@@ -3690,7 +3690,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("BinaryExpression type", type);
             var params = [];
             var left = component.left;
-           
+
             console.log("BinaryExpression left", left);
 
             if(left.type == "Literal" || left.type == "Identifier") {
@@ -3867,7 +3867,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 result = structure;
 
-                return result; 
+                return result;
             }
 
             operator = String(component.operator);
@@ -4097,7 +4097,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         this._blockCount++;
         console.log("BlockCount FunctionDeclaration", this._blockCount);
-    
+
         var bodyData = this[body.type](body);
         console.log("FunctionDeclaration bodyData", bodyData);
 
@@ -4138,7 +4138,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
 
-        console.log("FunctionDeclaration textFuncName", textFuncName); 
+        console.log("FunctionDeclaration textFuncName", textFuncName);
         console.log("FunctionDeclaration textFuncParams", textFuncParams);
         console.log("FunctionDeclaration textFuncStatements", textFuncStatements);
 
@@ -4155,7 +4155,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
             var component = Entry.TextCodingUtil.makeExpressionStatementForEntryEvent(id.name, param);
             var entryEventBlock = this.ExpressionStatement(component);
-            
+
             this._thread.push(entryEventBlock);
 
             console.log("entry event block", entryEventBlock);
@@ -4252,7 +4252,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     this._thread.push(sblock);
                 }
             }*/
-            
+
             for(var t in textFuncStatements) {
                 var tfs = textFuncStatements[t];
                 var sblock = {};
@@ -4262,7 +4262,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(tfs.statements)
                     sblock.statements = tfs.statements;
 
-                this._thread.push(sblock);   
+                this._thread.push(sblock);
             }
 
             return null;
@@ -4600,7 +4600,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         syntax = syntax.split(".");
 
         var syntaxTokens = [];
-        syntaxTokens.push(syntax.shift()); 
+        syntaxTokens.push(syntax.shift());
         var restSyntax = syntax.join('.');
         if(restSyntax != '')
             syntaxTokens.push(restSyntax);
@@ -5036,7 +5036,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if (isFail) {
                     continue;
                 }
-                return syntax; 
+                return syntax;
             }
         }
         return null;

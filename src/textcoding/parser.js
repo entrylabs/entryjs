@@ -121,7 +121,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 this._execParser = new Entry.BlockToJsParser(this.syntax);
 
-                var syntax = this.syntax; 
+                var syntax = this.syntax;
                 var assistScope = {};
 
                 for(var key in syntax.Scope) {
@@ -208,16 +208,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             clearOnEnter: true
                         });
 
-                        if(error.title) 
+                        if(error.title)
                             var errorTitle = error.title;
-                        else 
+                        else
                             var errorTitle = '문법 오류';
-            
+
                         if(error.type == 2 && error.message)
                             var errorMsg = error.message;
-                        else if(error.type == 2 && !error.message) 
+                        else if(error.type == 2 && !error.message)
                             var errorMsg = '자바스크립트 코드를 확인해주세요.';
-                        else  if(error.type == 1) 
+                        else  if(error.type == 1)
                             var errorMsg = '자바스크립트 문법을 확인해주세요.';
 
                         Entry.toast.alert(errorTitle, errorMsg);
@@ -271,7 +271,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     }
 
                     if (this.codeMirror) {
-                        var line; 
+                        var line;
                         if (error instanceof SyntaxError) {
                             var err = this.findSyntaxError(error, threadCount);
                             var annotation = {
@@ -308,7 +308,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var title = "변환오류"
                             var message = "변환할수 없는 코드입니다";
                         }
-                        
+
 
                         Entry.toast.alert(title, message);
                         throw error;
@@ -354,7 +354,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 if(parseMode == Entry.Parser.PARSE_GENERAL) {
                     if(!this._execParser._variableDeclaration) {
                         var vd = Entry.TextCodingUtil.generateVariablesDeclaration();
-                        this._execParser._variableDeclaration = vd; 
+                        this._execParser._variableDeclaration = vd;
                         if(vd)
                             result += vd;
                     }
@@ -365,22 +365,22 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if(ld)
                             result += ld;
                     }
-                    
+
                     if(vd || ld)
                         result += "\n";
-                    
+
                     if(!this._execParser._funcDeclaration) {
                         var funcDefMap = this._execParser._funcDefMap;
                         var fd = "";
-                        
+
                         for(var f in funcDefMap) {
                             var funcDef = funcDefMap[f];
                             fd += funcDef + '\n';
                         }
-                        this._execParser._funcDeclaration = fd; 
+                        this._execParser._funcDeclaration = fd;
                         if(fd)
                             result += fd + "\n";
-                    } 
+                    }
                 }
                 result += textCode.trim();
                 result = result.replace(/\t/g, "    ");
@@ -497,16 +497,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             tokens += "#" + s.keyOption;
 
                         tokens = tokens.split(".");
-                        
+
                         var newTokens = [];
-                        newTokens.push(tokens.shift()); 
-                        var restToken = tokens.join('.'); 
+                        newTokens.push(tokens.shift());
+                        var restToken = tokens.join('.');
                         if(restToken != '')
-                            newTokens.push(restToken); 
+                            newTokens.push(restToken);
                         tokens = newTokens;
 
                         var syntaxPointer = syntax;
-                        for (var i = 0; i < tokens.length; i++) { 
+                        for (var i = 0; i < tokens.length; i++) {
                             var syntaxKey = tokens[i];
                             if (i === tokens.length - 1) {
                                 syntaxPointer[syntaxKey] = result;
@@ -568,7 +568,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var errorMessage = error.message;
 
         console.log("this._pyThreadCount", this._pyThreadCount, "this._pyBlockCount", this._pyBlockCount);
-        
+
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
         var currentThreadCount = 0;
@@ -581,7 +581,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         var targetLine = errorLine + currentLineCount + 4;
         var targetText = contentsArr[targetLine-1];
-        
+
         err.from.line = targetLine;
         err.from.ch = 0;
         err.to.line = targetLine;
@@ -606,12 +606,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var emptyLineCount = 0;
         var currentText;
         var targetLine;
-        
+
         for(var i = 4; i < contentsArr.length; i++) {
             currentText = contentsArr[i];
 
             var length = currentText.trim().length;
-            if(length == 0) 
+            if(length == 0)
                 emptyLineCount++;
 
             console.log("errorLine", errorLine, "emptyLineCount", emptyLineCount, "i", i);
@@ -621,7 +621,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
             }
         }
-        
+
         err.from.line = targetLine;
         err.from.ch = 0;
         err.to.line = targetLine;
@@ -640,7 +640,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var optText = "";
         for(var i = 4; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
-            
+
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {
                 textLine = Entry.TextCodingUtil.entryEventFilter(textLine);
                 if(optText.length != 0) {

@@ -243,7 +243,7 @@ Entry.Field = function() {};
             }
             if(isNaN(key) && isNaN(value)) {
                 if(this._contents.caseType == "no") {
-                    key = key; 
+                    key = key;
                     value = value;
                 }
                 else if(this._contents.caseType == "upper") {
@@ -261,6 +261,25 @@ Entry.Field = function() {};
             }
             return result;
         } else return key;
+    };
+
+    p._updateOptions = function() {
+        var block = Entry.block[this._blockView.type];
+        if (!block) return;
+
+        var syntaxes = block.syntax;
+
+        for (var key in syntaxes) {
+            var syntax = syntaxes[key];
+            if (!syntax) continue;
+            if (syntax.length === 0) continue;
+
+            var textParams = syntax[0].textParams;
+            if (!textParams)
+                continue;
+
+            textParams[this._index].options = this._contents.options;
+        }
     };
 
 })(Entry.Field.prototype);

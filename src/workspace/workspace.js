@@ -93,10 +93,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         }
 
         this.mode = Number(this.mode);
-        switch (this.mode) {
-            case this.oldMode:
-                return;
+        if (this.oldMode === this.mode)
+            return;
 
+
+        switch (this.mode) {
             case Entry.Workspace.MODE_VIMBOARD:
                     if(Entry.playground && Entry.playground.object)
                         Entry.TextCodingUtil._currentObject = Entry.playground.object;
@@ -253,12 +254,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.overlayBoard.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
     };
 
-    p._keyboardControl = function(e) {
+    p._keyboardControl = function(e, isForce) {
         var keyCode = e.keyCode || e.which,
             ctrlKey = e.ctrlKey;
             altKey = e.altKey;
 
-        if (Entry.Utils.isInInput(e)) return;
+        if (Entry.Utils.isInInput(e) && !isForce) return;
 
         var blockView = this.selectedBlockView;
 
@@ -349,8 +350,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             }
             if (Entry.container) {
                 if (keyCode == 219) { //Previous Object
+                    e.preventDefault();
                     Entry.container.selectNeighborObject('prev');
                 } else if(keyCode == 221) { //Next Object
+                    e.preventDefault();
                     Entry.container.selectNeighborObject('next');
                 }
             }
