@@ -254,12 +254,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.overlayBoard.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
     };
 
-    p._keyboardControl = function(e) {
+    p._keyboardControl = function(e, isForce) {
         var keyCode = e.keyCode || e.which,
             ctrlKey = e.ctrlKey;
             altKey = e.altKey;
 
-        if (Entry.Utils.isInInput(e)) return;
+        if (Entry.Utils.isInInput(e) && !isForce) return;
 
         var blockView = this.selectedBlockView;
 
@@ -350,8 +350,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             }
             if (Entry.container) {
                 if (keyCode == 219) { //Previous Object
+                    e.preventDefault();
                     Entry.container.selectNeighborObject('prev');
                 } else if(keyCode == 221) { //Next Object
+                    e.preventDefault();
                     Entry.container.selectNeighborObject('next');
                 }
             }

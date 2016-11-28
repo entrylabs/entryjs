@@ -98,14 +98,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
                     Entry.dispatchEvent("changeMode", mode);
                     $('.entryModeSelector span ul li:eq(1)').triggerHandler('click');
                 },
-                "Alt-[": function() {
-                    if (Entry.container)
-                        Entry.container.selectNeighborObject('prev');
-                },
-                "Alt-]": function() {
-                    if (Entry.container)
-                        Entry.container.selectNeighborObject('next');
-                },
                 "Tab": function(cm) {
                     var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
                     cm.replaceSelection(spaces);
@@ -117,9 +109,13 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
         });
 
         this.codeMirror.on("keydown", function(cm, event) {
+            if (Entry && Entry.keyPressed) {
+                Entry.keyPressed.notify(event, true);
+            }
             if (event.key.length === 1) {
                 this.codeMirror.showHint({completeSingle: false});
             }
+
         }.bind(this))
         this.codeMirror.on("keyup", function(cm, event) {
             if (event.key === "Backspace") {
