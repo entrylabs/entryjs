@@ -14953,10 +14953,12 @@ Entry.PyToBlockParser = function(b) {
     console.log("ParamTextInput value, paramMeta, paramDefMeta", a, b, c);
     return a;
   };
-  b.ParamColor = function(a, b, c) {
-    console.log("ParamColor value, paramMeta, paramDefMeta", a, b, c);
-    console.log("ParamColor result", a);
-    return a;
+  b.ParamColor = function(a, b, c, e) {
+    console.log("ParamColor value, paramMeta, paramDefMeta, textParam", a, b, c, e);
+    var f;
+    e && e.codeMap && (b = e.codeMap, console.log("codeMap", b), b = eval(b), console.log("codeMap", b), a = a.toLowerCase(), console.log("codeMap value", a), f = b[a]);
+    console.log("ParamColor result", f);
+    return f;
   };
   b.ParamDropdown = function(a, b, c, e) {
     console.log("ParamDropdown value, paramMeta, paramDefMeta textParam", a, b, c, e);

@@ -11,7 +11,7 @@ Entry.CodeMap = {};
 (function(cc) {
     cc.Entry = {
         start_scene_to: [
-            {"다음": "next", "이전": "pre"}
+            {"다음": "next", "이전": "pre"} 
         ],
         stop_code: [
             {"thisOnly": "self", "thisThread": "this", "otherThread": "others",

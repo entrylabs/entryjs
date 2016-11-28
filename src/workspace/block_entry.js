@@ -6327,7 +6327,7 @@ Entry.block = {
                 sprite.brush.beginStroke("rgba("+rgb.r+","+rgb.g+","+rgb.b+","+(sprite.brush.opacity/100)+")");
 
                 sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
-            }
+            } 
 
             return script.callReturn();
         },

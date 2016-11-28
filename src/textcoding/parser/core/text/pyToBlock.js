@@ -2427,11 +2427,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result; 
     };
 
-    p.ParamColor = function(value, paramMeta, paramDefMeta) {
-        console.log("ParamColor value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
+    p.ParamColor = function(value, paramMeta, paramDefMeta, textParam) {
+        console.log("ParamColor value, paramMeta, paramDefMeta, textParam", value, paramMeta, paramDefMeta, textParam);
         var result;
 
-        result = value;
+        if(textParam && textParam.codeMap) {
+            var codeMap = textParam.codeMap;
+            console.log("codeMap", codeMap);
+            var map = eval(codeMap);
+            console.log("codeMap", map);
+            value = value.toLowerCase();
+            console.log("codeMap value", value);
+            result = map[value];
+        }
 
         console.log("ParamColor result", result);
 
