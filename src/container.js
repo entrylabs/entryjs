@@ -385,13 +385,12 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
         if (object.view_)
             object.view_.addClass('selectedObject');
         object.isSelected_ = true;
-    } 
-    else {
+    } else {
         if(Entry.playground && Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.vimBoard) {
             Entry.playground.mainWorkspace.vimBoard.clearText();
         }
     }
-    
+
     if (Entry.playground)
         Entry.playground.injectObject(object);
     if (Entry.type != "minimize" && Entry.engine.isState('stop'))
@@ -978,4 +977,27 @@ Entry.Container.prototype.removeFuncBlocks = function(functionType) {
     this.objects_.forEach(function(object) {
         object.script.removeBlocksByType(functionType);
     });
+};
+
+Entry.Container.prototype.selectNeighborObject = function(option) {
+    var objects = this.getCurrentObjects();
+    if(!objects || objects.length === 0)
+        return;
+
+    var currentIndex = objects.indexOf(Entry.playground.object);
+    var maxLen = objects.length;
+    switch (option) {
+        case 'prev':
+            if (--currentIndex < 0)
+                currentIndex = objects.length - 1;
+            break;
+        case 'next':
+            currentIndex = ++currentIndex % maxLen;
+            break;
+    }
+
+    var object = objects[currentIndex];
+    if(!object) return;
+
+    Entry.container.selectObject(object.id);
 };

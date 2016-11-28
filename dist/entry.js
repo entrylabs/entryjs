@@ -7342,6 +7342,20 @@ Entry.Container.prototype.removeFuncBlocks = function(b) {
     a.script.removeBlocksByType(b);
   });
 };
+Entry.Container.prototype.selectNeighborObject = function(b) {
+  var a = this.getCurrentObjects();
+  if (a && 0 !== a.length) {
+    var d = a.indexOf(Entry.playground.object), c = a.length;
+    switch(b) {
+      case "prev":
+        0 > --d && (d = a.length - 1);
+        break;
+      case "next":
+        d = ++d % c;
+    }
+    (b = a[d]) && Entry.container.selectObject(b.id);
+  }
+};
 Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
@@ -12966,36 +12980,6 @@ Entry.TextCodingUtil = {};
       }
     }
     return b;
-  };
-  b.selectObjectForShortCut = function(a, b, c) {
-    if (a && b) {
-      var e = Entry.container.objects_, f = [], g;
-      for (g in e) {
-        var h = e[g];
-        h.scene.id == a.id && f.push(h);
-      }
-      console.log("currentSceneObjects", f);
-      if (0 != f.length) {
-        a = f.length - 1;
-        console.log("start", 0, "end", a);
-        var e = 0, k;
-        for (k in f) {
-          if (h = f[k], h.id == b.id) {
-            e = k;
-            break;
-          }
-        }
-        console.log("currentIndex", e);
-        if ("prev" == c) {
-          var l = 0 == e ? a : parseInt(e) - 1
-        } else {
-          "next" == c && (l = e == a ? 0 : parseInt(e) + 1);
-        }
-        if (b = f[l]) {
-          console.log("targetObject", b, "targetIndex", l), Entry.container.selectObject(b.id);
-        }
-      }
-    }
   };
   b.makeExpressionStatementForEntryEvent = function(a, b) {
     var c = {}, e = {type:"CallExpression"}, f = {};
@@ -26801,13 +26785,9 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
     }, "Ctrl-]":function(a) {
       (a = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(a) : (a = {}, a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, Entry.dispatchEvent("changeMode", a), $(".entryModeSelector span ul li:eq(1)").triggerHandler("click"));
     }, "Alt-[":function() {
-      var a = Entry.scene.selectedScene, b = Entry.playground.object;
-      Entry.TextCodingUtil.selectObjectForShortCut(a, b, "prev");
-      console.log("Alt-[ shortcut", a, b, "prev");
+      Entry.container && Entry.container.selectNeighborObject("prev");
     }, "Alt-]":function() {
-      var a = Entry.scene.selectedScene, b = Entry.playground.object;
-      Entry.TextCodingUtil.selectObjectForShortCut(a, b, "next");
-      console.log("Alt-] shortcut", a, b, "next");
+      Entry.container && Entry.container.selectNeighborObject("next");
     }, Tab:function(a) {
       var b = Array(a.getOption("indentUnit") + 1).join(" ");
       a.replaceSelection(b);
@@ -27040,8 +27020,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           $(".entryModeSelector span ul li:eq(1)").triggerHandler("click");
         }
       }
-      altKey && this.mode == Entry.Workspace.MODE_VIMBOARD && (219 == b ? Entry.playground.object ? (b = Entry.scene.selectedScene, c = Entry.playground.object, e = "prev", Entry.TextCodingUtil.selectObjectForShortCut(b, c, e), console.log("Alt-[ shortcut", b, c, e)) : alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.") : 221 == b && (Entry.playground.object ? (b = 
-      Entry.scene.selectedScene, c = Entry.playground.object, e = "next", Entry.TextCodingUtil.selectObjectForShortCut(b, c, e), console.log("Alt-] shortcut", b, c, e)) : alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.")));
+      altKey && (Entry.playground.object ? Entry.container && (219 == b ? Entry.container.selectNeighborObject("prev") : 221 == b && Entry.container.selectNeighborObject("next")) : alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694."));
     }
   };
   b._handleChangeBoard = function() {

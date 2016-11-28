@@ -342,32 +342,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         }
 
         if(altKey) {
-            if(this.mode == Entry.Workspace.MODE_VIMBOARD) {
+            if(!Entry.playground.object) {
+                var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                alert(message);
+                return;
+            }
+            if (Entry.container) {
                 if (keyCode == 219) { //Previous Object
-                    if(!Entry.playground.object) {
-                        var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                        alert(message);
-                        return;
-                    }
-                    var currentScene = Entry.scene.selectedScene;
-                    var currentObject = Entry.playground.object;
-                    var option = "prev";
-
-                    Entry.TextCodingUtil.selectObjectForShortCut(currentScene, currentObject, option);
-                    console.log("Alt-[ shortcut", currentScene, currentObject, option);
-                }
-                else if(keyCode == 221) { //Next Object
-                    if(!Entry.playground.object) {
-                        var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                        alert(message);
-                        return;
-                    }
-                    var currentScene = Entry.scene.selectedScene;
-                    var currentObject = Entry.playground.object;
-                    var option = "next";
-
-                    Entry.TextCodingUtil.selectObjectForShortCut(currentScene, currentObject, option);
-                    console.log("Alt-] shortcut", currentScene, currentObject, option);
+                    Entry.container.selectNeighborObject('prev');
+                } else if(keyCode == 221) { //Next Object
+                    Entry.container.selectNeighborObject('next');
                 }
             }
         }

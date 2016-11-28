@@ -99,21 +99,12 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
                     $('.entryModeSelector span ul li:eq(1)').triggerHandler('click');
                 },
                 "Alt-[": function() {
-                    var currentScene = Entry.scene.selectedScene;
-                    var currentObject = Entry.playground.object;
-                    var option = "prev";
-
-                    Entry.TextCodingUtil.selectObjectForShortCut(currentScene, currentObject, option);
-                    console.log("Alt-[ shortcut", currentScene, currentObject, option);
-
+                    if (Entry.container)
+                        Entry.container.selectNeighborObject('prev');
                 },
                 "Alt-]": function() {
-                    var currentScene = Entry.scene.selectedScene;
-                    var currentObject = Entry.playground.object;
-                    var option = "next";
-
-                    Entry.TextCodingUtil.selectObjectForShortCut(currentScene, currentObject, option);
-                    console.log("Alt-] shortcut", currentScene, currentObject, option);
+                    if (Entry.container)
+                        Entry.container.selectNeighborObject('next');
                 },
                 "Tab": function(cm) {
                     var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");

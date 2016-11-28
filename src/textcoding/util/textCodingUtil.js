@@ -15,7 +15,7 @@ Entry.TextCodingUtil = {};
     this._currentObject;
 
     tu.init = function() {
-        this._funcParams = []; 
+        this._funcParams = [];
     };
 
     tu.initQueue = function() {
@@ -134,7 +134,7 @@ Entry.TextCodingUtil = {};
             return name;
 
         var result;
-        
+
         if(menuName == "variables") {
             var entryVariables = Entry.variableContainer.variables_;
             //console.log("dropdownDynamicValueConvertor entryVariables", entryVariables);
@@ -462,7 +462,7 @@ Entry.TextCodingUtil = {};
 
     tu.updateGlobalVariable = function(name, value) {
         var entryVariables = Entry.variableContainer.variables_;
-        for(var i in entryVariables) { 
+        for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
             console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === null && entryVariable.name_ == name) {
@@ -837,7 +837,7 @@ Entry.TextCodingUtil = {};
 
                     thread = thread.replace(/def /, "");
                     var colonIndex = thread.indexOf(":");
-                    var funcPart = ""; 
+                    var funcPart = "";
                     var restPart = "";
 
                     if(colonIndex > 0) {
@@ -849,14 +849,14 @@ Entry.TextCodingUtil = {};
                         var newThread = funcPart.concat("\n").concat(restPart.trim());
                     }
                     else {
-                        var newThread = funcPart;   
+                        var newThread = funcPart;
                     }
 
-                    console.log("newThread funcPart", newThread); 
+                    console.log("newThread funcPart", newThread);
                     threadArr[i] = newThread;
-                    eventFound = true; 
+                    eventFound = true;
                 }
-                else */if(preText == "def when_press_key" || preText == "def when_get_signal") { 
+                else */if(preText == "def when_press_key" || preText == "def when_get_signal") {
                     thread = thread.replace(/def /, "");
                     var colonIndex = thread.indexOf(":");
                     var funcPart = "";
@@ -871,10 +871,10 @@ Entry.TextCodingUtil = {};
                         var newThread = funcPart.concat("\n").concat(restPart.trim());
                     }
                     else {
-                        var newThread = funcPart;   
+                        var newThread = funcPart;
                     }
-                    
-                    console.log("newThread funcPart", newThread); 
+
+                    console.log("newThread funcPart", newThread);
                     threadArr[i] = newThread;
                     eventFound = true;
                 }
@@ -947,7 +947,7 @@ Entry.TextCodingUtil = {};
             name == "def when_click_object_off" ||
             name == "def when_get_signal" ||
             name == "def when_start_scene" ||
-            name == "def when_make_clone") { 
+            name == "def when_make_clone") {
 
             return true;
         }
@@ -956,7 +956,7 @@ Entry.TextCodingUtil = {};
 
     };
 
-    tu.isEntryEventFuncName = function(name) { 
+    tu.isEntryEventFuncName = function(name) {
         console.log("isEntryEventFuncName name", name);
         if( name == "when_start" ||
             name == "when_press_key" ||
@@ -971,7 +971,7 @@ Entry.TextCodingUtil = {};
 
             return true;
         }
-        
+
         console.log("isEntryEventFuncName result is NOT");
         return false;
     };
@@ -1118,7 +1118,7 @@ Entry.TextCodingUtil = {};
 
             if(textFuncStatement.type == blockFuncContent.data.type) { //Type Check
                 matchFlag = true;
-                
+
                 var textFuncStatementParams = textFuncStatement.params;
                 var blockFuncContentParams = blockFuncContent.data.params;
                 var cleansingParams = [];
@@ -1157,10 +1157,10 @@ Entry.TextCodingUtil = {};
                         else if(textFuncStatementParams[j].name) {
                             var paramKey = textFuncStatementParams[j].name;
                             var paramBlockType = paramInfo[paramKey];
-    
+
                             if(paramBlockType) {
                                 if(blockFuncContentParams[j].data.type == paramBlockType)
-                                    matchFlag = true;                   
+                                    matchFlag = true;
                             }
                             else {
                                 if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0])
@@ -1176,7 +1176,7 @@ Entry.TextCodingUtil = {};
                             else if(textFuncStatementParams[j].type == blockFuncContentParams[j].type) {
                                 matchFlag = true;
                             }
-                        } 
+                        }
                         else if(textFuncStatementParams[j].type && textFuncStatementParams[j].params) {
                             matchFlag = this.isFuncContentsParamsMatch(blockFuncContentParams[j], textFuncStatementParams[j], paramMap, paramInfo);
                         }
@@ -1214,7 +1214,7 @@ Entry.TextCodingUtil = {};
         }
         else if(tfspType == "number") {
             tfspType = "literal";
-        } 
+        }
         else {
             if(textFuncStatementParam.isParamFromFunc)
                 tfspType = paramInfo[tfspType];
@@ -1227,7 +1227,7 @@ Entry.TextCodingUtil = {};
         else if(bfcpType == "number") {
             bfcpType = "literal";
         }
-        
+
         console.log("tfspType", tfspType, "bfcpType", bfcpType);
 
         if(tfspType == bfcpType) {
@@ -1271,7 +1271,7 @@ Entry.TextCodingUtil = {};
                         console.log("blockSubParam.data.type", blockSubParam.data.type, "paramBlockType", paramBlockType);
                         if(paramBlockType) {
                             if(blockSubParam.data.type == paramBlockType)
-                                matchFlag = true;                   
+                                matchFlag = true;
                         } else {
                             if(textSubParam.params[0] == blockSubParam.data.params[0])
                                 matchFlag = true;
@@ -1286,7 +1286,7 @@ Entry.TextCodingUtil = {};
                         else if(textSubParam.type == blockSubParam.type) {
                             matchFlag = true;
                         }
-                    } 
+                    }
                     else if(textSubParam.type && textSubParam.params) {
                         matchFlag = this.isFuncContentsParamsMatch(blockSubParam, textSubParam, paramMap, paramInfo);
                     }
@@ -1295,7 +1295,7 @@ Entry.TextCodingUtil = {};
             else {
                 matchFlag = false;
             }
-        } 
+        }
         else {
                 matchFlag = false;
         }
@@ -1347,24 +1347,24 @@ Entry.TextCodingUtil = {};
             if(!param)
                 continue;
 
-            if(typeof param != "object")  
+            if(typeof param != "object")
                 continue;
 
             if(param.type && param.params) {
                 this.makeParamBlock(param, paramInfo);
             }
             else if(param.name) {
-                var paramKey = param.name; 
+                var paramKey = param.name;
                 var paramBlockType = paramInfo[paramKey];
                 console.log("paramBlockType2", paramBlockType);
                 if(paramBlockType) {
                     var paramBlock = {};
                     paramBlock.type = paramBlockType;
                     paramBlock.params = [];
-                     
+
                     params[p] = paramBlock;
                 }
-            } 
+            }
         }
 
         if(targetBlock.statements && targetBlock.statements[0]) {
@@ -1625,7 +1625,7 @@ Entry.TextCodingUtil = {};
         return message;
     };
 
-    tu.isNamesIncludeSpace = function() { 
+    tu.isNamesIncludeSpace = function() {
         var vc = Entry.variableContainer;
         if(!vc)
             return;
@@ -1667,9 +1667,9 @@ Entry.TextCodingUtil = {};
                         if(paramBlockParams.length == 2) {
                             if(paramBlockParams[1] == undefined) {
                                 var name = paramBlockParams[0];
-                                if (test(name)) 
+                                if (test(name))
                                     return "등록된 함수중에 함수명에 공백(띄어쓰기)이 포함된 함수가 있습니다.";
-                            } 
+                            }
                             else {
                                 if(paramBlockParams[1].data.type == "function_field_label") {
                                     return "등록된 함수중에 함수명이 2개 이상의 네임블록으로 구성된 함수가 있습니다.";
@@ -1679,7 +1679,7 @@ Entry.TextCodingUtil = {};
                         else {
                             return "정상적이지 않은 함수가 포함되어 있습니다.";
                         }
-                    } 
+                    }
                     else {
                         return "정상적이지 않은 함수가 포함되어 있습니다.";
                     }
@@ -1725,77 +1725,14 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.selectObjectForShortCut = function(currentScene, currentObject, option) {
-        if(!currentScene)
-            return;
-        if(!currentObject)
-            return;
-
-        var objects = Entry.container.objects_;
-        var currentSceneObjects = [];
-        for(var o in objects) {
-            var object = objects[o];
-            if(object.scene.id == currentScene.id)
-                currentSceneObjects.push(object);
-        }
-
-        console.log("currentSceneObjects", currentSceneObjects);
-        
-        if(currentSceneObjects.length == 0)
-            return;
-
-        var start = 0;
-        var end = currentSceneObjects.length - 1;
-
-        console.log("start", start, "end", end);
-
-        var currentIndex = 0; 
-
-        for(var c in currentSceneObjects) {
-            var object = currentSceneObjects[c];
-            if(object.id == currentObject.id) {
-                currentIndex = c;
-                break;
-            }
-        }
-
-        console.log("currentIndex", currentIndex);
-
-        if(option == "prev") {
-            if(currentIndex == start) {
-                var targetIndex = end;
-            }
-            else {
-                var targetIndex = parseInt(currentIndex) - 1;
-            }
-        } 
-        else if(option == "next") {
-            if(currentIndex == end) {
-                var targetIndex = start;
-            } 
-            else {
-                var targetIndex = parseInt(currentIndex) + 1;
-            }
-        } 
-
-        var targetObject = currentSceneObjects[targetIndex];
-
-        if(!targetObject)
-            return;
-
-        console.log("targetObject", targetObject, "targetIndex", targetIndex);
-
-        Entry.container.selectObject(targetObject.id);
-    };
-
     tu.makeExpressionStatementForEntryEvent = function(calleName, arg) {
         var expressionStatement = {};
 
         var type = "ExpressionStatement";
         var expression = {};
-        
+
         expression.type = "CallExpression";
-        
+
         var callee = {};
         callee.name = calleName;
         callee.type = "Identifier";
@@ -1876,7 +1813,7 @@ Entry.TextCodingUtil = {};
         else if(propertyName == "fabs") {
             optionParam = "abs";
             params[3] = optionParam;
-        } 
+        }
 
         return optionParam;
     };
@@ -1884,7 +1821,7 @@ Entry.TextCodingUtil = {};
     tu.isMathExpression = function(text) {
         var textTokens = text.split("(");
         var textName = textTokens[0];
-        
+
         console.log("isMathExpression textName", textName);
         if(textName == "Entry.math_operation")
             return true;
@@ -1904,7 +1841,7 @@ Entry.TextCodingUtil = {};
         mathOption = mathOption.substring(2, mathOption.length-2).trim();
 
         console.log("makeMathExpression mathOption", mathOption);
-        
+
         if(mathOption == "square") {
             mathProperty = "pow";
             var mathText = "math" + "." + mathProperty;
@@ -2002,7 +1939,7 @@ Entry.TextCodingUtil = {};
                 if(v.object_ == currentObject.id) {
                     name = "self." + name;
                 }
-                else 
+                else
                     continue;
             }
 
@@ -2030,7 +1967,7 @@ Entry.TextCodingUtil = {};
                 if(l.object_ == currentObject.id) {
                     name = "self." + name;
                 }
-                else 
+                else
                     continue;
             }
             var value = "";
@@ -2048,7 +1985,7 @@ Entry.TextCodingUtil = {};
                 if(va != lArray.length-1)
                     value += ", ";
             }
-            
+
             result = name + " = [" + value + "]" + "\n";
         }
 
