@@ -1,5 +1,7 @@
 "use strict";
 
+goog.require("Entry.Utils");
+
 goog.provide("Entry.fuzzy");
 
 /*
