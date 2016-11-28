@@ -17710,43 +17710,6 @@ Entry.ContextMenu = {};
     this._hideEvent && (Entry.documentMousedown.detach(this._hideEvent), this._hideEvent = null);
   };
 })(Entry.ContextMenu);
-Entry.fuzzy = {};
-$(function() {
-  (function(b) {
-    var a = {};
-    b.fuzzy = a;
-    a.simpleFilter = function(b, c) {
-      return c.filter(function(c) {
-        return a.test(b, c);
-      });
-    };
-    a.test = function(b, c) {
-      return null !== a.match(b, c);
-    };
-    a.match = function(a, b, e) {
-      e = e || {};
-      var f = 0, g = [], h = b.length, k = 0, l = 0, n = e.pre || "", q = e.post || "", m = e.caseSensitive && b || b.toLowerCase();
-      a = e.caseSensitive && a || a.toLowerCase();
-      for (var r = 0;r < h;r++) {
-        e = b[r], m[r] === a[f] ? (e = n + e + q, f += 1, l += 1 + l) : l = 0, k += l, g[g.length] = e;
-      }
-      return f === a.length ? {rendered:g.join(""), score:k} : null;
-    };
-    a.filter = function(b, c, e) {
-      e = e || {};
-      return c.reduce(function(c, g, h, k) {
-        k = g;
-        e.extract && (k = e.extract(g));
-        k = a.match(b, k, e);
-        null != k && (c[c.length] = {string:k.rendered, score:k.score, index:h, original:g});
-        return c;
-      }, []).sort(function(a, b) {
-        var c = b.score - a.score;
-        return c ? c : a.index - b.index;
-      });
-    };
-  })(Entry.Utils);
-});
 Entry.Loader = {queueCount:0, totalCount:0, loaded:!1};
 Entry.Loader.addQueue = function(b) {
   this.queueCount || Entry.dispatchEvent("loadStart");
@@ -20126,6 +20089,41 @@ Entry.Stage.prototype.getBoundRect = function(b) {
 Entry.Stage.prototype.updateBoundRect = function(b) {
   return this._boundRect = this.canvas.canvas.getBoundingClientRect();
 };
+Entry.fuzzy = {};
+(function(b) {
+  var a = {};
+  b.fuzzy = a;
+  a.simpleFilter = function(b, c) {
+    return c.filter(function(c) {
+      return a.test(b, c);
+    });
+  };
+  a.test = function(b, c) {
+    return null !== a.match(b, c);
+  };
+  a.match = function(a, b, e) {
+    e = e || {};
+    var f = 0, g = [], h = b.length, k = 0, l = 0, n = e.pre || "", q = e.post || "", m = e.caseSensitive && b || b.toLowerCase();
+    a = e.caseSensitive && a || a.toLowerCase();
+    for (var r = 0;r < h;r++) {
+      e = b[r], m[r] === a[f] ? (e = n + e + q, f += 1, l += 1 + l) : l = 0, k += l, g[g.length] = e;
+    }
+    return f === a.length ? {rendered:g.join(""), score:k} : null;
+  };
+  a.filter = function(b, c, e) {
+    e = e || {};
+    return c.reduce(function(c, g, h, k) {
+      k = g;
+      e.extract && (k = e.extract(g));
+      k = a.match(b, k, e);
+      null != k && (c[c.length] = {string:k.rendered, score:k.score, index:h, original:g});
+      return c;
+    }, []).sort(function(a, b) {
+      var c = b.score - a.score;
+      return c ? c : a.index - b.index;
+    });
+  };
+})(Entry.Utils);
 Entry.Variable = function(b) {
   Entry.assert("string" == typeof b.name, "Variable name must be given");
   this.name_ = b.name;

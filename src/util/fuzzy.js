@@ -1,5 +1,7 @@
 "use strict";
 
+goog.require("Entry.Utils");
+
 goog.provide("Entry.fuzzy");
 
 /*
@@ -10,11 +12,12 @@ goog.provide("Entry.fuzzy");
  * Licensed under the MIT license.
  */
 
-$(function () {
 (function(u) {
+
+
 var fuzzy = {};
 
-u.fuzzy = fuzzy; 
+u.fuzzy = fuzzy;
 
 // Return all elements of `array` that have a fuzzy
 // match against `pattern`.
@@ -101,7 +104,7 @@ fuzzy.match = function(pattern, string, opts) {
 fuzzy.filter = function(pattern, arr, opts) {
   opts = opts || {};
   return arr
-    .reduce(function(prev, element, idx, arr) { 
+    .reduce(function(prev, element, idx, arr) {
       var str = element;
       if(opts.extract) {
         str = opts.extract(element);
@@ -130,5 +133,4 @@ fuzzy.filter = function(pattern, arr, opts) {
 
 
 }(Entry.Utils));
-});
 
