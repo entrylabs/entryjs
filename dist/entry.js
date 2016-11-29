@@ -13238,12 +13238,12 @@ Entry.BlockToPyParser = function(b) {
             if (k[q] && "Indicator" != k[q].type) {
               if ("Block" == k[q].type) {
                 f = this.Block(l[q]).trim();
-                console.log("syntaxObj1", c);
-                console.log("param param", f);
+                console.log("syntaxObj1", c, "index", q);
+                console.log("param param", f, "index", q);
                 if (c.textParams && c.textParams[q]) {
                   var m = c.textParams[q]
                 }
-                m && "index" == m.paramType && (isNaN(f) ? (q = f.split("+"), " 1)" == q[q.length - 1] ? (delete q[q.length - 1], f = q.join("+"), f = f.substring(1, f.length - 2)) : f += " - 1") : f = String(parseInt(f) - 1));
+                m && "index" == m.paramType && (isNaN(f) ? (q = f.split("+"), console.log("index tokens", q), " 1)" == q[q.length - 1] ? (delete q[q.length - 1], f = q.join("+"), f = f.substring(1, f.length - 2)) : f += " - 1") : f = String(parseInt(f) - 1));
                 if (q = this._funcMap.get(f)) {
                   b += q;
                 } else {
@@ -14349,13 +14349,13 @@ Entry.PyToBlockParser = function(b) {
               console.log("isStringIncluded params", c);
             }
           } else {
-            "pop" == f.property.name ? "number" == c[0].type || "text" == c[0].type ? c[0].params[0] += 1 : "get_variable" == c[0].type ? (k = {type:"calc_basic"}, m = [], m[0] = c[0], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[0] = k) : "calc_basic" == c[0].type && ("MINUS" == c[0].params[1] && "1" == c[0].params[2].params[0] ? c[3] = c[0].params[0] : (k = {type:"calc_basic"}, m = [], m[0] = u, m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[0] = k)) : 
-            "insert" == f.property.name ? "number" == c[2].type || "text" == c[2].type ? c[2].params[0] += 1 : "get_variable" == c[2].type ? (k = {type:"calc_basic"}, m = [], m[0] = c[2], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[2] = k) : "calc_basic" == c[2].type && ("MINUS" == c[2].params[1] && "1" == c[2].params[2].params[0] ? c[2] = c[2].params[0] : (k = {type:"calc_basic"}, m = [], m[0] = u, m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[2] = k)) : 
-            "len" == f.property.name ? "len" == m && (u = c[1], u = this.ParamDropdownDynamic(u.name, v[1], x[1]), c[1] = u) : "in" == f.property.name ? (u = c[1], u = this.ParamDropdownDynamic(u.name, v[1], x[1]), c[1] = u) : "subscriptIndex" == f.property.name ? (u = c[3], "number" == c[3].type || "text" == c[3].type ? c[3].params[0] += 1 : "get_variable" == c[3].type ? (k = {type:"calc_basic"}, m = [], m[0] = c[3], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[3] = k) : "calc_basic" == 
-            c[3].type && ("MINUS" == c[3].params[1] && "1" == c[3].params[2].params[0] ? c[3] = c[3].params[0] : (k = {type:"calc_basic"}, m = [], m[0] = c[3], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[3] = k))) : "_pySlice" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, "number" == c[1].type || "text" == c[1].type ? c[1].params[0] += 1 : "get_variable" == c[1].type ? (k = {type:"calc_basic"}, m = [], m[0] = 
-            c[1], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[1] = k) : "calc_basic" == c[1].type && ("MINUS" == c[1].params[1] && "1" == c[1].params[2].params[0] ? c[1] = c[1].params[0] : (k = {type:"calc_basic"}, m = [], m[0] = c[1], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[1] = k)), y[3] = c[1], y[5] = c[3], c = y) : "find" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, y[3] = 
-            c[1], c = y) : "replace" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, "number" == c[1].type || "text" == c[1].type ? c[1].params[0] += 1 : "get_variable" == c[1].type ? (k = {type:"calc_basic"}, m = [], m[0] = c[1], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[1] = k) : "calc_basic" == c[1].type && ("MINUS" == c[1].params[1] && "1" == c[1].params[2].params[0] ? c[1] = c[1].params[0] : (k = {type:"calc_basic"}, 
-            m = [], m[0] = c[1], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[1] = k)), y[3] = c[1], y[5] = c[3], c = y) : "upper" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, y[3] = c[1], c = y) : "lower" == f.property.name && f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, y[3] = c[1], c = y);
+            "len" == f.property.name ? "len" == m && (u = c[1], u = this.ParamDropdownDynamic(u.name, v[1], x[1]), c[1] = u) : "in" == f.property.name ? (u = c[1], u = this.ParamDropdownDynamic(u.name, v[1], x[1]), c[1] = u) : "pop" == f.property.name ? "number" == c[0].type || "text" == c[0].type ? isNaN(c[0].params[0]) || (c[0].params[0] += 1) : "get_variable" == c[0].type ? (k = {type:"calc_basic"}, m = [], m[0] = c[0], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[0] = k) : 
+            "calc_basic" == c[0].type && ("MINUS" == c[0].params[1] && "1" == c[0].params[2].params[0] ? c[0] = c[0].params[0] : (k = {type:"calc_basic"}, m = [], m[0] = c[0], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[0] = k)) : "insert" == f.property.name ? "number" == c[2].type || "text" == c[2].type ? isNaN(c[2].params[0]) || (c[2].params[0] += 1) : "get_variable" == c[2].type ? (k = {type:"calc_basic"}, m = [], m[0] = c[2], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, 
+            k.params = m, c[2] = k) : "calc_basic" == c[2].type && ("MINUS" == c[2].params[1] && "1" == c[2].params[2].params[0] ? c[2] = c[2].params[0] : (k = {type:"calc_basic"}, m = [], m[0] = c[2], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[2] = k)) : "subscriptIndex" == f.property.name ? (u = c[3], "number" == c[3].type || "text" == c[3].type ? isNaN(c[3].params[0]) || (c[3].params[0] += 1) : "get_variable" == c[3].type ? (k = {type:"calc_basic"}, m = [], m[0] = c[3], 
+            m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[3] = k) : "calc_basic" == c[3].type && ("MINUS" == c[3].params[1] && "1" == c[3].params[2].params[0] ? c[3] = c[3].params[0] : (k = {type:"calc_basic"}, m = [], m[0] = c[3], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[3] = k))) : "_pySlice" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, "number" == c[1].type || "text" == c[1].type ? 
+            isNaN(c[1].params[0]) || (c[1].params[0] += 1) : "get_variable" == c[1].type ? (k = {type:"calc_basic"}, m = [], m[0] = c[1], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[1] = k) : "calc_basic" == c[1].type && ("MINUS" == c[1].params[1] && "1" == c[1].params[2].params[0] ? c[1] = c[1].params[0] : (k = {type:"calc_basic"}, m = [], m[0] = c[1], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[1] = k)), y[3] = c[1], y[5] = c[3], c = y) : "find" == 
+            f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, y[3] = c[1], c = y) : "replace" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, y[3] = c[1], y[5] = c[3], c = y) : "upper" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, y[3] = c[1], c = y) : "lower" == f.property.name && f.object && (k = 
+            this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, y[3] = c[1], c = y);
           }
         }
       }
@@ -14741,7 +14741,8 @@ Entry.PyToBlockParser = function(b) {
       f = h.params[1];
       console.log("AssignmentExpression listName", f);
       e.push(f);
-      h && h.property && (f = h.property.arguments[0], console.log("AssignmentExpression left param", f), e.push(f), f = h.property.arguments[1], e.push(f), console.log("AssignmentExpression left param", f));
+      h && h.property && (f = h.property.arguments[0], console.log("AssignmentExpression left param", f), e.push(f), f = h.property.arguments[1], console.log("arg1 param", f), "number" == f.type || "text" == f.type ? e.push(f) : "get_variable" == f.type ? (h = {type:"calc_basic"}, k = [], k[0] = f, k[1] = "PLUS", k[2] = {type:"number", params:[1]}, h.params = k, e.push(h)) : "calc_basic" == f.type && ("MINUS" == f.params[1] && "1" == f.params[2].params[0] ? e.push(f.params[0]) : (h = {type:"calc_basic"}, 
+      k = [], k[0] = f, k[1] = "PLUS", k[2] = {type:"number", params:[1]}, h.params = k, e.push(h))), console.log("AssignmentExpression left param", f));
       l && e.push(l);
       4 == e.length && e.splice(1, 1);
       c.params = e;
@@ -15018,21 +15019,17 @@ Entry.PyToBlockParser = function(b) {
       e.push("");
       e.push(g);
       e.push("");
-      if ("number" == arguments[1].type) {
-        arguments[1].params[0] += 1, e.push(arguments[1]);
+      if ("number" == arguments[1].type || "text" == arguments[1].type) {
+        isNaN(arguments[1].params[0]) || (arguments[1].params[0] += 1), e.push(arguments[1]);
       } else {
-        if ("text" == arguments[1].type) {
-          arguments[1].params[0] = String(Number(arguments[1].params[0]) + 1), e.push(arguments[1]);
+        if ("get_variable" == arguments[1].type) {
+          g = {type:"calc_basic"}, f = [], f[0] = arguments[1], f[1] = "PLUS", f[2] = {type:"number", params:[1]}, g.params = f, e.push(g);
         } else {
-          if ("get_variable" == arguments[1].type) {
-            g = {type:"calc_basic"}, f = [], f[0] = arguments[1], f[1] = "PLUS", f[2] = {type:"number", params:[1]}, g.params = f, e.push(g);
+          if ("calc_basic" == arguments[1].type) {
+            console.log("value list", arguments[1], "arguments[1].params[2].params[0]", arguments[1].params[2].params[0]), "MINUS" == arguments[1].params[1] && "1" == arguments[1].params[2].params[0] ? e.push(arguments[1].params[0]) : (g = {type:"calc_basic"}, f = [], f[0] = arguments[1], f[1] = "PLUS", f[2] = {type:"number", params:[1]}, g.params = f, e.push(g));
           } else {
-            if ("calc_basic" == arguments[1].type) {
-              "MINUS" == arguments[1].params[1] && "1" == arguments[1].params[2].params[0] ? e.push(arguments[1].params[0]) : (g = {type:"calc_basic"}, f = [], f[0] = arguments[1], f[1] = "PLUS", f[2] = {type:"number", params:[1]}, g.params = f, e.push(g));
-            } else {
-              if (!arguments[1].type) {
-                throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
-              }
+            if (!arguments[1].type) {
+              throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
             }
           }
         }
