@@ -17783,9 +17783,13 @@ p.retryConnect = function() {
   this.initSocket();
 };
 p.openHardwareProgram = function() {
+  var b = this;
   this.isOpenHardware = !0;
   Entry.HW.TRIAL_LIMIT = 5;
-  this.socket ? this.executeHardware() : (this.executeHardware(), this.initSocket());
+  this.executeHardware();
+  this.socket && this.socket.connected || setTimeout(function() {
+    b.initSocket();
+  }, 1E3);
 };
 p.initHardware = function(b) {
   this.socket = b;
@@ -17912,14 +17916,18 @@ p.executeHardware = function() {
   function d(a) {
     var b = !1;
     window.focus();
-    window.onblur = function() {
+    $(window).one("blur", function() {
       b = !0;
-    };
+    });
+    Entry.dispatchEvent("workspaceUnbindUnload", !0);
     location.assign(encodeURI(a));
     setTimeout(function() {
-      (0 == b || 0 < navigator.userAgent.indexOf("Edge")) && c.popupHelper.show("hwDownload", !0);
+      Entry.dispatchEvent("workspaceBindUnload", !0);
+    }, 100);
+    setTimeout(function() {
+      0 == b && c.popupHelper.show("hwDownload", !0);
       window.onblur = null;
-    }, 1500);
+    }, 3E3);
   }
   var c = this, e = {_bNotInstalled:!1, init:function(a, b) {
     this._w = window.open("/views/hwLoading.html", "entry_hw_launcher", "width=220, height=225,  top=" + window.screenTop + ", left=" + window.screenLeft);
@@ -17968,7 +17976,8 @@ p.hwPopupCreate = function() {
     h.text(Lang.Buttons.cancel);
     k.html(Lang.Msgs.new_version_download);
     d.bindOnClick(".popupDefaultBtn", function(a) {
-      $(this).hasClass("popupOkBtn") ? b.downloadConnector() : b.popupHelper.hide("newVersion");
+      $(this).hasClass("popupOkBtn") && b.downloadConnector();
+      b.popupHelper.hide("newVersion");
     });
     a.append(d);
   }});
@@ -17981,7 +17990,8 @@ p.hwPopupCreate = function() {
     h.text(Lang.Buttons.cancel);
     k.html(Lang.Msgs.hw_download_btn);
     d.bindOnClick(".popupDefaultBtn", function(a) {
-      $(this).hasClass("popupOkBtn") ? b.downloadConnector() : b.popupHelper.hide("hwDownload");
+      $(this).hasClass("popupOkBtn") && b.downloadConnector();
+      b.popupHelper.hide("hwDownload");
     });
     a.append(d);
   }});
@@ -25952,7 +25962,7 @@ Entry.Playground.prototype.updateHW = function() {
   var b = Entry.playground.mainWorkspace.blockMenu;
   if (b) {
     var a = Entry.hw;
-    a && a.connected ? (b.unbanClass("arduinoConnected", !0), b.banClass("arduinoDisconnected", !0), a.banHW(), a.hwModule && b.unbanClass(a.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
+    a && a.connected ? (b.banClass("arduinoDisconnected", !0), a.banHW(), a.hwModule ? (b.banClass("arduinoConnect", !0), b.unbanClass("arduinoConnected", !0), b.unbanClass(a.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoConnect", !0))) : (b.banClass("arduinoConnected", !0), b.banClass("arduinoConnect", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
     b.reDraw();
   }
 };

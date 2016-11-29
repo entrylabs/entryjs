@@ -2926,6 +2926,20 @@ Entry.block = {
         ],
         "events": {}
     },
+    "arduino_connect": {
+        "skeleton": "basic_button",
+        "color": "#eee",
+        "isNotFor": ["arduinoConnect"],
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.ARDUINO_connect,
+                "color": "#333",
+                "align": "center"
+            }
+        ],
+        "events": {}
+    },
     "arduino_reconnect": {
         "skeleton": "basic_button",
         "color": "#eee",
