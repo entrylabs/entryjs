@@ -235,7 +235,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
                     Entry.playground.blockMenu.reDraw();
-                    
+
                     this._pyBlockCount = {};
                     this._pyThreadCount = 1;
 
@@ -480,13 +480,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         tokens = tokens.split('(');
 
-                        if(tokens[1] && tokens[1].includes('%')) {
+                        if(tokens[1] && tokens[1].indexOf('%') > -1) {
                             if(tokens[0].length != 0)
                                 tokens = tokens[0];
                             else
                                 tokens = tokens.join('(');
-                        }
-                        else {
+                        } else {
                             tokens = tokens.join('(');
                         }
 

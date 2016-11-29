@@ -14571,7 +14571,7 @@ Entry.PyToBlockParser = function(b) {
           "Identifier" == f.type ? r = f.name : "UnaryExpression" == f.type && (h = this[f.type](f), console.log("VariableDeclarator initData UnaryExpression", h), r = h.params[0], console.log("gl initData", h, "type", typeof r), "string" != typeof r && "number" != typeof r && (r = 0));
         }
         console.log("variable name", g, "value", r);
-        (r && !isNaN(r) || 0 == r) && g && !g.includes("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(g) ? (console.log("this is update", g, r), Entry.TextCodingUtil.updateGlobalVariable(g, r)) : Entry.TextCodingUtil.createGlobalVariable(g, r));
+        (r && !isNaN(r) || 0 == r) && g && 0 > g.indexOf("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(g) ? (console.log("this is update", g, r), Entry.TextCodingUtil.updateGlobalVariable(g, r)) : Entry.TextCodingUtil.createGlobalVariable(g, r));
         g = this[e.type](e);
         console.log("VariableDeclarator idData", g);
         b.id = g;
@@ -15543,7 +15543,7 @@ Entry.PyToBlockParser = function(b) {
           m = this[m.type](m, e[q], k[q], !0);
           console.log("BinaryExpression param", m);
           console.log("check binary", typeof m, "$", m.type, "$", m.isCallParam);
-          if (m && "object" == typeof m && m.name && !m.name.includes("__filbert") && !Entry.TextCodingUtil.isFuncParam(m.name) && !Entry.TextCodingUtil.isEntryEventDesignatedParamName(m.name) && !Entry.TextCodingUtil.isGlobalVariableExisted(m.name)) {
+          if (m && "object" == typeof m && m.name && 0 > m.name.indexOf("__filbert") && !Entry.TextCodingUtil.isFuncParam(m.name) && !Entry.TextCodingUtil.isEntryEventDesignatedParamName(m.name) && !Entry.TextCodingUtil.isGlobalVariableExisted(m.name)) {
             throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
           }
           m && m.type && b.push(m);
@@ -15568,7 +15568,7 @@ Entry.PyToBlockParser = function(b) {
                   }
                 }
               } else {
-                if (m.object && !m.object.name.includes("__filbert")) {
+                if (m.object && 0 > m.object.name.indexOf("__filbert")) {
                   if ("self" != m.object.name) {
                     throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + m.object.name + "' \uac1d\uccb4 \ubcc0\uc218\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;
                   }
@@ -15577,7 +15577,7 @@ Entry.PyToBlockParser = function(b) {
                   }
                 }
               }
-              m.object.name.includes("__filbert") || (e = {type:"text"}, k = [], k.push(m.object.name + "." + m.property.name), e.params = k, b.push(e));
+              0 > m.object.name.indexOf("__filbert") && (e = {type:"text"}, k = [], k.push(m.object.name + "." + m.property.name), e.params = k, b.push(e));
             }
           }
         } else {
@@ -15608,7 +15608,7 @@ Entry.PyToBlockParser = function(b) {
         }
         for (q in arguments) {
           if (m = arguments[q], console.log("BinaryExpression argument", m), m = this[m.type](m, e[q], k[q], !0), console.log("BinaryExpression param", m), m && "object" == typeof m) {
-            if (m.name && !m.name.includes("__filbert") && !m.type && m.isCallParam && !Entry.TextCodingUtil.isFuncParam(m.name) && !Entry.TextCodingUtil.isGlobalVariableExisted(m.property.name)) {
+            if (m.name && 0 > m.name.indexOf("__filbert") && !m.type && m.isCallParam && !Entry.TextCodingUtil.isFuncParam(m.name) && !Entry.TextCodingUtil.isGlobalVariableExisted(m.property.name)) {
               throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
             }
             b.push(m);
@@ -15634,7 +15634,7 @@ Entry.PyToBlockParser = function(b) {
                   }
                 }
               } else {
-                if (m.object && !m.object.name.includes("__filbert")) {
+                if (m.object && 0 > m.object.name.indexOf("__filbert")) {
                   if ("self" != m.object.name) {
                     throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + m.object.name + "' \uac1d\uccb4 \ubcc0\uc218\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;
                   }
@@ -15643,7 +15643,7 @@ Entry.PyToBlockParser = function(b) {
                   }
                 }
               }
-              m.object.name.includes("__filbert") || (e = {type:"text"}, k = [], k.push(m.object.name + "." + m.property.name), e.params = k, b.push(e));
+              0 > m.object.name.indexOf("__filbert") && (e = {type:"text"}, k = [], k.push(m.object.name + "." + m.property.name), e.params = k, b.push(e));
             }
           }
         } else {
@@ -16305,7 +16305,7 @@ Entry.Parser = function(b, a, d, c) {
             b = a, d = a.syntax, a.key = l, a.template || (b.template = a.syntax);
           }
           d = d.split("(");
-          d = d[1] && d[1].includes("%") ? 0 != d[0].length ? d[0] : d.join("(") : d.join("(");
+          d = d[1] && -1 < d[1].indexOf("%") ? 0 != d[0].length ? d[0] : d.join("(") : d.join("(");
           d = d.replace("():", "");
           d = d.replace("()", "");
           a.keyOption && (d += "#" + a.keyOption);
@@ -24240,7 +24240,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this._block.view.alignContent();
   };
   b.getTextWidth = function() {
-    return this.textElement ? this.textElement.getComputedTextLength() + 8 : 8;
+    return this.textElement ? this.textElement.getBoundingClientRect().width + 8 : 8;
   };
   b.getText = function() {
     return this.getValue() + "\u00b0";

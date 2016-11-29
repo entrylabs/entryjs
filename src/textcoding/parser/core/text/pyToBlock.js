@@ -1464,7 +1464,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("variable name", name, "value", value);
 
             if((value && !isNaN(value)) || value == 0) {
-                if(name && !name.includes('__filbert')) {
+                if(name && name.indexOf('__filbert') < 0) {
                     if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                         console.log("this is update", name, value);
                         Entry.TextCodingUtil.updateGlobalVariable(name, value);
@@ -3724,7 +3724,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("check binary", typeof param, "$", param.type, "$", param.isCallParam);
 
                     if(param && typeof param == "object") {
-                        if(param.name && !param.name.includes("__filbert")) {
+                        if(param.name && param.name.indexOf("__filbert") < 0) {
                             if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
                                 if(!Entry.TextCodingUtil.isEntryEventDesignatedParamName(param.name)) {
                                     if(!Entry.TextCodingUtil.isGlobalVariableExisted(param.name)) {
@@ -3805,7 +3805,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                     else { // In Case of Variable
                         if(param.object) {
-                            if(!param.object.name.includes("__filbert")) {
+                            if(param.object.name.indexOf("__filbert") < 0) {
                                 if(param.object.name != "self") {
                                     var error = {};
                                     error.title = "지원되지 않는 코드";
@@ -3828,7 +3828,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                     }
 
-                    if(!param.object.name.includes("__filbert")) {
+                    if(param.object.name.indexOf("__filbert") < 0) {
                         var paramBlock = {};
                         paramBlock.type = "text";
                         var textParams = [];
@@ -3919,7 +3919,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("BinaryExpression param", param);
                     if(param && typeof param == "object") {
-                        if(param.name && !param.name.includes("__filbert")) {
+                        if(param.name && param.name.indexOf("__filbert") < 0) {
                             if(!param.type && param.isCallParam) {
                                 if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
                                     if(!Entry.TextCodingUtil.isGlobalVariableExisted(param.property.name)) {
@@ -3980,7 +3980,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                     else { // In Case of Variable
                         if(param.object) {
-                            if(!param.object.name.includes("__filbert")) {
+                            if(param.object.name.indexOf("__filbert") < 0) {
                                 if(param.object.name != "self") {
                                     var error = {};
                                     error.title = "지원되지 않는 코드";
@@ -4003,7 +4003,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                     }
 
-                    if(!param.object.name.includes("__filbert")) {
+                    if(param.object.name.indexOf("__filbert") < 0) {
                         var paramBlock = {};
                         paramBlock.type = "text";
                         var textParams = [];
