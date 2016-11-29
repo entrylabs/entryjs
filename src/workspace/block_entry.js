@@ -20632,7 +20632,8 @@ Entry.block = {
                         "menuName": "variables",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                     {
                         "type": "Block",
@@ -20712,7 +20713,8 @@ Entry.block = {
                         "menuName": "variables",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                     {
                         "type": "Block",
@@ -20906,7 +20908,8 @@ Entry.block = {
                         "menuName": "variables",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                 ]
             }
@@ -21136,7 +21139,8 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                 ]
             }
@@ -21223,7 +21227,8 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                 ]
             }
@@ -21318,7 +21323,8 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                     {
                         "type": "Block",
@@ -21414,7 +21420,8 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                     {
                         "type": "Block",
@@ -21515,7 +21522,8 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                     undefined,
                     {
@@ -21590,7 +21598,8 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                 ]
             }
@@ -21908,7 +21917,8 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                     undefined,
                     {

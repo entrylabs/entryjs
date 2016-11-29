@@ -268,7 +268,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         console.log("FieldDropdown", dataParam, textParam);
         var key, value;
 
-        if(textParam && textParam.converter && textParam.options) {
+        if(textParam && textParam.converter && textParam.options) { 
             for(var i in textParam.options) {
                 var option = textParam.options[i];
                 console.log("option", option);
