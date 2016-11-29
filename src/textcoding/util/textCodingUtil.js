@@ -1989,7 +1989,7 @@ Entry.TextCodingUtil = {};
                     value += ", ";
             }
 
-            result = name + " = [" + value + "]" + "\n";
+            result += name + " = [" + value + "]" + "\n";
         }
 
         return result;

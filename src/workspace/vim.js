@@ -227,7 +227,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
         textCode += '\n';
         this.codeMirror.setValue(textCode);
         if(textType == Entry.Vim.TEXT_TYPE_PY)
-            this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 4, ch:0}, {readOnly: true});
+            this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 3, ch:0}, {readOnly: true});
 
         var doc = this.codeMirror.getDoc();
         doc.setCursor({ line: doc.lastLine() - 1});

@@ -21,6 +21,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     this._variableDeclaration = null;
     this._listDeclaration = null;
+    this._forIdCharIndex = 0;
 };
 
 (function(p){
@@ -36,6 +37,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             threads = code.getThreads();
 
         for (var i = 0; i < threads.length; i++) {
+            this._forIdCharIndex = 0;
             var thread = threads[i];
 
             textCode += this.Thread(thread) + '\n';
@@ -46,6 +48,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.Thread = function(thread) {
+        console.log("start thread");
         if (thread instanceof Entry.Block)
             return this.Block(thread);
         var result = "",
@@ -201,10 +204,20 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         var index = Number(statementToken.split('$')[1]) - 1;
                         result += Entry.TextCodingUtil.indent(this.Thread(block.statements[index]));
                     }
-                    else result += statementToken;
-
+                    else result += statementToken; 
                 }
             } else {
+                console.log("blockTokenss", blockToken, "syntaxObj", syntaxObj, "i", i);
+                if(syntaxObj && syntaxObj.key == "repeat_basic" && i == 0) {
+                    if(syntaxObj.idChar) {
+                        var forStmtTokens = blockToken.split(" ");
+                        console.log("forStmtTokens", forStmtTokens);
+                        forStmtTokens[1] = syntaxObj.idChar[this._forIdCharIndex++];
+                        var forStmtText = forStmtTokens.join(" ");
+                        console.log("forStmtText", forStmtText);
+                        blockToken = forStmtText;
+                    }
+                }
                 result += blockToken;
             }
         }

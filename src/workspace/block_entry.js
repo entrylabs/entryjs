@@ -9200,7 +9200,11 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": [
-            {syntax: "for i in range(%1):\n$1", template: "for i in range(%1):"}
+            {
+                syntax: "for i in range(%1):\n$1", 
+                template: "for i in range(%1):",
+                idChar: ['i', 'j', 'k', 'x', 'y', 'z', 'o', 'p', 'm', 'n']
+            }
         ]}
     },
     "repeat_inf": {

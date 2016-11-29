@@ -148,7 +148,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 this._execParser = new Entry.BlockToPyParser(this.syntax);
                 cm.setOption("mode", {name: "python", globalVars: true});
-                cm.markText({line: 0, ch: 0}, {line: 3, ch: 0}, {readOnly: true});
+                //cm.markText({line: 0, ch: 0}, {line: 3, ch: 0}, {readOnly: true});
                 this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
 
                 break;
@@ -578,7 +578,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             currentLineCount += count;
         }
 
-        var targetLine = errorLine + currentLineCount + 4;
+        var targetLine = errorLine + currentLineCount + 3;
         var targetText = contentsArr[targetLine-1];
 
         err.from.line = targetLine;
@@ -606,7 +606,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var currentText;
         var targetLine;
 
-        for(var i = 4; i < contentsArr.length; i++) {
+        for(var i = 3; i < contentsArr.length; i++) {
             currentText = contentsArr[i];
 
             var length = currentText.trim().length;
@@ -615,7 +615,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
             console.log("errorLine", errorLine, "emptyLineCount", emptyLineCount, "i", i);
 
-            if(errorLine + emptyLineCount + 4 == i) {
+            if(errorLine + emptyLineCount + 3 == i) {
                 targetLine = i+1;
                 break;
             }
@@ -637,7 +637,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var threads = [];
 
         var optText = "";
-        for(var i = 4; i < textArr.length; i++) {
+        for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
 
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {

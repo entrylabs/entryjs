@@ -131,6 +131,11 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     //functionAddButton.innerHTML = '+ ' + Lang.Msgs.to_be_continue;
     this.functionAddButton_ = functionAddButton;
     functionAddButton.bindOnClick(function(e) {
+        if(Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY) {
+            var message = "텍스트모드에서는 지원하지 않습니다.";
+            alert(message);
+            return;
+        }
         var blockMenu = that._getBlockMenu();
         Entry.playground.changeViewMode('code');
         if (blockMenu.lastSelector != 'func')
@@ -218,7 +223,7 @@ Entry.VariableContainer.prototype.select = function(object) {
     object.listElement.addClass('selected');
     this.selected = object;
     if (object instanceof Entry.Variable) {
-        this.renderVariableReference(object);
+        this.renderVariableReference(object); 
         if (object.object_)
             Entry.container.selectObject(object.object_, true);
     } else if (object instanceof Entry.Func) {
