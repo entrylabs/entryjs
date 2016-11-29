@@ -13919,7 +13919,8 @@ Entry.block = {
                         "value": "EQUAL",
                         "fontSize": 11,
                         noArrow: true,
-                        converter: Entry.block.converters.returnOperator
+                        converter: Entry.block.converters.returnOperator,
+                        caseType: "no"
                     },
                     {
                         "type": "Block",

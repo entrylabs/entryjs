@@ -12833,7 +12833,7 @@ Entry.TextCodingUtil = {};
     if ("repeat_while_true" == a.data.type) {
       var c = b.split(" "), e = c.length - 1, f = c[e];
       console.log("option", f, "option.length", f.length);
-      '"until"' == f ? (c.splice(1, 0, "not"), c.splice(e + 1, 1), c = c.join(" ")) : '"while"' == f ? (c.splice(e, 1), c = c.join(" ")) : c = b;
+      "until" == f ? (c.splice(1, 0, "not"), c.splice(e + 1, 1), c = c.join(" ")) : "while" == f ? (c.splice(e, 1), c = c.join(" ")) : c = b;
     } else {
       c = b;
     }
@@ -13238,8 +13238,6 @@ Entry.BlockToPyParser = function(b) {
             if (k[q] && "Indicator" != k[q].type) {
               if ("Block" == k[q].type) {
                 f = this.Block(l[q]).trim();
-                console.log("syntaxObj1", c, "index", q);
-                console.log("param param", f, "index", q);
                 if (c.textParams && c.textParams[q]) {
                   var m = c.textParams[q]
                 }

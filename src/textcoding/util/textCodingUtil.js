@@ -1421,14 +1421,14 @@ Entry.TextCodingUtil = {};
             var option = blockArr[lastIndex];
             console.log("option", option, "option.length", option.length);
 
-            if(option == '\"until\"') {
+            if(option == 'until') {
                 var condition = "not";
                 blockArr.splice(1, 0, condition);
                 lastIndex += 1;
                 blockArr.splice(lastIndex, 1);
                 result = blockArr.join(" ");
             }
-            else if(option == '\"while\"') {
+            else if(option == 'while') {
                 blockArr.splice(lastIndex, 1);
                 result = blockArr.join(" ");
             }

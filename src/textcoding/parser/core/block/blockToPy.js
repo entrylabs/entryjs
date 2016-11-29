@@ -144,9 +144,6 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         index++;
                     } else if(schemaParams[index].type == "Block") {
                         var param = this.Block(dataParams[index]).trim();
-                        console.log("syntaxObj1", syntaxObj, "index", index);
-                        console.log("param param", param, "index", index);
-                        //if(syntaxObj.key == "remove_value_from_list" && index == 0) {
                         if(syntaxObj.textParams && syntaxObj.textParams[index])
                             var textParam = syntaxObj.textParams[index];
                         if(textParam && textParam.paramType == "index") { 
@@ -284,7 +281,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         var codeMap = eval(textParam.codeMap);
                         var code = codeMap[value];
                         if(code)
-                            value = code;
+                            value = code; 
                     }
                     if(isNaN(key) && isNaN(value)) {
                         if(textParam.caseType == "no") {
