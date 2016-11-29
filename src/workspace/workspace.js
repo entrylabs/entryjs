@@ -404,6 +404,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
             }
         }
+        Entry.disposeEvent && Entry.disposeEvent.notify(e);
     };
 
     p._handleChangeBoard = function() {

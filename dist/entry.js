@@ -27028,14 +27028,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           case 219:
             if (!Entry.playground.object && h) {
               alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
-              break;
+              return;
             }
             if (Entry.playground.mainWorkspace.oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
-              break;
+              return;
             }
             if (k = Entry.TextCodingUtil.isNamesIncludeSpace()) {
               alert(k);
-              break;
+              return;
             }
             k = {};
             k.boardType = Entry.Workspace.MODE_BOARD;
@@ -27046,15 +27046,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           case 221:
             if (!Entry.playground.object && this.oldMode === Entry.Workspace.MODE_BOARD) {
               alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
-              break;
+              return;
             }
             if (k = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
               alert(k);
-              break;
+              return;
             }
             if (k = Entry.TextCodingUtil.isNamesIncludeSpace()) {
               alert(k);
-              break;
+              return;
             }
             k = {};
             k.boardType = Entry.Workspace.MODE_VIMBOARD;
@@ -27071,33 +27071,33 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         }
       } else {
         if (g) {
-          if (Entry.playground.object) {
-            switch(c) {
-              case 49:
-                Entry.playground.changeViewMode("code");
-                a.preventDefault();
-                break;
-              case 50:
-                Entry.playground.changeViewMode("picture");
-                a.preventDefault();
-                break;
-              case 51:
-                Entry.playground.changeViewMode("sound");
-                a.preventDefault();
-                break;
-              case 52:
-                Entry.playground.toggleOnVariableView();
-                Entry.playground.changeViewMode("variable");
-                a.preventDefault();
-                break;
-              case 219:
-                Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("prev"));
-                break;
-              case 221:
-                Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("next"));
-            }
-          } else {
+          if (!Entry.playground.object) {
             alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+            return;
+          }
+          switch(c) {
+            case 49:
+              Entry.playground.changeViewMode("code");
+              a.preventDefault();
+              break;
+            case 50:
+              Entry.playground.changeViewMode("picture");
+              a.preventDefault();
+              break;
+            case 51:
+              Entry.playground.changeViewMode("sound");
+              a.preventDefault();
+              break;
+            case 52:
+              Entry.playground.toggleOnVariableView();
+              Entry.playground.changeViewMode("variable");
+              a.preventDefault();
+              break;
+            case 219:
+              Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("prev"));
+              break;
+            case 221:
+              Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("next"));
           }
         } else {
           if (f) {
@@ -27118,6 +27118,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           }
         }
       }
+      Entry.disposeEvent && Entry.disposeEvent.notify(a);
     }
   };
   b._handleChangeBoard = function() {
