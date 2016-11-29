@@ -12080,8 +12080,8 @@ Entry.PyHint = function(b) {
 Entry.CodeMap = {};
 (function(b) {
   b.Entry = {start_scene_to:[{"\ub2e4\uc74c":"next", "\uc774\uc804":"pre"}], stop_code:[{thisOnly:"self", thisThread:"this", otherThread:"others", self:"thisOnly", "this":"thisThread", others:"otherThread", "\ubaa8\ub4e0":"all", "\uc790\uc2e0":"thisOnly", "\uc774":"thisThread", "\uc790\uc2e0\uc758 \ub2e4\ub978":"otherThread"}], change_shape_to:[{prev:"pre", pre:"prev", "\ub2e4\uc74c":"next", "\uc774\uc804":"prev"}], add_effect:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", "\ud22c\uba85\ub3c4":"transparency"}], 
-  set_effect:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", "\ud22c\uba85\ub3c4":"transparency"}], send_layer_to:[{front:"FRONT", forward:"FORWARD", backward:"BACKWARD", back:"BACK", "\ub9e8 \uc55e":"FRONT", "\uc55e":"FORWARD", "\ub4a4":"BACKWARD", "\ub9e8 \ub4a4":"BACK"}], set_brush_color_to:[{red:"#FF0000", orange:"#FF9966", yellow:"#FFFF66", green:"#009900", blue:"#3333FF", navy:"#000099", purple:"#993399", black:"#000000", white:"#FFFFFF", brown:"#990000"}], reach_something:[{mouse:"mouse_pointer", 
-  mouse_pointer:"mouse"}]};
+  set_effect:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", "\ud22c\uba85\ub3c4":"transparency"}], send_layer_to:[{front:"FRONT", forward:"FORWARD", backward:"BACKWARD", back:"BACK", "\ub9e8 \uc55e":"FRONT", "\uc55e":"FORWARD", "\ub4a4":"BACKWARD", "\ub9e8 \ub4a4":"BACK"}], set_brush_color_to:[{red:"#FF0000", orange:"#FF9966", yellow:"#FFFF66", green:"#009900", blue:"#3333FF", navy:"#000099", purple:"#993399", black:"#000000", white:"#FFFFFF", brown:"#990000"}], is_touched:[null, {mouse:"mouse_pointer", 
+  mouse_pointer:"mouse"}, null]};
   b.Arduino = {digitalWrite:[null, {on:"HIGH", off:"LOW", high:"on", low:"off"}], analogRead:[{A0:"0", A1:"1", A2:"2", A3:"3", A4:"4", A5:"5"}]};
   b.Hamster = {note:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F", 10:"Hamster.NOTE_F_SHARP", 11:"Hamster.NOTE_G", 12:"Hamster.NOTE_G_SHARP", 13:"Hamster.NOTE_A", 14:"Hamster.NOTE_B_FLAT", 15:"Hamster.NOTE_B", "Hamster.NOTE_C":4, "Hamster.NOTE_C_SHARP":5, "Hamster.NOTE_D_FLAT":5, "Hamster.NOTE_D":6, "Hamster.NOTE_E_FLAT":7, "Hamster.NOTE_D_SHARP":7, "Hamster.NOTE_E":8, "Hamster.NOTE_F":8, "Hamster.NOTE_F":9, "Hamster.NOTE_F_SHARP":10, 
   "Hamster.NOTE_G_FLAT":10, "Hamster.NOTE_G":11, "Hamster.NOTE_G_SHARP":12, "Hamster.NOTE_A_FLAT":12, "Hamster.NOTE_A":13, "Hamster.NOTE_B_FLAT":14, "Hamster.NOTE_A_SHARP":14, "Hamster.NOTE_B":15}, null, null]};
@@ -13228,19 +13228,27 @@ Entry.BlockToPyParser = function(b) {
     var k = a._schema.params;
     console.log("first schema", k);
     for (var l = a.data.params, n = 0;n < e.length;n++) {
-      var q = e[n];
-      if (0 !== q.length) {
-        if ("% " == q) {
-          b += q;
+      if (f = e[n], 0 !== f.length) {
+        if ("% " == f) {
+          b += f;
         } else {
-          if (g.test(q)) {
-            if (q = q.split("%")[1], q = Number(q) - 1, k[q] && "Indicator" != k[q].type) {
+          if (g.test(f)) {
+            f = f.split("%")[1];
+            var q = Number(f) - 1;
+            if (k[q] && "Indicator" != k[q].type) {
               if ("Block" == k[q].type) {
-                if (f = this.Block(l[q]).trim(), "char_at" != c.key && "value_of_index_from_list" != c.key || 3 != q ? "substring" != c.key || 3 != q && 5 != q || (f = String(parseInt(f) - 1)) : f = String(parseInt(f) - 1), q = this._funcMap.get(f)) {
+                f = this.Block(l[q]).trim();
+                console.log("syntaxObj1", c);
+                console.log("param param", f);
+                if (c.textParams && c.textParams[q]) {
+                  var m = c.textParams[q]
+                }
+                m && "index" == m.paramType && (isNaN(f) ? (q = f.split("+"), " 1)" == q[q.length - 1] ? (delete q[q.length - 1], f = q.join("+"), f = f.substring(1, f.length - 2)) : f += " - 1") : f = String(parseInt(f) - 1));
+                if (q = this._funcMap.get(f)) {
                   b += q;
                 } else {
-                  var q = f.split("_"), m = q[0];
-                  2 == q.length && ("stringParam" == m ? f = "string_param" : "booleanParam" == m && (f = "boolean_param"));
+                  var q = f.split("_"), r = q[0];
+                  2 == q.length && ("stringParam" == r ? f = "string_param" : "booleanParam" == r && (f = "boolean_param"));
                   b += f;
                 }
               } else {
@@ -13248,12 +13256,12 @@ Entry.BlockToPyParser = function(b) {
               }
             }
           } else {
-            if (h.test(q)) {
-              for (f = q.split(h), m = 0;m < f.length;m++) {
-                q = f[m], 0 !== q.length && (h.test(q) ? (q = Number(q.split("$")[1]) - 1, b += Entry.TextCodingUtil.indent(this.Thread(a.statements[q]))) : b += q);
+            if (h.test(f)) {
+              for (f = f.split(h), r = 0;r < f.length;r++) {
+                q = f[r], 0 !== q.length && (h.test(q) ? (q = Number(q.split("$")[1]) - 1, b += Entry.TextCodingUtil.indent(this.Thread(a.statements[q]))) : b += q);
               }
             } else {
-              b += q;
+              b += f;
             }
           }
         }
@@ -13301,35 +13309,44 @@ Entry.BlockToPyParser = function(b) {
     console.log("FieldDropdown", a, b);
     var c, e;
     if (b && b.converter && b.options) {
-      for (var f in b.options) {
-        if (e = b.options[f], console.log("option", e), c = e[0], e = e[1], a === e) {
-          if (b.codeMap) {
-            var g = eval(b.codeMap)[e];
-            g && (e = g);
-          }
+      for (c in b.options) {
+        var f = b.options[c];
+        console.log("option", f);
+        e = f[0];
+        f = f[1];
+        if (a === f) {
+          c = e;
+          e = f;
+          b.codeMap && (f = eval(b.codeMap)[e]) && (e = f);
           isNaN(c) && isNaN(e) && "no" != b.caseType && ("upper" == b.caseType ? (c = c.toUpperCase(), e = e.toUpperCase()) : (c = c.toLowerCase(), e = e.toLowerCase()));
           a = b.converter(c, e);
           "variable" == b.paramType && (a = a.replace(/\"/g, ""));
+          break;
         }
       }
     }
     return a;
   };
   b.FieldDropdownDynamic = function(a, b) {
-    var c, e = a;
+    var c;
     if (b && b.converter && b.options) {
       c = b.options;
-      for (var f in c) {
-        var g = c[f];
-        console.log("option", g);
-        var h = g[0], g = g[1];
-        if (a === g) {
-          e = b.converter(h, g);
+      for (var e in c) {
+        var f = c[e];
+        console.log("option", f);
+        var g = f[0], f = f[1];
+        if (a === f) {
+          key = g;
+          value = f;
+          b.codeMap && (c = eval(b.codeMap)[value]) && (value = c);
+          isNaN(key) && isNaN(value) && "no" != b.caseType && ("upper" == b.caseType ? (key = key.toUpperCase(), value = value.toUpperCase()) : (key = key.toLowerCase(), value = value.toLowerCase()));
+          a = b.converter(key, value);
+          "variable" == b.paramType && (a = a.replace(/\"/g, ""));
           break;
         }
       }
     }
-    return e;
+    return a;
   };
   b.FieldImage = function(a, b) {
     console.log("FieldImage", a, b);
@@ -14248,7 +14265,7 @@ Entry.PyToBlockParser = function(b) {
                   }
                 } else {
                   if ("__pythonRuntime.ops.subscriptIndex" == h.property.callee) {
-                    if ("char_at" != h.type && !Entry.TextCodingUtil.isGlobalListExisted(h.object.name, this._currentObject)) {
+                    if (console.log("mmm param", h), !h.object.type && !Entry.TextCodingUtil.isGlobalListExisted(h.object.name, this._currentObject)) {
                       throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + h.object.name + "' \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uc138\uc694.", c.line = this._blockCount, console.log("send error", c), c;
                     }
                   } else {
@@ -14314,9 +14331,13 @@ Entry.PyToBlockParser = function(b) {
           console.log("range final params", c);
         } else {
           if ("add" == f.property.name) {
-            y = !0;
+            y = !1;
             for (u in c) {
-              h = c[u], !h || "text" != h.type && "number" != h.type && "combine_something" != h.type && "PLUS" != h ? y = !1 : "text" != h.type && "number" != h.type || !h.params || 0 == h.params.length || (u = h.params[0], "string" != typeof u && (console.log("isParamAllString", h), y = !1));
+              if ((h = c[u]) && ("text" == h.type || "number" == h.type || "combine_something" == h.type || "PLUS" == h) && ("text" == h.type || "number" == h.type) && h.params && 0 != h.params.length && (u = h.params[0], "string" == typeof u)) {
+                console.log("isStringIncluded", h);
+                y = !0;
+                break;
+              }
             }
             if (y) {
               if (r = this.getBlockSyntax("(%2 + %4)")) {
@@ -14325,53 +14346,16 @@ Entry.PyToBlockParser = function(b) {
               c[1] = null;
               c.splice(0, 0, null);
               c.splice(4, 0, null);
-              console.log("isParamAllString params", c);
+              console.log("isStringIncluded params", c);
             }
           } else {
-            if ("pop" == f.property.name) {
-              "number" == c[0].type ? c[0].params[0] += 1 : "text" == c[0].type && (c[0].params[0] = String(Number(c[0].params[0]) + 1));
-            } else {
-              if ("insert" == f.property.name) {
-                "number" == c[2].type ? c[2].params[0] += 1 : "text" == c[2].type && (c[2].params[0] = String(Number(c[2].params[0]) + 1));
-              } else {
-                if ("len" == f.property.name) {
-                  "len" == m && (u = c[1], u = this.ParamDropdownDynamic(u.name, v[1], x[1]), c[1] = u);
-                } else {
-                  if ("in" == f.property.name) {
-                    u = c[1], u = this.ParamDropdownDynamic(u.name, v[1], x[1]), c[1] = u;
-                  } else {
-                    if ("subscriptIndex" == f.property.name) {
-                      u = c[3];
-                      if ("number" == u.type || "text" == u.type) {
-                        u.params[0] += 1;
-                      }
-                      c[3] = u;
-                    } else {
-                      if ("_pySlice" == f.property.name) {
-                        if (f.object) {
-                          y = this[f.object.type](f.object);
-                          console.log("objectData", y);
-                          k = [];
-                          k[1] = y;
-                          if ("number" == c[1].type || "text" == c[1].type) {
-                            c[1].params[0] += 1;
-                          }
-                          k[3] = c[1];
-                          if ("number" == c[3].type || "text" == c[3].type) {
-                            c[3].params[0] += 1;
-                          }
-                          k[5] = c[3];
-                          c = k;
-                        }
-                      } else {
-                        "find" == f.property.name ? f.object && (y = this[f.object.type](f.object), console.log("objectData", y), k = [], k[1] = y, k[3] = c[1], c = k) : "replace" == f.property.name ? f.object && (y = this[f.object.type](f.object), console.log("objectData", y), k = [], k[1] = y, k[3] = c[1], k[5] = c[3], c = k) : "upper" == f.property.name ? f.object && (y = this[f.object.type](f.object), console.log("objectData", y), k = [], k[1] = y, k[3] = c[1], c = k) : "lower" == f.property.name && 
-                        f.object && (y = this[f.object.type](f.object), console.log("objectData", y), k = [], k[1] = y, k[3] = c[1], c = k);
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "pop" == f.property.name ? "number" == c[0].type || "text" == c[0].type ? c[0].params[0] += 1 : "get_variable" == c[0].type ? (k = {type:"calc_basic"}, m = [], m[0] = c[0], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[0] = k) : "calc_basic" == c[0].type && ("MINUS" == c[0].params[1] && "1" == c[0].params[2].params[0] ? c[3] = c[0].params[0] : (k = {type:"calc_basic"}, m = [], m[0] = u, m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[0] = k)) : 
+            "insert" == f.property.name ? "number" == c[2].type || "text" == c[2].type ? c[2].params[0] += 1 : "get_variable" == c[2].type ? (k = {type:"calc_basic"}, m = [], m[0] = c[2], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[2] = k) : "calc_basic" == c[2].type && ("MINUS" == c[2].params[1] && "1" == c[2].params[2].params[0] ? c[2] = c[2].params[0] : (k = {type:"calc_basic"}, m = [], m[0] = u, m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[2] = k)) : 
+            "len" == f.property.name ? "len" == m && (u = c[1], u = this.ParamDropdownDynamic(u.name, v[1], x[1]), c[1] = u) : "in" == f.property.name ? (u = c[1], u = this.ParamDropdownDynamic(u.name, v[1], x[1]), c[1] = u) : "subscriptIndex" == f.property.name ? (u = c[3], "number" == c[3].type || "text" == c[3].type ? c[3].params[0] += 1 : "get_variable" == c[3].type ? (k = {type:"calc_basic"}, m = [], m[0] = c[3], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[3] = k) : "calc_basic" == 
+            c[3].type && ("MINUS" == c[3].params[1] && "1" == c[3].params[2].params[0] ? c[3] = c[3].params[0] : (k = {type:"calc_basic"}, m = [], m[0] = c[3], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[3] = k))) : "_pySlice" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, "number" == c[1].type || "text" == c[1].type ? c[1].params[0] += 1 : "get_variable" == c[1].type ? (k = {type:"calc_basic"}, m = [], m[0] = 
+            c[1], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[1] = k) : "calc_basic" == c[1].type && ("MINUS" == c[1].params[1] && "1" == c[1].params[2].params[0] ? c[1] = c[1].params[0] : (k = {type:"calc_basic"}, m = [], m[0] = c[1], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[1] = k)), y[3] = c[1], y[5] = c[3], c = y) : "find" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, y[3] = 
+            c[1], c = y) : "replace" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, "number" == c[1].type || "text" == c[1].type ? c[1].params[0] += 1 : "get_variable" == c[1].type ? (k = {type:"calc_basic"}, m = [], m[0] = c[1], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[1] = k) : "calc_basic" == c[1].type && ("MINUS" == c[1].params[1] && "1" == c[1].params[2].params[0] ? c[1] = c[1].params[0] : (k = {type:"calc_basic"}, 
+            m = [], m[0] = c[1], m[1] = "PLUS", m[2] = {type:"number", params:[1]}, k.params = m, c[1] = k)), y[3] = c[1], y[5] = c[3], c = y) : "upper" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, y[3] = c[1], c = y) : "lower" == f.property.name && f.object && (k = this[f.object.type](f.object), console.log("objectData", k), y = [], y[1] = k, y[3] = c[1], c = y);
           }
         }
       }
@@ -15034,9 +15018,25 @@ Entry.PyToBlockParser = function(b) {
       e.push("");
       e.push(g);
       e.push("");
-      "number" == arguments[1].type ? arguments[1].params[0] += 1 : "text" == arguments[1].type && (arguments[1].params[0] = String(Number(arguments[1].params[0]) + 1));
-      e.push(arguments[1]);
-      e.push("");
+      if ("number" == arguments[1].type) {
+        arguments[1].params[0] += 1, e.push(arguments[1]);
+      } else {
+        if ("text" == arguments[1].type) {
+          arguments[1].params[0] = String(Number(arguments[1].params[0]) + 1), e.push(arguments[1]);
+        } else {
+          if ("get_variable" == arguments[1].type) {
+            g = {type:"calc_basic"}, f = [], f[0] = arguments[1], f[1] = "PLUS", f[2] = {type:"number", params:[1]}, g.params = f, e.push(g);
+          } else {
+            if ("calc_basic" == arguments[1].type) {
+              "MINUS" == arguments[1].params[1] && "1" == arguments[1].params[2].params[0] ? e.push(arguments[1].params[0]) : (g = {type:"calc_basic"}, f = [], f[0] = arguments[1], f[1] = "PLUS", f[2] = {type:"number", params:[1]}, g.params = f, e.push(g));
+            } else {
+              if (!arguments[1].type) {
+                throw b = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
+              }
+            }
+          }
+        }
+      }
       b.type = c;
       b.params = e;
     } else {
@@ -15134,7 +15134,7 @@ Entry.PyToBlockParser = function(b) {
     var b = {statements:[], data:[]}, c = [], e = [], f = [];
     a = a.body;
     console.log("BlockStatement bodies", a);
-    a[1] && a[1].consequent && a[1].consequent.body && "ForStatement" == a[1].consequent.body[0].type && (this._blockCount++, console.log("BlockCount ForStatement in BlockStatement", this._blockCount));
+    a[1] && a[1].consequent && a[1].consequent.body && a[1].consequent.body[0] && "ForStatement" == a[1].consequent.body[0].type && (this._blockCount++, console.log("BlockCount ForStatement in BlockStatement", this._blockCount));
     for (var g in a) {
       var h = a[g], h = this[h.type](h);
       console.log("BlockStatement bodyData", h);
@@ -24122,8 +24122,11 @@ Entry.Field = function() {
     b = void 0 !== b ? b : this.getValue();
     if (this._contents.converter) {
       if (this._contents.codeMap) {
-        var c = eval(this._contents.codeMap)[b];
-        c && (b = c);
+        var c = eval(this._contents.codeMap);
+        if (c) {
+          var e = c[b]
+        }
+        e && (b = e);
       }
       isNaN(a) && isNaN(b) && "no" != this._contents.caseType && ("upper" == this._contents.caseType ? (a = a.toUpperCase(), b = b.toUpperCase()) : (a = a.toLowerCase(), b = b.toLowerCase()));
       c = this._contents.converter(a, b);

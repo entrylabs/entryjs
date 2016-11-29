@@ -144,10 +144,23 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         index++;
                     } else if(schemaParams[index].type == "Block") {
                         var param = this.Block(dataParams[index]).trim();
-                        if((syntaxObj.key == "char_at" || syntaxObj.key == "value_of_index_from_list") && index == 3)
-                            param = String(parseInt(param) - 1);
-                        else if(syntaxObj.key == "substring" && (index == 3 || index == 5))
-                            param = String(parseInt(param) - 1);
+                        console.log("syntaxObj1", syntaxObj);
+                        console.log("param param", param);
+                        //if(syntaxObj.key == "remove_value_from_list" && index == 0) {
+                        if(syntaxObj.textParams && syntaxObj.textParams[index])
+                            var textParam = syntaxObj.textParams[index];
+                        if(textParam && textParam.paramType == "index") { 
+                            if(!isNaN(param)) param = String(parseInt(param) - 1);
+                            else {
+                                var tokens = param.split('+');
+                                if(tokens[tokens.length-1] == ' 1)') {
+                                    delete tokens[tokens.length-1];
+                                    param = tokens.join("+");
+                                    param = param.substring(1, param.length-2); 
+                                }
+                                else param += " - 1";
+                            }
+                        }
 
                         var funcParam = this._funcMap.get(param);
                         if(funcParam) {
@@ -291,6 +304,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     if(textParam.paramType == "variable") {
                         dataParam = dataParam.replace(/\"/g, "");
                     }
+                    break;
                 }
             }
         }
@@ -306,16 +320,42 @@ Entry.BlockToPyParser = function(blockSyntax) {
             for(var i in options) {
                 var option = options[i];
                 console.log("option", option);
-                var key = option[0];
-                var value = option[1];
-                if(dataParam === value) {
-                    returnValue = textParam.converter(key, value);
+                var op0 = option[0];
+                var op1 = option[1];
+                if(dataParam === op1) {
+                    key = op0;
+                    value = op1
+                    if(textParam.codeMap) {
+                        var codeMap = eval(textParam.codeMap);
+                        var code = codeMap[value];
+                        if(code)
+                            value = code;
+                    }
+                    if(isNaN(key) && isNaN(value)) {
+                        if(textParam.caseType == "no") {
+                            key = key;
+                            value = value;
+                        }
+                        else if(textParam.caseType == "upper") {
+                            key = key.toUpperCase();
+                            value = value.toUpperCase();
+                        }
+                        else {
+                            key = key.toLowerCase();
+                            value = value.toLowerCase();
+                        }
+                    }
+
+                    dataParam = textParam.converter(key, value);
+                    if(textParam.paramType == "variable") {
+                        dataParam = dataParam.replace(/\"/g, "");
+                    }
                     break;
                 }
             }
         }
 
-        return returnValue;
+        return dataParam;
     };
 
     p.FieldImage = function(dataParam, textParam) {

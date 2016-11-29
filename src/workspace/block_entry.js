@@ -7316,7 +7316,8 @@ Entry.block = {
                         "value": "PLUS",
                         "fontSize": 11,
                         noArrow: true,
-                        converter: Entry.block.converters.returnOperator
+                        converter: Entry.block.converters.returnOperator,
+                        caseType: "upper"
                     },
                     {
                         "type": "Block",
@@ -8342,7 +8343,8 @@ Entry.block = {
                     },
                     {
                         "type": "Block",
-                        "accept": "string"
+                        "accept": "string",
+                        paramType: "index"
                     },
                     {
                         "type": "Text",
@@ -8482,7 +8484,26 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "%2\[%4:%6\]"
+                syntax: "%2\[%4:%6\]",
+                textParams: [
+                    null,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    null,
+                    {
+                        "type": "Block",
+                        "accept": "string",
+                        paramType: "index"
+                    },
+                    null,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    null
+                ]
             }
         ]}
     },
@@ -21192,7 +21213,8 @@ Entry.block = {
                 textParams: [
                     {
                         "type": "Block",
-                        "accept": "string"
+                        "accept": "string",
+                        paramType: "index"
                     },
                     {
                         "type": "DropdownDynamic",
@@ -21299,7 +21321,8 @@ Entry.block = {
                     },
                     {
                         "type": "Block",
-                        "accept": "string"
+                        "accept": "string",
+                        paramType: "index"
                     },
                 ]
             }
@@ -21394,7 +21417,8 @@ Entry.block = {
                     },
                     {
                         "type": "Block",
-                        "accept": "string"
+                        "accept": "string",
+                        paramType: "index"
                     },
                     {
                         "type": "Block",
@@ -21495,7 +21519,8 @@ Entry.block = {
                     undefined,
                     {
                         "type": "Block",
-                        "accept": "string"
+                        "accept": "string",
+                        paramType: "index"
                     },
                 ]
             }
