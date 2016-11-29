@@ -1620,14 +1620,20 @@ Entry.Playground.prototype.updateHW = function() {
 
     var hw = Entry.hw;
     if (hw && hw.connected) {
-        blockMenu.unbanClass("arduinoConnected", true);
         blockMenu.banClass("arduinoDisconnected", true);
-
         hw.banHW();
-        if (hw.hwModule)
+
+        if (hw.hwModule) {
+            blockMenu.banClass("arduinoConnect", true);
+            blockMenu.unbanClass("arduinoConnected", true);
             blockMenu.unbanClass(hw.hwModule.name);
+        } else {
+            blockMenu.banClass("arduinoConnected", true);
+            blockMenu.unbanClass("arduinoConnect", true);
+        }
     } else {
         blockMenu.banClass("arduinoConnected", true);
+        blockMenu.banClass("arduinoConnect", true);
         blockMenu.unbanClass("arduinoDisconnected", true);
         Entry.hw.banHW();
     }

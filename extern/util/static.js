@@ -271,6 +271,7 @@ EntryStatic.getAllBlocks = function() {
                 "download_guide",
                 "arduino_download_source",
                 "arduino_connected",
+                "arduino_connect",
                 "arduino_reconnect",
                 "arduino_open",
                 "arduino_cloud_pc_open",
