@@ -14555,7 +14555,7 @@ Entry.PyToBlockParser = function(b) {
           "Identifier" == f.type ? r = f.name : "UnaryExpression" == f.type && (h = this[f.type](f), console.log("VariableDeclarator initData UnaryExpression", h), r = h.params[0], console.log("gl initData", h, "type", typeof r), "string" != typeof r && "number" != typeof r && (r = 0));
         }
         console.log("variable name", g, "value", r);
-        (r && !isNaN(r) || 0 == r) && g && !g.includes("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(g) ? (console.log("this is update", g, r), Entry.TextCodingUtil.updateGlobalVariable(g, r)) : Entry.TextCodingUtil.createGlobalVariable(g, r));
+        (r && !isNaN(r) || 0 == r) && g && 0 > g.indexOf("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(g) ? (console.log("this is update", g, r), Entry.TextCodingUtil.updateGlobalVariable(g, r)) : Entry.TextCodingUtil.createGlobalVariable(g, r));
         g = this[e.type](e);
         console.log("VariableDeclarator idData", g);
         b.id = g;
@@ -15543,7 +15543,7 @@ Entry.PyToBlockParser = function(b) {
           m = this[m.type](m, e[q], k[q], !0);
           console.log("BinaryExpression param", m);
           console.log("check binary", typeof m, "$", m.type, "$", m.isCallParam);
-          if (m && "object" == typeof m && m.name && !m.name.includes("__filbert") && !Entry.TextCodingUtil.isFuncParam(m.name) && !Entry.TextCodingUtil.isEntryEventDesignatedParamName(m.name) && !Entry.TextCodingUtil.isGlobalVariableExisted(m.name)) {
+          if (m && "object" == typeof m && m.name && 0 > m.name.indexOf("__filbert") && !Entry.TextCodingUtil.isFuncParam(m.name) && !Entry.TextCodingUtil.isEntryEventDesignatedParamName(m.name) && !Entry.TextCodingUtil.isGlobalVariableExisted(m.name)) {
             throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
           }
           m && m.type && b.push(m);
@@ -15568,7 +15568,7 @@ Entry.PyToBlockParser = function(b) {
                   }
                 }
               } else {
-                if (m.object && !m.object.name.includes("__filbert")) {
+                if (m.object && 0 > m.object.name.indexOf("__filbert")) {
                   if ("self" != m.object.name) {
                     throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + m.object.name + "' \uac1d\uccb4 \ubcc0\uc218\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;
                   }
@@ -15577,7 +15577,7 @@ Entry.PyToBlockParser = function(b) {
                   }
                 }
               }
-              m.object.name.includes("__filbert") || (e = {type:"text"}, k = [], k.push(m.object.name + "." + m.property.name), e.params = k, b.push(e));
+              0 > m.object.name.indexOf("__filbert") && (e = {type:"text"}, k = [], k.push(m.object.name + "." + m.property.name), e.params = k, b.push(e));
             }
           }
         } else {
@@ -15608,7 +15608,7 @@ Entry.PyToBlockParser = function(b) {
         }
         for (q in arguments) {
           if (m = arguments[q], console.log("BinaryExpression argument", m), m = this[m.type](m, e[q], k[q], !0), console.log("BinaryExpression param", m), m && "object" == typeof m) {
-            if (m.name && !m.name.includes("__filbert") && !m.type && m.isCallParam && !Entry.TextCodingUtil.isFuncParam(m.name) && !Entry.TextCodingUtil.isGlobalVariableExisted(m.property.name)) {
+            if (m.name && 0 > m.name.indexOf("__filbert") && !m.type && m.isCallParam && !Entry.TextCodingUtil.isFuncParam(m.name) && !Entry.TextCodingUtil.isGlobalVariableExisted(m.property.name)) {
               throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
             }
             b.push(m);
@@ -15634,7 +15634,7 @@ Entry.PyToBlockParser = function(b) {
                   }
                 }
               } else {
-                if (m.object && !m.object.name.includes("__filbert")) {
+                if (m.object && 0 > m.object.name.indexOf("__filbert")) {
                   if ("self" != m.object.name) {
                     throw c = {title:"\uc9c0\uc6d0\ub418\uc9c0 \uc54a\ub294 \ucf54\ub4dc"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + m.object.name + "' \uac1d\uccb4 \ubcc0\uc218\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;
                   }
@@ -15643,7 +15643,7 @@ Entry.PyToBlockParser = function(b) {
                   }
                 }
               }
-              m.object.name.includes("__filbert") || (e = {type:"text"}, k = [], k.push(m.object.name + "." + m.property.name), e.params = k, b.push(e));
+              0 > m.object.name.indexOf("__filbert") && (e = {type:"text"}, k = [], k.push(m.object.name + "." + m.property.name), e.params = k, b.push(e));
             }
           }
         } else {
@@ -16305,7 +16305,7 @@ Entry.Parser = function(b, a, d, c) {
             b = a, d = a.syntax, a.key = l, a.template || (b.template = a.syntax);
           }
           d = d.split("(");
-          d = d[1] && d[1].includes("%") ? 0 != d[0].length ? d[0] : d.join("(") : d.join("(");
+          d = d[1] && -1 < d[1].indexOf("%") ? 0 != d[0].length ? d[0] : d.join("(") : d.join("(");
           d = d.replace("():", "");
           d = d.replace("()", "");
           a.keyOption && (d += "#" + a.keyOption);
@@ -24243,7 +24243,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this._block.view.alignContent();
   };
   b.getTextWidth = function() {
-    return this.textElement ? this.textElement.getComputedTextLength() + 8 : 8;
+    return this.textElement ? this.textElement.getBoundingClientRect().width + 8 : 8;
   };
   b.getText = function() {
     return this.getValue() + "\u00b0";
@@ -27020,70 +27020,108 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.overlayBoard.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1);
   };
   b._keyboardControl = function(a, b) {
-    var c = a.keyCode || a.which, e = a.ctrlKey;
-    altKey = a.altKey;
+    var c = a.keyCode || a.which, e = a.ctrlKey, f = a.shiftKey, g = a.altKey;
     if (!Entry.Utils.isInInput(a) || b) {
-      var f = this.selectedBlockView;
-      if (f && !f.isInBlockMenu && f.block.isDeletable()) {
-        if (8 == c || 46 == c) {
-          Entry.do("destroyBlock", f.block), a.preventDefault();
+      var h = this._isVimMode(), k = this.selectedBlockView;
+      if (e) {
+        switch(c) {
+          case 86:
+            (k = this.selectedBoard) && k instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
+            break;
+          case 219:
+            if (!Entry.playground.object && h) {
+              alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+              return;
+            }
+            if (Entry.playground.mainWorkspace.oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
+              return;
+            }
+            if (k = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+              alert(k);
+              return;
+            }
+            k = {};
+            k.boardType = Entry.Workspace.MODE_BOARD;
+            k.textType = -1;
+            this.setMode(k);
+            $(".entryModeSelector span ul li:eq(0)").triggerHandler("click");
+            break;
+          case 221:
+            if (!Entry.playground.object && this.oldMode === Entry.Workspace.MODE_BOARD) {
+              alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+              return;
+            }
+            if (k = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
+              alert(k);
+              return;
+            }
+            if (k = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+              alert(k);
+              return;
+            }
+            k = {};
+            k.boardType = Entry.Workspace.MODE_VIMBOARD;
+            k.textType = Entry.Vim.TEXT_TYPE_PY;
+            k.runType = Entry.Vim.WORKSPACE_MODE;
+            Entry.dispatchEvent("changeMode", k);
+            $(".entryModeSelector span ul li:eq(1)").triggerHandler("click");
+            break;
+          case 67:
+            k && !k.isInBlockMenu && k.block.isDeletable() && k.block.copyToClipboard();
+            break;
+          case 88:
+            k && !k.isInBlockMenu && k.block.isDeletable() && (c = k.block, c.copyToClipboard(), c.destroy(!0, !0), k.getBoard().setSelectedBlock(null));
+        }
+      } else {
+        if (g) {
+          if (!Entry.playground.object) {
+            alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+            return;
+          }
+          switch(c) {
+            case 49:
+              Entry.playground.changeViewMode("code");
+              a.preventDefault();
+              break;
+            case 50:
+              Entry.playground.changeViewMode("picture");
+              a.preventDefault();
+              break;
+            case 51:
+              Entry.playground.changeViewMode("sound");
+              a.preventDefault();
+              break;
+            case 52:
+              Entry.playground.toggleOnVariableView();
+              Entry.playground.changeViewMode("variable");
+              a.preventDefault();
+              break;
+            case 219:
+              Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("prev"));
+              break;
+            case 221:
+              Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("next"));
+          }
         } else {
-          if (e) {
-            if (67 == c) {
-              f.block.copyToClipboard();
-            } else {
-              if (88 == c) {
-                var g = f.block;
-                g.copyToClipboard();
-                g.destroy(!0, !0);
-                f.getBoard().setSelectedBlock(null);
-              }
+          if (f) {
+            switch(c) {
+              case 9:
+                h && (CodeMirror.commands.indentLess(this.vimBoard.codeMirror), a.preventDefault());
+            }
+          } else {
+            switch(c) {
+              case 9:
+                h && (CodeMirror.commands.indentMore(this.vimBoard.codeMirror), a.preventDefault());
+                break;
+              case 8:
+              ;
+              case 46:
+                k && !k.isInBlockMenu && k.block.isDeletable() && (Entry.do("destroyBlock", k.block), a.preventDefault());
             }
           }
         }
       }
-      if (e) {
-        86 == c && (e = this.selectedBoard) && e instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
-        if (219 == c) {
-          if (!Entry.playground.object && this.oldMode === Entry.Workspace.MODE_VIMBOARD) {
-            alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
-            return;
-          }
-          if (Entry.playground.mainWorkspace.oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
-            return;
-          }
-          if (e = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-            alert(e);
-            return;
-          }
-          e = {};
-          e.boardType = Entry.Workspace.MODE_BOARD;
-          e.textType = -1;
-          this.setMode(e);
-          $(".entryModeSelector span ul li:eq(0)").triggerHandler("click");
-        }
-        if (221 == c) {
-          if (!Entry.playground.object && this.oldMode === Entry.Workspace.MODE_BOARD) {
-            alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
-            return;
-          }
-          if (e = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
-            alert(e);
-            return;
-          }
-          if (e = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-            alert(e);
-            return;
-          }
-          e = {};
-          e.boardType = Entry.Workspace.MODE_VIMBOARD;
-          e.textType = Entry.Vim.TEXT_TYPE_PY;
-          e.runType = Entry.Vim.WORKSPACE_MODE;
-          Entry.dispatchEvent("changeMode", e);
-          $(".entryModeSelector span ul li:eq(1)").triggerHandler("click");
-        }
-      }
-      altKey && (Entry.playground.object ? Entry.container && (219 == c ? (a.preventDefault(), Entry.container.selectNeighborObject("prev")) : 221 == c && (a.preventDefault(), Entry.container.selectNeighborObject("next"))) : alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694."));
+      Entry.disposeEvent && Entry.disposeEvent.notify(a);
     }
   };
   b._handleChangeBoard = function() {
@@ -27114,6 +27152,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       case Entry.Workspace.MODE_VIMBOARD:
         return Entry.BlockView.RENDER_MODE_TEXT;
     }
+  };
+  b._isVimMode = function() {
+    return this.oldMode === Entry.Workspace.MODE_VIMBOARD;
   };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {

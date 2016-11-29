@@ -244,7 +244,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
     p.getTextWidth = function() {
         if (!this.textElement) return X_PADDING;
-        return this.textElement.getComputedTextLength() + X_PADDING;
+        return this.textElement.getBoundingClientRect().width + X_PADDING;
     };
 
     p.getText = function() {
