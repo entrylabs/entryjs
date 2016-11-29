@@ -14545,17 +14545,13 @@ Entry.PyToBlockParser = function(b) {
           }
           f.push(m);
         }
+        console.log("vd name", g);
         Entry.TextCodingUtil.isGlobalListExisted(g) ? Entry.TextCodingUtil.updateGlobalList(g, f) : Entry.TextCodingUtil.createGlobalList(g, f);
       } else {
         g = e.name;
-        if ("Literal" == f.type) {
-          var r = f.value;
-          "string" === typeof r && (r = '"' + r + '"');
-        } else {
-          "Identifier" == f.type ? r = f.name : "UnaryExpression" == f.type && (h = this[f.type](f), console.log("VariableDeclarator initData UnaryExpression", h), r = h.params[0], console.log("gl initData", h, "type", typeof r), "string" != typeof r && "number" != typeof r && (r = 0));
-        }
-        console.log("variable name", g, "value", r);
-        (r && !isNaN(r) || 0 == r) && g && 0 > g.indexOf("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(g) ? (console.log("this is update", g, r), Entry.TextCodingUtil.updateGlobalVariable(g, r)) : Entry.TextCodingUtil.createGlobalVariable(g, r));
+        "Literal" == f.type ? (c = f.value, "string" === typeof c && (c = '"' + c + '"')) : "Identifier" == f.type ? c = f.name : "UnaryExpression" == f.type ? (h = this[f.type](f), console.log("VariableDeclarator initData UnaryExpression", h), c = h.params[0], console.log("gl initData", h, "type", typeof c), "string" != typeof c && "number" != typeof c && (c = 0)) : c = 0;
+        console.log("variable name", g, "value", c);
+        (c && !isNaN(c) || 0 == c) && g && 0 > g.indexOf("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(g) ? (console.log("this is update", g, c), Entry.TextCodingUtil.updateGlobalVariable(g, c)) : Entry.TextCodingUtil.createGlobalVariable(g, c));
         g = this[e.type](e);
         console.log("VariableDeclarator idData", g);
         b.id = g;
@@ -14565,17 +14561,17 @@ Entry.PyToBlockParser = function(b) {
         console.log("VariableDeclarator init.type", f.type);
         if ("Literal" == f.type) {
           c = this.getBlockSyntax("%1 = %2");
-          var t;
+          var r;
         } else {
           h.params && h.params[0] && h.params[0].name && g.name == h.params[0].name && "PLUS" == h.operator || "MINUS" == h.operator ? (console.log("VariableDeclarator idData.name", g.name, "initData.params[0].name", h.params[0].name), c = "%1 = %1 + %2") : c = "%1 = %2", c = this.getBlockSyntax(c);
         }
-        c && (t = c.key);
-        c = t;
-        e = Entry.block[t];
+        c && (r = c.key);
+        c = r;
+        e = Entry.block[r];
         console.log("vblock", e);
-        t = e.params;
+        r = e.params;
         e = e.def.params;
-        g.name && (m = this.ParamDropdownDynamic(g.name, t[0], e[0]));
+        g.name && (m = this.ParamDropdownDynamic(g.name, r[0], e[0]));
         e = [];
         "Literal" == f.type ? (g.params && g.params[0] ? e.push(g.params[0]) : e.push(m), f = h.params[0], "string" == typeof f && (f = '"' + f + '"'), h.params[0] = f, e.push(h)) : (console.log("VariableDeclarator idData", g, "initData", h), h.params && h.params[0] && g.name == h.params[0].name && "PLUS" == h.operator || "MINUS" == h.operator ? (console.log("in initData.params[0]"), g.params && g.params[0] ? e.push(g.params[0]) : e.push(m), "MINUS" == h.operator && 0 != h.params[2].params[0] && 
         (h.params[2].params[0] = "-" + h.params[2].params[0]), e.push(h.params[2])) : (console.log("in initData"), g.params && g.params[0] ? e.push(g.params[0]) : e.push(m), e.push(h)));

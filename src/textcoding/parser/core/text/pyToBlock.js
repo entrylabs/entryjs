@@ -1528,7 +1528,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var argument = arguments[a];
                 var item = {};
                 if(argument.type) {
-                    var arg = argument.params[0];
+                    var arg = argument.params[0]; 
                     if(typeof arg === "string")
                         arg = "\"" + arg + "\"";
                     item.data = String(argument.params[0]);
@@ -1544,6 +1544,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 array.push(item);
             }
+
+            console.log("vd name", name);
 
             if(Entry.TextCodingUtil.isGlobalListExisted(name)) {
                 Entry.TextCodingUtil.updateGlobalList(name, array);
@@ -1569,6 +1571,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(typeof value != "string" && typeof value != "number") {
                     value = 0;
                 }
+            }
+            else {
+                value = 0
             }
 
             console.log("variable name", name, "value", value);
