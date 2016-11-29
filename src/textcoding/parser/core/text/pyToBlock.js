@@ -245,13 +245,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(blockSyntax) {
                     type = blockSyntax.key;
                 }
-            }
+            } 
 
             if(!type) {
                 var funcNameKey = calleeData.name + component.arguments.length;
                 if(calleeData.name && arguments.length != 0 && arguments[0].type == "Literal") {
                     if(!this._funcMap.contains(funcNameKey)) {
-                        console.log("error", Entry.TextCodingError.TITLE_CONVERTING);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_NO_BLOCK,

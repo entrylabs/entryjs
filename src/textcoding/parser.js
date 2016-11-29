@@ -14,6 +14,7 @@ goog.require("Entry.JsToBlockParser");
 goog.require("Entry.PyToBlockParser");
 
 goog.require("Entry.TextCodingUtil");
+goog.require("Entry.TextCodingError");
 goog.require("Entry.PyHint");
 goog.require("Entry.Console")
 
@@ -278,19 +279,19 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 from: {line: err.from.line-1, ch: err.from.ch},
                                 to: {line: err.to.line-1, ch: err.to.ch}
                             }
-                            err.type = "syntax";
+                            error.type = "syntax";
                         } else {
                             var err = this.findConvError(error);
                             var annotation = {
                                 from: {line: err.from.line-1, ch: err.from.ch},
                                 to: {line: err.to.line-1, ch: err.to.ch}
                             }
-                            err.type = "converting"
+                            error.type = "converting"
                         }
 
                         var option = {
                             className: "CodeMirror-lint-mark-error",
-                            __annotation: annotation,
+                            __annotation: annotation, 
                             clearOnEnter: true,
                             inclusiveLeft: true,
                             inclusiveRigth: true,
@@ -300,13 +301,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         this._marker = this.codeMirror.markText(
                             annotation.from, annotation.to, option);
 
-                        if(err.type == "syntax") {
+                        console.log("error eee", error.message);
+                        if(error.type == "syntax") {
                             var title = "문법오류";
                             var message = error.message;
+
                         }
-                        else if(err.type == "converting") {
+                        else if(error.type == "converting") {
                             var title = "변환오류"
-                            var message = "변환할수 없는 코드입니다";
+                            var message = error.message;
                         }
 
 
@@ -579,6 +582,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
         }
 
         var targetLine = errorLine + currentLineCount + 3;
+        if(targetLine > contentsArr.length-1)
+            targetLine = contentsArr.length-1;
         var targetText = contentsArr[targetLine-1];
 
         err.from.line = targetLine;
@@ -620,6 +625,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
             }
         }
+
+        if(targetLine > contentsArr.length-1)
+            targetLine = contentsArr.length-1;
 
         err.from.line = targetLine;
         err.from.ch = 0;
