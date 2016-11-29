@@ -109,7 +109,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.codeToText(this.board.code, mode);
                     this.blockMenu.renderText();
                     this.board.clear();
-                    //this.oldMode = this.mode;
                     this.oldTextType = this.textType;
                 break;
 
@@ -124,7 +123,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     }
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.renderBlock();
-                    //this.oldMode = this.mode;
                     this.oldTextType = this.textType;
                 } catch(e) {
                     if(this.board && this.board.code)
@@ -162,7 +160,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 this.overlayBoard.show();
                 this.set({selectedBoard:this.overlayBoard});
                 Entry.commander.setCurrentEditor("board", this.overlayBoard);
-                //this.oldMode = this.mode;
                 break;
         }
 
@@ -256,106 +253,155 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p._keyboardControl = function(e, isForce) {
         var keyCode = e.keyCode || e.which,
-            ctrlKey = e.ctrlKey;
+            ctrlKey = e.ctrlKey,
+            shiftKey = e.shiftKey,
             altKey = e.altKey;
 
-        if (Entry.Utils.isInInput(e) && !isForce) return;
+        if (Entry.Utils.isInInput(e) && !isForce)
+            return;
+
+        var isVimMode = this._isVimMode();
 
         var blockView = this.selectedBlockView;
 
-        if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
-            if (keyCode == 8 || keyCode == 46) { //destroy
-                Entry.do("destroyBlock", blockView.block);
-                e.preventDefault();
-            } else if (ctrlKey) {
-                if (keyCode == 67) //copy
-                    blockView.block.copyToClipboard();
-                else if (keyCode == 88) { //cut
-                    (function(block) {
-                        block.copyToClipboard();
-                        block.destroy(true, true);
-                        blockView.getBoard().setSelectedBlock(null);
-                    })(blockView.block);
-                }
-            }
-        }
-
         if (ctrlKey) {
-            if (keyCode == 86) { //paste
-                var board = this.selectedBoard;
-                if (board && board instanceof Entry.Board && Entry.clipboard)
-                    Entry.do('addThread', Entry.clipboard).value
-                        .getFirstBlock().copyToClipboard();
-            }
-            if (keyCode == 219) { //setMode(block) for textcoding
-                if(!Entry.playground.object) {
-                    if (this.oldMode === Entry.Workspace.MODE_VIMBOARD) {
-                        var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+            switch (keyCode) {
+                case 86:  //paste
+                    var board = this.selectedBoard;
+                    if (board && board instanceof Entry.Board && Entry.clipboard)
+                        Entry.do('addThread', Entry.clipboard).value
+                            .getFirstBlock().copyToClipboard();
+                    break;
+                case 219: //setMode(block) for textcoding
+                    if(!Entry.playground.object) {
+                        if (isVimMode) {
+                            var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                            alert(message);
+                            return;
+                        }
+                    }
+                    var oldMode = Entry.playground.mainWorkspace.oldMode;
+                    if(oldMode == Entry.Workspace.MODE_OVERLAYBOARD)
+                        return;
+
+                    var message = Entry.TextCodingUtil.isNamesIncludeSpace()
+                    if(message) {
                         alert(message);
                         return;
                     }
-                }
-                var oldMode = Entry.playground.mainWorkspace.oldMode;
-                if(oldMode == Entry.Workspace.MODE_OVERLAYBOARD)
-                    return;
 
-                var message = Entry.TextCodingUtil.isNamesIncludeSpace()
-                if(message) {
-                    alert(message);
-                    return;
-                }
+                    var mode = {};
+                    mode.boardType = Entry.Workspace.MODE_BOARD;
+                    mode.textType = -1;
+                    this.setMode(mode);
+                    $('.entryModeSelector span ul li:eq(0)').triggerHandler('click');
+                    break;
+                case 221: //setMode(python) for textcoding
+                    if(!Entry.playground.object) {
+                        if (this.oldMode === Entry.Workspace.MODE_BOARD) {
+                            var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                            alert(message);
+                            return;
+                        }
+                    }
 
-                var mode = {};
-                mode.boardType = Entry.Workspace.MODE_BOARD;
-                mode.textType = -1;
-                this.setMode(mode);
-                $('.entryModeSelector span ul li:eq(0)').triggerHandler('click');
-            }
-            if (keyCode == 221) { //setMode(python) for textcoding
-                if(!Entry.playground.object) {
-                    if (this.oldMode === Entry.Workspace.MODE_BOARD) {
-                        var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                    var message;
+                    message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
+                    if(message) {
                         alert(message);
                         return;
                     }
-                }
 
-                var message;
-                message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
-                if(message) {
-                    alert(message);
-                    return;
-                }
+                    var message =Entry.TextCodingUtil.isNamesIncludeSpace()
+                    if(message) {
+                        alert(message);
+                        return;
+                    }
 
-                var message =Entry.TextCodingUtil.isNamesIncludeSpace()
-                if(message) {
-                    alert(message);
-                    return;
-                }
-
-                var mode = {};
-                mode.boardType = Entry.Workspace.MODE_VIMBOARD;
-                mode.textType = Entry.Vim.TEXT_TYPE_PY;
-                mode.runType = Entry.Vim.WORKSPACE_MODE;
-                Entry.dispatchEvent("changeMode", mode);
-                $('.entryModeSelector span ul li:eq(1)').triggerHandler('click');
+                    var mode = {};
+                    mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+                    mode.textType = Entry.Vim.TEXT_TYPE_PY;
+                    mode.runType = Entry.Vim.WORKSPACE_MODE;
+                    Entry.dispatchEvent("changeMode", mode);
+                    $('.entryModeSelector span ul li:eq(1)').triggerHandler('click');
+                    break;
+                case 67:
+                    if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
+                        blockView.block.copyToClipboard();
+                    }
+                    break;
+                case 88:
+                    if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
+                        (function(block) {
+                            block.copyToClipboard();
+                            block.destroy(true, true);
+                            blockView.getBoard().setSelectedBlock(null);
+                        })(blockView.block);
+                    }
+                    break;
             }
-        }
-
-        if(altKey) {
+        } else if (altKey) {
             if(!Entry.playground.object) {
                 var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
                 alert(message);
                 return;
             }
-            if (Entry.container) {
-                if (keyCode == 219) { //Previous Object
+
+            switch (keyCode) {
+                case 49:
+                    Entry.playground.changeViewMode('code');
                     e.preventDefault();
-                    Entry.container.selectNeighborObject('prev');
-                } else if(keyCode == 221) { //Next Object
+                    break;
+                case 50:
+                    Entry.playground.changeViewMode('picture');
                     e.preventDefault();
-                    Entry.container.selectNeighborObject('next');
-                }
+                    break;
+                case 51:
+                    Entry.playground.changeViewMode('sound');
+                    e.preventDefault();
+                    break;
+                case 52:
+                    Entry.playground.toggleOnVariableView();
+                    Entry.playground.changeViewMode('variable');
+                    e.preventDefault();
+                    break;
+                case 219:
+                    if (Entry.container) {
+                        e.preventDefault();
+                        Entry.container.selectNeighborObject('prev');
+                    }
+                    break;
+                case 221:
+                    if (Entry.container) {
+                        e.preventDefault();
+                        Entry.container.selectNeighborObject('next');
+                    }
+                    break;
+            }
+        } else if (shiftKey) {
+            switch (keyCode) {
+                case 9:
+                    if (isVimMode) {
+                        CodeMirror.commands.indentLess(this.vimBoard.codeMirror);
+                        e.preventDefault();
+                    }
+                    break;
+            }
+        } else {
+            switch (keyCode) {
+                case 9:
+                    if (isVimMode) {
+                        CodeMirror.commands.indentMore(this.vimBoard.codeMirror);
+                        e.preventDefault();
+                    }
+                    break;
+                case 8:
+                case 46:
+                    if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
+                        Entry.do("destroyBlock", blockView.block);
+                        e.preventDefault();
+                    }
+                    break;
             }
         }
     };
@@ -404,6 +450,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             case Entry.Workspace.MODE_VIMBOARD:
                 return Entry.BlockView.RENDER_MODE_TEXT;
         }
+    };
+
+    p._isVimMode = function() {
+        return this.oldMode === Entry.Workspace.MODE_VIMBOARD;
     };
 
 })(Entry.Workspace.prototype);
