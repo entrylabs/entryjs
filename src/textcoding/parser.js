@@ -347,7 +347,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                $('button.entryVariableListElementEditWorkspace').hide();
                 Entry.getMainWS().blockMenu.renderText();
                 result = "";
                 var textCode = this._execParser.Code(code, parseMode);

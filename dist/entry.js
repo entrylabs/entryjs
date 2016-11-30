@@ -16089,7 +16089,6 @@ Entry.Parser = function(b, a, d, c) {
         c = n = this._execParser.Code(a, b);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        $("button.entryVariableListElementEditWorkspace").hide();
         Entry.getMainWS().blockMenu.renderText();
         c = "";
         n = this._execParser.Code(a, b);
@@ -20787,7 +20786,7 @@ Entry.VariableContainer.prototype.createVariableView = function(b) {
     a.selectedVariable = null;
     a.variableSettingView.addClass("entryRemove");
   });
-  d.removeButton = e;
+  this._removeButton = d.removeButton = e;
   var f = Entry.createElement("button");
   f.addClass("entryVariableListElementEditWorkspace");
   f.bindOnClick(function(c) {

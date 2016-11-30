@@ -989,6 +989,7 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
         that.variableSettingView.addClass('entryRemove');
     });
     view.removeButton = removeButton;
+    this._removeButton = removeButton;
 
     var editButton = Entry.createElement('button');
     editButton.addClass('entryVariableListElementEditWorkspace');
