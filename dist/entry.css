@@ -146,14 +146,14 @@
 .cm-invalidchar {color: #f00;} */
 /*Entry Textcoding Font*/
 .cm-s-default .cm-keyword {
-  color: #2A7DEF ;
+  color: #2BBFED ;
 }
 /* applied */
 .cm-s-default .cm-atom {
   color: #FF9E00;
 }
 .cm-s-default .cm-number {
-  color: #C93AD8;
+  color: #0FC764;
 }
 /* applied */
 .cm-s-default .cm-def {
@@ -161,16 +161,16 @@
 }
 /* applied */
 .cm-s-default .cm-variable {
-  color: #0FC764;
+  color: #E22C0B;
 }
 /* applied */
 .cm-s-default .cm-punctuation,
 .cm-s-default .cm-property {
-  color: #0FC764;
+  color: #E22C0B;
 }
 /* applied */
 .cm-s-default .cm-operator {
-  color: #E22C0B;
+  color: #000000;
 }
 /* applied */
 .cm-s-default .cm-variable-2 {
@@ -184,7 +184,7 @@
 }
 /* applied */
 .cm-s-default .cm-string {
-  color: #5D0B89;
+  color: #2A7DEF;
 }
 /* applied */
 .cm-s-default .cm-string-2 {
@@ -197,7 +197,7 @@
   color: #555;
 }
 .cm-s-default .cm-builtin {
-  color: #2BBFED;
+  color: #C93AD8;
 }
 /* applied */
 .cm-s-default .cm-bracket {

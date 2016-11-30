@@ -143,7 +143,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 structure.type = expressionData.type;
 
                 result = structure;
-            } else {
+            } else { 
                 structure = expressionData;
 
                 result = structure;
@@ -151,12 +151,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         if(!result.type && result.name) {
-            var error = {};
+            /*var error = {};
             error.title = "지원되지 않는 코드";
             error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + result.name + "\'" + "을 삭제하세요.";
             error.line = this._blockCount;
             console.log("send error", error);
-            throw error;
+            throw error;*/
+            var keyword = result.name;
+            Entry.TextCodingError.error(
+                Entry.TextCodingError.TITLE_CONVERTING,
+                Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                keyword,
+                this._blockCount);
         }
 
         console.log("ExpressionStatement result", result);
@@ -251,10 +257,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var funcNameKey = calleeData.name + component.arguments.length;
                 if(calleeData.name && arguments.length != 0 && arguments[0].type == "Literal") {
                     if(!this._funcMap.contains(funcNameKey)) {
+                        var keyword = calleeData.name;
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
-                            Entry.TextCodingError.MESSAGE_NO_BLOCK,
-                            calleeData.name,
+                            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                            keyword,
                             this._blockCount);
                     }
                 }
@@ -503,13 +510,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if(!type) {
                 if(calleeData.object.name) {
-                    console.log("callex error calleeData", calleeData);
+                    /*console.log("callex error calleeData", calleeData);
                     var error = {};
                     error.title = "지원되지 않는 코드";
                     error.message = "블록으로 변환될 수 없는 코드입니다. 변환가능한 함수를 사용하세요.";
                     error.line = this._blockCount;
                     console.log("send error", error);
-                    throw error;
+                    throw error;*/
+
+                    var keyword = calleeData.object.name;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                        keyword,
+                        this._blockCount);
                 }
             }
 
@@ -546,12 +560,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             if(callee.object.object.name == "self") {
                                 var name = callee.object.property.name;
                                 if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)){
-                                    var error = {};
+                                    /*var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                     error.line = this._blockCount;
                                     console.log("send error", error);
-                                    throw error;
+                                    throw error;*/
+
+                                    var keyword = name;
+                                    Entry.TextCodingError.error(
+                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                        Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                        keyword,
+                                        this._blockCount);
 
                                     return result;
                                 }
@@ -560,12 +581,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         else {
                             var name = callee.object.name;
                             if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
-                                var error = {};
-                                error.title = "지원되지 않는 코드";
-                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                                error.line = this._blockCount;
-                                console.log("send error", error);
-                                throw error;
+                                var keyword = name;
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                    keyword,
+                                    this._blockCount);
 
                                 return result;
                             }
@@ -584,12 +605,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             if(callee.object.object.name == "self") {
                                 var name = callee.object.property.name;
                                 if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)){
-                                    var error = {};
+                                    /*var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                     error.line = this._blockCount;
                                     console.log("send error", error);
-                                    throw error;
+                                    throw error;*/
+
+                                    var keyword = name;
+                                    Entry.TextCodingError.error(
+                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                        Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                        keyword,
+                                        this._blockCount);
 
                                     return result;
                                 }
@@ -598,12 +626,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         else {
                             var name = callee.object.name;
                             if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
-                                var error = {};
+                                /*var error = {};
                                 error.title = "지원되지 않는 코드";
                                 error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                 error.line = this._blockCount;
                                 console.log("send error", error);
-                                throw error;
+                                throw error;*/
+
+                                var keyword = name;
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                    keyword,
+                                    this._blockCount);
 
                                 return result;
                             }
@@ -622,12 +657,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             if(callee.object.object.name == "self") {
                                 var name = callee.object.property.name;
                                 if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)){
-                                    var error = {};
+                                    /*var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                     error.line = this._blockCount;
                                     console.log("send error", error);
-                                    throw error;
+                                    throw error;*/
+
+                                    var keyword = name;
+                                    Entry.TextCodingError.error(
+                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                        Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                        keyword,
+                                        this._blockCount);
 
                                     return result;
                                 }
@@ -636,12 +678,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         else {
                             var name = callee.object.name;
                             if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
-                                var error = {};
+                                /*var error = {};
                                 error.title = "지원되지 않는 코드";
                                 error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                 error.line = this._blockCount;
                                 console.log("send error", error);
-                                throw error;
+                                throw error;*/
+
+                                var keyword = name;
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                    keyword,
+                                    this._blockCount);
 
                                 return result;
                             }
@@ -663,7 +712,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var textParams = blockSyntax.textParams;
 
             for(var i in arguments) {
-                var isParamOption = false;
+                var isParamOption = false; 
                 var argument = arguments[i];
                 console.log("kkk argument", argument, "typeof", typeof argument);
 
@@ -720,78 +769,132 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(param) {
                         if(param.object && param.object.object) {
                             if(param.object.object.name == "self") {
-                                if(!Entry.TextCodingUtil.isLocalListExisted(param.object.property.name, this._currentObject)) {
-                                    var error = {};
+                                var name = param.object.property.name;
+                                if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)) {
+                                    /*var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.property.name + "\'" + " 리스트를 생성하세요.";
                                     error.line = this._blockCount;
                                     console.log("send error", error);
-                                    throw error;
+                                    throw error;*/
+
+                                    var keyword = name;
+                                    Entry.TextCodingError.error(
+                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                        Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                        keyword,
+                                        this._blockCount);
                                 }
                             }
                             else {
-                                var error = {};
+                                /*var error = {};
                                 error.title = "지원되지 않는 코드";
                                 error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.object.name + "\'" + " 리스트 객체는 지원하지 않습니다.";
                                 error.line = this._blockCount;
                                 console.log("send error", error);
-                                throw error;
+                                throw error;*/
+                                var name = param.object.object.name;
+                                var keyword = name;
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
+                                    keyword,
+                                    this._blockCount); 
                             }
                         }
                         else if(param.object) {
                             if(callee.property && callee.property.name == "len" || callee.property.name == "in") {
                                 if(param.object.name == "self") {
-                                    if(!Entry.TextCodingUtil.isLocalListExisted(param.property.name, this._currentObject)) {
-                                        var error = {};
+                                    var name = param.property.name;
+                                    if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)) {
+                                        /*var error = {};
                                         error.title = "지원되지 않는 코드";
                                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.property.name + "\'" + " 리스트를 생성하세요.";
                                         error.line = this._blockCount;
                                         console.log("send error", error);
-                                        throw error;
+                                        throw error;*/
+
+                                        var keyword = name;
+                                        Entry.TextCodingError.error(
+                                            Entry.TextCodingError.TITLE_CONVERTING,
+                                            Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                            keyword,
+                                            this._blockCount);
                                     }
                                 }
                                 else {
-                                    var error = {};
+                                    /*var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.name + "\'" + " 리스트 객체는 지원하지 않습니다.";
                                     error.line = this._blockCount;
                                     console.log("send error", error);
-                                    throw error;
+                                    throw error;*/
+                                    var name = param.object.name;
+                                    var keyword = name;
+                                    Entry.TextCodingError.error(
+                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                        Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
+                                        keyword,
+                                        this._blockCount);
                                 }
                             }
                             else {
                                 if(param.property.callee == "__pythonRuntime.ops.subscriptIndex") {
                                     console.log("mmm param", param);
                                     if(!param.object.type) {
-                                        if(!Entry.TextCodingUtil.isGlobalListExisted(param.object.name, this._currentObject)) {
-                                            var error = {};
+                                        var name = param.object.name;
+                                        if(!Entry.TextCodingUtil.isGlobalListExisted(name, this._currentObject)) {
+                                            /*var error = {};
                                             error.title = "지원되지 않는 코드";
                                             error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.name + "\'" + " 리스트를 생성하세요.";
                                             error.line = this._blockCount;
                                             console.log("send error", error);
-                                            throw error;
+                                            throw error;*/
+
+                                            var keyword = name;
+                                            Entry.TextCodingError.error(
+                                                Entry.TextCodingError.TITLE_CONVERTING,
+                                                Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                                keyword,
+                                                this._blockCount);
                                         }
                                     }
                                 }
                                 else {
                                     if(param.object.name == "self") {
-                                        if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, this._currentObject)) {
-                                            var error = {};
+                                        var name = param.property.name;
+                                        if(!Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
+                                            /*var error = {};
                                             error.title = "지원되지 않는 코드";
                                             error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.property.name + "\'" + " 변수를 생성하세요.";
                                             error.line = this._blockCount;
                                             console.log("send error", error);
-                                            throw error;
+                                            throw error;*/
+
+                                            var keyword = name;
+                                            Entry.TextCodingError.error(
+                                                Entry.TextCodingError.TITLE_CONVERTING,
+                                                Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                                keyword,
+                                                this._blockCount);
                                         }
+                                    } else if(param.object.name == "Hamster") {
+                                        continue;
                                     } else {
-                                        if(param.object.name == "Hamster")
-                                            continue;
-                                        var error = {};
+                                        /*var error = {};
                                         error.title = "지원되지 않는 코드";
                                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.name + "\'" + " 변수 객체는 지원하지 않습니다.";
                                         error.line = this._blockCount;
                                         console.log("send error", error);
-                                        throw error;
+                                        throw error;*/
+
+                                        var name = param.object.name;
+                                        var keyword = name;
+                                        Entry.TextCodingError.error(
+                                            Entry.TextCodingError.TITLE_CONVERTING,
+                                            Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
+                                            keyword,
+                                            this._blockCount);
                                     }
                                 }
                             }
@@ -799,24 +902,40 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         else {
                             if(param.name && typeof param == "object") {
                                 if(callee.property && (callee.property.name == "len" || callee.property.name == "in")) {
-                                    if(!Entry.TextCodingUtil.isGlobalListExisted(param.name, this._currentObject)) {
-                                        var error = {};
+                                    var name = param.name;
+                                    if(!Entry.TextCodingUtil.isGlobalListExisted(name, this._currentObject)) {
+                                        /*var error = {};
                                         error.title = "지원되지 않는 코드";
                                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + " 리스트를 생성하세요.";
                                         error.line = this._blockCount;
                                         console.log("send error", error);
-                                        throw error;
+                                        throw error;*/
+
+                                        var keyword = name;
+                                        Entry.TextCodingError.error(
+                                            Entry.TextCodingError.TITLE_CONVERTING,
+                                            Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                            keyword,
+                                            this._blockCount);
                                     }
                                 }
                                 else {
-                                    if(!Entry.TextCodingUtil.isGlobalVariableExisted(param.name)) {
-                                        if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
-                                            var error = {};
+                                    var name = param.name;
+                                    if(!Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                                        if(!Entry.TextCodingUtil.isFuncParam(name)) {
+                                           /* var error = {};
                                             error.title = "지원되지 않는 코드";
                                             error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + " 변수를 생성하세요.";
                                             error.line = this._blockCount;
                                             console.log("send error", error);
-                                            throw error;
+                                            throw error;*/
+
+                                            var keyword = name;
+                                            Entry.TextCodingError.error(
+                                                Entry.TextCodingError.TITLE_CONVERTING,
+                                                Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                                keyword,
+                                                this._blockCount);
                                         }
                                     }
                                 }
@@ -831,12 +950,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if(callee.object && callee.property) {
                 if(callee.property.name == "range") {
                     if(params.length > 2) {
-                        var error = {};
-                        error.title = "지원되지 않는 코드";
-                        error.message = "블록으로 변환될 수 없는 코드입니다." + "range() 함수의 파라미터 개수는 1개 또는 2개만 가능합니다.";
-                        error.line = this._blockCount;
-                        console.log("send error", error);
-                        throw error;
+                        //Just Check
                     }
                     else if(params.length == 2) {
                         for(var p in params) {
@@ -1224,12 +1338,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 else if(!argumentData.type && argumentData.isCallParam) {
                     if(argument.type != "ThisExpression") {
-                        var error = {};
+                        /*var error = {};
                         error.title = "지원되지 않는 코드";
                         error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                         error.line = this._blockCount;
                         console.log("send error", error);
-                        throw error;
+                        throw error;*/
+
+                        console.log("argumentData 123", argumentData);
+                        var keyword;
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
+                            keyword,
+                            this._blockCount);
                     }
                 }
                 else {
@@ -1277,12 +1399,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else {
                 if(result.callee.isCallParam == false) {
                     if(!Entry.TextCodingUtil.isEntryEventFuncName(result.callee.name)) {
-                        var error = {};
+                        /*var error = {};
                         error.title = "지원되지 않는 코드";
                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + result.callee.name + "\'" + "을 제거하세요.";
                         error.line = this._blockCount;
                         console.log("send error", error);
-                        throw error;
+                        throw error;*/
+                        var name = result.callee.name;
+                        var keyword = name;
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                            keyword,
+                            this._blockCount);
                     }
                 }
             }
@@ -1430,65 +1559,112 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if(initData.property && initData.property.callee == "__pythonRuntime.ops.subscriptIndex") {
                 if(initData.object && initData.object.object) {
                     if(initData.object.object.name != "self") { // Not Self List
-                        var error = {};
+                        /*var error = {};
                         error.title = "지원되지 않는 코드";
                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + initData.object.object.name + "\'" + " 객체 리스트는 지원하지 않습니다.";
                         error.line = this._blockCount;
                         console.log("send error", error);
-                        throw error;
+                        throw error;*/
+
+                        var name = initData.object.object.name;
+                        var keyword = name;
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
+                            keyword,
+                            this._blockCount);
                     }
                     else if(initData.object.property) { // Self List
+                        var name = initData.object.property.name;
                         if(!Entry.TextCodingUtil.isLocalListExisted(initData.object.property.name, this._currentObject)) {
-                            var error = {};
+                            /*var error = {};
                             error.title = "지원되지 않는 코드";
                             error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + initData.object.property.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                             error.line = this._blockCount;
                             console.log("send error", error);
-                            throw error;
+                            throw error;*/
+
+                            var keyword = name;
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                keyword,
+                                this._blockCount);
                         }
                     }
                 }
                 else if(initData.object) { // List
-                    if(!Entry.TextCodingUtil.isGlobalListExisted(initData.object.name)) {
-                        var error = {};
+                    var name = initData.object.name;
+                    if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
+                        /*var error = {};
                         error.title = "지원되지 않는 코드";
                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + initData.object.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                         error.line = this._blockCount;
                         console.log("send error", error);
-                        throw error;
+                        throw error;*/
+
+                        var keyword = name;
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                            keyword,
+                            this._blockCount);
                     }
                 }
             }
             else {
                 if(initData.object) {
                     if(initData.object.name != "self") { // Not Self List
-                        var error = {};
+                        /*var error = {};
                         error.title = "지원되지 않는 코드";
                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + initData.object.name + "\'" + " 객체 변수는 지원하지 않습니다.";
                         error.line = this._blockCount;
                         console.log("send error", error);
-                        throw error;
+                        throw error;*/
+
+                        var keyword = initData.object.name;
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
+                            keyword,
+                            this._blockCount);
+
                     }
                     else if(initData.property.name) { // Self List
-                        console.log("initData.property.name", initData)
-                        if(!Entry.TextCodingUtil.isLocalVariableExisted(initData.property.name, this._currentObject)) {
-                            var error = {};
+                        var name = initData.property.name;
+                        if(!Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
+                            /*var error = {};
                             error.title = "지원되지 않는 코드";
                             error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + initData.property.name + "\'" + " 변수를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                             error.line = this._blockCount;
                             console.log("send error", error);
-                            throw error;
+                            throw error;*/
+
+                            var keyword = name;
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                keyword,
+                                this._blockCount);
                         }
                     }
                 }
                 else {
-                    if(!Entry.TextCodingUtil.isGlobalVariableExisted(initData.name)) {
-                        var error = {};
+                    var name = initData.name;
+                    if(!Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                        /*var error = {};
                         error.title = "지원되지 않는 코드";
                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + initData.name + "\'" + " 변수는 지원하지 않습니다.";
                         error.line = this._blockCount;
                         console.log("send error", error);
-                        throw error;
+                        throw error;*/
+
+                        var keyword = name;
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                            keyword,
+                            this._blockCount);
                     }
                 }
             }
@@ -1533,12 +1709,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     item.data = String(argument.params[0]);
                 }
                 else if(argument.name) {
-                    var error = {};
+                   /* var error = {};
                     error.title = "지원되지 않는 코드";
                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + argument.name + "\'" + " 변수는 리스트에 포함될 수 없습니다.";
                     error.line = this._blockCount;
                     console.log("send error", error);
-                    throw error;
+                    throw error;*/
+
+                    var keyword = argument.name;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                        keyword,
+                        this._blockCount);
                 }
 
                 array.push(item);
@@ -1841,61 +2024,61 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 structure.type = type;
                 break;
             case "%=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case "<<=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case ">>=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case "|=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case "^=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case "&=":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             default:
                 operator = operator;
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
         }
 
@@ -1910,36 +2093,58 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(leftData && leftData.property && leftData.property.callee == "__pythonRuntime.ops.subscriptIndex") { // In Case of List
             if(leftData.object && leftData.object.object) {
                 if(leftData.object.object.name != "self") { // Not Self List
-                    var error = {};
+                    /*var error = {};
                     error.title = "지원되지 않는 코드";
                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + leftData.object.object.name + "\'" + " 객체 리스트는 지원하지 않습니다.";
                     error.line = this._blockCount;
                     console.log("send error", error);
-                    throw error;
+                    throw error;*/
+
+                    var keyword = leftData.object.object.name;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
+                        keyword,
+                        this._blockCount);
+
                 }
                 else if(leftData.object.property) { // Self List, Because of Left Variable
                 }
             }
             else if(leftData.object) { // List
                 if(!Entry.TextCodingUtil.isGlobalListExisted(leftData.object.name)) {
-                    var error = {};
+                    /*var error = {};
                     error.title = "지원되지 않는 코드";
                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + leftData.object.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                     error.line = this._blockCount;
                     console.log("send error", error);
-                    throw error;
+                    throw error;*/
+
+                    var keyword = leftData.object.name;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                        keyword,
+                        this._blockCount);
                 }
             }
         }
         else { // In Case of Variable
             if(leftData.object) {
                 if(leftData.object.name != "self") {
-                    var error = {};
+                    /*var error = {};
                     error.title = "지원되지 않는 코드";
                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + leftData.object.name + "\'" + " 객체 변수는 지원하지 않습니다.";
                     error.line = this._blockCount;
                     console.log("send error", error);
-                    throw error;
+                    throw error;*/
+
+                    var keyword = leftData.object.name;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
+                        keyword,
+                        this._blockCount);
                 }
                 else if(leftData.property) { //Because of Left Variable
                 }
@@ -1949,65 +2154,107 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(right.type == "Identifier" || right.type == "MemberExpression") {
             if(rightData && rightData.property && rightData.property.callee == "__pythonRuntime.ops.subscriptIndex") { // In Case of List
                 if(rightData.object && rightData.object.object) {
-                    if(rightData.object.object != "self") { // Not Self List
-                        var error = {};
+                    if(rightData.object.object.name != "self") { // Not Self List
+                        /*var error = {};
                         error.title = "지원되지 않는 코드";
                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.object.object.name + "\'" + " 객체 리스트는 지원하지 않습니다.";
                         error.line = this._blockCount;
                         console.log("send error", error);
-                        throw error;
+                        throw error;*/
+
+                        var keyword = rightData.object.object.name;
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
+                            keyword,
+                            this._blockCount);
                     }
                     else if(rightData.object.property) { // Self List
                         if(!Entry.TextCodingUtil.isLocalListExisted(rightData.object.property.name, this._currentObject)) {
-                            var error = {};
+                            /*var error = {};
                             error.title = "지원되지 않는 코드";
                             error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.object.property.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                             error.line = this._blockCount;
                             console.log("send error", error);
-                            throw error;
+                            throw error;*/
+
+                            var keyword = rightData.object.property.name;
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                keyword,
+                                this._blockCount);
                         }
                     }
                 }
                 else if(rightData.object) { // List
                     if(!Entry.TextCodingUtil.isGlobalListExisted(rightData.object.name)) {
-                        var error = {};
+                        /*var error = {};
                         error.title = "지원되지 않는 코드";
                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.object.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                         error.line = this._blockCount;
                         console.log("send error", error);
-                        throw error;
+                        throw error;*/
+
+                        var keyword = rightData.object.name;
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                            keyword,
+                            this._blockCount);
                     }
                 }
             }
             else { // In Case of Variable
                 if(rightData.object) {
                     if(rightData.object.name != "self") {
-                        var error = {};
+                        /*var error = {};
                         error.title = "지원되지 않는 코드";
                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.object.name + "\'" + " 객체 변수는 지원하지 않습니다.";
                         error.line = this._blockCount;
                         console.log("send error", error);
-                        throw error;
+                        throw error;*/
+
+                        var keyword = rightData.object.name;
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                            keyword,
+                            this._blockCount);
                     }
                     else if(rightData.property) {
                         if(!Entry.TextCodingUtil.isLocalVariableExisted(rightData.property.name, this._currentObject)) {
-                            var error = {};
+                            /*var error = {};
                             error.title = "지원되지 않는 코드";
                             error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.property.name + "\'" + "변수를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                             error.line = this._blockCount;
                             console.log("send error", error);
-                            throw error;
+                            throw error;*/
+
+                            var keyword = rightData.object.name;
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                keyword,
+                                this._blockCount);
                         }
                     }
                 }
                 else {
                     if(!Entry.TextCodingUtil.isGlobalVariableExisted(rightData.name)) {
-                        var error = {};
+                        /*var error = {};
                         error.title = "지원되지 않는 코드";
                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + rightData.name + "\'" + " 변수는 지원하지 않습니다.";
                         error.line = this._blockCount;
                         console.log("send error", error);
-                        throw error;
+                        throw error;*/
+
+                        var keyword = rightData.name;
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                            keyword,
+                            this._blockCount);
                     }
                 }
             }
@@ -2021,12 +2268,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var paramsDefMeta = block.def.params;
 
             if(!leftData || !leftData.params) {
-                var error = {};
+                /*var error = {};
                 error.title = "지원되지 않는 코드";
                 error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                 error.line = this._blockCount;
                 console.log("send error", error);
-                throw error;
+                throw error;*/
+
+                var keyword;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                    keyword,
+                    this._blockCount);
             }
 
             var listName = leftData.params[1];
@@ -2100,9 +2354,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(rightData.type == "number" || rightData.type == "text")
                         var value = rightData.params[0];
                     else
-                        var value = NaN;
+                        var value = 0;
 
-                    if(value != NaN) {
+                    if((value && !isNaN(value)) || value == 0) {
                         console.log("final value", value);
                         console.log("final currentObject", currentObject);
 
@@ -2129,9 +2383,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(rightData.type == "number" || rightData.type == "text")
                     var value = rightData.params[0];
                 else
-                    var value = NaN;
+                    var value = 0;
 
-                if(value != NaN) {
+                if((value && !isNaN(value)) || value == 0) {
                     console.log("final currentObject", this._currentObject);
                     console.log("final value", value);
 
@@ -2767,19 +3021,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 }
                 else if(!arguments[1].type) {
-                    var error = {};
+                    /*var error = {};
                     error.title = "지원되지 않는 코드";
                     error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                     error.line = this._blockCount;
                     console.log("send error", error);
-                    throw error;
+                    throw error;*/
+
+                    var keyword;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
+                        keyword,
+                        this._blockCount);
                 }
+                    
                 //params.push("");
 
                 structure.params = params;
 
                 result.type = structure.type;
                 result.params = structure.params;
+
 
             }
             else {
@@ -2851,12 +3114,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         type = blockSyntax.key;
                 }
                 else {
-                    var error = {};
+                    /*var error = {};
                     error.title = "지원되지 않는 코드";
                     error.message = "블록으로 변환될 수 없는 코드입니다. \'True\' 를 사용하세요.";
                     error.line = this._blockCount;
                     console.log("send error", error);
-                    throw error;
+                    throw error;*/
+
+                    var keyword = test.value;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                        keyword,
+                        this._blockCount);
+                    
                 }
             }
             else if(test.type == "Identifier") {
@@ -2867,12 +3138,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     type = blockSyntax.key;
 
                 if(!Entry.TextCodingUtil.isFuncParam(test.name)) {
-                    var error = {};
+                    /*var error = {};
                     error.title = "지원되지 않는 코드";
                     error.message = "블록으로 변환될 수 없는 코드입니다. 파라미터를 확인하세요.";
                     error.line = this._blockCount;
                     console.log("send error", error);
-                    throw error;
+                    throw error;*/
+
+                    var keyword = test.name;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                        keyword,
+                        this._blockCount);
+
                 }
             }
             else {
@@ -2887,12 +3166,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("WhileStatement type", type);
 
         if(!type) {
-            var error = {};
+            /*var error = {};
             error.title = "지원되지 않는 코드";
             error.message = "블록으로 변환될 수 없는 코드입니다." + "\'while\'문의 파라미터를 확인하세요.";
             error.line = this._blockCount;
             console.log("send error", error);
-            throw error;
+            throw error;*/
+
+            var keyword;
+            Entry.TextCodingError.error(
+                Entry.TextCodingError.TITLE_CONVERTING,
+                Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                keyword,
+                this._blockCount);
         }
 
         var paramsMeta = Entry.block[type].params;
@@ -3080,20 +3366,34 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 statements.push(statement);
                             } else {
                                 if(statement.callee) {
-                                    var error = {};
+                                    /*var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + statement.callee.name + "\'" + "을 제거하세요.";
                                     error.line = this._blockCount;
                                     console.log("send error", error);
-                                    throw error;
+                                    throw error;*/
+
+                                    var keyword = statement.callee.name;
+                                    Entry.TextCodingError.error(
+                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                        Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                                        keyword,
+                                        this._blockCount);
                                 }
                                 else {
-                                    var error = {};
+                                    /*var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + statement.name + "\'" + "을 제거하세요.";
                                     error.line = this._blockCount;
                                     console.log("send error", error);
-                                    throw error;
+                                    throw error;*/
+
+                                    var keyword;
+                                    Entry.TextCodingError.error(
+                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                        Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                                        keyword,
+                                        this._blockCount);
                                 }
                             }
                         }
@@ -3259,12 +3559,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(!param.type) {
                         if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
-                            var error = {};
+                            /*var error = {};
                             error.title = "지원되지 않는 코드";
                             error.message = "블록으로 변환될 수 없는 코드입니다. \'True\' 또는 \'False\'를 사용하세요.";
                             error.line = this._blockCount;
                             console.log("send error", error);
-                            throw error;
+                            throw error;*/
+
+                            var keyword = param.name;
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                                keyword,
+                                this._blockCount);
                         }
                     }
                 }
@@ -3466,45 +3773,45 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     type = "boolean_not";
                     break;
                 case "~":
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                    error.line = this._blockCount;
-                    console.log("send error", error);
-                    throw error;
+                    var keyword = operator;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                        keyword,
+                        this._blockCount);
                     break;
                 case "typeof":
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                    error.line = this._blockCount;
-                    console.log("send error", error);
-                    throw error;
+                    var keyword = operator;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                        keyword,
+                        this._blockCount);
                     break;
                 case "void":
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                    error.line = this._blockCount;
-                    console.log("send error", error);
-                    throw error;
+                    var keyword = operator;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                        keyword,
+                        this._blockCount);
                     break;
                 case "delete":
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                    error.line = this._blockCount;
-                    console.log("send error", error);
-                    throw error;
+                    var keyword = operator;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                        keyword,
+                        this._blockCount);
                     break;
                 default:
                     operator = operator;
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                    error.line = this._blockCount;
-                    console.log("send error", error);
-                    throw error;
+                    var keyword = operator;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                        keyword,
+                        this._blockCount);
                     break;
             }
 
@@ -3648,12 +3955,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(!param.type && param.name) {
             if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
-                var error = {};
+                /*var error = {};
                 error.title = "지원되지 않는 코드";
                 error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을 수정하세요";
                 error.line = this._blockCount;
                 console.log("send error", error);
-                throw error;
+                throw error;*/
+
+                var keyword = param.name;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
             }
         }
 
@@ -3707,12 +4021,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("LogicalExpression right param", param);
 
         if(!param.type && param.name) {
-            var error = {};
+            /*var error = {};
             error.title = "지원되지 않는 코드";
             error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을 수정하세요";
             error.line = this._blockCount;
             console.log("send error", error);
-            throw error;
+            throw error;*/
+
+            var keyword = param.name;
+            Entry.TextCodingError.error(
+                Entry.TextCodingError.TITLE_CONVERTING,
+                Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                keyword,
+                this._blockCount);
         }
 
         structure.type = type;
@@ -3744,12 +4065,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var syntax = String("(%1 %2 %3)#boolean_basic_operator");
                 break;
             case "!==":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case "<":
                 var syntax = String("(%1 %2 %3)#boolean_basic_operator");
@@ -3764,28 +4085,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var syntax = String("(%1 %2 %3)#boolean_basic_operator");
                 break;
             case "<<":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case ">>":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case ">>>":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case "+":
                 var syntax = String("(%1 %2 %3)#calc_basic");
@@ -3804,56 +4125,55 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
                 break;
             case "|":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case "^":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case "|":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case "&":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case "in":
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
             case "instanceof":
                 //used in BlockStatement
                 break;
             default:
-                operator = operator;
-                var error = {};
-                error.title = "지원되지 않는 코드";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount;
-                console.log("send error", error);
-                throw error;
+                var keyword = operator;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                    keyword,
+                    this._blockCount);
                 break;
         }
 
@@ -3907,12 +4227,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
                                 if(!Entry.TextCodingUtil.isEntryEventDesignatedParamName(param.name)) {
                                     if(!Entry.TextCodingUtil.isGlobalVariableExisted(param.name)) {
-                                        var error = {};
+                                        /*var error = {};
                                         error.title = "지원되지 않는 코드";
                                         error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                         error.line = this._blockCount;
                                         console.log("send error", error);
-                                        throw error;
+                                        throw error;*/
+
+                                        var keyword = param.name;
+                                        Entry.TextCodingError.error(
+                                            Entry.TextCodingError.TITLE_CONVERTING,
+                                            Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                            keyword,
+                                            this._blockCount);
                                     }
                                 }
                             }
@@ -3952,33 +4279,53 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(param.object && param.property) {
                     if(param.property.callee == "__pythonRuntime.ops.subscriptIndex") { // In Case of List
                         if(param.object && param.object.object) {
-                            if(param.object.object != "self") { // Not Self List
-                                var error = {};
+                            if(param.object.object.name != "self") { // Not Self List
+                                /*var error = {};
                                 error.title = "지원되지 않는 코드";
                                 error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.object.name + "\'" + " 객체 리스트는 지원하지 않습니다.";
                                 error.line = this._blockCount;
                                 console.log("send error", error);
-                                throw error;
+                                throw error;*/
+                                var keyword = param.object.object.name; 
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                    keyword,
+                                    this._blockCount);
                             }
                             else if(param.object.property) { // Self List
                                 if(!Entry.TextCodingUtil.isLocalListExisted(param.object.property.name, this._currentObject)) {
-                                    var error = {};
+                                    /*var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.property.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                     error.line = this._blockCount;
                                     console.log("send error", error);
-                                    throw error;
+                                    throw error;*/
+
+                                    var keyword = param.object.property.name;
+                                    Entry.TextCodingError.error(
+                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                        Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                        keyword,
+                                        this._blockCount);
                                 }
                             }
                         }
                         else if(param.object) { // List
                             if(!Entry.TextCodingUtil.isGlobalListExisted(param.object.name)) {
-                                var error = {};
+                                /*var error = {};
                                 error.title = "지원되지 않는 코드";
                                 error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                 error.line = this._blockCount;
                                 console.log("send error", error);
-                                throw error;
+                                throw error;*/
+
+                                var keyword = param.object.name;
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                    keyword,
+                                    this._blockCount);
                             }
                         }
                     }
@@ -3986,21 +4333,35 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         if(param.object) {
                             if(param.object.name.indexOf("__filbert") < 0) {
                                 if(param.object.name != "self") {
-                                    var error = {};
+                                    /*var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.name + "\'" + " 객체 변수는 지원하지 않습니다.";
                                     error.line = this._blockCount;
                                     console.log("send error", error);
-                                    throw error;
+                                    throw error;*/
+
+                                    var keyword = param.object.name;
+                                    Entry.TextCodingError.error(
+                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                        Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
+                                        keyword,
+                                        this._blockCount);
                                 }
                                 else if(param.property) {
                                     if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, this._currentObject)) {
-                                        var error = {};
+                                        /*var error = {};
                                         error.title = "지원되지 않는 코드";
                                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.property.name + "\'" + "변수를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                         error.line = this._blockCount;
                                         console.log("send error", error);
-                                        throw error;
+                                        throw error;*/
+
+                                        var keyword = param.property.name;
+                                        Entry.TextCodingError.error(
+                                            Entry.TextCodingError.TITLE_CONVERTING,
+                                            Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                            keyword,
+                                            this._blockCount);
                                     }
                                 }
                             }
@@ -4025,12 +4386,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params.push(param);
                 }
                 else {
-                    var error = {};
+                    /*var error = {};
                     error.title = "지원되지 않는 코드";
                     error.message = "블록으로 변환될 수 없는 코드입니다." + "올바른 파라미터 값 또는 타입으로 변경하세요.";
                     error.line = this._blockCount;
                     console.log("send error", error);
-                    throw error;
+                    throw error;*/
+
+                    var keyword;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
+                        keyword,
+                        this._blockCount);
                 }
 
             }
@@ -4102,12 +4470,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             if(!param.type && param.isCallParam) {
                                 if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
                                     if(!Entry.TextCodingUtil.isGlobalVariableExisted(param.property.name)) {
-                                        var error = {};
+                                        /*var error = {};
                                         error.title = "지원되지 않는 코드";
                                         error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                         error.line = this._blockCount;
                                         console.log("send error", error);
-                                        throw error;
+                                        throw error;*/
+
+                                        var keyword = param.property.name;
+                                        Entry.TextCodingError.error(
+                                            Entry.TextCodingError.TITLE_CONVERTING,
+                                            Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                            keyword,
+                                            this._blockCount);
                                     }
                                 }
                             }
@@ -4126,21 +4501,35 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(param.property.callee == "__pythonRuntime.ops.subscriptIndex") { // In Case of List
                         if(param.object.object) {
                             if(param.object.object.name != "self") { // Object Name
-                                var error = {};
+                                /*var error = {};
                                 error.title = "지원되지 않는 코드";
                                 error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.object.name + "\'" + " 객체 리스트는 지원하지 않습니다.";
                                 error.line = this._blockCount;
                                 console.log("send error", error);
-                                throw error;
+                                throw error;*/
+
+                                var keyword = param.object.object.name;
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
+                                    keyword,
+                                    this._blockCount);
                             }
                             else if(param.object.property) { // List Name
                                 if(!Entry.TextCodingUtil.isLocalListExisted(param.object.property.name, this._currentObject)) {
-                                    var error = {};
+                                    /*var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.property.name + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                     error.line = this._blockCount;
                                     console.log("send error", error);
-                                    throw error;
+                                    throw error;*/
+
+                                    var keyword = param.object.property.name;
+                                    Entry.TextCodingError.error(
+                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                        Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                        keyword,
+                                        this._blockCount);
                                 }
                             }
                         }
@@ -4148,12 +4537,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             var objectName = param.object.name;
 
                             if(!Entry.TextCodingUtil.isGlobalListExisted(objectName)) {
-                                var error = {};
+                                /*var error = {};
                                 error.title = "지원되지 않는 코드";
                                 error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + objectName + "\'" + " 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                 error.line = this._blockCount;
                                 console.log("send error", error);
-                                throw error;
+                                throw error;*/
+
+                                var keyword = param.object.name;
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                    keyword,
+                                    this._blockCount);
                             }
                         }
                     }
@@ -4161,21 +4557,35 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         if(param.object) {
                             if(param.object.name.indexOf("__filbert") < 0) {
                                 if(param.object.name != "self") {
-                                    var error = {};
+                                   /* var error = {};
                                     error.title = "지원되지 않는 코드";
                                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.object.name + "\'" + " 객체 변수는 지원하지 않습니다.";
                                     error.line = this._blockCount;
                                     console.log("send error", error);
-                                    throw error;
+                                    throw error;*/
+
+                                    var keyword = param.object.name;
+                                    Entry.TextCodingError.error(
+                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                        Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
+                                        keyword,
+                                        this._blockCount);
                                 }
                                 else if(param.property) {
                                     if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, this._currentObject)) {
-                                        var error = {};
+                                        /*var error = {};
                                         error.title = "지원되지 않는 코드";
                                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.property.name + "\'" + "변수를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                                         error.line = this._blockCount;
                                         console.log("send error", error);
-                                        throw error;
+                                        throw error;*/
+
+                                        var keyword = param.property.name;
+                                        Entry.TextCodingError.error(
+                                            Entry.TextCodingError.TITLE_CONVERTING,
+                                            Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                            keyword,
+                                            this._blockCount);
                                     }
                                 }
                             }
@@ -4200,12 +4610,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params.push(param);
                 }
                 else {
-                    var error = {};
+                    /*var error = {};
                     error.title = "지원되지 않는 코드";
                     error.message = "블록으로 변환될 수 없는 코드입니다." + "올바른 파라미터 값 또는 타입으로 변경하세요.";
                     error.line = this._blockCount;
                     console.log("send error", error);
-                    throw error;
+                    throw error;*/
+
+                    var keyword;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                        keyword,
+                        this._blockCount);
                 }
             }
             console.log("BinaryExpression right param", param);
@@ -4832,12 +5249,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("RegExp result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "RegExp" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "RegExp";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -4852,12 +5269,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("Function result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "Function" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "Function";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -4872,18 +5289,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("EmptyStatement result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "EmptyStatement" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "EmptyStatement";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
     };
 
-    p.DebuggerStatement = function(component) {
+    p.DebuggerStatement = function(component) { 
         console.log("DebuggerStatement component", component);
         var result;
 
@@ -4892,12 +5309,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("DebuggerStatement result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "DebuggerStatement" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "DebuggerStatement";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -4912,12 +5329,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("WithStatement result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "WithStatement" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "WithStatement";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -4932,12 +5349,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("LabeledStatement result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "LabeledStatement" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "LabeledStatement";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -4952,12 +5369,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("ContinueStatement result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "ContinueStatement" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "ContinueStatement";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -4972,12 +5389,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("SwitchStatement result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "SwitchStatement" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "SwitchStatement";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -4992,12 +5409,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("SwitchCase result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "SwitchCase" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "SwitchCase";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -5012,12 +5429,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("ThrowStatement result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "ThrowStatement" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "ThrowStatement";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -5032,12 +5449,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("TryStatement result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "TryStatement" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "TryStatement";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -5052,12 +5469,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("CatchClause result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "CatchClause" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "CatchClause";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -5072,12 +5489,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("DoWhileStatement result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "DoWhileStatement" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "DoWhileStatement";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -5092,12 +5509,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("ArrayExpression result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "ArrayExpression" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "ArrayExpression";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -5112,12 +5529,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("ObjectExpression result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "ObjectExpression" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "ObjectExpression";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -5132,12 +5549,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("Property result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "Property" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "Property";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -5152,12 +5569,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("ConditionalExpression result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "ConditionalExpression" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "ConditionalExpression";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;
@@ -5172,12 +5589,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("SequenceExpression result", result);
 
         //Convertin Error Control
-        var error = {};
-        error.title = "지원되지 않는 코드";
-        error.message = "블록으로 변환될 수 없는 코드입니다." + "SequenceExpression" + " 표현식은 지원하지 않습니다.";
-        error.line = this._blockCount;
-        console.log("send error", error);
-        throw error;
+        var keyword = "SequenceExpression";
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+            keyword,
+            this._blockCount);
         //Converting Error Control
 
         return result;

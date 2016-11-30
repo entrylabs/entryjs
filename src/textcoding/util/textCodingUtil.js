@@ -1643,7 +1643,7 @@ Entry.TextCodingUtil = {};
         targets = vc.lists_ || [];
         for (i=0; i<targets.length; i++) {
             if (test(targets[i].name_))
-                return "등록된 리스트중에 공백(띄어쓰기)이 포함된 리스트드가 있습니다.";
+                return "등록된 리스트중에 공백(띄어쓰기)이 포함된 리스트가 있습니다.";
         }
 
         //this doesn't need for now

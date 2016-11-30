@@ -301,19 +301,29 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         this._marker = this.codeMirror.markText(
                             annotation.from, annotation.to, option);
 
-                        console.log("error eee", error.message);
                         if(error.type == "syntax") {
-                            var title = "문법오류";
+                            var title = error.title;
                             var message = error.message;
+                            var keyword = error.keyword;
+                            var line = err.from.line;
+                            var subject = error.subject;
+
+                            var contents = '';
+                            contents = this.makeErrorDisplay(subject, keyword, message, line);
 
                         }
                         else if(error.type == "converting") {
-                            var title = "변환오류"
+                            var title = error.title;
                             var message = error.message;
+                            var keyword = error.keyword;
+                            var line = err.from.line;
+                            var subject = error.subject;
+
+                            var contents = '';
+                            contents = this.makeErrorDisplay(subject, keyword, message, line);
                         }
 
-
-                        Entry.toast.alert(title, message);
+                        Entry.toast.alert(title, contents);
                         throw error;
                     }
                 }
@@ -664,5 +674,19 @@ Entry.Parser = function(mode, type, cm, syntax) {
         return threads;
 
     };
+
+    p.makeErrorDisplay = function(subject, keyword, message, line) {
+        console.log("subject", subject, "keyword", keyword, "message", message, "line", line);
+        var contents;
+        if(keyword)
+            var kw = "\'" + keyword + "\' ";
+        else 
+            var kw = '';
+
+        contents = '[' + subject + ']' + ' ' + kw +
+                    message + ' ' + '(line ' + line + ')';
+
+        return contents;
+    }
 
 })(Entry.Parser.prototype);
