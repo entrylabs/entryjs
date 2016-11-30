@@ -237,11 +237,12 @@ Entry.Field = function() {};
         if (this._contents.converter) {
             if(this._contents.codeMap) {
                 var codeMap = eval(this._contents.codeMap);
-                var code = codeMap[value];
+                if(codeMap)
+                    var code = codeMap[value];
                 if(code)
                     value = code;
             }
-            if(isNaN(key) && isNaN(value)) {
+            if(isNaN(key) && isNaN(value)) { 
                 if(this._contents.caseType == "no") {
                     key = key;
                     value = value;

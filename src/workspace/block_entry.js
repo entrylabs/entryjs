@@ -7316,7 +7316,8 @@ Entry.block = {
                         "value": "PLUS",
                         "fontSize": 11,
                         noArrow: true,
-                        converter: Entry.block.converters.returnOperator
+                        converter: Entry.block.converters.returnOperator,
+                        caseType: "upper"
                     },
                     {
                         "type": "Block",
@@ -8342,7 +8343,8 @@ Entry.block = {
                     },
                     {
                         "type": "Block",
-                        "accept": "string"
+                        "accept": "string",
+                        paramType: "index"
                     },
                     {
                         "type": "Text",
@@ -8482,7 +8484,26 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "%2\[%4:%6\]"
+                syntax: "%2\[%4:%6\]",
+                textParams: [
+                    null,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    null,
+                    {
+                        "type": "Block",
+                        "accept": "string",
+                        paramType: "index"
+                    },
+                    null,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    null
+                ]
             }
         ]}
     },
@@ -9179,7 +9200,11 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": [
-            {syntax: "for i in range(%1):\n$1", template: "for i in range(%1):"}
+            {
+                syntax: "for i in range(%1):\n$1", 
+                template: "for i in range(%1):",
+                idChar: ['i', 'j', 'k', 'x', 'y', 'z', 'o', 'p', 'm', 'n']
+            }
         ]}
     },
     "repeat_inf": {
@@ -13898,7 +13923,8 @@ Entry.block = {
                         "value": "EQUAL",
                         "fontSize": 11,
                         noArrow: true,
-                        converter: Entry.block.converters.returnOperator
+                        converter: Entry.block.converters.returnOperator,
+                        caseType: "no"
                     },
                     {
                         "type": "Block",
@@ -20610,7 +20636,8 @@ Entry.block = {
                         "menuName": "variables",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                     {
                         "type": "Block",
@@ -20690,7 +20717,8 @@ Entry.block = {
                         "menuName": "variables",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                     {
                         "type": "Block",
@@ -20884,7 +20912,8 @@ Entry.block = {
                         "menuName": "variables",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                 ]
             }
@@ -21114,7 +21143,8 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                 ]
             }
@@ -21192,7 +21222,8 @@ Entry.block = {
                 textParams: [
                     {
                         "type": "Block",
-                        "accept": "string"
+                        "accept": "string",
+                        paramType: "index"
                     },
                     {
                         "type": "DropdownDynamic",
@@ -21200,7 +21231,8 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                 ]
             }
@@ -21295,11 +21327,13 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                     {
                         "type": "Block",
-                        "accept": "string"
+                        "accept": "string",
+                        paramType: "index"
                     },
                 ]
             }
@@ -21390,11 +21424,13 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                     {
                         "type": "Block",
-                        "accept": "string"
+                        "accept": "string",
+                        paramType: "index"
                     },
                     {
                         "type": "Block",
@@ -21490,12 +21526,14 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                     undefined,
                     {
                         "type": "Block",
-                        "accept": "string"
+                        "accept": "string",
+                        paramType: "index"
                     },
                 ]
             }
@@ -21564,7 +21602,8 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                 ]
             }
@@ -21882,7 +21921,8 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no"
                     },
                     undefined,
                     {

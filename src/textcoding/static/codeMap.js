@@ -36,8 +36,11 @@ Entry.CodeMap = {};
              "blue": "#3333FF", "navy": "#000099", "purple": "#993399", "black": "#000000", 
              "white": "#FFFFFF", "brown": "#990000"}
         ],
-        reach_something: [
-            {"mouse": "mouse_pointer", "mouse_pointer": "mouse"}
+        is_touched: [
+            null, 
+            {"mouse": "mouse_pointer", "mouse_pointer": "mouse"},
+            null
+
         ]
     };
 

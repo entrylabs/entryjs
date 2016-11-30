@@ -21,6 +21,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     this._variableDeclaration = null;
     this._listDeclaration = null;
+    this._forIdCharIndex = 0;
 };
 
 (function(p){
@@ -36,6 +37,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             threads = code.getThreads();
 
         for (var i = 0; i < threads.length; i++) {
+            this._forIdCharIndex = 0;
             var thread = threads[i];
 
             textCode += this.Thread(thread) + '\n';
@@ -46,6 +48,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.Thread = function(thread) {
+        console.log("start thread");
         if (thread instanceof Entry.Block)
             return this.Block(thread);
         var result = "",
@@ -144,10 +147,21 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         index++;
                     } else if(schemaParams[index].type == "Block") {
                         var param = this.Block(dataParams[index]).trim();
-                        if((syntaxObj.key == "char_at" || syntaxObj.key == "value_of_index_from_list") && index == 3)
-                            param = String(parseInt(param) - 1);
-                        else if(syntaxObj.key == "substring" && (index == 3 || index == 5))
-                            param = String(parseInt(param) - 1);
+                        if(syntaxObj.textParams && syntaxObj.textParams[index])
+                            var textParam = syntaxObj.textParams[index];
+                        if(textParam && textParam.paramType == "index") { 
+                            if(!isNaN(param)) param = String(parseInt(param) - 1);
+                            else {
+                                var tokens = param.split('+');
+                                console.log("index tokens", tokens);
+                                if(tokens[tokens.length-1] == ' 1)') {
+                                    delete tokens[tokens.length-1];
+                                    param = tokens.join("+");
+                                    param = param.substring(1, param.length-2); 
+                                }
+                                else param += " - 1";
+                            }
+                        }
 
                         var funcParam = this._funcMap.get(param);
                         if(funcParam) {
@@ -190,10 +204,20 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         var index = Number(statementToken.split('$')[1]) - 1;
                         result += Entry.TextCodingUtil.indent(this.Thread(block.statements[index]));
                     }
-                    else result += statementToken;
-
+                    else result += statementToken; 
                 }
             } else {
+                console.log("blockTokenss", blockToken, "syntaxObj", syntaxObj, "i", i);
+                if(syntaxObj && syntaxObj.key == "repeat_basic" && i == 0) {
+                    if(syntaxObj.idChar) {
+                        var forStmtTokens = blockToken.split(" ");
+                        console.log("forStmtTokens", forStmtTokens);
+                        forStmtTokens[1] = syntaxObj.idChar[this._forIdCharIndex++];
+                        var forStmtText = forStmtTokens.join(" ");
+                        console.log("forStmtText", forStmtText);
+                        blockToken = forStmtText;
+                    }
+                }
                 result += blockToken;
             }
         }
@@ -257,7 +281,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         console.log("FieldDropdown", dataParam, textParam);
         var key, value;
 
-        if(textParam && textParam.converter && textParam.options) {
+        if(textParam && textParam.converter && textParam.options) { 
             for(var i in textParam.options) {
                 var option = textParam.options[i];
                 console.log("option", option);
@@ -266,6 +290,52 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 if(dataParam === op1) {
                     key = op0;
                     value = op1;
+                    if(textParam.codeMap) {
+                        var codeMap = eval(textParam.codeMap);
+                        var code = codeMap[value];
+                        if(code)
+                            value = code; 
+                    }
+                    if(isNaN(key) && isNaN(value)) {
+                        if(textParam.caseType == "no") {
+                            key = key;
+                            value = value;
+                        }
+                        else if(textParam.caseType == "upper") {
+                            key = key.toUpperCase();
+                            value = value.toUpperCase();
+                        }
+                        else {
+                            key = key.toLowerCase();
+                            value = value.toLowerCase();
+                        }
+                    }
+
+                    dataParam = textParam.converter(key, value);
+                    if(textParam.paramType == "variable") {
+                        dataParam = dataParam.replace(/\"/g, "");
+                    }
+                    break;
+                }
+            }
+        }
+
+        return dataParam;
+    };
+
+    p.FieldDropdownDynamic = function(dataParam, textParam) {
+        var options;
+        var returnValue = dataParam;
+        if(textParam && textParam.converter && textParam.options) {
+            options = textParam.options;
+            for(var i in options) {
+                var option = options[i];
+                console.log("option", option);
+                var op0 = option[0];
+                var op1 = option[1];
+                if(dataParam === op1) {
+                    key = op0;
+                    value = op1
                     if(textParam.codeMap) {
                         var codeMap = eval(textParam.codeMap);
                         var code = codeMap[value];
@@ -291,31 +361,12 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     if(textParam.paramType == "variable") {
                         dataParam = dataParam.replace(/\"/g, "");
                     }
-                }
-            }
-        }
-
-        return dataParam;
-    };
-
-    p.FieldDropdownDynamic = function(dataParam, textParam) {
-        var options;
-        var returnValue = dataParam;
-        if(textParam && textParam.converter && textParam.options) {
-            options = textParam.options;
-            for(var i in options) {
-                var option = options[i];
-                console.log("option", option);
-                var key = option[0];
-                var value = option[1];
-                if(dataParam === value) {
-                    returnValue = textParam.converter(key, value);
                     break;
                 }
             }
         }
 
-        return returnValue;
+        return dataParam;
     };
 
     p.FieldImage = function(dataParam, textParam) {

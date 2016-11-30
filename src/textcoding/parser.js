@@ -14,6 +14,7 @@ goog.require("Entry.JsToBlockParser");
 goog.require("Entry.PyToBlockParser");
 
 goog.require("Entry.TextCodingUtil");
+goog.require("Entry.TextCodingError");
 goog.require("Entry.PyHint");
 goog.require("Entry.Console")
 
@@ -148,7 +149,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 this._execParser = new Entry.BlockToPyParser(this.syntax);
                 cm.setOption("mode", {name: "python", globalVars: true});
-                cm.markText({line: 0, ch: 0}, {line: 3, ch: 0}, {readOnly: true});
+                //cm.markText({line: 0, ch: 0}, {line: 3, ch: 0}, {readOnly: true});
                 this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
 
                 break;
@@ -278,19 +279,19 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 from: {line: err.from.line-1, ch: err.from.ch},
                                 to: {line: err.to.line-1, ch: err.to.ch}
                             }
-                            err.type = "syntax";
+                            error.type = "syntax";
                         } else {
                             var err = this.findConvError(error);
                             var annotation = {
                                 from: {line: err.from.line-1, ch: err.from.ch},
                                 to: {line: err.to.line-1, ch: err.to.ch}
                             }
-                            err.type = "converting"
+                            error.type = "converting"
                         }
 
                         var option = {
                             className: "CodeMirror-lint-mark-error",
-                            __annotation: annotation,
+                            __annotation: annotation, 
                             clearOnEnter: true,
                             inclusiveLeft: true,
                             inclusiveRigth: true,
@@ -300,13 +301,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         this._marker = this.codeMirror.markText(
                             annotation.from, annotation.to, option);
 
-                        if(err.type == "syntax") {
+                        console.log("error eee", error.message);
+                        if(error.type == "syntax") {
                             var title = "문법오류";
                             var message = error.message;
+
                         }
-                        else if(err.type == "converting") {
+                        else if(error.type == "converting") {
                             var title = "변환오류"
-                            var message = "변환할수 없는 코드입니다";
+                            var message = error.message;
                         }
 
 
@@ -578,7 +581,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
             currentLineCount += count;
         }
 
-        var targetLine = errorLine + currentLineCount + 4;
+        var targetLine = errorLine + currentLineCount + 3;
+        if(targetLine > contentsArr.length-1)
+            targetLine = contentsArr.length-1;
         var targetText = contentsArr[targetLine-1];
 
         err.from.line = targetLine;
@@ -606,7 +611,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var currentText;
         var targetLine;
 
-        for(var i = 4; i < contentsArr.length; i++) {
+        for(var i = 3; i < contentsArr.length; i++) {
             currentText = contentsArr[i];
 
             var length = currentText.trim().length;
@@ -615,11 +620,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
             console.log("errorLine", errorLine, "emptyLineCount", emptyLineCount, "i", i);
 
-            if(errorLine + emptyLineCount + 4 == i) {
+            if(errorLine + emptyLineCount + 3 == i) {
                 targetLine = i+1;
                 break;
             }
         }
+
+        if(targetLine > contentsArr.length-1)
+            targetLine = contentsArr.length-1;
 
         err.from.line = targetLine;
         err.from.ch = 0;
@@ -637,7 +645,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var threads = [];
 
         var optText = "";
-        for(var i = 4; i < textArr.length; i++) {
+        for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
 
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {

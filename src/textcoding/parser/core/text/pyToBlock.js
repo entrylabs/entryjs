@@ -245,13 +245,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(blockSyntax) {
                     type = blockSyntax.key;
                 }
-            }
+            } 
 
             if(!type) {
                 var funcNameKey = calleeData.name + component.arguments.length;
                 if(calleeData.name && arguments.length != 0 && arguments[0].type == "Literal") {
                     if(!this._funcMap.contains(funcNameKey)) {
-                        console.log("error", Entry.TextCodingError.TITLE_CONVERTING);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_NO_BLOCK,
@@ -762,7 +761,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             }
                             else {
                                 if(param.property.callee == "__pythonRuntime.ops.subscriptIndex") {
-                                    if(param.type != "char_at")
+                                    console.log("mmm param", param);
+                                    if(!param.object.type) {
                                         if(!Entry.TextCodingUtil.isGlobalListExisted(param.object.name, this._currentObject)) {
                                             var error = {};
                                             error.title = "지원되지 않는 코드";
@@ -771,6 +771,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             console.log("send error", error);
                                             throw error;
                                         }
+                                    }
                                 }
                                 else {
                                     if(param.object.name == "self") {
@@ -924,25 +925,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("range final params", params);
                 }
                 else if(callee.property.name == "add") {
-                    var isParamAllString = true;
+                    var isStringIncluded = false;
                     for(var p in params) {
                         var param = params[p];
                         if(param && (param.type == "text" || param.type == "number" || param.type == "combine_something" || param == "PLUS")) {
                             if(param.type == "text" || param.type == "number") {
                                 if(param.params && param.params.length != 0) {
                                     var p = param.params[0];
-                                    if(typeof p != "string") {
-                                        console.log("isParamAllString", param);
-                                        isParamAllString = false;
+                                    if(typeof p == "string") {
+                                        console.log("isStringIncluded", param);
+                                        isStringIncluded = true;
+                                        break;
                                     }
                                 }
                             }
-                        } else {
-                            isParamAllString = false;
                         }
                     }
 
-                    if(isParamAllString) { //retype considering parameter condition
+                    if(isStringIncluded) { //retype considering parameter condition
                         var syntax = String("(%2 + %4)");
                         var blockSyntax = this.getBlockSyntax(syntax);
                         if(blockSyntax)
@@ -952,21 +952,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params.splice(0, 0, null);
                         params.splice(4, 0, null);
 
-                        console.log("isParamAllString params", params);
-                    }
-                }
-                else if(callee.property.name == "pop") {
-                    if(params[0].type == "number")
-                        params[0].params[0] += 1;
-                    else if(params[0].type == "text") {
-                        params[0].params[0] = String(Number(params[0].params[0]) + 1);
-                    }
-                }
-                else if(callee.property.name == "insert") {
-                    if(params[2].type == "number")
-                        params[2].params[0] += 1;
-                    else if(params[2].type == "text") {
-                        params[2].params[0] = String(Number(params[2].params[0]) + 1);
+                        console.log("isStringIncluded params", params);
                     }
                 }
                 else if(callee.property.name == "len") {
@@ -981,11 +967,107 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     p = this.ParamDropdownDynamic(p.name, paramsMeta[1], paramsDefMeta[1]);
                     params[1] = p;
                 }
+                else if(callee.property.name == "pop") {
+                    if(params[0].type == "number" || params[0].type == "text") {
+                        if(!isNaN(params[0].params[0]))
+                            params[0].params[0] += 1;
+                    }
+                    else if(params[0].type == "get_variable") {
+                        var indexBlock = {};
+                        var indexBlockType = "calc_basic"; 
+                        indexBlock.type = indexBlockType;
+                        var indexParams = [];
+                        indexParams[0] = params[0];
+                        indexParams[1] = "PLUS";
+                        indexParams[2] = {type: "number", params: [1]}; 
+                        indexBlock.params = indexParams;
+                        params[0] = indexBlock;
+                    }
+                    else if(params[0].type == "calc_basic") {
+                        if(params[0].params[1] == "MINUS" && params[0].params[2].params[0] == "1") {
+                            params[0] = params[0].params[0];   
+                        }
+                        else {
+                            var indexBlock = {};
+                            var indexBlockType = "calc_basic"; 
+                            indexBlock.type = indexBlockType;
+                            var indexParams = [];
+                            indexParams[0] = params[0];
+                            indexParams[1] = "PLUS";
+                            indexParams[2] = {type: "number", params: [1]};
+                            indexBlock.params = indexParams;
+                            params[0] = indexBlock;
+                        }
+                    }
+                   
+                }
+                else if(callee.property.name == "insert") {
+                    if(params[2].type == "number" || params[2].type == "text") {
+                        if(!isNaN(params[2].params[0]))
+                            params[2].params[0] += 1;
+                    }
+                    else if(params[2].type == "get_variable") {
+                        var indexBlock = {};
+                        var indexBlockType = "calc_basic"; 
+                        indexBlock.type = indexBlockType;
+                        var indexParams = [];
+                        indexParams[0] = params[2];
+                        indexParams[1] = "PLUS";
+                        indexParams[2] = {type: "number", params: [1]};
+                        indexBlock.params = indexParams;
+                        params[2] = indexBlock;
+                    }
+                    else if(params[2].type == "calc_basic") {
+                        if(params[2].params[1] == "MINUS" && params[2].params[2].params[0] == "1") {
+                            params[2] = params[2].params[0];   
+                        }
+                        else {
+                            var indexBlock = {};
+                            var indexBlockType = "calc_basic"; 
+                            indexBlock.type = indexBlockType;
+                            var indexParams = [];
+                            indexParams[0] = params[2];
+                            indexParams[1] = "PLUS";
+                            indexParams[2] = {type: "number", params: [1]};
+                            indexBlock.params = indexParams;
+                            params[2] = indexBlock;
+                        }
+                    }
+                    
+                }
                 else if(callee.property.name == "subscriptIndex") {
                     var p = params[3];
-                    if(p.type == "number" || p.type == "text")
-                        p.params[0] += 1;
-                    params[3] = p;
+                    if(params[3].type == "number" || params[3].type == "text") {
+                        if(!isNaN(params[3].params[0]))
+                            params[3].params[0] += 1;
+                    }
+                    else if(params[3].type == "get_variable") {
+                        var indexBlock = {};
+                        var indexBlockType = "calc_basic"; 
+                        indexBlock.type = indexBlockType;
+                        var indexParams = [];
+                        indexParams[0] = params[3];
+                        indexParams[1] = "PLUS";
+                        indexParams[2] = {type: "number", params: [1]};
+                        indexBlock.params = indexParams;
+                        params[3] = indexBlock;
+                    }
+                    else if(params[3].type == "calc_basic") {
+                        if(params[3].params[1] == "MINUS" && params[3].params[2].params[0] == "1") {
+                            params[3] = params[3].params[0];   
+                        }
+                        else {
+                            var indexBlock = {};
+                            var indexBlockType = "calc_basic"; 
+                            indexBlock.type = indexBlockType;
+                            var indexParams = [];
+                            indexParams[0] = params[3];
+                            indexParams[1] = "PLUS";
+                            indexParams[2] = {type: "number", params: [1]};
+                            indexBlock.params = indexParams;
+                            params[3] = indexBlock;
+                        }
+                    }
                 }
                 else if(callee.property.name == "_pySlice") {
                     if(callee.object) {
@@ -993,11 +1075,38 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         console.log("objectData", objectData);
                         var newParams = [];
                         newParams[1] = objectData;
-                        if(params[1].type == "number" || params[1].type == "text")
-                            params[1].params[0] += 1;
+                        if(params[1].type == "number" || params[1].type == "text") {
+                            if(!isNaN(params[1].params[0]))
+                                params[1].params[0] += 1;
+                        }
+                        else if(params[1].type == "get_variable") {
+                            var indexBlock = {};
+                            var indexBlockType = "calc_basic"; 
+                            indexBlock.type = indexBlockType;
+                            var indexParams = [];
+                            indexParams[0] = params[1];
+                            indexParams[1] = "PLUS";
+                            indexParams[2] = {type: "number", params: [1]};
+                            indexBlock.params = indexParams;
+                            params[1] = indexBlock;
+                        }
+                        else if(params[1].type == "calc_basic") {
+                            if(params[1].params[1] == "MINUS" && params[1].params[2].params[0] == "1") {
+                                params[1] = params[1].params[0];   
+                            }
+                            else {
+                                var indexBlock = {};
+                                var indexBlockType = "calc_basic"; 
+                                indexBlock.type = indexBlockType;
+                                var indexParams = [];
+                                indexParams[0] = params[1];
+                                indexParams[1] = "PLUS";
+                                indexParams[2] = {type: "number", params: [1]};
+                                indexBlock.params = indexParams;
+                                params[1] = indexBlock;
+                            }
+                        }
                         newParams[3] = params[1];
-                        if(params[3].type == "number" || params[3].type == "text")
-                            params[3].params[0] += 1;
                         newParams[5] = params[3];
                         params = newParams;
                     }
@@ -1418,7 +1527,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var argument = arguments[a];
                 var item = {};
                 if(argument.type) {
-                    var arg = argument.params[0];
+                    var arg = argument.params[0]; 
                     if(typeof arg === "string")
                         arg = "\"" + arg + "\"";
                     item.data = String(argument.params[0]);
@@ -1434,6 +1543,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 array.push(item);
             }
+
+            console.log("vd name", name);
 
             if(Entry.TextCodingUtil.isGlobalListExisted(name)) {
                 Entry.TextCodingUtil.updateGlobalList(name, array);
@@ -1459,6 +1570,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(typeof value != "string" && typeof value != "number") {
                     value = 0;
                 }
+            }
+            else {
+                value = 0
             }
 
             console.log("variable name", name, "value", value);
@@ -1926,7 +2040,39 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 params.push(param);
                 param = leftData.property.arguments[1];
-                params.push(param);
+
+                console.log("arg1 param", param);
+
+                if(param.type == "number" || param.type == "text") {
+                    params.push(param);
+                }
+                else if(param.type == "get_variable") {
+                    var indexBlock = {};
+                    var type = "calc_basic"; 
+                    indexBlock.type = type;
+                    var indexParams = [];
+                    indexParams[0] = param;
+                    indexParams[1] = "PLUS";
+                    indexParams[2] = {type: "number", params: [1]};
+                    indexBlock.params = indexParams;
+                    params.push(indexBlock);
+                }
+                else if(param.type == "calc_basic") {
+                    if(param.params[1] == "MINUS" && param.params[2].params[0] == "1") {
+                        params.push(param.params[0]);   
+                    }
+                    else {
+                        var indexBlock = {};
+                        var type = "calc_basic"; 
+                        indexBlock.type = type;
+                        var indexParams = [];
+                        indexParams[0] = param;
+                        indexParams[1] = "PLUS";
+                        indexParams[2] = {type: "number", params: [1]};
+                        indexBlock.params = indexParams;
+                        params.push(indexBlock);
+                    }
+                }
                 console.log("AssignmentExpression left param", param);
             }
 
@@ -2587,15 +2733,48 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 params.push(listName);
                 params.push("");
 
-                if(arguments[1].type == "number") {
-                    arguments[1].params[0] += 1;
+                if(arguments[1].type == "number" || arguments[1].type == "text") {
+                    if(!isNaN(arguments[1].params[0]))
+                        arguments[1].params[0] += 1;
+                    params.push(arguments[1]);
                 }
-                else if(arguments[1].type == "text") {
-                    arguments[1].params[0] = String(Number(arguments[1].params[0]) + 1);
+                else if(arguments[1].type == "get_variable") {
+                    var indexBlock = {};
+                    var type = "calc_basic"; 
+                    indexBlock.type = type;
+                    var indexParams = [];
+                    indexParams[0] = arguments[1];
+                    indexParams[1] = "PLUS";
+                    indexParams[2] = {type: "number", params: [1]};
+                    indexBlock.params = indexParams;
+                    params.push(indexBlock);
                 }
-
-                params.push(arguments[1]);
-                params.push("");
+                else if(arguments[1].type == "calc_basic") {
+                    console.log("value list", arguments[1], "arguments[1].params[2].params[0]", arguments[1].params[2].params[0]);
+                    if(arguments[1].params[1] == "MINUS" && arguments[1].params[2].params[0] == "1") {
+                        params.push(arguments[1].params[0]);   
+                    }
+                    else {
+                        var indexBlock = {};
+                        var type = "calc_basic"; 
+                        indexBlock.type = type;
+                        var indexParams = [];
+                        indexParams[0] = arguments[1];
+                        indexParams[1] = "PLUS";
+                        indexParams[2] = {type: "number", params: [1]};
+                        indexBlock.params = indexParams;
+                        params.push(indexBlock);
+                    }
+                }
+                else if(!arguments[1].type) {
+                    var error = {};
+                    error.title = "지원되지 않는 코드";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                    error.line = this._blockCount;
+                    console.log("send error", error);
+                    throw error;
+                }
+                //params.push("");
 
                 structure.params = params;
 
@@ -2806,7 +2985,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var bodies = component.body;
         console.log("BlockStatement bodies", bodies);
 
-        if(bodies[1] && bodies[1].consequent && bodies[1].consequent.body)
+        if(bodies[1] && bodies[1].consequent && bodies[1].consequent.body && bodies[1].consequent.body[0])
             if(bodies[1].consequent.body[0].type == "ForStatement") {
                 this._blockCount++;
                 console.log("BlockCount ForStatement in BlockStatement", this._blockCount);
