@@ -132,7 +132,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     this.functionAddButton_ = functionAddButton;
     functionAddButton.bindOnClick(function(e) {
         if(Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY) {
-            var message = "텍스트모드에서는 지원하지 않습니다.";
+            var message = Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NO_SUPPORT];
             alert(message);
             return;
         }

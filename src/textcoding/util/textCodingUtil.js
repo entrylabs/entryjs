@@ -1621,7 +1621,7 @@ Entry.TextCodingUtil = {};
         var oldMode = Entry.playground.mainWorkspace.oldMode;
 
         if(oldMode == Entry.Workspace.MODE_OVERLAYBOARD && convertingMode == Entry.Workspace.MODE_VIMBOARD) {
-            message = "\'함수만들기\' 에디터에서는 \'텍스트코딩\' 서비스로 변환할 수 없습니다.";
+            message = Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_EDITOR];
             return message;
         }
 
@@ -1635,15 +1635,16 @@ Entry.TextCodingUtil = {};
         //inspect variables
         var targets = vc.variables_ || [];
         for (var i=0; i<targets.length; i++) {
-            if (test(targets[i].name_))
-                return "등록된 변수중에 공백(띄어쓰기)이 포함된 변수가 있습니다.";
+            if (test(targets[i].name_)) {
+                return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT];
+            }
         }
 
         //inspect lists
         targets = vc.lists_ || [];
         for (i=0; i<targets.length; i++) {
             if (test(targets[i].name_))
-                return "등록된 리스트중에 공백(띄어쓰기)이 포함된 리스트가 있습니다.";
+                return Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT];
         }
 
         //this doesn't need for now
@@ -1666,31 +1667,31 @@ Entry.TextCodingUtil = {};
                 if(funcBlock.params.length == 2) {
                     var paramBlock = funcBlock.params[0];
                     if(paramBlock.data.type == "function_field_label") {
-                        var paramBlockParams = paramBlock.data.params;
+                        var paramBlockParams = paramBlock.data.params; 
                         if(paramBlockParams.length == 2) {
                             if(paramBlockParams[1] == undefined) {
                                 var name = paramBlockParams[0];
                                 if (test(name))
-                                    return "등록된 함수중에 함수명에 공백(띄어쓰기)이 포함된 함수가 있습니다.";
+                                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT];
                             }
                             else {
                                 if(paramBlockParams[1].data.type == "function_field_label") {
-                                    return "등록된 함수중에 함수명이 2개 이상의 네임블록으로 구성된 함수가 있습니다.";
+                                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
                                 }
                             }
                         }
                         else {
-                            return "정상적이지 않은 함수가 포함되어 있습니다.";
+                            return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
                         }
                     }
                     else {
-                        return "정상적이지 않은 함수가 포함되어 있습니다.";
+                        return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
                     }
                 } else {
-                    return "정상적이지 않은 함수가 포함되어 있습니다.";
+                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
                 }
             } else {
-                return "정상적이지 않은 함수가 포함되어 있습니다.";
+                return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
             }
         }
 

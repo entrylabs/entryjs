@@ -12002,6 +12002,13 @@ Entry.TextCodingError = {};
   b.SUBJECT_CONV_LIST = "subject_conv_list";
   b.SUBJECT_CONV_OBJECT = "subject_conv_object";
   b.SUBJECT_CONV_FUNCTION = "subject_conv_function";
+  b.ALERT_VARIABLE_EMPTY_TEXT = "alert_variable_empty_text";
+  b.ALERT_LIST_EMPTY_TEXT = "alert_list_empty_text";
+  b.ALERT_FUNCTION_NAME_EMPTY_TEXT = "alert_function_name_empty_text";
+  b.ALERT_FUNCTION_NAME_FIELD_MULTI = "alert_function_name_field_multi";
+  b.ALERT_FUNCTION_NAME_DISORDER = "alert_function_name_disorder";
+  b.ALERT_FUNCTION_EDITOR = "alert_function_editor";
+  b.ALERT_FUNCTION_NO_SUPPORT = "alert_function_no_support";
   var a = {};
   b.error = function(b, c, e, f, g) {
     console.log("error control", b, c, e, f);
@@ -12943,22 +12950,22 @@ Entry.TextCodingUtil = {};
     return "stone" == a ? "OBSTACLE" : "wall" == a ? a.toUpperCase() : "item" == a ? a.toUpperCase() : a;
   };
   b.canConvertTextModeForOverlayMode = function(a) {
-    if (Entry.playground.mainWorkspace.oldMode == Entry.Workspace.MODE_OVERLAYBOARD && a == Entry.Workspace.MODE_VIMBOARD) {
-      return "'\ud568\uc218\ub9cc\ub4e4\uae30' \uc5d0\ub514\ud130\uc5d0\uc11c\ub294 '\ud14d\uc2a4\ud2b8\ucf54\ub529' \uc11c\ube44\uc2a4\ub85c \ubcc0\ud658\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.";
-    }
+    var b;
+    Entry.playground.mainWorkspace.oldMode == Entry.Workspace.MODE_OVERLAYBOARD && a == Entry.Workspace.MODE_VIMBOARD && (b = Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_EDITOR]);
+    return b;
   };
   b.isNamesIncludeSpace = function() {
     var a = Entry.variableContainer;
     if (a) {
       for (var b = a.variables_ || [], c = 0;c < b.length;c++) {
         if (/ /.test(b[c].name_)) {
-          return "\ub4f1\ub85d\ub41c \ubcc0\uc218\uc911\uc5d0 \uacf5\ubc31(\ub744\uc5b4\uc4f0\uae30)\uc774 \ud3ec\ud568\ub41c \ubcc0\uc218\uac00 \uc788\uc2b5\ub2c8\ub2e4.";
+          return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT];
         }
       }
       b = a.lists_ || [];
       for (c = 0;c < b.length;c++) {
         if (/ /.test(b[c].name_)) {
-          return "\ub4f1\ub85d\ub41c \ub9ac\uc2a4\ud2b8\uc911\uc5d0 \uacf5\ubc31(\ub744\uc5b4\uc4f0\uae30)\uc774 \ud3ec\ud568\ub41c \ub9ac\uc2a4\ud2b8\uac00 \uc788\uc2b5\ub2c8\ub2e4.";
+          return Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT];
         }
       }
       b = a.functions_ || {};
@@ -12969,24 +12976,24 @@ Entry.TextCodingUtil = {};
               if (a = a.data.params, 2 == a.length) {
                 if (void 0 == a[1]) {
                   if (/ /.test(a[0])) {
-                    return "\ub4f1\ub85d\ub41c \ud568\uc218\uc911\uc5d0 \ud568\uc218\uba85\uc5d0 \uacf5\ubc31(\ub744\uc5b4\uc4f0\uae30)\uc774 \ud3ec\ud568\ub41c \ud568\uc218\uac00 \uc788\uc2b5\ub2c8\ub2e4.";
+                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT];
                   }
                 } else {
                   if ("function_field_label" == a[1].data.type) {
-                    return "\ub4f1\ub85d\ub41c \ud568\uc218\uc911\uc5d0 \ud568\uc218\uba85\uc774 2\uac1c \uc774\uc0c1\uc758 \ub124\uc784\ube14\ub85d\uc73c\ub85c \uad6c\uc131\ub41c \ud568\uc218\uac00 \uc788\uc2b5\ub2c8\ub2e4.";
+                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
                   }
                 }
               } else {
-                return "\uc815\uc0c1\uc801\uc774\uc9c0 \uc54a\uc740 \ud568\uc218\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
+                return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
               }
             } else {
-              return "\uc815\uc0c1\uc801\uc774\uc9c0 \uc54a\uc740 \ud568\uc218\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
+              return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
             }
           } else {
-            return "\uc815\uc0c1\uc801\uc774\uc9c0 \uc54a\uc740 \ud568\uc218\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
+            return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
           }
         } else {
-          return "\uc815\uc0c1\uc801\uc774\uc9c0 \uc54a\uc740 \ud568\uc218\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
+          return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
         }
       }
       return !1;
@@ -14181,7 +14188,7 @@ Entry.PyToBlockParser = function(b) {
           }
         }
       }
-      e || (g.object.name && f.property.name && (t = g.object.name + "." + f.property.name), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_GENERAL));
+      !e && g.object.name && (t = f.property.name ? g.object.name + "." + f.property.name : g.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_GENERAL));
     }
     console.log("CallExpression type after", e);
     if (e) {
@@ -20325,7 +20332,7 @@ Entry.VariableContainer.prototype.createDom = function(b) {
   d.innerHTML = "+ " + Lang.Workspace.function_add;
   this.functionAddButton_ = d;
   d.bindOnClick(function(b) {
-    Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY ? alert("\ud14d\uc2a4\ud2b8\ubaa8\ub4dc\uc5d0\uc11c\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.") : (b = a._getBlockMenu(), Entry.playground.changeViewMode("code"), "func" != b.lastSelector && b.selectMenu("func"), a.createFunction());
+    Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY ? alert(Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NO_SUPPORT]) : (b = a._getBlockMenu(), Entry.playground.changeViewMode("code"), "func" != b.lastSelector && b.selectMenu("func"), a.createFunction());
   });
   return b;
 };

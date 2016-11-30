@@ -36,6 +36,15 @@ Entry.TextCodingError = {};
 	tce.SUBJECT_CONV_OBJECT = "subject_conv_object";
 	tce.SUBJECT_CONV_FUNCTION = "subject_conv_function";
 
+	//No Converting Message
+	tce.ALERT_VARIABLE_EMPTY_TEXT = "alert_variable_empty_text";
+	tce.ALERT_LIST_EMPTY_TEXT = "alert_list_empty_text";
+	tce.ALERT_FUNCTION_NAME_EMPTY_TEXT = "alert_function_name_empty_text";
+	tce.ALERT_FUNCTION_NAME_FIELD_MULTI = "alert_function_name_field_multi";
+	tce.ALERT_FUNCTION_NAME_DISORDER = "alert_function_name_disorder";
+	tce.ALERT_FUNCTION_EDITOR = "alert_function_editor";
+	tce.ALERT_FUNCTION_NO_SUPPORT = "alert_function_no_support";
+
 	var error = {};
  
 	tce.error = function(title, message, keyword, line, subject) {

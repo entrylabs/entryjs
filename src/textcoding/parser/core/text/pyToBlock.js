@@ -510,7 +510,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             if(!type) {
-                if(calleeData.object.name && callee.property.name) {
+                if(calleeData.object.name) {
                     /*console.log("callex error calleeData", calleeData);
                     var error = {};
                     error.title = "지원되지 않는 코드";
@@ -519,7 +519,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("send error", error);
                     throw error;*/
 
-                    var keyword = calleeData.object.name + '.' + callee.property.name;
+                    if(callee.property.name)
+                        var keyword = calleeData.object.name + '.' + callee.property.name;
+                    else
+                        var keyword = calleeData.object.name;
+                    
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -527,7 +531,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         this._blockCount,
                         Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 }
-                else {
+                /*else {
                     var keyword;
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
@@ -535,7 +539,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         keyword,
                         this._blockCount,
                         Entry.TextCodingError.SUBJECT_CONV_GENERAL);
-                }
+                }*/
             }
 
         }
