@@ -18,7 +18,7 @@ Entry.TextCodingError = {};
 
 
 	tce.MESSAGE_CONV_DEFAULT = "message_conv_default";
-	tce.MESSAGE_CONV_NO_BLOCK = "message_conv_no_support";
+	tce.MESSAGE_CONV_NO_SUPPORT = "message_conv_no_support";
 	tce.MESSAGE_CONV_NO_VARIABLE = "message_conv_no_variable";
 	tce.MESSAGE_CONV_NO_LIST = "message_conv_no_list";
 	tce.MESSAGE_CONV_NO_OBJECT ="message_conv_no_object";
