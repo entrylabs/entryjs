@@ -44,6 +44,9 @@ Entry.TextCodingError = {};
 	tce.ALERT_FUNCTION_NAME_DISORDER = "alert_function_name_disorder";
 	tce.ALERT_FUNCTION_EDITOR = "alert_function_editor";
 	tce.ALERT_FUNCTION_NO_SUPPORT = "alert_function_no_support";
+	tce.ALERT_LIST_NO_SUPPORT = "alert_list_no_support";
+	tce.ALERT_VARIABLE_NO_SUPPORT = "alert_variable_no_support";
+	tce.ALERT_SIGNAL_NO_SUPPORT = "alert_signal_no_support";
 
 	var error = {};
  

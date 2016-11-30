@@ -70,6 +70,11 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     this.variableAddButton_ = variableAddButton;
 
     variableAddButton.bindOnClick(function(e) {
+        if(Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY) {
+            var message = Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_NO_SUPPORT];
+            alert(message);
+            return;
+        }
         var panel = thisPointer.variableAddPanel;
         var value = panel.view.name.value.trim();
         if (panel.isOpen){
@@ -97,6 +102,11 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     messageAddButton.innerHTML = '+ ' + Lang.Workspace.message_create;
     this.messageAddButton_ = messageAddButton;
     messageAddButton.bindOnClick(function(e) {
+        if(Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY) {
+            var message = Lang.TextCoding[Entry.TextCodingError.ALERT_SIGNAL_NO_SUPPORT];
+            alert(message);
+            return;
+        }
         that.addMessage({
             name:Lang.Workspace.message + ' ' +
                 (that.messages_.length + 1)
@@ -109,6 +119,11 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     listAddButton.innerHTML = '+ ' + Lang.Workspace.list_create;
     this.listAddButton_ = listAddButton;
     listAddButton.bindOnClick(function(e) {
+        if(Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY) {
+            var message = Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_NO_SUPPORT];
+            alert(message);
+            return;
+        }
         var panel = thisPointer.listAddPanel;
         var value = panel.view.name.value.trim();
         if (panel.isOpen) {
@@ -973,6 +988,7 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
         that.selectedVariable = null;
         that.variableSettingView.addClass('entryRemove');
     });
+    view.removeButton = removeButton;
 
     var editButton = Entry.createElement('button');
     editButton.addClass('entryVariableListElementEditWorkspace');

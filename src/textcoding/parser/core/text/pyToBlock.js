@@ -1793,9 +1793,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     value = 0;
                 }
             }
-            else {
+            /*else {
                 value = 0
-            }
+            }*/
 
             console.log("variable name", name, "value", value);
 
@@ -2438,8 +2438,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var name = leftData.name;
                 if(rightData.type == "number" || rightData.type == "text")
                     var value = rightData.params[0];
-                else
-                    var value = 0;
+                /*else
+                    var value = 0;*/
 
                 if((value && !isNaN(value)) || value == 0) {
                     console.log("final currentObject", this._currentObject);
