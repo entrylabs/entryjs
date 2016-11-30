@@ -395,6 +395,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                     }
                 }
+                else if(callee.object.name == "Entry") {
+                    if(callee.property.name == "send_signal") {
+                        var argument = component.arguments[0];
+                        if(argument && argument.value) {
+                            Entry.TextCodingUtil.createMessage(argument.value);
+                        }
+                    }
+                    else if(callee.property.name == "send_signal_wait") {
+                        var argument = component.arguments[0];
+                        if(argument && argument.value) {
+                            Entry.TextCodingUtil.createMessage(argument.value);
+                        }
+                    }
+                }
             }
 
             if(callee.property) {
@@ -523,7 +537,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var keyword = calleeData.object.name + '.' + callee.property.name;
                     else
                         var keyword = calleeData.object.name;
-                    
+
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -1283,7 +1297,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var newParams = [];
                         newParams[1] = objectData;
                         newParams[3] = params[1];
-                        params = newParams;
+                        params = newParams; 
                     }
                 }
                 else if(callee.property.name == "lower") {
@@ -1293,7 +1307,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var newParams = [];
                         newParams[1] = objectData;
                         newParams[3] = params[1];
-                        params = newParams;
+                        params = newParams; 
                     }
                 }
             }

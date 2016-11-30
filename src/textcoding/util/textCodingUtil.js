@@ -700,6 +700,19 @@ Entry.TextCodingUtil = {};
 
     };
 
+    tu.createMessage = function(name) {
+        var messages = Entry.variableContainer.messages_;
+        var exist = Entry.isExist(name, 'name', messages);
+        if(exist)
+            return;
+        var message = {
+            name: name
+        };
+
+        Entry.variableContainer.addMessage(message);
+        Entry.variableContainer.updateList();
+    };
+
     tu.isLocalType = function(block, id) {
         if(block.data.type == "get_variable" ||
             block.data.type == "set_variable" ||

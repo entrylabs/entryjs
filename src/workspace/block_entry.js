@@ -20249,7 +20249,8 @@ Entry.block = {
                         "menuName": "messages",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_START,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        paramType: "signal"
                     },
                     undefined
                 ]
