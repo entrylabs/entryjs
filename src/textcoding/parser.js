@@ -273,6 +273,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                     if (this.codeMirror) {
                         var line;
+                        console.log("main error", error);
                         if (error instanceof SyntaxError) {
                             var err = this.findSyntaxError(error, threadCount);
                             var annotation = {
@@ -293,7 +294,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             className: "CodeMirror-lint-mark-error",
                             __annotation: annotation, 
                             clearOnEnter: true,
-                            inclusiveLeft: true,
+                            inclusiveLeft: true, 
                             inclusiveRigth: true,
                             clearWhenEmpty: false
                         };
@@ -303,27 +304,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         if(error.type == "syntax") {
                             var title = error.title;
-                            var message = error.message;
-                            var keyword = error.keyword;
-                            var line = err.from.line;
-                            var subject = error.subject;
-
-                            var contents = '';
-                            contents = this.makeErrorDisplay(subject, keyword, message, line);
-
+                            var message = this.makeSyntaxErrorDisplay(error.subject, error.keyword, error.message, err.from.line);
                         }
                         else if(error.type == "converting") {
+                            console.log("error.keyword", error.keyword);
                             var title = error.title;
                             var message = error.message;
-                            var keyword = error.keyword;
-                            var line = err.from.line;
-                            var subject = error.subject;
-
-                            var contents = '';
-                            contents = this.makeErrorDisplay(subject, keyword, message, line);
+                            
                         }
 
-                        Entry.toast.alert(title, contents);
+                        Entry.toast.alert(title, message);
                         throw error;
                     }
                 }
@@ -675,7 +665,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     };
 
-    p.makeErrorDisplay = function(subject, keyword, message, line) {
+    p.makeSyntaxErrorDisplay = function(subject, keyword, message, line) {
         console.log("subject", subject, "keyword", keyword, "message", message, "line", line);
         var contents;
         if(keyword)
@@ -683,7 +673,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         else 
             var kw = '';
 
-        contents = '[' + subject + ']' + ' ' + kw +
+        contents = '[' + subject + ']' + ' ' + kw + ' : ' +
                     message + ' ' + '(line ' + line + ')';
 
         return contents;

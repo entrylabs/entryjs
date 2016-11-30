@@ -30,7 +30,8 @@ Entry.TextCodingError = {};
 	tce.SUBJECT_SYNTAX_CHARACTER = "subject_syntax_character";
 	tce.SUBJECT_SYNTAX_INDENT = "subject_syntax_indent";
 	tce.SUBJECT_CONV_DEFAULT = "subject_conv_default";
-	tce.SUBJECT_CONV_VARIABLE = "subject_conv_variable";
+	tce.SUBJECT_CONV_GENERAL = "subject_conv_general"; 
+	tce.SUBJECT_CONV_VARIABLE = "subject_conv_variable"; 
 	tce.SUBJECT_CONV_LIST = "subject_conv_list";
 	tce.SUBJECT_CONV_OBJECT = "subject_conv_object";
 	tce.SUBJECT_CONV_FUNCTION = "subject_conv_function";
@@ -39,19 +40,32 @@ Entry.TextCodingError = {};
  
 	tce.error = function(title, message, keyword, line, subject) {
 		console.log("error control", title, message, keyword, line);
-		var errorInfo = this.getErrorInfo(title, message);
+		var errorInfo = this.getErrorInfo(title, message, keyword, line, subject);
 		error.title = errorInfo.title;
 		error.message = errorInfo.message;  
-		error.line = line;
-		error.keyword = keyword;
-		error.subject = subject;
 		throw error;
 	};
 
-	tce.getErrorInfo = function(title, message) {
+	tce.getErrorInfo = function(title, message, keyword, line, subject) {
 		var info = {};
 		info.title = Lang.TextCoding[title];
-		info.message = Lang.TextCoding[message];
+		var message = Lang.TextCoding[message];
+
+		var contents;
+        if(keyword)
+            var kw = "\'" + keyword + "\' ";
+        else 
+            var kw = '';
+
+        if(subject)
+        	var sj = Lang.TextCoding[subject];
+        else
+        	var sj = Lang.TextCoding[this.SUBJECT_CONV_GENERAL];
+
+        contents = '[' + sj + ']' + ' ' + kw + ' : ' +
+                    message + ' ' + '(line ' + line + ')';
+		
+        info.message = contents;
 
 		return info;
 

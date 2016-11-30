@@ -262,7 +262,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                             keyword,
-                            this._blockCount);
+                            this._blockCount,
+                            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                     }
                 }
             }
@@ -509,7 +510,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             if(!type) {
-                if(calleeData.object.name) {
+                if(calleeData.object.name && callee.property.name) {
                     /*console.log("callex error calleeData", calleeData);
                     var error = {};
                     error.title = "지원되지 않는 코드";
@@ -518,12 +519,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("send error", error);
                     throw error;*/
 
-                    var keyword = calleeData.object.name;
+                    var keyword = calleeData.object.name + '.' + callee.property.name;
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_GENERAL);
+                }
+                else {
+                    var keyword;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                        keyword,
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 }
             }
 
@@ -572,7 +583,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                         keyword,
-                                        this._blockCount);
+                                        this._blockCount,
+                                        Entry.TextCodingError.SUBJECT_CONV_LIST);
 
                                     return result;
                                 }
@@ -586,7 +598,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                     keyword,
-                                    this._blockCount);
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_LIST);
 
                                 return result;
                             }
@@ -617,7 +630,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                         keyword,
-                                        this._blockCount);
+                                        this._blockCount,
+                                        Entry.TextCodingError.SUBJECT_CONV_LIST);
 
                                     return result;
                                 }
@@ -638,7 +652,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                     keyword,
-                                    this._blockCount);
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_LIST);
 
                                 return result;
                             }
@@ -669,7 +684,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                         keyword,
-                                        this._blockCount);
+                                        this._blockCount,
+                                        Entry.TextCodingError.SUBJECT_CONV_LIST);
 
                                     return result;
                                 }
@@ -690,7 +706,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                     keyword,
-                                    this._blockCount);
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_LIST);
 
                                 return result;
                             }
@@ -783,7 +800,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                         keyword,
-                                        this._blockCount);
+                                        this._blockCount,
+                                        Entry.TextCodingError.SUBJECT_CONV_LIST);
                                 }
                             }
                             else {
@@ -799,7 +817,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
                                     keyword,
-                                    this._blockCount); 
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_OBJECT); 
                             }
                         }
                         else if(param.object) {
@@ -819,7 +838,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                             keyword,
-                                            this._blockCount);
+                                            this._blockCount,
+                                            Entry.TextCodingError.SUBJECT_CONV_LIST);
                                     }
                                 }
                                 else {
@@ -835,7 +855,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
                                         keyword,
-                                        this._blockCount);
+                                        this._blockCount,
+                                        Entry.TextCodingError.SUBJECT_CONV_OBJECT);
                                 }
                             }
                             else {
@@ -856,7 +877,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                                 Entry.TextCodingError.TITLE_CONVERTING,
                                                 Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                                 keyword,
-                                                this._blockCount);
+                                                this._blockCount,
+                                                Entry.TextCodingError.SUBJECT_CONV_LIST);
                                         }
                                     }
                                 }
@@ -876,7 +898,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                                 Entry.TextCodingError.TITLE_CONVERTING,
                                                 Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
                                                 keyword,
-                                                this._blockCount);
+                                                this._blockCount,
+                                                Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                                         }
                                     } else if(param.object.name == "Hamster") {
                                         continue;
@@ -894,7 +917,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
                                             keyword,
-                                            this._blockCount);
+                                            this._blockCount,
+                                            Entry.TextCodingError.SUBJECT_CONV_OBJECT);
                                     }
                                 }
                             }
@@ -916,7 +940,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                             keyword,
-                                            this._blockCount);
+                                            this._blockCount,
+                                            Entry.TextCodingError.SUBJECT_CONV_LIST);
                                     }
                                 }
                                 else {
@@ -935,7 +960,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                                 Entry.TextCodingError.TITLE_CONVERTING,
                                                 Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
                                                 keyword,
-                                                this._blockCount);
+                                                this._blockCount,
+                                                Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                                         }
                                     }
                                 }
@@ -1351,7 +1377,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
                             keyword,
-                            this._blockCount);
+                            this._blockCount,
+                            Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
                     }
                 }
                 else {
@@ -1411,7 +1438,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                             keyword,
-                            this._blockCount);
+                            this._blockCount,
+                            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                     }
                 }
             }
@@ -1572,7 +1600,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
                             keyword,
-                            this._blockCount);
+                            this._blockCount,
+                            Entry.TextCodingError.SUBJECT_CONV_OBJECT);
                     }
                     else if(initData.object.property) { // Self List
                         var name = initData.object.property.name;
@@ -1589,7 +1618,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                 keyword,
-                                this._blockCount);
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_LIST);
                         }
                     }
                 }
@@ -1608,7 +1638,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                             keyword,
-                            this._blockCount);
+                            this._blockCount,
+                            Entry.TextCodingError.SUBJECT_CONV_LIST);
                     }
                 }
             }
@@ -1627,7 +1658,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
                             keyword,
-                            this._blockCount);
+                            this._blockCount,
+                            Entry.TextCodingError.SUBJECT_CONV_OBJECT);
 
                     }
                     else if(initData.property.name) { // Self List
@@ -1645,7 +1677,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
                                 keyword,
-                                this._blockCount);
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                         }
                     }
                 }
@@ -1664,7 +1697,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
                             keyword,
-                            this._blockCount);
+                            this._blockCount,
+                            Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                     }
                 }
             }
@@ -1721,7 +1755,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                 }
 
                 array.push(item);
@@ -2029,7 +2064,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case "<<=":
                 var keyword = operator;
@@ -2037,7 +2073,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case ">>=":
                 var keyword = operator;
@@ -2045,7 +2082,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case "|=":
                 var keyword = operator;
@@ -2053,7 +2091,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case "^=":
                 var keyword = operator;
@@ -2061,7 +2100,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case "&=":
                 var keyword = operator;
@@ -2069,7 +2109,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             default:
                 operator = operator;
@@ -2078,7 +2119,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
         }
 
@@ -2105,7 +2147,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_OBJECT);
 
                 }
                 else if(leftData.object.property) { // Self List, Because of Left Variable
@@ -2125,7 +2168,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_LIST);
                 }
             }
         }
@@ -2144,7 +2188,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_OBJECT);
                 }
                 else if(leftData.property) { //Because of Left Variable
                 }
@@ -2167,7 +2212,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
                             keyword,
-                            this._blockCount);
+                            this._blockCount,
+                            Entry.TextCodingError.SUBJECT_CONV_OBJECT);
                     }
                     else if(rightData.object.property) { // Self List
                         if(!Entry.TextCodingUtil.isLocalListExisted(rightData.object.property.name, this._currentObject)) {
@@ -2183,7 +2229,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                 keyword,
-                                this._blockCount);
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_LIST);
                         }
                     }
                 }
@@ -2201,7 +2248,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                             keyword,
-                            this._blockCount);
+                            this._blockCount,
+                            Entry.TextCodingError.SUBJECT_CONV_LIST);
                     }
                 }
             }
@@ -2220,7 +2268,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                             keyword,
-                            this._blockCount);
+                            this._blockCount,
+                            Entry.TextCodingError.SUBJECT_CONV_LIST);
                     }
                     else if(rightData.property) {
                         if(!Entry.TextCodingUtil.isLocalVariableExisted(rightData.property.name, this._currentObject)) {
@@ -2236,7 +2285,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                 keyword,
-                                this._blockCount);
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_LIST);
                         }
                     }
                 }
@@ -2254,7 +2304,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
                             keyword,
-                            this._blockCount);
+                            this._blockCount,
+                            Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                     }
                 }
             }
@@ -2280,7 +2331,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
             }
 
             var listName = leftData.params[1];
@@ -3033,7 +3085,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
                 }
                     
                 //params.push("");
@@ -3126,7 +3179,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                     
                 }
             }
@@ -3150,7 +3204,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_GENERAL);
 
                 }
             }
@@ -3178,7 +3233,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 Entry.TextCodingError.TITLE_CONVERTING,
                 Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                 keyword,
-                this._blockCount);
+                this._blockCount,
+                Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         }
 
         var paramsMeta = Entry.block[type].params;
@@ -3378,7 +3434,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                                         keyword,
-                                        this._blockCount);
+                                        this._blockCount,
+                                        Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                                 }
                                 else {
                                     /*var error = {};
@@ -3393,7 +3450,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                                         keyword,
-                                        this._blockCount);
+                                        this._blockCount,
+                                        Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                                 }
                             }
                         }
@@ -3571,7 +3629,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                                 keyword,
-                                this._blockCount);
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                         }
                     }
                 }
@@ -3778,7 +3837,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                     break;
                 case "typeof":
                     var keyword = operator;
@@ -3786,7 +3846,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                     break;
                 case "void":
                     var keyword = operator;
@@ -3794,7 +3855,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                     break;
                 case "delete":
                     var keyword = operator;
@@ -3802,7 +3864,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                     break;
                 default:
                     operator = operator;
@@ -3811,7 +3874,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                     break;
             }
 
@@ -3967,7 +4031,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
             }
         }
 
@@ -4033,7 +4098,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 Entry.TextCodingError.TITLE_CONVERTING,
                 Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                 keyword,
-                this._blockCount);
+                this._blockCount,
+                Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         }
 
         structure.type = type;
@@ -4070,7 +4136,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case "<":
                 var syntax = String("(%1 %2 %3)#boolean_basic_operator");
@@ -4090,7 +4157,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case ">>":
                 var keyword = operator;
@@ -4098,7 +4166,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case ">>>":
                 var keyword = operator;
@@ -4106,7 +4175,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case "+":
                 var syntax = String("(%1 %2 %3)#calc_basic");
@@ -4130,7 +4200,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case "^":
                 var keyword = operator;
@@ -4138,7 +4209,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case "|":
                 var keyword = operator;
@@ -4146,7 +4218,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case "&":
                 var keyword = operator;
@@ -4154,7 +4227,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case "in":
                 var keyword = operator;
@@ -4162,7 +4236,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
             case "instanceof":
                 //used in BlockStatement
@@ -4173,7 +4248,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                     keyword,
-                    this._blockCount);
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 break;
         }
 
@@ -4239,7 +4315,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                             keyword,
-                                            this._blockCount);
+                                            this._blockCount,
+                                            Entry.TextCodingError.SUBJECT_CONV_LIST);
                                     }
                                 }
                             }
@@ -4291,7 +4368,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                     keyword,
-                                    this._blockCount);
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_LIST);
                             }
                             else if(param.object.property) { // Self List
                                 if(!Entry.TextCodingUtil.isLocalListExisted(param.object.property.name, this._currentObject)) {
@@ -4307,7 +4385,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                         keyword,
-                                        this._blockCount);
+                                        this._blockCount,
+                                        Entry.TextCodingError.SUBJECT_CONV_LIST);
                                 }
                             }
                         }
@@ -4325,7 +4404,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                     keyword,
-                                    this._blockCount);
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_LIST);
                             }
                         }
                     }
@@ -4345,7 +4425,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
                                         keyword,
-                                        this._blockCount);
+                                        this._blockCount,
+                                        Entry.TextCodingError.SUBJECT_CONV_OBJECT);
                                 }
                                 else if(param.property) {
                                     if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, this._currentObject)) {
@@ -4361,7 +4442,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
                                             keyword,
-                                            this._blockCount);
+                                            this._blockCount,
+                                            Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                                     }
                                 }
                             }
@@ -4398,7 +4480,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
                 }
 
             }
@@ -4482,7 +4565,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
                                             keyword,
-                                            this._blockCount);
+                                            this._blockCount,
+                                            Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                                     }
                                 }
                             }
@@ -4513,7 +4597,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
                                     keyword,
-                                    this._blockCount);
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_OBJECT);
                             }
                             else if(param.object.property) { // List Name
                                 if(!Entry.TextCodingUtil.isLocalListExisted(param.object.property.name, this._currentObject)) {
@@ -4529,7 +4614,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                         keyword,
-                                        this._blockCount);
+                                        this._blockCount,
+                                        Entry.TextCodingError.SUBJECT_CONV_LIST);
                                 }
                             }
                         }
@@ -4549,7 +4635,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
                                     keyword,
-                                    this._blockCount);
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_LIST);
                             }
                         }
                     }
@@ -4569,7 +4656,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
                                         keyword,
-                                        this._blockCount);
+                                        this._blockCount,
+                                        Entry.TextCodingError.SUBJECT_CONV_OBJECT);
                                 }
                                 else if(param.property) {
                                     if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, this._currentObject)) {
@@ -4585,7 +4673,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
                                             keyword,
-                                            this._blockCount);
+                                            this._blockCount,
+                                            Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                                     }
                                 }
                             }
@@ -4622,7 +4711,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                         keyword,
-                        this._blockCount);
+                        this._blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 }
             }
             console.log("BinaryExpression right param", param);
@@ -5254,7 +5344,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5274,7 +5365,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5294,7 +5386,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5314,7 +5407,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5334,7 +5428,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5354,7 +5449,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5374,7 +5470,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5394,7 +5491,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5414,7 +5512,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5434,7 +5533,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5454,7 +5554,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5474,7 +5575,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5494,7 +5596,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5514,7 +5617,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5534,7 +5638,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5554,7 +5659,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5574,7 +5680,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
@@ -5594,7 +5701,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
-            this._blockCount);
+            this._blockCount,
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         //Converting Error Control
 
         return result;
