@@ -535,11 +535,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p.checkBanClass = function(blockInfo) {
         if (!blockInfo) return;
         var isNotFor = blockInfo.isNotFor;
-        for (var i in this._bannedClass) {
-            if (isNotFor && isNotFor.indexOf(this._bannedClass[i]) > -1)
-                return true;
+        if (!isNotFor || isNotFor.length === 0) return false;
+        for (var i in isNotFor) {
+            if (isNotFor[i] && this._bannedClass.indexOf(isNotFor[i]) === -1) {
+                return false;
+            }
         }
-        return false;
+        return true;
     };
 
     p._addControl = function(dom) {
