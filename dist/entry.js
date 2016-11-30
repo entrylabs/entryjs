@@ -20785,12 +20785,15 @@ Entry.BlockMenu = function(b, a, d, c) {
   b.checkBanClass = function(a) {
     if (a) {
       a = a.isNotFor;
-      for (var b in this._bannedClass) {
-        if (a && -1 < a.indexOf(this._bannedClass[b])) {
-          return !0;
+      if (!a || 0 === a.length) {
+        return !1;
+      }
+      for (var b in a) {
+        if (a[b] && -1 === this._bannedClass.indexOf(a[b])) {
+          return !1;
         }
       }
-      return !1;
+      return !0;
     }
   };
   b._addControl = function(a) {

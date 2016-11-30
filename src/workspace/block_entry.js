@@ -2984,7 +2984,7 @@ Entry.block = {
     "arduino_cloud_pc_open": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "isNotFor": ["arduinoConnected"],
+        "isNotFor": ["arduinoConnect", "arduinoConnected"],
         "template": '%1',
         "params": [
             {
