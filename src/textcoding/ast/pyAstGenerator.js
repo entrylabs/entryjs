@@ -20,7 +20,38 @@ Entry.PyAstGenerator = function() {
             return astTree;
         }
         catch (error) {
-            console.log("ast error", error);
+            var msgTokens = error.message.split('\''); 
+            var title = Entry.TextCodingError.TITLE_SYNTAX;
+            console.log("msgTokens", msgTokens);
+
+            if(msgTokens[0].trim() == "Unexpected token") {
+                var message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN;
+                var subject = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN;
+            }
+            else if(msgTokens[0].trim() == "Unexpected character") {
+                var message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER;
+                var subject = Entry.TextCodingError.SUBJECT_SYNTAX_CHARACTER;
+            }
+            else if(msgTokens[0].trim() == "Unexpected indent") {
+                var message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER;
+                var subject = Entry.TextCodingError.SUBJECT_SYNTAX_INDENT
+            }
+            else {
+                var message = Entry.TextCodingError.MESSAGE_SYNTAX_DEFAULT;
+                var subject = Entry.TextCodingError.SUBJECT_SYNTAX_DEFAULT;
+            }
+
+            if(msgTokens[1])
+                var keyword = msgTokens[1];
+
+            error.title = Lang.TextCoding[title];
+            error.message = Lang.TextCoding[message];
+            if(keyword)
+                error.keyword = keyword;
+            else
+                error.keyword = '';
+            error.subject = Lang.TextCoding[subject];
+            
             throw error;
         }
     }

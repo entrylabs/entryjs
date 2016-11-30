@@ -273,6 +273,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                     if (this.codeMirror) {
                         var line;
+                        console.log("main error", error);
                         if (error instanceof SyntaxError) {
                             var err = this.findSyntaxError(error, threadCount);
                             var annotation = {
@@ -293,7 +294,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             className: "CodeMirror-lint-mark-error",
                             __annotation: annotation,
                             clearOnEnter: true,
-                            inclusiveLeft: true,
+                            inclusiveLeft: true, 
                             inclusiveRigth: true,
                             clearWhenEmpty: false
                         };
@@ -301,17 +302,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         this._marker = this.codeMirror.markText(
                             annotation.from, annotation.to, option);
 
-                        console.log("error eee", error.message);
                         if(error.type == "syntax") {
-                            var title = "문법오류";
-                            var message = error.message;
-
+                            var title = error.title;
+                            var message = this.makeSyntaxErrorDisplay(error.subject, error.keyword, error.message, err.from.line);
                         }
                         else if(error.type == "converting") {
-                            var title = "변환오류"
+                            console.log("error.keyword", error.keyword);
+                            var title = error.title;
                             var message = error.message;
+                            
                         }
-
 
                         Entry.toast.alert(title, message);
                         throw error;
@@ -664,5 +664,19 @@ Entry.Parser = function(mode, type, cm, syntax) {
         return threads;
 
     };
+
+    p.makeSyntaxErrorDisplay = function(subject, keyword, message, line) {
+        console.log("subject", subject, "keyword", keyword, "message", message, "line", line);
+        var contents;
+        if(keyword)
+            var kw = "\'" + keyword + "\' ";
+        else 
+            var kw = '';
+
+        contents = '[' + subject + ']' + ' ' + kw + ' : ' +
+                    message + ' ' + '(line ' + line + ')';
+
+        return contents;
+    }
 
 })(Entry.Parser.prototype);

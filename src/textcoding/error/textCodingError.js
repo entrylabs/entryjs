@@ -11,28 +11,61 @@ Entry.TextCodingError = {};
 	tce.TITLE_SYNTAX = "title_syntax";
 	tce.TITLE_CONVERTING = "title_converting";
 
-	tce.MESSAGE_NO_BLOCK = "message_no_block";
-	tce.MESSAGE_NO_VARIABLE = "message_no_variable";
-	tce.MESSAGE_NO_LIST = "message_no_list";
-	tce.MESSAGE_NO_OBJECT ="message_no_object";
+	tce.MESSAGE_SYNTAX_DEFAULT = "message_syntax_default";
+	tce.MESSAGE_SYNTAX_UNEXPECTED_TOKEN = "message_syntax_unexpected_token";
+	tce.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER = "message_syntax_unexpected_character";
+	tce.MESSAGE_SYNTAX_UNEXPECTED_INDENT = "message_syntax_unexpected_indent";
+
+
+	tce.MESSAGE_CONV_DEFAULT = "message_conv_default";
+	tce.MESSAGE_CONV_NO_SUPPORT = "message_conv_no_support";
+	tce.MESSAGE_CONV_NO_VARIABLE = "message_conv_no_variable";
+	tce.MESSAGE_CONV_NO_LIST = "message_conv_no_list";
+	tce.MESSAGE_CONV_NO_OBJECT ="message_conv_no_object";
+	tce.MESSAGE_CONV_NO_FUNCTION ="message_conv_no_function";
+
+
+	tce.SUBJECT_SYNTAX_DEFAULT = "subject_syntax_default";
+	tce.SUBJECT_SYNTAX_TOKEN = "subject_syntax_token";
+	tce.SUBJECT_SYNTAX_CHARACTER = "subject_syntax_character";
+	tce.SUBJECT_SYNTAX_INDENT = "subject_syntax_indent";
+	tce.SUBJECT_CONV_DEFAULT = "subject_conv_default";
+	tce.SUBJECT_CONV_GENERAL = "subject_conv_general"; 
+	tce.SUBJECT_CONV_VARIABLE = "subject_conv_variable"; 
+	tce.SUBJECT_CONV_LIST = "subject_conv_list";
+	tce.SUBJECT_CONV_OBJECT = "subject_conv_object";
+	tce.SUBJECT_CONV_FUNCTION = "subject_conv_function";
 
 	var error = {};
  
-	tce.error = function(title, message, keyword, line) {
+	tce.error = function(title, message, keyword, line, subject) {
 		console.log("error control", title, message, keyword, line);
-		var errorInfo = this.getErrorInfo(title, message, keyword);
-		console.log("errorInfo", errorInfo);
+		var errorInfo = this.getErrorInfo(title, message, keyword, line, subject);
 		error.title = errorInfo.title;
 		error.message = errorInfo.message;  
-		error.line = line;
 		throw error;
 	};
 
-	tce.getErrorInfo = function(title, message, keyword) {
+	tce.getErrorInfo = function(title, message, keyword, line, subject) {
 		var info = {};
-		console.log("getErrorInfo", Lang.TextCoding[title]);
 		info.title = Lang.TextCoding[title];
-		info.message = "\'" + keyword + "\'" + Lang.TextCoding[message];
+		var message = Lang.TextCoding[message];
+
+		var contents;
+        if(keyword)
+            var kw = "\'" + keyword + "\' ";
+        else 
+            var kw = '';
+
+        if(subject)
+        	var sj = Lang.TextCoding[subject];
+        else
+        	var sj = Lang.TextCoding[this.SUBJECT_CONV_GENERAL];
+
+        contents = '[' + sj + ']' + ' ' + kw + ' : ' +
+                    message + ' ' + '(line ' + line + ')';
+		
+        info.message = contents;
 
 		return info;
 
