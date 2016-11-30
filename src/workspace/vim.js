@@ -129,6 +129,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
         target = this.view[0];
         function eventDragEnd(e) {
             var textCode = _self.getCodeToText(e.block, Entry.Parser.PARSE_GENERAL);
+
             _self.codeMirror.display.dragFunctions.leave(e);
             var mousedown = Entry.Utils.createMouseEvent('mousedown', e);
             _self.codeMirror.display.scroller.dispatchEvent(mousedown);
@@ -269,9 +270,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
 
         if(this._parser)
             syntax = this._parser._execParser.searchSyntax(datum);
-
-        if(syntax)
-            return syntax;
 
         return syntax;
     };

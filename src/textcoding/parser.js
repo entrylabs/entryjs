@@ -74,7 +74,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             break;
 
         case "blockJs":
-            this._execParser = new Entry.BlockToJsParser(this.syntax);
+            this._execParser = new Entry.BlockToJsParser(this.syntax, this);
             var syntax = this.syntax;
             break;
 
@@ -119,7 +119,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-                this._execParser = new Entry.BlockToJsParser(this.syntax);
+                this._execParser = new Entry.BlockToJsParser(this.syntax, this);
 
                 var syntax = this.syntax;
                 var assistScope = {};
