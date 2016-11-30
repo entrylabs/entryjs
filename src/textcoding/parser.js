@@ -235,7 +235,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
-                    Entry.playground.blockMenu.reDraw();
+                    Entry.getMainWS().blockMenu.reDraw();
 
                     this._pyBlockCount = {};
                     this._pyThreadCount = 1;
@@ -266,8 +266,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     break;
                 } catch(error) {
                     result = [];
-                    if(Entry.playground && Entry.playground.mainWorkspace){
-                        var board = Entry.playground.mainWorkspace.board;
+                    if(Entry.getMainWS()){
+                        var board = Entry.getMainWS().board;
                         if(board) board.code.clear();
                     }
 
@@ -292,7 +292,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         var option = {
                             className: "CodeMirror-lint-mark-error",
-                            __annotation: annotation, 
+                            __annotation: annotation,
                             clearOnEnter: true,
                             inclusiveLeft: true, 
                             inclusiveRigth: true,
@@ -347,7 +347,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                Entry.playground.blockMenu.renderText();
+                Entry.getMainWS().blockMenu.renderText();
                 result = "";
                 var textCode = this._execParser.Code(code, parseMode);
                 if (!this._pyHinter)

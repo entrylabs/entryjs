@@ -123,6 +123,10 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     a.template = Lang.template.function_general;
     Entry.block[b] = a;
   }
+}, getMainWS:function() {
+  var b;
+  Entry.mainWorkspace ? b = Entry.mainWorkspace : Entry.playground && Entry.playground.mainWorkspace && (b = Entry.playground.mainWorkspace);
+  return b;
 }};
 window.Entry = Entry;
 Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightEye:0, note:0, bodyLed:0, frontLed:0, padWidth:0, padHeight:0}, setZero:function() {
@@ -12950,9 +12954,15 @@ Entry.TextCodingUtil = {};
     return "stone" == a ? "OBSTACLE" : "wall" == a ? a.toUpperCase() : "item" == a ? a.toUpperCase() : a;
   };
   b.canConvertTextModeForOverlayMode = function(a) {
+<<<<<<< HEAD
     var b;
     Entry.playground.mainWorkspace.oldMode == Entry.Workspace.MODE_OVERLAYBOARD && a == Entry.Workspace.MODE_VIMBOARD && (b = Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_EDITOR]);
     return b;
+=======
+    if (Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD && a == Entry.Workspace.MODE_VIMBOARD) {
+      return "'\ud568\uc218\ub9cc\ub4e4\uae30' \uc5d0\ub514\ud130\uc5d0\uc11c\ub294 '\ud14d\uc2a4\ud2b8\ucf54\ub529' \uc11c\ube44\uc2a4\ub85c \ubcc0\ud658\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.";
+    }
+>>>>>>> 1c394a6f344d44567bc170079f243d7e7db4ed22
   };
   b.isNamesIncludeSpace = function() {
     var a = Entry.variableContainer;
@@ -16007,7 +16017,7 @@ Entry.Parser = function(b, a, d, c) {
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
         try {
-          Entry.playground.blockMenu.reDraw();
+          Entry.getMainWS().blockMenu.reDraw();
           this._pyBlockCount = {};
           this._pyThreadCount = 1;
           var n = new Entry.PyAstGenerator, e = this.makeThreads(a);
@@ -16022,8 +16032,8 @@ Entry.Parser = function(b, a, d, c) {
           this._execParser._variableMap.clear();
         } catch (u) {
           c = [];
-          if (Entry.playground && Entry.playground.mainWorkspace) {
-            var r = Entry.playground.mainWorkspace.board;
+          if (Entry.getMainWS()) {
+            var r = Entry.getMainWS().board;
             r && r.code.clear();
           }
           if (this.codeMirror) {
@@ -16044,7 +16054,7 @@ Entry.Parser = function(b, a, d, c) {
         c = q = this._execParser.Code(a, b);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        Entry.playground.blockMenu.renderText();
+        Entry.getMainWS().blockMenu.renderText();
         c = "";
         q = this._execParser.Code(a, b);
         this._pyHinter || (this._pyHinter = new Entry.PyHint(this.syntax));
@@ -17272,16 +17282,17 @@ Entry.Toast.prototype.success = function(b, a, d) {
   }, 1E3);
 };
 Entry.Toast.prototype.alert = function(b, a, d) {
-  var c = Entry.createElement("div", "entryToast");
+  var c = Entry.createElement("div", "entryToast"), e;
   c.addClass("entryToast");
   c.addClass("entryToastAlert");
   c.bindOnClick(function() {
     Entry.toast.body_.removeChild(this);
+    e && clearInterval(e);
   });
-  var e = Entry.createElement("div", "entryToast");
-  e.addClass("entryToastTitle");
-  e.innerHTML = b;
-  c.appendChild(e);
+  var f = Entry.createElement("div", "entryToast");
+  f.addClass("entryToastTitle");
+  f.innerHTML = b;
+  c.appendChild(f);
   b = Entry.createElement("p", "entryToast");
   b.addClass("entryToastMessage");
   b.innerHTML = a;
@@ -17290,8 +17301,8 @@ Entry.Toast.prototype.alert = function(b, a, d) {
   this.body_.appendChild(c);
   d || window.setTimeout(function() {
     c.style.opacity = 1;
-    var a = setInterval(function() {
-      .05 > c.style.opacity && (clearInterval(a), c.style.display = "none", Entry.toast.body_.removeChild(c));
+    e = setInterval(function() {
+      .05 > c.style.opacity && (clearInterval(e), c.style.display = "none", c.parentElement && Entry.toast.body_.removeChild(c));
       c.style.opacity *= .9;
     }, 20);
   }, 5E3);
@@ -26633,11 +26644,11 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
       e.codeMirror.display.dragFunctions.leave(a);
       var d = Entry.Utils.createMouseEvent("mousedown", a);
       e.codeMirror.display.scroller.dispatchEvent(d);
-      var c = c.split("\n"), f = c.length - 1;
+      var c = c.split("\n"), k = c.length - 1;
       c.forEach(function(a, b) {
         e.codeMirror.replaceSelection(a);
         e.doc.getCursor();
-        0 !== b && f === b || e.codeMirror.replaceSelection("\n");
+        0 !== b && k === b || e.codeMirror.replaceSelection("\n");
       });
       a = Entry.Utils.createMouseEvent("mouseup", a);
       e.codeMirror.display.scroller.dispatchEvent(a);
@@ -26647,12 +26658,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
     }
     var e;
     this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
-    var f = this;
-    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, indentWithTabs:!0, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"autocomplete", "Ctrl-[":function(a) {
-      Entry.playground.object ? (a = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(a) : (a = {}, a.boardType = Entry.Workspace.MODE_BOARD, a.textType = -1, f.workspace.setMode(a), $(".entryModeSelector span ul li:eq(0)").triggerHandler("click")) : alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
-    }, "Ctrl-]":function(a) {
-      (a = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(a) : (a = {}, a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, Entry.dispatchEvent("changeMode", a), $(".entryModeSelector span ul li:eq(1)").triggerHandler("click"));
-    }, Tab:function(a) {
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, indentWithTabs:!0, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"autocomplete", Tab:function(a) {
       var b = Array(a.getOption("indentUnit") + 1).join(" ");
       a.replaceSelection(b);
     }}, lint:!0, viewportMargin:10});
@@ -26775,8 +26781,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           try {
             this.board.show(), this.blockMenu.unbanClass("textMode"), this.set({selectedBoard:this.board}), this.vimBoard && (this.textToCode(this.oldMode, this.oldTextType), this.vimBoard.hide()), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldTextType = this.textType;
           } catch (c) {
-            this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.TEXT_TYPE_JS ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_JS, Entry.dispatchEvent("changeMode", a), Ntry.dispatchEvent("textError", a)) : this.oldTextType == Entry.Vim.TEXT_TYPE_PY && 
-            (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_PY, Entry.dispatchEvent("changeMode", a));
+            this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.blockMenu.banClass("textMode"), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.TEXT_TYPE_JS ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_JS) : this.oldTextType == Entry.Vim.TEXT_TYPE_PY && (a.boardType = Entry.Workspace.MODE_VIMBOARD, 
+            a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_PY);
           }
           Entry.commander.setCurrentEditor("board", this.board);
           break;
@@ -26848,11 +26854,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             (k = this.selectedBoard) && k instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
             break;
           case 219:
-            if (!Entry.playground.object && h) {
+            if (Entry.playground && !Entry.playground.object && h) {
               alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
               return;
             }
-            if (Entry.playground.mainWorkspace.oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
+            if (Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
               return;
             }
             if (k = Entry.TextCodingUtil.isNamesIncludeSpace()) {
@@ -26863,10 +26869,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             k.boardType = Entry.Workspace.MODE_BOARD;
             k.textType = -1;
             this.setMode(k);
-            $(".entryModeSelector span ul li:eq(0)").triggerHandler("click");
             break;
           case 221:
-            if (!Entry.playground.object && this.oldMode === Entry.Workspace.MODE_BOARD) {
+            if (Entry.playground && !Entry.playground.object && this.oldMode === Entry.Workspace.MODE_BOARD) {
               alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
               return;
             }
@@ -26882,8 +26887,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             k.boardType = Entry.Workspace.MODE_VIMBOARD;
             k.textType = Entry.Vim.TEXT_TYPE_PY;
             k.runType = Entry.Vim.WORKSPACE_MODE;
-            Entry.dispatchEvent("changeMode", k);
-            $(".entryModeSelector span ul li:eq(1)").triggerHandler("click");
+            this.setMode(k);
             break;
           case 67:
             k && !k.isInBlockMenu && k.block.isDeletable() && k.block.copyToClipboard();
@@ -26981,12 +26985,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 Entry.Playground = function() {
   this.enableArduino = this.isTextBGMode_ = !1;
   this.viewMode_ = "default";
-  var b = this;
   Entry.addEventListener("textEdited", this.injectText);
   Entry.addEventListener("hwChanged", this.updateHW);
-  Entry.addEventListener("changeMode", function(a) {
-    b.setMode(a);
-  });
 };
 Entry.Playground.prototype.setMode = function(b) {
   console.log("playground setMode", b);

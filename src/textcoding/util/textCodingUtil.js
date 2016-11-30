@@ -1618,7 +1618,7 @@ Entry.TextCodingUtil = {};
 
     tu.canConvertTextModeForOverlayMode = function(convertingMode) {
         var message;
-        var oldMode = Entry.playground.mainWorkspace.oldMode;
+        var oldMode = Entry.getMainWS().oldMode;
 
         if(oldMode == Entry.Workspace.MODE_OVERLAYBOARD && convertingMode == Entry.Workspace.MODE_VIMBOARD) {
             message = Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_EDITOR];

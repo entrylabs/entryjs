@@ -68,36 +68,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
             styleActiveLine: true,
             extraKeys: {
                 "Ctrl-Space": "autocomplete",
-                "Ctrl-[": function(e) {
-                    if(!Entry.playground.object) {
-                            var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                            alert(message);
-                            return;
-                    }
-                    var message =Entry.TextCodingUtil.isNamesIncludeSpace()
-                    if(message) {
-                        alert(message);
-                        return;
-                    }
-                    var mode = {};
-                    mode.boardType = Entry.Workspace.MODE_BOARD;
-                    mode.textType = -1;
-                    that.workspace.setMode(mode);
-                    $('.entryModeSelector span ul li:eq(0)').triggerHandler('click');
-                },
-                "Ctrl-]": function(e) {
-                    var message =Entry.TextCodingUtil.isNamesIncludeSpace()
-                    if(message) {
-                        alert(message);
-                        return;
-                    }
-                    var mode = {};
-                    mode.boardType = Entry.Workspace.MODE_VIMBOARD;
-                    mode.textType = Entry.Vim.TEXT_TYPE_PY;
-                    mode.runType = Entry.Vim.WORKSPACE_MODE;
-                    Entry.dispatchEvent("changeMode", mode);
-                    $('.entryModeSelector span ul li:eq(1)').triggerHandler('click');
-                },
                 "Tab": function(cm) {
                     var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
                     cm.replaceSelection(spaces);

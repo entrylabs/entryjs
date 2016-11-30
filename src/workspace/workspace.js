@@ -84,7 +84,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.getMode = function() {return this.mode;};
 
-    p.setMode = function(mode, message){
+    p.setMode = function(mode, message) {
         if (!isNaN(mode)) this.mode = mode;
         else {
             this.mode = mode.boardType;
@@ -129,6 +129,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         this.board.code.clear();
                     if (this.board) this.board.hide();
                     this.set({selectedBoard:this.vimBoard});
+                    this.blockMenu.banClass('textMode');
                     this.mode = Entry.Workspace.MODE_VIMBOARD;
 
                     //console.log(("this.oldTextType", this.oldTextType);
@@ -138,15 +139,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         mode.textType = Entry.Vim.TEXT_TYPE_JS;
                         mode.runType = Entry.Vim.MAZE_MODE;
                         this.oldTextType = Entry.Vim.TEXT_TYPE_JS;
-                        Entry.dispatchEvent("changeMode", mode);
-                        Ntry.dispatchEvent("textError", mode);
                     } else if(this.oldTextType == Entry.Vim.TEXT_TYPE_PY) {
                         mode.boardType = Entry.Workspace.MODE_VIMBOARD;
                         mode.textType = Entry.Vim.TEXT_TYPE_PY;
                         mode.runType = Entry.Vim.WORKSPACE_MODE;
                         this.oldTextType = Entry.Vim.TEXT_TYPE_PY;
                         //console.log(("mode", mode);
-                        Entry.dispatchEvent("changeMode", mode);
                     }
 
                     //throw e;
@@ -273,14 +271,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                             .getFirstBlock().copyToClipboard();
                     break;
                 case 219: //setMode(block) for textcoding
-                    if(!Entry.playground.object) {
+                    if (Entry.playground && !Entry.playground.object) {
                         if (isVimMode) {
                             var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
                             alert(message);
                             return;
                         }
                     }
-                    var oldMode = Entry.playground.mainWorkspace.oldMode;
+
+                    var oldMode = Entry.getMainWS().oldMode;
                     if(oldMode == Entry.Workspace.MODE_OVERLAYBOARD)
                         return;
 
@@ -294,10 +293,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     mode.boardType = Entry.Workspace.MODE_BOARD;
                     mode.textType = -1;
                     this.setMode(mode);
-                    $('.entryModeSelector span ul li:eq(0)').triggerHandler('click');
                     break;
                 case 221: //setMode(python) for textcoding
-                    if(!Entry.playground.object) {
+                    if (Entry.playground && !Entry.playground.object) {
                         if (this.oldMode === Entry.Workspace.MODE_BOARD) {
                             var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
                             alert(message);
@@ -322,8 +320,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     mode.boardType = Entry.Workspace.MODE_VIMBOARD;
                     mode.textType = Entry.Vim.TEXT_TYPE_PY;
                     mode.runType = Entry.Vim.WORKSPACE_MODE;
-                    Entry.dispatchEvent("changeMode", mode);
-                    $('.entryModeSelector span ul li:eq(1)').triggerHandler('click');
+                    this.setMode(mode);
                     break;
                 case 67:
                     if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
