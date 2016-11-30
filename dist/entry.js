@@ -13096,9 +13096,10 @@ Entry.TextCodingUtil = {};
     }
   };
 })(Entry.TextCodingUtil);
-Entry.BlockToJsParser = function(b) {
+Entry.BlockToJsParser = function(b, a) {
   this._type = "BlockToJsParser";
   this.syntax = b;
+  this._parentParser = a;
   this._iterVariableCount = 0;
   this._iterVariableChunk = ["i", "j", "k"];
 };
@@ -13201,7 +13202,8 @@ Entry.BlockToJsParser = function(b) {
     return a = "null" == a ? "none" : Entry.TextCodingUtil.dropdownDynamicValueConvertor(a, b);
   };
   b.searchSyntax = function(a) {
-    return null;
+    a instanceof Entry.BlockView && (a = a.block);
+    return this._parentParser.parse(a, Entry.Parser.PARSE_SYNTAX);
   };
 })(Entry.BlockToJsParser.prototype);
 Entry.BlockToPyParser = function(b) {
@@ -15921,7 +15923,7 @@ Entry.Parser = function(b, a, d, c) {
       }
       break;
     case "blockJs":
-      this._execParser = new Entry.BlockToJsParser(this.syntax);
+      this._execParser = new Entry.BlockToJsParser(this.syntax, this);
       break;
     case "blockPy":
       this._execParser = new Entry.BlockToPyParser(this.syntax);
@@ -15940,7 +15942,7 @@ Entry.Parser = function(b, a, d, c) {
           this._execParserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
           break;
         case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-          this._execParser = new Entry.BlockToJsParser(this.syntax);
+          this._execParser = new Entry.BlockToJsParser(this.syntax, this);
           a = this.syntax;
           var e = {}, f;
           for (f in a.Scope) {
@@ -22774,13 +22776,15 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.elem("g", {class:"contentsGroup"});
     b.statements && b.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g", {class:"statementGroup"}));
-    for (var c = /(%\d)/mi, e = this._getTemplate(a).split(c), f = this._getSchemaParams(a), g = 0;g < e.length;g++) {
-      var h = e[g];
+    var c = /(%\d)/mi, e = this._getTemplate(a), f = this._getSchemaParams(a);
+    a === Entry.BlockView.RENDER_MODE_TEXT && /(if)+(.|\n)+(else)+/gmi.test(e) && !c.test(e) && this.isInBlockMenu && (e = e.replace("else", "%" + f.length + " else"));
+    for (var g = e.split(c), e = 0;e < g.length;e++) {
+      var h = g[e];
       " " === h[0] && (h = h.substring(1));
       " " === h[h.length - 1] && (h = h.substring(0, h.length - 1));
       if (0 !== h.length) {
         if (c.test(h)) {
-          var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a || this.renderMode, g);
+          var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a || this.renderMode, e);
           this._contents.push(h);
           this._paramMap[k] = h;
         } else {
@@ -22789,8 +22793,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
       }
     }
     if ((a = b.statements) && a.length) {
-      for (g = 0;g < a.length;g++) {
-        this._statements.push(new Entry.FieldStatement(a[g], this, g));
+      for (e = 0;e < a.length;e++) {
+        this._statements.push(new Entry.FieldStatement(a[e], this, e));
       }
     }
     this.alignContent(!1);
@@ -23312,13 +23316,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   };
   b._getTemplate = function(a) {
     var b = this._schema, b = b.template ? b.template : Lang.template[this.block.type], c;
-    a === Entry.BlockView.RENDER_MODE_TEXT && (a = this.getBoard().workspace) && a.vimBoard && (a = a.vimBoard.getBlockSyntax(this)) && (c = a.template);
+    a === Entry.BlockView.RENDER_MODE_TEXT && (a = this.getBoard().workspace) && a.vimBoard && (a = a.vimBoard.getBlockSyntax(this)) && (c = "string" === typeof a ? a : a.template);
     return c || b;
   };
   b._getSchemaParams = function(a) {
-    var b = this._schema, c = b.params;
-    a === Entry.BlockView.RENDER_MODE_TEXT && b.syntax && b.syntax.py[0].textParams && (c = b.syntax.py[0].textParams);
-    return c;
+    var b = this._schema.params;
+    a === Entry.BlockView.RENDER_MODE_TEXT && (a = this.getBoard().workspace) && a.vimBoard && (a = a.vimBoard.getBlockSyntax(this)) && a.textParams && (b = a.textParams);
+    return b;
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(b, a) {
@@ -26878,33 +26882,35 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         }
       } else {
         if (g) {
-          if (!Entry.playground.object) {
-            alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
-            return;
-          }
-          switch(c) {
-            case 49:
-              Entry.playground.changeViewMode("code");
-              a.preventDefault();
-              break;
-            case 50:
-              Entry.playground.changeViewMode("picture");
-              a.preventDefault();
-              break;
-            case 51:
-              Entry.playground.changeViewMode("sound");
-              a.preventDefault();
-              break;
-            case 52:
-              Entry.playground.toggleOnVariableView();
-              Entry.playground.changeViewMode("variable");
-              a.preventDefault();
-              break;
-            case 219:
-              Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("prev"));
-              break;
-            case 221:
-              Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("next"));
+          if (Entry.playground) {
+            if (!Entry.playground.object) {
+              alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+              return;
+            }
+            switch(c) {
+              case 49:
+                Entry.playground.changeViewMode("code");
+                a.preventDefault();
+                break;
+              case 50:
+                Entry.playground.changeViewMode("picture");
+                a.preventDefault();
+                break;
+              case 51:
+                Entry.playground.changeViewMode("sound");
+                a.preventDefault();
+                break;
+              case 52:
+                Entry.playground.toggleOnVariableView();
+                Entry.playground.changeViewMode("variable");
+                a.preventDefault();
+                break;
+              case 219:
+                Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("prev"));
+                break;
+              case 221:
+                Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("next"));
+            }
           }
         } else {
           if (f) {

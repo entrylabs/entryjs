@@ -217,9 +217,16 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var reg = /(%\d)/mi;
 
         var template = this._getTemplate(mode);
-        var templateParams = template.split(reg);
         var params = this._getSchemaParams(mode);
 
+        if (mode === Entry.BlockView.RENDER_MODE_TEXT) {
+            if (/(if)+(.|\n)+(else)+/gmi.test(template) &&
+                !reg.test(template) && this.isInBlockMenu) {
+                    template = template.replace('else', '%' + params.length + ' else');
+            }
+        }
+
+        var templateParams = template.split(reg);
         for (var i=0; i<templateParams.length; i++) {
             var param = templateParams[i];
             if (param[0] === " ") param = param.substring(1);
@@ -1286,24 +1293,29 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             var workspace = this.getBoard().workspace;
             if (workspace && workspace.vimBoard) {
                 var syntax = workspace.vimBoard.getBlockSyntax(this);
-                if (syntax) template = syntax.template;
+                if (syntax) {
+                    if (typeof syntax === 'string')
+                        template = syntax;
+                    else template = syntax.template;
+                }
             }
         }
 
         return template || defaultTemplate;
     };
 
-    //TODO
     p._getSchemaParams = function(mode) {
         var schema = this._schema;
         var params = schema.params;
         if (mode === Entry.BlockView.RENDER_MODE_TEXT) {
-            if (schema.syntax && schema.syntax.py[0].textParams) {
-                params = schema.syntax.py[0].textParams;
+            var workspace = this.getBoard().workspace;
+            if (workspace && workspace.vimBoard) {
+                var syntax = workspace.vimBoard.getBlockSyntax(this);
+                if (syntax && syntax.textParams) params = syntax.textParams;
             }
         }
         return params;
-    }
+    };
 
 
 })(Entry.BlockView.prototype);

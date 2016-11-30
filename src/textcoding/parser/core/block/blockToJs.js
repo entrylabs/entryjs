@@ -6,9 +6,11 @@
 goog.provide("Entry.BlockToJsParser");
 goog.require("Entry.TextCodingUtil");
 
-Entry.BlockToJsParser = function(syntax) {
+Entry.BlockToJsParser = function(syntax, parentParser) {
     this._type = "BlockToJsParser";
     this.syntax = syntax;
+
+    this._parentParser = parentParser;
 
     this._iterVariableCount = 0;
     this._iterVariableChunk = ["i", "j", "k"];
@@ -278,6 +280,11 @@ Entry.BlockToJsParser = function(syntax) {
         return dataParam;
     };
 
-    p.searchSyntax = function(datum) { return null; }
+    p.searchSyntax = function(datum) {
+        if (datum instanceof Entry.BlockView)
+            datum = datum.block;
+        return this._parentParser.parse(datum,
+            Entry.Parser.PARSE_SYNTAX);
+    };
 
 })(Entry.BlockToJsParser.prototype);

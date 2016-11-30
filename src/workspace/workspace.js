@@ -341,42 +341,44 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
             }
         } else if (altKey) {
-            if(!Entry.playground.object) {
-                var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                alert(message);
-                return;
-            }
+            if (Entry.playground) {
+                if(!Entry.playground.object) {
+                    var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                    alert(message);
+                    return;
+                }
 
-            switch (keyCode) {
-                case 49:
-                    Entry.playground.changeViewMode('code');
-                    e.preventDefault();
-                    break;
-                case 50:
-                    Entry.playground.changeViewMode('picture');
-                    e.preventDefault();
-                    break;
-                case 51:
-                    Entry.playground.changeViewMode('sound');
-                    e.preventDefault();
-                    break;
-                case 52:
-                    Entry.playground.toggleOnVariableView();
-                    Entry.playground.changeViewMode('variable');
-                    e.preventDefault();
-                    break;
-                case 219:
-                    if (Entry.container) {
+                switch (keyCode) {
+                    case 49:
+                        Entry.playground.changeViewMode('code');
                         e.preventDefault();
-                        Entry.container.selectNeighborObject('prev');
-                    }
-                    break;
-                case 221:
-                    if (Entry.container) {
+                        break;
+                    case 50:
+                        Entry.playground.changeViewMode('picture');
                         e.preventDefault();
-                        Entry.container.selectNeighborObject('next');
-                    }
-                    break;
+                        break;
+                    case 51:
+                        Entry.playground.changeViewMode('sound');
+                        e.preventDefault();
+                        break;
+                    case 52:
+                        Entry.playground.toggleOnVariableView();
+                        Entry.playground.changeViewMode('variable');
+                        e.preventDefault();
+                        break;
+                    case 219:
+                        if (Entry.container) {
+                            e.preventDefault();
+                            Entry.container.selectNeighborObject('prev');
+                        }
+                        break;
+                    case 221:
+                        if (Entry.container) {
+                            e.preventDefault();
+                            Entry.container.selectNeighborObject('next');
+                        }
+                        break;
+                }
             }
         } else if (shiftKey) {
             switch (keyCode) {
