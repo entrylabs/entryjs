@@ -21990,9 +21990,6 @@ Entry.block = {
     "dplay_get_gas_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
         "template": "아날로그 %1 번 가스 센서값",
-        "isNotFor": [
-            "dplay"
-        ],
         "def": {
             "params": [
                 {
