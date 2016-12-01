@@ -7854,7 +7854,6 @@ Entry.Engine.prototype.toggleStop = function() {
   });
   a.mapList(function(a) {
     a.loadSnapshot();
-    a.updateView();
   });
   this.stopProjectTimer();
   b.clearRunningState();
@@ -11636,11 +11635,11 @@ Entry.Scene.prototype.generateElement = function(b) {
   }
   Entry.Utils.disableContextmenu(d);
   $(d).on("contextmenu", function() {
-    var a = [{text:Lang.Workspace.duplicate_scene, enable:Entry.engine.isState("stop"), callback:function() {
+    var a = [{text:Lang.Workspace.duplicate_scene, enable:Entry.engine.isState("stop") && !this.isMax(), callback:function() {
       Entry.scene.cloneScene(b);
     }}];
     Entry.ContextMenu.show(a, "workspace-contextmenu");
-  });
+  }.bind(this));
   return b.view = d;
 };
 Entry.Scene.prototype.updateView = function() {
@@ -11648,7 +11647,7 @@ Entry.Scene.prototype.updateView = function() {
     for (var b = this.listView_, a = $(b).children().length;a < this.getScenes().length;a++) {
       b.appendChild(this.getScenes()[a].view);
     }
-    this.addButton_ && (this.getScenes().length < this.maxCount ? this.addButton_.removeClass("entryRemove") : this.addButton_.addClass("entryRemove"));
+    this.addButton_ && (this.getScenes(), this.isMax() ? this.addButton_.addClass("entryRemove") : this.addButton_.removeClass("entryRemove"));
   }
   this.resize();
 };
@@ -11745,7 +11744,7 @@ Entry.Scene.prototype.createScene = function() {
   return b;
 };
 Entry.Scene.prototype.cloneScene = function(b) {
-  if (this.scenes_.length >= this.maxCount) {
+  if (this.isMax()) {
     Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_add_error, !1);
   } else {
     var a = {name:b.name + Lang.Workspace.replica_of_object, id:Entry.generateHash()};
@@ -11778,6 +11777,9 @@ Entry.Scene.prototype.resize = function() {
 Entry.Scene.prototype.getNextScene = function() {
   var b = this.getScenes();
   return b[b.indexOf(this.selectedScene) + 1];
+};
+Entry.Scene.prototype.isMax = function() {
+  return this.scenes_.length >= this.maxCount;
 };
 Entry.Script = function(b) {
   this.entity = b;
@@ -18604,31 +18606,36 @@ Entry.Utils.isChrome = function() {
   return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 };
 Entry.Utils.waitForWebfonts = function(b, a) {
-  for (var d = 0, c = 0, e = b.length;c < e;++c) {
-    (function(c) {
-      function e() {
-        h && h.offsetWidth != k && (++d, h.parentNode.removeChild(h), h = null);
-        if (d >= b.length && (l && clearInterval(l), d == b.length)) {
-          return a(), !0;
+  var d = 0;
+  if (b && b.length) {
+    for (var c = 0, e = b.length;c < e;++c) {
+      (function(c) {
+        function e() {
+          h && h.offsetWidth != k && (++d, h.parentNode.removeChild(h), h = null);
+          if (d >= b.length && (l && clearInterval(l), d == b.length)) {
+            return a(), !0;
+          }
         }
-      }
-      var h = document.createElement("span");
-      h.innerHTML = "giItT1WQy@!-/#";
-      h.style.position = "absolute";
-      h.style.left = "-10000px";
-      h.style.top = "-10000px";
-      h.style.fontSize = "300px";
-      h.style.fontFamily = "sans-serif";
-      h.style.fontVariant = "normal";
-      h.style.fontStyle = "normal";
-      h.style.fontWeight = "normal";
-      h.style.letterSpacing = "0";
-      document.body.appendChild(h);
-      var k = h.offsetWidth;
-      h.style.fontFamily = c;
-      var l;
-      e() || (l = setInterval(e, 50));
-    })(b[c]);
+        var h = document.createElement("span");
+        h.innerHTML = "giItT1WQy@!-/#";
+        h.style.position = "absolute";
+        h.style.left = "-10000px";
+        h.style.top = "-10000px";
+        h.style.fontSize = "300px";
+        h.style.fontFamily = "sans-serif";
+        h.style.fontVariant = "normal";
+        h.style.fontStyle = "normal";
+        h.style.fontWeight = "normal";
+        h.style.letterSpacing = "0";
+        document.body.appendChild(h);
+        var k = h.offsetWidth;
+        h.style.fontFamily = c;
+        var l;
+        e() || (l = setInterval(e, 50));
+      })(b[c]);
+    }
+  } else {
+    return a && a(), !0;
   }
 };
 window.requestAnimFrame = function() {
@@ -18798,7 +18805,10 @@ Entry.Func.prototype.destroy = function() {
   this.blockMenuBlock.destroy();
 };
 Entry.Func.edit = function(b) {
+  this.unbindFuncChangeEvent();
+  this.unbindWorkspaceStateChangeEvent();
   this.cancelEdit();
+  Entry.Func.isEdit = !0;
   this.targetFunc = b;
   this.initEditView(b.content);
   this.bindFuncChangeEvent();
@@ -18820,8 +18830,7 @@ Entry.Func.initEditView = function(b) {
 };
 Entry.Func.endEdit = function(b) {
   this.unbindFuncChangeEvent();
-  this._workspaceStateEvent.destroy();
-  delete this._workspaceStateEvent;
+  this.unbindWorkspaceStateChangeEvent();
   switch(b) {
     case "save":
       this.save();
@@ -18830,9 +18839,9 @@ Entry.Func.endEdit = function(b) {
       this.cancelEdit();
   }
   this._backupContent = null;
-  Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD);
   delete this.targetFunc;
   this.updateMenu();
+  Entry.Func.isEdit = !1;
 };
 Entry.Func.save = function() {
   this.targetFunc.generateBlock(!0);
@@ -18871,7 +18880,7 @@ Entry.Func.syncFuncName = function(b) {
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a);
 };
 Entry.Func.cancelEdit = function() {
-  this.targetFunc && (this.targetFunc.block ? this._backupContent && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), Entry.variableContainer.updateList(), Entry.Func.isEdit = !1);
+  this.targetFunc && (this.targetFunc.block ? this._backupContent && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), Entry.variableContainer.updateList());
 };
 Entry.Func.getMenuXml = function() {
   var b = [];
@@ -19017,8 +19026,10 @@ Entry.Func.bindFuncChangeEvent = function(b) {
   !this._funcChangeEvent && b.content.getEventMap("funcDef")[0].view && (this._funcChangeEvent = b.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
 };
 Entry.Func.unbindFuncChangeEvent = function() {
-  this._funcChangeEvent && this._funcChangeEvent.destroy();
-  delete this._funcChangeEvent;
+  this._funcChangeEvent && (this._funcChangeEvent.destroy(), delete this._funcChangeEvent);
+};
+Entry.Func.unbindWorkspaceStateChangeEvent = function() {
+  this._workspaceStateEvent && (this._workspaceStateEvent.destroy(), delete this._workspaceStateEvent);
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(b) {
@@ -19268,7 +19279,7 @@ Entry.HW = function() {
   this.connectTrial = 0;
   this.isFirstConnect = !0;
   this.requireVerion = "v1.6.1";
-  this.downloadPath = "http://code.playentry.org/uploads/Entry_HW_1.6.1_Setup_alpha1.exe";
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.2_Setup.exe";
   this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
@@ -19359,9 +19370,13 @@ p.retryConnect = function() {
   this.initSocket();
 };
 p.openHardwareProgram = function() {
+  var b = this;
   this.isOpenHardware = !0;
   Entry.HW.TRIAL_LIMIT = 5;
-  this.socket ? this.executeHardware() : (this.executeHardware(), this.initSocket());
+  this.executeHardware();
+  this.socket && this.socket.connected || setTimeout(function() {
+    b.initSocket();
+  }, 1E3);
 };
 p.initHardware = function(b) {
   this.socket = b;
@@ -19437,7 +19452,10 @@ p.downloadConnector = function() {
   window.open(this.downloadPath, "_blank").focus();
 };
 p.downloadGuide = function() {
-  window.open("http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC-%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%EC%97%B0%EA%B2%B0%EB%A7%A4%EB%89%B4%EC%96%BC_16_08_17.hwp", "_blank").focus();
+  var b = document.createElement("a");
+  b.href = "http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC%20%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%20%EC%97%B0%EA%B2%B0%20%EB%A7%A4%EB%89%B4%EC%96%BC(%EC%98%A8%EB%9D%BC%EC%9D%B8%EC%9A%A9).pdf";
+  b.download = "download";
+  b.click();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -19485,14 +19503,18 @@ p.executeHardware = function() {
   function d(a) {
     var b = !1;
     window.focus();
-    window.onblur = function() {
+    $(window).one("blur", function() {
       b = !0;
-    };
+    });
+    Entry.dispatchEvent("workspaceUnbindUnload", !0);
     location.assign(encodeURI(a));
     setTimeout(function() {
-      (0 == b || 0 < navigator.userAgent.indexOf("Edge")) && c.popupHelper.show("hwDownload", !0);
+      Entry.dispatchEvent("workspaceBindUnload", !0);
+    }, 100);
+    setTimeout(function() {
+      0 == b && c.popupHelper.show("hwDownload", !0);
       window.onblur = null;
-    }, 1500);
+    }, 3E3);
   }
   var c = this, e = {_bNotInstalled:!1, init:function(a, b) {
     this._w = window.open("/views/hwLoading.html", "entry_hw_launcher", "width=220, height=225,  top=" + window.screenTop + ", left=" + window.screenLeft);
@@ -19541,7 +19563,8 @@ p.hwPopupCreate = function() {
     h.text(Lang.Buttons.cancel);
     k.html(Lang.Msgs.new_version_download);
     d.bindOnClick(".popupDefaultBtn", function(a) {
-      $(this).hasClass("popupOkBtn") ? b.downloadConnector() : b.popupHelper.hide("newVersion");
+      $(this).hasClass("popupOkBtn") && b.downloadConnector();
+      b.popupHelper.hide("newVersion");
     });
     a.append(d);
   }});
@@ -19554,7 +19577,8 @@ p.hwPopupCreate = function() {
     h.text(Lang.Buttons.cancel);
     k.html(Lang.Msgs.hw_download_btn);
     d.bindOnClick(".popupDefaultBtn", function(a) {
-      $(this).hasClass("popupOkBtn") ? b.downloadConnector() : b.popupHelper.hide("hwDownload");
+      $(this).hasClass("popupOkBtn") && b.downloadConnector();
+      b.popupHelper.hide("hwDownload");
     });
     a.append(d);
   }});
@@ -20247,17 +20271,17 @@ Entry.Variable.prototype.takeSnapshot = function() {
   this.snapshot_ = this.toJSON();
 };
 Entry.Variable.prototype.loadSnapshot = function() {
-  this.snapshot_ && !this.isCloud_ && this.syncModel_(this.snapshot_);
+  this.snapshot_ && this.syncModel_(this.snapshot_);
+  delete this.snapshot_;
 };
 Entry.Variable.prototype.syncModel_ = function(b) {
   this.setX(b.x);
   this.setY(b.y);
-  this.id_ = b.id;
   this.setVisible(b.visible);
-  this.setValue(b.value);
+  this.isCloud_ || this.setValue(b.value);
   this.setName(b.name);
   this.isCloud_ = b.isCloud;
-  "list" == this.type && (this.setWidth(b.width), this.setHeight(b.height), this.array_ = b.array);
+  "list" == this.type && (this.isCloud_ || (this.array_ = b.array), this.setWidth(b.width), this.setHeight(b.height));
 };
 Entry.Variable.prototype.toJSON = function() {
   var b = {};
@@ -20412,7 +20436,15 @@ Entry.VariableContainer.prototype.createDom = function(b) {
   d.innerHTML = "+ " + Lang.Workspace.function_add;
   this.functionAddButton_ = d;
   d.bindOnClick(function(b) {
-    Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY ? alert(Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NO_SUPPORT]) : (b = a._getBlockMenu(), Entry.playground.changeViewMode("code"), "func" != b.lastSelector && b.selectMenu("func"), a.createFunction());
+    if (Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY) {
+      alert(Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NO_SUPPORT]);
+    } else {
+      b = Entry.playground;
+      var c = a._getBlockMenu();
+      b.changeViewMode("code");
+      "func" != c.lastSelector && c.selectMenu("func");
+      a.createFunction();
+    }
   });
   return b;
 };
@@ -20611,7 +20643,7 @@ Entry.VariableContainer.prototype.updateList = function() {
       }
     }
     if ("all" == b || "func" == b) {
-      for (d in "func" == b && this.listView_.appendChild(this.functionAddButton_), this.functions_) {
+      for (d in "func" == b && (b = Entry.Workspace.MODE_BOARD, Entry.playground && Entry.playground.mainWorkspace && (b = Entry.playground.mainWorkspace.getMode()), b === Entry.Workspace.MODE_OVERLAYBOARD ? this.functionAddButton_.addClass("disable") : this.functionAddButton_.removeClass("disable"), this.listView_.appendChild(this.functionAddButton_)), this.functions_) {
         b = this.functions_[d], a.push(b), e = b.listElement, this.listView_.appendChild(e), b.callerListElement && this.listView_.appendChild(b.callerListElement);
       }
     }
@@ -22443,12 +22475,15 @@ Entry.BlockMenu = function(b, a, d, c) {
   b.checkBanClass = function(a) {
     if (a) {
       a = a.isNotFor;
-      for (var b in this._bannedClass) {
-        if (a && -1 < a.indexOf(this._bannedClass[b])) {
-          return !0;
+      if (!a || 0 === a.length) {
+        return !1;
+      }
+      for (var b in a) {
+        if (a[b] && -1 === this._bannedClass.indexOf(a[b])) {
+          return !1;
         }
       }
-      return !1;
+      return !0;
     }
   };
   b.checkCategory = function(a) {
@@ -26233,7 +26268,7 @@ Entry.Thread = function(b, a, d) {
     var c = this.indexOf(b);
     a.unshift(c);
     this.parent instanceof Entry.Block && a.unshift(this.parent.indexOfStatements(this));
-    return this._code === this.parent ? (a.unshift(this._code.indexOf(this)), c = this._data[0], a.unshift(c.y), a.unshift(c.x), a) : this.parent.pointer(a);
+    return this._code === this.parent ? (1 === this._data.length && a.shift(), a.unshift(this._code.indexOf(this)), c = this._data[0], a.unshift(c.y), a.unshift(c.x), a) : this.parent.pointer(a);
   };
   b.getBlockList = function(a, b) {
     for (var c = [], e = 0;e < this._data.length;e++) {
@@ -27909,7 +27944,7 @@ Entry.Playground.prototype.updateHW = function() {
   var b = Entry.playground.mainWorkspace.blockMenu;
   if (b) {
     var a = Entry.hw;
-    a && a.connected ? (b.unbanClass("arduinoConnected"), b.banClass("arduinoDisconnected"), a.banHW(), a.hwModule && b.unbanClass(a.hwModule.name)) : (b.banClass("arduinoConnected"), b.unbanClass("arduinoDisconnected"), Entry.hw.banHW());
+    a && a.connected ? (b.banClass("arduinoDisconnected", !0), a.banHW(), a.hwModule ? (b.banClass("arduinoConnect", !0), b.unbanClass("arduinoConnected", !0), b.unbanClass(a.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoConnect", !0))) : (b.banClass("arduinoConnected", !0), b.banClass("arduinoConnect", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
     b.reDraw();
   }
 };

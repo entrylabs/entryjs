@@ -70,10 +70,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             var blockType = targetSyntax.blockType;
                         }
                       
-                        if(blockType == "param")
-                            continue;
+                        if(blockType == "param") continue;
+
                         if(blockType == "event")
                             isEntryEventExisted = true;
+                        
                         if(blockType == "variable") { 
                             if(!isEntryEventExisted)
                                 continue;

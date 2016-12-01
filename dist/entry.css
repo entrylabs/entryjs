@@ -834,7 +834,7 @@ svg .svgBlockGroup text {
   z-index: -9999;
 }
 .entryCategoryListWorkspace {
-  width: 64px;
+  min-width: 64px;
   height: 100%;
   display: inline-block;
   background-color: #f5f5f5;
@@ -860,7 +860,7 @@ svg .svgBlockGroup text {
 .entryCategoryElementWorkspace {
   clear: both;
   padding-top: 38px;
-  width: 64px;
+  min-width: 64px;
   text-align: center;
   background-color: #edf5f7;
   font-size: 13px;
@@ -1574,7 +1574,7 @@ svg .svgBlockGroup text {
   color: #000000;
   top: 12px;
   left: 28px;
-  width: 150px;
+  width: auto;
 }
 .selectedObject > .entryObjectWrapperWorkspace > .entryObjectCoordinateWorkspace {
   color: black;
@@ -1666,7 +1666,6 @@ svg .svgBlockGroup text {
 }
 .collapsed .rotationMethodWrapper {
   float: left;
-  top: 39px;
 }
 .entryObjectRotateMethodLabelWorkspace {
   display: inline-block;
@@ -1824,7 +1823,7 @@ svg .svgBlockGroup text {
   border-width: 1px;
   outline: none;
   font-size: 13px;
-  z-index: 300;
+  z-index: 1100;
 }
 #entry-contextmenu span {
   width: 100%;
@@ -2369,7 +2368,8 @@ svg .svgBlockGroup text {
   background: url("../images/pause_btn.png");
   background-repeat: no-repeat;
   color: transparent;
-  width: 90px;
+  width: auto;
+  padding-left: 20px;
   left: 103px;
   color: #4b37a0;
   background-position: center left;
@@ -3029,9 +3029,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
   position: relative;
   font-size: 9pt;
   color: #000000;
-  top: 12px;
+  top: 8px;
   left: 28px;
-  width: 150px;
+  width: auto;
 }
 .selectedObject > .entryObjectWrapperWorkspace > .entryObjectCoordinateWorkspace {
   color: black;
@@ -3123,16 +3123,18 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .collapsed .rotationMethodWrapper {
   float: left;
-  top: 39px;
+  position: absolute;
+  bottom: 9px;
 }
 .entryObjectRotateMethodLabelWorkspace {
   display: inline-block;
   line-height: 20px;
   font-size: 9pt;
   color: #000000;
-  position: absolute;
   padding-left: 20px;
   padding-top: 20px;
+  position: relative;
+  float: left;
 }
 /*.entryObjectRotateLabelWorkspace {
     display: block;
@@ -3171,7 +3173,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   height: 22px;
 }
 .entryObjectRotateModeAWorkspace {
-  margin-left: 80px;
+  margin-left: 6px;
   background-image: url("../images/layers_icon_rotate01_nor.png");
 }
 .entryObjectRotateModeAWorkspace.selected {
@@ -3189,36 +3191,27 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryObjectRotateModeCWorkspace.selected {
   background-image: url("../images/layers_icon_rotate03_sel.png");
 }
-.entryObjectCoordinateSpanWorkspace {
-  float: left;
-  position: absolute;
-}
 .entryObjectCoordinateSpanWorkspace:nth-child(3) {
-  float: left;
-  margin-left: 57px;
+  margin-left: 5px;
+  position: relative;
 }
 .entryObjectCoordinateSizeWorkspace {
-  float: left;
-  margin-left: 113px;
-  position: absolute;
+  margin: 0;
+  position: relative;
+  float: none;
 }
 .entryObjectCoordinateInputWorkspace {
   width: 40px;
   height: 20px;
-  position: absolute;
-  float: left;
-  margin: -2px 5px 0px 15px;
   background-color: #e5e5e5;
   border: none;
   border: 1px solid transparent;
-}
-.entryObjectCoordinateInputWorkspace_right {
-  margin-left: 70px;
+  margin-left: 4px;
 }
 .entryObjectCoordinateInputWorkspace_size {
-  float: left;
-  position: absolute;
-  margin-left: 145px;
+  margin: 0;
+  float: none;
+  position: relative;
 }
 .entryObjectCoordinateInputWorkspace:disabled,
 .entryObjectRotateInputWorkspace:disabled,
@@ -3334,10 +3327,6 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .tablet .entryObjectCoordinateInputWorkspace_size {
   width: 48px;
-  margin-left: 170px;
-}
-.tablet .entryObjectCoordinateInputWorkspace_right {
-  margin-left: 84px;
 }
 .tablet .entryObjectRotateInputWorkspace {
   width: 50px;
@@ -3345,11 +3334,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .tablet .entryObjectDirectionInputWorkspace {
   width: 38px;
 }
-.tablet .entryObjectCoordinateSpanWorkspace:nth-child(3) {
-  margin-left: 70px;
-}
 .tablet .entryObjectCoordinateSizeWorkspace {
-  margin-left: 139px;
   width: 30px;
 }
 .tablet .collapsed .entryObjectRotationWrapperWorkspace {
@@ -3357,7 +3342,8 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .tablet .collapsed .rotationMethodWrapper {
   float: left;
-  top: 39px;
+  position: absolute;
+  bottom: 9px;
 }
 /* tablet end */
 /* Painter css start */
@@ -3479,6 +3465,11 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 #entryPainterTopMenuEdit {
   color: white;
+  width: auto;
+  position: relative;
+  vertical-align: top;
+  margin-top: -28px;
+  margin-left: 16px;
 }
 #entryPainterTopMenuFile > ul > li {
   border-bottom: solid 1px #643cd9;
@@ -3497,13 +3488,17 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 #entryPainterTopMenuFile {
   color: white;
+  position: relative;
+  width: auto;
+  vertical-align: top;
+  margin-left: 5px;
 }
 .entryPlaygroundPainterTopStageXY {
   position: absolute;
   width: 150px;
   height: 30px;
   top: 5px;
-  left: 280px;
+  left: 300px;
   font-size: 10pt;
   color: white;
 }
@@ -3611,7 +3606,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryPlaygroundPainterAttrResize > legend {
   background-color: transparent;
   padding: 2px;
-  width: 30px;
+  width: auto !important;
   margin-bottom: 0;
   border-bottom: 0;
   font-size: 9pt;
@@ -3753,7 +3748,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryPlaygroundPainterAttrTop {
   position: absolute;
   top: 20px;
-  width: 93px;
+  width: auto !important;
+  min-width: 93px;
+  max-width: 120px;
   height: 40px;
   border-radius: 3px;
   color: white;
@@ -3791,9 +3788,11 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryPlaygroundPainterAttrFontStyleArea {
   position: absolute;
-  background-color: #643cd9 ;
+  background-color: #643cd9;
   top: 120px;
-  width: 67px;
+  width: auto !important;
+  min-width: 67px;
+  max-width: 80px;
   height: 40px;
   border-radius: 3px;
   color: white;
@@ -3820,6 +3819,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   height: 28px;
   cursor: pointer;
   list-style: none;
+  z-index: 101;
   font-family: nanumBarunBold !important;
 }
 .entryPlaygroundPainterTopMenuFileSave {
@@ -4153,7 +4153,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .painterAttrRotateName {
   top: 60px;
   left: 9px;
-  width: 30px;
+  width: auto !important;
 }
 .painterAttrOpacityName {
   top: 60px;
@@ -4509,8 +4509,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
   width: 120px;
 }
 .entryPlaygroundPainterTopMenu > ul {
-  position: absolute;
   top: 5px;
+  position: relative;
+  vertical-align: top;
 }
 .entryPainterTopMenuEditImport {
   height: 40px;
@@ -4579,7 +4580,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryTabListItemWorkspace {
   float: left;
-  width: 59px;
+  min-width: 59px;
   height: 42px;
   margin: 0 1px 0 1px;
   cursor: pointer;
@@ -4955,7 +4956,6 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryTextFontSelect {
   display: inline-block;
-  width: 96px;
   height: 32px;
   border: 1px solid #808080;
   border-radius: 4px;
@@ -4965,6 +4965,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryTextFontSelecter {
   margin-top: 5px;
   margin-left: 2px;
+  width: 120px;
 }
 .entryFontToggle {
   display: inline-block;
@@ -5135,7 +5136,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   width: 15px;
   height: 4px;
   margin-top: -15px;
-  margin-left: 345px;
+  margin-left: 373px;
 }
 .entryPlayground_bgColorDiv {
   position: absolute;
@@ -5147,12 +5148,12 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryPlayground_textBox {
   margin-top: 5px;
   height: 33px;
-  width: 400px;
+  width: 426px;
 }
 .entryPlayground_textArea {
   margin-top: 5px;
   height: 120px;
-  width: 400px;
+  width: 426px;
   resize: none;
 }
 .entryPlaygroundFontSizeWrapper {
@@ -5196,7 +5197,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   z-index: 10;
   cursor: pointer;
   margin-top: -5px;
-  margin-left: 335px;
+  margin-left: 362px;
   padding: 20px 5px;
   position: absolute;
   background-image: url("../images/text_color_bg.png");
@@ -5782,7 +5783,12 @@ input.entryObjectNameWorkspace:-moz-read-only {
   position: relative;
   text-align: center;
 }
-.entryVariableAddWorkspace:hover {
+.entryVariableAddWorkspace.disable {
+  color: #bdbdbd;
+  cursor: default;
+  pointer-events: none;
+}
+.entryVariableAddWorkspace:not(.disable):hover {
   background-color: #d3d3d3;
   color: #333;
 }
