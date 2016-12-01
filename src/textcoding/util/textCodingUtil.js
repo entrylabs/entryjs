@@ -1955,14 +1955,15 @@ Entry.TextCodingUtil = {};
             var value = v.value_;
             if(v.object_) {
                 if(v.object_ == currentObject.id) {
-                    name = "self." + name;
+                    name = "self." + name; 
                 }
                 else
                     continue;
             }
 
-            /*if(typeof value === "string")
-                value = "\"" + value + "\"";*/
+            if(typeof value === "string")
+                value = '"()"'.replace('()', value);
+            
             result += name + " = " + value + "\n";
         }
 

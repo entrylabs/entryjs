@@ -1082,11 +1082,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                     console.log("range final params", params);
                 }
-                else if(callee.property.name == "add") {
+                else if(callee.property.name == "add") { 
                     var isStringIncluded = false;
                     for(var p in params) {
                         var param = params[p];
-                        if(param && (param.type == "text" || param.type == "number" || param.type == "combine_something" || param == "PLUS")) {
+                        if(param && (param.type == "text" || param.type == "number" || param.type == "get_variable" || 
+                            param.type == "combine_something" || param == "PLUS")) {
                             if(param.type == "text" || param.type == "number") {
                                 if(param.params && param.params.length != 0) {
                                     var p = param.params[0];
@@ -1096,6 +1097,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         break;
                                     }
                                 }
+                            }
+                            else if(param.type == "get_variable") {
+                                isStringIncluded = true;
+                                break;
                             }
                         }
                     }
@@ -1792,8 +1797,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var name = id.name;
             if(init.type == "Literal") {
                 var value = init.value;
-                if(typeof value === "string")
-                    value = "\"" + value + "\"";
+                /*if(typeof value === "string")
+                    value = "\"" + value + "\"";*/
             }
             else if(init.type == "Identifier") {
                 var value = init.name;
@@ -1810,9 +1815,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             /*else {
                 value = 0
             }*/
-            if(typeof value != "string" && typeof value != "number") {
+            /*if(typeof value != "string" && typeof value != "number") {
                 value = 0;
-            }
+            }*/
 
             console.log("variable name", name, "value", value);
 
@@ -1885,8 +1890,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else
                     params.push(variableId);
                 var pData = initData.params[0];
-                if(typeof pData == "string")
-                    pData = "\"" + pData + "\"";
+                /*if(typeof pData == "string")
+                    pData = "\"" + pData + "\"";*/
                 initData.params[0] = pData;
                 params.push(initData);
             }
@@ -2428,9 +2433,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var value = rightData.params[0];
                     /*else
                         var value = 0;*/
-                    if(typeof value != "string" && typeof value != "number") {
+                    /*if(typeof value != "string" && typeof value != "number") {
                         value = 0;
-                    }
+                    }*/
 
                     if(value || value == 0) {
                         console.log("final value", value); 
@@ -2460,9 +2465,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var value = rightData.params[0];
                 /*else
                     var value = 0;*/
-                if(typeof value != "string" && typeof value != "number") {
+                /*if(typeof value != "string" && typeof value != "number") {
                     value = 0;
-                }
+                }*/
 
                 if(value || value == 0) {
                     console.log("final currentObject", this._currentObject);
