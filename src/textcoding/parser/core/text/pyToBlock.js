@@ -2486,8 +2486,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(value || value == 0) {
                         console.log("final value", value); 
-                        console.log("final currentObject", currentObject);
-
 
                         if(Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
                             Entry.TextCodingUtil.updateLocalVariable(name, value, this._currentObject);
@@ -3182,7 +3180,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var params = [];
 
                 if(objectData.name == "self") {
-                    var syntax = String("%1");
+                    var syntax = String("%1#get_variable");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     var type;
                     if(blockSyntax)

@@ -655,7 +655,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
 
-            if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {
+            if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim())) {
                 textLine = Entry.TextCodingUtil.entryEventFilter(textLine);
                 if(optText.length != 0) {
                     threads.push(optText);

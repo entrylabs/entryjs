@@ -9673,7 +9673,12 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_clone_start",
-        "syntax": {"js": [], "py": ["def when_make_clone():"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "def when_make_clone():",
+                blockType: "event"
+            }
+        ]}
     },
     "stop_run": {
         "color": "#498deb",

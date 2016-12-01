@@ -14722,7 +14722,7 @@ Entry.PyToBlockParser = function(b) {
               y = l.params[0];
             }
             if (y || 0 == y) {
-              console.log("final value", y), console.log("final currentObject", currentObject), Entry.TextCodingUtil.isLocalVariableExisted(q, this._currentObject) ? Entry.TextCodingUtil.updateLocalVariable(q, y, this._currentObject) : Entry.TextCodingUtil.createLocalVariable(q, y, this._currentObject);
+              console.log("final value", y), Entry.TextCodingUtil.isLocalVariableExisted(q, this._currentObject) ? Entry.TextCodingUtil.updateLocalVariable(q, y, this._currentObject) : Entry.TextCodingUtil.createLocalVariable(q, y, this._currentObject);
             }
             q = this.ParamDropdownDynamic(q, k[0], m[0]);
             e.push(q);
@@ -15018,7 +15018,7 @@ Entry.PyToBlockParser = function(b) {
       b.params = e;
     } else {
       if (e = [], "self" == c.name) {
-        if (c = this.getBlockSyntax("%1")) {
+        if (c = this.getBlockSyntax("%1#get_variable")) {
           h = c.key;
         }
         c = h;
@@ -16277,7 +16277,7 @@ Entry.Parser = function(b, a, d, c) {
     a = a.split("\n");
     for (var b = [], c = "", e = 3;e < a.length;e++) {
       var f = a[e] + "\n";
-      Entry.TextCodingUtil.isEntryEventFuncByFullText(f) && (f = Entry.TextCodingUtil.entryEventFilter(f), 0 != c.length && b.push(c), c = "");
+      Entry.TextCodingUtil.isEntryEventFuncByFullText(f.trim()) && (f = Entry.TextCodingUtil.entryEventFilter(f), 0 != c.length && b.push(c), c = "");
       c += f;
     }
     b.push(c);
