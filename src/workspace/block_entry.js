@@ -14364,47 +14364,47 @@ Entry.block = {
         "func": function (sprite, script) {
 
             var scope = script.executor.scope;
-            if(!scope.isStart) {
-                scope.isStart = true;
-                scope.count = 0;
 
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
+            // instruction / address / length / value / default length
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
 
-                var data_default_address = 0;
-                var data_default_length = 0;
+            var data_default_address = 0;
+            var data_default_length = 0;
 
-                var size = script.getStringField("SIZE");
+            var size = script.getStringField("SIZE");
 
-                if (size == 'BYTE') {
-                    data_length = 1;
-                } else if (size == 'WORD') {
-                    data_length = 2;
-                } else if (size == 'DWORD') {
-                    data_length = 4;
-                }
-
-                data_address = script.getNumberValue('VALUE');
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                scope.data_default_address = data_default_address;
-                throw new Entry.Utils.AsyncError();
-            }  else if(scope.count < 2) {
-                scope.count++;
-                throw new Entry.Utils.AsyncError();
+            if (size == 'BYTE') {
+                data_length = 1;
+            } else if (size == 'WORD') {
+                data_length = 2;
+            } else if (size == 'DWORD') {
+                data_length = 4;
             }
-            scope.isStart = false;
-            var result = Entry.hw.portData[scope.data_default_address];
-            scope.data_default_address = undefined;
+
+	    data_address = script.getNumberValue('VALUE');
+
+	    data_default_address = data_address;
+	    data_default_length = data_length;
+				
+	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
+		    //throw new Entry.Utils.AsyncError();
+		    return Entry.hw.sendQueue.prevResult;
+		}	
+	    }
+
+	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+	    Entry.Robotis_carCont.update();
+
+	    var result = Entry.hw.portData[data_default_address];
+            Entry.hw.sendQueue.prevAddress = data_default_address;
+	    Entry.hw.sendQueue.prevTime = new Date();
+	    Entry.hw.sendQueue.prevResult = result;
+			
             return result;
         },
         "syntax": {"js": [], "py": ["Robotis.opencm70_cm_custom_value(%1, %2)"]}
@@ -14438,52 +14438,56 @@ Entry.block = {
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (sprite, script) {
             var scope = script.executor.scope;
-            if(!scope.isStart) {
-                scope.isStart = true;
-                scope.count = 0;
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
 
-                var data_default_address = 0;
-                var data_default_length = 0;
+            scope.isStart = true;
+            scope.count = 0;
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
 
-                var sensor = script.getStringField("SENSOR");
+            var data_default_address = 0;
+            var data_default_length = 0;
 
-                var increase = 0;
+            var sensor = script.getStringField("SENSOR");
 
-                if (sensor == 'CM_SOUND_DETECTED') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-                } else if (sensor == 'CM_SOUND_DETECTING') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
-                } else if (sensor == 'CM_USER_BUTTON') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
-                }
+            var increase = 0;
 
-                data_default_address = data_default_address + increase * data_default_length;
-
-                Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-                scope.data_default_address = data_default_address;
-                throw new Entry.Utils.AsyncError();
-            } else if(scope.count < 2) {
-                scope.count++;
-                throw new Entry.Utils.AsyncError();
+            if (sensor == 'CM_SOUND_DETECTED') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+            } else if (sensor == 'CM_SOUND_DETECTING') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+            } else if (sensor == 'CM_USER_BUTTON') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
             }
-            scope.isStart = false;
-            var result = Entry.hw.portData[scope.data_default_address];
-            scope.data_default_address = undefined;
+
+	    data_default_address = data_default_address + increase * data_default_length;
+			
+	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+	    	if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
+	    	    //throw new Entry.Utils.AsyncError();
+		    return Entry.hw.sendQueue.prevResult;
+	        }	
+	    }
+
+	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+	    Entry.Robotis_carCont.update();
+
+	    var result = Entry.hw.portData[data_default_address];
+            Entry.hw.sendQueue.prevAddress = data_default_address;
+	    Entry.hw.sendQueue.prevTime = new Date();
+	    Entry.hw.sendQueue.prevResult = result;
+            
             return result;
         },
         "syntax": {"js": [], "py": ["Robotis.opencm70_sensor_value(%1)"]}
@@ -14538,113 +14542,114 @@ Entry.block = {
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (sprite, script) {
             var scope = script.executor.scope;
-            if(!scope.isStart) {
-                scope.isStart = true;
-                scope.count = 0;
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
 
-                var data_default_address = 0;
-                var data_default_length = 0;
+	    // instruction / address / length / value / default length
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
 
-                var port = script.getStringField("PORT");
-                var sensor = script.getStringField("SENSOR");
+            var data_default_address = 0;
+            var data_default_length = 0;
 
-                var increase = 0;
-                if (port == 'PORT_3') {
-                    increase = 2;
-                } else if (port == 'PORT_4') {
-                    increase = 3;
-                } else if (port == 'PORT_5') {
-                    increase = 4;
-                } else if (port == 'PORT_6') {
-                    increase = 5;
-                }
+            var port = script.getStringField("PORT");
+            var sensor = script.getStringField("SENSOR");
 
-                if (sensor == 'AUX_SERVO_POSITION') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
-                } else if (sensor == 'AUX_IR') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
-                } else if (sensor == 'AUX_TOUCH') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
-                } else if (sensor == 'AUX_TEMPERATURE') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
-                } else if (sensor == 'AUX_BRIGHTNESS') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
-                } else if (sensor == 'AUX_HYDRO_THEMO_HUMIDITY') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
-                } else if (sensor == 'AUX_HYDRO_THEMO_TEMPER') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
-                } else if (sensor == 'AUX_ULTRASONIC') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
-                } else if (sensor == 'AUX_MAGNETIC') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
-                } else if (sensor == 'AUX_MOTION_DETECTION') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
-                } else if (sensor == 'AUX_COLOR') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
-                } else if (sensor == 'AUX_CUSTOM') {
-                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
-                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
-                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
-                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
-                }
-
-                data_default_address = data_default_address + increase * data_default_length;
-                data_address = data_default_address;
-                // if (increase != 0) {
-                   // data_length = 6 * data_default_length;
-                // }
-
-                Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                scope.data_default_address = data_default_address;
-                throw new Entry.Utils.AsyncError();
-            } else if(scope.count < 2) {
-                scope.count++;
-                throw new Entry.Utils.AsyncError();
+            var increase = 0;
+            if (port == 'PORT_3') {
+                increase = 2;
+            } else if (port == 'PORT_4') {
+                increase = 3;
+            } else if (port == 'PORT_5') {
+                increase = 4;
+            } else if (port == 'PORT_6') {
+                increase = 5;
             }
-            scope.isStart = false;
-            var result = Entry.hw.portData[scope.data_default_address];
-            scope.data_default_address = undefined;
+
+            if (sensor == 'AUX_SERVO_POSITION') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+            } else if (sensor == 'AUX_IR') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+            } else if (sensor == 'AUX_TOUCH') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+            } else if (sensor == 'AUX_TEMPERATURE') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+            } else if (sensor == 'AUX_BRIGHTNESS') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+            } else if (sensor == 'AUX_HYDRO_THEMO_HUMIDITY') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
+            } else if (sensor == 'AUX_HYDRO_THEMO_TEMPER') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
+            } else if (sensor == 'AUX_ULTRASONIC') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+            } else if (sensor == 'AUX_MAGNETIC') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+            } else if (sensor == 'AUX_MOTION_DETECTION') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
+            } else if (sensor == 'AUX_COLOR') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+            } else if (sensor == 'AUX_CUSTOM') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+            }
+
+            data_default_address = data_default_address + increase * data_default_length;
+            data_address = data_default_address;
+            // if (increase != 0) {
+               // data_length = 6 * data_default_length;
+            // }
+
+	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
+		    //throw new Entry.Utils.AsyncError();
+		    return Entry.hw.sendQueue.prevResult;
+		}	
+	    }
+
+	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+	    Entry.Robotis_carCont.update();
+
+	    var result = Entry.hw.portData[data_default_address];
+            Entry.hw.sendQueue.prevAddress = data_default_address;
+	    Entry.hw.sendQueue.prevTime = new Date();
+	    Entry.hw.sendQueue.prevResult = result;
+            
             return result;
         },
         "syntax": {"js": [], "py": ["Robotis.opencm70_aux_sensor_value(%1, %2)"]}
@@ -15601,11 +15606,29 @@ Entry.block = {
                 data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
             }
 
-            Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-            // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-            Entry.Robotis_carCont.update();
-
-            return Entry.hw.portData[data_default_address];
+            //Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+            //// Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+            //Entry.Robotis_carCont.update();
+			//
+            //return Entry.hw.portData[data_default_address];
+			
+	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 300) {
+		    //throw new Entry.Utils.AsyncError();
+		    return Entry.hw.sendQueue.prevResult;
+		}	
+	    }
+		
+	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+	    Entry.Robotis_carCont.update();
+			
+	    var result = Entry.hw.portData[data_default_address];
+            Entry.hw.sendQueue.prevAddress = data_default_address;
+	    Entry.hw.sendQueue.prevTime = new Date();
+	    Entry.hw.sendQueue.prevResult = result;
+            
+            return result;		
         },
         "syntax": {"js": [], "py": ["Robotis.carcont_sensor_value(%1)"]}
     },
