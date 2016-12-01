@@ -1762,7 +1762,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(argument.type) {
                     var arg = argument.params[0]; 
                     if(typeof arg === "string")
-                        arg = "\"" + arg + "\"";
+                        arg = '"()"'.replace('()', arg);
                     item.data = String(argument.params[0]);
                 }
                 else if(argument.name) {
@@ -1863,7 +1863,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         type = blockSyntax.key;
 
                     structure.type = type;
-                } else {
+                } //for combine something type
+                else if(initData.type == "combine_something" && initData.params && initData.params[1] && initData.params[1].name &&
+                    idData.name == initData.params[1].name &&
+                    initData.operator == "PLUS" || initData.operator == "MINUS") {
+
+                    console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[1].name);
+                    var syntax = String("%1 = %1 + %2");
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    var type;
+                    if(blockSyntax)
+                        type = blockSyntax.key;
+
+                    structure.type = type;
+                } 
+                else {
                     var syntax = String("%1 = %2");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     var type;
@@ -1911,7 +1925,23 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
 
                     params.push(initData.params[2]);
-                } else {
+                } //combine something
+                else if(initData.type == "combine_something" && initData.params && initData.params[1] && idData.name == initData.params[1].name &&
+                    initData.operator == "PLUS" || initData.operator == "MINUS") {
+                    console.log("in initData.params[0]");
+                    if(idData.params && idData.params[0])
+                        params.push(idData.params[0]);
+                    else
+                        params.push(variableId);
+
+                    if(initData.operator == "MINUS") {
+                        if(initData.params[3].params[0] != 0)
+                            initData.params[3].params[0] = "-" + initData.params[3].params[0];
+                    }
+
+                    params.push(initData.params[3]);
+                } 
+                else {
                     console.log("in initData");
                     if(idData.params && idData.params[0])
                         params.push(idData.params[0]);
