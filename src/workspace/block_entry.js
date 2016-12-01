@@ -2638,7 +2638,11 @@ Entry.block = {
                     duration = 0;
                 }
 
-                if(note === 0 || duration === 0) {
+                if(!sq['SET']) {
+                    sq['SET'] = {};
+                }
+
+                if(duration === 0) {
                     sq['SET'][port] = {
                         type: Entry.ArduinoExt.sensorTypes.TONE,
                         data: 0,
@@ -2648,15 +2652,15 @@ Entry.block = {
                 }
 
                 var octave = script.getNumberField("OCTAVE", script);
-                var value = Entry.ArduinoExt.toneMap[note][octave];
+                var value = 0;
+
+                if(note != 0) {
+                    value = Entry.ArduinoExt.toneMap[note][octave];
+                }
                 
                 duration = duration * 1000;
                 script.isStart = true;
-                script.timeFlag = 1;
-
-                if(!sq['SET']) {
-                    sq['SET'] = {};
-                }
+                script.timeFlag = 1;                
 
                 sq['SET'][port] = {
                     type: Entry.ArduinoExt.sensorTypes.TONE,
