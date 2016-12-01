@@ -77,7 +77,7 @@ Entry.PARAM = -1;
         if (!this.view)
             return;
         this.view.destroy();
-        delete this.view;
+        this.set({view:null});
     };
 
     p.recreateView = function() {

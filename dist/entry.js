@@ -23450,7 +23450,7 @@ Entry.PARAM = -1;
     null === this.view ? this.set({view:new Entry.CodeView(this, a), board:a}) : (this.set({board:a}), a.bindCodeView(this.view));
   };
   b.destroyView = function() {
-    this.view && (this.view.destroy(), delete this.view);
+    this.view && (this.view.destroy(), this.set({view:null}));
   };
   b.recreateView = function() {
     this.view && (this.destroyView(), this.set({view:new Entry.CodeView(this, this.board), board:this.board}));
@@ -26846,7 +26846,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           break;
         case Entry.Workspace.MODE_BOARD:
           try {
-            this.board.show(), this.blockMenu.unbanClass("textMode"), this.set({selectedBoard:this.board}), this.vimBoard && (this.textToCode(this.oldMode, this.oldTextType), this.vimBoard.hide()), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldTextType = this.textType;
+            this.vimBoard && this.vimBoard.hide(), this.board.show(), this.blockMenu.unbanClass("textMode"), this.set({selectedBoard:this.board}), this.vimBoard && this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldTextType = this.textType;
           } catch (c) {
             this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.blockMenu.banClass("textMode"), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.TEXT_TYPE_JS ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_JS) : this.oldTextType == Entry.Vim.TEXT_TYPE_PY && (a.boardType = Entry.Workspace.MODE_VIMBOARD, 
             a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_PY);
@@ -26881,10 +26881,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       console.log("here come in2", g);
       g.load(e);
       console.log("here come in3");
-      g.createView(f);
+      this.changeBoardCode(g);
       console.log("here come in4");
-      this.board.reDraw();
       setTimeout(function() {
+        g.view.reDraw();
         c.board.alignThreads();
       }, 0);
     }

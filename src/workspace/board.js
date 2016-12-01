@@ -955,7 +955,7 @@ Entry.Board.DRAG_RADIUS = 5;
                     text: Lang.Menus.save_as_image_all,
                     enable: true,
                     callback: function(){
-                        var threads = that.code.getThreads(); 
+                        var threads = that.code.getThreads();
                         var images = [];
                         threads.forEach(function(t,i) {
                             var topBlock = t.getFirstBlock();
@@ -968,7 +968,7 @@ Entry.Board.DRAG_RADIUS = 5;
                                     if (images.length == threads.length) {
                                         //console.log('images completely added');
                                         Entry.dispatchEvent(
-                                            'saveBlockImages', 
+                                            'saveBlockImages',
                                             { images: images }
                                         );
                                     }
@@ -977,7 +977,7 @@ Entry.Board.DRAG_RADIUS = 5;
                             } else {
                                 topBlock.view.downloadAsImage(++i);
                             }
-                            
+
                         });
                     }
                 }
