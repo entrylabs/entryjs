@@ -1961,6 +1961,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax:"%1",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -2138,6 +2139,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Arduino.sensor_value(%1)",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Block",
@@ -2179,6 +2181,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Arduino.digitalRead(%1)",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Block",
@@ -2419,6 +2422,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax:"Arduino.convert_scale(%1, %2, %3, %4, %5)",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Block",
@@ -2477,6 +2481,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -2530,6 +2535,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Arduino.analogRead(%1)",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Block",
@@ -2635,6 +2641,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Arduino.map(%1, %2, %3, %4, %5)",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Block",
@@ -2741,6 +2748,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Arduino.ultrasonicRead(%1, %2)",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -2828,6 +2836,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Arduino.digitalRead(%1)",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Block",
@@ -3219,7 +3228,7 @@ Entry.block = {
                     octave = 5;
                 }
                 var value = 0;
-                
+
                 if(note != 0) {
                     value = Entry.ArduinoExt.toneMap[note][octave];
                 }
@@ -6977,6 +6986,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Entry.value_of_distance_to(%2)",
+                blockType: "param",
                 textParams: [
                     undefined,
                     {
@@ -7039,6 +7049,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Entry.value_of_mouse_pointer(%2)",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Text",
@@ -7149,6 +7160,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Entry.value_of_object(%2, %4)",
+                blockType: "param",
                 textParams: [
                     undefined,
                     {
@@ -7304,6 +7316,7 @@ Entry.block = {
             {
                 syntax: "(%1 %2 %3)",
                 keyOption: "calc_basic",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Block",
@@ -7689,7 +7702,9 @@ Entry.block = {
             {
                 syntax: "(%2**2)",
                 params: [null, null, null, "square"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7701,7 +7716,9 @@ Entry.block = {
             {
                 syntax: "math.sqrt(%2)",
                 params: [null, null, null, "root"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7713,7 +7730,9 @@ Entry.block = {
             {
                 syntax: "math.sin(%2)",
                 params: [null, null, null, "sin"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7725,7 +7744,9 @@ Entry.block = {
             {
                 syntax: "math.cos(%2)",
                 params: [null, null, null, "cos"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7737,7 +7758,9 @@ Entry.block = {
             {
                 syntax: "math.tan(%2)",
                 params: [null, null, null, "tan"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7749,7 +7772,9 @@ Entry.block = {
             {
                 syntax: "math.asin(%2)",
                 params: [null, null, null, "asin_radian"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7761,7 +7786,9 @@ Entry.block = {
             {
                 syntax: "math.acos(%2)",
                 params: [null, null, null, "acos_radian"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7773,7 +7800,9 @@ Entry.block = {
             {
                 syntax: "math.atan(%2)",
                 params: [null, null, null, "atan_radian"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7785,7 +7814,9 @@ Entry.block = {
             {
                 syntax: "math.log10(%2)",
                 params: [null, null, null, "log"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7797,7 +7828,9 @@ Entry.block = {
             {
                 syntax: "math.log(%2)",
                 params: [null, null, null, "ln"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7809,7 +7842,9 @@ Entry.block = {
             {
                 syntax: "math.floor(%2)",
                 params: [null, null, null, "floor"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7821,7 +7856,9 @@ Entry.block = {
             {
                 syntax: "math.ceil(%2)",
                 params: [null, null, null, "ceil"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7833,7 +7870,9 @@ Entry.block = {
             {
                 syntax: "math.round(%2)",
                 params: [null, null, null, "round"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7845,7 +7884,9 @@ Entry.block = {
             {
                 syntax: "math.factorial(%2)",
                 params: [null, null, null, "factorial"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7857,7 +7898,9 @@ Entry.block = {
             {
                 syntax: "math.fabs(%2)",
                 params: [null, null, null, "abs"],
-                textParams: [undefined,
+                blockType: "param",
+                textParams: [
+                    undefined,
                     {
                         "type": "Block",
                         "accept": "string"
@@ -7935,10 +7978,12 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "random.randint(%2, %4)"
+                syntax: "random.randint(%2, %4)",
+                blockType: "param"
             },
             {
-                syntax: "random.uniform(%2, %4)"
+                syntax: "random.uniform(%2, %4)",
+                blockType: "param"
             }
         ]}
     },
@@ -8002,6 +8047,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Entry.value_of_current_time(%2)",
+                blockType: "param",
                 textParams: [
                     undefined,
                     {
@@ -8069,6 +8115,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Entry.value_of_sound_length_of(%2)",
+                blockType: "param",
                 textParams: [
                     undefined,
                     {
@@ -8264,7 +8311,12 @@ Entry.block = {
         "func": function (sprite, script) {
             return Entry.engine.projectTimer.getValue();
         },
-        "syntax": {"js": [], "py": ["Entry.value_of_timer()"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.value_of_timer()",
+                blockType: "param"
+            }
+        ]}
     },
     "char_at": {
         "color": "#FFD974",
@@ -8330,6 +8382,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2\[%4\]",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Text",
@@ -8404,6 +8457,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "len(%2)",
+                blockType: "param",
                 keyOption: "length_of_string"
             }
         ]}
@@ -8489,6 +8543,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2\[%4:%6\]",
+                blockType: "param",
                 textParams: [
                     null,
                     {
@@ -8586,7 +8641,12 @@ Entry.block = {
                     script.getStringValue("NEW_WORD", script)
                 );
         },
-        "syntax": {"js": [], "py": ["%2.replace(%4, %6)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%2.replace(%4, %6)",
+                blockType: "param"
+            }
+        ]}
     },
     "change_string_case": {
         "color": "#FFD974",
@@ -8651,6 +8711,7 @@ Entry.block = {
             {
                 syntax: "%2.upper()",
                 params: [null,null,null,"toUpperCase",null],
+                blockType: "param",
                 textParams: [
                     undefined,
                     {
@@ -8674,6 +8735,7 @@ Entry.block = {
             {
                 syntax: "%2.lower()",
                 params: [null,null,null,"toLowerCase",null],
+                blockType: "param",
                 textParams: [
                     undefined,
                     {
@@ -8755,7 +8817,12 @@ Entry.block = {
             var index = str.indexOf(target);
             return index > -1 ? index + 1 : 0;
         },
-        "syntax": {"js": [], "py": ["%2.find(%4)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%2.find(%4)",
+                blockType: "param"
+            }
+        ]}
     },
     "combine_something": {
         "color": "#FFD974",
@@ -8816,7 +8883,12 @@ Entry.block = {
 
             return leftValue + rightValue;
         },
-        "syntax": {"js": [], "py": ["(%2 + %4)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "(%2 + %4)",
+                blockType: "param"
+            }
+        ]}
     },
     "get_sound_volume": {
         "color": "#FFD974",
@@ -8847,7 +8919,12 @@ Entry.block = {
         "func": function (sprite, script) {
             return createjs.Sound.getVolume() * 100;
         },
-        "syntax": {"js": [], "py": ["Entry.value_of_sound_volume()"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.value_of_sound_volume()",
+                blockType: "param"
+            }
+        ]}
     },
     "quotient_and_mod": {
         "color": "#FFD974",
@@ -8929,6 +9006,7 @@ Entry.block = {
             {
                 syntax: "(%2 // %4)",
                 params: [null,null,null,null,null,"QUOTIENT"],
+                blockType: "param",
                 textParams: [
                     undefined,
                     {
@@ -8957,6 +9035,7 @@ Entry.block = {
             {
                 syntax: "(%2 % %4)",
                 params: [null,null,null,null,null,"MOD"],
+                blockType: "param",
                 textParams: [
                     undefined,
                     {
@@ -10031,7 +10110,8 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Hamster.hand_found()"
+                syntax: "Hamster.hand_found()",
+                blockType: "param"
             }
         ]}
     },
@@ -10079,6 +10159,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Hamster.left_proximity()",
+                blockType: "param",
                 textParams:[
                     {
                         "type": "Dropdown",
@@ -10105,6 +10186,7 @@ Entry.block = {
             },
             {
                 syntax: "Hamster.right_proximity()",
+                blockType: "param",
                 textParams:[
                     {
                         "type": "Dropdown",
@@ -10131,6 +10213,7 @@ Entry.block = {
             },
             {
                 syntax: "Hamster.left_floor()",
+                blockType: "param",
                 textParams:[
                     {
                         "type": "Dropdown",
@@ -10157,6 +10240,7 @@ Entry.block = {
             },
             {
                 syntax: "Hamster.right_floor()",
+                blockType: "param",
                 textParams:[
                     {
                         "type": "Dropdown",
@@ -10183,6 +10267,7 @@ Entry.block = {
             },
             {
                 syntax: "Hamster.acceleration_x()",
+                blockType: "param",
                 textParams:[
                     {
                         "type": "Dropdown",
@@ -10209,6 +10294,7 @@ Entry.block = {
             },
             {
                 syntax: "Hamster.acceleration_y()",
+                blockType: "param",
                 textParams:[
                     {
                         "type": "Dropdown",
@@ -10235,6 +10321,7 @@ Entry.block = {
             },
             {
                 syntax: "Hamster.acceleration_z()",
+                blockType: "param",
                 textParams:[
                     {
                         "type": "Dropdown",
@@ -10261,6 +10348,7 @@ Entry.block = {
             },
             {
                 syntax: "Hamster.light()",
+                blockType: "param",
                 textParams:[
                     {
                         "type": "Dropdown",
@@ -10287,6 +10375,7 @@ Entry.block = {
             },
             {
                 syntax: "Hamster.temperature()",
+                blockType: "param",
                 textParams:[
                     {
                         "type": "Dropdown",
@@ -10313,6 +10402,7 @@ Entry.block = {
             },
             {
                 syntax: "Hamster.signal_strength()",
+                blockType: "param",
                 textParams:[
                     {
                         "type": "Dropdown",
@@ -10339,6 +10429,7 @@ Entry.block = {
             },
             {
                 syntax: "Hamster.input_a()",
+                blockType: "param",
                 textParams:[
                     {
                         "type": "Dropdown",
@@ -10365,6 +10456,7 @@ Entry.block = {
             },
             {
                 syntax: "Hamster.input_b()",
+                blockType: "param",
                 textParams:[
                     {
                         "type": "Dropdown",
@@ -13191,7 +13283,12 @@ Entry.block = {
         "func": function (sprite, script) {
             return Entry.stage.isClick;
         },
-        "syntax": {"js": [], "py": ["Entry.is_mouse_clicked()"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.is_mouse_clicked()",
+                blockType: "param"
+            }
+        ]}
     },
     "is_press_some_key": {
         "color": "#AEB8FF",
@@ -13226,6 +13323,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Entry.is_key_pressed(%1)",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Keyboard",
@@ -13332,6 +13430,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Entry.is_touched(%2)",
+                blockType: "param",
                 textParams: [
                     undefined,
                     {
@@ -13622,7 +13721,12 @@ Entry.block = {
             var rightValue = script.getBooleanValue("RIGHTHAND", script);
             return leftValue && rightValue;
         },
-        "syntax": {"js": [], "py": ["(%1 and %3)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "(%1 and %3)", 
+                blockType: "param"
+            }
+        ]}
     },
     "boolean_or": {
         "color": "#AEB8FF",
@@ -13664,7 +13768,12 @@ Entry.block = {
             var rightValue = script.getBooleanValue("RIGHTHAND", script);
             return leftValue || rightValue;
         },
-        "syntax": {"js": [], "py": ["(%1 or %3)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "(%1 or %3)",
+                blockType: "param"
+            }
+        ]}
     },
     "boolean_not": {
         "color": "#AEB8FF",
@@ -13704,7 +13813,12 @@ Entry.block = {
         "func": function (sprite, script) {
             return !script.getBooleanValue("VALUE");
         },
-        "syntax": {"js": [], "py": ["not (%2)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "not (%2)",
+                blockType: "param"
+            }
+        ]}
     },
     "true_or_false": {
         "color": "#AEB8FF",
@@ -13924,6 +14038,7 @@ Entry.block = {
             {
                 syntax: "(%1 %2 %3)",
                 keyOption:"boolean_basic_operator",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "Block",
@@ -19009,7 +19124,12 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_scene_start",
-        "syntax": {"js": [], "py": ["def when_start_scene():"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "def when_start_scene():",
+                blockType: "event"
+            }
+        ]}
     },
     "start_scene": {
         "color": "#3BBD70",
@@ -19895,7 +20015,8 @@ Entry.block = {
         "event": "start",
         "syntax": {"js": [], "py": [
             {
-                syntax: "def when_start():"
+                syntax: "def when_start():",
+                blockType: "event"
             }
         ]}
     },
@@ -19989,6 +20110,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "def when_press_key(%2):",
+                blockType: "event",
                 textParams: [
                     undefined,
                     {
@@ -20026,7 +20148,12 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "mouse_clicked",
-        "syntax": {"js": [], "py": ["def when_click_mouse_on():"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "def when_click_mouse_on():",
+                blockType: "event"
+            }
+        ]}
     },
     "mouse_click_cancled": {
         "color": "#3BBD70",
@@ -20054,7 +20181,12 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "mouse_click_cancled",
-        "syntax": {"js": [], "py": ["def when_click_mouse_off():"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "def when_click_mouse_off():",
+                blockType: "event"
+            }
+        ]}
     },
     "when_object_click": {
         "color": "#3BBD70",
@@ -20082,7 +20214,12 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_object_click",
-        "syntax": {"js": [], "py": ["def when_click_object_on():"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "def when_click_object_on():",
+                blockType: "event"
+            }
+        ]}
     },
     "when_object_click_canceled": {
         "color": "#3BBD70",
@@ -20110,7 +20247,12 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_object_click_canceled",
-        "syntax": {"js": [], "py": ["def when_click_object_off():"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "def when_click_object_off():",
+                blockType: "event"
+            }
+        ]}
     },
     "when_some_key_click": {
         "color": "#3BBD70",
@@ -20191,6 +20333,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "def when_get_signal(%2):",
+                blockType: "event",
                 textParams: [
                     undefined,
                     {
@@ -20729,6 +20872,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1 = %2",
+                blockType: "variable",
                 textParams: [
                     {
                         "type": "DropdownDynamic",
@@ -20924,6 +21068,7 @@ Entry.block = {
             {
                 syntax: "%1",
                 keyOption: "get_variable",
+                blockType: "param",
                 textParams: [
                     {
                         "type": "DropdownDynamic",
@@ -21082,7 +21227,12 @@ Entry.block = {
         "func": function (sprite, script) {
             return Entry.container.getInputValue();
         },
-        "syntax": {"js": [], "py": ["Entry.answer()"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.answer()",
+                blockType: "param"
+            }
+        ]}
     },
     "add_value_to_list": {
         "color": "#E457DC",
@@ -21537,6 +21687,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2\[%4\]",
+                blockType: "param",
                 textParams: [
                     undefined,
                     {
@@ -21613,6 +21764,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "len(%2)",
+                blockType: "param",
                 textParams: [
                     undefined,
                     {
@@ -21932,6 +22084,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%4 in %2",
+                blockType: "param",
                 textParams: [
                     undefined,
                     {

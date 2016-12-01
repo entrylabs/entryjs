@@ -13982,12 +13982,13 @@ Entry.PyToBlockParser = function(b) {
           console.log("Program node", e);
           var f = this[e.type](e);
           console.log("result block", f);
-          if (f && f.type && (console.log("block.type", f.type), !(Entry.TextCodingUtil.isJudgementBlock(f.type) || Entry.TextCodingUtil.isCalculationBlock(f.type) || Entry.TextCodingUtil.isMaterialBlock(f.type) || Entry.TextCodingUtil.isHWParamBlock(f.type)))) {
-            Entry.TextCodingUtil.isEventBlockByType(f.type) && (isEntryEventExisted = !0, console.log("isEntryEventExisted", isEntryEventExisted));
-            if (Entry.TextCodingUtil.isVariableDeclarationBlock(f.type) && (console.log("isVariableDeclarationBlock block.type", f.type), !isEntryEventExisted)) {
-              continue;
+          if (f && f.type) {
+            console.log("block.type", f.type);
+            var g = this.searchSyntax(Entry.block[f.type]);
+            if (g) {
+              var h = g.blockType
             }
-            this._thread.push(f);
+            "param" != h && ("event" == h && (isEntryEventExisted = !0), ("variable" != h || isEntryEventExisted) && this._thread.push(f));
           }
         }
         console.log("thread", this._thread);
@@ -13996,8 +13997,8 @@ Entry.PyToBlockParser = function(b) {
       console.log("this._blockCountMap", this._blockCountMap);
       console.log("this._blockCount", this._blockCount);
       return this._code;
-    } catch (g) {
-      throw console.log("error", g), a = {}, a.line = this._blockCount, a.title = g.title, a.message = g.message, console.log("Program catch error", a), a;
+    } catch (k) {
+      throw console.log("error", k), a = {}, a.line = this._blockCount, a.title = k.title, a.message = k.message, console.log("Program catch error", a), a;
     }
   };
   b.ExpressionStatement = function(a) {
