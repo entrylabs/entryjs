@@ -164,13 +164,15 @@ p.retryConnect = function() {
 };
 
 p.openHardwareProgram = function() {
+    var hw = this;
     this.isOpenHardware = true;
     Entry.HW.TRIAL_LIMIT = 5;
-    if(this.socket) {
-        this.executeHardware();
-    } else {
-        this.executeHardware();
-        this.initSocket();
+    this.executeHardware();
+    
+    if(!this.socket || !this.socket.connected) {
+        setTimeout(function() {
+            hw.initSocket();
+        }, 1000);
     }
 }
 
@@ -497,17 +499,20 @@ p.executeHardware = function() {
     function executeChrome(customUrl) {
         var isInstalled = false;
         window.focus();
-        window.onblur = function() {
+        $(window).one('blur', function() {
             isInstalled = true;
-        };
-
+        });
+        Entry.dispatchEvent('workspaceUnbindUnload', true);
         location.assign(encodeURI(customUrl));
         setTimeout(function() {
-            if (isInstalled == false || navigator.userAgent.indexOf("Edge") > 0) {
+            Entry.dispatchEvent('workspaceBindUnload', true);
+        }, 100);
+        setTimeout(function() {
+            if (isInstalled == false) {
                 hw.popupHelper.show('hwDownload', true);
             }
             window.onblur = null;
-        }, 1500);
+        }, 3000);
     }
 }
 
@@ -567,9 +572,9 @@ p.hwPopupCreate = function () {
                 var $this = $(this);
                 if($this.hasClass('popupOkBtn')) {
                     hw.downloadConnector();
-                } else {
-                    hw.popupHelper.hide('newVersion');
                 }
+
+                hw.popupHelper.hide('newVersion');
             });
 
             popup.append(content);
@@ -622,9 +627,9 @@ p.hwPopupCreate = function () {
                 var $this = $(this);
                 if($this.hasClass('popupOkBtn')) {
                     hw.downloadConnector();
-                } else {
-                    hw.popupHelper.hide('hwDownload');
                 }
+
+                hw.popupHelper.hide('hwDownload');
             });
 
             popup.append(content);

@@ -2638,7 +2638,11 @@ Entry.block = {
                     duration = 0;
                 }
 
-                if(note === 0 || duration === 0) {
+                if(!sq['SET']) {
+                    sq['SET'] = {};
+                }
+
+                if(duration === 0) {
                     sq['SET'][port] = {
                         type: Entry.ArduinoExt.sensorTypes.TONE,
                         data: 0,
@@ -2648,15 +2652,15 @@ Entry.block = {
                 }
 
                 var octave = script.getNumberField("OCTAVE", script);
-                var value = Entry.ArduinoExt.toneMap[note][octave];
+                var value = 0;
+
+                if(note != 0) {
+                    value = Entry.ArduinoExt.toneMap[note][octave];
+                }
                 
                 duration = duration * 1000;
                 script.isStart = true;
-                script.timeFlag = 1;
-
-                if(!sq['SET']) {
-                    sq['SET'] = {};
-                }
+                script.timeFlag = 1;                
 
                 sq['SET'][port] = {
                     type: Entry.ArduinoExt.sensorTypes.TONE,
@@ -2926,6 +2930,20 @@ Entry.block = {
         ],
         "events": {}
     },
+    "arduino_connect": {
+        "skeleton": "basic_button",
+        "color": "#eee",
+        "isNotFor": ["arduinoConnect"],
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.ARDUINO_connect,
+                "color": "#333",
+                "align": "center"
+            }
+        ],
+        "events": {}
+    },
     "arduino_reconnect": {
         "skeleton": "basic_button",
         "color": "#eee",
@@ -2970,7 +2988,7 @@ Entry.block = {
     "arduino_cloud_pc_open": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "isNotFor": ["arduinoConnected"],
+        "isNotFor": ["arduinoConnect", "arduinoConnected"],
         "template": '%1',
         "params": [
             {
@@ -21976,9 +21994,6 @@ Entry.block = {
     "dplay_get_gas_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
         "template": "아날로그 %1 번 가스 센서값",
-        "isNotFor": [
-            "dplay"
-        ],
         "def": {
             "params": [
                 {
