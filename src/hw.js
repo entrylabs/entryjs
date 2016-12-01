@@ -52,7 +52,8 @@ Entry.HW = function() {
         '10.2': Entry.Roborobo_SchoolKit,
         '12.1': Entry.EV3,
         'B.1': Entry.Codestar,
-        'A.1': Entry.SmartBoard
+        'A.1': Entry.SmartBoard,
+        'D.1': Entry.robotori
     };
 };
 
