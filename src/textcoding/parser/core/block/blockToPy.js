@@ -128,7 +128,6 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var statementReg = /(\$.)/mi;
         var blockTokens = syntax.split(blockReg);
         var schemaParams = block._schema.params;
-        console.log("first schema", schemaParams);
         var dataParams = block.data.params;
         var currentBlock = block;
         var currentBlockSkeleton = currentBlock._schema.skeleton;

@@ -1813,7 +1813,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             console.log("variable name", name, "value", value);
 
-            if((value && !isNaN(value)) || value == 0) {
+            if(value || value == 0) {
                 if(name && name.indexOf('__filbert') < 0) {
                     if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                         console.log("this is update", name, value);
@@ -2419,15 +2419,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 console.log("assi leftData.property", leftData.property);
 
-                if(leftData.object.name == "self") {
+                if(leftData.object.name == "self") { 
                     var name = leftData.property.name;
                     if(rightData.type == "number" || rightData.type == "text")
                         var value = rightData.params[0];
-                    else
-                        var value = 0;
+                    /*else
+                        var value = 0;*/
 
-                    if((value && !isNaN(value)) || value == 0) {
-                        console.log("final value", value);
+                    if(value || value == 0) {
+                        console.log("final value", value); 
                         console.log("final currentObject", currentObject);
 
 
@@ -2455,7 +2455,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 /*else
                     var value = 0;*/
 
-                if((value && !isNaN(value)) || value == 0) {
+                if(value || value == 0) {
                     console.log("final currentObject", this._currentObject);
                     console.log("final value", value);
 
