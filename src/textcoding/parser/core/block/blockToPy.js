@@ -520,7 +520,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             result = result.substring(0, index);
             result = result.trim();
         }
-        result = result.concat('):').concat('\n');
+        result = result.concat('):');
 
         if(func.statements && func.statements.length) {
             var stmtResult = "";

@@ -13480,7 +13480,7 @@ Entry.BlockToPyParser = function(b) {
       b = b.substring(0, a);
       b = b.trim();
     }
-    b = b.concat("):").concat("\n");
+    b = b.concat("):");
     if (c.statements && c.statements.length) {
       a = "";
       for (var f in c.statements) {
@@ -15986,6 +15986,7 @@ Entry.Parser = function(b, a, d, c) {
   Entry.Parser.PARSE_GENERAL = 1;
   Entry.Parser.PARSE_SYNTAX = 2;
   Entry.Parser.PARSE_VARIABLE = 3;
+  this._isError = !1;
   this._console = new Entry.Console;
   switch(this._lang) {
     case "js":
@@ -16018,6 +16019,7 @@ Entry.Parser = function(b, a, d, c) {
         case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
           this._execParser = new Entry.PyToBlockParser(this.syntax);
           this._execParserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
+          this._isError = !1;
           break;
         case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
           this._execParser = new Entry.BlockToJsParser(this.syntax, this);
@@ -16033,7 +16035,7 @@ Entry.Parser = function(b, a, d, c) {
           this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
           break;
         case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-          this._execParser = new Entry.BlockToPyParser(this.syntax), c.setOption("mode", {name:"python", globalVars:!0}), this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+          this._execParser = new Entry.BlockToPyParser(this.syntax), c.setOption("mode", {name:"python", globalVars:!0}), this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this.py_funcDeclaration = this.py_listDeclaration = this.py_variableDeclaration = null;
       }
     }
   };
@@ -16116,25 +16118,25 @@ Entry.Parser = function(b, a, d, c) {
         c = "";
         n = this._execParser.Code(a, b);
         this._pyHinter || (this._pyHinter = new Entry.PyHint(this.syntax));
-        if (b == Entry.Parser.PARSE_GENERAL) {
-          if (!this._execParser._variableDeclaration) {
+        if (b == Entry.Parser.PARSE_GENERAL && !this._isError) {
+          if (!this.py_variableDeclaration) {
             var v = Entry.TextCodingUtil.generateVariablesDeclaration();
-            (this._execParser._variableDeclaration = v) && (c += v);
+            (this.py_variableDeclaration = v) && (c += v);
           }
-          if (!this._execParser._listDeclaration) {
+          if (!this.py_listDeclaration) {
             var t = Entry.TextCodingUtil.generateListsDeclaration();
-            (this._execParser._listDeclaration = t) && (c += t);
+            (this.py_listDeclaration = t) && (c += t);
           }
           if (v || t) {
             c += "\n";
           }
-          if (!this._execParser._funcDeclaration) {
+          if (!this.py_funcDeclaration) {
             x = this._execParser._funcDefMap;
             l = "";
             for (r in x) {
               l += x[r] + "\n";
             }
-            (this._execParser._funcDeclaration = l) && (c += l + "\n");
+            (this.py_funcDeclaration = l) && (c += l + "\n");
           }
         }
         c += n.trim();
@@ -26846,10 +26848,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           break;
         case Entry.Workspace.MODE_BOARD:
           try {
-            this.vimBoard && this.vimBoard.hide(), this.board.show(), this.blockMenu.unbanClass("textMode"), this.set({selectedBoard:this.board}), this.vimBoard && this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldTextType = this.textType;
+            this.board.show(), this.blockMenu.unbanClass("textMode"), this.set({selectedBoard:this.board}), this.vimBoard && this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide(), this.vimBoard._parser._isError = !1;
           } catch (c) {
-            this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.blockMenu.banClass("textMode"), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.TEXT_TYPE_JS ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_JS) : this.oldTextType == Entry.Vim.TEXT_TYPE_PY && (a.boardType = Entry.Workspace.MODE_VIMBOARD, 
-            a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_PY);
+            this.vimBoard._parser._isError = !0, this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.blockMenu.banClass("textMode"), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.TEXT_TYPE_JS ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_JS) : this.oldTextType == Entry.Vim.TEXT_TYPE_PY && 
+            (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_PY);
           }
           Entry.commander.setCurrentEditor("board", this.board);
           break;
@@ -26873,18 +26875,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.textToCode = function(a, b) {
     if (a == Entry.Workspace.MODE_VIMBOARD) {
-      var c = this, e = this.vimBoard.textToCode(b);
-      console.log("changedCode", e);
-      var f = this.board;
-      console.log("here come in1", f);
-      var g = f.code;
-      console.log("here come in2", g);
-      g.load(e);
-      console.log("here come in3");
-      this.changeBoardCode(g);
+      var c = this, e = this.vimBoard.textToCode(b), f = this.board.code;
+      f.load(e);
+      this.changeBoardCode(f);
       console.log("here come in4");
       setTimeout(function() {
-        g.view.reDraw();
+        f.view.reDraw();
         c.board.alignThreads();
       }, 0);
     }
