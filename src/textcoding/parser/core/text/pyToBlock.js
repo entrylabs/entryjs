@@ -1810,6 +1810,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             /*else {
                 value = 0
             }*/
+            if(typeof value != "string" && typeof value != "number") {
+                value = 0;
+            }
 
             console.log("variable name", name, "value", value);
 
@@ -2425,6 +2428,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var value = rightData.params[0];
                     /*else
                         var value = 0;*/
+                    if(typeof value != "string" && typeof value != "number") {
+                        value = 0;
+                    }
 
                     if(value || value == 0) {
                         console.log("final value", value); 
@@ -2454,6 +2460,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var value = rightData.params[0];
                 /*else
                     var value = 0;*/
+                if(typeof value != "string" && typeof value != "number") {
+                    value = 0;
+                }
 
                 if(value || value == 0) {
                     console.log("final currentObject", this._currentObject);
