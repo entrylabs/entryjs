@@ -366,7 +366,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         var ld = Entry.TextCodingUtil.generateListsDeclaration();
                         this._execParser._listDeclaration = ld;
                         if(ld)
-                            result += ld;
+                            result += ld; 
                     }
 
                     if(vd || ld)

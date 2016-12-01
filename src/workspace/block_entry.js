@@ -3214,7 +3214,13 @@ Entry.block = {
                 } else if(octave > 5) {
                     octave = 5;
                 }
-                var value = Entry.ArduinoExt.toneMap[note][octave];
+                var value;
+
+                if(note == 0) {
+                    value = 0;
+                } else {
+                    value = Entry.ArduinoExt.toneMap[note][octave];
+                }
 
                 duration = duration * 1000;
                 script.isStart = true;
