@@ -14919,6 +14919,7 @@ Entry.PyToBlockParser = function(b) {
     console.log("ParamColor value, paramMeta, paramDefMeta, textParam", a, b, c, e);
     var f;
     e && e.codeMap && (b = e.codeMap, console.log("codeMap", b), b = eval(b), console.log("codeMap", b), a = a.toLowerCase(), console.log("codeMap value", a), f = b[a]);
+    f || (f = a);
     console.log("ParamColor result", f);
     return f;
   };
@@ -14934,7 +14935,8 @@ Entry.PyToBlockParser = function(b) {
       }
     }
     f || (f = a);
-    e && e.codeMap && (a = e.codeMap, console.log("codeMap", a), a = eval(a), console.log("codeMap", a), f = f.toLowerCase(), console.log("codeMap result", f), f = a[f]);
+    e && e.codeMap && (e = e.codeMap, console.log("codeMap", e), e = eval(e), console.log("codeMap", e), f = f.toLowerCase(), console.log("codeMap result", f), f = e[f]);
+    f || (f = a);
     console.log("ParamDropdown result", f);
     return f;
   };
@@ -14961,6 +14963,7 @@ Entry.PyToBlockParser = function(b) {
       }
     }
     e || (e = Entry.TextCodingUtil.dropdownDynmaicNameToIdConvertor(a, b.menuName));
+    e || (e = a);
     console.log("ParamDropdownDynamic result", e);
     return e;
   };
