@@ -19213,6 +19213,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Entry.start_scene_of(%1)",
+                blockType: "last",
                 textParams: [
                     {
                         "type": "DropdownDynamic",
@@ -19284,6 +19285,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Entry.start_scene_to(%1)",
+                blockType: "last",
                 textParams: [
                     {
                         "type": "Dropdown",

@@ -12024,6 +12024,7 @@ Entry.TextCodingError = {};
     b = this.getErrorInfo(b, c, e, f, g);
     a.title = b.title;
     a.message = b.message;
+    a.line = f;
     throw a;
   };
   b.getErrorInfo = function(a, b, e, f, g) {
@@ -13974,23 +13975,38 @@ Entry.PyToBlockParser = function(b) {
         if ("Program" != a[b].type) {
           return;
         }
+        var c = !1;
         this._threadCount++;
         this._thread = [];
-        var c = a[b].body;
-        console.log("nodes", c);
+        var e = a[b].body;
+        console.log("nodes", e);
         isEntryEventExisted = !1;
-        for (b in c) {
-          var e = c[b];
-          console.log("Program node", e);
-          var f = this[e.type](e);
-          console.log("result block", f);
-          if (f && f.type) {
-            console.log("block.type", f.type);
-            var g = this.searchSyntax(Entry.block[f.type]);
-            if (g) {
-              var h = g.blockType
+        for (b in e) {
+          var f = e[b];
+          console.log("Program node", f);
+          var g = this[f.type](f);
+          console.log("result block", g);
+          c && Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT, void 0, this._blockCount);
+          if (g && g.type) {
+            console.log("block.type", g.type);
+            var h = this.searchSyntax(Entry.block[g.type]);
+            if (h) {
+              var k = h.blockType
             }
-            "param" != h && ("event" == h && (isEntryEventExisted = !0), ("variable" != h || isEntryEventExisted) && this._thread.push(f));
+            if ("param" != k) {
+              if ("event" == k) {
+                isEntryEventExisted = !0;
+              } else {
+                if ("last" == k) {
+                  c = !0;
+                } else {
+                  if ("variable" == k && !isEntryEventExisted) {
+                    continue;
+                  }
+                }
+              }
+              this._thread.push(g);
+            }
           }
         }
         console.log("thread", this._thread);
@@ -13999,8 +14015,8 @@ Entry.PyToBlockParser = function(b) {
       console.log("this._blockCountMap", this._blockCountMap);
       console.log("this._blockCount", this._blockCount);
       return this._code;
-    } catch (k) {
-      throw console.log("error", k), a = {}, a.line = this._blockCount, a.title = k.title, a.message = k.message, console.log("Program catch error", a), a;
+    } catch (l) {
+      Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, void 0, this._blockCount);
     }
   };
   b.ExpressionStatement = function(a) {

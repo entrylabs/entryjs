@@ -48,6 +48,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var isEventBlockExisted = false;
             for(var index in astArr) {
                 if(astArr[index].type != 'Program') return;
+                var isLastBlock = false;
                 this._threadCount++;
                 this._thread = [];
                 var nodes = astArr[index].body;
@@ -61,6 +62,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var block = this[node.type](node);
                     console.log("result block", block);
 
+                    if(isLastBlock) { 
+                        var keyword;
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
+                            keyword,
+                            this._blockCount);
+                    } 
+
                     if(block && block.type) {
                         console.log("block.type", block.type);
                         var blockDatum = Entry.block[block.type];
@@ -71,11 +81,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                       
                         if(blockType == "param") continue;
-
-                        if(blockType == "event")
+                        else if(blockType == "event") {
                             isEntryEventExisted = true;
-                        
-                        if(blockType == "variable") { 
+                        }
+                        else if(blockType == "last") {
+                            isLastBlock = true;
+                        }
+                        else if(blockType == "variable") { 
                             if(!isEntryEventExisted)
                                 continue;
                         }
@@ -118,13 +130,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             return this._code;
         } catch(error) {
-            console.log("error", error);
+            /*console.log("error", error);
             var err = {};
             err.line = this._blockCount;
             err.title = error.title;
             err.message = error.message;
             console.log("Program catch error", err);
-            throw err;
+            throw err;*/
+
+            var keyword;
+            Entry.TextCodingError.error(
+                Entry.TextCodingError.TITLE_CONVERTING,
+                Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
+                keyword,
+                this._blockCount);
         }
     };
 

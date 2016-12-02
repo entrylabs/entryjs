@@ -55,6 +55,7 @@ Entry.TextCodingError = {};
 		var errorInfo = this.getErrorInfo(title, message, keyword, line, subject);
 		error.title = errorInfo.title;
 		error.message = errorInfo.message;  
+		error.line = line;
 		throw error;
 	};
 
