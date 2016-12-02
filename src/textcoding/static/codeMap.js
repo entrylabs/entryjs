@@ -11,7 +11,7 @@ Entry.CodeMap = {};
 (function(cc) {
     cc.Entry = {
         start_scene_to: [
-            {"다음": "next", "이전": "pre"} 
+            {"다음": "next", "이전": "pre"}
         ],
         stop_code: [
             {"thisOnly": "self", "thisThread": "this", "otherThread": "others",
@@ -28,16 +28,16 @@ Entry.CodeMap = {};
             {"색깔": "color", "밝기": "brightness", "투명도": "transparency"}
         ],
         send_layer_to: [
-            {"front": "FRONT", "forward": "FORWARD", "backward": "BACKWARD", "back": "BACK", 
+            {"front": "FRONT", "forward": "FORWARD", "backward": "BACKWARD", "back": "BACK",
             "맨 앞": "FRONT", "앞": "FORWARD", "뒤": "BACKWARD", "맨 뒤": "BACK"}
         ],
         set_brush_color_to: [
-            {"red": "#FF0000", "orange": "#FF9966", "yellow": "#FFFF66", "green": "#009900", 
-             "blue": "#3333FF", "navy": "#000099", "purple": "#993399", "black": "#000000", 
+            {"red": "#FF0000", "orange": "#FF9966", "yellow": "#FFFF66", "green": "#009900",
+             "blue": "#3333FF", "navy": "#000099", "purple": "#993399", "black": "#000000",
              "white": "#FFFFFF", "brown": "#990000"}
         ],
         is_touched: [
-            null, 
+            null,
             {"mouse": "mouse_pointer", "mouse_pointer": "mouse"},
             null
 
@@ -48,7 +48,7 @@ Entry.CodeMap = {};
         digitalWrite: [
             null,
             {"on":"HIGH", "off":"LOW", "high":"on", "low":"off"}
-        ], 
+        ],
         analogRead: [
             {"A0":"0", "A1":"1", "A2":"2", "A3":"3", "A4":"4", "A5":"5"}
         ]
@@ -76,7 +76,6 @@ Entry.CodeMap = {};
                 "Hamster.NOTE_E_FLAT": 7,
                 "Hamster.NOTE_D_SHARP": 7,
                 "Hamster.NOTE_E": 8,
-                "Hamster.NOTE_F": 8,
                 "Hamster.NOTE_F": 9,
                 "Hamster.NOTE_F_SHARP": 10,
                 "Hamster.NOTE_G_FLAT": 10,

@@ -480,6 +480,10 @@ span.CodeMirror-selectedtext {
   margin: 0;
   background-color: transparent;
 }
+.entryDimmed {
+  opacity: 0.5;
+  background-color: #767676;
+}
 
 .dragNone {
   -webkit-touch-callout: none;
@@ -505,6 +509,10 @@ span.CodeMirror-selectedtext {
   border: none;
   margin: 0;
   background-color: transparent;
+}
+.entryDimmed {
+  opacity: 0.5;
+  background-color: #767676;
 }
 .block.selected > g > .blockPath {
   stroke-width: 3px;
@@ -6279,6 +6287,158 @@ input.entryObjectNameWorkspace:-moz-read-only {
   position: absolute;
   width: 100%;
   top: 150px;
+}
+@keyframes fIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+.entryTooltipBG {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 9990;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  animation-name: fIn;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+}
+@keyframes stretch {
+  0% {
+    opacity: 0;
+    transform: translate(0, -10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+.entryTooltipWrapper {
+  position: absolute;
+  z-index: 9999;
+  animation-name: stretch;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+}
+.entryTooltip {
+  position: relative;
+  padding: 25px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+  font-family: NanumGothic;
+  color: #3b3b3b;
+  box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.19);
+}
+.entryTooltip:before {
+  position: absolute;
+  content: "";
+}
+.entryTooltip.up {
+  -webkit-transform: translate(-50%, -100%);
+  -moz-transform: translate(-50%, -100%);
+  -ms-transform: translate(-50%, -100%);
+  -o-transform: translate(-50%, -100%);
+  transform: translate(-50%, -100%);
+}
+.entryTooltip.up:before {
+  background: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2225px%22%20height%3D%2211px%22%3E%3Cpath%20fill%3D%22%23FFF%22%20transform%3D%22rotate%280%29%22%20d%3D%22M0,0%20l10,10%20c2.5%201.5%202.5%201.5%205%200%20l10,-10%20Z%22/%3E%3C/svg%3E') no-repeat;
+  background-size: 100% auto;
+  height: 11px;
+  width: 25px;
+  top: 100%;
+  left: 50%;
+  margin-left: -12.5px;
+}
+.entryTooltip.down {
+  margin-top: 11px;
+  left: -50%;
+}
+.entryTooltip.down:before {
+  background: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2225px%22%20height%3D%2211px%22%3E%3Cpath%20fill%3D%22%23FFF%22%20transform%3D%22rotate%28180%2012.5%205.5%29%22%20d%3D%22M0,0%20l10,10%20c2.5%201.5%202.5%201.5%205%200%20l10,-10%20Z%22/%3E%3C/svg%3E') no-repeat;
+  background-size: 100% auto;
+  height: 11px;
+  width: 25px;
+  top: -11px;
+  left: 50%;
+  margin-left: -12.5px;
+}
+.entryTooltip.left {
+  -webkit-transform: translate(-100%, -50%);
+  -moz-transform: translate(-100%, -50%);
+  -ms-transform: translate(-100%, -50%);
+  -o-transform: translate(-100%, -50%);
+  transform: translate(-100%, -50%);
+}
+.entryTooltip.left:before {
+  background: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2211px%22%20height%3D%2225px%22%3E%3Cpath%20fill%3D%22%23FFF%22%20transform%3D%22rotate%28-90%2012.5%2012.5%29%22%20d%3D%22M0,0%20l10,10%20c2.5%201.5%202.5%201.5%205%200%20l10,-10%20Z%22/%3E%3C/svg%3E') no-repeat;
+  background-size: 100% auto;
+  height: 25px;
+  width: 11px;
+  left: 100%;
+  top: 50%;
+  margin-top: -12.5px;
+}
+.entryTooltip.right {
+  margin-left: 11px;
+  -webkit-transform: translate(0, -50%);
+  -moz-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  -o-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+}
+.entryTooltip.right:before {
+  background: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2211px%22%20height%3D%2225px%22%3E%3Cpath%20fill%3D%22%23FFF%22%20transform%3D%22rotate%2890%205.5%205.5%29%22%20d%3D%22M0,0%20l10,10%20c2.5%201.5%202.5%201.5%205%200%20l10,-10%20Z%22/%3E%3C/svg%3E') no-repeat;
+  background-size: 100% auto;
+  height: 25px;
+  width: 11px;
+  top: 50%;
+  left: -11px;
+  margin-top: -12.5px;
+}
+@keyframes IndicatorPop {
+  0% {
+    opacity: 1;
+    transform: scale(0);
+  }
+  75% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+.entryTooltipIndicator {
+  position: absolute;
+  padding-top: 25px;
+}
+.entryTooltipIndicator > div {
+  width: 50px;
+  height: 50px;
+  background-color: #FFFFFF;
+  margin: -100% -50%;
+  border-radius: 100%;
+  position: relative;
+  z-index: 9999;
+  animation-name: IndicatorPop;
+  animation-duration: 1.3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-out;
+  transform: scale(0);
+}
+.entryTooltipIndicator > div:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.entryTooltipIndicator > div:nth-child(3) {
+  animation-delay: 0.6s;
 }
 
 
