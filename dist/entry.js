@@ -19649,6 +19649,8 @@ Entry.Tooltip = function(a, b) {
   this.data = a instanceof Array ? a : [a];
   this.opts = b || {};
   this._tooltips = [];
+  this._indicators = [];
+  1 < a.length && (this.isIndicator = !0);
   this.render();
 };
 (function(a) {
@@ -19665,6 +19667,7 @@ Entry.Tooltip = function(a, b) {
   };
   a._renderTooltip = function(b) {
     var a = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), d = Entry.Dom("div", {classes:["entryTooltip", b.direction], parent:a}), e = b.target.offset(), f = b.target.get(0).getBoundingClientRect();
+    this.isIndicator && this.renderIndicator(e.left + f.width / 2, e.top + f.height / 2);
     switch(b.direction) {
       case "up":
         e.left += f.width / 2;
@@ -19685,10 +19688,19 @@ Entry.Tooltip = function(a, b) {
     d.html(b.content.replace(/\n/gi, "<br>"));
     this._tooltips.push(a);
   };
+  a.renderIndicator = function(b, a) {
+    var c = Entry.Dom("div", {classes:["entryTooltipIndicator"], parent:$(document.body)});
+    c.html("<div></div><div></div><div></div>");
+    c.css({left:b, top:a});
+    this._indicators.push(c);
+  };
   a.dispose = function() {
     this._bg && this._bg.remove();
     for (this.opts.callBack && this.opts.callBack.call();this._tooltips.length;) {
       this._tooltips.pop().remove();
+    }
+    for (;this._indicators.length;) {
+      this._indicators.pop().remove();
     }
   };
 })(Entry.Tooltip.prototype);
@@ -26058,10 +26070,10 @@ Entry.ThreadView = function(a, b) {
     }
     return e;
   };
-  a.requestPartHeight = function(b, a) {
-    a = this.thread.getBlocks();
-    for (var c = a.pop(), e = b ? b.magnet.next ? b.magnet.next.y : b.height : 0;c && c.view !== b && c.view;) {
-      c = c.view, e = c.magnet.next ? e + c.magnet.next.y : e + c.height, c.dragMode === Entry.DRAG_MODE_DRAG && (e = 0), c = a.pop();
+  a.requestPartHeight = function(a, c) {
+    c = this.thread.getBlocks();
+    for (var b = c.pop(), e = a ? a.magnet.next ? a.magnet.next.y : a.height : 0;b && b.view !== a && b.view;) {
+      b = b.view, e = b.magnet.next ? e + b.magnet.next.y : e + b.height, b.dragMode === Entry.DRAG_MODE_DRAG && (e = 0), b = c.pop();
     }
     return e;
   };

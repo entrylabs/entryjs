@@ -8,6 +8,10 @@ Entry.Tooltip = function(data, opts) {
     this.data = data instanceof Array ? data : [data];
     this.opts = opts || {};
     this._tooltips = [];
+    this._indicators = [];
+
+    if (data.length > 1)
+        this.isIndicator = true;
 
     this.render();
 };
@@ -53,6 +57,11 @@ Entry.Tooltip = function(data, opts) {
 
         var pos = data.target.offset()
         var bound = data.target.get(0).getBoundingClientRect();
+        if (this.isIndicator) {
+            this.renderIndicator(
+                pos.left + bound.width / 2,
+                pos.top + bound.height / 2);
+        }
         switch(data.direction) {
             case "up":
                 pos.left += bound.width / 2;
@@ -79,6 +88,20 @@ Entry.Tooltip = function(data, opts) {
         this._tooltips.push(tooltipWrapper);
     };
 
+    p.renderIndicator = function(left, top) {
+        var indicator = Entry.Dom("div", {
+            classes: [
+                 "entryTooltipIndicator"
+            ],
+            parent: $(document.body)
+        });
+        indicator.html("<div></div><div></div><div></div>");
+        indicator.css({
+            left: left, top: top
+        });
+        this._indicators.push(indicator);
+    };
+
     p.dispose = function() {
         if (this._bg)
             this._bg.remove();
@@ -86,5 +109,7 @@ Entry.Tooltip = function(data, opts) {
             this.opts.callBack.call();
         while (this._tooltips.length)
             this._tooltips.pop().remove();
+        while (this._indicators.length)
+            this._indicators.pop().remove();
     };
 })(Entry.Tooltip.prototype);
