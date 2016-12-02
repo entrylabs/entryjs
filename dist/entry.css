@@ -2639,25 +2639,18 @@ svg .svgBlockGroup text {
   margin-left: 6px;
   z-index: 100;
 }
-#entryBlockHelperBlockWorkspace {
-  width: 400px;
-  height: 160px;
-  top: 16px;
-  overflow: hidden;
+.entryBlockHelperIntro .renderViewContainer {
+  display: none;
 }
 #entryBlockHelperBlockWorkspace > .renderViewContainer {
   width: 100%;
 }
 #entryBlockHelperBlockWorkspace > .renderViewContainer > svg {
-  position: absolute;
   overflow: visible;
-  left: 50%;
 }
 #entryBlockHelperDescriptionWorkspace {
-  position: absolute;
   line-height: 20px;
   width: 100%;
-  top: 100px;
   font-size: 13px;
   color: #707074;
   padding: 0 50px;
@@ -2821,25 +2814,74 @@ svg .svgBlockGroup text {
   z-index: 100;
 }
 #entryBlockHelperBlockWorkspace {
-  position: absolute;
   width: 100%;
   bottom: 0px;
   overflow-y: auto;
   overflow-x: hidden;
+  top: 16px;
+  text-align: center;
 }
 #entryBlockHelperBlockWorkspace > svg {
   position: relative;
-  left: -50%;
 }
 #entryBlockHelperDescriptionWorkspace {
-  position: absolute;
   line-height: 20px;
   width: 100%;
-  top: 100px;
   font-size: 13px;
   color: #707074;
   padding: 0 50px;
   text-align: center;
+}
+.textModeElem {
+  display: none;
+}
+#entryBlockHelperContentWorkspace.textMode {
+  padding: 18px;
+  top: 0;
+}
+#entryBlockHelperContentWorkspace.textMode .textModeElem {
+  display: block;
+}
+#entryBlockHelperContentWorkspace.textMode .entryBlockHelperTitle {
+  font-family: NanumGothic;
+  font-size: 18px;
+  font-weight: bold;
+  color: #3b3b3b;
+}
+#entryBlockHelperContentWorkspace.textMode .entryBlockHelperTitle:not(:first-child) {
+  margin-top: 20px;
+}
+#entryBlockHelperContentWorkspace.textMode .renderViewContainer {
+  text-align: left;
+  margin-top: 9px;
+}
+#entryBlockHelperContentWorkspace.textMode #entryBlockHelperBlockWorkspace {
+  height: auto;
+}
+#entryBlockHelperContentWorkspace.textMode #entryBlockHelperBlockWorkspace > div > svg {
+  position: relative;
+  left: auto;
+}
+#entryBlockHelperContentWorkspace.textMode #entryBlockHelperDescriptionWorkspace {
+  text-align: left;
+  padding: 0;
+}
+#entryBlockHelperContentWorkspace.textMode .entryBlockHelperContent {
+  font-family: NanumGothic;
+  font-size: 14px;
+  color: #3b3b3b;
+  margin-top: 8px;
+}
+#entryBlockHelperContentWorkspace.textMode .entryBlockHelperElementsContainer .elementLeft {
+  display: inline-block;
+  vertical-align: top;
+}
+#entryBlockHelperContentWorkspace.textMode .entryBlockHelperElementsContainer .elementRight {
+  display: inline-block;
+  margin-left: 15px;
+}
+#entryBlockHelperContentWorkspace.textMode .entryBlockHelperElementsContainer:not(:first-child) {
+  margin-top: 12px;
 }
 .hwMonitor {
   background-color: #363c46;

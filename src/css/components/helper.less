@@ -125,11 +125,8 @@
     z-index: 100;
 }
 
-#entryBlockHelperBlockWorkspace {
-    width: 400px;
-    height: 160px;
-    top: 16px;
-    overflow: hidden;
+.entryBlockHelperIntro .renderViewContainer {
+    display: none;
 }
 
 #entryBlockHelperBlockWorkspace>.renderViewContainer {
@@ -137,16 +134,12 @@
 }
 
 #entryBlockHelperBlockWorkspace>.renderViewContainer > svg {
-    position: absolute;
     overflow: visible;
-    left: 50%;
 }
 
 #entryBlockHelperDescriptionWorkspace {
-    position: absolute;
     line-height: 20px;
     width: 100%;
-    top: 100px;
     font-size: 13px;
     color: #707074;
     padding: 0 50px;
@@ -274,25 +267,91 @@
 }
 
 #entryBlockHelperBlockWorkspace {
-    position: absolute;
     width: 100%;
     bottom: 0px;
     overflow-y: auto;
     overflow-x: hidden;
+    top: 16px;
+    text-align: center;
 }
 
 #entryBlockHelperBlockWorkspace>svg {
-    position: relative; left: -50%;
+    position: relative; 
 }
 
 #entryBlockHelperDescriptionWorkspace {
-    position: absolute;
     line-height: 20px;
     width: 100%;
-    top: 100px;
     font-size: 13px;
     color: #707074;
     padding: 0 50px;
     text-align: center;
+}
+
+.textModeElem {
+    display: none;
+}
+
+
+#entryBlockHelperContentWorkspace.textMode {
+    padding: 18px;
+    top: 0;
+
+    .textModeElem {
+        display: block;
+    }
+
+    .entryBlockHelperTitle {
+        font-family: NanumGothic;
+        font-size: 18px;
+        font-weight: bold;
+        color: #3b3b3b;
+    }
+
+    .entryBlockHelperTitle:not(:first-child) {
+        margin-top: 20px;
+    }
+
+    .renderViewContainer {
+        text-align: left;
+        margin-top: 9px;
+    }
+
+    #entryBlockHelperBlockWorkspace {
+        height: auto;
+    }
+
+    #entryBlockHelperBlockWorkspace>div>svg {
+        position: relative; 
+        left: auto;
+    }
+
+    #entryBlockHelperDescriptionWorkspace {
+        text-align: left;
+        padding: 0;
+    }
+
+    .entryBlockHelperContent {
+        font-family: NanumGothic;
+        font-size: 14px;
+        color: #3b3b3b;
+        margin-top: 8px;
+    }
+
+    .entryBlockHelperElementsContainer {
+        .elementLeft {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .elementRight {
+            display: inline-block;
+            margin-left: 15px;
+        }
+    }
+
+    .entryBlockHelperElementsContainer:not(:first-child) {
+        margin-top: 12px;
+    }
 }
 
