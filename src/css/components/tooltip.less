@@ -1,3 +1,12 @@
+@keyframes fIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+
 .entryTooltipBG {
     position: absolute;
     width: 100%;
@@ -5,11 +14,28 @@
     z-index: 9990;
     top: 0; left: 0;
     cursor: pointer;
+    animation-name: fIn;
+    animation-duration: 0.3s;
+    animation-timing-function: ease-out;
+}
+
+@keyframes stretch {
+    0% {
+        opacity: 0;
+        transform: translate(0,-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0,0);
+    }
 }
 
 .entryTooltipWrapper {
     position: absolute;
     z-index: 9999;
+    animation-name: stretch;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-out;
 }
 
 @balloon-arrow-width: 25px;
@@ -25,28 +51,28 @@
 }
 
 .svg-arrow(@color, @position) {
-    & when (@position = up) {
-        @width: @balloon-arrow-width;
-        @height: @balloon-arrow-height;
-        @degrees: 0;
-        .mixin-svg-arrow(@width, @height, @degrees);
-    }
     & when (@position = down) {
         @width: @balloon-arrow-width;
         @height: @balloon-arrow-height;
         @degrees: 180 12.5 5.5;
         .mixin-svg-arrow(@width, @height, @degrees);
     }
-    & when (@position = left) {
-        @width: @balloon-arrow-height;
-        @height: @balloon-arrow-width;
-        @degrees: -90 18 18;
+    & when (@position = up) {
+        @width: @balloon-arrow-width;
+        @height: @balloon-arrow-height;
+        @degrees: 0;
         .mixin-svg-arrow(@width, @height, @degrees);
     }
     & when (@position = right) {
         @width: @balloon-arrow-height;
         @height: @balloon-arrow-width;
-        @degrees: 90 11 11;
+        @degrees: 90 5.5 5.5;
+        .mixin-svg-arrow(@width, @height, @degrees);
+    }
+    & when (@position = left) {
+        @width: @balloon-arrow-height;
+        @height: @balloon-arrow-width;
+        @degrees: -90 12.5 12.5;
         .mixin-svg-arrow(@width, @height, @degrees);
     }
 }
@@ -56,6 +82,10 @@
     padding: 25px;
     background-color: #ffffff;
     border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+    font-family: NanumGothic;
+    color: #3b3b3b;
     box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.19);
     &:before {
          position: absolute;
@@ -64,6 +94,16 @@
 }
 
 .entryTooltip.up {
+    .transform(translate(-50%,-100%));
+    &:before {
+        .svg-arrow("#FFF", up);
+         top: 100%;
+         left: 50%;
+         margin-left: -@balloon-arrow-width * 0.5;
+    }
+}
+
+.entryTooltip.down {
     margin-top: 11px;
     left: -50%;
     &:before {
@@ -71,6 +111,27 @@
          top: -@balloon-arrow-height;
          left: 50%;
          margin-left: -@balloon-arrow-width * 0.5;
+    }
+}
+
+.entryTooltip.left {
+    .transform(translate(-100%,-50%));
+    &:before {
+        .svg-arrow("#FFF", left);
+         left: 100%;
+         top: 50%;
+         margin-top: -@balloon-arrow-width * 0.5;
+    }
+}
+
+.entryTooltip.right {
+    margin-left: 11px;
+    .transform(translate(0,-50%));
+    &:before {
+        .svg-arrow("#FFF", right);
+         top: 50%;
+         left: -@balloon-arrow-height;
+         margin-top: -@balloon-arrow-width * 0.5;
     }
 }
 

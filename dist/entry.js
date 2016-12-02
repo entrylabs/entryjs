@@ -19667,10 +19667,22 @@ Entry.Tooltip = function(a, b) {
     var a = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), d = Entry.Dom("div", {classes:["entryTooltip", b.direction], parent:a}), e = b.target.offset(), f = b.target.get(0).getBoundingClientRect();
     switch(b.direction) {
       case "up":
-        e.left += f.width / 2, e.top += f.height;
+        e.left += f.width / 2;
+        e.top -= 11;
+        break;
+      case "down":
+        e.left += f.width / 2;
+        e.top += f.height;
+        break;
+      case "left":
+        e.top += f.height / 2;
+        e.left -= 11;
+        break;
+      case "right":
+        e.left += f.width, e.top += f.height / 2;
     }
     a.css(e);
-    d.html(b.content);
+    d.html(b.content.replace(/\n/gi, "<br>"));
     this._tooltips.push(a);
   };
   a.dispose = function() {

@@ -56,14 +56,26 @@ Entry.Tooltip = function(data, opts) {
         switch(data.direction) {
             case "up":
                 pos.left += bound.width / 2;
+                pos.top -= 11;
+                break;
+            case "down":
+                pos.left += bound.width / 2;
                 pos.top += bound.height;
+                break;
+            case "left":
+                pos.top += bound.height / 2;
+                pos.left -= 11;
+                break;
+            case "right":
+                pos.left += bound.width;
+                pos.top += bound.height / 2;
                 break;
             default:
                 break;
         }
 
         tooltipWrapper.css(pos);
-        tooltipDom.html(data.content);
+        tooltipDom.html(data.content.replace(/\n/gi, "<br>"));
         this._tooltips.push(tooltipWrapper);
     };
 
