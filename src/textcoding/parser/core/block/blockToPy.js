@@ -217,14 +217,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         blockToken = forStmtText;
                     }
                 }
-                result += blockToken;
+                result += blockToken; 
             }
         }
         return result;
     };
 
-    p.searchSyntax = function(datum) {
-        var schema;
+    p.searchSyntax = function(datum) { 
+        var schema; 
         var appliedParams;
         if(datum instanceof Entry.BlockView) {
             schema = datum.block._schema;
@@ -520,7 +520,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             result = result.substring(0, index);
             result = result.trim();
         }
-        result = result.concat('):').concat('\n');
+        result = result.concat('):');
 
         if(func.statements && func.statements.length) {
             var stmtResult = "";

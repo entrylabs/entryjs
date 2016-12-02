@@ -63,7 +63,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(block && block.type) {
                         console.log("block.type", block.type);
-                        if(Entry.TextCodingUtil.isJudgementBlock(block.type)) {
+                        var blockDatum = Entry.block[block.type];
+                        var targetSyntax = this.searchSyntax(blockDatum);
+
+                        if(targetSyntax) {
+                            var blockType = targetSyntax.blockType;
+                        }
+                      
+                        if(blockType == "param") continue;
+
+                        if(blockType == "event")
+                            isEntryEventExisted = true;
+                        
+                        if(blockType == "variable") { 
+                            if(!isEntryEventExisted)
+                                continue;
+                        }
+
+                        /*if(Entry.TextCodingUtil.isJudgementBlock(block.type)) {
                             continue;
                         }
                         else if(Entry.TextCodingUtil.isCalculationBlock(block.type)) {
@@ -74,18 +91,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                         else if(Entry.TextCodingUtil.isHWParamBlock(block.type)) {
                             continue;
-                        }
+                        }*/
 
-                        if(Entry.TextCodingUtil.isEventBlockByType(block.type)) {
+                        /*if(Entry.TextCodingUtil.isEventBlockByType(block.type)) {
                             isEntryEventExisted = true;
                             console.log("isEntryEventExisted", isEntryEventExisted);
-                        }
+                        }*/
 
-                        if(Entry.TextCodingUtil.isVariableDeclarationBlock(block.type)) {
+                        /*if(Entry.TextCodingUtil.isVariableDeclarationBlock(block.type)) {
                             console.log("isVariableDeclarationBlock block.type", block.type)
                             if(!isEntryEventExisted)
                                 continue;
-                        }
+                        }*/
 
                         this._thread.push(block);
                     }
@@ -2469,8 +2486,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(value || value == 0) {
                         console.log("final value", value); 
-                        console.log("final currentObject", currentObject);
-
 
                         if(Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
                             Entry.TextCodingUtil.updateLocalVariable(name, value, this._currentObject);
@@ -3165,7 +3180,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var params = [];
 
                 if(objectData.name == "self") {
-                    var syntax = String("%1");
+                    var syntax = String("%1#get_variable");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     var type;
                     if(blockSyntax)

@@ -62,13 +62,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var y = this.position && this.position.y ? this.position.y : 0;
         y -= CONTENT_HEIGHT/2;
         this._header = this.svgGroup.elem('rect', {
-                x: 0, y: y,
-                rx: 3, ry: 3,
+                x: 0, 
+                y: y,
+                rx: 3, 
+                ry: 3,
                 width: width,
                 height: CONTENT_HEIGHT,
                 fill: "#fff",
                 'fill-opacity': 0.4
-                });
+        });
 
         this.svgGroup.appendChild(this.textElement);
 

@@ -867,7 +867,9 @@ Entry.Board.DRAG_RADIUS = 5;
     p.insert = function(block, pointer, count) { // pointer can be target
         if (typeof block === "string")
             block = this.findById(block);
+
         this.separate(block, count);
+
         if (pointer.length === 3) // is global
             block.moveTo(pointer[0], pointer[1]);
         else if (pointer.length === 4 && pointer[3] === 0) {
@@ -875,8 +877,7 @@ Entry.Board.DRAG_RADIUS = 5;
             block.thread.cut(block);
             targetThread.insertToTop(block);
             block.getNextBlock().view.bindPrev();
-        }
-        else {
+        } else {
             var targetObj;
             if (pointer instanceof Array)
                 targetObj = this.code.getTargetByPointer(pointer);
