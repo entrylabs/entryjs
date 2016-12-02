@@ -332,15 +332,17 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 console.log("option", option);
                 var op0 = option[0];
                 var op1 = option[1];
-                if(dataParam === op1) {
+                if(dataParam === op1) { 
                     key = op0;
-                    value = op1
+                    value = op1;
                     if(textParam.codeMap) {
                         var codeMap = eval(textParam.codeMap);
                         var code = codeMap[value];
-                        if(code)
+                        console.log("codeMap", codeMap, "code", code, "dataParam", dataParam);
+                        if(code) 
                             value = code;
                     }
+
                     if(isNaN(key) && isNaN(value)) {
                         if(textParam.caseType == "no") {
                             key = key;

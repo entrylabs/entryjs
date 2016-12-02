@@ -40,7 +40,9 @@ Entry.CodeMap = {};
             null, 
             {"mouse": "mouse_pointer", "mouse_pointer": "mouse"},
             null
-
+        ],
+        make_clone_of: [
+            {"자신": "self", "self": "자신"}
         ]
     };
 

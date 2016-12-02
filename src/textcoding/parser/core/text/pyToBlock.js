@@ -62,7 +62,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var block = this[node.type](node);
                     console.log("result block", block);
 
-                    if(isLastBlock) { 
+                    if(isLastBlock) {  
                         var keyword;
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,

@@ -12178,7 +12178,7 @@ Entry.CodeMap = {};
 (function(b) {
   b.Entry = {start_scene_to:[{"\ub2e4\uc74c":"next", "\uc774\uc804":"pre"}], stop_code:[{thisOnly:"self", thisThread:"this", otherThread:"others", self:"thisOnly", "this":"thisThread", others:"otherThread", "\ubaa8\ub4e0":"all", "\uc790\uc2e0":"thisOnly", "\uc774":"thisThread", "\uc790\uc2e0\uc758 \ub2e4\ub978":"otherThread"}], change_shape_to:[{prev:"pre", pre:"prev", "\ub2e4\uc74c":"next", "\uc774\uc804":"prev"}], add_effect:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", "\ud22c\uba85\ub3c4":"transparency"}], 
   set_effect:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", "\ud22c\uba85\ub3c4":"transparency"}], send_layer_to:[{front:"FRONT", forward:"FORWARD", backward:"BACKWARD", back:"BACK", "\ub9e8 \uc55e":"FRONT", "\uc55e":"FORWARD", "\ub4a4":"BACKWARD", "\ub9e8 \ub4a4":"BACK"}], set_brush_color_to:[{red:"#FF0000", orange:"#FF9966", yellow:"#FFFF66", green:"#009900", blue:"#3333FF", navy:"#000099", purple:"#993399", black:"#000000", white:"#FFFFFF", brown:"#990000"}], is_touched:[null, {mouse:"mouse_pointer", 
-  mouse_pointer:"mouse"}, null]};
+  mouse_pointer:"mouse"}, null], make_clone_of:[{"\uc790\uc2e0":"self", self:"\uc790\uc2e0"}]};
   b.Arduino = {digitalWrite:[null, {on:"HIGH", off:"LOW", high:"on", low:"off"}], analogRead:[{A0:"0", A1:"1", A2:"2", A3:"3", A4:"4", A5:"5"}]};
   b.Hamster = {note:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F", 10:"Hamster.NOTE_F_SHARP", 11:"Hamster.NOTE_G", 12:"Hamster.NOTE_G_SHARP", 13:"Hamster.NOTE_A", 14:"Hamster.NOTE_B_FLAT", 15:"Hamster.NOTE_B", "Hamster.NOTE_C":4, "Hamster.NOTE_C_SHARP":5, "Hamster.NOTE_D_FLAT":5, "Hamster.NOTE_D":6, "Hamster.NOTE_E_FLAT":7, "Hamster.NOTE_D_SHARP":7, "Hamster.NOTE_E":8, "Hamster.NOTE_F":8, "Hamster.NOTE_F":9, "Hamster.NOTE_F_SHARP":10, 
   "Hamster.NOTE_G_FLAT":10, "Hamster.NOTE_G":11, "Hamster.NOTE_G_SHARP":12, "Hamster.NOTE_A_FLAT":12, "Hamster.NOTE_A":13, "Hamster.NOTE_B_FLAT":14, "Hamster.NOTE_A_SHARP":14, "Hamster.NOTE_B":15}, null, null]};
@@ -13419,7 +13419,7 @@ Entry.BlockToPyParser = function(b) {
         if (a === f) {
           key = g;
           value = f;
-          b.codeMap && (c = eval(b.codeMap)[value]) && (value = c);
+          b.codeMap && (c = eval(b.codeMap), e = c[value], console.log("codeMap", c, "code", e, "dataParam", a), e && (value = e));
           isNaN(key) && isNaN(value) && "no" != b.caseType && ("upper" == b.caseType ? (key = key.toUpperCase(), value = value.toUpperCase()) : (key = key.toLowerCase(), value = value.toLowerCase()));
           a = b.converter(key, value);
           "variable" == b.paramType && (a = a.replace(/\"/g, ""));
@@ -14017,7 +14017,7 @@ Entry.PyToBlockParser = function(b) {
           console.log("Program node", f);
           var g = this[f.type](f);
           console.log("result block", g);
-          c && Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT, void 0, this._blockCount);
+          c && Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, void 0, this._blockCount);
           if (g && g.type) {
             console.log("block.type", g.type);
             var h = this.searchSyntax(Entry.block[g.type]);

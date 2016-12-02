@@ -9615,7 +9615,8 @@ Entry.block = {
                         "menuName": "clone",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_FLOW,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        codeMap: "Entry.CodeMap.Entry.make_clone_of[0]"
                     },
                 ]
             }
