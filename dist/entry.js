@@ -8482,6 +8482,11 @@ p.generateView = function(b, a) {
     Entry.isForLecture && d.addClass("lecture");
     this.parentView_.appendChild(d);
     var c = Entry.createElement("div", "entryBlockHelperContentWorkspace");
+    this._contentView = c;
+    var e = Entry.createElement("div");
+    e.addClass("entryBlockHelperTitle textModeElem");
+    e.innerHTML = "\uba85\ub839\uc5b4";
+    c.appendChild(e);
     c.addClass("entryBlockHelperIntro");
     Entry.isForLecture && c.addClass("lecture");
     d.appendChild(c);
@@ -8489,11 +8494,63 @@ p.generateView = function(b, a) {
     this.blockHelperView_ = d;
     d = Entry.createElement("div", "entryBlockHelperBlockWorkspace");
     this.blockHelperContent_.appendChild(d);
-    c = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
-    this.blockHelperContent_.appendChild(c);
-    c.innerHTML = Lang.Helper.Block_click_msg;
-    this.blockHelperDescription_ = c;
-    this._renderView = new Entry.RenderView($(d), "LEFT");
+    e = Entry.createElement("div");
+    e.addClass("entryBlockHelperTitle textModeElem");
+    e.innerHTML = "\uc124\uba85";
+    c.appendChild(e);
+    e = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
+    e.addClass("entryBlockHelperContent");
+    this.blockHelperContent_.appendChild(e);
+    e.innerHTML = Lang.Helper.Block_click_msg;
+    this.blockHelperDescription_ = e;
+    e = Entry.createElement("div");
+    e.addClass("entryBlockHelperTitle textModeElem");
+    e.innerHTML = "\uc694\uc18c";
+    c.appendChild(e);
+    this._elementsContainer = Entry.createElement("div", "entryBlockHelperElementsContainer");
+    this._elementsContainer.addClass("entryBlockHelperContent textModeElem");
+    c.appendChild(this._elementsContainer);
+    e = Entry.createElement("div");
+    e.addClass("entryBlockHelperElementsContainer");
+    var f = Entry.createElement("div");
+    f.innerHTML = "A";
+    f.addClass("elementLeft");
+    var g = Entry.createElement("div");
+    g.innerHTML = "adsfdasfdsf<br/>nasdfdsfadfn";
+    g.addClass("elementRight");
+    e.appendChild(f);
+    e.appendChild(g);
+    this._elementsContainer.appendChild(e);
+    e = Entry.createElement("div");
+    e.addClass("entryBlockHelperElementsContainer");
+    f = Entry.createElement("div");
+    f.innerHTML = "A";
+    f.addClass("elementLeft");
+    g = Entry.createElement("div");
+    g.innerHTML = "adsfdasfdsf<br/>nasdfdsfadfn";
+    g.addClass("elementRight");
+    e.appendChild(f);
+    e.appendChild(g);
+    this._elementsContainer.appendChild(e);
+    e = Entry.createElement("div");
+    e.addClass("entryBlockHelperTitle textModeElem");
+    e.innerHTML = "\uc608\uc2dc \ucf54\ub4dc";
+    c.appendChild(e);
+    e = Entry.createElement("div", "entryBlockHelperCodeMirrorContainer");
+    e.addClass("textModeElem");
+    c.appendChild(e);
+    this.codeMirror = CodeMirror(e, {lineNumbers:!0, value:"", mode:{name:"python"}, indentUnit:4, theme:"default", viewportMargin:10, styleActiveLine:!1, readOnly:!0});
+    this._doc = this.codeMirror.getDoc();
+    this._codeMirror = this.codeMirror;
+    e = Entry.createElement("div");
+    e.addClass("entryBlockHelperTitle textModeElem");
+    e.innerHTML = "\uc608\uc2dc \uc124\uba85";
+    c.appendChild(e);
+    this._codeMirrorDesc = Entry.createElement("div");
+    this._codeMirrorDesc.addClass("entryBlockHelperContent textModeElem");
+    this._codeMirrorDesc.innerHTML = "\uc624\ube0c\uc81d\ud2b8\ub97c \ud074\ub9ad\ud558\uba74 \ud22c\uba85\ub3c4\ub97c 50\ub9cc\ud07c \uc90c";
+    c.appendChild(this._codeMirrorDesc);
+    this._renderView = new Entry.RenderView($(d), "LEFT_MOST");
     this.code = new Entry.Code([]);
     this._renderView.changeCode(this.code);
     this.first = !0;
@@ -8519,15 +8576,9 @@ p.renderBlock = function(b) {
     this.code.createThread([d]);
     this.code.board.align();
     this.code.board.resize();
-    var d = this.code.getThreads()[0].getFirstBlock().view, c = d.svgGroup.getBBox();
-    b = c.width;
-    c = c.height;
-    d = d.getSkeleton().box(d).offsetX;
-    isNaN(d) && (d = 0);
-    this.blockHelperDescription_.innerHTML = a;
+    this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD ? (this._contentView.addClass("textMode"), this._codeMirror.setValue("def when_start():\nsdfdasf\nddfdsfkjdajk")) : (this._contentView.removeClass("textMode"), this.blockHelperDescription_.innerHTML = a);
     this._renderView.align();
-    $(this.blockHelperDescription_).css({top:c + 30});
-    this._renderView.svgDom.css({"margin-left":-(b / 2) - 20 - d});
+    this._renderView.setDomSize();
   }
 };
 p.getView = function() {
@@ -12190,26 +12241,6 @@ Entry.Console = function() {
     this._isEditing !== a && (this._isEditing = a);
   };
 })(Entry.Console.prototype);
-Entry.TextCodingHelper = function() {
-  Entry.propertyPanel && (this.createView(), Entry.textCodingHelper = this);
-};
-(function(b) {
-  b.createView = function() {
-    this.parentView_ = Entry.propertyPanel.modes.helper.obj.blockHelperContent_;
-    this.view = Entry.createElement("div", "textCodingExampleView");
-    this.codeMirror = CodeMirror(this.view, {lineNumbers:!0, lineWrapping:!0, value:"", mode:{name:"python"}, theme:"default", styleActiveLine:!1});
-    this.parentView_.appendChild(this.view);
-    this._doc = this.codeMirror.getDoc();
-    this._codeMirror = this.codeMirror;
-    this._codeMirror.setValue("def when_start():");
-  };
-  b.getView = function() {
-    return this.view;
-  };
-  b.removeView = function() {
-    this.parentView_.removeChild(this.view);
-  };
-})(Entry.TextCodingHelper.prototype);
 Entry.TextCodingUtil = {};
 (function(b) {
   this._funcParams;
@@ -26747,7 +26778,6 @@ Entry.Vim = function(b, a) {
   }
   this.createDom(b);
   this._parser = new Entry.Parser(null, null, this.codeMirror);
-  this._helper = new Entry.TextCodingHelper;
   Entry.Model(this, !1);
   window.eventset = [];
 };

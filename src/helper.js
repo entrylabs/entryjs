@@ -24,14 +24,16 @@ p.generateView = function(parentView, option) {
     if (Entry.isForLecture)
         blockHelperView.addClass('lecture');
     helper.parentView_.appendChild(blockHelperView);
-    // if (!Entry.isForLecture) {
-    //     var blockHelperHeader = Entry.createElement('div',
-    //                             'entryBlockHelperHeaderWorkspace');
-    //     blockHelperHeader.innerHTML = Lang.Helper.Block_info;
-    //     blockHelperView.appendChild(blockHelperHeader);
-    // }
-    var blockHelperContent = Entry.createElement('div',
-                            'entryBlockHelperContentWorkspace');
+
+    var blockHelperContent =
+        Entry.createElement('div', 'entryBlockHelperContentWorkspace');
+    this._contentView = blockHelperContent;
+
+    var commandTitle = Entry.createElement('div');
+    commandTitle.addClass('entryBlockHelperTitle textModeElem');
+    commandTitle.innerHTML = '명령어';
+    blockHelperContent.appendChild(commandTitle);
+
     blockHelperContent.addClass('entryBlockHelperIntro');
     if (Entry.isForLecture)
         blockHelperContent.addClass('lecture');
@@ -43,13 +45,91 @@ p.generateView = function(parentView, option) {
                             'entryBlockHelperBlockWorkspace');
     helper.blockHelperContent_.appendChild(blockHelperBlock);
 
+    var descTitle = Entry.createElement('div');
+    descTitle.addClass('entryBlockHelperTitle textModeElem');
+    descTitle.innerHTML = '설명';
+    blockHelperContent.appendChild(descTitle);
+
     var blockHelperDescription = Entry.createElement('div',
                             'entryBlockHelperDescriptionWorkspace');
+    blockHelperDescription.addClass('entryBlockHelperContent');
     helper.blockHelperContent_.appendChild(blockHelperDescription);
     blockHelperDescription.innerHTML = Lang.Helper.Block_click_msg;
     this.blockHelperDescription_ = blockHelperDescription;
 
-    this._renderView = new Entry.RenderView($(blockHelperBlock), 'LEFT');
+    var elementsTitle = Entry.createElement('div');
+    elementsTitle.addClass('entryBlockHelperTitle textModeElem');
+    elementsTitle.innerHTML = '요소';
+    blockHelperContent.appendChild(elementsTitle);
+
+
+    this._elementsContainer =
+        Entry.createElement('div', 'entryBlockHelperElementsContainer');
+
+    this._elementsContainer.addClass('entryBlockHelperContent textModeElem');
+    blockHelperContent.appendChild(this._elementsContainer);
+
+    //TODO remove
+    var box = Entry.createElement('div');
+    box.addClass('entryBlockHelperElementsContainer');
+    var left = Entry.createElement('div');
+    left.innerHTML = 'A';
+    left.addClass('elementLeft');
+    var right = Entry.createElement('div');
+    right.innerHTML = 'adsfdasfdsf<br/>nasdfdsfadfn';
+    right.addClass('elementRight');
+    box.appendChild(left);
+    box.appendChild(right);
+    this._elementsContainer.appendChild(box);
+
+    var box = Entry.createElement('div');
+    box.addClass('entryBlockHelperElementsContainer');
+    var left = Entry.createElement('div');
+    left.innerHTML = 'A';
+    left.addClass('elementLeft');
+    var right = Entry.createElement('div');
+    right.innerHTML = 'adsfdasfdsf<br/>nasdfdsfadfn';
+    right.addClass('elementRight');
+    box.appendChild(left);
+    box.appendChild(right);
+    this._elementsContainer.appendChild(box);
+
+
+    var codeMirrorTitle = Entry.createElement('div');
+    codeMirrorTitle.addClass('entryBlockHelperTitle textModeElem');
+    codeMirrorTitle.innerHTML = '예시 코드';
+    blockHelperContent.appendChild(codeMirrorTitle);
+
+    var codeMirrorView = Entry.createElement('div', 'entryBlockHelperCodeMirrorContainer');
+    codeMirrorView.addClass('textModeElem');
+    blockHelperContent.appendChild(codeMirrorView);
+
+    this.codeMirror = CodeMirror(codeMirrorView, {
+        lineNumbers: true,
+        value: "",
+        mode: {name: "python"},
+        indentUnit: 4,
+        theme: "default",
+        viewportMargin: 10,
+        styleActiveLine: false,
+        readOnly: true
+    });
+
+
+    this._doc = this.codeMirror.getDoc();
+    this._codeMirror = this.codeMirror;
+
+    var codeMirrorDescTitle = Entry.createElement('div');
+    codeMirrorDescTitle.addClass('entryBlockHelperTitle textModeElem');
+    codeMirrorDescTitle.innerHTML = '예시 설명';
+    blockHelperContent.appendChild(codeMirrorDescTitle);
+
+    this._codeMirrorDesc = Entry.createElement('div');
+    this._codeMirrorDesc.addClass('entryBlockHelperContent textModeElem');
+    this._codeMirrorDesc.innerHTML = '오브젝트를 클릭하면 투명도를 50만큼 줌';
+    blockHelperContent.appendChild(this._codeMirrorDesc);
+
+    this._renderView = new Entry.RenderView($(blockHelperBlock), 'LEFT_MOST');
     this.code = new Entry.Code([]);
     this._renderView.changeCode(this.code);
 
@@ -59,7 +139,8 @@ p.generateView = function(parentView, option) {
 p.bindWorkspace = function(workspace) {
     if (!workspace) return;
 
-    if (this._blockViewObserver) this._blockViewObserver.destroy();
+    if (this._blockViewObserver)
+        this._blockViewObserver.destroy();
 
     this.workspace = workspace;
     if (this._renderView)
@@ -99,24 +180,17 @@ p.renderBlock = function(type) {
     this.code.board.align();
     this.code.board.resize();
 
-    var blockView = this.code.getThreads()[0].getFirstBlock().view;
-    var bBox = blockView.svgGroup.getBBox();
-    var blockWidth = bBox.width;
-    var blockHeight = bBox.height;
-    var offsetX =blockView.getSkeleton().box(blockView).offsetX;
-    if (isNaN(offsetX)) offsetX = 0;
-    this.blockHelperDescription_.innerHTML = description;
+    if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+        this._contentView.addClass('textMode');
+        var exampleText = "def when_start():\nsdfdasf\nddfdsfkjdajk";
+        this._codeMirror.setValue(exampleText);
+    } else {
+        this._contentView.removeClass('textMode');
+        this.blockHelperDescription_.innerHTML = description;
+    }
+
     this._renderView.align();
-
-    $(this.blockHelperDescription_).css({
-        top: blockHeight + 30
-    });
-
-    var renderView = this._renderView;
-    var dom = renderView.svgDom;
-    dom.css({
-        'margin-left':-(blockWidth/2) -20 - offsetX
-    });
+    this._renderView.setDomSize();
 };
 
 p.getView = function() {
