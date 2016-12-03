@@ -12182,8 +12182,8 @@ Entry.CodeMap = {};
   "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], see_angle_object:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], coordinate_object:[null, null, null, {"\uc790\uc2e0":"self", "\ud06c\uae30":"size", "\ubc29\ud5a5":"rotation", "\uc774\ub3d9 \ubc29\ud5a5":"direction", "\ubaa8\uc591 \ubc88\ud638":"picture_index", "\ubaa8\uc591 \uc774\ub984":"picutre_name", picture_index:"shape_number", picture_name:"shape_name", shape_number:"picture_index", shape_name:"picture_name"}], 
   choose_project_timer_action:[null, {start:"START", stop:"STOP", reset:"RESET"}], set_visible_project_timer:[null, {show:"SHOW", hide:"HIDE"}], get_date:[null, {year:"YEAR", month:"MONTH", day:"DAY", hour:"HOUR", minute:"MINUTE", second:"SECOND"}], distance_something:[null, {mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], set_visible_answer:[{show:"SHOW", hide:"HIDE"}]};
   b.Arduino = {arduino_ext_toggle_led:[null, {on:"HIGH", off:"LOW", high:"on", low:"off"}], arduino_ext_analog_list:[{a0:"0", a1:"1", a2:"2", a3:"3", a4:"4", a5:"5"}]};
-  b.Hamster = {hamster_play_note_for:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F", 10:"Hamster.NOTE_F_SHARP", 11:"Hamster.NOTE_G", 12:"Hamster.NOTE_G_SHARP", 13:"Hamster.NOTE_A", 14:"Hamster.NOTE_B_FLAT", 15:"Hamster.NOTE_B", "Hamster.NOTE_C":4, "Hamster.NOTE_C_SHARP":5, "Hamster.NOTE_D_FLAT":5, "Hamster.NOTE_D":6, "Hamster.NOTE_E_FLAT":7, "Hamster.NOTE_D_SHARP":7, "Hamster.NOTE_E":8, "Hamster.NOTE_F":8, "Hamster.NOTE_F":9, 
-  "Hamster.NOTE_F_SHARP":10, "Hamster.NOTE_G_FLAT":10, "Hamster.NOTE_G":11, "Hamster.NOTE_G_SHARP":12, "Hamster.NOTE_A_FLAT":12, "Hamster.NOTE_A":13, "Hamster.NOTE_B_FLAT":14, "Hamster.NOTE_A_SHARP":14, "Hamster.NOTE_B":15}, null, null]};
+  b.Hamster = {hamster_play_note_for:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F", 10:"Hamster.NOTE_F_SHARP", 11:"Hamster.NOTE_G", 12:"Hamster.NOTE_G_SHARP", 13:"Hamster.NOTE_A", 14:"Hamster.NOTE_B_FLAT", 15:"Hamster.NOTE_B", "Hamster.NOTE_C":4, "Hamster.NOTE_C_SHARP":5, "Hamster.NOTE_D_FLAT":5, "Hamster.NOTE_D":6, "Hamster.NOTE_E_FLAT":7, "Hamster.NOTE_D_SHARP":7, "Hamster.NOTE_E":8, "Hamster.NOTE_F":9, "Hamster.NOTE_F_SHARP":10, 
+  "Hamster.NOTE_G_FLAT":10, "Hamster.NOTE_G":11, "Hamster.NOTE_G_SHARP":12, "Hamster.NOTE_A_FLAT":12, "Hamster.NOTE_A":13, "Hamster.NOTE_B_FLAT":14, "Hamster.NOTE_A_SHARP":14, "Hamster.NOTE_B":15}, null, null]};
 })(Entry.CodeMap);
 Entry.KeyboardCode = {};
 (function(b) {
@@ -18108,6 +18108,65 @@ Entry.initFonts = function(b) {
   this.fonts = b;
   b || (this.fonts = []);
 };
+Entry.Tooltip = function(b, a) {
+  this.data = b instanceof Array ? b : [b];
+  this.opts = a || {};
+  this._tooltips = [];
+  this._indicators = [];
+  1 < b.length && (this.isIndicator = !0);
+  this.render();
+};
+(function(b) {
+  b.render = function() {
+    this.opts.dimmed && this.renderBG();
+    this.renderTooltips();
+  };
+  b.renderBG = function() {
+    this._bg = Entry.Dom("div", {classes:["entryDimmed", "entryTooltipBG"], parent:$(document.body)});
+    this._bg.bindOnClick(this.dispose.bind(this));
+  };
+  b.renderTooltips = function() {
+    this.data.map(this._renderTooltip.bind(this));
+  };
+  b._renderTooltip = function(a) {
+    var b = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), c = Entry.Dom("div", {classes:["entryTooltip", a.direction], parent:b}), e = a.target.offset(), f = a.target.get(0).getBoundingClientRect();
+    this.isIndicator && this.renderIndicator(e.left + f.width / 2, e.top + f.height / 2);
+    switch(a.direction) {
+      case "up":
+        e.left += f.width / 2;
+        e.top -= 11;
+        break;
+      case "down":
+        e.left += f.width / 2;
+        e.top += f.height;
+        break;
+      case "left":
+        e.top += f.height / 2;
+        e.left -= 11;
+        break;
+      case "right":
+        e.left += f.width, e.top += f.height / 2;
+    }
+    b.css(e);
+    c.html(a.content.replace(/\n/gi, "<br>"));
+    this._tooltips.push(b);
+  };
+  b.renderIndicator = function(a, b) {
+    var c = Entry.Dom("div", {classes:["entryTooltipIndicator"], parent:$(document.body)});
+    c.html("<div></div><div></div><div></div>");
+    c.css({left:a, top:b});
+    this._indicators.push(c);
+  };
+  b.dispose = function() {
+    this._bg && this._bg.remove();
+    for (this.opts.callBack && this.opts.callBack.call();this._tooltips.length;) {
+      this._tooltips.pop().remove();
+    }
+    for (;this._indicators.length;) {
+      this._indicators.pop().remove();
+    }
+  };
+})(Entry.Tooltip.prototype);
 Entry.Utils = {};
 Entry.overridePrototype = function() {
   Number.prototype.mod = function(b) {

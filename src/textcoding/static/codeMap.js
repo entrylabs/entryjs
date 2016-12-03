@@ -120,7 +120,6 @@ Entry.CodeMap = {};
                 "Hamster.NOTE_E_FLAT": 7,
                 "Hamster.NOTE_D_SHARP": 7,
                 "Hamster.NOTE_E": 8,
-                "Hamster.NOTE_F": 8,
                 "Hamster.NOTE_F": 9,
                 "Hamster.NOTE_F_SHARP": 10,
                 "Hamster.NOTE_G_FLAT": 10,
