@@ -295,6 +295,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         if(code)
                             value = code; 
                     }
+                    console.log("dropdown key, value", key, value);
                     if(isNaN(key) && isNaN(value)) {
                         if(textParam.caseType == "no") {
                             key = key;
@@ -323,6 +324,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldDropdownDynamic = function(dataParam, textParam) {
+        console.log("FieldDropdown", dataParam, textParam); 
         var options;
         var returnValue = dataParam;
         if(textParam && textParam.converter && textParam.options) {
@@ -335,33 +337,37 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 if(dataParam === op1) { 
                     key = op0;
                     value = op1;
-                    if(textParam.codeMap) {
+                    dataParam = textParam.converter(key, value);
+                    
+                    console.log("dataParam convert result", dataParam);
+                    if(textParam.codeMap) { 
+                        dataParam = dataParam.replace(/\"/g, "");
                         var codeMap = eval(textParam.codeMap);
-                        var code = codeMap[value];
+                        var code = codeMap[dataParam];
                         console.log("codeMap", codeMap, "code", code, "dataParam", dataParam);
                         if(code) 
-                            value = code;
-                    }
+                            dataParam = code; 
+                        dataParam = '"()"'.replace('()', dataParam);
+                    } 
 
-                    if(isNaN(key) && isNaN(value)) {
+
+
+                    if(isNaN(dataParam)) {
                         if(textParam.caseType == "no") {
-                            key = key;
-                            value = value;
+                            dataParam = dataParam;
                         }
                         else if(textParam.caseType == "upper") {
-                            key = key.toUpperCase();
-                            value = value.toUpperCase();
+                            dataParam = dataParam.toUpperCase();
                         }
                         else {
-                            key = key.toLowerCase();
-                            value = value.toLowerCase();
+                            dataParam = dataParam.toLowerCase();
                         }
                     }
 
-                    dataParam = textParam.converter(key, value);
                     if(textParam.paramType == "variable") {
                         dataParam = dataParam.replace(/\"/g, "");
                     }
+
                     break;
                 }
             }
@@ -522,7 +528,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             result = result.substring(0, index);
             result = result.trim();
         }
-        result = result.concat('):');
+        result = result.concat('):').concat('\n');
 
         if(func.statements && func.statements.length) {
             var stmtResult = "";
@@ -535,7 +541,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         }
         this._funcMap.clear();
 
-        return result;
+        return result.trim();
     };
 
     p.getFuncInfo = function(funcBlock) {

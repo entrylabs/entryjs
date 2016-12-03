@@ -1943,13 +1943,13 @@ Entry.TextCodingUtil = {};
 
     tu.generateVariablesDeclaration = function() {
         var result = "";
-        var currentObject = this._currentObject;
+        var currentObject = Entry.playground.object;
         var vc = Entry.variableContainer;
         if(!vc)
             return;
         //inspect variables
         var targets = vc.variables_ || [];
-        for (var i=targets.length-1; i>=0; i--) {
+        for (var i=targets.length-1; i>=0; i--) { 
             var v = targets[i];
             var name = v.name_;
             var value = v.value_;
@@ -1972,7 +1972,7 @@ Entry.TextCodingUtil = {};
 
     tu.generateListsDeclaration = function() {
         var result = "";
-        var currentObject = this._currentObject;
+        var currentObject = Entry.playground.object;
         var vc = Entry.variableContainer;
         if(!vc)
             return;
@@ -2009,5 +2009,29 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
+    };
+
+    tu.isVariableNumber = function(id, type) {
+        console.log("isVariableNumber", id, type);
+        var currentObject = Entry.playground.object;
+        var entryVariables = Entry.variableContainer.variables_;
+        for(var i in entryVariables) {
+            var entryVariable = entryVariables[i];
+            if(type == "global") {
+                if(entryVariable.object_ === null && entryVariable.id_ == id) {
+                    if(!isNaN(entryVariable.value_))
+                        return true;
+                }
+            }
+            else if(type == "local") {
+                if(entryVariable.object_ === currentObject.id && entryVariable.id_ == id) {
+                    if(!isNaN(entryVariable.value_))
+                        return true;
+                }
+            }
+
+        }
+
+        return false;
     };
 })(Entry.TextCodingUtil);

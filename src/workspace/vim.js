@@ -108,12 +108,12 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
             testArr.forEach(function (text, i) {
                 _self.codeMirror.replaceSelection(text);
                 var cursor = _self.doc.getCursor();
-                lastLine = cursor.line;
+                lastLine = cursor.line; 
                 /*if(!Entry.TextCodingUtil.isEntryEventFuncByFullText(text))
                     _self.codeMirror.indentLine(lastLine);*/
-                if(i === 0 || max !== i) {
+                /*if(i === 0 || max !== i) {
                     _self.codeMirror.replaceSelection('\n');
-                }
+                }*/
             });
             var mouseup = Entry.Utils.createMouseEvent('mouseup', e);
             _self.codeMirror.display.scroller.dispatchEvent(mouseup);

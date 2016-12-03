@@ -10,54 +10,96 @@ Entry.CodeMap = {};
 
 (function(cc) {
     cc.Entry = {
-        start_scene_to: [
+        start_neighbor_scene: [
             {"다음": "next", "이전": "pre"} 
         ],
-        stop_code: [
+        stop_object: [
             {"thisOnly": "self", "thisThread": "this", "otherThread": "others",
              "self": "thisOnly", "this": "thisThread", "others": "otherThread",
              "모든": "all", "자신": "thisOnly", "이": "thisThread", "자신의 다른": "otherThread"}
         ],
-        change_shape_to: [
+        change_to_next_shape: [
             {"prev": "pre", "pre": "prev", "다음": "next", "이전": "prev"}
         ],
-        add_effect: [
+        add_effect_amount: [
             {"색깔": "color", "밝기": "brightness", "투명도": "transparency"}
         ],
-        set_effect: [
+        change_effect_amount: [
             {"색깔": "color", "밝기": "brightness", "투명도": "transparency"}
         ],
-        send_layer_to: [
+        change_object_index: [
             {"front": "FRONT", "forward": "FORWARD", "backward": "BACKWARD", "back": "BACK", 
             "맨 앞": "FRONT", "앞": "FORWARD", "뒤": "BACKWARD", "맨 뒤": "BACK"}
         ],
-        set_brush_color_to: [
+        set_color: [
             {"red": "#FF0000", "orange": "#FF9966", "yellow": "#FFFF66", "green": "#009900", 
              "blue": "#3333FF", "navy": "#000099", "purple": "#993399", "black": "#000000", 
              "white": "#FFFFFF", "brown": "#990000"}
         ],
-        is_touched: [
+        reach_something: [
             null, 
-            {"mouse": "mouse_pointer", "mouse_pointer": "mouse"},
+            {"mouse": "mouse_pointer", "wall":"edge", "wall_up":"edge_up", 
+            "wall_down":"edge_down", "wall_right":"edge_right", "wall_left":"edge_left",
+            "mouse_pointer": "mouse", "edge":"wall", "edge_up":"wall_up", "edge_down":"wall_down", 
+            "edge_right":"wall_right", "edge_left":"edge_left"}, 
             null
         ],
-        make_clone_of: [
-            {"자신": "self", "self": "자신"}
+        create_clone: [
+            {"자신": "self"} 
+        ],
+        locate: [
+            {"mouse": "mouse_pointer", "mouse_pointer": "mouse", "마우스포인터": "mouse"}
+        ],
+        locate_object_time: [
+            null,
+            {"mouse": "mouse_pointer", "mouse_pointer": "mouse", "마우스포인터": "mouse"}
+        ],
+        see_angle_object: [
+            {"mouse": "mouse_pointer", "mouse_pointer": "mouse", "마우스포인터": "mouse"}
+        ],
+        coordinate_object: [
+            null,
+            null,
+            null,
+            {"자신": "self", "크기":"size", "방향":"rotation", "이동 방향":"direction", 
+            "모양 번호":"picture_index", "모양 이름":"picutre_name", 
+            "picture_index":"shape_number", "picture_name":"shape_name",
+            "shape_number":"picture_index", "shape_name":"picture_name"
+            } 
+        ],
+        choose_project_timer_action: [
+            null,
+            {"start":"START", "stop":"STOP", "reset":"RESET"}
+        ],
+        set_visible_project_timer: [
+            null,
+            {"show":"SHOW", "hide":"HIDE"}
+        ],
+        get_date: [
+            null,
+            {"year":"YEAR", "month":"MONTH", "day":"DAY", "hour":"HOUR", "minute":"MINUTE", "second":"SECOND"}
+        ],
+        distance_something: [
+            null,
+            {"mouse": "mouse_pointer", "mouse_pointer": "mouse", "마우스포인터": "mouse"}
+        ],
+        set_visible_answer: [
+            {"show": "SHOW", "hide": "HIDE"}
         ]
     };
 
     cc.Arduino = {
-        digitalWrite: [
+        arduino_ext_toggle_led: [
             null,
             {"on":"HIGH", "off":"LOW", "high":"on", "low":"off"}
-        ], 
-        analogRead: [
-            {"A0":"0", "A1":"1", "A2":"2", "A3":"3", "A4":"4", "A5":"5"}
+        ],
+        arduino_ext_analog_list: [
+            {"a0":"0", "a1":"1", "a2":"2", "a3":"3", "a4":"4", "a5":"5"}
         ]
     };
 
     cc.Hamster = {
-        note: [
+        hamster_play_note_for: [
             {
                 4: "Hamster.NOTE_C",
                 5: "Hamster.NOTE_C_SHARP",
