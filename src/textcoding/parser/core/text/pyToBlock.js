@@ -2784,7 +2784,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var name = leftData.name;
 
                 if(!Entry.TextCodingUtil.isGlobalVariableExisted(name))
-                    return result;
+                    return result; 
 
                 name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
                 params.push(name);

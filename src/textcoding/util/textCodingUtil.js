@@ -1717,7 +1717,7 @@ Entry.TextCodingUtil = {};
         var targets = vc.variables_ || [];
         for (var i=0; i<targets.length; i++) {
             if (test(targets[i].name_)) {
-                console.log("vari here"); 
+                console.log("vari here", Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]); 
                 return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT];
             }
         }

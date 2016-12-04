@@ -239,7 +239,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-                try {
+                try { 
                     Entry.getMainWS().blockMenu.reDraw();
 
                     this._pyBlockCount = {};

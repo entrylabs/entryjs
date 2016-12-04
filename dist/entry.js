@@ -13015,7 +13015,7 @@ Entry.TextCodingUtil = {};
     if (a) {
       for (var b = a.variables_ || [], c = 0;c < b.length;c++) {
         if (/ /.test(b[c].name_)) {
-          return console.log("vari here"), Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT];
+          return console.log("vari here", Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]), Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT];
         }
       }
       b = a.lists_ || [];
