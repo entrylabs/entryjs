@@ -45,7 +45,7 @@ Entry.CodeMap = {};
             null
         ],
         create_clone: [
-            {"자신": "self"} 
+            {"자신": "self", "self": "self"} 
         ],
         locate: [
             {"mouse": "mouse_pointer", "mouse_pointer": "mouse", "마우스포인터": "mouse"}
