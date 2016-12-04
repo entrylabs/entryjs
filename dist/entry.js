@@ -12692,11 +12692,21 @@ Entry.TextCodingUtil = {};
     var b = a.indexOf("(");
     a = a.substring(0, b);
     console.log("isEntryEventFuncByFullText name", a);
-    return "def when_start" == a || "def when_press_key" == a || "def when_click_mouse_on" == a || "def when_click_mouse_off" == a || "def when_click_object_on" == a || "def when_click_object_off" == a || "def when_get_signal" == a || "def when_start_scene" == a || "def when_make_clone" == a ? !0 : !1;
+    return "def when_start" == a || "def when_press_key" == a || "def when_click_mouse_on" == a || "def when_click_mouse_off" == a || "def when_click_object_on" == a || "def when_click_object_off" == a || "def when_get_signal" == a || "def when_start_scene" == a || "def when_make_clone" == a || "def entry_event_start" == a || "def entry_event_key" == a || "def entry_event_mouse_down" == a || "def entry_event_mouse_up" == a || "def entry_event_object_down" == a || "def entry_event_object_up" == a || 
+    "def entry_event_signal" == a || "def entry_event_scene_start" == a || "def entry_event_clone_create" == a ? !0 : !1;
+  };
+  b.eventBlockSyntaxFilter = function(a) {
+    if ("when_start" == a || "when_press_key" == a || "when_click_mouse_on" == a || "when_click_mouse_off" == a || "when_click_object_on" == a || "when_click_object_off" == a || "when_get_signal" == a || "when_start_scene" == a || "when_make_clone" == a) {
+      return "def " + a;
+    }
+    if ("entry_event_start" == a || "entry_event_key" == a || "entry_event_mouse_down" == a || "entry_event_mouse_up" == a || "entry_event_object_down" == a || "entry_event_object_up" == a || "entry_event_signal" == a || "entry_event_scene_start" == a || "entry_event_clone_create" == a) {
+      return a = "def " + a;
+    }
   };
   b.isEntryEventFuncName = function(a) {
     console.log("isEntryEventFuncName name", a);
-    if ("when_start" == a || "when_press_key" == a || "when_click_mouse_on" == a || "when_click_mouse_off" == a || "when_click_object_on" == a || "when_click_object_off" == a || "when_get_signal" == a || "when_start_scene" == a || "when_make_clone" == a) {
+    if ("when_start" == a || "when_press_key" == a || "when_click_mouse_on" == a || "when_click_mouse_off" == a || "when_click_object_on" == a || "when_click_object_off" == a || "when_get_signal" == a || "when_start_scene" == a || "when_make_clone" == a || "entry_event_start" == a || "entry_event_key" == a || "entry_event_mouse_down" == a || "entry_event_mouse_up" == a || "entry_event_object_down" == a || "entry_event_object_up" == a || "entry_event_signal" == a || "entry_event_scene_start" == a || 
+    "entry_event_clone_create" == a) {
       return !0;
     }
     console.log("isEntryEventFuncName result is NOT");

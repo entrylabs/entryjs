@@ -947,6 +947,9 @@ Entry.TextCodingUtil = {};
 
     };
 
+    /////////////////////////////////////////////////////
+    //Important 
+    //////////////////////////////////////////////////// 
     tu.isEntryEventFuncByFullText = function(text) {
         var index = text.indexOf("(");
         var name = text.substring(0, index);
@@ -964,8 +967,57 @@ Entry.TextCodingUtil = {};
 
             return true;
         }
+        else if(name == "def entry_event_start" ||
+            name == "def entry_event_key" ||
+            name == "def entry_event_mouse_down" ||
+            name == "def entry_event_mouse_up" ||
+            name == "def entry_event_object_down" ||
+            name == "def entry_event_object_up" ||
+            name == "def entry_event_signal" ||
+            name == "def entry_event_scene_start" ||
+            name == "def entry_event_clone_create") { 
+
+
+            return true;
+        }
 
         return false;
+
+    };
+
+    
+    tu.eventBlockSyntaxFilter = function(name) {
+        var result;
+        if( name == "when_start" ||
+            name == "when_press_key" ||
+            name == "when_click_mouse_on" ||
+            name == "when_click_mouse_off" ||
+            name == "when_click_object_on" ||
+            name == "when_click_object_off" ||
+            name == "when_get_signal" ||
+            name == "when_start_scene" ||
+            name == "when_make_clone") {
+
+            name = "def " + name;
+            result = name;
+            return name;
+        }
+        else if(name == "entry_event_start" ||
+            name == "entry_event_key" ||
+            name == "entry_event_mouse_down" ||
+            name == "entry_event_mouse_up" ||
+            name == "entry_event_object_down" ||
+            name == "entry_event_object_up" ||
+            name == "entry_event_signal" ||
+            name == "entry_event_scene_start" ||
+            name == "entry_event_clone_create") { 
+
+            name = "def " + name;
+            result = name;
+            return name;
+        }
+
+        return result;
 
     };
 
@@ -984,10 +1036,26 @@ Entry.TextCodingUtil = {};
 
             return true;
         }
+        else if(name == "entry_event_start" ||
+            name == "entry_event_key" ||
+            name == "entry_event_mouse_down" ||
+            name == "entry_event_mouse_up" ||
+            name == "entry_event_object_down" ||
+            name == "entry_event_object_up" ||
+            name == "entry_event_signal" ||
+            name == "entry_event_scene_start" ||
+            name == "entry_event_clone_create") { 
+
+
+            return true;
+        }
 
         console.log("isEntryEventFuncName result is NOT");
         return false;
     };
+    /////////////////////////////////////////////////////
+    //Important 
+    ////////////////////////////////////////////////////
 
     tu.isEntryEventFuncNameWithParam = function(name) {
         console.log("isEntryEventFuncNameWithParam name", name);
