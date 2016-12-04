@@ -50,7 +50,8 @@ Entry.Tooltip = function(data, opts) {
         var tooltipDom = Entry.Dom("div", {
             classes: [
                 "entryTooltip",
-                data.direction
+                data.direction,
+                data.style
             ],
             parent: tooltipWrapper
         });

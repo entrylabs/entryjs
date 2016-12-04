@@ -21458,7 +21458,7 @@ Entry.Tooltip = function(a, b) {
     this.data.map(this._renderTooltip.bind(this));
   };
   a._renderTooltip = function(b) {
-    var a = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), d = Entry.Dom("div", {classes:["entryTooltip", b.direction], parent:a}), e = b.target.offset(), f = b.target.get(0).getBoundingClientRect();
+    var a = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), d = Entry.Dom("div", {classes:["entryTooltip", b.direction, b.style], parent:a}), e = b.target.offset(), f = b.target.get(0).getBoundingClientRect();
     this.isIndicator && this.renderIndicator(e.left + f.width / 2, e.top + f.height / 2);
     switch(b.direction) {
       case "up":
