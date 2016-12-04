@@ -28202,6 +28202,9 @@ Entry.Vim = function(b, a) {
   }
   this.createDom(b);
   this._parser = new Entry.Parser(null, null, this.codeMirror);
+  Entry.addEventListener("hwChanged", function(a) {
+    Entry.hw.hwModule ? (a = Entry.hw.hwModule.name, a = a[0].toUpperCase() + a.slice(1), Entry.Vim.PYTHON_IMPORT_HW = "\nimport " + a + "\n") : Entry.Vim.PYTHON_IMPORT_HW = "";
+  }.bind(this));
   Entry.Model(this, !1);
   window.eventset = [];
 };
@@ -28214,7 +28217,7 @@ Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
 Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
 Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
 Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
-Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino, Dplay \n\t   Neobot, Nemoino, Robotis, Sensorboard, Xbot from Hw";
+Entry.Vim.PYTHON_IMPORT_HW = "";
 (function(b) {
   b.createDom = function(a) {
     function b(a) {
@@ -28274,7 +28277,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
     b = b.textType;
     b === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : b === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     a = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
-    b === Entry.Vim.TEXT_TYPE_PY && (a = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat("\n\n").concat(a));
+    b === Entry.Vim.TEXT_TYPE_PY && (a = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(a));
     this.codeMirror.setValue(a + "\n");
     b == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:3, ch:0}, {readOnly:!0});
     a = this.codeMirror.getDoc();
