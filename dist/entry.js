@@ -14870,7 +14870,7 @@ Entry.PyToBlockParser = function(b) {
               console.log("assignment check operator, rightData", operator, l);
               if ("=" == operator) {
                 if ("PLUS" == l.operator) {
-                  e.push(l.params[3]);
+                  "combine_something" == l.type ? e.push(l.params[3]) : e.push(l.params[2]);
                 } else {
                   if ("MINUS" == l.operator) {
                     if ("calc_basic" != l.type || "text" != l.params[2].type && "number" != l.params[2].type) {
@@ -14923,7 +14923,7 @@ Entry.PyToBlockParser = function(b) {
             console.log("check 123 operator, rightData", operator, l);
             if ("=" == operator) {
               if ("PLUS" == l.operator) {
-                e.push(l.params[3]);
+                "combine_something" == l.type ? e.push(l.params[3]) : e.push(l.params[2]);
               } else {
                 if ("MINUS" == l.operator) {
                   if ("calc_basic" != l.type || "text" != l.params[2].type && "number" != l.params[2].type) {
