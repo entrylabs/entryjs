@@ -27,7 +27,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
 (function(p){
     p.Code = function(code, parseMode) {
         this._parseMode = parseMode;
-
+        if(!code) return;
         if (code instanceof Entry.Thread)
             return this.Thread(code);
         if (code instanceof Entry.Block)

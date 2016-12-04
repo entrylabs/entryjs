@@ -13296,16 +13296,18 @@ Entry.BlockToPyParser = function(b) {
 (function(b) {
   b.Code = function(a, b) {
     this._parseMode = b;
-    if (a instanceof Entry.Thread) {
-      return this.Thread(a);
+    if (a) {
+      if (a instanceof Entry.Thread) {
+        return this.Thread(a);
+      }
+      if (a instanceof Entry.Block) {
+        return this.Block(a);
+      }
+      for (var c = "", e = a.getThreads(), f = 0;f < e.length;f++) {
+        this._forIdCharIndex = 0, c += this.Thread(e[f]) + "\n";
+      }
+      return c = c.trim();
     }
-    if (a instanceof Entry.Block) {
-      return this.Block(a);
-    }
-    for (var c = "", e = a.getThreads(), f = 0;f < e.length;f++) {
-      this._forIdCharIndex = 0, c += this.Thread(e[f]) + "\n";
-    }
-    return c = c.trim();
   };
   b.Thread = function(a) {
     console.log("start thread");
@@ -16176,7 +16178,7 @@ Entry.Parser = function(b, a, d, c) {
   b.parse = function(a, b) {
     console.log("this.syntax", this.syntax);
     console.log("this._syntax_cache", this._syntax_cache);
-    var c = null;
+    var c = "";
     switch(this._type) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
         try {
@@ -16273,7 +16275,7 @@ Entry.Parser = function(b, a, d, c) {
             (this.py_funcDeclaration = l) && (c += l + "\n");
           }
         }
-        c += n.trim();
+        n && (c += n.trim());
         c = c.replace(/\t/g, "    ");
     }
     return c;
@@ -26982,12 +26984,14 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
   b.textToCode = function(a) {
     a === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : a === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     a = this.codeMirror.getValue();
-    return this._parser.parse(a);
+    a = this._parser.parse(a);
+    console.log("textToCode result", a);
+    return a;
   };
   b.codeToText = function(a, b) {
     var c;
     b && (this._mode = b.runType);
-    Entry.playground && (c = Entry.playground.object, c = "# " + c.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc");
+    Entry.playground && (c = (c = Entry.playground.object) ? "# " + c.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc" : "# \ud30c\uc774\uc36c \ucf54\ub4dc");
     var e = b.textType;
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
@@ -27099,14 +27103,18 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.textToCode = function(a, b) {
     if (a == Entry.Workspace.MODE_VIMBOARD) {
-      var c = this, e = this.vimBoard.textToCode(b), f = this.board.code;
-      f.load(e);
-      this.changeBoardCode(f);
-      console.log("here come in4");
-      setTimeout(function() {
-        f.view.reDraw();
-        c.board.alignThreads();
-      }, 0);
+      var c = this, e = this.vimBoard.textToCode(b);
+      console.log("changedCode", e);
+      if (0 != e.length) {
+        var f = this.board.code;
+        f.load(e);
+        this.changeBoardCode(f);
+        console.log("here come in4");
+        setTimeout(function() {
+          f.view.reDraw();
+          c.board.alignThreads();
+        }, 0);
+      }
     }
   };
   b.loadCodeFromText = function(a) {
