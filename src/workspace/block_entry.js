@@ -12719,7 +12719,23 @@ Entry.block = {
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
-            
+            {
+                syntax: "Hamster.left_led(Hamster.LED_OFF,Hamster.LED_OFF)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT"]
+            },
             {
                 syntax: "Hamster.left_led(Hamster.LED_OFF)",
                 textParams: [
@@ -12755,6 +12771,23 @@ Entry.block = {
                 params: ["LEFT"]
             },
             {
+                syntax: "Hamster.right_led(Hamster.LED_OFF,Hamster.LED_OFF)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT"]
+            },
+            {
                 syntax: "Hamster.right_led(Hamster.LED_OFF)",
                 textParams: [
                     {
@@ -12787,6 +12820,23 @@ Entry.block = {
                     }
                 ],
                 params: ["RIGHT"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_OFF,Hamster.LED_OFF)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH"]
             },
             {
                 syntax: "Hamster.leds(Hamster.LED_OFF)",
