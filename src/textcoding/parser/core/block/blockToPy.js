@@ -286,7 +286,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 console.log("option", option);
                 var op0 = option[0];
                 var op1 = option[1];
-                if(dataParam === op1) {
+                console.log("dataparam", dataParam);
+
+                if(dataParam == op1) { 
                     key = op0;
                     value = op1;
                     if(textParam.codeMap) {

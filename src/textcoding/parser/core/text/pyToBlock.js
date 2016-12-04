@@ -841,6 +841,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     isParamOption = true;
                             }
                         }
+                        else {
+                            if(param.object && param.property.name) {
+                                var pName = param.object.name + "." + param.property.name;
+                                var memberParam = {};
+                                memberParam.value = pName;
+                                var param = this['Literal']
+                                    (memberParam, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], textParams[paramIndex[pi]]);
+                                console.log("param vvv", param);
+                            }
+                        }
                     }
 
                     if(isParamOption) continue;
@@ -2980,7 +2990,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(value === true){
             structure.type = "True";
             result = structure;
-            return result;
+            return result; 
         }
         else if(value === false) {
             structure.type = "False";
@@ -3078,14 +3088,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(!result)
             result = value;
 
+
         if(textParam && textParam.codeMap) {
-            var codeMap = textParam.codeMap;
-            console.log("codeMap", codeMap);
-            var map = eval(codeMap);
-            console.log("codeMap", map);
-            result = result.toLowerCase();
-            console.log("codeMap result", result);
-            result = map[result];
+            if(isNaN(result)) {
+                var codeMap = textParam.codeMap;
+                console.log("codeMap", codeMap);
+                var map = eval(codeMap);
+                console.log("codeMap", map);
+                result = result.toLowerCase();
+                console.log("codeMap result", result);
+                result = map[result];
+            }
         }
         else {
             result = result.toLowerCase();
@@ -3119,6 +3132,45 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return result;
         }*/
 
+        if(textParam) {
+            if(textParam.paramType == "picture") {
+                if(!isNaN(value) && value > 0) {
+                    var objects = Entry.container.getAllObjects();
+                    for(var o in objects) {
+                        var object = objects[o];
+                        console.log("object currentObject", object, this._currentObject);
+                        if(object.id == this._currentObject.id) {
+                            var pictures = object.pictures;
+                            console.log("pictures", pictures);
+                            var picture = pictures[value-1];
+                            if(picture) {
+                                value = picture.name; 
+                                break;
+                            }
+                        }
+                    }
+                }
+            }  
+            else if(textParam.paramType == "sound") {
+                if(!isNaN(value) && value > 0) {
+                    var objects = Entry.container.getAllObjects();
+                    for(var o in objects) {
+                        var object = objects[o];
+                        if(object.id == this._currentObject.id) {
+                            var sounds = object.sounds;
+                            console.log("sounds", sounds);
+                            var sound = sounds[value-1];
+                            if(sound) {
+                                value = sound.name;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        console.log("dropdown picture sound", result);
+
         if(paramMeta) {
             var options = paramMeta.options;
             console.log("ParamDropdownDynamic options", options);
@@ -3128,10 +3180,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     result = options[i][1];
                     return result;
                 }
-                else if(value == 'mouse_pointer' || value == '마우스포인터') {
+                /*else if(value == 'mouse_pointer' || value == '마우스포인터') {
                     result = 'mouse';
                     return result;
-                }
+                }*/
             }
         }
 

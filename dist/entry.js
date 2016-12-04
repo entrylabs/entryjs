@@ -12182,8 +12182,8 @@ Entry.CodeMap = {};
   "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], see_angle_object:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], coordinate_object:[null, null, null, {"\uc790\uc2e0":"self", "\ud06c\uae30":"size", "\ubc29\ud5a5":"rotation", "\uc774\ub3d9 \ubc29\ud5a5":"direction", "\ubaa8\uc591 \ubc88\ud638":"picture_index", "\ubaa8\uc591 \uc774\ub984":"picutre_name", picture_index:"shape_number", picture_name:"shape_name", shape_number:"picture_index", shape_name:"picture_name"}], 
   choose_project_timer_action:[null, {start:"START", stop:"STOP", reset:"RESET"}], set_visible_project_timer:[null, {show:"SHOW", hide:"HIDE"}], get_date:[null, {year:"YEAR", month:"MONTH", day:"DAY", hour:"HOUR", minute:"MINUTE", second:"SECOND"}], distance_something:[null, {mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], set_visible_answer:[{show:"SHOW", hide:"HIDE"}]};
   b.Arduino = {arduino_ext_toggle_led:[null, {on:"HIGH", off:"LOW", high:"on", low:"off"}], arduino_ext_analog_list:[{a0:"0", a1:"1", a2:"2", a3:"3", a4:"4", a5:"5"}]};
-  b.Hamster = {hamster_play_note_for:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F", 10:"Hamster.NOTE_F_SHARP", 11:"Hamster.NOTE_G", 12:"Hamster.NOTE_G_SHARP", 13:"Hamster.NOTE_A", 14:"Hamster.NOTE_B_FLAT", 15:"Hamster.NOTE_B", "Hamster.NOTE_C":4, "Hamster.NOTE_C_SHARP":5, "Hamster.NOTE_D_FLAT":5, "Hamster.NOTE_D":6, "Hamster.NOTE_E_FLAT":7, "Hamster.NOTE_D_SHARP":7, "Hamster.NOTE_E":8, "Hamster.NOTE_F":9, "Hamster.NOTE_F_SHARP":10, 
-  "Hamster.NOTE_G_FLAT":10, "Hamster.NOTE_G":11, "Hamster.NOTE_G_SHARP":12, "Hamster.NOTE_A_FLAT":12, "Hamster.NOTE_A":13, "Hamster.NOTE_B_FLAT":14, "Hamster.NOTE_A_SHARP":14, "Hamster.NOTE_B":15}, null, null]};
+  b.Hamster = {hamster_play_note_for:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F", 10:"Hamster.NOTE_F_SHARP", 11:"Hamster.NOTE_G", 12:"Hamster.NOTE_G_SHARP", 13:"Hamster.NOTE_A", 14:"Hamster.NOTE_B_FLAT", 15:"Hamster.NOTE_B", "hamster.note_c":4, "hamster.note_c_sharp":5, "hamster.note_d_flat":5, "hamster.note_d":6, "hamster.note_e_flat":7, "hamster.note_d_sharp":7, "hamster.note_e":8, "hamster.note_f":9, "hamster.note_f_sharp":10, 
+  "hamster.note_g_flat":10, "hamster.note_g":11, "hamster.note_g_sharp":12, "hamster.note_a_flat":12, "hamster.note_a":13, "hamster.note_b_flat":14, "hamster.note_a_sharp":14, "hamster.note_b":15}, null, null]};
 })(Entry.CodeMap);
 Entry.KeyboardCode = {};
 (function(b) {
@@ -13414,7 +13414,8 @@ Entry.BlockToPyParser = function(b) {
         console.log("option", f);
         e = f[0];
         f = f[1];
-        if (a === f) {
+        console.log("dataparam", a);
+        if (a == f) {
           c = e;
           e = f;
           b.codeMap && (f = eval(b.codeMap)[e]) && (e = f);
@@ -14365,19 +14366,17 @@ Entry.PyToBlockParser = function(b) {
         var B = n.textParams
       }
       for (var z in arguments) {
-        if (u = !1, m = arguments[z], console.log("kkk argument", m, "typeof", typeof m), m) {
-          console.log("CallExpression argument", m, "typeof", typeof m), m.calleeName = k, B || (B = []), h = this[m.type](m, y[x[g]], v[x[g]], B[x[g]]), console.log("callexpression callee", f, "param", h), console.log("calleeName", k, "param", h), h && h.data && (h = h.data), console.log("callex block one multi", q), console.log("callex param syntax", r, "order", x, "value", x[g], "param", h), console.log("pi", g), h && (t = n.keyOption, console.log("keyOption", t), t || 0 === t) && (console.log("param", 
-          h), h.object && h.property.name ? (m = h.object.name + "." + h.property.name, t == m && (u = !0)) : "text" != h.type && "number" != h.type || !h.params || 0 == h.params.length || (m = h.params[0], console.log("pName", m), t == m && (u = !0))), u || (u = x[g++], void 0 !== u && (c[u] = h, console.log("callex realtime params", c), h && (h.object && h.object.object ? "self" == h.object.object.name ? (u = h.object.property.name, Entry.TextCodingUtil.isLocalListExisted(u, this._currentObject) || 
-          (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = u = h.object.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : h.object ? f.property && "in" == f.property.name ? "self" == h.object.name ? (u = h.property.name, 
-          Entry.TextCodingUtil.isLocalListExisted(u, this._currentObject) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = u = h.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : f.property && "len" == f.property.name ? 
-          "self" == h.object.name ? (u = h.property.name, "len#length_of_string" == r ? Entry.TextCodingUtil.isLocalVariableExisted(u, this._currentObject) || Entry.TextCodingUtil.isFuncParam(u) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : "len" != r || Entry.TextCodingUtil.isLocalListExisted(u, this._currentObject) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
-          Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = u = h.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : "__pythonRuntime.ops.subscriptIndex" == h.property.callee ? (console.log("mmm param", h), h.object.type || (u = h.object.name, Entry.TextCodingUtil.isGlobalListExisted(u, this._currentObject) || 
-          (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)))) : "self" == h.object.name ? (u = h.property.name, Entry.TextCodingUtil.isLocalVariableExisted(u, this._currentObject) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))) : 
-          "Hamster" != h.object.name && (t = u = h.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : h.name && "object" == typeof h && (f.property && "in" == f.property.name ? (u = h.name, Entry.TextCodingUtil.isGlobalListExisted(u, this._currentObject) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, 
-          t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : f.property && "len" == f.property.name ? (u = h.name, "len#length_of_string" == r ? Entry.TextCodingUtil.isGlobalVariableExisted(u) || Entry.TextCodingUtil.isFuncParam(u) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : "len" != r || Entry.TextCodingUtil.isGlobalListExisted(u, 
-          this._currentObject) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (u = h.name, Entry.TextCodingUtil.isGlobalVariableExisted(u) || Entry.TextCodingUtil.isFuncParam(u) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)))))))
-          ;
-        }
+        u = !1, m = arguments[z], console.log("kkk argument", m, "typeof", typeof m), m && (console.log("CallExpression argument", m, "typeof", typeof m), m.calleeName = k, B || (B = []), h = this[m.type](m, y[x[g]], v[x[g]], B[x[g]]), console.log("callexpression callee", f, "param", h), console.log("calleeName", k, "param", h), h && h.data && (h = h.data), console.log("callex block one multi", q), console.log("callex param syntax", r, "order", x, "value", x[g], "param", h), console.log("pi", g), 
+        h && (m = n.keyOption, console.log("keyOption", m), m || 0 === m ? (console.log("param", h), h.object && h.property.name ? (t = h.object.name + "." + h.property.name, m == t && (u = !0)) : "text" != h.type && "number" != h.type || !h.params || 0 == h.params.length || (t = h.params[0], console.log("pName", t), m == t && (u = !0))) : h.object && h.property.name && (t = h.object.name + "." + h.property.name, h = {}, h.value = t, h = this.Literal(h, y[x[g]], v[x[g]], B[x[g]]), console.log("param vvv", 
+        h))), u || (u = x[g++], void 0 !== u && (c[u] = h, console.log("callex realtime params", c), h && (h.object && h.object.object ? "self" == h.object.object.name ? (u = h.object.property.name, Entry.TextCodingUtil.isLocalListExisted(u, this._currentObject) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = u = h.object.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
+        Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : h.object ? f.property && "in" == f.property.name ? "self" == h.object.name ? (u = h.property.name, Entry.TextCodingUtil.isLocalListExisted(u, this._currentObject) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = u = h.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
+        Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : f.property && "len" == f.property.name ? "self" == h.object.name ? (u = h.property.name, "len#length_of_string" == r ? Entry.TextCodingUtil.isLocalVariableExisted(u, this._currentObject) || Entry.TextCodingUtil.isFuncParam(u) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : 
+        "len" != r || Entry.TextCodingUtil.isLocalListExisted(u, this._currentObject) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = u = h.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : "__pythonRuntime.ops.subscriptIndex" == 
+        h.property.callee ? (console.log("mmm param", h), h.object.type || (u = h.object.name, Entry.TextCodingUtil.isGlobalListExisted(u, this._currentObject) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)))) : "self" == h.object.name ? (u = h.property.name, Entry.TextCodingUtil.isLocalVariableExisted(u, this._currentObject) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
+        Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))) : "Hamster" != h.object.name && (t = u = h.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : h.name && "object" == typeof h && (f.property && "in" == f.property.name ? (u = h.name, Entry.TextCodingUtil.isGlobalListExisted(u, this._currentObject) || 
+        (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : f.property && "len" == f.property.name ? (u = h.name, "len#length_of_string" == r ? Entry.TextCodingUtil.isGlobalVariableExisted(u) || Entry.TextCodingUtil.isFuncParam(u) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, 
+        Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : "len" != r || Entry.TextCodingUtil.isGlobalListExisted(u, this._currentObject) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (u = h.name, Entry.TextCodingUtil.isGlobalVariableExisted(u) || Entry.TextCodingUtil.isFuncParam(u) || (t = u, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
+        Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))))))));
       }
       console.log("call call params", c);
       if (f.object && f.property) {
@@ -15035,7 +15034,7 @@ Entry.PyToBlockParser = function(b) {
       }
     }
     f || (f = a);
-    e && e.codeMap ? (g = e.codeMap, console.log("codeMap", g), g = eval(g), console.log("codeMap", g), f = f.toLowerCase(), console.log("codeMap result", f), f = g[f]) : f = f.toLowerCase();
+    e && e.codeMap ? isNaN(f) && (g = e.codeMap, console.log("codeMap", g), g = eval(g), console.log("codeMap", g), f = f.toLowerCase(), console.log("codeMap result", f), f = g[f]) : f = f.toLowerCase();
     isNaN(f) && e && "operator" == e.paramType && (f = f.toUpperCase());
     f || (a && (a = a.toLowerCase()), f = a);
     console.log("ParamDropdown result", f);
@@ -15044,15 +15043,37 @@ Entry.PyToBlockParser = function(b) {
   b.ParamDropdownDynamic = function(a, b, c, e) {
     console.log("ParamDropdownDynamic value, paramMeta, paramDefMeta, textParam", a, b, c, e);
     var f;
-    if (b) {
-      c = b.options;
-      console.log("ParamDropdownDynamic options", c);
-      for (var g in c) {
-        if (a == c[g][0]) {
-          return console.log("options[i][0]", c[g][0]), f = c[g][1];
+    if (e) {
+      if ("picture" == e.paramType) {
+        if (!isNaN(a) && 0 < a) {
+          c = Entry.container.getAllObjects();
+          for (var g in c) {
+            var h = c[g];
+            console.log("object currentObject", h, this._currentObject);
+            if (h.id == this._currentObject.id && (h = h.pictures, console.log("pictures", h), h = h[a - 1])) {
+              a = h.name;
+              break;
+            }
+          }
         }
-        if ("mouse_pointer" == a || "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130" == a) {
-          return f = "mouse";
+      } else {
+        if ("sound" == e.paramType && !isNaN(a) && 0 < a) {
+          for (g in c = Entry.container.getAllObjects(), c) {
+            if (h = c[g], h.id == this._currentObject.id && (h = h.sounds, console.log("sounds", h), h = h[a - 1])) {
+              a = h.name;
+              break;
+            }
+          }
+        }
+      }
+    }
+    console.log("dropdown picture sound", f);
+    if (b) {
+      g = b.options;
+      console.log("ParamDropdownDynamic options", g);
+      for (var k in g) {
+        if (a == g[k][0]) {
+          return console.log("options[i][0]", g[k][0]), f = g[k][1];
         }
       }
     }

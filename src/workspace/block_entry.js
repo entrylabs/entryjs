@@ -12031,70 +12031,7 @@ Entry.block = {
                 ],
                 params: ["LEFT", "4"]
             },
-            {
-                syntax: "Hamster.right_led(Hamster.LED_RED)",
-                textParams: [
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                        ],
-                        "value": "LEFT",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
-                    },
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.HAMSTER_color_red,"4"],
-                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                            [Lang.Blocks.HAMSTER_color_green,"2"],
-                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                            [Lang.Blocks.HAMSTER_color_blue,"1"],
-                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                            [Lang.Blocks.HAMSTER_color_white,"7"]
-                        ],
-                        "value": "4",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
-                    }
-                ],
-                params: ["RIGHT", "4"]
-            },
-            {
-                syntax: "Hamster.leds(Hamster.LED_RED)",
-                textParams: [
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                        ],
-                        "value": "LEFT",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
-                    },
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.HAMSTER_color_red,"4"],
-                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                            [Lang.Blocks.HAMSTER_color_green,"2"],
-                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                            [Lang.Blocks.HAMSTER_color_blue,"1"],
-                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                            [Lang.Blocks.HAMSTER_color_white,"7"]
-                        ],
-                        "value": "4",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
-                    }
-                ],
-                params: ["BOTH", "4"]
-            },
+            
             {
                 syntax: "Hamster.left_led(Hamster.LED_YELLOW)",
                 textParams: [
@@ -12286,6 +12223,454 @@ Entry.block = {
                     }
                 ],
                 params: ["LEFT", "7"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_RED)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "4"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_YELLOW)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "6"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_GREEN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "2"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_CYAN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "3"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_BLUE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "1"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_MAGENTA)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "5"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_WHITE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "7"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_RED)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "4"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_YELLOW)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "6"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_GREEN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "2"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_CYAN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "3"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_BLUE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "1"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_MAGENTA)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "5"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_WHITE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "7"]
             }
         ]}
     },
@@ -12334,23 +12719,7 @@ Entry.block = {
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
-            {
-                syntax: "Hamster.left_led(0)",
-                textParams: [
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                        ],
-                        "value": "LEFT",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
-                    }
-                ],
-                params: ["LEFT"]
-            },
+            
             {
                 syntax: "Hamster.left_led(Hamster.LED_OFF)",
                 textParams: [
@@ -12369,7 +12738,7 @@ Entry.block = {
                 params: ["LEFT"]
             },
             {
-                syntax: "Hamster.right_led(0)",
+                syntax: "Hamster.left_led(0)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12383,7 +12752,7 @@ Entry.block = {
                         converter: Entry.block.converters.returnStringValue
                     }
                 ],
-                params: ["RIGHT"]
+                params: ["LEFT"]
             },
             {
                 syntax: "Hamster.right_led(Hamster.LED_OFF)",
@@ -12403,7 +12772,24 @@ Entry.block = {
                 params: ["RIGHT"]
             },
             {
-                syntax: "Hamster.leds(0)",
+                syntax: "Hamster.right_led(0)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12420,7 +12806,7 @@ Entry.block = {
                 params: ["BOTH"]
             },
             {
-                syntax: "Hamster.leds(Hamster.LED_OFF)",
+                syntax: "Hamster.leds(0)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12733,7 +13119,6 @@ Entry.block = {
                         codeMap: "Entry.CodeMap.Hamster.hamster_play_note_for[0]",
                         caseType: "no",
                         paramType: "variable"
-
                     },
                     {
                         "type": "Dropdown",
@@ -14887,7 +15272,8 @@ Entry.block = {
                         "menuName": "pictures",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        paramType: "picture"
                     }
                 ]
             }
@@ -19671,7 +20057,8 @@ Entry.block = {
                         "menuName": "sounds",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_SOUNDS,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        paramType: "sound"
                     }
                 ],
                 keyOption: "get_sounds"
