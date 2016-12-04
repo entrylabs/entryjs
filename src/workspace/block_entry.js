@@ -78,6 +78,7 @@ if (Entry && Entry.block) {
         };
 
         c.returnStringOrNumberByValue = function(key, value) {
+            console.log("string case", key, value);
             if (isNaN(value)) {
                 value = value.replace(/\"/gi, '');
                 return '"()"'.replace('()', value);
@@ -85,8 +86,10 @@ if (Entry && Entry.block) {
         };
 
         c.returnObjectOrStringValue = function(key, value) {
-            if (Entry.container && Entry.container.getObject(value))
-                return Entry.container.getObject(value).name;
+            if (Entry.container && Entry.container.getObject(value)) {
+                var objectName = Entry.container.getObject(value).name;
+                return '"()"'.replace('()', objectName);
+            }
             else {
                 value = value.replace(/\"/gi, '');
                 return '"()"'.replace('()', value);
@@ -2495,7 +2498,8 @@ Entry.block = {
                         ],
                         "value": "0",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        codeMap:"Entry.CodeMap.Arduino.arduino_ext_analog_list[0]"
                     }
                 ],
                 keyOption: "arduino_ext_analog_list"
@@ -2922,7 +2926,7 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_HW,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Arduino.digitalWrite[1]",
+                        codeMap: "Entry.CodeMap.Arduino.arduino_ext_toggle_led[1]",
                         caseType: "no"
                     },
                 ]
@@ -6387,7 +6391,7 @@ Entry.block = {
                     {
                         "type": "Color",
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Entry.set_brush_color_to[0]"
+                        codeMap: "Entry.CodeMap.Entry.set_color[0]"
                     }
                 ]
             }
@@ -7031,7 +7035,8 @@ Entry.block = {
                         "menuName": "spritesWithMouse",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        codeMap: "Entry.CodeMap.Entry.distance_something[1]"
                     },
                 ]
             }
@@ -7205,7 +7210,7 @@ Entry.block = {
                         "menuName": "spritesWithSelf",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnObjectOrStringValue
                     },
                     undefined,
                     {
@@ -7222,7 +7227,8 @@ Entry.block = {
                         "value": "x",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Entry.coordinate_object[3]"
                     }
                 ]
             }
@@ -7370,7 +7376,8 @@ Entry.block = {
                         "fontSize": 11,
                         noArrow: true,
                         converter: Entry.block.converters.returnOperator,
-                        caseType: "upper"
+                        caseType: "upper",
+                        paramType: "operator"
                     },
                     {
                         "type": "Block",
@@ -8099,7 +8106,8 @@ Entry.block = {
                         "value": "YEAR",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Entry.get_date[1]"
                     },
                 ]
             }
@@ -8266,7 +8274,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.timer_view(%2)",
+                syntax: "Entry.timer_view(%2)", 
                 textParams: [
                     undefined,
                     {
@@ -8278,7 +8286,8 @@ Entry.block = {
                         "value": "SHOW",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Entry.set_visible_project_timer[1]"
                     },
                 ]
             }
@@ -9204,7 +9213,8 @@ Entry.block = {
                         "value": "START",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Entry.choose_project_timer_action[1]"
                     },
                 ]
             }
@@ -9615,7 +9625,8 @@ Entry.block = {
                         "menuName": "clone",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_FLOW,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        codeMap: "Entry.CodeMap.Entry.create_clone[0]"
                     },
                 ]
             }
@@ -9846,7 +9857,7 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_FLOW,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Entry.stop_code[0]"
+                        codeMap: "Entry.CodeMap.Entry.stop_object[0]"
                     }
                 ]
             }
@@ -12020,70 +12031,7 @@ Entry.block = {
                 ],
                 params: ["LEFT", "4"]
             },
-            {
-                syntax: "Hamster.right_led(Hamster.LED_RED)",
-                textParams: [
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                        ],
-                        "value": "LEFT",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
-                    },
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.HAMSTER_color_red,"4"],
-                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                            [Lang.Blocks.HAMSTER_color_green,"2"],
-                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                            [Lang.Blocks.HAMSTER_color_blue,"1"],
-                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                            [Lang.Blocks.HAMSTER_color_white,"7"]
-                        ],
-                        "value": "4",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
-                    }
-                ],
-                params: ["RIGHT", "4"]
-            },
-            {
-                syntax: "Hamster.leds(Hamster.LED_RED)",
-                textParams: [
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                        ],
-                        "value": "LEFT",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
-                    },
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.HAMSTER_color_red,"4"],
-                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                            [Lang.Blocks.HAMSTER_color_green,"2"],
-                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                            [Lang.Blocks.HAMSTER_color_blue,"1"],
-                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                            [Lang.Blocks.HAMSTER_color_white,"7"]
-                        ],
-                        "value": "4",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue
-                    }
-                ],
-                params: ["BOTH", "4"]
-            },
+            
             {
                 syntax: "Hamster.left_led(Hamster.LED_YELLOW)",
                 textParams: [
@@ -12275,6 +12223,454 @@ Entry.block = {
                     }
                 ],
                 params: ["LEFT", "7"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_RED)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "4"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_YELLOW)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "6"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_GREEN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "2"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_CYAN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "3"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_BLUE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "1"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_MAGENTA)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "5"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_WHITE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "7"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_RED)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "4"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_YELLOW)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "6"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_GREEN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "2"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_CYAN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "3"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_BLUE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "1"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_MAGENTA)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "5"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_WHITE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "7"]
             }
         ]}
     },
@@ -12324,7 +12720,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Hamster.left_led(0)",
+                syntax: "Hamster.left_led(Hamster.LED_OFF,Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12358,7 +12754,24 @@ Entry.block = {
                 params: ["LEFT"]
             },
             {
-                syntax: "Hamster.right_led(0)",
+                syntax: "Hamster.left_led(0)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_OFF,Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12392,7 +12805,24 @@ Entry.block = {
                 params: ["RIGHT"]
             },
             {
-                syntax: "Hamster.leds(0)",
+                syntax: "Hamster.right_led(0)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_OFF,Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12410,6 +12840,23 @@ Entry.block = {
             },
             {
                 syntax: "Hamster.leds(Hamster.LED_OFF)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH"]
+            },
+            {
+                syntax: "Hamster.leds(0)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12719,10 +13166,9 @@ Entry.block = {
                         "value": "4",
                         "fontSize": 11,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Hamster.note[0]",
+                        codeMap: "Entry.CodeMap.Hamster.hamster_play_note_for[0]",
                         caseType: "no",
                         paramType: "variable"
-
                     },
                     {
                         "type": "Dropdown",
@@ -13482,7 +13928,7 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_JUDGE,
                         converter: Entry.block.converters.returnObjectOrStringValue,
-                        codeMap: "Entry.CodeMap.Entry.is_touched[1]"
+                        codeMap: "Entry.CodeMap.Entry.reach_something[1]"
                     },
                 ]
             }
@@ -14442,7 +14888,7 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Entry.change_shape_to[0]"
+                        codeMap: "Entry.CodeMap.Entry.change_to_next_shape[0]"
                     }
                 ]
             }
@@ -14876,7 +15322,8 @@ Entry.block = {
                         "menuName": "pictures",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        paramType: "picture"
                     }
                 ]
             }
@@ -14995,7 +15442,7 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Entry.add_effect[0]"
+                        codeMap: "Entry.CodeMap.Entry.add_effect_amount[0]"
                     },
                     {
                         "type": "Block",
@@ -15077,7 +15524,7 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Entry.set_effect[0]"
+                        codeMap: "Entry.CodeMap.Entry.change_effect_amount[0]"
                     },
                     {
                         "type": "Block",
@@ -15281,7 +15728,7 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Entry.send_layer_to[0]"
+                        codeMap: "Entry.CodeMap.Entry.change_object_index[0]"
                     },
                 ]
             }
@@ -15840,7 +16287,8 @@ Entry.block = {
                         "menuName": "spritesWithMouse",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_MOVING,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        codeMap: "Entry.CodeMap.Entry.locate[0]"
                     },
                 ]
             }
@@ -16282,7 +16730,8 @@ Entry.block = {
                         "menuName": "spritesWithMouse",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_MOVING,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        codeMap: "Entry.CodeMap.Entry.see_angle_object[0]"
                     },
                 ]
             }
@@ -16471,7 +16920,8 @@ Entry.block = {
                         "menuName": "spritesWithMouse",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_MOVING,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        codeMap: "Entry.CodeMap.Entry.locate_object_time[1]"
                     },
                 ]
             }
@@ -19297,7 +19747,7 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_START,
                         converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Entry.start_scene_to[0]"
+                        codeMap: "Entry.CodeMap.Entry.start_neighbor_scene[0]"
                     },
                 ]
             }
@@ -19657,7 +20107,8 @@ Entry.block = {
                         "menuName": "sounds",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_SOUNDS,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        paramType: "sound"
                     }
                 ],
                 keyOption: "get_sounds"
@@ -20580,7 +21031,8 @@ Entry.block = {
                 textParams: [
                     {
                         "type": "TextInput",
-                        converter: Entry.block.converters.returnStringOrNumberByValue
+                        converter: Entry.block.converters.returnStringOrNumberByValue,
+                        caseType: "no"
                     },
                 ]
             }
@@ -20846,7 +21298,8 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no"
+                        caseType: "no",
+                        paramType: "variable"
                     },
                     {
                         "type": "Block",
@@ -20928,7 +21381,8 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no"
+                        caseType: "no",
+                        paramType: "variable"
                     },
                     {
                         "type": "Block",
@@ -21124,7 +21578,8 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no"
+                        caseType: "no",
+                        paramType: "variable"
                     },
                 ]
             }
@@ -21243,7 +21698,6 @@ Entry.block = {
     },
     "get_canvas_input_value": {
         "color": "#E457DC",
-        "vimModeFontColor": "white",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -21360,7 +21814,8 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no"
+                        caseType: "no",
+                        paramType: "variable"
                     },
                 ]
             }
@@ -21448,7 +21903,8 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no"
+                        caseType: "no",
+                        paramType: "variable"
                     },
                 ]
             }
@@ -21544,7 +22000,8 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no"
+                        caseType: "no",
+                        paramType: "variable"
                     },
                     {
                         "type": "Block",
@@ -21641,7 +22098,8 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no"
+                        caseType: "no",
+                        paramType: "variable"
                     },
                     {
                         "type": "Block",
@@ -21744,7 +22202,8 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no"
+                        caseType: "no",
+                        paramType: "variable"
                     },
                     undefined,
                     {
@@ -21821,7 +22280,8 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no"
+                        caseType: "no",
+                        paramType: "variable"
                     },
                 ]
             }
@@ -21885,7 +22345,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnStringKey
                     },
                 ]
             }
@@ -21949,7 +22409,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey
+                        converter: Entry.block.converters.returnStringKey
                     },
                 ]
             }
@@ -22046,7 +22506,8 @@ Entry.block = {
                         "value": "SHOW",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringValue
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Entry.set_visible_answer[0]"
                     },
                 ]
             }
@@ -22128,7 +22589,7 @@ Entry.block = {
             }
             return false;
         },
-        "syntax": {"js": [], "py": [
+        "syntax": {"js": [], "py": [ 
             {
                 syntax: "%4 in %2",
                 blockType: "param",
@@ -22141,7 +22602,8 @@ Entry.block = {
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no"
+                        caseType: "no",
+                        paramType: "variable"
                     },
                     undefined,
                     {

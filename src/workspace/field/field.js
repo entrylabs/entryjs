@@ -235,28 +235,28 @@ Entry.Field = function() {};
     p._convert = function(key, value) {
         value = value !== undefined ? value : this.getValue();
         if (this._contents.converter) {
+            var result = this._contents.converter(key, value);
             if(this._contents.codeMap) {
+                result = result.replace(/\"/g, "");
                 var codeMap = eval(this._contents.codeMap);
                 if(codeMap)
-                    var code = codeMap[value];
+                    var code = codeMap[result];
                 if(code)
-                    value = code;
+                    result = code;
+                result = '"()"'.replace('()', result);
             }
-            if(isNaN(key) && isNaN(value)) { 
+            if(isNaN(result)) { 
                 if(this._contents.caseType == "no") {
-                    key = key;
-                    value = value;
+                    result = result;
                 }
                 else if(this._contents.caseType == "upper") {
-                    key = key.toUpperCase();
-                    value = value.toUpperCase();
+                    result = result.toUpperCase();
                 }
                 else {
-                    key = key.toLowerCase();
-                    value = value.toLowerCase();
+                    result = result.toLowerCase();
                 }
             }
-            var result = this._contents.converter(key, value);
+            
             if(this._contents.paramType == "variable") {
                 result = result.replace(/\"/g, "");
             }

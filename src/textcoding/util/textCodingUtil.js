@@ -947,6 +947,9 @@ Entry.TextCodingUtil = {};
 
     };
 
+    /////////////////////////////////////////////////////
+    //Important 
+    //////////////////////////////////////////////////// 
     tu.isEntryEventFuncByFullText = function(text) {
         var index = text.indexOf("(");
         var name = text.substring(0, index);
@@ -964,8 +967,57 @@ Entry.TextCodingUtil = {};
 
             return true;
         }
+        else if(name == "def entry_event_start" ||
+            name == "def entry_event_key" ||
+            name == "def entry_event_mouse_down" ||
+            name == "def entry_event_mouse_up" ||
+            name == "def entry_event_object_down" ||
+            name == "def entry_event_object_up" ||
+            name == "def entry_event_signal" ||
+            name == "def entry_event_scene_start" ||
+            name == "def entry_event_clone_create") { 
+
+
+            return true;
+        }
 
         return false;
+
+    };
+
+    
+    tu.eventBlockSyntaxFilter = function(name) {
+        var result;
+        if( name == "when_start" ||
+            name == "when_press_key" ||
+            name == "when_click_mouse_on" ||
+            name == "when_click_mouse_off" ||
+            name == "when_click_object_on" ||
+            name == "when_click_object_off" ||
+            name == "when_get_signal" ||
+            name == "when_start_scene" ||
+            name == "when_make_clone") {
+
+            name = "def " + name;
+            result = name;
+            return name;
+        }
+        else if(name == "entry_event_start" ||
+            name == "entry_event_key" ||
+            name == "entry_event_mouse_down" ||
+            name == "entry_event_mouse_up" ||
+            name == "entry_event_object_down" ||
+            name == "entry_event_object_up" ||
+            name == "entry_event_signal" ||
+            name == "entry_event_scene_start" ||
+            name == "entry_event_clone_create") { 
+
+            name = "def " + name;
+            result = name;
+            return name;
+        }
+
+        return result;
 
     };
 
@@ -984,10 +1036,26 @@ Entry.TextCodingUtil = {};
 
             return true;
         }
+        else if(name == "entry_event_start" ||
+            name == "entry_event_key" ||
+            name == "entry_event_mouse_down" ||
+            name == "entry_event_mouse_up" ||
+            name == "entry_event_object_down" ||
+            name == "entry_event_object_up" ||
+            name == "entry_event_signal" ||
+            name == "entry_event_scene_start" ||
+            name == "entry_event_clone_create") { 
+
+
+            return true;
+        }
 
         console.log("isEntryEventFuncName result is NOT");
         return false;
     };
+    /////////////////////////////////////////////////////
+    //Important 
+    ////////////////////////////////////////////////////
 
     tu.isEntryEventFuncNameWithParam = function(name) {
         console.log("isEntryEventFuncNameWithParam name", name);
@@ -1649,7 +1717,7 @@ Entry.TextCodingUtil = {};
         var targets = vc.variables_ || [];
         for (var i=0; i<targets.length; i++) {
             if (test(targets[i].name_)) {
-                console.log("vari here"); 
+                console.log("vari here", Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]); 
                 return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT];
             }
         }
@@ -1943,13 +2011,13 @@ Entry.TextCodingUtil = {};
 
     tu.generateVariablesDeclaration = function() {
         var result = "";
-        var currentObject = this._currentObject;
+        var currentObject = Entry.playground.object;
         var vc = Entry.variableContainer;
         if(!vc)
             return;
         //inspect variables
         var targets = vc.variables_ || [];
-        for (var i=targets.length-1; i>=0; i--) {
+        for (var i=targets.length-1; i>=0; i--) { 
             var v = targets[i];
             var name = v.name_;
             var value = v.value_;
@@ -1972,7 +2040,7 @@ Entry.TextCodingUtil = {};
 
     tu.generateListsDeclaration = function() {
         var result = "";
-        var currentObject = this._currentObject;
+        var currentObject = Entry.playground.object;
         var vc = Entry.variableContainer;
         if(!vc)
             return;
@@ -2009,5 +2077,29 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
+    };
+
+    tu.isVariableNumber = function(id, type) {
+        console.log("isVariableNumber", id, type);
+        var currentObject = Entry.playground.object;
+        var entryVariables = Entry.variableContainer.variables_;
+        for(var i in entryVariables) {
+            var entryVariable = entryVariables[i];
+            if(type == "global") {
+                if(entryVariable.object_ === null && entryVariable.id_ == id) {
+                    if(!isNaN(entryVariable.value_))
+                        return true;
+                }
+            }
+            else if(type == "local") {
+                if(entryVariable.object_ === currentObject.id && entryVariable.id_ == id) {
+                    if(!isNaN(entryVariable.value_))
+                        return true;
+                }
+            }
+
+        }
+
+        return false;
     };
 })(Entry.TextCodingUtil);

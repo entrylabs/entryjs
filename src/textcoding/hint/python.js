@@ -20,6 +20,7 @@ Entry.PyHint = function(syntax) {
             this.scope._global.push(key)
     }
     this.addScope("Entry");
+    this.addScope("random");
 
     this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
 
