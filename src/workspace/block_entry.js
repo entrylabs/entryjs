@@ -10639,7 +10639,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Hamster.move_forward()"
+                syntax: "Hamster.board_forward()"
             }
         ]}
     },
@@ -13021,7 +13021,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Hamster.set_buzzer_sound(%1)"
+                syntax: "Hamster.buzzer(%1)"
             }
         ]}
     },
@@ -13743,7 +13743,7 @@ Entry.block = {
                 params: ["B"]
             },
             {
-                syntax: "Hamster.outputs(%2,%2)",
+                syntax: "Hamster.outputs(%2)",
                 textParams: [
                     {
                         "type": "Dropdown",
