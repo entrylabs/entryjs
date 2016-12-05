@@ -61,6 +61,7 @@ p.generateView = function(parentView, option) {
     elementsTitle.addClass('entryBlockHelperTitle textModeElem');
     elementsTitle.innerHTML = '요소';
     blockHelperContent.appendChild(elementsTitle);
+    this._elementsTitle = elementsTitle;
 
 
     this._elementsContainer =
@@ -68,32 +69,6 @@ p.generateView = function(parentView, option) {
 
     this._elementsContainer.addClass('entryBlockHelperContent textModeElem');
     blockHelperContent.appendChild(this._elementsContainer);
-
-    //TODO remove
-    var box = Entry.createElement('div');
-    box.addClass('entryBlockHelperElementsContainer');
-    var left = Entry.createElement('div');
-    left.innerHTML = 'A';
-    left.addClass('elementLeft');
-    var right = Entry.createElement('div');
-    right.innerHTML = 'adsfdasfdsf<br/>nasdfdsfadfn';
-    right.addClass('elementRight');
-    box.appendChild(left);
-    box.appendChild(right);
-    this._elementsContainer.appendChild(box);
-
-    var box = Entry.createElement('div');
-    box.addClass('entryBlockHelperElementsContainer');
-    var left = Entry.createElement('div');
-    left.innerHTML = 'A';
-    left.addClass('elementLeft');
-    var right = Entry.createElement('div');
-    right.innerHTML = 'adsfdasfdsf<br/>nasdfdsfadfn';
-    right.addClass('elementRight');
-    box.appendChild(left);
-    box.appendChild(right);
-    this._elementsContainer.appendChild(box);
-
 
     var codeMirrorTitle = Entry.createElement('div');
     codeMirrorTitle.addClass('entryBlockHelperTitle textModeElem');
@@ -115,7 +90,6 @@ p.generateView = function(parentView, option) {
         readOnly: true
     });
 
-
     this._doc = this.codeMirror.getDoc();
     this._codeMirror = this.codeMirror;
 
@@ -126,7 +100,6 @@ p.generateView = function(parentView, option) {
 
     this._codeMirrorDesc = Entry.createElement('div');
     this._codeMirrorDesc.addClass('entryBlockHelperContent textModeElem');
-    this._codeMirrorDesc.innerHTML = '오브젝트를 클릭하면 투명도를 50만큼 줌';
     blockHelperContent.appendChild(this._codeMirrorDesc);
 
     this._renderView = new Entry.RenderView($(blockHelperBlock), 'LEFT_MOST');
@@ -182,8 +155,39 @@ p.renderBlock = function(type) {
 
     if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
         this._contentView.addClass('textMode');
-        var exampleText = "def when_start():\nsdfdasf\nddfdsfkjdajk";
-        this._codeMirror.setValue(exampleText);
+        this.blockHelperDescription_.innerHTML = Lang.PythonHelper[type + '_desc'];
+
+        var elements = Lang.PythonHelper[type + '_elements'];
+        this._elementsContainer.innerHTML = '';
+        if (elements) {
+            this._elementsTitle.removeClass('entryRemove');
+            elements = elements.split('%next');
+            while (elements.length) {
+                (function(elems) {
+                    var contents = elems.split('-- ');
+                    var box = Entry.createElement('div');
+                    box.addClass('entryBlockHelperElementsContainer');
+                    var left = Entry.createElement('div');
+
+                    left.innerHTML = contents[0];
+                    left.addClass('elementLeft');
+
+                    var right = Entry.createElement('div');
+                    right.addClass('elementRight');
+                    right.innerHTML = contents[1];
+                    box.appendChild(left);
+                    box.appendChild(right);
+                    this._elementsContainer.appendChild(box);
+                }.bind(this))(elements.shift());
+            }
+        } else {
+            this._elementsTitle.addClass('entryRemove');
+        }
+        this._codeMirrorDesc.innerHTML = (Lang.PythonHelper[type + '_exampleDesc']);
+
+        var exampleCode = Lang.PythonHelper[type + '_exampleCode'];
+        this._codeMirror.setValue(exampleCode);
+        this.codeMirror.refresh();
     } else {
         this._contentView.removeClass('textMode');
         this.blockHelperDescription_.innerHTML = description;

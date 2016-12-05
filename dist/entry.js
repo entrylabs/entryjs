@@ -8513,31 +8513,10 @@ p.generateView = function(b, a) {
     e.addClass("entryBlockHelperTitle textModeElem");
     e.innerHTML = "\uc694\uc18c";
     c.appendChild(e);
+    this._elementsTitle = e;
     this._elementsContainer = Entry.createElement("div", "entryBlockHelperElementsContainer");
     this._elementsContainer.addClass("entryBlockHelperContent textModeElem");
     c.appendChild(this._elementsContainer);
-    e = Entry.createElement("div");
-    e.addClass("entryBlockHelperElementsContainer");
-    var f = Entry.createElement("div");
-    f.innerHTML = "A";
-    f.addClass("elementLeft");
-    var g = Entry.createElement("div");
-    g.innerHTML = "adsfdasfdsf<br/>nasdfdsfadfn";
-    g.addClass("elementRight");
-    e.appendChild(f);
-    e.appendChild(g);
-    this._elementsContainer.appendChild(e);
-    e = Entry.createElement("div");
-    e.addClass("entryBlockHelperElementsContainer");
-    f = Entry.createElement("div");
-    f.innerHTML = "A";
-    f.addClass("elementLeft");
-    g = Entry.createElement("div");
-    g.innerHTML = "adsfdasfdsf<br/>nasdfdsfadfn";
-    g.addClass("elementRight");
-    e.appendChild(f);
-    e.appendChild(g);
-    this._elementsContainer.appendChild(e);
     e = Entry.createElement("div");
     e.addClass("entryBlockHelperTitle textModeElem");
     e.innerHTML = "\uc608\uc2dc \ucf54\ub4dc";
@@ -8554,7 +8533,6 @@ p.generateView = function(b, a) {
     c.appendChild(e);
     this._codeMirrorDesc = Entry.createElement("div");
     this._codeMirrorDesc.addClass("entryBlockHelperContent textModeElem");
-    this._codeMirrorDesc.innerHTML = "\uc624\ube0c\uc81d\ud2b8\ub97c \ud074\ub9ad\ud558\uba74 \ud22c\uba85\ub3c4\ub97c 50\ub9cc\ud07c \uc90c";
     c.appendChild(this._codeMirrorDesc);
     this._renderView = new Entry.RenderView($(d), "LEFT_MOST");
     this.code = new Entry.Code([]);
@@ -8582,7 +8560,34 @@ p.renderBlock = function(b) {
     this.code.createThread([d]);
     this.code.board.align();
     this.code.board.resize();
-    this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD ? (this._contentView.addClass("textMode"), this._codeMirror.setValue("def when_start():\nsdfdasf\nddfdsfkjdajk")) : (this._contentView.removeClass("textMode"), this.blockHelperDescription_.innerHTML = a);
+    if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+      this._contentView.addClass("textMode");
+      this.blockHelperDescription_.innerHTML = Lang.PythonHelper[b + "_desc"];
+      a = Lang.PythonHelper[b + "_elements"];
+      this._elementsContainer.innerHTML = "";
+      if (a) {
+        for (this._elementsTitle.removeClass("entryRemove"), a = a.split("%next");a.length;) {
+          var d = a.shift().split("-- "), c = Entry.createElement("div");
+          c.addClass("entryBlockHelperElementsContainer");
+          var e = Entry.createElement("div");
+          e.innerHTML = d[0];
+          e.addClass("elementLeft");
+          var f = Entry.createElement("div");
+          f.addClass("elementRight");
+          f.innerHTML = d[1];
+          c.appendChild(e);
+          c.appendChild(f);
+          this._elementsContainer.appendChild(c);
+        }
+      } else {
+        this._elementsTitle.addClass("entryRemove");
+      }
+      this._codeMirrorDesc.innerHTML = Lang.PythonHelper[b + "_exampleDesc"];
+      this._codeMirror.setValue(Lang.PythonHelper[b + "_exampleCode"]);
+      this.codeMirror.refresh();
+    } else {
+      this._contentView.removeClass("textMode"), this.blockHelperDescription_.innerHTML = a;
+    }
     this._renderView.align();
     this._renderView.setDomSize();
   }

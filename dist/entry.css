@@ -2887,9 +2887,13 @@ svg .svgBlockGroup text {
 #entryBlockHelperContentWorkspace.textMode .entryBlockHelperElementsContainer .elementRight {
   display: inline-block;
   margin-left: 15px;
+  max-width: 80%;
 }
 #entryBlockHelperContentWorkspace.textMode .entryBlockHelperElementsContainer:not(:first-child) {
   margin-top: 12px;
+}
+#entryBlockHelperContentWorkspace.textMode #entryBlockHelperCodeMirrorContainer {
+  margin-top: 8px;
 }
 .hwMonitor {
   background-color: #363c46;
