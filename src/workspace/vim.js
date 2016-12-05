@@ -167,21 +167,25 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
                 message : '지원되지 않는 표현식을 포함하고 있습니다.',
             };
         }*/
+        console.log("textToCode result", code);
         return code;
     };
 
-    p.codeToText = function(code, mode) {
-        var object;
+    p.codeToText = function(code, mode) { 
+        
         var codeDescription;
         if(mode)
             this._mode = mode.runType;
 
         if(Entry.playground) {
-            object = Entry.playground.object;
-            codeDescription = "# " + object.name + " 오브젝트의 파이썬 코드";
+            var currentObject = Entry.playground.object;
+            if(currentObject)
+                codeDescription = "# " + currentObject.name + " 오브젝트의 파이썬 코드";
+            else
+                codeDescription = "# " + "파이썬 코드"; 
         }
 
-        var textType = mode.textType;
+        var textType = mode.textType; 
 
         if (textType === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;

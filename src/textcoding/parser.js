@@ -165,7 +165,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         console.log("this.syntax", this.syntax);
         console.log("this._syntax_cache", this._syntax_cache);
         var type = this._type;
-        var result = null;
+        var result = "";
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -392,7 +392,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         }
                     }
                 }
-                result += textCode.trim();
+                if(textCode)
+                    result += textCode.trim();
                 result = result.replace(/\t/g, "    ");
 
                 break;

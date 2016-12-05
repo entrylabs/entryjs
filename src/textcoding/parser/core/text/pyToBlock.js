@@ -3184,7 +3184,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(value == options[i][0]){
                     console.log("options[i][0]", options[i][0]);
                     result = options[i][1];
-                    return result;
+                    return result; 
                 }
                 /*else if(value == 'mouse_pointer' || value == '마우스포인터') {
                     result = 'mouse';

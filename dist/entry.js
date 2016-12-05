@@ -14769,14 +14769,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (a == Entry.Workspace.MODE_VIMBOARD) {
       var c = this;
       a = this.vimBoard.textToCode(b);
-      var e = this.board.code;
-      e.load(a);
-      this.changeBoardCode(e);
-      console.log("here come in4");
-      setTimeout(function() {
-        e.view.reDraw();
-        c.board.alignThreads();
-      }, 0);
+      console.log("changedCode", a);
+      if (0 != a.length) {
+        var e = this.board.code;
+        e.load(a);
+        this.changeBoardCode(e);
+        console.log("here come in4");
+        setTimeout(function() {
+          e.view.reDraw();
+          c.board.alignThreads();
+        }, 0);
+      }
     }
   };
   b.loadCodeFromText = function(a) {
@@ -17137,18 +17140,20 @@ Entry.BlockToPyParser = function(b) {
 (function(b) {
   b.Code = function(a, b) {
     this._parseMode = b;
-    if (a instanceof Entry.Thread) {
-      return this.Thread(a);
+    if (a) {
+      if (a instanceof Entry.Thread) {
+        return this.Thread(a);
+      }
+      if (a instanceof Entry.Block) {
+        return this.Block(a);
+      }
+      b = "";
+      a = a.getThreads();
+      for (var c = 0;c < a.length;c++) {
+        this._forIdCharIndex = 0, b += this.Thread(a[c]) + "\n";
+      }
+      return b = b.trim();
     }
-    if (a instanceof Entry.Block) {
-      return this.Block(a);
-    }
-    b = "";
-    a = a.getThreads();
-    for (var c = 0;c < a.length;c++) {
-      this._forIdCharIndex = 0, b += this.Thread(a[c]) + "\n";
-    }
-    return b = b.trim();
   };
   b.Thread = function(a) {
     console.log("start thread");
@@ -20042,7 +20047,7 @@ Entry.Parser = function(b, a, c, d) {
   b.parse = function(a, b) {
     console.log("this.syntax", this.syntax);
     console.log("this._syntax_cache", this._syntax_cache);
-    var c = null;
+    var c = "";
     switch(this._type) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
         try {
@@ -20139,7 +20144,7 @@ Entry.Parser = function(b, a, c, d) {
             (this.py_funcDeclaration = l) && (c += l + "\n");
           }
         }
-        c += n.trim();
+        n && (c += n.trim());
         c = c.replace(/\t/g, "    ");
     }
     return c;
@@ -20292,9 +20297,9 @@ Entry.CodeMap = {};
 (function(b) {
   b.Entry = {start_neighbor_scene:[{"\ub2e4\uc74c":"next", "\uc774\uc804":"pre"}], stop_object:[{thisOnly:"self", thisThread:"this", otherThread:"others", self:"thisOnly", "this":"thisThread", others:"otherThread", "\ubaa8\ub4e0":"all", "\uc790\uc2e0":"thisOnly", "\uc774":"thisThread", "\uc790\uc2e0\uc758 \ub2e4\ub978":"otherThread"}], change_to_next_shape:[{prev:"pre", pre:"prev", "\ub2e4\uc74c":"next", "\uc774\uc804":"prev"}], add_effect_amount:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", 
   "\ud22c\uba85\ub3c4":"transparency"}], change_effect_amount:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", "\ud22c\uba85\ub3c4":"transparency"}], change_object_index:[{front:"FRONT", forward:"FORWARD", backward:"BACKWARD", back:"BACK", "\ub9e8 \uc55e":"FRONT", "\uc55e":"FORWARD", "\ub4a4":"BACKWARD", "\ub9e8 \ub4a4":"BACK"}], set_color:[{red:"#FF0000", orange:"#FF9966", yellow:"#FFFF66", green:"#009900", blue:"#3333FF", navy:"#000099", purple:"#993399", black:"#000000", white:"#FFFFFF", 
-  brown:"#990000"}], reach_something:[null, {mouse:"mouse_pointer", wall:"edge", wall_up:"edge_up", wall_down:"edge_down", wall_right:"edge_right", wall_left:"edge_left", mouse_pointer:"mouse", edge:"wall", edge_up:"wall_up", edge_down:"wall_down", edge_right:"wall_right", edge_left:"edge_left"}, null], create_clone:[{"\uc790\uc2e0":"self"}], locate:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], locate_object_time:[null, {mouse:"mouse_pointer", mouse_pointer:"mouse", 
-  "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], see_angle_object:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], coordinate_object:[null, null, null, {"\uc790\uc2e0":"self", "\ud06c\uae30":"size", "\ubc29\ud5a5":"rotation", "\uc774\ub3d9 \ubc29\ud5a5":"direction", "\ubaa8\uc591 \ubc88\ud638":"picture_index", "\ubaa8\uc591 \uc774\ub984":"picutre_name", picture_index:"shape_number", picture_name:"shape_name", shape_number:"picture_index", shape_name:"picture_name"}], 
-  choose_project_timer_action:[null, {start:"START", stop:"STOP", reset:"RESET"}], set_visible_project_timer:[null, {show:"SHOW", hide:"HIDE"}], get_date:[null, {year:"YEAR", month:"MONTH", day:"DAY", hour:"HOUR", minute:"MINUTE", second:"SECOND"}], distance_something:[null, {mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], set_visible_answer:[{show:"SHOW", hide:"HIDE"}]};
+  brown:"#990000"}], reach_something:[null, {mouse:"mouse_pointer", wall:"edge", wall_up:"edge_up", wall_down:"edge_down", wall_right:"edge_right", wall_left:"edge_left", mouse_pointer:"mouse", edge:"wall", edge_up:"wall_up", edge_down:"wall_down", edge_right:"wall_right", edge_left:"edge_left"}, null], create_clone:[{"\uc790\uc2e0":"self", self:"self"}], locate:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], locate_object_time:[null, {mouse:"mouse_pointer", 
+  mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], see_angle_object:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], coordinate_object:[null, null, null, {"\uc790\uc2e0":"self", "\ud06c\uae30":"size", "\ubc29\ud5a5":"rotation", "\uc774\ub3d9 \ubc29\ud5a5":"direction", "\ubaa8\uc591 \ubc88\ud638":"picture_index", "\ubaa8\uc591 \uc774\ub984":"picutre_name", picture_index:"shape_number", picture_name:"shape_name", shape_number:"picture_index", 
+  shape_name:"picture_name"}], choose_project_timer_action:[null, {start:"START", stop:"STOP", reset:"RESET"}], set_visible_project_timer:[null, {show:"SHOW", hide:"HIDE"}], get_date:[null, {year:"YEAR", month:"MONTH", day:"DAY", hour:"HOUR", minute:"MINUTE", second:"SECOND"}], distance_something:[null, {mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], set_visible_answer:[{show:"SHOW", hide:"HIDE"}]};
   b.Arduino = {arduino_ext_toggle_led:[null, {on:"HIGH", off:"LOW", high:"on", low:"off"}], arduino_ext_analog_list:[{a0:"0", a1:"1", a2:"2", a3:"3", a4:"4", a5:"5"}]};
   b.Hamster = {hamster_play_note_for:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F", 10:"Hamster.NOTE_F_SHARP", 11:"Hamster.NOTE_G", 12:"Hamster.NOTE_G_SHARP", 13:"Hamster.NOTE_A", 14:"Hamster.NOTE_B_FLAT", 15:"Hamster.NOTE_B", "hamster.note_c":4, "hamster.note_c_sharp":5, "hamster.note_d_flat":5, "hamster.note_d":6, "hamster.note_e_flat":7, "hamster.note_d_sharp":7, "hamster.note_e":8, "hamster.note_f":9, "hamster.note_f_sharp":10, 
   "hamster.note_g_flat":10, "hamster.note_g":11, "hamster.note_g_sharp":12, "hamster.note_a_flat":12, "hamster.note_a":13, "hamster.note_b_flat":14, "hamster.note_a_sharp":14, "hamster.note_b":15}, null, null]};
@@ -28267,12 +28272,14 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
   b.textToCode = function(a) {
     a === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : a === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     a = this.codeMirror.getValue();
-    return this._parser.parse(a);
+    a = this._parser.parse(a);
+    console.log("textToCode result", a);
+    return a;
   };
   b.codeToText = function(a, b) {
     var c;
     b && (this._mode = b.runType);
-    Entry.playground && (c = Entry.playground.object, c = "# " + c.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc");
+    Entry.playground && (c = (c = Entry.playground.object) ? "# " + c.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc" : "# \ud30c\uc774\uc36c \ucf54\ub4dc");
     b = b.textType;
     b === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : b === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     a = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
