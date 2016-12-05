@@ -371,6 +371,12 @@ Entry.Container.prototype.removeObject = function(object) {
  * @param {string} objectId
  */
 Entry.Container.prototype.selectObject = function(objectId, changeScene) {
+    if(Entry.playground && Entry.playground.object) {
+        var currentObject = Entry.playground.object;
+        Entry.TextCodingUtil._currentObject = currentObject;
+        console.log("Entry.TextCodingUtil._currentObject1" , Entry.TextCodingUtil._currentObject);
+    }
+
     var object = this.getObject(objectId);
     if (changeScene && object) {
         Entry.scene.selectScene(object.scene);
@@ -395,6 +401,12 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
         Entry.playground.injectObject(object);
     if (Entry.type != "minimize" && Entry.engine.isState('stop'))
         Entry.stage.selectObject(object);
+
+    if(Entry.playground && Entry.playground.object) {
+        var currentObject = Entry.playground.object;
+        Entry.TextCodingUtil._currentObject = currentObject;
+        console.log("Entry.TextCodingUtil._currentObject2" , Entry.TextCodingUtil._currentObject);
+    }
 };
 
 /**

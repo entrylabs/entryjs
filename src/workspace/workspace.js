@@ -99,8 +99,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         switch (this.mode) {
             case Entry.Workspace.MODE_VIMBOARD:
-                    if(Entry.playground && Entry.playground.object)
+                    /*if(Entry.playground && Entry.playground.object) {
                         Entry.TextCodingUtil._currentObject = Entry.playground.object;
+                        Entry.TextCodingUtil._oldObject = Entry.TextCodingUtil._currentObject;
+                    }*/
                     if (this.board) this.board.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.banClass('textMode');
@@ -112,7 +114,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.oldTextType = this.textType;
                 break;
 
-            case Entry.Workspace.MODE_BOARD:
+            case Entry.Workspace.MODE_BOARD: 
                 try {
                     this.board.show();
                     this.blockMenu.unbanClass('textMode');
@@ -405,7 +407,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
             }
         }
-        Entry.disposeEvent && Entry.disposeEvent.notify(e);
+        setTimeout(function() { 
+            Entry.disposeEvent && Entry.disposeEvent.notify(e);
+        }, 0);
     };
 
     p._handleChangeBoard = function() {
@@ -419,7 +423,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
             return;
 
-        console.log("workspace textType", this.textType);
         var changedCode = this.vimBoard.textToCode(this.textType);
         var board = this.board;
         var code = board.code;
@@ -429,8 +432,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             code.createView(board);
             this.board.alignThreads();
         }
-
-        Entry.TextCodingUtil._currentObject = Entry.playground.object;
     };
 
     p.addVimBoard = function(dom) {

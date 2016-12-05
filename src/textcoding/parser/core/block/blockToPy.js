@@ -406,6 +406,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         if(textParam && textParam.converter)
             dataParam = textParam.converter(dataParam, null);
 
+        dataParam = dataParam.toLowerCase();
         return dataParam;
     };
 

@@ -135,6 +135,17 @@ Entry.TextCodingUtil = {};
 
         var result;
 
+        if(menuName == "spritesWithMouse" || menuName == "spritesWithSelf") {
+            var objects = Entry.container.getAllObjects();
+            for(var o in objects) {
+                var object = objects[o];
+                if(name == object.name) {
+                    result = object.id;
+                    break;
+                }
+            }
+        }
+
         if(menuName == "variables") {
             var entryVariables = Entry.variableContainer.variables_;
             //console.log("dropdownDynamicValueConvertor entryVariables", entryVariables);
@@ -540,6 +551,7 @@ Entry.TextCodingUtil = {};
     };
 
     tu.createLocalVariable = function(name, value, object) {
+        console.log("createLocalVariable", name, value, object);
         if(this.isLocalVariableExisted(name, object))
             return;
 
@@ -802,14 +814,31 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
-    tu.entryEventFilter = function(text) {
-        var textArr = text.split("\"");
-        if(textArr[1])
-            textArr[1] = textArr[1].replace(/ /g, "_space_");
+    tu.entryEventFilter = function(text) {  
+        var startIndex = text.indexOf("(");
+        var endIndex = text.indexOf(")");
 
-        text = textArr.join("\"");
-        text = text.replace(/\"/g, "");
-        text = text.replace("None", "none");
+        var stmt = text.substring(0, startIndex);
+        var param = text.substring(startIndex+1, endIndex);
+        console.log("filter stmt", stmt, "param", param);
+        param = param.replace(/\"/g, "");
+        
+        if(param) {
+            if(isNaN(param)) {
+                param = param.replace(/ /g, "_space_");
+            }
+            else {
+                param = 'num' + param;
+            }
+
+            if(param == 'None')
+                param = 'none';
+        }
+
+        
+        text = stmt + "(" + param + "):\n";
+        
+
 
         console.log("entryEventFilter text", text);
         return text;
@@ -2021,6 +2050,7 @@ Entry.TextCodingUtil = {};
             var v = targets[i];
             var name = v.name_;
             var value = v.value_;
+            console.log("generate variable v", v, "co", currentObject);
             if(v.object_) {
                 if(v.object_ == currentObject.id) {
                     name = "self." + name; 

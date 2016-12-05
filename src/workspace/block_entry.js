@@ -22,7 +22,11 @@ if (Entry && Entry.block) {
             var code;
             if(key)
                 code = key.toUpperCase();
-            return '"()"'.replace('()', code);
+
+            if(isNaN(code))
+                return '"()"'.replace('()', code);
+            else
+                return '"()"'.replace('"()"', code);
         };
 
         c.returnStringKey = function(key, value) {
@@ -78,7 +82,6 @@ if (Entry && Entry.block) {
         };
 
         c.returnStringOrNumberByValue = function(key, value) {
-            console.log("string case", key, value);
             if (isNaN(value)) {
                 value = value.replace(/\"/gi, '');
                 return '"()"'.replace('()', value);
@@ -7884,6 +7887,20 @@ Entry.block = {
                 ]
             },
             {
+                syntax: "1 - math.floor(%2)",
+                params: [null, null, null, "unnatural"],
+                blockType: "param",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
                 syntax: "math.floor(%2)",
                 params: [null, null, null, "floor"],
                 blockType: "param",
@@ -9772,7 +9789,7 @@ Entry.block = {
                 script.callReturn();
         },
         "syntax": {"js": [], "py": [
-            {syntax: "while %1 %2:\n$1", template: "while %1 %2:"}
+            {syntax: "while %1 %2:\n$1", template: "while not %1:"}
         ]}
     },
     "stop_object": {
@@ -21290,7 +21307,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "%1 = %1 + %2",
+                syntax: "%1 += %2",
                 textParams: [
                     {
                         "type": "DropdownDynamic",

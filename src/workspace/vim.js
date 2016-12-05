@@ -164,7 +164,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
     };
 
     p.codeToText = function(code, mode) { 
-        
         var codeDescription;
         if(mode)
             this._mode = mode.runType;

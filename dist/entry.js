@@ -7009,7 +7009,12 @@ Entry.Container.prototype.removeObject = function(b) {
   return d;
 };
 Entry.Container.prototype.selectObject = function(b, a) {
-  var d = this.getObject(b);
+  if (Entry.playground && Entry.playground.object) {
+    var d = Entry.playground.object;
+    Entry.TextCodingUtil._currentObject = d;
+    console.log("Entry.TextCodingUtil._currentObject1", Entry.TextCodingUtil._currentObject);
+  }
+  d = this.getObject(b);
   a && d && Entry.scene.selectScene(d.scene);
   this.mapObjectOnScene(function(a) {
     a.view_ && a.view_.removeClass("selectedObject");
@@ -7018,6 +7023,7 @@ Entry.Container.prototype.selectObject = function(b, a) {
   d ? (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0) : Entry.playground && Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.vimBoard && Entry.playground.mainWorkspace.vimBoard.clearText();
   Entry.playground && Entry.playground.injectObject(d);
   "minimize" != Entry.type && Entry.engine.isState("stop") && Entry.stage.selectObject(d);
+  Entry.playground && Entry.playground.object && (d = Entry.playground.object, Entry.TextCodingUtil._currentObject = d, console.log("Entry.TextCodingUtil._currentObject2", Entry.TextCodingUtil._currentObject));
 };
 Entry.Container.prototype.getAllObjects = function() {
   return this.objects_;
@@ -12321,48 +12327,57 @@ Entry.TextCodingUtil = {};
       return a;
     }
     var c;
-    if ("variables" == b) {
-      var e = Entry.variableContainer.variables_, f;
+    if ("spritesWithMouse" == b || "spritesWithSelf" == b) {
+      var e = Entry.container.getAllObjects(), f;
       for (f in e) {
         var g = e[f];
-        if (g.name_ == a) {
-          c = g.id_;
+        if (a == g.name) {
+          c = g.id;
+          break;
+        }
+      }
+    }
+    if ("variables" == b) {
+      var e = Entry.variableContainer.variables_, h;
+      for (h in e) {
+        if (f = e[h], f.name_ == a) {
+          c = f.id_;
           break;
         }
       }
     } else {
       if ("lists" == b) {
-        for (f in g = Entry.variableContainer.lists_, console.log("dropdownDynamicValueConvertor entryLists", g), g) {
-          if (e = g[f], e.name_ == a) {
+        for (h in f = Entry.variableContainer.lists_, console.log("dropdownDynamicValueConvertor entryLists", f), f) {
+          if (e = f[h], e.name_ == a) {
             c = e.id_;
             break;
           }
         }
       } else {
         if ("messages" == b) {
-          for (f in g = Entry.variableContainer.messages_, g) {
-            if (e = g[f], e.name == a) {
+          for (h in f = Entry.variableContainer.messages_, f) {
+            if (e = f[h], e.name == a) {
               c = e.id;
               break;
             }
           }
         } else {
           if ("pictures" == b) {
-            for (e in f = Entry.container.getAllObjects(), f) {
-              var h = f[e], h = h.pictures;
-              for (g in h) {
-                var k = h[g];
-                if (k.name == a) {
-                  return c = k.id;
+            for (f in e = Entry.container.getAllObjects(), e) {
+              g = e[f];
+              h = g.pictures;
+              for (var k in h) {
+                if (g = h[k], g.name == a) {
+                  return c = g.id;
                 }
               }
             }
           } else {
             if ("sounds" == b) {
-              for (e in f = Entry.container.getAllObjects(), f) {
-                for (g in h = f[e], h = h.sounds, h) {
-                  if (k = h[g], k.name == a) {
-                    return c = k.id;
+              for (f in e = Entry.container.getAllObjects(), e) {
+                for (k in g = e[f], h = g.sounds, h) {
+                  if (g = h[k], g.name == a) {
+                    return c = g.id;
                   }
                 }
               }
@@ -12546,6 +12561,7 @@ Entry.TextCodingUtil = {};
     }
   };
   b.createLocalVariable = function(a, b, c) {
+    console.log("createLocalVariable", a, b, c);
     this.isLocalVariableExisted(a, c) || (Entry.variableContainer.addVariable({name:a, value:b, object:c.id, variableType:"variable"}), Entry.variableContainer.updateList());
   };
   b.isLocalVariable = function(a) {
@@ -12656,11 +12672,13 @@ Entry.TextCodingUtil = {};
     return !1;
   };
   b.entryEventFilter = function(a) {
-    a = a.split('"');
-    a[1] && (a[1] = a[1].replace(/ /g, "_space_"));
-    a = a.join('"');
-    a = a.replace(/\"/g, "");
-    a = a.replace("None", "none");
+    var b = a.indexOf("("), c = a.indexOf(")"), e = a.substring(0, b);
+    a = a.substring(b + 1, c);
+    console.log("filter stmt", e, "param", a);
+    if (a = a.replace(/\"/g, "")) {
+      a = isNaN(a) ? a.replace(/ /g, "_space_") : "num" + a, "None" == a && (a = "none");
+    }
+    a = e + "(" + a + "):\n";
     console.log("entryEventFilter text", a);
     return a;
   };
@@ -13119,6 +13137,7 @@ Entry.TextCodingUtil = {};
     if (c) {
       for (var c = c.variables_ || [], e = c.length - 1;0 <= e;e--) {
         var f = c[e], g = f.name_, h = f.value_;
+        console.log("generate variable v", f, "co", b);
         if (f.object_) {
           if (f.object_ == b.id) {
             g = "self." + g;
@@ -13483,7 +13502,7 @@ Entry.BlockToPyParser = function(b) {
       }
     }
     b && b.converter && (a = b.converter(a, null));
-    return a;
+    return a = a.toLowerCase();
   };
   b.FieldOutput = function(a, b) {
     console.log("FieldOutput", a, b);
@@ -14022,7 +14041,7 @@ Entry.JsToBlockParser = function(b) {
 Entry.PyToBlockParser = function(b) {
   this._type = "PyToBlockParser";
   this.blockSyntax = b;
-  this._currentObject = Entry.playground.object;
+  this._currentObject = Entry.TextCodingUtil._currentObject;
   this._variableMap = new Entry.Map;
   this._funcMap = new Entry.Map;
   this._paramQ = new Entry.Queue;
@@ -14651,8 +14670,8 @@ Entry.PyToBlockParser = function(b) {
           c = this.getBlockSyntax("%1 = %2");
           var t;
         } else {
-          k.params && k.params[0] && k.params[0].name && h.name == k.params[0].name && "PLUS" == k.operator || "MINUS" == k.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", k.params[0].name), c = "%1 = %1 + %2") : "combine_something" == k.type && k.params && k.params[1] && k.params[1].name && h.name == k.params[1].name && "PLUS" == k.operator || "MINUS" == k.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", k.params[1].name), 
-          c = "%1 = %1 + %2") : c = "%1 = %2", c = this.getBlockSyntax(c);
+          k.params && k.params[0] && k.params[0].name && h.name == k.params[0].name && "PLUS" == k.operator || "MINUS" == k.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", k.params[0].name), c = "%1 += %2") : "combine_something" == k.type && k.params && k.params[1] && k.params[1].name && h.name == k.params[1].name && "PLUS" == k.operator || "MINUS" == k.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", k.params[1].name), 
+          c = "%1 += %2") : c = "%1 = %2", c = this.getBlockSyntax(c);
         }
         c && (t = c.key);
         c = t;
@@ -14717,34 +14736,34 @@ Entry.PyToBlockParser = function(b) {
         if (h && h.property && "__pythonRuntime.ops.subscriptIndex" == h.property.callee) {
           var q = "%1[%2] = %3", g = this.getBlockSyntax(q), v
         } else {
-          q = y && t && y == t ? "%1 = %1 + %2" : "%1 = %2", g = this.getBlockSyntax(q);
+          q = y && t && y == t ? "%1 += %2" : "%1 = %2", g = this.getBlockSyntax(q);
         }
         g && (v = g.key);
         c.type = v;
         break;
       case "+=":
-        q = "%1 = %1 + %2";
+        q = "%1 += %2";
         if (g = this.getBlockSyntax(q)) {
           v = g.key;
         }
         c.type = v;
         break;
       case "-=":
-        q = "%1 = %1 + %2";
+        q = "%1 += %2";
         if (g = this.getBlockSyntax(q)) {
           v = g.key;
         }
         c.type = v;
         break;
       case "*=":
-        q = "%1 = %1 + %2";
+        q = "%1 += %2";
         if (g = this.getBlockSyntax(q)) {
           v = g.key;
         }
         c.type = v;
         break;
       case "/=":
-        q = "%1 = %1 + %2";
+        q = "%1 += %2";
         if (g = this.getBlockSyntax(q)) {
           v = g.key;
         }
@@ -14856,7 +14875,7 @@ Entry.PyToBlockParser = function(b) {
           e.push(l);
         }
       } else {
-        if ("%1 = %1 + %2" == q) {
+        if ("%1 += %2" == q) {
           if (h && h.object && h.property) {
             if ("self" == h.object.name) {
               m = Entry.block[v];
@@ -15097,7 +15116,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamKeyboard = function(a, b, c) {
     console.log("ParamKeyboard value, paramMeta, paramDefMeta", a, b, c);
-    return Entry.KeyboardCode.map[a.toLowerCase()];
+    return isNaN(a) ? Entry.KeyboardCode.map[a.toLowerCase()] : Entry.KeyboardCode.map[a];
   };
   b.Indicator = function(a, b, c) {
   };
@@ -15735,12 +15754,12 @@ Entry.PyToBlockParser = function(b) {
     if ("__getParam0" == e.name) {
       return b;
     }
+    this._funcLoop = !0;
     this._blockCount++;
     console.log("BlockCount FunctionDeclaration", this._blockCount);
-    Entry.TextCodingUtil.isEntryEventFuncName(e.name) || (console.log("funcBodyData", g), this._funcLoop = !0);
+    Entry.TextCodingUtil.isEntryEventFuncName(e.name) || console.log("funcBodyData", g);
     g = this[c.type](c);
     console.log("FunctionDeclaration bodyData", g);
-    this._funcLoop = !1;
     if ("Identifier" == e.type) {
       var f = this[e.type](e)
     }
@@ -15770,6 +15789,7 @@ Entry.PyToBlockParser = function(b) {
       if (0 != a.length) {
         b = a[0];
         b = b.replace(/_space_/g, " ");
+        b = b.replace(/num/g, "");
         console.log("event arg", b);
         "none" == b && (b = "None");
         var q = b;
@@ -15783,6 +15803,7 @@ Entry.PyToBlockParser = function(b) {
       }
       return null;
     }
+    this._funcLoop = !1;
     var n, x, y;
     h = {};
     r = {};
@@ -27063,7 +27084,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (this.oldMode !== this.mode) {
       switch(this.mode) {
         case Entry.Workspace.MODE_VIMBOARD:
-          Entry.playground && Entry.playground.object && (Entry.TextCodingUtil._currentObject = Entry.playground.object);
           this.board && this.board.hide();
           this.overlayBoard && this.overlayBoard.hide();
           this.blockMenu.banClass("textMode");
@@ -27146,7 +27166,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       if (e) {
         switch(c) {
           case 86:
-            (k = this.selectedBoard) && k instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
+            (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
             break;
           case 219:
             if (Entry.playground && !Entry.playground.object && h) {
@@ -27156,39 +27176,43 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             if (Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
               return;
             }
-            if (k = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-              alert(k);
+            if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+              alert(c);
               return;
             }
-            k = {};
-            k.boardType = Entry.Workspace.MODE_BOARD;
-            k.textType = -1;
-            this.setMode(k);
+            c = {};
+            c.boardType = Entry.Workspace.MODE_BOARD;
+            c.textType = -1;
+            this.setMode(c);
             break;
           case 221:
             if (Entry.playground && !Entry.playground.object && this.oldMode === Entry.Workspace.MODE_BOARD) {
               alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
               return;
             }
-            if (k = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
-              alert(k);
+            if (c = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
+              alert(c);
               return;
             }
-            if (k = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-              alert(k);
+            if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+              alert(c);
               return;
             }
-            k = {};
-            k.boardType = Entry.Workspace.MODE_VIMBOARD;
-            k.textType = Entry.Vim.TEXT_TYPE_PY;
-            k.runType = Entry.Vim.WORKSPACE_MODE;
-            this.setMode(k);
+            c = {};
+            c.boardType = Entry.Workspace.MODE_VIMBOARD;
+            c.textType = Entry.Vim.TEXT_TYPE_PY;
+            c.runType = Entry.Vim.WORKSPACE_MODE;
+            this.setMode(c);
             break;
           case 67:
             k && !k.isInBlockMenu && k.block.isDeletable() && k.block.copyToClipboard();
             break;
           case 88:
-            k && !k.isInBlockMenu && k.block.isDeletable() && (c = k.block, c.copyToClipboard(), c.destroy(!0, !0), k.getBoard().setSelectedBlock(null));
+            k && !k.isInBlockMenu && k.block.isDeletable() && function(a) {
+              a.copyToClipboard();
+              a.destroy(!0, !0);
+              k.getBoard().setSelectedBlock(null);
+            }(k.block);
         }
       } else {
         if (g) {
@@ -27241,7 +27265,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           }
         }
       }
-      Entry.disposeEvent && Entry.disposeEvent.notify(a);
+      setTimeout(function() {
+        Entry.disposeEvent && Entry.disposeEvent.notify(a);
+      }, 0);
     }
   };
   b._handleChangeBoard = function() {
@@ -27250,11 +27276,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b._syncTextCode = function() {
     if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
-      console.log("workspace textType", this.textType);
       var a = this.vimBoard.textToCode(this.textType), b = this.board, c = b.code;
       console.log("syncTextCode", c);
       c && (c.load(a), c.createView(b), this.board.alignThreads());
-      Entry.TextCodingUtil._currentObject = Entry.playground.object;
     }
   };
   b.addVimBoard = function(a) {
