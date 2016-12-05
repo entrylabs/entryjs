@@ -26175,6 +26175,329 @@ Entry.block = {
             return script.callReturn();
         }
     },
+    //robotori Add 20161129 begin
+    "robotori_digitalInput": {
+        "color": "#00979D",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotori_D2_Input, "D2"],
+                    [Lang.Blocks.robotori_D3_Input, "D3"]
+                ],
+                "value": "D2",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "robotori_digitalInput"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "robotori_sensor",
+        "isNotFor": [ "robotori" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            return pd[dev];
+        }
+    },
+    "robotori_analogInput": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotori_A0_Input, "A0"],
+					[Lang.Blocks.robotori_A1_Input, "A1"],
+					[Lang.Blocks.robotori_A2_Input, "A2"],
+					[Lang.Blocks.robotori_A3_Input, "A3"],
+					[Lang.Blocks.robotori_A4_Input, "A4"],
+					[Lang.Blocks.robotori_A5_Input, "A5"],
+                ],
+                "value": "A0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "robotori_analogInput"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "robotori_sensor",
+        "isNotFor": [ "robotori" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            return pd[dev];
+        }
+    },
+    "robotori_digitalOutput": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotori_D10_Output, "D10"],
+					[Lang.Blocks.robotori_D11_Output, "D11"],
+					[Lang.Blocks.robotori_D12_Output, "D12"],
+					[Lang.Blocks.robotori_D13_Output, "D13"]
+                ],
+                "value": "D10",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotori_On, "ON"],
+					[Lang.Blocks.robotori_Off, "OFF"]
+                ],
+                "value": "ON",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null, null ],
+            "type": "robotori_digitalOutput"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "VALUE": 1
+        },
+        "class": "robotori_sensor",
+        "isNotFor": [ "robotori" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var dev = script.getStringField("DEVICE", script);
+            var value = script.getStringField('VALUE', script);
+
+            if (dev == 'D10' && value == 'ON') {
+                sq.D10 = 1;
+            } else {
+                sq.D10 = 0;
+            }
+
+            if (dev == 'D11' && value == 'ON') {
+                sq.D11 = 1;
+            } else {
+                sq.D11 = 0;
+            }
+
+            if (dev == 'D12' && value == 'ON') {
+                sq.D12 = 1;
+            } else {
+                sq.D12 = 0;
+            }
+
+            if (dev == 'D13' && value == 'ON') {
+                sq.D13 = 1;
+            } else {
+                sq.D13 = 0;
+            }
+            //sq.D13 = 1;
+            return script.callReturn();
+        }
+    },
+	"robotori_analogOutput": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotori_analog5, "AOUT5"],
+					[Lang.Blocks.robotori_analog6, "AOUT6"],
+					[Lang.Blocks.robotori_analog9, "AOUT9"]
+                ],
+                "value": "AOUT5",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "robotori_analogOutput"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "VALUE": 1
+        },
+        "class": "robotori_sensor",
+        "isNotFor": [ "robotori" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+			var dev = script.getStringField("DEVICE", script);
+			var value = script.getNumberValue("VALUE", script);
+			
+			if (dev == 'AOUT5')
+			{
+				sq.AOUT5 = value;
+			}
+			else if(dev == 'AOUT6')
+			{
+				sq.AOUT6 = value;
+			}	
+			else if(dev == 'AOUT9')
+			{
+				sq.AOUT9 = value;
+			}	
+			
+			return script.callReturn();
+        }
+    },
+    "robotori_servo": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "90" ]
+                },
+                null
+            ],
+            "type": "robotori_servo"
+        },
+        "paramsKeyMap": {
+            "SERVO": 0
+        },
+        "class": "robotori_motor",
+        "isNotFor": [ "robotori" ],
+        "func": function (sprite, script) {
+           var sq = Entry.hw.sendQueue;
+			sq.SERVO = script.getNumberValue("SERVO");
+
+			return script.callReturn();
+        }
+    },
+    "robotori_dc_direction": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotori_DC_rightmotor, "RIGHT_MOTOR"],
+					[Lang.Blocks.robotori_DC_leftmotor, "LEFT_MOTOR"]
+                ],
+                "value": "RIGHT_MOTOR",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotori_DC_STOP, "STOP"],
+					[Lang.Blocks.robotori_DC_CW, "CW"],
+					[Lang.Blocks.robotori_DC_CCW, "CCW"]
+                ],
+                "value": "STOP",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null, null ],
+            "type": "robotori_dc_direction"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "VALUE": 1
+        },
+        "class": "robotori_motor",
+        "isNotFor": [ "robotori" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var dev = script.getStringField("DEVICE", script);
+            var value = script.getStringField('VALUE', script);
+			if( dev == 'RIGHT_MOTOR' )
+			{
+				if( value == 'STOP' )
+				{
+					sq.RIGHT_MOTOR = 0xFF;
+				}
+				else if( value == 'CW' )
+				{
+					sq.RIGHT_MOTOR = 0x00;
+				}
+				else if( value == 'CCW' )
+				{
+					sq.RIGHT_MOTOR = 0xB4;
+				}
+			}
+			if( dev == 'LEFT_MOTOR' )
+			{
+				if( value == 'STOP' )
+				{
+					sq.LEFT_MOTOR = 0xFF;
+				}
+				else if( value == 'CW' )
+				{
+					sq.LEFT_MOTOR = 0x00;
+				}
+				else if( value == 'CCW' )
+				{
+					sq.LEFT_MOTOR = 0xB4;
+				}
+			}
+            return script.callReturn();
+        }
+    },
+    //robotori add 20161129 end
     "hidden": {
         "color": "#7C7C7C",
         "skeleton": "basic",

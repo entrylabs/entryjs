@@ -556,7 +556,16 @@ EntryStatic.getAllBlocks = function() {
                 "smartBoard_get_digital_value",
                 "smartBoard_toggle_led",
                 "smartBoard_toggle_pwm",
-                "smartBoard_convert_scale"
+                "smartBoard_convert_scale",
+                
+                //robotori Add 20161129 begin
+                "robotori_digitalInput",
+                "robotori_analogInput",
+                "robotori_digitalOutput",
+                "robotori_analogOutput",
+                "robotori_servo",
+                "robotori_dc_direction"
+                //robotori add 20161129 end
             ]
         }
     ]
