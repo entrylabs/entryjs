@@ -3177,21 +3177,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
         console.log("dropdown picture sound", result);
 
-        if(paramMeta) {
+        if(paramMeta) { 
             var options = paramMeta.options;
             console.log("ParamDropdownDynamic options", options);
             for(var i in options) {
                 if(value == options[i][0]){
                     console.log("options[i][0]", options[i][0]);
                     result = options[i][1];
-                    return result; 
+                    return result;  
                 }
                 /*else if(value == 'mouse_pointer' || value == '마우스포인터') {
                     result = 'mouse';
                     return result;
                 }*/
             }
-        }
+        } 
 
         if(textParam && textParam.codeMap) {
             var codeMap = textParam.codeMap;

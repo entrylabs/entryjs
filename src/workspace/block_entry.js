@@ -7210,7 +7210,8 @@ Entry.block = {
                         "menuName": "spritesWithSelf",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnObjectOrStringValue
+                        converter: Entry.block.converters.returnObjectOrStringValue,
+                        codeMap: "Entry.CodeMap.Entry.coordinate_object[1]"
                     },
                     undefined,
                     {
