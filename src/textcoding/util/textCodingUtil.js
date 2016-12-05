@@ -135,18 +135,27 @@ Entry.TextCodingUtil = {};
 
         var result;
 
-        if(menuName == "spritesWithMouse" || menuName == "spritesWithSelf") {
+        if(menuName == "scenes") {
+            var scenes = Entry.scene.getScenes();
+            for(var s in scenes) {
+                var scene = scenes[s];
+                if(name == scene.name) {
+                    result = scene.id;
+                    break;
+                }
+            }
+        }
+        else if(menuName == "spritesWithMouse" || menuName == "spritesWithSelf") {
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
                 var object = objects[o];
-                if(name == object.name) {
+                if(name == object.name) { 
                     result = object.id;
                     break;
                 }
             }
         }
-
-        if(menuName == "variables") {
+        else if(menuName == "variables") {
             var entryVariables = Entry.variableContainer.variables_;
             //console.log("dropdownDynamicValueConvertor entryVariables", entryVariables);
             for(var e in entryVariables) {

@@ -12332,8 +12332,8 @@ Entry.TextCodingUtil = {};
       return a;
     }
     var c;
-    if ("spritesWithMouse" == b || "spritesWithSelf" == b) {
-      var e = Entry.container.getAllObjects(), f;
+    if ("scenes" == b) {
+      var e = Entry.scene.getScenes(), f;
       for (f in e) {
         var g = e[f];
         if (a == g.name) {
@@ -12341,48 +12341,57 @@ Entry.TextCodingUtil = {};
           break;
         }
       }
-    }
-    if ("variables" == b) {
-      var e = Entry.variableContainer.variables_, h;
-      for (h in e) {
-        if (f = e[h], f.name_ == a) {
-          c = f.id_;
-          break;
-        }
-      }
     } else {
-      if ("lists" == b) {
-        for (h in f = Entry.variableContainer.lists_, console.log("dropdownDynamicValueConvertor entryLists", f), f) {
-          if (e = f[h], e.name_ == a) {
-            c = e.id_;
+      if ("spritesWithMouse" == b || "spritesWithSelf" == b) {
+        var h = Entry.container.getAllObjects();
+        for (e in h) {
+          if (f = h[e], a == f.name) {
+            c = f.id;
             break;
           }
         }
       } else {
-        if ("messages" == b) {
-          for (h in f = Entry.variableContainer.messages_, f) {
-            if (e = f[h], e.name == a) {
-              c = e.id;
+        if ("variables" == b) {
+          for (h in e = Entry.variableContainer.variables_, e) {
+            if (g = e[h], g.name_ == a) {
+              c = g.id_;
               break;
             }
           }
         } else {
-          if ("pictures" == b) {
-            for (f in e = Entry.container.getAllObjects(), e) {
-              g = e[f];
-              h = g.pictures;
-              for (var k in h) {
-                if (g = h[k], g.name == a) {
-                  return c = g.id;
-                }
+          if ("lists" == b) {
+            for (h in g = Entry.variableContainer.lists_, console.log("dropdownDynamicValueConvertor entryLists", g), g) {
+              if (e = g[h], e.name_ == a) {
+                c = e.id_;
+                break;
               }
             }
           } else {
-            if ("sounds" == b) {
-              for (f in e = Entry.container.getAllObjects(), e) {
-                for (k in g = e[f], h = g.sounds, h) {
-                  if (g = h[k], g.name == a) {
-                    return c = g.id;
+            if ("messages" == b) {
+              for (h in g = Entry.variableContainer.messages_, g) {
+                if (e = g[h], e.name == a) {
+                  c = e.id;
+                  break;
+                }
+              }
+            } else {
+              if ("pictures" == b) {
+                for (e in h = Entry.container.getAllObjects(), h) {
+                  for (g in f = h[e], f = f.pictures, f) {
+                    var k = f[g];
+                    if (k.name == a) {
+                      return c = k.id;
+                    }
+                  }
+                }
+              } else {
+                if ("sounds" == b) {
+                  for (e in h = Entry.container.getAllObjects(), h) {
+                    for (g in f = h[e], f = f.sounds, f) {
+                      if (k = f[g], k.name == a) {
+                        return c = k.id;
+                      }
+                    }
                   }
                 }
               }
