@@ -99,6 +99,9 @@ Entry.CodeMap = {};
         arduino_ext_tone_list: [
             {"c":"C", "cs":"CS", "d":"D", "e":"E", "f":"F", "fs":"FS", "g":"G",
             "gs":"GS", "a":"A", "b":"B"}
+        ],
+        arduino_get_digital_toggle: [
+            {"on":"HIGH", "off":"LOW", "high":"on", "low":"off"}
         ]
     };
 

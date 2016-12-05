@@ -3096,7 +3096,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         if(!result)
-            result = value;
+            result = value; 
 
 
         if(textParam && textParam.codeMap) {
