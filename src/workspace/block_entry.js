@@ -8292,7 +8292,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.timer_view(%2)", 
+                syntax: "Entry.timer_view(%2)",
                 textParams: [
                     undefined,
                     {
@@ -8976,9 +8976,7 @@ Entry.block = {
             "type": "get_sound_volume"
         },
         "class": "calc",
-        "isNotFor": [
-            ""
-        ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             return createjs.Sound.getVolume() * 100;
         },
@@ -12049,7 +12047,7 @@ Entry.block = {
                 ],
                 params: ["LEFT", "4"]
             },
-            
+
             {
                 syntax: "Hamster.left_led(Hamster.LED_YELLOW)",
                 textParams: [
@@ -14229,7 +14227,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "(%1 and %3)", 
+                syntax: "(%1 and %3)",
                 blockType: "param"
             }
         ]}
@@ -22607,7 +22605,7 @@ Entry.block = {
             }
             return false;
         },
-        "syntax": {"js": [], "py": [ 
+        "syntax": {"js": [], "py": [
             {
                 syntax: "%4 in %2",
                 blockType: "param",

@@ -26,6 +26,16 @@ Entry.Vim = function(dom, textType) {
     //this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
     //this._pyParser = new Entry.Parser("ws", "py", this.codeMirror);
 
+    Entry.addEventListener('hwChanged', function(e){
+        if (Entry.hw.hwModule) {
+            var name = Entry.hw.hwModule.name;
+            name = name[0].toUpperCase() + name.slice(1);
+            Entry.Vim.PYTHON_IMPORT_HW = "\nimport " + name + "\n";
+        } else {
+            Entry.Vim.PYTHON_IMPORT_HW = "";
+        }
+    }.bind(this));
+
     Entry.Model(this, false);
     window.eventset = [];
 };
@@ -42,9 +52,7 @@ Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
 Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
 
 Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
-Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino, Dplay" +
-                                " \n\t   Neobot, Nemoino, Robotis, Sensorboard, Xbot from Hw";
-
+Entry.Vim.PYTHON_IMPORT_HW = "";
 
 (function(p) {
     p.createDom = function (dom) {
@@ -108,7 +116,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
             testArr.forEach(function (text, i) {
                 _self.codeMirror.replaceSelection(text);
                 var cursor = _self.doc.getCursor();
-                lastLine = cursor.line; 
+                lastLine = cursor.line;
                 /*if(!Entry.TextCodingUtil.isEntryEventFuncByFullText(text))
                     _self.codeMirror.indentLine(lastLine);*/
                 /*if(i === 0 || max !== i) {
@@ -193,7 +201,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
             .concat("\n\n")
             .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
             //.concat("\n")
-            //.concat(Entry.Vim.PYTHON_IMPORT_HW)
+            .concat(Entry.Vim.PYTHON_IMPORT_HW)
             .concat("\n\n")
             .concat(textCode);
         }

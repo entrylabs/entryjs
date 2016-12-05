@@ -6440,5 +6440,15 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryTooltipIndicator > div:nth-child(3) {
   animation-delay: 0.6s;
 }
+.entryTooltip.edge_up {
+  -webkit-transform: translate(-100%, -20%);
+  -moz-transform: translate(-100%, -20%);
+  -ms-transform: translate(-100%, -20%);
+  -o-transform: translate(-100%, -20%);
+  transform: translate(-100%, -20%);
+}
+.entryTooltip.edge_up:before {
+  top: 20%;
+}
 
 

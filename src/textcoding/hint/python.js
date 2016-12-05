@@ -9,8 +9,6 @@ goog.provide("Entry.PyHint");
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 //
 Entry.PyHint = function(syntax) {
-    console.log(Entry.playground.mainWorkspace.vimBoard._parser.syntax);
-
     this.syntax = syntax;
     this.scope = {};
 
@@ -20,6 +18,7 @@ Entry.PyHint = function(syntax) {
             this.scope._global.push(key)
     }
     this.addScope("Entry");
+    this.addScope("random");
 
     this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
 
@@ -40,7 +39,6 @@ Entry.PyHint = function(syntax) {
         var lastToken = tokens[tokens.length - 1];
         var result = [], menuResult = [];
 
-        console.log(tokens)
 
         // If it's not a 'word-style' token, ignore the token.
 
@@ -139,7 +137,7 @@ Entry.PyHint = function(syntax) {
     };
 
     p.hintFunc = function(cm, self, data) {
-        console.log(cm, self, data);
+        console.log(data);
         var text;
         var syntax = data.syntax;
         var ch = self.from.ch;
@@ -152,7 +150,6 @@ Entry.PyHint = function(syntax) {
             if (data.localKey) {
                 text = data.localKey + "." + text;
             }
-            console.log(text);
             text = text.split(".");
             if (text.length > 1)
                 text.shift();
@@ -167,6 +164,7 @@ Entry.PyHint = function(syntax) {
 
         cm.replaceRange(text, self.from, self.to)
         cm.setCursor({line: self.from.line, ch: ch})
+        Entry.helper.renderBlock(data.syntax.key);
     };
 
 })(Entry.PyHint.prototype);
