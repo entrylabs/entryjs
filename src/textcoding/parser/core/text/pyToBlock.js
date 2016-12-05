@@ -2565,6 +2565,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(value || value == 0) {
                         console.log("final value", value); 
+                        console.log("final value", value, value.length); 
 
                         if(Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
                             if(!this._funcLoop)
@@ -2605,7 +2606,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 if(value || value == 0) {
                     console.log("final currentObject", this._currentObject);
-                    console.log("final value", value);
+                    console.log("final value", value, value.length);
 
                     if(Entry.TextCodingUtil.isGlobalVariableExisted(name, this._currentObject)) {
                         if(!this._funcLoop)

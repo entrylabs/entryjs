@@ -12736,7 +12736,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Hamster.left_led(Hamster.LED_OFF,Hamster.LED_OFF)",
+                syntax: "Hamster.left_led(0)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12770,7 +12770,7 @@ Entry.block = {
                 params: ["LEFT"]
             },
             {
-                syntax: "Hamster.left_led(0)",
+                syntax: "Hamster.left_led(Hamster.LED_OFF,Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12787,7 +12787,7 @@ Entry.block = {
                 params: ["LEFT"]
             },
             {
-                syntax: "Hamster.right_led(Hamster.LED_OFF,Hamster.LED_OFF)",
+                syntax: "Hamster.right_led(0)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12821,7 +12821,7 @@ Entry.block = {
                 params: ["RIGHT"]
             },
             {
-                syntax: "Hamster.right_led(0)",
+                syntax: "Hamster.right_led(Hamster.LED_OFF,Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12838,7 +12838,7 @@ Entry.block = {
                 params: ["RIGHT"]
             },
             {
-                syntax: "Hamster.leds(Hamster.LED_OFF,Hamster.LED_OFF)",
+                syntax: "Hamster.leds(0)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12872,7 +12872,7 @@ Entry.block = {
                 params: ["BOTH"]
             },
             {
-                syntax: "Hamster.leds(0)",
+                syntax: "Hamster.leds(Hamster.LED_OFF,Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
