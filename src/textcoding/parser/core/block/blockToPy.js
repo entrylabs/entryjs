@@ -295,7 +295,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         var codeMap = eval(textParam.codeMap);
                         var code = codeMap[value];
                         if(code)
-                            value = code; 
+                            value = code;  
                     }
                     console.log("dropdown key, value", key, value);
                     if(isNaN(key) && isNaN(value)) {

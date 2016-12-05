@@ -2502,6 +2502,7 @@ Entry.block = {
                         "value": "0",
                         "fontSize": 11,
                         converter: Entry.block.converters.returnStringKey,
+                        caseType: "no",
                         codeMap:"Entry.CodeMap.Arduino.arduino_ext_analog_list[0]"
                     }
                 ],
@@ -3069,6 +3070,7 @@ Entry.block = {
                         "value": "C",
                         "fontSize": 11,
                         converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Arduino.arduino_ext_tone_list[0]",
                         caseType: "no"
                     }
                 ],
@@ -11636,6 +11638,59 @@ Entry.block = {
                     }
                 ],
                 params: ["BLACK", "BOTH"]
+            },
+            {
+                syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_WHITE_RIGHT_SENSOR)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                            [Lang.Blocks.HAMSTER_color_white,"WHITE"]
+                        ],
+                        "value": "BLACK",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_floor_sensors,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["WHITE", "RIGHT"]
+            },{
+                syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_WHITE_BOTH_SENSORS)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                            [Lang.Blocks.HAMSTER_color_white,"WHITE"]
+                        ],
+                        "value": "BLACK",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_floor_sensors,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["WHITE", "BOTH"]
             }
 
         ]}
@@ -11854,6 +11909,90 @@ Entry.block = {
                     },
                 ],
                 params: ["BLACK", "REAR"]
+            },
+            {
+                syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_WHITE_TURN_RIGHT)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                            [Lang.Blocks.HAMSTER_color_white,"WHITE"]
+                        ],
+                        "value": "BLACK",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_front,"FRONT"],
+                            [Lang.Blocks.HAMSTER_rear,"REAR"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ],
+                params: ["WHITE", "RIGHT"]
+            },
+            {
+                syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_WHITE_MOVE_FORWARD)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                            [Lang.Blocks.HAMSTER_color_white,"WHITE"]
+                        ],
+                        "value": "BLACK",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_front,"FRONT"],
+                            [Lang.Blocks.HAMSTER_rear,"REAR"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ],
+                params: ["WHITE", "FRONT"]
+            },
+            {
+                syntax: "Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_WHITE_UTURN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                            [Lang.Blocks.HAMSTER_color_white,"WHITE"]
+                        ],
+                        "value": "BLACK",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_front,"FRONT"],
+                            [Lang.Blocks.HAMSTER_rear,"REAR"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ],
+                params: ["WHITE", "REAR"]
             }
         ]}
     },
@@ -13498,22 +13637,22 @@ Entry.block = {
                 params: ["AB", "0"]
             },
             {
-                syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT,Hamster.IO_MODE_DIGITAL_INPUT)",
+                syntax: "Hamster.io_modes(Hamster.IO_MODE_DIGITAL_INPUT)",
                 textParams: [{converter: Entry.block.converters.returnStringValue}],
                 params: ["AB", "1"]
             },
             {
-                syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT,Hamster.IO_MODE_SERVO_OUTPUT)",
+                syntax: "Hamster.io_modes(Hamster.IO_MODE_SERVO_OUTPUT)",
                 textParams: [{converter: Entry.block.converters.returnStringValue}],
                 params: ["AB", "8"]
             },
             {
-                syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT,Hamster.IO_MODE_PWM_OUTPUT)",
+                syntax: "Hamster.io_modes(Hamster.IO_MODE_PWM_OUTPUT)",
                 textParams: [{converter: Entry.block.converters.returnStringValue}],
                 params: ["AB", "9"]
             },
             {
-                syntax: "Hamster.io_modes(Hamster.IO_MODE_ANALOG_INPUT,Hamster.IO_MODE_DIGITAL_OUTPUT)",
+                syntax: "Hamster.io_modes(Hamster.IO_MODE_DIGITAL_OUTPUT)",
                 textParams: [{converter: Entry.block.converters.returnStringValue}],
                 params: ["AB", "10"]
             },

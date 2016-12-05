@@ -95,6 +95,10 @@ Entry.CodeMap = {};
         ],
         arduino_ext_analog_list: [
             {"a0":"0", "a1":"1", "a2":"2", "a3":"3", "a4":"4", "a5":"5"}
+        ],
+        arduino_ext_tone_list: [
+            {"c":"C", "cs":"CS", "d":"D", "e":"E", "f":"F", "fs":"FS", "g":"G",
+            "gs":"GS", "a":"A", "b":"B"}
         ]
     };
 

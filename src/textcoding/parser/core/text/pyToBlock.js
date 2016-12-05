@@ -3019,7 +3019,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(paramsMeta && paramsMeta.length != 0) {
             for(var i in paramsMeta) {
                 console.log("aaa", paramsMeta[i], "bbb", paramsDefMeta[i]);
-                param = this['Param'+paramsMeta[i].type](value, paramsMeta[i], paramsDefMeta[i], textParams[i]);
+                if(textParams && textParams[i])
+                    param = this['Param'+paramsMeta[i].type](value, paramsMeta[i], paramsDefMeta[i], textParams[i]);
+                else
+                    param = this['Param'+paramsMeta[i].type](value, paramsMeta[i], paramsDefMeta[i]);
             }
         } else {
             param = value;

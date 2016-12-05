@@ -12187,7 +12187,7 @@ Entry.CodeMap = {};
   brown:"#990000"}], reach_something:[null, {mouse:"mouse_pointer", wall:"edge", wall_up:"edge_up", wall_down:"edge_down", wall_right:"edge_right", wall_left:"edge_left", mouse_pointer:"mouse", edge:"wall", edge_up:"wall_up", edge_down:"wall_down", edge_right:"wall_right", edge_left:"edge_left"}, null], create_clone:[{"\uc790\uc2e0":"self", self:"self"}], locate:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], locate_object_time:[null, {mouse:"mouse_pointer", 
   mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], see_angle_object:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], coordinate_object:[null, {"\uc790\uc2e0":"self", self:"self"}, null, {"\ud06c\uae30":"size", "\ubc29\ud5a5":"rotation", "\uc774\ub3d9 \ubc29\ud5a5":"direction", "\ubaa8\uc591 \ubc88\ud638":"picture_index", "\ubaa8\uc591 \uc774\ub984":"picutre_name", picture_index:"shape_number", picture_name:"shape_name", shape_number:"picture_index", 
   shape_name:"picture_name"}], choose_project_timer_action:[null, {start:"START", stop:"STOP", reset:"RESET"}], set_visible_project_timer:[null, {show:"SHOW", hide:"HIDE"}], get_date:[null, {year:"YEAR", month:"MONTH", day:"DAY", hour:"HOUR", minute:"MINUTE", second:"SECOND"}], distance_something:[null, {mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], set_visible_answer:[{show:"SHOW", hide:"HIDE"}]};
-  b.Arduino = {arduino_ext_toggle_led:[null, {on:"HIGH", off:"LOW", high:"on", low:"off"}], arduino_ext_analog_list:[{a0:"0", a1:"1", a2:"2", a3:"3", a4:"4", a5:"5"}]};
+  b.Arduino = {arduino_ext_toggle_led:[null, {on:"HIGH", off:"LOW", high:"on", low:"off"}], arduino_ext_analog_list:[{a0:"0", a1:"1", a2:"2", a3:"3", a4:"4", a5:"5"}], arduino_ext_tone_list:[{c:"C", cs:"CS", d:"D", e:"E", f:"F", fs:"FS", g:"G", gs:"GS", a:"A", b:"B"}]};
   b.Hamster = {hamster_play_note_for:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F", 10:"Hamster.NOTE_F_SHARP", 11:"Hamster.NOTE_G", 12:"Hamster.NOTE_G_SHARP", 13:"Hamster.NOTE_A", 14:"Hamster.NOTE_B_FLAT", 15:"Hamster.NOTE_B", "hamster.note_c":4, "hamster.note_c_sharp":5, "hamster.note_d_flat":5, "hamster.note_d":6, "hamster.note_e_flat":7, "hamster.note_d_sharp":7, "hamster.note_e":8, "hamster.note_f":9, "hamster.note_f_sharp":10, 
   "hamster.note_g_flat":10, "hamster.note_g":11, "hamster.note_g_sharp":12, "hamster.note_a_flat":12, "hamster.note_a":13, "hamster.note_b_flat":14, "hamster.note_a_sharp":14, "hamster.note_b":15}, null, null]};
 })(Entry.CodeMap);
@@ -15025,7 +15025,7 @@ Entry.PyToBlockParser = function(b) {
     var h = g.def.params, g = this.searchSyntax(g).textParams;
     if (c && 0 != c.length) {
       for (var k in c) {
-        console.log("aaa", c[k], "bbb", h[k]), e = this["Param" + c[k].type](a, c[k], h[k], g[k]);
+        console.log("aaa", c[k], "bbb", h[k]), e = g && g[k] ? this["Param" + c[k].type](a, c[k], h[k], g[k]) : this["Param" + c[k].type](a, c[k], h[k]);
       }
     } else {
       e = a;
