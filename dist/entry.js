@@ -7009,7 +7009,12 @@ Entry.Container.prototype.removeObject = function(b) {
   return d;
 };
 Entry.Container.prototype.selectObject = function(b, a) {
-  var d = this.getObject(b);
+  if (Entry.playground && Entry.playground.object) {
+    var d = Entry.playground.object;
+    Entry.TextCodingUtil._currentObject = d;
+    console.log("Entry.TextCodingUtil._currentObject1", Entry.TextCodingUtil._currentObject);
+  }
+  d = this.getObject(b);
   a && d && Entry.scene.selectScene(d.scene);
   this.mapObjectOnScene(function(a) {
     a.view_ && a.view_.removeClass("selectedObject");
@@ -7018,6 +7023,7 @@ Entry.Container.prototype.selectObject = function(b, a) {
   d ? (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0) : Entry.playground && Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.vimBoard && Entry.playground.mainWorkspace.vimBoard.clearText();
   Entry.playground && Entry.playground.injectObject(d);
   "minimize" != Entry.type && Entry.engine.isState("stop") && Entry.stage.selectObject(d);
+  Entry.playground && Entry.playground.object && (d = Entry.playground.object, Entry.TextCodingUtil._currentObject = d, console.log("Entry.TextCodingUtil._currentObject2", Entry.TextCodingUtil._currentObject));
 };
 Entry.Container.prototype.getAllObjects = function() {
   return this.objects_;
@@ -12179,7 +12185,7 @@ Entry.CodeMap = {};
   b.Entry = {start_neighbor_scene:[{"\ub2e4\uc74c":"next", "\uc774\uc804":"pre"}], stop_object:[{thisOnly:"self", thisThread:"this", otherThread:"others", self:"thisOnly", "this":"thisThread", others:"otherThread", "\ubaa8\ub4e0":"all", "\uc790\uc2e0":"thisOnly", "\uc774":"thisThread", "\uc790\uc2e0\uc758 \ub2e4\ub978":"otherThread"}], change_to_next_shape:[{prev:"pre", pre:"prev", "\ub2e4\uc74c":"next", "\uc774\uc804":"prev"}], add_effect_amount:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", 
   "\ud22c\uba85\ub3c4":"transparency"}], change_effect_amount:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", "\ud22c\uba85\ub3c4":"transparency"}], change_object_index:[{front:"FRONT", forward:"FORWARD", backward:"BACKWARD", back:"BACK", "\ub9e8 \uc55e":"FRONT", "\uc55e":"FORWARD", "\ub4a4":"BACKWARD", "\ub9e8 \ub4a4":"BACK"}], set_color:[{red:"#FF0000", orange:"#FF9966", yellow:"#FFFF66", green:"#009900", blue:"#3333FF", navy:"#000099", purple:"#993399", black:"#000000", white:"#FFFFFF", 
   brown:"#990000"}], reach_something:[null, {mouse:"mouse_pointer", wall:"edge", wall_up:"edge_up", wall_down:"edge_down", wall_right:"edge_right", wall_left:"edge_left", mouse_pointer:"mouse", edge:"wall", edge_up:"wall_up", edge_down:"wall_down", edge_right:"wall_right", edge_left:"edge_left"}, null], create_clone:[{"\uc790\uc2e0":"self", self:"self"}], locate:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], locate_object_time:[null, {mouse:"mouse_pointer", 
-  mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], see_angle_object:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], coordinate_object:[null, null, null, {"\uc790\uc2e0":"self", "\ud06c\uae30":"size", "\ubc29\ud5a5":"rotation", "\uc774\ub3d9 \ubc29\ud5a5":"direction", "\ubaa8\uc591 \ubc88\ud638":"picture_index", "\ubaa8\uc591 \uc774\ub984":"picutre_name", picture_index:"shape_number", picture_name:"shape_name", shape_number:"picture_index", 
+  mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], see_angle_object:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], coordinate_object:[null, {"\uc790\uc2e0":"self", self:"self"}, null, {"\ud06c\uae30":"size", "\ubc29\ud5a5":"rotation", "\uc774\ub3d9 \ubc29\ud5a5":"direction", "\ubaa8\uc591 \ubc88\ud638":"picture_index", "\ubaa8\uc591 \uc774\ub984":"picutre_name", picture_index:"shape_number", picture_name:"shape_name", shape_number:"picture_index", 
   shape_name:"picture_name"}], choose_project_timer_action:[null, {start:"START", stop:"STOP", reset:"RESET"}], set_visible_project_timer:[null, {show:"SHOW", hide:"HIDE"}], get_date:[null, {year:"YEAR", month:"MONTH", day:"DAY", hour:"HOUR", minute:"MINUTE", second:"SECOND"}], distance_something:[null, {mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], set_visible_answer:[{show:"SHOW", hide:"HIDE"}]};
   b.Arduino = {arduino_ext_toggle_led:[null, {on:"HIGH", off:"LOW", high:"on", low:"off"}], arduino_ext_analog_list:[{a0:"0", a1:"1", a2:"2", a3:"3", a4:"4", a5:"5"}]};
   b.Hamster = {hamster_play_note_for:[{4:"Hamster.NOTE_C", 5:"Hamster.NOTE_C_SHARP", 6:"Hamster.NOTE_D", 7:"Hamster.NOTE_E_FLAT", 8:"Hamster.NOTE_E", 9:"Hamster.NOTE_F", 10:"Hamster.NOTE_F_SHARP", 11:"Hamster.NOTE_G", 12:"Hamster.NOTE_G_SHARP", 13:"Hamster.NOTE_A", 14:"Hamster.NOTE_B_FLAT", 15:"Hamster.NOTE_B", "hamster.note_c":4, "hamster.note_c_sharp":5, "hamster.note_d_flat":5, "hamster.note_d":6, "hamster.note_e_flat":7, "hamster.note_d_sharp":7, "hamster.note_e":8, "hamster.note_f":9, "hamster.note_f_sharp":10, 
@@ -12321,48 +12327,57 @@ Entry.TextCodingUtil = {};
       return a;
     }
     var c;
-    if ("variables" == b) {
-      var e = Entry.variableContainer.variables_, f;
+    if ("spritesWithMouse" == b || "spritesWithSelf" == b) {
+      var e = Entry.container.getAllObjects(), f;
       for (f in e) {
         var g = e[f];
-        if (g.name_ == a) {
-          c = g.id_;
+        if (a == g.name) {
+          c = g.id;
+          break;
+        }
+      }
+    }
+    if ("variables" == b) {
+      var e = Entry.variableContainer.variables_, h;
+      for (h in e) {
+        if (f = e[h], f.name_ == a) {
+          c = f.id_;
           break;
         }
       }
     } else {
       if ("lists" == b) {
-        for (f in g = Entry.variableContainer.lists_, console.log("dropdownDynamicValueConvertor entryLists", g), g) {
-          if (e = g[f], e.name_ == a) {
+        for (h in f = Entry.variableContainer.lists_, console.log("dropdownDynamicValueConvertor entryLists", f), f) {
+          if (e = f[h], e.name_ == a) {
             c = e.id_;
             break;
           }
         }
       } else {
         if ("messages" == b) {
-          for (f in g = Entry.variableContainer.messages_, g) {
-            if (e = g[f], e.name == a) {
+          for (h in f = Entry.variableContainer.messages_, f) {
+            if (e = f[h], e.name == a) {
               c = e.id;
               break;
             }
           }
         } else {
           if ("pictures" == b) {
-            for (e in f = Entry.container.getAllObjects(), f) {
-              var h = f[e], h = h.pictures;
-              for (g in h) {
-                var k = h[g];
-                if (k.name == a) {
-                  return c = k.id;
+            for (f in e = Entry.container.getAllObjects(), e) {
+              g = e[f];
+              h = g.pictures;
+              for (var k in h) {
+                if (g = h[k], g.name == a) {
+                  return c = g.id;
                 }
               }
             }
           } else {
             if ("sounds" == b) {
-              for (e in f = Entry.container.getAllObjects(), f) {
-                for (g in h = f[e], h = h.sounds, h) {
-                  if (k = h[g], k.name == a) {
-                    return c = k.id;
+              for (f in e = Entry.container.getAllObjects(), e) {
+                for (k in g = e[f], h = g.sounds, h) {
+                  if (g = h[k], g.name == a) {
+                    return c = g.id;
                   }
                 }
               }
@@ -12546,6 +12561,7 @@ Entry.TextCodingUtil = {};
     }
   };
   b.createLocalVariable = function(a, b, c) {
+    console.log("createLocalVariable", a, b, c);
     this.isLocalVariableExisted(a, c) || (Entry.variableContainer.addVariable({name:a, value:b, object:c.id, variableType:"variable"}), Entry.variableContainer.updateList());
   };
   b.isLocalVariable = function(a) {
@@ -12656,11 +12672,13 @@ Entry.TextCodingUtil = {};
     return !1;
   };
   b.entryEventFilter = function(a) {
-    a = a.split('"');
-    a[1] && (a[1] = a[1].replace(/ /g, "_space_"));
-    a = a.join('"');
-    a = a.replace(/\"/g, "");
-    a = a.replace("None", "none");
+    var b = a.indexOf("("), c = a.indexOf(")"), e = a.substring(0, b);
+    a = a.substring(b + 1, c);
+    console.log("filter stmt", e, "param", a);
+    if (a = a.replace(/\"/g, "")) {
+      a = isNaN(a) ? a.replace(/ /g, "_space_") : "num" + a, "None" == a && (a = "none");
+    }
+    a = e + "(" + a + "):\n";
     console.log("entryEventFilter text", a);
     return a;
   };
@@ -13119,6 +13137,7 @@ Entry.TextCodingUtil = {};
     if (c) {
       for (var c = c.variables_ || [], e = c.length - 1;0 <= e;e--) {
         var f = c[e], g = f.name_, h = f.value_;
+        console.log("generate variable v", f, "co", b);
         if (f.object_) {
           if (f.object_ == b.id) {
             g = "self." + g;
@@ -13482,7 +13501,7 @@ Entry.BlockToPyParser = function(b) {
       }
     }
     b && b.converter && (a = b.converter(a, null));
-    return a;
+    return a = a.toLowerCase();
   };
   b.FieldOutput = function(a, b) {
     console.log("FieldOutput", a, b);
@@ -14021,7 +14040,7 @@ Entry.JsToBlockParser = function(b) {
 Entry.PyToBlockParser = function(b) {
   this._type = "PyToBlockParser";
   this.blockSyntax = b;
-  this._currentObject = Entry.playground.object;
+  this._currentObject = Entry.TextCodingUtil._currentObject;
   this._variableMap = new Entry.Map;
   this._funcMap = new Entry.Map;
   this._paramQ = new Entry.Queue;
@@ -14650,8 +14669,8 @@ Entry.PyToBlockParser = function(b) {
           c = this.getBlockSyntax("%1 = %2");
           var t;
         } else {
-          k.params && k.params[0] && k.params[0].name && h.name == k.params[0].name && "PLUS" == k.operator || "MINUS" == k.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", k.params[0].name), c = "%1 = %1 + %2") : "combine_something" == k.type && k.params && k.params[1] && k.params[1].name && h.name == k.params[1].name && "PLUS" == k.operator || "MINUS" == k.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", k.params[1].name), 
-          c = "%1 = %1 + %2") : c = "%1 = %2", c = this.getBlockSyntax(c);
+          k.params && k.params[0] && k.params[0].name && h.name == k.params[0].name && "PLUS" == k.operator || "MINUS" == k.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", k.params[0].name), c = "%1 += %2") : "combine_something" == k.type && k.params && k.params[1] && k.params[1].name && h.name == k.params[1].name && "PLUS" == k.operator || "MINUS" == k.operator ? (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", k.params[1].name), 
+          c = "%1 += %2") : c = "%1 = %2", c = this.getBlockSyntax(c);
         }
         c && (t = c.key);
         c = t;
@@ -14716,34 +14735,34 @@ Entry.PyToBlockParser = function(b) {
         if (h && h.property && "__pythonRuntime.ops.subscriptIndex" == h.property.callee) {
           var q = "%1[%2] = %3", g = this.getBlockSyntax(q), v
         } else {
-          q = y && t && y == t ? "%1 = %1 + %2" : "%1 = %2", g = this.getBlockSyntax(q);
+          q = y && t && y == t ? "%1 += %2" : "%1 = %2", g = this.getBlockSyntax(q);
         }
         g && (v = g.key);
         c.type = v;
         break;
       case "+=":
-        q = "%1 = %1 + %2";
+        q = "%1 += %2";
         if (g = this.getBlockSyntax(q)) {
           v = g.key;
         }
         c.type = v;
         break;
       case "-=":
-        q = "%1 = %1 + %2";
+        q = "%1 += %2";
         if (g = this.getBlockSyntax(q)) {
           v = g.key;
         }
         c.type = v;
         break;
       case "*=":
-        q = "%1 = %1 + %2";
+        q = "%1 += %2";
         if (g = this.getBlockSyntax(q)) {
           v = g.key;
         }
         c.type = v;
         break;
       case "/=":
-        q = "%1 = %1 + %2";
+        q = "%1 += %2";
         if (g = this.getBlockSyntax(q)) {
           v = g.key;
         }
@@ -14832,7 +14851,7 @@ Entry.PyToBlockParser = function(b) {
               u = l.params[0];
             }
             if (u || 0 == u) {
-              console.log("final value", u), Entry.TextCodingUtil.isLocalVariableExisted(q, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateLocalVariable(q, u, this._currentObject) : this._funcLoop || Entry.TextCodingUtil.createLocalVariable(q, u, this._currentObject);
+              console.log("final value", u), console.log("final value", u, u.length), Entry.TextCodingUtil.isLocalVariableExisted(q, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateLocalVariable(q, u, this._currentObject) : this._funcLoop || Entry.TextCodingUtil.createLocalVariable(q, u, this._currentObject);
             }
             q = this.ParamDropdownDynamic(q, k[0], m[0]);
             e.push(q);
@@ -14847,7 +14866,7 @@ Entry.PyToBlockParser = function(b) {
             u = l.params[0];
           }
           if (u || 0 == u) {
-            console.log("final currentObject", this._currentObject), console.log("final value", u), Entry.TextCodingUtil.isGlobalVariableExisted(q, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(q, u, this._currentObject) : this._funcLoop || Entry.TextCodingUtil.createGlobalVariable(q, u, this._currentObject);
+            console.log("final currentObject", this._currentObject), console.log("final value", u, u.length), Entry.TextCodingUtil.isGlobalVariableExisted(q, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(q, u, this._currentObject) : this._funcLoop || Entry.TextCodingUtil.createGlobalVariable(q, u, this._currentObject);
           }
           q = this.ParamDropdownDynamic(q, k[0], m[0]);
           e.push(q);
@@ -14855,7 +14874,7 @@ Entry.PyToBlockParser = function(b) {
           e.push(l);
         }
       } else {
-        if ("%1 = %1 + %2" == q) {
+        if ("%1 += %2" == q) {
           if (h && h.object && h.property) {
             if ("self" == h.object.name) {
               m = Entry.block[v];
@@ -15097,7 +15116,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamKeyboard = function(a, b, c) {
     console.log("ParamKeyboard value, paramMeta, paramDefMeta", a, b, c);
-    return Entry.KeyboardCode.map[a.toLowerCase()];
+    return isNaN(a) ? Entry.KeyboardCode.map[a.toLowerCase()] : Entry.KeyboardCode.map[a];
   };
   b.Indicator = function(a, b, c) {
   };
@@ -15736,12 +15755,12 @@ Entry.PyToBlockParser = function(b) {
     if ("__getParam0" == e.name) {
       return b;
     }
+    this._funcLoop = !0;
     this._blockCount++;
     console.log("BlockCount FunctionDeclaration", this._blockCount);
-    Entry.TextCodingUtil.isEntryEventFuncName(e.name) || (console.log("funcBodyData", g), this._funcLoop = !0);
+    Entry.TextCodingUtil.isEntryEventFuncName(e.name) || console.log("funcBodyData", g);
     g = this[c.type](c);
     console.log("FunctionDeclaration bodyData", g);
-    this._funcLoop = !1;
     if ("Identifier" == e.type) {
       var f = this[e.type](e)
     }
@@ -15771,6 +15790,7 @@ Entry.PyToBlockParser = function(b) {
       if (0 != a.length) {
         b = a[0];
         b = b.replace(/_space_/g, " ");
+        b = b.replace(/num/g, "");
         console.log("event arg", b);
         "none" == b && (b = "None");
         var q = b;
@@ -15784,6 +15804,7 @@ Entry.PyToBlockParser = function(b) {
       }
       return null;
     }
+    this._funcLoop = !1;
     var n, x, y;
     h = {};
     r = {};
@@ -27068,7 +27089,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (this.oldMode !== this.mode) {
       switch(this.mode) {
         case Entry.Workspace.MODE_VIMBOARD:
-          Entry.playground && Entry.playground.object && (Entry.TextCodingUtil._currentObject = Entry.playground.object);
           this.board && this.board.hide();
           this.overlayBoard && this.overlayBoard.hide();
           this.blockMenu.banClass("textMode");
@@ -27151,7 +27171,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       if (e) {
         switch(c) {
           case 86:
-            (k = this.selectedBoard) && k instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
+            (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
             break;
           case 219:
             if (Entry.playground && !Entry.playground.object && h) {
@@ -27161,39 +27181,43 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             if (Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
               return;
             }
-            if (k = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-              alert(k);
+            if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+              alert(c);
               return;
             }
-            k = {};
-            k.boardType = Entry.Workspace.MODE_BOARD;
-            k.textType = -1;
-            this.setMode(k);
+            c = {};
+            c.boardType = Entry.Workspace.MODE_BOARD;
+            c.textType = -1;
+            this.setMode(c);
             break;
           case 221:
             if (Entry.playground && !Entry.playground.object && this.oldMode === Entry.Workspace.MODE_BOARD) {
               alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
               return;
             }
-            if (k = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
-              alert(k);
+            if (c = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
+              alert(c);
               return;
             }
-            if (k = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-              alert(k);
+            if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+              alert(c);
               return;
             }
-            k = {};
-            k.boardType = Entry.Workspace.MODE_VIMBOARD;
-            k.textType = Entry.Vim.TEXT_TYPE_PY;
-            k.runType = Entry.Vim.WORKSPACE_MODE;
-            this.setMode(k);
+            c = {};
+            c.boardType = Entry.Workspace.MODE_VIMBOARD;
+            c.textType = Entry.Vim.TEXT_TYPE_PY;
+            c.runType = Entry.Vim.WORKSPACE_MODE;
+            this.setMode(c);
             break;
           case 67:
             k && !k.isInBlockMenu && k.block.isDeletable() && k.block.copyToClipboard();
             break;
           case 88:
-            k && !k.isInBlockMenu && k.block.isDeletable() && (c = k.block, c.copyToClipboard(), c.destroy(!0, !0), k.getBoard().setSelectedBlock(null));
+            k && !k.isInBlockMenu && k.block.isDeletable() && function(a) {
+              a.copyToClipboard();
+              a.destroy(!0, !0);
+              k.getBoard().setSelectedBlock(null);
+            }(k.block);
         }
       } else {
         if (g) {
@@ -27246,7 +27270,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           }
         }
       }
-      Entry.disposeEvent && Entry.disposeEvent.notify(a);
+      setTimeout(function() {
+        Entry.disposeEvent && Entry.disposeEvent.notify(a);
+      }, 0);
     }
   };
   b._handleChangeBoard = function() {
@@ -27255,11 +27281,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b._syncTextCode = function() {
     if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
-      console.log("workspace textType", this.textType);
       var a = this.vimBoard.textToCode(this.textType), b = this.board, c = b.code;
       console.log("syncTextCode", c);
       c && (c.load(a), c.createView(b), this.board.alignThreads());
-      Entry.TextCodingUtil._currentObject = Entry.playground.object;
     }
   };
   b.addVimBoard = function(a) {

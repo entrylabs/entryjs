@@ -24,7 +24,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
     this._forIdCharIndex = 0;
 };
 
-(function(p){
+(function(p){ 
     p.Code = function(code, parseMode) {
         this._parseMode = parseMode;
         if(!code) return;
@@ -338,13 +338,13 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 var op1 = option[1];
                 if(dataParam === op1) { 
                     key = op0;
-                    value = op1;
+                    value = op1; 
                     dataParam = textParam.converter(key, value);
                     
                     console.log("dataParam convert result", dataParam);
                     if(textParam.codeMap) { 
                         dataParam = dataParam.replace(/\"/g, "");
-                        var codeMap = eval(textParam.codeMap);
+                        var codeMap = eval(textParam.codeMap); 
                         var code = codeMap[dataParam];
                         console.log("codeMap", codeMap, "code", code, "dataParam", dataParam);
                         if(code) 
@@ -406,6 +406,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         if(textParam && textParam.converter)
             dataParam = textParam.converter(dataParam, null);
 
+        dataParam = dataParam.toLowerCase();
         return dataParam;
     };
 

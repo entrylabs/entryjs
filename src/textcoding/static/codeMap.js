@@ -59,9 +59,9 @@ Entry.CodeMap = {};
         ],
         coordinate_object: [
             null,
+            {"자신": "self", "self": "self"}, 
             null,
-            null,
-            {"자신": "self", "크기":"size", "방향":"rotation", "이동 방향":"direction", 
+            {"크기":"size", "방향":"rotation", "이동 방향":"direction", 
             "모양 번호":"picture_index", "모양 이름":"picutre_name", 
             "picture_index":"shape_number", "picture_name":"shape_name",
             "shape_number":"picture_index", "shape_name":"picture_name"

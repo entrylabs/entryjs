@@ -172,7 +172,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
     };
 
     p.codeToText = function(code, mode) { 
-        
         var codeDescription;
         if(mode)
             this._mode = mode.runType;

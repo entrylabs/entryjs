@@ -15,7 +15,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
     this.blockSyntax = blockSyntax;
 
-    this._currentObject = Entry.playground.object;
+    this._currentObject = Entry.TextCodingUtil._currentObject;
 
     var variableMap = new Entry.Map();
     this._variableMap = variableMap;
@@ -1940,7 +1940,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     initData.operator == "PLUS" || initData.operator == "MINUS") {
 
                     console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
-                    var syntax = String("%1 = %1 + %2");
+                    var syntax = String("%1 += %2");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     var type;
                     if(blockSyntax)
@@ -1953,7 +1953,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     initData.operator == "PLUS" || initData.operator == "MINUS") {
 
                     console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[1].name);
-                    var syntax = String("%1 = %1 + %2");
+                    var syntax = String("%1 += %2");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     var type;
                     if(blockSyntax)
@@ -2153,8 +2153,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     structure.type = type;
                 }
-                else if(leftEx && rightEx && leftEx == rightEx) {
-                    var syntax = String("%1 = %1 + %2");
+                else if(leftEx && rightEx && leftEx == rightEx) { 
+                    var syntax = String("%1 += %2");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     var type;
                     if(blockSyntax)
@@ -2175,7 +2175,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             }
             case "+=":
-                var syntax = String("%1 = %1 + %2");
+                var syntax = String("%1 += %2");
                 var blockSyntax = this.getBlockSyntax(syntax);
                 var type;
                 if(blockSyntax)
@@ -2184,7 +2184,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 structure.type = type;
                 break;
             case "-=":
-                var syntax = String("%1 = %1 + %2");
+                var syntax = String("%1 += %2");
                 var blockSyntax = this.getBlockSyntax(syntax);
                 var type;
                 if(blockSyntax)
@@ -2193,7 +2193,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 structure.type = type;
                 break;
             case "*=":
-                var syntax = String("%1 = %1 + %2");
+                var syntax = String("%1 += %2");
                 var blockSyntax = this.getBlockSyntax(syntax);
                 var type;
                 if(blockSyntax)
@@ -2202,7 +2202,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 structure.type = type;
                 break;
             case "/=":
-                var syntax = String("%1 = %1 + %2");
+                var syntax = String("%1 += %2");
                 var blockSyntax = this.getBlockSyntax(syntax);
                 var type;
                 if(blockSyntax)
@@ -2565,6 +2565,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(value || value == 0) {
                         console.log("final value", value); 
+                        console.log("final value", value, value.length); 
 
                         if(Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
                             if(!this._funcLoop)
@@ -2605,7 +2606,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 if(value || value == 0) {
                     console.log("final currentObject", this._currentObject);
-                    console.log("final value", value);
+                    console.log("final value", value, value.length);
 
                     if(Entry.TextCodingUtil.isGlobalVariableExisted(name, this._currentObject)) {
                         if(!this._funcLoop)
@@ -2625,7 +2626,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
         }
-        else if(syntax == String("%1 = %1 + %2")) {
+        else if(syntax == String("%1 += %2")) {
             if(leftData && leftData.object && leftData.property) {
                 if(leftData.object.name == "self") {
                     var block = Entry.block[type];
@@ -3177,23 +3178,23 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
         console.log("dropdown picture sound", result);
 
-        if(paramMeta) {
+        if(paramMeta) { 
             var options = paramMeta.options;
             console.log("ParamDropdownDynamic options", options);
             for(var i in options) {
                 if(value == options[i][0]){
                     console.log("options[i][0]", options[i][0]);
                     result = options[i][1];
-                    return result; 
+                    return result;  
                 }
                 /*else if(value == 'mouse_pointer' || value == '마우스포인터') {
                     result = 'mouse';
                     return result;
                 }*/
             }
-        }
+        } 
 
-        if(textParam && textParam.codeMap) {
+        if(textParam && textParam.codeMap) { 
             var codeMap = textParam.codeMap;
             console.log("codeMap", codeMap);
             var map = eval(codeMap);
@@ -3215,7 +3216,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamKeyboard = function(value, paramMeta, paramDefMeta) {
         console.log("ParamKeyboard value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
-        var result = Entry.KeyboardCode.map[value.toLowerCase()];
+        if(isNaN(value))
+            var result = Entry.KeyboardCode.map[value.toLowerCase()];
+        else 
+            var result = Entry.KeyboardCode.map[value];
         return result;
     };
 
@@ -5030,16 +5034,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return result;
         }
 
+        this._funcLoop = true;
         this._blockCount++;
         console.log("BlockCount FunctionDeclaration", this._blockCount);
         if(!Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
             console.log("funcBodyData", funcBodyData);
-            this._funcLoop = true;
         }
 
         var bodyData = this[body.type](body);
         console.log("FunctionDeclaration bodyData", bodyData);
-        this._funcLoop = false;
+        
 
         if(id.type == "Identifier")
             var idData = this[id.type](id);
@@ -5078,6 +5082,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
         }
+
       
         console.log("this_funcLoop", this._funcLoop);
 
@@ -5090,7 +5095,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
             if(textFuncParams.length != 0) {
                 var arg = textFuncParams[0];
+                
                 arg = arg.replace(/_space_/g, " ");
+                arg = arg.replace(/num/g, "");
+
                 console.log("event arg", arg);
                 if(arg == "none")
                     arg = "None";
@@ -5210,6 +5218,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             return null;
         }
+        this._funcLoop = false;
 
         ////////////////////////////////////////////////////////////////
         //First, Find The Function Block

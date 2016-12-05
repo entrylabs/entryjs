@@ -22,7 +22,11 @@ if (Entry && Entry.block) {
             var code;
             if(key)
                 code = key.toUpperCase();
-            return '"()"'.replace('()', code);
+
+            if(isNaN(code))
+                return '"()"'.replace('()', code);
+            else
+                return '"()"'.replace('"()"', code);
         };
 
         c.returnStringKey = function(key, value) {
@@ -78,7 +82,6 @@ if (Entry && Entry.block) {
         };
 
         c.returnStringOrNumberByValue = function(key, value) {
-            console.log("string case", key, value);
             if (isNaN(value)) {
                 value = value.replace(/\"/gi, '');
                 return '"()"'.replace('()', value);
@@ -7196,7 +7199,8 @@ Entry.block = {
                         "menuName": "spritesWithSelf",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnObjectOrStringValue
+                        converter: Entry.block.converters.returnObjectOrStringValue,
+                        codeMap: "Entry.CodeMap.Entry.coordinate_object[1]"
                     },
                     undefined,
                     {
@@ -7857,6 +7861,20 @@ Entry.block = {
             {
                 syntax: "math.log(%2)",
                 params: [null, null, null, "ln"],
+                blockType: "param",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
+            {
+                syntax: "1 - math.floor(%2)",
+                params: [null, null, null, "unnatural"],
                 blockType: "param",
                 textParams: [
                     undefined,
@@ -9755,7 +9773,7 @@ Entry.block = {
                 script.callReturn();
         },
         "syntax": {"js": [], "py": [
-            {syntax: "while %1 %2:\n$1", template: "while %1 %2:"}
+            {syntax: "while %1 %2:\n$1", template: "while not %1:"}
         ]}
     },
     "stop_object": {
@@ -10607,7 +10625,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Hamster.move_forward()"
+                syntax: "Hamster.board_forward()"
             }
         ]}
     },
@@ -12704,7 +12722,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Hamster.left_led(Hamster.LED_OFF,Hamster.LED_OFF)",
+                syntax: "Hamster.left_led(0)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12738,7 +12756,7 @@ Entry.block = {
                 params: ["LEFT"]
             },
             {
-                syntax: "Hamster.left_led(0)",
+                syntax: "Hamster.left_led(Hamster.LED_OFF,Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12755,7 +12773,7 @@ Entry.block = {
                 params: ["LEFT"]
             },
             {
-                syntax: "Hamster.right_led(Hamster.LED_OFF,Hamster.LED_OFF)",
+                syntax: "Hamster.right_led(0)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12789,7 +12807,7 @@ Entry.block = {
                 params: ["RIGHT"]
             },
             {
-                syntax: "Hamster.right_led(0)",
+                syntax: "Hamster.right_led(Hamster.LED_OFF,Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12806,7 +12824,7 @@ Entry.block = {
                 params: ["RIGHT"]
             },
             {
-                syntax: "Hamster.leds(Hamster.LED_OFF,Hamster.LED_OFF)",
+                syntax: "Hamster.leds(0)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12840,7 +12858,7 @@ Entry.block = {
                 params: ["BOTH"]
             },
             {
-                syntax: "Hamster.leds(0)",
+                syntax: "Hamster.leds(Hamster.LED_OFF,Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -12989,7 +13007,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Hamster.set_buzzer_sound(%1)"
+                syntax: "Hamster.buzzer(%1)"
             }
         ]}
     },
@@ -13711,7 +13729,7 @@ Entry.block = {
                 params: ["B"]
             },
             {
-                syntax: "Hamster.outputs(%2,%2)",
+                syntax: "Hamster.outputs(%2)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -21273,7 +21291,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "%1 = %1 + %2",
+                syntax: "%1 += %2",
                 textParams: [
                     {
                         "type": "DropdownDynamic",
