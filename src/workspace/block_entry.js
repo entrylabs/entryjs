@@ -2682,51 +2682,23 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Dropdown",
-                "options": [
-                    [ "0", "0" ],
-                    [ "1", "1" ],
-                    [ "2", "2" ],
-                    [ "3", "3" ],
-                    [ "4", "4" ],
-                    [ "5", "5" ],
-                    [ "6", "6" ],
-                    [ "7", "7" ],
-                    [ "8", "8" ],
-                    [ "9", "9" ],
-                    [ "10", "10" ],
-                    [ "11", "11" ],
-                    [ "12", "12" ],
-                    [ "13", "13" ],
-                ],
-                "value": "0",
-                "fontSize": 11
+                "type": "Block",
+                "accept": "string"
             },
             {
-                "type": "Dropdown",
-                "options": [
-                    [ "0", "0" ],
-                    [ "1", "1" ],
-                    [ "2", "2" ],
-                    [ "3", "3" ],
-                    [ "4", "4" ],
-                    [ "5", "5" ],
-                    [ "6", "6" ],
-                    [ "7", "7" ],
-                    [ "8", "8" ],
-                    [ "9", "9" ],
-                    [ "10", "10" ],
-                    [ "11", "11" ],
-                    [ "12", "12" ],
-                    [ "13", "13" ],
-                ],
-                "value": "0",
-                "fontSize": 11
+                "type": "Block",
+                "accept": "string"
             }
         ],
         "events": {},
         "def": {
-            "params": [ '2', '4' ],
+            "params": [{
+                type: 'arduino_get_port_number',
+                params: [ '2' ],
+            }, {
+                type: 'arduino_get_port_number',
+                params: [ '4' ],
+            }],
             "type": "arduino_ext_get_ultrasonic_value"
         },
         "paramsKeyMap": {
@@ -2736,8 +2708,9 @@ Entry.block = {
         "class": "ArduinoExtGet",
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
-            var port1 = script.getField("PORT1", script);
-            var port2 = script.getField("PORT2", script);
+            var port1 = script.getNumberValue("PORT1", script);
+            var port2 = script.getNumberValue("PORT2", script);
+
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
@@ -2759,48 +2732,12 @@ Entry.block = {
                 blockType: "param",
                 textParams: [
                     {
-                        "type": "Dropdown",
-                        "options": [
-                            [ "0", "0" ],
-                            [ "1", "1" ],
-                            [ "2", "2" ],
-                            [ "3", "3" ],
-                            [ "4", "4" ],
-                            [ "5", "5" ],
-                            [ "6", "6" ],
-                            [ "7", "7" ],
-                            [ "8", "8" ],
-                            [ "9", "9" ],
-                            [ "10", "10" ],
-                            [ "11", "11" ],
-                            [ "12", "12" ],
-                            [ "13", "13" ],
-                        ],
-                        "value": "0",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringOrNumberByValue
+                        "type": "Block",
+                        "accept": "string",
                     },
                     {
-                        "type": "Dropdown",
-                        "options": [
-                            [ "0", "0" ],
-                            [ "1", "1" ],
-                            [ "2", "2" ],
-                            [ "3", "3" ],
-                            [ "4", "4" ],
-                            [ "5", "5" ],
-                            [ "6", "6" ],
-                            [ "7", "7" ],
-                            [ "8", "8" ],
-                            [ "9", "9" ],
-                            [ "10", "10" ],
-                            [ "11", "11" ],
-                            [ "12", "12" ],
-                            [ "13", "13" ],
-                        ],
-                        "value": "0",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringOrNumberByValue
+                        "type": "Block",
+                        "accept": "string",
                     }
                 ]
             }
@@ -2854,6 +2791,51 @@ Entry.block = {
             }
         ]}
     },
+    "arduino_get_digital_toggle": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ARDUINO_on,"on"],
+                    [Lang.Blocks.ARDUINO_off,"off"]
+                ],
+                "value": "on",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "OPERATOR": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("OPERATOR");
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%1",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ARDUINO_on,"on"],
+                            [Lang.Blocks.ARDUINO_off,"off"]
+                        ],
+                        "value": "on",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_HW
+                    }
+                ],
+                keyOption: "arduino_get_digital_toggle"
+            }
+        ]}
+    },
     "arduino_ext_toggle_led": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -2864,13 +2846,8 @@ Entry.block = {
                 "accept": "string"
             },
             {
-                "type": "Dropdown",
-                "options": [
-                    [Lang.Blocks.ARDUINO_on,"on"],
-                    [Lang.Blocks.ARDUINO_off,"off"]
-                ],
-                "fontSize": 11,
-                'arrowColor': EntryStatic.ARROW_COLOR_HW
+                "type": "Block",
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -2884,7 +2861,10 @@ Entry.block = {
                 {
                     "type": "arduino_get_port_number"
                 },
-                'on',
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": [ "on" ],
+                },
                 null
             ],
             "type": "arduino_ext_toggle_led"
@@ -2897,11 +2877,17 @@ Entry.block = {
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var port = script.getNumberValue("PORT");
-            var value = script.getField("VALUE");
-             if(value == "on") {
+            var value = script.getValue("VALUE");
+
+            if(typeof value === 'string') {
+                value = value.toLowerCase();
+            }
+            if(Entry.ArduinoExt.highList.indexOf(value) > -1) {
                 value = 255;
-            } else {
+            } else if(Entry.ArduinoExt.lowList.indexOf(value) > -1) {
                 value = 0;
+            } else {
+                throw new Error();
             }
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
