@@ -2264,7 +2264,7 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ 
+            "params": [
                 null,
                 {
                     "type": "number",
@@ -2281,7 +2281,7 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "100" ]
-                } 
+                }
             ],
             "type": "arduino_ext_get_analog_value_map"
         },
@@ -2657,10 +2657,10 @@ Entry.block = {
                 if(note != 0) {
                     value = Entry.ArduinoExt.toneMap[note][octave];
                 }
-                
+
                 duration = duration * 1000;
                 script.isStart = true;
-                script.timeFlag = 1;                
+                script.timeFlag = 1;
 
                 sq['SET'][port] = {
                     type: Entry.ArduinoExt.sensorTypes.TONE,
@@ -7771,9 +7771,7 @@ Entry.block = {
             "type": "get_sound_volume"
         },
         "class": "calc",
-        "isNotFor": [
-            ""
-        ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             return createjs.Sound.getVolume() * 100;
         },
