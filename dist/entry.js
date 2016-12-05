@@ -16925,7 +16925,6 @@ Entry.TextCodingError = {};
   };
 })(Entry.TextCodingError);
 Entry.PyHint = function(b) {
-  console.log(Entry.playground.mainWorkspace.vimBoard._parser.syntax);
   this.syntax = b;
   this.scope = {};
   this.scope._global = [];
@@ -16945,7 +16944,6 @@ Entry.PyHint = function(b) {
     var b = a.getCursor(), d = a.getLineTokens(b.line);
     a = d[d.length - 1];
     var e = [], f = [];
-    console.log(d);
     if (!a) {
       return null;
     }
@@ -17002,13 +17000,14 @@ Entry.PyHint = function(b) {
     });
   };
   b.hintFunc = function(a, b, d) {
-    console.log(a, b, d);
+    console.log(d);
     var c;
     c = d.syntax;
     var f = b.from.ch;
-    c.syntax ? (c = c.syntax.split("\n"), c = c[0], d.localKey && (c = d.localKey + "." + c), console.log(c), c = c.split("."), 1 < c.length && c.shift(), c = c.join("."), -1 < c.indexOf("%") ? (c = c.replace(/%\d+/gi, ""), f += c.indexOf("(") + 1) : f += c.length) : (c = d.displayText + ".", f += c.length);
+    c.syntax ? (c = c.syntax.split("\n"), c = c[0], d.localKey && (c = d.localKey + "." + c), c = c.split("."), 1 < c.length && c.shift(), c = c.join("."), -1 < c.indexOf("%") ? (c = c.replace(/%\d+/gi, ""), f += c.indexOf("(") + 1) : f += c.length) : (c = d.displayText + ".", f += c.length);
     a.replaceRange(c, b.from, b.to);
     a.setCursor({line:b.from.line, ch:f});
+    Entry.helper.renderBlock(d.syntax.key);
   };
 })(Entry.PyHint.prototype);
 Entry.BlockToJsParser = function(b, a) {
