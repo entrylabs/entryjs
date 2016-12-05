@@ -20,8 +20,16 @@ if (Entry && Entry.block) {
     (function(c) {
         c.keyboardCode = function(key, value) {
             var code;
-            if(key)
-                code = key.toUpperCase();
+
+            if(key) code = key.toUpperCase();
+
+            var map = {
+                32: 'space', 13: 'enter',
+                38: 'up', 37: 'left',
+                39: 'right', 40: 'down'
+            };
+
+            code = map[value] || code;
 
             if(isNaN(code))
                 return '"()"'.replace('()', code);
