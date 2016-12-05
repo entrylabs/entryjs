@@ -398,6 +398,17 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     fontName.size = '1';
     fontName.onchange = function(evt) {
         var font = evt.target.value;
+        if (font == 'Nanum Pen Script' || font == 'Jeju Hallasan') {
+            var textValue = textEditInput.value;
+            if (Entry.playground.object.entity.getLineBreak())
+                textValue = textEditArea.value;
+
+            if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
+                font = "KoPub Batang";
+                fontName.value = font;
+                alert(Lang.Menus.not_supported_text);
+            }
+        }
         Entry.playground.object.entity.setFontType(font);
     };
     for (var i=0; i<Entry.fonts.length; i++) {
@@ -576,6 +587,15 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var textEditInput = Entry.createElement("input");
     textEditInput.addClass("entryPlayground_textBox");
     textEditInput.onkeyup = function() {
+        var fontName = Entry.getElementsByClassName('entryPlaygroundPainterAttrFontName')[0];
+        if (fontName.value == 'Nanum Pen Script' || fontName.value == 'Jeju Hallasan') {
+            if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
+                var font = "KoPub Batang";
+                fontName.value = font;
+                Entry.playground.object.entity.setFontType(font);
+                alert(Lang.Menus.not_supported_text);
+            }
+        }
         Entry.playground.object.setText(this.value);
         Entry.playground.object.entity.setText(this.value);
     };
@@ -589,6 +609,15 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     textEditArea.addClass("entryPlayground_textArea");
     textEditArea.style.display = 'none';
     textEditArea.onkeyup = function() {
+        var fontName = Entry.getElementsByClassName('entryPlaygroundPainterAttrFontName')[0];
+        if (fontName.value == 'Nanum Pen Script' || fontName.value == 'Jeju Hallasan') {
+            if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
+                var font = "KoPub Batang";
+                fontName.value = font;
+                Entry.playground.object.entity.setFontType(font);
+                alert(Lang.Menus.not_supported_text);
+            }
+        }
         Entry.playground.object.setText(this.value);
         Entry.playground.object.entity.setText(this.value);
     };
