@@ -25402,12 +25402,14 @@ Entry.Playground.prototype.generateTextView = function(b) {
   f.style.display = "none";
   var n = Entry.createElement("input");
   n.addClass("entryPlayground_textBox");
-  n.onkeyup = function() {
+  b = function() {
     var a = Entry.getElementsByClassName("entryPlaygroundPainterAttrFontName")[0];
     "Nanum Pen Script" != a.value && "Jeju Hallasan" != a.value || null == /[\u4E00-\u9FFF]/.exec(this.value) || (a.value = "KoPub Batang", Entry.playground.object.entity.setFontType("KoPub Batang"), alert(Lang.Menus.not_supported_text));
     Entry.playground.object.setText(this.value);
     Entry.playground.object.entity.setText(this.value);
   };
+  n.onkeyup = b;
+  n.onchange = b;
   n.onblur = function() {
     Entry.dispatchEvent("textEdited");
   };
@@ -25416,12 +25418,8 @@ Entry.Playground.prototype.generateTextView = function(b) {
   var q = Entry.createElement("textarea");
   q.addClass("entryPlayground_textArea");
   q.style.display = "none";
-  q.onkeyup = function() {
-    var a = Entry.getElementsByClassName("entryPlaygroundPainterAttrFontName")[0];
-    "Nanum Pen Script" != a.value && "Jeju Hallasan" != a.value || null == /[\u4E00-\u9FFF]/.exec(this.value) || (a.value = "KoPub Batang", Entry.playground.object.entity.setFontType("KoPub Batang"), alert(Lang.Menus.not_supported_text));
-    Entry.playground.object.setText(this.value);
-    Entry.playground.object.entity.setText(this.value);
-  };
+  q.onkeyup = b;
+  q.onchange = b;
   q.onblur = function() {
     Entry.dispatchEvent("textEdited");
   };

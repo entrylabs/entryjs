@@ -586,7 +586,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
 
     var textEditInput = Entry.createElement("input");
     textEditInput.addClass("entryPlayground_textBox");
-    textEditInput.onkeyup = function() {
+    var textChangeApply = function() {
         var fontName = Entry.getElementsByClassName('entryPlaygroundPainterAttrFontName')[0];
         if (fontName.value == 'Nanum Pen Script' || fontName.value == 'Jeju Hallasan') {
             if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
@@ -599,6 +599,9 @@ Entry.Playground.prototype.generateTextView = function(textView) {
         Entry.playground.object.setText(this.value);
         Entry.playground.object.entity.setText(this.value);
     };
+    textEditInput.onkeyup = textChangeApply;
+    textEditInput.onchange = textChangeApply;
+
     textEditInput.onblur = function() {
         Entry.dispatchEvent('textEdited');
     };
@@ -608,19 +611,9 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var textEditArea = Entry.createElement("textarea");
     textEditArea.addClass("entryPlayground_textArea");
     textEditArea.style.display = 'none';
-    textEditArea.onkeyup = function() {
-        var fontName = Entry.getElementsByClassName('entryPlaygroundPainterAttrFontName')[0];
-        if (fontName.value == 'Nanum Pen Script' || fontName.value == 'Jeju Hallasan') {
-            if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
-                var font = "KoPub Batang";
-                fontName.value = font;
-                Entry.playground.object.entity.setFontType(font);
-                alert(Lang.Menus.not_supported_text);
-            }
-        }
-        Entry.playground.object.setText(this.value);
-        Entry.playground.object.entity.setText(this.value);
-    };
+    textEditArea.onkeyup = textChangeApply;
+    textEditArea.onchange = textChangeApply;
+    
     textEditArea.onblur = function() {
         Entry.dispatchEvent('textEdited');
     };
