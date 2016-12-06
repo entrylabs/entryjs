@@ -99,10 +99,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         switch (this.mode) {
             case Entry.Workspace.MODE_VIMBOARD:
-                    /*if(Entry.playground && Entry.playground.object) {
-                        Entry.TextCodingUtil._currentObject = Entry.playground.object;
-                        Entry.TextCodingUtil._oldObject = Entry.TextCodingUtil._currentObject;
-                    }*/
                     if (this.board) this.board.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.banClass('textMode');
@@ -114,7 +110,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.oldTextType = this.textType;
                 break;
 
-            case Entry.Workspace.MODE_BOARD: 
+            case Entry.Workspace.MODE_BOARD:
                 try {
                     this.board.show();
                     this.blockMenu.unbanClass('textMode');
@@ -127,9 +123,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.blockMenu.renderBlock();
                     this.oldTextType = this.textType;
                     this.vimBoard && this.vimBoard.hide();
-                    this.vimBoard._parser._isError = false; 
+                    this.vimBoard._parser._isError = false;
                 } catch(e) {
-                    this.vimBoard._parser._isError = true; 
+                    this.vimBoard._parser._isError = true;
                     if(this.board && this.board.code)
                         this.board.code.clear();
                     if (this.board) this.board.hide();
@@ -211,7 +207,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p.loadCodeFromText = function(mode) {
-        if (mode != Entry.Workspace.MODE_VIMBOARD) return;
+        if (mode != Entry.Workspace.MODE_VIMBOARD)
+            return;
         var changedCode = this.vimBoard.textToCode(this.textType);
         var board = this.board;
         var code = board.code;
@@ -404,7 +401,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
             }
         }
-        setTimeout(function() { 
+        setTimeout(function() {
             Entry.disposeEvent && Entry.disposeEvent.notify(e);
         }, 0);
     };
