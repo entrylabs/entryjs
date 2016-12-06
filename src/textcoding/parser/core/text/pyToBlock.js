@@ -3115,23 +3115,36 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(objectData.object) {
                     if(objectData.object.name == "self") {
                         var name = objectData.property.name;
-                        if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject))
+                        if(Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject))
+                            var syntax = String("%2\[%4\]");
+                        if(Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject))
+                            var syntax = String("%2\[%4\]#char_at");
+                        if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject) &&
+                            !Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject))
                             return result;
                     }
                 }
                 else {
                     var name = objectData.name;
-                    if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
+                    if(Entry.TextCodingUtil.isGlobalListExisted(name)) 
+                        var syntax = String("%2\[%4\]");
+                    if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) 
+                        var syntax = String("%2\[%4\]#char_at");
+                    if(!Entry.TextCodingUtil.isGlobalListExisted(name) &&
+                        !Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                         result.type = propertyData.type;
                         result.params = propertyData.params;
                         return result;
                     }
                 }
 
+                if(!syntax) return;
+
                 var arguments = propertyData.arguments;
                 console.log("member ex args", arguments);
 
-                var syntax = String("%2\[%4\]");
+                //var syntax = String("%2\[%4\]");
+                console.log("syntax 123", syntax);
                 var blockSyntax = this.getBlockSyntax(syntax);
                 var type;
                 if(blockSyntax)
@@ -3148,14 +3161,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("MemberExpression listName", listName);
 
                 var params = [];
-                params.push("");
-                params.push(listName);
-                params.push("");
+                
+                if(syntax == String("%2\[%4\]")) {
+                    params[1] = listName; 
+                }
+                else if(syntax == String("%2\[%4\]#char_at")) {
+                    console.log("objectData", objectData);
+                    if(objectData.object && objectData.object.name == "self") {
+                        params[1] = objectData.property;
+                    }
+                    else {
+                        params[1] = objectData;
+                    }
+                }
 
                 if(arguments[1].type == "number" || arguments[1].type == "text") {
                     if(!isNaN(arguments[1].params[0]))
                         arguments[1].params[0] += 1;
-                    params.push(arguments[1]);
+                    params[3] = arguments[1];
                 }
                 else if(arguments[1].type == "get_variable") {
                     var indexBlock = {};
@@ -3166,12 +3189,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     indexParams[1] = "PLUS";
                     indexParams[2] = {type: "number", params: [1]};
                     indexBlock.params = indexParams;
-                    params.push(indexBlock);
+                    params[3] = indexBlock;
                 }
                 else if(arguments[1].type == "calc_basic") {
                     console.log("value list", arguments[1], "arguments[1].params[2].params[0]", arguments[1].params[2].params[0]);
                     if(arguments[1].params[1] == "MINUS" && arguments[1].params[2].params[0] == "1") {
-                        params.push(arguments[1].params[0]);   
+                        params[3] = arguments[1].params[0];   
                     }
                     else {
                         var indexBlock = {};
@@ -3182,7 +3205,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         indexParams[1] = "PLUS";
                         indexParams[2] = {type: "number", params: [1]};
                         indexBlock.params = indexParams;
-                        params.push(indexBlock);
+                        params[3] = indexBlock;
                     }
                 }
                 else if(!arguments[1].type) {
