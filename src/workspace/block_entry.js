@@ -21902,8 +21902,16 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
+                template: "%1",
                 syntax: "Entry.answer()",
-                blockType: "param"
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Text",
+                        "text": 'Entry.answer()',
+                        "color": "#fff"
+                    },
+                ]
             }
         ]}
     },
