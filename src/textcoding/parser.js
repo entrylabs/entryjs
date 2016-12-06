@@ -588,8 +588,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
         }
 
         var targetLine = errorLine + currentLineCount + 3;
-        if(targetLine > contentsArr.length-1)
-            targetLine = contentsArr.length-1;
+        if(targetLine > contentsArr.length)
+            targetLine = contentsArr.length;
         var targetText = contentsArr[targetLine-1];
 
         err.from.line = targetLine;
@@ -632,8 +632,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
             }
         }
 
-        if(targetLine > contentsArr.length-1)
-            targetLine = contentsArr.length-1;
+        if(targetLine > contentsArr.length)
+            targetLine = contentsArr.length;
 
         err.from.line = targetLine;
         err.from.ch = 0;
@@ -653,6 +653,21 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var optText = "";
         for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
+            console.log("textLine search", textLine.search('=='));
+            if(textLine.search('==') == -1) {
+                var declarations = textLine.split('=');
+                console.log("declarations", declarations);
+                if(declarations.length >= 3) {
+                    for(var d in declarations) {
+                        declarations[d] = declarations[d].trim();
+                    }
+                    var value = declarations[declarations.length-1];
+                    delete declarations[declarations.length-1];
+                    textLine = declarations.join('=' + value + '\n').trim().concat('\n');
+                } 
+            } 
+
+            console.log("textLine declations", textLine);
 
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim())) {
                 textLine = Entry.TextCodingUtil.entryEventFilter(textLine);

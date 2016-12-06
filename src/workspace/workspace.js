@@ -98,10 +98,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         switch (this.mode) {
             case Entry.Workspace.MODE_VIMBOARD:
-                    /*if(Entry.playground && Entry.playground.object) {
-                        Entry.TextCodingUtil._currentObject = Entry.playground.object;
-                        Entry.TextCodingUtil._oldObject = Entry.TextCodingUtil._currentObject;
-                    }*/
                     if (this.board) this.board.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.banClass('textMode');
@@ -196,21 +192,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             return;
 
         var that = this;
-
         var changedCode = this.vimBoard.textToCode(oldTextType);
         console.log("changedCode", changedCode);
-        if(changedCode.length != 0) {
-            var board = this.board;
-            var code = board.code;
-            code.load(changedCode);
-            this.changeBoardCode(code);
-            console.log("here come in4");
-
-            setTimeout(function() {
-                code.view.reDraw();
-                that.board.alignThreads();
-            }, 0);
-        }
+       
+        var board = this.board;
+        var code = board.code;
+        code.load(changedCode);
+        this.changeBoardCode(code);
+        setTimeout(function() {
+            code.view.reDraw();
+            that.board.alignThreads();
+        }, 0);
     };
 
     p.loadCodeFromText = function(mode) {
