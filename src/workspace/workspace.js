@@ -207,17 +207,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             this.changeBoardCode(code);
             console.log("here come in4");
 
-            if (!this._isVimMode()) {
-                setTimeout(function() {
-                    code.view.reDraw();
-                    that.board.alignThreads();
-                }, 0);
-            }
+            setTimeout(function() {
+                code.view.reDraw();
+                that.board.alignThreads();
+            }, 0);
         }
     };
 
     p.loadCodeFromText = function(mode) {
-        if (mode != Entry.Workspace.MODE_VIMBOARD) return;
+        if (mode != Entry.Workspace.MODE_VIMBOARD)
+            return;
         var changedCode = this.vimBoard.textToCode(this.textType);
         var board = this.board;
         var code = board.code;

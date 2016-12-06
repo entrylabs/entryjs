@@ -27149,7 +27149,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         f.load(e);
         this.changeBoardCode(f);
         console.log("here come in4");
-        this._isVimMode() || setTimeout(function() {
+        setTimeout(function() {
           f.view.reDraw();
           c.board.alignThreads();
         }, 0);
