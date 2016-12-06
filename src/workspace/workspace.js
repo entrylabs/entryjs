@@ -197,20 +197,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             return;
 
         var that = this;
-
         var changedCode = this.vimBoard.textToCode(oldTextType);
         console.log("changedCode", changedCode);
-        if(changedCode.length != 0) {
-            var board = this.board;
-            var code = board.code;
-            code.load(changedCode);
-            this.changeBoardCode(code);
-            console.log("here come in4");
-            setTimeout(function() {
-                code.view.reDraw();
-                that.board.alignThreads();
-            }, 0);
-        }
+       
+        var board = this.board;
+        var code = board.code;
+        code.load(changedCode);
+        this.changeBoardCode(code);
+        setTimeout(function() {
+            code.view.reDraw();
+            that.board.alignThreads();
+        }, 0);
     };
 
     p.loadCodeFromText = function(mode) {

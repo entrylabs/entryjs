@@ -64,6 +64,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(isLastBlock) {  
                         var keyword;
+                        console.log("errorId", 1);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
@@ -187,6 +188,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("send error", error);
             throw error;*/
             var keyword = result.name;
+            console.log("errorId", 2);
             Entry.TextCodingError.error(
                 Entry.TextCodingError.TITLE_CONVERTING,
                 Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -287,6 +289,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(calleeData.name && arguments.length != 0 && arguments[0].type == "Literal") {
                     if(!this._funcMap.contains(funcNameKey)) {
                         var keyword = calleeData.name;
+                        console.log("errorId", 3);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -588,6 +591,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     else
                         var keyword = calleeData.object.name;
 
+                    console.log("errorId", 4);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -647,6 +651,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     throw error;*/
 
                                     var keyword = name;
+                                    console.log("errorId", 5);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -662,6 +667,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             var name = callee.object.name;
                             if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
                                 var keyword = name;
+                                console.log("errorId", 6);
                                 Entry.TextCodingError.error(
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -694,6 +700,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     throw error;*/
 
                                     var keyword = name;
+                                    console.log("errorId", 7);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -716,6 +723,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 throw error;*/
 
                                 var keyword = name;
+                                console.log("errorId", 8);
                                 Entry.TextCodingError.error(
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -748,6 +756,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     throw error;*/
 
                                     var keyword = name;
+                                    console.log("errorId", 9);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -770,6 +779,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 throw error;*/
 
                                 var keyword = name;
+                                console.log("errorId", 10);
                                 Entry.TextCodingError.error(
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -867,6 +877,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 var name = param.object.property.name;
                                 if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)) {
                                     var keyword = name;
+                                    console.log("errorId", 11);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -878,6 +889,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             else {
                                 var name = param.object.object.name;
                                 var keyword = name;
+                                console.log("errorId", 12);
                                 Entry.TextCodingError.error(
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
@@ -892,6 +904,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     var name = param.property.name;
                                     if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)) {
                                         var keyword = name;
+                                        console.log("errorId", 13);
                                         Entry.TextCodingError.error(
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -903,6 +916,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 else {
                                     var name = param.object.name;
                                     var keyword = name;
+                                    console.log("errorId", 14);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
@@ -918,6 +932,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         if(!Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
                                             if(!Entry.TextCodingUtil.isFuncParam(name)) {
                                                 var keyword = name;
+                                                console.log("errorId", 15);
                                                 Entry.TextCodingError.error(
                                                     Entry.TextCodingError.TITLE_CONVERTING,
                                                     Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -930,6 +945,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     else if(syntax == "len") {
                                         if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)) {
                                             var keyword = name;
+                                            console.log("errorId", 16);
                                             Entry.TextCodingError.error(
                                                 Entry.TextCodingError.TITLE_CONVERTING,
                                                 Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -942,6 +958,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 else {
                                     var name = param.object.name;
                                     var keyword = name;
+                                    console.log("errorId", 17);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
@@ -957,6 +974,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         var name = param.object.name;
                                         if(!Entry.TextCodingUtil.isGlobalListExisted(name, this._currentObject)) {
                                             var keyword = name;
+                                            console.log("errorId", 18);
                                             Entry.TextCodingError.error(
                                                 Entry.TextCodingError.TITLE_CONVERTING,
                                                 Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -971,6 +989,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         var name = param.property.name;
                                         if(!Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
                                             var keyword = name;
+                                            console.log("errorId", 19);
                                             Entry.TextCodingError.error(
                                                 Entry.TextCodingError.TITLE_CONVERTING,
                                                 Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -983,6 +1002,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     } else {
                                         var name = param.object.name;
                                         var keyword = name;
+                                        console.log("errorId", 20);
                                         Entry.TextCodingError.error(
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
@@ -999,6 +1019,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     var name = param.name;
                                     if(!Entry.TextCodingUtil.isGlobalListExisted(name, this._currentObject)) {
                                         var keyword = name;
+                                        console.log("errorId", 21);
                                         Entry.TextCodingError.error(
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -1013,6 +1034,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         if(!Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                                             if(!Entry.TextCodingUtil.isFuncParam(name)) {
                                                 var keyword = name;
+                                                console.log("errorId", 22);
                                                 Entry.TextCodingError.error(
                                                     Entry.TextCodingError.TITLE_CONVERTING,
                                                     Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -1025,6 +1047,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     else if(syntax == "len") {
                                         if(!Entry.TextCodingUtil.isGlobalListExisted(name, this._currentObject)) {
                                             var keyword = name;
+                                            console.log("errorId", 23);
                                             Entry.TextCodingError.error(
                                                 Entry.TextCodingError.TITLE_CONVERTING,
                                                 Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -1039,6 +1062,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     if(!Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                                         if(!Entry.TextCodingUtil.isFuncParam(name)) {
                                             var keyword = name;
+                                            console.log("errorId", 24);
                                             Entry.TextCodingError.error(
                                                 Entry.TextCodingError.TITLE_CONVERTING,
                                                 Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -1474,6 +1498,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                         console.log("argumentData 123", argumentData);
                         var keyword;
+                        console.log("errorId", 25);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
@@ -1535,6 +1560,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         throw error;*/
                         var name = result.callee.name;
                         var keyword = name;
+                        console.log("errorId", 26);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -1682,6 +1708,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return result;
         }
 
+        if(init.object && init.object.name == "__filbertTmp0") {
+            var keyword;
+            console.log("errorId", 26.1);
+            Entry.TextCodingError.error(
+                Entry.TextCodingError.TITLE_CONVERTING,
+                Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
+                keyword,
+                this._blockCount,
+                Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
+        }
+
         var idData = this[id.type](id);
         var initData = this[init.type](init);
 
@@ -1699,6 +1736,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                         var name = initData.object.object.name;
                         var keyword = name;
+                        console.log("errorId", 27);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
@@ -1717,6 +1755,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             throw error;*/
 
                             var keyword = name;
+                            console.log("errorId", 28);
                             Entry.TextCodingError.error(
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -1737,6 +1776,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         throw error;*/
 
                         var keyword = name;
+                        console.log("errorId", 29);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -1757,6 +1797,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         throw error;*/
 
                         var keyword = initData.object.name;
+                        console.log("errorId", 30);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
@@ -1776,6 +1817,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             throw error;*/
 
                             var keyword = name;
+                            console.log("errorId", 31);
                             Entry.TextCodingError.error(
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -1796,6 +1838,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         throw error;*/
 
                         var keyword = name;
+                        console.log("errorId", 32);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -1854,6 +1897,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     throw error;*/
 
                     var keyword = argument.name;
+                    console.log("errorId", 33);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -1865,15 +1909,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 array.push(item);
             }
 
-            console.log("vd name", name);
+            console.log("vd name", name); 
 
             if(Entry.TextCodingUtil.isGlobalListExisted(name)) {
-                if(!this._funcLoop)
+                if(!this._funcLoop) {
                     Entry.TextCodingUtil.updateGlobalList(name, array);
+                }
             }
             else {
-                if(!this._funcLoop)
+                if(!this._funcLoop) {
                     Entry.TextCodingUtil.createGlobalList(name, array);
+                }
             }
         } else {
             var name = id.name;
@@ -1911,8 +1957,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingUtil.updateGlobalVariable(name, value);
                     }
                     else {
-                        if(!this._funcLoop)
+                        if(!this._funcLoop) {
                             Entry.TextCodingUtil.createGlobalVariable(name, value);
+                        }
+                        else {
+                            value = 0;
+                            Entry.TextCodingUtil.createGlobalVariable(name, value);   
+                        }
                     }
                 }
             }
@@ -2113,8 +2164,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     Entry.TextCodingUtil.updateLocalList(name, array, this._currentObject);
                             }
                             else {
-                                if(!this._funcLoop)
+                                if(!this._funcLoop) {
                                     Entry.TextCodingUtil.createLocalList(name, array, this._currentObject);
+                                }
                             }
                         }
                     }
@@ -2212,6 +2264,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "%=":
                 var keyword = operator;
+                console.log("errorId", 34);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -2221,6 +2274,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "<<=":
                 var keyword = operator;
+                console.log("errorId", 35);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -2230,6 +2284,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case ">>=":
                 var keyword = operator;
+                console.log("errorId", 36);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -2239,6 +2294,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "|=":
                 var keyword = operator;
+                console.log("errorId", 37);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -2248,6 +2304,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "^=":
                 var keyword = operator;
+                console.log("errorId", 38);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -2257,6 +2314,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "&=":
                 var keyword = operator;
+                console.log("errorId", 39);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -2267,6 +2325,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             default:
                 operator = operator;
                 var keyword = operator;
+                console.log("errorId", 40);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -2295,6 +2354,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     throw error;*/
 
                     var keyword = leftData.object.object.name;
+                    console.log("errorId", 41);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
@@ -2316,6 +2376,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     throw error;*/
 
                     var keyword = leftData.object.name;
+                    console.log("errorId", 42);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -2336,6 +2397,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     throw error;*/
 
                     var keyword = leftData.object.name;
+                    console.log("errorId", 43);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
@@ -2360,6 +2422,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         throw error;*/
 
                         var keyword = rightData.object.object.name;
+                        console.log("errorId", 44);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
@@ -2377,6 +2440,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             throw error;*/
 
                             var keyword = rightData.object.property.name;
+                            console.log("errorId", 45);
                             Entry.TextCodingError.error(
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -2396,6 +2460,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         throw error;*/
 
                         var keyword = rightData.object.name;
+                        console.log("errorId", 46);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -2416,6 +2481,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         throw error;*/
 
                         var keyword = rightData.object.name;
+                        console.log("errorId", 47);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -2433,6 +2499,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             throw error;*/
 
                             var keyword = rightData.object.name;
+                            console.log("errorId", 48);
                             Entry.TextCodingError.error(
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -2452,6 +2519,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         throw error;*/
 
                         var keyword = rightData.name;
+                        console.log("errorId", 49);
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -2479,6 +2547,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 throw error;*/
 
                 var keyword;
+                console.log("errorId", 50);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -2572,8 +2641,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 Entry.TextCodingUtil.updateLocalVariable(name, value, this._currentObject);
                         }
                         else {
-                            if(!this._funcLoop)
+                            if(!this._funcLoop) {
                                 Entry.TextCodingUtil.createLocalVariable(name, value, this._currentObject);
+                            }
+                            else {
+                                value = 0;
+                                Entry.TextCodingUtil.createLocalVariable(name, value, this._currentObject);   
+                            }
                         }
                     }
 
@@ -2613,8 +2687,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingUtil.updateGlobalVariable(name, value, this._currentObject);
                     }
                     else {
-                        if(!this._funcLoop)
+                        if(!this._funcLoop) {
                             Entry.TextCodingUtil.createGlobalVariable(name, value, this._currentObject);
+                        }
+                        else {
+                            value = 0;
+                            Entry.TextCodingUtil.createGlobalVariable(name, value, this._currentObject);   
+                        }
                     }
                 }
 
@@ -3336,6 +3415,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     throw error;*/
 
                     var keyword;
+                    console.log("errorId", 51);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
@@ -3431,6 +3511,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     throw error;*/
 
                     var keyword = test.value;
+                    console.log("errorId", 52);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -3456,6 +3537,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     throw error;*/
 
                     var keyword = test.name;
+                    console.log("errorId", 53);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -3485,6 +3567,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             throw error;*/
 
             var keyword;
+            console.log("errorId", 54);
             Entry.TextCodingError.error(
                 Entry.TextCodingError.TITLE_CONVERTING,
                 Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -3686,6 +3769,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     throw error;*/
 
                                     var keyword = statement.callee.name;
+                                    console.log("errorId", 55);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -3702,6 +3786,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     throw error;*/
 
                                     var keyword;
+                                    console.log("errorId", 56);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -3881,6 +3966,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             throw error;*/
 
                             var keyword = param.name;
+                            console.log("errorId", 57);
                             Entry.TextCodingError.error(
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4089,6 +4175,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     break;
                 case "~":
                     var keyword = operator;
+                    console.log("errorId", 58);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4098,6 +4185,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     break;
                 case "typeof":
                     var keyword = operator;
+                    console.log("errorId", 59);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4107,6 +4195,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     break;
                 case "void":
                     var keyword = operator;
+                    console.log("errorId", 60);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4116,6 +4205,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     break;
                 case "delete":
                     var keyword = operator;
+                    console.log("errorId", 61);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4126,6 +4216,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 default:
                     operator = operator;
                     var keyword = operator;
+                    console.log("errorId", 62);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4283,6 +4374,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 throw error;*/
 
                 var keyword = param.name;
+                console.log("errorId", 63);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4350,6 +4442,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             throw error;*/
 
             var keyword = param.name;
+            console.log("errorId", 64);
             Entry.TextCodingError.error(
                 Entry.TextCodingError.TITLE_CONVERTING,
                 Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4388,6 +4481,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "!==":
                 var keyword = operator;
+                console.log("errorId", 65);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4409,6 +4503,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "<<":
                 var keyword = operator;
+                console.log("errorId", 66);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4418,6 +4513,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case ">>":
                 var keyword = operator;
+                console.log("errorId", 67);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4427,6 +4523,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case ">>>":
                 var keyword = operator;
+                console.log("errorId", 68);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4452,6 +4549,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "|":
                 var keyword = operator;
+                console.log("errorId", 69);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4461,6 +4559,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "^":
                 var keyword = operator;
+                console.log("errorId", 70);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4470,6 +4569,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "|":
                 var keyword = operator;
+                console.log("errorId", 71);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4479,6 +4579,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "&":
                 var keyword = operator;
+                console.log("errorId", 72);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4488,6 +4589,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "in":
                 var keyword = operator;
+                console.log("errorId", 73);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4500,6 +4602,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             default:
                 var keyword = operator;
+                console.log("errorId", 74);
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
                     Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -4567,6 +4670,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         throw error;*/
 
                                         var keyword = param.name;
+                                        console.log("errorId", 75);
                                         Entry.TextCodingError.error(
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -4620,6 +4724,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 console.log("send error", error);
                                 throw error;*/
                                 var keyword = param.object.object.name; 
+                                console.log("errorId", 76);
                                 Entry.TextCodingError.error(
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -4637,6 +4742,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     throw error;*/
 
                                     var keyword = param.object.property.name;
+                                    console.log("errorId", 77);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -4656,6 +4762,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 throw error;*/
 
                                 var keyword = param.object.name;
+                                console.log("errorId", 78);
                                 Entry.TextCodingError.error(
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -4677,6 +4784,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     throw error;*/
 
                                     var keyword = param.object.name;
+                                    console.log("errorId", 79);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
@@ -4694,6 +4802,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         throw error;*/
 
                                         var keyword = param.property.name;
+                                        console.log("errorId", 80);
                                         Entry.TextCodingError.error(
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -4732,6 +4841,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     throw error;*/
 
                     var keyword;
+                    console.log("errorId", 81);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
@@ -4817,6 +4927,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         throw error;*/
 
                                         var keyword = param.property.name;
+                                        console.log("errorId", 82);
                                         Entry.TextCodingError.error(
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -4849,6 +4960,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 throw error;*/
 
                                 var keyword = param.object.object.name;
+                                console.log("errorId", 83);
                                 Entry.TextCodingError.error(
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
@@ -4866,6 +4978,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     throw error;*/
 
                                     var keyword = param.object.property.name;
+                                    console.log("errorId", 84);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -4887,6 +5000,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 throw error;*/
 
                                 var keyword = param.object.name;
+                                console.log("errorId", 85);
                                 Entry.TextCodingError.error(
                                     Entry.TextCodingError.TITLE_CONVERTING,
                                     Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -4908,6 +5022,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     throw error;*/
 
                                     var keyword = param.object.name;
+                                    console.log("errorId", 86);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,
                                         Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
@@ -4925,6 +5040,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         throw error;*/
 
                                         var keyword = param.property.name;
+                                        console.log("errorId", 87);
                                         Entry.TextCodingError.error(
                                             Entry.TextCodingError.TITLE_CONVERTING,
                                             Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -4963,6 +5079,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     throw error;*/
 
                     var keyword;
+                    console.log("errorId", 88);
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
                         Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5610,6 +5727,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "RegExp";
+        console.log("errorId", 89);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5631,6 +5749,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "Function";
+        console.log("errorId", 90);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5652,6 +5771,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "EmptyStatement";
+        console.log("errorId", 91);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5673,6 +5793,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "DebuggerStatement";
+        console.log("errorId", 92);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5694,6 +5815,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "WithStatement";
+        console.log("errorId", 93);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5715,6 +5837,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "LabeledStatement";
+        console.log("errorId", 94);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5736,6 +5859,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "ContinueStatement";
+        console.log("errorId", 95);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5757,6 +5881,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "SwitchStatement";
+        console.log("errorId", 96);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5778,6 +5903,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "SwitchCase";
+        console.log("errorId", 97);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5799,6 +5925,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "ThrowStatement";
+        console.log("errorId", 98);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5820,6 +5947,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "TryStatement";
+        console.log("errorId", 99);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5841,6 +5969,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "CatchClause";
+        console.log("errorId", 100);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5862,6 +5991,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "DoWhileStatement";
+        console.log("errorId", 101);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5883,6 +6013,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "ArrayExpression";
+        console.log("errorId", 102);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5904,6 +6035,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "ObjectExpression";
+        console.log("errorId", 103);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5925,6 +6057,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "Property";
+        console.log("errorId", 104);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5946,6 +6079,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "ConditionalExpression";
+        console.log("errorId", 105);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5967,6 +6101,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //Convertin Error Control
         var keyword = "SequenceExpression";
+        console.log("errorId", 106);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -5988,7 +6123,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             schema = datum._schema;
             applliedParams = datum.params;
         }
-        else schema = datum;
+        else schema = datum; 
 
         if(schema && schema.syntax) {
             var syntaxes = schema.syntax.py.concat();
