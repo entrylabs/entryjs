@@ -8,6 +8,10 @@
  */
 Entry.Helper = function() {
     this.visible = false;
+    Entry.addEventListener('workspaceChangeMode', function() {
+        if (this._blockView)
+            this.renderBlock(this._blockView.type)
+    }.bind(this));
 };
 
 var p = Entry.Helper.prototype;
