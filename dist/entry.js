@@ -17014,14 +17014,14 @@ Entry.PyHint = function(b) {
   b.pythonHint = function(a) {
     var b = a.getCursor(), d = a.getLineTokens(b.line);
     a = d.pop();
-    for (var e = [], f = [];b.ch <= a.start;) {
-      a = d.pop();
-    }
+    var e = [], f = [];
     if (!a) {
       return null;
     }
+    for (;b.ch <= a.start;) {
+      a = d.pop();
+    }
     var g, h = a.start, k = this.hintFunc, l = this.syntax;
-    console.log(d);
     switch(a.type) {
       case "def":
         if (e = d[d.length - 2]) {
@@ -17033,7 +17033,7 @@ Entry.PyHint = function(b) {
         g || (g = a.string);
         e = this.fuzzySearch(this.getScope("_global"), g).slice(0, 20);
         e = e.map(function(a) {
-          var b = l, c = a.split("#")[0], d;
+          var b = l, c = a.split("#")[0], c = c.split("\n")[0], d;
           -1 < a.indexOf(".") && (a = a.split("."), b = l[a[0]], d = a[0], a = a[1]);
           b[a].key && f.push(b[a].key);
           return {displayText:c, hint:k, syntax:b[a], localKey:d};
@@ -17044,7 +17044,8 @@ Entry.PyHint = function(b) {
         if (m) {
           g = this.fuzzySearch(this.getScope(m.string), a.string).slice(0, 20);
           var e = g.map(function(a) {
-            return {displayText:a.split("#")[0], hint:k, syntax:l[m.string][a]};
+            var b = a.split("#")[0], b = b.split("\n")[0];
+            return {displayText:b, hint:k, syntax:l[m.string][a]};
           }), q = this.syntax[m.string], f = g.map(function(a) {
             return q[a].key;
           });

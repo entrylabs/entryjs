@@ -38,16 +38,15 @@ Entry.PyHint = function(syntax) {
         var cur = editor.getCursor(), tokens = editor.getLineTokens(cur.line);
         var lastToken = tokens.pop();
         var result = [], menuResult = [];
+        if (!lastToken) return null;
+
         while (cur.ch <= lastToken.start)
             lastToken = tokens.pop();
-
-        if (!lastToken) return null;
 
         var searchString;
         var start = lastToken.start;
         var hintFunc = this.hintFunc;
         var syntax = this.syntax;
-        console.log(tokens)
 
         switch(lastToken.type) {
             case "def":
@@ -66,6 +65,7 @@ Entry.PyHint = function(syntax) {
                 result = result.map(function(key) {
                     var localSyntax = syntax;
                     var displayText = key.split("#")[0];
+                    displayText = displayText.split("\n")[0];
                     var localKey;
                     if (key.indexOf(".") > -1) {
                         key = key.split(".");
@@ -90,6 +90,7 @@ Entry.PyHint = function(syntax) {
                 var searchResult = this.fuzzySearch(this.getScope(variableToken.string), lastToken.string).slice(0,20);
                 result = searchResult.map(function(key) {
                     var displayText = key.split("#")[0];
+                    displayText = displayText.split("\n")[0];
                     return {
                         displayText: displayText,
                         hint: hintFunc,
