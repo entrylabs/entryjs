@@ -16248,7 +16248,6 @@ Entry.Parser = function(b, a, d, c) {
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
         try {
-          Entry.getMainWS().blockMenu.reDraw();
           this._pyBlockCount = {};
           this._pyThreadCount = 1;
           var m = new Entry.PyAstGenerator, e = this.makeThreads(a);
@@ -27150,7 +27149,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         f.load(e);
         this.changeBoardCode(f);
         console.log("here come in4");
-        setTimeout(function() {
+        this._isVimMode() || setTimeout(function() {
           f.view.reDraw();
           c.board.alignThreads();
         }, 0);

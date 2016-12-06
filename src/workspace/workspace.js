@@ -114,7 +114,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.oldTextType = this.textType;
                 break;
 
-            case Entry.Workspace.MODE_BOARD: 
+            case Entry.Workspace.MODE_BOARD:
                 try {
                     this.board.show();
                     this.blockMenu.unbanClass('textMode');
@@ -127,9 +127,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.blockMenu.renderBlock();
                     this.oldTextType = this.textType;
                     this.vimBoard && this.vimBoard.hide();
-                    this.vimBoard._parser._isError = false; 
+                    this.vimBoard._parser._isError = false;
                 } catch(e) {
-                    this.vimBoard._parser._isError = true; 
+                    this.vimBoard._parser._isError = true;
                     if(this.board && this.board.code)
                         this.board.code.clear();
                     if (this.board) this.board.hide();
@@ -206,10 +206,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             code.load(changedCode);
             this.changeBoardCode(code);
             console.log("here come in4");
-            setTimeout(function() {
-                code.view.reDraw();
-                that.board.alignThreads();
-            }, 0);
+
+            if (!this._isVimMode()) {
+                setTimeout(function() {
+                    code.view.reDraw();
+                    that.board.alignThreads();
+                }, 0);
+            }
         }
     };
 
@@ -407,7 +410,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
             }
         }
-        setTimeout(function() { 
+        setTimeout(function() {
             Entry.disposeEvent && Entry.disposeEvent.notify(e);
         }, 0);
     };

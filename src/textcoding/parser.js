@@ -239,9 +239,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-                try { 
-                    Entry.getMainWS().blockMenu.reDraw();
-
+                try {
                     this._pyBlockCount = {};
                     this._pyThreadCount = 1;
 
@@ -299,7 +297,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             className: "CodeMirror-lint-mark-error",
                             __annotation: annotation,
                             clearOnEnter: true,
-                            inclusiveLeft: true, 
+                            inclusiveLeft: true,
                             inclusiveRigth: true,
                             clearWhenEmpty: false
                         };
@@ -315,7 +313,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             console.log("error.keyword", error.keyword);
                             var title = error.title;
                             var message = error.message;
-                            
+
                         }
 
                         Entry.toast.alert(title, message);
@@ -372,7 +370,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var ld = Entry.TextCodingUtil.generateListsDeclaration();
                             this.py_listDeclaration = ld;
                             if(ld)
-                                result += ld; 
+                                result += ld;
                         }
 
                         if(vd || ld)
@@ -678,7 +676,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var contents;
         if(keyword)
             var kw = "\'" + keyword + "\' ";
-        else 
+        else
             var kw = '';
 
         contents = '[' + subject + ']' + ' ' + kw + ' : ' +
