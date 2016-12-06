@@ -32,7 +32,8 @@ Entry.VariableContainer = function() {
     this._variableRefs = [];
     this._messageRefs = [];
     this._functionRefs = [];
-};
+    Entry.addEventListener('workspaceChangeMode', this.updateList.bind(this));
+}
 
 Entry.VariableContainer.prototype.createDom = function(view) {
     var that = this;
@@ -70,11 +71,6 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     this.variableAddButton_ = variableAddButton;
 
     variableAddButton.bindOnClick(function(e) {
-        if(Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY) {
-            var message = Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_NO_SUPPORT];
-            alert(message);
-            return;
-        }
         var panel = thisPointer.variableAddPanel;
         var value = panel.view.name.value.trim();
         if (panel.isOpen){
@@ -102,11 +98,6 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     messageAddButton.innerHTML = '+ ' + Lang.Workspace.message_create;
     this.messageAddButton_ = messageAddButton;
     messageAddButton.bindOnClick(function(e) {
-        if(Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY) {
-            var message = Lang.TextCoding[Entry.TextCodingError.ALERT_SIGNAL_NO_SUPPORT];
-            alert(message);
-            return;
-        }
         that.addMessage({
             name:Lang.Workspace.message + ' ' +
                 (that.messages_.length + 1)
@@ -119,11 +110,6 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     listAddButton.innerHTML = '+ ' + Lang.Workspace.list_create;
     this.listAddButton_ = listAddButton;
     listAddButton.bindOnClick(function(e) {
-        if(Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY) {
-            var message = Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_NO_SUPPORT];
-            alert(message);
-            return;
-        }
         var panel = thisPointer.listAddPanel;
         var value = panel.view.name.value.trim();
         if (panel.isOpen) {
@@ -146,12 +132,6 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     //functionAddButton.innerHTML = '+ ' + Lang.Msgs.to_be_continue;
     this.functionAddButton_ = functionAddButton;
     functionAddButton.bindOnClick(function(e) {
-        if(Entry.playground.mainWorkspace.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY) {
-            var message = Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NO_SUPPORT];
-            alert(message);
-            return;
-        }
-
         var playground = Entry.playground;
         var blockMenu = that._getBlockMenu();
         playground.changeViewMode('code');
@@ -431,6 +411,12 @@ Entry.VariableContainer.prototype.updateList = function() {
     this.variableSettingView.addClass('entryRemove');
     this.listSettingView.addClass('entryRemove');
 
+    var isPythonMode = this._isPythonMode();
+    if (isPythonMode)
+        this.listView_.addClass('entryTextMode');
+    else
+        this.listView_.removeClass('entryTextMode');
+
     while (this.listView_.firstChild)
         this.listView_.removeChild(this.listView_.firstChild);
 
@@ -555,8 +541,7 @@ Entry.VariableContainer.prototype.updateList = function() {
             if (Entry.playground && Entry.playground.mainWorkspace)
                 mode = Entry.playground.mainWorkspace.getMode();
 
-            if (mode === Entry.Workspace.MODE_OVERLAYBOARD ||
-                this._isPythonMode()) {
+            if (mode === Entry.Workspace.MODE_OVERLAYBOARD || isPythonMode) {
                 this.functionAddButton_.addClass('disable');
             } else
                 this.functionAddButton_.removeClass('disable');
@@ -979,7 +964,7 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
     var that = this;
     var view = Entry.createElement('li');
     var wrapper = Entry.createElement('div');
-    wrapper.addClass('entryVariableListElementWrapperWorkspace');
+    wrapper.addClass('entryVariableListElementWrapperWorkspace variable');
     view.appendChild(wrapper);
     view.addClass('entryVariableListElementWorkspace');
     if (!variable.object_) {
@@ -1262,7 +1247,7 @@ Entry.VariableContainer.prototype.createListView = function(list) {
     var that = this;
     var view = Entry.createElement('li');
     var wrapper = Entry.createElement('div');
-    wrapper.addClass('entryVariableListElementWrapperWorkspace');
+    wrapper.addClass('entryVariableListElementWrapperWorkspace variable');
     view.appendChild(wrapper);
     view.addClass('entryVariableListElementWorkspace');
     if (!list.object_) {
