@@ -208,13 +208,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
             } else {
                 console.log("blockTokenss", blockToken, "syntaxObj", syntaxObj, "i", i);
                 if(syntaxObj && syntaxObj.key == "repeat_basic" && i == 0) {
-                    //if(syntaxObj.idChar) {
-                        var forStmtTokens = blockToken.split(" ");
-                        forStmtTokens[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++);
-                        //forStmtTokens[1] = syntaxObj.idChar[this._forIdCharIndex++];
-                        var forStmtText = forStmtTokens.join(" ");
-                        blockToken = forStmtText;
-                    //}
+                    var forStmtTokens = blockToken.split(" ");
+                    forStmtTokens[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++);
+                    var forStmtText = forStmtTokens.join(" ");
+                    blockToken = forStmtText; 
                 }
                 result += blockToken; 
             }
