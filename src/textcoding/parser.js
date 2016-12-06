@@ -654,7 +654,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
             console.log("textLine search", textLine.search('=='));
-            if(textLine.search('==') == -1) {
+            if(textLine.search('==') == -1 || textLine.search('<=') == -1 || textLine.search('>=') == -1) {
                 var declarations = textLine.split('=');
                 console.log("declarations", declarations);
                 if(declarations.length >= 3) {
