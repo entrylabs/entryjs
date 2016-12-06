@@ -8291,9 +8291,14 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
+                template: "%1 %2 %3",
                 syntax: "Entry.timer_view(%2)",
                 textParams: [
-                    undefined,
+                    {
+                        "type": "Text",
+                        "text": 'Entry.timer_view(',
+                        "color": "#3D3D3D"
+                    },
                     {
                         "type": "Dropdown",
                         "options": [
@@ -8305,6 +8310,11 @@ Entry.block = {
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
                         converter: Entry.block.converters.returnStringValue,
                         codeMap: "Entry.CodeMap.Entry.set_visible_project_timer[1]"
+                    },
+                    {
+                        "type": "Text",
+                        "text": ')',
+                        "color": "#3D3D3D"
                     },
                 ]
             }
@@ -9215,9 +9225,14 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
+                template: "%1 %2 %3",
                 syntax: "Entry.timer(%2)",
                 textParams: [
-                    undefined,
+                    {
+                        "type": "Text",
+                        "text": 'Entry.timer(',
+                        "color": "#3D3D3D"
+                    },
                     {
                         "type": "Dropdown",
                         "options": [
@@ -9230,6 +9245,11 @@ Entry.block = {
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
                         converter: Entry.block.converters.returnStringValue,
                         codeMap: "Entry.CodeMap.Entry.choose_project_timer_action[1]"
+                    },
+                    {
+                        "type": "Text",
+                        "text": ')',
+                        "color": "#3D3D3D"
                     },
                 ]
             }
