@@ -16527,7 +16527,7 @@ Entry.Parser = function(b, a, d, c) {
     for (var b = [], c = "", e = 3;e < a.length;e++) {
       var f = a[e] + "\n";
       console.log("textLine search", f.search("=="));
-      if (-1 == f.search("==")) {
+      if (-1 == f.search("==") || -1 == f.search("<=") || -1 == f.search(">=")) {
         var g = f.split("=");
         console.log("declarations", g);
         if (3 <= g.length) {
