@@ -96,7 +96,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (this.oldMode === this.mode)
             return;
 
-
         switch (this.mode) {
             case Entry.Workspace.MODE_VIMBOARD:
                     /*if(Entry.playground && Entry.playground.object) {
@@ -113,7 +112,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.board.clear();
                     this.oldTextType = this.textType;
                 break;
-
             case Entry.Workspace.MODE_BOARD:
                 try {
                     this.board.show();
@@ -168,6 +166,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         this.oldMode = this.mode;
 
+        Entry.dispatchEvent('workspaceChangeMode');
         this.changeEvent.notify(message);
     };
 
