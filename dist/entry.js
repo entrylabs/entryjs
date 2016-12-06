@@ -14746,6 +14746,11 @@ Entry.TextCodingUtil = {};
     }
     return !1;
   };
+  b.generateForStmtIndex = function(a, b) {
+    var c = Math.floor(a / 3);
+    b = ["i", "j", "k"][a % 3] + (b || "");
+    return c ? this.generateForStmtIndex(c - 1, b) : b;
+  };
 })(Entry.TextCodingUtil);
 Entry.Workspace = function(b) {
   Entry.Model(this, !1);
@@ -17290,7 +17295,7 @@ Entry.BlockToPyParser = function(b) {
                 q = f[n], 0 !== q.length && (h.test(q) ? (q = Number(q.split("$")[1]) - 1, b += Entry.TextCodingUtil.indent(this.Thread(a.statements[q]))) : b += q);
               }
             } else {
-              console.log("blockTokenss", f, "syntaxObj", d, "i", m), d && "repeat_basic" == d.key && 0 == m && d.idChar && (f = f.split(" "), console.log("forStmtTokens", f), f[1] = d.idChar[this._forIdCharIndex++], f = f.join(" "), console.log("forStmtText", f)), b += f;
+              console.log("blockTokenss", f, "syntaxObj", d, "i", m), d && "repeat_basic" == d.key && 0 == m && (f = f.split(" "), f[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++), f = f.join(" ")), b += f;
             }
           }
         }
