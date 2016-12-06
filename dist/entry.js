@@ -20870,7 +20870,7 @@ Entry.VariableContainer.prototype.updateList = function() {
       }
     }
     if ("all" == b || "func" == b) {
-      for (d in "func" == b && (b = Entry.Workspace.MODE_BOARD, Entry.playground && Entry.playground.mainWorkspace && (b = Entry.playground.mainWorkspace.getMode()), b === Entry.Workspace.MODE_OVERLAYBOARD ? this.functionAddButton_.addClass("disable") : this.functionAddButton_.removeClass("disable"), this.listView_.appendChild(this.functionAddButton_)), this.functions_) {
+      for (d in "func" == b && (b = Entry.Workspace.MODE_BOARD, Entry.playground && Entry.playground.mainWorkspace && (b = Entry.playground.mainWorkspace.getMode()), b === Entry.Workspace.MODE_OVERLAYBOARD || this._isPythonMode() ? this.functionAddButton_.addClass("disable") : this.functionAddButton_.removeClass("disable"), this.listView_.appendChild(this.functionAddButton_)), this.functions_) {
         b = this.functions_[d], a.push(b), e = b.listElement, this.listView_.appendChild(e), b.callerListElement && this.listView_.appendChild(b.callerListElement);
       }
     }
@@ -21882,6 +21882,9 @@ Entry.VariableContainer.prototype._truncName = function(b, a) {
   return b;
 };
 Entry.VariableContainer.prototype._maxNameLength = 10;
+Entry.VariableContainer.prototype._isPythonMode = function() {
+  return Entry.getMainWS().vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+};
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
 Entry.block.mutant = {skeleton:"basic", event:"start", color:"#3BBD70", template:"test mutant block", params:[], func:function() {

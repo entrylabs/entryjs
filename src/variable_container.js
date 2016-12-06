@@ -169,7 +169,8 @@ Entry.VariableContainer.prototype.createDom = function(view) {
  */
 Entry.VariableContainer.prototype.createSelectButton = function(type, isEnable) {
     var that = this;
-    if (isEnable === undefined) isEnable = true;
+    if (isEnable === undefined)
+        isEnable = true;
     var view = Entry.createElement('td');
     view.addClass('entryVariableSelectButtonWorkspace', type);
     view.innerHTML = Lang.Workspace[type];
@@ -240,7 +241,7 @@ Entry.VariableContainer.prototype.select = function(object) {
     object.listElement.addClass('selected');
     this.selected = object;
     if (object instanceof Entry.Variable) {
-        this.renderVariableReference(object); 
+        this.renderVariableReference(object);
         if (object.object_)
             Entry.container.selectObject(object.object_, true);
     } else if (object instanceof Entry.Func) {
@@ -554,7 +555,8 @@ Entry.VariableContainer.prototype.updateList = function() {
             if (Entry.playground && Entry.playground.mainWorkspace)
                 mode = Entry.playground.mainWorkspace.getMode();
 
-            if (mode === Entry.Workspace.MODE_OVERLAYBOARD) {
+            if (mode === Entry.Workspace.MODE_OVERLAYBOARD ||
+                this._isPythonMode()) {
                 this.functionAddButton_.addClass('disable');
             } else
                 this.functionAddButton_.removeClass('disable');
@@ -2360,3 +2362,7 @@ Entry.VariableContainer.prototype._truncName = function(name, type) {
 };
 
 Entry.VariableContainer.prototype._maxNameLength = 10;
+
+Entry.VariableContainer.prototype._isPythonMode = function() {
+    return Entry.getMainWS().vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+};
