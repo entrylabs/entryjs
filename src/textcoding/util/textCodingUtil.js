@@ -2167,12 +2167,12 @@ Entry.TextCodingUtil = {};
         var currentObject = Entry.playground.object;
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {
-            var entryVariable = entryVariables[i];
+            var entryVariable = entryVariables[i]; 
             if(type == "global") {
                 if(entryVariable.object_ === null && entryVariable.id_ == id) {
                     if(!isNaN(entryVariable.value_))
                         return true;
-                }
+                } 
             }
             else if(type == "local") {
                 if(entryVariable.object_ === currentObject.id && entryVariable.id_ == id) {
@@ -2184,5 +2184,18 @@ Entry.TextCodingUtil = {};
         }
 
         return false;
+    };
+
+    tu.generateForStmtIndex = function(index, str) {
+        str = str || "";
+        var ref = ["i", "j", "k"];
+        var quotient = Math.floor(index / 3);
+        var remainder = index % 3;
+
+        str = ref[remainder] + str;
+
+        if (quotient) return this.generateForStmtIndex(quotient - 1, str);
+        else return str;
+
     };
 })(Entry.TextCodingUtil);

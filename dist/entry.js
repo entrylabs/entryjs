@@ -13239,6 +13239,11 @@ Entry.TextCodingUtil = {};
     }
     return !1;
   };
+  b.generateForStmtIndex = function(a, b) {
+    var c = Math.floor(a / 3);
+    b = ["i", "j", "k"][a % 3] + (b || "");
+    return c ? this.generateForStmtIndex(c - 1, b) : b;
+  };
 })(Entry.TextCodingUtil);
 Entry.BlockToJsParser = function(b, a) {
   this._type = "BlockToJsParser";
@@ -13437,7 +13442,7 @@ Entry.BlockToPyParser = function(b) {
                 n = f[q], 0 !== n.length && (h.test(n) ? (n = Number(n.split("$")[1]) - 1, b += Entry.TextCodingUtil.indent(this.Thread(a.statements[n]))) : b += n);
               }
             } else {
-              console.log("blockTokenss", f, "syntaxObj", c, "i", m), c && "repeat_basic" == c.key && 0 == m && c.idChar && (f = f.split(" "), console.log("forStmtTokens", f), f[1] = c.idChar[this._forIdCharIndex++], f = f.join(" "), console.log("forStmtText", f)), b += f;
+              console.log("blockTokenss", f, "syntaxObj", c, "i", m), c && "repeat_basic" == c.key && 0 == m && (f = f.split(" "), f[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++), f = f.join(" ")), b += f;
             }
           }
         }
