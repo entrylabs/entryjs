@@ -281,6 +281,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if(!type) {
                 var funcNameKey = calleeData.name + component.arguments.length;
+                if(calleeData.name.search("__getParam") != -1) {
+                    return result;
+                }
+
                 if(calleeData.name && arguments.length != 0 && arguments[0].type == "Literal") {
                     if(!this._funcMap.contains(funcNameKey)) {
                         var keyword = calleeData.name;
@@ -1624,18 +1628,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var init = component.init;
 
         // This is Function-Related Param
-        if(id.name == "__params0" || id.name == "__formalsIndex0" || id.name == "__args0")
+        if(id.name && (id.name.search("__params") != -1 || id.name.search("__formalsIndex") != -1 || id.name.search("__args")) != -1)
             return undefined;
 
         // This is Function-Related Param
-        if(init.callee && init.callee.name == "__getParam0") {
+        if(init.callee && init.callee.name && init.callee.name.search("__getParam") != -1) {
             result.isFuncParam = true;
             result.name = id.name;
 
             return result;
         }
 
-        if(init.object && init.object.name == "__filbertTmp0") {
+        if(init.object && init.object.name && init.object.name.search("__filbertTmp") != -1) {
             var keyword;
             console.log("errorId", 26.1);
             Entry.TextCodingError.error(
@@ -1726,6 +1730,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(!Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                         var keyword = name;
                         console.log("errorId", 32);
+                        if(Entry.TextCodingError)
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -4796,7 +4801,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var body = component.body;
         var id = component.id;
 
-        if(id.name == "__getParam0") {
+        if(id.name.search("__getParam") != -1) {
             return result;
         }
 
@@ -5722,17 +5727,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result = component;
 
-        console.log("ConditionalExpression result", result);
+        console.log("ConditionalExpression result", result); 
 
         //Convertin Error Control
-        var keyword = "ConditionalExpression";
+        /*var keyword = "ConditionalExpression";
         console.log("errorId", 105);
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
             keyword,
             this._blockCount,
-            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
+            Entry.TextCodingError.SUBJECT_CONV_GENERAL);*/
         //Converting Error Control
 
         return result;

@@ -101,6 +101,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         switch (this.mode) {
             case Entry.Workspace.MODE_VIMBOARD:
+                    if(alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) { 
+                        alert(alert_message); 
+                        var mode = {};
+                        mode.boardType = Entry.Workspace.MODE_BOARD;
+                        mode.textType = -1;
+                        Entry.getMainWS().setMode(mode);
+                        break;
+                    }
                     if (this.board) this.board.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.banClass('textMode');

@@ -13032,6 +13032,7 @@ Entry.TextCodingUtil = {};
     return b;
   };
   b.isNamesIncludeSpace = function() {
+    console.log("isNamesIncludeSpace check");
     var a = Entry.variableContainer;
     if (a) {
       for (var b = a.variables_ || [], c = 0;c < b.length;c++) {
@@ -13614,7 +13615,7 @@ Entry.BlockToPyParser = function(b) {
         a += this.Block(c.statements[f]).concat("\n");
       }
       a = a.concat("\n");
-      b += Entry.TextCodingUtil.indent(a).concat("\n");
+      b += Entry.TextCodingUtil.indent(a).concat("\n\n");
     }
     this._funcMap.clear();
     return b.trim();
@@ -13641,6 +13642,7 @@ Entry.BlockToPyParser = function(b) {
       g[f[h]] = h;
     }
     Entry.TextCodingUtil.clearQueue();
+    console.log("funcParamMap", g);
     if (g) {
       var f = {}, k;
       for (k in g) {
@@ -14194,6 +14196,9 @@ Entry.PyToBlockParser = function(b) {
       !e && (r = k, n = this.getBlockSyntax(r)) && (e = n.key);
       if (!e) {
         var y = g.name + a.arguments.length;
+        if (-1 != g.name.search("__getParam")) {
+          return b;
+        }
         if (g.name && 0 != arguments.length && "Literal" == arguments[0].type && !this._funcMap.contains(y)) {
           var t = g.name;
           console.log("errorId", 3);
@@ -14632,11 +14637,11 @@ Entry.PyToBlockParser = function(b) {
       this._blockCount--, console.log("BlockCount VariableDeclarator --", this._blockCount);
     }
     var f = a.id, g = a.init;
-    if ("__params0" != f.name && "__formalsIndex0" != f.name && "__args0" != f.name) {
-      if (g.callee && "__getParam0" == g.callee.name) {
+    if (!f.name || -1 == (-1 != f.name.search("__params") || -1 != f.name.search("__formalsIndex") || f.name.search("__args"))) {
+      if (g.callee && g.callee.name && -1 != g.callee.name.search("__getParam")) {
         return b.isFuncParam = !0, b.name = f.name, b;
       }
-      if (g.object && "__filbertTmp0" == g.object.name) {
+      if (g.object && g.object.name && -1 != g.object.name.search("__filbertTmp")) {
         var h;
         console.log("errorId", 26.1);
         Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
@@ -14646,7 +14651,7 @@ Entry.PyToBlockParser = function(b) {
         l.property && "__pythonRuntime.ops.subscriptIndex" == l.property.callee ? l.object && l.object.object ? "self" != l.object.object.name ? (h = e = l.object.object.name, console.log("errorId", 27), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : l.object.property && (e = l.object.property.name, Entry.TextCodingUtil.isLocalListExisted(l.object.property.name, this._currentObject) || 
         (h = e, console.log("errorId", 28), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : l.object && (e = l.object.name, "get_variable" != l.object.type || Entry.TextCodingUtil.isGlobalListExisted(e) || Entry.TextCodingUtil.isGlobalVariableExisted(e) || (h = e, console.log("errorId", 29), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, 
         h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : l.object ? "self" != l.object.name ? (h = l.object.name, console.log("errorId", 30), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : l.property.name && (e = l.property.name, Entry.TextCodingUtil.isLocalVariableExisted(e, this._currentObject) || (h = e, console.log("errorId", 31), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
-        Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))) : (e = l.name, Entry.TextCodingUtil.isGlobalVariableExisted(e) || (h = e, console.log("errorId", 32), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)));
+        Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))) : (e = l.name, Entry.TextCodingUtil.isGlobalVariableExisted(e) || (h = e, console.log("errorId", 32), Entry.TextCodingError && Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)));
       }
       var m;
       console.log("VariableDeclarator init", g);
@@ -15821,7 +15826,7 @@ Entry.PyToBlockParser = function(b) {
   b.FunctionDeclaration = function(a) {
     console.log("FunctionDeclaration component", a);
     var b = {}, c = a.body, e = a.id;
-    if ("__getParam0" == e.name) {
+    if (-1 != e.name.search("__getParam")) {
       return b;
     }
     this._funcLoop = !0;
@@ -16179,8 +16184,6 @@ Entry.PyToBlockParser = function(b) {
   b.ConditionalExpression = function(a) {
     console.log("ConditionalExpression component", a);
     console.log("ConditionalExpression result", a);
-    console.log("errorId", 105);
-    Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT, "ConditionalExpression", this._blockCount, Entry.TextCodingError.SUBJECT_CONV_GENERAL);
     return a;
   };
   b.SequenceExpression = function(a) {
@@ -27192,6 +27195,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (this.oldMode !== this.mode) {
       switch(this.mode) {
         case Entry.Workspace.MODE_VIMBOARD:
+          if (alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+            alert(alert_message);
+            a = {};
+            a.boardType = Entry.Workspace.MODE_BOARD;
+            a.textType = -1;
+            Entry.getMainWS().setMode(a);
+            break;
+          }
           this.board && this.board.hide();
           this.overlayBoard && this.overlayBoard.hide();
           this.blockMenu.banClass("textMode");

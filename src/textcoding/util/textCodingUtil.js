@@ -1734,6 +1734,7 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isNamesIncludeSpace = function() {
+        console.log("isNamesIncludeSpace check");
         var vc = Entry.variableContainer;
         if(!vc)
             return;

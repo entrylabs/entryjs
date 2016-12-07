@@ -538,7 +538,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 stmtResult += this.Block(block).concat('\n');
             }
             stmtResult = stmtResult.concat('\n');
-            result += Entry.TextCodingUtil.indent(stmtResult).concat('\n');
+            result += Entry.TextCodingUtil.indent(stmtResult).concat('\n\n');
         }
         this._funcMap.clear();
 
@@ -585,6 +585,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         Entry.TextCodingUtil.clearQueue();
         var funcParamMap = paramMap;
+
+        console.log("funcParamMap", funcParamMap);
 
         if(funcParamMap) {
             var funcParams = {};
