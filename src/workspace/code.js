@@ -358,4 +358,13 @@ Entry.PARAM = -1;
         this.getBlockList(false, type)
             .forEach(function(b) { b.doDestroy(); });
     };
+
+    p.isAllThreadsInOrigin = function() {
+        var threads = this.getThreads();
+        for (var i=threads.length-1; i>=0; i--) {
+            if (!threads[i].isInOrigin())
+                return false;
+        }
+        return true;
+    };
 })(Entry.Code.prototype);

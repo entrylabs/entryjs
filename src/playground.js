@@ -1290,7 +1290,10 @@ Entry.Playground.prototype.reloadPlayground = function () {
     if (!mainWorkspace) return;
     mainWorkspace.getBlockMenu().reDraw();
 
-    if (this.object) this.object.script.view.reDraw();
+    var object = this.object;
+    (function(o) {
+        o && o.script && o.script.view && o.script.view.reDraw();
+    })(this.object);
 };
 
 /**
@@ -1304,7 +1307,6 @@ Entry.Playground.prototype.flushPlayground = function () {
         var board = Entry.playground.mainWorkspace.getBoard();
         board.clear();
         board.changeCode(null);
-
     }
 };
 

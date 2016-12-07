@@ -322,7 +322,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldDropdownDynamic = function(dataParam, textParam) {
-        console.log("FieldDropdown", dataParam, textParam); 
+        console.log("FieldDropdownDynamic", dataParam, textParam); 
+        var found = false;
         var options;
         var returnValue = dataParam;
         if(textParam && textParam.converter && textParam.options) {
@@ -348,16 +349,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         dataParam = '"()"'.replace('()', dataParam);
                     } 
 
-
-
                     if(isNaN(dataParam)) {
                         if(textParam.caseType == "no") {
                             dataParam = dataParam;
                         }
-                        else if(textParam.caseType == "upper") {
+                        else if(textParam.caseType == "upper") { 
                             dataParam = dataParam.toUpperCase();
                         }
-                        else {
+                        else { 
                             dataParam = dataParam.toLowerCase();
                         }
                     }
@@ -365,10 +364,16 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     if(textParam.paramType == "variable") {
                         dataParam = dataParam.replace(/\"/g, "");
                     }
-
+                    found = true; 
                     break;
                 }
             }
+        }
+
+        if(!found) {
+            dataParam = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(dataParam, textParam.menuName);
+            if(isNaN(dataParam))
+                dataParam = '"()"'.replace('()', dataParam);
         }
 
         return dataParam;
@@ -536,7 +541,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 stmtResult += this.Block(block).concat('\n');
             }
             stmtResult = stmtResult.concat('\n');
-            result += Entry.TextCodingUtil.indent(stmtResult).concat('\n');
+            result += Entry.TextCodingUtil.indent(stmtResult).concat('\n\n');
         }
         this._funcMap.clear();
 
@@ -583,6 +588,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         Entry.TextCodingUtil.clearQueue();
         var funcParamMap = paramMap;
+
+        console.log("funcParamMap", funcParamMap);
 
         if(funcParamMap) {
             var funcParams = {};
