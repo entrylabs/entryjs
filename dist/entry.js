@@ -12524,13 +12524,6 @@ Entry.TextCodingUtil = {};
     a ? 1 == b ? e = eval(c) : 2 == b && this.isNumeric(c) && (e = c - 1) : "add_value_to_list" == a && 2 == b && (e = eval(c));
     return e;
   };
-  b.variableListSpaceMessage = function() {
-    console.log("variableListSpaceMessage");
-    var a = {title:"\ud30c\uc774\uc36c\ubcc0\ud658(Converting) \uc624\ub958", message:"\uacf5\ubc31(\ub744\uc5b4\uc4f0\uae30)\uc774 \ud3ec\ud568\ub41c \ubcc0\uc218 \ub610\ub294 \ub9ac\uc2a4\ud2b8\ub294 \ubcc0\ud658\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4."};
-    a.line = this._blockCount;
-    console.log("send error", a);
-    throw a;
-  };
   b.isGlobalVariableExisted = function(a) {
     var b = Entry.variableContainer.variables_, c;
     for (c in b) {
@@ -12558,11 +12551,9 @@ Entry.TextCodingUtil = {};
     this.isGlobalVariableExisted(a) || (Entry.variableContainer.addVariable({name:a, value:b, variableType:"variable"}), Entry.variableContainer.updateList());
   };
   b.isLocalVariableExisted = function(a, b) {
-    console.log("isLocalVariableExisted name object", a, b);
     var c = Entry.variableContainer.variables_, e;
     for (e in c) {
       var f = c[e];
-      console.log("TextCodingUtil isLocalVariableExisted", f);
       if (f.object_ === b.id && f.name_ == a) {
         return !0;
       }
@@ -12581,7 +12572,6 @@ Entry.TextCodingUtil = {};
     }
   };
   b.createLocalVariable = function(a, b, c) {
-    console.log("createLocalVariable", a, b, c);
     this.isLocalVariableExisted(a, c) || (Entry.variableContainer.addVariable({name:a, value:b, object:c.id, variableType:"variable"}), Entry.variableContainer.updateList());
   };
   b.isLocalVariable = function(a) {
@@ -13538,7 +13528,7 @@ Entry.BlockToPyParser = function(b) {
         }
       }
     }
-    c || (a = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(value, b.menuName));
+    c || (a = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(a, b.menuName));
     return a;
   };
   b.FieldImage = function(a, b) {
@@ -14099,7 +14089,7 @@ Entry.JsToBlockParser = function(b) {
 Entry.PyToBlockParser = function(b) {
   this._type = "PyToBlockParser";
   this.blockSyntax = b;
-  this._currentObject = Entry.TextCodingUtil._currentObject;
+  Entry.playground && (this._currentObject = Entry.playground.object);
   this._variableMap = new Entry.Map;
   this._funcMap = new Entry.Map;
   this._paramQ = new Entry.Queue;
@@ -14605,8 +14595,8 @@ Entry.PyToBlockParser = function(b) {
       var k = this[f.type](f), l = this[g.type](g);
       if ("Identifier" == g.type || "MemberExpression" == g.type) {
         l.property && "__pythonRuntime.ops.subscriptIndex" == l.property.callee ? l.object && l.object.object ? "self" != l.object.object.name ? (e = l.object.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, e, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : l.object.property && (e = l.object.property.name, Entry.TextCodingUtil.isLocalListExisted(l.object.property.name, this._currentObject) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
-        Entry.TextCodingError.MESSAGE_CONV_NO_LIST, e, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)) : l.object && (e = l.object.name, Entry.TextCodingUtil.isGlobalListExisted(e) || Entry.TextCodingUtil.isGlobalVariableExisted(e) || "get_canvas_input_value" != l.object.type && Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, e, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)) : l.object ? "self" != l.object.name ? 
-        (h = l.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : l.property.name && (e = l.property.name, Entry.TextCodingUtil.isLocalVariableExisted(e, this._currentObject) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, e, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : 
+        Entry.TextCodingError.MESSAGE_CONV_NO_LIST, e, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)) : l.object && (e = l.object.name, "get_variable" == l.object.type && (Entry.TextCodingUtil.isGlobalListExisted(e) || Entry.TextCodingUtil.isGlobalVariableExisted(e) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, e, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : l.object ? "self" != l.object.name ? (h = 
+        l.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : l.property.name && (e = l.property.name, Entry.TextCodingUtil.isLocalVariableExisted(e, this._currentObject) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, e, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : 
         (e = l.name, Entry.TextCodingUtil.isGlobalVariableExisted(e) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, e, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE));
       }
       var n;
@@ -15069,7 +15059,7 @@ Entry.PyToBlockParser = function(b) {
         if (f.object) {
           if ("self" == f.object.name) {
             var h = f.property.name;
-            if (f.type && "get_canvas_input_value" == f.type) {
+            if (f.type && "get_variable" != f.type) {
               var k = "%2[%4]#char_at"
             } else {
               if (Entry.TextCodingUtil.isLocalListExisted(h, this._currentObject) && (k = "%2[%4]"), Entry.TextCodingUtil.isLocalVariableExisted(h, this._currentObject) && (k = "%2[%4]#char_at"), !Entry.TextCodingUtil.isLocalListExisted(h, this._currentObject) && !Entry.TextCodingUtil.isLocalVariableExisted(h, this._currentObject)) {
@@ -15078,7 +15068,7 @@ Entry.PyToBlockParser = function(b) {
             }
           }
         } else {
-          if (h = f.name, f.type && "get_canvas_input_value" == f.type) {
+          if (h = f.name, f.type && "get_variable" != f.type) {
             k = "%2[%4]#char_at";
           } else {
             if (Entry.TextCodingUtil.isGlobalListExisted(h) && (k = "%2[%4]"), Entry.TextCodingUtil.isGlobalVariableExisted(h) && (k = "%2[%4]#char_at"), !Entry.TextCodingUtil.isGlobalListExisted(h) && !Entry.TextCodingUtil.isGlobalVariableExisted(h)) {
@@ -15990,11 +15980,9 @@ Entry.Parser = function(b, a, d, c) {
         try {
           this._pyBlockCount = {};
           this._pyThreadCount = 1;
-          var n = new Entry.PyAstGenerator, e = this.makeThreads(a);
-          console.log("threads", e);
-          var f = [], m = 0;
+          var n = new Entry.PyAstGenerator, e = this.makeThreads(a), f = [], m = 0;
           for (g = 0;g < e.length;g++) {
-            if (h = e[g], console.log("thread", h, "thread.length", h.length), 0 != h.length && (h = h.replace(/    /g, "\t"), k = n.generate(h))) {
+            if (h = e[g], 0 != h.length && (h = h.replace(/    /g, "\t"), k = n.generate(h))) {
               this._pyThreadCount = m++, this._pyBlockCount[m] = h.split("\n").length - 1, 0 != k.body.length && f.push(k);
             }
           }

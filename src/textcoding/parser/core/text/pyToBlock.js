@@ -15,7 +15,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
     this.blockSyntax = blockSyntax;
 
-    this._currentObject = Entry.TextCodingUtil._currentObject;
+    if(Entry.playground)
+    this._currentObject = Entry.playground.object;
 
     var variableMap = new Entry.Map();
     this._variableMap = variableMap;
@@ -1677,9 +1678,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 else if(initData.object) { // List
                     var name = initData.object.name;
-                    
-                    if(!Entry.TextCodingUtil.isGlobalListExisted(name) && !Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
-                        if(initData.object.type != "get_canvas_input_value") {
+                    if(initData.object.type == "get_variable") {
+                        if(!Entry.TextCodingUtil.isGlobalListExisted(name) && !Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                             var keyword = name;
                             //console.log("errorId", 29);
                             Entry.TextCodingError.error(
@@ -2985,7 +2985,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result = result.toLowerCase();
         }
 
-        if(isNaN(result)) {
+        if(isNaN(result)) { 
             if(textParam && textParam.paramType == "operator")
                 result = result.toUpperCase();
         }
@@ -3118,7 +3118,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(objectData.object) {
                     if(objectData.object.name == "self") {
                         var name = objectData.property.name;
-                        if(objectData.type && objectData.type == "get_canvas_input_value") {
+                        if(objectData.type && objectData.type != "get_variable") {
                             var syntax = String("%2\[%4\]#char_at");
                         }
                         else {
@@ -3134,7 +3134,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 else {
                     var name = objectData.name;
-                    if(objectData.type && objectData.type == "get_canvas_input_value") {
+                    if(objectData.type && objectData.type != "get_variable") {
                         var syntax = String("%2\[%4\]#char_at");
                     }
                     else {

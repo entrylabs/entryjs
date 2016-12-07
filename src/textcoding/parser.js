@@ -245,14 +245,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                     var pyAstGenerator = new Entry.PyAstGenerator();
                     var threads = this.makeThreads(code);
-                    console.log("threads", threads);
+                    //console.log("threads", threads);
 
                     var astArray = [];
                     var threadCount = 0;
                     var ast;
                     for(var index = 0; index < threads.length; index++) {
                         var thread = threads[index];
-                        console.log("thread", thread, "thread.length", thread.length);
+                        //console.log("thread", thread, "thread.length", thread.length);
                         if(thread.length == 0)
                             continue;
                         thread = thread.replace(/    /g, "\t");
