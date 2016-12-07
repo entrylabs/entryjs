@@ -129,7 +129,7 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.dropdownDynmaicNameToIdConvertor = function(name, menuName) {
+    tu.dropdownDynamicNameToIdConvertor = function(name, menuName) {
         if(!name)
             return name;
 

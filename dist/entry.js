@@ -12333,7 +12333,7 @@ Entry.TextCodingUtil = {};
     }
     return a;
   };
-  b.dropdownDynmaicNameToIdConvertor = function(a, b) {
+  b.dropdownDynamicNameToIdConvertor = function(a, b) {
     if (!a) {
       return a;
     }
