@@ -250,7 +250,7 @@ Entry.TextCodingUtil = {};
 
         result = id;
 
-        if(!found && param.menuName == "variables") {
+        if(!found && menuName == "variables") {
             var entryVariables = Entry.variableContainer.variables_;
             //console.log("dropdownDynamicValueConvertor entryVariables", entryVariables);
             for(var e in entryVariables) {
@@ -262,7 +262,7 @@ Entry.TextCodingUtil = {};
 
             }
         }
-        else if(!found && param.menuName == "lists") {
+        else if(!found && menuName == "lists") {
             var entryLists = Entry.variableContainer.lists;
             //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
             for(var e in entryLists) {
@@ -274,7 +274,7 @@ Entry.TextCodingUtil = {};
 
             }
         }
-        else if(!found && param.menuName == "messages") {
+        else if(!found && menuName == "messages") {
             var entryMessages = Entry.variableContainer.messages_;
             //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
             for(var e in entryMessages) {
@@ -286,7 +286,7 @@ Entry.TextCodingUtil = {};
 
             }
         }
-        else if(!found && param.menuName == "pictures") {
+        else if(!found && menuName == "pictures") {
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
                 var object = objects[o];
@@ -300,7 +300,7 @@ Entry.TextCodingUtil = {};
                 }
             }
         }
-        else if(!found && param.menuName == "sounds") {
+        else if(!found && menuName == "sounds") {
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
                 var object = objects[o];

@@ -12415,7 +12415,7 @@ Entry.TextCodingUtil = {};
   b.dropdownDynamicIdToNameConvertor = function(a, b) {
     console.log("dropdownDynamicNameToIdConvertor id", a, "menuName", b);
     var c = null, c = a;
-    if ("variables" == param.menuName) {
+    if ("variables" == b) {
       var e = Entry.variableContainer.variables_, f;
       for (f in e) {
         var g = e[f];
@@ -12425,7 +12425,7 @@ Entry.TextCodingUtil = {};
         }
       }
     } else {
-      if ("lists" == param.menuName) {
+      if ("lists" == b) {
         for (f in g = Entry.variableContainer.lists, g) {
           if (e = g[f], e.id_ == a) {
             c = e.name_;
@@ -12433,7 +12433,7 @@ Entry.TextCodingUtil = {};
           }
         }
       } else {
-        if ("messages" == param.menuName) {
+        if ("messages" == b) {
           for (f in g = Entry.variableContainer.messages_, g) {
             if (e = g[f], e.id == a) {
               c = e.name;
@@ -12441,7 +12441,7 @@ Entry.TextCodingUtil = {};
             }
           }
         } else {
-          if ("pictures" == param.menuName) {
+          if ("pictures" == b) {
             for (e in f = Entry.container.getAllObjects(), f) {
               var h = f[e], h = h.pictures;
               for (g in h) {
@@ -12452,7 +12452,7 @@ Entry.TextCodingUtil = {};
               }
             }
           } else {
-            if ("sounds" == param.menuName) {
+            if ("sounds" == b) {
               for (e in f = Entry.container.getAllObjects(), f) {
                 for (g in h = f[e], h = h.sounds, h) {
                   if (k = h[g], k.id == a) {
