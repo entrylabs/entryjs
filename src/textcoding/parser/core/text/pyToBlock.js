@@ -1825,7 +1825,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
             else {
-                value = 0
+                var value = 0
             }
             /*else {
                 value = 0
@@ -2434,7 +2434,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(rightData.type == "number" || rightData.type == "text")
                         var value = rightData.params[0];
                     else 
-                        value = 0;
+                        var value = 0;
                     /*else
                         var value = 0;*/
                     /*if(typeof value != "string" && typeof value != "number") {
@@ -2470,6 +2470,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var name = leftData.name;
                 if(rightData.type == "number" || rightData.type == "text")
                     var value = rightData.params[0];
+                else 
+                    var value = 0;
                 /*else
                     var value = 0;*/
                 /*if(typeof value != "string" && typeof value != "number") {
