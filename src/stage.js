@@ -278,6 +278,7 @@ Entry.Stage.prototype.sortZorder = function() {
         }
         container.setChildIndex(entity.object, index++);
     }
+    Entry.requestUpdate = true;
 };
 
 /**
