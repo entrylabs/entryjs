@@ -106,18 +106,21 @@ Entry.Board.DRAG_RADIUS = 5;
         this.pattern = returnVal.pattern;
     };
 
-    p.changeCode = function(code) {
+    p.changeCode = function(code, shouldNotCreateView) {
         if (this.code && this.codeListener)
             this.code.changeEvent.detach(this.codeListener);
 
         this.set({code: code});
 
         var that = this;
-        if (code) {
+        if (code && !shouldNotCreateView) {
             this.codeListener = this.code.changeEvent.attach(
                 this, function() {that.changeEvent.notify();}
             );
             code.createView(this);
+            if (code.isAllThreadsInOrigin())
+                this.alignThreads();
+
         }
         this.scroller.resizeScrollBar();
     };
@@ -899,6 +902,7 @@ Entry.Board.DRAG_RADIUS = 5;
     p.adjustThreadsPosition = function() {
         var code = this.code;
         if (!code) return;
+        if (!code.view) return;
 
         var threads = code.getThreads();
         if (!threads || threads.length === 0) return;

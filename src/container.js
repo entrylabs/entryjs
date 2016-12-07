@@ -38,6 +38,15 @@ Entry.Container = function() {
      * @type {Array.<object model>}
      */
     this.currentObjects_ = null;
+
+    Entry.addEventListener('workspaceChangeMode', function() {
+        var ws = Entry.getMainWS();
+        if (ws && ws.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+            this.objects_.forEach(function(o) {
+                o.script && o.script.destroyView();
+            });
+        }
+    }.bind(this));
 };
 
 /**
@@ -440,9 +449,11 @@ Entry.Container.prototype.getObject = function(objectId) {
 Entry.Container.prototype.getEntity = function(objectId) {
     var object = this.getObject(objectId);
     if (!object) {
-        Entry.toast.alert(Lang.Msgs.runtime_error,
-                          Lang.Workspace.object_not_found,
-                          true);
+        Entry.toast.alert(
+            Lang.Msgs.runtime_error,
+            Lang.Workspace.object_not_found,
+            true
+        );
         return;
     }
     return object.entity;
