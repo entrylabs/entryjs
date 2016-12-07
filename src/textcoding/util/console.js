@@ -51,7 +51,7 @@ Entry.Console = function() {
         }.bind(this));
 
         this.codeMirror.on("cursorActivity", function(cm, event) {
-            cm.execCommand("goDocEnd");                                     
+            cm.execCommand("goDocEnd");
         });
 
         Entry.addEventListener("stop", this.clear.bind(this));
@@ -61,7 +61,7 @@ Entry.Console = function() {
         console.log("this.clear()");
     };
 
-    p.getView = function() { 
+    p.getView = function() {
         return this.view;
     };
 
@@ -73,6 +73,9 @@ Entry.Console = function() {
     };
 
     p.print = function(message, mode) {
+        if (!this.visible)
+            return;
+
         this.setEditing(true);
         this.codeMirror.execCommand("goDocEnd");
         var cursor = this._doc.getCursor();

@@ -266,13 +266,15 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             if (next) nextBlock.destroy(animate, next);
             else {
                 if (!prevBlock) {
-                    var parent = this.getThread().view.getParent();
-                    if (parent.constructor === Entry.FieldStatement) {
-                        nextBlock.view && nextBlock.view.bindPrev(parent);
-                        parent.insertTopBlock(nextBlock);
-                    } else if (parent.constructor === Entry.FieldStatement) {
-                        nextBlock.replace(parent._valueBlock);
-                    } else nextBlock.view._toGlobalCoordinate();
+                    if (thread.view) {
+                        var parent = thread.view.getParent();
+                        if (parent.constructor === Entry.FieldStatement) {
+                            nextBlock.view && nextBlock.view.bindPrev(parent);
+                            parent.insertTopBlock(nextBlock);
+                        } else if (parent.constructor === Entry.FieldStatement) {
+                            nextBlock.replace(parent._valueBlock);
+                        } else nextBlock.view._toGlobalCoordinate();
+                    }
                 } else nextBlock.view && nextBlock.view.bindPrev(prevBlock, true);
             }
         }
@@ -531,6 +533,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
     p.stringify = function(excludeData) {
         return JSON.stringify(this.toJSON(false, excludeData));
+    };
+
+    p.isInOrigin = function() {
+        return this.x === 0 && this.y === 0;
     };
 
 })(Entry.Block.prototype);

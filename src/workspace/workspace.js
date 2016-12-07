@@ -11,6 +11,9 @@ goog.require("Entry.TextCodingUtil");
 
 Entry.Workspace = function(options) {
     Entry.Model(this, false);
+
+    this.dSetMode = Entry.Utils.debounce(this.setMode, 200);
+
     this.observe(this, "_handleChangeBoard", ["selectedBoard"], false);
     this.trashcan = new Entry.FieldTrashcan();
     var that = this;
@@ -107,6 +110,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.blockMenu.renderText();
                     this.board.clear();
                     this.oldTextType = this.textType;
+                    //destroy view because of performance
                 break;
             case Entry.Workspace.MODE_BOARD:
                 try {
@@ -145,7 +149,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         this.oldTextType = Entry.Vim.TEXT_TYPE_PY;
                         //console.log(("mode", mode);
                     }
-
                     //throw e;
                 }
                 Entry.commander.setCurrentEditor("board", this.board);
@@ -168,8 +171,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.changeBoardCode = function(code) {
         this._syncTextCode();
-        this.board.changeCode(code);
-        if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
+        var isVim = this.mode === Entry.Workspace.MODE_VIMBOARD;
+        this.board.changeCode(code, isVim);
+        if (isVim) {
             var mode = {};
             mode.textType = this.textType;
             mode.boardType = this.boardType;
@@ -193,15 +197,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         var that = this;
         var changedCode = this.vimBoard.textToCode(oldTextType);
-        console.log("changedCode", changedCode);
-       
+
         var board = this.board;
         var code = board.code;
         code.load(changedCode);
         this.changeBoardCode(code);
         setTimeout(function() {
-            code.view.reDraw();
-            that.board.alignThreads();
+            if (code.view) {
+                code.view.reDraw();
+                that.board.alignThreads();
+            }
         }, 0);
     };
 
@@ -248,9 +253,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p._keyboardControl = function(e, isForce) {
         var keyCode = e.keyCode || e.which,
-            ctrlKey = e.ctrlKey,
-            shiftKey = e.shiftKey,
-            altKey = e.altKey;
+            ctrlKey = e.ctrlKey, shiftKey = e.shiftKey, altKey = e.altKey;
+        var playground = Entry.playground;
 
         if (Entry.Utils.isInInput(e) && !isForce)
             return;
@@ -268,7 +272,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                             .getFirstBlock().copyToClipboard();
                     break;
                 case 219: //setMode(block) for textcoding
-                    if (Entry.playground && !Entry.playground.object) {
+                    if (playground && !playground.object) {
                         if (isVimMode) {
                             var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
                             alert(message);
@@ -286,13 +290,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         return;
                     }
 
-                    var mode = {};
-                    mode.boardType = Entry.Workspace.MODE_BOARD;
-                    mode.textType = -1;
-                    this.setMode(mode);
+                    this.dSetMode({
+                        boardType : Entry.Workspace.MODE_BOARD,
+                        textType : -1
+                    });
                     break;
                 case 221: //setMode(python) for textcoding
-                    if (Entry.playground && !Entry.playground.object) {
+                    if (playground && !playground.object) {
                         if (this.oldMode === Entry.Workspace.MODE_BOARD) {
                             var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
                             alert(message);
@@ -307,17 +311,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         return;
                     }
 
-                    var message =Entry.TextCodingUtil.isNamesIncludeSpace()
+                    var message = Entry.TextCodingUtil.isNamesIncludeSpace()
                     if(message) {
                         alert(message);
                         return;
                     }
 
-                    var mode = {};
-                    mode.boardType = Entry.Workspace.MODE_VIMBOARD;
-                    mode.textType = Entry.Vim.TEXT_TYPE_PY;
-                    mode.runType = Entry.Vim.WORKSPACE_MODE;
-                    this.setMode(mode);
+                    this.dSetMode({
+                        boardType : Entry.Workspace.MODE_VIMBOARD,
+                        textType : Entry.Vim.TEXT_TYPE_PY,
+                        runType : Entry.Vim.WORKSPACE_MODE
+                    });
                     break;
                 case 67:
                     if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
@@ -335,44 +339,42 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
             }
         } else if (altKey) {
-            if (Entry.playground) {
-                if(!Entry.playground.object) {
-                    var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                    alert(message);
-                    return;
-                }
+            if (playground && !playground.object) {
+                var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                alert(message);
+                return;
+            }
 
-                switch (keyCode) {
-                    case 49:
-                        Entry.playground.changeViewMode('code');
+            switch (keyCode) {
+                case 49:
+                    playground.changeViewMode('code');
+                    e.preventDefault();
+                    break;
+                case 50:
+                    playground.changeViewMode('picture');
+                    e.preventDefault();
+                    break;
+                case 51:
+                    playground.changeViewMode('sound');
+                    e.preventDefault();
+                    break;
+                case 52:
+                    playground.toggleOnVariableView();
+                    playground.changeViewMode('variable');
+                    e.preventDefault();
+                    break;
+                case 219:
+                    if (Entry.container) {
                         e.preventDefault();
-                        break;
-                    case 50:
-                        Entry.playground.changeViewMode('picture');
+                        Entry.container.selectNeighborObject('prev');
+                    }
+                    break;
+                case 221:
+                    if (Entry.container) {
                         e.preventDefault();
-                        break;
-                    case 51:
-                        Entry.playground.changeViewMode('sound');
-                        e.preventDefault();
-                        break;
-                    case 52:
-                        Entry.playground.toggleOnVariableView();
-                        Entry.playground.changeViewMode('variable');
-                        e.preventDefault();
-                        break;
-                    case 219:
-                        if (Entry.container) {
-                            e.preventDefault();
-                            Entry.container.selectNeighborObject('prev');
-                        }
-                        break;
-                    case 221:
-                        if (Entry.container) {
-                            e.preventDefault();
-                            Entry.container.selectNeighborObject('next');
-                        }
-                        break;
-                }
+                        Entry.container.selectNeighborObject('next');
+                    }
+                    break;
             }
         } else if (shiftKey) {
             switch (keyCode) {
@@ -400,6 +402,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
             }
         }
+
+        //delay for fields value applied
         setTimeout(function() {
             Entry.disposeEvent && Entry.disposeEvent.notify(e);
         }, 0);
@@ -419,12 +423,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var changedCode = this.vimBoard.textToCode(this.textType);
         var board = this.board;
         var code = board.code;
-        console.log("syncTextCode", code);
-        if(code) {
-            code.load(changedCode);
-            code.createView(board);
-            this.board.alignThreads();
-        }
+        if (code) code.load(changedCode);
     };
 
     p.addVimBoard = function(dom) {

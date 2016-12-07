@@ -6850,6 +6850,12 @@ Entry.Container = function() {
   this.cachedPicture = {};
   this.inputValue = {};
   this.currentObjects_ = this.copiedObject = null;
+  Entry.addEventListener("workspaceChangeMode", function() {
+    var b = Entry.getMainWS();
+    b && b.getMode() === Entry.Workspace.MODE_VIMBOARD && this.objects_.forEach(function(a) {
+      a.script && a.script.destroyView();
+    });
+  }.bind(this));
 };
 Entry.Container.prototype.generateView = function(b, a) {
   var d = this;
@@ -11552,7 +11558,8 @@ Entry.PropertyPanel = function() {
     430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
     Entry.dispatchEvent("windowResized");
     a = this.selected;
-    "hw" == a ? this.modes.hw.obj.listPorts ? this.modes[a].obj.resizeList() : this.modes[a].obj.resize() : this.modes[a].obj.resize();
+    var b = this.modes[a].obj;
+    "hw" == a ? this.modes.hw.obj.listPorts ? b.resizeList() : b.resize && b.resize() : b.resize && b.resize();
   };
   b.select = function(a) {
     for (var b in this.modes) {
@@ -12232,14 +12239,16 @@ Entry.Console = function() {
     this.setEditing(!1);
   };
   b.print = function(a, b) {
-    this.setEditing(!0);
-    this.codeMirror.execCommand("goDocEnd");
-    var c = this._doc.getCursor();
-    this._doc.replaceRange(a + "\n", {line:c.line, ch:0});
-    this._doc.addLineClass(c.line, "text", b);
-    "speak" === b && this.setEditing(!1);
-    this.codeMirror.execCommand("goDocEnd");
-    "ask" === b && (this._doc.addLineClass(c.line + 1, "text", "answer"), this.codeMirror.focus());
+    if (this.visible) {
+      this.setEditing(!0);
+      this.codeMirror.execCommand("goDocEnd");
+      var c = this._doc.getCursor();
+      this._doc.replaceRange(a + "\n", {line:c.line, ch:0});
+      this._doc.addLineClass(c.line, "text", b);
+      "speak" === b && this.setEditing(!1);
+      this.codeMirror.execCommand("goDocEnd");
+      "ask" === b && (this._doc.addLineClass(c.line + 1, "text", "answer"), this.codeMirror.focus());
+    }
   };
   b.endInput = function() {
     var a = this._doc.getCursor(), b = this.codeMirror.lineInfo(a.line);
@@ -14674,7 +14683,6 @@ Entry.PyToBlockParser = function(b) {
           }
           g.push(l);
         }
-        console.log("vd name", e);
         Entry.TextCodingUtil.isGlobalListExisted(e) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalList(e, g) : this._funcLoop || Entry.TextCodingUtil.createGlobalList(e, g);
       } else {
         e = f.name;
@@ -14884,7 +14892,7 @@ Entry.PyToBlockParser = function(b) {
               u = l.params[0];
             }
             if (u || 0 == u) {
-              console.log("final value", u), console.log("final value", u, u.length), Entry.TextCodingUtil.isLocalVariableExisted(q, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateLocalVariable(q, u, this._currentObject) : this._funcLoop ? Entry.TextCodingUtil.createLocalVariable(q, 0, this._currentObject) : Entry.TextCodingUtil.createLocalVariable(q, u, this._currentObject);
+              Entry.TextCodingUtil.isLocalVariableExisted(q, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateLocalVariable(q, u, this._currentObject) : this._funcLoop ? Entry.TextCodingUtil.createLocalVariable(q, 0, this._currentObject) : Entry.TextCodingUtil.createLocalVariable(q, u, this._currentObject);
             }
             q = this.ParamDropdownDynamic(q, k[0], m[0]);
             e.push(q);
@@ -16079,7 +16087,6 @@ Entry.PyToBlockParser = function(b) {
     return a;
   };
   b.DebuggerStatement = function(a) {
-    console.log("DebuggerStatement component", a);
     console.log("DebuggerStatement result", a);
     console.log("errorId", 92);
     Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT, "DebuggerStatement", this._blockCount, Entry.TextCodingError.SUBJECT_CONV_GENERAL);
@@ -23967,6 +23974,14 @@ Entry.PARAM = -1;
       a.doDestroy();
     });
   };
+  b.isAllThreadsInOrigin = function() {
+    for (var a = this.getThreads(), b = a.length - 1;0 <= b;b--) {
+      if (!a[b].isInOrigin()) {
+        return !1;
+      }
+    }
+    return !0;
+  };
 })(Entry.Code.prototype);
 Entry.CodeView = function(b, a) {
   Entry.Model(this, !1);
@@ -25717,13 +25732,13 @@ Entry.Board.DRAG_RADIUS = 5;
     Entry.Utils.addFilters(this.svg, this.suffix);
     this.pattern = Entry.Utils.addBlockPattern(this.svg, this.suffix).pattern;
   };
-  b.changeCode = function(a) {
+  b.changeCode = function(a, b) {
     this.code && this.codeListener && this.code.changeEvent.detach(this.codeListener);
     this.set({code:a});
-    var b = this;
-    a && (this.codeListener = this.code.changeEvent.attach(this, function() {
-      b.changeEvent.notify();
-    }), a.createView(this));
+    var c = this;
+    a && !b && (this.codeListener = this.code.changeEvent.attach(this, function() {
+      c.changeEvent.notify();
+    }), a.createView(this), a.isAllThreadsInOrigin() && this.alignThreads());
     this.scroller.resizeScrollBar();
   };
   b.bindCodeView = function(a) {
@@ -26114,7 +26129,7 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   b.adjustThreadsPosition = function() {
     var a = this.code;
-    a && (a = a.getThreads()) && 0 !== a.length && (a = a.sort(function(a, b) {
+    a && a.view && (a = a.getThreads()) && 0 !== a.length && (a = a.sort(function(a, b) {
       return a.getFirstBlock().view.x - b.getFirstBlock().view.x;
     }), a = a[0].getFirstBlock()) && (a = a.view, a = a.getAbsoluteCoordinate(), this.scroller.scroll(50 - a.x, 30 - a.y));
   };
@@ -26576,6 +26591,10 @@ Entry.Thread = function(b, a, d) {
   b.stringify = function(a) {
     return JSON.stringify(this.toJSON(void 0, void 0, a));
   };
+  b.isInOrigin = function() {
+    var a = this.getFirstBlock();
+    return a && a.isInOrigin();
+  };
 })(Entry.Thread.prototype);
 Entry.Block = function(b, a) {
   var d = this;
@@ -26715,7 +26734,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       this.getCode().unregisterBlock(this);
       f = this.getThread();
       this._schema && this._schema.event && f.unregisterEvent(this, this._schema.event);
-      c && (b ? c.destroy(a, b) : g ? c.view && c.view.bindPrev(g, !0) : (b = this.getThread().view.getParent(), b.constructor === Entry.FieldStatement ? (c.view && c.view.bindPrev(b), b.insertTopBlock(c)) : b.constructor === Entry.FieldStatement ? c.replace(b._valueBlock) : c.view._toGlobalCoordinate()));
+      c && (b ? c.destroy(a, b) : g ? c.view && c.view.bindPrev(g, !0) : f.view && (b = f.view.getParent(), b.constructor === Entry.FieldStatement ? (c.view && c.view.bindPrev(b), b.insertTopBlock(c)) : b.constructor === Entry.FieldStatement ? c.replace(b._valueBlock) : c.view._toGlobalCoordinate()));
       !this.doNotSplice && f.spliceBlock ? f.spliceBlock(this) : delete this.doNotSplice;
       this.view && this.view.destroy(a);
       this._schemaChangeEvent && this._schemaChangeEvent.destroy();
@@ -26882,6 +26901,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   b.stringify = function(a) {
     return JSON.stringify(this.toJSON(!1, a));
+  };
+  b.isInOrigin = function() {
+    return 0 === this.x && 0 === this.y;
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(b, a) {
@@ -27124,6 +27146,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
 })(Entry.Vim.prototype);
 Entry.Workspace = function(b) {
   Entry.Model(this, !1);
+  this.dSetMode = Entry.Utils.debounce(this.setMode, 200);
   this.observe(this, "_handleChangeBoard", ["selectedBoard"], !1);
   this.trashcan = new Entry.FieldTrashcan;
   var a = b.blockMenu;
@@ -27198,8 +27221,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.changeBoardCode = function(a) {
     this._syncTextCode();
-    this.board.changeCode(a);
-    this.mode === Entry.Workspace.MODE_VIMBOARD && (a = {}, a.textType = this.textType, a.boardType = this.boardType, a.runType = this.runType, this.codeToText(this.board.code, a));
+    var b = this.mode === Entry.Workspace.MODE_VIMBOARD;
+    this.board.changeCode(a, b);
+    b && (a = {}, a.textType = this.textType, a.boardType = this.boardType, a.runType = this.runType, this.codeToText(this.board.code, a));
   };
   b.changeOverlayBoardCode = function(a) {
     this.overlayBoard && this.overlayBoard.changeCode(a);
@@ -27209,14 +27233,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.textToCode = function(a, b) {
     if (a == Entry.Workspace.MODE_VIMBOARD) {
-      var c = this, e = this.vimBoard.textToCode(b);
-      console.log("changedCode", e);
-      var f = this.board.code;
+      var c = this, e = this.vimBoard.textToCode(b), f = this.board.code;
       f.load(e);
       this.changeBoardCode(f);
       setTimeout(function() {
-        f.view.reDraw();
-        c.board.alignThreads();
+        f.view && (f.view.reDraw(), c.board.alignThreads());
       }, 0);
     }
   };
@@ -27243,16 +27264,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.overlayBoard.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1);
   };
   b._keyboardControl = function(a, b) {
-    var c = a.keyCode || a.which, e = a.ctrlKey, f = a.shiftKey, g = a.altKey;
+    var c = a.keyCode || a.which, e = a.ctrlKey, f = a.shiftKey, g = a.altKey, h = Entry.playground;
     if (!Entry.Utils.isInInput(a) || b) {
-      var h = this._isVimMode(), k = this.selectedBlockView;
+      var k = this._isVimMode(), l = this.selectedBlockView;
       if (e) {
         switch(c) {
           case 86:
             (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
             break;
           case 219:
-            if (Entry.playground && !Entry.playground.object && h) {
+            if (h && !h.object && k) {
               alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
               return;
             }
@@ -27263,13 +27284,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
               alert(c);
               return;
             }
-            c = {};
-            c.boardType = Entry.Workspace.MODE_BOARD;
-            c.textType = -1;
-            this.setMode(c);
+            this.dSetMode({boardType:Entry.Workspace.MODE_BOARD, textType:-1});
             break;
           case 221:
-            if (Entry.playground && !Entry.playground.object && this.oldMode === Entry.Workspace.MODE_BOARD) {
+            if (h && !h.object && this.oldMode === Entry.Workspace.MODE_BOARD) {
               alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
               return;
             }
@@ -27281,69 +27299,63 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
               alert(c);
               return;
             }
-            c = {};
-            c.boardType = Entry.Workspace.MODE_VIMBOARD;
-            c.textType = Entry.Vim.TEXT_TYPE_PY;
-            c.runType = Entry.Vim.WORKSPACE_MODE;
-            this.setMode(c);
+            this.dSetMode({boardType:Entry.Workspace.MODE_VIMBOARD, textType:Entry.Vim.TEXT_TYPE_PY, runType:Entry.Vim.WORKSPACE_MODE});
             break;
           case 67:
-            k && !k.isInBlockMenu && k.block.isDeletable() && k.block.copyToClipboard();
+            l && !l.isInBlockMenu && l.block.isDeletable() && l.block.copyToClipboard();
             break;
           case 88:
-            k && !k.isInBlockMenu && k.block.isDeletable() && function(a) {
+            l && !l.isInBlockMenu && l.block.isDeletable() && function(a) {
               a.copyToClipboard();
               a.destroy(!0, !0);
-              k.getBoard().setSelectedBlock(null);
-            }(k.block);
+              l.getBoard().setSelectedBlock(null);
+            }(l.block);
         }
       } else {
         if (g) {
-          if (Entry.playground) {
-            if (!Entry.playground.object) {
-              alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
-              return;
-            }
-            switch(c) {
-              case 49:
-                Entry.playground.changeViewMode("code");
-                a.preventDefault();
-                break;
-              case 50:
-                Entry.playground.changeViewMode("picture");
-                a.preventDefault();
-                break;
-              case 51:
-                Entry.playground.changeViewMode("sound");
-                a.preventDefault();
-                break;
-              case 52:
-                Entry.playground.toggleOnVariableView();
-                Entry.playground.changeViewMode("variable");
-                a.preventDefault();
-                break;
-              case 219:
-                Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("prev"));
-                break;
-              case 221:
-                Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("next"));
-            }
+          if (h && !h.object) {
+            alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+            return;
+          }
+          switch(c) {
+            case 49:
+              h.changeViewMode("code");
+              a.preventDefault();
+              break;
+            case 50:
+              h.changeViewMode("picture");
+              a.preventDefault();
+              break;
+            case 51:
+              h.changeViewMode("sound");
+              a.preventDefault();
+              break;
+            case 52:
+              h.toggleOnVariableView();
+              h.changeViewMode("variable");
+              a.preventDefault();
+              break;
+            case 219:
+              Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("prev"));
+              break;
+            case 221:
+              Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("next"));
           }
         } else {
           if (f) {
             switch(c) {
               case 9:
-                h && (CodeMirror.commands.indentLess(this.vimBoard.codeMirror), a.preventDefault());
+                k && (CodeMirror.commands.indentLess(this.vimBoard.codeMirror), a.preventDefault());
             }
           } else {
             switch(c) {
               case 9:
-                h && (CodeMirror.commands.indentMore(this.vimBoard.codeMirror), a.preventDefault());
+                k && (CodeMirror.commands.indentMore(this.vimBoard.codeMirror), a.preventDefault());
                 break;
               case 8:
               ;
               case 46:
-                k && !k.isInBlockMenu && k.block.isDeletable() && (Entry.do("destroyBlock", k.block), a.preventDefault());
+                l && !l.isInBlockMenu && l.block.isDeletable() && (Entry.do("destroyBlock", l.block), a.preventDefault());
             }
           }
         }
@@ -27359,9 +27371,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b._syncTextCode = function() {
     if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
-      var a = this.vimBoard.textToCode(this.textType), b = this.board, c = b.code;
-      console.log("syncTextCode", c);
-      c && (c.load(a), c.createView(b), this.board.alignThreads());
+      var a = this.vimBoard.textToCode(this.textType), b = this.board.code;
+      b && b.load(a);
     }
   };
   b.addVimBoard = function(a) {
@@ -28063,7 +28074,7 @@ Entry.Playground.prototype.initializeResizeHandle = function(b) {
 };
 Entry.Playground.prototype.reloadPlayground = function() {
   var b = this.mainWorkspace;
-  b && (b.getBlockMenu().reDraw(), this.object && this.object.script.view.reDraw());
+  b && (b.getBlockMenu().reDraw(), (b = this.object) && b.script && b.script.view && b.script.view.reDraw());
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;
