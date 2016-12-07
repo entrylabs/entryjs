@@ -16518,17 +16518,6 @@ Entry.Parser = function(b, a, d, c) {
     a = a.split("\n");
     for (var b = [], c = "", e = 3;e < a.length;e++) {
       var f = a[e] + "\n";
-      if (-1 == f.search("==") && -1 == f.search("<=") && -1 == f.search(">=")) {
-        var g = f.split("=");
-        if (3 <= g.length) {
-          for (var h in g) {
-            g[h] = g[h].trim();
-          }
-          f = g[g.length - 1];
-          delete g[g.length - 1];
-          f = g.join("=" + f + "\n").trim().concat("\n");
-        }
-      }
       Entry.TextCodingUtil.isEntryEventFuncByFullText(f.trim()) && (f = Entry.TextCodingUtil.entryEventFilter(f), 0 != c.length && b.push(c), c = "");
       c += f;
     }
