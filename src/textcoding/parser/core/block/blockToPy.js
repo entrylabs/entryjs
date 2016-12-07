@@ -208,14 +208,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
             } else {
                 console.log("blockTokenss", blockToken, "syntaxObj", syntaxObj, "i", i);
                 if(syntaxObj && syntaxObj.key == "repeat_basic" && i == 0) {
-                    if(syntaxObj.idChar) {
-                        var forStmtTokens = blockToken.split(" ");
-                        console.log("forStmtTokens", forStmtTokens);
-                        forStmtTokens[1] = syntaxObj.idChar[this._forIdCharIndex++];
-                        var forStmtText = forStmtTokens.join(" ");
-                        console.log("forStmtText", forStmtText);
-                        blockToken = forStmtText;
-                    }
+                    var forStmtTokens = blockToken.split(" ");
+                    forStmtTokens[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++);
+                    var forStmtText = forStmtTokens.join(" ");
+                    blockToken = forStmtText; 
                 }
                 result += blockToken; 
             }
@@ -326,7 +322,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldDropdownDynamic = function(dataParam, textParam) {
-        console.log("FieldDropdown", dataParam, textParam); 
+        console.log("FieldDropdownDynamic", dataParam, textParam); 
+        var found = false;
         var options;
         var returnValue = dataParam;
         if(textParam && textParam.converter && textParam.options) {
@@ -352,13 +349,11 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         dataParam = '"()"'.replace('()', dataParam);
                     } 
 
-
-
                     if(isNaN(dataParam)) {
                         if(textParam.caseType == "no") {
                             dataParam = dataParam;
                         }
-                        else if(textParam.caseType == "upper") {
+                        else if(textParam.caseType == "upper") { 
                             dataParam = dataParam.toUpperCase();
                         }
                         else {
@@ -369,11 +364,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     if(textParam.paramType == "variable") {
                         dataParam = dataParam.replace(/\"/g, "");
                     }
-
+                    found = true;
                     break;
                 }
             }
         }
+
+        if(!found)
+            dataParam = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(dataParam, textParam.menuName);
 
         return dataParam;
     };

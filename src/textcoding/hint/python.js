@@ -36,14 +36,12 @@ Entry.PyHint = function(syntax) {
 (function(p) {
     p.pythonHint = function(editor) {
         var cur = editor.getCursor(), tokens = editor.getLineTokens(cur.line);
-        var lastToken = tokens[tokens.length - 1];
+        var lastToken = tokens.pop();
         var result = [], menuResult = [];
-
-
-        // If it's not a 'word-style' token, ignore the token.
-
-
         if (!lastToken) return null;
+
+        while (cur.ch <= lastToken.start)
+            lastToken = tokens.pop();
 
         var searchString;
         var start = lastToken.start;
@@ -52,7 +50,7 @@ Entry.PyHint = function(syntax) {
 
         switch(lastToken.type) {
             case "def":
-                var defToken = tokens[tokens.length - 3];
+                var defToken = tokens[tokens.length - 2];
                 if (defToken) {
                     searchString = "def " + lastToken.string;
                     start = defToken.start;
@@ -67,6 +65,7 @@ Entry.PyHint = function(syntax) {
                 result = result.map(function(key) {
                     var localSyntax = syntax;
                     var displayText = key.split("#")[0];
+                    displayText = displayText.split("\n")[0];
                     var localKey;
                     if (key.indexOf(".") > -1) {
                         key = key.split(".");
@@ -85,12 +84,13 @@ Entry.PyHint = function(syntax) {
                 })
                 break;
             case "property":
-                var variableToken = tokens[tokens.length - 3];
+                var variableToken = tokens[tokens.length - 2];
                 if (!variableToken)
                     break;
                 var searchResult = this.fuzzySearch(this.getScope(variableToken.string), lastToken.string).slice(0,20);
                 result = searchResult.map(function(key) {
                     var displayText = key.split("#")[0];
+                    displayText = displayText.split("\n")[0];
                     return {
                         displayText: displayText,
                         hint: hintFunc,
@@ -137,7 +137,6 @@ Entry.PyHint = function(syntax) {
     };
 
     p.hintFunc = function(cm, self, data) {
-        console.log(data);
         var text;
         var syntax = data.syntax;
         var ch = self.from.ch;

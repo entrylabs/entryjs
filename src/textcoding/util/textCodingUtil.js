@@ -129,7 +129,7 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.dropdownDynmaicNameToIdConvertor = function(name, menuName) {
+    tu.dropdownDynamicNameToIdConvertor = function(name, menuName) {
         if(!name)
             return name;
 
@@ -456,7 +456,7 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.variableListSpaceMessage = function() {
+    /*tu.variableListSpaceMessage = function() {
         console.log("variableListSpaceMessage");
         var error = {};
         error.title = "파이썬변환(Converting) 오류";
@@ -464,7 +464,7 @@ Entry.TextCodingUtil = {};
         error.line = this._blockCount;
         console.log("send error", error);
         throw error;
-    };
+    };*/
 
     tu.isGlobalVariableExisted = function(name) {
         var entryVariables = Entry.variableContainer.variables_;
@@ -521,11 +521,11 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isLocalVariableExisted = function(name, object) {
-        console.log("isLocalVariableExisted name object", name, object);
+        //console.log("isLocalVariableExisted name object", name, object);
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
-            console.log("TextCodingUtil isLocalVariableExisted", entryVariable);
+            //console.log("TextCodingUtil isLocalVariableExisted", entryVariable);
             if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
                 return true;
             }
@@ -560,7 +560,7 @@ Entry.TextCodingUtil = {};
     };
 
     tu.createLocalVariable = function(name, value, object) {
-        console.log("createLocalVariable", name, value, object);
+        //console.log("createLocalVariable", name, value, object);
         if(this.isLocalVariableExisted(name, object))
             return;
 
@@ -2167,12 +2167,12 @@ Entry.TextCodingUtil = {};
         var currentObject = Entry.playground.object;
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {
-            var entryVariable = entryVariables[i];
+            var entryVariable = entryVariables[i]; 
             if(type == "global") {
                 if(entryVariable.object_ === null && entryVariable.id_ == id) {
                     if(!isNaN(entryVariable.value_))
                         return true;
-                }
+                } 
             }
             else if(type == "local") {
                 if(entryVariable.object_ === currentObject.id && entryVariable.id_ == id) {
@@ -2184,5 +2184,18 @@ Entry.TextCodingUtil = {};
         }
 
         return false;
+    };
+
+    tu.generateForStmtIndex = function(index, str) {
+        str = str || "";
+        var ref = ["i", "j", "k"];
+        var quotient = Math.floor(index / 3);
+        var remainder = index % 3;
+
+        str = ref[remainder] + str;
+
+        if (quotient) return this.generateForStmtIndex(quotient - 1, str);
+        else return str;
+
     };
 })(Entry.TextCodingUtil);

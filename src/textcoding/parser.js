@@ -245,14 +245,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                     var pyAstGenerator = new Entry.PyAstGenerator();
                     var threads = this.makeThreads(code);
-                    console.log("threads", threads);
+                    //console.log("threads", threads);
 
                     var astArray = [];
                     var threadCount = 0;
                     var ast;
                     for(var index = 0; index < threads.length; index++) {
                         var thread = threads[index];
-                        console.log("thread", thread, "thread.length", thread.length);
+                        //console.log("thread", thread, "thread.length", thread.length);
                         if(thread.length == 0)
                             continue;
                         thread = thread.replace(/    /g, "\t");
@@ -654,7 +654,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
             console.log("textLine search", textLine.search('=='));
-            if(textLine.search('==') == -1) {
+            if(textLine.search('==') == -1 && textLine.search('<=') == -1 && textLine.search('>=') == -1) {
                 var declarations = textLine.split('=');
                 console.log("declarations", declarations);
                 if(declarations.length >= 3) {
@@ -667,7 +667,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 } 
             } 
 
-            console.log("textLine declations", textLine);
+            console.log("textLine declations", textLine); 
 
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim())) {
                 textLine = Entry.TextCodingUtil.entryEventFilter(textLine);
