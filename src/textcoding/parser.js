@@ -653,10 +653,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var optText = "";
         for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
-            console.log("textLine search", textLine.search('=='));
             if(textLine.search('==') == -1 && textLine.search('<=') == -1 && textLine.search('>=') == -1) {
                 var declarations = textLine.split('=');
-                console.log("declarations", declarations);
                 if(declarations.length >= 3) {
                     for(var d in declarations) {
                         declarations[d] = declarations[d].trim();
@@ -666,8 +664,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     textLine = declarations.join('=' + value + '\n').trim().concat('\n');
                 } 
             } 
-
-            console.log("textLine declations", textLine); 
 
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim())) {
                 textLine = Entry.TextCodingUtil.entryEventFilter(textLine);

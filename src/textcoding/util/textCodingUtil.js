@@ -227,32 +227,18 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.dropdownDynamicValueConvertor = function(value, param) {
+    tu.dropdownDynamicIdToNameConvertor = function(id, menuName) {
         var options = param.options;
-        //console.log("dropdownDynamicValueConvertor value", value, "options", options);
+        console.log("dropdownDynamicNameToIdConvertor id", id, "menuName", menuName);
         var found = false;
         var result = null;
-        for(var index in options) {
+        /*for(var index in options) {
             var option = options[index];
             if(option[1] == "null") {
-                /*var item = {};
-                var None = {};
-                item.None = None;
-                result = item.None;*/
-
                 result = "None";
-
                 found = true;
                 return result;
             }
-
-            if(value == "mouse" || value == "wall" || value == "wall_up" ||
-               value == "wall_down" || value == "wall_right" || value == "wall_left") {
-                found = true;
-                return value;
-            }
-
-            //console.log("dropdownDynamicValueConvertor check value", value, "option", option);
 
             if(value == option[1]) {
                 console.log("dropdownDynamicValueConvertor value", value, option[1]);
@@ -260,16 +246,16 @@ Entry.TextCodingUtil = {};
                 found = true;
                 return result;
             }
-        }
+        }*/
 
-        result = value;
+        result = id;
 
         if(!found && param.menuName == "variables") {
             var entryVariables = Entry.variableContainer.variables_;
             //console.log("dropdownDynamicValueConvertor entryVariables", entryVariables);
             for(var e in entryVariables) {
                 var entryVariable = entryVariables[e];
-                if(entryVariable.id_ == value) {
+                if(entryVariable.id_ == id) {
                     result = entryVariable.name_;
                     break;
                 }
@@ -281,7 +267,7 @@ Entry.TextCodingUtil = {};
             //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
             for(var e in entryLists) {
                 var entryList = entryLists[e];
-                if(entryList.id_ == value) {
+                if(entryList.id_ == id) {
                     result = entryList.name_;
                     break;
                 }
@@ -293,7 +279,7 @@ Entry.TextCodingUtil = {};
             //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
             for(var e in entryMessages) {
                 var entryList = entryMessages[e];
-                if(entryList.id == value) {
+                if(entryList.id == id) {
                     result = entryList.name;
                     break;
                 }
@@ -307,7 +293,7 @@ Entry.TextCodingUtil = {};
                 var pictures = object.pictures;
                 for(var p in pictures) {
                     var picture = pictures[p];
-                    if(picture.id == value) {
+                    if(picture.id == id) {
                         result = picture.name;
                         return result;
                     }
@@ -321,7 +307,7 @@ Entry.TextCodingUtil = {};
                 var sounds = object.sounds;
                 for(var p in sounds) {
                     var sound = sounds[p];
-                    if(sound.id == value) {
+                    if(sound.id == id) {
                         result = sound.name;
                         return result;
                     }
@@ -2061,7 +2047,6 @@ Entry.TextCodingUtil = {};
             var name = v.name_;
             var value = v.value_;
             if(value == 0) {
-                console.log("generate variable v", v, "co", currentObject);
                 if(v.object_) {
                     if(v.object_ == currentObject.id) {
                         name = "self." + name; 
@@ -2081,7 +2066,6 @@ Entry.TextCodingUtil = {};
             var name = v.name_;
             var value = v.value_;
             if(value != 0) {
-                console.log("generate variable v", v, "co", currentObject);
                 if(v.object_) {
                     if(v.object_ == currentObject.id) {
                         name = "self." + name; 
