@@ -13,12 +13,16 @@ Entry.PyHint = function(syntax) {
     this.scope = {};
 
     this.scope._global = [];
+    this.scope._list = [];
     for (var key in syntax) {
         if (syntax[key].syntax && key.indexOf("%") < 0)
+            this.scope._global.push(key)
+        else if (key.substr(0, 2) === "if")
             this.scope._global.push(key)
     }
     this.addScope("Entry");
     this.addScope("random");
+    this.addScope("%2", "_list")
 
     this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
 
@@ -49,11 +53,18 @@ Entry.PyHint = function(syntax) {
         var syntax = this.syntax;
 
         switch(lastToken.type) {
+            case "builtin":
+                if (tokens[tokens.length - 2] && tokens[tokens.length - 2].string === "def")
+                    searchString = null;
+                else
+                    searchString = lastToken.string;
             case "def":
-                var defToken = tokens[tokens.length - 2];
-                if (defToken) {
-                    searchString = "def " + lastToken.string;
-                    start = defToken.start;
+                if (!searchString) {
+                    var defToken = tokens[tokens.length - 2];
+                    if (defToken) {
+                        searchString = "def " + lastToken.string;
+                        start = defToken.start;
+                    }
                 }
             case "keyword":
                 if (!searchString)
@@ -65,7 +76,9 @@ Entry.PyHint = function(syntax) {
                 result = result.map(function(key) {
                     var localSyntax = syntax;
                     var displayText = key.split("#")[0];
-                    displayText = displayText.split("\n")[0];
+                    displayText = displayText.split("\n").join(" ");
+                    displayText = displayText.replace(/%\d+/gi, "");
+                    displayText = displayText.replace(/\$\d+/gi, "");
                     var localKey;
                     if (key.indexOf(".") > -1) {
                         key = key.split(".");
@@ -87,7 +100,16 @@ Entry.PyHint = function(syntax) {
                 var variableToken = tokens[tokens.length - 2];
                 if (!variableToken)
                     break;
-                var searchResult = this.fuzzySearch(this.getScope(variableToken.string), lastToken.string).slice(0,20);
+                var searchResult;
+                var searchScope = this.getScope(variableToken.string);
+                if (searchScope.length)
+                    searchResult = this.fuzzySearch(searchScope, lastToken.string).slice(0,20);
+                else if (Entry.variableContainer.getListByName(variableToken.string)) {
+                    searchResult = this.fuzzySearch(this.getScope('%2'), lastToken.string).slice(0,20);
+                    variableToken.string = "%2";
+                }
+                else
+                    searchResult = [];
                 result = searchResult.map(function(key) {
                     var displayText = key.split("#")[0];
                     displayText = displayText.split("\n")[0];
@@ -144,8 +166,7 @@ Entry.PyHint = function(syntax) {
             text = data.displayText + ".";
             ch += text.length;
         } else {
-            text = syntax.syntax.split("\n");
-            text = text[0];
+            text = syntax.syntax;
             if (data.localKey) {
                 text = data.localKey + "." + text;
             }
@@ -154,11 +175,12 @@ Entry.PyHint = function(syntax) {
                 text.shift();
             text = text.join(".");
             if (text.indexOf("%") > -1) {
+                ch += text.indexOf("%");
                 text = text.replace(/%\d+/gi, "");
-                ch += text.indexOf("(") + 1;
             } else {
                 ch += text.length;
             }
+            text = text.replace(/\$\d+/gi, "");
         }
 
         cm.replaceRange(text, self.from, self.to)

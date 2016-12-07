@@ -8625,7 +8625,6 @@ Entry.SVG.createElement = function(b, a) {
       c.setAttribute(d, a[d]);
     }
   }
-  this instanceof SVGElement && this.appendChild(c);
   c.elem = Entry.SVG.createElement;
   c.attr = Entry.SVG.attr;
   c.addClass = Entry.SVG.addClass;
@@ -8634,6 +8633,7 @@ Entry.SVG.createElement = function(b, a) {
   c.remove = Entry.SVG.remove;
   c.removeAttr = Entry.SVG.removeAttr;
   "text" === b && c.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space", "preserve");
+  this instanceof SVGElement && this.appendChild(c);
   return c;
 };
 Entry.SVG.attr = function(b, a) {
@@ -17004,11 +17004,13 @@ Entry.PyHint = function(b) {
   this.syntax = b;
   this.scope = {};
   this.scope._global = [];
+  this.scope._list = [];
   for (var a in b) {
-    b[a].syntax && 0 > a.indexOf("%") && this.scope._global.push(a);
+    b[a].syntax && 0 > a.indexOf("%") ? this.scope._global.push(a) : "if" === a.substr(0, 2) && this.scope._global.push(a);
   }
   this.addScope("Entry");
   this.addScope("random");
+  this.addScope("%2", "_list");
   this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
   CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
   Entry.addEventListener("hwChanged", function(a) {
@@ -17028,17 +17030,17 @@ Entry.PyHint = function(b) {
     }
     var g, h = a.start, k = this.hintFunc, l = this.syntax;
     switch(a.type) {
+      case "builtin":
+        g = d[d.length - 2] && "def" === d[d.length - 2].string ? null : a.string;
       case "def":
-        if (e = d[d.length - 2]) {
-          g = "def " + a.string, h = e.start;
-        }
+        !g && (e = d[d.length - 2]) && (g = "def " + a.string, h = e.start);
       case "keyword":
         g || (g = a.string);
       case "variable":
         g || (g = a.string);
         e = this.fuzzySearch(this.getScope("_global"), g).slice(0, 20);
         e = e.map(function(a) {
-          var b = l, c = a.split("#")[0], c = c.split("\n")[0], d;
+          var b = l, c = a.split("#")[0], c = c.split("\n").join(" "), c = c.replace(/%\d+/gi, ""), c = c.replace(/\$\d+/gi, ""), d;
           -1 < a.indexOf(".") && (a = a.split("."), b = l[a[0]], d = a[0], a = a[1]);
           b[a].key && f.push(b[a].key);
           return {displayText:c, hint:k, syntax:b[a], localKey:d};
@@ -17047,7 +17049,8 @@ Entry.PyHint = function(b) {
       case "property":
         var m = d[d.length - 2];
         if (m) {
-          g = this.fuzzySearch(this.getScope(m.string), a.string).slice(0, 20);
+          g = this.getScope(m.string);
+          g.length ? g = this.fuzzySearch(g, a.string).slice(0, 20) : Entry.variableContainer.getListByName(m.string) ? (g = this.fuzzySearch(this.getScope("%2"), a.string).slice(0, 20), m.string = "%2") : g = [];
           var e = g.map(function(a) {
             var b = a.split("#")[0], b = b.split("\n")[0];
             return {displayText:b, hint:k, syntax:l[m.string][a]};
@@ -17083,7 +17086,7 @@ Entry.PyHint = function(b) {
     var c;
     c = d.syntax;
     var f = b.from.ch;
-    c.syntax ? (c = c.syntax.split("\n"), c = c[0], d.localKey && (c = d.localKey + "." + c), c = c.split("."), 1 < c.length && c.shift(), c = c.join("."), -1 < c.indexOf("%") ? (c = c.replace(/%\d+/gi, ""), f += c.indexOf("(") + 1) : f += c.length) : (c = d.displayText + ".", f += c.length);
+    c.syntax ? (c = c.syntax, d.localKey && (c = d.localKey + "." + c), c = c.split("."), 1 < c.length && c.shift(), c = c.join("."), -1 < c.indexOf("%") ? (f += c.indexOf("%"), c = c.replace(/%\d+/gi, "")) : f += c.length, c = c.replace(/\$\d+/gi, "")) : (c = d.displayText + ".", f += c.length);
     a.replaceRange(c, b.from, b.to);
     a.setCursor({line:b.from.line, ch:f});
     Entry.helper.renderBlock(d.syntax.key);
@@ -22399,6 +22402,12 @@ Entry.VariableContainer.prototype.getListById = function(b) {
     return c;
   }
   return !1;
+};
+Entry.VariableContainer.prototype.getListByName = function(b) {
+  var a = this.lists_, a = a.filter(function(a) {
+    return a.getName() === b;
+  });
+  return a[0];
 };
 Entry.VariableContainer.prototype.editFunction = function(b, a) {
 };
