@@ -356,7 +356,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         else if(textParam.caseType == "upper") { 
                             dataParam = dataParam.toUpperCase();
                         }
-                        else {
+                        else { 
                             dataParam = dataParam.toLowerCase();
                         }
                     }
@@ -364,14 +364,17 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     if(textParam.paramType == "variable") {
                         dataParam = dataParam.replace(/\"/g, "");
                     }
-                    found = true;
+                    found = true; 
                     break;
                 }
             }
         }
 
-        if(!found)
-            dataParam = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(dataParam, textParam.menuName);
+        if(!found) {
+            dataParam = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(dataParam, textParam.menuName);
+            if(isNaN(dataParam))
+                dataParam = '"()"'.replace('()', dataParam);
+        }
 
         return dataParam;
     };

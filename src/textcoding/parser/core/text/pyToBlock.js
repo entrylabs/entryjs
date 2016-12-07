@@ -1628,7 +1628,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var init = component.init;
 
         // This is Function-Related Param
-        if(id.name && (id.name.search("__params") != -1 || id.name.search("__formalsIndex") != -1 || id.name.search("__args")) != -1)
+        if(id.name && (id.name.search("__params") != -1 || id.name.search("__formalsIndex") != -1 || 
+            id.name.search("__args") != -1 ||id.name.search("__filbert") != -1))
             return undefined;
 
         // This is Function-Related Param

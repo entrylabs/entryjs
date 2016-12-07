@@ -12413,7 +12413,7 @@ Entry.TextCodingUtil = {};
     return c;
   };
   b.dropdownDynamicIdToNameConvertor = function(a, b) {
-    console.log("dropdownDynamicNameToIdConvertor id", a, "menuName", b);
+    console.log("dropdownDynamicIdToNameConvertor id", a, "menuName", b);
     var c = null, c = a;
     if ("variables" == b) {
       var e = Entry.variableContainer.variables_, f;
@@ -13520,7 +13520,7 @@ Entry.BlockToPyParser = function(b) {
         }
       }
     }
-    c || (a = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(a, b.menuName));
+    c || (a = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(a, b.menuName), isNaN(a) && (a = '"()"'.replace("()", a)));
     return a;
   };
   b.FieldImage = function(a, b) {
@@ -14637,7 +14637,7 @@ Entry.PyToBlockParser = function(b) {
       this._blockCount--, console.log("BlockCount VariableDeclarator --", this._blockCount);
     }
     var f = a.id, g = a.init;
-    if (!f.name || -1 == (-1 != f.name.search("__params") || -1 != f.name.search("__formalsIndex") || f.name.search("__args"))) {
+    if (!f.name || -1 == f.name.search("__params") && -1 == f.name.search("__formalsIndex") && -1 == f.name.search("__args") && -1 == f.name.search("__filbert")) {
       if (g.callee && g.callee.name && -1 != g.callee.name.search("__getParam")) {
         return b.isFuncParam = !0, b.name = f.name, b;
       }

@@ -229,7 +229,7 @@ Entry.TextCodingUtil = {};
 
     tu.dropdownDynamicIdToNameConvertor = function(id, menuName) {
         var options = param.options;
-        console.log("dropdownDynamicNameToIdConvertor id", id, "menuName", menuName);
+        console.log("dropdownDynamicIdToNameConvertor id", id, "menuName", menuName);
         var found = false;
         var result = null;
         /*for(var index in options) {
