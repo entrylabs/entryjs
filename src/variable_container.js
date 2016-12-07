@@ -720,6 +720,11 @@ Entry.VariableContainer.prototype.getListById = function(mouseevt) {
     return false;
 };
 
+Entry.VariableContainer.prototype.getListByName = function(name) {
+    var lists = this.lists_;
+    lists = lists.filter(function(l) {return l.getName() === name})
+    return lists[0];
+};
 
 /**
  * @param {Entry.Variable} variable
