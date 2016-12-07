@@ -1677,7 +1677,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 else if(initData.object) { // List
                     var name = initData.object.name;
-                    if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
+                    if(!Entry.TextCodingUtil.isGlobalListExisted(name) && !Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                         var keyword = name;
                         console.log("errorId", 29);
                         Entry.TextCodingError.error(
@@ -3066,7 +3066,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         if(!result)
-            result = Entry.TextCodingUtil.dropdownDynmaicNameToIdConvertor(value, paramMeta.menuName);
+            result = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(value, paramMeta.menuName);
 
         if(!result)
             result = value;

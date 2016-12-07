@@ -322,7 +322,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldDropdownDynamic = function(dataParam, textParam) {
-        console.log("FieldDropdown", dataParam, textParam); 
+        console.log("FieldDropdownDynamic", dataParam, textParam); 
+        var found = false;
         var options;
         var returnValue = dataParam;
         if(textParam && textParam.converter && textParam.options) {
@@ -348,13 +349,11 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         dataParam = '"()"'.replace('()', dataParam);
                     } 
 
-
-
                     if(isNaN(dataParam)) {
                         if(textParam.caseType == "no") {
                             dataParam = dataParam;
                         }
-                        else if(textParam.caseType == "upper") {
+                        else if(textParam.caseType == "upper") { 
                             dataParam = dataParam.toUpperCase();
                         }
                         else {
@@ -365,11 +364,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     if(textParam.paramType == "variable") {
                         dataParam = dataParam.replace(/\"/g, "");
                     }
-
+                    found = true;
                     break;
                 }
             }
         }
+
+        if(!found)
+            dataParam = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(value, paramMeta.menuName);
 
         return dataParam;
     };

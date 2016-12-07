@@ -13517,26 +13517,28 @@ Entry.BlockToPyParser = function(b) {
     return a;
   };
   b.FieldDropdownDynamic = function(a, b) {
-    console.log("FieldDropdown", a, b);
-    var c;
+    console.log("FieldDropdownDynamic", a, b);
+    var c = !1, e;
     if (b && b.converter && b.options) {
-      c = b.options;
-      for (var e in c) {
-        var f = c[e];
-        console.log("option", f);
-        var g = f[0], f = f[1];
-        if (a === f) {
-          key = g;
-          value = f;
+      e = b.options;
+      for (var f in e) {
+        var g = e[f];
+        console.log("option", g);
+        var h = g[0], g = g[1];
+        if (a === g) {
+          key = h;
+          value = g;
           a = b.converter(key, value);
           console.log("dataParam convert result", a);
           b.codeMap && (a = a.replace(/\"/g, ""), c = eval(b.codeMap), e = c[a], console.log("codeMap", c, "code", e, "dataParam", a), e && (a = e), a = '"()"'.replace("()", a));
           isNaN(a) && "no" != b.caseType && (a = "upper" == b.caseType ? a.toUpperCase() : a.toLowerCase());
           "variable" == b.paramType && (a = a.replace(/\"/g, ""));
+          c = !0;
           break;
         }
       }
     }
+    c || (a = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(value, paramMeta.menuName));
     return a;
   };
   b.FieldImage = function(a, b) {
@@ -14661,9 +14663,9 @@ Entry.PyToBlockParser = function(b) {
       var k = this[f.type](f), l = this[g.type](g);
       if ("Identifier" == g.type || "MemberExpression" == g.type) {
         l.property && "__pythonRuntime.ops.subscriptIndex" == l.property.callee ? l.object && l.object.object ? "self" != l.object.object.name ? (h = e = l.object.object.name, console.log("errorId", 27), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : l.object.property && (e = l.object.property.name, Entry.TextCodingUtil.isLocalListExisted(l.object.property.name, this._currentObject) || 
-        (h = e, console.log("errorId", 28), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : l.object && (e = l.object.name, Entry.TextCodingUtil.isGlobalListExisted(e) || (h = e, console.log("errorId", 29), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : 
-        l.object ? "self" != l.object.name ? (h = l.object.name, console.log("errorId", 30), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : l.property.name && (e = l.property.name, Entry.TextCodingUtil.isLocalVariableExisted(e, this._currentObject) || (h = e, console.log("errorId", 31), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, 
-        h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))) : (e = l.name, Entry.TextCodingUtil.isGlobalVariableExisted(e) || (h = e, console.log("errorId", 32), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)));
+        (h = e, console.log("errorId", 28), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : l.object && (e = l.object.name, Entry.TextCodingUtil.isGlobalListExisted(e) || Entry.TextCodingUtil.isGlobalVariableExisted(e) || (h = e, console.log("errorId", 29), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, h, 
+        this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : l.object ? "self" != l.object.name ? (h = l.object.name, console.log("errorId", 30), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : l.property.name && (e = l.property.name, Entry.TextCodingUtil.isLocalVariableExisted(e, this._currentObject) || (h = e, console.log("errorId", 31), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
+        Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))) : (e = l.name, Entry.TextCodingUtil.isGlobalVariableExisted(e) || (h = e, console.log("errorId", 32), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)));
       }
       var m;
       console.log("VariableDeclarator init", g);
@@ -15167,7 +15169,7 @@ Entry.PyToBlockParser = function(b) {
       }
     }
     e && e.codeMap && (e = e.codeMap, console.log("codeMap", e), e = eval(e), console.log("codeMap", e), a = a.toLowerCase(), f = e[a], console.log("codeMap result", f));
-    f || (f = Entry.TextCodingUtil.dropdownDynmaicNameToIdConvertor(a, b.menuName));
+    f || (f = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(a, b.menuName));
     f || (f = a);
     console.log("ParamDropdownDynamic result", f);
     return f;
