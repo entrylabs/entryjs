@@ -371,7 +371,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         }
 
         if(!found)
-            dataParam = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(value, paramMeta.menuName);
+            dataParam = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(value, textParam.menuName);
 
         return dataParam;
     };
