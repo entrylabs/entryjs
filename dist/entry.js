@@ -16960,6 +16960,7 @@ Entry.PyHint = function(b) {
   }
   this.addScope("Entry");
   this.addScope("random");
+  this.addScope("math");
   this.addScope("%2", "_list");
   this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
   CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
@@ -16971,12 +16972,11 @@ Entry.PyHint = function(b) {
   b.pythonHint = function(a) {
     var b = a.getCursor(), d = a.getLineTokens(b.line);
     a = d.pop();
-    var e = [], f = [];
+    for (var e = [], f = [];a && b.ch <= a.start;) {
+      a = d.pop();
+    }
     if (!a) {
       return null;
-    }
-    for (;b.ch <= a.start;) {
-      a = d.pop();
     }
     var g, h = a.start, k = this.hintFunc, l = this.syntax;
     switch(a.type) {
@@ -17039,6 +17039,7 @@ Entry.PyHint = function(b) {
     c = d.syntax;
     var f = b.from.ch;
     c.syntax ? (c = c.syntax, d.localKey && (c = d.localKey + "." + c), c = c.split("."), 1 < c.length && c.shift(), c = c.join("."), -1 < c.indexOf("%") ? (f += c.indexOf("%"), c = c.replace(/%\d+/gi, "")) : f += c.length, c = c.replace(/\$\d+/gi, "")) : (c = d.displayText + ".", f += c.length);
+    -1 < c.indexOf("\n") && (console.log(b.from.ch, Math.floor((b.from.ch + 1) / 4)), c = c.split("\n").join("\n" + "\t".repeat(b.from.ch)));
     a.replaceRange(c, b.from, b.to);
     a.setCursor({line:b.from.line, ch:f});
     Entry.helper.renderBlock(d.syntax.key);
