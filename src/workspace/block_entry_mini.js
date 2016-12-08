@@ -362,6 +362,7 @@
             color: '#2AB4D3',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 접촉 센서가 %2',
             params: [{
                 type: 'Dropdown',
@@ -434,6 +435,7 @@
             color: '#498DEB',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 빛 감지 센서 값 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -536,6 +538,7 @@
             color: '#00D67F',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 소리 센서에 감지되는 소리 값 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -639,6 +642,7 @@
             color: '#C4065C',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 적외선 센서에 감지되는 크기 값이 %2 %3',
             params: [{
                 type: 'Dropdown',
