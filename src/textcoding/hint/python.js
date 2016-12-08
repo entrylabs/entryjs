@@ -24,6 +24,7 @@ Entry.PyHint = function(syntax) {
     }
     this.addScope("Entry");
     this.addScope("random");
+    this.addScope("math");
     this.addScope("%2", "_list")
 
     this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
@@ -44,10 +45,11 @@ Entry.PyHint = function(syntax) {
         var cur = editor.getCursor(), tokens = editor.getLineTokens(cur.line);
         var lastToken = tokens.pop();
         var result = [], menuResult = [];
-        if (!lastToken) return null;
 
-        while (cur.ch <= lastToken.start)
+        while (lastToken && cur.ch <= lastToken.start)
             lastToken = tokens.pop();
+
+        if (!lastToken) return null;
 
         var searchString;
         var start = lastToken.start;
@@ -185,6 +187,10 @@ Entry.PyHint = function(syntax) {
                 ch += text.length;
             }
             text = text.replace(/\$\d+/gi, "");
+        }
+        if (text.indexOf("\n") > -1) {
+            console.log(self.from.ch, Math.floor((self.from.ch + 1) / 4))
+            text = text.split("\n").join("\n" + "\t".repeat(self.from.ch))
         }
 
         cm.replaceRange(text, self.from, self.to)
