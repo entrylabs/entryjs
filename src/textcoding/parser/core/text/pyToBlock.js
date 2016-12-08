@@ -2869,6 +2869,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamBlock = function(value, paramMeta, paramDefMeta) {
         console.log("ParamBlock value", value, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta);
+        console.log("value.length", value.length);
         var result;
         var structure = {};
 
@@ -2929,13 +2930,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result = value;
 
-        return result;
+        return result; 
     };
 
     p.ParamTextInput = function(value, paramMeta, paramDefMeta) {
         console.log("ParamTextInput value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
-        var spaces = value.split(" "); 
-        console.log("value", value.length, "spaces", spaces.length);
+        var spaces = value.split(/ /); 
+        if(value)
+            console.log("value", value.length, "spaces", spaces.length);
 
         if(value.length == spaces.length-1) {
             console.log(" space ")

@@ -427,7 +427,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldTextInput = function(dataParam, textParam) {
-        var spaces = dataParam.split(" "); 
+        var spaces = dataParam.split(/ /);  
         console.log("dataParam.length", dataParam.length);
 
         if(dataParam.length == spaces.length-1) {

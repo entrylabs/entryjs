@@ -13530,7 +13530,7 @@ Entry.BlockToPyParser = function(b) {
     return a;
   };
   b.FieldTextInput = function(a, b) {
-    var c = a.split(" ");
+    var c = a.split(/ /);
     console.log("dataParam.length", a.length);
     a.length == c.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("dataParam", a));
     b && b.converter && (a = b.converter(null, a));
@@ -14997,6 +14997,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamBlock = function(a, b, c) {
     console.log("ParamBlock value", a, "paramMeta", b, "paramDefMeta", c);
+    console.log("value.length", a.length);
     b = {};
     var e = a, f = [];
     if (!0 === a) {
@@ -15029,8 +15030,8 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamTextInput = function(a, b, c) {
     console.log("ParamTextInput value, paramMeta, paramDefMeta", a, b, c);
-    b = a.split(" ");
-    console.log("value", a.length, "spaces", b.length);
+    b = a.split(/ /);
+    a && console.log("value", a.length, "spaces", b.length);
     a.length == b.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("value space", a));
     return a;
   };
