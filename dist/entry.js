@@ -13537,11 +13537,7 @@ Entry.BlockToPyParser = function(b) {
   };
   b.FieldTextInput = function(a, b) {
     console.log("dataParam FieldTextInput", a);
-    if ("number" != typeof a) {
-      var c = a.split(/ /);
-      console.log("dataParam.length", a.length);
-      a.length == c.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("dataParam", a));
-    }
+    "number" != typeof a && (a = a.replace("\t", "    "));
     b && b.converter && (a = b.converter(null, a));
     return a;
   };
@@ -14242,8 +14238,10 @@ Entry.PyToBlockParser = function(b) {
             }
           }
         } else {
-          "Entry" == f.object.name && ("send_signal" == f.property.name ? (m = a.arguments[0]) && m.value && Entry.TextCodingUtil.createMessage(m.value) : "send_signal_wait" == f.property.name && (m = a.arguments[0]) && m.value && Entry.TextCodingUtil.createMessage(m.value));
+          "Entry" == f.object.name && (console.log("callee.property.name", f.property.name), console.log("callee.property.component", a), "send_signal" == f.property.name ? (m = a.arguments[0]) && m.value && Entry.TextCodingUtil.createMessage(m.value) : "send_signal_wait" == f.property.name && (m = a.arguments[0]) && m.value && Entry.TextCodingUtil.createMessage(m.value));
         }
+      } else {
+        f && "when_get_signal" == f.name && (m = a.arguments[0]) && m.value && Entry.TextCodingUtil.createMessage(m.value);
       }
       if (f.property) {
         if ("range" == f.property.name) {
@@ -15003,7 +15001,6 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamBlock = function(a, b, c) {
     console.log("ParamBlock value", a, "paramMeta", b, "paramDefMeta", c);
-    console.log("value.length", a.length);
     b = {};
     var e = a, f = [];
     if (!0 === a) {
@@ -15036,7 +15033,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamTextInput = function(a, b, c) {
     console.log("ParamTextInput value, paramMeta, paramDefMeta", a, b, c);
-    "number" != typeof a && (b = a.split(/ /), a && console.log("value", a.length, "spaces", b.length), a.length == b.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("value space", a)));
+    "number" != typeof a && (a = a.replace(/\t/gi, "    "));
     console.log("ParamTextInput result", a);
     return a;
   };

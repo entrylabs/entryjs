@@ -429,6 +429,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 }
                 else if(callee.object.name == "Entry") {
+                    console.log("callee.property.name", callee.property.name);
+                    console.log("callee.property.component", component);
                     if(callee.property.name == "send_signal") {
                         var argument = component.arguments[0];
                         if(argument && argument.value) {
@@ -440,6 +442,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         if(argument && argument.value) {
                             Entry.TextCodingUtil.createMessage(argument.value);
                         }
+                    }
+                }
+            }
+            else if(callee) {
+                if(callee.name == "when_get_signal") {
+                    var argument = component.arguments[0];
+                    if(argument && argument.value) {
+                        Entry.TextCodingUtil.createMessage(argument.value);
                     }
                 }
             }
@@ -2823,7 +2833,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var value = component.value;
 
         if(!paramMeta) {
-            var paramMeta = { type: "Block" };
+            var paramMeta = { type: "Block" }; 
             if(!paramDefMeta) {
                 if(typeof value == "number")
                     var paramDefMeta = { type: "number" };
@@ -2868,7 +2878,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamBlock = function(value, paramMeta, paramDefMeta) {
         console.log("ParamBlock value", value, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta);
-        console.log("value.length", value.length);
+        
+        
         var result;
         var structure = {};
 
@@ -2934,17 +2945,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamTextInput = function(value, paramMeta, paramDefMeta) {
         console.log("ParamTextInput value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
-        if(typeof value != "number") {
-            var spaces = value.split(/ /); 
-            if(value)
-                console.log("value", value.length, "spaces", spaces.length);
-
-            if(value.length == spaces.length-1) {
-                console.log(" space ")
-                value = '"()"'.replace('()', value);
-                console.log("value space", value);
-            }
-        }
+        if(typeof value != "number")
+            value = value.replace(/\t/gi, '    ');
         
         var result = value; 
         console.log("ParamTextInput result", result);
