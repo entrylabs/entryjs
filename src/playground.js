@@ -833,15 +833,15 @@ Entry.Playground.prototype.injectObject = function(object) {
  * Inject code
  */
 Entry.Playground.prototype.injectCode = function() {
-    var code = this.object.script; 
+    var code = this.object.script;
     var ws = this.mainWorkspace;
-    
+
     if(this.mainWorkspace.vimBoard._changedObject)
         this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject;
     else
         if(Entry.playground)
             this.mainWorkspace.vimBoard._currentObject = Entry.playground.object;
-    
+
     ws.changeBoardCode(code);
     if(Entry.playground)
         this.mainWorkspace.vimBoard._changedObject = Entry.playground.object;

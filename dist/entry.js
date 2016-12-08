@@ -7021,7 +7021,12 @@ Entry.Container.prototype.selectObject = function(b, a) {
     a.view_ && a.view_.removeClass("selectedObject");
     a.isSelected_ = !1;
   });
-  d ? (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0) : Entry.playground && Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.vimBoard && Entry.playground.mainWorkspace.vimBoard.clearText();
+  if (d) {
+    d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0;
+  } else {
+    var c = Entry.getMainworkspace();
+    c && c.vimBoard && c.vimBoard.clearText();
+  }
   Entry.playground && Entry.playground.injectObject(d);
   "minimize" != Entry.type && Entry.engine.isState("stop") && Entry.stage.selectObject(d);
 };
@@ -8863,7 +8868,6 @@ Entry.EntryObject.prototype.generateView = function() {
     c = Entry.createElement("input");
     c.bindOnClick(function(a) {
       a.preventDefault();
-      Entry.container.selectObject(d.id);
       this.readOnly || (this.focus(), this.select());
     });
     c.addClass("entryObjectNameWorkspace");
@@ -12107,7 +12111,7 @@ Entry.PyHint = function(b) {
   this.scope._global = [];
   this.scope._list = [];
   for (var a in b) {
-    b[a].syntax && 0 > a.indexOf("%") ? this.scope._global.push(a) : "if" === a.substr(0, 2) && this.scope._global.push(a);
+    b[a].syntax && 0 > a.indexOf("%") ? this.scope._global.push(a) : "if" === a.substr(0, 2) ? this.scope._global.push(a) : "while" === a.substr(0, 5) && this.scope._global.push(a);
   }
   this.addScope("Entry");
   this.addScope("random");

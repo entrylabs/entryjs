@@ -386,18 +386,16 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     }
 
     this.mapObjectOnScene(function(object) {
-        if (object.view_)
-            object.view_.removeClass('selectedObject');
+        object.view_ && object.view_.removeClass('selectedObject');
         object.isSelected_ = false;
     });
+
     if (object) {
-        if (object.view_)
-            object.view_.addClass('selectedObject');
+        object.view_ && object.view_.addClass('selectedObject');
         object.isSelected_ = true;
     } else {
-        if(Entry.playground && Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.vimBoard) {
-            Entry.playground.mainWorkspace.vimBoard.clearText();
-        }
+        var workspace = Entry.getMainworkspace();
+        workspace && workspace.vimBoard && workspace.vimBoard.clearText();
     }
 
     if (Entry.playground)
