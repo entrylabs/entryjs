@@ -14,8 +14,8 @@ Entry.HW = function() {
 
     this.connectTrial = 0;
     this.isFirstConnect = true;
-
-    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.0_Setup.exe";
+    this.requireVerion = 'v1.6.1';
+    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.3_Setup.exe";
     this.hwPopupCreate();
     this.initSocket();
     this.connected = false;
@@ -95,7 +95,7 @@ p.connectWebSocket = function(url, option) {
                 }
                 default: {
                     var data = JSON.parse(msg.data);
-                    hw.checkDevice(data);
+                    hw.checkDevice(data, msg.version);
                     hw.updatePortData(data);
                     break;
                 }
@@ -128,9 +128,12 @@ p.initSocket = function() {
         }
         if(location.protocol.indexOf('https') > -1) {
             this.tlsSocketIo = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{ 'client': true, 'roomId' : this.sessionRoomId } });
-        } else if(Entry.isOffline){
+        } 
+        // 일단 보류(?)
+        /*else if(Entry.isOffline){
             this.tlsSocketIo = this.connectWebSocket('http://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
-        } else {
+        }*/ 
+        else {
             try {
                 this.socketIo = this.connectWebSocket('http://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
             } catch(e) { }
@@ -161,13 +164,15 @@ p.retryConnect = function() {
 };
 
 p.openHardwareProgram = function() {
+    var hw = this;
     this.isOpenHardware = true;
     Entry.HW.TRIAL_LIMIT = 5;
-    if(this.socket) {
-        this.executeHardware();
-    } else {
-        this.executeHardware();
-        this.initSocket();
+    this.executeHardware();
+    
+    if(!this.socket || !this.socket.connected) {
+        setTimeout(function() {
+            hw.initSocket();
+        }, 1000);
     }
 }
 
@@ -296,9 +301,12 @@ p.downloadConnector = function() {
 };
 
 p.downloadGuide = function() {
-    var url = "http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC-%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%EC%97%B0%EA%B2%B0%EB%A7%A4%EB%89%B4%EC%96%BC_16_08_17.hwp";
-    var win = window.open(url, '_blank');
-    win.focus();
+    var url = "http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC%20%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%20%EC%97%B0%EA%B2%B0%20%EB%A7%A4%EB%89%B4%EC%96%BC(%EC%98%A8%EB%9D%BC%EC%9D%B8%EC%9A%A9).pdf";
+    var anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'download';
+    anchor.click();
+    anchor = undefined;
 };
 
 p.downloadSource = function() {
@@ -313,12 +321,17 @@ p.setZero = function() {
     Entry.hw.hwModule.setZero();
 };
 
-p.checkDevice = function(data) {
+p.checkDevice = function(data, version) {
     if (data.company === undefined)
         return;
     var key = [Entry.Utils.convertIntToHex(data.company), '.', Entry.Utils.convertIntToHex(data.model)].join('');
     if (key == this.selectedDevice)
         return;
+
+    if(Entry.Utils.isNewVersion(version, this.requireVerion)) {
+        this.popupHelper.show('newVersion', true);
+    }
+
     this.selectedDevice = key;
     this.hwModule = this.hwInfo[key];
     Entry.dispatchEvent("hwChanged");
@@ -486,17 +499,20 @@ p.executeHardware = function() {
     function executeChrome(customUrl) {
         var isInstalled = false;
         window.focus();
-        window.onblur = function() {
+        $(window).one('blur', function() {
             isInstalled = true;
-        };
-
+        });
+        Entry.dispatchEvent('workspaceUnbindUnload', true);
         location.assign(encodeURI(customUrl));
         setTimeout(function() {
-            if (isInstalled == false || navigator.userAgent.indexOf("Edge") > 0) {
+            Entry.dispatchEvent('workspaceBindUnload', true);
+        }, 100);
+        setTimeout(function() {
+            if (isInstalled == false) {
                 hw.popupHelper.show('hwDownload', true);
             }
             window.onblur = null;
-        }, 1500);
+        }, 3000);
     }
 }
 
@@ -556,9 +572,9 @@ p.hwPopupCreate = function () {
                 var $this = $(this);
                 if($this.hasClass('popupOkBtn')) {
                     hw.downloadConnector();
-                } else {
-                    hw.popupHelper.hide('newVersion');
                 }
+
+                hw.popupHelper.hide('newVersion');
             });
 
             popup.append(content);
@@ -611,9 +627,9 @@ p.hwPopupCreate = function () {
                 var $this = $(this);
                 if($this.hasClass('popupOkBtn')) {
                     hw.downloadConnector();
-                } else {
-                    hw.popupHelper.hide('hwDownload');
                 }
+
+                hw.popupHelper.hide('hwDownload');
             });
 
             popup.append(content);

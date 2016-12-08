@@ -4919,7 +4919,6 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryTextFontSelect {
   display: inline-block;
-  width: 96px;
   height: 32px;
   border: 1px solid #808080;
   border-radius: 4px;
@@ -4929,6 +4928,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryTextFontSelecter {
   margin-top: 5px;
   margin-left: 2px;
+  width: 120px;
 }
 .entryFontToggle {
   display: inline-block;
@@ -5099,7 +5099,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   width: 15px;
   height: 4px;
   margin-top: -15px;
-  margin-left: 345px;
+  margin-left: 373px;
 }
 .entryPlayground_bgColorDiv {
   position: absolute;
@@ -5111,12 +5111,12 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryPlayground_textBox {
   margin-top: 5px;
   height: 33px;
-  width: 400px;
+  width: 426px;
 }
 .entryPlayground_textArea {
   margin-top: 5px;
   height: 120px;
-  width: 400px;
+  width: 426px;
   resize: none;
 }
 .entryPlaygroundFontSizeWrapper {
@@ -5160,7 +5160,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   z-index: 10;
   cursor: pointer;
   margin-top: -5px;
-  margin-left: 335px;
+  margin-left: 362px;
   padding: 20px 5px;
   position: absolute;
   background-image: url("../images/text_color_bg.png");
@@ -5740,7 +5740,12 @@ input.entryObjectNameWorkspace:-moz-read-only {
   position: relative;
   text-align: center;
 }
-.entryVariableAddWorkspace:hover {
+.entryVariableAddWorkspace.disable {
+  color: #bdbdbd;
+  cursor: default;
+  pointer-events: none;
+}
+.entryVariableAddWorkspace:not(.disable):hover {
   background-color: #d3d3d3;
   color: #333;
 }

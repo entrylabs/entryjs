@@ -271,8 +271,10 @@ EntryStatic.getAllBlocks = function() {
                 "download_guide",
                 "arduino_download_source",
                 "arduino_connected",
+                "arduino_connect",
                 "arduino_reconnect",
                 "arduino_open",
+                "arduino_cloud_pc_open",
                 "arduino_get_number_sensor_value",
                 "arduino_get_digital_value",
                 "arduino_toggle_led",
@@ -280,6 +282,7 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_convert_scale",
                 //arduinoExt
                 "arduino_ext_get_analog_value",
+                "arduino_ext_get_analog_value_map",
                 "arduino_ext_get_ultrasonic_value",
                 "arduino_ext_get_digital",
                 "arduino_ext_toggle_led",

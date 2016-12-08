@@ -1175,55 +1175,60 @@ Entry.Utils.isChrome = function() {
 
 Entry.Utils.waitForWebfonts = function(fonts, callback) {
     var loadedFonts = 0;
-    for(var i = 0, l = fonts.length; i < l; ++i) {
-        (function(font) {
-            var node = document.createElement('span');
-            // Characters that vary significantly among different fonts
-            node.innerHTML = 'giItT1WQy@!-/#';
-            // Visible - so we can measure it - but not on the screen
-            node.style.position      = 'absolute';
-            node.style.left          = '-10000px';
-            node.style.top           = '-10000px';
-            // Large font size makes even subtle changes obvious
-            node.style.fontSize      = '300px';
-            // Reset any font properties
-            node.style.fontFamily    = 'sans-serif';
-            node.style.fontVariant   = 'normal';
-            node.style.fontStyle     = 'normal';
-            node.style.fontWeight    = 'normal';
-            node.style.letterSpacing = '0';
-            document.body.appendChild(node);
+    if (fonts && fonts.length) {
+        for(var i = 0, l = fonts.length; i < l; ++i) {
+            (function(font) {
+                var node = document.createElement('span');
+                // Characters that vary significantly among different fonts
+                node.innerHTML = 'giItT1WQy@!-/#';
+                // Visible - so we can measure it - but not on the screen
+                node.style.position      = 'absolute';
+                node.style.left          = '-10000px';
+                node.style.top           = '-10000px';
+                // Large font size makes even subtle changes obvious
+                node.style.fontSize      = '300px';
+                // Reset any font properties
+                node.style.fontFamily    = 'sans-serif';
+                node.style.fontVariant   = 'normal';
+                node.style.fontStyle     = 'normal';
+                node.style.fontWeight    = 'normal';
+                node.style.letterSpacing = '0';
+                document.body.appendChild(node);
 
-            // Remember width with no applied web font
-            var width = node.offsetWidth;
+                // Remember width with no applied web font
+                var width = node.offsetWidth;
 
-            node.style.fontFamily = font;
+                node.style.fontFamily = font;
 
-            var interval;
-            function checkFont() {
-                // Compare current width with original width
-                if(node && node.offsetWidth != width) {
-                    ++loadedFonts;
-                    node.parentNode.removeChild(node);
-                    node = null;
-                }
-
-                // If all fonts have been loaded
-                if(loadedFonts >= fonts.length) {
-                    if(interval) {
-                        clearInterval(interval);
+                var interval;
+                function checkFont() {
+                    // Compare current width with original width
+                    if(node && node.offsetWidth != width) {
+                        ++loadedFonts;
+                        node.parentNode.removeChild(node);
+                        node = null;
                     }
-                    if(loadedFonts == fonts.length) {
-                        callback();
-                        return true;
-                    }
-                }
-            };
 
-            if(!checkFont()) {
-                interval = setInterval(checkFont, 50);
-            }
-        })(fonts[i]);
+                    // If all fonts have been loaded
+                    if(loadedFonts >= fonts.length) {
+                        if(interval) {
+                            clearInterval(interval);
+                        }
+                        if(loadedFonts == fonts.length) {
+                            callback();
+                            return true;
+                        }
+                    }
+                };
+
+                if(!checkFont()) {
+                    interval = setInterval(checkFont, 50);
+                }
+            })(fonts[i]);
+        }
+    } else {
+        callback && callback();
+        return true;
     }
 };
 window.requestAnimFrame = (function(){
@@ -1267,4 +1272,32 @@ Entry.Utils.convertIntToHex = function(num) {
 Entry.Utils.hasSpecialCharacter = function(str) {
     var reg = /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g;
     return reg.test(str);
+}
+
+Entry.Utils.isNewVersion = function(old_version, new_version) {
+    try {
+        old_version = old_version.replace('v', '');
+        new_version = new_version.replace('v', '');
+        var arrOld = old_version.split('.');
+        var arrNew = new_version.split('.');
+        var count = (arrOld.length < arrNew.length) ? arrOld.length : arrNew.length;
+        var isNew = false;
+        var isSame = true;
+        for(var i = 0; i < count; i++) {
+            if(Number(arrOld[i]) < Number(arrNew[i])) {
+                isNew = true;
+                isSame = false;
+            } else if(Number(arrOld[i]) > Number(arrNew[i])) {
+                isSame = false;
+            }
+        }
+
+        if(isSame && (arrOld.length < arrNew.length)) {
+            isNew = true;
+        }
+
+        return isNew;
+    } catch(e) {
+        return false;
+    }
 }
