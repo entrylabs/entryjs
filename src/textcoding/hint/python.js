@@ -19,6 +19,8 @@ Entry.PyHint = function(syntax) {
             this.scope._global.push(key)
         else if (key.substr(0, 2) === "if")
             this.scope._global.push(key)
+        else if (key.substr(0, 5) === "while")
+            this.scope._global.push(key)
     }
     this.addScope("Entry");
     this.addScope("random");
