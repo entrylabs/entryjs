@@ -4,7 +4,7 @@
             color: '#00B200',
             skeleton: 'basic_string_field',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1',
             params: [{
                 type: 'Dropdown',
@@ -43,7 +43,7 @@
             color: '#D126BD',
             skeleton: 'basic',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1 포트의 서보모터를 %2 도 이동 %3',
             params: [{
                 type: 'Dropdown',
@@ -94,7 +94,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1모터를 %2 %3의 속도로 %4초 동안 회전 %5',
             params: [{
                 type: 'Dropdown',
@@ -212,7 +212,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1모터를 %2 %3의 속도로 계속 회전 %4',
             params: [{
                 type: 'Dropdown',
@@ -288,7 +288,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1모터를 정지 %2',
             params: [{
                 type: 'Dropdown',
@@ -331,7 +331,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 접촉 센서 값',
             params: [{
                 type: 'Dropdown',
@@ -404,7 +404,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 빛 감지 센서 값',
             params: [{
                 type: 'Dropdown',
@@ -506,7 +506,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 소리 센서에 감지되는 소리 값',
             params: [{
                 type: 'Dropdown',
@@ -608,7 +608,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 적외선 센서에 감지되는 크기 값',
             params: [{
                 type: 'Dropdown',
@@ -712,7 +712,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 발광다이오드를 %2초 동안 %3 %4',
             params: [{
                 type: 'Dropdown',
@@ -799,7 +799,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 발광다이오드를 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -860,7 +860,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 발광다이오드를 %2번 포트의 %3~%4의 범위로 켜기%5',
             params: [{
                 type: 'Dropdown',
@@ -937,7 +937,7 @@
             color: '#FF8D10',
             skeleton: 'basic',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 발광다이오드를 %2의 밝기로 정하기 %3',
             params: [{
                 type: 'Dropdown',
@@ -992,7 +992,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '%1번 포트의 값',
             params: [{
                 type: 'Dropdown',
@@ -1022,7 +1022,7 @@
             color: '#FC327F',
             skeleton: 'basic',
             statements: [],
-            isNotFor: [ 'Neobot' ],
+            isNotFor: [ 'neobot' ],
             template: '멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4',
             params: [{
                 type: 'Dropdown',
