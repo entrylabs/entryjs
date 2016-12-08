@@ -2066,7 +2066,7 @@ Entry.TextCodingUtil = {};
             var v = targets[i];
             var name = v.name_;
             var value = v.value_;
-            if(value != 0) {
+            //if(value != 0) {
                 if(v.object_) {
                     if(v.object_ == currentObject.id) {
                         name = "self." + name; 
@@ -2079,7 +2079,7 @@ Entry.TextCodingUtil = {};
                     value = '"()"'.replace('()', value);
                 
                 result += name + " = " + value + "\n";
-            }
+            //}
         }
 
         return result;
@@ -2118,7 +2118,7 @@ Entry.TextCodingUtil = {};
             var name = l.name_;
             var value = "";
             var lArray = l.array_;
-            if(lArray.length != 0) {
+            //if(lArray.length != 0) {
                 if(l.object_) {
                     if(l.object_ == currentObject.id) {
                         name = "self." + name;
@@ -2141,7 +2141,7 @@ Entry.TextCodingUtil = {};
                 }
 
                 result += name + " = [" + value + "]" + "\n";
-            }
+            //}
         }
 
         return result;

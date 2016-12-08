@@ -13143,17 +13143,15 @@ Entry.TextCodingUtil = {};
     if (c) {
       for (var c = c.variables_ || [], e = c.length - 1;0 <= e;e--) {
         var f = c[e], g = f.name_, h = f.value_;
-        if (0 != h) {
-          if (f.object_) {
-            if (f.object_ == b.id) {
-              g = "self." + g;
-            } else {
-              continue;
-            }
+        if (f.object_) {
+          if (f.object_ == b.id) {
+            g = "self." + g;
+          } else {
+            continue;
           }
-          "string" === typeof h && (h = '"()"'.replace("()", h));
-          a += g + " = " + h + "\n";
         }
+        "string" === typeof h && (h = '"()"'.replace("()", h));
+        a += g + " = " + h + "\n";
       }
       return a;
     }
@@ -13164,23 +13162,21 @@ Entry.TextCodingUtil = {};
       targets = c.lists_ || [];
       for (c = targets.length - 1;0 <= c;c--) {
         var e = targets[c], f = e.name_, g = "", h = e.array_;
-        if (0 != h.length) {
-          if (e.object_) {
-            if (e.object_ == b.id) {
-              f = "self." + f;
-            } else {
-              continue;
-            }
+        if (e.object_) {
+          if (e.object_ == b.id) {
+            f = "self." + f;
+          } else {
+            continue;
           }
-          for (var k in h) {
-            var e = h[k].data, l = parseInt(e);
-            isNaN(l) || (e = l);
-            "string" === typeof e && (e = '"' + e + '"');
-            g += e;
-            k != h.length - 1 && (g += ", ");
-          }
-          a += f + " = [" + g + "]\n";
         }
+        for (var k in h) {
+          var e = h[k].data, l = parseInt(e);
+          isNaN(l) || (e = l);
+          "string" === typeof e && (e = '"' + e + '"');
+          g += e;
+          k != h.length - 1 && (g += ", ");
+        }
+        a += f + " = [" + g + "]\n";
       }
       return a;
     }
