@@ -15,9 +15,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
     this.blockSyntax = blockSyntax;
 
-    if(Entry.playground)
-    this._currentObject = Entry.playground.object;
-
     var variableMap = new Entry.Map();
     this._variableMap = variableMap;
 
@@ -39,10 +36,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
 };
 
 (function(p){
-    p.Program = function(astArr) {
+    p.Program = function(astArr) { 
         console.log("this.syntax", this.blockSyntax);
+        this._currentObject = Entry.playground.mainWorkspace.vimBoard._currentObject;
+        console.log("_currentObject", this._currentObject);
         try {
-            this._code = [];
+            this._code = []; 
 
             this._threadCount = 0;
             this._blockCount = 0;
@@ -807,7 +806,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 memberParam.value = pName;
                                 var param = this['Literal']
                                     (memberParam, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], textParams[paramIndex[pi]]);
-                                console.log("param vvv", param);
                             }
                         }
                     }
@@ -918,7 +916,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             }
                             else {
                                 if(param.property.callee == "__pythonRuntime.ops.subscriptIndex") {
-                                    console.log("mmm param", param);
                                     if(!param.object.type) {
                                         var name = param.object.name;
                                         if(!Entry.TextCodingUtil.isGlobalListExisted(name, this._currentObject)) {

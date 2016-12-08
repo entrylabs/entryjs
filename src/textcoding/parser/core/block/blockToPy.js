@@ -443,7 +443,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.isFunc = function(block) {
-        var tokens = block.data.type.split('_');
+        if(block.data)
+            var tokens = block.data.type.split('_');
         var prefix = tokens[0];
         var funcId = tokens[1];
 

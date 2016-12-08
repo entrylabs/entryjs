@@ -2043,7 +2043,7 @@ Entry.TextCodingUtil = {};
         //inspect variables
         var targets = vc.variables_ || [];
         //case for value is 0
-        for (var i=targets.length-1; i>=0; i--) { 
+        /*for (var i=targets.length-1; i>=0; i--) { 
             var v = targets[i];
             var name = v.name_;
             var value = v.value_;
@@ -2060,7 +2060,7 @@ Entry.TextCodingUtil = {};
             }
         }
         if(result.length != 0)
-            result += 0 + '\n';
+            result += 0 + '\n';*/
 
         for (var i=targets.length-1; i>=0; i--) { 
             var v = targets[i];
@@ -2095,7 +2095,7 @@ Entry.TextCodingUtil = {};
         //inspect lists
         targets = vc.lists_ || [];
         //case for value is empty, []
-        for (var i=targets.length-1; i>=0; i--) {
+        /*for (var i=targets.length-1; i>=0; i--) {
             var l = targets[i];
             var name = l.name_;
             var value = "";
@@ -2111,7 +2111,7 @@ Entry.TextCodingUtil = {};
             }         
         }
         if(result.length != 0)
-            result += '[]' + '\n';
+            result += '[]' + '\n';*/
         
         for (var i=targets.length-1; i>=0; i--) {
             var l = targets[i];

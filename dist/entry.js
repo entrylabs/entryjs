@@ -13143,21 +13143,7 @@ Entry.TextCodingUtil = {};
     if (c) {
       for (var c = c.variables_ || [], e = c.length - 1;0 <= e;e--) {
         var f = c[e], g = f.name_, h = f.value_;
-        if (0 == h) {
-          if (f.object_) {
-            if (f.object_ == b.id) {
-              g = "self." + g;
-            } else {
-              continue;
-            }
-          }
-          "string" === typeof h && '"()"'.replace("()", h);
-          a += g + " = ";
-        }
-      }
-      0 != a.length && (a += "0\n");
-      for (e = c.length - 1;0 <= e;e--) {
-        if (f = c[e], g = f.name_, h = f.value_, 0 != h) {
+        if (0 != h) {
           if (f.object_) {
             if (f.object_ == b.id) {
               g = "self." + g;
@@ -13178,20 +13164,7 @@ Entry.TextCodingUtil = {};
       targets = c.lists_ || [];
       for (c = targets.length - 1;0 <= c;c--) {
         var e = targets[c], f = e.name_, g = "", h = e.array_;
-        if (0 == h.length) {
-          if (e.object_) {
-            if (e.object_ == b.id) {
-              f = "self." + f;
-            } else {
-              continue;
-            }
-          }
-          a += f + " = ";
-        }
-      }
-      0 != a.length && (a += "[]\n");
-      for (c = targets.length - 1;0 <= c;c--) {
-        if (e = targets[c], f = e.name_, g = "", h = e.array_, 0 != h.length) {
+        if (0 != h.length) {
           if (e.object_) {
             if (e.object_ == b.id) {
               f = "self." + f;
@@ -13566,7 +13539,10 @@ Entry.BlockToPyParser = function(b) {
     return a;
   };
   b.isFunc = function(a) {
-    return "func" == a.data.type.split("_")[0] ? !0 : !1;
+    if (a.data) {
+      var b = a.data.type.split("_")
+    }
+    return "func" == b[0] ? !0 : !1;
   };
   b.isRegisteredFunc = function(a) {
     a = a.data.type.split("_")[1];
@@ -14084,7 +14060,6 @@ Entry.JsToBlockParser = function(b) {
 Entry.PyToBlockParser = function(b) {
   this._type = "PyToBlockParser";
   this.blockSyntax = b;
-  Entry.playground && (this._currentObject = Entry.playground.object);
   this._variableMap = new Entry.Map;
   this._funcMap = new Entry.Map;
   this._paramQ = new Entry.Queue;
@@ -14096,6 +14071,8 @@ Entry.PyToBlockParser = function(b) {
 (function(b) {
   b.Program = function(a) {
     console.log("this.syntax", this.blockSyntax);
+    this._currentObject = Entry.playground.mainWorkspace.vimBoard._currentObject;
+    console.log("_currentObject", this._currentObject);
     try {
       this._code = [];
       this._blockCount = this._threadCount = 0;
@@ -14445,13 +14422,13 @@ Entry.PyToBlockParser = function(b) {
       }
       for (var z in arguments) {
         y = !1, m = arguments[z], console.log("kkk argument", m, "typeof", typeof m), m && (console.log("CallExpression argument", m, "typeof", typeof m), m.calleeName = k, B || (B = []), h = this[m.type](m, x[v[g]], u[v[g]], B[v[g]]), console.log("callexpression callee", f, "param", h), console.log("calleeName", k, "param", h), h && h.data && (h = h.data), console.log("callex block one multi", n), console.log("callex param syntax", r, "order", v, "value", v[g], "param", h), console.log("pi", g), 
-        h && (m = q.keyOption, console.log("keyOption", m), m || 0 === m ? (console.log("param", h), h.object && h.property.name ? (t = h.object.name + "." + h.property.name, m == t && (y = !0)) : "text" != h.type && "number" != h.type || !h.params || 0 == h.params.length || (t = h.params[0], console.log("pName", t), m == t && (y = !0))) : h.object && h.property.name && (t = h.object.name + "." + h.property.name, h = {}, h.value = t, h = this.Literal(h, x[v[g]], u[v[g]], B[v[g]]), console.log("param vvv", 
-        h))), y || (y = v[g++], void 0 !== y && (c[y] = h, console.log("callex realtime params", c), h && (h.object && h.object.object ? "self" == h.object.object.name ? (y = h.object.property.name, Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 11), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = y = h.object.object.name, 
-        console.log("errorId", 12), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : h.object ? f.property && "in" == f.property.name ? "self" == h.object.name ? (y = h.property.name, Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 13), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, 
+        h && (m = q.keyOption, console.log("keyOption", m), m || 0 === m ? (console.log("param", h), h.object && h.property.name ? (t = h.object.name + "." + h.property.name, m == t && (y = !0)) : "text" != h.type && "number" != h.type || !h.params || 0 == h.params.length || (t = h.params[0], console.log("pName", t), m == t && (y = !0))) : h.object && h.property.name && (t = h.object.name + "." + h.property.name, h = {}, h.value = t, h = this.Literal(h, x[v[g]], u[v[g]], B[v[g]]))), y || (y = v[g++], 
+        void 0 !== y && (c[y] = h, console.log("callex realtime params", c), h && (h.object && h.object.object ? "self" == h.object.object.name ? (y = h.object.property.name, Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 11), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = y = h.object.object.name, console.log("errorId", 
+        12), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : h.object ? f.property && "in" == f.property.name ? "self" == h.object.name ? (y = h.property.name, Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 13), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, 
         t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = y = h.object.name, console.log("errorId", 14), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : f.property && "len" == f.property.name ? "self" == h.object.name ? (y = h.property.name, "len#length_of_string" == r ? Entry.TextCodingUtil.isLocalVariableExisted(y, this._currentObject) || Entry.TextCodingUtil.isFuncParam(y) || 
         (t = y, console.log("errorId", 15), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : "len" != r || Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 16), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : 
-        (t = y = h.object.name, console.log("errorId", 17), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : "__pythonRuntime.ops.subscriptIndex" == h.property.callee ? (console.log("mmm param", h), h.object.type || (y = h.object.name, Entry.TextCodingUtil.isGlobalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 18), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
-        Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)))) : "self" == h.object.name ? (y = h.property.name, Entry.TextCodingUtil.isLocalVariableExisted(y, this._currentObject) || (t = y, console.log("errorId", 19), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))) : "Hamster" != h.object.name && (t = y = h.object.name, 
+        (t = y = h.object.name, console.log("errorId", 17), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : "__pythonRuntime.ops.subscriptIndex" == h.property.callee ? h.object.type || (y = h.object.name, Entry.TextCodingUtil.isGlobalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 18), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
+        Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : "self" == h.object.name ? (y = h.property.name, Entry.TextCodingUtil.isLocalVariableExisted(y, this._currentObject) || (t = y, console.log("errorId", 19), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))) : "Hamster" != h.object.name && (t = y = h.object.name, 
         console.log("errorId", 20), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : h.name && "object" == typeof h && (f.property && "in" == f.property.name ? (y = h.name, Entry.TextCodingUtil.isGlobalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 21), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, 
         t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : f.property && "len" == f.property.name ? (y = h.name, "len#length_of_string" == r ? Entry.TextCodingUtil.isGlobalVariableExisted(y) || Entry.TextCodingUtil.isFuncParam(y) || (t = y, console.log("errorId", 22), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : "len" != r || Entry.TextCodingUtil.isGlobalListExisted(y, 
         this._currentObject) || (t = y, console.log("errorId", 23), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (y = h.name, Entry.TextCodingUtil.isGlobalVariableExisted(y) || Entry.TextCodingUtil.isFuncParam(y) || (t = y, console.log("errorId", 24), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, 
@@ -27074,7 +27051,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
   b.codeToText = function(a, b) {
     var c;
     b && (this._mode = b.runType);
-    Entry.playground && (c = (c = Entry.playground.object) ? "# " + c.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc" : "# \ud30c\uc774\uc36c \ucf54\ub4dc");
+    c = this._currentObject ? "# " + this._currentObject.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc" : "# \ud30c\uc774\uc36c \ucf54\ub4dc";
     var e = b.textType;
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
@@ -27807,9 +27784,10 @@ Entry.Playground.prototype.injectObject = function(b) {
   }
 };
 Entry.Playground.prototype.injectCode = function() {
-  var b = this.mainWorkspace;
-  b.changeBoardCode(this.object.script);
-  b.getBoard().adjustThreadsPosition();
+  var b = this.object.script, a = this.mainWorkspace;
+  Entry.playground && this.mainWorkspace.vimBoard && this.mainWorkspace.vimBoard && (this.mainWorkspace.vimBoard._currentObject = Entry.playground.object, console.log("Entry.playground", this.mainWorkspace.vimBoard._currentObject));
+  a.changeBoardCode(b);
+  a.getBoard().adjustThreadsPosition();
 };
 Entry.Playground.prototype.injectPicture = function() {
   var b = this.pictureListView_;
