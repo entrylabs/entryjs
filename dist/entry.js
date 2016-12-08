@@ -18476,7 +18476,7 @@ Entry.PyToBlockParser = function(b) {
       this._blockCount--, console.log("BlockCount VariableDeclarator --", this._blockCount);
     }
     var f = a.id, g = a.init;
-    if (!f.name || -1 == f.name.search("__params") && -1 == f.name.search("__formalsIndex") && -1 == f.name.search("__args") && -1 == f.name.search("__filbert")) {
+    if (!f.name || -1 == f.name.search("__params") && -1 == f.name.search("__formalsIndex") && -1 == f.name.search("__args")) {
       if (g.callee && g.callee.name && -1 != g.callee.name.search("__getParam")) {
         return b.isFuncParam = !0, b.name = f.name, b;
       }
@@ -18525,9 +18525,7 @@ Entry.PyToBlockParser = function(b) {
         d = f.name;
         "Literal" == g.type ? k = g.value : "Identifier" == g.type ? k = g.name : "UnaryExpression" == g.type ? (l = this[g.type](g), console.log("VariableDeclarator initData UnaryExpression", l), k = l.params[0], console.log("gl initData", l, "type", typeof k), "string" != typeof k && "number" != typeof k && (k = 0)) : k = 0;
         console.log("variable name", d, "value", k);
-        if (k || 0 == k) {
-          Entry.TextCodingUtil.isGlobalVariableExisted(d) ? (console.log("this is update", d, k), this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(d, k)) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(d, 0) : Entry.TextCodingUtil.createGlobalVariable(d, k);
-        }
+        !k && 0 != k || -1 != d.search("__filbert") || (Entry.TextCodingUtil.isGlobalVariableExisted(d) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(d, k) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(d, 0) : Entry.TextCodingUtil.createGlobalVariable(d, k));
         k = this[f.type](f);
         console.log("VariableDeclarator idData", k);
         b.id = k;
@@ -18886,6 +18884,7 @@ Entry.PyToBlockParser = function(b) {
   b.ParamTextInput = function(a, b, d) {
     console.log("ParamTextInput value, paramMeta, paramDefMeta", a, b, d);
     isNaN(a) && (b = a.split(/ /), a && console.log("value", a.length, "spaces", b.length), a.length == b.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("value space", a)));
+    console.log("ParamTextInput result", a);
     return a;
   };
   b.ParamColor = function(a, b, d, e) {

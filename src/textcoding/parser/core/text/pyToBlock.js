@@ -1632,7 +1632,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         // This is Function-Related Param
         if(id.name && (id.name.search("__params") != -1 || id.name.search("__formalsIndex") != -1 || 
-            id.name.search("__args") != -1 ||id.name.search("__filbert") != -1))
+            id.name.search("__args") != -1))
             return undefined;
 
         // This is Function-Related Param
@@ -1840,18 +1840,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("variable name", name, "value", value);
 
             if(value || value == 0) {
-                if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
-                    console.log("this is update", name, value);
-                    if(!this._funcLoop)
-                        Entry.TextCodingUtil.updateGlobalVariable(name, value);
-                }
-                else {
-                    if(!this._funcLoop) {
-                        Entry.TextCodingUtil.createGlobalVariable(name, value);
+                if(name.search("__filbert") == -1) {
+                    if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                        if(!this._funcLoop)
+                            Entry.TextCodingUtil.updateGlobalVariable(name, value);
                     }
                     else {
-                        value = 0;
-                        Entry.TextCodingUtil.createGlobalVariable(name, value);
+                        if(!this._funcLoop) {
+                            Entry.TextCodingUtil.createGlobalVariable(name, value);
+                        }
+                        else {
+                            value = 0;
+                            Entry.TextCodingUtil.createGlobalVariable(name, value);
+                        }
                     }
                 }
             }
@@ -2945,7 +2946,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
         
-        var result = value;
+        var result = value; 
+        console.log("ParamTextInput result", result);
 
         return result;
     };
@@ -2988,7 +2990,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(!result)
             result = value;
-
 
         if(textParam && textParam.codeMap) {
             if(isNaN(result)) {
