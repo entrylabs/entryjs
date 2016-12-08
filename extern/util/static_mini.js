@@ -239,6 +239,7 @@ EntryStatic.getAllBlocks = function() {
         ]
     }, {
         category: "arduino",
+        visible: false,
         blocks: [
             "arduino_download_connector",
             "download_guide",
