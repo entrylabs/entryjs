@@ -30,9 +30,13 @@ Entry.Vim = function(dom, textType) {
         if (Entry.hw.hwModule) {
             var name = Entry.hw.hwModule.name;
             name = name[0].toUpperCase() + name.slice(1);
+            if(name == "ArduinoExt") 
+                name = "Arduino";
             Entry.Vim.PYTHON_IMPORT_HW = "\nimport " + name + "\n";
+            Entry.Vim.INEDITABLE_LINE_PY = 4;
         } else {
             Entry.Vim.PYTHON_IMPORT_HW = "";
+            Entry.Vim.INEDITABLE_LINE_PY = 3;
         }
     }.bind(this));
 
@@ -50,6 +54,8 @@ Entry.Vim.PARSER_TYPE_JS_TO_BLOCK = 0;
 Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
 Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
 Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
+
+Entry.Vim.INEDITABLE_LINE_PY = 3;
 
 Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
 Entry.Vim.PYTHON_IMPORT_HW = "";
@@ -181,7 +187,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
 
         if(Entry.playground)
             this._currentObject = Entry.playground.object;
-        
+
         if(this._currentObject) 
             codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이썬 코드";
         else
@@ -212,7 +218,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         textCode += '\n';
         this.codeMirror.setValue(textCode);
         if(textType == Entry.Vim.TEXT_TYPE_PY)
-            this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 3, ch:0}, {readOnly: true});
+            this.codeMirror.getDoc().markText({line:0, ch:0}, {line: Entry.Vim.INEDITABLE_LINE_PY, ch:0}, {readOnly: true});
 
         var doc = this.codeMirror.getDoc();
         doc.setCursor({ line: doc.lastLine() - 1});

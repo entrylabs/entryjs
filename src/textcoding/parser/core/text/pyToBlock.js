@@ -2934,7 +2934,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamTextInput = function(value, paramMeta, paramDefMeta) {
         console.log("ParamTextInput value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
-        if(isNaN(value)) {
+        if(typeof value != "number") {
             var spaces = value.split(/ /); 
             if(value)
                 console.log("value", value.length, "spaces", spaces.length);
