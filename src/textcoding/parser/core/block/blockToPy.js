@@ -143,7 +143,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 var index = Number(blockParamIndex) - 1;
                 if(schemaParams[index]) {
                     if(schemaParams[index].type == "Indicator") {
-                        index++;
+                        index++; 
                     } else if(schemaParams[index].type == "Block") {
                         var param = this.Block(dataParams[index]).trim();
                         if(syntaxObj.textParams && syntaxObj.textParams[index])
@@ -206,7 +206,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     else result += statementToken; 
                 }
             } else {
-                console.log("blockTokenss", blockToken, "syntaxObj", syntaxObj, "i", i);
+                console.log("blockTokenss", blockToken, "syntaxObj", syntaxObj, "i", i, blockToken.length);
                 if(syntaxObj && syntaxObj.key == "repeat_basic" && i == 0) {
                     var forStmtTokens = blockToken.split(" ");
                     forStmtTokens[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++);
@@ -310,7 +310,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     }
 
                     dataParam = textParam.converter(key, value);
-                    if(textParam.paramType == "variable") {
+                    if(textParam.paramType == "variable" || textParam.paramType == "list") {
                         dataParam = dataParam.replace(/\"/g, "");
                     }
                     break;
@@ -361,7 +361,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
                     }
 
-                    if(textParam.paramType == "variable") {
+                    if(textParam.paramType == "variable" || textParam.paramType == "list") {
                         dataParam = dataParam.replace(/\"/g, "");
                     }
                     found = true; 
@@ -419,6 +419,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     p.FieldText = function(dataParam, textParam) {
         console.log("FieldText", dataParam, textParam);
+        console.log("FiedlText Length", dataParam.length);
         if(textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
 
@@ -426,7 +427,15 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldTextInput = function(dataParam, textParam) {
-        console.log("FieldTextInput", dataParam, textParam);
+        var spaces = dataParam.split(" "); 
+        console.log("dataParam.length", dataParam.length);
+
+        if(dataParam.length == spaces.length-1) {
+            console.log(" space ")
+            dataParam = '"()"'.replace('()', dataParam);
+            console.log("dataParam", dataParam);
+        }
+
         if(textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
 

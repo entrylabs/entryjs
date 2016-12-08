@@ -13401,7 +13401,7 @@ Entry.BlockToPyParser = function(b) {
                 n = f[q], 0 !== n.length && (h.test(n) ? (n = Number(n.split("$")[1]) - 1, b += Entry.TextCodingUtil.indent(this.Thread(a.statements[n]))) : b += n);
               }
             } else {
-              console.log("blockTokenss", f, "syntaxObj", c, "i", m), c && "repeat_basic" == c.key && 0 == m && (f = f.split(" "), f[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++), f = f.join(" ")), b += f;
+              console.log("blockTokenss", f, "syntaxObj", c, "i", m, f.length), c && "repeat_basic" == c.key && 0 == m && (f = f.split(" "), f[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++), f = f.join(" ")), b += f;
             }
           }
         }
@@ -13462,7 +13462,9 @@ Entry.BlockToPyParser = function(b) {
           console.log("dropdown key, value", c, e);
           isNaN(c) && isNaN(e) && "no" != b.caseType && ("upper" == b.caseType ? (c = c.toUpperCase(), e = e.toUpperCase()) : (c = c.toLowerCase(), e = e.toLowerCase()));
           a = b.converter(c, e);
-          "variable" == b.paramType && (a = a.replace(/\"/g, ""));
+          if ("variable" == b.paramType || "list" == b.paramType) {
+            a = a.replace(/\"/g, "");
+          }
           break;
         }
       }
@@ -13485,7 +13487,9 @@ Entry.BlockToPyParser = function(b) {
           console.log("dataParam convert result", a);
           b.codeMap && (a = a.replace(/\"/g, ""), c = eval(b.codeMap), e = c[a], console.log("codeMap", c, "code", e, "dataParam", a), e && (a = e), a = '"()"'.replace("()", a));
           isNaN(a) && "no" != b.caseType && (a = "upper" == b.caseType ? a.toUpperCase() : a.toLowerCase());
-          "variable" == b.paramType && (a = a.replace(/\"/g, ""));
+          if ("variable" == b.paramType || "list" == b.paramType) {
+            a = a.replace(/\"/g, "");
+          }
           c = !0;
           break;
         }
@@ -13521,11 +13525,14 @@ Entry.BlockToPyParser = function(b) {
   };
   b.FieldText = function(a, b) {
     console.log("FieldText", a, b);
+    console.log("FiedlText Length", a.length);
     b && b.converter && (a = b.converter(null, a));
     return a;
   };
   b.FieldTextInput = function(a, b) {
-    console.log("FieldTextInput", a, b);
+    var c = a.split(" ");
+    console.log("dataParam.length", a.length);
+    a.length == c.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("dataParam", a));
     b && b.converter && (a = b.converter(null, a));
     return a;
   };
@@ -14272,7 +14279,13 @@ Entry.PyToBlockParser = function(b) {
                           r = "len#length_of_string";
                         }
                       } else {
-                        "MemberExpression" == m.type && (Entry.TextCodingUtil.isGlobalVariableExisted(m.property.name) || Entry.TextCodingUtil.isLocalVariableExisted(m.property.name, this._currentObject)) && (r = "len#length_of_string");
+                        if ("MemberExpression" == m.type) {
+                          if (Entry.TextCodingUtil.isGlobalVariableExisted(m.property.name) || Entry.TextCodingUtil.isLocalVariableExisted(m.property.name, this._currentObject)) {
+                            r = "len#length_of_string";
+                          }
+                        } else {
+                          r = "len#length_of_string";
+                        }
                       }
                     }
                   }
@@ -14416,9 +14429,9 @@ Entry.PyToBlockParser = function(b) {
       }
       for (var z in arguments) {
         y = !1, m = arguments[z], console.log("kkk argument", m, "typeof", typeof m), m && (console.log("CallExpression argument", m, "typeof", typeof m), m.calleeName = k, B || (B = []), h = this[m.type](m, x[v[g]], u[v[g]], B[v[g]]), console.log("callexpression callee", f, "param", h), console.log("calleeName", k, "param", h), h && h.data && (h = h.data), console.log("callex block one multi", n), console.log("callex param syntax", r, "order", v, "value", v[g], "param", h), console.log("pi", g), 
-        h && (m = q.keyOption, console.log("keyOption", m), m || 0 === m ? (console.log("param", h), h.object && h.property.name ? (t = h.object.name + "." + h.property.name, m == t && (y = !0)) : "text" != h.type && "number" != h.type || !h.params || 0 == h.params.length || (t = h.params[0], console.log("pName", t), m == t && (y = !0))) : h.object && h.property.name && (t = h.object.name + "." + h.property.name, h = {}, h.value = t, h = this.Literal(h, x[v[g]], u[v[g]], B[v[g]]))), y || (y = v[g++], 
-        void 0 !== y && (c[y] = h, console.log("callex realtime params", c), h && (h.object && h.object.object ? "self" == h.object.object.name ? (y = h.object.property.name, Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 11), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = y = h.object.object.name, console.log("errorId", 
-        12), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : h.object ? f.property && "in" == f.property.name ? "self" == h.object.name ? (y = h.property.name, Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 13), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, 
+        h && (m = q.keyOption, console.log("keyOption", m), m || 0 === m ? (console.log("param", h), h.object && h.property.name ? (t = h.object.name + "." + h.property.name, m == t && (y = !0)) : "text" != h.type && "number" != h.type || !h.params || 0 == h.params.length || (t = h.params[0], console.log("pName", t), m == t && (y = !0))) : h.object && h.property.name && "self" != h.object.name && (t = h.object.name + "." + h.property.name, h = {}, h.value = t, h = this.Literal(h, x[v[g]], u[v[g]], 
+        B[v[g]]))), y || (y = v[g++], void 0 !== y && (c[y] = h, console.log("callex realtime params", c), h && (h.object && h.object.object ? "self" == h.object.object.name ? (y = h.object.property.name, Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 11), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = y = h.object.object.name, 
+        console.log("errorId", 12), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : h.object ? f.property && "in" == f.property.name ? "self" == h.object.name ? (y = h.property.name, Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 13), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, 
         t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = y = h.object.name, console.log("errorId", 14), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : f.property && "len" == f.property.name ? "self" == h.object.name ? (y = h.property.name, "len#length_of_string" == r ? Entry.TextCodingUtil.isLocalVariableExisted(y, this._currentObject) || Entry.TextCodingUtil.isFuncParam(y) || 
         (t = y, console.log("errorId", 15), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : "len" != r || Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 16), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : 
         (t = y = h.object.name, console.log("errorId", 17), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : "__pythonRuntime.ops.subscriptIndex" == h.property.callee ? h.object.type || (y = h.object.name, Entry.TextCodingUtil.isGlobalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 18), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
@@ -14496,13 +14509,13 @@ Entry.PyToBlockParser = function(b) {
               console.log("isStringIncluded params", c);
             }
           } else {
-            "len" == f.property.name ? "len" == r && (A = c[1], A = this.ParamDropdownDynamic(A.name, x[1], u[1]), c[1] = A) : "in" == f.property.name ? (A = c[1], A = this.ParamDropdownDynamic(A.name, x[1], u[1]), c[1] = A) : "pop" == f.property.name ? "number" == c[0].type || "text" == c[0].type ? isNaN(c[0].params[0]) || (c[0].params[0] += 1) : "get_variable" == c[0].type ? (k = {type:"calc_basic"}, r = [], r[0] = c[0], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[0] = k) : 
-            "calc_basic" == c[0].type && ("MINUS" == c[0].params[1] && "1" == c[0].params[2].params[0] ? c[0] = c[0].params[0] : (k = {type:"calc_basic"}, r = [], r[0] = c[0], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[0] = k)) : "insert" == f.property.name ? "number" == c[2].type || "text" == c[2].type ? isNaN(c[2].params[0]) || (c[2].params[0] += 1) : "get_variable" == c[2].type ? (k = {type:"calc_basic"}, r = [], r[0] = c[2], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, 
-            k.params = r, c[2] = k) : "calc_basic" == c[2].type && ("MINUS" == c[2].params[1] && "1" == c[2].params[2].params[0] ? c[2] = c[2].params[0] : (k = {type:"calc_basic"}, r = [], r[0] = c[2], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[2] = k)) : "subscriptIndex" == f.property.name ? (A = c[3], "number" == c[3].type || "text" == c[3].type ? isNaN(c[3].params[0]) || (c[3].params[0] += 1) : "get_variable" == c[3].type ? (k = {type:"calc_basic"}, r = [], r[0] = c[3], 
-            r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[3] = k) : "calc_basic" == c[3].type && ("MINUS" == c[3].params[1] && "1" == c[3].params[2].params[0] ? c[3] = c[3].params[0] : (k = {type:"calc_basic"}, r = [], r[0] = c[3], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[3] = k))) : "_pySlice" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), z = [], z[1] = k, "number" == c[1].type || "text" == c[1].type ? 
-            isNaN(c[1].params[0]) || (c[1].params[0] += 1) : "get_variable" == c[1].type ? (k = {type:"calc_basic"}, r = [], r[0] = c[1], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[1] = k) : "calc_basic" == c[1].type && ("MINUS" == c[1].params[1] && "1" == c[1].params[2].params[0] ? c[1] = c[1].params[0] : (k = {type:"calc_basic"}, r = [], r[0] = c[1], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[1] = k)), z[3] = c[1], z[5] = c[3], c = z) : "find" == 
-            f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), z = [], z[1] = k, z[3] = c[1], c = z) : "replace" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), z = [], z[1] = k, z[3] = c[1], z[5] = c[3], c = z) : "upper" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), z = [], z[1] = k, z[3] = c[1], c = z) : "lower" == f.property.name && f.object && (k = 
-            this[f.object.type](f.object), console.log("objectData", k), z = [], z[1] = k, z[3] = c[1], c = z);
+            "len" == f.property.name ? (console.log("syntax", r, "params", c), "len" == r && (A = c[1], A = this.ParamDropdownDynamic(A.name, x[1], u[1]), c[1] = A)) : "in" == f.property.name ? (A = c[1], A = this.ParamDropdownDynamic(A.name, x[1], u[1]), c[1] = A) : "pop" == f.property.name ? "number" == c[0].type || "text" == c[0].type ? isNaN(c[0].params[0]) || (c[0].params[0] += 1) : "get_variable" == c[0].type ? (k = {type:"calc_basic"}, r = [], r[0] = c[0], r[1] = "PLUS", r[2] = {type:"number", 
+            params:[1]}, k.params = r, c[0] = k) : "calc_basic" == c[0].type && ("MINUS" == c[0].params[1] && "1" == c[0].params[2].params[0] ? c[0] = c[0].params[0] : (k = {type:"calc_basic"}, r = [], r[0] = c[0], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[0] = k)) : "insert" == f.property.name ? "number" == c[2].type || "text" == c[2].type ? isNaN(c[2].params[0]) || (c[2].params[0] += 1) : "get_variable" == c[2].type ? (k = {type:"calc_basic"}, r = [], r[0] = c[2], r[1] = 
+            "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[2] = k) : "calc_basic" == c[2].type && ("MINUS" == c[2].params[1] && "1" == c[2].params[2].params[0] ? c[2] = c[2].params[0] : (k = {type:"calc_basic"}, r = [], r[0] = c[2], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[2] = k)) : "subscriptIndex" == f.property.name ? (A = c[3], "number" == c[3].type || "text" == c[3].type ? isNaN(c[3].params[0]) || (c[3].params[0] += 1) : "get_variable" == c[3].type ? (k = 
+            {type:"calc_basic"}, r = [], r[0] = c[3], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[3] = k) : "calc_basic" == c[3].type && ("MINUS" == c[3].params[1] && "1" == c[3].params[2].params[0] ? c[3] = c[3].params[0] : (k = {type:"calc_basic"}, r = [], r[0] = c[3], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[3] = k))) : "_pySlice" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), z = [], z[1] = k, 
+            "number" == c[1].type || "text" == c[1].type ? isNaN(c[1].params[0]) || (c[1].params[0] += 1) : "get_variable" == c[1].type ? (k = {type:"calc_basic"}, r = [], r[0] = c[1], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[1] = k) : "calc_basic" == c[1].type && ("MINUS" == c[1].params[1] && "1" == c[1].params[2].params[0] ? c[1] = c[1].params[0] : (k = {type:"calc_basic"}, r = [], r[0] = c[1], r[1] = "PLUS", r[2] = {type:"number", params:[1]}, k.params = r, c[1] = k)), 
+            z[3] = c[1], z[5] = c[3], c = z) : "find" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), z = [], z[1] = k, z[3] = c[1], c = z) : "replace" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), z = [], z[1] = k, z[3] = c[1], z[5] = c[3], c = z) : "upper" == f.property.name ? f.object && (k = this[f.object.type](f.object), console.log("objectData", k), z = [], z[1] = k, z[3] = c[1], c = z) : 
+            "lower" == f.property.name && f.object && (k = this[f.object.type](f.object), console.log("objectData", k), z = [], z[1] = k, z[3] = c[1], c = z);
           }
         }
       }
@@ -14969,7 +14982,7 @@ Entry.PyToBlockParser = function(b) {
   b.Literal = function(a, b, c, e) {
     console.log("Literal component", a, "paramMeta", b, "paramDefMeta", c, "textParam", e);
     var f, g = a.value;
-    console.log("Literal value", g);
+    console.log("Literal value", g, "value.legnth", g.length);
     b || (b = {type:"Block"}, c || (c = "number" == typeof g ? {type:"number"} : {type:"text"}));
     if ("Indicator" == b.type) {
       return null;
@@ -14979,7 +14992,7 @@ Entry.PyToBlockParser = function(b) {
     }
     console.log("Literal paramMeta", b, "paramDefMeta", c);
     1 == g || 0 == g || g ? f = b = this["Param" + b.type](g, b, c, e) : a.left && a.operator && a.right && (b = [], c = this[a.left.type](a.left), b.push(c), b.push(a.operator), a = this[a.right.type](a.right), b.push(a), f = b);
-    console.log("Literal result", f);
+    console.log("Literal result", f, "result.length", f.length);
     return f;
   };
   b.ParamBlock = function(a, b, c) {
@@ -15016,6 +15029,9 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamTextInput = function(a, b, c) {
     console.log("ParamTextInput value, paramMeta, paramDefMeta", a, b, c);
+    b = a.split(" ");
+    console.log("value", a.length, "spaces", b.length);
+    a.length == b.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("value space", a));
     return a;
   };
   b.ParamColor = function(a, b, c, e) {

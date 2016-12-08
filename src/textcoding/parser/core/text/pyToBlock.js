@@ -502,6 +502,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             if(Entry.TextCodingUtil.isGlobalVariableExisted(arg.property.name) ||
                                 Entry.TextCodingUtil.isLocalVariableExisted(arg.property.name, this._currentObject))
                                 syntax = String("len#length_of_string");
+                        } 
+                        else {
+                            syntax = String("len#length_of_string");    
                         }
                     } 
                     console.log("syntax1", syntax);
@@ -801,11 +804,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                         else {
                             if(param.object && param.property.name) {
-                                var pName = param.object.name + "." + param.property.name;
-                                var memberParam = {};
-                                memberParam.value = pName;
-                                var param = this['Literal']
-                                    (memberParam, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], textParams[paramIndex[pi]]);
+                                if(param.object.name != "self") {
+                                    var pName = param.object.name + "." + param.property.name;
+                                    var memberParam = {};
+                                    memberParam.value = pName;
+                                    var param = this['Literal']
+                                        (memberParam, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], textParams[paramIndex[pi]]);
+                                }
                             }
                         }
                     }
@@ -1162,6 +1167,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 }
                 else if(callee.property.name == "len") {
+                    console.log("syntax", syntax, "params", params);
                     if(syntax == String("len")) {
                         var p = params[1];
                         p = this.ParamDropdownDynamic(p.name, paramsMeta[1], paramsDefMeta[1]);
@@ -2815,7 +2821,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var result;
         var value = component.value;
 
-        console.log("Literal value", value);
+        console.log("Literal value", value, "value.legnth", value.length);
 
         if(!paramMeta) {
             var paramMeta = { type: "Block" };
@@ -2855,7 +2861,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             result = params;
         }
-        console.log("Literal result", result);
+        console.log("Literal result", result, "result.length", result.length);
 
         return result;
     };
@@ -2928,6 +2934,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamTextInput = function(value, paramMeta, paramDefMeta) {
         console.log("ParamTextInput value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
+        var spaces = value.split(" "); 
+        console.log("value", value.length, "spaces", spaces.length);
+
+        if(value.length == spaces.length-1) {
+            console.log(" space ")
+            value = '"()"'.replace('()', value);
+            console.log("value space", value);
+        }
         var result;
 
         result = value;

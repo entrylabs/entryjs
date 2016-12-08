@@ -19834,7 +19834,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.start_scene_of(%1)",
+                syntax: "Entry.start_scene(%1)",
                 blockType: "last",
                 textParams: [
                     {
@@ -19906,7 +19906,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.start_scene_to(%1)",
+                syntax: "Entry.start_scene_of(%1)",
                 blockType: "last",
                 textParams: [
                     {
@@ -21995,7 +21995,7 @@ Entry.block = {
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
                         caseType: "no",
-                        paramType: "variable"
+                        paramType: "list"
                     },
                 ]
             }
@@ -22084,7 +22084,7 @@ Entry.block = {
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
                         caseType: "no",
-                        paramType: "variable"
+                        paramType: "list"
                     },
                 ]
             }
@@ -22181,7 +22181,7 @@ Entry.block = {
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
                         caseType: "no",
-                        paramType: "variable"
+                        paramType: "list"
                     },
                     {
                         "type": "Block",
@@ -22279,7 +22279,7 @@ Entry.block = {
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
                         caseType: "no",
-                        paramType: "variable"
+                        paramType: "list"
                     },
                     {
                         "type": "Block",
@@ -22383,7 +22383,7 @@ Entry.block = {
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
                         caseType: "no",
-                        paramType: "variable"
+                        paramType: "list"
                     },
                     undefined,
                     {
@@ -22461,7 +22461,7 @@ Entry.block = {
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
                         caseType: "no",
-                        paramType: "variable"
+                        paramType: "list"
                     },
                 ]
             }
@@ -22783,7 +22783,7 @@ Entry.block = {
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
                         converter: Entry.block.converters.returnRawStringKey,
                         caseType: "no",
-                        paramType: "variable"
+                        paramType: "list"
                     },
                     undefined,
                     {
