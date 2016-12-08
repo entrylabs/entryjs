@@ -380,7 +380,7 @@ Entry.Container.prototype.removeObject = function(object) {
  * @param {string} objectId
  */
 Entry.Container.prototype.selectObject = function(objectId, changeScene) {
-    if(Entry.playground && Entry.playground.object) {
+    if (Entry.playground && Entry.playground.object) {
         var currentObject = Entry.playground.object;
         Entry.TextCodingUtil._currentObject = currentObject;
         console.log("Entry.TextCodingUtil._currentObject1" , Entry.TextCodingUtil._currentObject);
@@ -392,18 +392,16 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     }
 
     this.mapObjectOnScene(function(object) {
-        if (object.view_)
-            object.view_.removeClass('selectedObject');
+        object.view_ && object.view_.removeClass('selectedObject');
         object.isSelected_ = false;
     });
+
     if (object) {
-        if (object.view_)
-            object.view_.addClass('selectedObject');
+        object.view_ && object.view_.addClass('selectedObject');
         object.isSelected_ = true;
     } else {
-        if(Entry.playground && Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.vimBoard) {
-            Entry.playground.mainWorkspace.vimBoard.clearText();
-        }
+        var workspace = Entry.getMainworkspace();
+        workspace && workspace.vimBoard && workspace.vimBoard.clearText();
     }
 
     if (Entry.playground)
@@ -411,7 +409,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     if (Entry.type != "minimize" && Entry.engine.isState('stop'))
         Entry.stage.selectObject(object);
 
-    if(Entry.playground && Entry.playground.object) {
+    if (Entry.playground && Entry.playground.object) {
         var currentObject = Entry.playground.object;
         Entry.TextCodingUtil._currentObject = currentObject;
         console.log("Entry.TextCodingUtil._currentObject2" , Entry.TextCodingUtil._currentObject);

@@ -7026,7 +7026,12 @@ Entry.Container.prototype.selectObject = function(b, a) {
     a.view_ && a.view_.removeClass("selectedObject");
     a.isSelected_ = !1;
   });
-  d ? (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0) : Entry.playground && Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.vimBoard && Entry.playground.mainWorkspace.vimBoard.clearText();
+  if (d) {
+    d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0;
+  } else {
+    var c = Entry.getMainworkspace();
+    c && c.vimBoard && c.vimBoard.clearText();
+  }
   Entry.playground && Entry.playground.injectObject(d);
   "minimize" != Entry.type && Entry.engine.isState("stop") && Entry.stage.selectObject(d);
   Entry.playground && Entry.playground.object && (d = Entry.playground.object, Entry.TextCodingUtil._currentObject = d, console.log("Entry.TextCodingUtil._currentObject2", Entry.TextCodingUtil._currentObject));
@@ -8869,7 +8874,6 @@ Entry.EntryObject.prototype.generateView = function() {
     c = Entry.createElement("input");
     c.bindOnClick(function(a) {
       a.preventDefault();
-      Entry.container.selectObject(d.id);
       this.readOnly || (this.focus(), this.select());
     });
     c.addClass("entryObjectNameWorkspace");

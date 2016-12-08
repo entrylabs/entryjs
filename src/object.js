@@ -226,7 +226,6 @@ Entry.EntryObject.prototype.generateView = function() {
         var nameView = Entry.createElement('input');
         nameView.bindOnClick(function (e) {
             e.preventDefault();
-            Entry.container.selectObject(thisPointer.id);
             if (!this.readOnly) {
                 this.focus();
                 this.select();
@@ -250,8 +249,6 @@ Entry.EntryObject.prototype.generateView = function() {
             if (e.keyCode == 13) {
                 self.editObjectValues(false);
             }
-
-
         };
 
         this.nameView_.value = this.name;
@@ -1261,7 +1258,6 @@ Entry.EntryObject.prototype.toggleInformation = function(isToggle) {
         isToggle = this.isInformationToggle = !this.isInformationToggle;
     if (isToggle) {
         this.view_.addClass('informationToggle');
-
     } else {
         this.view_.removeClass('informationToggle');
 
