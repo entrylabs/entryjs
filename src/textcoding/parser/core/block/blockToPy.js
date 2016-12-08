@@ -428,9 +428,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     p.FieldTextInput = function(dataParam, textParam) {
         console.log("dataParam FieldTextInput", dataParam); 
-        if(isNaN(dataParam)) {
+        if(typeof dataParam != "number") {
             var spaces = dataParam.split(/ /);  
-            console.log("dataParam.length", dataParam.length);
+            console.log("dataParam.length", dataParam.length); 
 
             if(dataParam.length == spaces.length-1) {
                 console.log(" space ")

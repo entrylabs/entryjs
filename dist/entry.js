@@ -17380,7 +17380,7 @@ Entry.BlockToPyParser = function(b) {
   };
   b.FieldTextInput = function(a, b) {
     console.log("dataParam FieldTextInput", a);
-    if (isNaN(a)) {
+    if ("number" != typeof a) {
       var c = a.split(/ /);
       console.log("dataParam.length", a.length);
       a.length == c.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("dataParam", a));
@@ -18884,7 +18884,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamTextInput = function(a, b, d) {
     console.log("ParamTextInput value, paramMeta, paramDefMeta", a, b, d);
-    isNaN(a) && (b = a.split(/ /), a && console.log("value", a.length, "spaces", b.length), a.length == b.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("value space", a)));
+    "number" != typeof a && (b = a.split(/ /), a && console.log("value", a.length, "spaces", b.length), a.length == b.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("value space", a)));
     console.log("ParamTextInput result", a);
     return a;
   };
@@ -28319,7 +28319,7 @@ Entry.Vim = function(b, a) {
   this.createDom(b);
   this._parser = new Entry.Parser(null, null, this.codeMirror);
   Entry.addEventListener("hwChanged", function(a) {
-    Entry.hw.hwModule ? (a = Entry.hw.hwModule.name, a = a[0].toUpperCase() + a.slice(1), Entry.Vim.PYTHON_IMPORT_HW = "\nimport " + a + "\n") : Entry.Vim.PYTHON_IMPORT_HW = "";
+    Entry.hw.hwModule ? (a = Entry.hw.hwModule.name, a = a[0].toUpperCase() + a.slice(1), "ArduinoExt" == a && (a = "Arduino"), Entry.Vim.PYTHON_IMPORT_HW = "\nimport " + a + "\n", Entry.Vim.INEDITABLE_LINE_PY = 4) : (Entry.Vim.PYTHON_IMPORT_HW = "", Entry.Vim.INEDITABLE_LINE_PY = 3);
   }.bind(this));
   Entry.Model(this, !1);
   window.eventset = [];
@@ -28332,6 +28332,7 @@ Entry.Vim.PARSER_TYPE_JS_TO_BLOCK = 0;
 Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
 Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
 Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
+Entry.Vim.INEDITABLE_LINE_PY = 3;
 Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
 Entry.Vim.PYTHON_IMPORT_HW = "";
 (function(b) {
@@ -28400,7 +28401,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
     a = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
     b === Entry.Vim.TEXT_TYPE_PY && (a = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(a));
     this.codeMirror.setValue(a + "\n");
-    b == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:3, ch:0}, {readOnly:!0});
+    b == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:Entry.Vim.INEDITABLE_LINE_PY, ch:0}, {readOnly:!0});
     c = this.codeMirror.getDoc();
     c.setCursor({line:c.lastLine() - 1});
   };
