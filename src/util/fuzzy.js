@@ -56,6 +56,9 @@ fuzzy.match = function(pattern, string, opts) {
   // or wrap in template if it's the next string in the pattern
   for(var idx = 0; idx < len; idx++) {
     ch = string[idx];
+    if(compareString[idx] === opts.escapeLetter) {
+        break;
+    }
     if(compareString[idx] === pattern[patternIdx]) {
       ch = pre + ch + post;
       patternIdx += 1;

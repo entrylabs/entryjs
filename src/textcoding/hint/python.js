@@ -74,7 +74,7 @@ Entry.PyHint = function(syntax) {
             case "variable":
                 if (!searchString)
                     searchString = lastToken.string;
-                result = this.fuzzySearch(this.getScope("_global"), searchString).slice(0,20);
+                result = this.fuzzySearch(this.getScope("_global"), searchString);
                 result = result.map(function(key) {
                     var localSyntax = syntax;
                     var displayText = key.split("#")[0];
@@ -105,9 +105,9 @@ Entry.PyHint = function(syntax) {
                 var searchResult;
                 var searchScope = this.getScope(variableToken.string);
                 if (searchScope.length)
-                    searchResult = this.fuzzySearch(searchScope, lastToken.string).slice(0,20);
+                    searchResult = this.fuzzySearch(searchScope, lastToken.string);
                 else if (Entry.variableContainer.getListByName(variableToken.string)) {
-                    searchResult = this.fuzzySearch(this.getScope('%2'), lastToken.string).slice(0,20);
+                    searchResult = this.fuzzySearch(this.getScope('%2'), lastToken.string);
                     variableToken.string = "%2";
                 }
                 else
@@ -155,7 +155,9 @@ Entry.PyHint = function(syntax) {
     }
 
     p.fuzzySearch = function(arr, start, options) {
-        var result = fuzzy.filter(start, arr, options);
+        options = options || {};
+        options.escapeLetter = "#";
+        var result = Entry.Utils.fuzzy.filter(start, arr, options).slice(0,20);
         result = result.map(function(o){return o.original});
         return result;
     };

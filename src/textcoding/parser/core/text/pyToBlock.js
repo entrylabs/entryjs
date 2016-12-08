@@ -2876,7 +2876,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var param = value;
         var params = [];
 
-        if(value === true){
+        if(value === true) {
             structure.type = "True";
             result = structure;
             return result;
