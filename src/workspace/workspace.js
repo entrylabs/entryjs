@@ -101,6 +101,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         switch (this.mode) {
             case Entry.Workspace.MODE_VIMBOARD:
+                    if(alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) { 
+                        alert(alert_message); 
+                        var mode = {};
+                        mode.boardType = Entry.Workspace.MODE_BOARD;
+                        mode.textType = -1;
+                        Entry.getMainWS().setMode(mode);
+                        break;
+                    }
                     if (this.board) this.board.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.banClass('textMode');
@@ -419,6 +427,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p._syncTextCode = function() {
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
             return;
+
+        console.log("this.vimBoard._currentObject", this.vimBoard._currentObject);
+        console.log("this.vimBoard._changedObject", this.vimBoard._changedObject);
 
         var changedCode = this.vimBoard.textToCode(this.textType);
         var board = this.board;

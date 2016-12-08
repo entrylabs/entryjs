@@ -227,32 +227,18 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.dropdownDynamicValueConvertor = function(value, param) {
+    tu.dropdownDynamicIdToNameConvertor = function(id, menuName) {
         var options = param.options;
-        //console.log("dropdownDynamicValueConvertor value", value, "options", options);
+        console.log("dropdownDynamicIdToNameConvertor id", id, "menuName", menuName);
         var found = false;
         var result = null;
-        for(var index in options) {
+        /*for(var index in options) {
             var option = options[index];
             if(option[1] == "null") {
-                /*var item = {};
-                var None = {};
-                item.None = None;
-                result = item.None;*/
-
                 result = "None";
-
                 found = true;
                 return result;
             }
-
-            if(value == "mouse" || value == "wall" || value == "wall_up" ||
-               value == "wall_down" || value == "wall_right" || value == "wall_left") {
-                found = true;
-                return value;
-            }
-
-            //console.log("dropdownDynamicValueConvertor check value", value, "option", option);
 
             if(value == option[1]) {
                 console.log("dropdownDynamicValueConvertor value", value, option[1]);
@@ -260,68 +246,68 @@ Entry.TextCodingUtil = {};
                 found = true;
                 return result;
             }
-        }
+        }*/
 
-        result = value;
+        result = id;
 
-        if(!found && param.menuName == "variables") {
+        if(!found && menuName == "variables") {
             var entryVariables = Entry.variableContainer.variables_;
             //console.log("dropdownDynamicValueConvertor entryVariables", entryVariables);
             for(var e in entryVariables) {
                 var entryVariable = entryVariables[e];
-                if(entryVariable.id_ == value) {
+                if(entryVariable.id_ == id) {
                     result = entryVariable.name_;
                     break;
                 }
 
             }
         }
-        else if(!found && param.menuName == "lists") {
+        else if(!found && menuName == "lists") {
             var entryLists = Entry.variableContainer.lists;
             //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
             for(var e in entryLists) {
                 var entryList = entryLists[e];
-                if(entryList.id_ == value) {
+                if(entryList.id_ == id) {
                     result = entryList.name_;
                     break;
                 }
 
             }
         }
-        else if(!found && param.menuName == "messages") {
+        else if(!found && menuName == "messages") {
             var entryMessages = Entry.variableContainer.messages_;
             //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
             for(var e in entryMessages) {
                 var entryList = entryMessages[e];
-                if(entryList.id == value) {
+                if(entryList.id == id) {
                     result = entryList.name;
                     break;
                 }
 
             }
         }
-        else if(!found && param.menuName == "pictures") {
+        else if(!found && menuName == "pictures") {
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
                 var object = objects[o];
                 var pictures = object.pictures;
                 for(var p in pictures) {
                     var picture = pictures[p];
-                    if(picture.id == value) {
+                    if(picture.id == id) {
                         result = picture.name;
                         return result;
                     }
                 }
             }
         }
-        else if(!found && param.menuName == "sounds") {
+        else if(!found && menuName == "sounds") {
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
                 var object = objects[o];
                 var sounds = object.sounds;
                 for(var p in sounds) {
                     var sound = sounds[p];
-                    if(sound.id == value) {
+                    if(sound.id == id) {
                         result = sound.name;
                         return result;
                     }
@@ -1748,6 +1734,7 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isNamesIncludeSpace = function() {
+        console.log("isNamesIncludeSpace check");
         var vc = Entry.variableContainer;
         if(!vc)
             return;
@@ -2056,12 +2043,11 @@ Entry.TextCodingUtil = {};
         //inspect variables
         var targets = vc.variables_ || [];
         //case for value is 0
-        for (var i=targets.length-1; i>=0; i--) { 
+        /*for (var i=targets.length-1; i>=0; i--) { 
             var v = targets[i];
             var name = v.name_;
             var value = v.value_;
             if(value == 0) {
-                console.log("generate variable v", v, "co", currentObject);
                 if(v.object_) {
                     if(v.object_ == currentObject.id) {
                         name = "self." + name; 
@@ -2074,14 +2060,13 @@ Entry.TextCodingUtil = {};
             }
         }
         if(result.length != 0)
-            result += 0 + '\n';
+            result += 0 + '\n';*/
 
         for (var i=targets.length-1; i>=0; i--) { 
             var v = targets[i];
             var name = v.name_;
             var value = v.value_;
-            if(value != 0) {
-                console.log("generate variable v", v, "co", currentObject);
+            //if(value != 0) {
                 if(v.object_) {
                     if(v.object_ == currentObject.id) {
                         name = "self." + name; 
@@ -2094,7 +2079,7 @@ Entry.TextCodingUtil = {};
                     value = '"()"'.replace('()', value);
                 
                 result += name + " = " + value + "\n";
-            }
+            //}
         }
 
         return result;
@@ -2110,7 +2095,7 @@ Entry.TextCodingUtil = {};
         //inspect lists
         targets = vc.lists_ || [];
         //case for value is empty, []
-        for (var i=targets.length-1; i>=0; i--) {
+        /*for (var i=targets.length-1; i>=0; i--) {
             var l = targets[i];
             var name = l.name_;
             var value = "";
@@ -2126,14 +2111,14 @@ Entry.TextCodingUtil = {};
             }         
         }
         if(result.length != 0)
-            result += '[]' + '\n';
+            result += '[]' + '\n';*/
         
         for (var i=targets.length-1; i>=0; i--) {
             var l = targets[i];
             var name = l.name_;
             var value = "";
             var lArray = l.array_;
-            if(lArray.length != 0) {
+            //if(lArray.length != 0) {
                 if(l.object_) {
                     if(l.object_ == currentObject.id) {
                         name = "self." + name;
@@ -2156,7 +2141,7 @@ Entry.TextCodingUtil = {};
                 }
 
                 result += name + " = [" + value + "]" + "\n";
-            }
+            //}
         }
 
         return result;

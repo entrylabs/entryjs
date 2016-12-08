@@ -356,7 +356,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         else if(textParam.caseType == "upper") { 
                             dataParam = dataParam.toUpperCase();
                         }
-                        else {
+                        else { 
                             dataParam = dataParam.toLowerCase();
                         }
                     }
@@ -364,14 +364,17 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     if(textParam.paramType == "variable") {
                         dataParam = dataParam.replace(/\"/g, "");
                     }
-                    found = true;
+                    found = true; 
                     break;
                 }
             }
         }
 
-        if(!found)
-            dataParam = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(dataParam, textParam.menuName);
+        if(!found) {
+            dataParam = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(dataParam, textParam.menuName);
+            if(isNaN(dataParam))
+                dataParam = '"()"'.replace('()', dataParam);
+        }
 
         return dataParam;
     };
@@ -439,7 +442,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return dataParam;
     };
 
-    p.isFunc = function(block) {
+    p.isFunc = function(block) { 
+        if(!block) return false;
         var tokens = block.data.type.split('_');
         var prefix = tokens[0];
         var funcId = tokens[1];
@@ -463,6 +467,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.isFuncStmtParam = function(block) {
+        if(!block) return;
         var blockType = block.data.type;
         var tokens = blockType.split('_');
         var prefix = tokens[0];
@@ -538,7 +543,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 stmtResult += this.Block(block).concat('\n');
             }
             stmtResult = stmtResult.concat('\n');
-            result += Entry.TextCodingUtil.indent(stmtResult).concat('\n');
+            result += Entry.TextCodingUtil.indent(stmtResult).concat('\n\n');
         }
         this._funcMap.clear();
 
@@ -585,6 +590,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         Entry.TextCodingUtil.clearQueue();
         var funcParamMap = paramMap;
+
+        console.log("funcParamMap", funcParamMap);
 
         if(funcParamMap) {
             var funcParams = {};

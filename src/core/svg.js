@@ -39,9 +39,6 @@ Entry.SVG.createElement = function (tag, options) {
         }
     }
 
-    if (this instanceof SVGElement)
-        this.appendChild(el);
-
     //add util functions
     el.elem = Entry.SVG.createElement;
     el.attr = Entry.SVG.attr;
@@ -53,6 +50,9 @@ Entry.SVG.createElement = function (tag, options) {
 
     if (tag === "text")
        el.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space","preserve");
+
+    if (this instanceof SVGElement)
+        this.appendChild(el);
 
     return el;
 };
