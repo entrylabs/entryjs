@@ -2821,8 +2821,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var result;
         var value = component.value;
 
-        console.log("Literal value", value, "value.legnth", value.length);
-
         if(!paramMeta) {
             var paramMeta = { type: "Block" };
             if(!paramDefMeta) {
@@ -2861,7 +2859,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             result = params;
         }
-        console.log("Literal result", result, "result.length", result.length);
+        console.log("Literal result", result);
 
         return result;
     };
@@ -2935,18 +2933,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamTextInput = function(value, paramMeta, paramDefMeta) {
         console.log("ParamTextInput value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
-        var spaces = value.split(/ /); 
-        if(value)
-            console.log("value", value.length, "spaces", spaces.length);
+        if(isNaN(value)) {
+            var spaces = value.split(/ /); 
+            if(value)
+                console.log("value", value.length, "spaces", spaces.length);
 
-        if(value.length == spaces.length-1) {
-            console.log(" space ")
-            value = '"()"'.replace('()', value);
-            console.log("value space", value);
+            if(value.length == spaces.length-1) {
+                console.log(" space ")
+                value = '"()"'.replace('()', value);
+                console.log("value space", value);
+            }
         }
-        var result;
-
-        result = value;
+        
+        var result = value;
 
         return result;
     };

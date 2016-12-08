@@ -13534,9 +13534,12 @@ Entry.BlockToPyParser = function(b) {
     return a;
   };
   b.FieldTextInput = function(a, b) {
-    var c = a.split(/ /);
-    console.log("dataParam.length", a.length);
-    a.length == c.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("dataParam", a));
+    console.log("dataParam FieldTextInput", a);
+    if (isNaN(a)) {
+      var c = a.split(/ /);
+      console.log("dataParam.length", a.length);
+      a.length == c.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("dataParam", a));
+    }
     b && b.converter && (a = b.converter(null, a));
     return a;
   };
@@ -14986,7 +14989,6 @@ Entry.PyToBlockParser = function(b) {
   b.Literal = function(a, b, c, e) {
     console.log("Literal component", a, "paramMeta", b, "paramDefMeta", c, "textParam", e);
     var f, g = a.value;
-    console.log("Literal value", g, "value.legnth", g.length);
     b || (b = {type:"Block"}, c || (c = "number" == typeof g ? {type:"number"} : {type:"text"}));
     if ("Indicator" == b.type) {
       return null;
@@ -14996,7 +14998,7 @@ Entry.PyToBlockParser = function(b) {
     }
     console.log("Literal paramMeta", b, "paramDefMeta", c);
     1 == g || 0 == g || g ? f = b = this["Param" + b.type](g, b, c, e) : a.left && a.operator && a.right && (b = [], c = this[a.left.type](a.left), b.push(c), b.push(a.operator), a = this[a.right.type](a.right), b.push(a), f = b);
-    console.log("Literal result", f, "result.length", f.length);
+    console.log("Literal result", f);
     return f;
   };
   b.ParamBlock = function(a, b, c) {
@@ -15034,9 +15036,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamTextInput = function(a, b, c) {
     console.log("ParamTextInput value, paramMeta, paramDefMeta", a, b, c);
-    b = a.split(/ /);
-    a && console.log("value", a.length, "spaces", b.length);
-    a.length == b.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("value space", a));
+    isNaN(a) && (b = a.split(/ /), a && console.log("value", a.length, "spaces", b.length), a.length == b.length - 1 && (console.log(" space "), a = '"()"'.replace("()", a), console.log("value space", a)));
     return a;
   };
   b.ParamColor = function(a, b, c, e) {

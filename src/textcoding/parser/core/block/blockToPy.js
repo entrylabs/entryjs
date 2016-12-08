@@ -427,13 +427,16 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldTextInput = function(dataParam, textParam) {
-        var spaces = dataParam.split(/ /);  
-        console.log("dataParam.length", dataParam.length);
+        console.log("dataParam FieldTextInput", dataParam); 
+        if(isNaN(dataParam)) {
+            var spaces = dataParam.split(/ /);  
+            console.log("dataParam.length", dataParam.length);
 
-        if(dataParam.length == spaces.length-1) {
-            console.log(" space ")
-            dataParam = '"()"'.replace('()', dataParam);
-            console.log("dataParam", dataParam);
+            if(dataParam.length == spaces.length-1) {
+                console.log(" space ")
+                dataParam = '"()"'.replace('()', dataParam);
+                console.log("dataParam", dataParam);
+            }
         }
 
         if(textParam && textParam.converter)
