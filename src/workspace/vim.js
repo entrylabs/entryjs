@@ -176,7 +176,13 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         if(mode)
             this._mode = mode.runType;
 
-        if(this._currentObject)
+        console.log("this._currentObject", this._currentObject);
+        console.log("this._changedObject", this._changedObject);
+
+        if(Entry.playground)
+            this._currentObject = Entry.playground.object;
+        
+        if(this._currentObject) 
             codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이썬 코드";
         else
             codeDescription = "# " + "파이썬 코드"; 

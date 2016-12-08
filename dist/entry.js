@@ -13535,18 +13535,16 @@ Entry.BlockToPyParser = function(b) {
     return a;
   };
   b.isFunc = function(a) {
-    if (a.data) {
-      var b = a.data.type.split("_")
-    }
-    return "func" == b[0] ? !0 : !1;
+    return a ? "func" == a.data.type.split("_")[0] ? !0 : !1 : !1;
   };
   b.isRegisteredFunc = function(a) {
     a = a.data.type.split("_")[1];
     return Entry.variableContainer.functions_[a] ? !0 : !1;
   };
   b.isFuncStmtParam = function(a) {
-    a = a.data.type.split("_")[0];
-    return "stringParam" == a || "booleanParam" == a ? !0 : !1;
+    if (a) {
+      return a = a.data.type.split("_")[0], "stringParam" == a || "booleanParam" == a ? !0 : !1;
+    }
   };
   b.makeFuncSyntax = function(a) {
     var b = "", c = a._schema.template.trim();
@@ -27047,6 +27045,9 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
   b.codeToText = function(a, b) {
     var c;
     b && (this._mode = b.runType);
+    console.log("this._currentObject", this._currentObject);
+    console.log("this._changedObject", this._changedObject);
+    Entry.playground && (this._currentObject = Entry.playground.object);
     c = this._currentObject ? "# " + this._currentObject.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc" : "# \ud30c\uc774\uc36c \ucf54\ub4dc";
     var e = b.textType;
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
@@ -27307,6 +27308,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b._syncTextCode = function() {
     if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
+      console.log("this.vimBoard._currentObject", this.vimBoard._currentObject);
+      console.log("this.vimBoard._changedObject", this.vimBoard._changedObject);
       var a = this.vimBoard.textToCode(this.textType), b = this.board.code;
       b && b.load(a);
     }
@@ -27781,8 +27784,9 @@ Entry.Playground.prototype.injectObject = function(b) {
 };
 Entry.Playground.prototype.injectCode = function() {
   var b = this.object.script, a = this.mainWorkspace;
-  Entry.playground && this.mainWorkspace.vimBoard && this.mainWorkspace.vimBoard && (this.mainWorkspace.vimBoard._currentObject = Entry.playground.object, console.log("Entry.playground", this.mainWorkspace.vimBoard._currentObject));
+  this.mainWorkspace.vimBoard._changedObject ? this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject : Entry.playground && (this.mainWorkspace.vimBoard._currentObject = Entry.playground.object);
   a.changeBoardCode(b);
+  Entry.playground && (this.mainWorkspace.vimBoard._changedObject = Entry.playground.object);
   a.getBoard().adjustThreadsPosition();
 };
 Entry.Playground.prototype.injectPicture = function() {

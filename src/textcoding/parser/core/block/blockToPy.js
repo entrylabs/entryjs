@@ -442,9 +442,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return dataParam;
     };
 
-    p.isFunc = function(block) {
-        if(block.data)
-            var tokens = block.data.type.split('_');
+    p.isFunc = function(block) { 
+        if(!block) return false;
+        var tokens = block.data.type.split('_');
         var prefix = tokens[0];
         var funcId = tokens[1];
 
@@ -467,6 +467,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.isFuncStmtParam = function(block) {
+        if(!block) return;
         var blockType = block.data.type;
         var tokens = blockType.split('_');
         var prefix = tokens[0];
