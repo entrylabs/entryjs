@@ -107,6 +107,17 @@ if (Entry && Entry.block) {
             }
         };
 
+        c.returnStringValueUpperCase = function(key, value) {
+            var codeMap = eval(this.codeMap);
+            var codeMapKey = value;
+            if(codeMap) {
+                var codeMapValue = codeMap[codeMapKey];
+                if(codeMapValue)
+                    value = codeMapValue;
+            }
+            return '"()"'.replace('()', value).toUpperCase();
+        };
+
     })(Entry.block.converters);
 }
 
@@ -2838,9 +2849,8 @@ Entry.block = {
                         "value": "on",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]",
-                        caseType: "no"
+                        converter: Entry.block.converters.returnStringValueUpperCase,
+                        codeMap: "Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]"
                     }
                 ],
                 keyOption: "arduino_get_digital_toggle"
@@ -2919,17 +2929,9 @@ Entry.block = {
                         "accept": "string"
                     },
                     {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.ARDUINO_on,"on"],
-                            [Lang.Blocks.ARDUINO_off,"off"]
-                        ],
-                        "fontSize": 11,
-                        'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Arduino.arduino_ext_toggle_led[1]",
-                        caseType: "no"
-                    },
+                        "type": "Block",
+                        "accept": "string"
+                    }
                 ]
             }
         ]}
@@ -3066,9 +3068,7 @@ Entry.block = {
                         ],
                         "value": "C",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Arduino.arduino_ext_tone_list[0]",
-                        caseType: "no"
+                        converter: Entry.block.converters.returnStringValueUpperCase
                     }
                 ],
                 keyOption: "arduino_ext_tone_list"

@@ -346,7 +346,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         if(code) 
                             dataParam = code; 
                         dataParam = '"()"'.replace('()', dataParam);
-                    } 
+                    }  
 
                     if(isNaN(dataParam)) {
                         if(textParam.caseType == "no") {
