@@ -21478,6 +21478,25 @@ Entry.block = {
                         "accept": "string"
                     },
                 ]
+            },
+            {
+                syntax: "%1 = %1 + %2",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "variables",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnRawStringKey,
+                        caseType: "no",
+                        paramType: "variable"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                ]
             }
         ]}
     },

@@ -297,6 +297,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 }
             }
+
+            if(callee) {
+                console.log("callee123", callee, "argument123", component.arguments);
+                if(callee.name == "when_get_signal") {
+                    var argument = component.arguments[0];
+                    if(argument && argument.value) {
+                        Entry.TextCodingUtil.createMessage(argument.value);
+                    }
+                }
+            }
         }
         else {
             var object = calleeData.object;
@@ -388,7 +398,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     type = blockSyntax.key;
             }
 
-            console.log("callee", callee);
+            console.log("callee check line", callee);
 
             if(callee.object) {
                 if(callee.object.name === "Math") {
@@ -428,7 +438,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                     }
                 }
-                else if(callee.object.name == "Entry") {
+                else if(callee.object.name == "Entry") { 
+                    console.log("callee.property.name", callee.property.name);
+                    console.log("callee.property.component", component);
                     if(callee.property.name == "send_signal") {
                         var argument = component.arguments[0];
                         if(argument && argument.value) {
@@ -441,8 +453,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingUtil.createMessage(argument.value);
                         }
                     }
-                }
+                } 
             }
+           
 
             if(callee.property) {
                 if(callee.property.name == "range"){
@@ -644,7 +657,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                         else {
                             var name = callee.object.name;
-                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
+                            if(!Entry.TextCodingUtil.isGlobalListExisted(name) && !Entry.TextCodingUtil.isLocalListExisted(name)){
                                 var keyword = name;
                                 console.log("errorId", 6);
                                 Entry.TextCodingError.error(
@@ -2023,9 +2036,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var calleeName = rightData.callee.object.object.name.concat('.')
                         .concat(rightData.callee.object.property.name).concat('.')
                         .concat(rightData.callee.property.name);
-                }
+                } 
 
-                if(calleeName == "__pythonRuntime.objects.list") {
+                /*if(calleeName == "__pythonRuntime.objects.list") {
                     if(leftData && leftData.object && leftData.object.name == "self") {
                         if(leftData.property) {
                             var calleeName;
@@ -2051,7 +2064,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             }
                         }
                     }
-                }
+                }*/
 
                 //left expressoin
                 if(left.name) {
@@ -2434,36 +2447,62 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("assi leftData.property", leftData.property);
 
                 if(leftData.object.name == "self") {
-                    var name = leftData.property.name;
-                    if(rightData.type == "number" || rightData.type == "text")
-                        var value = rightData.params[0];
-                    else 
-                        var value = 0;
-                    /*else
-                        var value = 0;*/
-                    /*if(typeof value != "string" && typeof value != "number") {
-                        value = 0;
-                    }*/
 
-                    if(value || value == 0) {
-                        if(Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
+
+                    if(calleeName == "__pythonRuntime.objects.list") {
+                        var name = leftData.property.name;
+
+                        var array = [];
+                        var arguments = rightData.arguments;
+                        for(var a in arguments) {
+                            var argument = arguments[a];
+                            var item = {};
+                            item.data = String(argument.params[0]);
+                            array.push(item);
+                        }
+
+                        if(Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)) {
                             if(!this._funcLoop)
-                                Entry.TextCodingUtil.updateLocalVariable(name, value, this._currentObject);
+                                Entry.TextCodingUtil.updateLocalList(name, array, this._currentObject);
                         }
                         else {
                             if(!this._funcLoop) {
-                                Entry.TextCodingUtil.createLocalVariable(name, value, this._currentObject);
-                            }
-                            else {
-                                value = 0;
-                                Entry.TextCodingUtil.createLocalVariable(name, value, this._currentObject);
+                                Entry.TextCodingUtil.createLocalList(name, array, this._currentObject);
                             }
                         }
                     }
+                    else {
+                        var name = leftData.property.name;
+                        if(rightData.type == "number" || rightData.type == "text")
+                            var value = rightData.params[0];
+                        else 
+                            var value = 0;
+                        /*else
+                            var value = 0;*/
+                        /*if(typeof value != "string" && typeof value != "number") {
+                            value = 0;
+                        }*/
 
-                    name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
-                    params.push(name);
-                    params.push(rightData);
+                        if(value || value == 0) {
+                            if(Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
+                                if(!this._funcLoop)
+                                    Entry.TextCodingUtil.updateLocalVariable(name, value, this._currentObject);
+                            }
+                            else {
+                                if(!this._funcLoop) {
+                                    Entry.TextCodingUtil.createLocalVariable(name, value, this._currentObject);
+                                }
+                                else {
+                                    value = 0;
+                                    Entry.TextCodingUtil.createLocalVariable(name, value, this._currentObject);
+                                }
+                            }
+                        }
+
+                        name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                        params.push(name);
+                        params.push(rightData);
+                    }
                 }
             }
             else {
@@ -2823,7 +2862,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var value = component.value;
 
         if(!paramMeta) {
-            var paramMeta = { type: "Block" };
+            var paramMeta = { type: "Block" }; 
             if(!paramDefMeta) {
                 if(typeof value == "number")
                     var paramDefMeta = { type: "number" };
@@ -2868,7 +2907,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamBlock = function(value, paramMeta, paramDefMeta) {
         console.log("ParamBlock value", value, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta);
-        console.log("value.length", value.length);
+        
+        
         var result;
         var structure = {};
 
@@ -2934,17 +2974,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamTextInput = function(value, paramMeta, paramDefMeta) {
         console.log("ParamTextInput value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
-        if(typeof value != "number") {
-            var spaces = value.split(/ /); 
-            if(value)
-                console.log("value", value.length, "spaces", spaces.length);
-
-            if(value.length == spaces.length-1) {
-                console.log(" space ")
-                value = '"()"'.replace('()', value);
-                console.log("value space", value);
-            }
-        }
+        if(typeof value != "number")
+            value = value.replace(/\t/gi, '    ');
         
         var result = value; 
         console.log("ParamTextInput result", result);
@@ -3065,9 +3096,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
         }
-        console.log("dropdown picture sound", result);
 
-        if(paramMeta) {
+        /*if(paramMeta) {
             var options = paramMeta.options;
             console.log("ParamDropdownDynamic options", options);
             for(var i in options) {
@@ -3077,7 +3107,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     return result;
                 }
             }
-        }
+        }*/
 
         if(textParam && textParam.codeMap) {
             var codeMap = textParam.codeMap;
@@ -3282,7 +3312,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(!Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject))
                         return result;
 
-                    var convertedName = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                    var convertedName = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0], this._currentObject);
 
                     params.push(convertedName);
 

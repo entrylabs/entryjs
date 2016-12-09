@@ -129,7 +129,7 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.dropdownDynamicNameToIdConvertor = function(name, menuName) {
+    tu.dropdownDynamicNameToIdConvertor = function(name, menuName, currentObject) {
         if(!name)
             return name;
 
@@ -161,7 +161,12 @@ Entry.TextCodingUtil = {};
             for(var e in entryVariables) {
                 var entryVariable = entryVariables[e];
                 if(entryVariable.name_ == name) {
-                    result = entryVariable.id_;
+                    if(currentObject) {
+                        if(currentObject.id == entryVariable.object_)
+                            result = entryVariable.id_;
+                    }
+                    else
+                        result = entryVariable.id_;
                     break;
                 }
 
@@ -228,27 +233,10 @@ Entry.TextCodingUtil = {};
     };
 
     tu.dropdownDynamicIdToNameConvertor = function(id, menuName) {
-        var options = param.options;
+        //var options = param.options;
         console.log("dropdownDynamicIdToNameConvertor id", id, "menuName", menuName);
         var found = false;
-        var result = null;
-        /*for(var index in options) {
-            var option = options[index];
-            if(option[1] == "null") {
-                result = "None";
-                found = true;
-                return result;
-            }
-
-            if(value == option[1]) {
-                console.log("dropdownDynamicValueConvertor value", value, option[1]);
-                result = option[0];
-                found = true;
-                return result;
-            }
-        }*/
-
-        result = id;
+        var result = id;
 
         if(!found && menuName == "variables") {
             var entryVariables = Entry.variableContainer.variables_;
@@ -256,7 +244,10 @@ Entry.TextCodingUtil = {};
             for(var e in entryVariables) {
                 var entryVariable = entryVariables[e];
                 if(entryVariable.id_ == id) {
-                    result = entryVariable.name_;
+                    if(entryVariable.object_)
+                        result = "self." + entryVariable.name_;
+                    else
+                        result = entryVariable.name_;
                     break;
                 }
 
@@ -268,7 +259,10 @@ Entry.TextCodingUtil = {};
             for(var e in entryLists) {
                 var entryList = entryLists[e];
                 if(entryList.id_ == id) {
-                    result = entryList.name_;
+                    if(entryVariable.object_)
+                        result = "self." + entryList.name_;
+                    else
+                        result = entryList.name_;
                     break;
                 }
 
@@ -319,6 +313,40 @@ Entry.TextCodingUtil = {};
 
         return result;
 
+    };
+
+    tu.isLocalType = function(id, menuName) {
+        console.log("isLocalType id", id, "menuName", menuName);
+        var result = id;
+
+        if(menuName == "variables") {
+            var entryVariables = Entry.variableContainer.variables_;
+            for(var e in entryVariables) {
+                var entryVariable = entryVariables[e];
+                console.log("entryVariable", entryVariable);
+                if(entryVariable.id_ == id) {
+                    if(entryVariable.object_)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+        }
+        else if(menuName == "lists") {
+            var entryLists = Entry.variableContainer.lists;
+            for(var e in entryLists) {
+                var entryList = entryLists[e];
+                if(entryList.id_ == id) {
+                    if(entryVariable.object_)
+                        return true;
+                    else
+                        return false;
+                }
+
+            }
+        }
+
+        return false;
     };
 
     tu.binaryOperatorValueConvertor = function(operator) {
@@ -720,7 +748,7 @@ Entry.TextCodingUtil = {};
         Entry.variableContainer.updateList();
     };
 
-    tu.isLocalType = function(block, id) {
+    /*tu.isLocalType = function(block, id) {
         if(block.data.type == "get_variable" ||
             block.data.type == "set_variable" ||
             block.data.type == "change_variable" ) {
@@ -739,7 +767,7 @@ Entry.TextCodingUtil = {};
             if(this.isLocalList(id))
                 return true;
         }
-    };
+    };*/
 
     tu.isEventBlock = function(block) {
         var blockType = block.data.type;
