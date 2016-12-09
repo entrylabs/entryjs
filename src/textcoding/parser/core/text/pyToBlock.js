@@ -297,6 +297,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 }
             }
+
+            if(callee) {
+                console.log("callee123", callee, "argument123", component.arguments);
+                if(callee.name == "when_get_signal") {
+                    var argument = component.arguments[0];
+                    if(argument && argument.value) {
+                        Entry.TextCodingUtil.createMessage(argument.value);
+                    }
+                }
+            }
         }
         else {
             var object = calleeData.object;
@@ -388,7 +398,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     type = blockSyntax.key;
             }
 
-            console.log("callee", callee);
+            console.log("callee check line", callee);
 
             if(callee.object) {
                 if(callee.object.name === "Math") {
@@ -428,7 +438,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                     }
                 }
-                else if(callee.object.name == "Entry") {
+                else if(callee.object.name == "Entry") { 
                     console.log("callee.property.name", callee.property.name);
                     console.log("callee.property.component", component);
                     if(callee.property.name == "send_signal") {
@@ -443,16 +453,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingUtil.createMessage(argument.value);
                         }
                     }
-                }
+                } 
             }
-            else if(callee) {
-                if(callee.name == "when_get_signal") {
-                    var argument = component.arguments[0];
-                    if(argument && argument.value) {
-                        Entry.TextCodingUtil.createMessage(argument.value);
-                    }
-                }
-            }
+           
 
             if(callee.property) {
                 if(callee.property.name == "range"){

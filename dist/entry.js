@@ -13538,7 +13538,11 @@ Entry.BlockToPyParser = function(b) {
   };
   b.FieldTextInput = function(a, b) {
     console.log("dataParam FieldTextInput", a);
-    "number" != typeof a && (a = a.replace("\t", "    "));
+    if ("number" != typeof a) {
+      a = a.replace("\t", "    ");
+      var c = a.split(/ /);
+      a.length == c.length - 1 && (a = '"()"'.replace("()", a));
+    }
     b && b.converter && (a = b.converter(null, a));
     return a;
   };
@@ -14191,6 +14195,7 @@ Entry.PyToBlockParser = function(b) {
           Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         }
       }
+      f && (console.log("callee123", f, "argument123", a.arguments), "when_get_signal" == f.name && (m = a.arguments[0]) && m.value && Entry.TextCodingUtil.createMessage(m.value));
     } else {
       m = g.object;
       k = null;
@@ -14219,7 +14224,7 @@ Entry.PyToBlockParser = function(b) {
         }
       }
       !e && (r = k, q = this.getBlockSyntax(r)) && (e = q.key);
-      console.log("callee", f);
+      console.log("callee check line", f);
       if (f.object) {
         if ("Math" === f.object.name) {
           if ("pow" === f.property.name) {
@@ -14241,8 +14246,6 @@ Entry.PyToBlockParser = function(b) {
         } else {
           "Entry" == f.object.name && (console.log("callee.property.name", f.property.name), console.log("callee.property.component", a), "send_signal" == f.property.name ? (m = a.arguments[0]) && m.value && Entry.TextCodingUtil.createMessage(m.value) : "send_signal_wait" == f.property.name && (m = a.arguments[0]) && m.value && Entry.TextCodingUtil.createMessage(m.value));
         }
-      } else {
-        f && "when_get_signal" == f.name && (m = a.arguments[0]) && m.value && Entry.TextCodingUtil.createMessage(m.value);
       }
       if (f.property) {
         if ("range" == f.property.name) {

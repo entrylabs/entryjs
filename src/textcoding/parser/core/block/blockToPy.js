@@ -428,9 +428,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     p.FieldTextInput = function(dataParam, textParam) {
         console.log("dataParam FieldTextInput", dataParam); 
-        if(typeof dataParam != "number") 
+        if(typeof dataParam != "number") {
             dataParam = dataParam.replace('\t', '    ');
-             
+            var spaces = dataParam.split(/ /);  
+           
+            if(dataParam.length == spaces.length-1)
+                dataParam = '"()"'.replace('()', dataParam);
+        }
+
         if(textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
 
