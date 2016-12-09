@@ -1,5 +1,29 @@
 (function() {
     var miniBlock = {
+        practical_course_dummy: {
+            color: '#7C7C7C',
+            skeleton: 'basic',
+            statements: [],
+            isNotFor: [ 'arduinoDisconnected' ],
+            template: '%1',
+            params: [{
+                type: "Indicator",
+                color: "#6B6B6B",
+                size: 12
+            }],
+            events: {},
+            def: {
+                params: [
+                    null
+                ],
+                type: "hidden"
+            },
+            paramsKeyMap: {
+                VALUE: 0
+            },
+            func: function(sprite, script) {
+            }
+        },    
         practical_course_motor_speed: {
             color: '#00B200',
             skeleton: 'basic_string_field',
@@ -32,7 +56,7 @@
             def: {
                 params: [null]
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 VALUE: 0
             },
             func: function(sprite, script) {
@@ -67,7 +91,7 @@
                 params: [null, null, null],
                 type: 'practical_course_set_servo2'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0,
                 'DEGREE': 1
             },
@@ -134,7 +158,7 @@
                 }, null],
                 type: 'practical_course_move_for_secs'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 'WHEEL': 0,
                 'DIRECTION': 1,
                 'SPEED': 2,
@@ -246,7 +270,7 @@
                 }, null],
                 type: 'practical_course_move_for'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 'WHEEL': 0,
                 'DIRECTION': 1,
                 'SPEED': 2
@@ -309,7 +333,7 @@
                 params: [null, null],
                 type: 'practical_course_stop_for'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 'WHEEL': 0
             },
             class: 'practical_course_motor',
@@ -348,7 +372,7 @@
                 params: [null],
                 type: 'practical_course_touch_value'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0
             },
             class: 'practical_course_touch',
@@ -386,7 +410,7 @@
                 params: [null, null, null],
                 type: 'practical_course_touch_value_boolean'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0,
                 'TOUCH': 1
             },
@@ -422,7 +446,7 @@
                 params: [null],
                 type: 'practical_course_light_value'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0
             },
             class: 'practical_course_light',
@@ -469,7 +493,7 @@
                 }],
                 type: 'practical_course_light_value_boolean'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0,
                 'OPERATOR': 1,
                 'RIGHTVALUE': 2
@@ -525,7 +549,7 @@
                 params: [null],
                 type: 'practical_course_sound_value'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0
             },
             class: 'practical_course_sound',
@@ -572,7 +596,7 @@
                 }],
                 type: 'practical_course_sound_value_boolean'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0,
                 'OPERATOR': 1,
                 'RIGHTVALUE': 2
@@ -628,7 +652,7 @@
                 params: [null],
                 type: 'practical_course_irs_value'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0
             },
             class: 'practical_course_irs',
@@ -676,7 +700,7 @@
                 }],
                 type: 'practical_course_irs_value_boolean'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0,
                 'OPERATOR': 1,
                 'RIGHTVALUE': 2
@@ -751,7 +775,7 @@
                 }, null, null],
                 type: 'practical_course_diode_secs_toggle'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0,
                 DURATION: 1,
                 VALUE: 2
@@ -832,7 +856,7 @@
                 params: [null, null, null],
                 type: 'practical_course_diode_toggle'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1
             },
@@ -904,7 +928,7 @@
                 ],
                 type: 'practical_course_diode_inout_toggle'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 'OUTPUT': 0,
                 'INPUT': 1,
                 'MIN': 2,
@@ -968,7 +992,7 @@
                 }, null],
                 type: 'practical_course_diode_set_output',
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1
             },
@@ -1013,7 +1037,7 @@
                 params: [null],
                 type: 'practical_course_diode_input_value'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 PORT: 0
             },
             class: 'practical_course_diode',
@@ -1080,7 +1104,7 @@
                 params: [null, null, null, null],
                 type: 'practical_course_melody_note_for'
             },
-            paramskEymAp: {
+            paramsKeyMap: {
                 'NOTE': 0,
                 'OCTAVE': 1,
                 DURATION: 2

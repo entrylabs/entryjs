@@ -194,6 +194,7 @@ EntryStatic.getAllBlocks = function() {
         category: "hw_motor",
         visible: false,
         blocks: [
+            "practical_course_dummy",
             "practical_course_move_for_secs",
             "practical_course_move_for",
             "practical_course_stop_for",
@@ -203,12 +204,14 @@ EntryStatic.getAllBlocks = function() {
         category: "hw_melody",
         visible: false,
         blocks: [
+            "practical_course_dummy",
             "practical_course_melody_note_for",
         ]
     }, {
         category: "hw_sensor",
         visible: false,
         blocks: [
+            "practical_course_dummy",
             "practical_course_touch_value",
             "practical_course_touch_value_boolean",
             "practical_course_light_value",
@@ -222,6 +225,7 @@ EntryStatic.getAllBlocks = function() {
         category: "hw_led",
         visible: false,
         blocks: [
+            "practical_course_dummy",
             "practical_course_diode_secs_toggle",
             "practical_course_diode_toggle",
             "practical_course_diode_inout_toggle",
