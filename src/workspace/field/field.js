@@ -235,10 +235,13 @@ Entry.Field = function() {};
     p._convert = function(key, value) {
         value = value !== undefined ? value : this.getValue();
         if (this._contents.converter) {
+            var isLocalType = false;
+            if(Entry.TextCodingUtil.isLocalType(value, this._contents.menuName))
+                isLocalType = true;
             var result = this._contents.converter(key, value);
             if(this._contents.codeMap) {
                 result = result.replace(/\"/g, "");
-                var codeMap = eval(this._contents.codeMap);
+                var codeMap = eval(this._contents.codeMap); 
                 if(codeMap)
                     var code = codeMap[result];
                 if(code)
@@ -257,7 +260,9 @@ Entry.Field = function() {};
                 }
             }
             
-            if(this._contents.paramType == "variable") {
+            if(this._contents.paramType == "variable" || this._contents.paramType == "list") {
+                if(isLocalType)
+                    result = "self." + result;
                 result = result.replace(/\"/g, "");
             }
             return result;

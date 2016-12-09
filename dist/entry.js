@@ -12482,7 +12482,7 @@ Entry.TextCodingUtil = {};
       var c = Entry.variableContainer.variables_, e;
       for (e in c) {
         var f = c[e];
-        console.log("entryVariable", f);
+        console.log("entryVariable variable", f);
         if (f.id_ == a) {
           if (f.object_) {
             return !0;
@@ -12492,9 +12492,11 @@ Entry.TextCodingUtil = {};
       }
     } else {
       if ("lists" == b) {
-        for (e in c = Entry.variableContainer.lists, c) {
-          if (c[e].id_ == a) {
-            if (f.object_) {
+        for (e in c = Entry.variableContainer.lists_, c) {
+          var g = c[e];
+          console.log("entryVariable list", f);
+          if (g.id_ == a) {
+            if (g.object_) {
               return !0;
             }
             break;
@@ -24327,18 +24329,22 @@ Entry.Field = function() {
   b._convert = function(a, b) {
     b = void 0 !== b ? b : this.getValue();
     if (this._contents.converter) {
-      var c = this._contents.converter(a, b);
+      var c = !1;
+      Entry.TextCodingUtil.isLocalType(b, this._contents.menuName) && (c = !0);
+      var e = this._contents.converter(a, b);
       if (this._contents.codeMap) {
-        var c = c.replace(/\"/g, ""), e = eval(this._contents.codeMap);
-        if (e) {
-          var f = e[c]
+        var e = e.replace(/\"/g, ""), f = eval(this._contents.codeMap);
+        if (f) {
+          var g = f[e]
         }
-        f && (c = f);
-        c = '"()"'.replace("()", c);
+        g && (e = g);
+        e = '"()"'.replace("()", e);
       }
-      isNaN(c) && "no" != this._contents.caseType && (c = "upper" == this._contents.caseType ? c.toUpperCase() : c.toLowerCase());
-      "variable" == this._contents.paramType && (c = c.replace(/\"/g, ""));
-      return c;
+      isNaN(e) && "no" != this._contents.caseType && (e = "upper" == this._contents.caseType ? e.toUpperCase() : e.toLowerCase());
+      if ("variable" == this._contents.paramType || "list" == this._contents.paramType) {
+        c && (e = "self." + e), e = e.replace(/\"/g, "");
+      }
+      return e;
     }
     return a;
   };
