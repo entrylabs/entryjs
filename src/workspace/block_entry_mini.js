@@ -16,7 +16,7 @@
                 params: [
                     null
                 ],
-                type: "hidden"
+                type: "practical_course_dummy"
             },
             paramsKeyMap: {
                 VALUE: 0
