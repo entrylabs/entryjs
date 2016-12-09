@@ -12345,69 +12345,68 @@ Entry.TextCodingUtil = {};
     }
     return a;
   };
-  b.dropdownDynamicNameToIdConvertor = function(a, b) {
+  b.dropdownDynamicNameToIdConvertor = function(a, b, c) {
     if (!a) {
       return a;
     }
-    var c;
+    var e;
     if ("scenes" == b) {
-      var e = Entry.scene.getScenes(), f;
-      for (f in e) {
-        var g = e[f];
-        if (a == g.name) {
-          c = g.id;
+      var f = Entry.scene.getScenes(), g;
+      for (g in f) {
+        var h = f[g];
+        if (a == h.name) {
+          e = h.id;
           break;
         }
       }
     } else {
       if ("spritesWithMouse" == b || "spritesWithSelf" == b) {
-        var h = Entry.container.getAllObjects();
-        for (e in h) {
-          if (f = h[e], a == f.name) {
-            c = f.id;
+        var k = Entry.container.getAllObjects();
+        for (f in k) {
+          if (c = k[f], a == c.name) {
+            e = c.id;
             break;
           }
         }
       } else {
         if ("variables" == b) {
-          for (h in e = Entry.variableContainer.variables_, e) {
-            if (g = e[h], g.name_ == a) {
-              c = g.id_;
+          for (k in f = Entry.variableContainer.variables_, f) {
+            if (h = f[k], h.name_ == a) {
+              c ? c.id == h.object_ && (e = h.id_) : e = h.id_;
               break;
             }
           }
         } else {
           if ("lists" == b) {
-            for (h in g = Entry.variableContainer.lists_, console.log("dropdownDynamicValueConvertor entryLists", g), g) {
-              if (e = g[h], e.name_ == a) {
-                c = e.id_;
+            for (k in h = Entry.variableContainer.lists_, console.log("dropdownDynamicValueConvertor entryLists", h), h) {
+              if (f = h[k], f.name_ == a) {
+                e = f.id_;
                 break;
               }
             }
           } else {
             if ("messages" == b) {
-              for (h in g = Entry.variableContainer.messages_, g) {
-                if (e = g[h], e.name == a) {
-                  c = e.id;
+              for (k in h = Entry.variableContainer.messages_, h) {
+                if (f = h[k], f.name == a) {
+                  e = f.id;
                   break;
                 }
               }
             } else {
               if ("pictures" == b) {
-                for (e in h = Entry.container.getAllObjects(), h) {
-                  for (g in f = h[e], f = f.pictures, f) {
-                    var k = f[g];
-                    if (k.name == a) {
-                      return c = k.id;
+                for (f in k = Entry.container.getAllObjects(), k) {
+                  for (h in c = k[f], c = c.pictures, c) {
+                    if (g = c[h], g.name == a) {
+                      return e = g.id;
                     }
                   }
                 }
               } else {
                 if ("sounds" == b) {
-                  for (e in h = Entry.container.getAllObjects(), h) {
-                    for (g in f = h[e], f = f.sounds, f) {
-                      if (k = f[g], k.name == a) {
-                        return c = k.id;
+                  for (f in k = Entry.container.getAllObjects(), k) {
+                    for (h in c = k[f], c = c.sounds, c) {
+                      if (g = c[h], g.name == a) {
+                        return e = g.id;
                       }
                     }
                   }
@@ -12418,33 +12417,34 @@ Entry.TextCodingUtil = {};
         }
       }
     }
-    c || (c = "None");
-    return c;
+    e || (e = "None");
+    return e;
   };
   b.dropdownDynamicIdToNameConvertor = function(a, b) {
     console.log("dropdownDynamicIdToNameConvertor id", a, "menuName", b);
-    var c = null, c = a;
+    var c = a;
     if ("variables" == b) {
       var e = Entry.variableContainer.variables_, f;
       for (f in e) {
         var g = e[f];
         if (g.id_ == a) {
-          c = g.name_;
+          c = g.object_ ? "self." + g.name_ : g.name_;
           break;
         }
       }
     } else {
       if ("lists" == b) {
-        for (f in g = Entry.variableContainer.lists, g) {
-          if (e = g[f], e.id_ == a) {
-            c = e.name_;
+        var h = Entry.variableContainer.lists;
+        for (f in h) {
+          if (e = h[f], e.id_ == a) {
+            c = g.object_ ? "self." + e.name_ : e.name_;
             break;
           }
         }
       } else {
         if ("messages" == b) {
-          for (f in g = Entry.variableContainer.messages_, g) {
-            if (e = g[f], e.id == a) {
+          for (f in h = Entry.variableContainer.messages_, h) {
+            if (e = h[f], e.id == a) {
               c = e.name;
               break;
             }
@@ -12452,9 +12452,8 @@ Entry.TextCodingUtil = {};
         } else {
           if ("pictures" == b) {
             for (e in f = Entry.container.getAllObjects(), f) {
-              var h = f[e], h = h.pictures;
-              for (g in h) {
-                var k = h[g];
+              for (h in g = f[e], g = g.pictures, g) {
+                var k = g[h];
                 if (k.id == a) {
                   return c = k.name;
                 }
@@ -12463,8 +12462,8 @@ Entry.TextCodingUtil = {};
           } else {
             if ("sounds" == b) {
               for (e in f = Entry.container.getAllObjects(), f) {
-                for (g in h = f[e], h = h.sounds, h) {
-                  if (k = h[g], k.id == a) {
+                for (h in g = f[e], g = g.sounds, g) {
+                  if (k = g[h], k.id == a) {
                     return c = k.name;
                   }
                 }
@@ -12476,6 +12475,34 @@ Entry.TextCodingUtil = {};
     }
     console.log("dropdownDynamicValueConvertor result", c);
     return c;
+  };
+  b.isLocalType = function(a, b) {
+    console.log("isLocalType id", a, "menuName", b);
+    if ("variables" == b) {
+      var c = Entry.variableContainer.variables_, e;
+      for (e in c) {
+        var f = c[e];
+        console.log("entryVariable", f);
+        if (f.id_ == a) {
+          if (f.object_) {
+            return !0;
+          }
+          break;
+        }
+      }
+    } else {
+      if ("lists" == b) {
+        for (e in c = Entry.variableContainer.lists, c) {
+          if (c[e].id_ == a) {
+            if (f.object_) {
+              return !0;
+            }
+            break;
+          }
+        }
+      }
+    }
+    return !1;
   };
   b.binaryOperatorValueConvertor = function(a) {
     switch(a) {
@@ -12649,17 +12676,6 @@ Entry.TextCodingUtil = {};
   };
   b.createMessage = function(a) {
     Entry.isExist(a, "name", Entry.variableContainer.messages_) || (Entry.variableContainer.addMessage({name:a}), Entry.variableContainer.updateList());
-  };
-  b.isLocalType = function(a, b) {
-    if ("get_variable" == a.data.type || "set_variable" == a.data.type || "change_variable" == a.data.type) {
-      if (this.isLocalVariable(b)) {
-        return !0;
-      }
-    } else {
-      if (("value_of_index_from_list" == a.data.type || "add_value_to_list" == a.data.type || "remove_value_from_list" == a.data.type || "insert_value_to_list" == a.data.type || "change_value_list_index" == a.data.type || "length_of_list" == a.data.type || "is_included_in_list" == a.data.type) && this.isLocalList(b)) {
-        return !0;
-      }
-    }
   };
   b.isEventBlock = function(a) {
     a = a.data.type;
@@ -13399,7 +13415,7 @@ Entry.BlockToPyParser = function(b) {
                   b += f;
                 }
               } else {
-                f = c.textParams ? c.textParams : [], f = this["Field" + k[n].type](l[n], f[n]), Entry.TextCodingUtil.isLocalType(a, a.params[n]) && (f = "self".concat(".").concat(f)), b += f, b = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(a, b);
+                f = c.textParams ? c.textParams : [], f = this["Field" + k[n].type](l[n], f[n]), b += f, b = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(a, b);
               }
             }
           } else {
@@ -13480,29 +13496,28 @@ Entry.BlockToPyParser = function(b) {
   };
   b.FieldDropdownDynamic = function(a, b) {
     console.log("FieldDropdownDynamic", a, b);
-    var c = !1, e;
+    var c = !1, e = !1;
     if (b && b.converter && b.options) {
-      e = b.options;
-      for (var f in e) {
-        var g = e[f];
-        console.log("option", g);
-        var h = g[0], g = g[1];
-        if (a === g) {
-          key = h;
-          value = g;
+      var f = b.options, g;
+      for (g in f) {
+        var h = f[g];
+        console.log("option", h);
+        var k = h[0], h = h[1];
+        if (a === h) {
+          key = k;
+          value = h;
+          Entry.TextCodingUtil.isLocalType(value, b.menuName) && (e = !0);
           a = b.converter(key, value);
-          console.log("dataParam convert result", a);
-          b.codeMap && (a = a.replace(/\"/g, ""), c = eval(b.codeMap), e = c[a], console.log("codeMap", c, "code", e, "dataParam", a), e && (a = e), a = '"()"'.replace("()", a));
+          b.codeMap && (a = a.replace(/\"/g, ""), c = eval(b.codeMap), f = c[a], console.log("codeMap", c, "code", f, "dataParam", a), f && (a = f), a = '"()"'.replace("()", a));
           isNaN(a) && "no" != b.caseType && (a = "upper" == b.caseType ? a.toUpperCase() : a.toLowerCase());
-          if ("variable" == b.paramType || "list" == b.paramType) {
-            a = a.replace(/\"/g, "");
-          }
           c = !0;
           break;
         }
       }
     }
+    console.log("dataParam", a);
     c || (a = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(a, b.menuName), isNaN(a) && (a = '"()"'.replace("()", a)));
+    !b || "variable" != b.paramType && "list" != b.paramType || (e && (a = "self." + a), a = a.replace(/\"/g, ""));
     return a;
   };
   b.FieldImage = function(a, b) {
@@ -15094,16 +15109,6 @@ Entry.PyToBlockParser = function(b) {
         }
       }
     }
-    console.log("dropdown picture sound", f);
-    if (b) {
-      g = b.options;
-      console.log("ParamDropdownDynamic options", g);
-      for (var k in g) {
-        if (a == g[k][0]) {
-          return console.log("options[i][0]", g[k][0]), f = g[k][1];
-        }
-      }
-    }
     e && e.codeMap && (e = e.codeMap, console.log("codeMap", e), e = eval(e), console.log("codeMap", e), a = a.toLowerCase(), f = e[a], console.log("codeMap result", f));
     f || (f = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(a, b.menuName));
     f || (f = a);
@@ -15184,7 +15189,7 @@ Entry.PyToBlockParser = function(b) {
         if (!Entry.TextCodingUtil.isLocalVariableExisted(h, this._currentObject)) {
           return b;
         }
-        k = this.ParamDropdownDynamic(h, l[0], m[0]);
+        k = this.ParamDropdownDynamic(h, l[0], m[0], this._currentObject);
         e.push(k);
         b.type = c;
         0 != e.length && (b.params = e, b.variableType = "local");
@@ -27174,7 +27179,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             this.board.show(), this.blockMenu.unbanClass("textMode"), this.set({selectedBoard:this.board}), this.vimBoard && this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide(), this.vimBoard._parser._isError = !1;
           } catch (c) {
             this.vimBoard._parser._isError = !0, this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.blockMenu.banClass("textMode"), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.TEXT_TYPE_JS ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_JS) : this.oldTextType == Entry.Vim.TEXT_TYPE_PY && 
-            (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_PY);
+            (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_PY), Entry.getMainWS().setMode(a);
           }
           Entry.commander.setCurrentEditor("board", this.board);
           break;
@@ -27338,8 +27343,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b._syncTextCode = function() {
     if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
-      console.log("this.vimBoard._currentObject", this.vimBoard._currentObject);
-      console.log("this.vimBoard._changedObject", this.vimBoard._changedObject);
       var a = this.vimBoard.textToCode(this.textType), b = this.board.code;
       b && b.load(a);
     }

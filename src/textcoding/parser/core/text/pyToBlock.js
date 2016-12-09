@@ -3070,9 +3070,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
         }
-        console.log("dropdown picture sound", result);
 
-        if(paramMeta) {
+        /*if(paramMeta) {
             var options = paramMeta.options;
             console.log("ParamDropdownDynamic options", options);
             for(var i in options) {
@@ -3082,7 +3081,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     return result;
                 }
             }
-        }
+        }*/
 
         if(textParam && textParam.codeMap) {
             var codeMap = textParam.codeMap;
@@ -3287,7 +3286,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(!Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject))
                         return result;
 
-                    var convertedName = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                    var convertedName = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0], this._currentObject);
 
                     params.push(convertedName);
 

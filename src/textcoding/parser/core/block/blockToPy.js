@@ -177,7 +177,6 @@ Entry.BlockToPyParser = function(blockSyntax) {
                                 }
                             }
                         }
-
                         result += param;
                     } else {
                         if(syntaxObj.textParams)
@@ -186,9 +185,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                         param = this['Field' + schemaParams[index].type](dataParams[index], textParams[index]);
 
-
-                        if(Entry.TextCodingUtil.isLocalType(currentBlock, block.params[index]))
-                            param = "self".concat('.').concat(param);
+                        /*if(Entry.TextCodingUtil.isLocalType(currentBlock, block.params[index]))
+                            param = "self".concat('.').concat(param);*/
 
                         result += param;
                         result = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(currentBlock, result);
@@ -324,10 +322,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
     p.FieldDropdownDynamic = function(dataParam, textParam) {
         console.log("FieldDropdownDynamic", dataParam, textParam); 
         var found = false;
-        var options;
-        var returnValue = dataParam;
+        var isLocalType = false;
+        //var returnValue = dataParam;
         if(textParam && textParam.converter && textParam.options) {
-            options = textParam.options;
+            var options = textParam.options;
             for(var i in options) {
                 var option = options[i];
                 console.log("option", option);
@@ -336,9 +334,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 if(dataParam === op1) { 
                     key = op0;
                     value = op1; 
-                    dataParam = textParam.converter(key, value);
+                    if(Entry.TextCodingUtil.isLocalType(value, textParam.menuName))
+                        isLocalType = true;
                     
-                    console.log("dataParam convert result", dataParam);
+                    dataParam = textParam.converter(key, value);
                     if(textParam.codeMap) { 
                         dataParam = dataParam.replace(/\"/g, "");
                         var codeMap = eval(textParam.codeMap); 
@@ -361,19 +360,24 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
                     }
 
-                    if(textParam.paramType == "variable" || textParam.paramType == "list") {
-                        dataParam = dataParam.replace(/\"/g, "");
-                    }
                     found = true; 
                     break;
                 }
             }
         }
 
+        console.log("dataParam", dataParam);
+
         if(!found) {
             dataParam = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(dataParam, textParam.menuName);
             if(isNaN(dataParam))
                 dataParam = '"()"'.replace('()', dataParam);
+        }
+
+        if(textParam && (textParam.paramType == "variable" || textParam.paramType == "list")) {
+            if(isLocalType)
+                dataParam = "self." + dataParam;
+            dataParam = dataParam.replace(/\"/g, "");
         }
 
         return dataParam;
@@ -427,7 +431,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldTextInput = function(dataParam, textParam) {
-        console.log("dataParam FieldTextInput", dataParam); 
+        console.log("dataParam FieldTextInput", dataParam);
         if(typeof dataParam != "number") {
             dataParam = dataParam.replace('\t', '    ');
             var spaces = dataParam.split(/ /);  
