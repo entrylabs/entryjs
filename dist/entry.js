@@ -21626,6 +21626,10 @@ Entry.Tooltip = function(b, a) {
   this._indicators = [];
   1 < b.length && (this.isIndicator = !0);
   this.render();
+  this._resizeEventFunc = Entry.Utils.debounce(function() {
+    this.alignTooltips();
+  }.bind(this), 200);
+  Entry.addEventListener("windowResized", this._resizeEventFunc);
 };
 (function(b) {
   b.render = function() {
@@ -21639,34 +21643,44 @@ Entry.Tooltip = function(b, a) {
   b.renderTooltips = function() {
     this.data.map(this._renderTooltip.bind(this));
   };
+  b.alignTooltips = function() {
+    this.data.map(this._alignTooltip.bind(this));
+  };
   b._renderTooltip = function(a) {
-    var b = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), d = Entry.Dom("div", {classes:["entryTooltip", a.direction, a.style], parent:b}), e = a.target.offset(), f = a.target.get(0).getBoundingClientRect();
-    this.isIndicator && this.renderIndicator(e.left + f.width / 2, e.top + f.height / 2);
-    switch(a.direction) {
-      case "up":
-        e.left += f.width / 2;
-        e.top -= 11;
-        break;
-      case "down":
-        e.left += f.width / 2;
-        e.top += f.height;
-        break;
-      case "left":
-        e.top += f.height / 2;
-        e.left -= 11;
-        break;
-      case "right":
-        e.left += f.width, e.top += f.height / 2;
-    }
-    b.css(e);
+    var b = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), d = Entry.Dom("div", {classes:["entryTooltip", a.direction, a.style], parent:b});
+    this.isIndicator && (a.indicator = this.renderIndicator());
     d.html(a.content.replace(/\n/gi, "<br>"));
     this._tooltips.push(b);
+    a.wrapper = b;
+    a.dom = d;
+    this._alignTooltip(a);
+  };
+  b._alignTooltip = function(a) {
+    var b = a.target.offset(), d = a.target.get(0).getBoundingClientRect();
+    this.isIndicator && a.indicator.css({left:b.left + d.width / 2, top:b.top + d.height / 2});
+    switch(a.direction) {
+      case "up":
+        b.left += d.width / 2;
+        b.top -= 11;
+        break;
+      case "down":
+        b.left += d.width / 2;
+        b.top += d.height;
+        break;
+      case "left":
+        b.top += d.height / 2;
+        b.left -= 11;
+        break;
+      case "right":
+        b.left += d.width, b.top += d.height / 2;
+    }
+    a.wrapper.css(b);
   };
   b.renderIndicator = function(a, b) {
-    var c = Entry.Dom("div", {classes:["entryTooltipIndicator"], parent:$(document.body)});
-    c.html("<div></div><div></div><div></div>");
-    c.css({left:a, top:b});
-    this._indicators.push(c);
+    a = Entry.Dom("div", {classes:["entryTooltipIndicator"], parent:$(document.body)});
+    a.html("<div></div><div></div><div></div>");
+    this._indicators.push(a);
+    return a;
   };
   b.dispose = function() {
     this._bg && this._bg.remove();
@@ -21676,6 +21690,7 @@ Entry.Tooltip = function(b, a) {
     for (;this._indicators.length;) {
       this._indicators.pop().remove();
     }
+    Entry.removeEventListener("windowResized", this._resizeEventFunc);
   };
 })(Entry.Tooltip.prototype);
 Entry.Variable = function(b) {
