@@ -657,7 +657,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                         else {
                             var name = callee.object.name;
-                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)){
+                            if(!Entry.TextCodingUtil.isGlobalListExisted(name) && !Entry.TextCodingUtil.isLocalListExisted(name)){
                                 var keyword = name;
                                 console.log("errorId", 6);
                                 Entry.TextCodingError.error(
@@ -2036,9 +2036,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var calleeName = rightData.callee.object.object.name.concat('.')
                         .concat(rightData.callee.object.property.name).concat('.')
                         .concat(rightData.callee.property.name);
-                }
+                } 
 
-                if(calleeName == "__pythonRuntime.objects.list") {
+                /*if(calleeName == "__pythonRuntime.objects.list") {
                     if(leftData && leftData.object && leftData.object.name == "self") {
                         if(leftData.property) {
                             var calleeName;
@@ -2064,7 +2064,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             }
                         }
                     }
-                }
+                }*/
 
                 //left expressoin
                 if(left.name) {
@@ -2447,36 +2447,62 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("assi leftData.property", leftData.property);
 
                 if(leftData.object.name == "self") {
-                    var name = leftData.property.name;
-                    if(rightData.type == "number" || rightData.type == "text")
-                        var value = rightData.params[0];
-                    else 
-                        var value = 0;
-                    /*else
-                        var value = 0;*/
-                    /*if(typeof value != "string" && typeof value != "number") {
-                        value = 0;
-                    }*/
 
-                    if(value || value == 0) {
-                        if(Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
+
+                    if(calleeName == "__pythonRuntime.objects.list") {
+                        var name = leftData.property.name;
+
+                        var array = [];
+                        var arguments = rightData.arguments;
+                        for(var a in arguments) {
+                            var argument = arguments[a];
+                            var item = {};
+                            item.data = String(argument.params[0]);
+                            array.push(item);
+                        }
+
+                        if(Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)) {
                             if(!this._funcLoop)
-                                Entry.TextCodingUtil.updateLocalVariable(name, value, this._currentObject);
+                                Entry.TextCodingUtil.updateLocalList(name, array, this._currentObject);
                         }
                         else {
                             if(!this._funcLoop) {
-                                Entry.TextCodingUtil.createLocalVariable(name, value, this._currentObject);
-                            }
-                            else {
-                                value = 0;
-                                Entry.TextCodingUtil.createLocalVariable(name, value, this._currentObject);
+                                Entry.TextCodingUtil.createLocalList(name, array, this._currentObject);
                             }
                         }
                     }
+                    else {
+                        var name = leftData.property.name;
+                        if(rightData.type == "number" || rightData.type == "text")
+                            var value = rightData.params[0];
+                        else 
+                            var value = 0;
+                        /*else
+                            var value = 0;*/
+                        /*if(typeof value != "string" && typeof value != "number") {
+                            value = 0;
+                        }*/
 
-                    name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
-                    params.push(name);
-                    params.push(rightData);
+                        if(value || value == 0) {
+                            if(Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
+                                if(!this._funcLoop)
+                                    Entry.TextCodingUtil.updateLocalVariable(name, value, this._currentObject);
+                            }
+                            else {
+                                if(!this._funcLoop) {
+                                    Entry.TextCodingUtil.createLocalVariable(name, value, this._currentObject);
+                                }
+                                else {
+                                    value = 0;
+                                    Entry.TextCodingUtil.createLocalVariable(name, value, this._currentObject);
+                                }
+                            }
+                        }
+
+                        name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                        params.push(name);
+                        params.push(rightData);
+                    }
                 }
             }
             else {
