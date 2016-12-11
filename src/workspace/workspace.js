@@ -114,6 +114,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.blockMenu.banClass('textMode');
                     this.set({selectedBoard:this.vimBoard});
                     this.vimBoard.show();
+                    this.initDeclaration();
                     this.codeToText(this.board.code, mode);
                     this.blockMenu.renderText();
                     this.board.clear();
@@ -459,5 +460,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p._isVimMode = function() {
         return this.oldMode === Entry.Workspace.MODE_VIMBOARD;
     };
+
+    p.initDeclaration = function() {
+        if(this.vimBoard && this.vimBoard._parser) {
+            var parser = this.vimBoard._parser;
+            parser.py_variableDeclaration = null;
+            parser.py_listDeclaration = null;
+            parser.py_funcDeclaration = null;
+        }
+    }
 
 })(Entry.Workspace.prototype);

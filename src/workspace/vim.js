@@ -195,13 +195,18 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         
 
         var textType = mode.textType; 
+        this._oldParserType = mode.textType;
 
         if (textType === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
-            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            if(this._oldParserType != this._parserType)
+                this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            this._oldParserType = this._parserType;
         } else if(textType === Entry.Vim.TEXT_TYPE_PY) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            if(this._oldParserType != this._parserType)
+                this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            this._oldParserType = this._parserType;
         }
 
         var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);

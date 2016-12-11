@@ -3034,7 +3034,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         
         console.log("ParamDropdown result", result);
 
-        return result;
+        return result; 
     };
 
     p.ParamDropdownDynamic = function(value, paramMeta, paramDefMeta, textParam, currentObject) {
