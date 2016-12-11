@@ -7024,7 +7024,7 @@ Entry.Container.prototype.selectObject = function(b, a) {
   if (d) {
     d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0;
   } else {
-    var c = Entry.getMainworkspace();
+    var c = Entry.getMainWS();
     c && c.vimBoard && c.vimBoard.clearText();
   }
   Entry.playground && Entry.playground.injectObject(d);
@@ -12346,67 +12346,71 @@ Entry.TextCodingUtil = {};
     return a;
   };
   b.dropdownDynamicNameToIdConvertor = function(a, b, c) {
-    if (!a) {
-      return a;
-    }
-    var e;
+    console.log("dropdownDynamicNameToIdConvertor", a, b, c);
     if ("scenes" == b) {
-      var f = Entry.scene.getScenes(), g;
-      for (g in f) {
-        var h = f[g];
-        if (a == h.name) {
-          e = h.id;
-          break;
+      var e = Entry.scene.getScenes(), f;
+      for (f in e) {
+        var g = e[f];
+        if (a == g.name) {
+          return g.id;
         }
       }
     } else {
-      if ("spritesWithMouse" == b || "spritesWithSelf" == b) {
-        var k = Entry.container.getAllObjects();
-        for (f in k) {
-          if (c = k[f], a == c.name) {
-            e = c.id;
-            break;
+      if ("spritesWithMouse" == b || "spritesWithSelf" == b || "collision" == b) {
+        for (e in g = Entry.container.getAllObjects(), g) {
+          if (c = g[e], a == c.name) {
+            return c.id;
           }
         }
       } else {
         if ("variables" == b) {
-          for (k in f = Entry.variableContainer.variables_, f) {
-            if (h = f[k], h.name_ == a) {
-              c ? c.id == h.object_ && (e = h.id_) : e = h.id_;
-              break;
+          for (g in e = Entry.variableContainer.variables_, e) {
+            var h = e[g];
+            if (h.name_ == a) {
+              if (c) {
+                if (c.id == h.object_) {
+                  return h.id_;
+                }
+              } else {
+                return h.id_;
+              }
             }
           }
         } else {
           if ("lists" == b) {
-            for (k in h = Entry.variableContainer.lists_, console.log("dropdownDynamicValueConvertor entryLists", h), h) {
-              if (f = h[k], f.name_ == a) {
-                e = f.id_;
-                break;
+            for (g in e = Entry.variableContainer.lists_, e) {
+              if (h = e[g], h.name_ == a) {
+                if (c) {
+                  if (c.id == h.object_) {
+                    return h.id_;
+                  }
+                } else {
+                  return h.id_;
+                }
               }
             }
           } else {
             if ("messages" == b) {
-              for (k in h = Entry.variableContainer.messages_, h) {
-                if (f = h[k], f.name == a) {
-                  e = f.id;
-                  break;
+              for (g in e = Entry.variableContainer.messages_, e) {
+                if (h = e[g], h.name == a) {
+                  return h.id;
                 }
               }
             } else {
               if ("pictures" == b) {
-                for (f in k = Entry.container.getAllObjects(), k) {
-                  for (h in c = k[f], c = c.pictures, c) {
-                    if (g = c[h], g.name == a) {
-                      return e = g.id;
+                for (e in g = Entry.container.getAllObjects(), g) {
+                  for (h in c = g[e], c = c.pictures, c) {
+                    if (f = c[h], f.name == a) {
+                      return f.id;
                     }
                   }
                 }
               } else {
                 if ("sounds" == b) {
-                  for (f in k = Entry.container.getAllObjects(), k) {
-                    for (h in c = k[f], c = c.sounds, c) {
-                      if (g = c[h], g.name == a) {
-                        return e = g.id;
+                  for (e in g = Entry.container.getAllObjects(), g) {
+                    for (h in c = g[e], c = c.sounds, c) {
+                      if (f = c[h], f.name == a) {
+                        return f.id;
                       }
                     }
                   }
@@ -12417,12 +12421,12 @@ Entry.TextCodingUtil = {};
         }
       }
     }
-    e || (e = "None");
-    return e;
+    console.log("dropdownDynamicNameToIdConvertor result", a);
+    return a;
   };
   b.dropdownDynamicIdToNameConvertor = function(a, b) {
     console.log("dropdownDynamicIdToNameConvertor id", a, "menuName", b);
-    var c = a;
+    var c;
     if ("variables" == b) {
       var e = Entry.variableContainer.variables_, f;
       for (f in e) {
@@ -12434,17 +12438,16 @@ Entry.TextCodingUtil = {};
       }
     } else {
       if ("lists" == b) {
-        var h = Entry.variableContainer.lists;
-        for (f in h) {
-          if (e = h[f], e.id_ == a) {
-            c = g.object_ ? "self." + e.name_ : e.name_;
+        for (f in g = Entry.variableContainer.lists_, g) {
+          if (e = g[f], e.id_ == a) {
+            c = e.object_ ? "self." + e.name_ : e.name_;
             break;
           }
         }
       } else {
         if ("messages" == b) {
-          for (f in h = Entry.variableContainer.messages_, h) {
-            if (e = h[f], e.id == a) {
+          for (f in g = Entry.variableContainer.messages_, g) {
+            if (e = g[f], e.id == a) {
               c = e.name;
               break;
             }
@@ -12452,8 +12455,9 @@ Entry.TextCodingUtil = {};
         } else {
           if ("pictures" == b) {
             for (e in f = Entry.container.getAllObjects(), f) {
-              for (h in g = f[e], g = g.pictures, g) {
-                var k = g[h];
+              var h = f[e], h = h.pictures;
+              for (g in h) {
+                var k = h[g];
                 if (k.id == a) {
                   return c = k.name;
                 }
@@ -12462,9 +12466,18 @@ Entry.TextCodingUtil = {};
           } else {
             if ("sounds" == b) {
               for (e in f = Entry.container.getAllObjects(), f) {
-                for (h in g = f[e], g = g.sounds, g) {
-                  if (k = g[h], k.id == a) {
+                for (g in h = f[e], h = h.sounds, h) {
+                  if (k = h[g], k.id == a) {
                     return c = k.name;
+                  }
+                }
+              }
+            } else {
+              if ("scenes" == b) {
+                for (h in e = Entry.scene.getScenes(), e) {
+                  if (g = e[h], g.id == a) {
+                    c = g.name;
+                    break;
                   }
                 }
               }
@@ -12473,8 +12486,36 @@ Entry.TextCodingUtil = {};
         }
       }
     }
-    console.log("dropdownDynamicValueConvertor result", c);
+    console.log("dropdownDynamicIdToNameConvertor result", c);
     return c;
+  };
+  b.getDynamicIdByNumber = function(a, b, c) {
+    console.log("getDynamicIdByNumber", a, b, c);
+    var e = a;
+    isNaN(a) && (a = parseInt(a));
+    if ("pictures" == b.menuName) {
+      if (0 < a) {
+        b = Entry.container.getAllObjects();
+        for (var f in b) {
+          var g = b[f];
+          if (g.id == c.id && (g = g.pictures[a - 1])) {
+            e = g.name;
+            break;
+          }
+        }
+      }
+    } else {
+      if ("sounds" == b.menuName && 0 < a) {
+        for (f in b = Entry.container.getAllObjects(), b) {
+          if (g = b[f], g.id == c.id && (g = g.sounds[a - 1])) {
+            e = g.name;
+            break;
+          }
+        }
+      }
+    }
+    console.log("getDynamicIdByNumber result", e);
+    return e;
   };
   b.isLocalType = function(a, b) {
     console.log("isLocalType id", a, "menuName", b);
@@ -12642,6 +12683,9 @@ Entry.TextCodingUtil = {};
     this.isGlobalListExisted(a) || (Entry.variableContainer.addList({name:a, array:b, variableType:"list"}), Entry.variableContainer.updateList());
   };
   b.isLocalListExisted = function(a, b) {
+    if (!b) {
+      return !1;
+    }
     var c = Entry.variableContainer.lists_, e;
     for (e in c) {
       var f = c[e];
@@ -13417,7 +13461,7 @@ Entry.BlockToPyParser = function(b) {
                   b += f;
                 }
               } else {
-                f = c.textParams ? c.textParams : [], f = this["Field" + k[r].type](l[r], f[r]), b += f, b = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(a, b);
+                f = c.textParams ? c.textParams : [], f = this["Field" + k[r].type](l[r], f[r]), b += f, c && "repeat_while_true" == c.key && (b = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(a, b));
               }
             }
           } else {
@@ -13472,54 +13516,28 @@ Entry.BlockToPyParser = function(b) {
   };
   b.FieldDropdown = function(a, b) {
     console.log("FieldDropdown", a, b);
-    var c, e;
     if (b && b.converter && b.options) {
-      for (c in b.options) {
-        var f = b.options[c];
-        console.log("option", f);
-        e = f[0];
-        f = f[1];
-        console.log("dataparam", a);
-        if (a == f) {
-          c = e;
-          e = f;
-          b.codeMap && (f = eval(b.codeMap)[e]) && (e = f);
-          console.log("dropdown key, value", c, e);
-          isNaN(c) && isNaN(e) && "no" != b.caseType && ("upper" == b.caseType ? (c = c.toUpperCase(), e = e.toUpperCase()) : (c = c.toLowerCase(), e = e.toLowerCase()));
-          a = b.converter(c, e);
-          if ("variable" == b.paramType || "list" == b.paramType) {
-            a = a.replace(/\"/g, "");
-          }
-          break;
-        }
+      var c = b.options, e;
+      for (e in c) {
+        var f = c[e][0], g = c[e][1];
+        a == g && (a = b.converter(f, g));
       }
     }
     return a;
   };
   b.FieldDropdownDynamic = function(a, b) {
     console.log("FieldDropdownDynamic", a, b);
-    var c = !1, e = !1;
+    console.log("dataParam", a);
     if (b && b.converter && b.options) {
-      var f = b.options, g;
-      for (g in f) {
-        var h = f[g];
-        console.log("option", h);
-        var k = h[0], h = h[1];
-        if (a === h) {
-          key = k;
-          value = h;
-          Entry.TextCodingUtil.isLocalType(value, b.menuName) && (e = !0);
-          a = b.converter(key, value);
-          b.codeMap && (a = a.replace(/\"/g, ""), c = eval(b.codeMap), f = c[a], console.log("codeMap", c, "code", f, "dataParam", a), f && (a = f), a = '"()"'.replace("()", a));
-          isNaN(a) && "no" != b.caseType && (a = "upper" == b.caseType ? a.toUpperCase() : a.toLowerCase());
-          c = !0;
-          break;
+      var c = b.options, e;
+      for (e in c) {
+        var f = c[e][0], g = c[e][1];
+        if (a == g) {
+          return (c = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(g, b.menuName)) && (f = c), b.converter(f, g);
         }
       }
+      a = (g = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(a, b.menuName)) ? b.converter(g, g) : b.converter(a, a);
     }
-    console.log("dataParam", a);
-    c || (a = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(a, b.menuName), isNaN(a) && (a = '"()"'.replace("()", a)));
-    !b || "variable" != b.paramType && "list" != b.paramType || (e && (a = "self." + a), a = a.replace(/\"/g, ""));
     return a;
   };
   b.FieldImage = function(a, b) {
@@ -14212,7 +14230,7 @@ Entry.PyToBlockParser = function(b) {
           Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT, v, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         }
       }
-      f && (console.log("callee123", f, "argument123", a.arguments), "when_get_signal" == f.name && (m = a.arguments[0]) && m.value && Entry.TextCodingUtil.createMessage(m.value));
+      f && (console.log("callee123", f, "argument123", a.arguments), "when_get_signal" == f.name && (m = a.arguments[0]) && m.value && "None" != m.value && Entry.TextCodingUtil.createMessage(m.value));
     } else {
       m = g.object;
       k = null;
@@ -14404,7 +14422,7 @@ Entry.PyToBlockParser = function(b) {
                 }
               }
             } else {
-              if (y = f.object.name, !Entry.TextCodingUtil.isGlobalListExisted(y) && !Entry.TextCodingUtil.isLocalListExisted(y)) {
+              if (y = f.object.name, !Entry.TextCodingUtil.isGlobalListExisted(y) && !Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject)) {
                 return v = y, console.log("errorId", 6), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, v, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST), b;
               }
             }
@@ -15069,54 +15087,38 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamDropdown = function(a, b, c, e) {
     console.log("ParamDropdown value, paramMeta, paramDefMeta textParam", a, b, c, e);
-    var f;
     b = b.options;
-    console.log("options", b);
-    for (var g in b) {
-      if (c = b[g], a == c[1]) {
-        f = c[1];
+    for (var f in b) {
+      if (c = b[f], a == c[1]) {
+        a = c[1];
         break;
       }
     }
-    f || (f = a);
-    e && e.codeMap ? isNaN(f) && (g = e.codeMap, console.log("codeMap", g), g = eval(g), console.log("codeMap", g), f = f.toLowerCase(), console.log("codeMap result", f), f = g[f]) : f = f.toLowerCase();
-    isNaN(f) && e && "operator" == e.paramType && (f = f.toUpperCase());
-    f || (a && (a = a.toLowerCase()), f = a);
-    console.log("ParamDropdown result", f);
-    return f;
-  };
-  b.ParamDropdownDynamic = function(a, b, c, e) {
-    console.log("ParamDropdownDynamic value, paramMeta, paramDefMeta, textParam", a, b, c, e);
-    var f;
-    if (e) {
-      if ("picture" == e.paramType) {
-        if (!isNaN(a) && 0 < a) {
-          c = Entry.container.getAllObjects();
-          for (var g in c) {
-            var h = c[g];
-            console.log("object currentObject", h, this._currentObject);
-            if (h.id == this._currentObject.id && (h = h.pictures, console.log("pictures", h), h = h[a - 1])) {
-              a = h.name;
-              break;
-            }
-          }
-        }
-      } else {
-        if ("sound" == e.paramType && !isNaN(a) && 0 < a) {
-          for (g in c = Entry.container.getAllObjects(), c) {
-            if (h = c[g], h.id == this._currentObject.id && (h = h.sounds, console.log("sounds", h), h = h[a - 1])) {
-              a = h.name;
-              break;
-            }
-          }
-        }
+    if (e && e.codeMap) {
+      if ((f = e.codeMap) && eval(f)) {
+        var g = eval(f)[a.toLowerCase()]
       }
+      g && (a = g);
     }
-    e && e.codeMap && (e = e.codeMap, console.log("codeMap", e), e = eval(e), console.log("codeMap", e), a = a.toLowerCase(), f = e[a], console.log("codeMap result", f));
-    f || (f = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(a, b.menuName));
-    f || (f = a);
-    console.log("ParamDropdownDynamic result", f);
-    return f;
+    e && "operator" == e.paramType && (a = a.toUpperCase());
+    console.log("ParamDropdown result", a);
+    return a;
+  };
+  b.ParamDropdownDynamic = function(a, b, c, e, f) {
+    console.log("ParamDropdownDynamic value, paramMeta, paramDefMeta, textParam, currentObject", a, b, c, e, f);
+    c = a;
+    e && (a = Entry.TextCodingUtil.getDynamicIdByNumber(a, e, this._currentObject));
+    2 < a.split.length && "self" == a.split(".")[0] && (a = a.split(".")[1], f = this._currentObject);
+    a = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(a, b.menuName, f);
+    if (e && e.codeMap) {
+      if ((b = e.codeMap) && eval(b)) {
+        var g = eval(b)[a.toLowerCase()]
+      }
+      g && (a = g);
+    }
+    c = a;
+    console.log("ParamDropdownDynamic result", c);
+    return c;
   };
   b.ParamKeyboard = function(a, b, c) {
     console.log("ParamKeyboard value, paramMeta, paramDefMeta", a, b, c);
@@ -15171,7 +15173,7 @@ Entry.PyToBlockParser = function(b) {
       var m = Entry.block[l];
       l = m.params;
       m = m.def.params;
-      h = this.ParamDropdownDynamic(h, l[1], m[1]);
+      h = f.object && "self" == f.object.name ? this.ParamDropdownDynamic(h, l[1], m[1], null, this._currentObject) : this.ParamDropdownDynamic(h, l[1], m[1]);
       console.log("MemberExpression listName", h);
       e = [];
       "%2[%4]" == k ? e[1] = h : "%2[%4]#char_at" == k && (console.log("objectData", f), e[1] = f.object && "self" == f.object.name ? f.property : f);
@@ -15192,7 +15194,7 @@ Entry.PyToBlockParser = function(b) {
         if (!Entry.TextCodingUtil.isLocalVariableExisted(h, this._currentObject)) {
           return b;
         }
-        k = this.ParamDropdownDynamic(h, l[0], m[0], this._currentObject);
+        k = this.ParamDropdownDynamic(h, l[0], m[0], null, this._currentObject);
         e.push(k);
         b.type = c;
         0 != e.length && (b.params = e, b.variableType = "local");

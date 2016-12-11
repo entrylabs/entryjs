@@ -185,11 +185,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                         param = this['Field' + schemaParams[index].type](dataParams[index], textParams[index]);
 
-                        /*if(Entry.TextCodingUtil.isLocalType(currentBlock, block.params[index]))
-                            param = "self".concat('.').concat(param);*/
-
                         result += param;
-                        result = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(currentBlock, result);
+                        if(syntaxObj && syntaxObj.key == "repeat_while_true")
+                            result = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(currentBlock, result);
                     }
                 }
             } else if (statementReg.test(blockToken)) {
@@ -272,113 +270,45 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     p.FieldDropdown = function(dataParam, textParam) {
         console.log("FieldDropdown", dataParam, textParam);
-        var key, value;
 
-        if(textParam && textParam.converter && textParam.options) { 
-            for(var i in textParam.options) {
-                var option = textParam.options[i];
-                console.log("option", option);
-                var op0 = option[0];
-                var op1 = option[1];
-                console.log("dataparam", dataParam);
-
-                if(dataParam == op1) { 
-                    key = op0;
-                    value = op1;
-                    if(textParam.codeMap) {
-                        var codeMap = eval(textParam.codeMap);
-                        var code = codeMap[value];
-                        if(code)
-                            value = code;  
-                    }
-                    console.log("dropdown key, value", key, value);
-                    if(isNaN(key) && isNaN(value)) {
-                        if(textParam.caseType == "no") {
-                            key = key;
-                            value = value;
-                        }
-                        else if(textParam.caseType == "upper") {
-                            key = key.toUpperCase();
-                            value = value.toUpperCase();
-                        }
-                        else {
-                            key = key.toLowerCase();
-                            value = value.toLowerCase();
-                        }
-                    }
-
+        if(textParam && textParam.converter && textParam.options) {
+            var options = textParam.options;
+            for(var i in options) {
+                var key = options[i][0];
+                var value = options[i][1];
+                if(dataParam == value) { 
                     dataParam = textParam.converter(key, value);
-                    if(textParam.paramType == "variable" || textParam.paramType == "list") {
-                        dataParam = dataParam.replace(/\"/g, "");
-                    }
-                    break;
-                }
+                }   
             }
-        }
+            //dataParam = '"()"'.replace('"()"', "None");
+        } 
 
         return dataParam;
     };
 
     p.FieldDropdownDynamic = function(dataParam, textParam) {
         console.log("FieldDropdownDynamic", dataParam, textParam); 
-        var found = false;
-        var isLocalType = false;
-        //var returnValue = dataParam;
+        console.log("dataParam", dataParam);
+
         if(textParam && textParam.converter && textParam.options) {
             var options = textParam.options;
             for(var i in options) {
-                var option = options[i];
-                console.log("option", option);
-                var op0 = option[0];
-                var op1 = option[1];
-                if(dataParam === op1) { 
-                    key = op0;
-                    value = op1; 
-                    if(Entry.TextCodingUtil.isLocalType(value, textParam.menuName))
-                        isLocalType = true;
-                    
-                    dataParam = textParam.converter(key, value);
-                    if(textParam.codeMap) { 
-                        dataParam = dataParam.replace(/\"/g, "");
-                        var codeMap = eval(textParam.codeMap); 
-                        var code = codeMap[dataParam];
-                        console.log("codeMap", codeMap, "code", code, "dataParam", dataParam);
-                        if(code) 
-                            dataParam = code; 
-                        dataParam = '"()"'.replace('()', dataParam);
-                    }  
-
-                    if(isNaN(dataParam)) {
-                        if(textParam.caseType == "no") {
-                            dataParam = dataParam;
-                        }
-                        else if(textParam.caseType == "upper") { 
-                            dataParam = dataParam.toUpperCase();
-                        }
-                        else { 
-                            dataParam = dataParam.toLowerCase();
-                        }
-                    }
-
-                    found = true; 
-                    break;
-                }
+                var key = options[i][0];
+                var value = options[i][1];
+                if(dataParam == value) { 
+                    var name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(value, textParam.menuName);
+                    if(name) key = name;
+                    return dataParam = textParam.converter(key, value);
+                }   
             }
-        }
 
-        console.log("dataParam", dataParam);
-
-        if(!found) {
-            dataParam = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(dataParam, textParam.menuName);
-            if(isNaN(dataParam))
-                dataParam = '"()"'.replace('()', dataParam);
-        }
-
-        if(textParam && (textParam.paramType == "variable" || textParam.paramType == "list")) {
-            if(isLocalType)
-                dataParam = "self." + dataParam;
-            dataParam = dataParam.replace(/\"/g, "");
-        }
+            var value = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(dataParam, textParam.menuName);
+            
+            if(value) 
+                dataParam = textParam.converter(value, value);
+            else
+                dataParam = textParam.converter(dataParam, dataParam);
+        } 
 
         return dataParam;
     };

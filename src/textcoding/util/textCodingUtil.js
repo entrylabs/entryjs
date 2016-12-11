@@ -130,68 +130,63 @@ Entry.TextCodingUtil = {};
     };
 
     tu.dropdownDynamicNameToIdConvertor = function(name, menuName, currentObject) {
-        if(!name)
-            return name;
-
-        var result;
+        console.log("dropdownDynamicNameToIdConvertor", name, menuName, currentObject);
+        var result = name;
 
         if(menuName == "scenes") {
             var scenes = Entry.scene.getScenes();
             for(var s in scenes) {
                 var scene = scenes[s];
                 if(name == scene.name) {
-                    result = scene.id;
-                    break;
+                    return scene.id;
                 }
             }
         }
-        else if(menuName == "spritesWithMouse" || menuName == "spritesWithSelf") {
+        else if(menuName == "spritesWithMouse" || menuName == "spritesWithSelf" || menuName == "collision") {
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
                 var object = objects[o];
                 if(name == object.name) { 
-                    result = object.id;
-                    break;
+                    return object.id;
                 }
             }
         }
         else if(menuName == "variables") {
             var entryVariables = Entry.variableContainer.variables_;
-            //console.log("dropdownDynamicValueConvertor entryVariables", entryVariables);
             for(var e in entryVariables) {
                 var entryVariable = entryVariables[e];
                 if(entryVariable.name_ == name) {
                     if(currentObject) {
                         if(currentObject.id == entryVariable.object_)
-                            result = entryVariable.id_;
+                            return entryVariable.id_;
                     }
                     else
-                        result = entryVariable.id_;
-                    break;
+                        return entryVariable.id_;
                 }
-
             }
         }
         else if(menuName == "lists") {
             var entryLists = Entry.variableContainer.lists_;
-            console.log("dropdownDynamicValueConvertor entryLists", entryLists);
             for(var e in entryLists) {
                 var entryList = entryLists[e];
                 if(entryList.name_ == name) {
-                    result = entryList.id_;
-                    break;
+                    if(currentObject) {
+                        if(currentObject.id == entryList.object_)
+                            return entryList.id_;
+                    }
+                    else
+                        return entryList.id_;
                 }
 
             }
         }
         else if(menuName == "messages") {
             var entryMessages = Entry.variableContainer.messages_;
-            //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
             for(var e in entryMessages) {
-                var entryList = entryMessages[e];
-                if(entryList.name == name) {
-                    result = entryList.id;
-                    break;
+                var entryMessage = entryMessages[e];
+                if(entryMessage.name == name) {
+                    return entryMessage.id;
+                    
                 }
 
             }
@@ -204,8 +199,7 @@ Entry.TextCodingUtil = {};
                 for(var p in pictures) {
                     var picture = pictures[p];
                     if(picture.name == name) {
-                        result = picture.id;
-                        return result;
+                        return picture.id;
                     }
                 }
             }
@@ -218,29 +212,23 @@ Entry.TextCodingUtil = {};
                 for(var p in sounds) {
                     var sound = sounds[p];
                     if(sound.name == name) {
-                        result = sound.id;
-                        return result;
+                        return sound.id;
                     }
                 }
             }
         }
 
-        if(!result) {
-            result = "None";
-        }
-
+        console.log("dropdownDynamicNameToIdConvertor result", result);
         return result;
     };
 
     tu.dropdownDynamicIdToNameConvertor = function(id, menuName) {
-        //var options = param.options;
         console.log("dropdownDynamicIdToNameConvertor id", id, "menuName", menuName);
-        var found = false;
-        var result = id;
+        //var found = false;
+        var result;
 
-        if(!found && menuName == "variables") {
+        if(menuName == "variables") {
             var entryVariables = Entry.variableContainer.variables_;
-            //console.log("dropdownDynamicValueConvertor entryVariables", entryVariables);
             for(var e in entryVariables) {
                 var entryVariable = entryVariables[e];
                 if(entryVariable.id_ == id) {
@@ -253,13 +241,12 @@ Entry.TextCodingUtil = {};
 
             }
         }
-        else if(!found && menuName == "lists") {
-            var entryLists = Entry.variableContainer.lists;
-            //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
+        else if(menuName == "lists") {
+            var entryLists = Entry.variableContainer.lists_;
             for(var e in entryLists) {
                 var entryList = entryLists[e];
                 if(entryList.id_ == id) {
-                    if(entryVariable.object_)
+                    if(entryList.object_)
                         result = "self." + entryList.name_;
                     else
                         result = entryList.name_;
@@ -268,9 +255,8 @@ Entry.TextCodingUtil = {};
 
             }
         }
-        else if(!found && menuName == "messages") {
+        else if(menuName == "messages") {
             var entryMessages = Entry.variableContainer.messages_;
-            //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
             for(var e in entryMessages) {
                 var entryList = entryMessages[e];
                 if(entryList.id == id) {
@@ -280,7 +266,7 @@ Entry.TextCodingUtil = {};
 
             }
         }
-        else if(!found && menuName == "pictures") {
+        else if(menuName == "pictures") {
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
                 var object = objects[o];
@@ -294,7 +280,7 @@ Entry.TextCodingUtil = {};
                 }
             }
         }
-        else if(!found && menuName == "sounds") {
+        else if(menuName == "sounds") {
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
                 var object = objects[o];
@@ -308,11 +294,64 @@ Entry.TextCodingUtil = {};
                 }
             }
         }
+        else if(menuName == "scenes") {
+            var scenes = Entry.scene.getScenes();
+            for(var s in scenes) {
+                var scene = scenes[s];
+                if(scene.id == id) {
+                    result = scene.name;
+                    break;
+                }
+            }
+        }
 
-        console.log("dropdownDynamicValueConvertor result", result);
+        console.log("dropdownDynamicIdToNameConvertor result", result);
 
         return result;
 
+    };
+
+    tu.getDynamicIdByNumber = function(value, textParam, currentObject) {
+        console.log("getDynamicIdByNumber", value, textParam, currentObject);
+        var result = value;
+        if(isNaN(value))
+            value = parseInt(value);
+        if(textParam.menuName == "pictures") {
+            if(value > 0) {
+                var objects = Entry.container.getAllObjects();
+                for(var o in objects) {
+                    var object = objects[o];
+                    if(object.id == currentObject.id) {
+                        var pictures = object.pictures;
+                        var picture = pictures[value-1];
+                        if(picture) {
+                            result = picture.name;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else if(textParam.menuName == "sounds") {
+            if(value > 0) {
+                var objects = Entry.container.getAllObjects();
+                for(var o in objects) {
+                    var object = objects[o];
+                    if(object.id == currentObject.id) {
+                        var sounds = object.sounds;
+                        var sound = sounds[value-1];
+                        if(sound) {
+                            result = sound.name;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        console.log("getDynamicIdByNumber result", result);
+
+        return result;
     };
 
     tu.isLocalType = function(id, menuName) {
@@ -665,6 +704,7 @@ Entry.TextCodingUtil = {};
 
     tu.isLocalListExisted = function(name, object) {
         //console.log("TextCodingUtil isLocalListExisted", name, object);
+        if(!object) return false;
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) {
             var entryList = entryLists[i];
