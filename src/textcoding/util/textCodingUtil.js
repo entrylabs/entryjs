@@ -142,7 +142,8 @@ Entry.TextCodingUtil = {};
                 }
             }
         }
-        else if(menuName == "spritesWithMouse" || menuName == "spritesWithSelf" || menuName == "collision") {
+        else if(menuName == "spritesWithMouse" || menuName == "spritesWithSelf" || 
+            menuName == "collision" || menuName == "clone") {
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
                 var object = objects[o];
