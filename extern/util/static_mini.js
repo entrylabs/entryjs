@@ -752,7 +752,7 @@ EntryStatic.initOptions = {
 
 EntryStatic.hwCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led'];
 
-EntryStatic.hwMiniSupportList = ['neobot'];
+EntryStatic.hwMiniSupportList = ['neobot', 'ArduinoExt'];
 
 EntryStatic.COMMAND_TYPES = {
     addThread: 101,

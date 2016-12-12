@@ -14,6 +14,7 @@ Lang.Blocks = {
     "ARDUINO_program": "프로그램 실행하기",
     "ARDUINO_cloud_pc_connector": "클라우드 PC 연결하기",
     "ARDUINO_connected": "Hardware connected",
+    "ARDUINO_connect": "Connect hardware",
     "ARDUINO_arduino_get_number_1": "신호",
     "ARDUINO_arduino_get_number_2": "의 숫자 결과값",
     "ARDUINO_arduino_get_sensor_number_0": "0",
@@ -921,7 +922,12 @@ Lang.Blocks = {
     "sol_sharp_name": "솔#(라♭)",
     "la_name": "라",
     "la_sharp_name": "라#(시♭)",
-    "si_name": "시"
+    "si_name": "시",
+    "HW_MOTOR": "모터",
+    "HW_SENSOR": "센서",
+    "HW_LED": "발광다이오드",
+    "HW_MELODY": "멜로디",
+    "HW_ROBOT": "로봇"
 };
 Lang.Buttons = {
     "apply": "적용하기",
@@ -940,6 +946,7 @@ Lang.Buttons = {
 Lang.ko = "한국어";
 Lang.vn = "tiếng Việt";
 Lang.Menus = {
+    "no_permission": "권한이 없습니다.",
     "duplicate_username": "이미 입력한 아이디 입니다.",
     "share_your_project": "내가 만든 작품을 공유해 보세요",
     "not_available_student": "학급에서 발급된 '학급 아이디'입니다.\n'엔트리 회원 아이디'를 입력해주세요.",
@@ -2359,7 +2366,7 @@ Lang.Menus = {
     "offline_required": "최소 요구사항",
     "offline_required_detail": "디스크 여유 공간 500MB 이상, windows7 혹은 MAC OS 10.8 이상",
     "offline_notice": "설치 전 참고사항",
-    "offline_notice_1": "1. 버전 1.3.4 에서는 하드웨어 연결 프로그램이 내장되어 있습니다.",
+    "offline_notice_1": "1. 버전 1.3.5 에서는 하드웨어 연결 프로그램이 내장되어 있습니다.",
     "offline_notice_2": "2. 별도의 웹브라우져가 필요하지 않습니다.",
     "offline_notice_3": "버전 별 변경 사항 안내",
     "cparty_jr_result_2": "고마워~ 덕분에 책가방을 챙겨서 학교에 올 수 있었어~ <br>다음 학교 가는 길도 함께 가자~ ",
@@ -2548,6 +2555,7 @@ Lang.Menus = {
     "linebreak_on_desc_1": "글상자의 크기가 글자가 쓰일 수 있는 영역을 결정합니다.",
     "linebreak_on_desc_2": "내용 작성시 엔터키로 줄바꿈을 할 수 있습니다.",
     "linebreak_on_desc_3": "내용을 작성하시거나 새로운 글자를 추가시 길이가 글상자의 가로 영역을 넘어서면 자동으로 줄이 바뀝니다.",
+    "not_supported_text": "해당 글씨체는 한자를 지원하지 않습니다.",
     "entry_with": "함께 만드는 엔트리",
     "ebs_season_1": "시즌 1 보러가기",
     "ebs_season_2": "시즌 2 보러가기",
@@ -3181,7 +3189,16 @@ Lang.Workspace = {
     "variable_name_auto_edited_title": "변수 이름 자동 변경",
     "variable_name_auto_edited_content": "변수의 이름은 10글자를 넘을 수 없습니다.",
     "list_name_auto_edited_title": "리스트 이름 자동 변경",
-    "list_name_auto_edited_content": "리스트의 이름은 10글자를 넘을 수 없습니다."
+    "list_name_auto_edited_content": "리스트의 이름은 10글자를 넘을 수 없습니다.",
+    "default_mode": "기본형",
+    "practical_course_mode": "실과형",
+    "practical_course": "실과",
+    "select_mode": "모드선택",
+    "select_mode_popup_title": "엔트리 만들기 환경을 선택해 주세요.",
+    "select_mode_popup_lable1": "기본형",
+    "select_mode_popup_lable2": "실과형",
+    "select_mode_popup_desc1": "엔트리의 모든 기능을 이용하여<br/>자유롭게 작품을 만듭니다.",
+    "select_mode_popup_desc2": "실과 교과서에 등장하는 기능만을<br/>이용하여 작품을 만듭니다."
 };
 Lang.code = "코드보기";
 Lang.EntryStatic = {
@@ -3740,6 +3757,7 @@ Lang.template = {
     "download_guide": "%1",
     "arduino_download_source": "%1",
     "arduino_connected": "%1",
+    "arduino_connect": "%1",
     "arduino_reconnect": "%1",
     "CODEino_get_sensor_number": "%1  ",
     "CODEino_get_named_sensor_value": "  %1  Sensor value ",

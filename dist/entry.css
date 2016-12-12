@@ -1007,6 +1007,62 @@ svg .svgBlockGroup text {
 .entrySelectedCategory#entryCategoryarduino {
   border-right: none;
 }
+#entryCategoryhw_sensor {
+  background-image: url("../images/others.png");
+  background-repeat: no-repeat;
+  border-bottom: #5494A3 solid 1px;
+}
+#entryCategoryhw_sensor:not(.entrySelectedCategory) {
+  background-color: #C7DCDD;
+}
+.entrySelectedCategory#entryCategoryhw_sensor {
+  border-right: none;
+}
+#entryCategoryhw_led {
+  font-size: 10px;
+  background-image: url("../images/diode.png");
+  background-repeat: no-repeat;
+  border-bottom: #5494A3 solid 1px;
+}
+#entryCategoryhw_led:not(.entrySelectedCategory) {
+  background-color: #C7DCDD;
+}
+.entrySelectedCategory#entryCategoryhw_led {
+  border-right: none;
+}
+#entryCategoryhw_motor {
+  background-image: url("../images/dcmotor.png");
+  background-repeat: no-repeat;
+  border-bottom: #5494A3 solid 1px;
+}
+#entryCategoryhw_motor:not(.entrySelectedCategory) {
+  background-color: #C7DCDD;
+}
+.entrySelectedCategory#entryCategoryhw_motor {
+  border-right: none;
+}
+#entryCategoryhw_melody {
+  background-image: url("../images/melody.png");
+  background-repeat: no-repeat;
+  border-bottom: #5494A3 solid 1px;
+}
+#entryCategoryhw_melody:not(.entrySelectedCategory) {
+  background-color: #C7DCDD;
+}
+.entrySelectedCategory#entryCategoryhw_melody {
+  border-right: none;
+}
+#entryCategoryhw_robot {
+  background-image: url("../images/robot.png");
+  background-repeat: no-repeat;
+  border-bottom: #5494A3 solid 1px;
+}
+#entryCategoryhw_robot:not(.entrySelectedCategory) {
+  background-color: #C7DCDD;
+}
+.entrySelectedCategory#entryCategoryhw_robot {
+  border-right: none;
+}
 .entryBlocklyWorkspace {
   position: absolute;
   left: 250px;
