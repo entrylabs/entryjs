@@ -839,10 +839,12 @@ Entry.Playground.prototype.injectCode = function() {
     if(this.mainWorkspace.vimBoard._changedObject)
         this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject;
     else
-        if(Entry.playground)
+        if(Entry.playground) 
             this.mainWorkspace.vimBoard._currentObject = Entry.playground.object;
 
-    ws.changeBoardCode(code);
+    if(!Entry.engine.isState('run'))
+        ws.changeBoardCode(code);
+
     if(Entry.playground)
         this.mainWorkspace.vimBoard._changedObject = Entry.playground.object;
     ws.getBoard().adjustThreadsPosition();
