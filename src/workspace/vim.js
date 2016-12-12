@@ -185,13 +185,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         console.log("this._currentObject", this._currentObject);
         console.log("this._changedObject", this._changedObject);
 
-        if(Entry.playground)
-            this._currentObject = Entry.playground.object;
-
-        if(this._currentObject) 
-            codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이썬 코드";
-        else
-            codeDescription = "# " + "파이썬 코드"; 
+        
         
 
         var textType = mode.textType; 
@@ -209,24 +203,33 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             this._oldParserType = this._parserType;
         }
 
-        var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
+        if(Entry.playground)
+            this._currentObject = Entry.playground.object;
 
-        if(textType === Entry.Vim.TEXT_TYPE_PY) {
-            textCode = codeDescription
-            .concat("\n\n")
-            .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
-            //.concat("\n")
-            .concat(Entry.Vim.PYTHON_IMPORT_HW)
-            .concat("\n\n")
-            .concat(textCode);
+        if(this._currentObject) {
+            codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이썬 코드";
+            var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
+
+            if(textType === Entry.Vim.TEXT_TYPE_PY) {
+                textCode = codeDescription
+                .concat("\n\n")
+                .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
+                //.concat("\n")
+                .concat(Entry.Vim.PYTHON_IMPORT_HW)
+                .concat("\n\n")
+                .concat(textCode);
+            }
+            textCode += '\n';
+            this.codeMirror.setValue(textCode);
+            if(textType == Entry.Vim.TEXT_TYPE_PY)
+                this.codeMirror.getDoc().markText({line:0, ch:0}, {line: Entry.Vim.INEDITABLE_LINE_PY, ch:0}, {readOnly: true});
+
+            var doc = this.codeMirror.getDoc();
+            doc.setCursor({ line: doc.lastLine() - 1});
         }
-        textCode += '\n';
-        this.codeMirror.setValue(textCode);
-        if(textType == Entry.Vim.TEXT_TYPE_PY)
-            this.codeMirror.getDoc().markText({line:0, ch:0}, {line: Entry.Vim.INEDITABLE_LINE_PY, ch:0}, {readOnly: true});
-
-        var doc = this.codeMirror.getDoc();
-        doc.setCursor({ line: doc.lastLine() - 1});
+        else {
+            this.clearText();  
+        }
     };
 
     p.getCodeToText = function(code, parseType) {

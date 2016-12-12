@@ -27088,17 +27088,21 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
     b && (this._mode = b.runType);
     console.log("this._currentObject", this._currentObject);
     console.log("this._changedObject", this._changedObject);
-    Entry.playground && (this._currentObject = Entry.playground.object);
-    c = this._currentObject ? "# " + this._currentObject.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc" : "# \ud30c\uc774\uc36c \ucf54\ub4dc";
     var e = b.textType;
     this._oldParserType = b.textType;
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._oldParserType != this._parserType && this._parser.setParser(this._mode, this._parserType, this.codeMirror), this._oldParserType = this._parserType) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._oldParserType != this._parserType && this._parser.setParser(this._mode, this._parserType, this.codeMirror), this._oldParserType = this._parserType);
-    var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
-    e === Entry.Vim.TEXT_TYPE_PY && (f = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(f));
-    this.codeMirror.setValue(f + "\n");
-    e == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:Entry.Vim.INEDITABLE_LINE_PY, ch:0}, {readOnly:!0});
-    c = this.codeMirror.getDoc();
-    c.setCursor({line:c.lastLine() - 1});
+    Entry.playground && (this._currentObject = Entry.playground.object);
+    if (this._currentObject) {
+      c = "# " + this._currentObject.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc";
+      var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
+      e === Entry.Vim.TEXT_TYPE_PY && (f = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(f));
+      this.codeMirror.setValue(f + "\n");
+      e == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:Entry.Vim.INEDITABLE_LINE_PY, ch:0}, {readOnly:!0});
+      c = this.codeMirror.getDoc();
+      c.setCursor({line:c.lastLine() - 1});
+    } else {
+      this.clearText();
+    }
   };
   b.getCodeToText = function(a, b) {
     var c = this.workspace.oldTextType;
