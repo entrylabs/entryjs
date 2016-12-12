@@ -32,7 +32,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     this._threadCount = 0;
     this._blockCount = 0;
 
-    Entry.TextCodingUtil.init();
+    Entry.TextCodingUtil.init(); 
 };
 
 (function(p){
@@ -92,30 +92,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             if(!isEntryEventExisted)
                                 continue;
                         }
-
-                        /*if(Entry.TextCodingUtil.isJudgementBlock(block.type)) {
-                            continue;
-                        }
-                        else if(Entry.TextCodingUtil.isCalculationBlock(block.type)) {
-                            continue;
-                        }
-                        else if(Entry.TextCodingUtil.isMaterialBlock(block.type)) {
-                            continue;
-                        }
-                        else if(Entry.TextCodingUtil.isHWParamBlock(block.type)) {
-                            continue;
-                        }*/
-
-                        /*if(Entry.TextCodingUtil.isEventBlockByType(block.type)) {
-                            isEntryEventExisted = true;
-                            console.log("isEntryEventExisted", isEntryEventExisted);
-                        }*/
-
-                        /*if(Entry.TextCodingUtil.isVariableDeclarationBlock(block.type)) {
-                            console.log("isVariableDeclarationBlock block.type", block.type)
-                            if(!isEntryEventExisted)
-                                continue;
-                        }*/
 
                         this._thread.push(block);
                     }
@@ -3067,9 +3043,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ParamKeyboard = function(value, paramMeta, paramDefMeta) {
         console.log("ParamKeyboard value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
         if(isNaN(value))
-            var result = Entry.KeyboardCode.map[value.toLowerCase()];
+            var result = Entry.KeyboardCode.map[value.toLowerCase()].toString();
         else
-            var result = Entry.KeyboardCode.map[value];
+            var result = Entry.KeyboardCode.map[value].toString();
         return result;
     };
 

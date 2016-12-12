@@ -15122,7 +15122,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamKeyboard = function(a, b, c) {
     console.log("ParamKeyboard value, paramMeta, paramDefMeta", a, b, c);
-    return isNaN(a) ? Entry.KeyboardCode.map[a.toLowerCase()] : Entry.KeyboardCode.map[a];
+    return isNaN(a) ? Entry.KeyboardCode.map[a.toLowerCase()].toString() : Entry.KeyboardCode.map[a].toString();
   };
   b.Indicator = function(a, b, c) {
   };
