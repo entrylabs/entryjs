@@ -23,23 +23,29 @@ Entry.byrobot_dronefighter =
 	// 'entry-hw' 프로젝트 byrobot_dronefighter.js 파일 내부의 'var DataType'에 정의된 것과 동일하게 사용해야 함
 	PORT_MAP:
 	{
-		ledModeColor_mode: 0,
-		ledModeColor_r: 0,
-		ledModeColor_g: 0,
-		ledModeColor_b: 0,
-		ledModeColor_interval: 0,
+		target: 0,
 
-		ledEventColor_mode: 0,
-		ledEventColor_r: 0,
-		ledEventColor_g: 0,
-		ledEventColor_b: 0,
-		ledEventColor_interval: 0,
-		ledEventColor_repeat: 0,
+		light_mode_mode: 0,
+		light_mode_interval: 0,
+
+		light_event_event: 0,
+		light_event_interval: 0,
+		light_event_repeat: 0,
+
+		light_manual_flags: 0,
+		light_manual_brightness: 0,
 
 		control_roll: 0,
 		control_pitch: 0,
 		control_yaw: 0,
-		control_throttle: 0
+		control_throttle: 0,
+
+		buzzer_scale: 0,
+		buzzer_time: 0,
+
+		vibrator_on: 0,
+		vibrator_off: 0,
+		vibrator_total: 0
 	},
 
 	// 초기화
