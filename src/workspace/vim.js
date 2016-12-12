@@ -185,9 +185,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         console.log("this._currentObject", this._currentObject);
         console.log("this._changedObject", this._changedObject);
 
-        
-        
-
         var textType = mode.textType; 
         this._oldParserType = mode.textType;
 
