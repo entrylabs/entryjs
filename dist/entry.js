@@ -27838,7 +27838,7 @@ Entry.Playground.prototype.injectObject = function(b) {
 Entry.Playground.prototype.injectCode = function() {
   var b = this.object.script, a = this.mainWorkspace;
   this.mainWorkspace.vimBoard._changedObject ? this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject : Entry.playground && (this.mainWorkspace.vimBoard._currentObject = Entry.playground.object);
-  Entry.engine.isState("run") || a.changeBoardCode(b);
+  a.changeBoardCode(b);
   Entry.playground && (this.mainWorkspace.vimBoard._changedObject = Entry.playground.object);
   a.getBoard().adjustThreadsPosition();
 };
