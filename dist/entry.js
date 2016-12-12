@@ -12356,7 +12356,7 @@ Entry.TextCodingUtil = {};
         }
       }
     } else {
-      if ("spritesWithMouse" == b || "spritesWithSelf" == b || "collision" == b) {
+      if ("spritesWithMouse" == b || "spritesWithSelf" == b || "collision" == b || "clone" == b) {
         for (e in g = Entry.container.getAllObjects(), g) {
           if (c = g[e], a == c.name) {
             return c.id;
