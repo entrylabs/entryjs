@@ -544,13 +544,13 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var bgColorDiv = Entry.createElement("div");
     bgColorDiv.addClass("entryPlayground_bgColorDiv");
 
-    textProperties.appendChild(fgColorDiv);
-    textProperties.appendChild(bgColorDiv);
+    foregroundButton.appendChild(fgColorDiv);
+    backgroundButton.appendChild(bgColorDiv);
 
     var coloursWrapper = Entry.createElement("div");
     coloursWrapper.addClass("entryPlaygroundTextColoursWrapper");
     this.coloursWrapper = coloursWrapper;
-    wrap.appendChild(coloursWrapper);
+    foregroundButton.appendChild(coloursWrapper);
     var colours = Entry.getColourCodes();
     for (var i=0; i<colours.length; i++) {
         var cell = Entry.createElement("div");
@@ -569,7 +569,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var backgroundsWrapper = Entry.createElement("div");
     backgroundsWrapper.addClass("entryPlaygroundTextBackgroundsWrapper");
     this.backgroundsWrapper = backgroundsWrapper;
-    wrap.appendChild(backgroundsWrapper);
+    backgroundButton.appendChild(backgroundsWrapper);
     for (var i=0; i<colours.length; i++) {
         var cell = Entry.createElement("div");
         cell.addClass("modal_colour");
