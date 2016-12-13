@@ -105,5 +105,3 @@ Entry.byrobot_dronefighter =
 		mode : 'both'	// 표시 모드
     }
 };
-
-

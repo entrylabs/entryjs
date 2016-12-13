@@ -537,8 +537,12 @@ EntryStatic.getAllBlocks = function() {
 
 				// BYROBOT - DroneFighter 2016.10.21
 				'byrobot_dronefighter_value',
+				"byrobot_dronefighter_controller_if_button_press",
+				"byrobot_dronefighter_controller_if_joystick_left_direction",
+				"byrobot_dronefighter_controller_if_joystick_right_direction",
 				"byrobot_dronefighter_controller_light_manual_single_on",
 				"byrobot_dronefighter_controller_light_manual_single_off",
+				"byrobot_dronefighter_controller_light_manual_single",
 				"byrobot_dronefighter_drone_light_manual_single_on",
 				"byrobot_dronefighter_drone_light_manual_single_off",
 				'byrobot_dronefighter_control'
