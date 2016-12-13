@@ -4555,7 +4555,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else {
                 param = this[left.type](left);
                 console.log("BinaryExpression extra left param", param);
-                if(param.type) {
+                if(param && param.type) {
                     params.push(param);
                 }
                 else {
