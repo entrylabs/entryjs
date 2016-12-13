@@ -24456,479 +24456,6 @@ Entry.block = {
         "syntax": {"js": [], "py": []}
     },
 	// */
-	/*
-    "byrobot_dronefighter_ledModeColor_team":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",		// 콤보 박스 형태의 입력창
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_team_Red,		"RED"],
-						[Lang.Blocks.byrobot_dronefighter_team_Blue,	"BLUE"]
-					],
-					"value": "RED",			// 콤보 박스의 기본 선택값
-					"fontSize": 11
-				},
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_light_mode_TeamHold,			"17"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_TeamFlicker,		"19"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_TeamFlickerDouble,	"20"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_TeamDimming,		"21"]
-					],
-					"value": "17",
-					"fontSize": 11
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",	// 하드웨어 명령임을 의미하는 아이콘
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						null,
-						{
-							"type": "text",
-							"params": ["100"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_ledModeColor_team"	// 블럭 이름과 동일
-			},	// 초기 값 정의
-        "paramsKeyMap": {
-				"TEAM": 0,
-				"MODE": 1,
-				"INTERVAL": 2
-			},	// 파라메터 "이름": 순서
-        "class": "byrobot_dronefighter_led",		// 블럭의 종류를 구분하기 위한 태그
-        "isNotFor": [ "byrobot_dronefighter" ],		// 해당 블럭을 소유하는 개체 이름
-        "func": function (sprite, script)
-			{
-				var team		= script.getField('TEAM');	// 콤보 박스에서 값을 가져올 때 사용
-				var mode		= script.getField('MODE');
-				var interval	= script.getNumberValue('INTERVAL');
-				var r			= 0;
-				var b			= 0;
-				
-				// 범위 조정
-				if ( team == 'RED' )	r	= 255;
-				else					b	= 255;
-				interval = Math.max(interval, 0);
-				interval = Math.min(interval, 255);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("ledModeColor_mode", mode);
-				Entry.hw.setDigitalPortValue("ledModeColor_r", r);
-				Entry.hw.setDigitalPortValue("ledModeColor_b", b);
-				Entry.hw.setDigitalPortValue("ledModeColor_interval", interval);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["ledModeColor_mode"];
-				delete Entry.hw.sendQueue["ledModeColor_r"];
-				delete Entry.hw.sendQueue["ledModeColor_b"];
-				delete Entry.hw.sendQueue["ledModeColor_interval"];
-				
-				return script.callReturn();
-			},
-        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledModeColor_team(%1, %2, %3)"]}
-    },
-	// */
-	/*
-    "byrobot_dronefighter_ledModeColor":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_light_mode_ArmHold,			"65"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_ArmFlicker,		"67"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_ArmFlickerDouble,	"68"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_ArmDimming,		"69"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_AllEnergyBeamIn,	"151"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_AllEnergyBeamOut,	"152"]
-					],
-					"value": "65",
-					"fontSize": 11
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						'65',
-						{
-							"type": "text",
-							"params": ["100"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_ledModeColor"
-			},
-        "paramsKeyMap": {
-				"MODE": 0,
-				"INTERVAL": 1
-			},
-        "class": "byrobot_dronefighter_led",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var mode		= script.getField("MODE");
-				var interval	= script.getNumberValue("INTERVAL");
-				
-				// 범위 조정
-				interval = Math.max(interval, 0);
-				interval = Math.min(interval, 255);
-								
-				// 전송
-				Entry.hw.setDigitalPortValue("ledModeColor_mode", mode);
-				Entry.hw.setDigitalPortValue("ledModeColor_interval", interval);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["ledModeColor_mode"];
-				delete Entry.hw.sendQueue["ledModeColor_interval"];
-
-				return script.callReturn();
-			},
-		//"syntax": {"js": [], "py": ["byrobot_dronefighter.ledModeColor(%1, %2)"]}
-    },
-	// */
-	/*
-    "byrobot_dronefighter_ledEventColor_team":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_team_Red,		"RED"],
-						[Lang.Blocks.byrobot_dronefighter_team_Blue,	"BLUE"]
-					],
-					"value": "RED",
-					"fontSize": 11
-				},
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_light_mode_TeamHold,			"17"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_TeamFlicker,		"19"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_TeamFlickerDouble,	"20"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_TeamDimming,		"21"]
-					],
-					"value": "17",
-					"fontSize": 11
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						null,
-						{
-							"type": "text",
-							"params": ["100"]
-						},
-						{
-							"type": "text",
-							"params": ["1"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_ledEventColor_team"
-			},
-        "paramsKeyMap": {
-				"TEAM": 0,
-				"EVENT": 1,
-				"INTERVAL": 2,
-				"REPEAT": 3
-			},
-        "class": "byrobot_dronefighter_led",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var team		= script.getField("TEAM");
-				var event		= script.getField("EVENT");
-				var interval	= script.getNumberValue("INTERVAL");
-				var repeat		= script.getNumberValue("REPEAT");
-				var r			= 0;
-				var b			= 0;
-				
-				
-				// 범위 조정
-				if ( team == 'RED' )	r	= 255;
-				else					b	= 255;
-				interval = Math.max(interval, 0);
-				interval = Math.min(interval, 255);
-				repeat = Math.max(repeat, 0);
-				repeat = Math.min(repeat, 255);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("ledEventColor_event", event);
-				Entry.hw.setDigitalPortValue("ledEventColor_r", r);
-				Entry.hw.setDigitalPortValue("ledEventColor_b", b);
-				Entry.hw.setDigitalPortValue("ledEventColor_interval", interval);
-				Entry.hw.setDigitalPortValue("ledEventColor_repeat", repeat);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["ledEventColor_event"];
-				delete Entry.hw.sendQueue["ledEventColor_r"];
-				delete Entry.hw.sendQueue["ledEventColor_b"];
-				delete Entry.hw.sendQueue["ledEventColor_interval"];
-				delete Entry.hw.sendQueue["ledEventColor_repeat"];
-				
-				return script.callReturn();
-			},
-        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor_team(%1, %2, %3, %4)"]}
-    },
-	// */
-	/*
-    "byrobot_dronefighter_ledEventColor":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_light_mode_ArmHold,			"65"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_ArmFlicker,		"67"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_ArmFlickerDouble,	"68"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_ArmDimming,		"69"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_AllEnergyBeamIn,	"151"],
-						[Lang.Blocks.byrobot_dronefighter_light_mode_AllEnergyBeamOut,	"152"]
-					],
-					"value": "65",
-					"fontSize": 11
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						{
-							"type": "text",
-							"params": ["100"]
-						},
-						{
-							"type": "text",
-							"params": ["1"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_ledEventColor"
-			},
-        "paramsKeyMap": {
-				"EVENT": 0,
-				"INTERVAL": 1,
-				"REPEAT": 2
-			},
-        "class": "byrobot_dronefighter_led",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var event		= script.getField('EVENT');
-				var interval	= script.getNumberValue('INTERVAL');
-				var repeat		= script.getNumberValue('REPEAT');
-				
-				// 범위 조정
-				interval	= Math.max(interval, 0);
-				interval	= Math.min(interval, 255);
-				repeat		= Math.max(repeat, 0);
-				repeat		= Math.min(repeat, 255);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("ledEventColor_event", event);
-				Entry.hw.setDigitalPortValue("ledEventColor_interval", interval);
-				Entry.hw.setDigitalPortValue("ledEventColor_repeat", repeat);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["ledEventColor_event"];
-				delete Entry.hw.sendQueue["ledEventColor_interval"];
-				delete Entry.hw.sendQueue["ledEventColor_repeat"];
-				
-				return script.callReturn();
-			},
-        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_light_manual_single_on":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_light_manual_all,		"255"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_red,		"1"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_blue,	"2"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_1,		"4"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_2,		"8"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_3,		"16"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_4,		"32"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_5,		"64"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_6,		"128"]
-					],
-					"value": "4",
-					"fontSize": 11
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						null
-					],
-				"type": "byrobot_dronefighter_controller_light_manual_single_on"
-			},
-        "paramsKeyMap": {
-				"LED": 0
-			},
-        "class": "byrobot_dronefighter_controller_light",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var event		= script.getField('LED');
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("light_manual_flags", event);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", 120);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
-				
-				return script.callReturn();
-			},
-        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_light_manual_single_off":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_light_manual_all,		"255"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_red,		"1"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_blue,	"2"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_1,		"4"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_2,		"8"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_3,		"16"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_4,		"32"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_5,		"64"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_6,		"128"]
-					],
-					"value": "4",
-					"fontSize": 11
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						null
-					],
-				"type": "byrobot_dronefighter_controller_light_manual_single_off"
-			},
-        "paramsKeyMap": {
-				"LED": 0
-			},
-        "class": "byrobot_dronefighter_controller_light",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var event		= script.getField('LED');
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("light_manual_flags", event);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
-				
-				return script.callReturn();
-			},
-        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
-    },
-	// */
 	//*
     "byrobot_dronefighter_controller_light_manual_single":
 	{
@@ -24984,7 +24511,7 @@ Entry.block = {
 				"TARGET"		: 0,
 				"BRIGHTNESS"	: 1
 			},
-        "class": "byrobot_dronefighter_controller_light",
+        "class": "byrobot_dronefighter_light",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
@@ -25008,7 +24535,7 @@ Entry.block = {
     },
 	// */
 	//*
-    "byrobot_dronefighter_drone_light_manual_single_on":
+    "byrobot_dronefighter_drone_light_manual_single":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -25027,6 +24554,19 @@ Entry.block = {
 					"fontSize": 11
 				},
 				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_light_manual_on,		"150"],
+						[Lang.Blocks.byrobot_dronefighter_light_manual_off,		"0"],
+						[Lang.Blocks.byrobot_dronefighter_light_manual_b25,		"75"],
+						[Lang.Blocks.byrobot_dronefighter_light_manual_b50,		"125"],
+						[Lang.Blocks.byrobot_dronefighter_light_manual_b75,		"200"],
+						[Lang.Blocks.byrobot_dronefighter_light_manual_b100,	"255"],
+					],
+					"value": "150",
+					"fontSize": 11
+				},
+				{
 					"type": "Indicator",
 					"img": "block_icon/hardware_03.png",
 					"size": 12
@@ -25036,23 +24576,26 @@ Entry.block = {
         "def": {
 				"params": [
 						null,
+						null,
 						null
 					],
-				"type": "byrobot_dronefighter_drone_light_manual_single_on"	
+				"type": "byrobot_dronefighter_drone_light_manual_single"	
 			},
         "paramsKeyMap": {
-				"LED": 0
+				"TARGET"		: 0,
+				"BRIGHTNESS"	: 1
 			},
-        "class": "byrobot_dronefighter_drone_light",
+        "class": "byrobot_dronefighter_light",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var event		= script.getField('LED');
+				var target		= script.getField('TARGET');
+				var brightness	= script.getField('BRIGHTNESS');
 				
 				// 전송
 				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("light_manual_flags", event);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", 120);
+				Entry.hw.setDigitalPortValue("light_manual_flags", target);
+				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
 
 				Entry.hw.update();
 
@@ -25066,7 +24609,7 @@ Entry.block = {
     },
 	// */
 	//*
-    "byrobot_dronefighter_drone_light_manual_single_off":
+    "byrobot_dronefighter_controller_buzzer":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -25075,14 +24618,41 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
-						[Lang.Blocks.byrobot_dronefighter_light_manual_all,		"255"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_1,		"1"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_2,		"2"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_3,		"4"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_4,		"8"]
+						["1",	"0"],
+						["2",	"1"],
+						["3",	"2"],
+						["4",	"3"],
+						["5",	"4"],
+						["6",	"5"],
+						["7",	"6"],
+						["8",	"7"]
 					],
 					"value": "1",
 					"fontSize": 11
+				},
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute,	"0"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_c,		"1"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs,		"2"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_d,		"3"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds,		"4"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_e,		"5"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_f,		"6"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs,		"7"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_g,		"8"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs,		"9"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_a,		"10"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_as,		"11"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_b,		"12"]
+					],
+					"value": "1",
+					"fontSize": 11
+				},
+				{
+					"type": "Block",
+					"accept": "string"
 				},
 				{
 					"type": "Indicator",
@@ -25094,29 +24664,176 @@ Entry.block = {
         "def": {
 				"params": [
 						null,
-						null
+						null,
+						{
+							"type": "text",
+							"params": ["1"]
+						},
+						null,
 					],
-				"type": "byrobot_dronefighter_drone_light_manual_single_off"
+				"type": "byrobot_dronefighter_controller_buzzer"	
 			},
         "paramsKeyMap": {
-				"LED": 0
+				"OCTAVE"	: 0,
+				"SCALE"		: 1,
+				"TIME"		: 2
 			},
-        "class": "byrobot_dronefighter_drone_light",
+        "class": "byrobot_dronefighter_buzzer",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var event		= script.getField('LED');
+				var octave		= script.getField('OCTAVE');
+				var scale		= script.getField('SCALE');
+				var time		= script.getNumberValue('TIME') * 1000.0;
+				
+				time = Math.max(time, 0);
+				time = Math.min(time, 10000);
+				
+				var scalecalc;
+				
+				if( scale == "0" )
+				{
+					scalecalc = 0;
+				}
+				else
+				{
+					scalecalc = (octave * 12) + (scale - 1) + 1;
+				}
 				
 				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("light_manual_flags", event);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", 0);
+				Entry.hw.setDigitalPortValue("target", 0x11);
+				Entry.hw.setDigitalPortValue("buzzer_scale", scalecalc);
+				Entry.hw.setDigitalPortValue("buzzer_time", time);
 
 				Entry.hw.update();
 
 				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+				delete Entry.hw.sendQueue["buzzer_scale"];
+				delete Entry.hw.sendQueue["buzzer_time"];
+				
+				return script.callReturn();
+			},
+        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
+    },
+	// */
+	//*
+    "byrobot_dronefighter_controller_buzzer_stop":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null
+					],
+				"type": "byrobot_dronefighter_controller_buzzer_stop"	
+			},
+        "paramsKeyMap": {
+			},
+        "class": "byrobot_dronefighter_buzzer",
+        "isNotFor": [ "byrobot_dronefighter" ],
+        "func": function (sprite, script)
+			{
+				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x11);
+				Entry.hw.setDigitalPortValue("buzzer_scale", 0);
+				Entry.hw.setDigitalPortValue("buzzer_time", 0);
+
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["target"];
+				delete Entry.hw.sendQueue["buzzer_scale"];
+				delete Entry.hw.sendQueue["buzzer_time"];
+				
+				return script.callReturn();
+			},
+        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
+    },
+	// */
+	//*
+    "byrobot_dronefighter_controller_vibrator":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["0.02"]
+						},
+						{
+							"type": "text",
+							"params": ["0.04"]
+						},
+						{
+							"type": "text",
+							"params": ["0.2"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_controller_vibrator"	
+			},
+        "paramsKeyMap": {
+				"TIMEON"	: 0,
+				"TIMEOFF"	: 1,
+				"TIMERUN"	: 2
+			},
+        "class": "byrobot_dronefighter_vibrator",
+        "isNotFor": [ "byrobot_dronefighter" ],
+        "func": function (sprite, script)
+			{
+				var timeOn		= script.getNumberValue('TIMEON') * 1000;
+				var timeOff		= script.getNumberValue('TIMEOFF') * 1000;
+				var timeRun		= script.getNumberValue('TIMERUN') * 1000;
+				
+				timeOn = Math.max(timeOn, 0);
+				timeOn = Math.min(timeOn, 10000);
+				timeOff = Math.max(timeOff, 0);
+				timeOff = Math.min(timeOff, 10000);
+				timeRun = Math.max(timeRun, 0);
+				timeRun = Math.min(timeRun, 10000);
+				
+				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x11);
+				Entry.hw.setDigitalPortValue("vibrator_on", timeOn);
+				Entry.hw.setDigitalPortValue("vibrator_off", timeOff);
+				Entry.hw.setDigitalPortValue("vibrator_total", timeRun);
+
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["target"];
+				delete Entry.hw.sendQueue["vibrator_on"];
+				delete Entry.hw.sendQueue["vibrator_off"];
+				delete Entry.hw.sendQueue["vibrator_total"];
 				
 				return script.callReturn();
 			},
