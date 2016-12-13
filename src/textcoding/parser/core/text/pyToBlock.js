@@ -1664,6 +1664,55 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
         }
 
+        if(init.callee && init.callee.object && init.callee.property) {
+            if(init.callee.object.object && init.callee.object.object.name)
+                var objectObjectName  = init.callee.object.object.name;
+            if(init.callee.object.property && init.callee.object.property.name)
+                var objectPropertyName = init.callee.object.property.name;
+            if(init.callee.property.name)
+                var propertyName = init.callee.property.name;
+
+            if(objectObjectName && objectPropertyName && propertyName)
+                calleeName = objectObjectName.concat('.').concat(objectPropertyName).concat('.').concat(propertyName);
+        }
+
+        //Id Registration and Initiation for A+=B Case
+        if(calleeName == "__pythonRuntime.objects.list") {
+            var name = id.name;
+            var array = [];
+            if(Entry.TextCodingUtil.isGlobalListExisted(name)) {
+                if(!this._funcLoop) {
+                    Entry.TextCodingUtil.updateGlobalList(name, array);
+                }
+            }
+            else {
+                if(!this._funcLoop) {
+                    Entry.TextCodingUtil.createGlobalList(name, array);
+                }
+            }
+        }
+        else {
+            var name = id.name;
+            var value = 0;
+            if(value || value == 0) {
+                if(name.search("__filbert") == -1) {
+                    if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                        if(!this._funcLoop)
+                            Entry.TextCodingUtil.updateGlobalVariable(name, value);
+                    }
+                    else {
+                        if(!this._funcLoop) {
+                            Entry.TextCodingUtil.createGlobalVariable(name, value);
+                        }
+                        else {
+                            value = 0;
+                            Entry.TextCodingUtil.createGlobalVariable(name, value);
+                        }
+                    }
+                }
+            }
+        }
+
         var idData = this[id.type](id);
         var initData = this[init.type](init);
 
@@ -1764,7 +1813,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("VariableDeclarator init", init);
 
-        if(init.callee && init.callee.object && init.callee.property) {
+        /*if(init.callee && init.callee.object && init.callee.property) {
             if(init.callee.object.object && init.callee.object.object.name)
                 var objectObjectName  = init.callee.object.object.name;
             if(init.callee.object.property && init.callee.object.property.name)
@@ -1774,7 +1823,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if(objectObjectName && objectPropertyName && propertyName)
                 calleeName = objectObjectName.concat('.').concat(objectPropertyName).concat('.').concat(propertyName);
-        }
+        }*/
 
         console.log("calleeName", calleeName);
 
@@ -1826,15 +1875,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var name = id.name;
             if(init.type == "Literal") {
                 var value = init.value;
-                /*if(typeof value === "string")
-                    value = "\"" + value + "\"";*/
             }
             else if(init.type == "Identifier") {
                 var value = init.name;
             }
             else if(init.type == "UnaryExpression") {
-                var initData = this[init.type](init);
-                console.log("VariableDeclarator initData UnaryExpression", initData);
+                /*var initData = this[init.type](init);
+                console.log("VariableDeclarator initData UnaryExpression", initData);*/
                 var value = initData.params[0];
                 console.log("gl initData", initData, "type", typeof value);
                 if(typeof value != "string" && typeof value != "number") {
@@ -1844,12 +1891,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else {
                 var value = 0
             }
-            /*else {
-                value = 0
-            }*/
-            /*if(typeof value != "string" && typeof value != "number") {
-                value = 0;
-            }*/
+            
 
             console.log("variable name", name, "value", value);
 
@@ -1871,15 +1913,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
 
-            var idData = this[id.type](id);
-            console.log("VariableDeclarator idData", idData);
+            /*var idData = this[id.type](id);
+            console.log("VariableDeclarator idData", idData);*/
             result.id = idData;
 
-            var initData = this[init.type](init);
-            console.log("VariableDeclarator initData", initData);
+            /*var initData = this[init.type](init);
+            console.log("VariableDeclarator initData", initData);*/
             result.init = initData;
-
-            console.log("VariableDeclarator init.type", init.type);
+            
             if(init.type == "Literal") {
                 var syntax = String("%1 = %2");
                 var blockSyntax = this.getBlockSyntax(syntax);
@@ -2269,15 +2310,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
         else { // In Case of Variable
             if(leftData.object) {
-                if(leftData.object.name != "self") {
-                    var keyword = leftData.object.name;
-                    console.log("errorId", 43);
-                    Entry.TextCodingError.error(
-                        Entry.TextCodingError.TITLE_CONVERTING,
-                        Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
-                        keyword,
-                        this._blockCount,
-                        Entry.TextCodingError.SUBJECT_CONV_OBJECT);
+                if(leftData.object.name != "self") { 
+                    var name = leftData.object.name
+                    if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
+                        var keyword = name;
+                        console.log("errorId", 42.1);
+                        Entry.TextCodingError.error(
+                            Entry.TextCodingError.TITLE_CONVERTING,
+                            Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                            keyword,
+                            this._blockCount,
+                            Entry.TextCodingError.SUBJECT_CONV_LIST);
+                    }
                 }
                 else if(leftData.property) { //Because of Left Variable
                 }
