@@ -1720,13 +1720,16 @@ Entry.block.set_brush_tranparency = function(a, b) {
   a.brush && (a.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), a.brush.endStroke(), c = a.brush.rgb, a.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + (1 - a.brush.opacity / 100) + ")"), a.brush.moveTo(a.getX(), -1 * a.getY()));
   return b.callReturn();
 };
-Entry.byrobot_dronefighter = {name:"byrobot_dronefighter", PORT_MAP:{ledModeColor_mode:0, ledModeColor_r:0, ledModeColor_g:0, ledModeColor_b:0, ledModeColor_interval:0, ledEventColor_mode:0, ledEventColor_r:0, ledEventColor_g:0, ledEventColor_b:0, ledEventColor_interval:0, ledEventColor_repeat:0, control_roll:0, control_pitch:0, control_yaw:0, control_throttle:0}, setZero:function() {
+Entry.byrobot_dronefighter = {name:"byrobot_dronefighter", PORT_MAP:{target:0, light_mode_mode:0, light_mode_interval:0, light_event_event:0, light_event_interval:0, light_event_repeat:0, light_manual_flags:0, light_manual_brightness:0, control_roll:0, control_pitch:0, control_yaw:0, control_throttle:0, buzzer_scale:0, buzzer_time:0, vibrator_on:0, vibrator_off:0, vibrator_total:0}, setZero:function() {
   var a = Entry.byrobot_dronefighter.PORT_MAP, b = Entry.hw.sendQueue, c;
   for (c in a) {
-    b[c] = a[c];
+    b[c] = void 0;
   }
   Entry.hw.update();
-}, monitorTemplate:{imgPath:"hw/byrobot_dronefighter.png", width:500, height:450, listPorts:{attitude_roll:{name:Lang.Blocks.byrobot_dronefighter_attitude_roll, type:"input", pos:{x:0, y:0}}, attitude_pitch:{name:Lang.Blocks.byrobot_dronefighter_attitude_pitch, type:"input", pos:{x:0, y:0}}, attitude_yaw:{name:Lang.Blocks.byrobot_dronefighter_attitude_yaw, type:"input", pos:{x:0, y:0}}}, ports:{}, mode:"both"}};
+}, monitorTemplate:{imgPath:"hw/byrobot_dronefighter.png", width:500, height:450, listPorts:{attitude_roll:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_roll, type:"input", pos:{x:0, y:0}}, attitude_pitch:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, attitude_yaw:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x, type:"input", 
+pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event, type:"input", pos:{x:0, y:0}}, joystick_left_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command, type:"input", pos:{x:0, 
+y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event, type:"input", pos:{x:0, y:0}}, joystick_right_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command, 
+type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_dronefighter_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_dronefighter_controller_button_event, type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_dronefighter_drone_irmessage, type:"input", pos:{x:0, y:0}}}, ports:{}, mode:"both"}};
 var calcArrowColor = "#e8b349", calcBlockColor = "#FFD974", calcFontColor = "#3D3D3D";
 Blockly.Blocks.number = {init:function() {
   this.setColour(calcBlockColor);
@@ -25417,12 +25420,12 @@ Entry.GlobalSvg = {};
     }
   };
   a.draw = function() {
-    var a = this._view;
+    var b = this._view;
     this._svg && this.remove();
-    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
+    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
-    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
+    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());

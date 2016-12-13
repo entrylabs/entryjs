@@ -537,10 +537,10 @@ EntryStatic.getAllBlocks = function() {
 
 				// BYROBOT - DroneFighter 2016.10.21
 				'byrobot_dronefighter_value',
-				'byrobot_dronefighter_ledModeColor_team',
-				'byrobot_dronefighter_ledModeColor',
-				'byrobot_dronefighter_ledEventColor_team',
-				'byrobot_dronefighter_ledEventColor',
+				"byrobot_dronefighter_controller_light_manual_single_on",
+				"byrobot_dronefighter_controller_light_manual_single_off",
+				"byrobot_dronefighter_drone_light_manual_single_on",
+				"byrobot_dronefighter_drone_light_manual_single_off",
 				'byrobot_dronefighter_control'
             ]
         }

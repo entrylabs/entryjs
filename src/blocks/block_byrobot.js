@@ -74,9 +74,22 @@ Entry.byrobot_dronefighter =
 		// 모니터 화면 상단에 차례대로 나열하는 값
         listPorts:
 		{
-            "attitude_roll"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_roll,		type: "input", pos: {x: 0, y: 0}},
-            "attitude_pitch"	:{name: Lang.Blocks.byrobot_dronefighter_attitude_pitch,	type: "input", pos: {x: 0, y: 0}},
-            "attitude_yaw"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_yaw,		type: "input", pos: {x: 0, y: 0}}
+            "attitude_roll"				:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_roll,					type: "input", pos: {x: 0, y: 0}},
+            "attitude_pitch"			:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch,					type: "input", pos: {x: 0, y: 0}},
+            "attitude_yaw"				:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw,					type: "input", pos: {x: 0, y: 0}},
+            "joystick_left_x"			:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,			type: "input", pos: {x: 0, y: 0}},
+            "joystick_left_y"			:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,			type: "input", pos: {x: 0, y: 0}},
+            "joystick_left_direction"	:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction,	type: "input", pos: {x: 0, y: 0}},
+            "joystick_left_event"		:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event,		type: "input", pos: {x: 0, y: 0}},
+            "joystick_left_command"		:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command,		type: "input", pos: {x: 0, y: 0}},
+            "joystick_right_x"			:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x,			type: "input", pos: {x: 0, y: 0}},
+            "joystick_right_y"			:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y,			type: "input", pos: {x: 0, y: 0}},
+            "joystick_right_direction"	:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction,	type: "input", pos: {x: 0, y: 0}},
+            "joystick_right_event"		:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event,		type: "input", pos: {x: 0, y: 0}},
+            "joystick_right_command"	:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command,		type: "input", pos: {x: 0, y: 0}},
+            "button_button"				:{name: Lang.Blocks.byrobot_dronefighter_controller_button_button,				type: "input", pos: {x: 0, y: 0}},
+            "button_event"				:{name: Lang.Blocks.byrobot_dronefighter_controller_button_event,				type: "input", pos: {x: 0, y: 0}},
+            "irmessage_irdata"			:{name: Lang.Blocks.byrobot_dronefighter_drone_irmessage,						type: "input", pos: {x: 0, y: 0}}
         },
 
 		// 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
