@@ -648,6 +648,7 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isGlobalListExisted = function(name) {
+        console.log("isGlobalListExisted name", name);
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) {
             var entryList = entryLists[i];
