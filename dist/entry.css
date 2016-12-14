@@ -32,11 +32,12 @@
   white-space: nowrap;
 }
 .CodeMirror-linenumber {
-  padding: 0 3px 0 5px;
+  padding: 0 5px 0 5px;
   min-width: 20px;
   text-align: right;
   color: #A0A0A0;
   white-space: nowrap;
+  border-right: 1px solid #ddd;
 }
 .CodeMirror-guttermarker {
   color: black;
@@ -305,6 +306,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   height: 100%;
   display: inline-block;
   margin-bottom: -30px;
+  margin-right: -1px;
   /* Hack to make IE7 behave */
   *zoom: 1;
   *display: inline;
@@ -325,8 +327,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   position: absolute;
   cursor: default;
   z-index: 4;
-  border-right: 1px solid #ddd;
   background-color: #f7f7f7;
+  padding-right: 6px;
 }
 .CodeMirror-gutter-wrapper {
   -webkit-user-select: none;
