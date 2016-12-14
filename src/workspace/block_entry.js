@@ -22403,7 +22403,7 @@ Entry.block = {
             ],
             "type": "set_variable"
         },
-        "def": {
+        "pyHelpDef": {
             "params": [
                 "A&value",
                 {

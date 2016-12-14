@@ -91,7 +91,6 @@ Entry.init = function(container, options) {
         Entry.mediaFilePath + 'sounds/delete.wav'], 'entryDelete');
 
     createjs.Sound.stop();
-
 };
 
 Entry.loadAudio_ = function(filenames, name) {
