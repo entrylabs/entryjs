@@ -18254,13 +18254,15 @@ Entry.Tooltip = function(b, a) {
     this.data.map(this._alignTooltip.bind(this));
   };
   b._renderTooltip = function(a) {
-    var b = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), c = Entry.Dom("div", {classes:["entryTooltip", a.direction, a.style], parent:b});
-    this.isIndicator && (a.indicator = this.renderIndicator());
-    c.html(a.content.replace(/\n/gi, "<br>"));
-    this._tooltips.push(b);
-    a.wrapper = b;
-    a.dom = c;
-    this._alignTooltip(a);
+    if (a.content) {
+      var b = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), c = Entry.Dom("div", {classes:["entryTooltip", a.direction, a.style], parent:b});
+      this.isIndicator && (a.indicator = this.renderIndicator());
+      c.html(a.content.replace(/\n/gi, "<br>"));
+      this._tooltips.push(b);
+      a.wrapper = b;
+      a.dom = c;
+      this._alignTooltip(a);
+    }
   };
   b._alignTooltip = function(a) {
     var b = a.target.offset(), c = a.target.get(0).getBoundingClientRect();
