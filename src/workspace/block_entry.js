@@ -29,8 +29,7 @@ if (Entry && Entry.block) {
                 39: 'right', 40: 'down'
             };
 
-            code = map[value] || code;
-
+            code = map[value] || code || value;
             if(isNaN(code))
                 return '"()"'.replace('()', code);
             else
@@ -6406,6 +6405,10 @@ Entry.block = {
             "params": [ null ],
             "type": "set_color"
         },
+        "pyHelpDef": {
+            "params": [ "A&value" ],
+            "type": "set_color"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -6505,6 +6508,16 @@ Entry.block = {
             ],
             "type": "change_thickness"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                null
+            ],
+            "type": "change_thickness"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -6553,6 +6566,16 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "set_thickness"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
                 },
                 null
             ],
@@ -6774,6 +6797,16 @@ Entry.block = {
             ],
             "type": "change_brush_transparency"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                null
+            ],
+            "type": "change_brush_transparency"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -6821,6 +6854,16 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "50" ]
+                },
+                null
+            ],
+            "type": "set_brush_tranparency"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
                 },
                 null
             ],
@@ -7021,7 +7064,6 @@ Entry.block = {
     },
     "distance_something": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -7046,6 +7088,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null, null, null ],
+            "type": "distance_something"
+        },
+        "pyHelpDef": {
+            "params": [ null, "A&value", null ],
             "type": "distance_something"
         },
         "paramsKeyMap": {
@@ -7090,7 +7136,6 @@ Entry.block = {
     },
     "coordinate_mouse": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -7118,6 +7163,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null, null, null ],
+            "type": "coordinate_mouse"
+        },
+        "pyHelpDef": {
+            "params": [ null, "A&value", null ],
             "type": "coordinate_mouse"
         },
         "paramsKeyMap": {
@@ -7165,7 +7214,6 @@ Entry.block = {
     },
     "coordinate_object": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -7205,6 +7253,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null, null, null, null ],
+            "type": "coordinate_object"
+        },
+        "pyHelpDef": {
+            "params": [ null, "A&value", null, "B&value" ],
             "type": "coordinate_object"
         },
         "paramsKeyMap": {
@@ -7283,7 +7335,6 @@ Entry.block = {
     },
     "calc_basic": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -7319,6 +7370,20 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "10" ]
+                }
+            ],
+            "type": "calc_basic"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                "PLUS",
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
                 }
             ],
             "type": "calc_basic"
@@ -7677,7 +7742,6 @@ Entry.block = {
     },
     "calc_operation": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -7727,6 +7791,18 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "10" ]
+                },
+                null,
+                null
+            ],
+            "type": "calc_operation"
+        },
+        "pyHelpDef": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
                 },
                 null,
                 null
@@ -8016,7 +8092,6 @@ Entry.block = {
     },
     "calc_rand": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -8061,6 +8136,22 @@ Entry.block = {
             ],
             "type": "calc_rand"
         },
+        "pyHelpDef": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                null,
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
+                },
+                null
+            ],
+            "type": "calc_rand"
+        },
         "paramsKeyMap": {
             "LEFTHAND": 1,
             "RIGHTHAND": 3
@@ -8092,7 +8183,6 @@ Entry.block = {
     },
     "get_date": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -8124,6 +8214,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null, "YEAR", null ],
+            "type": "get_date"
+        },
+        "pyHelpDef": {
+            "params": [ null, "A&value", null ],
             "type": "get_date"
         },
         "paramsKeyMap": {
@@ -8175,7 +8269,6 @@ Entry.block = {
     },
     "get_sound_duration": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -8200,6 +8293,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null, null, null ],
+            "type": "get_sound_duration"
+        },
+        "pyHelpDef": {
+            "params": [ null, "A&value", null ],
             "type": "get_sound_duration"
         },
         "paramsKeyMap": {
@@ -8271,7 +8368,6 @@ Entry.block = {
     },
     "set_visible_project_timer": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -8315,6 +8411,10 @@ Entry.block = {
         },
         "def": {
             "params": [ null, "HIDE", null, null ],
+            "type": "set_visible_project_timer"
+        },
+        "pyHelpDef": {
+            "params": [ null, "A&value", null, null ],
             "type": "set_visible_project_timer"
         },
         "paramsKeyMap": {
@@ -8390,7 +8490,6 @@ Entry.block = {
     },
     "get_project_timer_value": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -8435,7 +8534,6 @@ Entry.block = {
     },
     "char_at": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -8475,6 +8573,22 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "char_at"
+        },
+        "pyHelpDef": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
+                },
+                null,
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
                 },
                 null
             ],
@@ -8530,7 +8644,6 @@ Entry.block = {
     },
     "length_of_string": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -8561,6 +8674,17 @@ Entry.block = {
             ],
             "type": "length_of_string"
         },
+        "pyHelpDef": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
+                },
+                null
+            ],
+            "type": "length_of_string"
+        },
         "paramsKeyMap": {
             "STRING": 1
         },
@@ -8579,7 +8703,6 @@ Entry.block = {
     },
     "substring": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -8638,6 +8761,27 @@ Entry.block = {
             ],
             "type": "substring"
         },
+        "pyHelpDef": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
+                },
+                null,
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
+                },
+                null,
+                {
+                    "type": "number",
+                    "params": [ "C&value" ]
+                },
+                null
+            ],
+            "type": "substring"
+        },
         "paramsKeyMap": {
             "STRING": 1,
             "START": 3,
@@ -8683,7 +8827,6 @@ Entry.block = {
     },
     "replace_string": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -8742,6 +8885,27 @@ Entry.block = {
             ],
             "type": "replace_string"
         },
+        "pyHelpDef": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "C&value" ]
+                },
+                null
+            ],
+            "type": "replace_string"
+        },
         "paramsKeyMap": {
             "STRING": 1,
             "OLD_WORD": 3,
@@ -8765,7 +8929,6 @@ Entry.block = {
     },
     "change_string_case": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -8806,6 +8969,19 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ "Hello Entry!" ]
+                },
+                null,
+                null,
+                null
+            ],
+            "type": "change_string_case"
+        },
+        "pyHelpDef": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
                 },
                 null,
                 null,
@@ -8875,7 +9051,6 @@ Entry.block = {
     },
     "index_of_string": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -8920,6 +9095,22 @@ Entry.block = {
             ],
             "type": "index_of_string"
         },
+        "pyHelpDef": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
+                },
+                null
+            ],
+            "type": "index_of_string"
+        },
         "paramsKeyMap": {
             "LEFTHAND": 1,
             "RIGHTHAND": 3
@@ -8941,7 +9132,6 @@ Entry.block = {
     },
     "combine_something": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -8986,6 +9176,22 @@ Entry.block = {
             ],
             "type": "combine_something"
         },
+        "pyHelpDef": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
+                },
+                null
+            ],
+            "type": "combine_something"
+        },
         "paramsKeyMap": {
             "VALUE1": 1,
             "VALUE2": 3
@@ -9007,7 +9213,6 @@ Entry.block = {
     },
     "get_sound_volume": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -9041,7 +9246,6 @@ Entry.block = {
     },
     "quotient_and_mod": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -9091,6 +9295,23 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ "10" ]
+                },
+                null,
+                null
+            ],
+            "type": "quotient_and_mod"
+        },
+        "pyHelpDef": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
                 },
                 null,
                 null
@@ -9178,7 +9399,6 @@ Entry.block = {
     },
     "choose_project_timer_action": {
         "color": "#FFD974",
-        "vimModeFontColor": "black",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -9225,6 +9445,15 @@ Entry.block = {
             "params": [
                 null,
                 "START",
+                null,
+                null
+            ],
+            "type": "choose_project_timer_action"
+        },
+        "pyHelpDef": {
+            "params": [
+                null,
+                "A&value",
                 null,
                 null
             ],
@@ -9324,6 +9553,16 @@ Entry.block = {
             ],
             "type": "wait_second"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                null
+            ],
+            "type": "wait_second"
+        },
         "paramsKeyMap": {
             "SECOND": 0
         },
@@ -9349,7 +9588,11 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.wait_for_sec(%1)"]}
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.wait_for_sec(%1)"
+            }
+        ]}
     },
     "repeat_basic": {
         "color": "#498deb",
@@ -9376,6 +9619,16 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "repeat_basic"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
                 },
                 null
             ],
@@ -9436,6 +9689,16 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null ],
+            "type": "repeat_inf"
+        },
+        "pyHelpDef": {
+            "params": [
+                null,
+                {
+                    "type": "boolean_shell",
+                    "params": [ "A" ]
+                }
+            ],
             "type": "repeat_inf"
         },
         "statementsKeyMap": {
@@ -9512,6 +9775,16 @@ Entry.block = {
             ],
             "type": "wait_until_true"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "boolean_shell",
+                    "params": [ "A" ]
+                },
+                null
+            ],
+            "type": "wait_until_true"
+        },
         "paramsKeyMap": {
             "BOOL": 0
         },
@@ -9551,6 +9824,16 @@ Entry.block = {
             "params": [
                 {
                     "type": "True"
+                },
+                null
+            ],
+            "type": "_if"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "boolean_shell",
+                    "params": [ "A" ]
                 },
                 null
             ],
@@ -9616,6 +9899,16 @@ Entry.block = {
             ],
             "type": "if_else"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "boolean_shell",
+                    "params": [ "A" ]
+                },
+                null
+            ],
+            "type": "if_else"
+        },
         "paramsKeyMap": {
             "BOOL": 0
         },
@@ -9675,6 +9968,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null, null ],
+            "type": "create_clone"
+        },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
             "type": "create_clone"
         },
         "paramsKeyMap": {
@@ -9829,6 +10126,17 @@ Entry.block = {
             ],
             "type": "repeat_while_true"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "boolean_shell",
+                    "params": [ "A" ]
+                },
+                null,
+                null
+            ],
+            "type": "repeat_while_true"
+        },
         "paramsKeyMap": {
             "BOOL": 0,
             "OPTION": 1
@@ -9878,6 +10186,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null, null ],
+            "type": "stop_object"
+        },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
             "type": "stop_object"
         },
         "paramsKeyMap": {
@@ -13964,7 +14276,6 @@ Entry.block = {
     },
     "is_clicked": {
         "color": "#AEB8FF",
-        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -13993,7 +14304,6 @@ Entry.block = {
     },
     "is_press_some_key": {
         "color": "#AEB8FF",
-        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -14010,6 +14320,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null, null ],
+            "type": "is_press_some_key"
+        },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
             "type": "is_press_some_key"
         },
         "paramsKeyMap": {
@@ -14037,7 +14351,6 @@ Entry.block = {
     },
     "reach_something": {
         "color": "#AEB8FF",
-        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -14062,6 +14375,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null, null, null ],
+            "type": "reach_something"
+        },
+        "pyHelpDef": {
+            "params": [ null, "A&value", null ],
             "type": "reach_something"
         },
         "paramsKeyMap": {
@@ -14380,7 +14697,6 @@ Entry.block = {
     },
     "boolean_and": {
         "color": "#AEB8FF",
-        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -14411,6 +14727,20 @@ Entry.block = {
             ],
             "type": "boolean_and"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "boolean_shell",
+                    params: ["A"]
+                },
+                null,
+                {
+                    "type": "boolean_shell",
+                    params: ["B"]
+                },
+            ],
+            "type": "boolean_and"
+        },
         "paramsKeyMap": {
             "LEFTHAND": 0,
             "RIGHTHAND": 2
@@ -14431,7 +14761,6 @@ Entry.block = {
     },
     "boolean_or": {
         "color": "#AEB8FF",
-        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -14458,6 +14787,20 @@ Entry.block = {
             ],
             "type": "boolean_or"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "boolean_shell",
+                    params: ["A"]
+                },
+                null,
+                {
+                    "type": "boolean_shell",
+                    params: ["B"]
+                },
+            ],
+            "type": "boolean_or"
+        },
         "paramsKeyMap": {
             "LEFTHAND": 0,
             "RIGHTHAND": 2
@@ -14478,7 +14821,6 @@ Entry.block = {
     },
     "boolean_not": {
         "color": "#AEB8FF",
-        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -14506,6 +14848,14 @@ Entry.block = {
             ],
             "type": "boolean_not"
         },
+        "pyHelpDef": {
+            "params": [
+                null,
+                { "type": "boolean_shell" },
+                null
+            ],
+            "type": "boolean_not"
+        },
         "paramsKeyMap": {
             "VALUE": 1
         },
@@ -14517,7 +14867,14 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "not (%2)",
-                blockType: "param"
+                blockType: "param",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "Boolean"
+                    }
+                ]
             }
         ]}
     },
@@ -14597,7 +14954,6 @@ Entry.block = {
     },
     "boolean_basic_operator": {
         "color": "#AEB8FF",
-        "vimModeFontColor": "black",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -14634,6 +14990,20 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ "10" ]
+                }
+            ],
+            "type": "boolean_basic_operator"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
+                },
+                "EQUAL",
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
                 }
             ],
             "type": "boolean_basic_operator"
@@ -14859,6 +15229,21 @@ Entry.block = {
             ],
             "type": "dialog_time"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
+                },
+                null,
+                null
+            ],
+            "type": "dialog_time"
+        },
         "paramsKeyMap": {
             "VALUE": 0,
             "SECOND": 1,
@@ -14957,6 +15342,16 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.block_hi ]
+                },
+                null, null
+            ],
+            "type": "dialog"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
                 },
                 null, null
             ],
@@ -15069,6 +15464,13 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null, null ],
+            "type": "change_to_next_shape"
+        },
+        "pyHelpDef": {
+            "params": [
+                "A&value",
+                null
+            ],
             "type": "change_to_next_shape"
         },
         "paramsKeyMap": {
@@ -15361,6 +15763,16 @@ Entry.block = {
             ],
             "type": "change_scale_size"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                null
+            ],
+            "type": "change_scale_size"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -15394,6 +15806,16 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "100" ]
+                },
+                null
+            ],
+            "type": "set_scale_size"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
                 },
                 null
             ],
@@ -15566,6 +15988,16 @@ Entry.block = {
             ],
             "type": "change_to_some_shape"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "get_pictures",
+                    params: ["A&value"]
+                },
+                null
+            ],
+            "type": "change_to_some_shape"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -15614,6 +16046,17 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "add_effect_amount"
+        },
+        "pyHelpDef": {
+            "params": [
+                "A&value",
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
                 },
                 null
             ],
@@ -15696,6 +16139,17 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "100" ]
+                },
+                null
+            ],
+            "type": "change_effect_amount"
+        },
+        "pyHelpDef": {
+            "params": [
+                "A&value",
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
                 },
                 null
             ],
@@ -15889,6 +16343,10 @@ Entry.block = {
             "params": [ null, null ],
             "type": "change_object_index"
         },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
+            "type": "change_object_index"
+        },
         "paramsKeyMap": {
             "LOCATION": 0
         },
@@ -15971,6 +16429,16 @@ Entry.block = {
             ],
             "type": "move_direction"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                null
+            ],
+            "type": "move_direction"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -16013,6 +16481,16 @@ Entry.block = {
             ],
             "type": "move_x"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                null
+            ],
+            "type": "move_x"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -16049,6 +16527,16 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "move_y"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
                 },
                 null
             ],
@@ -16106,6 +16594,24 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "locate_xy_time"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "C&value" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
                 },
                 null
             ],
@@ -16341,6 +16847,19 @@ Entry.block = {
             ],
             "type": "locate_xy"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
+                },
+            ],
+            "type": "locate_xy"
+        },
         "paramsKeyMap": {
             "VALUE1": 0,
             "VALUE2": 1
@@ -16380,6 +16899,16 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "locate_x"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
                 },
                 null
             ],
@@ -16426,6 +16955,16 @@ Entry.block = {
             ],
             "type": "locate_y"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                null
+            ],
+            "type": "locate_y"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -16463,6 +17002,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null, null ],
+            "type": "locate"
+        },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
             "type": "locate"
         },
         "paramsKeyMap": {
@@ -16542,6 +17085,24 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "move_xy_time"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "C&value" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
                 },
                 null
             ],
@@ -16894,6 +17455,10 @@ Entry.block = {
             "params": [ null, null ],
             "type": "see_angle_object"
         },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
+            "type": "see_angle_object"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -17059,6 +17624,16 @@ Entry.block = {
             ],
             "type": "locate_object_time"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
+                },
+                "A&value"
+            ],
+            "type": "locate_object_time"
+        },
         "paramsKeyMap": {
             "VALUE": 0,
             "TARGET": 1
@@ -17161,6 +17736,16 @@ Entry.block = {
             ],
             "type": "rotate_absolute"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "angle",
+                    params: ["A&value"]
+                },
+                null
+            ],
+            "type": "rotate_absolute"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -17193,6 +17778,15 @@ Entry.block = {
             "params": [
                 { "type": "angle" },
                 null
+            ],
+            "type": "rotate_relative"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "angle",
+                    params: ["A&value"]
+                },
             ],
             "type": "rotate_relative"
         },
@@ -17231,6 +17825,16 @@ Entry.block = {
             ],
             "type": "direction_absolute"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "angle",
+                    params: ["A&value"]
+                },
+                null
+            ],
+            "type": "direction_absolute"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -17262,6 +17866,16 @@ Entry.block = {
         "def": {
             "params": [
                 { "type": "angle" },
+                null
+            ],
+            "type": "direction_relative"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "angle",
+                    params: ["A&value"]
+                },
                 null
             ],
             "type": "direction_relative"
@@ -17304,6 +17918,20 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "move_to_angle"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "angle",
+                    params: ["B&value"]
+                },
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
                 },
                 null
             ],
@@ -17355,6 +17983,20 @@ Entry.block = {
                 },
                 {
                     "type": "angle"
+                },
+                null
+            ],
+            "type": "rotate_by_time"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
+                },
+                {
+                    "type": "angle",
+                    params: ["A&value"]
                 },
                 null
             ],
@@ -17420,6 +18062,20 @@ Entry.block = {
                     "params": [ "2" ]
                 },
                 { "type": "angle" },
+                null
+            ],
+            "type": "direction_relative_duration"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
+                },
+                {
+                    "type": "angle",
+                    params: ["A&value"]
+                },
                 null
             ],
             "type": "direction_relative_duration"
@@ -19857,6 +20513,10 @@ Entry.block = {
             "params": [ null, null ],
             "type": "start_scene"
         },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
+            "type": "start_scene"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -19912,6 +20572,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null, null ],
+            "type": "start_neighbor_scene"
+        },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
             "type": "start_neighbor_scene"
         },
         "paramsKeyMap": {
@@ -20201,6 +20865,16 @@ Entry.block = {
             ],
             "type": "sound_volume_change"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                null
+            ],
+            "type": "sound_volume_change"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -20239,6 +20913,16 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "sound_volume_set"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
                 },
                 null
             ],
@@ -20350,6 +21034,16 @@ Entry.block = {
             ],
             "type": "sound_something_with_block"
         },
+        "def": {
+            "params": [
+                {
+                    "type": "get_sounds",
+                    params: ["A&value"]
+                },
+                null
+            ],
+            "type": "sound_something_with_block"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -20404,6 +21098,20 @@ Entry.block = {
             ],
             "type": "sound_something_second_with_block"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "get_sounds",
+                    params: ["A&value"]
+                },
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
+                },
+                null
+            ],
+            "type": "sound_something_second_with_block"
+        },
         "paramsKeyMap": {
             "VALUE": 0,
             "SECOND": 1
@@ -20448,6 +21156,16 @@ Entry.block = {
             "params": [
                 {
                     "type": "get_sounds"
+                },
+                null
+            ],
+            "type": "sound_something_wait_with_block"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "get_sounds",
+                    params: ["A&value"]
                 },
                 null
             ],
@@ -20509,6 +21227,20 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "sound_something_second_wait_with_block"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "get_sounds",
+                    params: ["A&value"]
+                },
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
                 },
                 null
             ],
@@ -20588,6 +21320,24 @@ Entry.block = {
             ],
             "type": "sound_from_to"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "get_sounds",
+                    params: ["A&value"]
+                },
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "C&value" ]
+                },
+                null
+            ],
+            "type": "sound_from_to"
+        },
         "paramsKeyMap": {
             "VALUE": 0,
             "START": 1,
@@ -20647,6 +21397,24 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "sound_from_to_and_wait"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "get_sounds",
+                    params: ["A&value"]
+                },
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "C&value" ]
                 },
                 null
             ],
@@ -20801,6 +21569,10 @@ Entry.block = {
             "params": [ null, "81" ],
             "type": "when_some_key_pressed"
         },
+        "pyHelpDef": {
+            "params": [ null, "A&value" ],
+            "type": "when_some_key_pressed"
+        },
         "paramsKeyMap": {
             "VALUE": 1
         },
@@ -20810,8 +21582,6 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "keyPress",
-
-        //"syntax": {"js": [], "py": ["def entry_event_key():\n\tif key == %2:"]}
         "syntax": {"js": [], "py": [
             {
                 syntax: "def when_press_key(%2):",
@@ -21024,6 +21794,10 @@ Entry.block = {
             "params": [ null, null ],
             "type": "when_message_cast"
         },
+        "pyHelpDef": {
+            "params": [ null, "A&value"],
+            "type": "when_message_cast"
+        },
         "paramsKeyMap": {
             "VALUE": 1
         },
@@ -21087,6 +21861,10 @@ Entry.block = {
         },
         "def": {
             "params": [ null, null ],
+            "type": "message_cast"
+        },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
             "type": "message_cast"
         },
         "paramsKeyMap": {
@@ -21157,6 +21935,10 @@ Entry.block = {
         },
         "def": {
             "params": [ null, null ],
+            "type": "message_cast_wait"
+        },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
             "type": "message_cast_wait"
         },
         "paramsKeyMap": {
@@ -21273,6 +22055,16 @@ Entry.block = {
             ],
             "type": "text_write"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
+                },
+                null
+            ],
+            "type": "text_write"
+        },
         "paramsKeyMap": {
             "VALUE": 0
         },
@@ -21307,6 +22099,16 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.entry ]
+                },
+                null
+            ],
+            "type": "text_append"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
                 },
                 null
             ],
@@ -21347,6 +22149,16 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.entry ]
+                },
+                null
+            ],
+            "type": "text_prepend"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
                 },
                 null
             ],
@@ -21477,6 +22289,17 @@ Entry.block = {
             ],
             "type": "change_variable"
         },
+        "pyHelpDef": {
+            "params": [
+                "A&value",
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
+                },
+                null
+            ],
+            "type": "change_variable"
+        },
         "paramsKeyMap": {
             "VARIABLE": 0,
             "VALUE": 1
@@ -21580,6 +22403,17 @@ Entry.block = {
             ],
             "type": "set_variable"
         },
+        "def": {
+            "params": [
+                "A&value",
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
+                },
+                null
+            ],
+            "type": "set_variable"
+        },
         "paramsKeyMap": {
             "VARIABLE": 0,
             "VALUE": 1
@@ -21650,6 +22484,10 @@ Entry.block = {
             "params": [ null, null ],
             "type": "show_variable"
         },
+        "def": {
+            "params": [ "A&value", null ],
+            "type": "show_variable"
+        },
         "paramsKeyMap": {
             "VARIABLE": 0
         },
@@ -21712,6 +22550,10 @@ Entry.block = {
         },
         "def": {
             "params": [ null, null ],
+            "type": "hide_variable"
+        },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
             "type": "hide_variable"
         },
         "paramsKeyMap": {
@@ -21777,6 +22619,10 @@ Entry.block = {
             "params": [ null ],
             "type": "get_variable"
         },
+        "pyHelpDef": {
+            "params": [ "A&value" ],
+            "type": "get_variable"
+        },
         "paramsKeyMap": {
             "VARIABLE": 0
         },
@@ -21837,6 +22683,16 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.block_hi ]
+                },
+                null
+            ],
+            "type": "ask_and_wait"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
                 },
                 null
             ],
@@ -22010,6 +22866,17 @@ Entry.block = {
             ],
             "type": "add_value_to_list"
         },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
+                },
+                "A&value",
+                null
+            ],
+            "type": "add_value_to_list"
+        },
         "paramsKeyMap": {
             "VALUE": 0,
             "LIST": 1
@@ -22090,6 +22957,17 @@ Entry.block = {
                     "params": [ "1" ]
                 },
                 null,
+                null
+            ],
+            "type": "remove_value_from_list"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
+                },
+                "A&value",
                 null
             ],
             "type": "remove_value_from_list"
@@ -22184,6 +23062,21 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "insert_value_to_list"
+        },
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "C&value" ]
+                },
+                "A&value",
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
                 },
                 null
             ],
@@ -22284,6 +23177,21 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "change_value_list_index"
+        },
+        "pyHelpDef": {
+            "params": [
+                "A&value",
+                {
+                    "type": "text",
+                    "params": [ "B&value" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "C&value" ]
                 },
                 null
             ],
@@ -22392,6 +23300,18 @@ Entry.block = {
             ],
             "type": "value_of_index_from_list"
         },
+        "pyHelpDef": {
+            "params": [
+                null,
+                "A&value",
+                null,
+                {
+                    "type": "number",
+                    "params": [ "B&value" ]
+                }
+            ],
+            "type": "value_of_index_from_list"
+        },
         "paramsKeyMap": {
             "LIST": 1,
             "INDEX": 3
@@ -22474,6 +23394,10 @@ Entry.block = {
             "params": [ null, null, null ],
             "type": "length_of_list"
         },
+        "pyHelpDef": {
+            "params": [ null, "A&value", null ],
+            "type": "length_of_list"
+        },
         "paramsKeyMap": {
             "LIST": 1
         },
@@ -22539,6 +23463,10 @@ Entry.block = {
             "params": [ null, null ],
             "type": "show_list"
         },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
+            "type": "show_list"
+        },
         "paramsKeyMap": {
             "LIST": 0
         },
@@ -22601,6 +23529,10 @@ Entry.block = {
         },
         "def": {
             "params": [ null, null ],
+            "type": "hide_list"
+        },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
             "type": "hide_list"
         },
         "paramsKeyMap": {
@@ -22696,6 +23628,10 @@ Entry.block = {
             "params": [ "HIDE", null ],
             "type": "set_visible_answer"
         },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
+            "type": "set_visible_answer"
+        },
         "paramsKeyMap": {
             "BOOL": 0
         },
@@ -22781,6 +23717,16 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ "10" ]
+                }, null
+            ],
+            "type": "is_included_in_list"
+        },
+        "pyHelpDef": {
+            "params": [
+                null, "B&value", null,
+                {
+                    "type": "text",
+                    "params": [ "A&value" ]
                 }, null
             ],
             "type": "is_included_in_list"
@@ -30489,8 +31435,21 @@ Entry.block = {
         },
         "class": "etc",
         "isNotFor": [],
-        "func": function (sprite, script) {
-        }
+        "func": function (sprite, script) {}
+    },
+    "boolean_shell": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "template": "%1",
+        "isPrimitive": true,
+        "params": [
+            {
+                "type": "Text",
+                "text": "A",
+                "color": "#3D3D3D"
+            }
+        ],
+        "func": function (sprite, script) {},
     }
 };
 
