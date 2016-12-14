@@ -27097,8 +27097,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
   b.codeToText = function(a, b) {
     var c;
     b && (this._mode = b.runType);
-    console.log("this._currentObject", this._currentObject);
-    console.log("this._changedObject", this._changedObject);
     var e = b.textType;
     this._oldParserType = b.textType;
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._oldParserType != this._parserType && this._parser.setParser(this._mode, this._parserType, this.codeMirror), this._oldParserType = this._parserType) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._oldParserType != this._parserType && this._parser.setParser(this._mode, this._parserType, this.codeMirror), this._oldParserType = this._parserType);
@@ -27241,7 +27239,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.codeToText = function(a, b) {
     if (this.vimBoard) {
-      return this.vimBoard.codeToText(a, b);
+      return this.initDeclaration(), this.vimBoard.codeToText(a, b);
     }
   };
   b.getCodeToText = function(a) {

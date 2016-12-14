@@ -86,7 +86,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
                     cm.replaceSelection(spaces);
                 }
             },
-            // gutters: ["CodeMirror-lint-markers"],
+            //gutters: ["CodeMirror-linenumbers", "breakpoints"],
             lint: true,
             viewportMargin: 10
         });
@@ -181,9 +181,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         var codeDescription;
         if(mode)
             this._mode = mode.runType;
-
-        console.log("this._currentObject", this._currentObject);
-        console.log("this._changedObject", this._changedObject);
 
         var textType = mode.textType; 
         this._oldParserType = mode.textType;

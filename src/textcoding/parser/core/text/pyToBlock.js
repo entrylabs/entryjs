@@ -1674,7 +1674,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if(objectObjectName && objectPropertyName && propertyName)
                 calleeName = objectObjectName.concat('.').concat(objectPropertyName).concat('.').concat(propertyName);
-        }
+        } 
 
         //Id Registration and Initiation for A+=B Case
         if(calleeName == "__pythonRuntime.objects.list") {

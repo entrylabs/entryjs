@@ -232,6 +232,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.codeToText = function(code, mode) {
         if (!this.vimBoard)
             return;
+        this.initDeclaration();
         return this.vimBoard.codeToText(code, mode);
 
     };
