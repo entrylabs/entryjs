@@ -62,9 +62,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var y = this.position && this.position.y ? this.position.y : 0;
         y -= CONTENT_HEIGHT/2;
         this._header = this.svgGroup.elem('rect', {
-                x: 0, 
+                x: 0,
                 y: y,
-                rx: 3, 
+                rx: 3,
                 ry: 3,
                 width: width,
                 height: CONTENT_HEIGHT,
@@ -250,10 +250,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     };
 
     p.getText = function() {
-        return this.getValue() + '\u00B0';
+        var value = this.getValue();
+        var reg = /&value/gm;
+        if (reg.test(value))
+            return value.replace(reg, '');
+        return value + '\u00B0';
     };
 
-    p.modValue = function(value) {return value % 360;};
+    p.modValue = function(value) {
+        var reg = /&value/gm;
+        if (reg.test(value))
+            return value;
+        return value % 360;
+    };
 
     p.destroyOption = function() {
         if (this.disposeEvent) {

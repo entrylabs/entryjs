@@ -234,7 +234,10 @@ Entry.Field = function() {};
 
     p._convert = function(key, value) {
         value = value !== undefined ? value : this.getValue();
-        if (this._contents.converter) {
+        var reg = /&value/gm;
+        if (reg.test(value))
+            return value.replace(reg, '');
+        else if (this._contents.converter) {
             return this._contents.converter(key, value);
         } else return key;
     };

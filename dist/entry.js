@@ -8485,6 +8485,7 @@ Entry.Helper = function() {
   Entry.addEventListener("workspaceChangeMode", function() {
     this._blockView && this.renderBlock(this._blockView.type);
   }.bind(this));
+  this.resize = Entry.Utils.debounce(this.resize, 300);
 };
 p = Entry.Helper.prototype;
 p.generateView = function(b, a) {
@@ -8544,6 +8545,7 @@ p.generateView = function(b, a) {
     c.appendChild(this._codeMirrorDesc);
     this._renderView = new Entry.RenderView($(d), "LEFT_MOST");
     this.code = new Entry.Code([]);
+    this.code.isFor = "blockHelper";
     this._renderView.changeCode(this.code);
     this.first = !0;
   }
@@ -8564,10 +8566,7 @@ p.renderBlock = function(b) {
   if (b && this.visible && a && !Entry.block[b].isPrimitive) {
     this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1);
     this.code.clear();
-    var d = Entry.block[b].def, d = d || {type:b};
-    this.code.createThread([d]);
-    this.code.board.align();
-    this.code.board.resize();
+    var d = Entry.block[b].def || {type:b};
     if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
       this._contentView.addClass("textMode");
       this.blockHelperDescription_.innerHTML = Lang.PythonHelper[b + "_desc"];
@@ -8575,17 +8574,17 @@ p.renderBlock = function(b) {
       this._elementsContainer.innerHTML = "";
       if (a) {
         for (this._elementsTitle.removeClass("entryRemove"), a = a.split("%next");a.length;) {
-          var d = a.shift().split("-- "), c = Entry.createElement("div");
-          c.addClass("entryBlockHelperElementsContainer");
-          var e = Entry.createElement("div");
-          e.innerHTML = d[0];
-          e.addClass("elementLeft");
+          var c = a.shift().split("-- "), e = Entry.createElement("div");
+          e.addClass("entryBlockHelperElementsContainer");
           var f = Entry.createElement("div");
-          f.addClass("elementRight");
-          f.innerHTML = d[1];
-          c.appendChild(e);
-          c.appendChild(f);
-          this._elementsContainer.appendChild(c);
+          f.innerHTML = c[0];
+          f.addClass("elementLeft");
+          var g = Entry.createElement("div");
+          g.addClass("elementRight");
+          g.innerHTML = c[1];
+          e.appendChild(f);
+          e.appendChild(g);
+          this._elementsContainer.appendChild(e);
         }
       } else {
         this._elementsTitle.addClass("entryRemove");
@@ -8593,9 +8592,13 @@ p.renderBlock = function(b) {
       this._codeMirrorDesc.innerHTML = Lang.PythonHelper[b + "_exampleDesc"];
       this._codeMirror.setValue(Lang.PythonHelper[b + "_exampleCode"]);
       this.codeMirror.refresh();
+      d = Entry.block[b].pyHelpDef || d;
     } else {
       this._contentView.removeClass("textMode"), this.blockHelperDescription_.innerHTML = a;
     }
+    this.code.createThread([d]);
+    this.code.board.align();
+    this.code.board.resize();
     this._renderView.align();
     this._renderView.setDomSize();
   }
@@ -8604,6 +8607,7 @@ p.getView = function() {
   return this.view;
 };
 p.resize = function() {
+  this.codeMirror && this.codeMirror.refresh();
 };
 Entry.Activity = function(b, a) {
   this.name = b;
@@ -24356,7 +24360,8 @@ Entry.Field = function() {
   };
   b._convert = function(a, b) {
     b = void 0 !== b ? b : this.getValue();
-    return this._contents.converter ? this._contents.converter(a, b) : a;
+    var c = /&value/gm;
+    return c.test(b) ? b.replace(c, "") : this._contents.converter ? this._contents.converter(a, b) : a;
   };
   b._updateOptions = function() {
     var a = Entry.block[this._blockView.type];
@@ -24469,10 +24474,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     return this.textElement ? this.textElement.getBoundingClientRect().width + 8 : 8;
   };
   b.getText = function() {
-    return this.getValue() + "\u00b0";
+    var a = this.getValue(), b = /&value/gm;
+    return b.test(a) ? a.replace(b, "") : a + "\u00b0";
   };
   b.modValue = function(a) {
-    return a % 360;
+    return /&value/gm.test(a) ? a : a % 360;
   };
   b.destroyOption = function() {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
@@ -24802,6 +24808,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.resize();
   };
   b.getTextByValue = function(a) {
+    var b = /&value/gm;
+    if (b.test(a)) {
+      return a.replace(b, "");
+    }
     if (!a && "number" !== typeof a || "null" === a) {
       return Lang.Blocks.no_target;
     }
@@ -25017,7 +25027,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   };
   b._setTextValue = function() {
     var a = Entry.getKeyCodeMap()[this.getValue()], a = this._convert(a, this.getValue());
-    this.textElement.textContent = a;
+    this.textElement.textContent = a || this.getValue();
   };
 })(Entry.FieldKeyboard.prototype);
 Entry.FieldLineBreak = function(b, a, d) {
