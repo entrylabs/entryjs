@@ -159,6 +159,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         //console.log(("mode", mode);
                     }
                     Entry.getMainWS().setMode(mode);
+
                     //throw e;
                 }
                 Entry.commander.setCurrentEditor("board", this.board);

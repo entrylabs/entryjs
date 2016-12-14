@@ -3010,7 +3010,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         return result;
 
-    };
+    }; 
 
     p.ParamAngle = function (value, paramMeta, paramDefMeta) {
         console.log("ParamAngle value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);

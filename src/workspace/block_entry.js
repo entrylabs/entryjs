@@ -30,9 +30,10 @@ if (Entry && Entry.block) {
             };
 
             code = map[value] || code || value;
-            if(isNaN(code))
+            if(isNaN(code)) {
                 return '"()"'.replace('()', code);
-            else
+            }
+            else 
                 return '"()"'.replace('"()"', code);
         };
 
@@ -22403,7 +22404,7 @@ Entry.block = {
             ],
             "type": "set_variable"
         },
-        "pyHelpDef": {
+        "def": {
             "params": [
                 "A&value",
                 {

@@ -12131,6 +12131,7 @@ Entry.PyHint = function(b) {
 (function(b) {
   b.pythonHint = function(a) {
     var b = a.getCursor(), c = a.getLineTokens(b.line);
+    console.log("tokens", c);
     a = c.pop();
     for (var e = [], f = [];a && b.ch <= a.start;) {
       a = c.pop();
