@@ -8374,7 +8374,7 @@ Entry.block = {
             {
                 "type": "Text",
                 "text": Lang.Blocks.CALC_timer_visible_1,
-                "color": "#3D3D3D"
+                "color": "#000"
             },
             {
                 "type": "Dropdown",
@@ -8389,7 +8389,7 @@ Entry.block = {
             {
                 "type": "Text",
                 "text": Lang.Blocks.CALC_timer_visible_2,
-                "color": "#3D3D3D"
+                "color": "#000"
             },
             {
                 "type": "Indicator",
@@ -8440,7 +8440,7 @@ Entry.block = {
                     {
                         "type": "Text",
                         "text": 'Entry.timer_view(',
-                        "color": "#3D3D3D"
+                        "color": "#000"
                     },
                     {
                         "type": "Dropdown",
@@ -8457,7 +8457,7 @@ Entry.block = {
                     {
                         "type": "Text",
                         "text": ')',
-                        "color": "#3D3D3D"
+                        "color": "#000"
                     },
                 ]
             }
@@ -9405,7 +9405,7 @@ Entry.block = {
             {
                 "type": "Text",
                 "text": Lang.Blocks.CALC_choose_project_timer_action_1,
-                "color": "#3D3D3D"
+                "color": "#000"
             },
             {
                 "type": "Dropdown",
@@ -9421,7 +9421,7 @@ Entry.block = {
             {
                 "type": "Text",
                 "text": Lang.Blocks.CALC_choose_project_timer_action_2,
-                "color": "#3D3D3D"
+                "color": "#000"
             },
             {
                 "type": "Indicator",
@@ -9503,7 +9503,7 @@ Entry.block = {
                     {
                         "type": "Text",
                         "text": 'Entry.timer(',
-                        "color": "#3D3D3D"
+                        "color": "#000"
                     },
                     {
                         "type": "Dropdown",
@@ -9521,7 +9521,7 @@ Entry.block = {
                     {
                         "type": "Text",
                         "text": ')',
-                        "color": "#3D3D3D"
+                        "color": "#000"
                     },
                 ]
             }
@@ -23244,6 +23244,7 @@ Entry.block = {
     },
     "value_of_index_from_list": {
         "color": "#E457DC",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -23355,6 +23356,7 @@ Entry.block = {
     },
     "length_of_list": {
         "color": "#E457DC",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -23667,6 +23669,7 @@ Entry.block = {
     },
     "is_included_in_list": {
         "color": "#E457DC",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [

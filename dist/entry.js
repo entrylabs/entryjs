@@ -7898,10 +7898,11 @@ Entry.Engine.prototype.fireEventOnEntity = function(b, a) {
 Entry.Engine.prototype.raiseEventOnEntity = function(b, a) {
   b === a[0] && b.parent.script.raiseEvent(a[1], b);
 };
-Entry.Engine.prototype.captureKeyEvent = function(b) {
-  var a = b.keyCode, d = Entry.type;
-  b.ctrlKey && "workspace" == d ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
-  Entry.engine.isState("stop") && "workspace" === d && 37 <= a && 40 >= a && Entry.stage.moveSprite(b);
+Entry.Engine.prototype.captureKeyEvent = function(b, a) {
+  var d = b.keyCode, c = Entry.type;
+  if (!Entry.Utils.isInInput(b) || a) {
+    b.ctrlKey && "workspace" == c ? 83 == d ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == d ? (b.preventDefault(), Entry.engine.run()) : 90 == d && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", d]), Entry.engine.isState("stop") && "workspace" === c && 37 <= d && 40 >= d && Entry.stage.moveSprite(b);
+  }
 };
 Entry.Engine.prototype.raiseKeyEvent = function(b, a) {
   return b.parent.script.raiseEvent(a[0], b, String(a[1]));
@@ -18253,13 +18254,15 @@ Entry.Tooltip = function(b, a) {
     this.data.map(this._alignTooltip.bind(this));
   };
   b._renderTooltip = function(a) {
-    var b = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), c = Entry.Dom("div", {classes:["entryTooltip", a.direction, a.style], parent:b});
-    this.isIndicator && (a.indicator = this.renderIndicator());
-    c.html(a.content.replace(/\n/gi, "<br>"));
-    this._tooltips.push(b);
-    a.wrapper = b;
-    a.dom = c;
-    this._alignTooltip(a);
+    if (a.content) {
+      var b = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), c = Entry.Dom("div", {classes:["entryTooltip", a.direction, a.style], parent:b});
+      this.isIndicator && (a.indicator = this.renderIndicator());
+      c.html(a.content.replace(/\n/gi, "<br>"));
+      this._tooltips.push(b);
+      a.wrapper = b;
+      a.dom = c;
+      this._alignTooltip(a);
+    }
   };
   b._alignTooltip = function(a) {
     var b = a.target.offset(), c = a.target.get(0).getBoundingClientRect();
