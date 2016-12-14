@@ -23244,6 +23244,7 @@ Entry.block = {
     },
     "value_of_index_from_list": {
         "color": "#E457DC",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -23355,6 +23356,7 @@ Entry.block = {
     },
     "length_of_list": {
         "color": "#E457DC",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -23667,6 +23669,7 @@ Entry.block = {
     },
     "is_included_in_list": {
         "color": "#E457DC",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
