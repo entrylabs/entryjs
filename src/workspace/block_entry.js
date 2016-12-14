@@ -24545,12 +24545,14 @@ Entry.block = {
 					"type": "Dropdown",
 					"options": [
 						[Lang.Blocks.byrobot_dronefighter_light_manual_all,		"255"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_1,		"1"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_2,		"2"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_3,		"4"],
-						[Lang.Blocks.byrobot_dronefighter_light_manual_4,		"8"]
+						[Lang.Blocks.byrobot_dronefighter_light_manual_red,		"1"],
+						[Lang.Blocks.byrobot_dronefighter_light_manual_blue,	"2"],
+						[Lang.Blocks.byrobot_dronefighter_light_manual_1,		"4"],
+						[Lang.Blocks.byrobot_dronefighter_light_manual_2,		"8"],
+						[Lang.Blocks.byrobot_dronefighter_light_manual_3,		"16"],
+						[Lang.Blocks.byrobot_dronefighter_light_manual_4,		"32"]
 					],
-					"value": "1",
+					"value": "4",
 					"fontSize": 11
 				},
 				{
@@ -24684,7 +24686,7 @@ Entry.block = {
 			{
 				var octave		= script.getField('OCTAVE');
 				var scale		= script.getField('SCALE');
-				var time		= script.getNumberValue('TIME') * 1000.0;
+				var time		= parseInt(script.getNumberValue('TIME') * 1000);
 				
 				time = Math.max(time, 0);
 				time = Math.min(time, 10000);
@@ -24697,7 +24699,7 @@ Entry.block = {
 				}
 				else
 				{
-					scalecalc = (octave * 12) + (scale - 1) + 1;
+					scalecalc = parseInt((octave * 12) + (scale - 1) + 1);
 				}
 				
 				// 전송
@@ -24796,7 +24798,7 @@ Entry.block = {
 						},
 						{
 							"type": "text",
-							"params": ["0.2"]
+							"params": ["0.5"]
 						},
 						null
 					],
@@ -24811,9 +24813,9 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var timeOn		= script.getNumberValue('TIMEON') * 1000;
-				var timeOff		= script.getNumberValue('TIMEOFF') * 1000;
-				var timeRun		= script.getNumberValue('TIMERUN') * 1000;
+				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
+				var timeOff		= parseInt(script.getNumberValue('TIMEOFF') * 1000);
+				var timeRun		= parseInt(script.getNumberValue('TIMERUN') * 1000);
 				
 				timeOn = Math.max(timeOn, 0);
 				timeOn = Math.min(timeOn, 10000);
@@ -24904,10 +24906,10 @@ Entry.block = {
 			{
 				var send		= Entry.hw.sendQueue;
 
-				var roll		= script.getNumberValue("ROLL", script);
-				var pitch		= script.getNumberValue("PITCH", script);
-				var yaw			= script.getNumberValue("YAW", script);
-				var throttle	= script.getNumberValue("THROTTLE", script);
+				var roll		= parseInt(script.getNumberValue("ROLL", script));
+				var pitch		= parseInt(script.getNumberValue("PITCH", script));
+				var yaw			= parseInt(script.getNumberValue("YAW", script));
+				var throttle	= parseInt(script.getNumberValue("THROTTLE", script));
 				
 				// 범위 조정
 				roll		= Math.max(roll, 0);

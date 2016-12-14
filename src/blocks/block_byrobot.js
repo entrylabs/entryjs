@@ -62,7 +62,6 @@ Entry.byrobot_dronefighter =
 		Entry.hw.update();
 		//var byrobot_dronefighter = Entry.byrobot_dronefighter;
 	},
-
 	// Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성 
 	// listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
     monitorTemplate:
