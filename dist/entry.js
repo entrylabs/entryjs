@@ -13525,8 +13525,11 @@ Entry.BlockToPyParser = function(b) {
       var c = b.options, e;
       for (e in c) {
         var f = c[e][0], g = c[e][1];
-        a == g && (a = b.converter(f, g));
+        if (a == g) {
+          return b.converter(f, g);
+        }
       }
+      a = b.converter(a, a);
     }
     return a;
   };
@@ -13542,6 +13545,7 @@ Entry.BlockToPyParser = function(b) {
         }
       }
       a = (g = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(a, b.menuName)) ? b.converter(g, g) : b.converter(a, a);
+      /None/.test(a) && (a = a.replace(/\"/gm, ""));
     }
     return a;
   };
@@ -13556,6 +13560,9 @@ Entry.BlockToPyParser = function(b) {
   };
   b.FieldKeyboard = function(a, b) {
     console.log("FieldKeyboardInput", a, b);
+    if (/None/.test(a)) {
+      return a.replace(/\"/gm, "");
+    }
     var c = Entry.KeyboardCode.map, e;
     for (e in c) {
       if (c[e] == a) {
@@ -15075,17 +15082,24 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamAngle = function(a, b, c) {
     console.log("ParamAngle value, paramMeta, paramDefMeta", a, b, c);
-    return a;
+    return /None/.test(a) ? "None" : a;
   };
   b.ParamTextInput = function(a, b, c) {
     console.log("ParamTextInput value, paramMeta, paramDefMeta", a, b, c);
     "number" != typeof a && (a = a.replace(/\t/gi, "    "));
-    console.log("ParamTextInput result", a);
-    return a;
+    b = a;
+    if (/None/.test(a)) {
+      return "None";
+    }
+    console.log("ParamTextInput result", b);
+    return b;
   };
   b.ParamColor = function(a, b, c, e) {
     console.log("ParamColor value, paramMeta, paramDefMeta, textParam", a, b, c, e);
     var f;
+    if (/None/.test(a)) {
+      return "None";
+    }
     e && e.codeMap && (b = e.codeMap, console.log("codeMap", b), b = eval(b), console.log("codeMap", b), a = a.toLowerCase(), console.log("codeMap value", a), f = b[a]);
     f || (f = a);
     console.log("ParamColor result", f);
@@ -15093,6 +15107,9 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamDropdown = function(a, b, c, e) {
     console.log("ParamDropdown value, paramMeta, paramDefMeta textParam", a, b, c, e);
+    if (/None/.test(a)) {
+      return "None";
+    }
     b = b.options;
     for (var f in b) {
       if (c = b[f], a == c[1]) {
@@ -15102,7 +15119,8 @@ Entry.PyToBlockParser = function(b) {
     }
     if (e && e.codeMap) {
       if ((f = e.codeMap) && eval(f)) {
-        var g = eval(f)[a.toLowerCase()]
+        isNaN(a) && (a = a.toLowerCase());
+        var g = eval(f)[a];
       }
       g && (a = g);
     }
@@ -15114,7 +15132,7 @@ Entry.PyToBlockParser = function(b) {
     console.log("ParamDropdownDynamic value, paramMeta, paramDefMeta, textParam, currentObject", a, b, c, e, f);
     c = a;
     e && (a = Entry.TextCodingUtil.getDynamicIdByNumber(a, e, this._currentObject));
-    a && 2 < a.split.length && "self" == a.split(".")[0] && (a = a.split(".")[1], f = this._currentObject);
+    a && isNaN(a) && 2 < a.split(".").length && "self" == a.split(".")[0] && (a = a.split(".")[1], f = this._currentObject);
     a = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(a, b.menuName, f);
     if (e && e.codeMap) {
       if ((b = e.codeMap) && eval(b)) {
@@ -15128,7 +15146,12 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamKeyboard = function(a, b, c) {
     console.log("ParamKeyboard value, paramMeta, paramDefMeta", a, b, c);
-    return isNaN(a) ? Entry.KeyboardCode.map[a.toLowerCase()].toString() : Entry.KeyboardCode.map[a].toString();
+    b = a;
+    if (/None/.test(a)) {
+      return "None";
+    }
+    (a = isNaN(a) ? Entry.KeyboardCode.map[a.toLowerCase()] : Entry.KeyboardCode.map[a]) && (b = a.toString());
+    return b;
   };
   b.Indicator = function(a, b, c) {
   };

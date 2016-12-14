@@ -2926,8 +2926,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         } else if(paramMeta.type == "Text") {
             var param = "";
             result = param;
-            return result;
-        }
+            return result; 
+        } 
 
         console.log("Literal paramMeta", paramMeta, "paramDefMeta", paramDefMeta);
 
@@ -2947,6 +2947,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             result = params;
         }
+        
         console.log("Literal result", result);
 
         return result;
@@ -2978,7 +2979,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(paramDefMeta)
             paramDefMetaType = paramDefMeta.type;
         else
-            paramDefMetaType = "text";
+            paramDefMetaType = "text"; //default
 
         var paramBlock = Entry.block[paramDefMetaType];
         var paramsMeta = paramBlock.params;
@@ -3014,6 +3015,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ParamAngle = function (value, paramMeta, paramDefMeta) {
         console.log("ParamAngle value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
         var result;
+        var reg = /None/;
+        if(reg.test(value)) return "None";
 
         result = value;
 
@@ -3026,6 +3029,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             value = value.replace(/\t/gi, '    ');
         
         var result = value; 
+        var reg = /None/;
+        if(reg.test(value)) return "None";
+
         console.log("ParamTextInput result", result);
 
         return result;
@@ -3034,6 +3040,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ParamColor = function(value, paramMeta, paramDefMeta, textParam) {
         console.log("ParamColor value, paramMeta, paramDefMeta, textParam", value, paramMeta, paramDefMeta, textParam);
         var result;
+        var reg = /None/;
+        if(reg.test(value)) return "None";
 
         if(textParam && textParam.codeMap) {
             var codeMap = textParam.codeMap;
@@ -3056,6 +3064,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ParamDropdown = function(value, paramMeta, paramDefMeta, textParam) {
         console.log("ParamDropdown value, paramMeta, paramDefMeta textParam", value, paramMeta, paramDefMeta, textParam);
         var result;
+        var reg = /None/;
+        if(reg.test(value)) return "None";
 
         var options = paramMeta.options;
         for(var j in options) {
@@ -3068,8 +3078,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(textParam && textParam.codeMap) {
             var codeMap = textParam.codeMap;
-            if(codeMap && eval(codeMap))
-               var codeMapValue =  eval(codeMap)[value.toLowerCase()];
+            if(codeMap && eval(codeMap)) {
+                if(isNaN(value))
+                    value = value.toLowerCase();
+                var codeMapValue =  eval(codeMap)[value];
+            }
             if(codeMapValue) value = codeMapValue;
         }
 
@@ -3090,7 +3103,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(textParam)   
             value = Entry.TextCodingUtil.getDynamicIdByNumber(value, textParam, this._currentObject);
         
-        if(value && value.split.length > 2 && value.split(".")[0] == "self") {
+        if(value && isNaN(value) && value.split(".").length > 2 && value.split(".")[0] == "self") {
             value = value.split(".")[1];
             currentObject = this._currentObject;
         }
@@ -3112,10 +3125,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamKeyboard = function(value, paramMeta, paramDefMeta) {
         console.log("ParamKeyboard value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
-        if(isNaN(value))
-            var result = Entry.KeyboardCode.map[value.toLowerCase()].toString();
-        else
-            var result = Entry.KeyboardCode.map[value].toString();
+        var result = value;
+        var reg = /None/;
+        if(reg.test(value)) return "None";
+
+        if(isNaN(value)) {
+            var keyChar = Entry.KeyboardCode.map[value.toLowerCase()];
+            if(keyChar) result = keyChar.toString();
+        }
+        else {
+            var keyChar = Entry.KeyboardCode.map[value];
+            if(keyChar) result = keyChar.toString();
+        }
+
         return result;
     };
 
