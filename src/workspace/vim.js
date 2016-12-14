@@ -30,7 +30,7 @@ Entry.Vim = function(dom, textType) {
         if (Entry.hw.hwModule) {
             var name = Entry.hw.hwModule.name;
             name = name[0].toUpperCase() + name.slice(1);
-            if(name == "ArduinoExt") 
+            if(name == "ArduinoExt")
                 name = "Arduino";
             Entry.Vim.PYTHON_IMPORT_HW = "\nimport " + name + "\n";
             Entry.Vim.INEDITABLE_LINE_PY = 4;
@@ -98,7 +98,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             if (event.key.length === 1) {
                 this.codeMirror.showHint({completeSingle: false});
             }
-
         }.bind(this))
         this.codeMirror.on("keyup", function(cm, event) {
             if (event.key === "Backspace") {
@@ -177,12 +176,12 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         return code;
     };
 
-    p.codeToText = function(code, mode) { 
+    p.codeToText = function(code, mode) {
         var codeDescription;
         if(mode)
             this._mode = mode.runType;
 
-        var textType = mode.textType; 
+        var textType = mode.textType;
         this._oldParserType = mode.textType;
 
         if (textType === Entry.Vim.TEXT_TYPE_JS) {
@@ -222,7 +221,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             doc.setCursor({ line: doc.lastLine() - 1});
         }
         else {
-            this.clearText();  
+            this.clearText();
         }
     };
 
