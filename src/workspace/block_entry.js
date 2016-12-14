@@ -24620,16 +24620,12 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
-						["1",	"0"],
-						["2",	"1"],
-						["3",	"2"],
-						["4",	"3"],
 						["5",	"4"],
 						["6",	"5"],
 						["7",	"6"],
 						["8",	"7"]
 					],
-					"value": "1",
+					"value": "4",
 					"fontSize": 11
 				},
 				{
@@ -24794,11 +24790,11 @@ Entry.block = {
 						},
 						{
 							"type": "text",
-							"params": ["0.04"]
+							"params": ["0.2"]
 						},
 						{
 							"type": "text",
-							"params": ["0.5"]
+							"params": ["1"]
 						},
 						null
 					],
@@ -24922,6 +24918,7 @@ Entry.block = {
 				throttle	= Math.min(throttle, 100);
 				
 				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue("control_roll", roll);
 				Entry.hw.setDigitalPortValue("control_pitch", pitch);
 				Entry.hw.setDigitalPortValue("control_yaw", yaw);
@@ -24929,6 +24926,7 @@ Entry.block = {
 
 				Entry.hw.update();
 
+				delete Entry.hw.sendQueue["target"];
 				delete Entry.hw.sendQueue["control_roll"];
 				delete Entry.hw.sendQueue["control_pitch"];
 				delete Entry.hw.sendQueue["control_yaw"];
