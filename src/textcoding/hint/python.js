@@ -24,6 +24,7 @@ Entry.PyHint = function(syntax) {
     }
     this.addScope("Entry");
     this.addScope("random");
+    this.addScope("math");
     this.addScope("%2", "_list")
 
     this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
@@ -44,10 +45,11 @@ Entry.PyHint = function(syntax) {
         var cur = editor.getCursor(), tokens = editor.getLineTokens(cur.line);
         var lastToken = tokens.pop();
         var result = [], menuResult = [];
-        if (!lastToken) return null;
 
-        while (cur.ch <= lastToken.start)
+        while (lastToken && cur.ch <= lastToken.start)
             lastToken = tokens.pop();
+
+        if (!lastToken) return null;
 
         var searchString;
         var start = lastToken.start;
@@ -74,7 +76,7 @@ Entry.PyHint = function(syntax) {
             case "variable":
                 if (!searchString)
                     searchString = lastToken.string;
-                result = this.fuzzySearch(this.getScope("_global"), searchString).slice(0,20);
+                result = this.fuzzySearch(this.getScope("_global"), searchString);
                 result = result.map(function(key) {
                     var localSyntax = syntax;
                     var displayText = key.split("#")[0];
@@ -105,9 +107,9 @@ Entry.PyHint = function(syntax) {
                 var searchResult;
                 var searchScope = this.getScope(variableToken.string);
                 if (searchScope.length)
-                    searchResult = this.fuzzySearch(searchScope, lastToken.string).slice(0,20);
+                    searchResult = this.fuzzySearch(searchScope, lastToken.string);
                 else if (Entry.variableContainer.getListByName(variableToken.string)) {
-                    searchResult = this.fuzzySearch(this.getScope('%2'), lastToken.string).slice(0,20);
+                    searchResult = this.fuzzySearch(this.getScope('%2'), lastToken.string);
                     variableToken.string = "%2";
                 }
                 else
@@ -155,7 +157,9 @@ Entry.PyHint = function(syntax) {
     }
 
     p.fuzzySearch = function(arr, start, options) {
-        var result = fuzzy.filter(start, arr, options);
+        options = options || {};
+        options.escapeLetter = "#";
+        var result = Entry.Utils.fuzzy.filter(start, arr, options).slice(0,20);
         result = result.map(function(o){return o.original});
         return result;
     };
@@ -183,6 +187,10 @@ Entry.PyHint = function(syntax) {
                 ch += text.length;
             }
             text = text.replace(/\$\d+/gi, "");
+        }
+        if (text.indexOf("\n") > -1) {
+            console.log(self.from.ch, Math.floor((self.from.ch + 1) / 4))
+            text = text.split("\n").join("\n" + "\t".repeat(self.from.ch))
         }
 
         cm.replaceRange(text, self.from, self.to)

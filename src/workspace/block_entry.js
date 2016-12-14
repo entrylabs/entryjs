@@ -42,6 +42,18 @@ if (Entry && Entry.block) {
             key  = String(key);
             if (value === 'mouse')
                 key = 'mouse';
+
+            var name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(value, this.menuName);
+            if(name) key = name;
+            if(this.codeMap)
+                var codeMap = eval(this.codeMap);
+            var codeMapKey = value;
+            if(codeMap) {
+                var codeMapValue = codeMap[codeMapKey];
+                if(codeMapValue)
+                    key = codeMapValue;
+            }
+
             key = key.replace(/\"/gi, '');
             return '"()"'.replace('()', key);
         };
@@ -52,11 +64,24 @@ if (Entry && Entry.block) {
             key  = String(key);
             if (value === 'mouse')
                 key = value;
+            var name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(value, this.menuName);
+            if(name) key = name;
             key = key.replace(/\"/gi, '');
             return '"()"'.replace('"()"', key);
         };
 
         c.returnStringValue = function(key, value) {
+            if ((!value && typeof value !== 'number') || value === 'null')
+                return "None";
+
+            if(this.codeMap)
+                var codeMap = eval(this.codeMap);
+            var codeMapKey = value;
+            if(codeMap) {
+                var codeMapValue = codeMap[codeMapKey];
+                if(codeMapValue)
+                    value = codeMapValue;
+            }
             return '"()"'.replace('()', value);
         };
 
@@ -101,9 +126,41 @@ if (Entry && Entry.block) {
                 return '"()"'.replace('()', objectName);
             }
             else {
+                if(this.codeMap)
+                    var codeMap = eval(this.codeMap);
+                var codeMapKey = value;
+                if(codeMap) {
+                    var codeMapValue = codeMap[codeMapKey];
+                    if(codeMapValue)
+                        value = codeMapValue;
+                }
                 value = value.replace(/\"/gi, '');
                 return '"()"'.replace('()', value);
             }
+        };
+
+        c.returnStringValueUpperCase = function(key, value) {
+            if(this.codeMap)
+                var codeMap = eval(this.codeMap);
+            var codeMapKey = value;
+            if(codeMap) {
+                var codeMapValue = codeMap[codeMapKey];
+                if(codeMapValue)
+                    value = codeMapValue;
+            }
+            return '"()"'.replace('()', value).toUpperCase();
+        };
+
+        c.returnStringValueLowerCase = function(key, value) {
+            if(this.codeMap)
+                var codeMap = eval(this.codeMap);
+            var codeMapKey = value;
+            if(codeMap) {
+                var codeMapValue = codeMap[codeMapKey];
+                if(codeMapValue)
+                    value = codeMapValue;
+            }
+            return '"()"'.replace('()', value).toLowerCase();
         };
 
     })(Entry.block.converters);
@@ -1989,8 +2046,7 @@ Entry.block = {
                         "value": "A0",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue,
-                        caseType: "no"
+                        converter: Entry.block.converters.returnStringValue
                     }
                 ],
                 keyOption: "arduino_get_sensor_number"
@@ -2509,7 +2565,6 @@ Entry.block = {
                         "value": "0",
                         "fontSize": 11,
                         converter: Entry.block.converters.returnStringKey,
-                        caseType: "no",
                         codeMap:"Entry.CodeMap.Arduino.arduino_ext_analog_list[0]"
                     }
                 ],
@@ -2837,9 +2892,8 @@ Entry.block = {
                         "value": "on",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]",
-                        caseType: "no"
+                        converter: Entry.block.converters.returnStringValueUpperCase,
+                        codeMap: "Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]"
                     }
                 ],
                 keyOption: "arduino_get_digital_toggle"
@@ -2918,17 +2972,9 @@ Entry.block = {
                         "accept": "string"
                     },
                     {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.ARDUINO_on,"on"],
-                            [Lang.Blocks.ARDUINO_off,"off"]
-                        ],
-                        "fontSize": 11,
-                        'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                        converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Arduino.arduino_ext_toggle_led[1]",
-                        caseType: "no"
-                    },
+                        "type": "Block",
+                        "accept": "string"
+                    }
                 ]
             }
         ]}
@@ -3065,9 +3111,7 @@ Entry.block = {
                         ],
                         "value": "C",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Arduino.arduino_ext_tone_list[0]",
-                        caseType: "no"
+                        converter: Entry.block.converters.returnStringValueUpperCase
                     }
                 ],
                 keyOption: "arduino_ext_tone_list"
@@ -7444,7 +7488,6 @@ Entry.block = {
                         "fontSize": 11,
                         noArrow: true,
                         converter: Entry.block.converters.returnOperator,
-                        caseType: "upper",
                         paramType: "operator"
                     },
                     {
@@ -8217,7 +8260,7 @@ Entry.block = {
                         "value": "YEAR",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnStringValue,
+                        converter: Entry.block.converters.returnStringValueLowerCase,
                         codeMap: "Entry.CodeMap.Entry.get_date[1]"
                     },
                 ]
@@ -8408,7 +8451,7 @@ Entry.block = {
                         "value": "SHOW",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnStringValue,
+                        converter: Entry.block.converters.returnStringValueLowerCase,
                         codeMap: "Entry.CodeMap.Entry.set_visible_project_timer[1]"
                     },
                     {
@@ -9472,7 +9515,7 @@ Entry.block = {
                         "value": "START",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnStringValue,
+                        converter: Entry.block.converters.returnStringValueLowerCase,
                         codeMap: "Entry.CodeMap.Entry.choose_project_timer_action[1]"
                     },
                     {
@@ -13649,10 +13692,8 @@ Entry.block = {
                         ],
                         "value": "4",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValue,
-                        codeMap: "Entry.CodeMap.Hamster.hamster_play_note_for[0]",
-                        caseType: "no",
-                        paramType: "variable"
+                        converter: Entry.block.converters.returnStringValueUpperCase,
+                        codeMap: "Entry.CodeMap.Hamster.hamster_play_note_for[0]"
                     },
                     {
                         "type": "Dropdown",
@@ -15086,8 +15127,7 @@ Entry.block = {
                         "value": "EQUAL",
                         "fontSize": 11,
                         noArrow: true,
-                        converter: Entry.block.converters.returnOperator,
-                        caseType: "no"
+                        converter: Entry.block.converters.returnOperator
                     },
                     {
                         "type": "Block",
@@ -15916,8 +15956,7 @@ Entry.block = {
                         "menuName": "pictures",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringKey,
-                        paramType: "picture"
+                        converter: Entry.block.converters.returnStringKey
                     }
                 ]
             }
@@ -16357,7 +16396,7 @@ Entry.block = {
                         "value": "FRONT",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_LOOKS,
-                        converter: Entry.block.converters.returnStringValue,
+                        converter: Entry.block.converters.returnStringValueLowerCase,
                         codeMap: "Entry.CodeMap.Entry.change_object_index[0]"
                     },
                 ]
@@ -20494,7 +20533,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.start_scene_of(%1)",
+                syntax: "Entry.start_scene(%1)",
                 blockType: "last",
                 textParams: [
                     {
@@ -20570,7 +20609,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Entry.start_scene_to(%1)",
+                syntax: "Entry.start_scene_of(%1)",
                 blockType: "last",
                 textParams: [
                     {
@@ -20963,8 +21002,7 @@ Entry.block = {
                         "menuName": "sounds",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_SOUNDS,
-                        converter: Entry.block.converters.returnStringKey,
-                        paramType: "sound"
+                        converter: Entry.block.converters.returnStringKey
                     }
                 ],
                 keyOption: "get_sounds"
@@ -21985,8 +22023,7 @@ Entry.block = {
                 textParams: [
                     {
                         "type": "TextInput",
-                        converter: Entry.block.converters.returnStringOrNumberByValue,
-                        caseType: "no"
+                        converter: Entry.block.converters.returnStringOrNumberByValue
                     },
                 ]
             }
@@ -22292,9 +22329,24 @@ Entry.block = {
                         "menuName": "variables",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no",
-                        paramType: "variable"
+                        converter: Entry.block.converters.returnRawStringKey
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                ]
+            },
+            {
+                syntax: "%1 = %1 + %2",
+                textParams: [
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "variables",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                     {
                         "type": "Block",
@@ -22386,9 +22438,7 @@ Entry.block = {
                         "menuName": "variables",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no",
-                        paramType: "variable"
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                     {
                         "type": "Block",
@@ -22595,9 +22645,7 @@ Entry.block = {
                         "menuName": "variables",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no",
-                        paramType: "variable"
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                 ]
             }
@@ -22860,9 +22908,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no",
-                        paramType: "variable"
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                 ]
             }
@@ -22960,9 +23006,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no",
-                        paramType: "variable"
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                 ]
             }
@@ -23072,9 +23116,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no",
-                        paramType: "variable"
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                     {
                         "type": "Block",
@@ -23185,9 +23227,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no",
-                        paramType: "variable"
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                     {
                         "type": "Block",
@@ -23301,9 +23341,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no",
-                        paramType: "variable"
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                     undefined,
                     {
@@ -23383,9 +23421,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no",
-                        paramType: "variable"
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                 ]
             }
@@ -23622,7 +23658,7 @@ Entry.block = {
                         "value": "SHOW",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnStringValue,
+                        converter: Entry.block.converters.returnStringValueLowerCase,
                         codeMap: "Entry.CodeMap.Entry.set_visible_answer[0]"
                     },
                 ]
@@ -23727,9 +23763,7 @@ Entry.block = {
                         "menuName": "lists",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE,
-                        converter: Entry.block.converters.returnRawStringKey,
-                        caseType: "no",
-                        paramType: "variable"
+                        converter: Entry.block.converters.returnRawStringKey
                     },
                     undefined,
                     {

@@ -843,6 +843,7 @@ Entry.Playground.prototype.injectCode = function() {
             this.mainWorkspace.vimBoard._currentObject = Entry.playground.object;
 
     ws.changeBoardCode(code);
+    
     if(Entry.playground)
         this.mainWorkspace.vimBoard._changedObject = Entry.playground.object;
     ws.getBoard().adjustThreadsPosition();

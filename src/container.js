@@ -394,7 +394,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
         object.view_ && object.view_.addClass('selectedObject');
         object.isSelected_ = true;
     } else {
-        var workspace = Entry.getMainworkspace();
+        var workspace = Entry.getMainWS();
         workspace && workspace.vimBoard && workspace.vimBoard.clearText();
     }
 

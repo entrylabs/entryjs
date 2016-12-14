@@ -307,6 +307,9 @@ Entry.Scene.prototype.selectScene = function(scene) {
         Entry.stage.selectObject(null);
         Entry.playground.flushPlayground();
         Entry.variableContainer.updateList();
+
+        var workspace = Entry.getMainWS();
+        workspace && workspace.vimBoard && workspace.vimBoard.clearText();
     }
 
     if (!Entry.container.listView_)

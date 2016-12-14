@@ -153,9 +153,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 cm.setOption("mode", {name: "python", globalVars: true});
                 //cm.markText({line: 0, ch: 0}, {line: 3, ch: 0}, {readOnly: true});
                 this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-                this.py_variableDeclaration = null;
-                this.py_listDeclaration = null;
-                this.py_funcDeclaration = null;
 
                 break;
         }

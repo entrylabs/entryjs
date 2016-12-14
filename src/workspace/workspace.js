@@ -114,6 +114,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.blockMenu.banClass('textMode');
                     this.set({selectedBoard:this.vimBoard});
                     this.vimBoard.show();
+                    this.initDeclaration();
                     this.codeToText(this.board.code, mode);
                     this.blockMenu.renderText();
                     this.board.clear();
@@ -157,6 +158,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         this.oldTextType = Entry.Vim.TEXT_TYPE_PY;
                         //console.log(("mode", mode);
                     }
+                    Entry.getMainWS().setMode(mode);
                     //throw e;
                 }
                 Entry.commander.setCurrentEditor("board", this.board);
@@ -428,9 +430,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
             return;
 
-        console.log("this.vimBoard._currentObject", this.vimBoard._currentObject);
-        console.log("this.vimBoard._changedObject", this.vimBoard._changedObject);
-
         var changedCode = this.vimBoard.textToCode(this.textType);
         var board = this.board;
         var code = board.code;
@@ -461,5 +460,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p._isVimMode = function() {
         return this.oldMode === Entry.Workspace.MODE_VIMBOARD;
     };
+
+    p.initDeclaration = function() {
+        if(this.vimBoard && this.vimBoard._parser) {
+            var parser = this.vimBoard._parser;
+            parser.py_variableDeclaration = null;
+            parser.py_listDeclaration = null;
+            parser.py_funcDeclaration = null;
+        }
+    }
 
 })(Entry.Workspace.prototype);

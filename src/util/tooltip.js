@@ -14,6 +14,11 @@ Entry.Tooltip = function(data, opts) {
         this.isIndicator = true;
 
     this.render();
+
+    this._resizeEventFunc =Entry.Utils.debounce(function() {
+        this.alignTooltips();
+    }.bind(this), 200);
+    Entry.addEventListener('windowResized', this._resizeEventFunc);
 };
 
 (function(p) {
@@ -40,6 +45,10 @@ Entry.Tooltip = function(data, opts) {
         this.data.map(this._renderTooltip.bind(this));
     };
 
+    p.alignTooltips = function() {
+        this.data.map(this._alignTooltip.bind(this));
+    };
+
     p._renderTooltip = function(data) {
         var tooltipWrapper = Entry.Dom("div", {
             classes: [
@@ -56,12 +65,24 @@ Entry.Tooltip = function(data, opts) {
             parent: tooltipWrapper
         });
 
+        if (this.isIndicator)
+            data.indicator = this.renderIndicator();
+
+        tooltipDom.html(data.content.replace(/\n/gi, "<br>"));
+        this._tooltips.push(tooltipWrapper);
+        data.wrapper = tooltipWrapper;
+        data.dom = tooltipDom;
+        this._alignTooltip(data);
+    };
+
+    p._alignTooltip = function(data) {
         var pos = data.target.offset()
         var bound = data.target.get(0).getBoundingClientRect();
         if (this.isIndicator) {
-            this.renderIndicator(
-                pos.left + bound.width / 2,
-                pos.top + bound.height / 2);
+            data.indicator.css({
+                left: pos.left + bound.width / 2,
+                top: pos.top + bound.height / 2
+            });
         }
         switch(data.direction) {
             case "up":
@@ -84,9 +105,7 @@ Entry.Tooltip = function(data, opts) {
                 break;
         }
 
-        tooltipWrapper.css(pos);
-        tooltipDom.html(data.content.replace(/\n/gi, "<br>"));
-        this._tooltips.push(tooltipWrapper);
+        data.wrapper.css(pos);
     };
 
     p.renderIndicator = function(left, top) {
@@ -97,10 +116,8 @@ Entry.Tooltip = function(data, opts) {
             parent: $(document.body)
         });
         indicator.html("<div></div><div></div><div></div>");
-        indicator.css({
-            left: left, top: top
-        });
         this._indicators.push(indicator);
+        return indicator;
     };
 
     p.dispose = function() {
@@ -112,5 +129,6 @@ Entry.Tooltip = function(data, opts) {
             this._tooltips.pop().remove();
         while (this._indicators.length)
             this._indicators.pop().remove();
+        Entry.removeEventListener('windowResized', this._resizeEventFunc);
     };
 })(Entry.Tooltip.prototype);

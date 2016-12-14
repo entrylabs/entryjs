@@ -57,8 +57,6 @@ Entry.Console = function() {
         Entry.addEventListener("stop", this.clear.bind(this));
 
         this.clear();
-
-        console.log("this.clear()");
     };
 
     p.getView = function() {

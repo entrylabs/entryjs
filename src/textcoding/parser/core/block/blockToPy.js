@@ -143,7 +143,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 var index = Number(blockParamIndex) - 1;
                 if(schemaParams[index]) {
                     if(schemaParams[index].type == "Indicator") {
-                        index++;
+                        index++; 
                     } else if(schemaParams[index].type == "Block") {
                         var param = this.Block(dataParams[index]).trim();
                         if(syntaxObj.textParams && syntaxObj.textParams[index])
@@ -177,7 +177,6 @@ Entry.BlockToPyParser = function(blockSyntax) {
                                 }
                             }
                         }
-
                         result += param;
                     } else {
                         if(syntaxObj.textParams)
@@ -186,12 +185,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                         param = this['Field' + schemaParams[index].type](dataParams[index], textParams[index]);
 
-
-                        if(Entry.TextCodingUtil.isLocalType(currentBlock, block.params[index]))
-                            param = "self".concat('.').concat(param);
-
                         result += param;
-                        result = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(currentBlock, result);
+                        if(syntaxObj && syntaxObj.key == "repeat_while_true")
+                            result = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(currentBlock, result);
                     }
                 }
             } else if (statementReg.test(blockToken)) {
@@ -206,7 +202,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     else result += statementToken; 
                 }
             } else {
-                console.log("blockTokenss", blockToken, "syntaxObj", syntaxObj, "i", i);
+                console.log("blockTokenss", blockToken, "syntaxObj", syntaxObj, "i", i, blockToken.length);
                 if(syntaxObj && syntaxObj.key == "repeat_basic" && i == 0) {
                     var forStmtTokens = blockToken.split(" ");
                     forStmtTokens[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++);
@@ -274,107 +270,45 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     p.FieldDropdown = function(dataParam, textParam) {
         console.log("FieldDropdown", dataParam, textParam);
-        var key, value;
 
-        if(textParam && textParam.converter && textParam.options) { 
-            for(var i in textParam.options) {
-                var option = textParam.options[i];
-                console.log("option", option);
-                var op0 = option[0];
-                var op1 = option[1];
-                console.log("dataparam", dataParam);
-
-                if(dataParam == op1) { 
-                    key = op0;
-                    value = op1;
-                    if(textParam.codeMap) {
-                        var codeMap = eval(textParam.codeMap);
-                        var code = codeMap[value];
-                        if(code)
-                            value = code;  
-                    }
-                    console.log("dropdown key, value", key, value);
-                    if(isNaN(key) && isNaN(value)) {
-                        if(textParam.caseType == "no") {
-                            key = key;
-                            value = value;
-                        }
-                        else if(textParam.caseType == "upper") {
-                            key = key.toUpperCase();
-                            value = value.toUpperCase();
-                        }
-                        else {
-                            key = key.toLowerCase();
-                            value = value.toLowerCase();
-                        }
-                    }
-
+        if(textParam && textParam.converter && textParam.options) {
+            var options = textParam.options;
+            for(var i in options) {
+                var key = options[i][0];
+                var value = options[i][1];
+                if(dataParam == value) { 
                     dataParam = textParam.converter(key, value);
-                    if(textParam.paramType == "variable") {
-                        dataParam = dataParam.replace(/\"/g, "");
-                    }
-                    break;
-                }
+                }   
             }
-        }
+            //dataParam = '"()"'.replace('"()"', "None");
+        } 
 
         return dataParam;
     };
 
     p.FieldDropdownDynamic = function(dataParam, textParam) {
         console.log("FieldDropdownDynamic", dataParam, textParam); 
-        var found = false;
-        var options;
-        var returnValue = dataParam;
+        console.log("dataParam", dataParam);
+
         if(textParam && textParam.converter && textParam.options) {
-            options = textParam.options;
+            var options = textParam.options;
             for(var i in options) {
-                var option = options[i];
-                console.log("option", option);
-                var op0 = option[0];
-                var op1 = option[1];
-                if(dataParam === op1) { 
-                    key = op0;
-                    value = op1; 
-                    dataParam = textParam.converter(key, value);
-                    
-                    console.log("dataParam convert result", dataParam);
-                    if(textParam.codeMap) { 
-                        dataParam = dataParam.replace(/\"/g, "");
-                        var codeMap = eval(textParam.codeMap); 
-                        var code = codeMap[dataParam];
-                        console.log("codeMap", codeMap, "code", code, "dataParam", dataParam);
-                        if(code) 
-                            dataParam = code; 
-                        dataParam = '"()"'.replace('()', dataParam);
-                    } 
-
-                    if(isNaN(dataParam)) {
-                        if(textParam.caseType == "no") {
-                            dataParam = dataParam;
-                        }
-                        else if(textParam.caseType == "upper") { 
-                            dataParam = dataParam.toUpperCase();
-                        }
-                        else { 
-                            dataParam = dataParam.toLowerCase();
-                        }
-                    }
-
-                    if(textParam.paramType == "variable") {
-                        dataParam = dataParam.replace(/\"/g, "");
-                    }
-                    found = true; 
-                    break;
-                }
+                var key = options[i][0];
+                var value = options[i][1];
+                if(dataParam == value) { 
+                    var name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(value, textParam.menuName);
+                    if(name) key = name;
+                    return dataParam = textParam.converter(key, value);
+                }   
             }
-        }
 
-        if(!found) {
-            dataParam = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(dataParam, textParam.menuName);
-            if(isNaN(dataParam))
-                dataParam = '"()"'.replace('()', dataParam);
-        }
+            var value = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(dataParam, textParam.menuName);
+            
+            if(value) 
+                dataParam = textParam.converter(value, value);
+            else
+                dataParam = textParam.converter(dataParam, dataParam);
+        } 
 
         return dataParam;
     };
@@ -419,6 +353,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     p.FieldText = function(dataParam, textParam) {
         console.log("FieldText", dataParam, textParam);
+        console.log("FiedlText Length", dataParam.length);
         if(textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
 
@@ -426,7 +361,15 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.FieldTextInput = function(dataParam, textParam) {
-        console.log("FieldTextInput", dataParam, textParam);
+        console.log("dataParam FieldTextInput", dataParam);
+        if(typeof dataParam != "number") {
+            dataParam = dataParam.replace('\t', '    ');
+            var spaces = dataParam.split(/ /);  
+           
+            if(dataParam.length == spaces.length-1)
+                dataParam = '"()"'.replace('()', dataParam);
+        }
+
         if(textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
 
