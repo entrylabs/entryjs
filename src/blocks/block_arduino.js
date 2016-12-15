@@ -35,7 +35,6 @@ Entry.Arduino = {
             "a5":{name: Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
         },
         mode : 'both'
-
     }
 };
 
@@ -87,7 +86,34 @@ Entry.ArduinoExt = {
 
 Entry.SmartBoard = {
     name: 'smartBoard',
-    setZero: Entry.Arduino.setZero
+    setZero: Entry.Arduino.setZero,
+
+    monitorTemplate: {
+//        imgPath: "hw/smartBoard.png",
+//        width: 658,
+//        height: 540,
+        listPorts: {
+            "2":{name: Lang.Hw.port_en + " GS2 ", type: "output", pos: {x: 0, y: 0}},
+            "3":{name: Lang.Hw.port_en + " GS1 ", type: "output", pos: {x : 0, y: 0}},
+            "4":{name: Lang.Hw.port_en + " MT1 회전 방향 ", type: "output", pos: {x: 0, y: 0}},
+            "5":{name: Lang.Hw.port_en + " MT1 PWM ", type: "output", pos: {x: 0, y: 0}},
+            "6":{name: Lang.Hw.port_en + " MT2 PWM ", type: "output", pos: {x: 0, y: 0}},
+            "7":{name: Lang.Hw.port_en + " MT2 회전 방향 ", type: "output", pos: {x: 0, y: 0}},
+            "8":{name: Lang.Hw.port_en + " RELAY ", type: "output", pos: {x: 0, y: 0}},
+            "9":{name: Lang.Hw.port_en + " SM3 각도(PWM) ", type: "output", pos: {x: 0, y: 0}},
+            "10":{name: Lang.Hw.port_en + " SM2 각도(PWM) ", type: "output", pos: {x: 0, y: 0}},
+            "11":{name: Lang.Hw.port_en + "SM1 각도(PWM", type: "output", pos: {x: 0, y: 0}},
+            "12":{name: Lang.Hw.port_en + " 빨간 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
+            "13":{name: Lang.Hw.port_en + " 노란 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
+            "14":{name: Lang.Hw.port_en + " 초록 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
+            "15":{name: Lang.Hw.port_en + " 파란 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
+            "a2":{name: Lang.Hw.port_en + " 1번 " + Lang.Hw.sensor, type: "input", pos: {x: 0, y: 0}},
+            "a3":{name: Lang.Hw.port_en + " 2번 " + Lang.Hw.sensor, type: "input", pos: {x: 0, y: 0}},
+            "a4":{name: Lang.Hw.port_en + " 3번 " + Lang.Hw.sensor, type: "input", pos: {x: 0, y: 0}},
+            "a5":{name: Lang.Hw.port_en + " 4번 " + Lang.Hw.sensor, type: "input", pos: {x: 0, y: 0}}
+        },
+        mode : 'both'
+    }
 };
 
 Entry.SensorBoard = {
