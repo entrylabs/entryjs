@@ -3596,8 +3596,8 @@ Lang.template = {
 	"byrobot_dronefighter_controller_if_joystick_right_direction"	: "조종기 오른쪽 조이스틱을 %1(으)로 움직였을 때",
     "byrobot_dronefighter_controller_light_manual_single"			: "조종기 LED %1 %2 %3",
     "byrobot_dronefighter_drone_light_manual_single"				: "드론 LED %1 %2 %3",
-    "byrobot_dronefighter_controller_buzzer"						: "%1 옥타브 %2 을(를) %3 초 동안 연주하기 %4",
     "byrobot_dronefighter_controller_buzzer_stop"					: "소리 끄기 %1",
+    "byrobot_dronefighter_controller_buzzer"						: "%1 옥타브 %2 을(를) %3 초 동안 연주하기 %4",
 	"byrobot_dronefighter_controller_vibrator"						: "진동 (켜기 %1 초, 끄기 %2 초)를 %3 초 동안 실행하기 %4",
     "byrobot_dronefighter_control"									: "조종 입력을 좌우 %1 앞뒤 %2 좌우회전 %3 위아래 %4 (으)로 전달 %5",
 	/* BYROBOT End */
