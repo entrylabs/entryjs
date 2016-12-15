@@ -252,7 +252,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         //console.log("thread", thread, "thread.length", thread.length);
                         if(thread.length == 0)
                             continue;
-                        thread = thread.replace(/    /g, "\t");
+                        thread = thread.replace(/\t/gm, '    ');
                         ast = pyAstGenerator.generate(thread);
                         if(!ast)
                             continue;

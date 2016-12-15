@@ -14129,10 +14129,11 @@ Entry.PyToBlockParser = function(b) {
 };
 (function(b) {
   b.Program = function(a) {
-    console.log("this.syntax", this.blockSyntax);
-    this._currentObject = Entry.playground.mainWorkspace.vimBoard._currentObject;
-    console.log("_currentObject", this._currentObject);
     try {
+      console.log("this.syntax", this.blockSyntax);
+      this._currentObject = Entry.playground.mainWorkspace.vimBoard._currentObject;
+      console.log("_currentObject", this._currentObject);
+      this._funcLoop = !1;
       this._code = [];
       this._blockCount = this._threadCount = 0;
       for (var b in a) {
@@ -14735,7 +14736,7 @@ Entry.PyToBlockParser = function(b) {
       } else {
         l = e.name;
         "Literal" == f.type ? g = f.value : "Identifier" == f.type ? g = f.name : "UnaryExpression" == f.type ? (g = h.params[0], console.log("gl initData", h, "type", typeof g), "string" != typeof g && "number" != typeof g && (g = 0)) : g = 0;
-        console.log("variable name", l, "value", g);
+        console.log("variable name", l, "value", g, "value.length", g.length, "this._funcLoop", this._funcLoop);
         !g && 0 != g || -1 != l.search("__filbert") || (Entry.TextCodingUtil.isGlobalVariableExisted(l) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(l, g) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(l, 0) : Entry.TextCodingUtil.createGlobalVariable(l, g));
         b.id = k;
         b.init = h;
@@ -15041,6 +15042,7 @@ Entry.PyToBlockParser = function(b) {
   b.Literal = function(a, b, c, e) {
     console.log("Literal component", a, "paramMeta", b, "paramDefMeta", c, "textParam", e);
     var f, g = a.value;
+    g && isNaN(g) && (g = g.replace(/\t/gm, "    "));
     b || (b = {type:"Block"}, c || (c = "number" == typeof g ? {type:"number"} : {type:"text"}));
     if ("Indicator" == b.type) {
       return null;
@@ -15087,13 +15089,11 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ParamTextInput = function(a, b, c) {
     console.log("ParamTextInput value, paramMeta, paramDefMeta", a, b, c);
-    "number" != typeof a && (a = a.replace(/\t/gi, "    "));
-    b = a;
     if (/None/.test(a)) {
       return "None";
     }
-    console.log("ParamTextInput result", b);
-    return b;
+    console.log("ParamTextInput result", a);
+    return a;
   };
   b.ParamColor = function(a, b, c, e) {
     console.log("ParamColor value, paramMeta, paramDefMeta, textParam", a, b, c, e);
@@ -15761,7 +15761,7 @@ Entry.PyToBlockParser = function(b) {
           n = this[n.type](n, e[q], l[q], !0);
           console.log("BinaryExpression param", n);
           console.log("check binary", typeof n, "$", n.type, "$", n.isCallParam);
-          n && "object" == typeof n && n.name && 0 > n.name.indexOf("__filbert") && !Entry.TextCodingUtil.isFuncParam(n.name) && !Entry.TextCodingUtil.isEntryEventDesignatedParamName(n.name) && !Entry.TextCodingUtil.isGlobalVariableExisted(n.name) && (g = n.name, console.log("errorId", 75), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, g, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST));
+          n && "object" == typeof n && n.name && 0 > n.name.indexOf("__filbert") && !Entry.TextCodingUtil.isFuncParam(n.name) && !Entry.TextCodingUtil.isGlobalVariableExisted(n.name) && (g = n.name, console.log("errorId", 75), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, g, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST));
           n && n.type && b.push(n);
         }
       } else {
@@ -15879,7 +15879,6 @@ Entry.PyToBlockParser = function(b) {
       }
       return null;
     }
-    this._funcLoop = !1;
     var n, v, u;
     h = {};
     q = {};
@@ -16329,7 +16328,7 @@ Entry.Parser = function(b, a, d, c) {
           this._pyThreadCount = 1;
           var m = new Entry.PyAstGenerator, e = this.makeThreads(a), f = [], r = 0;
           for (g = 0;g < e.length;g++) {
-            if (h = e[g], 0 != h.length && (h = h.replace(/    /g, "\t"), k = m.generate(h))) {
+            if (h = e[g], 0 != h.length && (h = h.replace(/\t/gm, "    "), k = m.generate(h))) {
               this._pyThreadCount = r++, this._pyBlockCount[r] = h.split("\n").length - 1, 0 != k.body.length && f.push(k);
             }
           }
