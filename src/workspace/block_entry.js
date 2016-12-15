@@ -22487,7 +22487,7 @@ Entry.block = {
             "params": [ null, null ],
             "type": "show_variable"
         },
-        "def": {
+        "pyHelpDef": {
             "params": [ "A&value", null ],
             "type": "show_variable"
         },
