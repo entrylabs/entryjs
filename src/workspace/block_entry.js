@@ -24903,7 +24903,7 @@ Entry.block = {
     },
 	// */
 	//*
-    "byrobot_dronefighter_control":
+    "byrobot_dronefighter_control_double":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -24952,7 +24952,106 @@ Entry.block = {
 						},
 						null
 					],
-				"type": "byrobot_dronefighter_control"
+				"type": "byrobot_dronefighter_control_double"
+			},
+        "paramsKeyMap": {
+				"ROLL":		0,
+				"PITCH":	1,
+				"YAW":		2,
+				"THROTTLE":	3
+			},
+        "class": "byrobot_dronefighter_input",
+        "isNotFor": [ "byrobot_dronefighter" ],
+        "func": function (sprite, script)
+			{
+				var send		= Entry.hw.sendQueue;
+
+				var roll		= parseInt(script.getNumberValue("ROLL", script));
+				var pitch		= parseInt(script.getNumberValue("PITCH", script));
+				var yaw			= parseInt(script.getNumberValue("YAW", script));
+				var throttle	= parseInt(script.getNumberValue("THROTTLE", script));
+				
+				// 범위 조정
+				roll		= Math.max(roll, 0);
+				roll		= Math.min(roll, 100);
+				pitch		= Math.max(pitch, 0);
+				pitch		= Math.min(pitch, 100);
+				yaw			= Math.max(yaw, 0);
+				yaw			= Math.min(yaw, 100);
+				throttle	= Math.max(throttle, 0);
+				throttle	= Math.min(throttle, 100);
+				
+				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x10);
+				Entry.hw.setDigitalPortValue("control_roll", roll);
+				Entry.hw.setDigitalPortValue("control_pitch", pitch);
+				Entry.hw.setDigitalPortValue("control_yaw", yaw);
+				Entry.hw.setDigitalPortValue("control_throttle", throttle);
+
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["target"];
+				delete Entry.hw.sendQueue["control_roll"];
+				delete Entry.hw.sendQueue["control_pitch"];
+				delete Entry.hw.sendQueue["control_yaw"];
+				delete Entry.hw.sendQueue["control_throttle"];
+				
+				return script.callReturn();
+			},
+        //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
+    }
+	// */
+	//*
+    "byrobot_dronefighter_control_quad":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "number",
+							"params": ["0"]
+						},
+						{
+							"type": "number",
+							"params": ["0"]
+						},
+						{
+							"type": "number",
+							"params": ["0"]
+						},
+						{
+							"type": "number",
+							"params": ["0"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_control_quad"
 			},
         "paramsKeyMap": {
 				"ROLL":		0,
