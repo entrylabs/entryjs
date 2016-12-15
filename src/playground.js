@@ -284,22 +284,21 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         class: "entryWorkspaceBlockMenu"
     });
 
-    this.mainWorkspace = new Entry.Workspace(
-        {
-            'blockMenu': {
-                dom: blockMenuView,
-                align: "LEFT",
-                categoryData: EntryStatic.getAllBlocks(),
-                scroll: true
-            },
-            'board': {
-                dom: boardView
-            },
-            'vimBoard': {
-                dom: boardView
-            }
-        }
-    );
+    var initOpts = {
+        'blockMenu': {
+            dom: blockMenuView,
+            align: "LEFT",
+            categoryData: EntryStatic.getAllBlocks(),
+            scroll: true
+        },
+        'board': {
+            dom: boardView
+        },
+    }
+    if (Entry.textCodingEnable)
+        initOpts.vimBoard = { dom: boardView };
+
+    this.mainWorkspace = new Entry.Workspace(initOpts);
     this.blockMenu = this.mainWorkspace.blockMenu;
     this.board = this.mainWorkspace.board;
     this.vimBoard = this.mainWorkspace.vimBoard;
@@ -836,15 +835,17 @@ Entry.Playground.prototype.injectCode = function() {
     var code = this.object.script;
     var ws = this.mainWorkspace;
 
-    if(this.mainWorkspace.vimBoard._changedObject)
-        this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject;
-    else
-        if(Entry.playground)
-            this.mainWorkspace.vimBoard._currentObject = Entry.playground.object;
+    if (Entry.textCodingEnable) {
+        if(this.mainWorkspace.vimBoard._changedObject)
+            this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject;
+        else
+            if(Entry.playground)
+                this.mainWorkspace.vimBoard._currentObject = Entry.playground.object;
+    }
 
     ws.changeBoardCode(code);
-    
-    if(Entry.playground)
+
+    if(Entry.playground && Entry.textCodingEnable)
         this.mainWorkspace.vimBoard._changedObject = Entry.playground.object;
     ws.getBoard().adjustThreadsPosition();
 };
