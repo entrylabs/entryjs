@@ -663,9 +663,12 @@ Entry.Engine.prototype.raiseEventOnEntity = function(entity, param) {
  * capture keyboard press input
  * @param {keyboard event} e
  */
-Entry.Engine.prototype.captureKeyEvent = function(e) {
+Entry.Engine.prototype.captureKeyEvent = function(e, isForce) {
     var keyCode = e.keyCode;
     var type = Entry.type;
+
+    if (Entry.Utils.isInInput(e) && !isForce)
+        return;
 
     //mouse shortcuts
     if (e.ctrlKey && type == 'workspace') {

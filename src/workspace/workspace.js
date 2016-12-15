@@ -101,8 +101,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         switch (this.mode) {
             case Entry.Workspace.MODE_VIMBOARD:
-                    if(alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) { 
-                        alert(alert_message); 
+                    if(alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+                        alert(alert_message);
                         var mode = {};
                         mode.boardType = Entry.Workspace.MODE_BOARD;
                         mode.textType = -1;
@@ -159,6 +159,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         //console.log(("mode", mode);
                     }
                     Entry.getMainWS().setMode(mode);
+
                     //throw e;
                 }
                 Entry.commander.setCurrentEditor("board", this.board);
@@ -232,6 +233,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.codeToText = function(code, mode) {
         if (!this.vimBoard)
             return;
+        this.initDeclaration();
         return this.vimBoard.codeToText(code, mode);
 
     };

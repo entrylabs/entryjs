@@ -238,6 +238,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     };
 
     p.getTextByValue = function(value) {
+        var reg = /&value/gm;
+        if (reg.test(value))
+            return value.replace(reg, '');
+
         if ((!value && typeof value !== 'number') || value === 'null')
             return Lang.Blocks.no_target;
 

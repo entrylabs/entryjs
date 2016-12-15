@@ -277,10 +277,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 var key = options[i][0];
                 var value = options[i][1];
                 if(dataParam == value) { 
-                    dataParam = textParam.converter(key, value);
+                    return dataParam = textParam.converter(key, value);
                 }   
             }
-            //dataParam = '"()"'.replace('"()"', "None");
+            dataParam = textParam.converter(dataParam, dataParam);
         } 
 
         return dataParam;
@@ -301,13 +301,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     return dataParam = textParam.converter(key, value);
                 }   
             }
-
             var value = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(dataParam, textParam.menuName);
-            
-            if(value) 
-                dataParam = textParam.converter(value, value);
-            else
-                dataParam = textParam.converter(dataParam, dataParam);
+            if(value) dataParam = textParam.converter(value, value);
+            else dataParam = textParam.converter(dataParam, dataParam);
+
+            var reg = /None/;
+            if(reg.test(dataParam)) {
+                dataParam = dataParam.replace(/\"/gm, '');
+            }
         } 
 
         return dataParam;
@@ -329,6 +330,11 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     p.FieldKeyboard = function(dataParam, textParam) {
         console.log("FieldKeyboardInput", dataParam, textParam);
+        var reg = /None/;
+        if(reg.test(dataParam)) {
+            return dataParam.replace(/\"/gm, '');
+        }
+
         var map = Entry.KeyboardCode.map;
         for(var key in map) {
             var value = map[key];
@@ -342,7 +348,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             dataParam = textParam.converter(dataParam, null);
 
         dataParam = dataParam.toLowerCase();
-        return dataParam;
+        return dataParam; 
     };
 
     p.FieldOutput = function(dataParam, textParam) {

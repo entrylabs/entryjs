@@ -50,9 +50,11 @@ Entry.Tooltip = function(data, opts) {
     };
 
     p._renderTooltip = function(data) {
+        if (!data.content)
+            return;
         var tooltipWrapper = Entry.Dom("div", {
             classes: [
-                 "entryTooltipWrapper"
+                "entryTooltipWrapper"
             ],
             parent: $(document.body)
         });

@@ -43,13 +43,14 @@ Entry.PyHint = function(syntax) {
 (function(p) {
     p.pythonHint = function(editor) {
         var cur = editor.getCursor(), tokens = editor.getLineTokens(cur.line);
+        console.log("tokens", tokens);
         var lastToken = tokens.pop();
         var result = [], menuResult = [];
 
         while (lastToken && cur.ch <= lastToken.start)
             lastToken = tokens.pop();
 
-        if (!lastToken) return null;
+        if (!lastToken) return null; 
 
         var searchString;
         var start = lastToken.start;

@@ -37,12 +37,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
 (function(p){
     p.Program = function(astArr) { 
-        console.log("this.syntax", this.blockSyntax);
-        this._currentObject = Entry.playground.mainWorkspace.vimBoard._currentObject;
-        console.log("_currentObject", this._currentObject);
         try {
+            console.log("this.syntax", this.blockSyntax);
+            this._currentObject = Entry.playground.mainWorkspace.vimBoard._currentObject;
+            console.log("_currentObject", this._currentObject);
+            this._funcLoop = false;
             this._code = []; 
-
             this._threadCount = 0;
             this._blockCount = 0;
             var isEventBlockExisted = false;
@@ -1674,7 +1674,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if(objectObjectName && objectPropertyName && propertyName)
                 calleeName = objectObjectName.concat('.').concat(objectPropertyName).concat('.').concat(propertyName);
-        }
+        }  
 
         //Id Registration and Initiation for A+=B Case
         if(calleeName == "__pythonRuntime.objects.list") {
@@ -1891,9 +1891,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else {
                 var value = 0
             }
-            
 
-            console.log("variable name", name, "value", value);
+            console.log("variable name", name, "value", value, "value.length", value.length, "this._funcLoop", this._funcLoop);
 
             if(value || value == 0) {
                 if(name.search("__filbert") == -1) {
@@ -2907,7 +2906,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Literal = function(component, paramMeta, paramDefMeta, textParam) {
         console.log("Literal component", component, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta, "textParam", textParam);
         var result;
-        var value = component.value;
+        var value = component.value; 
+        if(value && isNaN(value)) 
+            value = value.replace(/\t/gm, '    ');
 
         if(!paramMeta) {
             var paramMeta = { type: "Block" }; 
@@ -2926,8 +2927,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         } else if(paramMeta.type == "Text") {
             var param = "";
             result = param;
-            return result;
-        }
+            return result; 
+        } 
 
         console.log("Literal paramMeta", paramMeta, "paramDefMeta", paramDefMeta);
 
@@ -2947,6 +2948,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             result = params;
         }
+        
         console.log("Literal result", result);
 
         return result;
@@ -2978,7 +2980,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(paramDefMeta)
             paramDefMetaType = paramDefMeta.type;
         else
-            paramDefMetaType = "text";
+            paramDefMetaType = "text"; //default
 
         var paramBlock = Entry.block[paramDefMetaType];
         var paramsMeta = paramBlock.params;
@@ -3007,13 +3009,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = structure;
         console.log("ParamBlock result", result);
 
-        return result;
+        return result;  
 
-    };
+    }; 
 
     p.ParamAngle = function (value, paramMeta, paramDefMeta) {
         console.log("ParamAngle value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
         var result;
+        var reg = /None/;
+        if(reg.test(value)) return "None";
 
         result = value;
 
@@ -3022,10 +3026,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamTextInput = function(value, paramMeta, paramDefMeta) {
         console.log("ParamTextInput value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
-        if(typeof value != "number")
-            value = value.replace(/\t/gi, '    ');
+        /*if(isNaN(value))
+            value = value.replace(/\t/gm, '    ');*/
         
         var result = value; 
+        var reg = /None/;
+        if(reg.test(value)) return "None";
+
         console.log("ParamTextInput result", result);
 
         return result;
@@ -3034,6 +3041,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ParamColor = function(value, paramMeta, paramDefMeta, textParam) {
         console.log("ParamColor value, paramMeta, paramDefMeta, textParam", value, paramMeta, paramDefMeta, textParam);
         var result;
+        var reg = /None/;
+        if(reg.test(value)) return "None";
 
         if(textParam && textParam.codeMap) {
             var codeMap = textParam.codeMap;
@@ -3056,6 +3065,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ParamDropdown = function(value, paramMeta, paramDefMeta, textParam) {
         console.log("ParamDropdown value, paramMeta, paramDefMeta textParam", value, paramMeta, paramDefMeta, textParam);
         var result;
+        var reg = /None/;
+        if(reg.test(value)) return "None";
 
         var options = paramMeta.options;
         for(var j in options) {
@@ -3068,8 +3079,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(textParam && textParam.codeMap) {
             var codeMap = textParam.codeMap;
-            if(codeMap && eval(codeMap))
-               var codeMapValue =  eval(codeMap)[value.toLowerCase()];
+            if(codeMap && eval(codeMap)) {
+                if(isNaN(value))
+                    value = value.toLowerCase();
+                var codeMapValue =  eval(codeMap)[value];
+            }
             if(codeMapValue) value = codeMapValue;
         }
 
@@ -3090,7 +3104,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(textParam)   
             value = Entry.TextCodingUtil.getDynamicIdByNumber(value, textParam, this._currentObject);
         
-        if(value && value.split.length > 2 && value.split(".")[0] == "self") {
+        if(value && isNaN(value) && value.split(".").length > 2 && value.split(".")[0] == "self") {
             value = value.split(".")[1];
             currentObject = this._currentObject;
         }
@@ -3112,10 +3126,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamKeyboard = function(value, paramMeta, paramDefMeta) {
         console.log("ParamKeyboard value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
-        if(isNaN(value))
-            var result = Entry.KeyboardCode.map[value.toLowerCase()].toString();
-        else
-            var result = Entry.KeyboardCode.map[value].toString();
+        var result = value;
+        var reg = /None/;
+        if(reg.test(value)) return "None";
+
+        if(isNaN(value)) {
+            var keyChar = Entry.KeyboardCode.map[value.toLowerCase()];
+            if(keyChar) result = keyChar.toString();
+        }
+        else {
+            var keyChar = Entry.KeyboardCode.map[value];
+            if(keyChar) result = keyChar.toString();
+        }
+
         return result;
     };
 
@@ -4469,7 +4492,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(param && typeof param == "object") {
                         if(param.name && param.name.indexOf("__filbert") < 0) {
                             if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
-                                if(!Entry.TextCodingUtil.isEntryEventDesignatedParamName(param.name)) {
+                                //if(!Entry.TextCodingUtil.isEntryEventDesignatedParamName(param.name)) {
                                     if(!Entry.TextCodingUtil.isGlobalVariableExisted(param.name)) {
                                         var keyword = param.name;
                                         console.log("errorId", 75);
@@ -4480,7 +4503,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             this._blockCount,
                                             Entry.TextCodingError.SUBJECT_CONV_LIST);
                                     }
-                                }
+                                //}
                             }
                         }
                     }
@@ -5047,7 +5070,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             return null;
         }
-        this._funcLoop = false;
+        //this._funcLoop = false;
 
         ////////////////////////////////////////////////////////////////
         //First, Find The Function Block

@@ -12,6 +12,7 @@ Entry.Helper = function() {
         if (this._blockView)
             this.renderBlock(this._blockView.type)
     }.bind(this));
+    this.resize = Entry.Utils.debounce(this.resize, 300);
 };
 
 var p = Entry.Helper.prototype;
@@ -108,6 +109,7 @@ p.generateView = function(parentView, option) {
 
     this._renderView = new Entry.RenderView($(blockHelperBlock), 'LEFT_MOST');
     this.code = new Entry.Code([]);
+    this.code.isFor = 'blockHelper';
     this._renderView.changeCode(this.code);
 
     this.first = true;
@@ -149,13 +151,7 @@ p.renderBlock = function(type) {
 
     var code = this.code;
     this.code.clear();
-
-    var def = Entry.block[type].def;
-    def = def || {type:type};
-    this.code.createThread([def]);
-
-    this.code.board.align();
-    this.code.board.resize();
+    var def = Entry.block[type].def || {type: type};
 
     if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
         this._contentView.addClass('textMode');
@@ -192,10 +188,16 @@ p.renderBlock = function(type) {
         var exampleCode = Lang.PythonHelper[type + '_exampleCode'];
         this._codeMirror.setValue(exampleCode);
         this.codeMirror.refresh();
+        def = Entry.block[type].pyHelpDef || def;
     } else {
         this._contentView.removeClass('textMode');
         this.blockHelperDescription_.innerHTML = description;
     }
+
+    this.code.createThread([def]);
+
+    this.code.board.align();
+    this.code.board.resize();
 
     this._renderView.align();
     this._renderView.setDomSize();
@@ -205,4 +207,6 @@ p.getView = function() {
     return this.view;
 };
 
-p.resize = function() {};
+p.resize = function() {
+    this.codeMirror && this.codeMirror.refresh();
+};

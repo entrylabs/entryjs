@@ -36,12 +36,14 @@
   white-space: nowrap;
 }
 .CodeMirror-linenumbers {}
+
 .CodeMirror-linenumber {
-  padding: 0 3px 0 5px;
+  padding: 0 5px 0 5px;
   min-width: 20px;
   text-align: right;
   color: #A0A0A0;
   white-space: nowrap;
+  border-right: 1px solid #ddd;
 }
 
 .CodeMirror-guttermarker { color: black; }
@@ -140,7 +142,7 @@
 /*Entry Textcoding Font*/
 .cm-s-default .cm-keyword {color: #2BBFED ;} /* applied */
 .cm-s-default .cm-atom {color: #FF9E00;}
-.cm-s-default .cm-number {color: #0FC764;} /* applied */
+.cm-s-default .cm-number {color: #f00;} /* applied */
 .cm-s-default .cm-def {color: #4F39DB;} /* applied */
 .cm-s-default .cm-variable {color:#E22C0B;} /* applied */
 .cm-s-default .cm-punctuation,
@@ -233,6 +235,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
   height: 100%;
   display: inline-block;
   margin-bottom: -30px;
+  margin-right: -1px;
   /* Hack to make IE7 behave */
   *zoom:1;
   *display:inline;
@@ -252,6 +255,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
   position: absolute;
   cursor: default;
   z-index: 4;
+  background-color: #f7f7f7;
+  padding-right: 6px;
 }
 .CodeMirror-gutter-wrapper {
   -webkit-user-select: none;
