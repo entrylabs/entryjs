@@ -413,6 +413,8 @@ Entry.parseOptions = function(options) {
         this.hasVariableManager = true;
 
     this.isForLecture = options.isForLecture;
+
+    this.textCodingEnable = options.textCodingEnable;
 };
 
 

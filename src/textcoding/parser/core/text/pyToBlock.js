@@ -37,12 +37,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
 (function(p){
     p.Program = function(astArr) { 
-        console.log("this.syntax", this.blockSyntax);
-        this._currentObject = Entry.playground.mainWorkspace.vimBoard._currentObject;
-        console.log("_currentObject", this._currentObject);
         try {
+            console.log("this.syntax", this.blockSyntax);
+            this._currentObject = Entry.playground.mainWorkspace.vimBoard._currentObject;
+            console.log("_currentObject", this._currentObject);
+            this._funcLoop = false;
             this._code = []; 
-
             this._threadCount = 0;
             this._blockCount = 0;
             var isEventBlockExisted = false;
@@ -1891,9 +1891,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else {
                 var value = 0
             }
-            
 
-            console.log("variable name", name, "value", value);
+            console.log("variable name", name, "value", value, "value.length", value.length, "this._funcLoop", this._funcLoop);
 
             if(value || value == 0) {
                 if(name.search("__filbert") == -1) {
@@ -2907,7 +2906,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Literal = function(component, paramMeta, paramDefMeta, textParam) {
         console.log("Literal component", component, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta, "textParam", textParam);
         var result;
-        var value = component.value;
+        var value = component.value; 
+        if(value && isNaN(value)) 
+            value = value.replace(/\t/gm, '    ');
 
         if(!paramMeta) {
             var paramMeta = { type: "Block" }; 
@@ -3008,7 +3009,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = structure;
         console.log("ParamBlock result", result);
 
-        return result;
+        return result;  
 
     }; 
 
@@ -3025,8 +3026,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ParamTextInput = function(value, paramMeta, paramDefMeta) {
         console.log("ParamTextInput value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
-        if(typeof value != "number")
-            value = value.replace(/\t/gi, '    ');
+        /*if(isNaN(value))
+            value = value.replace(/\t/gm, '    ');*/
         
         var result = value; 
         var reg = /None/;
@@ -4491,7 +4492,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(param && typeof param == "object") {
                         if(param.name && param.name.indexOf("__filbert") < 0) {
                             if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
-                                if(!Entry.TextCodingUtil.isEntryEventDesignatedParamName(param.name)) {
+                                //if(!Entry.TextCodingUtil.isEntryEventDesignatedParamName(param.name)) {
                                     if(!Entry.TextCodingUtil.isGlobalVariableExisted(param.name)) {
                                         var keyword = param.name;
                                         console.log("errorId", 75);
@@ -4502,7 +4503,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             this._blockCount,
                                             Entry.TextCodingError.SUBJECT_CONV_LIST);
                                     }
-                                }
+                                //}
                             }
                         }
                     }
@@ -5069,7 +5070,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             return null;
         }
-        this._funcLoop = false;
+        //this._funcLoop = false;
 
         ////////////////////////////////////////////////////////////////
         //First, Find The Function Block
