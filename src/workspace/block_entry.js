@@ -24275,6 +24275,11 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
+						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,				"state_modeVehicle"],
+						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight,				"state_modeFlight"],
+						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive,				"state_modeDrive"],
+						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate,			"state_coordinate"],
+						[Lang.Blocks.byrobot_dronefighter_drone_state_battery,					"state_battery"],
 						[Lang.Blocks.byrobot_dronefighter_drone_attitude_roll,					"attitude_roll"],
 						[Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch,					"attitude_pitch"],
 						[Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw,					"attitude_yaw"],

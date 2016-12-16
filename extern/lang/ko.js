@@ -29,8 +29,14 @@ Lang.Blocks = {
     "BITBRICK_UserInput": "사용자입력",
     "BITBRICK_dc_direction_ccw": "반시계",
     "BITBRICK_dc_direction_cw": "시계",
-	/* BYROBOT Start */
+	/* BYROBOT DroneFighter Start */
 	/* input */
+	"byrobot_dronefighter_drone_state_mode_vehicle"				: "드론파이터 모드",
+	"byrobot_dronefighter_drone_state_mode_system"				: "시스템 모드",
+	"byrobot_dronefighter_drone_state_mode_flight"				: "비행 모드",
+	"byrobot_dronefighter_drone_state_mode_drive"				: "자동차 모드",
+	"byrobot_dronefighter_drone_state_mode_coordinate"			: "방위",
+	"byrobot_dronefighter_drone_state_battery"					: "배터리",	
 	"byrobot_dronefighter_drone_attitude_roll"					: "자세 좌우 기울임",
 	"byrobot_dronefighter_drone_attitude_pitch"					: "자세 앞뒤 기울임",
 	"byrobot_dronefighter_drone_attitude_yaw"					: "자세 회전",
@@ -115,7 +121,7 @@ Lang.Blocks = {
 	"byrobot_dronefighter_drone_control_quad_yaw_right"			: "오른쪽 회전",
 	"byrobot_dronefighter_drone_control_quad_throttle_up"		: "위",
 	"byrobot_dronefighter_drone_control_quad_throttle_down"		: "아래",
-	/* BYROBOT End */
+	/* BYROBOT DroneFighter End */
     "CODEino_get_sensor_number_0": "0",
     "CODEino_get_sensor_number_1": "1",
     "CODEino_get_sensor_number_2": "2",
@@ -3624,7 +3630,7 @@ Lang.template = {
     "arduino_ext_set_tone": "디지털 %1 번 핀을 %2 음으로 %3의 옥타르보 %4 만큼 연주하기 %5",
     "arduino_ext_set_servo": "서보모터 %1 번 핀을 %2 의 각도로 정하기 %3",
     "arduino_ext_get_digital": "디지털 %1 번 센서값",
-	/* BYROBOT Start */
+	/* BYROBOT DroneFighter Start */
     "byrobot_dronefighter_common_value"								: "%1",
     "byrobot_dronefighter_controller_if_button_press"				: "조종기 %1 버튼을 눌렀을 때",
 	"byrobot_dronefighter_controller_if_joystick_left_direction"	: "조종기 왼쪽 조이스틱을 %1(으)로 움직였을 때",
@@ -3645,7 +3651,7 @@ Lang.template = {
 	"byrobot_dronefighter_drone_control_quad_stop"					: "드론 정지 %1",
     "byrobot_dronefighter_drone_control_quad_one"					: "드론 조종을 %1 %2 (으)로 실행하기 %3", 	/* 방향 선택에 ComboBox 사용 */
     "byrobot_dronefighter_drone_control_quad"						: "드론 조종을 왼쪽오른쪽 %1 앞뒤 %2 회전 %3 위아래 %4 (으)로 실행하기 %5",
-	/* BYROBOT End */
+	/* BYROBOT DroneFighter End */
     "dplay_get_number_sensor_value": "아날로그 %1 번 센서값  ",
     "nemoino_get_number_sensor_value": "아날로그 %1 번 센서값  ",
     "sensorBoard_get_number_sensor_value": "아날로그 %1 번 센서값  ",
