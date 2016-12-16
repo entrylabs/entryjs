@@ -16,6 +16,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
     this._dAlign = Entry.Utils.debounce(this.align, 100);
     this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
+    this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
 
     this._align = align || "CENTER";
     this.setAlign(this._align);
@@ -735,7 +736,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (e.ctrlKey && Entry.type == 'workspace') {
             if (keyCode > 48 && keyCode < 58) {
                 e.preventDefault();
-                this.selectMenu(keyCode - 49);
+                setTimeout(function() {
+                    this._cancelDynamic(true);
+                    this._dSelectMenu(keyCode - 49, true);
+                }.bind(this), 200);
             }
         }
     };

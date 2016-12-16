@@ -22484,6 +22484,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
   this._dAlign = Entry.Utils.debounce(this.align, 100);
   this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
+  this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
   this._align = a || "CENTER";
   this.setAlign(this._align);
   this._scroll = void 0 !== c ? c : !1;
@@ -22883,7 +22884,10 @@ Entry.BlockMenu = function(b, a, d, c) {
   };
   b._captureKeyEvent = function(a) {
     var b = a.keyCode;
-    a.ctrlKey && "workspace" == Entry.type && 48 < b && 58 > b && (a.preventDefault(), this.selectMenu(b - 49));
+    a.ctrlKey && "workspace" == Entry.type && 48 < b && 58 > b && (a.preventDefault(), setTimeout(function() {
+      this._cancelDynamic(!0);
+      this._dSelectMenu(b - 49, !0);
+    }.bind(this), 200));
   };
   b.enablePattern = function() {
     this.pattern.removeAttribute("style");
