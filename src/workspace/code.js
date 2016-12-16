@@ -42,6 +42,9 @@ Entry.PARAM = -1;
     };
 
     p.load = function(code) {
+        if (Entry.engine && Entry.engine.isState('run'))
+            return;
+
         if (!(code instanceof Array))
             code = JSON.parse(code);
 

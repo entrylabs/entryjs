@@ -23794,12 +23794,14 @@ Entry.PARAM = -1;
 (function(b) {
   b.schema = {view:null, board:null};
   b.load = function(a) {
-    a instanceof Array || (a = JSON.parse(a));
-    this.clear();
-    for (var b = 0;b < a.length;b++) {
-      this._data.push(new Entry.Thread(a[b], this));
+    if (!Entry.engine || !Entry.engine.isState("run")) {
+      a instanceof Array || (a = JSON.parse(a));
+      this.clear();
+      for (var b = 0;b < a.length;b++) {
+        this._data.push(new Entry.Thread(a[b], this));
+      }
+      return this;
     }
-    return this;
   };
   b.clear = function(a) {
     a = void 0 === a ? !1 : a;
