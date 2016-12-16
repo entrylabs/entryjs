@@ -24327,140 +24327,106 @@ Entry.block = {
 		"skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
-			{
-                "type": "Dropdown",
-                "options": [
-                    [ Lang.Blocks.byrobot_dronefighter_controller_button_front_left,		"1" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_button_front_right,		"2" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_button_front_left_right,	"3" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_button_center_up_left,	"4" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_button_center_up_right,	"8" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_button_center_up,			"16" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_button_center_left,		"32" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_button_center_right,		"64" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_button_center_down,		"128" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_button_bottom_left,		"256" ],
-					[ Lang.Blocks.byrobot_dronefighter_controller_button_bottom_right,		"512" ],
-					[ Lang.Blocks.byrobot_dronefighter_controller_button_bottom_left_right,	"768" ]
-                ],
-                "value": "1",
-                "fontSize": 11
-            },
-        ],
+				{
+					"type": "Dropdown",
+					"options": [
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_front_left,		"1" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_front_right,		"2" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_front_left_right,	"3" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_up_left,	"4" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_up_right,	"8" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_up,			"16" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_left,		"32" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_right,		"64" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_down,		"128" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_bottom_left,		"256" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_bottom_right,		"512" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_bottom_left_right,	"768" ]
+					],
+					"value": "1",
+					"fontSize": 11
+				},
+			],
         "events": {},
         "def": {
-            "params": [ "1" ],
-            "type": "byrobot_dronefighter_controller_if_button_press"
-        },
+				"params": [ null ],
+				"type": "byrobot_dronefighter_controller_if_button_press"
+			},
         "paramsKeyMap": {
-            "BUTTON": 0
-        },
+				"BUTTON": 0
+			},
         "class": "byrobot_dronefighter_boolean_input",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script){
-			var read	= Entry.hw.portData;
-			var button		= 'button_button';	// paramsKeyMap에 정의된 이름 사용
-			var buttonevent	= 'button_event';	// paramsKeyMap에 정의된 이름 사용
-			
-			if( read[button] == script.getField('BUTTON') && read[buttonevent] == 2 )
-				return true;
-			else
-				return false;
-        },
+				var read	= Entry.hw.portData;
+				var button		= 'button_button';	// paramsKeyMap에 정의된 이름 사용
+				var buttonevent	= 'button_event';	// paramsKeyMap에 정의된 이름 사용
+				
+				if( read[button] == script.getField('BUTTON') && read[buttonevent] == 2 )
+					return true;
+				else
+					return false;
+			},
         "syntax": {"js": [], "py": []}
     },
 	// */
 	//*
-    "byrobot_dronefighter_controller_if_joystick_left_direction":
+    "byrobot_dronefighter_controller_if_joystick_direction":
 	{
         "color": "#00979D",
 		"skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
-			{
-                "type": "Dropdown",
-                "options": [
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_up,		"17" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_up,			"18" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_up,		"20" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left,			"33" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_center,		"34" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right,			"36" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_down,		"65" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_down,			"66" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_down,	"68" ]
-                ],
-                "value": "34",
-                "fontSize": 11
-            },
-        ],
+				{
+					"type": "Dropdown",
+					"options": [
+						[ Lang.Blocks.byrobot_dronefighter_common_left,				"joystick_left_direction" 	],
+						[ Lang.Blocks.byrobot_dronefighter_common_right,			"joystick_right_direction"	]
+					],
+					"value": "joystick_left_direction",
+					"fontSize": 11
+				},
+				{
+					"type": "Dropdown",
+					"options": [
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_up,		"17" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_up,			"18" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_up,		"20" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left,			"33" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_center,		"34" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right,			"36" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_down,		"65" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_down,			"66" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_down,	"68" ]
+					],
+					"value": "34",
+					"fontSize": 11
+				},
+			],
         "events": {},
         "def": {
-            "params": [ "34" ],
-            "type": "byrobot_dronefighter_controller_if_joystick_left_direction"
-        },
+				"params": [ 
+						null,
+						null
+					],
+				"type": "byrobot_dronefighter_controller_if_joystick_direction"
+			},
         "paramsKeyMap": {
-            "DIRECTION": 0
-        },
+				"DEVICE"	: 0,
+				"DIRECTION"	: 1
+			},
         "class": "byrobot_dronefighter_boolean_input",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script){
-			var read	= Entry.hw.portData;
-		
-			var device	= 'joystick_left_direction';	// paramsKeyMap에 정의된 이름 사용
+				var read	= Entry.hw.portData;
 			
-			if( read[device] == script.getField('DIRECTION') )
-				return true;
-			else
-				return false;
-        },
-        "syntax": {"js": [], "py": []}
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_if_joystick_right_direction":
-	{
-        "color": "#00979D",
-		"skeleton": "basic_boolean_field",
-        "statements": [],
-        "params": [
-			{
-                "type": "Dropdown",
-                "options": [
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_up,		"17" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_up,			"18" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_up,		"20" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left,			"33" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_center,		"34" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right,			"36" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_down,		"65" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_down,			"66" ],
-                    [ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_down,	"68" ]
-                ],
-                "value": "34",
-                "fontSize": 11
-            },
-        ],
-        "events": {},
-        "def": {
-            "params": [ null, "34" ],
-            "type": "byrobot_dronefighter_controller_if_joystick_right_direction"
-        },
-        "paramsKeyMap": {
-            "DIRECTION": 0
-        },
-        "class": "byrobot_dronefighter_boolean_input",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script){
-			var read	= Entry.hw.portData;
-		
-			var device	= 'joystick_right_direction';	// paramsKeyMap에 정의된 이름 사용
-			
-			if( read[device] == script.getField('DIRECTION') )
-				return true;
-			else
-				return false;
-        },
+				var device	= script.getField('DEVICE');	// paramsKeyMap에 정의된 이름 사용
+				
+				if( read[device] == script.getField('DIRECTION') )
+					return true;
+				else
+					return false;
+			},
         "syntax": {"js": [], "py": []}
     },
 	// */

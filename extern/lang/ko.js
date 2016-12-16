@@ -75,6 +75,8 @@ Lang.Blocks = {
 	"byrobot_dronefighter_controller_button_bottom_right"		: "아래 오른쪽",
 	"byrobot_dronefighter_controller_button_bottom_left_right"	: "아래 왼쪽, 아래 오른쪽",
 	/* output */
+	"byrobot_dronefighter_common_left"							: "왼쪽",
+	"byrobot_dronefighter_common_right"							: "오른쪽",
 	"byrobot_dronefighter_common_light_manual_on"				: "켜기",
 	"byrobot_dronefighter_common_light_manual_off"				: "끄기",
 	"byrobot_dronefighter_common_light_manual_b25"				: "밝기 25%",
@@ -3633,8 +3635,7 @@ Lang.template = {
 	/* BYROBOT DroneFighter Start */
     "byrobot_dronefighter_common_value"								: "%1",
     "byrobot_dronefighter_controller_if_button_press"				: "조종기 %1 버튼을 눌렀을 때",
-	"byrobot_dronefighter_controller_if_joystick_left_direction"	: "조종기 왼쪽 조이스틱을 %1(으)로 움직였을 때",
-	"byrobot_dronefighter_controller_if_joystick_right_direction"	: "조종기 오른쪽 조이스틱을 %1(으)로 움직였을 때",
+	"byrobot_dronefighter_controller_if_joystick_direction"			: "조종기 %1 조이스틱을 %2(으)로 움직였을 때",
 	"byrobot_dronefighter_controller_light_manual_single_off"		: "조종기 LED 끄기 %1",
     "byrobot_dronefighter_controller_light_manual_single"			: "조종기 LED %1 %2 %3",			/* 전체 ComboBox 사용 */
     "byrobot_dronefighter_controller_light_manual_single_input"		: "조종기 LED %1 밝기 %2 %3",	/* 전체 TextBox 사용 */
