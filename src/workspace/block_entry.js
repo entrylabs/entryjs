@@ -25022,10 +25022,10 @@ Entry.block = {
 						var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
 						
 						timeOn = Math.max(timeOn, 0);
-						timeOn = Math.min(timeOn, 10000);
+						timeOn = Math.min(timeOn, 30000);
 						
-						var timeOff		= 10;
-						var timeRun		= timeOn + 10;
+						var timeOff		= 0;
+						var timeRun		= timeOn;
 						
 						// 전송
 						Entry.hw.setDigitalPortValue("target", 0x11);
@@ -25135,11 +25135,11 @@ Entry.block = {
 						var timeRun		= parseInt(script.getNumberValue('TIMERUN') * 1000);
 						
 						timeOn = Math.max(timeOn, 0);
-						timeOn = Math.min(timeOn, 10000);
+						timeOn = Math.min(timeOn, 30000);
 						timeOff = Math.max(timeOff, 0);
-						timeOff = Math.min(timeOff, 10000);
+						timeOff = Math.min(timeOff, 30000);
 						timeRun = Math.max(timeRun, 0);
-						timeRun = Math.min(timeRun, 10000);
+						timeRun = Math.min(timeRun, 30000);
 						
 						// 전송
 						Entry.hw.setDigitalPortValue("target", 0x11);
