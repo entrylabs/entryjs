@@ -842,11 +842,12 @@ Entry.Playground.prototype.injectCode = function() {
         if(Entry.playground)
             this.mainWorkspace.vimBoard._currentObject = Entry.playground.object;
 
-    ws.changeBoardCode(code);
-    
+    ws.changeBoardCode(code, function() {
+        ws.getBoard().adjustThreadsPosition();
+    });
+
     if(Entry.playground)
         this.mainWorkspace.vimBoard._changedObject = Entry.playground.object;
-    ws.getBoard().adjustThreadsPosition();
 };
 
 /**
@@ -1294,16 +1295,9 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
  * Reload playground
  */
 Entry.Playground.prototype.reloadPlayground = function () {
-    var selectedCategory, selector;
-
-    var mainWorkspace = this.mainWorkspace;
-    if (!mainWorkspace) return;
-    mainWorkspace.getBlockMenu().reDraw();
-
-    var object = this.object;
-    (function(o) {
-        o && o.script && o.script.view && o.script.view.reDraw();
-    })(this.object);
+    (function(workspace) {
+        workspace && workspace.getBlockMenu().reDraw();
+    })(this.mainWorkspace);
 };
 
 /**

@@ -180,10 +180,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.changeEvent.notify(message);
     };
 
-    p.changeBoardCode = function(code) {
+    p.changeBoardCode = function(code, cb) {
         this._syncTextCode();
         var isVim = this.mode === Entry.Workspace.MODE_VIMBOARD;
-        this.board.changeCode(code, isVim);
+        this.board.changeCode(code, isVim, cb);
         if (isVim) {
             var mode = {};
             mode.textType = this.textType;
