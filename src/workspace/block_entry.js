@@ -24359,9 +24359,10 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script){
 			var read	= Entry.hw.portData;
-			var device	= 'button_button';	// paramsKeyMap에 정의된 이름 사용
+			var button		= 'button_button';	// paramsKeyMap에 정의된 이름 사용
+			var buttonevent	= 'button_event';	// paramsKeyMap에 정의된 이름 사용
 			
-			if( read[device] == script.getField('BUTTON') )
+			if( read[button] == script.getField('BUTTON') && read[buttonevent] == 2 )
 				return true;
 			else
 				return false;
