@@ -34,18 +34,24 @@ Entry.byrobot_dronefighter =
 
 		light_manual_flags: 0,
 		light_manual_brightness: 0,
+		
+		buzzer_scale: 0,
+		buzzer_time: 0,
+
+		vibrator_on: 0,
+		vibrator_off: 0,
+		vibrator_total: 0,
+		
+		control_wheel: 0,
+		control_accel: 0,
 
 		control_roll: 0,
 		control_pitch: 0,
 		control_yaw: 0,
 		control_throttle: 0,
 
-		buzzer_scale: 0,
-		buzzer_time: 0,
-
-		vibrator_on: 0,
-		vibrator_off: 0,
-		vibrator_total: 0
+		command_command: 0,
+		command_option: 0,
 	},
 
 	// 초기화
@@ -76,6 +82,7 @@ Entry.byrobot_dronefighter =
             "attitude_roll"				:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_roll,					type: "input", pos: {x: 0, y: 0}},
             "attitude_pitch"			:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch,					type: "input", pos: {x: 0, y: 0}},
             "attitude_yaw"				:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw,					type: "input", pos: {x: 0, y: 0}},
+            "irmessage_irdata"			:{name: Lang.Blocks.byrobot_dronefighter_drone_irmessage,						type: "input", pos: {x: 0, y: 0}},
             "joystick_left_x"			:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,			type: "input", pos: {x: 0, y: 0}},
             "joystick_left_y"			:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,			type: "input", pos: {x: 0, y: 0}},
             "joystick_left_direction"	:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction,	type: "input", pos: {x: 0, y: 0}},
@@ -88,7 +95,6 @@ Entry.byrobot_dronefighter =
             "joystick_right_command"	:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command,		type: "input", pos: {x: 0, y: 0}},
             "button_button"				:{name: Lang.Blocks.byrobot_dronefighter_controller_button_button,				type: "input", pos: {x: 0, y: 0}},
             "button_event"				:{name: Lang.Blocks.byrobot_dronefighter_controller_button_event,				type: "input", pos: {x: 0, y: 0}},
-            "irmessage_irdata"			:{name: Lang.Blocks.byrobot_dronefighter_drone_irmessage,						type: "input", pos: {x: 0, y: 0}}
         },
 
 		// 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
