@@ -6440,7 +6440,7 @@ Entry.block = {
                 textParams: [
                     {
                         "type": "Color",
-                        converter: Entry.block.converters.returnStringValue,
+                        converter: Entry.block.converters.returnStringValueUpperCase,
                         codeMap: "Entry.CodeMap.Entry.set_color[0]"
                     }
                 ]
