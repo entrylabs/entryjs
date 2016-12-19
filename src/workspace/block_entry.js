@@ -111,7 +111,8 @@ if (Entry && Entry.block) {
         };
 
         c.returnRawNumberValueByKey = function(key, value) {
-            return String(key).replace(/\D/, '');
+            //return String(key).replace(/\D/, '');
+            return key;
         };
 
         c.returnStringOrNumberByValue = function(key, value) {
@@ -13697,6 +13698,7 @@ Entry.block = {
                         "fontSize": 11,
                         converter: Entry.block.converters.returnStringValueUpperCase,
                         codeMap: "Entry.CodeMap.Hamster.hamster_play_note_for[0]"
+
                     },
                     {
                         "type": "Dropdown",

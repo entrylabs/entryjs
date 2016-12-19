@@ -379,11 +379,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                             for(var f in funcDefMap) {
                                 var funcDef = funcDefMap[f];
-                                fd += funcDef + '\n';
+                                fd += funcDef + '\n\n';
                             }
                             this.py_funcDeclaration = fd;
                             if(fd)
-                                result += fd + "\n";
+                                result += fd;
                         }
                     }
                 }
@@ -648,6 +648,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var threads = [];
 
         var optText = "";
+        var onEntryEvent = false;
+
         for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
             //variable, list for value is 0
@@ -663,22 +665,69 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 } 
             } */
 
-            if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim())) {
-                textLine = Entry.TextCodingUtil.entryEventFilter(textLine);
+            console.log("textLine", textLine, "length", textLine.length, "[0]", textLine.charAt(0));
+            textLine = textLine.replace(/\t/gm, '    ');
+            if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {  
+                textLine = this.entryEventParamConverter(textLine);
                 if(optText.length != 0) {
-                    threads.push(optText);
+                    threads.push(optText); 
                 }
+
                 optText = "";
                 optText += textLine;
+                onEntryEvent = true;
             }
             else {
+                if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim()))
+                    textLine = this.entryEventParamConverter(textLine);
+                if(textLine.length == 1) {
+                    threads.push(optText);
+                    optText = "";
+                }
+                else if((textLine.charAt(0) != ' ') && (onEntryEvent == true)) {
+                    threads.push(optText);    
+                    optText = "";
+                }
                 optText += textLine;
+                onEntryEvent = false;
+                
             }
         }
         threads.push(optText);
+        console.log("makeThreads result", threads);
         return threads;
 
     };
+
+    p.entryEventParamConverter = function(text) {  
+        var startIndex = text.indexOf("(");
+        var endIndex = text.indexOf(")");
+
+        var stmt = text.substring(0, startIndex);
+        var param = text.substring(startIndex+1, endIndex);
+        console.log("filter stmt", stmt, "param", param);
+        param = param.replace(/\"/g, "");
+        
+        if(param) {
+            if(isNaN(param)) {
+                param = param.replace(/ /g, "_space_");
+            }
+            else {
+                param = 'num' + param;
+            }
+
+            if(param == 'None')
+                param = 'none';
+        }
+
+        
+        text = stmt + "(" + param + "):\n";
+        
+
+
+        console.log("entryEventFilter text", text);
+        return text;
+    }
 
     p.makeSyntaxErrorDisplay = function(subject, keyword, message, line) {
         console.log("subject", subject, "keyword", keyword, "message", message, "line", line);

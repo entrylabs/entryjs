@@ -154,7 +154,7 @@
   color: #FF9E00;
 }
 .cm-s-default .cm-number {
-  color: #f00;
+  color: #0FC764;
 }
 /* applied */
 .cm-s-default .cm-def {
@@ -217,7 +217,7 @@
   color: #00c;
 }
 .cm-s-default .cm-error {
-  color: #f00;
+  color: #E22C0B;
 }
 .cm-invalidchar {
   color: #f00;

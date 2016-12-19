@@ -42,19 +42,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
             this._currentObject = Entry.playground.mainWorkspace.vimBoard._currentObject;
             console.log("_currentObject", this._currentObject);
             this._funcLoop = false;
+            this._hasReculsiveFunc = false;
             this._code = []; 
             this._threadCount = 0;
             this._blockCount = 0;
-            var isEventBlockExisted = false;
+            this.isEventBlockExisted = false;
             for(var index in astArr) {
                 if(astArr[index].type != 'Program') return;
-                var isLastBlock = false;
+                this.isLastBlock = false;
                 this._threadCount++;
                 this._thread = [];
                 var nodes = astArr[index].body;
 
                 console.log("nodes", nodes);
-                isEntryEventExisted = false;
+                this.isEntryEventExisted = false;
                 for(var index in nodes) {
                     var node = nodes[index];
                     console.log("Program node", node);
@@ -62,7 +63,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var block = this[node.type](node);
                     console.log("result block", block);
 
-                    if(isLastBlock) {
+                    if(this.isLastBlock) {
                         var keyword;
                         console.log("errorId", 1);
                         Entry.TextCodingError.error(
@@ -74,6 +75,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(block && block.type) {
                         console.log("block.type", block.type);
+                        if(Entry.TextCodingUtil.isEntryEventFuncByType(block.type)) {
+                            this._thread.push(block);
+                            if(block.contents) {  
+                                for(var b in block.contents) {
+                                    var content = block.contents[b];
+                                    this.extractContents(content, this._thread);
+                                }
+                            }
+                            continue;
+                        }
+
                         var blockDatum = Entry.block[block.type];
                         var targetSyntax = this.searchSyntax(blockDatum);
 
@@ -83,20 +95,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                         if(blockType == "param") continue;
                         else if(blockType == "event") {
-                            isEntryEventExisted = true;
+                            this.isEntryEventExisted = true;
                         }
                         else if(blockType == "last") {
-                            isLastBlock = true;
+                            this.isLastBlock = true;
                         }
                         else if(blockType == "variable") {
-                            if(!isEntryEventExisted)
+                            if(!this.isEntryEventExisted)
                                 continue;
-                        }
+                        } 
 
                         this._thread.push(block);
                     }
+
                 }
 
+                
                 console.log("thread", this._thread);
                 if(this._thread.length != 0)
                     this._code.push(this._thread);
@@ -120,7 +134,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ExpressionStatement = function(component) {
         console.log("ExpressionStatement component", component);
 
-        var reusult;
+        var result = {};
         var structure = {};
 
         var expression = component.expression;
@@ -141,18 +155,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("ExpressionStatement expressionData", expressionData);
 
             if(expressionData.type && expressionData.params) {
-                structure.type = expressionData.type;
-                structure.params = expressionData.params;
-
-                result = structure;
+                result.type = expressionData.type;
+                result.params = expressionData.params;
+                if(expressionData.funcName)
+                    result.funcName = expressionData.funcName;
             } else if(expressionData.type) {
-                structure.type = expressionData.type;
-
-                result = structure;
+                result.type = expressionData.type;
+                if(expressionData.funcName)
+                    result.funcName = expressionData.funcName;
             } else {
-                structure = expressionData;
-
-                result = structure;
+                result = expressionData;
+                if(expressionData.funcName)
+                    result.funcName = expressionData.funcName;
             }
         }
 
@@ -261,7 +275,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
 
                 if(calleeData.name && arguments.length != 0 && arguments[0].type == "Literal") {
-                    if(!this._funcMap.contains(funcNameKey)) {
+                    if(!this._funcMap.get(funcNameKey)) {
                         var keyword = calleeData.name;
                         console.log("errorId", 3);
                         Entry.TextCodingError.error(
@@ -1470,14 +1484,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("CallExpression Function Check result", result);
 
         // Function Check
-        if(result.arguments && result.arguments[0] && result.arguments[0].callee == "__pythonRuntime.utils.createParamsObj") {
+        if(result.arguments && result.arguments[0] && 
+            result.arguments[0].callee == "__pythonRuntime.utils.createParamsObj") {
             return result;
         }
 
         if(result.callee) {
+            var funcName  = result.callee.name;
             if(result.arguments) {
                 var idNumber = result.arguments.length;
-
                 var params = [];
                 var arguments = result.arguments;
                 for(var a in arguments) {
@@ -1488,8 +1503,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else {
                 var idNumber = 0;
             }
-            var funcKey = result.callee.name + idNumber;
-            //console.log("funcKey", funcKey);
+
+            var funcKey = funcName + idNumber;
             var type = this._funcMap.get(funcKey);
             if(type) {
                 result = {};
@@ -1500,17 +1515,29 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
             else {
-                if(result.callee.isCallParam == false) {
+                console.log("this._currentFuncKey", this._currentFuncKey);
+                if(funcKey == this._currentFuncKey) {
                     if(!Entry.TextCodingUtil.isEntryEventFuncName(result.callee.name)) {
-                        var name = result.callee.name;
-                        var keyword = name;
-                        console.log("errorId", 26);
-                        Entry.TextCodingError.error(
-                            Entry.TextCodingError.TITLE_CONVERTING,
-                            Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
-                            keyword,
-                            this._blockCount,
-                            Entry.TextCodingError.SUBJECT_CONV_GENERAL);
+                        console.log("callex funcKey", funcKey);
+                        result.type = funcKey;
+                        result.funcName = funcName;
+                        this._hasReculsiveFunc = true;
+                        console.log("temp func type", result);
+                    }
+                }
+                else {
+                    if(result.callee.isCallParam == false) {
+                        if(!Entry.TextCodingUtil.isEntryEventFuncName(result.callee.name)) {
+                            var name = result.callee.name;
+                            var keyword = name;
+                            console.log("errorId", 26);
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_NO_FUNCTION,
+                                keyword,
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_FUNCTION);
+                        }
                     }
                 }
             }
@@ -2410,11 +2437,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         console.log("leftData yyy", leftData);
+        
+        var block = Entry.block[type];
+        var paramsMeta = block.params;
+        var paramsDefMeta = block.def.params;
 
         if(syntax == String("%1\[%2\] = %3")) {
-            var block = Entry.block[type];
+            /*var block = Entry.block[type];
             var paramsMeta = block.params;
-            var paramsDefMeta = block.def.params;
+            var paramsDefMeta = block.def.params;*/
 
             if(!leftData || !leftData.params) {
                 var keyword;
@@ -2487,15 +2518,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
         else if(syntax == String("%1 = %2")) {
             console.log("AssignmentExpression calleeName check", calleeName);
             if(leftData && leftData.object && leftData.property) {
-                var block = Entry.block[type];
+                /*var block = Entry.block[type];
                 var paramsMeta = block.params;
-                var paramsDefMeta = block.def.params;
+                var paramsDefMeta = block.def.params;*/
 
                 console.log("assi leftData.property", leftData.property);
 
                 if(leftData.object.name == "self") {
-
-
                     if(calleeName == "__pythonRuntime.objects.list") {
                         var name = leftData.property.name;
 
@@ -2553,54 +2582,78 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
             else {
-                var block = Entry.block[type];
+                /*var block = Entry.block[type];
                 var paramsMeta = block.params;
-                var paramsDefMeta = block.def.params;
+                var paramsDefMeta = block.def.params;*/
+                
+                if(calleeName == "__pythonRuntime.objects.list") {
+                    var name = leftData.name;
 
-                var name = leftData.name;
-                if(rightData.type == "number" || rightData.type == "text")
-                    var value = rightData.params[0];
-                else 
-                    var value = 0;
-                /*else
-                    var value = 0;*/
-                /*if(typeof value != "string" && typeof value != "number") {
-                    value = 0;
-                }*/
+                    var array = [];
+                    var arguments = rightData.arguments;
+                    for(var a in arguments) {
+                        var argument = arguments[a];
+                        var item = {};
+                        item.data = String(argument.params[0]);
+                        array.push(item);
+                    }
 
-                if(value || value == 0) {
-                    console.log("final currentObject", this._currentObject);
-                    console.log("final value", value, value.length);
-
-                    if(Entry.TextCodingUtil.isGlobalVariableExisted(name, this._currentObject)) {
+                    if(Entry.TextCodingUtil.isGlobalListExisted(name)) {
                         if(!this._funcLoop)
-                            Entry.TextCodingUtil.updateGlobalVariable(name, value, this._currentObject);
+                            Entry.TextCodingUtil.updateGlobalList(name, array);
                     }
                     else {
                         if(!this._funcLoop) {
-                            Entry.TextCodingUtil.createGlobalVariable(name, value, this._currentObject);
-                        }
-                        else {
-                            value = 0;
-                            Entry.TextCodingUtil.createGlobalVariable(name, value, this._currentObject);
+                            Entry.TextCodingUtil.createGlobalList(name, array);
                         }
                     }
                 }
+                else {
+                    var name = leftData.name;
+                    if(rightData.type == "number" || rightData.type == "text")
+                        var value = rightData.params[0];
+                    else 
+                        var value = 0;
+                    /*else
+                        var value = 0;*/
+                    /*if(typeof value != "string" && typeof value != "number") {
+                        value = 0;
+                    }*/
 
-                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
-                params.push(name);
-                if(rightData.callee)
-                    delete rightData.callee;
-                params.push(rightData);
+                    if(value || value == 0) {
+                        console.log("final currentObject", this._currentObject);
+                        console.log("final value", value, value.length);
+
+                        if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                            if(!this._funcLoop)
+                                Entry.TextCodingUtil.updateGlobalVariable(name, value);
+                        }
+                        else {
+                            if(!this._funcLoop) {
+                                Entry.TextCodingUtil.createGlobalVariable(name, value);
+                            }
+                            else {
+                                value = 0;
+                                Entry.TextCodingUtil.createGlobalVariable(name, value);
+                            }
+                        }
+                    }
+
+                    name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                    params.push(name);
+                    if(rightData.callee)
+                        delete rightData.callee;
+                    params.push(rightData);
+                }
             }
 
         }
         else if(syntax == String("%1 += %2")) {
             if(leftData && leftData.object && leftData.property) {
                 if(leftData.object.name == "self") {
-                    var block = Entry.block[type];
+                    /*var block = Entry.block[type];
                     var paramsMeta = block.params;
-                    var paramsDefMeta = block.def.params;
+                    var paramsDefMeta = block.def.params;*/
 
                     var name = leftData.property.name;
                     console.log("final currentObject", this._currentObject);
@@ -2747,9 +2800,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
             else {
-                var block = Entry.block[type];
+                /*var block = Entry.block[type];
                 var paramsMeta = block.params;
-                var paramsDefMeta = block.def.params;
+                var paramsDefMeta = block.def.params;*/
 
                 var name = leftData.name;
 
@@ -2901,7 +2954,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("AssignmentExpression result", result);
 
         return result;
-    };
+    }; 
 
     p.Literal = function(component, paramMeta, paramDefMeta, textParam) {
         console.log("Literal component", component, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta, "textParam", textParam);
@@ -3076,6 +3129,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             }
         }
+        
+        if(!isNaN(value))
+            return value;
 
         if(textParam && textParam.codeMap) {
             var codeMap = textParam.codeMap;
@@ -4888,12 +4944,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
         this._funcLoop = true;
         this._blockCount++;
         console.log("BlockCount FunctionDeclaration", this._blockCount);
-        if(!Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
+        /*if(!Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
             console.log("funcBodyData", funcBodyData);
-        }
+        }*/
 
-        var bodyData = this[body.type](body);
-
+        
         console.log("FunctionDeclaration bodyData", bodyData);
         
         if(id.type == "Identifier")
@@ -4907,10 +4962,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         textFuncName = idData.name;
 
-        var funcBodyData = bodyData.data;
-        
-        console.log("this_funcLoop", this._funcLoop);
+        if(body.body && body.body.length != 1)
+            var paramNumber = body.body.length - 5;
+        else
+            var paramNumber = 0;
 
+        if(paramNumber || paramNumber == 0)
+            this._currentFuncKey = textFuncName + paramNumber;
+        console.log("this._currentFuncKey", this._currentFuncKey);
+
+
+        var bodyData = this[body.type](body);
+        var funcBodyData = bodyData.data;
+
+        console.log("funcBody", bodyData);
+        console.log("this_funcLoop", this._funcLoop);
+        console.log("funcBodyData", funcBodyData);
+
+        //First Step - Declarations
         for(var i in funcBodyData) {
             if(funcBodyData[i].declarations) {
                 var declarations = funcBodyData[i].declarations;
@@ -4918,13 +4987,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     textFuncParams.push(declarations[0].name);
                 }
             }
-            else if(funcBodyData[i].argument) {
+        }
+        
+        //Second Step - Satatements
+        for(var i in funcBodyData) {
+            if(funcBodyData[i].argument) {
                 var argument = funcBodyData[i].argument;
                 var statements = argument.statements;
                 if(statements && statements.length > 0) {
                     var cleansedStmt = [];
                     for(var s in statements) {
                         var stmt = statements[s];
+                        console.log("stmt", stmt);
                         if(stmt) {
                             cleansedStmt.push(stmt);
                         }
@@ -4935,8 +5009,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
 
+        console.log("textFuncParams", textFuncParams);
 
-      
+
         console.log("this_funcLoop", this._funcLoop);
         console.log("FunctionDeclaration textFuncName", textFuncName);
         console.log("FunctionDeclaration textFuncParams", textFuncParams);
@@ -4945,6 +5020,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         //In case of Entry Event Function
         if(Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
+            //var entryEventThread = [];
             if(textFuncParams.length != 0) {
                 var arg = textFuncParams[0];
 
@@ -4956,10 +5032,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     arg = "None";
                 var param = arg;
             }
+           
             var component = Entry.TextCodingUtil.makeExpressionStatementForEntryEvent(id.name, param);
             var entryEventBlock = this.ExpressionStatement(component);
-
-            this._thread.push(entryEventBlock);
+            
 
             console.log("entry event block", entryEventBlock);
 
@@ -5055,20 +5131,25 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     this._thread.push(sblock);
                 }
             }*/
-
+            entryEventBlock.contents = [];
             for(var t in textFuncStatements) {
                 var tfs = textFuncStatements[t];
+                console.log("tfs", tfs);
                 var sblock = {};
-                sblock.type = tfs.type;
+                sblock.type = tfs.type; 
                 if(tfs.params)
-                    sblock.params = tfs.params;
+                    sblock.params = tfs.params; 
                 if(tfs.statements)
                     sblock.statements = tfs.statements;
+                if(tfs.contents)
+                    sblock.contents = tfs.contents;
 
-                this._thread.push(sblock);
+                
+                entryEventBlock.contents.push(sblock);
             }
 
-            return null;
+            return entryEventBlock;
+            //return entryEventThread;
         }
         //this._funcLoop = false;
 
@@ -5128,15 +5209,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var funcThread = blockFunc.content._data[0]; //The Function Thread, index 0
                     var blockFuncContents = funcThread._data; //The Function Definition Block, index 0
                     var blockFuncDef = blockFuncContents[0];
-                    var blockFuncCts = blockFuncContents.slice();
-                    blockFuncCts.shift();
-                    console.log("blockFuncContents", blockFuncContents);
+                    //var blockFuncCts = blockFuncContents.slice();
+                    //var blockFuncCts = blockFuncContents.shift();
+                    console.log("blockFuncContents", blockFuncContents, "blockFuncContents.length", blockFuncContents.length);
 
                     console.log("paramMap", paramMap);
+                    var tmpBlockFuncContents = [];
+                    for(var i=1; i < blockFuncContents.length; i++)
+                        tmpBlockFuncContents.push(blockFuncContents[i]);
+                    console.log("tmpBlockFuncContents", tmpBlockFuncContents);
 
-                    matchFlag = Entry.TextCodingUtil.isFuncContentsMatch(blockFuncCts, textFuncStatements, paramMap, paramInfo);
 
-                }
+                    matchFlag = Entry.TextCodingUtil.isFuncContentsMatch(tmpBlockFuncContents, textFuncStatements, paramMap, paramInfo, this._currentFuncKey);
+
+                } 
                 else {
                     foundFlag = false;
                     matchFlag = false;
@@ -5144,12 +5230,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 // Final Decision In Terms of Conditions
                 if(foundFlag && matchFlag) {
-                    var funcPrefix = "func";
-                    targetFuncId = funcPrefix.concat('_').concat(funcId);
+                    //var funcPrefix = "func";
+                    //targetFuncId = funcPrefix.concat('_').concat(funcId);
                     //foundFlag = true;
+                    targetFuncId = funcId;
                     break;
                 } else if(foundFlag && !matchFlag) {
                     //var funcPrefix = "func";
+                    //targetFuncId = funcPrefix.concat('_').concat(funcId);
                     targetFuncId = funcId;
                     break;
                 }
@@ -5164,10 +5252,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var name = textFuncName;
             var paramCount = textFuncParams.length;
             var funcKey = name + paramCount;
-            this._funcMap.put(funcKey, targetFuncId);
+            var funcPrefix = "func";
+            var targetFuncBlockId = funcPrefix.concat('_').concat(targetFuncId);
+            this._funcMap.put(funcKey, targetFuncBlockId);
+            //this._currentFuncType = funcKey;
             console.log("FunctionDeclaration this._funcMap", this._funcMap);
 
-            result = targetFuncId;
+            result = targetFuncBlockId;
         }
         else if (foundFlag && !matchFlag) {
             console.log("this is function changed...");
@@ -5176,32 +5267,40 @@ Entry.PyToBlockParser = function(blockSyntax) {
             thread._data.splice(1, thread._data.length-1);
 
             console.log("paramInfo", paramInfo);
-            if(textFuncStatements.length > 0) {
-                for(var s in textFuncStatements) {
-                    var statement = textFuncStatements[s];
-                    Entry.TextCodingUtil.makeParamBlock(statement, paramInfo);
-                    console.log("textFunction statement", statement);
-                    var stmtBlock = new Entry.Block(statement, thread);
-                    thread._data.push(stmtBlock);
+            
+            for(var s in textFuncStatements) {
+                var statement = textFuncStatements[s];
+                Entry.TextCodingUtil.makeParamBlock(statement, paramInfo);
+                console.log("textFunction statement1", statement);
+                console.log("this._currentFuncKey", this._currentFuncKey);
+                if(statement.type == this._currentFuncKey) {
+                    statement.type = 'func_' + targetFuncId;
                 }
+                if(statement.statements && statement.statements[0])
+                    this.convertReculsiveFuncTypeGeneral(statement.statements[0], targetFuncId);
+                console.log("textFunction statement2", statement);
+                var stmtBlock = new Entry.Block(statement, thread);
+                thread._data.push(stmtBlock);
             }
+            
 
             Entry.variableContainer.saveFunction(targetFunc);
             Entry.variableContainer.updateList();
-
-            result = targetFuncId;
 
             console.log("textFuncName", textFuncName);
 
             var name = textFuncName;
             var paramCount = textFuncParams.length;
             var funcKey = name + paramCount;
-            var funcId = targetFuncId;
+            //var funcId = targetFuncId;
             var funcPrefix = "func";
-            targetFuncId = funcPrefix.concat('_').concat(funcId);
-            this._funcMap.put(funcKey, targetFuncId);
+            var targetFuncBlockId  = funcPrefix.concat('_').concat(targetFuncId); 
+            this._funcMap.put(funcKey, targetFuncBlockId);
+            //this._currentFuncType = funcKey;
+            result = targetFuncBlockId;
 
-            console.log("FunctionDeclaration result", result);
+            console.log("FunctionDeclaration targetFunc", targetFunc); 
+            console.log("FunctionDeclaration result", result); 
 
         }
         else {
@@ -5315,18 +5414,39 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var paramCount = textFuncParams.length;
             var funcKey = name + paramCount;
             var funcId = newFunc.id;
+            targetFuncId = funcId;
             var funcPrefix = "func";
-            targetFuncId = funcPrefix.concat('_').concat(funcId);
-            this._funcMap.put(funcKey, targetFuncId);
+            var targetFuncBlockId = funcPrefix.concat('_').concat(targetFuncId);
+            this._funcMap.put(funcKey, targetFuncBlockId);
+            //this._currentFuncType = funcKey;
+            result = targetFuncBlockId;
             console.log("FunctionDeclaration newFunc after", newFunc);
+        }
 
+        console.log("this._funcMap", this._funcMap);
+        console.log("targetFuncId", targetFuncId);
+        var tFunc = Entry.variableContainer.functions_[targetFuncId];
+        console.log("tFunc", tFunc);
+        if(tFunc) {
+            var fFuncStmts = tFunc.content._data[0]._data;
+            var tmpFuncStmts = [];
+            for(var i = 0; i < fFuncStmts.length; i++)
+                 tmpFuncStmts.push(fFuncStmts[i]);
+
+             console.log("tmpFuncStmts", tmpFuncStmts);
+
+            if(this._hasReculsiveFunc) {
+                console.log("_hasReculsiveFunc", tmpFuncStmts);
+                this.convertReculsiveFuncType(fFuncStmts);
+            }
         }
 
         Entry.TextCodingUtil.clearFuncParam();
         this._funcLoop = false;
+        this._hasReculsiveFunc = false;
 
         console.log("FunctionDeclaration result", result);
-        //return result;
+        return null;
     };
 
     p.FunctionExpression = function(component) {
@@ -5338,10 +5458,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("FunctionExpression bodyData", bodyData);
 
-        if(bodyData.data && bodyData.data.length != 0)
+        if(bodyData.data && bodyData.data.length != 0){
             result.statements = bodyData.data;
-        else
+        }
+        else {
             result.statements = bodyData.statements;
+        }
 
         console.log("FunctionExpression result", result);
         return result;
@@ -5395,8 +5517,48 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result.arguments = args;
 
         console.log("NewExpression result", result);
-        return result;
+        return result;  
     };
+
+    p.convertReculsiveFuncType = function(funcStmts) {  
+        console.log("convertReculsiveFuncType", funcStmts);
+
+        if(!funcStmts || funcStmts.length == 0) return;
+
+        for(var i = 0; i < funcStmts.length; i++) {
+            var funcStmt = funcStmts[i];
+            console.log("funcStmt", funcStmt);
+            if(funcStmt.data.type) { 
+                var funcKey = funcStmt.data.type;
+                console.log("this._funcMap.get(funcKey)", this._funcMap);
+                console.log("funcKey", funcKey, "funcType", this._funcMap.get(funcKey), "i", i);
+                if(funcType = this._funcMap.get(funcKey))
+                    funcStmt.data.type = funcType;
+            }
+
+            if(funcStmt.data && funcStmt.data.statements && funcStmt.data.statements[0]) {
+                if(funcStmt.data.statements[0]._data) {
+                    var ss = funcStmt.data.statements[0]._data;
+                    var tmpStmts = [];
+                    for(var t = 0; t < ss.length; t++)
+                        tmpStmts.push(ss[t]);
+                    console.log("check888", tmpStmts);
+                    this.convertReculsiveFuncType(tmpStmts);
+                }
+            }
+        }
+    }
+
+    p.convertReculsiveFuncTypeGeneral = function(statements, targetFuncId) {
+        for(var s in statements) {
+            var statement = statements[s];
+            if(statement.type == this._currentFuncKey)
+                statement.type = 'func_' + targetFuncId;
+            if(statement.statements && statement.statements) {
+                this.convertReculsiveFuncTypeGeneral(statement.statements[0], targetFuncId);
+            }
+        }
+    }
 
     p.getBlockSyntax = function(syntax) {
         console.log("why syntax", syntax);
@@ -5443,6 +5605,61 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("getParamIndex result", result);
         return result;
+    }
+
+    p.extractContents = function(content, thread) {
+        console.log("extractContents content", content);
+        var blockDatum = Entry.block[content.type];
+        var targetSyntax = this.searchSyntax(blockDatum);
+        if(targetSyntax) {
+            var blockType = targetSyntax.blockType;
+        }
+
+        if(blockType == "param") return;
+        else if(blockType == "event") {
+            this.isEntryEventExisted = true;
+        }
+        else if(blockType == "last") {
+            this.isLastBlock = true;
+        }
+        else if(blockType == "variable") {
+            if(!this.isEntryEventExisted)
+                return;
+        }
+
+        thread.push(content);
+        if(content.contents) {
+            for(var c in content.contents) {
+                var content = content.contents[c];
+                this.extractContents(content, thread);
+
+            }
+        }
+       
+
+        if(content.statements && content.statements[0]) {
+            for(var s in content.statements[0]) {
+                var st = content.statements[0][s];
+                if(st.contents){
+                    for(var sc in st.contents) {
+                        var scs = st.contents[sc];
+                        this.extractContents(scs, content.statements[0]);
+                    }
+                }
+
+                
+                
+            }
+        }
+
+        /*if(content.statements && content.statements[1]) {
+            for(var s in content.statements[1]) {
+                var st = content.statements[1][s];
+                this.extractContents(st, content.statements[0]);
+            }
+        }*/
+
+
     }
 
     ///////////////////////////////////////////////////////////

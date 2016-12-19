@@ -33,13 +33,13 @@ Entry.TextCodingUtil = {};
     };
 
 	tu.indent = function(textCode) {
-        //console.log("indent textCode", textCode);
+        console.log("indent textCode", textCode);
         var result = "\t";
         var indentedCodeArr = textCode.split("\n");
         indentedCodeArr.pop();
         result += indentedCodeArr.join("\n\t");
         result = "\t" + result.trim();//.concat('\n');
-        //console.log("indent result", result);
+        console.log("indent result", result);
 
         return result;
     };
@@ -1148,6 +1148,23 @@ Entry.TextCodingUtil = {};
         console.log("isEntryEventFuncName result is NOT");
         return false;
     };
+
+    tu.isEntryEventFuncByType = function(type) {
+        console.log("isEntryEventFuncByType", type);
+        if( type == "when_run_button_click" ||
+            type == "when_some_key_pressed" ||
+            type == "mouse_clicked" ||
+            type == "mouse_click_cancled" ||
+            type == "when_object_click" ||
+            type == "when_object_click_canceled" ||
+            type == "when_message_cast" ||
+            type == "when_scene_start" ||
+            type == "when_clone_start") {
+
+            return true;
+        }
+        return false;
+    }
     /////////////////////////////////////////////////////
     //Important 
     ////////////////////////////////////////////////////
@@ -1264,11 +1281,11 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.isFuncContentsMatch = function(blockFuncContents, textFuncStatements, paramMap, paramInfo) {
-        console.log("blockFuncContents, textFuncStatements, paramMap", blockFuncContents, textFuncStatements, paramMap);
+    tu.isFuncContentsMatch = function(blockFuncContents, textFuncStatements, paramMap, paramInfo, currentFuncKey) {
+        console.log("blockFuncContents, textFuncStatements", blockFuncContents, textFuncStatements);
         var matchFlag = true;
 
-        if(textFuncStatements.length != blockFuncContents.length) {
+        if(textFuncStatements.length != blockFuncContents.length) { 
             matchFlag = false;
             return matchFlag;
         }
@@ -1290,11 +1307,23 @@ Entry.TextCodingUtil = {};
                 return matchFlag;
             }
 
-            console.log("function");
+            console.log("textFuncStatement", textFuncStatement, "blockFuncContent", blockFuncContent);
+            
+            if(blockFuncContent._schema && blockFuncContent._schema.template) {
+                var template = blockFuncContent._schema.template;
+                var blockFuncName = template.trim().split(' ')[0];
+                console.log("blockFuncName", blockFuncName, "textFuncName", textFuncStatement);
+                if(blockFuncName == textFuncStatement.funcName)
+                    var reculsive = true;
+                else 
+                    var reculsive = false;
+            }
 
-            if(textFuncStatement.type == blockFuncContent.data.type) { //Type Check
+            if(textFuncStatement.type == blockFuncContent.data.type || reculsive) {
                 matchFlag = true;
-
+                if(currentFuncKey != textFuncStatement.type)
+                    matchFlag = false;
+                
                 var textFuncStatementParams = textFuncStatement.params;
                 var blockFuncContentParams = blockFuncContent.data.params;
                 var cleansingParams = [];
@@ -1309,6 +1338,14 @@ Entry.TextCodingUtil = {};
                 });
                 blockFuncContentParams = cleansingParams;
 
+                cleansingParams = [];
+                textFuncStatementParams.map(function(textFuncStatementParam, index) {
+                    if(textFuncStatementParam)
+                        cleansingParams.push(textFuncStatementParam);
+                });
+                textFuncStatementParams = cleansingParams;
+
+                console.log("textFuncStatementParams",textFuncStatementParams, "blockFuncContentParams", blockFuncContentParams);
                 if(textFuncStatementParams.length == blockFuncContentParams.length) { //Statement Param Length Comparison
                     matchFlag = true;
                     for(var j = 0; j < textFuncStatementParams.length; j++) {
@@ -1856,6 +1893,10 @@ Entry.TextCodingUtil = {};
                                 if(paramBlockParams[1].data.type == "function_field_label") {
                                     return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
                                 }
+                                else {
+                                    if(this.hasFunctionFieldLabel(paramBlockParams[1]))
+                                        return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
+                                }
                             }
                         }
                         else {
@@ -1877,6 +1918,37 @@ Entry.TextCodingUtil = {};
         function test(name) {
             return / /.test(name);
         }
+    };
+
+    tu.hasFunctionFieldLabel = function(fBlock) {
+        console.log("field fBlock", fBlock);
+        if(!fBlock || !fBlock.data) return;
+        if(fBlock.data.type == "function_field_label")
+            return true;
+        var params = fBlock.data.params;
+        console.log("has params", params);
+        if(params[0]) {
+            var type = params[0].data.type;
+            console.log("has type", type);
+            if(type == "function_field_label")
+                return true;
+            if(params[0].data.params)
+                if(this.hasFunctionFieldLabel(params[0]))
+                    return true;
+        }
+
+        if(params[1]) {
+            var type = params[1].data.type;
+            console.log("has type", type);
+            if(type == "function_field_label")
+                return true;
+            if(params[1].data.params)
+                if(this.hasFunctionFieldLabel(params[1]))
+                    return true;
+        }
+
+        return false;
+
     };
 
     tu.addFuncParam = function(param) {

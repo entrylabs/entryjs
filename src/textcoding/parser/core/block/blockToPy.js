@@ -58,6 +58,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var rootResult = '';
         var contentResult = '';
         var definition = '';
+
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
@@ -111,7 +112,12 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         // User Function
         if(this.isFunc(block)) {
-            this._funcDefMap[block.data.type] = this.makeFuncDef(block);
+            console.log("func block", block);
+            console.log("this._hasRootFunc", this._hasRootFunc);
+            if(!this._hasRootFunc) {
+                this._funcDefMap[block.data.type] = this.makeFuncDef(block, this._hasRootFunc);
+                this._hasRootFunc = false;
+            }
             if(this.isRegisteredFunc(block))
                 syntax = this.makeFuncSyntax(block);
                 if(this._parseMode == Entry.Parser.PARSE_SYNTAX)
@@ -429,72 +435,99 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     p.makeFuncSyntax = function(funcBlock) {
         var syntax = "";
-        var schemaTemplate = funcBlock._schema.template.trim();
-        var schemaParams = funcBlock._schema.params;
+        if(funcBlock && funcBlock._schema)
+            if(funcBlock._schema.template)
+                var schemaTemplate = funcBlock._schema.template.trim();
+            else if(funcBlock._schema.params)
+                var schemaParams = funcBlock._schema.params;
+        
         var paramReg = /(%.)/mi;
-        var funcTokens = schemaTemplate.trim().split(paramReg);
+        if(schemaTemplate)
+            var funcTokens = schemaTemplate.trim().split(paramReg);
+        
         var funcName = "";
         var funcParams = "";
+        console.log("funcTokens", funcTokens);
 
         for(var f in funcTokens) {
             var funcToken = funcTokens[f].trim();
             if(paramReg.test(funcToken)) {
                 var num = funcToken.split('%')[1];
-                var index = Number(num) - 1;
-                if(schemaParams[index].type == "Indicator")
+                if(num == 1) continue;
+                else num -= 1;
+                var index = num - 1;
+                if(schemaParams && schemaParams[index] && 
+                    schemaParams[index].type == "Indicator")
                     continue;
-                funcParams += funcToken.concat(', ');
+                
+                funcParams += '%'.concat(num).concat(', ');
             }
             else {
                 var funcTokenArr = funcToken.split(' ');
-                funcName += funcTokenArr.join('__');
+                funcName += funcTokenArr.join('__'); 
             }
         }
 
         var index = funcParams.lastIndexOf(',');
+        console.log("funcParams", funcParams, "index", index);
         funcParams = funcParams.substring(0, index);
+        console.log("funcParams2", funcParams, "index2", index);
 
         syntax = funcName.trim().concat('(').concat(funcParams.trim()).concat(')');
 
         return syntax;
     };
 
-    p.makeFuncDef = function(funcBlock) {
-        var result = 'def ';
-        var func = this.getFuncInfo(funcBlock);
-
+    p.makeFuncDef = function(funcBlock, exp) {
         if(!this.isRegisteredFunc(funcBlock))
-            func.name = "F";
+            return;
+        var result = '';
+        var func = this.getFuncInfo(funcBlock);
+        console.log("makeFuncDef func", func);
+        if(func) result += func.name;
+        else return;
 
-        if(!func.name) {
-            return result;
-        }
-        else {
-            result += func.name;
-        }
-
-        result = result.concat('(');
+        var paramResult = '';
         if(func.params && func.params.length != 0) {
             for(var p in func.params) {
-                result += func.params[p]
-                result = result.concat(', ');
+                paramResult += func.params[p];
+                console.log("p", p, "func.params", func.params, "func.params.length", func.params.length);
+                if(p != Object.keys(func.params).length-1)
+                    paramResult = paramResult.concat(', ');
             }
-            var index = result.lastIndexOf(',');
-            result = result.substring(0, index);
-            result = result.trim();
+            console.log("middle paramResult", paramResult); 
+            paramResult = paramResult.trim();
         }
-        result = result.concat('):').concat('\n');
+        result = result.concat('(').concat(paramResult).concat(')');
+        console.log("func middle check", result);
+        if(exp) return result;
+        else result =  'def ' + result;
 
+        this._hasRootFunc = true;
+
+        result = result.concat(':\n');
         if(func.statements && func.statements.length) {
             var stmtResult = "";
             for(var s in func.statements) {
                 var block = func.statements[s];
-                stmtResult += this.Block(block).concat('\n');
+                console.log("func check block", block);
+                console.log("this.getFuncInfo(block)", this.getFuncInfo(block), "func", func);
+
+                if(this.getFuncInfo(block)){
+                    console.log("func check name same");
+                    stmtResult += this.makeFuncDef(block, true).concat('\n');
+                }
+                else{
+                    console.log("func check name diff");
+                    stmtResult += this.Block(block).concat('\n');
+                }
             }
-            stmtResult = stmtResult.concat('\n');
-            result += Entry.TextCodingUtil.indent(stmtResult).concat('\n\n');
+            //stmtResult = stmtResult.concat('\n');
+            result += Entry.TextCodingUtil.indent(stmtResult).concat('\n');
         }
-        this._funcMap.clear();
+        console.log("func this._funcMap", this._funcMap);
+        //this._funcMap.clear();
+        console.log("func result", result);
 
         return result.trim();
     };
@@ -509,11 +542,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
             var _functions = Entry.variableContainer.functions_;
             var func = _functions[id];
             if(!func) {
-                result.name = "함수";
-                return result;
+                return null;
             }
         } else {
-            return result;
+            return null;
         }
 
         var template = func.block.template;
@@ -546,14 +578,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
             var funcParams = {};
             for(var key in funcParamMap) {
                 var index = funcParamMap[key];
-                console.log("paramName index", Number(parseInt(index)+1));
+                console.log("paramName index", parseInt(index)+1);
                 var i = key.search('_');
-                var nickname = key.substring(0, i);
+                var fieldType = key.substring(0, i);
 
-                if(nickname == 'stringParam')
-                    var name = 'param' + Number(parseInt(index)+1);
-                else if (nickname == 'booleanParam')
-                    var name = 'param' + Number(parseInt(index)+1);
+                if(fieldType == 'stringParam')
+                    var name = 'param' + (parseInt(index)+1);
+                else if (fieldType == 'booleanParam')
+                    var name = 'param' + (parseInt(index)+1);
 
                 var param = name;
                 funcParams[index] = param;
@@ -575,6 +607,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         if(funcContents.length != 0)
             result.statements = funcContents;
 
+        console.log("getFuncInfo result", result);
         return result;
     };
 
