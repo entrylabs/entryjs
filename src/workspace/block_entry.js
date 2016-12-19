@@ -3289,7 +3289,6 @@ Entry.block = {
                 script.isStart = true;
                 script.timeFlag = 1;
 
-
                 sq['SET'][port] = {
                     type: Entry.ArduinoExt.sensorTypes.TONE,
                     data: {
@@ -22310,7 +22309,7 @@ Entry.block = {
             "VALUE": 1
         },
         "class": "variable",
-        "isNotFor": [ "variable", "variableNotExist" ],
+        "isNotFor": [ "variableNotExist" ],
         "func": function (sprite, script) {
             var variableId = script.getField("VARIABLE", script);
             var value = script.getNumberValue("VALUE", script);
@@ -22424,7 +22423,7 @@ Entry.block = {
             "VALUE": 1
         },
         "class": "variable",
-        "isNotFor": [ "variable", "variableNotExist" ],
+        "isNotFor": [ "variableNotExist" ],
         "func": function (sprite, script) {
             var variableId = script.getField("VARIABLE", script);
             var value = script.getValue("VALUE", script);
@@ -22497,7 +22496,7 @@ Entry.block = {
             "VARIABLE": 0
         },
         "class": "variable_visibility",
-        "isNotFor": [ "variable", "variableNotExist" ],
+        "isNotFor": [ "variableNotExist" ],
         "func": function (sprite, script) {
             var variableId = script.getField("VARIABLE", script);
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
@@ -22565,7 +22564,7 @@ Entry.block = {
             "VARIABLE": 0
         },
         "class": "variable_visibility",
-        "isNotFor": [ "variable", "variableNotExist" ],
+        "isNotFor": [ "variableNotExist" ],
         "func": function (sprite, script) {
             var variableId = script.getField("VARIABLE", script);
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
@@ -22632,7 +22631,7 @@ Entry.block = {
             "VARIABLE": 0
         },
         "class": "variable",
-        "isNotFor": [ "variable", "variableNotExist" ],
+        "isNotFor": [ "variableNotExist" ],
         "func": function (sprite, script) {
             var variableId = script.getField("VARIABLE", script);
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
@@ -22887,7 +22886,7 @@ Entry.block = {
             "LIST": 1
         },
         "class": "list",
-        "isNotFor": [ "list", "listNotExist" ],
+        "isNotFor": [ "listNotExist" ],
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
             var value = script.getValue("VALUE", script);
@@ -22982,7 +22981,7 @@ Entry.block = {
             "LIST": 1
         },
         "class": "list",
-        "isNotFor": [ "list", "listNotExist" ],
+        "isNotFor": [ "listNotExist" ],
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
             var value = script.getValue("VALUE", script);
@@ -23093,7 +23092,7 @@ Entry.block = {
             "INDEX": 2
         },
         "class": "list",
-        "isNotFor": [ "list", "listNotExist" ],
+        "isNotFor": [ "listNotExist" ],
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
             var data = script.getValue("DATA", script);
@@ -23208,7 +23207,7 @@ Entry.block = {
             "DATA": 2
         },
         "class": "list",
-        "isNotFor": [ "list", "listNotExist" ],
+        "isNotFor": [ "listNotExist" ],
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
             var data = script.getValue("DATA", script);
@@ -23323,7 +23322,7 @@ Entry.block = {
             "INDEX": 3
         },
         "class": "list_element",
-        "isNotFor": [ "list", "listNotExist" ],
+        "isNotFor": [ "listNotExist" ],
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
             var index = script.getValue("INDEX", script);
@@ -23409,7 +23408,7 @@ Entry.block = {
             "LIST": 1
         },
         "class": "list",
-        "isNotFor": [ "list", "listNotExist" ],
+        "isNotFor": [ "listNotExist" ],
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
             var list = Entry.variableContainer.getList(listId, sprite);
@@ -23478,7 +23477,7 @@ Entry.block = {
             "LIST": 0
         },
         "class": "list_visibility",
-        "isNotFor": [ "list", "listNotExist" ],
+        "isNotFor": [ "listNotExist" ],
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
             var list = Entry.variableContainer.getList(listId);
@@ -23546,7 +23545,7 @@ Entry.block = {
             "LIST": 0
         },
         "class": "list_visibility",
-        "isNotFor": [ "list", "listNotExist" ],
+        "isNotFor": [ "listNotExist" ],
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
             var list = Entry.variableContainer.getList(listId);
@@ -23744,7 +23743,7 @@ Entry.block = {
             "DATA": 3
         },
         "class": "list",
-        "isNotFor": [ "list", "listNotExist" ],
+        "isNotFor": [ "listNotExist" ],
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
             var data = script.getStringValue("DATA", script);

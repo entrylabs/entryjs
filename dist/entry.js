@@ -19789,7 +19789,7 @@ Entry.HW = function() {
   this.connectTrial = 0;
   this.isFirstConnect = !0;
   this.requireVerion = "v1.6.1";
-  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.2_Setup.exe";
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.3_Setup.exe";
   this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
@@ -20253,6 +20253,7 @@ Entry.Stage.prototype.sortZorder = function() {
     f.shape && a.setChildIndex(f.shape, d++);
     a.setChildIndex(f.object, d++);
   }
+  Entry.requestUpdate = !0;
 };
 Entry.Stage.prototype.initCoordinator = function() {
   var b = new createjs.Container, a = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate.png");
