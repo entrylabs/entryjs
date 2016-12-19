@@ -33,7 +33,7 @@ if (Entry && Entry.block) {
             if(isNaN(code)) {
                 return '"()"'.replace('()', code);
             }
-            else 
+            else
                 return '"()"'.replace('"()"', code);
         };
 
@@ -22408,7 +22408,7 @@ Entry.block = {
             ],
             "type": "set_variable"
         },
-        "def": {
+        "pyHelpDef": {
             "params": [
                 "A&value",
                 {

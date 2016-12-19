@@ -2828,8 +2828,7 @@ svg .svgBlockGroup text {
 #entryBlockHelperBlockWorkspace {
   width: 100%;
   bottom: 0px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   top: 16px;
   text-align: center;
 }

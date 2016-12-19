@@ -724,6 +724,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.destroy = function(animate) {
+        this.block.set({view:null});
         $(this.svgGroup).unbind('.blockViewMousedown');
         this._destroyObservers();
         var svgGroup = this.svgGroup;
@@ -735,7 +736,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         } else svgGroup.remove();
 
         this._contents.forEach(function(c) {
-            if (c.constructor !== Entry.Block) c.destroy();
+            c.destroy();
         });
 
         this._statements.forEach(function(s) {

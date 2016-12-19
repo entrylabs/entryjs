@@ -2354,5 +2354,6 @@ Entry.VariableContainer.prototype._truncName = function(name, type) {
 Entry.VariableContainer.prototype._maxNameLength = 10;
 
 Entry.VariableContainer.prototype._isPythonMode = function() {
-    return Entry.getMainWS().vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+    var ws = Entry.getMainWS();
+    return ws.vimBoard && ws.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
 };

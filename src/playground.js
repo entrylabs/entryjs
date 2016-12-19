@@ -284,22 +284,21 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         class: "entryWorkspaceBlockMenu"
     });
 
-    this.mainWorkspace = new Entry.Workspace(
-        {
-            'blockMenu': {
-                dom: blockMenuView,
-                align: "LEFT",
-                categoryData: EntryStatic.getAllBlocks(),
-                scroll: true
-            },
-            'board': {
-                dom: boardView
-            },
-            'vimBoard': {
-                dom: boardView
-            }
-        }
-    );
+    var initOpts = {
+        'blockMenu': {
+            dom: blockMenuView,
+            align: "LEFT",
+            categoryData: EntryStatic.getAllBlocks(),
+            scroll: true
+        },
+        'board': {
+            dom: boardView
+        },
+    }
+    if (Entry.textCodingEnable)
+        initOpts.vimBoard = { dom: boardView };
+
+    this.mainWorkspace = new Entry.Workspace(initOpts);
     this.blockMenu = this.mainWorkspace.blockMenu;
     this.board = this.mainWorkspace.board;
     this.vimBoard = this.mainWorkspace.vimBoard;
@@ -836,17 +835,20 @@ Entry.Playground.prototype.injectCode = function() {
     var code = this.object.script;
     var ws = this.mainWorkspace;
 
-    if(this.mainWorkspace.vimBoard._changedObject)
-        this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject;
-    else
-        if(Entry.playground)
-            this.mainWorkspace.vimBoard._currentObject = Entry.playground.object;
+    if (Entry.textCodingEnable) {
+        if(this.mainWorkspace.vimBoard._changedObject)
+            this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject;
+        else
+            if(Entry.playground)
+                this.mainWorkspace.vimBoard._currentObject = Entry.playground.object;
+    }
 
-    ws.changeBoardCode(code);
-    
-    if(Entry.playground)
+    if(Entry.playground && Entry.textCodingEnable)
         this.mainWorkspace.vimBoard._changedObject = Entry.playground.object;
-    ws.getBoard().adjustThreadsPosition();
+
+    ws.changeBoardCode(code, function() {
+        ws.getBoard().adjustThreadsPosition();
+    });
 };
 
 /**
@@ -1294,16 +1296,9 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
  * Reload playground
  */
 Entry.Playground.prototype.reloadPlayground = function () {
-    var selectedCategory, selector;
-
-    var mainWorkspace = this.mainWorkspace;
-    if (!mainWorkspace) return;
-    mainWorkspace.getBlockMenu().reDraw();
-
-    var object = this.object;
-    (function(o) {
-        o && o.script && o.script.view && o.script.view.reDraw();
-    })(this.object);
+    (function(workspace) {
+        workspace && workspace.getBlockMenu().reDraw();
+    })(this.mainWorkspace);
 };
 
 /**

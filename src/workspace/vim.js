@@ -215,7 +215,11 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             textCode += '\n';
             this.codeMirror.setValue(textCode);
             if(textType == Entry.Vim.TEXT_TYPE_PY)
-                this.codeMirror.getDoc().markText({line:0, ch:0}, {line: Entry.Vim.INEDITABLE_LINE_PY, ch:0}, {readOnly: true, display: 'none !important'});  
+                this.codeMirror.getDoc().markText(
+                    {line:0, ch:0},
+                    {line: Entry.Vim.INEDITABLE_LINE_PY, ch:0},
+                    {readOnly: true, inclusiveLeft: true}
+                );
 
             var doc = this.codeMirror.getDoc();
             doc.setCursor({ line: doc.lastLine() - 1});

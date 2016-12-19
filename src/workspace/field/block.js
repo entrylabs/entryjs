@@ -65,8 +65,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             block.setThread(this);
             block.createView(board, this.renderMode);
             block.getThread().view.setParent(this);
-        } else if (block && block.view) {
-            block.view.reDraw();
         }
 
         this.updateValueBlock(block);
@@ -74,7 +72,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
         if (this._blockView.getBoard().constructor !== Entry.Board)
             this._valueBlock.view.removeControl();
-
     };
 
     p.align = function(x, y, animate) {
@@ -127,7 +124,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.calcHeight = p.calcWH;
 
-    p.destroy = function() {};
+    p.destroy = function() {
+        this._valueBlock && this._valueBlock.destroyView();
+    };
 
     p.inspectBlock = function() {
         var blockType = null;

@@ -111,22 +111,22 @@ Entry.Func.edit = function(func) {
 Entry.Func.initEditView = function(content) {
     if (!this.menuCode)
         this.setupMenuCode();
-    var workspace = Entry.playground.mainWorkspace;
+    var workspace = Entry.getMainWS();
     workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
-    workspace.changeOverlayBoardCode(content);
-    content.recreateView();
     workspace.changeOverlayBoardCode(content);
     this._workspaceStateEvent =
         workspace.changeEvent.attach(this, this.endEdit);
-    content.view.reDraw();
-    content.view.board.alignThreads();
+    content.board.alignThreads();
 };
 
 Entry.Func.endEdit = function(message) {
     this.unbindFuncChangeEvent();
     this.unbindWorkspaceStateChangeEvent();
 
-    switch(message) {
+    if (this.targetFunc && this.targetFunc.content)
+        this.targetFunc.content.destroyView();
+
+    switch (message) {
         case "save":
             this.save();
             break;
@@ -136,6 +136,7 @@ Entry.Func.endEdit = function(message) {
     }
 
     this._backupContent = null;
+
     delete this.targetFunc;
     this.updateMenu();
     Entry.Func.isEdit = false;

@@ -18438,6 +18438,7 @@ Entry.parseOptions = function(b) {
   this.hasVariableManager = b.hasvariablemanager;
   this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable ? void 0 === this.hasVariableManager && (this.hasVariableManager = !0) : this.hasVariableManager = !1;
   this.isForLecture = b.isForLecture;
+  this.textCodingEnable = b.textCodingEnable;
 };
 Entry.initFonts = function(b) {
   this.fonts = b;
@@ -19330,18 +19331,16 @@ Entry.Func.edit = function(b) {
 };
 Entry.Func.initEditView = function(b) {
   this.menuCode || this.setupMenuCode();
-  var a = Entry.playground.mainWorkspace;
+  var a = Entry.getMainWS();
   a.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
   a.changeOverlayBoardCode(b);
-  b.recreateView();
-  a.changeOverlayBoardCode(b);
   this._workspaceStateEvent = a.changeEvent.attach(this, this.endEdit);
-  b.view.reDraw();
-  b.view.board.alignThreads();
+  b.board.alignThreads();
 };
 Entry.Func.endEdit = function(b) {
   this.unbindFuncChangeEvent();
   this.unbindWorkspaceStateChangeEvent();
+  this.targetFunc && this.targetFunc.content && this.targetFunc.content.destroyView();
   switch(b) {
     case "save":
       this.save();
@@ -22170,7 +22169,8 @@ Entry.VariableContainer.prototype._truncName = function(b, a) {
 };
 Entry.VariableContainer.prototype._maxNameLength = 10;
 Entry.VariableContainer.prototype._isPythonMode = function() {
-  return Entry.getMainWS().vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+  var b = Entry.getMainWS();
+  return b.vimBoard && b.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
 };
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
@@ -22678,6 +22678,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
   this._dAlign = Entry.Utils.debounce(this.align, 100);
   this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
+  this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
   this._align = a || "CENTER";
   this.setAlign(this._align);
   this._scroll = void 0 !== c ? c : !1;
@@ -23077,7 +23078,10 @@ Entry.BlockMenu = function(b, a, d, c) {
   };
   b._captureKeyEvent = function(a) {
     var b = a.keyCode;
-    a.ctrlKey && "workspace" == Entry.type && 48 < b && 58 > b && (a.preventDefault(), this.selectMenu(b - 49));
+    a.ctrlKey && "workspace" == Entry.type && 48 < b && 58 > b && (a.preventDefault(), setTimeout(function() {
+      this._cancelDynamic(!0);
+      this._dSelectMenu(b - 49, !0);
+    }.bind(this), 200));
   };
   b.enablePattern = function() {
     this.pattern.removeAttribute("style");
@@ -23644,6 +23648,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this._board = this._board.code.board;
   };
   b.destroy = function(a) {
+    this.block.set({view:null});
     $(this.svgGroup).unbind(".blockViewMousedown");
     this._destroyObservers();
     var b = this.svgGroup;
@@ -23651,7 +23656,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
       b.remove();
     }) : b.remove();
     this._contents.forEach(function(a) {
-      a.constructor !== Entry.Block && a.destroy();
+      a.destroy();
     });
     this._statements.forEach(function(a) {
       a.destroy();
@@ -23987,12 +23992,14 @@ Entry.PARAM = -1;
 (function(b) {
   b.schema = {view:null, board:null};
   b.load = function(a) {
-    a instanceof Array || (a = JSON.parse(a));
-    this.clear();
-    for (var b = 0;b < a.length;b++) {
-      this._data.push(new Entry.Thread(a[b], this));
+    if (!Entry.engine || !Entry.engine.isState("run")) {
+      a instanceof Array || (a = JSON.parse(a));
+      this.clear();
+      for (var b = 0;b < a.length;b++) {
+        this._data.push(new Entry.Thread(a[b], this));
+      }
+      return this;
     }
-    return this;
   };
   b.clear = function(a) {
     a = void 0 === a ? !1 : a;
@@ -24741,7 +24748,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
     var c = this.getValue();
-    c && !c.view ? (c.setThread(this), c.createView(a, this.renderMode), c.getThread().view.setParent(this)) : c && c.view && c.view.reDraw();
+    c && !c.view && (c.setThread(this), c.createView(a, this.renderMode), c.getThread().view.setParent(this));
     this.updateValueBlock(c);
     this._valueBlock.view._startContentRender(this.renderMode);
     this._blockView.getBoard().constructor !== Entry.Board && this._valueBlock.view.removeControl();
@@ -24761,6 +24768,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   b.calcHeight = b.calcWH;
   b.destroy = function() {
+    this._valueBlock && this._valueBlock.destroyView();
   };
   b.inspectBlock = function() {
     var a = null;
@@ -25294,8 +25302,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
     var c = this.getValue();
-    c && !c.view ? (c.setThread(this), c.createView(a, b)) : c && c.view && c.view.reDraw();
+    c && !c.view && (c.setThread(this), c.createView(a, b));
     this._updateValueBlock(c);
+    this._valueBlock && this._valueBlock.view._startContentRender(this.renderMode);
     this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock && this._valueBlock.view.removeControl();
   };
   b.align = function(a, b, c) {
@@ -25309,10 +25318,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   };
   b.calcWH = function() {
     var a = this._valueBlock;
-    a ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:0, height:20});
+    a && a.view ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:0, height:20});
   };
   b.calcHeight = b.calcWH;
   b.destroy = function() {
+    this._valueBlock && this._valueBlock.destroyView();
   };
   b._inspectBlock = function() {
   };
@@ -25939,13 +25949,13 @@ Entry.Board.DRAG_RADIUS = 5;
     Entry.Utils.addFilters(this.svg, this.suffix);
     this.pattern = Entry.Utils.addBlockPattern(this.svg, this.suffix).pattern;
   };
-  b.changeCode = function(a, b) {
+  b.changeCode = function(a, b, c) {
     this.code && this.codeListener && this.code.changeEvent.detach(this.codeListener);
     this.set({code:a});
-    var c = this;
+    var e = this;
     a && !b && (this.codeListener = this.code.changeEvent.attach(this, function() {
-      c.changeEvent.notify();
-    }), a.createView(this), a.isAllThreadsInOrigin() && this.alignThreads());
+      e.changeEvent.notify();
+    }), this.svgBlockGroup.remove(), this.svgThreadGroup.remove(), a.createView(this), a.isAllThreadsInOrigin() && this.alignThreads(), c && c());
     this.scroller.resizeScrollBar();
   };
   b.bindCodeView = function(a) {
@@ -26894,7 +26904,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   b.destroyView = function() {
     this.view && this.view.destroy();
-    this.set({view:null});
   };
   b.clone = function(a) {
     return new Entry.Block(this.toJSON(!0), a);
@@ -27336,7 +27345,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
       var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
       e === Entry.Vim.TEXT_TYPE_PY && (f = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(f));
       this.codeMirror.setValue(f + "\n");
-      e == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:Entry.Vim.INEDITABLE_LINE_PY, ch:0}, {readOnly:!0, display:"none !important"});
+      e == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:Entry.Vim.INEDITABLE_LINE_PY, ch:0}, {readOnly:!0, inclusiveLeft:!0});
       c = this.codeMirror.getDoc();
       c.setCursor({line:c.lastLine() - 1});
     } else {
@@ -27442,11 +27451,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       this.changeEvent.notify(b);
     }
   };
-  b.changeBoardCode = function(a) {
+  b.changeBoardCode = function(a, b) {
     this._syncTextCode();
-    var b = this.mode === Entry.Workspace.MODE_VIMBOARD;
-    this.board.changeCode(a, b);
-    b && (a = {}, a.textType = this.textType, a.boardType = this.boardType, a.runType = this.runType, this.codeToText(this.board.code, a));
+    var c = this.mode === Entry.Workspace.MODE_VIMBOARD;
+    this.board.changeCode(a, c, b);
+    c && (c = {}, c.textType = this.textType, c.boardType = this.boardType, c.runType = this.runType, this.codeToText(this.board.code, c));
   };
   b.changeOverlayBoardCode = function(a) {
     this.overlayBoard && this.overlayBoard.changeCode(a);
@@ -27508,6 +27517,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
               return;
             }
             this.dSetMode({boardType:Entry.Workspace.MODE_BOARD, textType:-1});
+            a.preventDefault();
             break;
           case 221:
             if (h && !h.object && this.oldMode === Entry.Workspace.MODE_BOARD) {
@@ -27523,6 +27533,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
               return;
             }
             this.dSetMode({boardType:Entry.Workspace.MODE_VIMBOARD, textType:Entry.Vim.TEXT_TYPE_PY, runType:Entry.Vim.WORKSPACE_MODE});
+            a.preventDefault();
             break;
           case 67:
             l && !l.isInBlockMenu && l.block.isDeletable() && l.block.copyToClipboard();
@@ -27736,8 +27747,9 @@ Entry.Playground.prototype.generateCodeView = function(b) {
   this.variableView_ = a;
   b = Entry.Dom(b);
   a = Entry.Dom("div", {parent:b, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
-  b = Entry.Dom("div", {parent:b, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
-  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:b, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}, vimBoard:{dom:a}});
+  b = {blockMenu:{dom:Entry.Dom("div", {parent:b, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"}), align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}};
+  Entry.textCodingEnable && (b.vimBoard = {dom:a});
+  this.mainWorkspace = new Entry.Workspace(b);
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
   this.vimBoard = this.mainWorkspace.vimBoard;
@@ -28076,10 +28088,11 @@ Entry.Playground.prototype.injectObject = function(b) {
 };
 Entry.Playground.prototype.injectCode = function() {
   var b = this.object.script, a = this.mainWorkspace;
-  this.mainWorkspace.vimBoard._changedObject ? this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject : Entry.playground && (this.mainWorkspace.vimBoard._currentObject = Entry.playground.object);
-  a.changeBoardCode(b);
-  Entry.playground && (this.mainWorkspace.vimBoard._changedObject = Entry.playground.object);
-  a.getBoard().adjustThreadsPosition();
+  Entry.textCodingEnable && (this.mainWorkspace.vimBoard._changedObject ? this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject : Entry.playground && (this.mainWorkspace.vimBoard._currentObject = Entry.playground.object));
+  Entry.playground && Entry.textCodingEnable && (this.mainWorkspace.vimBoard._changedObject = Entry.playground.object);
+  a.changeBoardCode(b, function() {
+    a.getBoard().adjustThreadsPosition();
+  });
 };
 Entry.Playground.prototype.injectPicture = function() {
   var b = this.pictureListView_;
@@ -28307,7 +28320,7 @@ Entry.Playground.prototype.initializeResizeHandle = function(b) {
 };
 Entry.Playground.prototype.reloadPlayground = function() {
   var b = this.mainWorkspace;
-  b && (b.getBlockMenu().reDraw(), (b = this.object) && b.script && b.script.view && b.script.view.reDraw());
+  b && b.getBlockMenu().reDraw();
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;

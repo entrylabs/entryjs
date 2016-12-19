@@ -106,7 +106,7 @@ Entry.Board.DRAG_RADIUS = 5;
         this.pattern = returnVal.pattern;
     };
 
-    p.changeCode = function(code, shouldNotCreateView) {
+    p.changeCode = function(code, shouldNotCreateView, cb) {
         if (this.code && this.codeListener)
             this.code.changeEvent.detach(this.codeListener);
 
@@ -117,10 +117,12 @@ Entry.Board.DRAG_RADIUS = 5;
             this.codeListener = this.code.changeEvent.attach(
                 this, function() {that.changeEvent.notify();}
             );
+            this.svgBlockGroup.remove();
+            this.svgThreadGroup.remove();
             code.createView(this);
             if (code.isAllThreadsInOrigin())
                 this.alignThreads();
-
+            cb && cb();
         }
         this.scroller.resizeScrollBar();
     };

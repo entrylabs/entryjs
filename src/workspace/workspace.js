@@ -180,10 +180,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.changeEvent.notify(message);
     };
 
-    p.changeBoardCode = function(code) {
+    p.changeBoardCode = function(code, cb) {
         this._syncTextCode();
         var isVim = this.mode === Entry.Workspace.MODE_VIMBOARD;
-        this.board.changeCode(code, isVim);
+        this.board.changeCode(code, isVim, cb);
         if (isVim) {
             var mode = {};
             mode.textType = this.textType;
@@ -306,6 +306,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         boardType : Entry.Workspace.MODE_BOARD,
                         textType : -1
                     });
+                    e.preventDefault();
                     break;
                 case 221: //setMode(python) for textcoding
                     if (playground && !playground.object) {
@@ -334,6 +335,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         textType : Entry.Vim.TEXT_TYPE_PY,
                         runType : Entry.Vim.WORKSPACE_MODE
                     });
+                    e.preventDefault();
                     break;
                 case 67:
                     if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
