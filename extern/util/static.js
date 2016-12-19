@@ -555,7 +555,17 @@ EntryStatic.getAllBlocks = function() {
                 "smartBoard_get_digital_value",
                 "smartBoard_toggle_led",
                 "smartBoard_toggle_pwm",
-                "smartBoard_convert_scale"
+                "smartBoard_convert_scale",
+
+                //dadublock 2016-12-19
+                "dadublock_get_analog_value",
+                "dadublock_get_analog_value_map",
+                "dadublock_get_ultrasonic_value",
+                "dadublock_get_digital",
+                "dadublock_toggle_led",
+                "dadublock_digital_pwm",
+                "dadublock_set_servo",
+                "dadublock_set_tone"
             ]
         }
     ]
