@@ -614,8 +614,12 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (!blockInfo) return;
         var isNotFor = blockInfo.isNotFor;
         if (!isNotFor || isNotFor.length === 0) return false;
-        for (var i in isNotFor) {
-            if (isNotFor[i] && this._bannedClass.indexOf(isNotFor[i]) === -1) {
+
+        var current;
+        var banned = this._bannedClass;
+        for (var i=0; i<isNotFor.length; i++) {
+            current = isNotFor[i];
+            if (current && banned.indexOf(current) === -1) {
                 return false;
             }
         }

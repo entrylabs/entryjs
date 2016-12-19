@@ -39,7 +39,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Program = function(astArr) { 
         try {
             console.log("this.syntax", this.blockSyntax);
-            this._currentObject = Entry.playground.mainWorkspace.vimBoard._currentObject;
+            this._currentObject = Entry.getMainWS().vimBoard._currentObject;
             console.log("_currentObject", this._currentObject);
             this._funcLoop = false;
             this._hasReculsiveFunc = false;
