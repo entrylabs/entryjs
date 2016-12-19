@@ -189,8 +189,18 @@ Entry.PyHint = function(syntax) {
             text = text.replace(/\$\d+/gi, "");
         }
         if (text.indexOf("\n") > -1) {
-            console.log(self.from.ch, Math.floor((self.from.ch + 1) / 4))
             text = text.split("\n").join("\n" + "\t".repeat(self.from.ch))
+        }
+        if (text.indexOf(":") > -1) {
+            var cur = cm.getCursor(), tokens = cm.getLineTokens(cur.line);
+            var newStart = tokens.shift();
+            while (tokens.length) {
+                if (newStart.type === "keyword")
+                    break;
+                newStart = tokens.shift();
+            }
+            ch -= self.from.ch - newStart.start;
+            self.from.ch = newStart.start;
         }
 
         cm.replaceRange(text, self.from, self.to)
