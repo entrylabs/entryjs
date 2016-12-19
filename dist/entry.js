@@ -23008,8 +23008,8 @@ Entry.BlockMenu = function(b, a, d, c) {
       if (!a || 0 === a.length) {
         return !1;
       }
-      for (var b in a) {
-        if (a[b] && -1 === this._bannedClass.indexOf(a[b])) {
+      for (var b, c = this._bannedClass, e = 0;e < a.length;e++) {
+        if ((b = a[e]) && -1 === c.indexOf(b)) {
           return !1;
         }
       }
@@ -27429,37 +27429,38 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     isNaN(a) ? (this.mode = a.boardType, this.runType = a.runType, this.textType = a.textType) : this.mode = a;
     this.mode = Number(this.mode);
     if (this.oldMode !== this.mode) {
+      var c = Entry.Vim, e = Entry.Workspace, f = this.blockMenu;
       switch(this.mode) {
-        case Entry.Workspace.MODE_VIMBOARD:
+        case e.MODE_VIMBOARD:
           if (alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) {
             alert(alert_message);
             a = {};
-            a.boardType = Entry.Workspace.MODE_BOARD;
+            a.boardType = e.MODE_BOARD;
             a.textType = -1;
             Entry.getMainWS().setMode(a);
             break;
           }
           this.board && this.board.hide();
           this.overlayBoard && this.overlayBoard.hide();
-          this.blockMenu.banClass("textMode");
+          f.banClass("functionInit");
           this.set({selectedBoard:this.vimBoard});
           this.vimBoard.show();
           this.initDeclaration();
           this.codeToText(this.board.code, a);
-          this.blockMenu.renderText();
+          f.renderText();
           this.board.clear();
           this.oldTextType = this.textType;
           break;
-        case Entry.Workspace.MODE_BOARD:
+        case e.MODE_BOARD:
           try {
-            this.board.show(), this.blockMenu.unbanClass("textMode"), this.set({selectedBoard:this.board}), this.vimBoard && this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide(), this.vimBoard._parser._isError = !1;
-          } catch (c) {
-            this.vimBoard._parser._isError = !0, this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.blockMenu.banClass("textMode"), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.TEXT_TYPE_JS ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_JS) : this.oldTextType == Entry.Vim.TEXT_TYPE_PY && 
-            (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.TEXT_TYPE_PY), Entry.getMainWS().setMode(a);
+            this.board.show(), f.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), f.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide(), this.vimBoard._parser._isError = !1;
+          } catch (g) {
+            this.vimBoard._parser._isError = !0, this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), f.banClass("functionInit"), this.mode = e.MODE_VIMBOARD, this.oldTextType == c.TEXT_TYPE_JS ? (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_JS, a.runType = c.MAZE_MODE, this.oldTextType = c.TEXT_TYPE_JS) : this.oldTextType == c.TEXT_TYPE_PY && (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_PY, a.runType = 
+            c.WORKSPACE_MODE, this.oldTextType = c.TEXT_TYPE_PY), Entry.getMainWS().setMode(a);
           }
           Entry.commander.setCurrentEditor("board", this.board);
           break;
-        case Entry.Workspace.MODE_OVERLAYBOARD:
+        case e.MODE_OVERLAYBOARD:
           this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard}), Entry.commander.setCurrentEditor("board", this.overlayBoard);
       }
       this.oldMode = this.mode;
@@ -27480,17 +27481,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.blockMenu.changeCode(a);
   };
   b.textToCode = function(a, b) {
-    if (a == Entry.Workspace.MODE_VIMBOARD) {
-      var c = this, e = this.vimBoard.textToCode(b), f = this.board.code;
-      f.load(e);
-      this.changeBoardCode(f);
+    if (this.vimBoard && a === Entry.Workspace.MODE_VIMBOARD) {
+      var c = this.vimBoard.textToCode(b), e = this.board.code;
+      e.load(c);
+      this.changeBoardCode(e);
       setTimeout(function() {
-        f.view && (f.view.reDraw(), c.board.alignThreads());
-      }, 0);
+        e.view && (e.view.reDraw(), this.board.alignThreads());
+      }.bind(this), 0);
     }
   };
   b.loadCodeFromText = function(a) {
-    a == Entry.Workspace.MODE_VIMBOARD && (a = this.vimBoard.textToCode(this.textType), this.board.code.load(a));
+    this.vimBoard && a == Entry.Workspace.MODE_VIMBOARD && (a = this.vimBoard.textToCode(this.textType), this.board.code.load(a));
   };
   b.codeToText = function(a, b) {
     if (this.vimBoard) {
