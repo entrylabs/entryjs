@@ -18,6 +18,7 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
 
 (function(p){
     p.Code = function(code, parseMode) {
+        console.log("BToJCodeParser", code);
         this._parseMode = parseMode;
         /*if (code instanceof Entry.Thread)
             return this.Thread(code);*/
@@ -93,8 +94,11 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
             var syntax = block._schema.syntax.concat();
         }
 
+        console.log("scope syntax", syntax);
+
         syntax.shift();
         var syntaxTokens = syntax[0].split(paramReg);
+        console.log("syntaxTokens", syntaxTokens);
 
         var schemaParams = block._schema.params;
         var dataParams = block.data.params;
@@ -125,6 +129,8 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
             }
         }
 
+        console.log("js result", result);
+
         if(result.charAt(result.length-1) == '#') {
             notParenthesis = true;
             result = result.substring(0, result.length-1);
@@ -135,6 +141,8 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
             result += "();";
 
         result = Entry.TextCodingUtil.jsAdjustSyntax(block, result);
+
+        console.log("js result2", result);
 
         return result;
 

@@ -145,7 +145,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     }
                 });
 
-                this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
+                this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
@@ -162,6 +162,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         console.log("this.syntax", this.syntax);
         console.log("this._syntax_cache", this._syntax_cache);
         var type = this._type;
+        console.log("parser type", type, "this._type", this._type);
         var result = "";
 
         switch (type) {
@@ -341,7 +342,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     result = '';
                 }*/
 
-
+                console.log("js textcode", textCode);
                 result = textCode;
 
                 break;
@@ -649,22 +650,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         var optText = "";
         var onEntryEvent = false;
-
+        
         for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
-            //variable, list for value is 0
-            /*if(textLine.search('==') == -1 && textLine.search('<=') == -1 && textLine.search('>=') == -1) {
-                var declarations = textLine.split('=');
-                if(declarations.length >= 3) {
-                    for(var d in declarations) {
-                        declarations[d] = declarations[d].trim();
-                    }
-                    var value = declarations[declarations.length-1];
-                    delete declarations[declarations.length-1];
-                    textLine = declarations.join('=' + value + '\n').trim().concat('\n');
-                } 
-            } */
-
             console.log("textLine", textLine, "length", textLine.length, "[0]", textLine.charAt(0));
             textLine = textLine.replace(/\t/gm, '    ');
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {  
@@ -674,23 +662,23 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
 
                 optText = "";
-                optText += textLine;
+                optText += textLine; 
                 onEntryEvent = true;
             }
             else {
                 if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim()))
                     textLine = this.entryEventParamConverter(textLine);
-                if(textLine.length == 1) {
+                if(textLine.length == 1 && !onEntryEvent) { //empty line
                     threads.push(optText);
                     optText = "";
                 }
-                else if((textLine.charAt(0) != ' ') && (onEntryEvent == true)) {
+                else if(textLine.length != 1 && textLine.charAt(0) != ' ' && onEntryEvent) { //general line
                     threads.push(optText);    
                     optText = "";
+                    onEntryEvent = false;
                 }
+
                 optText += textLine;
-                onEntryEvent = false;
-                
             }
         }
         threads.push(optText);
