@@ -10313,8 +10313,7 @@ Entry.block = {
         "skeleton": "basic_button",
         "color": "#eee",
         "isNotFor": [
-            "functionInit",
-            "textMode"
+            "functionInit"
         ],
         "params": [
             {
