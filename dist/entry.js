@@ -11764,6 +11764,7 @@ Entry.Scene.prototype.removeScene = function(b) {
 Entry.Scene.prototype.selectScene = function(b) {
   b = b || this.getScenes()[0];
   if (!this.selectedScene || this.selectedScene.id != b.id) {
+    Entry.getMainWS() && Entry.getMainWS()._syncTextCode();
     Entry.engine.isState("run") && Entry.container.resetSceneDuringRun();
     var a = this.selectedScene;
     a && (a = a.view, a.removeClass("selectedScene"), a = $(a), a.find("input").blur());
@@ -27352,6 +27353,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
     this._oldParserType = b.textType;
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._oldParserType != this._parserType && this._parser.setParser(this._mode, this._parserType, this.codeMirror), this._oldParserType = this._parserType) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._oldParserType != this._parserType && this._parser.setParser(this._mode, this._parserType, this.codeMirror), this._oldParserType = this._parserType);
     Entry.playground && (this._currentObject = Entry.playground.object);
+    Entry.scene && (this._currentScene = Entry.scene.selectedScene);
     if (e == Entry.Vim.TEXT_TYPE_PY) {
       if (this._currentObject) {
         c = "# " + this._currentObject.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc";

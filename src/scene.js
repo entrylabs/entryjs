@@ -280,6 +280,8 @@ Entry.Scene.prototype.selectScene = function(scene) {
     if (this.selectedScene && (this.selectedScene.id == scene.id))
         return;
 
+    if(Entry.getMainWS()) Entry.getMainWS()._syncTextCode();
+
     if (Entry.engine.isState('run'))
         Entry.container.resetSceneDuringRun();
 

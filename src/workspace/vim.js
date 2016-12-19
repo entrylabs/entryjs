@@ -199,6 +199,9 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         if(Entry.playground)
             this._currentObject = Entry.playground.object;
 
+        if(Entry.scene)
+            this._currentScene = Entry.scene.selectedScene;
+
         if(textType == Entry.Vim.TEXT_TYPE_PY) {
             if(this._currentObject) {
                 codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이썬 코드";
@@ -208,10 +211,9 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
                     textCode = codeDescription
                     .concat("\n\n")
                     .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
-                    //.concat("\n")
                     .concat(Entry.Vim.PYTHON_IMPORT_HW)
                     .concat("\n\n")
-                    .concat(textCode);
+                    .concat(textCode); 
                 }
                 textCode += '\n';
                 this.codeMirror.setValue(textCode);
