@@ -7470,6 +7470,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "(%1 %2 %3)",
+                template: "%1 %2 %3",
                 keyOption: "calc_basic",
                 blockType: "param",
                 textParams: [
@@ -7866,7 +7867,8 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "(%2**2)",
+                syntax: "(%2 ** 2)",
+                template: "%2 ** 2",
                 params: [null, null, null, "square"],
                 blockType: "param",
                 textParams: [
@@ -8006,7 +8008,7 @@ Entry.block = {
                 ]
             },
             {
-                syntax: "1 - math.floor(%2)",
+                syntax: "%2 - math.floor(%2)",
                 params: [null, null, null, "unnatural"],
                 blockType: "param",
                 textParams: [
@@ -9210,6 +9212,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "(%2 + %4)",
+                template: "%2 + %4",
                 blockType: "param"
             }
         ]}
@@ -9342,6 +9345,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "(%2 // %4)",
+                template: "%2 // %4",
                 params: [null,null,null,null,null,"QUOTIENT"],
                 blockType: "param",
                 textParams: [
@@ -9371,6 +9375,7 @@ Entry.block = {
             },
             {
                 syntax: "(%2 % %4)",
+                template: "%2 % %4",
                 params: [null,null,null,null,null,"MOD"],
                 blockType: "param",
                 textParams: [
@@ -14758,6 +14763,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "(%1 and %3)",
+                template: "%1 and %3",
                 blockType: "param"
             }
         ]}
@@ -14818,6 +14824,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "(%1 or %3)",
+                template: "%1 or %3",
                 blockType: "param"
             }
         ]}
@@ -14870,6 +14877,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "not (%2)",
+                template: "not %2",
                 blockType: "param",
                 textParams: [
                     undefined,
@@ -15111,6 +15119,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "(%1 %2 %3)",
+                template: "%1 %2 %3",
                 keyOption:"boolean_basic_operator",
                 blockType: "param",
                 textParams: [

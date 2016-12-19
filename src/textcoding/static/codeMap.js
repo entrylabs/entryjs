@@ -25,7 +25,7 @@ Entry.CodeMap = {};
             {"색깔": "color", "밝기": "brightness", "투명도": "transparency"}
         ],
         change_effect_amount: [
-            {"색깔": "color", "밝기": "brightness", "투명도": "transparency"}
+            {"색깔": "color", "밝기": "brightness", "투명도": "transparency"} 
         ],
         change_object_index: [
             {"front": "FRONT", "forward": "FORWARD", "backward": "BACKWARD", "back": "BACK", 
@@ -41,7 +41,7 @@ Entry.CodeMap = {};
             {"mouse": "mouse_pointer", "wall":"edge", "wall_up":"edge_up", 
             "wall_down":"edge_down", "wall_right":"edge_right", "wall_left":"edge_left",
             "mouse_pointer": "mouse", "edge":"wall", "edge_up":"wall_up", "edge_down":"wall_down", 
-            "edge_right":"wall_right", "edge_left":"edge_left"}, 
+            "edge_right":"wall_right", "edge_left":"edge_left", "마우스포인터":"mouse"}, 
             null
         ],
         create_clone: [
@@ -62,7 +62,7 @@ Entry.CodeMap = {};
             {"자신": "self", "self": "self"}, 
             null,
             {"크기":"size", "방향":"rotation", "이동 방향":"direction", 
-            "모양 번호":"picture_index", "모양 이름":"picutre_name", 
+            "모양 번호":"picture_index", "모양 이름":"picture_name", 
             "picture_index":"shape_number", "picture_name":"shape_name",
             "shape_number":"picture_index", "shape_name":"picture_name"
             } 

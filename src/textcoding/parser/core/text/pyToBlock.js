@@ -46,7 +46,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             this._code = []; 
             this._threadCount = 0;
             this._blockCount = 0;
-            this.isEventBlockExisted = false;
+            this.isEntryEventExisted = false;
             for(var index in astArr) {
                 if(astArr[index].type != 'Program') return;
                 this.isLastBlock = false;
@@ -75,17 +75,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(block && block.type) {
                         console.log("block.type", block.type);
-                        if(Entry.TextCodingUtil.isEntryEventFuncByType(block.type)) {
-                            this._thread.push(block);
-                            if(block.contents) {  
-                                for(var b in block.contents) {
-                                    var content = block.contents[b];
-                                    this.extractContents(content, this._thread);
-                                }
-                            }
-                            continue;
-                        }
-
                         var blockDatum = Entry.block[block.type];
                         var targetSyntax = this.searchSyntax(blockDatum);
 
@@ -104,6 +93,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             if(!this.isEntryEventExisted)
                                 continue;
                         } 
+
+                        if(Entry.TextCodingUtil.isEntryEventFuncByType(block.type)) {
+                            this._thread.push(block);
+                            if(block.contents) {  
+                                for(var b in block.contents) {
+                                    var content = block.contents[b];
+                                    this.extractContents(content, this._thread);
+                                }
+                            }
+                            continue;
+                        }
 
                         this._thread.push(block);
                     }
@@ -394,7 +394,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if(callee.object) {
                 if(callee.object.name === "Math") {
                     if(callee.property.name === "pow") {
-                        var syntax = String("(%2**2)");
+                        var syntax = String("(%2 ** 2)");
                         var blockSyntax = this.getBlockSyntax(syntax);
                         if(blockSyntax)
                             type = blockSyntax.key;
@@ -599,7 +599,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.TextCodingError.SUBJECT_CONV_GENERAL);
                 }
             }
-
         }
 
         console.log("CallExpression type after", type);
