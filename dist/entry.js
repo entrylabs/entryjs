@@ -27151,7 +27151,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
       var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
       e === Entry.Vim.TEXT_TYPE_PY && (f = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(f));
       this.codeMirror.setValue(f + "\n");
-      e == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:Entry.Vim.INEDITABLE_LINE_PY, ch:0}, {readOnly:!0});
+      e == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:Entry.Vim.INEDITABLE_LINE_PY, ch:0}, {readOnly:!0, inclusiveLeft:!0});
       c = this.codeMirror.getDoc();
       c.setCursor({line:c.lastLine() - 1});
     } else {
