@@ -215,7 +215,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
                     .concat("\n\n")
                     .concat(textCode); 
                 }
-                textCode += '\n';
+                //textCode += '\n'; 
                 this.codeMirror.setValue(textCode);
                 if(textType == Entry.Vim.TEXT_TYPE_PY)
                     this.codeMirror.getDoc().markText(

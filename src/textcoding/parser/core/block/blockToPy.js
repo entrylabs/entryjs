@@ -13,8 +13,8 @@ goog.require("Entry.Queue");
 Entry.BlockToPyParser = function(blockSyntax) {
     this._type ="BlockToPyParser";
 
-    var funcMap = new Entry.Map();
-    this._funcMap = funcMap;
+    var funcParamMap = new Entry.Map();
+    this._funcParamMap = funcParamMap;
 
     var funcDefMap = {};
     this._funcDefMap = {};
@@ -168,7 +168,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                             }
                         }
 
-                        var funcParam = this._funcMap.get(param);
+                        var funcParam = this._funcParamMap.get(param);
                         if(funcParam) {
                             result += funcParam;
                             continue;
@@ -276,7 +276,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     p.FieldDropdown = function(dataParam, textParam) {
         console.log("FieldDropdown", dataParam, textParam);
-
+        if(typeof dataParam == "object")
+             return "None".replace(/\"/gm, '');
+            
         if(textParam && textParam.converter && textParam.options) {
             var options = textParam.options;
             for(var i in options) {
@@ -292,11 +294,12 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return dataParam;
     };
 
-    p.FieldDropdownDynamic = function(dataParam, textParam) {
+    p.FieldDropdownDynamic = function(dataParam, textParam) { 
         console.log("FieldDropdownDynamic", dataParam, textParam); 
-        console.log("dataParam", dataParam);
+        if(typeof dataParam == "object")
+             return "None".replace(/\"/gm, ''); 
 
-        if(textParam && textParam.converter && textParam.options) {
+        if(textParam && textParam.converter && textParam.options) { 
             var options = textParam.options;
             for(var i in options) {
                 var key = options[i][0];
@@ -398,7 +401,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.isFunc = function(block) { 
-        if(!block) return false;
+        if(!block || !block.data || !block.data.type) 
+            return false;
         var tokens = block.data.type.split('_');
         var prefix = tokens[0];
         var funcId = tokens[1];
@@ -422,7 +426,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.isFuncStmtParam = function(block) {
-        if(!block) return;
+        if(!block || !block.data || !block.data.type) 
+            return false;
         var blockType = block.data.type;
         var tokens = blockType.split('_');
         var prefix = tokens[0];
@@ -490,9 +495,13 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var paramResult = '';
         if(func.params && func.params.length != 0) {
             for(var p in func.params) {
-                paramResult += func.params[p];
+                //var param = func.params[p];
+                /*if(param instanceof Entry.Block) 
+                    paramResult += this.Block(param);
+                else*/
+                    paramResult += func.params[p];
                 console.log("p", p, "func.params", func.params, "func.params.length", func.params.length);
-                if(p != Object.keys(func.params).length-1)
+                if(p != func.params.length-1)
                     paramResult = paramResult.concat(', ');
             }
             console.log("middle paramResult", paramResult); 
@@ -525,14 +534,15 @@ Entry.BlockToPyParser = function(blockSyntax) {
             //stmtResult = stmtResult.concat('\n');
             result += Entry.TextCodingUtil.indent(stmtResult).concat('\n');
         }
-        console.log("func this._funcMap", this._funcMap);
-        //this._funcMap.clear();
+        console.log("func this._funcParamMap", this._funcParamMap);
+        //this._funcParamMap.clear();
         console.log("func result", result);
 
         return result.trim();
     };
 
     p.getFuncInfo = function(funcBlock) {
+        console.log("getFuncInfo funcBlock", funcBlock);
         var result = {};
         var tokens = funcBlock.data.type.split('_');
         var prefix = tokens[0];
@@ -557,41 +567,76 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var funcName = funcNameArr.join('__');
         Entry.TextCodingUtil.initQueue();
         Entry.TextCodingUtil.gatherFuncDefParam(func.content._data[0]._data[0].data.params[0]);
-        var funcParams = [];
+        var funcDefParams = [];
 
-        var paramMap = {}; 
-        while(param = Entry.TextCodingUtil._funcParamQ.dequeue()) {
-            funcParams.push(param);
-        }
-
-        for(var p in funcParams) {
-            var funcParam = funcParams[p];
-            paramMap[funcParam] = p;
-        }
-
-        Entry.TextCodingUtil.clearQueue();
-        var funcParamMap = paramMap;
-
-        console.log("funcParamMap", funcParamMap);
-
-        if(funcParamMap) {
-            var funcParams = {};
-            for(var key in funcParamMap) {
-                var index = funcParamMap[key];
-                console.log("paramName index", parseInt(index)+1);
-                var i = key.search('_');
-                var fieldType = key.substring(0, i);
-
-                if(fieldType == 'stringParam')
-                    var name = 'param' + (parseInt(index)+1);
-                else if (fieldType == 'booleanParam')
-                    var name = 'param' + (parseInt(index)+1);
-
-                var param = name;
-                funcParams[index] = param;
-                this._funcMap.put(key, param);
+        if(!this._hasRootFunc) {
+            while(param = Entry.TextCodingUtil._funcParamQ.dequeue()) {
+                funcDefParams.push(param);
             }
         }
+        console.log("funcDefParams", funcDefParams);
+
+        /*var funcParamMap = {}; 
+        for(var p in funcParams) {
+            var funcParam = funcParams[p];
+            funcParamMap[funcParam] = p;
+        }*/
+
+        Entry.TextCodingUtil.clearQueue();
+        //var funcParamMap = paramMap;
+
+        //console.log("funcParamMap", funcParamMap);
+
+        //var funcParams = {}; 
+        var funcParams = [];
+        if(!this._hasRootFunc) {
+            //if(Object.keys(funcParamMap).length != 0) {
+                for(var index in funcDefParams) {
+                    var value = funcDefParams[index];
+                    console.log("paramName index", parseInt(index)+1);
+                    var i = value.search('_');
+                    var fieldType = value.substring(0, i);
+
+                    if(fieldType == 'stringParam')
+                        var name = 'param' + (parseInt(index)+1);
+                    else if (fieldType == 'booleanParam')
+                        var name = 'param' + (parseInt(index)+1);
+                    
+                    if(name) {
+                        //funcParams[index] = name;
+                        funcParams.push(name);
+                        this._funcParamMap.put(value, name);
+                    }
+                }
+            //}
+        }
+        else {
+            var params = funcBlock.data.params;
+            for(var i in params) {
+                var param = params[i];
+                if(param) {
+                    var paramText = this.Block(param);
+                    if(paramType = this._funcParamMap.get(paramText))
+                        paramText = paramType;
+                    funcParams.push(paramText); 
+                }
+            } 
+        }
+        console.log("this._funcParamMap", this._funcParamMap);
+        
+        /*var params = funcBlock.data.params; 
+        for(var i in params) {
+            var param = params[i];
+            console.log("getFuncInfo param", param);
+            if(param) {
+                var paramText = this.Block(param); 
+                console.log("getFuncInfo paramText", paramText);
+                if(pText = this._funcParamMap.get(paramText)) 
+                    paramText = pText;
+                funcParams.push(paramText);
+            }
+            
+        }*/
 
         var contents  = func.content._data[0]._data;
         var funcContents = [];
@@ -602,8 +647,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         if(funcName)
             result.name = funcName;
-        if(Object.keys(funcParams).length != 0)
+
+        if(funcParams.length != 0)
             result.params = funcParams;
+
         if(funcContents.length != 0)
             result.statements = funcContents;
 

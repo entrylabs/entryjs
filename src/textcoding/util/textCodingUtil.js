@@ -14,9 +14,9 @@ Entry.TextCodingUtil = {};
     this._funcParamQ;
     this._currentObject;
 
-    tu.init = function() {
+    /*tu.init = function() {
         this._funcParams = [];
-    };
+    };*/
 
     tu.initQueue = function() {
         var queue = new Entry.Queue();
@@ -1376,7 +1376,7 @@ Entry.TextCodingUtil = {};
                                     matchFlag = true;
                             }
                             else {
-                                if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0])
+                                if(textFuncStatementParams[j].params && blockFuncContentParams[j].data.params && (textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0]))
                                     matchFlag = true;
                             }
                         }
@@ -1548,22 +1548,26 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.makeParamBlock = function(targetBlock, paramInfo) {
+    tu.makeFuncParamBlock = function(targetBlock, paramInfo, blockCount) {
         console.log("targetBlock", targetBlock);
         var params = targetBlock.params;
-        console.log("makeParamBlock params", params);
+        
+        console.log("makeFuncParamBlock params", params);
 
 
-        for(var p in params) {
-            var param = params[p];
-            console.log("makeParamBlock param", param);
+        for(var i in params) {
+            var param = params[i];
+            console.log("makeFuncParamBlock param", param, "i", i);
             if(!param)
                 continue;
 
             if(typeof param != "object")
-                continue;
+                continue; 
 
-            if(param.type && param.isParamFromFunc) {
+            if(param.type && param.params && param.params.length != 0) {
+                this.makeFuncParamBlock(param, paramInfo, blockCount);
+            }
+            else if(param.type && param.params.length == 0) { 
                 var paramKey = param.type;
                 var paramBlockType = paramInfo[paramKey];
                 console.log("paramBlockType1", paramBlockType);
@@ -1571,11 +1575,10 @@ Entry.TextCodingUtil = {};
                     var paramBlock = {};
                     paramBlock.type = paramBlockType; 
                     paramBlock.params = [];
-
-                    params[p] = paramBlock;
+                    targetBlock.params[i] = paramBlock;
                 }
             }
-            else if(param.name && param.isParamFromFunc) {
+            else if(param.name) {
                 var paramKey = param.name;
                 var paramBlockType = paramInfo[paramKey];
                 console.log("paramBlockType2", paramBlockType);
@@ -1583,31 +1586,47 @@ Entry.TextCodingUtil = {};
                     var paramBlock = {};
                     paramBlock.type = paramBlockType;
                     paramBlock.params = [];
-
-                    params[p] = paramBlock;
+                    targetBlock.params[i] = paramBlock;
+                }
+                else if(param.type != "get_variable") {
+                    var keyword = param.name;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                        keyword,
+                        blockCount,
+                        Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                 }
             }
-            else if(param.type && param.params && param.params.length != 0) {
-                this.makeParamBlock(param, paramInfo);
+            else if(param.object && param.property) { //self.xx
+                var keyword = param.object.name + '.' + param.property.name;
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                    keyword,
+                    blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
             }
+            
         }
 
-        if(targetBlock.statements && targetBlock.statements[0]) {
-            var statements = targetBlock.statements[0];
+        var stmts = targetBlock.statements;
+
+        if(stmts && stmts[0] && stmts[0].length != 0) {
+            var statements = stmts[0];
             for(var s in statements) {
                 var statement = statements[s];
-                this.makeParamBlock(statement, paramInfo);
+                this.makeFuncParamBlock(statement, paramInfo, blockCount);
             }
         }
 
-        if(targetBlock.statements && targetBlock.statements[1]) {
-            var statements = targetBlock.statements[1];
+        if(stmts && stmts[1] && stmts[1].length != 0) {
+            var statements = stmts[1];
             for(var s in statements) {
                 var statement = statements[s];
-                this.makeParamBlock(statement, paramInfo);
+                this.makeFuncParamBlock(statement, paramInfo, blockCount);
             }
         }
-
     };
 
     tu.updateBlockInfo = function(data, blockInfo) {
@@ -1956,11 +1975,11 @@ Entry.TextCodingUtil = {};
 
     };
 
-    tu.addFuncParam = function(param) {
+    /*tu.addFuncParam = function(param) {
         this._funcParams.push(param);
     };
 
-    tu.clearFuncParam = function() {
+    tu.clearFuncParam = function() { 
         this._funcParams = [];
     };
 
@@ -1982,7 +2001,7 @@ Entry.TextCodingUtil = {};
         }
 
         return result;
-    };
+    };*/
 
     tu.makeExpressionStatementForEntryEvent = function(calleName, arg) {
         var expressionStatement = {};
