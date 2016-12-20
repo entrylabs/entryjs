@@ -1563,10 +1563,19 @@ Entry.TextCodingUtil = {};
             if(typeof param != "object")
                 continue;
 
-            if(param.type && param.params) {
-                this.makeParamBlock(param, paramInfo);
+            if(param.type && param.isParamFromFunc) {
+                var paramKey = param.type;
+                var paramBlockType = paramInfo[paramKey];
+                console.log("paramBlockType1", paramBlockType);
+                if(paramBlockType) {
+                    var paramBlock = {};
+                    paramBlock.type = paramBlockType; 
+                    paramBlock.params = [];
+
+                    params[p] = paramBlock;
+                }
             }
-            else if(param.name) {
+            else if(param.name && param.isParamFromFunc) {
                 var paramKey = param.name;
                 var paramBlockType = paramInfo[paramKey];
                 console.log("paramBlockType2", paramBlockType);
@@ -1577,6 +1586,9 @@ Entry.TextCodingUtil = {};
 
                     params[p] = paramBlock;
                 }
+            }
+            else if(param.type && param.params && param.params.length != 0) {
+                this.makeParamBlock(param, paramInfo);
             }
         }
 
@@ -1889,29 +1901,22 @@ Entry.TextCodingUtil = {};
                                 if (test(name))
                                     return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT];
                             }
-                            else {
-                                if(paramBlockParams[1].data.type == "function_field_label") {
+                            else 
+                                if(paramBlockParams[1].data.type == "function_field_label") 
                                     return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
-                                }
-                                else {
+                                else 
                                     if(this.hasFunctionFieldLabel(paramBlockParams[1]))
                                         return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
-                                }
-                            }
                         }
-                        else {
+                        else
                             return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-                        }
                     }
-                    else {
+                    else 
                         return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-                    }
-                } else {
+                } else 
                     return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-                }
-            } else {
+            } else 
                 return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-            }
         }
 
         return false;

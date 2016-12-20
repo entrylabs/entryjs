@@ -1514,10 +1514,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
             else {
-                console.log("this._currentFuncKey", this._currentFuncKey);
+                console.log("this._currentFuncKey", this._currentFuncKey); 
                 if(funcKey == this._currentFuncKey) {
                     if(!Entry.TextCodingUtil.isEntryEventFuncName(result.callee.name)) {
-                        console.log("callex funcKey", funcKey);
+                        console.log("callex reculsive funcKey", funcKey);
+                        console.log("callex reculsive params", params);
                         result.type = funcKey;
                         result.funcName = funcName;
                         this._hasReculsiveFunc = true;
@@ -3720,8 +3721,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             for(var d in declarations){
                                 var declaration = declarations[d];
                                 var param = declaration.init;
-                                if(param)
+                                if(param) {
+                                    if(Entry.TextCodingUtil.isFuncParam(param.name))
+                                        param.isParamFromFunc = true;
                                     params.push(param);
+                                }
                             }
                         } else {
                             var statement = data[d];

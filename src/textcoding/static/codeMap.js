@@ -57,6 +57,11 @@ Entry.CodeMap = {};
         see_angle_object: [
             {"mouse": "mouse_pointer", "mouse_pointer": "mouse", "마우스포인터": "mouse"}
         ],
+        coordinate_mouse: [
+            null,
+            {"X":"x", "Y":"y"},
+            null
+        ],
         coordinate_object: [
             null,
             {"자신": "self", "self": "self"}, 

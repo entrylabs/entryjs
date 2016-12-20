@@ -7832,7 +7832,7 @@ Entry.Engine.prototype.toggleRun = function() {
   } else {
     if (Entry.playground && Entry.playground.mainWorkspace) {
       var b = Entry.playground.mainWorkspace, a = b.mode;
-      a == Entry.Workspace.MODE_VIMBOARD && b.loadCodeFromText(a);
+      a == Entry.Workspace.MODE_VIMBOARD && b._syncTextCode(a);
     }
     Entry.addActivity("run");
     "stop" == this.state && (Entry.container.mapEntity(function(a) {
@@ -12219,8 +12219,9 @@ Entry.CodeMap = {};
   b.Entry = {start_neighbor_scene:[{"\ub2e4\uc74c":"next", "\uc774\uc804":"pre"}], stop_object:[{thisOnly:"self", thisThread:"this", otherThread:"others", self:"thisOnly", "this":"thisThread", others:"otherThread", "\ubaa8\ub4e0":"all", "\uc790\uc2e0":"thisOnly", "\uc774":"thisThread", "\uc790\uc2e0\uc758 \ub2e4\ub978":"otherThread"}], change_to_next_shape:[{prev:"pre", pre:"prev", "\ub2e4\uc74c":"next", "\uc774\uc804":"prev"}], add_effect_amount:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", 
   "\ud22c\uba85\ub3c4":"transparency"}], change_effect_amount:[{"\uc0c9\uae54":"color", "\ubc1d\uae30":"brightness", "\ud22c\uba85\ub3c4":"transparency"}], change_object_index:[{front:"FRONT", forward:"FORWARD", backward:"BACKWARD", back:"BACK", "\ub9e8 \uc55e":"FRONT", "\uc55e":"FORWARD", "\ub4a4":"BACKWARD", "\ub9e8 \ub4a4":"BACK"}], set_color:[{red:"#FF0000", orange:"#FF9966", yellow:"#FFFF66", green:"#009900", blue:"#3333FF", navy:"#000099", purple:"#993399", black:"#000000", white:"#FFFFFF", 
   brown:"#990000"}], reach_something:[null, {mouse:"mouse_pointer", wall:"edge", wall_up:"edge_up", wall_down:"edge_down", wall_right:"edge_right", wall_left:"edge_left", mouse_pointer:"mouse", edge:"wall", edge_up:"wall_up", edge_down:"wall_down", edge_right:"wall_right", edge_left:"edge_left", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}, null], create_clone:[{"\uc790\uc2e0":"self", self:"self"}], locate:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], 
-  locate_object_time:[null, {mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], see_angle_object:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], coordinate_object:[null, {"\uc790\uc2e0":"self", self:"self"}, null, {"\ud06c\uae30":"size", "\ubc29\ud5a5":"rotation", "\uc774\ub3d9 \ubc29\ud5a5":"direction", "\ubaa8\uc591 \ubc88\ud638":"picture_index", "\ubaa8\uc591 \uc774\ub984":"picture_name", picture_index:"shape_number", 
-  picture_name:"shape_name", shape_number:"picture_index", shape_name:"picture_name"}], choose_project_timer_action:[null, {start:"START", stop:"STOP", reset:"RESET"}], set_visible_project_timer:[null, {show:"SHOW", hide:"HIDE"}], get_date:[null, {year:"YEAR", month:"MONTH", day:"DAY", hour:"HOUR", minute:"MINUTE", second:"SECOND"}], distance_something:[null, {mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], set_visible_answer:[{show:"SHOW", hide:"HIDE"}]};
+  locate_object_time:[null, {mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], see_angle_object:[{mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], coordinate_mouse:[null, {X:"x", Y:"y"}, null], coordinate_object:[null, {"\uc790\uc2e0":"self", self:"self"}, null, {"\ud06c\uae30":"size", "\ubc29\ud5a5":"rotation", "\uc774\ub3d9 \ubc29\ud5a5":"direction", "\ubaa8\uc591 \ubc88\ud638":"picture_index", "\ubaa8\uc591 \uc774\ub984":"picture_name", 
+  picture_index:"shape_number", picture_name:"shape_name", shape_number:"picture_index", shape_name:"picture_name"}], choose_project_timer_action:[null, {start:"START", stop:"STOP", reset:"RESET"}], set_visible_project_timer:[null, {show:"SHOW", hide:"HIDE"}], get_date:[null, {year:"YEAR", month:"MONTH", day:"DAY", hour:"HOUR", minute:"MINUTE", second:"SECOND"}], distance_something:[null, {mouse:"mouse_pointer", mouse_pointer:"mouse", "\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130":"mouse"}], set_visible_answer:[{show:"SHOW", 
+  hide:"HIDE"}]};
   b.Arduino = {arduino_ext_analog_list:[{a0:"0", a1:"1", a2:"2", a3:"3", a4:"4", a5:"5"}], arduino_get_digital_toggle:[{on:"high", off:"low", high:"on", low:"off"}]};
   b.Hamster = {hamster_play_note_for:[{4:"hamster.note_c", 5:"hamster.note_c_sharp", 6:"hamster.note_d", 7:"hamster.note_e_flat", 8:"hamster.note_e", 9:"hamster.note_f", 10:"hamster.note_f_sharp", 11:"hamster.note_g", 12:"hamster.note_g_sharp", 13:"hamster.note_a", 14:"hamster.note_b_flat", 15:"hamster.note_b", "hamster.note_c":4, "hamster.note_c_sharp":5, "hamster.note_d_flat":5, "hamster.note_d":6, "hamster.note_e_flat":7, "hamster.note_d_sharp":7, "hamster.note_e":8, "hamster.note_f":9, "hamster.note_f_sharp":10, 
   "hamster.note_g_flat":10, "hamster.note_g":11, "hamster.note_g_sharp":12, "hamster.note_a_flat":12, "hamster.note_a":13, "hamster.note_b_flat":14, "hamster.note_a_sharp":14, "hamster.note_b":15}, null, null]};
@@ -13005,15 +13006,15 @@ Entry.TextCodingUtil = {};
       var f = c[e];
       console.log("makeParamBlock param", f);
       if (f && "object" == typeof f) {
-        if (f.type && f.params) {
-          this.makeParamBlock(f, b);
-        } else {
-          if (f.name && (f = b[f.name], console.log("paramBlockType2", f), f)) {
+        if (f.type && f.isParamFromFunc) {
+          if (f = f.type, f = b[f], console.log("paramBlockType1", f), f) {
             var g = {};
             g.type = f;
             g.params = [];
             c[e] = g;
           }
+        } else {
+          f.name && f.isParamFromFunc ? (f = f.name, f = b[f], console.log("paramBlockType2", f), f && (g = {}, g.type = f, g.params = [], c[e] = g)) : f.type && f.params && 0 != f.params.length && this.makeParamBlock(f, b);
         }
       }
     }
@@ -14705,8 +14706,8 @@ Entry.PyToBlockParser = function(b) {
         e = 0;
       }
       l = f + e;
-      (e = this._funcMap.get(l)) ? (b = {}, b.type = e, c && 0 != c.length && (b.params = c)) : (console.log("this._currentFuncKey", this._currentFuncKey), l == this._currentFuncKey ? Entry.TextCodingUtil.isEntryEventFuncName(b.callee.name) || (console.log("callex funcKey", l), b.type = l, b.funcName = f, this._hasReculsiveFunc = !0, console.log("temp func type", b)) : 0 != b.callee.isCallParam || Entry.TextCodingUtil.isEntryEventFuncName(b.callee.name) || (t = x = b.callee.name, console.log("errorId", 
-      26), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_FUNCTION, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_FUNCTION)));
+      (e = this._funcMap.get(l)) ? (b = {}, b.type = e, c && 0 != c.length && (b.params = c)) : (console.log("this._currentFuncKey", this._currentFuncKey), l == this._currentFuncKey ? Entry.TextCodingUtil.isEntryEventFuncName(b.callee.name) || (console.log("callex reculsive funcKey", l), console.log("callex reculsive params", c), b.type = l, b.funcName = f, this._hasReculsiveFunc = !0, console.log("temp func type", b)) : 0 != b.callee.isCallParam || Entry.TextCodingUtil.isEntryEventFuncName(b.callee.name) || 
+      (t = x = b.callee.name, console.log("errorId", 26), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_FUNCTION, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_FUNCTION)));
     }
     console.log("CallExpression result", b);
     return b;
@@ -15459,7 +15460,9 @@ Entry.PyToBlockParser = function(b) {
           if (0 == k) {
             if (f[k] && f[k].declarations) {
               for (k in console.log("statement2 declarations", f[k]), a = f[k].declarations, a) {
-                h = a[k], (l = h.init) && c.push(l);
+                if (h = a[k], l = h.init) {
+                  Entry.TextCodingUtil.isFuncParam(l.name) && (l.isParamFromFunc = !0), c.push(l);
+                }
               }
             } else {
               if ((h = f[k]) && h.type) {

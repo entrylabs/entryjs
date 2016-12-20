@@ -485,7 +485,7 @@ Entry.Engine.prototype.toggleRun = function() {
         var mainWorkspace = Entry.playground.mainWorkspace;
         var boardMode = mainWorkspace.mode;
         if(boardMode == Entry.Workspace.MODE_VIMBOARD)
-            mainWorkspace.loadCodeFromText(boardMode);
+            mainWorkspace._syncTextCode(boardMode);
     }
 
     Entry.addActivity("run");

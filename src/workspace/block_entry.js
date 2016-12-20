@@ -7202,7 +7202,8 @@ Entry.block = {
                         "value": "x",
                         "fontSize": 11,
                         'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                        converter: Entry.block.converters.returnStringKey
+                        converter: Entry.block.converters.returnStringKey,
+                        codeMap: "Entry.CodeMap.Entry.coordinate_mouse[1]"
                     },
                     {
                         "type": "Text",
