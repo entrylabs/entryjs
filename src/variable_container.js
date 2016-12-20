@@ -2110,13 +2110,17 @@ Entry.VariableContainer.prototype.updateListSettingView = function(list) {
     if (arr.length === 0) seperator.addClass('entryRemove');
     else seperator.removeClass('entryRemove');
 
+    var startIndex = 1;
+    if (Entry.playground.mainWorkspace.mode === Entry.Workspace.MODE_VIMBOARD)
+        startIndex = 0;
+
     for (var i=0; i<arr.length; i++) {
         (function (i) {
              var wrapper = Entry.createElement('div');
              wrapper.addClass('entryListSettingValueWrapperWorkspace');
              var numberSpan = Entry.createElement('span');
              numberSpan.addClass('entryListSettingValueNumberSpanWorkspace');
-             numberSpan.innerHTML = i+1;
+             numberSpan.innerHTML = i + startIndex;
              wrapper.appendChild(numberSpan);
              var input = Entry.createElement('input');
              input.value = arr[i].data;

@@ -55,6 +55,8 @@ Entry.Variable = function(variable) {
         this.BORDER = 6;
         this.FONT = "10pt NanumGothic";
     }
+
+    Entry.addEventListener('workspaceChangeMode', this.updateView.bind(this));
 };
 
 /**
@@ -452,7 +454,10 @@ Entry.Variable.prototype.updateView = function() {
             for (var i = this.scrollPosition;
                  i < this.scrollPosition + maxView && i < this.array_.length;
                  i++) {
-                this.elementView.indexView.text = i + 1;
+                if (Entry.playground.mainWorkspace.mode === Entry.Workspace.MODE_VIMBOARD)
+                    this.elementView.indexView.text = i;
+                else
+                    this.elementView.indexView.text = i + 1;
                 var data = String(this.array_[i].data);
                 var stringLength = Math.floor((this.getWidth() - 50)/7);
                 data = Entry.cutStringByLength(data, stringLength);
