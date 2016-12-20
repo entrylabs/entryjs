@@ -253,53 +253,56 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.cloneToGlobal = function(e) {
+        var blockView = this.dragBlock;
         if (this._boardBlockView) return;
-        if (this.dragBlock === null) return;
+        if (blockView === null) return;
 
         var globalSvg = Entry.GlobalSvg;
         var workspace = this.workspace;
         var workspaceMode = workspace.getMode();
-        var blockView = this.dragBlock;
+        var WORKSPACE = Entry.Workspace;
 
         var svgWidth = this._svgWidth;
 
         var board = workspace.selectedBoard;
+        var mouseDownCoordinate = blockView.mouseDownCoordinate;
+        var dx = 0,
+            dy = 0;
 
-        if (board && (workspaceMode == Entry.Workspace.MODE_BOARD ||
-                      workspaceMode == Entry.Workspace.MODE_OVERLAYBOARD)) {
+        if (mouseDownCoordinate) {
+            dx = e.pageX - mouseDownCoordinate.x;
+            dy = e.pageY - mouseDownCoordinate.y;
+        }
+
+        if (board && (workspaceMode === WORKSPACE.MODE_BOARD ||
+            workspaceMode === WORKSPACE.MODE_OVERLAYBOARD)) {
             if (!board.code) return;
 
             var block = blockView.block;
             var code = this.code;
             var currentThread = block.getThread();
             if (block && currentThread) {
-                var threadJSON = currentThread.toJSON(true);
-                this._boardBlockView = Entry.do("addThread", threadJSON).value
-                    .getFirstBlock().view;
+                this._boardBlockView =
+                    Entry.do("addThread", currentThread.toJSON(true))
+                    .value.getFirstBlock().view;
 
-                var offset = this.offset();
-                var distance = offset.top - board.offset().top - $(window).scrollTop();
-
-                var dx, dy;
-
-                var mouseDownCoordinate = this.dragBlock.mouseDownCoordinate;
-
-                if (mouseDownCoordinate) {
-                    dx = e.pageX - mouseDownCoordinate.x;
-                    dy = e.pageY - mouseDownCoordinate.y;
-                }
+                var distance = this.offset().top - board.offset().top - $(window).scrollTop();
 
                 this._boardBlockView._moveTo(
-                    blockView.x - svgWidth + (dx || 0),
-                    blockView.y + distance + (dy || 0),
+                    blockView.x - svgWidth + dx,
+                    blockView.y + distance + dy,
                     false
                 );
+
                 this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
                 this._boardBlockView.dragInstance.set({isNew:true});
             }
         } else {
-            if(Entry.GlobalSvg.setView(blockView, workspace.getMode()))
-                Entry.GlobalSvg.addControl(e);
+            var GS = Entry.GlobalSvg;
+            if (GS.setView(blockView, workspaceMode)) {
+                GS.adjust(dx, dy);
+                GS.addControl(e);
+            }
         }
     };
 
