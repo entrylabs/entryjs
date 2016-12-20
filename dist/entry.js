@@ -22827,23 +22827,11 @@ Entry.BlockMenu = function(b, a, d, c) {
     }
   };
   b.cloneToGlobal = function(a) {
-    if (!this._boardBlockView && null !== this.dragBlock) {
-      var b = this.workspace, c = b.getMode(), e = this.dragBlock, f = this._svgWidth, g = b.selectedBoard;
-      if (!g || c != Entry.Workspace.MODE_BOARD && c != Entry.Workspace.MODE_OVERLAYBOARD) {
-        Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a);
-      } else {
-        if (g.code && (b = e.block, c = b.getThread(), b && c)) {
-          b = c.toJSON(!0);
-          this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view;
-          var g = this.offset().top - g.offset().top - $(window).scrollTop(), h, k;
-          if (b = this.dragBlock.mouseDownCoordinate) {
-            h = a.pageX - b.x, k = a.pageY - b.y;
-          }
-          this._boardBlockView._moveTo(e.x - f + (h || 0), e.y + g + (k || 0), !1);
-          this._boardBlockView.onMouseDown.call(this._boardBlockView, a);
-          this._boardBlockView.dragInstance.set({isNew:!0});
-        }
-      }
+    var b = this.dragBlock;
+    if (!this._boardBlockView && null !== b) {
+      var c = this.workspace, e = c.getMode(), f = Entry.Workspace, g = this._svgWidth, h = c.selectedBoard, k = b.mouseDownCoordinate, l = c = 0;
+      k && (c = a.pageX - k.x, l = a.pageY - k.y);
+      !h || e !== f.MODE_BOARD && e !== f.MODE_OVERLAYBOARD ? (g = Entry.GlobalSvg, g.setView(b, e) && (g.adjust(c, l), g.addControl(a))) : h.code && (e = b.block, f = e.getThread(), e && f && (this._boardBlockView = Entry.do("addThread", f.toJSON(!0)).value.getFirstBlock().view, e = this.offset().top - h.offset().top - $(window).scrollTop(), this._boardBlockView._moveTo(b.x - g + c, b.y + e + l, !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
     }
   };
   b.terminateDrag = function() {
@@ -25659,8 +25647,17 @@ Entry.GlobalSvg = {};
       var b = a.getAbsoluteCoordinate(), a = a.getBoard().offset();
       this.left = b.x + a.left - this._offsetX;
       this.top = b.y + a.top - this._offsetY;
-      this.svgDom.css({transform:"translate3d(" + this.left + "px," + this.top + "px, 0px)"});
+      this._applyDomPos(this.left, this.top);
     }
+  };
+  b.adjust = function(a, b) {
+    var c = this.left + (a || 0), e = this.top + (b || 0);
+    if (c !== this.left || e !== this.top) {
+      this.left = c, this.top = e, this._applyDomPos(this.left, this.top);
+    }
+  };
+  b._applyDomPos = function(a, b) {
+    this.svgDom.css({transform:"translate3d(" + a + "px," + b + "px, 0px)"});
   };
   b.terminateDrag = function(a) {
     var b = Entry.mouseCoordinate, c = a.getBoard(), e = c.workspace.blockMenu, f = e.offset().left, g = e.offset().top, h = e.visible ? e.svgDom.width() : 0;
@@ -25674,7 +25671,7 @@ Entry.GlobalSvg = {};
       var c = a.pageX;
       a = a.pageY;
       var d = e.left + (c - e._startX), f = e.top + (a - e._startY);
-      e.svgDom.css({transform:"translate3d(" + d + "px," + f + "px, 0px)"});
+      e._applyDomPos(d, f);
       e._startX = c;
       e._startY = a;
       e.left = d;
