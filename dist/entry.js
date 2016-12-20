@@ -8515,7 +8515,7 @@ p.generateView = function(b, a) {
     e.innerHTML = "\uc124\uba85";
     c.appendChild(e);
     e = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
-    e.addClass("entryBlockHelperContent");
+    e.addClass("entryBlockHelperContent selectAble");
     this.blockHelperContent_.appendChild(e);
     e.innerHTML = Lang.Helper.Block_click_msg;
     this.blockHelperDescription_ = e;
@@ -8525,7 +8525,7 @@ p.generateView = function(b, a) {
     c.appendChild(e);
     this._elementsTitle = e;
     this._elementsContainer = Entry.createElement("div", "entryBlockHelperElementsContainer");
-    this._elementsContainer.addClass("entryBlockHelperContent textModeElem");
+    this._elementsContainer.addClass("entryBlockHelperContent textModeElem selectAble");
     c.appendChild(this._elementsContainer);
     e = Entry.createElement("div");
     e.addClass("entryBlockHelperTitle textModeElem");
@@ -8542,7 +8542,7 @@ p.generateView = function(b, a) {
     e.innerHTML = "\uc608\uc2dc \uc124\uba85";
     c.appendChild(e);
     this._codeMirrorDesc = Entry.createElement("div");
-    this._codeMirrorDesc.addClass("entryBlockHelperContent textModeElem");
+    this._codeMirrorDesc.addClass("entryBlockHelperContent textModeElem selectAble");
     c.appendChild(this._codeMirrorDesc);
     this._renderView = new Entry.RenderView($(d), "LEFT_MOST");
     this.code = new Entry.Code([]);
