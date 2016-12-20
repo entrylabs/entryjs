@@ -57,7 +57,7 @@ p.generateView = function(parentView, option) {
 
     var blockHelperDescription = Entry.createElement('div',
                             'entryBlockHelperDescriptionWorkspace');
-    blockHelperDescription.addClass('entryBlockHelperContent');
+    blockHelperDescription.addClass('entryBlockHelperContent selectAble');
     helper.blockHelperContent_.appendChild(blockHelperDescription);
     blockHelperDescription.innerHTML = Lang.Helper.Block_click_msg;
     this.blockHelperDescription_ = blockHelperDescription;
@@ -72,7 +72,7 @@ p.generateView = function(parentView, option) {
     this._elementsContainer =
         Entry.createElement('div', 'entryBlockHelperElementsContainer');
 
-    this._elementsContainer.addClass('entryBlockHelperContent textModeElem');
+    this._elementsContainer.addClass('entryBlockHelperContent textModeElem selectAble');
     blockHelperContent.appendChild(this._elementsContainer);
 
     var codeMirrorTitle = Entry.createElement('div');
@@ -104,7 +104,7 @@ p.generateView = function(parentView, option) {
     blockHelperContent.appendChild(codeMirrorDescTitle);
 
     this._codeMirrorDesc = Entry.createElement('div');
-    this._codeMirrorDesc.addClass('entryBlockHelperContent textModeElem');
+    this._codeMirrorDesc.addClass('entryBlockHelperContent textModeElem selectAble');
     blockHelperContent.appendChild(this._codeMirrorDesc);
 
     this._renderView = new Entry.RenderView($(blockHelperBlock), 'LEFT_MOST');

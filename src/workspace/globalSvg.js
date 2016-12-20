@@ -66,8 +66,10 @@ goog.provide('Entry.GlobalSvg');
         //TODO selectAll function replace
         if (isVimMode) {
             var svg = $(this.svgGroup);
+
             svg.find('g').css({filter: 'none'});
-            svg.find('path').velocity({
+
+            svg.find('path, rect, polygon').velocity({
                 opacity: 0
             }, {
                 duration: 500

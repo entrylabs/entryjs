@@ -9957,7 +9957,7 @@ p.generateView = function(b, a) {
     c.innerHTML = "\uc124\uba85";
     b.appendChild(c);
     c = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
-    c.addClass("entryBlockHelperContent");
+    c.addClass("entryBlockHelperContent selectAble");
     this.blockHelperContent_.appendChild(c);
     c.innerHTML = Lang.Helper.Block_click_msg;
     this.blockHelperDescription_ = c;
@@ -9967,7 +9967,7 @@ p.generateView = function(b, a) {
     b.appendChild(c);
     this._elementsTitle = c;
     this._elementsContainer = Entry.createElement("div", "entryBlockHelperElementsContainer");
-    this._elementsContainer.addClass("entryBlockHelperContent textModeElem");
+    this._elementsContainer.addClass("entryBlockHelperContent textModeElem selectAble");
     b.appendChild(this._elementsContainer);
     c = Entry.createElement("div");
     c.addClass("entryBlockHelperTitle textModeElem");
@@ -9984,7 +9984,7 @@ p.generateView = function(b, a) {
     c.innerHTML = "\uc608\uc2dc \uc124\uba85";
     b.appendChild(c);
     this._codeMirrorDesc = Entry.createElement("div");
-    this._codeMirrorDesc.addClass("entryBlockHelperContent textModeElem");
+    this._codeMirrorDesc.addClass("entryBlockHelperContent textModeElem selectAble");
     b.appendChild(this._codeMirrorDesc);
     this._renderView = new Entry.RenderView($(a), "LEFT_MOST");
     this.code = new Entry.Code([]);
@@ -28302,7 +28302,7 @@ Entry.GlobalSvg = {};
     var b = this._mode == Entry.Workspace.MODE_VIMBOARD;
     this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
-    b && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
+    b && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path, rect, polygon").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   b.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
