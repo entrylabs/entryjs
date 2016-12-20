@@ -38,6 +38,8 @@ Entry.Container = function() {
      * @type {Array.<object model>}
      */
     this.currentObjects_ = null;
+
+    this._extensionObjects = [];
 };
 
 /**
@@ -119,13 +121,17 @@ Entry.Container.prototype.generateView = function(containerView, option) {
 
     this._view.appendChild(ulWrapper);
 
+    var extensionListView = Entry.createElement('ul');
+    ulWrapper.appendChild(extensionListView);
+    this._extensionListView = Entry.Dom(extensionListView, {
+        class: "entryContainerExtensions"
+    });
+
     var listView = Entry.createElement('ul');
     listView.addClass('entryContainerListWorkspace');
-
     ulWrapper.appendChild(listView);
-    //this._view.appendChild(listView);
-    /** @param {!Element} */
     this.listView_ = listView;
+
     this.enableSort();
 };
 /**
@@ -305,6 +311,10 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
     return new Entry.State(this,
                            this.removeObject,
                            object);
+};
+
+Entry.Container.prototype.addExtension = function(obj) {
+    this._extensionObjects.push(obj);
 };
 
 /**

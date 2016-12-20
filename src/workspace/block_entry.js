@@ -21311,7 +21311,7 @@ Entry.block = {
             for (var key in entities){
                 entity = entities[key];
             }
-            
+
             var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
 
             if(unitComp.isStartedUnit) {
@@ -21333,7 +21333,7 @@ Entry.block = {
             if(!isGoal) {
                 this.executor.stepInto(statement);
                 return Entry.STATIC.BREAK;
-            }                
+            }
             // Ntry.dispatchEvent('executeEnd');
         }
     },
@@ -26106,6 +26106,150 @@ Entry.block = {
                 null
             ],
             "type": "hidden"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+        }
+    },
+    "check_object_property": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "%1 가 %2 %3 %4 %5 %6",
+        "statements": [],
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "menuName": "sprites",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["언젠가", "16"],
+                    ["지금", "32"]
+                ],
+                "value": "16",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["크기", "16"],
+                    ["x", "32"]
+                ],
+                "value": "16",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "=", "EQUAL" ],
+                    [ ">", "GREATER" ],
+                    [ "<", "LESS" ],
+                    [ "≥", "GREATER_OR_EQUAL" ],
+                    [ "≤", "LESS_OR_EQUAL" ]
+                ],
+                "value": "EQUAL",
+                "fontSize": 11,
+                noArrow: true
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "check_object_property"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+        }
+    },
+    "check_block_execution": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "목표 %1 달성 %2",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": 0
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "check_block_execution"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+        }
+    },
+    "check_lecture_goal": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_loop",
+        "template": "아래 블록이 %1 %2 실행되었는가 %3",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["언젠가", "16"],
+                    ["지금", "32"]
+                ],
+                "value": "16",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["비슷하게", "16"],
+                    ["똑같이", "32"]
+                ],
+                "value": "16",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "check_lecture_goal"
         },
         "paramsKeyMap": {
             "VALUE": 0
