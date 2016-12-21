@@ -15,48 +15,46 @@ Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
     this.blockSyntax = blockSyntax;
 
-    var variableMap = new Entry.Map();
-    this._variableMap = variableMap;
-
     var funcMap = new Entry.Map();
     this._funcMap = funcMap;
 
-    var paramQ = new Entry.Queue();
+    /*var funcParamMap = new Entry.Map();
+    this._funcParamMap = funcParamMap;
+    */
+     /*var variableMap = new Entry.Map();
+    this._variableMap = variableMap;*/
+
+
+    /*var paramQ = new Entry.Queue();
     this._paramQ = paramQ;
+    */
+    /*var blockCountMap = new Entry.Map();
+    this._blockCountMap = blockCountMap;*/
 
-    var blockCountMap = new Entry.Map();
-    this._blockCountMap = blockCountMap;
+    /*this._threadCount = 0;
+    this._blockCount = 0;*/
 
-    this._funcParamList = [];
-
-    this._threadCount = 0;
-    this._blockCount = 0;
-
-    Entry.TextCodingUtil.init(); 
+    //Entry.TextCodingUtil.init(); 
 };
 
 (function(p){
     p.Program = function(astArr) { 
         try {
+            this.codeInit();
             console.log("this.syntax", this.blockSyntax);
-            this._currentObject = Entry.getMainWS().vimBoard._currentObject;
             console.log("_currentObject", this._currentObject);
-            this._funcLoop = false;
-            this._hasReculsiveFunc = false;
-            this._code = []; 
-            this._threadCount = 0;
-            this._blockCount = 0;
-            this.isEntryEventExisted = false;
             for(var index in astArr) {
                 if(astArr[index].type != 'Program') return;
-                this.isLastBlock = false;
+                this.threadInit();
+                //this.isLastBlock = false;
                 this._threadCount++;
-                this._thread = [];
+                //this._thread = [];
                 var nodes = astArr[index].body;
 
                 console.log("nodes", nodes);
-                this.isEntryEventExisted = false;
+                this._isEntryEventExisted = false;
                 for(var index in nodes) {
+
                     var node = nodes[index];
                     console.log("Program node", node);
 
@@ -84,13 +82,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                         if(blockType == "param") continue;
                         else if(blockType == "event") {
-                            this.isEntryEventExisted = true;
+                            this._isEntryEventExisted = true;
                         }
                         else if(blockType == "last") {
                             this.isLastBlock = true;
                         }
                         else if(blockType == "variable") {
-                            if(!this.isEntryEventExisted)
+                            if(!this._isEntryEventExisted)
                                 continue;
                         } 
 
@@ -116,7 +114,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     this._code.push(this._thread);
             }
 
-            console.log("this._blockCountMap", this._blockCountMap);
+            //console.log("this._blockCountMap", this._blockCountMap);
             console.log("this._blockCount", this._blockCount);
 
             return this._code;
@@ -177,7 +175,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 Entry.TextCodingError.TITLE_CONVERTING,
                 Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
                 keyword,
-                this._blockCount);
+                this._blockCount,
+                Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         }
 
         console.log("ExpressionStatement result", result);
@@ -278,6 +277,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(!this._funcMap.get(funcNameKey)) {
                         var keyword = calleeData.name;
                         console.log("errorId", 3);
+                        
                         Entry.TextCodingError.error(
                             Entry.TextCodingError.TITLE_CONVERTING,
                             Entry.TextCodingError.MESSAGE_CONV_NO_SUPPORT,
@@ -775,19 +775,29 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     var param = this[argument.type](argument, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], textParams[paramIndex[pi]]);
 
-                    console.log("callexpression callee", callee, "param", param);
-
-                    console.log("calleeName", calleeName, "param", param);
-
                     if(param && param.data) {
                         param = param.data;
                     }
 
+                    console.log("callexpression callee", callee, "param", param);
+                    console.log("calleeName", calleeName, "param", param);
                     console.log("callex block one multi", block);
                     console.log("callex param syntax", syntax, "order", paramIndex, "value", paramIndex[pi], "param", param);
                     console.log("pi", pi);
 
-                    if(param) {
+                    if(param) { // Function Param Check
+                        if(this.isFuncParam(param.name)) {
+                            var fParam = {};
+                            fParam.type = param.name;
+                            fParam.params = [];
+                            fParam.isParamFromFunc = true;
+
+                            param = fParam;
+                            console.log("callex func fParam", fParam);
+                        }
+                    }
+
+                    if(param) { // For Member Param
                         var keyOption = blockSyntax.keyOption;
                         console.log("keyOption", keyOption);
                         if(keyOption || keyOption === 0) {
@@ -825,7 +835,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     console.log("callex realtime params", params);
 
-                    if(param) {
+                    if(param) { // Variable, List Check
                         console.log("param type check", param);
                         if(param.object && param.object.object) {
                             if(param.object.object.name == "self") {
@@ -874,7 +884,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 if(param.object.name == "self") {
                                     var name = param.property.name;
                                     if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)) {
-                                        var keyword = name;
+                                        var keyword = param.object.name + '.' + param.property.name;
                                         console.log("errorId", 13);
                                         Entry.TextCodingError.error(
                                             Entry.TextCodingError.TITLE_CONVERTING,
@@ -901,8 +911,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     var name = param.property.name;
                                     if(syntax == "len#length_of_string") {
                                         if(!Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
-                                            if(!Entry.TextCodingUtil.isFuncParam(name)) {
-                                                var keyword = name;
+                                            if(!this.isFuncParam(name)) { 
+                                                var keyword = param.object.name + '.' + param.property.name;
                                                 console.log("errorId", 15);
                                                 Entry.TextCodingError.error(
                                                     Entry.TextCodingError.TITLE_CONVERTING,
@@ -958,7 +968,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     if(param.object.name == "self") {
                                         var name = param.property.name;
                                         if(!Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
-                                            var keyword = name;
+                                            var keyword = param.object.name + '.' + param.property.name;
                                             console.log("errorId", 19);
                                             Entry.TextCodingError.error(
                                                 Entry.TextCodingError.TITLE_CONVERTING,
@@ -1002,7 +1012,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     var name = param.name;
                                     if(syntax == "len#length_of_string") {
                                         if(!Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
-                                            if(!Entry.TextCodingUtil.isFuncParam(name)) {
+                                            if(!this.isFuncParam(name)) {
                                                 var keyword = name;
                                                 console.log("errorId", 22);
                                                 Entry.TextCodingError.error(
@@ -1030,7 +1040,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 else {
                                     var name = param.name;
                                     if(!Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
-                                        if(!Entry.TextCodingUtil.isFuncParam(name)) {
+                                        if(!this.isFuncParam(name)) {
                                             var keyword = name;
                                             console.log("errorId", 24);
                                             Entry.TextCodingError.error(
@@ -1050,7 +1060,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             console.log("call call params", params);
 
-            if(callee.object && callee.property) {
+            if(callee.object && callee.property) { //'range' in for i in range
                 if(callee.property.name == "range") {
                     if(params.length > 2) {
                         //Just Check
@@ -1125,19 +1135,26 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                     else if(params.length == 1) {
                         console.log("call range params", params);
-                        param = params[0];
                         console.log("range here param", param);
-
                         if(typeof param != "object") {
+                            param = params[0];
                             params.splice(0, 1, param);
                         }
                         else {
+                            param = params[0];
+                            type = param.type;
+                            params = param.params;
+                            if(param.isParamFromFunc)
+                                var isParamFromFunc = true;
+                        }
+
+                        /*else {
                             if(param.type && param.params) {
                                 console.log("rangeparam param.type", param.type, "param.params", param.params);
                                 type = param.type;
                                 params = param.params;
                             }
-                        }
+                        }*/
                     }
                     console.log("range final params", params);
                 }
@@ -1439,6 +1456,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 structure.params = params;
                 result.params = structure.params;
             }
+
+            if(isParamFromFunc) {
+                result.isParamFromFunc = true;
+            }
         } else { //special param
             var args = [];
             for(var i in arguments) {
@@ -1450,8 +1471,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("CallExpression argument", argument);
                 console.log("CallExpression argumentData", argumentData, "??", argumentData.type);
 
-                if(!argumentData.type && argumentData.isCallParam) {
-                    if(argument.type != "ThisExpression") {
+                if(argument.type == "ThisExpression") 
+                    continue;
+                else if(!argumentData.type && argumentData.isCallParam) {
                         console.log("argumentData 123", argumentData);
                         var keyword;
                         console.log("errorId", 25);
@@ -1461,6 +1483,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             keyword,
                             this._blockCount,
                             Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
+                }
+                else { 
+                    if(!argumentData.type && !argumentData.isCallParam && 
+                        argumentData.callee != "__pythonRuntime.utils.createParamsObj") {
+                        console.log("this._currentFuncKey", this._currentFuncKey);
+                        if(!this.isFuncParam(argumentData.name)) {
+                            var keyword = argumentData.name;
+                            console.log("errorId", 25.2);
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                keyword,
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
+                        }
                     }
                 }
 
@@ -1520,6 +1557,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         console.log("callex reculsive funcKey", funcKey);
                         console.log("callex reculsive params", params);
                         result.type = funcKey;
+                        result.params = params;
                         result.funcName = funcName;
                         this._hasReculsiveFunc = true;
                         console.log("temp func type", result);
@@ -1616,14 +1654,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var structure = {};
 
         var declarations = component.declarations;
-
+        //var funcParamMap = {};
         for(var i in declarations) {
             var declaration = declarations[i];
             var declarationData = this[declaration.type](declaration);
 
             console.log("VariableDeclaration declarationData", declarationData);
             if(declarationData && declarationData.isFuncParam) {
-                Entry.TextCodingUtil.addFuncParam(declarationData.name);
+                this._funcParams.push(declarationData.name);
+                //funcParamMap[i] = declarationData.name;
+                //Entry.TextCodingUtil.addFuncParam(declarationData.name);
             }
 
             if(declarationData) {
@@ -1636,6 +1676,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 structure.params = declarationData.params;
             }
         }
+
+        console.log("VariableDeclaration this._currentFuncKey", this._currentFuncKey);
+        //this._funcParamMap.put(this._currentFuncKey, funcParamMap);
+        console.log("VariableDeclaration this._funcParams", this._funcParams);
 
         if(structure.type)
             result.type = structure.type;
@@ -1656,7 +1700,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
 
         this._blockCount++;
-        console.log("BlockCount VariableDeclarator ++", this._blockCount);
+        console.log("BlockCount VariableDeclarator this._blockCount", this._blockCount);
         if((component.id.name && component.id.name.search("__") != -1) ||
             (component.init && component.init.callee && component.init.callee.name &&
              component.init.callee.name.search("__") != -1)) {
@@ -3425,7 +3469,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.WhileStatement = function(component) {
         console.log("WhileStatement component", component);
         this._blockCount++;
-        console.log("WhileStatement this._blockCount++");
+        console.log("WhileStatement this._blockCount++", this._blockCount);
 
         var result;
         var structure = {};
@@ -3465,7 +3509,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(blockSyntax)
                     type = blockSyntax.key;
 
-                if(!Entry.TextCodingUtil.isFuncParam(test.name)) {
+                if(!this.isFuncParam(test.name)) {
                     var keyword = test.name;
                     console.log("errorId", 53);
                     Entry.TextCodingError.error(
@@ -3591,8 +3635,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(bodies[1] && bodies[1].consequent && bodies[1].consequent.body && bodies[1].consequent.body[0])
             if(bodies[1].consequent.body[0].type == "ForStatement") {
-                this._blockCount++;
-                console.log("BlockCount ForStatement in BlockStatement", this._blockCount);
+                this._blockCount++; 
+                console.log("BlockCount ForStatement in BlockStatement this._blockCount", this._blockCount);
             }
 
         for(var i in bodies) {
@@ -3602,6 +3646,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if(bodyData && bodyData == null)
                 continue;
+            /*if(i == 1) {
+                this._forStatementCount--; //The End of ForStatement
+            }*/
 
             data.push(bodyData);
             console.log("BlockStatement data", data);
@@ -3624,7 +3671,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             var param = declaration.init;
                             console.log("ppp param", param);
                             if(param) {
-                                if(param.params && param.params[0])
+                                /*if(param.params && param.params[0])
                                 {
                                     if(param.type == "number" || param.type == "text") {
                                         var subParam = param.params[0];
@@ -3633,7 +3680,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         if(param.callee == "__pythonRuntime.functions.range") {
                                             if(typeof subParam == "object") {
                                                 if(typeof subParam.name == "string") {
-                                                    if(Entry.TextCodingUtil.isFuncParam(subParam.name)) {
+                                                    if(this.isFuncParam(subParam.name)) {
                                                         var oParam = {};
                                                         oParam.type = subParam.name;
                                                         oParam.params = [];
@@ -3653,7 +3700,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 } else {
                                     console.log("ttt param2", param);
                                     params.push(param);
-                                }
+                                }*/
+                                params.push(param);
                             }
                         }
                         result.params = params;
@@ -3722,8 +3770,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 var declaration = declarations[d];
                                 var param = declaration.init;
                                 if(param) {
-                                    if(Entry.TextCodingUtil.isFuncParam(param.name))
-                                        param.isParamFromFunc = true;
                                     params.push(param);
                                 }
                             }
@@ -3825,6 +3871,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var alternate = component.alternate;
         var test = component.test;
 
+        if(test.operator !== 'instanceof') {
+            this._blockCount++;
+            console.log("BlockCount IfStatement this._blockCount", this._blockCount);
+        }
+
         if(alternate != null) {
             var type = String("if_else");
         } else {
@@ -3867,9 +3918,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("IfStatement Literal param", param);
                 if(param && param != null) {
                     params.push(param);
-
                     if(!param.type) {
-                        if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
+                        if(!this.isFuncParam(param.name)) {
                             var keyword = param.name;
                             console.log("errorId", 57);
                             Entry.TextCodingError.error(
@@ -3897,10 +3947,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("IfStatement params result", params);
 
         if(consequent != null) {
-            if(test.operator !== 'instanceof') {
+            /*if(test.operator !== 'instanceof') {
                 this._blockCount++;
                 console.log("BlockCount IfStatement If", this._blockCount);
-            }
+            }*/
 
             var consStmts = [];
             console.log("IfStatement consequent", consequent);
@@ -3934,7 +3984,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(alternate != null) {
             if(test.operator !== 'instanceof') {
                 this._blockCount++;
-                console.log("BlockCount IfStatement Else", this._blockCount);
+                console.log("BlockCount IfStatement Else this._blockCount", this._blockCount);
             }
             var altStmts = [];
             console.log("IfStatement alternate", alternate);
@@ -3962,7 +4012,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var result;
         var structure = {};
         structure.statements = [];
-
+        
         var syntax = String("for i in range");
         var blockSyntax = this.getBlockSyntax(syntax);
         var type;
@@ -4035,7 +4085,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.BreakStatement = function(component) {
         console.log("BreakStatement component", component);
         this._blockCount++;
-        console.log("BreakStatement this._blockCount++");
+        console.log("BreakStatement this._blockCount++", this._blockCount);
 
         var result;
         var structure = {};
@@ -4270,7 +4320,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("LogicalExpression left param", param);
 
         if(!param.type && param.name) {
-            if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
+            if(!this.isFuncParam(param.name)) {
                 var keyword = param.name;
                 console.log("errorId", 63);
                 Entry.TextCodingError.error(
@@ -4550,24 +4600,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(param && typeof param == "object") {
                         if(param.name && param.name.indexOf("__filbert") < 0) {
-                            if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
+                            if(!this.isFuncParam(param.name)) {
                                 //if(!Entry.TextCodingUtil.isEntryEventDesignatedParamName(param.name)) {
                                     if(!Entry.TextCodingUtil.isGlobalVariableExisted(param.name)) {
                                         var keyword = param.name;
                                         console.log("errorId", 75);
                                         Entry.TextCodingError.error(
                                             Entry.TextCodingError.TITLE_CONVERTING,
-                                            Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                            Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
                                             keyword,
                                             this._blockCount,
-                                            Entry.TextCodingError.SUBJECT_CONV_LIST);
+                                            Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                                     }
                                 //}
                             }
                         }
                     }
 
-                    if(param && param.type)
+                    if(param)
                         params.push(param);
                     /*else {
                         if(param.name == "key") {
@@ -4653,7 +4703,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 }
                                 else if(param.property) {
                                     if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, this._currentObject)) {
-                                        var keyword = param.property.name;
+                                        var keyword = param.object.name + '.' + param.property.name;
                                         console.log("errorId", 80);
                                         Entry.TextCodingError.error(
                                             Entry.TextCodingError.TITLE_CONVERTING,
@@ -4681,7 +4731,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else {
                 param = this[left.type](left);
                 console.log("BinaryExpression extra left param", param);
-                if(param && param.type) {
+                if(param) {
                     params.push(param);
                 }
                 else {
@@ -4762,9 +4812,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(param && typeof param == "object") {
                         if(param.name && param.name.indexOf("__filbert") < 0) {
                             if(!param.type && param.isCallParam) {
-                                if(!Entry.TextCodingUtil.isFuncParam(param.name)) {
-                                    if(!Entry.TextCodingUtil.isGlobalVariableExisted(param.property.name)) {
-                                        var keyword = param.property.name;
+                                if(!this.isFuncParam(param.name)) {
+                                    if(!Entry.TextCodingUtil.isGlobalVariableExisted(param.name)) {
+                                        var keyword = param.name;
                                         console.log("errorId", 82);
                                         Entry.TextCodingError.error(
                                             Entry.TextCodingError.TITLE_CONVERTING,
@@ -4842,7 +4892,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 }
                                 else if(param.property) {
                                     if(!Entry.TextCodingUtil.isLocalVariableExisted(param.property.name, this._currentObject)) {
-                                        var keyword = param.property.name;
+                                        var keyword = param.object.name + '.' + param.property.name;
                                         console.log("errorId", 87);
                                         Entry.TextCodingError.error(
                                             Entry.TextCodingError.TITLE_CONVERTING,
@@ -4870,9 +4920,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else {
                 param = this[right.type](right);
                 console.log("BinaryExpression extra right param", param);
-                if(param && param.type) {
+                if(param) {
                     params.push(param);
-                }
+                } 
                 else {
                     var keyword;
                     console.log("errorId", 88);
@@ -4946,7 +4996,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         this._funcLoop = true;
         this._blockCount++;
-        console.log("BlockCount FunctionDeclaration", this._blockCount);
+        console.log("BlockCount FunctionDeclarationt this._blockCount++", this._blockCount);
         /*if(!Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
             console.log("funcBodyData", funcBodyData);
         }*/
@@ -5269,11 +5319,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var thread = targetFunc.content._data[0];
             thread._data.splice(1, thread._data.length-1);
 
-            console.log("paramInfo", paramInfo);
+            console.log("paramInfo", paramInfo);  
             
             for(var s in textFuncStatements) {
                 var statement = textFuncStatements[s];
-                Entry.TextCodingUtil.makeParamBlock(statement, paramInfo);
+                console.log("ck statement", statement);
+                Entry.TextCodingUtil.makeFuncParamBlock(statement, paramInfo, this._blockCount);
                 console.log("textFunction statement1", statement);
                 console.log("this._currentFuncKey", this._currentFuncKey);
                 if(statement.type == this._currentFuncKey) {
@@ -5403,7 +5454,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 for(var s in textFuncStatements) {
                     var statement = textFuncStatements[s];
                     console.log("paramInfo yyyyy", paramInfo);
-                    Entry.TextCodingUtil.makeParamBlock(statement, paramInfo);
+                    Entry.TextCodingUtil.makeFuncParamBlock(statement, paramInfo, this._blockCount);
                     var stmtBlock = new Entry.Block(statement, thread);
                     thread._data.push(stmtBlock);
                 }
@@ -5444,7 +5495,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
 
-        Entry.TextCodingUtil.clearFuncParam();
+        //Entry.TextCodingUtil.clearFuncParam();
         this._funcLoop = false;
         this._hasReculsiveFunc = false;
 
@@ -5521,6 +5572,49 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("NewExpression result", result);
         return result;  
+    };
+
+    // Utils
+    p.codeInit = function() {
+        //this._funcMap.clear();
+        //this._funcParams = [];
+        //this._funcParamMap.clear();
+        this.threadInit();
+        this._currentObject = Entry.getMainWS().vimBoard._currentObject;
+        this._funcMap.clear();
+        this._code = []; 
+        this._threadCount = 0;
+        this._blockCount = 0;
+        //this._funcLoop = false;
+        //this._hasReculsiveFunc = false;
+        //this._forStatementCount = 0;
+        //this._isEntryEventExisted = false;
+    };
+
+    p.threadInit = function() {
+        this._thread = [];
+        this._funcParams = [];
+        this._funcLoop = false;
+        this.isLastBlock = false; 
+        this._hasReculsiveFunc = false;
+        this._isEntryEventExisted = false;
+            
+    };
+
+    p.isFuncParam = function(paramName) {
+        console.log("isFuncParam", this._funcParams);
+        var result = false;
+        //var funcParams = this._funcParamMap.get(this._currentFuncKey);
+        if(this._funcParams.length == 0)
+            return false;
+        for(var p in this._funcParams) {
+            var funcParam = this._funcParams[p];
+            if(funcParam == paramName) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     };
 
     p.convertReculsiveFuncType = function(funcStmts) {  
@@ -5620,13 +5714,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(blockType == "param") return;
         else if(blockType == "event") {
-            this.isEntryEventExisted = true;
+            this._isEntryEventExisted = true;
         }
         else if(blockType == "last") {
             this.isLastBlock = true;
         }
         else if(blockType == "variable") {
-            if(!this.isEntryEventExisted)
+            if(!this._isEntryEventExisted)
                 return;
         }
 

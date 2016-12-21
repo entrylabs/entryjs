@@ -263,7 +263,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             astArray.push(ast);
                     }
                     result = this._execParser.Program(astArray);
-                    this._execParser._variableMap.clear();
+                    //this._execParser._variableMap.clear();
                     break;
                 } catch(error) {
                     result = [];
@@ -357,7 +357,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                 if(parseMode == Entry.Parser.PARSE_GENERAL) {
                     if(!this._isError) {
-                        if(!this.py_variableDeclaration) {
+                      if(!this.py_variableDeclaration) {
                             var vd = Entry.TextCodingUtil.generateVariablesDeclaration();
                             this.py_variableDeclaration = vd;
                             if(vd)
