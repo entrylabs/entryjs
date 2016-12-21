@@ -12,7 +12,11 @@ goog.require("Entry.Utils");
  */
 Entry.Func = function(func) {
     this.id = func ? func.id : Entry.generateHash();
-    this.content = func ? new Entry.Code(func.content) : new Entry.Code([
+    var content;
+    //inspect empty content
+    if (func && func.content && func.content.length > 4)
+        content = func.content;
+    this.content = content ? new Entry.Code(content) : new Entry.Code([
         [
             {
                 type: "function_create",

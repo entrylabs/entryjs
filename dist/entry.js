@@ -19331,15 +19331,17 @@ Entry.Model = function(b, a) {
 })(Entry.Model);
 Entry.Func = function(b) {
   this.id = b ? b.id : Entry.generateHash();
-  this.content = b ? new Entry.Code(b.content) : new Entry.Code([[{type:"function_create", copyable:!1, deletable:!1, x:40, y:40}]]);
+  var a;
+  b && b.content && 4 < b.content.length && (a = b.content);
+  this.content = a ? new Entry.Code(a) : new Entry.Code([[{type:"function_create", copyable:!1, deletable:!1, x:40, y:40}]]);
   this._backupContent = this.blockMenuBlock = this.block = null;
   this.hashMap = {};
   this.paramMap = {};
   Entry.generateFunctionSchema(this.id);
   if (b) {
     b = this.content._blockMap;
-    for (var a in b) {
-      Entry.Func.registerParamBlock(b[a].type);
+    for (var d in b) {
+      Entry.Func.registerParamBlock(b[d].type);
     }
     Entry.Func.generateWsBlock(this);
   }
