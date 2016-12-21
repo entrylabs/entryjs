@@ -135,9 +135,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     blockMenu.renderBlock();
                     this.oldTextType = this.textType;
                     this.vimBoard && this.vimBoard.hide();
-                    this.vimBoard._parser._isError = false;
+                    this.vimBoard._isError = false;
                 } catch(e) {
-                    this.vimBoard._parser._isError = true;
+                    console.log("error start");
+                    this.vimBoard._isError = true;
                     if(this.board && this.board.code)
                         this.board.code.clear();
                     if (this.board) this.board.hide();

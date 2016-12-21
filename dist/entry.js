@@ -7015,6 +7015,7 @@ Entry.Container.prototype.removeObject = function(b) {
   return d;
 };
 Entry.Container.prototype.selectObject = function(b, a) {
+  console.log("selectObject", b, a);
   var d = this.getObject(b);
   a && d && Entry.scene.selectScene(d.scene);
   this.mapObjectOnScene(function(a) {
@@ -7022,10 +7023,15 @@ Entry.Container.prototype.selectObject = function(b, a) {
     a.isSelected_ = !1;
   });
   if (d) {
-    d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0;
-  } else {
+    d.view_ && d.view_.addClass("selectedObject");
+    d.isSelected_ = !0;
     var c = Entry.getMainWS();
-    c && c.vimBoard && c.vimBoard.clearText();
+    if (c && c.vimBoard && c.vimBoard._parser && c.vimBoard._parser._onError) {
+      var e = c.vimBoard._currentObject, c = c.vimBoard._currentScene;
+      d.id != e.id && Entry.container.selectObject(e.id, c);
+    }
+  } else {
+    (c = Entry.getMainWS()) && c.vimBoard && c.vimBoard.clearText();
   }
   Entry.playground && Entry.playground.injectObject(d);
   "minimize" != Entry.type && Entry.engine.isState("stop") && Entry.stage.selectObject(d);
@@ -16533,7 +16539,7 @@ Entry.Parser = function(b, a, d, c) {
         case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
           this._execParser = new Entry.PyToBlockParser(this.syntax);
           this._execParserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
-          this._isError = !1;
+          this._onError = !1;
           break;
         case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
           this._execParser = new Entry.BlockToJsParser(this.syntax, this);
@@ -16554,6 +16560,7 @@ Entry.Parser = function(b, a, d, c) {
     }
   };
   b.parse = function(a, b) {
+    this._onError = !1;
     console.log("this.syntax", this.syntax);
     console.log("this._syntax_cache", this._syntax_cache);
     var c = this._type;
@@ -16593,6 +16600,7 @@ Entry.Parser = function(b, a, d, c) {
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
         try {
+          this._onError = !1;
           this._pyBlockCount = {};
           this._pyThreadCount = 1;
           var q = new Entry.PyAstGenerator, f = this.makeThreads(a), g = [], r = 0;
@@ -16603,11 +16611,8 @@ Entry.Parser = function(b, a, d, c) {
           }
           e = this._execParser.Program(g);
         } catch (y) {
-          e = [];
-          if (Entry.getMainWS()) {
-            var n = Entry.getMainWS().board;
-            n && n.code.clear();
-          }
+          var e = [], n = Entry.getMainWS();
+          n && (this._onError = !0, Entry.container.selectObject(n.vimBoard._currentObject.id, n.vimBoard._currentScene), (n = n.board) && n.code.clear());
           if (this.codeMirror) {
             console.log("main error", y);
             y instanceof SyntaxError ? (n = this.findSyntaxError(y, r), e = {from:{line:n.from.line - 1, ch:n.from.ch}, to:{line:n.to.line - 1, ch:n.to.ch}}, y.type = "syntax") : (n = this.findConvError(y), e = {from:{line:n.from.line - 1, ch:n.from.ch}, to:{line:n.to.line - 1, ch:n.to.ch}}, y.type = "converting");
@@ -27541,10 +27546,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           break;
         case e.MODE_BOARD:
           try {
-            this.board.show(), f.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), f.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide(), this.vimBoard._parser._isError = !1;
+            this.board.show(), f.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), f.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide(), this.vimBoard._isError = !1;
           } catch (g) {
-            this.vimBoard._parser._isError = !0, this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), f.banClass("functionInit"), this.mode = e.MODE_VIMBOARD, this.oldTextType == c.TEXT_TYPE_JS ? (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_JS, a.runType = c.MAZE_MODE, this.oldTextType = c.TEXT_TYPE_JS) : this.oldTextType == c.TEXT_TYPE_PY && (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_PY, a.runType = 
-            c.WORKSPACE_MODE, this.oldTextType = c.TEXT_TYPE_PY), Entry.getMainWS().setMode(a);
+            console.log("error start"), this.vimBoard._isError = !0, this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), f.banClass("functionInit"), this.mode = e.MODE_VIMBOARD, this.oldTextType == c.TEXT_TYPE_JS ? (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_JS, a.runType = c.MAZE_MODE, this.oldTextType = c.TEXT_TYPE_JS) : this.oldTextType == c.TEXT_TYPE_PY && (a.boardType = e.MODE_VIMBOARD, a.textType = 
+            c.TEXT_TYPE_PY, a.runType = c.WORKSPACE_MODE, this.oldTextType = c.TEXT_TYPE_PY), Entry.getMainWS().setMode(a);
           }
           Entry.commander.setCurrentEditor("board", this.board);
           break;
@@ -28190,8 +28195,7 @@ Entry.Playground.prototype.injectObject = function(b) {
 };
 Entry.Playground.prototype.injectCode = function() {
   var b = this.object.script, a = this.mainWorkspace;
-  Entry.textCodingEnable && (this.mainWorkspace.vimBoard._changedObject ? this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject : Entry.playground && (this.mainWorkspace.vimBoard._currentObject = Entry.playground.object));
-  Entry.playground && Entry.textCodingEnable && (this.mainWorkspace.vimBoard._changedObject = Entry.playground.object);
+  Entry.textCodingEnable && !a.vimBoard._parser._onError && (this.mainWorkspace.vimBoard._changedObject ? this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject : Entry.playground && (this.mainWorkspace.vimBoard._currentObject = Entry.playground.object), Entry.playground && Entry.textCodingEnable && (this.mainWorkspace.vimBoard._changedObject = Entry.playground.object));
   a.changeBoardCode(b, function() {
     a.getBoard().adjustThreadsPosition();
   });
