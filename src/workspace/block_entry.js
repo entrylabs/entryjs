@@ -26139,8 +26139,12 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    ["크기", "16"],
-                    ["x", "32"]
+                    ["x", "x"],
+                    ["y", "y"],
+                    ["크기", "size"],
+                    ["방향", "rotation"],
+                    ["이동 방향", "direction"],
+                    ["텍스트", "text"]
                 ],
                 "value": "16",
                 "fontSize": 11
@@ -26181,6 +26185,8 @@ Entry.block = {
         "class": "etc",
         "isNotFor": [],
         "func": function (sprite, script) {
+            var obj = Entry.container.getObject(this.block.params[0]);
+            console.log(obj);
         }
     },
     "check_block_execution": {
