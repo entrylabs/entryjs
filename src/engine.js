@@ -766,7 +766,7 @@ Entry.Engine.prototype.showProjectTimer = function() {
 };
 
 //decide Entry.engine.projectTimer to show
-Entry.Engine.prototype.hideProjectTimer = function() {
+Entry.Engine.prototype.hideProjectTimer = function(removeBlock, notIncludeSelf) {
     var timer = this.projectTimer;
     if (!timer || !timer.isVisible() || this.isState('run')) return;
     var objects = Entry.container.getAllObjects();
@@ -780,8 +780,14 @@ Entry.Engine.prototype.hideProjectTimer = function() {
 
     for (var i = 0, len = objects.length; i < len; i++) {
         var code = objects[i].script;
-        for (var j = 0; j < timerTypes.length; j++)
-            if(code.hasBlockType(timerTypes[j])) return;
+        for (var j = 0; j < timerTypes.length; j++) {
+            var blocks = code.getBlockList(false, timerTypes[j]);
+            if (notIncludeSelf) {
+                var index = blocks.indexOf(removeBlock);
+                if (index > -1) blocks.splice(index, 1);
+            }
+            if (blocks.length > 0) return;
+        }
     }
     timer.setVisible(false);
 };
