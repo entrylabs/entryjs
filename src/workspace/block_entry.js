@@ -8353,8 +8353,8 @@ Entry.block = {
                 }
             ],
             "viewDestroy": [
-                function(block) {
-                    if (Entry.engine) Entry.engine.hideProjectTimer(block);
+                function(block, notIncludeSelf) {
+                    if (Entry.engine) Entry.engine.hideProjectTimer(block, notIncludeSelf);
                 }
             ]
         },
@@ -8408,8 +8408,8 @@ Entry.block = {
                 }
             ],
             "viewDestroy": [
-                function(block) {
-                    if (Entry.engine) Entry.engine.hideProjectTimer(block);
+                function(block, notIncludeSelf) {
+                    if (Entry.engine) Entry.engine.hideProjectTimer(block, notIncludeSelf);
                 }
             ]
         },
@@ -8515,8 +8515,8 @@ Entry.block = {
                 }
             ],
             "viewDestroy": [
-                function(block) {
-                    if (Entry.engine) Entry.engine.hideProjectTimer(block);
+                function(block, notIncludeSelf) {
+                    if (Entry.engine) Entry.engine.hideProjectTimer(block, notIncludeSelf);
                 }
             ]
         },
@@ -22686,8 +22686,8 @@ Entry.block = {
                 }
             ],
             "viewDestroy": [
-                function(block) {
-                    if (Entry.container) Entry.container.hideProjectAnswer(block);
+                function(block, notIncludeSelf) {
+                    if (Entry.container) Entry.container.hideProjectAnswer(block, notIncludeSelf);
                 }
             ]
         },
@@ -22803,8 +22803,8 @@ Entry.block = {
                 }
             ],
             "viewDestroy": [
-                function(block) {
-                    if (Entry.container) Entry.container.hideProjectAnswer(block);
+                function(block, notIncludeSelf) {
+                    if (Entry.container) Entry.container.hideProjectAnswer(block, notIncludeSelf);
                 }
             ]
         },
@@ -23634,8 +23634,8 @@ Entry.block = {
                 }
             ],
             "viewDestroy": [
-                function(block) {
-                    if (Entry.container) Entry.container.hideProjectAnswer(block);
+                function(block, notIncludeSelf) {
+                    if (Entry.container) Entry.container.hideProjectAnswer(block, notIncludeSelf);
                 }
             ]
         },

@@ -929,7 +929,7 @@ Entry.Container.prototype.showProjectAnswer = function() {
 };
 
 
-Entry.Container.prototype.hideProjectAnswer = function(removeBlock) {
+Entry.Container.prototype.hideProjectAnswer = function(removeBlock, notIncludeSelf) {
     var answer = this.inputValue;
     if (!answer || !answer.isVisible() || Entry.engine.isState('run')) return;
 
@@ -942,8 +942,14 @@ Entry.Container.prototype.hideProjectAnswer = function(removeBlock) {
 
     for (var i = 0, len = objects.length; i < len; i++) {
         var code = objects[i].script;
-        for (var j = 0; j < answerTypes.length; j++)
-            if (code.hasBlockType(answerTypes[j])) return;
+        for (var j = 0; j < answerTypes.length; j++) {
+            var blocks = code.getBlockList(false, answerTypes[j]);
+            if (notIncludeSelf) {
+                var index = blocks.indexOf(removeBlock);
+                if (index > -1) blocks.splice(index, 1);
+            }
+            if (blocks.length > 0) return;
+        }
     }
 
     //answer related blocks not found

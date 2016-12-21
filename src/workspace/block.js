@@ -41,6 +41,14 @@ Entry.Block = function(block, thread) {
             if (Entry.Utils.isFunction(fn)) fn(that);
         });
     }
+
+    events = this.events.viewAdd;
+    if (events && (Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD)) {
+        events.forEach(function(fn) {
+            if (Entry.Utils.isFunction(fn))
+                fn.apply(that, [that]);
+        });
+    }
 };
 
 Entry.Block.MAGNET_RANGE = 10;
@@ -256,8 +264,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         var prevBlock = this.getPrevBlock();
         var nextBlock = this.getNextBlock();
+        var code = this.getCode();
 
-        this.getCode().unregisterBlock(this);
+        code.unregisterBlock(this);
         var thread = this.getThread();
         if (this._schema && this._schema.event)
             thread.unregisterEvent(this, this._schema.event);
@@ -277,16 +286,28 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                 } else nextBlock.view && nextBlock.view.bindPrev(prevBlock, true);
             }
         }
+
+        var notSpliced = this.doNotSplice;
         if (!this.doNotSplice && thread.spliceBlock) thread.spliceBlock(this);
         else delete this.doNotSplice;
+
         if (this.view) this.view.destroy(animate);
         if (this._schemaChangeEvent)
             this._schemaChangeEvent.destroy();
 
         var events = this.events.dataDestroy;
-        if (events && this.getCode().object) {
+        if (events && code.object) {
             events.forEach(function(fn) {
-                if (Entry.Utils.isFunction(fn)) fn(that);
+                if (Entry.Utils.isFunction(fn))
+                    fn.apply(that, [that]);
+            });
+        }
+
+        events = this.events.viewDestroy;
+        if (events && (Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD)) {
+            events.forEach(function(fn) {
+                if (Entry.Utils.isFunction(fn))
+                    fn.apply(that, [that, notSpliced]);
             });
         }
     };

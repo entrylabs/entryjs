@@ -7328,16 +7328,22 @@ Entry.Container.prototype.showProjectAnswer = function() {
   var b = this.inputValue;
   b && b.setVisible(!0);
 };
-Entry.Container.prototype.hideProjectAnswer = function(b) {
-  if ((b = this.inputValue) && b.isVisible() && !Entry.engine.isState("run")) {
-    for (var a = Entry.container.getAllObjects(), d = ["ask_and_wait", "get_canvas_input_value", "set_visible_answer"], c = 0, e = a.length;c < e;c++) {
-      for (var f = a[c].script, g = 0;g < d.length;g++) {
-        if (f.hasBlockType(d[g])) {
+Entry.Container.prototype.hideProjectAnswer = function(b, a) {
+  var d = this.inputValue;
+  if (d && d.isVisible() && !Entry.engine.isState("run")) {
+    for (var c = Entry.container.getAllObjects(), e = ["ask_and_wait", "get_canvas_input_value", "set_visible_answer"], f = 0, g = c.length;f < g;f++) {
+      for (var h = c[f].script, k = 0;k < e.length;k++) {
+        var l = h.getBlockList(!1, e[k]);
+        if (a) {
+          var m = l.indexOf(b);
+          -1 < m && l.splice(m, 1);
+        }
+        if (0 < l.length) {
           return;
         }
       }
     }
-    b.setVisible(!1);
+    d.setVisible(!1);
   }
 };
 Entry.Container.prototype.getView = function() {
@@ -7938,17 +7944,22 @@ Entry.Engine.prototype.exitFullScreen = function() {
 Entry.Engine.prototype.showProjectTimer = function() {
   Entry.engine.projectTimer && this.projectTimer.setVisible(!0);
 };
-Entry.Engine.prototype.hideProjectTimer = function() {
-  var b = this.projectTimer;
-  if (b && b.isVisible() && !this.isState("run")) {
-    for (var a = Entry.container.getAllObjects(), d = ["get_project_timer_value", "reset_project_timer", "set_visible_project_timer", "choose_project_timer_action"], c = 0, e = a.length;c < e;c++) {
-      for (var f = a[c].script, g = 0;g < d.length;g++) {
-        if (f.hasBlockType(d[g])) {
+Entry.Engine.prototype.hideProjectTimer = function(b, a) {
+  var d = this.projectTimer;
+  if (d && d.isVisible() && !this.isState("run")) {
+    for (var c = Entry.container.getAllObjects(), e = ["get_project_timer_value", "reset_project_timer", "set_visible_project_timer", "choose_project_timer_action"], f = 0, g = c.length;f < g;f++) {
+      for (var h = c[f].script, k = 0;k < e.length;k++) {
+        var l = h.getBlockList(!1, e[k]);
+        if (a) {
+          var m = l.indexOf(b);
+          -1 < m && l.splice(m, 1);
+        }
+        if (0 < l.length) {
           return;
         }
       }
     }
-    b.setVisible(!1);
+    d.setVisible(!1);
   }
 };
 Entry.Engine.prototype.clearTimer = function() {
@@ -26852,6 +26863,9 @@ Entry.Block = function(b, a) {
   e && c.object && e.forEach(function(a) {
     Entry.Utils.isFunction(a) && a(d);
   });
+  (e = this.events.viewAdd) && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && e.forEach(function(a) {
+    Entry.Utils.isFunction(a) && a.apply(d, [d]);
+  });
 };
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
@@ -26969,17 +26983,21 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
           f[c].destroy(a);
         }
       }
-      g = this.getPrevBlock();
-      c = this.getNextBlock();
-      this.getCode().unregisterBlock(this);
-      f = this.getThread();
-      this._schema && this._schema.event && f.unregisterEvent(this, this._schema.event);
-      c && (b ? c.destroy(a, b) : g ? c.view && c.view.bindPrev(g, !0) : f.view && (b = f.view.getParent(), b.constructor === Entry.FieldStatement ? (c.view && c.view.bindPrev(b), b.insertTopBlock(c)) : b.constructor === Entry.FieldStatement ? c.replace(b._valueBlock) : c.view._toGlobalCoordinate()));
-      !this.doNotSplice && f.spliceBlock ? f.spliceBlock(this) : delete this.doNotSplice;
+      var h = this.getPrevBlock(), f = this.getNextBlock();
+      c = this.getCode();
+      c.unregisterBlock(this);
+      g = this.getThread();
+      this._schema && this._schema.event && g.unregisterEvent(this, this._schema.event);
+      f && (b ? f.destroy(a, b) : h ? f.view && f.view.bindPrev(h, !0) : g.view && (b = g.view.getParent(), b.constructor === Entry.FieldStatement ? (f.view && f.view.bindPrev(b), b.insertTopBlock(f)) : b.constructor === Entry.FieldStatement ? f.replace(b._valueBlock) : f.view._toGlobalCoordinate()));
+      var k = this.doNotSplice;
+      !this.doNotSplice && g.spliceBlock ? g.spliceBlock(this) : delete this.doNotSplice;
       this.view && this.view.destroy(a);
       this._schemaChangeEvent && this._schemaChangeEvent.destroy();
-      (a = this.events.dataDestroy) && this.getCode().object && a.forEach(function(a) {
-        Entry.Utils.isFunction(a) && a(e);
+      (a = this.events.dataDestroy) && c.object && a.forEach(function(a) {
+        Entry.Utils.isFunction(a) && a.apply(e, [e]);
+      });
+      (a = this.events.viewDestroy) && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && a.forEach(function(a) {
+        Entry.Utils.isFunction(a) && a.apply(e, [e, k]);
       });
     }
   };
