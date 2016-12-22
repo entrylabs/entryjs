@@ -12111,6 +12111,7 @@ Entry.TextCodingError = {};
   b.ALERT_LIST_NO_SUPPORT = "alert_list_no_support";
   b.ALERT_VARIABLE_NO_SUPPORT = "alert_variable_no_support";
   b.ALERT_SIGNAL_NO_SUPPORT = "alert_signal_no_support";
+  b.ALERT_LEGACY_NO_SUPPORT = "alert_legacy_no_support";
   var a = {};
   b.error = function(b, c, e, f, g) {
     console.log("error control", b, c, e, f);
@@ -13494,8 +13495,9 @@ Entry.BlockToPyParser = function(b) {
     } else {
       this.isFuncStmtParam(a) && (b += a.data.type);
     }
-    if (!e || null == e) {
-      return b;
+    console.log("block syntax", e);
+    if ((!e || null == e) && this._parseMode == Entry.Parser.PARSE_GENERAL) {
+      throw alert(Lang.TextCoding[Entry.TextCodingError.ALERT_LEGACY_NO_SUPPORT]), {message:"no block"};
     }
     var g = /(%.)/mi, h = /(\$.)/mi;
     e = e.split(g);
@@ -15266,7 +15268,7 @@ Entry.PyToBlockParser = function(b) {
     e && (a = Entry.TextCodingUtil.getDynamicIdByNumber(a, e, this._currentObject));
     a && isNaN(a) && 2 < a.split(".").length && "self" == a.split(".")[0] && (a = a.split(".")[1], f = this._currentObject);
     a = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(a, b.menuName, f);
-    e && e.codeMap && ((b = e.codeMap) && eval(b) && isNaN(a) && (a = a.toLowerCase()), (b = eval(b)[a()]) && (a = b));
+    e && e.codeMap && ((b = e.codeMap) && eval(b) && isNaN(a) && (a = a.toLowerCase()), (b = eval(b)[a]) && (a = b));
     c = a;
     console.log("ParamDropdownDynamic result", c);
     return c;
@@ -16160,13 +16162,15 @@ Entry.PyToBlockParser = function(b) {
     n = Entry.variableContainer.functions_[n];
     console.log("tFunc", n);
     if (n && (n = n.content._data[0]._data[1], this._hasReculsiveFunc)) {
-      k = n.statements[0]._data;
-      for (m in k) {
-        k[m] instanceof Entry.Block && this.convertReculsiveFuncType(k[m]);
+      if (n.statements && n.statements[0] && n.statements[0]._data) {
+        for (m in k = n.statements[0]._data, k) {
+          k[m] instanceof Entry.Block && this.convertReculsiveFuncType(k[m]);
+        }
       }
-      k = n.statements[1]._data;
-      for (m in k) {
-        k[m] instanceof Entry.Block && this.convertReculsiveFuncType(k[m]);
+      if (n.statements && n.statements[1] && n.statements[1]._data) {
+        for (m in k = n.statements[1]._data, k) {
+          k[m] instanceof Entry.Block && this.convertReculsiveFuncType(k[m]);
+        }
       }
     }
     this._hasReculsiveFunc = this._funcLoop = !1;
@@ -27525,31 +27529,18 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       var c = Entry.Vim, e = Entry.Workspace, f = this.blockMenu;
       switch(this.mode) {
         case e.MODE_VIMBOARD:
-          if (alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-            alert(alert_message);
-            a = {};
-            a.boardType = e.MODE_BOARD;
-            a.textType = -1;
-            Entry.getMainWS().setMode(a);
-            break;
+          try {
+            (alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) ? (alert(alert_message), a = {}, a.boardType = e.MODE_BOARD, a.textType = -1, Entry.getMainWS().setMode(a)) : (this.board && this.board.hide(), this.overlayBoard && this.overlayBoard.hide(), f.banClass("functionInit"), this.set({selectedBoard:this.vimBoard}), this.vimBoard.show(), this.initDeclaration(), this.codeToText(this.board.code, a), f.renderText(), this.board.clear(), this.oldTextType = this.textType);
+          } catch (g) {
+            throw this.oldMode = e.MODE_VIMBOARD, Entry.getMainWS().setMode(e.MODE_BOARD, g.message), g;
           }
-          this.board && this.board.hide();
-          this.overlayBoard && this.overlayBoard.hide();
-          f.banClass("functionInit");
-          this.set({selectedBoard:this.vimBoard});
-          this.vimBoard.show();
-          this.initDeclaration();
-          this.codeToText(this.board.code, a);
-          f.renderText();
-          this.board.clear();
-          this.oldTextType = this.textType;
           break;
         case e.MODE_BOARD:
           try {
-            this.board.show(), f.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), f.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide(), this.vimBoard._isError = !1;
+            "no block" == b && (this.oldMode = this.mode), this.board.show(), f.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), f.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide(), this.vimBoard._parser._onError = !1;
           } catch (g) {
-            console.log("error start"), this.vimBoard._isError = !0, this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), f.banClass("functionInit"), this.mode = e.MODE_VIMBOARD, this.oldTextType == c.TEXT_TYPE_JS ? (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_JS, a.runType = c.MAZE_MODE, this.oldTextType = c.TEXT_TYPE_JS) : this.oldTextType == c.TEXT_TYPE_PY && (a.boardType = e.MODE_VIMBOARD, a.textType = 
-            c.TEXT_TYPE_PY, a.runType = c.WORKSPACE_MODE, this.oldTextType = c.TEXT_TYPE_PY), Entry.getMainWS().setMode(a);
+            this.vimBoard._parser._onError = !0, this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), f.banClass("functionInit"), this.mode = e.MODE_VIMBOARD, this.oldTextType == c.TEXT_TYPE_JS ? (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_JS, a.runType = c.MAZE_MODE, this.oldTextType = c.TEXT_TYPE_JS) : this.oldTextType == c.TEXT_TYPE_PY && (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_PY, a.runType = 
+            c.WORKSPACE_MODE, this.oldTextType = c.TEXT_TYPE_PY), Entry.getMainWS().setMode(a);
           }
           Entry.commander.setCurrentEditor("board", this.board);
           break;

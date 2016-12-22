@@ -104,6 +104,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
+                try {
                     if(alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) {
                         alert(alert_message);
                         var mode = {};
@@ -118,16 +119,24 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.set({selectedBoard:this.vimBoard});
                     this.vimBoard.show();
                     this.initDeclaration();
-                    this.codeToText(this.board.code, mode);
+                    this.codeToText(this.board.code, mode); 
                     blockMenu.renderText();
                     this.board.clear();
                     this.oldTextType = this.textType;
+                } catch(e) {
+                    this.oldMode = WORKSPACE.MODE_VIMBOARD;
+                    Entry.getMainWS().setMode(WORKSPACE.MODE_BOARD, e.message); 
+                    throw e;
+                }
                     //destroy view because of performance
                 break;
             case WORKSPACE.MODE_BOARD:
                 try {
+                    if(message == 'no block') {
+                        this.oldMode = this.mode;
+                    }
                     this.board.show();
-                    blockMenu.unbanClass('functionInit');
+                    blockMenu.unbanClass('functionInit'); 
                     this.set({selectedBoard:this.board});
                     this.textToCode(this.oldMode, this.oldTextType);
                     if (this.overlayBoard)
@@ -135,18 +144,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     blockMenu.renderBlock();
                     this.oldTextType = this.textType;
                     this.vimBoard && this.vimBoard.hide();
-                    this.vimBoard._isError = false;
+                    this.vimBoard._parser._onError = false;
                 } catch(e) {
-                    console.log("error start");
-                    this.vimBoard._isError = true;
+                    this.vimBoard._parser._onError = true;
                     if(this.board && this.board.code)
                         this.board.code.clear();
                     if (this.board) this.board.hide();
                     this.set({selectedBoard:this.vimBoard});
                     blockMenu.banClass('functionInit');
                     this.mode = WORKSPACE.MODE_VIMBOARD;
-
-                    //console.log(("this.oldTextType", this.oldTextType);
 
                     if(this.oldTextType == VIM.TEXT_TYPE_JS) {
                         mode.boardType = WORKSPACE.MODE_VIMBOARD;

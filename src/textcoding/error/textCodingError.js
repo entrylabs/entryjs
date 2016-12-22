@@ -47,6 +47,7 @@ Entry.TextCodingError = {};
 	tce.ALERT_LIST_NO_SUPPORT = "alert_list_no_support";
 	tce.ALERT_VARIABLE_NO_SUPPORT = "alert_variable_no_support";
 	tce.ALERT_SIGNAL_NO_SUPPORT = "alert_signal_no_support";
+	tce.ALERT_LEGACY_NO_SUPPORT = "alert_legacy_no_support";
 
 	var error = {};
  

@@ -111,7 +111,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 textParams = syntaxObj.textParams;
 
         // User Function
-        if(this.isFunc(block)) {
+        if(this.isFunc(block)) { 
             console.log("func block", block);
             console.log("this._hasRootFunc", this._hasRootFunc);
             if(!this._hasRootFunc) {
@@ -124,10 +124,18 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     return syntax;
         } else if(this.isFuncStmtParam(block)) {
             result += block.data.type;
-        }
+        } 
+
+        console.log("block syntax", syntax); 
 
         if(!syntax || syntax == null) {
-            return result;
+            if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
+                var alert_message = Lang.TextCoding[Entry.TextCodingError.ALERT_LEGACY_NO_SUPPORT];
+                alert(alert_message); 
+                var error = {};
+                error.message = 'no block';
+                throw error; 
+            } 
         }
 
 

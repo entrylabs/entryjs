@@ -275,7 +275,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         var sObject = ws.vimBoard._currentObject;
                         var sScene = ws.vimBoard._currentScene;
                         Entry.container.selectObject(sObject.id, sScene);  
-                        
+
                         var board = ws.board;
                         if(board) board.code.clear();
                     }
