@@ -835,16 +835,16 @@ Entry.Playground.prototype.injectCode = function() {
     var code = this.object.script;
     var ws = this.mainWorkspace;
 
-    if (Entry.textCodingEnable) {
+    if (Entry.textCodingEnable && !ws.vimBoard._parser._onError) {
         if(this.mainWorkspace.vimBoard._changedObject)
             this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject;
         else
             if(Entry.playground)
                 this.mainWorkspace.vimBoard._currentObject = Entry.playground.object;
+    
+        if(Entry.playground && Entry.textCodingEnable)
+            this.mainWorkspace.vimBoard._changedObject = Entry.playground.object;
     }
-
-    if(Entry.playground && Entry.textCodingEnable)
-        this.mainWorkspace.vimBoard._changedObject = Entry.playground.object;
 
     ws.changeBoardCode(code, function() {
         ws.getBoard().adjustThreadsPosition();

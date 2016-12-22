@@ -1396,7 +1396,8 @@ Entry.TextCodingUtil = {};
                     }
 
                     if(matchFlag && textFuncStatement.statements && textFuncStatement.statements.length != 0) {
-                        matchFlag = this.isFuncContentsMatch(blockFuncContent.data.statements[0]._data, textFuncStatement.statements[0], paramMap, paramInfo);
+                        for(var kkk in textFuncStatement.statements)
+                            matchFlag = this.isFuncContentsMatch(blockFuncContent.data.statements[kkk]._data, textFuncStatement.statements[kkk], paramMap, paramInfo);
                     }
                 }
                 else {
@@ -1550,13 +1551,16 @@ Entry.TextCodingUtil = {};
 
     tu.makeFuncParamBlock = function(targetBlock, paramInfo, blockCount) {
         console.log("targetBlock", targetBlock);
-        var params = targetBlock.params;
+        /*if(targetBlock.type == cFuncKey) {
+            targetBlock.type = cFuncType;
+        }*/
+        var tParams = targetBlock.params;
         
-        console.log("makeFuncParamBlock params", params);
+        console.log("makeFuncParamBlock tParams", tParams);
 
 
-        for(var i in params) {
-            var param = params[i];
+        for(var i in tParams) {
+            var param = tParams[i];
             console.log("makeFuncParamBlock param", param, "i", i);
             if(!param)
                 continue;
@@ -1567,7 +1571,7 @@ Entry.TextCodingUtil = {};
             if(param.type && param.params && param.params.length != 0) {
                 this.makeFuncParamBlock(param, paramInfo, blockCount);
             }
-            else if(param.type && param.params.length == 0) { 
+            else if(param.type && param.params && param.params.length == 0) { 
                 var paramKey = param.type;
                 var paramBlockType = paramInfo[paramKey];
                 console.log("paramBlockType1", paramBlockType);
@@ -1613,18 +1617,18 @@ Entry.TextCodingUtil = {};
         var stmts = targetBlock.statements;
 
         if(stmts && stmts[0] && stmts[0].length != 0) {
-            var statements = stmts[0];
-            for(var s in statements) {
-                var statement = statements[s];
-                this.makeFuncParamBlock(statement, paramInfo, blockCount);
+            var statements0 = stmts[0];
+            for(var s0 in statements0) {
+                var statement0 = statements0[s0];
+                this.makeFuncParamBlock(statement0, paramInfo, blockCount);
             }
         }
 
         if(stmts && stmts[1] && stmts[1].length != 0) {
-            var statements = stmts[1];
-            for(var s in statements) {
-                var statement = statements[s];
-                this.makeFuncParamBlock(statement, paramInfo, blockCount);
+            var statements1 = stmts[1];
+            for(var s1 in statements1) {
+                var statement1 = statements1[s1];
+                this.makeFuncParamBlock(statement1, paramInfo, blockCount);
             }
         }
     };

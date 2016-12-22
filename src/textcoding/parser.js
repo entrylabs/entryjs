@@ -117,7 +117,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 this._execParser = new Entry.PyToBlockParser(this.syntax);
 
                 this._execParserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
-                this._isError = false;
+                this._onError = false;
 
                 break;
 
@@ -159,6 +159,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.parse = function(code, parseMode) {
+        this._onError = false;
         console.log("this.syntax", this.syntax);
         console.log("this._syntax_cache", this._syntax_cache);
         var type = this._type;
@@ -238,6 +239,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
+                    this._onError = false;
                     this._pyBlockCount = {};
                     this._pyThreadCount = 1;
 
@@ -267,8 +269,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     break;
                 } catch(error) {
                     result = [];
-                    if(Entry.getMainWS()){
-                        var board = Entry.getMainWS().board;
+                    var ws = Entry.getMainWS();
+                    if(ws){
+                        this._onError = true;
+                        var sObject = ws.vimBoard._currentObject;
+                        var sScene = ws.vimBoard._currentScene;
+                        Entry.container.selectObject(sObject.id, sScene);  
+                        
+                        var board = ws.board;
                         if(board) board.code.clear();
                     }
 

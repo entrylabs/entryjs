@@ -126,8 +126,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
             result += block.data.type;
         }
 
-        if(!syntax || syntax == null)
+        if(!syntax || syntax == null) {
             return result;
+        }
 
 
         var blockReg = /(%.)/mi;
@@ -154,6 +155,24 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         var param = this.Block(dataParams[index]).trim();
                         if(syntaxObj.textParams && syntaxObj.textParams[index])
                             var textParam = syntaxObj.textParams[index];
+
+                        var funcParam = this._funcParamMap.get(param);
+
+                        if(funcParam) {
+                            param = funcParam;
+                            //continue;
+                        } else {
+                            var funcParamTokens = param.split('_');
+                            var prefix = funcParamTokens[0];
+                            if(funcParamTokens.length == 2) {
+                                if(prefix == "stringParam"){
+                                    param = "string_param";
+                                } else if(prefix == "booleanParam") {
+                                    param = "boolean_param";
+                                }
+                            }
+                        }
+
                         if(textParam && textParam.paramType == "index") { 
                             if(!isNaN(param)) param = String(parseInt(param) - 1);
                             else {
@@ -167,22 +186,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
                                 else param += " - 1";
                             }
                         }
-
-                        var funcParam = this._funcParamMap.get(param);
-                        if(funcParam) {
-                            result += funcParam;
-                            continue;
-                        } else {
-                            var funcParamTokens = param.split('_');
-                            var prefix = funcParamTokens[0];
-                            if(funcParamTokens.length == 2) {
-                                if(prefix == "stringParam"){
-                                    param = "string_param";
-                                } else if(prefix == "booleanParam") {
-                                    param = "boolean_param";
-                                }
-                            }
-                        }
+                        console.log("btop param", param);
+                        console.log("btop this._funcParamMap", this._funcParamMap);
+                        
                         result += param;
                     } else {
                         if(syntaxObj.textParams)
