@@ -18623,6 +18623,36 @@ Entry.overridePrototype = function() {
   Number.prototype.mod = function(b) {
     return (this % b + b) % b;
   };
+  String.prototype.repeat || (String.prototype.repeat = function(b) {
+    if (null == this) {
+      throw new TypeError("can't convert " + this + " to object");
+    }
+    var a = "" + this;
+    b = +b;
+    b != b && (b = 0);
+    if (0 > b) {
+      throw new RangeError("repeat count must be non-negative");
+    }
+    if (Infinity == b) {
+      throw new RangeError("repeat count must be less than infinity");
+    }
+    b = Math.floor(b);
+    if (0 == a.length || 0 == b) {
+      return "";
+    }
+    if (268435456 <= a.length * b) {
+      throw new RangeError("repeat count must not overflow maximum string size");
+    }
+    for (var d = "";;) {
+      1 == (b & 1) && (d += a);
+      b >>>= 1;
+      if (0 == b) {
+        break;
+      }
+      a += a;
+    }
+    return d;
+  });
 };
 Entry.Utils.generateId = function() {
   return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36)).substr(-4);
