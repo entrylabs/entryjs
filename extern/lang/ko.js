@@ -4153,7 +4153,15 @@ Lang.template = {
     "smartBoard_set_servo_port_pwm": "%1 핀을 %2 로 정하기 %3 ",
     "smartBoard_set_servo_speed": "%1 번 서보모터의 속도를 %2 %3",
     "smartBoard_set_servo_angle": "%1 번 서보모터를 %2 도 로 움직이기 %3",
-    "smartBoard_set_number_eight_pin": "예비포트(디지털 8번핀) %1 %2 "
+    "smartBoard_set_number_eight_pin": "예비포트(디지털 8번핀) %1 %2 ",
+    "dadublock_get_analog_value": "아날로그 %1 번 센서값",
+    "dadublock_get_analog_value_map": "아날로그 %1번 센서값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ",
+    "dadublock_get_ultrasonic_value": "울트라소닉 Trig %1번핀 Echo %2번핀 센서값",
+    "dadublock_toggle_led": "디지털 %1 번 핀 %2 %3",
+    "dadublock_digital_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
+    "dadublock_set_tone": "디지털 %1 번 핀을 %2 음으로 %3의 옥타르보 %4 만큼 연주하기 %5",
+    "dadublock_set_servo": "서보모터 %1 번 핀을 %2 의 각도로 정하기 %3",
+    "dadublock_get_digital": "디지털 %1 번 센서값"
 };
 
 if (typeof exports == "object")

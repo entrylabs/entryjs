@@ -53,6 +53,7 @@ Entry.HW = function() {
         '12.1': Entry.EV3,
         'B.1': Entry.Codestar,
         'A.1': Entry.SmartBoard,
+        'C.1': Entry.DaduBlock,
         'D.1': Entry.robotori
     };
 };

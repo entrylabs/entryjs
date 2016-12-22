@@ -564,8 +564,18 @@ EntryStatic.getAllBlocks = function() {
                 "robotori_digitalOutput",
                 "robotori_analogOutput",
                 "robotori_servo",
-                "robotori_dc_direction"
+                "robotori_dc_direction",
                 //robotori add 20161129 end
+
+                //dadublock 2016-12-19
+                "dadublock_get_analog_value",
+                "dadublock_get_analog_value_map",
+                "dadublock_get_ultrasonic_value",
+                "dadublock_get_digital",
+                "dadublock_toggle_led",
+                "dadublock_digital_pwm",
+                "dadublock_set_servo",
+                "dadublock_set_tone"
             ]
         }
     ]
