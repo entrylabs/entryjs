@@ -22854,13 +22854,13 @@ Entry.BlockMenu = function(b, a, d, c) {
           case Entry.Workspace.MODE_BOARD:
           ;
           case Entry.Workspace.MODE_OVERLAYBOARD:
-            b = this.renderBlock(b);
+            this.renderBlock(b);
             break;
           case Entry.Workspace.MODE_VIMBOARD:
-            b = this.renderText(b);
+            this.renderText(b);
             break;
           default:
-            b = this.renderBlock(b);
+            this.renderBlock(b);
         }
       }
       this._renderedCategories[this.lastSelector] = !0;
@@ -22902,20 +22902,24 @@ Entry.BlockMenu = function(b, a, d, c) {
     this.view.removeClass("entryRemove");
   };
   b.renderText = function(a) {
-    a = a || this._getSortedBlocks();
-    var b = Entry.BlockView.RENDER_MODE_TEXT;
-    a[0].forEach(function(a) {
-      b !== a.view.renderMode && (a = a.getThread(), a.view ? a.view.renderText() : a.createView(this, Entry.BlockView.RENDER_MODE_TEXT));
-    }.bind(this));
-    return a;
+    if (this._isOn()) {
+      a = a || this._getSortedBlocks();
+      var b = Entry.BlockView.RENDER_MODE_TEXT;
+      a[0].forEach(function(a) {
+        b !== a.view.renderMode && (a = a.getThread(), a.view ? a.view.renderText() : a.createView(this, Entry.BlockView.RENDER_MODE_TEXT));
+      }.bind(this));
+      return a;
+    }
   };
   b.renderBlock = function(a) {
-    a = a || this._getSortedBlocks();
-    var b = Entry.BlockView.RENDER_MODE_BLOCK;
-    a[0].forEach(function(a) {
-      b !== a.view.renderMode && (a = a.getThread(), a.view ? a.view.renderBlock() : a.createView(this, Entry.BlockView.RENDER_MODE_BLOCK));
-    }.bind(this));
-    return a;
+    if (this._isOn()) {
+      a = a || this._getSortedBlocks();
+      var b = Entry.BlockView.RENDER_MODE_BLOCK;
+      a[0].forEach(function(a) {
+        b !== a.view.renderMode && (a = a.getThread(), a.view ? a.view.renderBlock() : a.createView(this, Entry.BlockView.RENDER_MODE_BLOCK));
+      }.bind(this));
+      return a;
+    }
   };
   b._createSplitter = function(a) {
     a = this.svgBlockGroup.elem("line", {x1:20, y1:a, x2:this._svgWidth - 20, y2:a, stroke:"#b5b5b5"});
@@ -22965,31 +22969,33 @@ Entry.BlockMenu = function(b, a, d, c) {
     }
   };
   b.selectMenu = function(a, b, c) {
-    var e = this._selectedCategoryView, f = this._convertSelector(a);
-    if (void 0 === a || f) {
-      f && (this.lastSelector = f);
-      this._isSelectingMenu = !0;
-      switch(f) {
-        case "variable":
-          Entry.playground.checkVariables();
-          break;
-        case "arduino":
-          this._generateHwCode(), this.align();
+    if (this._isOn()) {
+      var e = this._selectedCategoryView, f = this._convertSelector(a);
+      if (void 0 === a || f) {
+        f && (this.lastSelector = f);
+        this._isSelectingMenu = !0;
+        switch(f) {
+          case "variable":
+            Entry.playground.checkVariables();
+            break;
+          case "arduino":
+            this._generateHwCode(), this.align();
+        }
+        a = this._categoryElems[f];
+        var g = !1, h = this.workspace.board, k = h.view;
+        e && e.removeClass("entrySelectedCategory");
+        a != e || b ? e ? f || (this._selectedCategoryView = null) : (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, a && a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
+        g && Entry.bindAnimationCallbackOnce(k, function() {
+          h.scroller.resizeScrollBar.call(h.scroller);
+          k.removeClass("foldOut");
+          Entry.windowResized.notify();
+        });
+        this._isSelectingMenu = !1;
+        this.visible && (this._selectedCategoryView = a) && a.addClass("entrySelectedCategory");
+        !0 !== c && this._dAlign();
+      } else {
+        this._dAlign();
       }
-      a = this._categoryElems[f];
-      var g = !1, h = this.workspace.board, k = h.view;
-      e && e.removeClass("entrySelectedCategory");
-      a != e || b ? e ? f || (this._selectedCategoryView = null) : (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, a && a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
-      g && Entry.bindAnimationCallbackOnce(k, function() {
-        h.scroller.resizeScrollBar.call(h.scroller);
-        k.removeClass("foldOut");
-        Entry.windowResized.notify();
-      });
-      this._isSelectingMenu = !1;
-      this.visible && (this._selectedCategoryView = a) && a.addClass("entrySelectedCategory");
-      !0 !== c && this._dAlign();
-    } else {
-      this._dAlign();
     }
   };
   b._generateCategoryCodes = function(a) {
@@ -23248,9 +23254,7 @@ Entry.BlockMenu = function(b, a, d, c) {
     return [a, b];
   };
   b._setDynamic = function(a) {
-    this._selectDynamic = !0;
-    this._dynamicThreads = a;
-    this.selectMenu(void 0, !0);
+    this._isOn() && (this._selectDynamic = !0, this._dynamicThreads = a, this.selectMenu(void 0, !0));
   };
   b._cancelDynamic = function(a, b) {
     this._setDynamicTimer && (clearTimeout(this._setDynamicTimer), this._setDynamicTimer = null);
@@ -27623,6 +27627,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           switch(c) {
             case 49:
               h.changeViewMode("code");
+              h.blockMenu.reDraw();
               a.preventDefault();
               break;
             case 50:

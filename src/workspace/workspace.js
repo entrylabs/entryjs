@@ -362,6 +362,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             switch (keyCode) {
                 case 49:
                     playground.changeViewMode('code');
+                    playground.blockMenu.reDraw();
                     e.preventDefault();
                     break;
                 case 50:
