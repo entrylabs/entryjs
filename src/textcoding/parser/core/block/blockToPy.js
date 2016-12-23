@@ -98,11 +98,12 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return result;
     };
 
-    p.Block = function(block) {
+    p.Block = function(block, template) {
         console.log("this._parseMode", this._parseMode);
+        console.log("block unit", block);
         var result = "";
         var syntaxObj, syntax, textParams;
-
+        
         syntaxObj = this.searchSyntax(block);
         console.log("syntaxObj", syntaxObj);
         if(syntaxObj)
@@ -115,6 +116,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             console.log("func block", block);
             console.log("this._hasRootFunc", this._hasRootFunc);
             if(!this._hasRootFunc) {
+                this._rootFuncId = block.data.type;
                 this._funcDefMap[block.data.type] = this.makeFuncDef(block, this._hasRootFunc);
                 this._hasRootFunc = false;
             }
@@ -126,18 +128,38 @@ Entry.BlockToPyParser = function(blockSyntax) {
             result += block.data.type;
         } 
 
-        console.log("block syntax", syntax); 
-
-        if(!syntax || syntax == null) {
-            if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
-                var alert_message = Lang.TextCoding[Entry.TextCodingError.ALERT_LEGACY_NO_SUPPORT];
-                alert(alert_message); 
-                var error = {};
-                error.message = 'no block';
-                throw error; 
-            } 
+        console.log("block syntax", syntax);  
+        /*if(block && block.data) {
+            var btype = block.data.type;
+            if(btype.split('_')[0] == "stringParam" || btype.split('_')[0] == "booleanParam")
+                return result;
         }
+        
+        if(template) syntax = template;
 
+        if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
+            if(!syntax || syntax == null || syntax == "def when_start():") {
+                var error = {};
+                var alert_msg = Lang.TextCoding[Entry.TextCodingError.ALERT_LEGACY_NO_SUPPORT];
+                
+                error.type = 'no_block';
+                error.alert_msg = alert_msg;
+                if(block && block.data) {
+                    error.block_type = block.data.type;
+                    error.block_name = this.Block(block, Lang.template[block.data.type]);
+                }
+                else { 
+                    error.block_type = 'Block';
+                    error.block_name = 'Block'; 
+                }
+
+                alert(syntax);
+            } 
+        }*/
+
+        if(!syntax || syntax == null)
+            return result;
+        
 
         var blockReg = /(%.)/mi;
         var statementReg = /(\$.)/mi;
@@ -453,12 +475,20 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.makeFuncSyntax = function(funcBlock) {
+        console.log("ggg funcBlock", funcBlock);
         var syntax = "";
         if(funcBlock && funcBlock._schema)
             if(funcBlock._schema.template)
                 var schemaTemplate = funcBlock._schema.template.trim();
             else if(funcBlock._schema.params)
                 var schemaParams = funcBlock._schema.params;
+        else if(funcBlock && !funcBlock._schema) {
+            if(this._hasRootFunc) {
+                var rootFunc = Entry.block[this._rootFuncId];
+                var schemaParams = rootFunc.block.params;
+                var schemaTemplate = rootFunc.block.template;
+            }
+        }
         
         var paramReg = /(%.)/mi;
         if(schemaTemplate)

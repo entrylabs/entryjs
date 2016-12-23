@@ -1232,7 +1232,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params[0] = indexBlock;
                     }
                     else if(params[0].type == "calc_basic") {
-                        if(params[0].params[1] == "MINUS" && params[0].params[2].params[0] == "1") {
+                        if(params[0].params && params[0].params[1] == "MINUS" && 
+                            params[0].params[2] && params[0].params[2].params && params[0].params[2].params[0] == "1") {
                             params[0] = params[0].params[0];
                         }
                         else {
@@ -1251,7 +1252,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 else if(callee.property.name == "insert") {
                     if(params[2].type == "number" || params[2].type == "text") {
-                        if(!isNaN(params[2].params[0]))
+                        if(!isNaN(params[2].params && params[2].params[0]))
                             params[2].params[0] += 1;
                     }
                     else if(params[2].type == "get_variable") {
@@ -1266,7 +1267,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params[2] = indexBlock;
                     }
                     else if(params[2].type == "calc_basic") {
-                        if(params[2].params[1] == "MINUS" && params[2].params[2].params[0] == "1") {
+                        if(params[2].params && params[2].params[1] == "MINUS" && params[2].params[2] && 
+                            params[2].params[2].params && params[2].params[2].params[0] == "1") {
                             params[2] = params[2].params[0];
                         }
                         else {
@@ -1286,7 +1288,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(callee.property.name == "subscriptIndex") {
                     var p = params[3];
                     if(params[3].type == "number" || params[3].type == "text") {
-                        if(!isNaN(params[3].params[0]))
+                        if(!isNaN(params[3].params && params[3].params[0]))
                             params[3].params[0] += 1;
                     }
                     else if(params[3].type == "get_variable") {
@@ -1301,7 +1303,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params[3] = indexBlock;
                     }
                     else if(params[3].type == "calc_basic") {
-                        if(params[3].params[1] == "MINUS" && params[3].params[2].params[0] == "1") {
+                        if(params[3].params && params[3].params[1] == "MINUS" && params[3].params[2] && 
+                            params[3].params[2].params && params[3].params[2].params[0] == "1") {
                             params[3] = params[3].params[0];
                         }
                         else {
@@ -1339,7 +1342,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             params[1] = indexBlock;
                         }
                         else if(params[1].type == "calc_basic") {
-                            if(params[1].params[1] == "MINUS" && params[1].params[2].params[0] == "1") {
+                            if(params[1].params && params[1].params[1] == "MINUS" && params[1].params[2] && 
+                                params[1].params[2].params && params[1].params[2].params[0] == "1") {
                                 params[1] = params[1].params[0];
                             }
                             else {
@@ -1496,7 +1500,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
                                 keyword,
                                 this._blockCount,
-                                Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
+                                Entry.TextCodingError.SUBJECT_CONV_VARIABLE); 
                         }
                     }
                 }
@@ -2015,7 +2019,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(initData.params && initData.params[0] && initData.params[0].name &&
                     idData.name == initData.params[0].name &&
                     initData.operator == "PLUS" || initData.operator == "MINUS") {
-
                     console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
                     var syntax = String("%1 += %2");
                     var blockSyntax = this.getBlockSyntax(syntax);
@@ -3393,7 +3396,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("memberexpression arguments", arguments);
                 if(arguments && arguments[1]) {
                     if(arguments[1].type == "number" || arguments[1].type == "text") {
-                        if(!isNaN(arguments[1].params[0]))
+                        if(!isNaN(arguments[1].params && arguments[1].params[0]))
                             arguments[1].params[0] += 1;
                         params[3] = arguments[1];
                     }
@@ -3409,8 +3412,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params[3] = indexBlock;
                     }
                     else if(arguments[1].type == "calc_basic") {
-                        console.log("value list", arguments[1], "arguments[1].params[2].params[0]", arguments[1].params[2].params[0]);
-                        if(arguments[1].params[1] == "MINUS" && arguments[1].params[2].params[0] == "1") {
+                        if(arguments[1].params && arguments[1].params[1] == "MINUS" && arguments[1].params[2] && 
+                            arguments[1].params[2].params &&arguments[1].params[2].params[0] == "1") {
                             params[3] = arguments[1].params[0];
                             console.log("check params[3]", params[3]);
                         }
@@ -5361,10 +5364,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var statement = textFuncStatements[s];
                 var cFuncType = 'func_' + targetFuncId;
                 Entry.TextCodingUtil.makeFuncParamBlock(statement, paramInfo, this._blockCount);
-                if(statement.statements)
+                /*if(statement.statements)
                     for(var z in statement.statements) {
                         this.convertReculsiveFuncTypeGeneral(statement.statements[z], cFuncType);
-                    }
+                    }*/
                 var stmtBlock = new Entry.Block(statement, thread);
                 thread._data.push(stmtBlock);
             }
@@ -5517,28 +5520,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var tFunc = Entry.variableContainer.functions_[targetFuncId];
         console.log("tFunc", tFunc);
         if(tFunc) {
-            var fFuncStmts = tFunc.content._data[0]._data[1];
-            /*var tmpFuncStmts = [];
-            for(var i = 0; i < fFuncStmts.length; i++)
-                 tmpFuncStmts.push(fFuncStmts[i]);*/
-
-             //console.log("tmpFuncStmts", tmpFuncStmts);
-
+            var tFuncContents = tFunc.content._data[0]._data;
             if(this._hasReculsiveFunc) {
-                if(fFuncStmts.statements && fFuncStmts.statements[0] && fFuncStmts.statements[0]._data) {
-                    var contentStmts = fFuncStmts.statements[0]._data;
-                    for(var x in contentStmts) {
-                        if(contentStmts[x] instanceof Entry.Block)
-                            this.convertReculsiveFuncType(contentStmts[x]);
+                if(tFuncContents) {
+                    for(var tf in tFuncContents) {
+                        var tFuncContent = tFuncContents[tf];
+                        this.convertReculsiveFuncType(tFuncContent);
                     }
-                }
-                if(fFuncStmts.statements && fFuncStmts.statements[1] && fFuncStmts.statements[1]._data) {
-                    var contentStmts = fFuncStmts.statements[1]._data;
-                    for(var x in contentStmts) {
-                        if(contentStmts[x] instanceof Entry.Block)
-                            this.convertReculsiveFuncType(contentStmts[x]);
-                    }
-                }
+                } 
             }
         }
 
@@ -5621,21 +5610,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;  
     };
 
+    /////////////////////////////////////////////////////////////////
     // Utils
     p.codeInit = function() {
-        //this._funcMap.clear();
-        //this._funcParams = [];
-        //this._funcParamMap.clear();
         this.threadInit();
         this._currentObject = Entry.getMainWS().vimBoard._currentObject;
         this._funcMap.clear();
         this._code = []; 
         this._threadCount = 0;
         this._blockCount = 0;
-        //this._funcLoop = false;
-        //this._hasReculsiveFunc = false;
-        //this._forStatementCount = 0;
-        //this._isEntryEventExisted = false;
     };
 
     p.threadInit = function() {
@@ -5651,7 +5634,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.isFuncParam = function(paramName) {
         console.log("isFuncParam", this._funcParams);
         var result = false;
-        //var funcParams = this._funcParamMap.get(this._currentFuncKey);
         if(this._funcParams.length == 0)
             return false;
         for(var p in this._funcParams) {
@@ -5664,27 +5646,30 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
-    p.convertReculsiveFuncType = function(funcStmt) {  
-        console.log("convertReculsiveFuncType funcStmt", funcStmt);
-        if(!funcStmt) return;
-        if(!(funcStmt instanceof Entry.Block)) return;
+    p.convertReculsiveFuncType = function(funcContents) {  
+        console.log("convertReculsiveFuncType funcContents", funcContents);
+        if(!funcContents) return;
 
-        if(funcStmt.data.type) { 
-            var funcKey = funcStmt.data.type;
+        if(funcContents && funcContents.data) { 
+            var funcKey = funcContents.data.type;
             console.log("this._funcMap.get(funcKey)", this._funcMap);
             if(funcType = this._funcMap.get(funcKey))
-                funcStmt.data.type = funcType;
+                funcContents.data.type = funcType;
         }
 
-        if(funcStmt.data && funcStmt.data.statements) {
-            var fds = funcStmt.data.statements;
-            for(var kk in fds) {
-                if(fds[0]._data) {
-                    var fdsData = fds[0]._data;
-                    var tmpStmts = [];
-                    for(var t = 0; t < fdsData.length; t++)
-                        tmpStmts.push(fdsData[t]);
-                    this.convertReculsiveFuncType(tmpStmts);
+        if(funcContents && funcContents.data && funcContents.data.statements) {
+            if(funcContents.data.statements[0]) {
+                var statements0 = funcContents.data.statements[0]._data;
+                for(var s in statements0) {
+                    var statement = statements0[s];
+                    this.convertReculsiveFuncType(statement);
+                }
+            }
+            if(funcContents.data.statements[1]) {
+                var statements1 = funcContents.data.statements[1]._data;
+                for(var s in statements1) {
+                    var statement = statements1[s];
+                    this.convertReculsiveFuncType(statement);
                 }
             }
         } 

@@ -2845,6 +2845,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "Arduino.digitalRead(%1)",
+                keyOption: "ext",
                 blockType: "param",
                 textParams: [
                     {
@@ -27138,10 +27139,12 @@ Entry.block = {
     "maze_step_if_8": {
         "parent": "_if",
         "class": "",
+        "syntax": {"js": [], "py": []}
     },
     "maze_step_if_else": {
         "parent": "if_else",
         "class": "",
+        "syntax": {"js": [], "py": []}
     },
     "test_wrapper": {
         "skeleton": "basic",
@@ -28598,7 +28601,8 @@ Entry.block = {
             ],
             "type": "ardublock_get_digital_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": []}
     },
     "ardublock_toggle_led": {
         "parent": "arduino_toggle_led",
@@ -28702,7 +28706,8 @@ Entry.block = {
             ],
             "type": "joystick_get_digital_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": []}
     },
     "joystick_toggle_led": {
         "parent": "arduino_toggle_led",
@@ -28790,7 +28795,8 @@ Entry.block = {
                     ]
                 }
             ]
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "ebs_if2": {
         "parent": "_if",
@@ -28805,7 +28811,8 @@ Entry.block = {
                     ]
                 }
             ]
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "ai_move_right": {
         "skeleton": "basic",
