@@ -11814,7 +11814,11 @@ Entry.Scene.prototype.selectScene = function(b) {
       Entry.container.selectObject(a.id), Entry.playground.refreshPlayground();
     } else {
       if ((a = Entry.getMainWS()) && a.vimBoard) {
-        var d = a.vimBoard._currentObject, c = d.scene, e = a.vimBoard._parser;
+        var d = a.vimBoard._currentObject;
+        if (d) {
+          var c = d.scene
+        }
+        var e = a.vimBoard._parser;
         try {
           b.id != c.id && a._syncTextCode();
         } catch (f) {

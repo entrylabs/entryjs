@@ -317,7 +317,8 @@ Entry.Scene.prototype.selectScene = function(scene) {
         var workspace = Entry.getMainWS();  
         if(workspace && workspace.vimBoard) {
             var sObject = workspace.vimBoard._currentObject;
-            var sScene = sObject.scene;
+            if(sObject) 
+                var sScene = sObject.scene;
             var parser = workspace.vimBoard._parser;
             try {
                 if(scene.id != sScene.id)
