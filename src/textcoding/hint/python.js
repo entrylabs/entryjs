@@ -91,8 +91,8 @@ Entry.PyHint = function(syntax) {
                     if (key.indexOf(".") > -1) {
                         key = key.split(".");
                         localSyntax = syntax[key[0]]
-                        localKey = key[0];
-                        key = key[1];
+                        localKey = key.shift();
+                        key = key.join(".");
                     }
                     if (localSyntax[key].key)
                         menuResult.push(localSyntax[key].key)

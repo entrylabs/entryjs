@@ -7040,6 +7040,36 @@ Entry.overridePrototype = function() {
   Number.prototype.mod = function(b) {
     return (this % b + b) % b;
   };
+  String.prototype.repeat || (String.prototype.repeat = function(b) {
+    if (null == this) {
+      throw new TypeError("can't convert " + this + " to object");
+    }
+    var a = "" + this;
+    b = +b;
+    b != b && (b = 0);
+    if (0 > b) {
+      throw new RangeError("repeat count must be non-negative");
+    }
+    if (Infinity == b) {
+      throw new RangeError("repeat count must be less than infinity");
+    }
+    b = Math.floor(b);
+    if (0 == a.length || 0 == b) {
+      return "";
+    }
+    if (268435456 <= a.length * b) {
+      throw new RangeError("repeat count must not overflow maximum string size");
+    }
+    for (var c = "";;) {
+      1 == (b & 1) && (c += a);
+      b >>>= 1;
+      if (0 == b) {
+        break;
+      }
+      a += a;
+    }
+    return c;
+  });
 };
 Entry.Utils.generateId = function() {
   return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36)).substr(-4);
@@ -14858,31 +14888,18 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       var c = Entry.Vim, e = Entry.Workspace, f = this.blockMenu;
       switch(this.mode) {
         case e.MODE_VIMBOARD:
-          if (alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-            alert(alert_message);
-            a = {};
-            a.boardType = e.MODE_BOARD;
-            a.textType = -1;
-            Entry.getMainWS().setMode(a);
-            break;
+          try {
+            (alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) ? (alert(alert_message), a = {}, a.boardType = e.MODE_BOARD, a.textType = -1, Entry.getMainWS().setMode(a)) : (this.board && this.board.hide(), this.overlayBoard && this.overlayBoard.hide(), f.banClass("functionInit"), this.set({selectedBoard:this.vimBoard}), this.vimBoard.show(), this.initDeclaration(), this.codeToText(this.board.code, a), f.renderText(), this.board.clear(), this.oldTextType = this.textType);
+          } catch (g) {
+            throw this.oldMode = e.MODE_VIMBOARD, Entry.getMainWS().setMode(e.MODE_BOARD, g.message), g;
           }
-          this.board && this.board.hide();
-          this.overlayBoard && this.overlayBoard.hide();
-          f.banClass("functionInit");
-          this.set({selectedBoard:this.vimBoard});
-          this.vimBoard.show();
-          this.initDeclaration();
-          this.codeToText(this.board.code, a);
-          f.renderText();
-          this.board.clear();
-          this.oldTextType = this.textType;
           break;
         case e.MODE_BOARD:
           try {
-            this.board.show(), f.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), f.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide(), this.vimBoard._isError = !1;
+            "no block" == b && (this.oldMode = this.mode), this.board.show(), f.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), f.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide(), this.vimBoard._parser._onError = !1;
           } catch (g) {
-            console.log("error start"), this.vimBoard._isError = !0, this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), f.banClass("functionInit"), this.mode = e.MODE_VIMBOARD, this.oldTextType == c.TEXT_TYPE_JS ? (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_JS, a.runType = c.MAZE_MODE, this.oldTextType = c.TEXT_TYPE_JS) : this.oldTextType == c.TEXT_TYPE_PY && (a.boardType = e.MODE_VIMBOARD, a.textType = 
-            c.TEXT_TYPE_PY, a.runType = c.WORKSPACE_MODE, this.oldTextType = c.TEXT_TYPE_PY), Entry.getMainWS().setMode(a);
+            this.vimBoard._parser._onError = !0, this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), f.banClass("functionInit"), this.mode = e.MODE_VIMBOARD, this.oldTextType == c.TEXT_TYPE_JS ? (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_JS, a.runType = c.MAZE_MODE, this.oldTextType = c.TEXT_TYPE_JS) : this.oldTextType == c.TEXT_TYPE_PY && (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_PY, a.runType = 
+            c.WORKSPACE_MODE, this.oldTextType = c.TEXT_TYPE_PY), Entry.getMainWS().setMode(a);
           }
           Entry.commander.setCurrentEditor("board", this.board);
           break;
@@ -14996,6 +15013,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           switch(c) {
             case 49:
               h.changeViewMode("code");
+              h.blockMenu.reDraw();
               a.preventDefault();
               break;
             case 50:
@@ -17051,6 +17069,7 @@ Entry.TextCodingError = {};
   b.ALERT_LIST_NO_SUPPORT = "alert_list_no_support";
   b.ALERT_VARIABLE_NO_SUPPORT = "alert_variable_no_support";
   b.ALERT_SIGNAL_NO_SUPPORT = "alert_signal_no_support";
+  b.ALERT_LEGACY_NO_SUPPORT = "alert_legacy_no_support";
   var a = {};
   b.error = function(b, d, e, f, g) {
     console.log("error control", b, d, e, f);
@@ -17111,7 +17130,7 @@ Entry.PyHint = function(b) {
         e = this.fuzzySearch(this.getScope("_global"), g);
         e = e.map(function(a) {
           var b = l, c = a.split("#")[0], c = c.split("\n").join(" "), c = c.replace(/%\d+/gi, ""), c = c.replace(/\$\d+/gi, ""), d;
-          -1 < a.indexOf(".") && (a = a.split("."), b = l[a[0]], d = a[0], a = a[1]);
+          -1 < a.indexOf(".") && (a = a.split("."), b = l[a[0]], d = a.shift(), a = a.join("."));
           b[a].key && f.push(b[a].key);
           return {displayText:c, hint:k, syntax:b[a], localKey:d};
         });
@@ -17348,8 +17367,9 @@ Entry.BlockToPyParser = function(b) {
     } else {
       this.isFuncStmtParam(a) && (b += a.data.type);
     }
-    if (!e || null == e) {
-      return b;
+    console.log("block syntax", e);
+    if ((!e || null == e) && this._parseMode == Entry.Parser.PARSE_GENERAL) {
+      throw alert(Lang.TextCoding[Entry.TextCodingError.ALERT_LEGACY_NO_SUPPORT]), {message:"no block"};
     }
     var g = /(%.)/mi, h = /(\$.)/mi;
     e = e.split(g);
@@ -19099,7 +19119,7 @@ Entry.PyToBlockParser = function(b) {
     e && (a = Entry.TextCodingUtil.getDynamicIdByNumber(a, e, this._currentObject));
     a && isNaN(a) && 2 < a.split(".").length && "self" == a.split(".")[0] && (a = a.split(".")[1], f = this._currentObject);
     a = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(a, b.menuName, f);
-    e && e.codeMap && ((b = e.codeMap) && eval(b) && isNaN(a) && (a = a.toLowerCase()), (b = eval(b)[a()]) && (a = b));
+    e && e.codeMap && ((b = e.codeMap) && eval(b) && isNaN(a) && (a = a.toLowerCase()), (b = eval(b)[a]) && (a = b));
     console.log("ParamDropdownDynamic result", a);
     return a;
   };
@@ -19992,13 +20012,15 @@ Entry.PyToBlockParser = function(b) {
     n = Entry.variableContainer.functions_[n];
     console.log("tFunc", n);
     if (n && (n = n.content._data[0]._data[1], this._hasReculsiveFunc)) {
-      k = n.statements[0]._data;
-      for (m in k) {
-        k[m] instanceof Entry.Block && this.convertReculsiveFuncType(k[m]);
+      if (n.statements && n.statements[0] && n.statements[0]._data) {
+        for (m in k = n.statements[0]._data, k) {
+          k[m] instanceof Entry.Block && this.convertReculsiveFuncType(k[m]);
+        }
       }
-      k = n.statements[1]._data;
-      for (m in k) {
-        k[m] instanceof Entry.Block && this.convertReculsiveFuncType(k[m]);
+      if (n.statements && n.statements[1] && n.statements[1]._data) {
+        for (m in k = n.statements[1]._data, k) {
+          k[m] instanceof Entry.Block && this.convertReculsiveFuncType(k[m]);
+        }
       }
     }
     this._hasReculsiveFunc = this._funcLoop = !1;
@@ -24945,13 +24967,13 @@ Entry.BlockMenu = function(b, a, c, d) {
         switch(this.workspace.getMode()) {
           case Entry.Workspace.MODE_BOARD:
           case Entry.Workspace.MODE_OVERLAYBOARD:
-            b = this.renderBlock(b);
+            this.renderBlock(b);
             break;
           case Entry.Workspace.MODE_VIMBOARD:
-            b = this.renderText(b);
+            this.renderText(b);
             break;
           default:
-            b = this.renderBlock(b);
+            this.renderBlock(b);
         }
       }
       this._renderedCategories[this.lastSelector] = !0;
@@ -24993,20 +25015,24 @@ Entry.BlockMenu = function(b, a, c, d) {
     this.view.removeClass("entryRemove");
   };
   b.renderText = function(a) {
-    a = a || this._getSortedBlocks();
-    var b = Entry.BlockView.RENDER_MODE_TEXT;
-    a[0].forEach(function(a) {
-      b !== a.view.renderMode && (a = a.getThread(), a.view ? a.view.renderText() : a.createView(this, Entry.BlockView.RENDER_MODE_TEXT));
-    }.bind(this));
-    return a;
+    if (this._isOn()) {
+      a = a || this._getSortedBlocks();
+      var b = Entry.BlockView.RENDER_MODE_TEXT;
+      a[0].forEach(function(a) {
+        b !== a.view.renderMode && (a = a.getThread(), a.view ? a.view.renderText() : a.createView(this, Entry.BlockView.RENDER_MODE_TEXT));
+      }.bind(this));
+      return a;
+    }
   };
   b.renderBlock = function(a) {
-    a = a || this._getSortedBlocks();
-    var b = Entry.BlockView.RENDER_MODE_BLOCK;
-    a[0].forEach(function(a) {
-      b !== a.view.renderMode && (a = a.getThread(), a.view ? a.view.renderBlock() : a.createView(this, Entry.BlockView.RENDER_MODE_BLOCK));
-    }.bind(this));
-    return a;
+    if (this._isOn()) {
+      a = a || this._getSortedBlocks();
+      var b = Entry.BlockView.RENDER_MODE_BLOCK;
+      a[0].forEach(function(a) {
+        b !== a.view.renderMode && (a = a.getThread(), a.view ? a.view.renderBlock() : a.createView(this, Entry.BlockView.RENDER_MODE_BLOCK));
+      }.bind(this));
+      return a;
+    }
   };
   b._createSplitter = function(a) {
     a = this.svgBlockGroup.elem("line", {x1:20, y1:a, x2:this._svgWidth - 20, y2:a, stroke:"#b5b5b5"});
@@ -25056,31 +25082,33 @@ Entry.BlockMenu = function(b, a, c, d) {
     }
   };
   b.selectMenu = function(a, b, d) {
-    var c = this._selectedCategoryView, f = this._convertSelector(a);
-    if (void 0 === a || f) {
-      f && (this.lastSelector = f);
-      this._isSelectingMenu = !0;
-      switch(f) {
-        case "variable":
-          Entry.playground.checkVariables();
-          break;
-        case "arduino":
-          this._generateHwCode(), this.align();
+    if (this._isOn()) {
+      var c = this._selectedCategoryView, f = this._convertSelector(a);
+      if (void 0 === a || f) {
+        f && (this.lastSelector = f);
+        this._isSelectingMenu = !0;
+        switch(f) {
+          case "variable":
+            Entry.playground.checkVariables();
+            break;
+          case "arduino":
+            this._generateHwCode(), this.align();
+        }
+        a = this._categoryElems[f];
+        var g = !1, h = this.workspace.board, k = h.view;
+        c && c.removeClass("entrySelectedCategory");
+        a != c || b ? c ? f || (this._selectedCategoryView = null) : (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, a && a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
+        g && Entry.bindAnimationCallbackOnce(k, function() {
+          h.scroller.resizeScrollBar.call(h.scroller);
+          k.removeClass("foldOut");
+          Entry.windowResized.notify();
+        });
+        this._isSelectingMenu = !1;
+        this.visible && (this._selectedCategoryView = a) && a.addClass("entrySelectedCategory");
+        !0 !== d && this._dAlign();
+      } else {
+        this._dAlign();
       }
-      a = this._categoryElems[f];
-      var g = !1, h = this.workspace.board, k = h.view;
-      c && c.removeClass("entrySelectedCategory");
-      a != c || b ? c ? f || (this._selectedCategoryView = null) : (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, a && a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
-      g && Entry.bindAnimationCallbackOnce(k, function() {
-        h.scroller.resizeScrollBar.call(h.scroller);
-        k.removeClass("foldOut");
-        Entry.windowResized.notify();
-      });
-      this._isSelectingMenu = !1;
-      this.visible && (this._selectedCategoryView = a) && a.addClass("entrySelectedCategory");
-      !0 !== d && this._dAlign();
-    } else {
-      this._dAlign();
     }
   };
   b._generateCategoryCodes = function(a) {
@@ -25339,9 +25367,7 @@ Entry.BlockMenu = function(b, a, c, d) {
     return [a, b];
   };
   b._setDynamic = function(a) {
-    this._selectDynamic = !0;
-    this._dynamicThreads = a;
-    this.selectMenu(void 0, !0);
+    this._isOn() && (this._selectDynamic = !0, this._dynamicThreads = a, this.selectMenu(void 0, !0));
   };
   b._cancelDynamic = function(a, b) {
     this._setDynamicTimer && (clearTimeout(this._setDynamicTimer), this._setDynamicTimer = null);
