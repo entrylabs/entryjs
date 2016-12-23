@@ -17167,7 +17167,6 @@ Entry.PyHint = function(b) {
       f -= b.from.ch - h.start;
       b.from.ch = h.start;
     }
-    console.log(c);
     a.replaceRange(c, b.from, b.to);
     a.setCursor({line:b.from.line, ch:f});
     Entry.helper.renderBlock(d.syntax.key);

@@ -3239,7 +3239,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if(codeMap && eval(codeMap))
                 if(isNaN(value))
                     value = value.toLowerCase();
-                var codeMapValue =  eval(codeMap)[value()];
+                var codeMapValue =  eval(codeMap)[value];
             if(codeMapValue) value = codeMapValue;
         }
         result = value; 
@@ -5525,15 +5525,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
              //console.log("tmpFuncStmts", tmpFuncStmts);
 
             if(this._hasReculsiveFunc) {
-                var contentStmts = fFuncStmts.statements[0]._data;
-                for(var x in contentStmts) {
-                    if(contentStmts[x] instanceof Entry.Block)
-                        this.convertReculsiveFuncType(contentStmts[x]);
+                if(fFuncStmts.statements && fFuncStmts.statements[0] && fFuncStmts.statements[0]._data) {
+                    var contentStmts = fFuncStmts.statements[0]._data;
+                    for(var x in contentStmts) {
+                        if(contentStmts[x] instanceof Entry.Block)
+                            this.convertReculsiveFuncType(contentStmts[x]);
+                    }
                 }
-                var contentStmts = fFuncStmts.statements[1]._data;
-                for(var x in contentStmts) {
-                    if(contentStmts[x] instanceof Entry.Block)
-                        this.convertReculsiveFuncType(contentStmts[x]);
+                if(fFuncStmts.statements && fFuncStmts.statements[1] && fFuncStmts.statements[1]._data) {
+                    var contentStmts = fFuncStmts.statements[1]._data;
+                    for(var x in contentStmts) {
+                        if(contentStmts[x] instanceof Entry.Block)
+                            this.convertReculsiveFuncType(contentStmts[x]);
+                    }
                 }
             }
         }

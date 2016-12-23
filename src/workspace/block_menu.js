@@ -83,6 +83,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     Entry.addEventListener('setBlockMenuDynamic', function() {
         this._setDynamicTimer = this._setDynamic.apply(this, arguments);
     }.bind(this));
+
     Entry.addEventListener('cancelBlockMenuDynamic', this._cancelDynamic.bind(this));
 };
 
@@ -238,13 +239,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             switch (mode) {
                 case Entry.Workspace.MODE_BOARD:
                 case Entry.Workspace.MODE_OVERLAYBOARD:
-                    blocks = this.renderBlock(blocks);
+                    this.renderBlock(blocks);
                     break;
                 case Entry.Workspace.MODE_VIMBOARD:
-                    blocks = this.renderText(blocks);
+                    this.renderText(blocks);
                     break;
                 default:
-                    blocks = this.renderBlock(blocks);
+                    this.renderBlock(blocks);
             }
         }
 
@@ -343,6 +344,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p.show = function() {this.view.removeClass('entryRemove');};
 
     p.renderText = function(blocks) {
+        if (!this._isOn()) return;
+
         var blocks = blocks || this._getSortedBlocks();
         var targetMode = Entry.BlockView.RENDER_MODE_TEXT;
 
@@ -359,6 +362,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.renderBlock = function(blocks) {
+        if (!this._isOn()) return;
+
         blocks = blocks ||this._getSortedBlocks();
         var targetMode = Entry.BlockView.RENDER_MODE_BLOCK;
 
@@ -449,10 +454,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             if (visible)
                 if (selector-- === 0) return key;
         }
-
     };
 
     p.selectMenu = function(selector, doNotFold, doNotAlign) {
+        if (!this._isOn()) return;
+
         var className = 'entrySelectedCategory';
         var oldView = this._selectedCategoryView;
 
@@ -550,6 +556,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var datum = this._categoryData.filter(function(obj) {
             return obj.category == key;
         })[0];
+
         var category = key;
         var blocks = datum.blocks;
         blocks.forEach(function(b){
@@ -929,6 +936,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p._setDynamic = function(blocks) {
+        if (!this._isOn()) return;
+
         this._selectDynamic = true;
         this._dynamicThreads = blocks;
         this.selectMenu(undefined, true);
