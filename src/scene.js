@@ -219,6 +219,7 @@ Entry.Scene.prototype.addScenes = function(scenes) {
         for (var i=0,len=scenes.length; i<len; i++)
             this.generateElement(scenes[i]);
     }
+
     this.selectScene(this.getScenes()[0]);
     this.updateView();
 };
@@ -239,7 +240,6 @@ Entry.Scene.prototype.addScene = function(scene, index) {
         this.getScenes().splice(index, 0, scene);
 
     Entry.stage.objectContainers.push(Entry.stage.createObjectContainer(scene));
-    Entry.playground.flushPlayground();
     this.selectScene(scene);
     this.updateView();
     return scene;
@@ -280,8 +280,6 @@ Entry.Scene.prototype.selectScene = function(scene) {
     if (this.selectedScene && (this.selectedScene.id == scene.id))
         return;
 
-    if(Entry.getMainWS()) Entry.getMainWS()._syncTextCode();
-
     if (Entry.engine.isState('run'))
         Entry.container.resetSceneDuringRun();
 
@@ -306,11 +304,21 @@ Entry.Scene.prototype.selectScene = function(scene) {
         Entry.playground.refreshPlayground();
     }
     else {
+        var workspace = Entry.getMainWS();
+        if(workspace && workspace.vimBoard && 
+            workspace.vimBoard._parser && !workspace.vimBoard._parser._onError) {
+            workspace && workspace._syncTextCode();
+        }
+        else {
+            workspace && workspace._syncTextCode();
+            var sObject = workspace.vimBoard._currentObject;
+            Entry.container.selectObject(sObject.id, scene);  
+        }
+        
         Entry.stage.selectObject(null);
         Entry.playground.flushPlayground();
         Entry.variableContainer.updateList();
 
-        var workspace = Entry.getMainWS();
         workspace && workspace.vimBoard && workspace.vimBoard.clearText();
     }
 

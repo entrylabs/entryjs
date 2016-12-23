@@ -7015,24 +7015,15 @@ Entry.Container.prototype.removeObject = function(b) {
   return d;
 };
 Entry.Container.prototype.selectObject = function(b, a) {
-  console.log("selectObject", b, a);
+  console.log("selectObject1", b, "changeScene", a);
   var d = this.getObject(b);
   a && d && Entry.scene.selectScene(d.scene);
   this.mapObjectOnScene(function(a) {
     a.view_ && a.view_.removeClass("selectedObject");
     a.isSelected_ = !1;
   });
-  if (d) {
-    d.view_ && d.view_.addClass("selectedObject");
-    d.isSelected_ = !0;
-    var c = Entry.getMainWS();
-    if (c && c.vimBoard && c.vimBoard._parser && c.vimBoard._parser._onError) {
-      var e = c.vimBoard._currentObject, c = c.vimBoard._currentScene;
-      d.id != e.id && Entry.container.selectObject(e.id, c);
-    }
-  } else {
-    (c = Entry.getMainWS()) && c.vimBoard && c.vimBoard.clearText();
-  }
+  var c = Entry.getMainWS();
+  d ? (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0, console.log("workspace.vimBoard._parser._onError", c.vimBoard._parser._onError), c && c.vimBoard && c.vimBoard._parser && c.vimBoard._parser._onError ? (c = c.vimBoard._currentObject, d.id != c.id && Entry.container.selectObject(c.id)) : c && c._syncTextCode()) : c && c.vimBoard && c.vimBoard.clearText();
   Entry.playground && Entry.playground.injectObject(d);
   "minimize" != Entry.type && Entry.engine.isState("stop") && Entry.stage.selectObject(d);
 };
@@ -11759,7 +11750,6 @@ Entry.Scene.prototype.addScene = function(b, a) {
   b.view || this.generateElement(b);
   a || "number" == typeof a ? this.getScenes().splice(a, 0, b) : this.getScenes().push(b);
   Entry.stage.objectContainers.push(Entry.stage.createObjectContainer(b));
-  Entry.playground.flushPlayground();
   this.selectScene(b);
   this.updateView();
   return b;
@@ -11781,7 +11771,6 @@ Entry.Scene.prototype.removeScene = function(b) {
 Entry.Scene.prototype.selectScene = function(b) {
   b = b || this.getScenes()[0];
   if (!this.selectedScene || this.selectedScene.id != b.id) {
-    Entry.getMainWS() && Entry.getMainWS()._syncTextCode();
     Entry.engine.isState("run") && Entry.container.resetSceneDuringRun();
     var a = this.selectedScene;
     a && (a = a.view, a.removeClass("selectedScene"), a = $(a), a.find("input").blur());
@@ -11789,7 +11778,7 @@ Entry.Scene.prototype.selectScene = function(b) {
     b.view.addClass("selectedScene");
     Entry.container.setCurrentObjects();
     Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(b);
-    (b = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? (Entry.container.selectObject(b.id), Entry.playground.refreshPlayground()) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), Entry.variableContainer.updateList(), (b = Entry.getMainWS()) && b.vimBoard && b.vimBoard.clearText());
+    (a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? (Entry.container.selectObject(a.id), Entry.playground.refreshPlayground()) : ((a = Entry.getMainWS()) && a.vimBoard && a.vimBoard._parser && !a.vimBoard._parser._onError ? a && a._syncTextCode() : (a && a._syncTextCode(), Entry.container.selectObject(a.vimBoard._currentObject.id, b)), Entry.stage.selectObject(null), Entry.playground.flushPlayground(), Entry.variableContainer.updateList(), a && a.vimBoard && a.vimBoard.clearText());
     Entry.container.listView_ || Entry.stage.sortZorder();
     Entry.container.updateListView();
     this.updateView();
@@ -16131,8 +16120,8 @@ Entry.PyToBlockParser = function(b) {
           h[0] = f, u.description = f + " ";
         }
         if (0 < a.length) {
-          for (e = new Entry.Block({type:"function_field_string"}, t), e.data.params = [], c = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", c), q = new Entry.Block({type:c}, t), e.data.params.push(q), q = Entry.TextCodingUtil.getLastParam(x), q.data.params[1] = e, u.paramMap[c] = Number(0), console.log("FunctionDeclaration paramBlock", u), r = {}, console.log("textFuncParams ppp", a[B]), r[a[0]] = c, B = 1;B < a.length;B++) {
-            e = new Entry.Block({type:"function_field_string"}, t), e.data.params = [], c = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", c), q = new Entry.Block({type:c}, t), e.data.params.push(q), x = Entry.TextCodingUtil.searchFuncDefParam(h[1]), console.log("FunctionDeclaration paramBlock", x), 0 == x.data.params.length ? x.data.params[0] = q : 1 == x.data.params.length && (x.data.params[1] = e), u.paramMap[c] = Number(B), console.log("textFuncParams ppp", 
+          for (e = new Entry.Block({type:"function_field_string"}, t), e.data.params = [], c = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", c), q = new Entry.Block({type:c}, t), console.log("new func param", q), e.data.params.push(q), q = Entry.TextCodingUtil.getLastParam(x), q.data.params[1] = e, u.paramMap[c] = Number(0), console.log("FunctionDeclaration paramBlock", u), r = {}, console.log("textFuncParams ppp", a[B]), r[a[0]] = c, B = 1;B < a.length;B++) {
+            console.log("loop p ", B), e = new Entry.Block({type:"function_field_string"}, t), e.data.params = [], c = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", c), q = new Entry.Block({type:c}, t), e.data.params.push(q), x = Entry.TextCodingUtil.searchFuncDefParam(h[1]), console.log("FunctionDeclaration paramBlock", x), 0 == x.data.params.length ? x.data.params[0] = q : 1 == x.data.params.length && (x.data.params[1] = e), u.paramMap[c] = Number(B), console.log("textFuncParams ppp", 
             a[B]), r[a[B]] = c, console.log("FunctionDeclaration paramBlock", u);
           }
         }
@@ -16500,7 +16489,7 @@ Entry.Parser = function(b, a, d, c) {
   Entry.Parser.PARSE_GENERAL = 1;
   Entry.Parser.PARSE_SYNTAX = 2;
   Entry.Parser.PARSE_VARIABLE = 3;
-  this._isError = !1;
+  this._onError = !1;
   this._console = new Entry.Console;
   switch(this._lang) {
     case "js":
@@ -16533,7 +16522,6 @@ Entry.Parser = function(b, a, d, c) {
         case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
           this._execParser = new Entry.PyToBlockParser(this.syntax);
           this._execParserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
-          this._onError = !1;
           break;
         case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
           this._execParser = new Entry.BlockToJsParser(this.syntax, this);
@@ -16554,7 +16542,6 @@ Entry.Parser = function(b, a, d, c) {
     }
   };
   b.parse = function(a, b) {
-    this._onError = !1;
     console.log("this.syntax", this.syntax);
     console.log("this._syntax_cache", this._syntax_cache);
     var c = this._type;
@@ -16594,7 +16581,6 @@ Entry.Parser = function(b, a, d, c) {
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
         try {
-          this._onError = !1;
           this._pyBlockCount = {};
           this._pyThreadCount = 1;
           var q = new Entry.PyAstGenerator, f = this.makeThreads(a), g = [], r = 0;
@@ -16604,12 +16590,16 @@ Entry.Parser = function(b, a, d, c) {
             }
           }
           e = this._execParser.Program(g);
+          this._onError = !1;
         } catch (z) {
-          var e = [], n = Entry.getMainWS();
-          n && (this._onError = !0, Entry.container.selectObject(n.vimBoard._currentObject.id, n.vimBoard._currentScene), (n = n.board) && n.code.clear());
-          if (this.codeMirror) {
+          if (this._onError = !0, e = [], this.codeMirror) {
             console.log("main error", z);
-            z instanceof SyntaxError ? (n = this.findSyntaxError(z, r), e = {from:{line:n.from.line - 1, ch:n.from.ch}, to:{line:n.to.line - 1, ch:n.to.ch}}, z.type = "syntax") : (n = this.findConvError(z), e = {from:{line:n.from.line - 1, ch:n.from.ch}, to:{line:n.to.line - 1, ch:n.to.ch}}, z.type = "converting");
+            if (z instanceof SyntaxError) {
+              var n = this.findSyntaxError(z, r), e = {from:{line:n.from.line - 1, ch:n.from.ch}, to:{line:n.to.line - 1, ch:n.to.ch}};
+              z.type = "syntax";
+            } else {
+              n = this.findConvError(z), e = {from:{line:n.from.line - 1, ch:n.from.ch}, to:{line:n.to.line - 1, ch:n.to.ch}}, z.type = "converting";
+            }
             this._marker = this.codeMirror.markText(e.from, e.to, {className:"CodeMirror-lint-mark-error", __annotation:e, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1});
             if ("syntax" == z.type) {
               var u = z.title, x = this.makeSyntaxErrorDisplay(z.subject, z.keyword, z.message, n.from.line)
@@ -16622,14 +16612,14 @@ Entry.Parser = function(b, a, d, c) {
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        u = this._execParser.Code(a, b);
-        console.log("js textcode", u);
-        e = u;
+        m = this._execParser.Code(a, b);
+        console.log("js textcode", m);
+        e = m;
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
         Entry.getMainWS().blockMenu.renderText();
         e = "";
-        u = this._execParser.Code(a, b);
+        m = this._execParser.Code(a, b);
         this._pyHinter || (this._pyHinter = new Entry.PyHint(this.syntax));
         if (b == Entry.Parser.PARSE_GENERAL && !this._isError) {
           if (!this.py_variableDeclaration) {
@@ -16644,15 +16634,15 @@ Entry.Parser = function(b, a, d, c) {
             e += "\n";
           }
           if (!this.py_funcDeclaration) {
-            x = this._execParser._funcDefMap;
-            m = "";
-            for (n in x) {
-              m += x[n] + "\n\n";
+            u = this._execParser._funcDefMap;
+            x = "";
+            for (n in u) {
+              x += u[n] + "\n\n";
             }
-            (this.py_funcDeclaration = m) && (e += m);
+            (this.py_funcDeclaration = x) && (e += x);
           }
         }
-        u && (e += u.trim());
+        m && (e += m.trim());
         e = e.replace(/\t/g, "    ");
     }
     return e;
@@ -27574,10 +27564,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           break;
         case e.MODE_BOARD:
           try {
-            this.board.show(), f.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), f.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide(), this.vimBoard._isError = !1;
+            this.board.show(), f.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), f.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide();
           } catch (g) {
-            console.log("error start"), this.vimBoard._isError = !0, this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), f.banClass("functionInit"), this.mode = e.MODE_VIMBOARD, this.oldTextType == c.TEXT_TYPE_JS ? (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_JS, a.runType = c.MAZE_MODE, this.oldTextType = c.TEXT_TYPE_JS) : this.oldTextType == c.TEXT_TYPE_PY && (a.boardType = e.MODE_VIMBOARD, a.textType = 
-            c.TEXT_TYPE_PY, a.runType = c.WORKSPACE_MODE, this.oldTextType = c.TEXT_TYPE_PY), Entry.getMainWS().setMode(a);
+            console.log("error start"), this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), f.banClass("functionInit"), this.mode = e.MODE_VIMBOARD, this.oldTextType == c.TEXT_TYPE_JS ? (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_JS, a.runType = c.MAZE_MODE, this.oldTextType = c.TEXT_TYPE_JS) : this.oldTextType == c.TEXT_TYPE_PY && (a.boardType = e.MODE_VIMBOARD, a.textType = c.TEXT_TYPE_PY, a.runType = c.WORKSPACE_MODE, 
+            this.oldTextType = c.TEXT_TYPE_PY), Entry.getMainWS().setMode(a);
           }
           Entry.commander.setCurrentEditor("board", this.board);
           break;
@@ -27742,6 +27732,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
       var a = this.vimBoard.textToCode(this.textType), b = this.board.code;
       b && b.load(a);
+      console.log("this.board.code", this.board.code);
     }
   };
   b.addVimBoard = function(a) {
@@ -28222,8 +28213,8 @@ Entry.Playground.prototype.injectObject = function(b) {
   }
 };
 Entry.Playground.prototype.injectCode = function() {
-  var b = this.object.script, a = this.mainWorkspace;
-  Entry.textCodingEnable && !a.vimBoard._parser._onError && (this.mainWorkspace.vimBoard._changedObject ? this.mainWorkspace.vimBoard._currentObject = this.mainWorkspace.vimBoard._changedObject : Entry.playground && (this.mainWorkspace.vimBoard._currentObject = Entry.playground.object), Entry.playground && Entry.textCodingEnable && (this.mainWorkspace.vimBoard._changedObject = Entry.playground.object));
+  var b = this.object.script, a = this.mainWorkspace, d = Entry.getMainWS();
+  Entry.textCodingEnable && d && !d.vimBoard._parser._onError && (d.vimBoard._changedObject ? d.vimBoard._currentObject = d.vimBoard._changedObject : Entry.playground && (d.vimBoard._currentObject = Entry.playground.object), Entry.playground && Entry.textCodingEnable && (d.vimBoard._changedObject = Entry.playground.object));
   a.changeBoardCode(b, function() {
     a.getBoard().adjustThreadsPosition();
   });

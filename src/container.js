@@ -380,31 +380,34 @@ Entry.Container.prototype.removeObject = function(object) {
  * @param {string} objectId
  */
 Entry.Container.prototype.selectObject = function(objectId, changeScene) {
-    console.log("selectObject", objectId, changeScene);
+    console.log("selectObject1", objectId, "changeScene", changeScene);
     var object = this.getObject(objectId);
+    
     if (changeScene && object) {
         Entry.scene.selectScene(object.scene); 
     }
 
     this.mapObjectOnScene(function(object) {
-        object.view_ && object.view_.removeClass('selectedObject'); 
+        object.view_ && object.view_.removeClass('selectedObject');  
         object.isSelected_ = false;
     });
 
-    if (object) { 
-        object.view_ && object.view_.addClass('selectedObject');
+    var workspace = Entry.getMainWS();
+    if (object) {  
+        object.view_ && object.view_.addClass('selectedObject'); 
         object.isSelected_ = true;
         
-        var workspace = Entry.getMainWS();
+        console.log("workspace.vimBoard._parser._onError", workspace.vimBoard._parser._onError);
         if(workspace && workspace.vimBoard && 
             workspace.vimBoard._parser && workspace.vimBoard._parser._onError) {
             var sObject = workspace.vimBoard._currentObject;
-            var sScene = workspace.vimBoard._currentScene;
             if(object.id != sObject.id)
-                Entry.container.selectObject(sObject.id, sScene);  
+                Entry.container.selectObject(sObject.id);  
+        }
+        else {          
+            workspace && workspace._syncTextCode();
         }
     } else {
-        var workspace = Entry.getMainWS();
         workspace && workspace.vimBoard && workspace.vimBoard.clearText();
     }
 

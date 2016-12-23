@@ -19,7 +19,7 @@ Entry.PyAstGenerator = function() {
             var astTree = filbertParse(code, options);
             return astTree;
         }
-        catch (error) {
+        catch (error) { 
             var msgTokens = error.message.split('\''); 
             var title = Entry.TextCodingError.TITLE_SYNTAX;
             console.log("msgTokens", msgTokens);

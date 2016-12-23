@@ -135,10 +135,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     blockMenu.renderBlock();
                     this.oldTextType = this.textType;
                     this.vimBoard && this.vimBoard.hide();
-                    this.vimBoard._isError = false;
                 } catch(e) {
                     console.log("error start");
-                    this.vimBoard._isError = true;
+                    
                     if(this.board && this.board.code)
                         this.board.code.clear();
                     if (this.board) this.board.hide();
@@ -432,13 +431,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p._syncTextCode = function() {
-        if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
+        if (this.mode !== Entry.Workspace.MODE_VIMBOARD) 
             return;
 
         var changedCode = this.vimBoard.textToCode(this.textType);
+        
         var board = this.board;
         var code = board.code;
         if (code) code.load(changedCode);
+        
+        console.log("this.board.code", this.board.code);
     };
 
     p.addVimBoard = function(dom) {

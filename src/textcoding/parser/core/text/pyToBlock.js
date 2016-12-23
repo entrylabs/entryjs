@@ -5445,11 +5445,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             if(textFuncParams.length > 0) {
-                var paramFieldBlock = new Entry.Block({ type: "function_field_string" }, thread);
+            var paramFieldBlock = new Entry.Block({ type: "function_field_string" }, thread);
                 paramFieldBlock.data.params = [];
                 var stringParam = Entry.Func.requestParamBlock("string");
                 console.log("FunctionDeclaration stringParam", stringParam);
                 var param = new Entry.Block({ type: stringParam }, thread);
+                console.log("new func param", param)
                 paramFieldBlock.data.params.push(param);
 
                 //newFuncDefParams[1] = paramFieldBlock;
@@ -5464,8 +5465,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 paramInfo[textFuncParams[0]] = stringParam;
 
                 for(var p = 1; p < textFuncParams.length; p++) {
+                    console.log("loop p ", p);
                     var paramFieldBlock = new Entry.Block({ type: "function_field_string" }, thread);
-                    paramFieldBlock.data.params = [];
+                    paramFieldBlock.data.params = []; 
 
                     var stringParam = Entry.Func.requestParamBlock("string");
                     console.log("FunctionDeclaration stringParam", stringParam);

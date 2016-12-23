@@ -35,7 +35,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     Entry.Parser.PARSE_SYNTAX = 2;
     Entry.Parser.PARSE_VARIABLE = 3;
 
-    this._isError = false;
+    this._onError = false;
     /*Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
     Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
     Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP = "basic_double_loop";*/
@@ -117,7 +117,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 this._execParser = new Entry.PyToBlockParser(this.syntax);
 
                 this._execParserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
-                this._onError = false;
 
                 break;
 
@@ -159,7 +158,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.parse = function(code, parseMode) {
-        this._onError = false;
         console.log("this.syntax", this.syntax);
         console.log("this._syntax_cache", this._syntax_cache);
         var type = this._type;
@@ -239,7 +237,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
-                    this._onError = false;
                     this._pyBlockCount = {};
                     this._pyThreadCount = 1;
 
@@ -265,11 +262,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             astArray.push(ast);
                     }
                     result = this._execParser.Program(astArray);
+                    this._onError = false;
                     //this._execParser._variableMap.clear();
                     break;
                 } catch(error) {
+                    this._onError = true;
                     result = [];
-                    var ws = Entry.getMainWS();
+                    /*var ws = Entry.getMainWS();
                     if(ws){
                         this._onError = true;
                         var sObject = ws.vimBoard._currentObject;
@@ -278,7 +277,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         var board = ws.board;
                         if(board) board.code.clear();
-                    }
+                    }*/
 
                     if (this.codeMirror) {
                         var line;

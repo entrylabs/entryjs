@@ -10432,7 +10432,8 @@ Entry.block = {
         "events": {
             "viewAdd": [
                 function() {
-                    Entry.Func.refreshMenuCode();
+                    if (Entry.Func.isEdit)
+                        Entry.Func.refreshMenuCode();
                 }
             ]
         },
@@ -10448,7 +10449,8 @@ Entry.block = {
         "events": {
             "viewAdd": [
                 function() {
-                    Entry.Func.refreshMenuCode();
+                    if (Entry.Func.isEdit)
+                        Entry.Func.refreshMenuCode();
                 }
             ]
         },
