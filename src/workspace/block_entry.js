@@ -26130,10 +26130,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    ["언젠가", "16"],
-                    ["지금", "32"]
+                    ["언젠가", 0],
+                    ["지금", 1]
                 ],
-                "value": "16",
+                "value": "0",
                 "fontSize": 11
             },
             {
@@ -26146,7 +26146,7 @@ Entry.block = {
                     ["이동 방향", "direction"],
                     ["텍스트", "text"]
                 ],
-                "value": "16",
+                "value": "x",
                 "fontSize": 11
             },
             {
@@ -26185,19 +26185,56 @@ Entry.block = {
         "class": "etc",
         "isNotFor": [],
         "func": function (sprite, script) {
-            var obj = Entry.container.getObject(this.block.params[0]);
-            console.log(obj);
+            var obj = Entry.container.getObject(this.block.params[0]),
+                flow = this.block.params[1],
+                propertyKey = this.block.params[2],
+                rightValue = this.getParam(4);
+            propertyKey = propertyKey[0].toUpperCase() + propertyKey.substr(1);
+            var leftValue = obj.entity["get" + propertyKey].call(obj.entity),
+                returnVal;
+
+            switch(this.block.params[3]) {
+                case 'EQUAL':
+                    returnVal = leftValue == rightValue;
+                    break;
+                case 'GREATER':
+                    returnVal = Number(leftValue) > Number(rightValue);
+                    break;
+                case 'LESS':
+                    returnVal = Number(leftValue) < Number(rightValue);
+                    break;
+                case 'GREATER_OR_EQUAL':
+                    returnVal = Number(leftValue) >= Number(rightValue);
+                    break;
+                case 'LESS_OR_EQUAL':
+                    returnVal = Number(leftValue) <= Number(rightValue);
+                    break;
+            }
+            if (returnVal)
+                return;
+            else if (flow === 0)
+                return Entry.STATIC.BREAK;
+            else
+                this.die();
         }
     },
     "check_block_execution": {
         "color": "#7C7C7C",
         "skeleton": "basic",
-        "template": "목표 %1 달성 %2",
+        "template": "목표 %1 %2 %3",
         "statements": [],
         "params": [
             {
                 "type": "TextInput",
                 "value": 0
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["달성", 1],
+                    ["실패", 0]
+                ],
+                "fontSize": 11
             },
             {
                 "type": "Indicator",
@@ -26218,14 +26255,29 @@ Entry.block = {
         "class": "etc",
         "isNotFor": [],
         "func": function (sprite, script) {
+            if (this.block.params[1])
+                alert(this.block.params[0] + " 달성!")
+            else
+                alert(this.block.params[0] + " 실패!")
+            this.die();
         }
     },
     "check_lecture_goal": {
         "color": "#7C7C7C",
         "skeleton": "basic_loop",
-        "template": "아래 블록이 %1 %2 실행되었는가 %3",
-        "statements": [],
+        "template": "%1 에서 아래 블록이 %2 %3 실행되었는가 %4",
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
         "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "menuName": "sprites",
+                "fontSize": 11
+            },
             {
                 "type": "Dropdown",
                 "options": [
@@ -26263,6 +26315,14 @@ Entry.block = {
         "class": "etc",
         "isNotFor": [],
         "func": function (sprite, script) {
+            var code = Entry.container.getObject(this.block.params[0]).script,
+                flow = this.block.params[1],
+                propertyKey = this.block.params[2];
+
+            if (flow === 0)
+                return Entry.STATIC.BREAK;
+            else
+                this.die();
         }
     }
 };
