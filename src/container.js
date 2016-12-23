@@ -382,6 +382,7 @@ Entry.Container.prototype.removeObject = function(object) {
 Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     console.log("selectObject1", objectId, "changeScene", changeScene);
     var object = this.getObject(objectId);
+    var workspace = Entry.getMainWS();
     
     if (changeScene && object) {
         Entry.scene.selectScene(object.scene); 
@@ -392,20 +393,38 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
         object.isSelected_ = false;
     });
 
-    var workspace = Entry.getMainWS();
     if (object) {  
         object.view_ && object.view_.addClass('selectedObject'); 
         object.isSelected_ = true;
         
         console.log("workspace.vimBoard._parser._onError", workspace.vimBoard._parser._onError);
-        if(workspace && workspace.vimBoard && 
-            workspace.vimBoard._parser && workspace.vimBoard._parser._onError) {
+
+        if(workspace && workspace.vimBoard) {
             var sObject = workspace.vimBoard._currentObject;
-            if(object.id != sObject.id)
-                Entry.container.selectObject(sObject.id);  
-        }
-        else {          
-            workspace && workspace._syncTextCode();
+            console.log("sObject", sObject);
+            var parser = workspace.vimBoard._parser
+            if(parser && parser._onError) {
+                if(sObject && (object.id != sObject.id)) {
+                    try { workspace._syncTextCode(); } catch(e) {}
+                    if(parser && !parser._onError) {
+                        Entry.container.selectObject(object.id, true);
+                        return;
+                    }
+                    else {
+                        Entry.container.selectObject(sObject.id, true);
+                        return;
+                    }
+                }
+            }
+            else {      
+                if(sObject && (object.id != sObject.id)) {
+                    try { workspace._syncTextCode(); } catch(e) {}
+                    if(parser && parser._onError) {
+                        Entry.container.selectObject(sObject.id, true);
+                        return;
+                    }
+                }
+            }
         }
     } else {
         workspace && workspace.vimBoard && workspace.vimBoard.clearText();

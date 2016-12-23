@@ -285,6 +285,7 @@ Entry.Scene.prototype.removeScene = function(scene) {
  * @param {scene model} scene
  */
 Entry.Scene.prototype.selectScene = function(scene) {
+    console.log("scene", scene);
     scene = scene || this.getScenes()[0];
     if (this.selectedScene && (this.selectedScene.id == scene.id))
         return;
@@ -305,25 +306,30 @@ Entry.Scene.prototype.selectScene = function(scene) {
     Entry.container.setCurrentObjects();
     if (Entry.stage.objectContainers &&
         Entry.stage.objectContainers.length !== 0)
-        Entry.stage.selectObjectContainer(scene);
+        Entry.stage.selectObjectContainer(scene); 
 
-    var targetObject = Entry.container.getCurrentObjects()[0];
+    var targetObject = Entry.container.getCurrentObjects()[0];   
     if (targetObject && Entry.type != 'minimize') {
-        Entry.container.selectObject(targetObject.id);
+        Entry.container.selectObject(targetObject.id); 
         Entry.playground.refreshPlayground();
     }
     else {
-        var workspace = Entry.getMainWS();
-        if(workspace && workspace.vimBoard && 
-            workspace.vimBoard._parser && !workspace.vimBoard._parser._onError) {
-            workspace && workspace._syncTextCode();
+        var workspace = Entry.getMainWS();  
+        console.log("workspace.vimBoard._parser._onError1", workspace.vimBoard._parser._onError);
+        if(workspace){
+            try {
+                workspace._syncTextCode();
+            }
+            catch(e) {}
+                console.log("workspace.vimBoard._parser._onError2", workspace.vimBoard._parser._onError);
+            
+            
+            if(workspace.vimBoard && workspace.vimBoard._parser && 
+                workspace.vimBoard._parser._onError) {
+                Entry.container.selectObject(workspace.vimBoard._currentObject.id, true);
+                return;
+            }
         }
-        else {
-            workspace && workspace._syncTextCode();
-            var sObject = workspace.vimBoard._currentObject;
-            Entry.container.selectObject(sObject.id, scene);  
-        }
-        
         Entry.stage.selectObject(null);
         Entry.playground.flushPlayground();
         Entry.variableContainer.updateList();

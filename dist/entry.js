@@ -7016,14 +7016,42 @@ Entry.Container.prototype.removeObject = function(b) {
 };
 Entry.Container.prototype.selectObject = function(b, a) {
   console.log("selectObject1", b, "changeScene", a);
-  var d = this.getObject(b);
+  var d = this.getObject(b), c = Entry.getMainWS();
   a && d && Entry.scene.selectScene(d.scene);
   this.mapObjectOnScene(function(a) {
     a.view_ && a.view_.removeClass("selectedObject");
     a.isSelected_ = !1;
   });
-  var c = Entry.getMainWS();
-  d ? (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0, console.log("workspace.vimBoard._parser._onError", c.vimBoard._parser._onError), c && c.vimBoard && c.vimBoard._parser && c.vimBoard._parser._onError ? (c = c.vimBoard._currentObject, d.id != c.id && Entry.container.selectObject(c.id)) : c && c._syncTextCode()) : c && c.vimBoard && c.vimBoard.clearText();
+  if (d) {
+    if (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0, console.log("workspace.vimBoard._parser._onError", c.vimBoard._parser._onError), c && c.vimBoard) {
+      var e = c.vimBoard._currentObject;
+      console.log("sObject", e);
+      var f = c.vimBoard._parser;
+      if (f && f._onError) {
+        if (e && d.id != e.id) {
+          try {
+            c._syncTextCode();
+          } catch (g) {
+          }
+          f && !f._onError ? Entry.container.selectObject(d.id, !0) : Entry.container.selectObject(e.id, !0);
+          return;
+        }
+      } else {
+        if (e && d.id != e.id) {
+          try {
+            c._syncTextCode();
+          } catch (g) {
+          }
+          if (f && f._onError) {
+            Entry.container.selectObject(e.id, !0);
+            return;
+          }
+        }
+      }
+    }
+  } else {
+    c && c.vimBoard && c.vimBoard.clearText();
+  }
   Entry.playground && Entry.playground.injectObject(d);
   "minimize" != Entry.type && Entry.engine.isState("stop") && Entry.stage.selectObject(d);
 };
@@ -11772,6 +11800,7 @@ Entry.Scene.prototype.removeScene = function(b) {
   }
 };
 Entry.Scene.prototype.selectScene = function(b) {
+  console.log("scene", b);
   b = b || this.getScenes()[0];
   if (!this.selectedScene || this.selectedScene.id != b.id) {
     Entry.engine.isState("run") && Entry.container.resetSceneDuringRun();
@@ -11781,7 +11810,27 @@ Entry.Scene.prototype.selectScene = function(b) {
     b.view.addClass("selectedScene");
     Entry.container.setCurrentObjects();
     Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(b);
-    (a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? (Entry.container.selectObject(a.id), Entry.playground.refreshPlayground()) : ((a = Entry.getMainWS()) && a.vimBoard && a.vimBoard._parser && !a.vimBoard._parser._onError ? a && a._syncTextCode() : (a && a._syncTextCode(), Entry.container.selectObject(a.vimBoard._currentObject.id, b)), Entry.stage.selectObject(null), Entry.playground.flushPlayground(), Entry.variableContainer.updateList(), a && a.vimBoard && a.vimBoard.clearText());
+    if ((b = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type) {
+      Entry.container.selectObject(b.id), Entry.playground.refreshPlayground();
+    } else {
+      b = Entry.getMainWS();
+      console.log("workspace.vimBoard._parser._onError1", b.vimBoard._parser._onError);
+      if (b) {
+        try {
+          b._syncTextCode();
+        } catch (d) {
+        }
+        console.log("workspace.vimBoard._parser._onError2", b.vimBoard._parser._onError);
+        if (b.vimBoard && b.vimBoard._parser && b.vimBoard._parser._onError) {
+          Entry.container.selectObject(b.vimBoard._currentObject.id, !0);
+          return;
+        }
+      }
+      Entry.stage.selectObject(null);
+      Entry.playground.flushPlayground();
+      Entry.variableContainer.updateList();
+      b && b.vimBoard && b.vimBoard.clearText();
+    }
     Entry.container.listView_ || Entry.stage.sortZorder();
     Entry.container.updateListView();
     this.updateView();
