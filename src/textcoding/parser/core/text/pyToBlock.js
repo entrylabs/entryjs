@@ -1492,15 +1492,53 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(!argumentData.type && !argumentData.isCallParam && 
                         argumentData.callee != "__pythonRuntime.utils.createParamsObj") {
                         console.log("this._currentFuncKey", this._currentFuncKey);
-                        if(!this.isFuncParam(argumentData.name) && !argumentData.variableType && !argumentData.listType) {
-                            var keyword = argumentData.name;
-                            console.log("errorId", 25.2);
-                            Entry.TextCodingError.error(
-                                Entry.TextCodingError.TITLE_CONVERTING,
-                                Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
-                                keyword,
-                                this._blockCount,
-                                Entry.TextCodingError.SUBJECT_CONV_VARIABLE); 
+                        if(argumentData.object && argumentData.object.name == "self") {
+                            if(argumentData.property.variableType || argumentData.property.listType)
+                                break;
+                            if(!argumentData.property.variableType) {
+                                var keyword = argumentData.object.name + '.' + argumentData.property.name;
+                                console.log("errorId", 25.1);
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                    keyword,
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_VARIABLE); 
+                            }
+                            if(!argumentData.property.listType) {
+                                var keyword = argumentData.object.name + '.' + argumentData.property.name;
+                                console.log("errorId", 25.1);
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST, 
+                                    keyword,
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_LIST); 
+                            }
+                        }
+                        else if(!this.isFuncParam(argumentData.name)) {
+                            if(argumentData.variableType || argumentData.listType)
+                                break;
+                            if (!argumentData.variableType) {
+                                var keyword = argumentData.name;
+                                console.log("errorId", 25.2);
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                    keyword,
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_VARIABLE); 
+                            }
+                            if(!argumentData.listType) {
+                                var keyword = argumentData.name;
+                                console.log("errorId", 25.2);
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                    keyword,
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_LIST); 
+                            }
                         }
                     }
                 }

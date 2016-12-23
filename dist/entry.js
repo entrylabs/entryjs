@@ -14711,9 +14711,30 @@ Entry.PyToBlockParser = function(b) {
       e = [];
       for (A in arguments) {
         if (m = arguments[A]) {
-          console.log("CallExpression argument", m, "typeof", typeof m), x = this[m.type](m), console.log("CallExpression argument", m), console.log("CallExpression argumentData", x, "??", x.type), "ThisExpression" != m.type && (!x.type && x.isCallParam ? (console.log("argumentData 123", x), console.log("errorId", 25), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT)) : 
-          x.type || x.isCallParam || "__pythonRuntime.utils.createParamsObj" == x.callee || (console.log("this._currentFuncKey", this._currentFuncKey), this.isFuncParam(x.name) || x.variableType || x.listType || (t = x.name, console.log("errorId", 25.2), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))), "__pythonRuntime.utils.createParamsObj" == x.callee ? e = x.arguments : 
-          e.push(x));
+          if (console.log("CallExpression argument", m, "typeof", typeof m), x = this[m.type](m), console.log("CallExpression argument", m), console.log("CallExpression argumentData", x, "??", x.type), "ThisExpression" != m.type) {
+            if (!x.type && x.isCallParam) {
+              console.log("argumentData 123", x), console.log("errorId", 25), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
+            } else {
+              if (!x.type && !x.isCallParam && "__pythonRuntime.utils.createParamsObj" != x.callee) {
+                if (console.log("this._currentFuncKey", this._currentFuncKey), x.object && "self" == x.object.name) {
+                  if (x.property.variableType || x.property.listType) {
+                    break;
+                  }
+                  x.property.variableType || (t = x.object.name + "." + x.property.name, console.log("errorId", 25.1), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE));
+                  x.property.listType || (t = x.object.name + "." + x.property.name, console.log("errorId", 25.1), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST));
+                } else {
+                  if (!this.isFuncParam(x.name)) {
+                    if (x.variableType || x.listType) {
+                      break;
+                    }
+                    x.variableType || (t = x.name, console.log("errorId", 25.2), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE));
+                    x.listType || (t = x.name, console.log("errorId", 25.2), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST));
+                  }
+                }
+              }
+            }
+            "__pythonRuntime.utils.createParamsObj" == x.callee ? e = x.arguments : e.push(x);
+          }
         }
       }
       console.log("CallExpression args", e);
