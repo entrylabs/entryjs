@@ -26318,8 +26318,9 @@ Entry.block = {
             var code = Entry.container.getObject(this.block.params[0]).script,
                 flow = this.block.params[1],
                 propertyKey = this.block.params[2];
-
-            if (flow === 0)
+            if (code)
+                return;
+            else if (flow === 0)
                 return Entry.STATIC.BREAK;
             else
                 this.die();
