@@ -24526,10 +24526,11 @@ Entry.PARAM = -1;
     this._data.map(b);
   };
   a.tick = function() {
-    for (var b = this.executors, a = 0;a < b.length;a++) {
-      var d = b[a];
-      d.isEnd() ? (b.splice(a--, 1), 0 === b.length && this.executeEndEvent.notify()) : d.execute();
+    for (var b = this.executors, a = [], d = 0;d < b.length;d++) {
+      var e = b[d];
+      e.isEnd() ? (b.splice(d--, 1), 0 === b.length && this.executeEndEvent.notify()) : a = a.concat(e.execute());
     }
+    this._reportExecuting(a);
   };
   a.removeExecutor = function(b) {
     b = this.executors.indexOf(b);
@@ -24666,6 +24667,12 @@ Entry.PARAM = -1;
       b.doDestroy();
     });
   };
+  a.watchExecuting = function(b) {
+  };
+  a._reportExecuting = function() {
+  };
+  a.unwatchExecuting = function() {
+  };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
   Entry.Model(this, !1);
@@ -24730,27 +24737,28 @@ Entry.Executor = function(a, b) {
 (function(a) {
   a.execute = function() {
     if (!this.isEnd()) {
-      for (;;) {
-        var b = null;
+      for (var b = [];;) {
+        var a = null;
         try {
-          var a = this.scope.block.getSchema();
-          a && (b = a.func.call(this.scope, this.entity, this.scope));
-        } catch (e) {
-          if ("AsyncError" === e.name) {
-            b = Entry.STATIC.BREAK;
+          var d = this.scope.block.getSchema();
+          d && (a = d.func.call(this.scope, this.entity, this.scope));
+        } catch (f) {
+          if ("AsyncError" === f.name) {
+            a = Entry.STATIC.BREAK;
           } else {
-            var d = !1;
-            "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec" != e.message && (d = !0);
-            Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", d);
+            var e = !1;
+            "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec" != f.message && (e = !0);
+            Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", e);
           }
         }
+        b.push(this.scope.block);
         if (this.isEnd()) {
           break;
         }
-        if (void 0 === b || null === b || b === Entry.STATIC.PASS) {
+        if (void 0 === a || null === a || a === Entry.STATIC.PASS) {
           if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
             if (this._callStack.length) {
-              if (b = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== b.isLooped) {
+              if (a = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== a.isLooped) {
                 break;
               }
             } else {
@@ -24758,11 +24766,12 @@ Entry.Executor = function(a, b) {
             }
           }
         } else {
-          if (b !== Entry.STATIC.CONTINUE && (b === Entry.STATIC.BREAK || this.scope === b)) {
+          if (a !== Entry.STATIC.CONTINUE && (a === Entry.STATIC.BREAK || this.scope === a)) {
             break;
           }
         }
       }
+      return b;
     }
   };
   a.stepInto = function(b) {
@@ -25941,16 +25950,16 @@ Entry.skinContainer = {_skins:{}};
     this._skins[b.type] || (this._skins[b.type] = []);
     this._skins[b.type].push(a);
   };
-  a.getSkin = function(b) {
-    if (this._skins[b.type]) {
-      for (var a = this._skins[b.type], d = 0;d < a.length;d++) {
-        var e = a[d];
+  a.getSkin = function(a) {
+    if (this._skins[a.type]) {
+      for (var b = this._skins[a.type], d = 0;d < b.length;d++) {
+        var e = b[d];
         if (!e.conditions || !e.conditions.length) {
           return e;
         }
         for (var f = 0;f < e.conditions.length;f++) {
           var g = e.conditions[f];
-          if (b.getDataByPointer(g.pointer) !== g.value) {
+          if (a.getDataByPointer(g.pointer) !== g.value) {
             break;
           }
           if (f === e.conditions.length - 1) {
@@ -25959,7 +25968,7 @@ Entry.skinContainer = {_skins:{}};
         }
       }
     }
-    return Entry.block[b.type];
+    return Entry.block[a.type];
   };
 })(Entry.skinContainer);
 Entry.ThreadView = function(a, b) {
@@ -25974,33 +25983,33 @@ Entry.ThreadView = function(a, b) {
   a.destroy = function() {
     this.svgGroup.remove();
   };
-  a.setParent = function(b) {
-    this.parent = b;
+  a.setParent = function(a) {
+    this.parent = a;
   };
   a.getParent = function() {
     return this.parent;
   };
   a.renderText = function() {
-    for (var b = this.thread.getBlocks(), a = 0;a < b.length;a++) {
-      b[a].view.renderText();
+    for (var a = this.thread.getBlocks(), c = 0;c < a.length;c++) {
+      a[c].view.renderText();
     }
   };
   a.renderBlock = function() {
-    for (var b = this.thread.getBlocks(), a = 0;a < b.length;a++) {
-      b[a].view.renderBlock();
+    for (var a = this.thread.getBlocks(), c = 0;c < a.length;c++) {
+      a[c].view.renderBlock();
     }
   };
-  a.requestAbsoluteCoordinate = function(b) {
-    var a = this.thread.getBlocks(), d = a.shift(), e = {x:0, y:0};
-    for (this.parent instanceof Entry.Board || this.parent instanceof Entry.BlockMenu || (e = this.parent.requestAbsoluteCoordinate());d && d.view !== b && d.view;) {
-      d = d.view, e.x += d.x + d.magnet.next.x, e.y += d.y + d.magnet.next.y, d = a.shift();
+  a.requestAbsoluteCoordinate = function(a) {
+    var b = this.thread.getBlocks(), d = b.shift(), e = {x:0, y:0};
+    for (this.parent instanceof Entry.Board || this.parent instanceof Entry.BlockMenu || (e = this.parent.requestAbsoluteCoordinate());d && d.view !== a && d.view;) {
+      d = d.view, e.x += d.x + d.magnet.next.x, e.y += d.y + d.magnet.next.y, d = b.shift();
     }
     return e;
   };
-  a.requestPartHeight = function(b, a) {
-    a = this.thread.getBlocks();
-    for (var c = a.pop(), e = b ? b.magnet.next ? b.magnet.next.y : b.height : 0;c && c.view !== b && c.view;) {
-      c = c.view, e = c.magnet.next ? e + c.magnet.next.y : e + c.height, c.dragMode === Entry.DRAG_MODE_DRAG && (e = 0), c = a.pop();
+  a.requestPartHeight = function(a, c) {
+    c = this.thread.getBlocks();
+    for (var b = c.pop(), e = a ? a.magnet.next ? a.magnet.next.y : a.height : 0;b && b.view !== a && b.view;) {
+      b = b.view, e = b.magnet.next ? e + b.magnet.next.y : e + b.height, b.dragMode === Entry.DRAG_MODE_DRAG && (e = 0), b = c.pop();
     }
     return e;
   };

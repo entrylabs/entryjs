@@ -130,15 +130,18 @@ Entry.PARAM = -1;
 
     p.tick = function() {
         var executors = this.executors;
+        var executedBlocks = [];
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
-            if (!executor.isEnd()) executor.execute();
+            if (!executor.isEnd())
+                executedBlocks = executedBlocks.concat(executor.execute());
             else {
                 executors.splice(i--, 1);
                 if (executors.length === 0)
                     this.executeEndEvent.notify();
             }
         }
+        this._reportExecuting(executedBlocks);
     };
 
     p.removeExecutor = function(executor) {
@@ -341,4 +344,14 @@ Entry.PARAM = -1;
         this.getBlockList(false, type)
             .forEach(function(b) { b.doDestroy(); });
     };
+
+    p.watchExecuting = function(func) {
+    };
+
+    p._reportExecuting = function() {
+    };
+
+    p.unwatchExecuting = function() {
+    };
+
 })(Entry.Code.prototype);
