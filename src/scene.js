@@ -16,6 +16,15 @@ Entry.Scene = function() {
     $(window).on('resize', (function(e) {
         that.resize();
     }));
+
+    that.disposeEvent =
+        Entry.disposeEvent.attach(this, function(e) {
+            var elem = document.activeElement;
+            if (elem && elem !== e.target &&
+                $(elem).hasClass('entrySceneFieldWorkspace')) {
+                elem.blur();
+            }
+        });
 };
 
 Entry.Scene.viewBasicWidth = 70;
@@ -48,12 +57,12 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
             var ret = 40 + slope*x;
 
             if (y > ret) {
-                 var nextScene = that.getNextScene();
-                 if (nextScene) {
-                    var $sceneView = $(nextScene.view);
-                    $(document).trigger('mouseup');
-                    $sceneView.trigger('mousedown');
-                 }
+                var nextScene = that.getNextScene();
+                if (nextScene) {
+                   var $sceneView = $(nextScene.view);
+                   $(document).trigger('mouseup');
+                   $sceneView.trigger('mousedown');
+                }
             }
         });
 

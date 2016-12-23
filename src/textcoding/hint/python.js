@@ -148,6 +148,7 @@ Entry.PyHint = function(syntax) {
     p.addScope = function(name) {
         if (this.syntax[name]) {
             var keys = Object.keys(this.syntax[name]);
+            keys = keys.filter(function(k){return k.indexOf("#") < 0})
             this.scope[name] = keys;
             this.scope._global.unshift(name);
             keys = keys.map(function(k) {return name + "." + k});
