@@ -315,18 +315,17 @@ Entry.Scene.prototype.selectScene = function(scene) {
     }
     else {
         var workspace = Entry.getMainWS();  
-        console.log("workspace.vimBoard._parser._onError1", workspace.vimBoard._parser._onError);
-        if(workspace){
+        if(workspace && workspace.vimBoard) {
+            var sObject = workspace.vimBoard._currentObject;
+            var sScene = sObject.scene;
+            var parser = workspace.vimBoard._parser;
             try {
-                workspace._syncTextCode();
+                if(scene.id != sScene.id)
+                    workspace._syncTextCode();
             }
             catch(e) {}
-                console.log("workspace.vimBoard._parser._onError2", workspace.vimBoard._parser._onError);
-            
-            
-            if(workspace.vimBoard && workspace.vimBoard._parser && 
-                workspace.vimBoard._parser._onError) {
-                Entry.container.selectObject(workspace.vimBoard._currentObject.id, true);
+            if(parser._onError) {
+                Entry.container.selectObject(sObject.id, true);
                 return;
             }
         }
