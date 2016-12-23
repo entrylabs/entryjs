@@ -12144,7 +12144,7 @@ Entry.PyHint = function(b) {
   this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
   CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
   b = function(a) {
-    Entry.hw.hwModule && (a = Entry.hw.hwModule.name, a = a[0].toUpperCase() + a.slice(1), this.addScope(a));
+    Entry.hw.hwModule && (a = Entry.hw.hwModule.name, a = a[0].toUpperCase() + a.slice(1), "ArduinoExt" === a && (a = "Arduino"), this.addScope(a));
   }.bind(this);
   Entry.addEventListener("hwChanged", b);
   Entry.hw.hwModule && b();
@@ -12172,7 +12172,7 @@ Entry.PyHint = function(b) {
         e = this.fuzzySearch(this.getScope("_global"), g);
         e = e.map(function(a) {
           var b = l, d = a.split("#")[0], d = d.split("\n").join(" "), d = d.replace(/%\d+/gi, ""), d = d.replace(/\$\d+/gi, ""), c;
-          -1 < a.indexOf(".") && (a = a.split("."), b = l[a[0]], c = a[0], a = a[1]);
+          -1 < a.indexOf(".") && (a = a.split("."), b = l[a[0]], c = a.shift(), a = a.join("."));
           b[a].key && f.push(b[a].key);
           return {displayText:d, hint:k, syntax:b[a], localKey:c};
         });
@@ -18613,6 +18613,36 @@ Entry.overridePrototype = function() {
   Number.prototype.mod = function(b) {
     return (this % b + b) % b;
   };
+  String.prototype.repeat || (String.prototype.repeat = function(b) {
+    if (null == this) {
+      throw new TypeError("can't convert " + this + " to object");
+    }
+    var a = "" + this;
+    b = +b;
+    b != b && (b = 0);
+    if (0 > b) {
+      throw new RangeError("repeat count must be non-negative");
+    }
+    if (Infinity == b) {
+      throw new RangeError("repeat count must be less than infinity");
+    }
+    b = Math.floor(b);
+    if (0 == a.length || 0 == b) {
+      return "";
+    }
+    if (268435456 <= a.length * b) {
+      throw new RangeError("repeat count must not overflow maximum string size");
+    }
+    for (var d = "";;) {
+      1 == (b & 1) && (d += a);
+      b >>>= 1;
+      if (0 == b) {
+        break;
+      }
+      a += a;
+    }
+    return d;
+  });
 };
 Entry.Utils.generateId = function() {
   return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36)).substr(-4);
