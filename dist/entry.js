@@ -11650,6 +11650,10 @@ Entry.Scene = function() {
   $(window).on("resize", function(a) {
     b.resize();
   });
+  b.disposeEvent = Entry.disposeEvent.attach(this, function(a) {
+    var b = document.activeElement;
+    b && b !== a.target && $(b).hasClass("entrySceneFieldWorkspace") && b.blur();
+  });
 };
 Entry.Scene.viewBasicWidth = 70;
 Entry.Scene.prototype.generateView = function(b, a) {
