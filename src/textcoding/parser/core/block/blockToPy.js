@@ -131,29 +131,19 @@ Entry.BlockToPyParser = function(blockSyntax) {
         console.log("block syntax", syntax);  
         /*if(block && block.data) {
             var btype = block.data.type;
-            if(btype.split('_')[0] == "stringParam" || btype.split('_')[0] == "booleanParam")
+            var prefix = btype.split('_')[0]
+            if(prefix == "stringParam" || prefix == "booleanParam")
                 return result;
         }
-        
         if(template) syntax = template;
-
         if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
             if(!syntax || syntax == null || syntax == "def when_start():") {
                 var error = {};
-                var alert_msg = Lang.TextCoding[Entry.TextCodingError.ALERT_LEGACY_NO_SUPPORT];
-                
-                error.type = 'no_block';
-                error.alert_msg = alert_msg;
-                if(block && block.data) {
-                    error.block_type = block.data.type;
-                    error.block_name = this.Block(block, Lang.template[block.data.type]);
-                }
-                else { 
-                    error.block_type = 'Block';
-                    error.block_name = 'Block'; 
-                }
+                var message = Lang.TextCoding[Entry.TextCodingError.ALERT_LEGACY_NO_SUPPORT];
+                var block_name = this.Block(block, Lang.template[block.data.type]);
+                var alert_message = message + '\n' + Lang.TextCoding[block_name] + ':' + block_name;                
 
-                alert(syntax);
+                alert(alert_message);
             } 
         }*/
 

@@ -1608,9 +1608,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else {
                     if(result.callee.isCallParam == false) {
                         if(!Entry.TextCodingUtil.isEntryEventFuncName(result.callee.name)) {
+                            console.log("funcMap", this._funcMap); 
                             var name = result.callee.name;
                             var keyword = name;
-                            console.log("errorId", 26);
+                            console.log("errorId", 26.2);
                             Entry.TextCodingError.error(
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_FUNCTION,

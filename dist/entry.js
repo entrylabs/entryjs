@@ -14755,7 +14755,7 @@ Entry.PyToBlockParser = function(b) {
       }
       l = f + e;
       (e = this._funcMap.get(l)) ? (b = {}, b.type = e, c && 0 != c.length && (b.params = c)) : (console.log("this._currentFuncKey", this._currentFuncKey), l == this._currentFuncKey ? Entry.TextCodingUtil.isEntryEventFuncName(b.callee.name) || (console.log("callex reculsive funcKey", l), console.log("callex reculsive params", c), b.type = l, b.params = c, b.funcName = f, this._hasReculsiveFunc = !0, console.log("temp func type", b)) : 0 != b.callee.isCallParam || Entry.TextCodingUtil.isEntryEventFuncName(b.callee.name) || 
-      (t = y = b.callee.name, console.log("errorId", 26), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_FUNCTION, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_FUNCTION)));
+      (console.log("funcMap", this._funcMap), t = y = b.callee.name, console.log("errorId", 26.2), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_FUNCTION, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_FUNCTION)));
     }
     console.log("CallExpression result", b);
     return b;
