@@ -35,6 +35,7 @@ Entry.PyHint = function(syntax) {
         if (Entry.hw.hwModule) {
             var name = Entry.hw.hwModule.name;
             name = name[0].toUpperCase() + name.slice(1);
+            if (name === "ArduinoExt") name = "Arduino";
             this.addScope(name);
         }
     }.bind(this);
