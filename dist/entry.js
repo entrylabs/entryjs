@@ -10671,7 +10671,6 @@ Entry.PropertyPanel = function() {
     this.initializeSplitter(a);
   };
   b.addMode = function(a, b) {
-    console.log("addMode", a);
     var c = b.getView(), c = Entry.Dom(c, {parent:this._contentView}), e = Entry.Dom("<div>" + Lang.Menus[a] + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
     e.bind("click", function() {
       f.select(a);
