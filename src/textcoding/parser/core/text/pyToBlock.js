@@ -87,7 +87,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         else if(blockType == "last") {
                             this.isLastBlock = true;
                         }
-                        else if(blockType == "variable") {
+                        else if(blockType == "variable") { 
                             if(!this._isEntryEventExisted)
                                 continue;
                         } 
@@ -97,6 +97,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             if(block.contents) {  
                                 for(var b in block.contents) {
                                     var content = block.contents[b];
+                                    console.log("content", content);
                                     this.extractContents(content, this._thread);
                                 }
                             }
@@ -5086,6 +5087,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var idData = this[id.type](id);
 
         console.log("FunctionDeclaration idData", idData);
+        if(idData && Entry.TextCodingUtil.isEntryEventFuncName(idData.name)) {
+            if(this._rootFuncKey) {
+                var keyword = "def " + idData.name;
+                console.log("errorId", 88.1);
+                Entry.TextCodingError.error(
+                    Entry.TextCodingError.TITLE_CONVERTING,
+                    Entry.TextCodingError.MESSAGE_CONV_NO_ENTRY_EVENT_FUNCTION,
+                    keyword,
+                    this._blockCount,
+                    Entry.TextCodingError.SUBJECT_CONV_FUNCTION);
+            }
+        }
 
         var textFuncName;
         var textFuncParams = [];
@@ -5098,9 +5111,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         else
             var paramNumber = 0;
 
-        if(paramNumber || paramNumber == 0)
+        if(paramNumber || paramNumber == 0) {
             this._currentFuncKey = textFuncName + paramNumber;
+            if(!this._rootFuncKey)
+                this._rootFuncKey = this._currentFuncKey;
+        }
         console.log("this._currentFuncKey", this._currentFuncKey);
+
+
 
 
         var bodyData = this[body.type](body);
@@ -5575,6 +5593,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         //Entry.TextCodingUtil.clearFuncParam();
         this._funcLoop = false;
         this._hasReculsiveFunc = false;
+        this._rootFuncKey = false;
 
         console.log("FunctionDeclaration result", result);
         return null;
@@ -5669,6 +5688,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         this.isLastBlock = false; 
         this._hasReculsiveFunc = false;
         this._isEntryEventExisted = false;
+        this._rootFuncKey = false;
             
     };
 
@@ -5785,6 +5805,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(targetSyntax) {
             var blockType = targetSyntax.blockType;
         }
+        console.log("blockType", blockType);
 
         if(blockType == "param") return;
         else if(blockType == "event") {

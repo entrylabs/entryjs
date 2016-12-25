@@ -12145,6 +12145,7 @@ Entry.TextCodingError = {};
   b.MESSAGE_CONV_NO_LIST = "message_conv_no_list";
   b.MESSAGE_CONV_NO_OBJECT = "message_conv_no_object";
   b.MESSAGE_CONV_NO_FUNCTION = "message_conv_no_function";
+  b.MESSAGE_CONV_NO_ENTRY_EVENT_FUNCTION = "message_conv_no_entry_event_function";
   b.SUBJECT_SYNTAX_DEFAULT = "subject_syntax_default";
   b.SUBJECT_SYNTAX_TOKEN = "subject_syntax_token";
   b.SUBJECT_SYNTAX_CHARACTER = "subject_syntax_character";
@@ -14317,7 +14318,9 @@ Entry.PyToBlockParser = function(b) {
               if (Entry.TextCodingUtil.isEntryEventFuncByType(f.type)) {
                 if (this._thread.push(f), f.contents) {
                   for (var k in f.contents) {
-                    this.extractContents(f.contents[k], this._thread);
+                    var l = f.contents[k];
+                    console.log("content", l);
+                    this.extractContents(l, this._thread);
                   }
                 }
               } else {
@@ -14331,8 +14334,8 @@ Entry.PyToBlockParser = function(b) {
       }
       console.log("this._blockCount", this._blockCount);
       return this._code;
-    } catch (l) {
-      throw console.log("error", l), a = {}, a.title = l.title, a.message = l.message, a.line = l.line, console.log("Program catch error", a), a;
+    } catch (m) {
+      throw console.log("error", m), a = {}, a.title = m.title, a.message = m.message, a.line = m.line, console.log("Program catch error", a), a;
     }
   };
   b.ExpressionStatement = function(a) {
@@ -16046,11 +16049,12 @@ Entry.PyToBlockParser = function(b) {
       var f = this[e.type](e)
     }
     console.log("FunctionDeclaration idData", f);
+    f && Entry.TextCodingUtil.isEntryEventFuncName(f.name) && this._rootFuncKey && (b = "def " + f.name, console.log("errorId", 88.1), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_ENTRY_EVENT_FUNCTION, b, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_FUNCTION));
     a = [];
     b = [];
     f = f.name;
     if ((g = c.body && 1 != c.body.length ? c.body.length - 5 : 0) || 0 == g) {
-      this._currentFuncKey = f + g;
+      this._currentFuncKey = f + g, this._rootFuncKey || (this._rootFuncKey = this._currentFuncKey);
     }
     console.log("this._currentFuncKey", this._currentFuncKey);
     var g = this[c.type](c), c = g.data;
@@ -16238,7 +16242,7 @@ Entry.PyToBlockParser = function(b) {
         this.convertReculsiveFuncType(n[m]);
       }
     }
-    this._hasReculsiveFunc = this._funcLoop = !1;
+    this._rootFuncKey = this._hasReculsiveFunc = this._funcLoop = !1;
     console.log("FunctionDeclaration result", b);
     return null;
   };
@@ -16295,7 +16299,7 @@ Entry.PyToBlockParser = function(b) {
   b.threadInit = function() {
     this._thread = [];
     this._funcParams = [];
-    this._isEntryEventExisted = this._hasReculsiveFunc = this.isLastBlock = this._funcLoop = !1;
+    this._rootFuncKey = this._isEntryEventExisted = this._hasReculsiveFunc = this.isLastBlock = this._funcLoop = !1;
   };
   b.isFuncParam = function(a) {
     console.log("isFuncParam", this._funcParams);
@@ -16385,6 +16389,7 @@ Entry.PyToBlockParser = function(b) {
     if (c) {
       var e = c.blockType
     }
+    console.log("blockType", e);
     if ("param" != e) {
       if ("event" == e) {
         this._isEntryEventExisted = !0;

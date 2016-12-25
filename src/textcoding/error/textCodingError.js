@@ -23,12 +23,14 @@ Entry.TextCodingError = {};
 	tce.MESSAGE_CONV_NO_LIST = "message_conv_no_list";
 	tce.MESSAGE_CONV_NO_OBJECT ="message_conv_no_object";
 	tce.MESSAGE_CONV_NO_FUNCTION ="message_conv_no_function";
+	tce.MESSAGE_CONV_NO_ENTRY_EVENT_FUNCTION = "message_conv_no_entry_event_function";
 
 
 	tce.SUBJECT_SYNTAX_DEFAULT = "subject_syntax_default";
 	tce.SUBJECT_SYNTAX_TOKEN = "subject_syntax_token";
 	tce.SUBJECT_SYNTAX_CHARACTER = "subject_syntax_character";
 	tce.SUBJECT_SYNTAX_INDENT = "subject_syntax_indent";
+
 	tce.SUBJECT_CONV_DEFAULT = "subject_conv_default";
 	tce.SUBJECT_CONV_GENERAL = "subject_conv_general"; 
 	tce.SUBJECT_CONV_VARIABLE = "subject_conv_variable"; 
