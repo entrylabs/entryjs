@@ -380,7 +380,7 @@ Entry.Container.prototype.removeObject = function(object) {
  * @param {string} objectId
  */
 Entry.Container.prototype.selectObject = function(objectId, changeScene) {
-    console.log("selectObject1", objectId, "changeScene", changeScene);
+    console.log("selectObject1", objectId, "changeScene", changeScene, "Entry.scene.isSceneCloning", Entry.scene.isSceneCloning);
     var object = this.getObject(objectId);
     var workspace = Entry.getMainWS();
     
@@ -399,28 +399,38 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
         
         console.log("workspace.vimBoard._parser._onError", workspace.vimBoard._parser._onError);
 
-        if(workspace && workspace.vimBoard) {
+        if(workspace && workspace.vimBoard && Entry.isTextMode) {
             var sObject = workspace.vimBoard._currentObject;
-            console.log("sObject", sObject);
-            var parser = workspace.vimBoard._parser
+            console.log("sObject", sObject); 
+            var parser = workspace.vimBoard._parser;
             if(parser && parser._onError) {
-                if(sObject && (object.id != sObject.id)) {
-                    try { workspace._syncTextCode(); } catch(e) {}
-                    if(parser && !parser._onError) {
-                        Entry.container.selectObject(object.id, true);
-                        return;
-                    }
-                    else {
-                        Entry.container.selectObject(sObject.id, true);
+                if(sObject && (object.id != sObject.id)) { 
+                    if(!Entry.scene.isSceneCloning) {
+                        try { workspace._syncTextCode(); } catch(e) {}
+                        if(parser && !parser._onError) {
+                            Entry.container.selectObject(object.id, true);
+                            return
+                        }
+                        else {
+                            Entry.container.selectObject(sObject.id, true);
+                            return;
+                        }
+                    } else {
+                        Entry.container.selectObject(sObject.id);
                         return;
                     }
                 }
             }
             else {      
                 if(sObject && (object.id != sObject.id)) {
-                    try { workspace._syncTextCode(); } catch(e) {}
-                    if(parser && parser._onError) {
-                        Entry.container.selectObject(sObject.id, true);
+                    if(!Entry.scene.isSceneCloning) {
+                        try { workspace._syncTextCode(); } catch(e) {}
+                        if(parser && parser._onError) {
+                            Entry.container.selectObject(sObject.id, true);
+                            return;
+                        }
+                    } else {
+                        Entry.container.selectObject(sObject.id);
                         return;
                     }
                 }

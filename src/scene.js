@@ -314,27 +314,28 @@ Entry.Scene.prototype.selectScene = function(scene) {
         Entry.playground.refreshPlayground();
     }
     else {
-        var workspace = Entry.getMainWS();  
-        if(workspace && workspace.vimBoard) {
-            var sObject = workspace.vimBoard._currentObject;
-            if(sObject) 
-                var sScene = sObject.scene;
-            var parser = workspace.vimBoard._parser;
-            try {
-                if(scene.id != sScene.id)
-                    workspace._syncTextCode();
+        if(Entry.isTextMode) {
+            var workspace = Entry.getMainWS();  
+            if(workspace && workspace.vimBoard) {
+                var sObject = workspace.vimBoard._currentObject;
+                var sScene = workspace.vimBoard._currentScene;
+                var parser = workspace.vimBoard._parser;
+                try {
+                    if(scene.id != sScene.id)
+                        workspace._syncTextCode();
+                }
+                catch(e) {}
+                if(parser._onError) {
+                    Entry.container.selectObject(sObject.id, true);
+                    return;
+                }
             }
-            catch(e) {}
-            if(parser._onError) {
-                Entry.container.selectObject(sObject.id, true);
-                return;
-            }
+            workspace && workspace.vimBoard && workspace.vimBoard.clearText();
         }
+
         Entry.stage.selectObject(null);
         Entry.playground.flushPlayground();
-        Entry.variableContainer.updateList();
-
-        workspace && workspace.vimBoard && workspace.vimBoard.clearText();
+        Entry.variableContainer.updateList(); 
     }
 
     if (!Entry.container.listView_)
@@ -456,8 +457,13 @@ Entry.Scene.prototype.cloneScene = function(scene) {
     this.addScene(clonedScene);
 
     var objects = Entry.container.getSceneObjects(scene);
-    for (var i=objects.length-1; i>=0; i--)
-        Entry.container.addCloneObject(objects[i], clonedScene.id);
+    
+    try {
+        this.isSceneCloning = true;
+        for (var i=objects.length-1; i>=0; i--) 
+            Entry.container.addCloneObject(objects[i], clonedScene.id);
+        this.isSceneCloning = false;
+    } catch(e) {}
 };
 
 /**

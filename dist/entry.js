@@ -7015,7 +7015,7 @@ Entry.Container.prototype.removeObject = function(b) {
   return d;
 };
 Entry.Container.prototype.selectObject = function(b, a) {
-  console.log("selectObject1", b, "changeScene", a);
+  console.log("selectObject1", b, "changeScene", a, "Entry.scene.isSceneCloning", Entry.scene.isSceneCloning);
   var d = this.getObject(b), c = Entry.getMainWS();
   a && d && Entry.scene.selectScene(d.scene);
   this.mapObjectOnScene(function(a) {
@@ -7023,21 +7023,29 @@ Entry.Container.prototype.selectObject = function(b, a) {
     a.isSelected_ = !1;
   });
   if (d) {
-    if (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0, console.log("workspace.vimBoard._parser._onError", c.vimBoard._parser._onError), c && c.vimBoard) {
+    if (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0, console.log("workspace.vimBoard._parser._onError", c.vimBoard._parser._onError), c && c.vimBoard && Entry.isTextMode) {
       var e = c.vimBoard._currentObject;
       console.log("sObject", e);
       var f = c.vimBoard._parser;
       if (f && f._onError) {
         if (e && d.id != e.id) {
-          try {
-            c._syncTextCode();
-          } catch (g) {
+          if (Entry.scene.isSceneCloning) {
+            Entry.container.selectObject(e.id);
+          } else {
+            try {
+              c._syncTextCode();
+            } catch (g) {
+            }
+            f && !f._onError ? Entry.container.selectObject(d.id, !0) : Entry.container.selectObject(e.id, !0);
           }
-          f && !f._onError ? Entry.container.selectObject(d.id, !0) : Entry.container.selectObject(e.id, !0);
           return;
         }
       } else {
         if (e && d.id != e.id) {
+          if (Entry.scene.isSceneCloning) {
+            Entry.container.selectObject(e.id);
+            return;
+          }
           try {
             c._syncTextCode();
           } catch (g) {
@@ -11813,25 +11821,23 @@ Entry.Scene.prototype.selectScene = function(b) {
     if ((a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type) {
       Entry.container.selectObject(a.id), Entry.playground.refreshPlayground();
     } else {
-      if ((a = Entry.getMainWS()) && a.vimBoard) {
-        var d = a.vimBoard._currentObject;
-        if (d) {
-          var c = d.scene
+      if (Entry.isTextMode) {
+        if ((a = Entry.getMainWS()) && a.vimBoard) {
+          var d = a.vimBoard._currentObject, c = a.vimBoard._currentScene, e = a.vimBoard._parser;
+          try {
+            b.id != c.id && a._syncTextCode();
+          } catch (f) {
+          }
+          if (e._onError) {
+            Entry.container.selectObject(d.id, !0);
+            return;
+          }
         }
-        var e = a.vimBoard._parser;
-        try {
-          b.id != c.id && a._syncTextCode();
-        } catch (f) {
-        }
-        if (e._onError) {
-          Entry.container.selectObject(d.id, !0);
-          return;
-        }
+        a && a.vimBoard && a.vimBoard.clearText();
       }
       Entry.stage.selectObject(null);
       Entry.playground.flushPlayground();
       Entry.variableContainer.updateList();
-      a && a.vimBoard && a.vimBoard.clearText();
     }
     Entry.container.listView_ || Entry.stage.sortZorder();
     Entry.container.updateListView();
@@ -11887,8 +11893,13 @@ Entry.Scene.prototype.cloneScene = function(b) {
     this.generateElement(a);
     this.addScene(a);
     b = Entry.container.getSceneObjects(b);
-    for (var d = b.length - 1;0 <= d;d--) {
-      Entry.container.addCloneObject(b[d], a.id);
+    try {
+      this.isSceneCloning = !0;
+      for (var d = b.length - 1;0 <= d;d--) {
+        Entry.container.addCloneObject(b[d], a.id);
+      }
+      this.isSceneCloning = !1;
+    } catch (c) {
     }
   }
 };
@@ -27539,7 +27550,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
     this._oldParserType = b.textType;
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._oldParserType != this._parserType && this._parser.setParser(this._mode, this._parserType, this.codeMirror), this._oldParserType = this._parserType) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._oldParserType != this._parserType && this._parser.setParser(this._mode, this._parserType, this.codeMirror), this._oldParserType = this._parserType);
     Entry.playground && (this._currentObject = Entry.playground.object);
-    Entry.scene && (this._currentScene = Entry.scene.selectedScene);
     if (e == Entry.Vim.TEXT_TYPE_PY) {
       if (this._currentObject) {
         c = "# " + this._currentObject.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc";
@@ -27652,6 +27662,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard}), Entry.commander.setCurrentEditor("board", this.overlayBoard);
       }
       this.oldMode = this.mode;
+      Entry.isTextMode = this.mode == e.MODE_VIMBOARD ? !0 : !1;
       Entry.dispatchEvent("workspaceChangeMode");
       this.changeEvent.notify(b);
     }
@@ -28291,7 +28302,7 @@ Entry.Playground.prototype.injectObject = function(b) {
 };
 Entry.Playground.prototype.injectCode = function() {
   var b = this.object.script, a = this.mainWorkspace, d = Entry.getMainWS();
-  Entry.textCodingEnable && d && !d.vimBoard._parser._onError && (d.vimBoard._changedObject ? d.vimBoard._currentObject = d.vimBoard._changedObject : Entry.playground && (d.vimBoard._currentObject = Entry.playground.object), Entry.playground && Entry.textCodingEnable && (d.vimBoard._changedObject = Entry.playground.object));
+  Entry.textCodingEnable && d && !d.vimBoard._parser._onError && (d.vimBoard._changedObject ? (d.vimBoard._currentObject = d.vimBoard._changedObject, d.vimBoard._currentScene = d.vimBoard._changedObject.scene) : Entry.playground && (d.vimBoard._currentObject = Entry.playground.object, d.vimBoard._currentScene = Entry.playground.object.scene), Entry.playground && Entry.textCodingEnable && (d.vimBoard._changedObject = Entry.playground.object, d.vimBoard._currentScene = Entry.playground.object.scene));
   a.changeBoardCode(b, function() {
     a.getBoard().adjustThreadsPosition();
   });

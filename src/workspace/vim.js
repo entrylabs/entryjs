@@ -199,8 +199,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         if(Entry.playground)
             this._currentObject = Entry.playground.object;
 
-        if(Entry.scene)
-            this._currentScene = Entry.scene.selectedScene;
 
         if(textType == Entry.Vim.TEXT_TYPE_PY) {
             if(this._currentObject) {

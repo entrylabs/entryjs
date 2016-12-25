@@ -176,6 +176,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         }
 
         this.oldMode = this.mode;
+        if(this.mode == WORKSPACE.MODE_VIMBOARD)
+            Entry.isTextMode = true;
+        else 
+            Entry.isTextMode = false;
 
         Entry.dispatchEvent('workspaceChangeMode');
         this.changeEvent.notify(message);
