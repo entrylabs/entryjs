@@ -1948,6 +1948,24 @@ Entry.TextCodingUtil = {};
         }
     };
 
+    tu.isNameIncludeSpace = function(name, type) { 
+        if (type == "variable" && test(name)) { 
+            return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE];
+        }
+        else if (type == "list" && test(name)) { 
+            return Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE];
+        }
+        else if (type == "function" && test(name)) { 
+            return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE];
+        }
+
+        return false;
+
+        function test(name) {
+            return / /.test(name);
+        }
+    };
+
     tu.hasFunctionFieldLabel = function(fBlock) {
         console.log("field fBlock", fBlock);
         if(!fBlock || !fBlock.data) return;

@@ -149,6 +149,16 @@ Entry.Func.endEdit = function(message) {
 Entry.Func.save = function() {
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
+    
+    var ws = Entry.getMainWS();
+    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) { 
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+        mode.textType = Entry.Vim.TEXT_TYPE_PY;
+        mode.runType = Entry.Vim.WORKSPACE_MODE;
+        Entry.getMainWS().setMode(mode);
+        Entry.variableContainer.functionAddButton_.addClass('disable');
+    }
 };
 
 Entry.Func.syncFuncName = function(dstFName) {
@@ -210,6 +220,16 @@ Entry.Func.cancelEdit = function() {
         }
     }
     Entry.variableContainer.updateList();
+
+    var ws = Entry.getMainWS();
+    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) { 
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+        mode.textType = Entry.Vim.TEXT_TYPE_PY;
+        mode.runType = Entry.Vim.WORKSPACE_MODE;
+        Entry.getMainWS().setMode(mode);
+        Entry.variableContainer.functionAddButton_.addClass('disable');
+    }
 };
 
 Entry.Func.getMenuXml = function() {

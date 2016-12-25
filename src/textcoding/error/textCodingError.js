@@ -39,6 +39,9 @@ Entry.TextCodingError = {};
 	tce.SUBJECT_CONV_FUNCTION = "subject_conv_function";
 
 	//No Converting Message
+	tce.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE = "alert_variable_empty_text_add_change";
+	tce.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE = "alert_list_empty_text_add_change";
+	tce.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE = "alert_function_name_empty_text_add_change";
 	tce.ALERT_VARIABLE_EMPTY_TEXT = "alert_variable_empty_text";
 	tce.ALERT_LIST_EMPTY_TEXT = "alert_list_empty_text";
 	tce.ALERT_FUNCTION_NAME_EMPTY_TEXT = "alert_function_name_empty_text";

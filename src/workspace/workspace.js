@@ -167,6 +167,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 break;
 
             case WORKSPACE.MODE_OVERLAYBOARD:
+                if(this.oldMode == WORKSPACE.MODE_VIMBOARD)
+                    this.overlayModefrom = WORKSPACE.MODE_VIMBOARD;
+                else if(this.oldMode == WORKSPACE.MODE_BOARD)
+                    this.overlayModefrom = WORKSPACE.MODE_BOARD;
+
                 if (!this.overlayBoard)
                     this.initOverlayBoard();
                 this.overlayBoard.show();

@@ -579,6 +579,33 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(blockSyntax)
                         type = blockSyntax.key;
                 }
+                else if(callee.property.name == "randint") {
+                    if(component.arguments && component.arguments[0]) {
+                        var arg = component.arguments[0];
+                        if(arg.type == "Literal") {
+                            var value = arg.value;
+                            if(!isNaN(value) && value % 1 !== 0) {
+                                var syntax = String("random.uniform(%2, %4)");
+                                var blockSyntax = this.getBlockSyntax(syntax);
+                                if(blockSyntax)
+                                    type = blockSyntax.key;
+                            }
+                        }
+                    }
+                    
+                    if(component.arguments && component.arguments[1]) {
+                        arg = component.arguments[1]; 
+                        if(arg.type == "Literal") {
+                            var value = arg.value;
+                            if(!isNaN(value) && value % 1 !== 0) {
+                                var syntax = String("random.uniform(%2, %4)");
+                                var blockSyntax = this.getBlockSyntax(syntax);
+                                if(blockSyntax)
+                                    type = blockSyntax.key;
+                            }
+                        }
+                    }
+                }
             }
 
             console.log("type", type); 
@@ -1189,7 +1216,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                     }
 
-                    if(isStringIncluded) { //retype considering parameter condition
+                    /*if(isStringIncluded) { //retype considering parameter condition
                         var syntax = String("(%2 + %4)");
                         var blockSyntax = this.getBlockSyntax(syntax);
                         if(blockSyntax)
@@ -1201,7 +1228,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params = combineParams;
 
                         console.log("isStringIncluded params", params);
-                    }
+                    }*/
                 }
                 else if(callee.property.name == "len") {
                     console.log("syntax", syntax, "params", params);
@@ -1404,7 +1431,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         newParams[3] = params[1];
                         params = newParams;
                     }
-                }
+                } 
             }
 
             //HW

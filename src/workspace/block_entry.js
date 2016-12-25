@@ -8178,11 +8178,41 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "random.randint(%2, %4)",
-                blockType: "param"
+                blockType: "param",
+                textParams: [
+                    null,
+                    {
+                        "type": "Block",
+                        "accept": "string",
+                        paramType: "integer"
+                    },
+                    null,
+                    {
+                        "type": "Block",
+                        "accept": "string",
+                        paramType: "integer"
+                    },
+                    null
+                ]
             },
             {
                 syntax: "random.uniform(%2, %4)",
-                blockType: "param"
+                blockType: "param",
+                textParams: [
+                    null,
+                    {
+                        "type": "Block",
+                        "accept": "string",
+                        paramType: "float"
+                    },
+                    null,
+                    {
+                        "type": "Block",
+                        "accept": "string",
+                        paramType: "float"
+                    },
+                    null
+                ]
             }
         ]}
     },

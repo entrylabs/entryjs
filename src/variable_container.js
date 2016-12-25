@@ -556,6 +556,7 @@ Entry.VariableContainer.prototype.updateList = function() {
             if (func.callerListElement)
                 this.listView_.appendChild(func.callerListElement);
         }
+        
     }
 
     //select the first element(view) if exist
@@ -739,6 +740,18 @@ Entry.VariableContainer.prototype.editFunction = function(variable, name) {
  */
 Entry.VariableContainer.prototype.saveFunction = function(func) {
     /* add to function list when not exist */
+    var ws = Entry.getMainWS();
+    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) { 
+        if(func && func.description) {
+            var funcName = func.description.substring(1, func.description.length-1);
+            if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(funcName, 'function')) {
+                alert(alert_msg); 
+                Entry.Func.cancelEdit();
+                return;
+            }
+        }
+    }
+
     if (!this.functions_[func.id]) {
         this.functions_[func.id] = func;
         this.createFunctionView(func);
@@ -812,6 +825,17 @@ Entry.VariableContainer.prototype.checkAllVariableName = function(name,variable)
 };
 
 Entry.VariableContainer.prototype.addVariable = function(variable) {
+    if (Entry.isTextMode) {
+        var panel = this.variableAddPanel;
+        var variableName = panel.view.name.value;
+        if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(variableName, 'variable')) {
+            alert(alert_msg); 
+            this.variableAddPanel.view.addClass('entryRemove');
+            this.resetVariableAddPanel('variable'); 
+            return;
+        }
+    }
+
     if (!variable) {
         var variableContainer = this;
         var panel = this.variableAddPanel;
@@ -823,6 +847,7 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
             name = this._truncName(name, 'variable');
 
         name = this.checkAllVariableName(name,'variables_') ? Entry.getOrderedName(name, this.variables_, 'name_') : name;
+
         var info = panel.info;
         variable = {
             name: name,
@@ -889,6 +914,15 @@ Entry.VariableContainer.prototype.removeVariable = function(variable) {
 Entry.VariableContainer.prototype.changeVariableName = function(variable, name) {
     if (variable.name_ == name)
         return;
+
+    if (Entry.isTextMode) {
+        if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'variable')) {
+            alert(alert_msg); 
+            variable.listElement.nameField.value = variable.name_;
+            return;
+        }
+    }
+
     var variables = this.variables_;
     var exist = Entry.isExist(name, 'name_', variables);
 
@@ -916,6 +950,15 @@ Entry.VariableContainer.prototype.changeVariableName = function(variable, name) 
 Entry.VariableContainer.prototype.changeListName = function(list, name) {
     if (list.name_ == name)
         return;
+
+    if (Entry.isTextMode) {
+        if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'list')) {
+            alert(alert_msg);
+            list.listElement.nameField.value = list.name_;
+            return;
+        }
+    }
+
     var lists = this.lists_;
     var exist = Entry.isExist(name, 'name_', lists);
 
@@ -1201,7 +1244,18 @@ Entry.VariableContainer.prototype.createMessageView = function(message) {
  * @param {list model} list
  * @return {boolean} return true when success
  */
-Entry.VariableContainer.prototype.addList = function(list) {
+Entry.VariableContainer.prototype.addList = function(list) { 
+    if (Entry.isTextMode) {
+        var panel = this.listAddPanel;
+        var listName = panel.view.name.value;
+        if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(listName, 'list')) {
+            alert(alert_msg); 
+            this.listAddPanel.view.addClass('entryRemove');
+            this.resetVariableAddPanel('list');
+            return;
+        }
+    }
+
     if (!list) {
         var variableContainer = this;
         var panel = this.listAddPanel;
@@ -1215,6 +1269,7 @@ Entry.VariableContainer.prototype.addList = function(list) {
             name = this._truncName(name, 'list');
 
         name = this.checkAllVariableName(name, 'lists_') ? Entry.getOrderedName(name, this.lists_, 'name_') : name;
+
         list = {
             name: name,
             isCloud: info.isCloud,
@@ -1989,7 +2044,7 @@ Entry.VariableContainer.prototype.updateVariableSettingView = function(v) {
         minValue.removeAttribute('disabled');
         maxValue.removeAttribute('disabled');
         minValue.value = v.getMinValue();
-        maxValue.value = v.getMaxValue();
+        maxValue.value = v.getMaxValue(); 
         minMaxWrapper.removeClass('entryVariableMinMaxDisabledWorkspace');
     } else {
         minMaxWrapper.addClass('entryVariableMinMaxDisabledWorkspace');

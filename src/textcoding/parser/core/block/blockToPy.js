@@ -206,6 +206,12 @@ Entry.BlockToPyParser = function(blockSyntax) {
                                 else param += " - 1";
                             }
                         }
+                        console.log("middle result", result, "textParam", textParam);
+
+                        if(textParam && textParam.paramType == "integer") { 
+                            if(!isNaN(param) && param % 1 !== 0)
+                                result = result.replace("randint", "uniform");
+                        }
                         console.log("btop param", param);
                         console.log("btop this._funcParamMap", this._funcParamMap);
                         
