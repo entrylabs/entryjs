@@ -194,7 +194,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
 
                         if(textParam && textParam.paramType == "index") { 
-                            if(!isNaN(param)) param = String(parseInt(param) - 1);
+                            if(!isNaN(param)) 
+                                param = param - 1;
                             else {
                                 var tokens = param.split('+');
                                 console.log("index tokens", tokens);

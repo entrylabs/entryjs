@@ -13599,7 +13599,7 @@ Entry.BlockToPyParser = function(b) {
                   var r = g.split("_"), v = r[0];
                   2 == r.length && ("stringParam" == v ? g = "string_param" : "booleanParam" == v && (g = "boolean_param"));
                 }
-                n && "index" == n.paramType && (isNaN(g) ? (r = g.split("+"), console.log("index tokens", r), " 1)" == r[r.length - 1] ? (delete r[r.length - 1], g = r.join("+"), g = g.substring(1, g.length - 2)) : g += " - 1") : g = String(parseInt(g) - 1));
+                n && "index" == n.paramType && (isNaN(g) ? (r = g.split("+"), console.log("index tokens", r), " 1)" == r[r.length - 1] ? (delete r[r.length - 1], g = r.join("+"), g = g.substring(1, g.length - 2)) : g += " - 1") : --g);
                 console.log("middle result", c, "textParam", n);
                 n && "integer" == n.paramType && (isNaN(g) || 0 === g % 1 || (c = c.replace("randint", "uniform")));
                 console.log("btop param", g);
@@ -14547,7 +14547,7 @@ Entry.PyToBlockParser = function(b) {
                         }
                       } else {
                         if ("subscriptIndex" == f.property.name) {
-                          a.arguments && a.arguments[0] && (m = a.arguments[0], "Literal" == m.type && (r = "%2[%4]#char_at", n = this.getBlockSyntax(r))) && (e = n.key);
+                          a.arguments && a.arguments[0] && (m = a.arguments[0], r = "Literal" == m.type ? "%2[%4]#char_at" : "%2[%4]", n = this.getBlockSyntax(r)) && (e = n.key);
                         } else {
                           if ("_pySlice" == f.property.name) {
                             if (r = "%2[%4:%6]", n = this.getBlockSyntax(r)) {
@@ -14690,10 +14690,12 @@ Entry.PyToBlockParser = function(b) {
           u.object.name, console.log("errorId", 14), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : f.property && "len" == f.property.name ? "self" == u.object.name ? (y = u.property.name, "len#length_of_string" == r ? Entry.TextCodingUtil.isLocalVariableExisted(y, this._currentObject) || this.isFuncParam(y) || (t = u.object.name + "." + u.property.name, console.log("errorId", 
           15), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : "len" != r || Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject) || (t = y, console.log("errorId", 16), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (t = y = 
           u.object.name, console.log("errorId", 17), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : "__pythonRuntime.ops.subscriptIndex" == u.property.callee ? u.object.type || (y = u.object.name, Entry.TextCodingUtil.isGlobalListExisted(y) || (t = y, console.log("errorId", 18), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, 
-          t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : "self" == u.object.name ? (y = u.property.name, Entry.TextCodingUtil.isLocalVariableExisted(y, this._currentObject) || (t = u.object.name + "." + u.property.name, console.log("errorId", 19), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))) : "Hamster" != u.object.name && (t = y = u.object.name, 
-          console.log("errorId", 20), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : u.name && "object" == typeof u && (f.property && "in" == f.property.name ? (y = u.name, Entry.TextCodingUtil.isGlobalListExisted(y) || (t = y, console.log("errorId", 21), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, 
-          t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : f.property && "len" == f.property.name ? (y = u.name, "len#length_of_string" == r ? Entry.TextCodingUtil.isGlobalVariableExisted(y) || this.isFuncParam(y) || (t = y, console.log("errorId", 22), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : "len" != r || Entry.TextCodingUtil.isGlobalListExisted(y) || 
-          (t = y, console.log("errorId", 23), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (y = u.name, Entry.TextCodingUtil.isGlobalVariableExisted(y) || this.isFuncParam(y) || (t = y, console.log("errorId", 24), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)))))));
+          t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : "self" == u.object.name ? (y = u.property.name, u.property && "local" == u.property.listType ? Entry.TextCodingUtil.isLocalListExisted(y, this._currentObject) || (t = u.object.name + "." + u.property.name, console.log("errorId", 19), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)) : u.property && 
+          "local" == u.property.variableType && !Entry.TextCodingUtil.isLocalVariableExisted(y, this._currentObject) && (t = u.object.name + "." + u.property.name, console.log("errorId", 19.1), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))) : "Hamster" != u.object.name && (t = y = u.object.name, console.log("errorId", 20), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
+          Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : u.name && "object" == typeof u && (f.property && "in" == f.property.name ? (y = u.name, Entry.TextCodingUtil.isGlobalListExisted(y) || (t = y, console.log("errorId", 21), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : f.property && "len" == f.property.name ? 
+          (y = u.name, "len#length_of_string" == r ? Entry.TextCodingUtil.isGlobalVariableExisted(y) || this.isFuncParam(y) || (t = y, console.log("errorId", 22), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : "len" != r || Entry.TextCodingUtil.isGlobalListExisted(y) || (t = y, console.log("errorId", 23), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, 
+          Entry.TextCodingError.MESSAGE_CONV_NO_LIST, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST))) : (y = u.name, this.isFuncParam(y) || ("global" == u.variableType ? Entry.TextCodingUtil.isGlobalVariableExisted(y) || this.isFuncParam(y) || (t = y, console.log("errorId", 24), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : "global" != u.listType || 
+          Entry.TextCodingUtil.isGlobalListExisted(y) || (t = y, console.log("errorId", 24), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE))))))));
         }
       }
       console.log("call call params", c);
@@ -14759,11 +14761,11 @@ Entry.PyToBlockParser = function(b) {
             }
           } else {
             "len" == f.property.name ? (console.log("syntax", r, "params", c), "len" == r && (z = c[1], z = this.ParamDropdownDynamic(z.name, x[1], A[1]), c[1] = z)) : "in" == f.property.name ? (z = c[1], z = this.ParamDropdownDynamic(z.name, x[1], A[1]), c[1] = z) : "pop" == f.property.name ? "number" == c[0].type || "text" == c[0].type ? isNaN(c[0].params[0]) || (c[0].params[0] += 1) : "get_variable" == c[0].type ? (u = {type:"calc_basic"}, k = [], k[0] = c[0], k[1] = "PLUS", k[2] = {type:"number", 
-            params:[1]}, u.params = k, c[0] = u) : "calc_basic" == c[0].type && (c[0].params && "MINUS" == c[0].params[1] && c[0].params[2] && c[0].params[2].params && "1" == c[0].params[2].params[0] ? c[0] = c[0].params[0] : (u = {type:"calc_basic"}, k = [], k[0] = c[0], k[1] = "PLUS", k[2] = {type:"number", params:[1]}, u.params = k, c[0] = u)) : "insert" == f.property.name ? "number" == c[2].type || "text" == c[2].type ? isNaN(c[2].params && c[2].params[0]) || (c[2].params[0] += 1) : "get_variable" == 
+            params:[1]}, u.params = k, c[0] = u) : "calc_basic" == c[0].type && (c[0].params && "MINUS" == c[0].params[1] && c[0].params[2] && c[0].params[2].params && "1" == c[0].params[2].params[0] ? c[0] = c[0].params[0] : (u = {type:"calc_basic"}, k = [], k[0] = c[0], k[1] = "PLUS", k[2] = {type:"number", params:[1]}, u.params = k, c[0] = u)) : "insert" == f.property.name ? "number" == c[2].type || "text" == c[2].type ? c[2].params && !isNaN(c[2].params[0]) && (c[2].params[0] += 1) : "get_variable" == 
             c[2].type ? (u = {type:"calc_basic"}, k = [], k[0] = c[2], k[1] = "PLUS", k[2] = {type:"number", params:[1]}, u.params = k, c[2] = u) : "calc_basic" == c[2].type && (c[2].params && "MINUS" == c[2].params[1] && c[2].params[2] && c[2].params[2].params && "1" == c[2].params[2].params[0] ? c[2] = c[2].params[0] : (u = {type:"calc_basic"}, k = [], k[0] = c[2], k[1] = "PLUS", k[2] = {type:"number", params:[1]}, u.params = k, c[2] = u)) : "subscriptIndex" == f.property.name ? (z = c[3], "number" == 
-            c[3].type || "text" == c[3].type ? isNaN(c[3].params && c[3].params[0]) || (c[3].params[0] += 1) : "get_variable" == c[3].type ? (u = {type:"calc_basic"}, k = [], k[0] = c[3], k[1] = "PLUS", k[2] = {type:"number", params:[1]}, u.params = k, c[3] = u) : "calc_basic" == c[3].type && (c[3].params && "MINUS" == c[3].params[1] && c[3].params[2] && c[3].params[2].params && "1" == c[3].params[2].params[0] ? c[3] = c[3].params[0] : (u = {type:"calc_basic"}, k = [], k[0] = c[3], k[1] = "PLUS", 
-            k[2] = {type:"number", params:[1]}, u.params = k, c[3] = u))) : "_pySlice" == f.property.name ? f.object && (u = this[f.object.type](f.object), console.log("objectData", u), B = [], B[1] = u, "number" == c[1].type || "text" == c[1].type ? isNaN(c[1].params[0]) || (c[1].params[0] += 1) : "get_variable" == c[1].type ? (u = {type:"calc_basic"}, k = [], k[0] = c[1], k[1] = "PLUS", k[2] = {type:"number", params:[1]}, u.params = k, c[1] = u) : "calc_basic" == c[1].type && (c[1].params && "MINUS" == 
-            c[1].params[1] && c[1].params[2] && c[1].params[2].params && "1" == c[1].params[2].params[0] ? c[1] = c[1].params[0] : (u = {type:"calc_basic"}, k = [], k[0] = c[1], k[1] = "PLUS", k[2] = {type:"number", params:[1]}, u.params = k, c[1] = u)), B[3] = c[1], B[5] = c[3], c = B) : "find" == f.property.name ? f.object && (u = this[f.object.type](f.object), console.log("objectData", u), B = [], B[1] = u, B[3] = c[1], c = B) : "replace" == f.property.name ? f.object && (u = this[f.object.type](f.object), 
+            c[3].type || "text" == c[3].type ? c[3].params && !isNaN(c[3].params[0]) && (c[3].params[0] += 1) : "get_variable" == c[3].type ? (u = {type:"calc_basic"}, k = [], k[0] = c[3], k[1] = "PLUS", k[2] = {type:"number", params:[1]}, u.params = k, c[3] = u) : "calc_basic" == c[3].type && (c[3].params && "MINUS" == c[3].params[1] && c[3].params[2] && c[3].params[2].params && "1" == c[3].params[2].params[0] ? c[3] = c[3].params[0] : (u = {type:"calc_basic"}, k = [], k[0] = c[3], k[1] = "PLUS", 
+            k[2] = {type:"number", params:[1]}, u.params = k, c[3] = u))) : "_pySlice" == f.property.name ? f.object && (u = this[f.object.type](f.object), console.log("objectData", u), B = [], B[1] = u, "number" == c[1].type || "text" == c[1].type ? c[1].params && !isNaN(c[1].params[0]) && (c[1].params[0] += 1) : "get_variable" == c[1].type ? (u = {type:"calc_basic"}, k = [], k[0] = c[1], k[1] = "PLUS", k[2] = {type:"number", params:[1]}, u.params = k, c[1] = u) : "calc_basic" == c[1].type && (c[1].params && 
+            "MINUS" == c[1].params[1] && c[1].params[2] && c[1].params[2].params && "1" == c[1].params[2].params[0] ? c[1] = c[1].params[0] : (u = {type:"calc_basic"}, k = [], k[0] = c[1], k[1] = "PLUS", k[2] = {type:"number", params:[1]}, u.params = k, c[1] = u)), B[3] = c[1], B[5] = c[3], c = B) : "find" == f.property.name ? f.object && (u = this[f.object.type](f.object), console.log("objectData", u), B = [], B[1] = u, B[3] = c[1], c = B) : "replace" == f.property.name ? f.object && (u = this[f.object.type](f.object), 
             console.log("objectData", u), B = [], B[1] = u, B[3] = c[1], B[5] = c[3], c = B) : "upper" == f.property.name ? f.object && (u = this[f.object.type](f.object), console.log("objectData", u), B = [], B[1] = u, B[3] = c[1], c = B) : "lower" == f.property.name && f.object && (u = this[f.object.type](f.object), console.log("objectData", u), B = [], B[1] = u, B[3] = c[1], c = B);
           }
         }
@@ -15105,29 +15107,36 @@ Entry.PyToBlockParser = function(b) {
       Entry.TextCodingError.MESSAGE_CONV_NO_LIST, x, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)) : Entry.TextCodingUtil.isGlobalVariableExisted(l.name) || (x = l.name, console.log("errorId", 49), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, x, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE));
     }
     console.log("leftData yyy", h);
+    console.log("rightData yyy", l);
     t = Entry.block[v];
     k = t.params;
     v = t.def.params;
     if ("%1[%2] = %3" == n) {
-      h && h.params || (console.log("errorId", 50), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, x, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)), f = h.params[1], console.log("AssignmentExpression listName", f), e.push(f), h && h.property && (f = h.property.arguments[0], console.log("AssignmentExpression left param", f), e.push(f), f = h.property.arguments[1], console.log("arg1 param", f), "number" == f.type || 
-      "text" == f.type ? e.push(f) : "get_variable" == f.type ? (h = {type:"calc_basic"}, m = [], m[0] = f, m[1] = "PLUS", m[2] = {type:"number", params:[1]}, h.params = m, e.push(h)) : "calc_basic" == f.type ? "MINUS" == f.params[1] && "1" == f.params[2].params[0] ? e.push(f.params[0]) : (h = {type:"calc_basic"}, m = [], m[0] = f, m[1] = "PLUS", m[2] = {type:"number", params:[1]}, h.params = m, e.push(h)) : (h = {type:"calc_basic"}, m = [], m[0] = f, m[1] = "PLUS", m[2] = {type:"number", params:[1]}, 
-      h.params = m, e.push(h)), console.log("AssignmentExpression left param", f)), l && e.push(l), 4 == e.length && e.splice(1, 1), c.params = e;
+      h && h.params || (console.log("errorId", 50), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, x, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE));
+      var A = h.params[1];
+      console.log("AssignmentExpression listName", A);
+      e.push(A);
+      h && h.params && (console.log("AssignmentExpression left param", f), f = h.params[3], console.log("arg1 param", f), "number" == f.type || "text" == f.type ? e.push(f) : "get_variable" == f.type ? (A = {type:"calc_basic"}, h = [], h[0] = f, h[1] = "PLUS", h[2] = {type:"number", params:[1]}, A.params = h, e.push(A)) : "calc_basic" == f.type ? "MINUS" == f.params[1] && "1" == f.params[2].params[0] ? e.push(f.params[0]) : (A = {type:"calc_basic"}, h = [], h[0] = f, h[1] = "PLUS", h[2] = {type:"number", 
+      params:[1]}, A.params = h, e.push(A)) : (A = {type:"calc_basic"}, h = [], h[0] = f, h[1] = "PLUS", h[2] = {type:"number", params:[1]}, A.params = h, e.push(A)), console.log("AssignmentExpression left param", f));
+      l && e.push(l);
+      4 == e.length && e.splice(1, 1);
+      c.params = e;
     } else {
       if ("%1 = %2" == n) {
         if (console.log("AssignmentExpression calleeName check", m), h && h.object && h.property) {
           if (console.log("assi leftData.property", h.property), "self" == h.object.name) {
             if ("__pythonRuntime.objects.list" == m) {
               t = h.property.name;
-              h = [];
+              f = [];
               arguments = l.arguments;
-              for (f in arguments) {
-                l = arguments[f], m = {}, m.data = String(l.params[0]), h.push(m);
+              for (A in arguments) {
+                l = arguments[A], h = {}, h.data = String(l.params[0]), f.push(h);
               }
-              Entry.TextCodingUtil.isLocalListExisted(t, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateLocalList(t, h, this._currentObject) : this._funcLoop || Entry.TextCodingUtil.createLocalList(t, h, this._currentObject);
+              Entry.TextCodingUtil.isLocalListExisted(t, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateLocalList(t, f, this._currentObject) : this._funcLoop || Entry.TextCodingUtil.createLocalList(t, f, this._currentObject);
             } else {
               t = h.property.name;
-              if ((h = "number" == l.type || "text" == l.type ? l.params[0] : 0) || 0 == h) {
-                Entry.TextCodingUtil.isLocalVariableExisted(t, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateLocalVariable(t, h, this._currentObject) : this._funcLoop ? Entry.TextCodingUtil.createLocalVariable(t, 0, this._currentObject) : Entry.TextCodingUtil.createLocalVariable(t, h, this._currentObject);
+              if ((f = "number" == l.type || "text" == l.type ? l.params[0] : 0) || 0 == f) {
+                Entry.TextCodingUtil.isLocalVariableExisted(t, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateLocalVariable(t, f, this._currentObject) : this._funcLoop ? Entry.TextCodingUtil.createLocalVariable(t, 0, this._currentObject) : Entry.TextCodingUtil.createLocalVariable(t, f, this._currentObject);
               }
               t = this.ParamDropdownDynamic(t, k[0], v[0]);
               e.push(t);
@@ -15137,16 +15146,16 @@ Entry.PyToBlockParser = function(b) {
         } else {
           if ("__pythonRuntime.objects.list" == m) {
             t = h.name;
-            h = [];
+            f = [];
             arguments = l.arguments;
-            for (f in arguments) {
-              l = arguments[f], m = {}, m.data = String(l.params[0]), h.push(m);
+            for (A in arguments) {
+              l = arguments[A], h = {}, h.data = String(l.params[0]), f.push(h);
             }
-            Entry.TextCodingUtil.isGlobalListExisted(t) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalList(t, h) : this._funcLoop || Entry.TextCodingUtil.createGlobalList(t, h);
+            Entry.TextCodingUtil.isGlobalListExisted(t) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalList(t, f) : this._funcLoop || Entry.TextCodingUtil.createGlobalList(t, f);
           } else {
             t = h.name;
-            if ((h = "number" == l.type || "text" == l.type ? l.params[0] : 0) || 0 == h) {
-              console.log("final currentObject", this._currentObject), console.log("final value", h, h.length), Entry.TextCodingUtil.isGlobalVariableExisted(t) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(t, h) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(t, 0) : Entry.TextCodingUtil.createGlobalVariable(t, h);
+            if ((f = "number" == l.type || "text" == l.type ? l.params[0] : 0) || 0 == f) {
+              console.log("final currentObject", this._currentObject), console.log("final value", f, f.length), Entry.TextCodingUtil.isGlobalVariableExisted(t) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(t, f) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(t, 0) : Entry.TextCodingUtil.createGlobalVariable(t, f);
             }
             t = this.ParamDropdownDynamic(t, k[0], v[0]);
             e.push(t);
@@ -15384,22 +15393,20 @@ Entry.PyToBlockParser = function(b) {
   };
   b.MemberExpression = function(a) {
     console.log("MemberExpression component", a);
-    var b = {}, c;
-    c = a.object;
-    var e = a.property, f = this[c.type](c);
-    b.object = f;
-    var g = this[e.type](e);
+    var b = {}, c, e = a.object, f = a.property, e = this[e.type](e);
+    b.object = e;
+    var g = this[f.type](f);
     b.property = g;
-    console.log("MemberExpression objectData", f);
+    console.log("MemberExpression objectData", e);
     console.log("MemberExpression propertyData", g);
     if ("call" == g.name && 0 == g.userCode) {
       return b;
     }
     if ("__pythonRuntime.ops.subscriptIndex" == g.callee) {
-      if (f.object) {
-        if ("self" == f.object.name) {
-          var h = f.property.name;
-          if (!f.type || "number" != f.type && "text" != f.type) {
+      if (e.object) {
+        if ("self" == e.object.name) {
+          var h = e.property.name;
+          if (!e.type || "number" != e.type && "text" != e.type) {
             if (Entry.TextCodingUtil.isLocalListExisted(h, this._currentObject) && (k = "%2[%4]"), Entry.TextCodingUtil.isLocalVariableExisted(h, this._currentObject) && (k = "%2[%4]#char_at"), !Entry.TextCodingUtil.isLocalListExisted(h, this._currentObject) && !Entry.TextCodingUtil.isLocalVariableExisted(h, this._currentObject)) {
               return b;
             }
@@ -15407,7 +15414,7 @@ Entry.PyToBlockParser = function(b) {
             var k = "%2[%4]#char_at"
           }
         } else {
-          if (h = f.object.name, !f.type || "number" != f.type && "text" != f.type) {
+          if (h = e.object.name, !e.type || "number" != e.type && "text" != e.type) {
             if (Entry.TextCodingUtil.isGlobalListExisted(h) && (k = "%2[%4]"), Entry.TextCodingUtil.isGlobalVariableExisted(h) && (k = "%2[%4]#char_at"), !Entry.TextCodingUtil.isGlobalListExisted(h) && !Entry.TextCodingUtil.isGlobalVariableExisted(h)) {
               return b.type = g.type, b.params = g.params, b;
             }
@@ -15416,7 +15423,7 @@ Entry.PyToBlockParser = function(b) {
           }
         }
       } else {
-        if (h = f.name, !f.type || "number" != f.type && "text" != f.type) {
+        if (h = e.name, !e.type || "number" != e.type && "text" != e.type) {
           if (Entry.TextCodingUtil.isGlobalListExisted(h) && (k = "%2[%4]"), Entry.TextCodingUtil.isGlobalVariableExisted(h) && (k = "%2[%4]#char_at"), !Entry.TextCodingUtil.isGlobalListExisted(h) && !Entry.TextCodingUtil.isGlobalVariableExisted(h)) {
             return b.type = g.type, b.params = g.params, b;
           }
@@ -15428,43 +15435,39 @@ Entry.PyToBlockParser = function(b) {
       if (!k) {
         return;
       }
-      arguments = g.arguments;
+      console.log("member ex propertyData", g);
       console.log("member ex args", arguments);
       console.log("syntax 123", k);
-      c = this.getBlockSyntax(k);
-      var l;
-      c && (l = c.key);
-      c = l;
-      var m = Entry.block[l];
-      l = m.params;
-      m = m.def.params;
-      g = f.object && "self" == f.object.name ? this.ParamDropdownDynamic(h, l[1], m[1], null, this._currentObject) : this.ParamDropdownDynamic(h, l[1], m[1]);
-      console.log("MemberExpression listName", g);
-      e = [];
-      "%2[%4]" == k ? e[1] = g : "%2[%4]#char_at" == k && (console.log("objectData", f), e[1] = f.object && "self" == f.object.name ? f.property : f);
-      console.log("memberexpression arguments", arguments);
-      arguments && arguments[1] && ("number" == arguments[1].type || "text" == arguments[1].type ? (isNaN(arguments[1].params && arguments[1].params[0]) || (arguments[1].params[0] += 1), e[3] = arguments[1]) : "get_variable" == arguments[1].type ? (k = {type:"calc_basic"}, f = [], f[0] = arguments[1], f[1] = "PLUS", f[2] = {type:"number", params:[1]}, k.params = f, e[3] = k) : "calc_basic" == arguments[1].type ? arguments[1].params && "MINUS" == arguments[1].params[1] && arguments[1].params[2] && 
-      arguments[1].params[2].params && "1" == arguments[1].params[2].params[0] ? (e[3] = arguments[1].params[0], console.log("check params[3]", e[3])) : (k = {type:"calc_basic"}, f = [], f[0] = arguments[1], f[1] = "PLUS", f[2] = {type:"number", params:[1]}, k.params = f, e[3] = k) : arguments[1].type || (this.isFuncParam(arguments[1].name) ? (k = {type:"calc_basic"}, f = [], f[0] = arguments[1], f[1] = "PLUS", f[2] = {type:"number", params:[1]}, k.params = f, e[3] = k) : (console.log("errorId", 
-      51), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, void 0, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT))));
-      b.type = c;
-      b.params = e;
+      var l = this.getBlockSyntax(k), m;
+      l && (m = l.key);
+      var q = Entry.block[m], l = q.params, q = q.def.params, h = e.object && "self" == e.object.name ? this.ParamDropdownDynamic(h, l[1], q[1], null, this._currentObject) : this.ParamDropdownDynamic(h, l[1], q[1]);
+      console.log("MemberExpression listName", h);
+      console.log("MemberExpression arguments recheck", arguments);
+      f = [];
+      "%2[%4]" == k ? f[1] = h : "%2[%4]#char_at" == k && (console.log("objectData", e), f[1] = e.object && "self" == e.object.name ? e.property : e);
+      console.log("memberexpression arguments", arguments, "isNaN(0)", isNaN(0));
+      g.type && "value_of_index_from_list" == g.type && (c = g.params[3]);
+      c && ("number" == c.type || "text" == c.type ? f[3] = c : "get_variable" == c.type ? (k = {}, m = "calc_basic", k.type = m, e = [], e[0] = c, e[1] = "PLUS", e[2] = {type:"number", params:[1]}, k.params = e, f[3] = k) : "calc_basic" == c.type ? c.params && "MINUS" == c.params[1] && c.params[2] && c.params[2].params && "1" == c.params[2].params[0] ? (f[3] = c.params[0], console.log("check params[3]", f[3])) : (k = {}, m = "calc_basic", k.type = m, e = [], e[0] = c, e[1] = "PLUS", e[2] = {type:"number", 
+      params:[1]}, k.params = e, f[3] = k) : c.type || (this.isFuncParam(c.name) ? (k = {}, m = "calc_basic", k.type = m, e = [], e[0] = arguments[1], e[1] = "PLUS", e[2] = {type:"number", params:[1]}, k.params = e, f[3] = k) : (console.log("errorId", 51), Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, void 0, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT))));
+      b.type = m;
+      b.params = f;
     } else {
-      if (e = [], "self" == f.name) {
-        if (c = this.getBlockSyntax("%1#get_variable")) {
-          l = c.key;
+      if (f = [], "self" == e.name) {
+        if (l = this.getBlockSyntax("%1#get_variable")) {
+          m = l.key;
         }
-        c = l;
-        m = Entry.block[l];
-        l = m.params;
-        m = m.def.params;
+        c = m;
+        q = Entry.block[m];
+        l = q.params;
+        q = q.def.params;
         h = g.name;
         if (!Entry.TextCodingUtil.isLocalVariableExisted(h, this._currentObject)) {
           return b;
         }
-        k = this.ParamDropdownDynamic(h, l[0], m[0], null, this._currentObject);
-        e.push(k);
+        m = this.ParamDropdownDynamic(h, l[0], q[0], null, this._currentObject);
+        f.push(m);
         b.type = c;
-        0 != e.length && (b.params = e, b.variableType = "local");
+        0 != f.length && (b.params = f, b.variableType = "local");
       } else {
         return b;
       }
