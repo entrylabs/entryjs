@@ -322,7 +322,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         }
 
-                        Entry.toast.alert(title, message);
+                        Entry.toast.alert(title, message); 
                         throw error;
                     }
                 }
@@ -332,7 +332,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 var textCode = this._execParser.Code(code, parseMode);
                 /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
-                ////console.log("textCode", textCode);
+                //console.log("textCode", textCode);
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
                         var temp = '';

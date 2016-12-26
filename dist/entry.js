@@ -12166,6 +12166,7 @@ Entry.TextCodingError = {};
   b.ALERT_VARIABLE_NO_SUPPORT = "alert_variable_no_support";
   b.ALERT_SIGNAL_NO_SUPPORT = "alert_signal_no_support";
   b.ALERT_LEGACY_NO_SUPPORT = "alert_legacy_no_support";
+  b.ALERT_NO_SAVE_ON_ERROR = "alert_no_save_on_error";
   var a = {};
   b.error = function(b, c, e, f, g) {
     console.log("error control", b, c, e, f);
