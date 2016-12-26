@@ -14434,6 +14434,7 @@ Entry.PyToBlockParser = function(b) {
         for (l in arguments) {
           if (m = arguments[l], "Identifier" == m.type ? q = m.name : "Literal" == m.type ? q = m.value : "MemberExpression" == m.type && (q = m.object.name + "." + m.property.name), r = k + "#" + q, console.log("argKey syntax", r), n = this.getBlockSyntax(r)) {
             e = n.key;
+            n.replaceBlockType && (e = n.replaceBlockType);
             break;
           }
         }
@@ -14448,10 +14449,10 @@ Entry.PyToBlockParser = function(b) {
         r = k + "(" + String(v) + ")";
         console.log("argKey syntax", r);
         if (n = this.getBlockSyntax(r)) {
-          e = n.key;
+          e = n.key, n.replaceBlockType && (e = n.replaceBlockType);
         }
       }
-      !e && (r = k, n = this.getBlockSyntax(r)) && (e = n.key);
+      !e && (r = k, n = this.getBlockSyntax(r)) && (e = n.key, n.replaceBlockType && (e = n.replaceBlockType));
       console.log("callee check line", f);
       if (f.object) {
         if ("Math" === f.object.name) {

@@ -2253,6 +2253,7 @@ Entry.block = {
             {
                 syntax: "Arduino.digitalRead(%1)",
                 blockType: "param",
+                replaceBlockType: "arduino_ext_get_digital",
                 textParams: [
                     {
                         "type": "Block",

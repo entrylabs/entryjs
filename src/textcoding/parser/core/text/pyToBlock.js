@@ -344,6 +344,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var blockSyntax = this.getBlockSyntax(syntax);
                         if(blockSyntax) {
                             type = blockSyntax.key;
+                            if(blockSyntax.replaceBlockType)
+                                type = blockSyntax.replaceBlockType;
                             break;
                         }
                     }
@@ -379,6 +381,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var blockSyntax = this.getBlockSyntax(syntax);
                 if(blockSyntax) {
                     type = blockSyntax.key;
+                    if(blockSyntax.replaceBlockType)
+                        type = blockSyntax.replaceBlockType;
                 }
             }
 
@@ -386,8 +390,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var syntax = calleeName;
                 var blockSyntax = this.getBlockSyntax(syntax);
 
-                if(blockSyntax)
+                if(blockSyntax) {
                     type = blockSyntax.key;
+                    if(blockSyntax.replaceBlockType)
+                        type = blockSyntax.replaceBlockType;
+                }
             }
 
             console.log("callee check line", callee);
