@@ -12593,33 +12593,36 @@ Entry.TextCodingUtil = {};
     console.log("getDynamicIdByNumber", a, b);
     var c = a;
     if (Entry.getMainWS() && Entry.getMainWS().vimBoard) {
-      var e = Entry.getMainWS().vimBoard
+      c = Entry.getMainWS().vimBoard;
     } else {
       return c;
     }
-    e = e._currentObject;
-    console.log("currentObject", e);
-    isNaN(a) && (a = parseInt(a));
-    if ("pictures" == b.menuName) {
-      if (0 < a) {
-        var f = Entry.container.getAllObjects(), g;
-        for (g in f) {
-          var h = f[g];
-          if (h.id == e.id && (h = h.pictures[a - 1])) {
-            c = h.name;
-            break;
+    var e = c._currentObject;
+    console.log("currentObject", e, "isNumeric", /^\d+$/.test(a));
+    if ("number" == typeof a) {
+      if (c = "None", "pictures" == b.menuName) {
+        if (0 < a) {
+          var f = Entry.container.getAllObjects(), g;
+          for (g in f) {
+            var h = f[g];
+            if (h.id == e.id && (h = h.pictures[a - 1])) {
+              c = h.name;
+              break;
+            }
+          }
+        }
+      } else {
+        if ("sounds" == b.menuName && 0 < a) {
+          for (g in f = Entry.container.getAllObjects(), f) {
+            if (h = f[g], h.id == e.id && (h = h.sounds[a - 1])) {
+              c = h.name;
+              break;
+            }
           }
         }
       }
     } else {
-      if ("sounds" == b.menuName && 0 < a) {
-        for (g in f = Entry.container.getAllObjects(), f) {
-          if (h = f[g], h.id == e.id && (h = h.sounds[a - 1])) {
-            c = h.name;
-            break;
-          }
-        }
-      }
+      c = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(a, b.menuName);
     }
     console.log("getDynamicIdByNumber result", c);
     return c;

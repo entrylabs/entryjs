@@ -328,46 +328,54 @@ Entry.TextCodingUtil = {};
         else return result;
 
         var currentObject = VIM._currentObject;
-        console.log("currentObject", currentObject);
+        console.log("currentObject", currentObject, "isNumeric", isNumeric(value));
 
-        if(isNaN(value))
-            value = parseInt(value);
-        if(textParam.menuName == "pictures") {
-            if(value > 0) {
-                var objects = Entry.container.getAllObjects();
-                for(var o in objects) {
-                    var object = objects[o];
-                    if(object.id == currentObject.id) {
-                        var pictures = object.pictures;
-                        var picture = pictures[value-1];
-                        if(picture) {
-                            result = picture.name;
-                            break;
+        if(typeof value == "number") {
+            result = "None";
+            if(textParam.menuName == "pictures") {
+                if(value > 0) {
+                    var objects = Entry.container.getAllObjects();
+                    for(var o in objects) {
+                        var object = objects[o];
+                        if(object.id == currentObject.id) {
+                            var pictures = object.pictures;
+                            var picture = pictures[value-1];
+                            if(picture) {
+                                result = picture.name;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else if(textParam.menuName == "sounds") {
+                if(value > 0) {
+                    var objects = Entry.container.getAllObjects();
+                    for(var o in objects) {
+                        var object = objects[o];
+                        if(object.id == currentObject.id) {
+                            var sounds = object.sounds;
+                            var sound = sounds[value-1];
+                            if(sound) {
+                                result = sound.name;
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
-        else if(textParam.menuName == "sounds") {
-            if(value > 0) {
-                var objects = Entry.container.getAllObjects();
-                for(var o in objects) {
-                    var object = objects[o];
-                    if(object.id == currentObject.id) {
-                        var sounds = object.sounds;
-                        var sound = sounds[value-1];
-                        if(sound) {
-                            result = sound.name;
-                            break;
-                        }
-                    }
-                }
-            }
+        else {
+            result = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(value, textParam.menuName);
         }
 
         console.log("getDynamicIdByNumber result", result);
 
         return result;
+
+        function isNumeric(value) {
+            return /^\d+$/.test(value);
+        }
     };
 
     tu.isLocalType = function(id, menuName) {
