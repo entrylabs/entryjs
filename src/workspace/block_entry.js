@@ -7460,8 +7460,13 @@ Entry.block = {
             var operator = script.getField("OPERATOR", script);
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
-            if (operator == "PLUS")
+            if (operator == "PLUS") {
+                if (isNaN(leftValue))
+                    leftValue = script.getStringValue("LEFTHAND", script);
+                if (isNaN(rightValue))
+                    rightValue = script.getStringValue("RIGHTHAND", script);
                 return leftValue + rightValue;
+            }
             else if (operator == "MINUS")
                 return leftValue - rightValue;
             else if (operator == "MULTI")
