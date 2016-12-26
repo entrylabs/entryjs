@@ -132,6 +132,10 @@ Entry.TextCodingUtil = {};
     tu.dropdownDynamicNameToIdConvertor = function(name, menuName, currentObject) {
         console.log("dropdownDynamicNameToIdConvertor", name, menuName, currentObject);
         var result = name;
+        if(Entry.getMainWS() && Entry.getMainWS().vimBoard) {
+            var VIM = Entry.getMainWS().vimBoard;
+            if(VIM) var currentScene = VIM._currentScene;
+        }
 
         if(menuName == "scenes") {
             var scenes = Entry.scene.getScenes();
@@ -147,9 +151,9 @@ Entry.TextCodingUtil = {};
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
                 var object = objects[o];
-                if(name == object.name) { 
-                    return object.id;
-                }
+                if(object.scene.id == currentScene.id)
+                    if(name == object.name)
+                        return object.id;
             }
         }
         else if(menuName == "variables") {
@@ -196,24 +200,28 @@ Entry.TextCodingUtil = {};
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
                 var object = objects[o];
-                var pictures = object.pictures;
-                for(var p in pictures) {
-                    var picture = pictures[p];
-                    if(picture.name == name) {
-                        return picture.id;
+                if(object.scene.id == currentScene.id) {
+                    var pictures = object.pictures;
+                    for(var p in pictures) {
+                        var picture = pictures[p];
+                        if(picture.name == name) {
+                            return picture.id;
+                        }
                     }
                 }
             }
         }
         else if(menuName == "sounds") {
-            var objects = Entry.container.getAllObjects();
+            var objects = Entry.container.getAllObjects(); 
             for(var o in objects) {
                 var object = objects[o];
-                var sounds = object.sounds;
-                for(var p in sounds) {
-                    var sound = sounds[p];
-                    if(sound.name == name) {
-                        return sound.id;
+                if(object.scene.id == currentScene.id) {
+                    var sounds = object.sounds;
+                    for(var p in sounds) {
+                        var sound = sounds[p];
+                        if(sound.name == name) {
+                            return sound.id;
+                        }
                     }
                 }
             }
@@ -312,9 +320,16 @@ Entry.TextCodingUtil = {};
 
     };
 
-    tu.getDynamicIdByNumber = function(value, textParam, currentObject) {
-        console.log("getDynamicIdByNumber", value, textParam, currentObject);
+    tu.getDynamicIdByNumber = function(value, textParam) {
+        console.log("getDynamicIdByNumber", value, textParam);
         var result = value;
+        if(Entry.getMainWS() && Entry.getMainWS().vimBoard)
+            var VIM = Entry.getMainWS().vimBoard;
+        else return result;
+
+        var currentObject = VIM._currentObject;
+        console.log("currentObject", currentObject);
+
         if(isNaN(value))
             value = parseInt(value);
         if(textParam.menuName == "pictures") {

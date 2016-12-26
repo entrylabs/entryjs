@@ -285,7 +285,6 @@ Entry.Scene.prototype.removeScene = function(scene) {
  * @param {scene model} scene
  */
 Entry.Scene.prototype.selectScene = function(scene) {
-    console.log("scene", scene);
     scene = scene || this.getScenes()[0];
     if (this.selectedScene && (this.selectedScene.id == scene.id))
         return;

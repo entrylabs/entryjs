@@ -5699,7 +5699,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     /////////////////////////////////////////////////////////////////
     // Utils
-    p.codeInit = function() {
+    p.codeInit = function() { 
         this.threadInit();
         this._currentObject = Entry.getMainWS().vimBoard._currentObject;
         this._funcMap.clear();

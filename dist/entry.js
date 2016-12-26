@@ -7015,7 +7015,6 @@ Entry.Container.prototype.removeObject = function(b) {
   return d;
 };
 Entry.Container.prototype.selectObject = function(b, a) {
-  console.log("selectObject1", b, "changeScene", a, "Entry.scene.isSceneCloning", Entry.scene.isSceneCloning);
   var d = this.getObject(b), c = Entry.getMainWS();
   a && d && Entry.scene.selectScene(d.scene);
   this.mapObjectOnScene(function(a) {
@@ -7023,10 +7022,8 @@ Entry.Container.prototype.selectObject = function(b, a) {
     a.isSelected_ = !1;
   });
   if (d) {
-    if (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0, console.log("workspace.vimBoard._parser._onError", c.vimBoard._parser._onError), c && c.vimBoard && Entry.isTextMode) {
-      var e = c.vimBoard._currentObject;
-      console.log("sObject", e);
-      var f = c.vimBoard._parser;
+    if (d.view_ && d.view_.addClass("selectedObject"), d.isSelected_ = !0, c && c.vimBoard && Entry.isTextMode) {
+      var e = c.vimBoard._currentObject, f = c.vimBoard._parser;
       if (f && f._onError) {
         if (e && d.id != e.id) {
           if (Entry.scene.isSceneCloning) {
@@ -11808,7 +11805,6 @@ Entry.Scene.prototype.removeScene = function(b) {
   }
 };
 Entry.Scene.prototype.selectScene = function(b) {
-  console.log("scene", b);
   b = b || this.getScenes()[0];
   if (!this.selectedScene || this.selectedScene.id != b.id) {
     Entry.engine.isState("run") && Entry.container.resetSceneDuringRun();
@@ -12440,26 +12436,32 @@ Entry.TextCodingUtil = {};
   };
   b.dropdownDynamicNameToIdConvertor = function(a, b, c) {
     console.log("dropdownDynamicNameToIdConvertor", a, b, c);
+    if (Entry.getMainWS() && Entry.getMainWS().vimBoard) {
+      var e = Entry.getMainWS().vimBoard;
+      if (e) {
+        var f = e._currentScene
+      }
+    }
     if ("scenes" == b) {
-      var e = Entry.scene.getScenes(), f;
-      for (f in e) {
-        var g = e[f];
-        if (a == g.name) {
-          return g.id;
+      var f = Entry.scene.getScenes(), g;
+      for (g in f) {
+        var h = f[g];
+        if (a == h.name) {
+          return h.id;
         }
       }
     } else {
       if ("spritesWithMouse" == b || "spritesWithSelf" == b || "collision" == b || "clone" == b) {
-        for (e in g = Entry.container.getAllObjects(), g) {
-          if (c = g[e], a == c.name) {
+        var k = Entry.container.getAllObjects();
+        for (h in k) {
+          if (c = k[h], c.scene.id == f.id && a == c.name) {
             return c.id;
           }
         }
       } else {
         if ("variables" == b) {
-          for (g in e = Entry.variableContainer.variables_, e) {
-            var h = e[g];
-            if (h.name_ == a) {
+          for (k in f = Entry.variableContainer.variables_, f) {
+            if (h = f[k], h.name_ == a) {
               if (c) {
                 if (c.id == h.object_) {
                   return h.id_;
@@ -12471,8 +12473,8 @@ Entry.TextCodingUtil = {};
           }
         } else {
           if ("lists" == b) {
-            for (g in e = Entry.variableContainer.lists_, e) {
-              if (h = e[g], h.name_ == a) {
+            for (k in f = Entry.variableContainer.lists_, f) {
+              if (h = f[k], h.name_ == a) {
                 if (c) {
                   if (c.id == h.object_) {
                     return h.id_;
@@ -12484,26 +12486,31 @@ Entry.TextCodingUtil = {};
             }
           } else {
             if ("messages" == b) {
-              for (g in e = Entry.variableContainer.messages_, e) {
-                if (h = e[g], h.name == a) {
+              for (k in f = Entry.variableContainer.messages_, f) {
+                if (h = f[k], h.name == a) {
                   return h.id;
                 }
               }
             } else {
               if ("pictures" == b) {
-                for (e in g = Entry.container.getAllObjects(), g) {
-                  for (h in c = g[e], c = c.pictures, c) {
-                    if (f = c[h], f.name == a) {
-                      return f.id;
+                for (h in k = Entry.container.getAllObjects(), k) {
+                  if (c = k[h], c.scene.id == f.id) {
+                    c = c.pictures;
+                    for (var l in c) {
+                      if (g = c[l], g.name == a) {
+                        return g.id;
+                      }
                     }
                   }
                 }
               } else {
                 if ("sounds" == b) {
-                  for (e in g = Entry.container.getAllObjects(), g) {
-                    for (h in c = g[e], c = c.sounds, c) {
-                      if (f = c[h], f.name == a) {
-                        return f.id;
+                  for (h in k = Entry.container.getAllObjects(), k) {
+                    if (c = k[h], c.scene.id == f.id) {
+                      for (l in c = c.sounds, c) {
+                        if (g = c[l], g.name == a) {
+                          return g.id;
+                        }
                       }
                     }
                   }
@@ -12582,33 +12589,40 @@ Entry.TextCodingUtil = {};
     console.log("dropdownDynamicIdToNameConvertor result", c);
     return c;
   };
-  b.getDynamicIdByNumber = function(a, b, c) {
-    console.log("getDynamicIdByNumber", a, b, c);
-    var e = a;
+  b.getDynamicIdByNumber = function(a, b) {
+    console.log("getDynamicIdByNumber", a, b);
+    var c = a;
+    if (Entry.getMainWS() && Entry.getMainWS().vimBoard) {
+      var e = Entry.getMainWS().vimBoard
+    } else {
+      return c;
+    }
+    e = e._currentObject;
+    console.log("currentObject", e);
     isNaN(a) && (a = parseInt(a));
     if ("pictures" == b.menuName) {
       if (0 < a) {
-        b = Entry.container.getAllObjects();
-        for (var f in b) {
-          var g = b[f];
-          if (g.id == c.id && (g = g.pictures[a - 1])) {
-            e = g.name;
+        var f = Entry.container.getAllObjects(), g;
+        for (g in f) {
+          var h = f[g];
+          if (h.id == e.id && (h = h.pictures[a - 1])) {
+            c = h.name;
             break;
           }
         }
       }
     } else {
       if ("sounds" == b.menuName && 0 < a) {
-        for (f in b = Entry.container.getAllObjects(), b) {
-          if (g = b[f], g.id == c.id && (g = g.sounds[a - 1])) {
-            e = g.name;
+        for (g in f = Entry.container.getAllObjects(), f) {
+          if (h = f[g], h.id == e.id && (h = h.sounds[a - 1])) {
+            c = h.name;
             break;
           }
         }
       }
     }
-    console.log("getDynamicIdByNumber result", e);
-    return e;
+    console.log("getDynamicIdByNumber result", c);
+    return c;
   };
   b.isLocalType = function(a, b) {
     console.log("isLocalType id", a, "menuName", b);
