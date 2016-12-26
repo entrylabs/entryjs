@@ -276,6 +276,7 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_connected",
                 "arduino_reconnect",
                 "arduino_open",
+                "arduino_cloud_pc_open",
                 "arduino_get_number_sensor_value",
                 "arduino_get_digital_value",
                 "arduino_toggle_led",
@@ -283,6 +284,7 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_convert_scale",
                 //arduinoExt
                 "arduino_ext_get_analog_value",
+                "arduino_ext_get_analog_value_map",
                 "arduino_ext_get_ultrasonic_value",
                 "arduino_ext_get_digital",
                 "arduino_ext_toggle_led",
@@ -2567,32 +2569,32 @@ EntryStatic.objectSubCategories = {
 
 EntryStatic.fonts = [
 {
-    name: '바탕체',
+    name: Lang.Fonts.batang,
     family: 'KoPub Batang',
     url: '/css/kopubbatang.css'
 },
 {
-    name: '명조체',
+    name: Lang.Fonts.myeongjo,
     family: 'Nanum Myeongjo',
     url: '/css/nanummyeongjo.css'
 },
 {
-    name: '고딕체',
+    name: Lang.Fonts.gothic,
     family: 'Nanum Gothic',
     url: '/css/nanumgothic.css'
 },
 {
-    name: '필기체',
+    name: Lang.Fonts.pen_script,
     family: 'Nanum Pen Script',
     url: '/css/nanumpenscript.css'
 },
 {
-    name: '한라산체',
+    name: Lang.Fonts.jeju_hallasan,
     family: 'Jeju Hallasan',
     url: '/css/jejuhallasan.css'
 },
 {
-    name: '코딩고딕체',
+    name: Lang.Fonts.gothic_coding,
     family: 'Nanum Gothic Coding',
     url: '/css/nanumgothiccoding.css'
 }

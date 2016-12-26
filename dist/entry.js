@@ -811,20 +811,11 @@ Entry.Arduino = {name:"arduino", setZero:function() {
 " 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 8:{name:Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
-Entry.ArduinoExt = {name:"ArduinoExt", getSensorKey:function() {
-  return "xxxxxxxx".replace(/[xy]/g, function(a) {
-    var b = 16 * Math.random() | 0;
-    return ("x" == a ? b : b & 0 | 0).toString(16);
-  }).toUpperCase();
-}, getSensorTime:function(a) {
-  return (new Date).getTime() + a;
-}, setZero:function() {
+Entry.ArduinoExt = {name:"ArduinoExt", setZero:function() {
   Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(a) {
     Entry.hw.sendQueue.SET[a].data = 0;
-    Entry.hw.sendQueue.TIME = Entry.ArduinoExt.getSensorTime(Entry.hw.sendQueue.SET[a].type);
-    Entry.hw.sendQueue.KEY = Entry.ArduinoExt.getSensorKey();
-  }) : Entry.hw.sendQueue = {SET:{0:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 1:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 2:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 3:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 4:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 5:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 6:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 7:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 8:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, 
-  data:0}, 9:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 10:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 11:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 12:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 13:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}}, TIME:Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL), KEY:Entry.ArduinoExt.getSensorKey()};
+    Entry.hw.sendQueue.SET[a].time = (new Date).getTime();
+  }) : Entry.hw.sendQueue = {GET:{}, SET:{}};
   Entry.hw.update();
 }, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 
 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, BlockState:{}};
@@ -7640,31 +7631,36 @@ Entry.Utils.isChrome = function() {
   return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 };
 Entry.Utils.waitForWebfonts = function(a, b) {
-  for (var c = 0, d = 0, e = a.length;d < e;++d) {
-    (function(d) {
-      function e() {
-        f && f.offsetWidth != k && (++c, f.parentNode.removeChild(f), f = null);
-        if (c >= a.length && (m && clearInterval(m), c == a.length)) {
-          return b(), !0;
+  var c = 0;
+  if (a && a.length) {
+    for (var d = 0, e = a.length;d < e;++d) {
+      (function(d) {
+        function e() {
+          f && f.offsetWidth != k && (++c, f.parentNode.removeChild(f), f = null);
+          if (c >= a.length && (m && clearInterval(m), c == a.length)) {
+            return b(), !0;
+          }
         }
-      }
-      var f = document.createElement("span");
-      f.innerHTML = "giItT1WQy@!-/#";
-      f.style.position = "absolute";
-      f.style.left = "-10000px";
-      f.style.top = "-10000px";
-      f.style.fontSize = "300px";
-      f.style.fontFamily = "sans-serif";
-      f.style.fontVariant = "normal";
-      f.style.fontStyle = "normal";
-      f.style.fontWeight = "normal";
-      f.style.letterSpacing = "0";
-      document.body.appendChild(f);
-      var k = f.offsetWidth;
-      f.style.fontFamily = d;
-      var m;
-      e() || (m = setInterval(e, 50));
-    })(a[d]);
+        var f = document.createElement("span");
+        f.innerHTML = "giItT1WQy@!-/#";
+        f.style.position = "absolute";
+        f.style.left = "-10000px";
+        f.style.top = "-10000px";
+        f.style.fontSize = "300px";
+        f.style.fontFamily = "sans-serif";
+        f.style.fontVariant = "normal";
+        f.style.fontStyle = "normal";
+        f.style.fontWeight = "normal";
+        f.style.letterSpacing = "0";
+        document.body.appendChild(f);
+        var k = f.offsetWidth;
+        f.style.fontFamily = d;
+        var m;
+        e() || (m = setInterval(e, 50));
+      })(a[d]);
+    }
+  } else {
+    return b && b(), !0;
   }
 };
 window.requestAnimFrame = function() {
@@ -7691,6 +7687,22 @@ Entry.Utils.convertIntToHex = function(a) {
 };
 Entry.Utils.hasSpecialCharacter = function(a) {
   return /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g.test(a);
+};
+Entry.Utils.isNewVersion = function(a, b) {
+  try {
+    a = a.replace("v", "");
+    b = b.replace("v", "");
+    var c = a.split("."), d = b.split("."), e = c.length < d.length ? c.length : d.length;
+    a = !1;
+    b = !0;
+    for (var f = 0;f < e;f++) {
+      Number(c[f]) < Number(d[f]) ? (a = !0, b = !1) : Number(c[f]) > Number(d[f]) && (b = !1);
+    }
+    b && c.length < d.length && (a = !0);
+    return a;
+  } catch (g) {
+    return !1;
+  }
 };
 Entry.Model = function(a, b) {
   var c = Entry.Model;
@@ -9010,7 +9022,6 @@ Entry.Engine.prototype.toggleStop = function() {
   });
   b.mapList(function(b) {
     b.loadSnapshot();
-    b.updateView();
   });
   this.stopProjectTimer();
   a.clearRunningState();
@@ -9657,7 +9668,10 @@ Entry.Func.prototype.destroy = function() {
   this.blockMenuBlock.destroy();
 };
 Entry.Func.edit = function(a) {
+  this.unbindFuncChangeEvent();
+  this.unbindWorkspaceStateChangeEvent();
   this.cancelEdit();
+  Entry.Func.isEdit = !0;
   this.targetFunc = a;
   this.initEditView(a.content);
   this.bindFuncChangeEvent();
@@ -9679,8 +9693,7 @@ Entry.Func.initEditView = function(a) {
 };
 Entry.Func.endEdit = function(a) {
   this.unbindFuncChangeEvent();
-  this._workspaceStateEvent.destroy();
-  delete this._workspaceStateEvent;
+  this.unbindWorkspaceStateChangeEvent();
   switch(a) {
     case "save":
       this.save();
@@ -9689,9 +9702,9 @@ Entry.Func.endEdit = function(a) {
       this.cancelEdit();
   }
   this._backupContent = null;
-  Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD);
   delete this.targetFunc;
   this.updateMenu();
+  Entry.Func.isEdit = !1;
 };
 Entry.Func.save = function() {
   this.targetFunc.generateBlock(!0);
@@ -9732,7 +9745,7 @@ Entry.Func.syncFuncName = function(a) {
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, b);
 };
 Entry.Func.cancelEdit = function() {
-  this.targetFunc && (this.targetFunc.block ? this._backupContent && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), Entry.variableContainer.updateList(), Entry.Func.isEdit = !1);
+  this.targetFunc && (this.targetFunc.block ? this._backupContent && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), Entry.variableContainer.updateList());
 };
 Entry.Func.getMenuXml = function() {
   var a = [];
@@ -9871,8 +9884,10 @@ Entry.Func.bindFuncChangeEvent = function(a) {
   !this._funcChangeEvent && a.content.getEventMap("funcDef")[0].view && (this._funcChangeEvent = a.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
 };
 Entry.Func.unbindFuncChangeEvent = function() {
-  this._funcChangeEvent && this._funcChangeEvent.destroy();
-  delete this._funcChangeEvent;
+  this._funcChangeEvent && (this._funcChangeEvent.destroy(), delete this._funcChangeEvent);
+};
+Entry.Func.unbindWorkspaceStateChangeEvent = function() {
+  this._workspaceStateEvent && (this._workspaceStateEvent.destroy(), delete this._workspaceStateEvent);
 };
 Entry.Helper = function() {
   this.visible = !1;
@@ -10170,7 +10185,8 @@ Entry.HW = function() {
   this.sessionRoomId || (this.sessionRoomId = this.createRandomRoomId(), localStorage.setItem("entryhwRoomId", this.sessionRoomId));
   this.connectTrial = 0;
   this.isFirstConnect = !0;
-  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.0_Setup.exe";
+  this.requireVerion = "v1.6.1";
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.2_Setup.exe";
   this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
@@ -10212,7 +10228,9 @@ p.connectWebSocket = function(a, b) {
           c.disconnectHardware();
           break;
         default:
-          b = JSON.parse(b.data), c.checkDevice(b), c.updatePortData(b);
+          var a = JSON.parse(b.data);
+          c.checkDevice(a, b.version);
+          c.updatePortData(a);
       }
     }
   });
@@ -10230,17 +10248,13 @@ p.initSocket = function() {
     if (-1 < location.protocol.indexOf("https")) {
       this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
     } else {
-      if (Entry.isOffline) {
-        this.tlsSocketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-      } else {
-        try {
-          this.socketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-        } catch (a) {
-        }
-        try {
-          this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-        } catch (a) {
-        }
+      try {
+        this.socketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+      } catch (a) {
+      }
+      try {
+        this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
+      } catch (a) {
       }
     }
     Entry.dispatchEvent("hwChanged");
@@ -10341,7 +10355,10 @@ p.downloadConnector = function() {
   window.open(this.downloadPath, "_blank").focus();
 };
 p.downloadGuide = function() {
-  window.open("http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC-%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%EC%97%B0%EA%B2%B0%EB%A7%A4%EB%89%B4%EC%96%BC_16_08_17.hwp", "_blank").focus();
+  var a = document.createElement("a");
+  a.href = "http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC%20%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%20%EC%97%B0%EA%B2%B0%20%EB%A7%A4%EB%89%B4%EC%96%BC(%EC%98%A8%EB%9D%BC%EC%9D%B8%EC%9A%A9).pdf";
+  a.download = "download";
+  a.click();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -10349,9 +10366,9 @@ p.downloadSource = function() {
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
-p.checkDevice = function(a) {
-  void 0 !== a.company && (a = [Entry.Utils.convertIntToHex(a.company), ".", Entry.Utils.convertIntToHex(a.model)].join(""), a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !1), this.hwModule.monitorTemplate && 
-  (this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), a = this.hwModule.monitorTemplate, "both" == a.mode ? (a.mode = "list", this.hwMonitor.generateListView(), a.mode = "general", this.hwMonitor.generateView(), a.mode = "both") : "list" == a.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
+p.checkDevice = function(a, b) {
+  void 0 !== a.company && (a = [Entry.Utils.convertIntToHex(a.company), ".", Entry.Utils.convertIntToHex(a.model)].join(""), a != this.selectedDevice && (Entry.Utils.isNewVersion(b, this.requireVerion) && this.popupHelper.show("newVersion", !0), this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", 
+  !1), this.hwModule.monitorTemplate && (this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
 };
 p.banHW = function() {
   var a = this.hwInfo, b;
@@ -14951,11 +14968,11 @@ Entry.Scene.prototype.generateElement = function(a) {
   }
   Entry.Utils.disableContextmenu(c);
   $(c).on("contextmenu", function() {
-    var b = [{text:Lang.Workspace.duplicate_scene, enable:Entry.engine.isState("stop"), callback:function() {
+    var b = [{text:Lang.Workspace.duplicate_scene, enable:Entry.engine.isState("stop") && !this.isMax(), callback:function() {
       Entry.scene.cloneScene(a);
     }}];
     Entry.ContextMenu.show(b, "workspace-contextmenu");
-  });
+  }.bind(this));
   return a.view = c;
 };
 Entry.Scene.prototype.updateView = function() {
@@ -14963,7 +14980,7 @@ Entry.Scene.prototype.updateView = function() {
     for (var a = this.listView_, b = $(a).children().length;b < this.getScenes().length;b++) {
       a.appendChild(this.getScenes()[b].view);
     }
-    this.addButton_ && (this.getScenes().length < this.maxCount ? this.addButton_.removeClass("entryRemove") : this.addButton_.addClass("entryRemove"));
+    this.addButton_ && (this.getScenes(), this.isMax() ? this.addButton_.addClass("entryRemove") : this.addButton_.removeClass("entryRemove"));
   }
   this.resize();
 };
@@ -15060,7 +15077,7 @@ Entry.Scene.prototype.createScene = function() {
   return a;
 };
 Entry.Scene.prototype.cloneScene = function(a) {
-  if (this.scenes_.length >= this.maxCount) {
+  if (this.isMax()) {
     Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_add_error, !1);
   } else {
     var b = {name:a.name + Lang.Workspace.replica_of_object, id:Entry.generateHash()};
@@ -15093,6 +15110,9 @@ Entry.Scene.prototype.resize = function() {
 Entry.Scene.prototype.getNextScene = function() {
   var a = this.getScenes();
   return a[a.indexOf(this.selectedScene) + 1];
+};
+Entry.Scene.prototype.isMax = function() {
+  return this.scenes_.length >= this.maxCount;
 };
 Entry.Script = function(a) {
   this.entity = a;
@@ -19871,17 +19891,17 @@ Entry.Variable.prototype.takeSnapshot = function() {
   this.snapshot_ = this.toJSON();
 };
 Entry.Variable.prototype.loadSnapshot = function() {
-  this.snapshot_ && !this.isCloud_ && this.syncModel_(this.snapshot_);
+  this.snapshot_ && this.syncModel_(this.snapshot_);
+  delete this.snapshot_;
 };
 Entry.Variable.prototype.syncModel_ = function(a) {
   this.setX(a.x);
   this.setY(a.y);
-  this.id_ = a.id;
   this.setVisible(a.visible);
-  this.setValue(a.value);
+  this.isCloud_ || this.setValue(a.value);
   this.setName(a.name);
   this.isCloud_ = a.isCloud;
-  "list" == this.type && (this.setWidth(a.width), this.setHeight(a.height), this.array_ = a.array);
+  "list" == this.type && (this.isCloud_ || (this.array_ = a.array), this.setWidth(a.width), this.setHeight(a.height));
 };
 Entry.Variable.prototype.toJSON = function() {
   var a = {};
@@ -20028,9 +20048,10 @@ Entry.VariableContainer.prototype.createDom = function(a) {
   c.innerHTML = "+ " + Lang.Workspace.function_add;
   this.functionAddButton_ = c;
   c.bindOnClick(function(a) {
-    a = b._getBlockMenu();
-    Entry.playground.changeViewMode("code");
-    "func" != a.lastSelector && a.selectMenu("func");
+    a = Entry.playground;
+    var c = b._getBlockMenu();
+    a.changeViewMode("code");
+    "func" != c.lastSelector && c.selectMenu("func");
     b.createFunction();
   });
   return a;
@@ -20230,7 +20251,7 @@ Entry.VariableContainer.prototype.updateList = function() {
       }
     }
     if ("all" == a || "func" == a) {
-      for (c in "func" == a && this.listView_.appendChild(this.functionAddButton_), this.functions_) {
+      for (c in "func" == a && (a = Entry.Workspace.MODE_BOARD, Entry.playground && Entry.playground.mainWorkspace && (a = Entry.playground.mainWorkspace.getMode()), a === Entry.Workspace.MODE_OVERLAYBOARD ? this.functionAddButton_.addClass("disable") : this.functionAddButton_.removeClass("disable"), this.listView_.appendChild(this.functionAddButton_)), this.functions_) {
         a = this.functions_[c], b.push(a), e = a.listElement, this.listView_.appendChild(e), a.callerListElement && this.listView_.appendChild(a.callerListElement);
       }
     }
@@ -21906,7 +21927,7 @@ Entry.Thread = function(a, b, c) {
     a = this.indexOf(a);
     b.unshift(a);
     this.parent instanceof Entry.Block && b.unshift(this.parent.indexOfStatements(this));
-    return this._code === this.parent ? (b.unshift(this._code.indexOf(this)), a = this._data[0], b.unshift(a.y), b.unshift(a.x), b) : this.parent.pointer(b);
+    return this._code === this.parent ? (1 === this._data.length && b.shift(), b.unshift(this._code.indexOf(this)), a = this._data[0], b.unshift(a.y), b.unshift(a.x), b) : this.parent.pointer(b);
   };
   a.getBlockList = function(b, a) {
     for (var c = [], e = 0;e < this._data.length;e++) {
@@ -25878,8 +25899,8 @@ Entry.RenderView = function(a, b, c) {
       for (var a = 0, d = this._getHorizontalPadding(), e = 0, f = b.length;e < f;e++) {
         var g = b[e].getFirstBlock().view, h = g.svgGroup.getBBox().height, k = 0, m = $(g.svgGroup).find(".extension");
         if (m) {
-          for (e = 0;e < m.length;e++) {
-            var l = parseFloat(m[e].getAttribute("x")), k = Math.min(k, l);
+          for (var l = 0;l < m.length;l++) {
+            var n = parseFloat(m[l].getAttribute("x")), k = Math.min(k, n);
           }
         }
         this._minBlockOffsetX = Math.min(this._minBlockOffsetX, g.offsetX);
@@ -25950,16 +25971,16 @@ Entry.skinContainer = {_skins:{}};
     this._skins[b.type] || (this._skins[b.type] = []);
     this._skins[b.type].push(a);
   };
-  a.getSkin = function(a) {
-    if (this._skins[a.type]) {
-      for (var b = this._skins[a.type], d = 0;d < b.length;d++) {
-        var e = b[d];
+  a.getSkin = function(b) {
+    if (this._skins[b.type]) {
+      for (var a = this._skins[b.type], d = 0;d < a.length;d++) {
+        var e = a[d];
         if (!e.conditions || !e.conditions.length) {
           return e;
         }
         for (var f = 0;f < e.conditions.length;f++) {
           var g = e.conditions[f];
-          if (a.getDataByPointer(g.pointer) !== g.value) {
+          if (b.getDataByPointer(g.pointer) !== g.value) {
             break;
           }
           if (f === e.conditions.length - 1) {
@@ -25968,7 +25989,7 @@ Entry.skinContainer = {_skins:{}};
         }
       }
     }
-    return Entry.block[a.type];
+    return Entry.block[b.type];
   };
 })(Entry.skinContainer);
 Entry.ThreadView = function(a, b) {
@@ -25983,15 +26004,15 @@ Entry.ThreadView = function(a, b) {
   a.destroy = function() {
     this.svgGroup.remove();
   };
-  a.setParent = function(a) {
-    this.parent = a;
+  a.setParent = function(b) {
+    this.parent = b;
   };
   a.getParent = function() {
     return this.parent;
   };
   a.renderText = function() {
-    for (var a = this.thread.getBlocks(), c = 0;c < a.length;c++) {
-      a[c].view.renderText();
+    for (var b = this.thread.getBlocks(), a = 0;a < b.length;a++) {
+      b[a].view.renderText();
     }
   };
   a.renderBlock = function() {
