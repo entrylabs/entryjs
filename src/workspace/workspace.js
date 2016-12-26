@@ -448,8 +448,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var board = this.board;
         var code = board.code;
         if (code) code.load(changedCode);
-        
-        console.log("this.board.code", this.board.code);
+
+        if(Entry.isTextMode)
+            this.vimBoard._parser._onRunError = false;
     };
 
     p.addVimBoard = function(dom) {

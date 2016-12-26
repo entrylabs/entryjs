@@ -16602,7 +16602,7 @@ Entry.Parser = function(b, a, d, c) {
   Entry.Parser.PARSE_GENERAL = 1;
   Entry.Parser.PARSE_SYNTAX = 2;
   Entry.Parser.PARSE_VARIABLE = 3;
-  this._onError = !1;
+  this._onRunError = this._onError = !1;
   this._console = new Entry.Console;
   switch(this._lang) {
     case "js":
@@ -16734,7 +16734,7 @@ Entry.Parser = function(b, a, d, c) {
         e = "";
         m = this._execParser.Code(a, b);
         this._pyHinter || (this._pyHinter = new Entry.PyHint(this.syntax));
-        if (b == Entry.Parser.PARSE_GENERAL && !this._isError) {
+        if (b == Entry.Parser.PARSE_GENERAL && !this._onError && !this._onRunError) {
           if (!this.py_variableDeclaration) {
             var t = Entry.TextCodingUtil.generateVariablesDeclaration();
             (this.py_variableDeclaration = t) && (e += t);
@@ -19324,6 +19324,7 @@ Entry.Utils.xmlToJsonData = function(b) {
 Entry.Utils.stopProjectWithToast = function(b, a, d) {
   var c = b.block;
   a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
+  Entry.isTextMode && (Entry.getMainWS().vimBoard._parser._onRunError = !0);
   Entry.toast && !d && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
   Entry.engine && Entry.engine.toggleStop();
   "workspace" === Entry.type && (b.block && "funcBlock" in b.block ? c = b.block.funcBlock : b.funcExecutor && (c = b.funcExecutor.scope.block, b = b.type.replace("func_", ""), Entry.Func.edit(Entry.variableContainer.functions_[b])), c && (Entry.container.selectObject(c.getCode().object.id, !0), c.view.getBoard().activateBlock(c)));
@@ -27878,7 +27879,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
       var a = this.vimBoard.textToCode(this.textType), b = this.board.code;
       b && b.load(a);
-      console.log("this.board.code", this.board.code);
+      Entry.isTextMode && (this.vimBoard._parser._onRunError = !1);
     }
   };
   b.addVimBoard = function(a) {

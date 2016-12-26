@@ -36,6 +36,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     Entry.Parser.PARSE_VARIABLE = 3;
 
     this._onError = false;
+    this._onRunError = false;
     /*Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
     Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
     Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP = "basic_double_loop";*/
@@ -363,7 +364,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
 
                 if(parseMode == Entry.Parser.PARSE_GENERAL) {
-                    if(!this._isError) {
+                    if(!this._onError && !this._onRunError) {
                       if(!this.py_variableDeclaration) {
                             var vd = Entry.TextCodingUtil.generateVariablesDeclaration();
                             this.py_variableDeclaration = vd;

@@ -1179,6 +1179,10 @@ Entry.Utils.xmlToJsonData = function(xml) {
 Entry.Utils.stopProjectWithToast = function(scope, message, isHide) {
     var block = scope.block;
     message = message || '런타임 에러 발생';
+    
+    if(Entry.isTextMode)
+        Entry.getMainWS().vimBoard._parser._onRunError = true;
+
     if (Entry.toast && !isHide)
         Entry.toast.alert(
             Lang.Msgs.warn,
@@ -1203,6 +1207,7 @@ Entry.Utils.stopProjectWithToast = function(scope, message, isHide) {
             block.view.getBoard().activateBlock(block);
         }
     }
+
     throw new Error(message);
 };
 
