@@ -31,16 +31,16 @@ Lang.Blocks = {
     "BITBRICK_dc_direction_cw": "시계",
 	/* BYROBOT DroneFighter Start */
 	/* input */
-	"byrobot_dronefighter_drone_state_mode_vehicle"				: "드론파이터 모드",
 	"byrobot_dronefighter_drone_state_mode_system"				: "시스템 모드",
+	"byrobot_dronefighter_drone_state_mode_vehicle"				: "드론파이터 모드",
 	"byrobot_dronefighter_drone_state_mode_flight"				: "비행 모드",
 	"byrobot_dronefighter_drone_state_mode_drive"				: "자동차 모드",
-	"byrobot_dronefighter_drone_state_mode_coordinate"			: "방위",
+	"byrobot_dronefighter_drone_state_mode_coordinate"			: "기본 좌표계",		/* world or local */
 	"byrobot_dronefighter_drone_state_battery"					: "배터리",	
-	"byrobot_dronefighter_drone_attitude_roll"					: "자세 좌우 기울임",
-	"byrobot_dronefighter_drone_attitude_pitch"					: "자세 앞뒤 기울임",
-	"byrobot_dronefighter_drone_attitude_yaw"					: "자세 회전",
-	"byrobot_dronefighter_drone_irmessage"						: "적외선 센서",
+	"byrobot_dronefighter_drone_attitude_roll"					: "자세 Roll",
+	"byrobot_dronefighter_drone_attitude_pitch"					: "자세 Pitch",
+	"byrobot_dronefighter_drone_attitude_yaw"					: "자세 Yaw",
+	"byrobot_dronefighter_drone_irmessage"						: "적외선 수신 값",
 	"byrobot_dronefighter_controller_joystick_left_x"			: "왼쪽 조이스틱 가로축",
 	"byrobot_dronefighter_controller_joystick_left_y"			: "왼쪽 조이스틱 세로축",
 	"byrobot_dronefighter_controller_joystick_left_direction"	: "왼쪽 조이스틱 방향",
@@ -62,19 +62,23 @@ Lang.Blocks = {
 	"byrobot_dronefighter_controller_joystick_direction_right_down"	: "오른쪽 아래",
 	"byrobot_dronefighter_controller_button_button"				: "버튼",
 	"byrobot_dronefighter_controller_button_event"				: "버튼 이벤트",
-	"byrobot_dronefighter_controller_button_front_left"			: "앞 왼쪽",
-	"byrobot_dronefighter_controller_button_front_right"		: "앞 오른쪽",
-	"byrobot_dronefighter_controller_button_front_left_right"	: "앞 왼쪽, 앞 오른쪽",
-	"byrobot_dronefighter_controller_button_center_up_left"		: "중앙 위 왼쪽",
-	"byrobot_dronefighter_controller_button_center_up_right"	: "중앙 위 오른쪽",
-	"byrobot_dronefighter_controller_button_center_up"			: "중앙 위",
-	"byrobot_dronefighter_controller_button_center_left"		: "중앙 왼쪽",
-	"byrobot_dronefighter_controller_button_center_right"		: "중앙 오른쪽",
-	"byrobot_dronefighter_controller_button_center_down"		: "중앙 아래",
-	"byrobot_dronefighter_controller_button_bottom_left"		: "아래 왼쪽",
-	"byrobot_dronefighter_controller_button_bottom_right"		: "아래 오른쪽",
-	"byrobot_dronefighter_controller_button_bottom_left_right"	: "아래 왼쪽, 아래 오른쪽",
+	"byrobot_dronefighter_controller_button_front_left"			: "왼쪽 빨간 버튼",
+	"byrobot_dronefighter_controller_button_front_right"		: "오른쪽 빨간 버튼",
+	"byrobot_dronefighter_controller_button_front_left_right"	: "양쪽 빨간 버튼",
+	"byrobot_dronefighter_controller_button_center_up_left"		: "트림 좌회전 버튼",
+	"byrobot_dronefighter_controller_button_center_up_right"	: "트림 우회전 버튼",
+	"byrobot_dronefighter_controller_button_center_up"			: "트림 위 버튼",
+	"byrobot_dronefighter_controller_button_center_left"		: "트림 왼쪽 버튼",
+	"byrobot_dronefighter_controller_button_center_right"		: "트림 오른쪽 버튼",
+	"byrobot_dronefighter_controller_button_center_down"		: "트림 아래 버튼",
+	"byrobot_dronefighter_controller_button_bottom_left"		: "왼쪽 둥근 버튼",
+	"byrobot_dronefighter_controller_button_bottom_right"		: "오른쪽 둥근 버튼",
+	"byrobot_dronefighter_controller_button_bottom_left_right"	: "양쪽 둥근 버튼",
 	/* output */
+	"byrobot_dronefighter_common_roll"							: "Roll",
+	"byrobot_dronefighter_common_pitch"							: "Pitch",
+	"byrobot_dronefighter_common_yaw"							: "Yaw",
+	"byrobot_dronefighter_common_throttle"						: "Throttle",
 	"byrobot_dronefighter_common_left"							: "왼쪽",
 	"byrobot_dronefighter_common_right"							: "오른쪽",
 	"byrobot_dronefighter_common_light_manual_on"				: "켜기",
@@ -109,12 +113,19 @@ Lang.Blocks = {
 	"byrobot_dronefighter_drone_team"							: "팀 ",
 	"byrobot_dronefighter_drone_team_red"						: "레드",
     "byrobot_dronefighter_drone_team_blue"						: "블루",
+	"byrobot_dronefighter_drone_coordinate_world"				: "앱솔루트",
+	"byrobot_dronefighter_drone_coordinate_local"				: "RC",
 	"byrobot_dronefighter_drone_mode_vehicle_flight"			: "드론",
 	"byrobot_dronefighter_drone_mode_vehicle_drive"				: "자동차",
+    "byrobot_dronefighter_drone_control_double_wheel"			: "방향",
     "byrobot_dronefighter_drone_control_double_wheel_left"		: "왼쪽 회전",
 	"byrobot_dronefighter_drone_control_double_wheel_right"		: "오른쪽 회전",
     "byrobot_dronefighter_drone_control_double_accel_forward"	: "앞으로",
     "byrobot_dronefighter_drone_control_double_accel_backward"	: "뒤로",
+	"byrobot_dronefighter_drone_control_quad_roll"				: "Roll",
+	"byrobot_dronefighter_drone_control_quad_pitch"				: "Pitch",
+	"byrobot_dronefighter_drone_control_quad_yaw"				: "Yaw",
+	"byrobot_dronefighter_drone_control_quad_throttle"			: "Throttle",
 	"byrobot_dronefighter_drone_control_quad_roll_left"			: "왼쪽",
 	"byrobot_dronefighter_drone_control_quad_roll_right"		: "오른쪽",
 	"byrobot_dronefighter_drone_control_quad_pitch_forward"		: "앞으로",
@@ -3633,25 +3644,41 @@ Lang.template = {
     "arduino_ext_set_servo": "서보모터 %1 번 핀을 %2 의 각도로 정하기 %3",
     "arduino_ext_get_digital": "디지털 %1 번 센서값",
 	/* BYROBOT DroneFighter Start */
-    "byrobot_dronefighter_common_value"								: "%1",
-    "byrobot_dronefighter_controller_if_button_press"				: "조종기 %1 버튼을 눌렀을 때",
-	"byrobot_dronefighter_controller_if_joystick_direction"			: "조종기 %1 조이스틱을 %2(으)로 움직였을 때",
+    "byrobot_dronefighter_common_value_button"						: "%1",
+    "byrobot_dronefighter_common_value_attitude"					: "%1",
+    "byrobot_dronefighter_common_value_joystick"					: "%1",
+    "byrobot_dronefighter_common_value_etc"							: "%1",
+    "byrobot_dronefighter_controller_if_button_press"				: "조종기 %1 눌렀을 때",
+	"byrobot_dronefighter_controller_if_joystick_direction"			: "조종기 %1 레버 %2 움직였을 때",	
 	"byrobot_dronefighter_controller_light_manual_single_off"		: "조종기 LED 끄기 %1",
-    "byrobot_dronefighter_controller_light_manual_single"			: "조종기 LED %1 %2 %3",			/* 전체 ComboBox 사용 */
-    "byrobot_dronefighter_controller_light_manual_single_input"		: "조종기 LED %1 밝기 %2 %3",	/* 전체 TextBox 사용 */
+    "byrobot_dronefighter_controller_light_manual_single"			: "조종기 LED %1 %2 %3",						/* 전체 ComboBox 사용 */
+    "byrobot_dronefighter_controller_light_manual_single_input"		: "조종기 LED %1 밝기 %2 %3",				/* 전체 TextBox 사용 */
 	"byrobot_dronefighter_drone_light_manual_single_off"			: "드론 LED 끄기 %1",
-    "byrobot_dronefighter_drone_light_manual_single"				: "드론 LED %1 %2 %3",			/* 전체 ComboBox 사용 */
-    "byrobot_dronefighter_drone_light_manual_single_input"			: "드론 LED %1 밝기 %2 %3",		/* 전체 TextBox 사용 */
-    "byrobot_dronefighter_controller_buzzer"						: "버저 %1 옥타브 %2 을(를) %3 초 동안 연주하기 %4",
-	"byrobot_dronefighter_controller_vibrator_on"					: "진동 %1 초 동안 켜기 %2",
-	"byrobot_dronefighter_controller_vibrator"						: "진동 (켜기 %1 초, 끄기 %2 초)를 %3 초 동안 실행하기 %4",
-	"byrobot_dronefighter_drone_command_mode_vehicle"				: "드론파이터를 %1 (으)로 바꾸기 %2",			/* 작동 모드 변경. ComboBox 사용 */
-	"byrobot_dronefighter_drone_control_double_stop"				: "자동차 정지 %1",
-	"byrobot_dronefighter_drone_control_double_one"					: "자동차 조종을 %1 %2 (으)로 실행하기 %3", 	/* 방향 선택에 ComboBox 사용 */
-    "byrobot_dronefighter_drone_control_double"						: "자동차 조종을 왼쪽오른쪽 %1 전진 %2 (으)로 실행하기 %3",
-	"byrobot_dronefighter_drone_control_quad_stop"					: "드론 정지 %1",
-    "byrobot_dronefighter_drone_control_quad_one"					: "드론 조종을 %1 %2 (으)로 실행하기 %3", 	/* 방향 선택에 ComboBox 사용 */
-    "byrobot_dronefighter_drone_control_quad"						: "드론 조종을 왼쪽오른쪽 %1 앞뒤 %2 회전 %3 위아래 %4 (으)로 실행하기 %5",
+    "byrobot_dronefighter_drone_light_manual_single"				: "드론 LED %1 %2 %3",						/* 전체 ComboBox 사용 */
+    "byrobot_dronefighter_drone_light_manual_single_input"			: "드론 LED %1 밝기 %2 %3",					/* 전체 TextBox 사용 */	
+    "byrobot_dronefighter_controller_buzzer_scale"					: "%1 옥타브 %2 을(를) 연주 %3",				/* 블럭 딜레이 없음 */
+    "byrobot_dronefighter_controller_buzzer_scale_delay"			: "%1 옥타브 %2 을(를) %3 초 연주 %4",		/* 블럭 딜레이 사용 */
+    "byrobot_dronefighter_controller_buzzer_scale_reserve"			: "%1 옥타브 %2 을(를) %3 초 예약 %4",		/* 블럭 딜레이 없음 */
+    "byrobot_dronefighter_controller_buzzer_hz"						: "%1 Hz 소리를 연주 %2",					/* 블럭 딜레이 없음 */	
+    "byrobot_dronefighter_controller_buzzer_hz_delay"				: "%1 Hz 소리를 %2 초 연주 %3",				/* 블럭 딜레이 사용 */
+	"byrobot_dronefighter_controller_buzzer_hz_reserve"				: "%1 Hz 소리를 %2 초 예약 %3",				/* 블럭 딜레이 없음 */
+	"byrobot_dronefighter_controller_vibrator_on_delay"				: "진동 %1 초 켜기 %2",
+	"byrobot_dronefighter_controller_vibrator_delay"				: "진동 켜기 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4",	
+	"byrobot_dronefighter_drone_irmessage"							: "적외선으로 %1 값 보내기 %2",
+	"byrobot_dronefighter_drone_command_mode_vehicle_car"			: "자동차 모드 %1",									/* 작동 모드 변경. */
+	"byrobot_dronefighter_drone_control_car_stop"					: "자동차 정지 %1",
+	"byrobot_dronefighter_drone_control_double_one"					: "자동차를 %1 %2 정하기 %3", 						/* 방향 선택에 ComboBox 사용 */
+	"byrobot_dronefighter_drone_control_double_one_delay"			: "자동차를 %1 %2 %3 초 실행 %4", 					/* 방향 선택에 ComboBox 사용 */
+    "byrobot_dronefighter_drone_control_double"						: "자동차를 방향 %1 전진 %2 정하기 %3",
+	"byrobot_dronefighter_drone_command_mode_vehicle_drone"			: "드론 모드 %1",									/* 작동 모드 변경. */
+	"byrobot_dronefighter_drone_control_drone_takeoff"				: "드론 이륙 %1",
+	"byrobot_dronefighter_drone_control_drone_landing"				: "드론 착륙 %1",
+	"byrobot_dronefighter_drone_control_drone_stop"					: "드론 정지 %1",
+	"byrobot_dronefighter_drone_control_coordinate"					: "드론 좌표 기준을 %1로 정하기 %2",
+	"byrobot_dronefighter_drone_control_drone_reset_heading"		: "드론 방향 초기화 %1",
+    "byrobot_dronefighter_drone_control_quad_one"					: "드론 %1 %2 정하기 %3", 							/* 방향 선택에 ComboBox 사용 */
+	"byrobot_dronefighter_drone_control_quad_one_delay"				: "드론 %1 %2 %3 초 실행 %4", 						/* 방향 선택에 ComboBox 사용 */
+    "byrobot_dronefighter_drone_control_quad"						: "드론 Roll %1 Pitch %2 Yaw %3 Throttle %4 정하기 %5",
 	/* BYROBOT DroneFighter End */
     "dplay_get_number_sensor_value": "아날로그 %1 번 센서값  ",
     "nemoino_get_number_sensor_value": "아날로그 %1 번 센서값  ",
