@@ -225,7 +225,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var blockSyntax = this.getBlockSyntax(syntax);
                         if(blockSyntax) {
                             type = blockSyntax.key;
-                            break;
                         }
                     }
                 }
@@ -346,7 +345,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             type = blockSyntax.key;
                             if(blockSyntax.replaceBlockType)
                                 type = blockSyntax.replaceBlockType;
-                            break;
+                            
                         }
                     }
                 }
@@ -802,6 +801,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if(blockSyntax.textParams)
                 var textParams = blockSyntax.textParams;
 
+            result.arguments = [];
+
             for(var i in arguments) {
                 var isParamOption = false;
                 var argument = arguments[i];
@@ -873,6 +874,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(pIndex === undefined) continue;
 
                     params[pIndex] = param;
+                    result.arguments.push(param);
 
                     console.log("callex realtime params", params);
 
@@ -1324,7 +1326,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 else if(callee.property.name == "insert") {
                     if(params[2].type == "number" || params[2].type == "text") {
-                        if(params[2].params && !isNaN(params[2].params[0]))
+                        if(!isNaN(params[2].params && params[2].params[0]))
                             params[2].params[0] += 1;
                     }
                     else if(params[2].type == "get_variable") {
@@ -1360,7 +1362,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(callee.property.name == "subscriptIndex") {
                     var p = params[3];
                     if(params[3].type == "number" || params[3].type == "text") {
-                        if(params[3].params && !isNaN(params[3].params[0]))
+                        if(!isNaN(params[3].params[0]))
                             params[3].params[0] += 1;
                     }
                     else if(params[3].type == "get_variable") {
@@ -1399,7 +1401,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var newParams = [];
                         newParams[1] = objectData;
                         if(params[1].type == "number" || params[1].type == "text") {
-                            if(params[1].params && !isNaN(params[1].params[0]))
+                            if(!isNaN(params[1].params[0]))
                                 params[1].params[0] += 1;
                         }
                         else if(params[1].type == "get_variable") {
@@ -2634,12 +2636,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("AssignmentExpression listName", listName);
 
             params.push(listName);
-            if(leftData && leftData.params) {
-                //var param = leftData.params[1];
+            if(leftData && leftData.property) {
+                var param = leftData.property.arguments[0];
                 console.log("AssignmentExpression left param", param);
 
-                //params.push(param);
-                var param = leftData.params[3];
+                params.push(param);
+                param = leftData.property.arguments[1];
 
                 console.log("arg1 param", param);
 
@@ -3332,7 +3334,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         
         console.log("ParamDropdown result", result);
 
-        return result;  
+        return result; 
     };
 
     p.ParamDropdownDynamic = function(value, paramMeta, paramDefMeta, textParam, currentObject) {
@@ -3469,8 +3471,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(!syntax) return;
 
                 console.log("member ex propertyData", propertyData);
-                //var arguments = propertyData.arguments;
-                //var arguments = [];
+                var arguments = propertyData.arguments;
                 console.log("member ex args", arguments);
 
                 //var syntax = String("%2\[%4\]");
@@ -3480,7 +3481,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(blockSyntax)
                     type = blockSyntax.key;
 
-                
+                structure.type = type;
 
                 var block = Entry.block[type];
                 var paramsMeta = block.params;
@@ -3492,9 +3493,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
 
                 console.log("MemberExpression listName", listName);
-                //arguments[0] = listName;
-                //arguments[1] = propertyData.params[3];
-                console.log("MemberExpression arguments recheck", arguments);
 
                 var params = [];
 
@@ -3510,31 +3508,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params[1] = objectData;
                     }
                 }
-                console.log("memberexpression arguments", arguments, "isNaN(0)", isNaN(0));
-                if(propertyData.type && propertyData.type == "value_of_index_from_list")
-                    var argument = propertyData.params[3];
-                if(argument) {
-                    if(argument.type == "number" || argument.type == "text") {
-                        /*if(argument.params && !isNaN(argument.params[0])) {
-                            argument.params[0] += 1;
-                        }*/
-                        params[3] = argument;
+                console.log("memberexpression arguments", arguments);
+                if(arguments && arguments[1]) {
+                    if(arguments[1].type == "number" || arguments[1].type == "text") {
+                        /*if(!isNaN(arguments[1].params[0]))
+                            arguments[1].params[0] += 1;*/
+                        params[3] = arguments[1];
                     }
-                    else if(argument.type == "get_variable") {
+                    else if(arguments[1].type == "get_variable") {
                         var indexBlock = {};
                         var type = "calc_basic";
                         indexBlock.type = type;
                         var indexParams = [];
-                        indexParams[0] = argument;
+                        indexParams[0] = arguments[1];
                         indexParams[1] = "PLUS";
                         indexParams[2] = {type: "number", params: [1]};
                         indexBlock.params = indexParams;
                         params[3] = indexBlock;
                     }
-                    else if(argument.type == "calc_basic") {
-                        if(argument.params && argument.params[1] == "MINUS" && argument.params[2] && 
-                            argument.params[2].params && argument.params[2].params[0] == "1") {
-                            params[3] = argument.params[0];
+                    else if(arguments[1].type == "calc_basic") {
+                        if(arguments[1].params && arguments[1].params[1] == "MINUS" && arguments[1].params[2] && 
+                            arguments[1].params[2].params && arguments[1].params[2].params[0] == "1") {
+                            params[3] = arguments[1].params[0];
                             console.log("check params[3]", params[3]);
                         }
                         else {
@@ -3542,15 +3537,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             var type = "calc_basic";
                             indexBlock.type = type;
                             var indexParams = [];
-                            indexParams[0] = argument;
+                            indexParams[0] = arguments[1];
                             indexParams[1] = "PLUS";
                             indexParams[2] = {type: "number", params: [1]};
                             indexBlock.params = indexParams;
                             params[3] = indexBlock;
                         }
                     }
-                    else if(!argument.type) {
-                        if(!this.isFuncParam(argument.name)) {
+                    else if(!arguments[1].type) {
+                        if(!this.isFuncParam(arguments[1].name)) {
                             var keyword;
                             console.log("errorId", 51);
                             Entry.TextCodingError.error(
@@ -3573,13 +3568,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 }
 
-                structure.type = type;
                 structure.params = params;
-                //structure.arguments = arguments;
 
                 result.type = structure.type;
                 result.params = structure.params;
-                //result.arguments = structure.arguments;
 
 
             }

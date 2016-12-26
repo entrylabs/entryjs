@@ -1580,6 +1580,7 @@ Entry.TextCodingUtil = {};
         var tParams = targetBlock.params;
         
         console.log("makeFuncParamBlock tParams", tParams);
+        console.log("paramInfo", paramInfo);
 
 
         for(var i in tParams) {
@@ -1615,7 +1616,7 @@ Entry.TextCodingUtil = {};
                     paramBlock.params = [];
                     targetBlock.params[i] = paramBlock;
                 }
-                else if(param.type != "get_variable") {
+                else if(param.type != "get_variable" ) {
                     var keyword = param.name;
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
