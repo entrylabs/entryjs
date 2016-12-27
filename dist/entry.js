@@ -27089,7 +27089,7 @@ Entry.Block = function(b, a) {
   e && c.object && e.forEach(function(a) {
     Entry.Utils.isFunction(a) && a(d);
   });
-  (e = this.events.viewAdd) && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && e.forEach(function(a) {
+  (e = this.events.viewAdd) && Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && e.forEach(function(a) {
     Entry.Utils.isFunction(a) && a.apply(d, [d]);
   });
 };
