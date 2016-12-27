@@ -548,6 +548,7 @@ EntryStatic.getAllBlocks = function() {
 				"byrobot_dronefighter_drone_light_manual_single_off",
 				"byrobot_dronefighter_drone_light_manual_single",
 				"byrobot_dronefighter_drone_light_manual_single_input",
+				"byrobot_dronefighter_controller_buzzer_off",
 				"byrobot_dronefighter_controller_buzzer_scale",
 				"byrobot_dronefighter_controller_buzzer_scale_delay",
 				"byrobot_dronefighter_controller_buzzer_scale_reserve",

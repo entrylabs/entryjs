@@ -24585,14 +24585,14 @@ Entry.block = {
 					"type": "Dropdown",
 					"options": [
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_all,		"255"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_red,		"1"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_1,		"128"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_2,		"64"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_3,		"32"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_4,		"16"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_5,		"8"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_6,		"4"],
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_blue,		"2"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_1,		"4"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_2,		"8"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_3,		"16"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_4,		"32"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_5,		"64"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_6,		"128"]
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_red,		"1"],
 					],
 					"value": "4",
 					"fontSize": 11
@@ -24600,14 +24600,14 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_on,		"150"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_on,		"220"],
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_off,		"0"],
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b25,		"75"],
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b50,		"125"],
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b75,		"200"],
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b100,		"255"],
 					],
-					"value": "150",
+					"value": "220",
 					"fontSize": 11
 				},
 				{
@@ -24775,12 +24775,12 @@ Entry.block = {
 					"type": "Dropdown",
 					"options": [
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_all,		"255"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_red,		"1"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_blue,		"2"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_1,		"4"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_2,		"8"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_3,		"16"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_4,		"32"]
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_1,		"128"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_2,		"64"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_3,		"32"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_4,		"16"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_blue,		"8"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_red,		"4"],
 					],
 					"value": "4",
 					"fontSize": 11
@@ -24788,14 +24788,14 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_on,		"150"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_on,		"220"],
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_off,		"0"],
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b25,		"75"],
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b50,		"125"],
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b75,		"200"],
 						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b100,		"255"],
 					],
-					"value": "150",
+					"value": "220",
 					"fontSize": 11
 				},
 				{
@@ -24905,6 +24905,55 @@ Entry.block = {
 				delete Entry.hw.sendQueue["light_manual_flags"];
 				delete Entry.hw.sendQueue["light_manual_brightness"];
 				
+				return script.callReturn();
+			},
+        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
+    },
+	// */
+	//*
+    "byrobot_dronefighter_controller_buzzer_off":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null,
+					],
+				"type": "byrobot_dronefighter_controller_buzzer_off"	
+			},
+        "paramsKeyMap": {
+			},
+        "class": "byrobot_dronefighter_buzzer",
+        "isNotFor": [ "byrobot_dronefighter" ],
+        "func": function (sprite, script)
+			{
+				var mode		= 0;
+				var octave		= 0;
+				var scale		= 0;
+				var time		= 10;
+				
+				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x11);
+				Entry.hw.setDigitalPortValue("buzzer_mode", mode);
+				Entry.hw.setDigitalPortValue("buzzer_value", scale);
+				Entry.hw.setDigitalPortValue("buzzer_time", time);
+
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["target"];
+				delete Entry.hw.sendQueue["buzzer_mode"];
+				delete Entry.hw.sendQueue["buzzer_value"];
+				delete Entry.hw.sendQueue["buzzer_time"];
+			
 				return script.callReturn();
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
@@ -25735,7 +25784,7 @@ Entry.block = {
 				"params": [
 						{
 							"type": "text",
-							"params": ["0x12345678"]
+							"params": ["100"]
 						},
 						null
 					],
@@ -25744,7 +25793,7 @@ Entry.block = {
         "paramsKeyMap": {
 				"IRMESSAGE":	0
 			},
-        "class": "byrobot_dronefighter_mode_vehicle",
+        "class": "byrobot_dronefighter_irmessage",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
@@ -25752,7 +25801,7 @@ Entry.block = {
 				
 				// 범위 조정
 				irmessage = Math.max(irmessage, 0);
-				irmessage = Math.min(irmessage, 0xFFFFFFFF);
+				irmessage = Math.min(irmessage, 127);
 				
 				// 전송
 				Entry.hw.setDigitalPortValue("target", 0x10);
@@ -25783,7 +25832,7 @@ Entry.block = {
 						["2",	"2"],
 						["3",	"3"]
 					],
-					"value": "1",
+					"value": "0",
 					"fontSize": 11
 				},
 				{
@@ -25812,7 +25861,7 @@ Entry.block = {
 				"MOTORINDEX":	0,
 				"MOTORSPEED":	1
 			},
-        "class": "byrobot_dronefighter_mode_vehicle",
+        "class": "byrobot_dronefighter_motor",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
@@ -25882,7 +25931,7 @@ Entry.block = {
 				"MOTORINDEX":	0,
 				"MOTORSPEED":	1
 			},
-        "class": "byrobot_dronefighter_mode_vehicle",
+        "class": "byrobot_dronefighter_motor",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{

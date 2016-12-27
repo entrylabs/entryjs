@@ -114,7 +114,7 @@ Lang.Blocks = {
 	"byrobot_dronefighter_drone_team_red"						: "레드",
     "byrobot_dronefighter_drone_team_blue"						: "블루",
 	"byrobot_dronefighter_drone_coordinate_world"				: "앱솔루트",
-	"byrobot_dronefighter_drone_coordinate_local"				: "RC",
+	"byrobot_dronefighter_drone_coordinate_local"				: "일반",
 	"byrobot_dronefighter_drone_mode_vehicle_flight"			: "드론",
 	"byrobot_dronefighter_drone_mode_vehicle_drive"				: "자동차",
     "byrobot_dronefighter_drone_control_double_wheel"			: "방향",
@@ -3656,6 +3656,7 @@ Lang.template = {
 	"byrobot_dronefighter_drone_light_manual_single_off"			: "드론 LED 끄기 %1",
     "byrobot_dronefighter_drone_light_manual_single"				: "드론 LED %1 %2 %3",						/* 전체 ComboBox 사용 */
     "byrobot_dronefighter_drone_light_manual_single_input"			: "드론 LED %1 밝기 %2 %3",					/* 전체 TextBox 사용 */	
+    "byrobot_dronefighter_controller_buzzer_off"					: "버저 끄기 %1",							/* 블럭 딜레이 없음 */
     "byrobot_dronefighter_controller_buzzer_scale"					: "%1 옥타브 %2 을(를) 연주 %3",				/* 블럭 딜레이 없음 */
     "byrobot_dronefighter_controller_buzzer_scale_delay"			: "%1 옥타브 %2 을(를) %3 초 연주 %4",		/* 블럭 딜레이 사용 */
     "byrobot_dronefighter_controller_buzzer_scale_reserve"			: "%1 옥타브 %2 을(를) %3 초 예약 %4",		/* 블럭 딜레이 없음 */
