@@ -23196,32 +23196,34 @@ Entry.BlockMenu = function(b, a, d, c) {
     var b = this.code, c = [], e = this._categoryData.filter(function(b) {
       return b.category == a;
     })[0];
-    e.blocks.forEach(function(b) {
-      var d = Entry.block[b];
-      d.category = e.category;
-      if (d && d.def) {
-        if (d.defs) {
-          for (d.defs.forEach(function(b) {
-            b.category = a;
-          }), b = 0;b < d.defs.length;b++) {
-            c.push([d.defs[b]]);
+    if (e) {
+      e.blocks.forEach(function(b) {
+        var d = Entry.block[b];
+        d.category = e.category;
+        if (d && d.def) {
+          if (d.defs) {
+            for (d.defs.forEach(function(b) {
+              b.category = a;
+            }), b = 0;b < d.defs.length;b++) {
+              c.push([d.defs[b]]);
+            }
+          } else {
+            d.def.category = a, c.push([d.def]);
           }
         } else {
-          d.def.category = a, c.push([d.def]);
+          c.push([{type:b, category:a}]);
         }
-      } else {
-        c.push([{type:b, category:a}]);
+      });
+      this._categories.push(a);
+      var f;
+      if ("func" == a) {
+        var g = this.code.getThreadsByCategory("func");
+        g.length && (f = this.code.getThreadIndex(g[0]));
       }
-    });
-    this._categories.push(a);
-    var f;
-    if ("func" == a) {
-      var g = this.code.getThreadsByCategory("func");
-      g.length && (f = this.code.getThreadIndex(g[0]));
+      c.forEach(function(a) {
+        a && a[0] && (a[0].x = -99999, b.createThread(a, f), void 0 !== f && f++, delete a[0].x);
+      });
     }
-    c.forEach(function(a) {
-      a && a[0] && (a[0].x = -99999, b.createThread(a, f), void 0 !== f && f++, delete a[0].x);
-    });
   };
   b.banClass = function(a) {
     0 > this._bannedClass.indexOf(a) && (this._bannedClass.push(a), this._dAlign());
@@ -23340,11 +23342,11 @@ Entry.BlockMenu = function(b, a, d, c) {
     this.code && this.code.constructor == Entry.Code && this.code.clear();
   };
   b.setCategoryData = function(a) {
+    this._generateCodesTimer && (clearTimeout(this._generateCodesTimer), this._generateCodesTimer = null);
     this._clearCategory();
     this._categoryData = a;
     this._generateCategoryView(a);
     this._generateCategoryCodes();
-    this._generateCodesTimer && (clearTimeout(this._generateCodesTimer), this._generateCodesTimer = null);
   };
   b._generateCategoryView = function(a) {
     if (a) {
@@ -23384,30 +23386,32 @@ Entry.BlockMenu = function(b, a, d, c) {
         break;
       }
     }
-    c = [];
-    for (f = 0;f < e.length;f++) {
-      var g = e[f], h = Entry.block[g];
-      if (!this.checkBanClass(h)) {
-        if (h && h.def) {
-          if (h.defs) {
-            for (h.defs.forEach(function(a) {
-              a.category = "arduino";
-            }), f = 0;f < h.defs.length;f++) {
-              c.push([h.defs[f]]);
+    if (e) {
+      c = [];
+      for (f = 0;f < e.length;f++) {
+        var g = e[f], h = Entry.block[g];
+        if (!this.checkBanClass(h)) {
+          if (h && h.def) {
+            if (h.defs) {
+              for (h.defs.forEach(function(a) {
+                a.category = "arduino";
+              }), f = 0;f < h.defs.length;f++) {
+                c.push([h.defs[f]]);
+              }
+            } else {
+              h.def.category = "arduino", c.push([h.def]);
             }
           } else {
-            h.def.category = "arduino", c.push([h.def]);
+            c.push([{type:g, category:"arduino"}]);
           }
-        } else {
-          c.push([{type:g, category:"arduino"}]);
         }
       }
+      c.forEach(function(c) {
+        a && (c[0].x = -99999);
+        b.createThread(c);
+        delete c[0].x;
+      });
     }
-    c.forEach(function(c) {
-      a && (c[0].x = -99999);
-      b.createThread(c);
-      delete c[0].x;
-    });
   };
   b.setAlign = function(a) {
     this._align = a || "CENTER";
