@@ -27888,10 +27888,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b._syncTextCode = function() {
     if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
-      this.vimBoard._parser._onSync = !0;
-      var a = this.vimBoard.textToCode(this.textType);
-      this.vimBoard._parser._onSync = !1;
-      var b = this.board.code;
+      var a = this.vimBoard.textToCode(this.textType), b = this.board.code;
       b && b.load(a);
     }
   };
