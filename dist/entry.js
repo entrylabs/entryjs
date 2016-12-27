@@ -6915,12 +6915,13 @@ Entry.Container.prototype.updateListView = function() {
     for (var b = this.listView_;b.hasChildNodes();) {
       b.removeChild(b.lastChild);
     }
-    var a = this.getCurrentObjects(), d;
-    for (d in a) {
-      var c = a[d];
-      !c.view_ && c.generateView();
-      b.appendChild(c.view_);
+    var a = document.createDocumentFragment("div"), d = this.getCurrentObjects(), c;
+    for (c in d) {
+      var e = d[c];
+      !e.view_ && e.generateView();
+      a.appendChild(e.view_);
     }
+    b.appendChild(a);
     Entry.stage.sortZorder();
     return !0;
   }
@@ -8852,6 +8853,7 @@ Entry.EntryObject = function(b) {
 Entry.EntryObject.prototype.generateView = function() {
   if ("workspace" == Entry.type) {
     var b = Entry.createElement("li", this.id);
+    document.createDocumentFragment("div").appendChild(b);
     b.addClass("entryContainerListElementWorkspace");
     b.object = this;
     Entry.Utils.disableContextmenu(b);
@@ -11700,7 +11702,9 @@ Entry.Scene.prototype.generateView = function(b, a) {
   }
 };
 Entry.Scene.prototype.generateElement = function(b) {
-  var a = this, d = Entry.createElement("li", b.id), c;
+  var a = this, d = Entry.createElement("li", b.id);
+  document.createDocumentFragment("div").appendChild(d);
+  var c;
   c = "entrySceneElementWorkspace entrySceneButtonWorkspace";
   c += " minValue";
   d.addClass(c);

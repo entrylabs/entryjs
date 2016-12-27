@@ -111,6 +111,8 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
 Entry.Scene.prototype.generateElement = function(scene) {
     var that = this;
     var viewTemplate = Entry.createElement('li', scene.id);
+    var fragment = document.createDocumentFragment('div');
+    fragment.appendChild(viewTemplate);
     var className = '';
     className += 'entrySceneElementWorkspace';
     className += ' entrySceneButtonWorkspace';

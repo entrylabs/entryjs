@@ -106,6 +106,8 @@ Entry.EntryObject = function(model) {
 Entry.EntryObject.prototype.generateView = function() {
     if (Entry.type == "workspace") {
         var objectView = Entry.createElement('li', this.id);
+        var fragment = document.createDocumentFragment('div');
+        fragment.appendChild(objectView);
         objectView.addClass('entryContainerListElementWorkspace');
         objectView.object = this;
         // generate context menu

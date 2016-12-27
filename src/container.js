@@ -177,13 +177,16 @@ Entry.Container.prototype.updateListView = function() {
     while (view.hasChildNodes())
         view.removeChild(view.lastChild);
 
+    var fragment = document.createDocumentFragment('div');
+
     var objs = this.getCurrentObjects();
     for (var i in objs) {
         var obj = objs[i];
         !obj.view_ && obj.generateView();
-        view.appendChild(obj.view_);
+        fragment.appendChild(obj.view_);
     }
 
+    view.appendChild(fragment);
     Entry.stage.sortZorder();
     return true;
 };
