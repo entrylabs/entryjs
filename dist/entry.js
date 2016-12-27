@@ -7860,6 +7860,8 @@ Entry.Engine.prototype.toggleRun = function() {
   if ("pause" === this.state) {
     this.togglePause();
   } else {
+    var b = document.activeElement;
+    b && b.blur && b.blur();
     if (Entry.playground && Entry.playground.mainWorkspace) {
       var b = Entry.playground.mainWorkspace, a = b.mode;
       a == Entry.Workspace.MODE_VIMBOARD && b._syncTextCode(a);

@@ -480,6 +480,9 @@ Entry.Engine.prototype.toggleRun = function() {
         return;
     }
 
+    var activeElem = document.activeElement;
+    activeElem && activeElem.blur && activeElem.blur();
+
     //Text Coding Mode
     if (Entry.playground && Entry.playground.mainWorkspace) {
         var mainWorkspace = Entry.playground.mainWorkspace;
