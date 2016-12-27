@@ -111,9 +111,13 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
 Entry.Scene.prototype.generateElement = function(scene) {
     var that = this;
     var viewTemplate = Entry.createElement('li', scene.id);
-    viewTemplate.addClass('entrySceneElementWorkspace');
-    viewTemplate.addClass('entrySceneButtonWorkspace');
-    viewTemplate.addClass('minValue');
+    var fragment = document.createDocumentFragment('div');
+    fragment.appendChild(viewTemplate);
+    var className = '';
+    className += 'entrySceneElementWorkspace';
+    className += ' entrySceneButtonWorkspace';
+    className += ' minValue';
+    viewTemplate.addClass(className);
     $(viewTemplate).on('mousedown', function(e){
         if (Entry.engine.isState('run')) {
             e.preventDefault();
@@ -134,7 +138,6 @@ Entry.Scene.prototype.generateElement = function(scene) {
 
     var divide = Entry.createElement('span');
     divide.addClass('entrySceneInputCover');
-    divide.style.width = Entry.computeInputWidth(scene.name);
     viewTemplate.appendChild(divide);
     scene.inputWrapper = divide;
 
@@ -230,7 +233,6 @@ Entry.Scene.prototype.addScenes = function(scenes) {
     }
 
     this.selectScene(this.getScenes()[0]);
-    this.updateView();
 };
 /**
  * add scenes to this.scenes_
@@ -305,16 +307,16 @@ Entry.Scene.prototype.selectScene = function(scene) {
     Entry.container.setCurrentObjects();
     if (Entry.stage.objectContainers &&
         Entry.stage.objectContainers.length !== 0)
-        Entry.stage.selectObjectContainer(scene); 
+        Entry.stage.selectObjectContainer(scene);
 
-    var targetObject = Entry.container.getCurrentObjects()[0];   
+    var targetObject = Entry.container.getCurrentObjects()[0];
     if (targetObject && Entry.type != 'minimize') {
-        Entry.container.selectObject(targetObject.id); 
+        Entry.container.selectObject(targetObject.id);
         Entry.playground.refreshPlayground();
     }
     else {
         if(Entry.isTextMode) {
-            var workspace = Entry.getMainWS();  
+            var workspace = Entry.getMainWS();
             if(workspace && workspace.vimBoard) {
                 var sObject = workspace.vimBoard._currentObject;
                 var sScene = workspace.vimBoard._currentScene;
@@ -334,7 +336,7 @@ Entry.Scene.prototype.selectScene = function(scene) {
 
         Entry.stage.selectObject(null);
         Entry.playground.flushPlayground();
-        Entry.variableContainer.updateList(); 
+        Entry.variableContainer.updateList();
     }
 
     if (!Entry.container.listView_)
@@ -456,10 +458,10 @@ Entry.Scene.prototype.cloneScene = function(scene) {
     this.addScene(clonedScene);
 
     var objects = Entry.container.getSceneObjects(scene);
-    
+
     try {
         this.isSceneCloning = true;
-        for (var i=objects.length-1; i>=0; i--) 
+        for (var i=objects.length-1; i>=0; i--)
             Entry.container.addCloneObject(objects[i], clonedScene.id);
         this.isSceneCloning = false;
     } catch(e) {}

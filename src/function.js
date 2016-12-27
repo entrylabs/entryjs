@@ -149,9 +149,9 @@ Entry.Func.endEdit = function(message) {
 Entry.Func.save = function() {
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
-    
+
     var ws = Entry.getMainWS();
-    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) { 
+    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) {
         var mode = {};
         mode.boardType = Entry.Workspace.MODE_VIMBOARD;
         mode.textType = Entry.Vim.TEXT_TYPE_PY;
@@ -222,7 +222,7 @@ Entry.Func.cancelEdit = function() {
     Entry.variableContainer.updateList();
 
     var ws = Entry.getMainWS();
-    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) { 
+    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) {
         var mode = {};
         mode.boardType = Entry.Workspace.MODE_VIMBOARD;
         mode.textType = Entry.Vim.TEXT_TYPE_PY;
@@ -359,19 +359,21 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
 }
 
 Entry.Func.updateMenu = function() {
-    if (!Entry.playground || !Entry.playground.mainWorkspace) return;
-    var workspace = Entry.playground.mainWorkspace;
+    var workspace = Entry.getMainWS();
+    if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
-    if (this.targetFunc) {
-        if (!this.menuCode)
-            this.setupMenuCode();
-        blockMenu.banClass("functionInit", true);
-        blockMenu.unbanClass("functionEdit", true);
-    } else {
-        blockMenu.unbanClass("functionInit", true);
-        blockMenu.banClass("functionEdit", true);
+    if (blockMenu.lastSelector === 'func') {
+        if (this.targetFunc) {
+            if (!this.menuCode)
+                this.setupMenuCode();
+            blockMenu.banClass("functionInit", true);
+            blockMenu.unbanClass("functionEdit", true);
+        } else {
+            blockMenu.unbanClass("functionInit", true);
+            blockMenu.banClass("functionEdit", true);
+        }
+        blockMenu.align();
     }
-    blockMenu.align();
 };
 
 Entry.Func.prototype.edit = function() {

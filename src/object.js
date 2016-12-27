@@ -52,7 +52,7 @@ Entry.EntryObject = function(model) {
         }
 
 
-        this.scene = Entry.scene.getSceneById(model.scene)|| Entry.scene.selectedScene;
+        this.scene = Entry.scene.getSceneById(model.scene) || Entry.scene.selectedScene;
 
         this.setRotateMethod(model.rotateMethod);
 
@@ -106,6 +106,8 @@ Entry.EntryObject = function(model) {
 Entry.EntryObject.prototype.generateView = function() {
     if (Entry.type == "workspace") {
         var objectView = Entry.createElement('li', this.id);
+        var fragment = document.createDocumentFragment('div');
+        fragment.appendChild(objectView);
         objectView.addClass('entryContainerListElementWorkspace');
         objectView.object = this;
         // generate context menu
@@ -476,8 +478,7 @@ Entry.EntryObject.prototype.generateView = function() {
         rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
 
         var rotateModeAView = Entry.createElement('div');
-        rotateModeAView.addClass('entryObjectRotateModeWorkspace');
-        rotateModeAView.addClass('entryObjectRotateModeAWorkspace');
+        rotateModeAView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace');
         rotateModeAView.object = this;
         this.rotateModeAView_ = rotateModeAView;
         rotationMethodWrapper.appendChild(rotateModeAView);
@@ -490,8 +491,7 @@ Entry.EntryObject.prototype.generateView = function() {
         });
 
         var rotateModeBView = Entry.createElement('div');
-        rotateModeBView.addClass('entryObjectRotateModeWorkspace');
-        rotateModeBView.addClass('entryObjectRotateModeBWorkspace');
+        rotateModeBView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace');
         rotateModeBView.object = this;
         this.rotateModeBView_ = rotateModeBView;
         rotationMethodWrapper.appendChild(rotateModeBView);
@@ -504,8 +504,7 @@ Entry.EntryObject.prototype.generateView = function() {
         });
 
         var rotateModeCView = Entry.createElement('div');
-        rotateModeCView.addClass('entryObjectRotateModeWorkspace');
-        rotateModeCView.addClass('entryObjectRotateModeCWorkspace');
+        rotateModeCView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace');
         rotateModeCView.object = this;
         this.rotateModeCView_ = rotateModeCView;
         rotationMethodWrapper.appendChild(rotateModeCView);
@@ -523,7 +522,6 @@ Entry.EntryObject.prototype.generateView = function() {
 
         this.updateCoordinateView(true);
         this.updateRotationView(true);
-
 
         return this.view_;
     } else if (Entry.type == "phone") {
