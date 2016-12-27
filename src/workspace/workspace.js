@@ -109,7 +109,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         var mode = {};
                         mode.boardType = WORKSPACE.MODE_BOARD;
                         mode.textType = -1;
-                        Entry.getMainWS().setMode(mode);
+                        Entry.getMainWS().setMode(mode); 
                         break;
                     }
                     if (this.board) this.board.hide();
@@ -117,7 +117,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     blockMenu.banClass('functionInit');
                     this.set({selectedBoard:this.vimBoard});
                     this.vimBoard.show();
-                    this.vimBoard._parser.initDeclaration();
                     this.codeToText(this.board.code, mode);
                     blockMenu.renderText();
                     this.board.clear();

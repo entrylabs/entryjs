@@ -2251,48 +2251,26 @@ Entry.TextCodingUtil = {};
         var result = "";
         var currentObject = Entry.playground.object;
         var vc = Entry.variableContainer;
-        if(!vc)
-            return;
+        if(!vc) return;
         //inspect variables
         var targets = vc.variables_ || [];
-        //case for value is 0
-        /*for (var i=targets.length-1; i>=0; i--) { 
-            var v = targets[i];
-            var name = v.name_;
-            var value = v.value_;
-            if(value == 0) {
-                if(v.object_) {
-                    if(v.object_ == currentObject.id) {
-                        name = "self." + name; 
-                    }
-                    else continue;
-                }
-                if(typeof value === "string")
-                    value = '"()"'.replace('()', value);
-                result += name + " = ";
-            }
-        }
-        if(result.length != 0)
-            result += 0 + '\n';*/
 
         for (var i=targets.length-1; i>=0; i--) { 
             var v = targets[i];
             var name = v.name_;
             var value = v.value_;
-            //if(value != 0) {
-                if(v.object_) {
-                    if(v.object_ == currentObject.id) {
-                        name = "self." + name; 
-                    }
-                    else
-                        continue;
+            
+            if(v.object_) {
+                if(v.object_ == currentObject.id) {
+                    name = "self." + name; 
                 }
+                else continue;
+            }
 
-                if(typeof value === "string")
-                    value = '"()"'.replace('()', value);
-                
-                result += name + " = " + value + "\n";
-            //}
+            if(typeof value === "string")
+                value = '"()"'.replace('()', value);
+            
+            result += name + " = " + value + "\n";
         }
 
         return result;
@@ -2307,54 +2285,35 @@ Entry.TextCodingUtil = {};
 
         //inspect lists
         targets = vc.lists_ || [];
-        //case for value is empty, []
-        /*for (var i=targets.length-1; i>=0; i--) {
-            var l = targets[i];
-            var name = l.name_;
-            var value = "";
-            var lArray = l.array_;
-            if(lArray.length == 0) {
-                if(l.object_) {
-                    if(l.object_ == currentObject.id) {
-                        name = "self." + name;
-                    }
-                    else continue;
-                }
-                result += name + " = ";
-            }         
-        }
-        if(result.length != 0)
-            result += '[]' + '\n';*/
         
         for (var i=targets.length-1; i>=0; i--) {
             var l = targets[i];
             var name = l.name_;
             var value = "";
             var lArray = l.array_;
-            //if(lArray.length != 0) {
-                if(l.object_) {
-                    if(l.object_ == currentObject.id) {
-                        name = "self." + name;
-                    }
-                    else
-                        continue;
+            if(l.object_) {
+                if(l.object_ == currentObject.id) {
+                    name = "self." + name;
                 }
-                
-                for(var va in lArray) {
-                    var vItem = lArray[va];
-                    var data = vItem.data;
-                    var pData = parseInt(data);
-                    if(!isNaN(pData))
-                        data = pData;
-                    if(typeof data === "string")
-                        data = "\"" + data + "\"";
-                    value += data;
-                    if(va != lArray.length-1)
-                        value += ", ";
-                }
+                else
+                    continue;
+            }
+            
+            for(var va in lArray) {
+                var vItem = lArray[va];
+                var data = vItem.data;
+                var pData = parseInt(data);
+                if(!isNaN(pData))
+                    data = pData;
+                if(typeof data === "string")
+                    data = "\"" + data + "\"";
+                value += data;
+                if(va != lArray.length-1)
+                    value += ", ";
+            }
 
-                result += name + " = [" + value + "]" + "\n";
-            //}
+            result += name + " = [" + value + "]" + "\n";
+            
         }
 
         return result;

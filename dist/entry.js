@@ -16734,7 +16734,8 @@ Entry.Parser = function(b, a, d, c) {
         e = "";
         m = this._execParser.Code(a, b);
         this._pyHinter || (this._pyHinter = new Entry.PyHint(this.syntax));
-        if (b == Entry.Parser.PARSE_GENERAL && !this._onError && !this._onRunError) {
+        this._hasDeclaration || this.initDeclaration();
+        if (b == Entry.Parser.PARSE_GENERAL) {
           this.py_variableDeclaration && (e += this.py_variableDeclaration);
           this.py_listDeclaration && (e += this.py_listDeclaration);
           if (this.py_variableDeclaration || this.py_listDeclaration) {
@@ -16751,7 +16752,7 @@ Entry.Parser = function(b, a, d, c) {
         }
         m && (e += m.trim());
         e = e.replace(/\t/g, "    ");
-        this.removeDeclaration();
+        this._hasDeclaration && this.removeDeclaration();
     }
     return e;
   };
@@ -16911,10 +16912,10 @@ Entry.Parser = function(b, a, d, c) {
   b.initDeclaration = function() {
     this.py_variableDeclaration = Entry.TextCodingUtil.generateVariablesDeclaration();
     this.py_listDeclaration = Entry.TextCodingUtil.generateListsDeclaration();
+    this._hasDeclaration = !0;
   };
   b.removeDeclaration = function() {
-    this.py_variableDeclaration && (this.py_variableDeclaration = null);
-    this.py_listDeclaration && (this.py_variableDeclaration = null);
+    this.py_listDeclaration = this.py_variableDeclaration = null;
   };
 })(Entry.Parser.prototype);
 Entry.PyBlockAssembler = function(b) {
@@ -27612,6 +27613,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
     this._oldParserType = b.textType;
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._oldParserType != this._parserType && this._parser.setParser(this._mode, this._parserType, this.codeMirror), this._oldParserType = this._parserType) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._oldParserType != this._parserType && this._parser.setParser(this._mode, this._parserType, this.codeMirror), this._oldParserType = this._parserType);
     Entry.playground && (this._currentObject = Entry.playground.object);
+    this._parser._hasDeclaration = !1;
     if (e == Entry.Vim.TEXT_TYPE_PY) {
       if (this._currentObject) {
         c = "# " + this._currentObject.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc";
@@ -27628,9 +27630,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
       e == Entry.Vim.TEXT_TYPE_JS && (f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL), this.codeMirror.setValue(f), c = this.codeMirror.getDoc(), c.setCursor({line:c.lastLine() - 1}));
     }
     Entry.isTextMode && (this._parser._onRunError = !1);
-    this._parser.py_variableDeclaration = null;
-    this._parser.py_listDeclaration = null;
-    this._parser.py_funcDeclaration = null;
   };
   b.getCodeToText = function(a, b) {
     var c = this.workspace.oldTextType;
@@ -27709,7 +27708,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           f.banClass("functionInit");
           this.set({selectedBoard:this.vimBoard});
           this.vimBoard.show();
-          this.vimBoard._parser.initDeclaration();
           this.codeToText(this.board.code, a);
           f.renderText();
           this.board.clear();

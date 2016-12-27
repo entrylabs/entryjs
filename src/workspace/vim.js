@@ -199,7 +199,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         if(Entry.playground)
             this._currentObject = Entry.playground.object;
 
-
+        this._parser._hasDeclaration = false;
         if(textType == Entry.Vim.TEXT_TYPE_PY) {
             if(this._currentObject) {
                 codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이썬 코드";
@@ -233,19 +233,15 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
             this.codeMirror.setValue(textCode);
             var doc = this.codeMirror.getDoc();
-            doc.setCursor({ line: doc.lastLine() - 1});
+            doc.setCursor({line: doc.lastLine() - 1});
         }
 
         if(Entry.isTextMode) 
             this._parser._onRunError = false;
-
-        this._parser.py_variableDeclaration = null;
-        this._parser.py_listDeclaration = null;
-        this._parser.py_funcDeclaration = null;
     };
 
     p.getCodeToText = function(code, parseType) {
-        var textType = this.workspace.oldTextType; 
+        var textType = this.workspace.oldTextType;
 
         if (textType === Entry.Vim.TEXT_TYPE_JS){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;

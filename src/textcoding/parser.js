@@ -362,37 +362,38 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 if (!this._pyHinter)
                     this._pyHinter = new Entry.PyHint(this.syntax);
 
+                if(!this._hasDeclaration)
+                    this.initDeclaration();
+
                 if(parseMode == Entry.Parser.PARSE_GENERAL) {
-                    if(!this._onError && !this._onRunError) {
-                        if(this.py_variableDeclaration) {
-                            result += this.py_variableDeclaration;
+                    if(this.py_variableDeclaration)
+                        result += this.py_variableDeclaration; 
+
+                    if(this.py_listDeclaration)
+                        result += this.py_listDeclaration;
+
+                    if(this.py_variableDeclaration || this.py_listDeclaration)
+                        result += '\n';
+
+                    if(!this.py_funcDeclaration) {
+                        var funcDefMap = this._execParser._funcDefMap;
+                        var fd = "";
+
+                        for(var f in funcDefMap) {
+                            var funcDef = funcDefMap[f];
+                            fd += funcDef + '\n\n';
                         }
-
-                        if(this.py_listDeclaration) {
-                            result += this.py_listDeclaration;
-                        }
-
-                        if(this.py_variableDeclaration || this.py_listDeclaration)
-                            result += '\n';
-
-                        if(!this.py_funcDeclaration) {
-                            var funcDefMap = this._execParser._funcDefMap;
-                            var fd = "";
-
-                            for(var f in funcDefMap) {
-                                var funcDef = funcDefMap[f];
-                                fd += funcDef + '\n\n';
-                            }
-                            this.py_funcDeclaration = fd;
-                            if(this.py_funcDeclaration )
-                                result += this.py_funcDeclaration ;
-                        }
+                        this.py_funcDeclaration = fd;
+                        if(this.py_funcDeclaration )
+                            result += this.py_funcDeclaration ;
                     }
                 }
                 if(textCode)
                     result += textCode.trim();
+                
                 result = result.replace(/\t/g, "    ");
-                this.removeDeclaration();
+                if(this._hasDeclaration) 
+                    this.removeDeclaration();
 
                 break;
         }
@@ -686,7 +687,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         threads.push(optText);
         console.log("makeThreads result", threads);
         return threads;
-
     };
 
     p.entryEventParamConverter = function(text) {  
@@ -710,11 +710,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 param = 'none';
         }
 
-        
         text = stmt + "(" + param + "):\n";
         
-
-
         console.log("entryEventFilter text", text);
         return text;
     };
@@ -736,12 +733,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
     p.initDeclaration = function() {
         this.py_variableDeclaration = Entry.TextCodingUtil.generateVariablesDeclaration();
         this.py_listDeclaration = Entry.TextCodingUtil.generateListsDeclaration();
+        this._hasDeclaration = true;
     };
 
     p.removeDeclaration = function() {
-        if(this.py_variableDeclaration)
-            this.py_variableDeclaration = null;
-        if(this.py_listDeclaration)
-            this.py_variableDeclaration = null;
+        this.py_variableDeclaration = null;
+        this.py_listDeclaration = null;
     };
 })(Entry.Parser.prototype);
