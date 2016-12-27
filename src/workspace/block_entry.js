@@ -25748,7 +25748,7 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var irmessage	= script.getNumberValue('IRMESSAGE');
+				var irmessage	= script.getNumberValue("IRMESSAGE", script);
 				
 				// 범위 조정
 				irmessage = Math.max(irmessage, 0);
@@ -25762,6 +25762,154 @@ Entry.block = {
 
 				delete Entry.hw.sendQueue["target"];
 				delete Entry.hw.sendQueue["irmessage_data"];
+				
+				return script.callReturn();
+			},
+        //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drone_motorsingle":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						["0",	"0"],
+						["1",	"1"],
+						["2",	"2"],
+						["3",	"3"]
+					],
+					"value": "1",
+					"fontSize": 11
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null,
+						{
+							"type": "text",
+							"params": ["1000"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_drone_motorsingle"
+			},
+        "paramsKeyMap": {
+				"MOTORINDEX":	0,
+				"MOTORSPEED":	1
+			},
+        "class": "byrobot_dronefighter_mode_vehicle",
+        "isNotFor": [ "byrobot_dronefighter" ],
+        "func": function (sprite, script)
+			{
+				var motorIndex		= parseInt(script.getField("MOTORINDEX"));
+				var motorDirection	= 1;
+				var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
+				
+				// 범위 조정
+				motorSpeed = Math.max(motorSpeed, 0);
+				motorSpeed = Math.min(motorSpeed, 4096);
+				
+				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x10);
+				Entry.hw.setDigitalPortValue("motorsingle_target", motorIndex);
+				Entry.hw.setDigitalPortValue("motorsingle_direction", motorDirection);
+				Entry.hw.setDigitalPortValue("motorsingle_value", motorSpeed);
+
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["target"];
+				delete Entry.hw.sendQueue["motorsingle_target"];
+				delete Entry.hw.sendQueue["motorsingle_direction"];
+				delete Entry.hw.sendQueue["motorsingle_value"];
+				
+				return script.callReturn();
+			},
+        //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drone_motorsingle_input":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["0"]
+						},
+						{
+							"type": "text",
+							"params": ["1000"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_drone_motorsingle_input"
+			},
+        "paramsKeyMap": {
+				"MOTORINDEX":	0,
+				"MOTORSPEED":	1
+			},
+        "class": "byrobot_dronefighter_mode_vehicle",
+        "isNotFor": [ "byrobot_dronefighter" ],
+        "func": function (sprite, script)
+			{
+				var motorIndex		= parseInt(script.getNumberValue("MOTORINDEX", script));
+				var motorDirection	= 1;
+				var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
+				
+				// 범위를 벗어난 경우 무시
+				if( motorIndex < 0 || motorIndex > 3 )
+					return script.callReturn();
+				
+				// 범위 조정
+				motorSpeed = Math.max(motorSpeed, 0);
+				motorSpeed = Math.min(motorSpeed, 4096);
+				
+				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x10);
+				Entry.hw.setDigitalPortValue("motorsingle_target", motorIndex);
+				Entry.hw.setDigitalPortValue("motorsingle_direction", motorDirection);
+				Entry.hw.setDigitalPortValue("motorsingle_value", motorSpeed);
+
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["target"];
+				delete Entry.hw.sendQueue["motorsingle_target"];
+				delete Entry.hw.sendQueue["motorsingle_direction"];
+				delete Entry.hw.sendQueue["motorsingle_value"];
 				
 				return script.callReturn();
 			},
@@ -25798,14 +25946,21 @@ Entry.block = {
 				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue("command_command", 0x10);		// 0x10 : CommandType::ModeVehicle
 				Entry.hw.setDigitalPortValue("command_option", 0x20);		// 0x10 : Mode::Vehicle::Drive
-				Entry.hw.setDigitalPortValue("control_wheel", 0);
-				Entry.hw.setDigitalPortValue("control_accel", 0);
 
 				Entry.hw.update();
 
 				delete Entry.hw.sendQueue["target"];
 				delete Entry.hw.sendQueue["command_command"];
 				delete Entry.hw.sendQueue["command_option"];
+				
+				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x10);
+				Entry.hw.setDigitalPortValue("control_wheel", 0);
+				Entry.hw.setDigitalPortValue("control_accel", 0);
+
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["target"];
 				delete Entry.hw.sendQueue["control_wheel"];
 				delete Entry.hw.sendQueue["control_accel"];
 				
@@ -25842,6 +25997,16 @@ Entry.block = {
 			{
 				// 전송
 				Entry.hw.setDigitalPortValue("target", 0x10);
+				Entry.hw.setDigitalPortValue("command_command", 0x23);		// 0x10 : CommandType::DriveEvent
+				Entry.hw.setDigitalPortValue("command_option", 0x10);
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["target"];
+				delete Entry.hw.sendQueue["command_command"];
+				delete Entry.hw.sendQueue["command_option"];
+				
+				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue("control_wheel", 0);
 				Entry.hw.setDigitalPortValue("control_accel", 0);
 
@@ -25850,7 +26015,7 @@ Entry.block = {
 				delete Entry.hw.sendQueue["target"];
 				delete Entry.hw.sendQueue["control_wheel"];
 				delete Entry.hw.sendQueue["control_accel"];
-					
+				
 				return script.callReturn();
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
@@ -26071,6 +26236,38 @@ Entry.block = {
 				}
 				else
 				{
+					var direction	= script.getField('DIRECTION');
+					
+					// 블럭을 빠져나갈 때 변경했던 값을 초기화
+					switch(direction)
+					{
+					case "direction":
+						{
+							// 전송
+							Entry.hw.setDigitalPortValue("target", 0x10);
+							Entry.hw.setDigitalPortValue("control_wheel", 0);
+
+							Entry.hw.update();
+
+							delete Entry.hw.sendQueue["target"];
+							delete Entry.hw.sendQueue["control_wheel"];
+						}
+						break;
+						
+					case "forward":
+						{
+							// 전송
+							Entry.hw.setDigitalPortValue("target", 0x10);
+							Entry.hw.setDigitalPortValue("control_accel", 0);
+
+							Entry.hw.update();
+
+							delete Entry.hw.sendQueue["target"];
+							delete Entry.hw.sendQueue["control_accel"];
+						}
+						break;
+					}
+					
 					delete script.timeFlag;
 					delete script.isStart;
 					Entry.engine.isContinue = false;
@@ -26179,6 +26376,15 @@ Entry.block = {
 				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue("command_command", 0x10);		// 0x10 : CommandType::ModeVehicle
 				Entry.hw.setDigitalPortValue("command_option", 0x10);		// 0x10 : Mode::Vehicle::Flight
+
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["target"];
+				delete Entry.hw.sendQueue["command_command"];
+				delete Entry.hw.sendQueue["command_option"];
+				
+				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue("control_roll", 0);
 				Entry.hw.setDigitalPortValue("control_pitch", 0);
 				Entry.hw.setDigitalPortValue("control_yaw", 0);
@@ -26187,8 +26393,6 @@ Entry.block = {
 				Entry.hw.update();
 
 				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
 				delete Entry.hw.sendQueue["control_roll"];
 				delete Entry.hw.sendQueue["control_pitch"];
 				delete Entry.hw.sendQueue["control_yaw"];
@@ -26229,6 +26433,15 @@ Entry.block = {
 				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue("command_command", 0x22);		// 0x22 : CommandType::FlightEvent
 				Entry.hw.setDigitalPortValue("command_option", 0x11);		// 0x11 : FlightEvent::TakeOff
+
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["target"];
+				delete Entry.hw.sendQueue["command_command"];
+				delete Entry.hw.sendQueue["command_option"];
+				
+				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue("control_roll", 0);
 				Entry.hw.setDigitalPortValue("control_pitch", 0);
 				Entry.hw.setDigitalPortValue("control_yaw", 0);
@@ -26237,8 +26450,6 @@ Entry.block = {
 				Entry.hw.update();
 
 				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
 				delete Entry.hw.sendQueue["control_roll"];
 				delete Entry.hw.sendQueue["control_pitch"];
 				delete Entry.hw.sendQueue["control_yaw"];
@@ -26279,6 +26490,15 @@ Entry.block = {
 				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue("command_command", 0x22);		// 0x22 : CommandType::FlightEvent
 				Entry.hw.setDigitalPortValue("command_option", 0x12);		// 0x12 : FlightEvent::Landing
+
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["target"];
+				delete Entry.hw.sendQueue["command_command"];
+				delete Entry.hw.sendQueue["command_option"];
+				
+				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue("control_roll", 0);
 				Entry.hw.setDigitalPortValue("control_pitch", 0);
 				Entry.hw.setDigitalPortValue("control_yaw", 0);
@@ -26287,8 +26507,6 @@ Entry.block = {
 				Entry.hw.update();
 
 				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
 				delete Entry.hw.sendQueue["control_roll"];
 				delete Entry.hw.sendQueue["control_pitch"];
 				delete Entry.hw.sendQueue["control_yaw"];
@@ -26328,7 +26546,16 @@ Entry.block = {
 				// 전송
 				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue("command_command", 0x22);		// 0x10 : CommandType::ModeFlight
-				Entry.hw.setDigitalPortValue("command_option", 6);
+				Entry.hw.setDigitalPortValue("command_option", 0x10);
+
+				Entry.hw.update();
+
+				delete Entry.hw.sendQueue["target"];
+				delete Entry.hw.sendQueue["command_command"];
+				delete Entry.hw.sendQueue["command_option"];
+								
+				// 전송
+				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue("control_roll", 0);
 				Entry.hw.setDigitalPortValue("control_pitch", 0);
 				Entry.hw.setDigitalPortValue("control_yaw", 0);
@@ -26337,13 +26564,11 @@ Entry.block = {
 				Entry.hw.update();
 
 				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
 				delete Entry.hw.sendQueue["control_roll"];
 				delete Entry.hw.sendQueue["control_pitch"];
 				delete Entry.hw.sendQueue["control_yaw"];
 				delete Entry.hw.sendQueue["control_throttle"];
-								
+				
 				return script.callReturn();
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
@@ -26362,7 +26587,7 @@ Entry.block = {
 						[Lang.Blocks.byrobot_dronefighter_drone_coordinate_world,	"1"],
 						[Lang.Blocks.byrobot_dronefighter_drone_coordinate_local,	"2"],
 					],
-					"value": "3",
+					"value": "1",
 					"fontSize": 11
 				},
 				{
@@ -26386,7 +26611,7 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var coordinate		= script.getNumberValue('COORDINATE');
+				var coordinate		= script.getField('COORDINATE');
 				
 				// 전송
 				Entry.hw.setDigitalPortValue("target", 0x10);
@@ -26610,8 +26835,8 @@ Entry.block = {
 				"type": "byrobot_dronefighter_drone_control_quad_one_delay"
 			},
         "paramsKeyMap": {
-				"DIRECTION":	0,
-				"VALUE":		1,
+				"DIRECTION"	: 0,
+				"VALUE"		: 1,
 				"TIME"		: 2
 			},
         "class": "byrobot_dronefighter_control_flight",
@@ -26626,7 +26851,7 @@ Entry.block = {
 					{
 						var direction	= script.getField('DIRECTION');
 						var value		= parseInt(script.getNumberValue("VALUE", script));
-						var time		= parseInt(script.getNumberValue('TIME') * 1000);
+						var time		= parseInt(script.getNumberValue("TIME", script) * 1000);
 						
 						// 범위 조정
 						value		= Math.max(value, -100);
@@ -26709,6 +26934,63 @@ Entry.block = {
 				}
 				else
 				{
+					var direction	= script.getField('DIRECTION');
+					
+					switch(direction)
+					{
+					case "roll":
+						{
+							// 전송
+							Entry.hw.setDigitalPortValue("target", 0x10);
+							Entry.hw.setDigitalPortValue("control_roll", 0);
+
+							Entry.hw.update();
+
+							delete Entry.hw.sendQueue["target"];
+							delete Entry.hw.sendQueue["control_roll"];
+						}
+						break;
+						
+					case "pitch":
+						{
+							// 전송
+							Entry.hw.setDigitalPortValue("target", 0x10);
+							Entry.hw.setDigitalPortValue("control_pitch", 0);
+
+							Entry.hw.update();
+
+							delete Entry.hw.sendQueue["target"];
+							delete Entry.hw.sendQueue["control_pitch"];
+						}
+						break;
+						
+					case "yaw":
+						{
+							// 전송
+							Entry.hw.setDigitalPortValue("target", 0x10);
+							Entry.hw.setDigitalPortValue("control_yaw", 0);
+
+							Entry.hw.update();
+
+							delete Entry.hw.sendQueue["target"];
+							delete Entry.hw.sendQueue["control_yaw"];
+						}
+						break;
+						
+					case "throttle":
+						{
+							// 전송
+							Entry.hw.setDigitalPortValue("target", 0x10);
+							Entry.hw.setDigitalPortValue("control_throttle", 0);
+
+							Entry.hw.update();
+
+							delete Entry.hw.sendQueue["target"];
+							delete Entry.hw.sendQueue["control_throttle"];	
+						}
+						break;
+					}
+					
 					delete script.timeFlag;
 					delete script.isStart;
 					Entry.engine.isContinue = false;
@@ -26786,14 +27068,14 @@ Entry.block = {
 				var throttle	= parseInt(script.getNumberValue("THROTTLE", script));
 				
 				// 범위 조정
-				roll		= Math.max(roll, -100);
-				roll		= Math.min(roll, 100);
-				pitch		= Math.max(pitch, -100);
-				pitch		= Math.min(pitch, 100);
-				yaw			= Math.max(yaw, -100);
-				yaw			= Math.min(yaw, 100);
-				throttle	= Math.max(throttle, -100);
-				throttle	= Math.min(throttle, 100);
+				roll		= Math.max(roll,		-100);
+				roll		= Math.min(roll,		 100);
+				pitch		= Math.max(pitch,		-100);
+				pitch		= Math.min(pitch,		 100);
+				yaw			= Math.max(yaw,			-100);
+				yaw			= Math.min(yaw,			 100);
+				throttle	= Math.max(throttle,	-100);
+				throttle	= Math.min(throttle,	 100);
 				
 				// 전송
 				Entry.hw.setDigitalPortValue("target", 0x10);

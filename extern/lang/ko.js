@@ -3663,8 +3663,10 @@ Lang.template = {
     "byrobot_dronefighter_controller_buzzer_hz_delay"				: "%1 Hz 소리를 %2 초 연주 %3",				/* 블럭 딜레이 사용 */
 	"byrobot_dronefighter_controller_buzzer_hz_reserve"				: "%1 Hz 소리를 %2 초 예약 %3",				/* 블럭 딜레이 없음 */
 	"byrobot_dronefighter_controller_vibrator_on_delay"				: "진동 %1 초 켜기 %2",
-	"byrobot_dronefighter_controller_vibrator_delay"				: "진동 켜기 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4",	
+	"byrobot_dronefighter_controller_vibrator_delay"				: "진동 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4",	
 	"byrobot_dronefighter_drone_irmessage"							: "적외선으로 %1 값 보내기 %2",
+	"byrobot_dronefighter_drone_motorsingle"						: "%1 번 모터를 %2 (으)로 회전 %3",
+	"byrobot_dronefighter_drone_motorsingle_input"					: "%1 번 모터를 %2 (으)로 회전 %3",
 	"byrobot_dronefighter_drone_command_mode_vehicle_car"			: "자동차 모드 %1",									/* 작동 모드 변경. */
 	"byrobot_dronefighter_drone_control_car_stop"					: "자동차 정지 %1",
 	"byrobot_dronefighter_drone_control_double_one"					: "자동차를 %1 %2 정하기 %3", 						/* 방향 선택에 ComboBox 사용 */

@@ -35,7 +35,8 @@ Entry.byrobot_dronefighter =
 		light_manual_flags: 0,
 		light_manual_brightness: 0,
 		
-		buzzer_scale: 0,
+		buzzer_mode: 0,
+		buzzer_value: 0,
 		buzzer_time: 0,
 
 		vibrator_on: 0,
@@ -52,6 +53,12 @@ Entry.byrobot_dronefighter =
 
 		command_command: 0,
 		command_option: 0,
+		
+		motorsingle_target: 0,
+		motorsingle_direction: 0,
+		motorsingle_value: 0,
+		
+		irmessage_data: 0,
 	},
 
 	// 초기화
@@ -80,7 +87,6 @@ Entry.byrobot_dronefighter =
         listPorts:
 		{
             "state_modeVehicle"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,				type: "input", pos: {x: 0, y: 0}},
-            "state_modeSystem"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_system,				type: "input", pos: {x: 0, y: 0}},
             "state_modeFlight"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight,				type: "input", pos: {x: 0, y: 0}},
             "state_modeDrive"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive,				type: "input", pos: {x: 0, y: 0}},
             "state_coordinate"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate,			type: "input", pos: {x: 0, y: 0}},
