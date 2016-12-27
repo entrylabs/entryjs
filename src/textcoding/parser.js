@@ -36,6 +36,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     Entry.Parser.PARSE_VARIABLE = 3;
 
     this._onError = false;
+    this._onRunError = false;
     /*Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
     Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
     Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP = "basic_double_loop";*/
@@ -321,7 +322,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         }
 
-                        Entry.toast.alert(title, message);
+                        Entry.toast.alert(title, message); 
                         throw error;
                     }
                 }
@@ -331,7 +332,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 var textCode = this._execParser.Code(code, parseMode);
                 /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
-                ////console.log("textCode", textCode);
+                //console.log("textCode", textCode);
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
                         var temp = '';
@@ -361,43 +362,38 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 if (!this._pyHinter)
                     this._pyHinter = new Entry.PyHint(this.syntax);
 
+                if(!this._hasDeclaration)
+                    this.initDeclaration();
 
                 if(parseMode == Entry.Parser.PARSE_GENERAL) {
-                    if(!this._isError) {
-                      if(!this.py_variableDeclaration) {
-                            var vd = Entry.TextCodingUtil.generateVariablesDeclaration();
-                            this.py_variableDeclaration = vd;
-                            if(vd)
-                                result += vd;
+                    if(this.py_variableDeclaration)
+                        result += this.py_variableDeclaration; 
+
+                    if(this.py_listDeclaration)
+                        result += this.py_listDeclaration;
+
+                    if(this.py_variableDeclaration || this.py_listDeclaration)
+                        result += '\n';
+
+                    //if(this.py_funcDeclaration) {
+                        var funcDefMap = this._execParser._funcDefMap;
+                        var fd = "";
+
+                        for(var f in funcDefMap) {
+                            var funcDef = funcDefMap[f]; 
+                            fd += funcDef + '\n\n';
                         }
-
-                        if(!this.py_listDeclaration) {
-                            var ld = Entry.TextCodingUtil.generateListsDeclaration();
-                            this.py_listDeclaration = ld;
-                            if(ld)
-                                result += ld;
-                        }
-
-                        if(vd || ld)
-                            result += "\n";
-
-                        if(!this.py_funcDeclaration) {
-                            var funcDefMap = this._execParser._funcDefMap;
-                            var fd = "";
-
-                            for(var f in funcDefMap) {
-                                var funcDef = funcDefMap[f];
-                                fd += funcDef + '\n\n';
-                            }
-                            this.py_funcDeclaration = fd;
-                            if(fd)
-                                result += fd;
-                        }
-                    }
+                        this.py_funcDeclaration = fd;
+                        if(this.py_funcDeclaration )
+                            result += this.py_funcDeclaration ;
+                    //}
                 }
                 if(textCode)
                     result += textCode.trim();
+                
                 result = result.replace(/\t/g, "    ");
+                if(this._hasDeclaration) 
+                    this.removeDeclaration();
 
                 break;
         }
@@ -691,7 +687,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         threads.push(optText);
         console.log("makeThreads result", threads);
         return threads;
-
     };
 
     p.entryEventParamConverter = function(text) {  
@@ -715,14 +710,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 param = 'none';
         }
 
-        
         text = stmt + "(" + param + "):\n";
         
-
-
         console.log("entryEventFilter text", text);
         return text;
-    }
+    };
 
     p.makeSyntaxErrorDisplay = function(subject, keyword, message, line) {
         console.log("subject", subject, "keyword", keyword, "message", message, "line", line);
@@ -736,6 +728,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     message + ' ' + '(line ' + line + ')';
 
         return contents;
-    }
+    };
 
+    p.initDeclaration = function() {
+        this.py_variableDeclaration = Entry.TextCodingUtil.generateVariablesDeclaration();
+        this.py_listDeclaration = Entry.TextCodingUtil.generateListsDeclaration();
+        this._hasDeclaration = true;
+    };
+
+    p.removeDeclaration = function() {
+        this.py_variableDeclaration = null;
+        this.py_listDeclaration = null;
+    };
 })(Entry.Parser.prototype);

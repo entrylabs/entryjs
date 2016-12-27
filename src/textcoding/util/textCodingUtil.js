@@ -328,46 +328,54 @@ Entry.TextCodingUtil = {};
         else return result;
 
         var currentObject = VIM._currentObject;
-        console.log("currentObject", currentObject);
+        console.log("currentObject", currentObject, "isNumeric", isNumeric(value));
 
-        if(isNaN(value))
-            value = parseInt(value);
-        if(textParam.menuName == "pictures") {
-            if(value > 0) {
-                var objects = Entry.container.getAllObjects();
-                for(var o in objects) {
-                    var object = objects[o];
-                    if(object.id == currentObject.id) {
-                        var pictures = object.pictures;
-                        var picture = pictures[value-1];
-                        if(picture) {
-                            result = picture.name;
-                            break;
+        if(typeof value == "number") {
+            result = "None";
+            if(textParam.menuName == "pictures") {
+                if(value > 0) {
+                    var objects = Entry.container.getAllObjects();
+                    for(var o in objects) {
+                        var object = objects[o];
+                        if(object.id == currentObject.id) {
+                            var pictures = object.pictures;
+                            var picture = pictures[value-1];
+                            if(picture) {
+                                result = picture.name;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else if(textParam.menuName == "sounds") {
+                if(value > 0) {
+                    var objects = Entry.container.getAllObjects();
+                    for(var o in objects) {
+                        var object = objects[o];
+                        if(object.id == currentObject.id) {
+                            var sounds = object.sounds;
+                            var sound = sounds[value-1];
+                            if(sound) {
+                                result = sound.name;
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
-        else if(textParam.menuName == "sounds") {
-            if(value > 0) {
-                var objects = Entry.container.getAllObjects();
-                for(var o in objects) {
-                    var object = objects[o];
-                    if(object.id == currentObject.id) {
-                        var sounds = object.sounds;
-                        var sound = sounds[value-1];
-                        if(sound) {
-                            result = sound.name;
-                            break;
-                        }
-                    }
-                }
-            }
+        else {
+            result = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(value, textParam.menuName);
         }
 
         console.log("getDynamicIdByNumber result", result);
 
         return result;
+
+        function isNumeric(value) {
+            return /^\d+$/.test(value);
+        }
     };
 
     tu.isLocalType = function(id, menuName) {
@@ -889,11 +897,11 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.isNoPrintBlock = function(block) {
+    /*tu.isNoPrintBlock = function(block) {
         var blockType = block.data.type;
 
         return false;
-    };
+    };*/
 
     tu.entryEventFilter = function(text) {  
         var startIndex = text.indexOf("(");
@@ -1572,6 +1580,7 @@ Entry.TextCodingUtil = {};
         var tParams = targetBlock.params;
         
         console.log("makeFuncParamBlock tParams", tParams);
+        console.log("paramInfo", paramInfo);
 
 
         for(var i in tParams) {
@@ -1607,7 +1616,7 @@ Entry.TextCodingUtil = {};
                     paramBlock.params = [];
                     targetBlock.params[i] = paramBlock;
                 }
-                else if(param.type != "get_variable") {
+                else if(param.type != "get_variable" ) {
                     var keyword = param.name;
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
@@ -2242,48 +2251,26 @@ Entry.TextCodingUtil = {};
         var result = "";
         var currentObject = Entry.playground.object;
         var vc = Entry.variableContainer;
-        if(!vc)
-            return;
+        if(!vc) return;
         //inspect variables
         var targets = vc.variables_ || [];
-        //case for value is 0
-        /*for (var i=targets.length-1; i>=0; i--) { 
-            var v = targets[i];
-            var name = v.name_;
-            var value = v.value_;
-            if(value == 0) {
-                if(v.object_) {
-                    if(v.object_ == currentObject.id) {
-                        name = "self." + name; 
-                    }
-                    else continue;
-                }
-                if(typeof value === "string")
-                    value = '"()"'.replace('()', value);
-                result += name + " = ";
-            }
-        }
-        if(result.length != 0)
-            result += 0 + '\n';*/
 
         for (var i=targets.length-1; i>=0; i--) { 
             var v = targets[i];
             var name = v.name_;
             var value = v.value_;
-            //if(value != 0) {
-                if(v.object_) {
-                    if(v.object_ == currentObject.id) {
-                        name = "self." + name; 
-                    }
-                    else
-                        continue;
+            
+            if(v.object_) {
+                if(v.object_ == currentObject.id) {
+                    name = "self." + name; 
                 }
+                else continue;
+            }
 
-                if(typeof value === "string")
-                    value = '"()"'.replace('()', value);
-                
-                result += name + " = " + value + "\n";
-            //}
+            if(typeof value === "string")
+                value = '"()"'.replace('()', value);
+            
+            result += name + " = " + value + "\n";
         }
 
         return result;
@@ -2298,54 +2285,35 @@ Entry.TextCodingUtil = {};
 
         //inspect lists
         targets = vc.lists_ || [];
-        //case for value is empty, []
-        /*for (var i=targets.length-1; i>=0; i--) {
-            var l = targets[i];
-            var name = l.name_;
-            var value = "";
-            var lArray = l.array_;
-            if(lArray.length == 0) {
-                if(l.object_) {
-                    if(l.object_ == currentObject.id) {
-                        name = "self." + name;
-                    }
-                    else continue;
-                }
-                result += name + " = ";
-            }         
-        }
-        if(result.length != 0)
-            result += '[]' + '\n';*/
         
         for (var i=targets.length-1; i>=0; i--) {
             var l = targets[i];
             var name = l.name_;
             var value = "";
             var lArray = l.array_;
-            //if(lArray.length != 0) {
-                if(l.object_) {
-                    if(l.object_ == currentObject.id) {
-                        name = "self." + name;
-                    }
-                    else
-                        continue;
+            if(l.object_) {
+                if(l.object_ == currentObject.id) {
+                    name = "self." + name;
                 }
-                
-                for(var va in lArray) {
-                    var vItem = lArray[va];
-                    var data = vItem.data;
-                    var pData = parseInt(data);
-                    if(!isNaN(pData))
-                        data = pData;
-                    if(typeof data === "string")
-                        data = "\"" + data + "\"";
-                    value += data;
-                    if(va != lArray.length-1)
-                        value += ", ";
-                }
+                else
+                    continue;
+            }
+            
+            for(var va in lArray) {
+                var vItem = lArray[va];
+                var data = vItem.data;
+                var pData = parseInt(data);
+                if(!isNaN(pData))
+                    data = pData;
+                if(typeof data === "string")
+                    data = "\"" + data + "\"";
+                value += data;
+                if(va != lArray.length-1)
+                    value += ", ";
+            }
 
-                result += name + " = [" + value + "]" + "\n";
-            //}
+            result += name + " = [" + value + "]" + "\n";
+            
         }
 
         return result;

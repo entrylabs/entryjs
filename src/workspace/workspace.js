@@ -109,15 +109,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         var mode = {};
                         mode.boardType = WORKSPACE.MODE_BOARD;
                         mode.textType = -1;
-                        Entry.getMainWS().setMode(mode);
+                        Entry.getMainWS().setMode(mode); 
                         break;
                     }
                     if (this.board) this.board.hide();
-                    if (this.overlayBoard) this.overlayBoard.hide();
+                    if (this.overlayBoard) this.overlayBoard.hide();  
                     blockMenu.banClass('functionInit');
                     this.set({selectedBoard:this.vimBoard});
                     this.vimBoard.show();
-                    this.initDeclaration();
                     this.codeToText(this.board.code, mode);
                     blockMenu.renderText();
                     this.board.clear();
@@ -242,7 +241,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.codeToText = function(code, mode) {
         if (!this.vimBoard)
             return;
-        this.initDeclaration();
+        
         return this.vimBoard.codeToText(code, mode);
 
     };
@@ -435,7 +434,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p._handleChangeBoard = function() {
         var board = this.selectedBoard;
         if (!board) return;
-        if (board.constructor === Entry.Board)
+        if (board.constructor === Entry.Board) 
             this.trashcan.setBoard(board);
     };
 
@@ -448,8 +447,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var board = this.board;
         var code = board.code;
         if (code) code.load(changedCode);
-        
-        console.log("this.board.code", this.board.code);
     };
 
     p.addVimBoard = function(dom) {
@@ -476,14 +473,4 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p._isVimMode = function() {
         return this.oldMode === Entry.Workspace.MODE_VIMBOARD;
     };
-
-    p.initDeclaration = function() {
-        if(this.vimBoard && this.vimBoard._parser) {
-            var parser = this.vimBoard._parser;
-            parser.py_variableDeclaration = null;
-            parser.py_listDeclaration = null;
-            parser.py_funcDeclaration = null;
-        }
-    }
-
 })(Entry.Workspace.prototype);

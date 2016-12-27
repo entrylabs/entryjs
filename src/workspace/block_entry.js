@@ -2253,6 +2253,7 @@ Entry.block = {
             {
                 syntax: "Arduino.digitalRead(%1)",
                 blockType: "param",
+                replaceBlockType: "arduino_ext_get_digital",
                 textParams: [
                     {
                         "type": "Block",
@@ -7460,8 +7461,13 @@ Entry.block = {
             var operator = script.getField("OPERATOR", script);
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
-            if (operator == "PLUS")
+            if (operator == "PLUS") {
+                if (isNaN(leftValue))
+                    leftValue = script.getStringValue("LEFTHAND", script);
+                if (isNaN(rightValue))
+                    rightValue = script.getStringValue("RIGHTHAND", script);
                 return leftValue + rightValue;
+            }
             else if (operator == "MINUS")
                 return leftValue - rightValue;
             else if (operator == "MULTI")

@@ -119,6 +119,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             var max = testArr.length - 1;
             var lastLine = 0;
             testArr.forEach(function (text, i) {
+                if(i != max) text += '\n';
                 _self.codeMirror.replaceSelection(text);
                 var cursor = _self.doc.getCursor();
                 lastLine = cursor.line;
@@ -199,7 +200,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         if(Entry.playground)
             this._currentObject = Entry.playground.object;
 
-
+        this._parser._hasDeclaration = false;
         if(textType == Entry.Vim.TEXT_TYPE_PY) {
             if(this._currentObject) {
                 codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이썬 코드";
@@ -233,8 +234,11 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
             this.codeMirror.setValue(textCode);
             var doc = this.codeMirror.getDoc();
-            doc.setCursor({ line: doc.lastLine() - 1});
+            doc.setCursor({line: doc.lastLine() - 1});
         }
+
+        if(Entry.isTextMode) 
+            this._parser._onRunError = false;
     };
 
     p.getCodeToText = function(code, parseType) {

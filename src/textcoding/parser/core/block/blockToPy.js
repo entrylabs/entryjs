@@ -62,8 +62,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
-                if(Entry.TextCodingUtil.isNoPrintBlock(block))
-                    continue;
+                /*if(Entry.TextCodingUtil.isNoPrintBlock(block))
+                    continue;*/
                 if(i == 0) {
                     rootBlock = block;
                     isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
@@ -194,7 +194,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
 
                         if(textParam && textParam.paramType == "index") { 
-                            if(!isNaN(param)) param = String(parseInt(param) - 1);
+                            if(!isNaN(param)) 
+                                param = param - 1;
                             else {
                                 var tokens = param.split('+');
                                 console.log("index tokens", tokens);

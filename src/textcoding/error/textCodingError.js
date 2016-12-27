@@ -53,6 +53,8 @@ Entry.TextCodingError = {};
 	tce.ALERT_VARIABLE_NO_SUPPORT = "alert_variable_no_support";
 	tce.ALERT_SIGNAL_NO_SUPPORT = "alert_signal_no_support";
 	tce.ALERT_LEGACY_NO_SUPPORT = "alert_legacy_no_support";
+	tce.ALERT_NO_SAVE_ON_ERROR = "alert_no_save_on_error";
+
 
 	var error = {};
  
