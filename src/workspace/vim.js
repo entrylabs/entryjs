@@ -235,10 +235,17 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             var doc = this.codeMirror.getDoc();
             doc.setCursor({ line: doc.lastLine() - 1});
         }
+
+        if(Entry.isTextMode) 
+            this._parser._onRunError = false;
+
+        this._parser.py_variableDeclaration = null;
+        this._parser.py_listDeclaration = null;
+        this._parser.py_funcDeclaration = null;
     };
 
     p.getCodeToText = function(code, parseType) {
-        var textType = this.workspace.oldTextType;
+        var textType = this.workspace.oldTextType; 
 
         if (textType === Entry.Vim.TEXT_TYPE_JS){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
