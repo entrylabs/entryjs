@@ -557,6 +557,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             return obj.category == key;
         })[0];
 
+        if (!datum)
+            return;
         var category = key;
         var blocks = datum.blocks;
         blocks.forEach(function(b){
@@ -780,14 +782,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.setCategoryData = function(data) {
-        this._clearCategory();
-        this._categoryData = data;
-        this._generateCategoryView(data);
-        this._generateCategoryCodes();
         if (this._generateCodesTimer) {
             clearTimeout(this._generateCodesTimer);
             this._generateCodesTimer = null;
         }
+        this._clearCategory();
+        this._categoryData = data;
+        this._generateCategoryView(data);
+        this._generateCategoryCodes();
     };
 
     p._generateCategoryView = function(data) {
@@ -849,6 +851,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             }
         }
 
+        if (!blocks) return;
         var threads = [];
 
         for (i =0; i<blocks.length; i++) {

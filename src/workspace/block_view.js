@@ -14,6 +14,9 @@ Entry.BlockView = function(block, board, mode) {
     this.block = block;
     this._lazyUpdatePos =
         Entry.Utils.debounce(block._updatePos.bind(block), 200);
+
+    this.dAlignContent =
+        Entry.Utils.debounce(this.alignContent, 30);
     this._board = board;
     this._observers = [];
     this.set(block);

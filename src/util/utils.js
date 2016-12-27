@@ -395,22 +395,30 @@ Entry.createElement = function(type, elementId) {
         element.id = elementId;
 
     element.hasClass = function(className) {
-        return this.className.match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
+        var current = this.cachedClassName || this.className;
+        return current.match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
     };
     element.addClass = function(className) {
+        var current = this.cachedClassName || this.className;
         for (var i = 0; i < arguments.length; i++) {
             var className = arguments[i];
-            if (!this.hasClass(className)) this.className += " " + className;
+            if (!this.hasClass(className))
+                current += " " + className;
         }
+        this.cachedClassName = current;
+        this.className = current;
     };
     element.removeClass = function(className) {
+        var current = this.cachedClassName || this.className;
         for (var i = 0; i < arguments.length; i++) {
             var className = arguments[i];
             if (this.hasClass(className)) {
                 var reg = new RegExp('(\\s|^)'+className+'(\\s|$)');
-                this.className=this.className.replace(reg,' ');
+                current = current.replace(reg,' ');
             }
         }
+        this.cachedClassName = current;
+        this.className = current;
     };
     element.bindOnClick = function(func) {
         $(this).on('click tab', function(e) {
@@ -766,13 +774,16 @@ Entry.nodeListToArray = function(nl) {
 };
 
 Entry.computeInputWidth = function(value){
-    var tmp = document.createElement("span");
-    tmp.className = "tmp-element";
-    tmp.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    document.body.appendChild(tmp);
-    var theWidth = tmp.offsetWidth;
-    document.body.removeChild(tmp);
-    return Number(theWidth + 10) + 'px';
+    var elem = document.getElementById('entryInputForComputeWidth');
+    if (!elem) {
+        elem = document.createElement("span");
+        elem.setAttribute('id', 'entryInputForComputeWidth');
+        elem.className = "elem-element";
+        document.body.appendChild(elem);
+    }
+
+    elem.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return Number(elem.offsetWidth + 10) + 'px';
 };
 
 Entry.isArrowOrBackspace = function(keyCode){

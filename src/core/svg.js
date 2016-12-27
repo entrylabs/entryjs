@@ -81,7 +81,8 @@ Entry.SVG.addClass = function(className) {
     var classAttr = this.getAttribute('class');
     for (var i = 0; i < arguments.length; i++) {
         var className = arguments[i];
-        if (!this.hasClass(className)) classAttr += " " + className;
+        if (!this.hasClass(className))
+            classAttr += " " + className;
     }
 
     this.setAttribute('class', classAttr);

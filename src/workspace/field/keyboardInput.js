@@ -144,7 +144,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this._header.attr({width: width});
 
         this.box.set({width: width});
-        this._blockView.alignContent();
+        this._blockView.dAlignContent();
     };
 
     p.getTextWidth = function() {

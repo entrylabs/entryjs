@@ -241,7 +241,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             this.optionGroup.css({width: width});
 
         this.box.set({width: width});
-        this._block.view.alignContent();
+        this._block.view.dAlignContent();
     };
 
     p.getTextWidth = function() {

@@ -43,7 +43,7 @@ Entry.Block = function(block, thread) {
     }
 
     events = this.events.viewAdd;
-    if (events && (Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD)) {
+    if (events && (Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD)) {
         events.forEach(function(fn) {
             if (Entry.Utils.isFunction(fn))
                 fn.apply(that, [that]);

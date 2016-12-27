@@ -846,7 +846,7 @@ Entry.Playground.prototype.injectCode = function() {
                 workspace.vimBoard._currentObject = Entry.playground.object;
                 workspace.vimBoard._currentScene = Entry.playground.object.scene;
             }
-    
+
         if(Entry.playground && Entry.textCodingEnable) {
             workspace.vimBoard._changedObject = Entry.playground.object;
             workspace.vimBoard._currentScene = Entry.playground.object.scene;
@@ -864,12 +864,16 @@ Entry.Playground.prototype.injectCode = function() {
 Entry.Playground.prototype.injectPicture = function() {
     var view = this.pictureListView_;
     if (!view) return;
+
     while (view.hasChildNodes()) {
         view.removeChild(view.lastChild);
     }
+
     if (this.object) {
         var pictures = this.object.pictures;
         for (var i=0, len=pictures.length; i<len; i++) {
+            var picture = pictures[i];
+            !picture.view && Entry.playground.generatePictureElement(picture);
             var element = pictures[i].view;
             if (!element)
                 console.log(element);
@@ -1050,13 +1054,17 @@ Entry.Playground.prototype.injectSound = function() {
     var view = this.soundListView_;
     if (!view)
         return;
+
     while (view.hasChildNodes()) {
         view.removeChild(view.lastChild);
     }
+
     if (this.object) {
         var sounds = this.object.sounds;
         for (var i=0, len=sounds.length; i<len; i++) {
-            var element = sounds[i].view;
+            var sound = sounds[i];
+            !sound.view && Entry.playground.generateSoundElement(sound);
+            var element = sound.view;
             element.orderHolder.innerHTML = i+1;
             view.appendChild(element);
         }

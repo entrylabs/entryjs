@@ -124,7 +124,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
 
         this.box.set({width: width});
-        this._block.view.alignContent();
+        this._block.view.dAlignContent();
     };
 
     p.renderOptions = function() {

@@ -32,7 +32,7 @@ Entry.FieldBlock = function(content, blockView, index, mode, contentIndex) {
 
     this._position = content.position;
 
-    this.box.observe(blockView, "alignContent", ["width", "height"]);
+    this.box.observe(blockView, "dAlignContent", ["width", "height"]);
     this.observe(this, "_updateBG", ["magneting"], false);
 
     this.renderStart(blockView.getBoard(), mode);

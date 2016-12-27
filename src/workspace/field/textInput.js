@@ -137,7 +137,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.optionGroup.css({width: width});
 
         this.box.set({width: width});
-        this._blockView.alignContent();
+        this._blockView.dAlignContent();
     };
 
     p.getTextWidth = function() {

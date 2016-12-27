@@ -177,11 +177,18 @@ Entry.Container.prototype.updateListView = function() {
     while (view.hasChildNodes())
         view.removeChild(view.lastChild);
 
-    var objs = this.getCurrentObjects();
-    for (var i in objs)
-        view.appendChild(objs[i].view_);
+    var fragment = document.createDocumentFragment('div');
 
+    var objs = this.getCurrentObjects();
+    for (var i in objs) {
+        var obj = objs[i];
+        !obj.view_ && obj.generateView();
+        fragment.appendChild(obj.view_);
+    }
+
+    view.appendChild(fragment);
     Entry.stage.sortZorder();
+    return true;
 };
 
 /**
@@ -192,25 +199,17 @@ Entry.Container.prototype.setObjects = function(objectModels) {
     for (var i in objectModels) {
         var object = new Entry.EntryObject(objectModels[i]);
         this.objects_.push(object);
-        object.generateView();
-        var pictures = object.pictures;
-        pictures.map(function (p) {
-            Entry.playground.generatePictureElement(p);
-        });
-        var sounds = object.sounds;
-        sounds.map(function (s) {
-            Entry.playground.generateSoundElement(s);
-        });
     }
     this.updateObjectsOrder();
-    this.updateListView();
-    Entry.stage.sortZorder();
+    var isStageSorted = this.updateListView();
+    !isStageSorted && Entry.stage.sortZorder();
     Entry.variableContainer.updateViews();
     var type = Entry.type;
     if (type == 'workspace' || type == 'phone') {
-        var target = this.getCurrentObjects()[0];
-        if (target)
-            this.selectObject(target.id);
+        setTimeout(function() {
+            var target = this.getCurrentObjects()[0];
+            target && this.selectObject(target.id);
+        }.bind(this), 0);
     }
 };
 
@@ -296,15 +295,6 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
         this.objects_.unshift(object);
 
     object.generateView();
-    var pictures = object.pictures;
-    pictures.map(function (p) {
-        Entry.playground.generatePictureElement(p);
-    });
-
-    var sounds = object.sounds;
-    sounds.map(function (s) {
-        Entry.playground.generateSoundElement(s);
-    });
     this.setCurrentObjects();
     this.updateObjectsOrder();
     this.updateListView();
@@ -382,25 +372,26 @@ Entry.Container.prototype.removeObject = function(object) {
 Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     var object = this.getObject(objectId);
     var workspace = Entry.getMainWS();
-    
+
     if (changeScene && object) {
-        Entry.scene.selectScene(object.scene); 
+        Entry.scene.selectScene(object.scene);
     }
 
     this.mapObjectOnScene(function(object) {
-        object.view_ && object.view_.removeClass('selectedObject');  
+        !object.view_ && object.generateView();
+        object.view_.removeClass('selectedObject');
         object.isSelected_ = false;
     });
 
-    if (object) {  
-        object.view_ && object.view_.addClass('selectedObject'); 
+    if (object) {
+        object.view_ && object.view_.addClass('selectedObject');
         object.isSelected_ = true;
 
         if(workspace && workspace.vimBoard && Entry.isTextMode) {
             var sObject = workspace.vimBoard._currentObject;
             var parser = workspace.vimBoard._parser;
             if(parser && parser._onError) {
-                if(sObject && (object.id != sObject.id)) { 
+                if(sObject && (object.id != sObject.id)) {
                     if(!Entry.scene.isSceneCloning) {
                         try { workspace._syncTextCode(); } catch(e) {}
                         if(parser && !parser._onError) {
@@ -417,7 +408,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
                     }
                 }
             }
-            else {      
+            else {
                 if(sObject && (object.id != sObject.id)) {
                     if(!Entry.scene.isSceneCloning) {
                         try { workspace._syncTextCode(); } catch(e) {}
