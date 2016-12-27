@@ -442,7 +442,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD) 
             return;
 
+        this.vimBoard._parser._onSync = true;
         var changedCode = this.vimBoard.textToCode(this.textType);
+        this.vimBoard._parser._onSync = false;
         
         var board = this.board;
         var code = board.code;

@@ -943,12 +943,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     var name = param.object.name;
                                     var keyword = name;
                                     console.log("errorId", 14);
-                                    Entry.TextCodingError.error(
-                                        Entry.TextCodingError.TITLE_CONVERTING,
-                                        Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
-                                        keyword,
-                                        this._blockCount,
-                                        Entry.TextCodingError.SUBJECT_CONV_OBJECT);
+                                    if(param.object.listType && param.object.listType == "global") {
+                                        if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
+                                            Entry.TextCodingError.error(
+                                                Entry.TextCodingError.TITLE_CONVERTING,
+                                                Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                                keyword,
+                                                this._blockCount,
+                                                Entry.TextCodingError.SUBJECT_CONV_LIST);
+                                        }
+                                    }
                                 }
                             }
                             else if(callee.property && callee.property.name == "len") {
@@ -983,14 +987,32 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 }
                                 else {
                                     var name = param.object.name;
-                                    var keyword = name;
-                                    console.log("errorId", 17);
-                                    Entry.TextCodingError.error(
-                                        Entry.TextCodingError.TITLE_CONVERTING,
-                                        Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT,
-                                        keyword,
-                                        this._blockCount,
-                                        Entry.TextCodingError.SUBJECT_CONV_OBJECT);
+                                    if(param.object.listType && param.listType == "global") {
+                                        if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
+                                            var keyword = name;
+                                            console.log("errorId", 21); 
+                                            Entry.TextCodingError.error(
+                                                Entry.TextCodingError.TITLE_CONVERTING,
+                                                Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                                keyword,
+                                                this._blockCount,
+                                                Entry.TextCodingError.SUBJECT_CONV_LIST);
+                                        }
+                                    }
+                                    else if(param.variableType && param.variableType == "global") {
+                                        if(!Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                                            if(!this.isFuncParam(name)) {
+                                                var keyword = name;
+                                                console.log("errorId", 21); 
+                                                Entry.TextCodingError.error(
+                                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                                    Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                                    keyword,
+                                                    this._blockCount,
+                                                    Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
+                                            }
+                                        } 
+                                    }
                                 }
                             }
                             else {
@@ -998,14 +1020,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     if(!param.object.type) {
                                         var name = param.object.name;
                                         if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
-                                            var keyword = name;
-                                            console.log("errorId", 18);
-                                            Entry.TextCodingError.error(
-                                                Entry.TextCodingError.TITLE_CONVERTING,
-                                                Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
-                                                keyword,
-                                                this._blockCount,
-                                                Entry.TextCodingError.SUBJECT_CONV_LIST);
+                                            if(!this.isFuncParam(name)) {
+                                                var keyword = name;
+                                                console.log("errorId", 18); 
+                                                Entry.TextCodingError.error(
+                                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                                    keyword,
+                                                    this._blockCount,
+                                                    Entry.TextCodingError.SUBJECT_CONV_LIST);
+                                            }
                                         }
                                     }
                                 }
@@ -1053,27 +1077,26 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             }
                         }
                         else {
-                            if(param.name && typeof param == "object") {
+                            if(param.name) {
                                 if(callee.property && callee.property.name == "in") {
                                     var name = param.name;
-                                    if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
-                                        var keyword = name;
-                                        console.log("errorId", 21);
-                                        Entry.TextCodingError.error(
-                                            Entry.TextCodingError.TITLE_CONVERTING,
-                                            Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
-                                            keyword,
-                                            this._blockCount,
-                                            Entry.TextCodingError.SUBJECT_CONV_LIST);
+                                    if(param.listType && param.listType == "global") {
+                                        if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
+                                            var keyword = name;
+                                            console.log("errorId", 21); 
+                                            Entry.TextCodingError.error(
+                                                Entry.TextCodingError.TITLE_CONVERTING,
+                                                Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                                keyword,
+                                                this._blockCount,
+                                                Entry.TextCodingError.SUBJECT_CONV_LIST);
+                                        }
                                     }
-                                }
-                                else if(callee.property && callee.property.name == "len") {
-                                    var name = param.name;
-                                    if(syntax == "len#length_of_string") {
+                                    else if(param.variableType && param.variableType == "global") {
                                         if(!Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                                             if(!this.isFuncParam(name)) {
                                                 var keyword = name;
-                                                console.log("errorId", 22);
+                                                console.log("errorId", 21); 
                                                 Entry.TextCodingError.error(
                                                     Entry.TextCodingError.TITLE_CONVERTING,
                                                     Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
@@ -1081,18 +1104,65 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                                     this._blockCount,
                                                     Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                                             }
+                                        } 
+                                    }
+                                }
+                                else if(callee.property && callee.property.name == "len") {
+                                    var name = param.name;
+                                    if(syntax == "len#length_of_string") {
+                                        if(param.listType && param.listType == "global") {
+                                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
+                                                var keyword = name;
+                                                console.log("errorId", 21); 
+                                                Entry.TextCodingError.error(
+                                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                                    keyword,
+                                                    this._blockCount,
+                                                    Entry.TextCodingError.SUBJECT_CONV_LIST);
+                                            }
+                                        }
+                                        else if(param.variableType && param.variableType == "global") {
+                                            if(!Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                                                if(!this.isFuncParam(name)) {
+                                                    var keyword = name;
+                                                    console.log("errorId", 21); 
+                                                    Entry.TextCodingError.error(
+                                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                                        Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                                        keyword,
+                                                        this._blockCount,
+                                                        Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
+                                                }
+                                            } 
                                         }
                                     }
                                     else if(syntax == "len") {
-                                        if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
-                                            var keyword = name;
-                                            console.log("errorId", 23);
-                                            Entry.TextCodingError.error(
-                                                Entry.TextCodingError.TITLE_CONVERTING,
-                                                Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
-                                                keyword,
-                                                this._blockCount,
-                                                Entry.TextCodingError.SUBJECT_CONV_LIST);
+                                        if(param.listType && param.listType == "global") {
+                                            if(!Entry.TextCodingUtil.isGlobalListExisted(name)) {
+                                                var keyword = name;
+                                                console.log("errorId", 21); 
+                                                Entry.TextCodingError.error(
+                                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                                    keyword,
+                                                    this._blockCount,
+                                                    Entry.TextCodingError.SUBJECT_CONV_LIST);
+                                            }
+                                        }
+                                        else if(param.variableType && param.variableType == "global") {
+                                            if(!Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                                                if(!this.isFuncParam(name)) {
+                                                    var keyword = name;
+                                                    console.log("errorId", 21); 
+                                                    Entry.TextCodingError.error(
+                                                        Entry.TextCodingError.TITLE_CONVERTING,
+                                                        Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                                        keyword,
+                                                        this._blockCount,
+                                                        Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
+                                                }
+                                            } 
                                         }
                                     }
                                 }
@@ -1394,6 +1464,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 indexBlock.params = indexParams;
                                 params[2] = indexBlock;
                             }
+                        }
+                        else {
+                            var indexBlock = {};
+                            var indexBlockType = "calc_basic";
+                            indexBlock.type = indexBlockType;
+                            var indexParams = [];
+                            indexParams[0] = params[2];
+                            indexParams[1] = "PLUS";
+                            indexParams[2] = {type: "number", params: [1]};
+                            indexBlock.params = indexParams;
+                            params[2] = indexBlock;
                         }
                     }
                     else {
@@ -2106,13 +2187,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if(!Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                         var keyword = name;
                         console.log("errorId", 32);
-                        if(Entry.TextCodingError)
-                        Entry.TextCodingError.error(
-                            Entry.TextCodingError.TITLE_CONVERTING,
-                            Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
-                            keyword,
-                            this._blockCount,
-                            Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
+                        if(!this.isFuncParam(name)) {
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                keyword,
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
+                        }
                     }
                 }
             }
@@ -2166,7 +2248,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         this._blockCount,
                         Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                 }
-
+                if(!isNaN(item)) 
+                    item = parseFloat(item);
                 array.push(item);
             }
 
@@ -2200,6 +2283,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else {
                 var value = 0
             }
+
+            if(!isNaN(value)) 
+                value = parseFloat(value);
 
             console.log("variable name", name, "value", value, "value.length", value.length, "this._funcLoop", this._funcLoop);
 
@@ -2882,6 +2968,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         for(var a in arguments) {
                             var argument = arguments[a];
                             var item = {};
+                            if(!isNaN(argument.params[0]))
+                                argument.params[0] = parseFloat(argument.params[0]);
                             item.data = String(argument.params[0]);
                             array.push(item);
                         }
@@ -2907,6 +2995,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         /*if(typeof value != "string" && typeof value != "number") {
                             value = 0;
                         }*/
+
+                        if(!isNaN(value)) 
+                            value = parseFloat(value);
 
                         if(value || value == 0) {
                             if(Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject)) {
@@ -3588,8 +3679,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 var syntax = String("%2\[%4\]");
                             if(Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject))
                                 var syntax = String("%2\[%4\]#char_at");
+                            if(this.isFuncParam(name))
+                                var syntax = String("%2\[%4\]#char_at");
                             if(!Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject) &&
-                                !Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject))
+                                !Entry.TextCodingUtil.isLocalVariableExisted(name, this._currentObject) &&
+                                !this.isFuncParam(name))
                                 return result;
                         }
                     }
@@ -3603,8 +3697,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 var syntax = String("%2\[%4\]");
                             if(Entry.TextCodingUtil.isGlobalVariableExisted(name))
                                 var syntax = String("%2\[%4\]#char_at");
+                            if(this.isFuncParam(name))
+                                var syntax = String("%2\[%4\]#char_at");
                             if(!Entry.TextCodingUtil.isGlobalListExisted(name) &&
-                                !Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                                !Entry.TextCodingUtil.isGlobalVariableExisted(name) &&
+                                !this.isFuncParam(name)) {
                                 result.type = propertyData.type;
                                 result.params = propertyData.params;
                                 return result;
@@ -3622,8 +3719,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             var syntax = String("%2\[%4\]");
                         if(Entry.TextCodingUtil.isGlobalVariableExisted(name))
                             var syntax = String("%2\[%4\]#char_at");
+                        if(this.isFuncParam(name))
+                            var syntax = String("%2\[%4\]#char_at");
                         if(!Entry.TextCodingUtil.isGlobalListExisted(name) &&
-                            !Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                            !Entry.TextCodingUtil.isGlobalVariableExisted(name) &&
+                            !this.isFuncParam(name)) {
                             result.type = propertyData.type;
                             result.params = propertyData.params;
                             return result;

@@ -480,19 +480,12 @@ Entry.Engine.prototype.toggleRun = function() {
         return;
     }
 
-    console.log("run here");
     //Text Coding Mode
     if (Entry.playground && Entry.playground.mainWorkspace) {
         var mainWorkspace = Entry.playground.mainWorkspace;
         var boardMode = mainWorkspace.mode;
-        if(boardMode == Entry.Workspace.MODE_VIMBOARD) {
+        if(boardMode == Entry.Workspace.MODE_VIMBOARD)
             mainWorkspace._syncTextCode(boardMode);
-            
-            /*Entry.getMainWS().vimBoard.codeMirror.getDoc().markText(
-                        {line:0, ch:0},
-                        {line: 10, ch:0},
-                        {readOnly: true, inclusiveLeft: true});*/
-        } 
     }
 
     Entry.addActivity("run");

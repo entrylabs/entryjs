@@ -130,7 +130,7 @@ Entry.TextCodingUtil = {};
     };
 
     tu.dropdownDynamicNameToIdConvertor = function(name, menuName, currentObject) {
-        console.log("dropdownDynamicNameToIdConvertor", name, menuName, currentObject);
+        //console.log("dropdownDynamicNameToIdConvertor", name, menuName, currentObject);
         var result = name;
         if(Entry.getMainWS() && Entry.getMainWS().vimBoard) {
             var VIM = Entry.getMainWS().vimBoard;
@@ -227,12 +227,12 @@ Entry.TextCodingUtil = {};
             }
         }
 
-        console.log("dropdownDynamicNameToIdConvertor result", result);
+        //console.log("dropdownDynamicNameToIdConvertor result", result);
         return result;
     };
 
     tu.dropdownDynamicIdToNameConvertor = function(id, menuName) {
-        console.log("dropdownDynamicIdToNameConvertor id", id, "menuName", menuName);
+        //console.log("dropdownDynamicIdToNameConvertor id", id, "menuName", menuName);
         //var found = false;
         var result;
 
@@ -314,7 +314,7 @@ Entry.TextCodingUtil = {};
             }
         }
 
-        console.log("dropdownDynamicIdToNameConvertor result", result);
+        //console.log("dropdownDynamicIdToNameConvertor result", result);
 
         return result;
 
@@ -2302,10 +2302,16 @@ Entry.TextCodingUtil = {};
             for(var va in lArray) {
                 var vItem = lArray[va];
                 var data = vItem.data;
-                var pData = parseInt(data);
-                if(!isNaN(pData))
+               
+                /*if(!isNaN(pData)) {
                     data = pData;
-                if(typeof data === "string")
+                    console.log("list data1", data);
+                    data = parseFloat(data);
+                    console.log("list data2", data);
+
+                }*/
+                
+                if(isNaN(data))
                     data = "\"" + data + "\"";
                 value += data;
                 if(va != lArray.length-1)

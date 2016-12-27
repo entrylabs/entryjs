@@ -201,6 +201,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             this._currentObject = Entry.playground.object;
 
         this._parser._hasDeclaration = false;
+        
         if(textType == Entry.Vim.TEXT_TYPE_PY) {
             if(this._currentObject) {
                 codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이썬 코드";
