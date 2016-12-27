@@ -442,11 +442,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
             return;
 
-        var changedCode = this.vimBoard.textToCode(this.textType);
+        var changedCode = this.vimBoard.textToCode(this.textType);        
+        if(Entry.engine.state == 'run')
+            this.vimBoard._onSync = true;    
         
         var board = this.board;
         var code = board.code;
-        if (code) code.load(changedCode);
+        if (code) code.load(changedCode);   
     };
 
     p.addVimBoard = function(dom) {

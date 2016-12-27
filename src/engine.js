@@ -484,12 +484,12 @@ Entry.Engine.prototype.toggleRun = function() {
     activeElem && activeElem.blur && activeElem.blur();
 
     //Text Coding Mode
-    if (Entry.playground && Entry.playground.mainWorkspace) {
+    /*if (Entry.playground && Entry.playground.mainWorkspace) {
         var mainWorkspace = Entry.playground.mainWorkspace;
         var boardMode = mainWorkspace.mode;
         if(boardMode == Entry.Workspace.MODE_VIMBOARD)
-            mainWorkspace._syncTextCode(boardMode);
-    }
+            mainWorkspace._syncTextCode();
+    }*/
 
     Entry.addActivity("run");
     if (this.state == 'stop') {
@@ -585,6 +585,12 @@ Entry.Engine.prototype.toggleStop = function() {
     this.state = 'stop';
     Entry.dispatchEvent('stop');
     Entry.stage.hideInputField();
+
+    if(Entry.isTextMode) {
+        var ws = Entry.getMainWS();
+        if(ws && ws.vimBoard) 
+            ws.vimBoard._onSync = false;
+    }
 };
 
 /**

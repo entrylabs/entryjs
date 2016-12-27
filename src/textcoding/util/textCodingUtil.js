@@ -2265,7 +2265,7 @@ Entry.TextCodingUtil = {};
                     name = "self." + name; 
                 }
                 else continue;
-            }
+            } 
 
             if(typeof value === "string")
                 value = '"()"'.replace('()', value);
@@ -2284,7 +2284,7 @@ Entry.TextCodingUtil = {};
             return;
 
         //inspect lists
-        targets = vc.lists_ || [];
+        targets = vc.lists_ || []; 
         
         for (var i=targets.length-1; i>=0; i--) {
             var l = targets[i];

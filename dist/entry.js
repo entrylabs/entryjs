@@ -7862,10 +7862,6 @@ Entry.Engine.prototype.toggleRun = function() {
   } else {
     var b = document.activeElement;
     b && b.blur && b.blur();
-    if (Entry.playground && Entry.playground.mainWorkspace) {
-      var b = Entry.playground.mainWorkspace, a = b.mode;
-      a == Entry.Workspace.MODE_VIMBOARD && b._syncTextCode(a);
-    }
     Entry.addActivity("run");
     "stop" == this.state && (Entry.container.mapEntity(function(a) {
       a.takeSnapshot();
@@ -7912,6 +7908,7 @@ Entry.Engine.prototype.toggleStop = function() {
   this.state = "stop";
   Entry.dispatchEvent("stop");
   Entry.stage.hideInputField();
+  Entry.isTextMode && (b = Entry.getMainWS()) && b.vimBoard && (b.vimBoard._onSync = !1);
 };
 Entry.Engine.prototype.togglePause = function() {
   var b = Entry.engine.projectTimer;
@@ -14959,13 +14956,13 @@ Entry.PyToBlockParser = function(b) {
           isNaN(f) || (f = parseFloat(f));
           k.push(f);
         }
-        Entry.TextCodingUtil.isGlobalListExisted(l) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalList(l, k) : this._funcLoop || Entry.TextCodingUtil.createGlobalList(l, k);
+        Entry.getMainWS().vimBoard._onSync || (Entry.TextCodingUtil.isGlobalListExisted(l) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalList(l, k) : this._funcLoop || Entry.TextCodingUtil.createGlobalList(l, k));
       } else {
         l = e.name;
         "Literal" == f.type ? g = f.value : "Identifier" == f.type ? g = f.name : "UnaryExpression" == f.type ? (g = h.params[0], console.log("gl initData", h, "type", typeof g), "string" != typeof g && "number" != typeof g && (g = 0)) : g = 0;
         isNaN(g) || (g = parseFloat(g));
         console.log("variable name", l, "value", g, "value.length", g.length, "this._funcLoop", this._funcLoop);
-        !g && 0 != g || -1 != l.search("__filbert") || (Entry.TextCodingUtil.isGlobalVariableExisted(l) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(l, g) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(l, 0) : Entry.TextCodingUtil.createGlobalVariable(l, g));
+        Entry.getMainWS().vimBoard._onSync || !g && 0 != g || -1 != l.search("__filbert") || (Entry.TextCodingUtil.isGlobalVariableExisted(l) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(l, g) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(l, 0) : Entry.TextCodingUtil.createGlobalVariable(l, g));
         b.id = k;
         b.init = h;
         if ("Literal" == f.type) {
@@ -19332,7 +19329,7 @@ Entry.Utils.xmlToJsonData = function(b) {
 Entry.Utils.stopProjectWithToast = function(b, a, d) {
   var c = b.block;
   a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
-  Entry.isTextMode && (Entry.getMainWS().vimBoard._parser._onRunError = !0);
+  Entry.isTextMode && (Entry.getMainWS().vimBoard._parser._onRunError = !0, Entry.getMainWS().vimBoard._onSync = !1);
   Entry.toast && !d && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
   Entry.engine && Entry.engine.toggleStop();
   "workspace" === Entry.type && (b.block && "funcBlock" in b.block ? c = b.block.funcBlock : b.funcExecutor && (c = b.funcExecutor.scope.block, b = b.type.replace("func_", ""), Entry.Func.edit(Entry.variableContainer.functions_[b])), c && (Entry.container.selectObject(c.getCode().object.id, !0), c.view.getBoard().activateBlock(c)));
@@ -27888,7 +27885,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b._syncTextCode = function() {
     if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
-      var a = this.vimBoard.textToCode(this.textType), b = this.board.code;
+      var a = this.vimBoard.textToCode(this.textType);
+      "run" == Entry.engine.state && (this.vimBoard._onSync = !0);
+      var b = this.board.code;
       b && b.load(a);
     }
   };

@@ -2253,14 +2253,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 array.push(item);
             }
 
-            if(Entry.TextCodingUtil.isGlobalListExisted(name)) {
-                if(!this._funcLoop) {
-                    Entry.TextCodingUtil.updateGlobalList(name, array);
+            if(!Entry.getMainWS().vimBoard._onSync) {
+                if(Entry.TextCodingUtil.isGlobalListExisted(name)) {
+                    if(!this._funcLoop) {
+                        Entry.TextCodingUtil.updateGlobalList(name, array);
+                    }
                 }
-            }
-            else {
-                if(!this._funcLoop) {
-                    Entry.TextCodingUtil.createGlobalList(name, array);
+                else {
+                    if(!this._funcLoop) {
+                        Entry.TextCodingUtil.createGlobalList(name, array);
+                    }
                 }
             }
         } else {
@@ -2281,27 +2283,29 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
             else {
-                var value = 0
+                var value = 0 
             }
 
             if(!isNaN(value)) 
                 value = parseFloat(value);
 
             console.log("variable name", name, "value", value, "value.length", value.length, "this._funcLoop", this._funcLoop);
-
-            if(value || value == 0) {
-                if(name.search("__filbert") == -1) {
-                    if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
-                        if(!this._funcLoop)
-                            Entry.TextCodingUtil.updateGlobalVariable(name, value);
-                    }
-                    else {
-                        if(!this._funcLoop) {
-                            Entry.TextCodingUtil.createGlobalVariable(name, value);
+        
+            if(!Entry.getMainWS().vimBoard._onSync) {
+                if(value || value == 0) {
+                    if(name.search("__filbert") == -1) {
+                        if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
+                            if(!this._funcLoop)
+                                Entry.TextCodingUtil.updateGlobalVariable(name, value);
                         }
                         else {
-                            value = 0;
-                            Entry.TextCodingUtil.createGlobalVariable(name, value);
+                            if(!this._funcLoop) {
+                                Entry.TextCodingUtil.createGlobalVariable(name, value);
+                            }
+                            else {
+                                value = 0;
+                                Entry.TextCodingUtil.createGlobalVariable(name, value);
+                            }
                         }
                     }
                 }
