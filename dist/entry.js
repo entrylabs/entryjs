@@ -12854,9 +12854,6 @@ Entry.TextCodingUtil = {};
     }
     return c;
   };
-  b.isNoPrintBlock = function(a) {
-    return !1;
-  };
   b.entryEventFilter = function(a) {
     var b = a.indexOf("("), c = a.indexOf(")"), e = a.substring(0, b);
     a = a.substring(b + 1, c);
@@ -13559,7 +13556,7 @@ Entry.BlockToPyParser = function(b) {
     a = a.getBlocks();
     for (var c = !1, e = "", f = "", g = 0;g < a.length;g++) {
       var h = a[g];
-      this._parseMode == Entry.Parser.PARSE_GENERAL ? Entry.TextCodingUtil.isNoPrintBlock(h) || (0 == g ? (c = Entry.TextCodingUtil.isEventBlock(h)) ? e = this.Block(h) + "\n" : f += this.Block(h) + "\n" : 0 != g && (h = this.Block(h) + "\n", f += h)) : this._parseMode == Entry.Parser.PARSE_SYNTAX && (b = (c = Entry.TextCodingUtil.isEventBlock(h)) ? "" : this.Block(h) + "\n");
+      this._parseMode == Entry.Parser.PARSE_GENERAL ? 0 == g ? (c = Entry.TextCodingUtil.isEventBlock(h)) ? e = this.Block(h) + "\n" : f += this.Block(h) + "\n" : 0 != g && (h = this.Block(h) + "\n", f += h) : this._parseMode == Entry.Parser.PARSE_SYNTAX && (b = (c = Entry.TextCodingUtil.isEventBlock(h)) ? "" : this.Block(h) + "\n");
     }
     this._parseMode == Entry.Parser.PARSE_GENERAL && (c && (f = Entry.TextCodingUtil.indent(f)), b = e + f + "\n");
     return b = b.trim() + "\n";
@@ -16741,14 +16738,12 @@ Entry.Parser = function(b, a, d, c) {
           if (this.py_variableDeclaration || this.py_listDeclaration) {
             e += "\n";
           }
-          if (!this.py_funcDeclaration) {
-            v = this._execParser._funcDefMap;
-            x = "";
-            for (n in v) {
-              x += v[n] + "\n\n";
-            }
-            (this.py_funcDeclaration = x) && (e += this.py_funcDeclaration);
+          v = this._execParser._funcDefMap;
+          x = "";
+          for (n in v) {
+            x += v[n] + "\n\n";
           }
+          (this.py_funcDeclaration = x) && (e += this.py_funcDeclaration);
         }
         m && (e += m.trim());
         e = e.replace(/\t/g, "    ");
@@ -27559,7 +27554,9 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
       e.codeMirror.display.dragFunctions.leave(a);
       var d = Entry.Utils.createMouseEvent("mousedown", a);
       e.codeMirror.display.scroller.dispatchEvent(d);
-      c.split("\n").forEach(function(a, b) {
+      var c = c.split("\n"), k = c.length - 1;
+      c.forEach(function(a, b) {
+        b != k && (a += "\n");
         e.codeMirror.replaceSelection(a);
         e.doc.getCursor();
       });

@@ -897,11 +897,11 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.isNoPrintBlock = function(block) {
+    /*tu.isNoPrintBlock = function(block) {
         var blockType = block.data.type;
 
         return false;
-    };
+    };*/
 
     tu.entryEventFilter = function(text) {  
         var startIndex = text.indexOf("(");

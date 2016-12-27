@@ -375,18 +375,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     if(this.py_variableDeclaration || this.py_listDeclaration)
                         result += '\n';
 
-                    if(!this.py_funcDeclaration) {
+                    //if(this.py_funcDeclaration) {
                         var funcDefMap = this._execParser._funcDefMap;
                         var fd = "";
 
                         for(var f in funcDefMap) {
-                            var funcDef = funcDefMap[f];
+                            var funcDef = funcDefMap[f]; 
                             fd += funcDef + '\n\n';
                         }
                         this.py_funcDeclaration = fd;
                         if(this.py_funcDeclaration )
                             result += this.py_funcDeclaration ;
-                    }
+                    //}
                 }
                 if(textCode)
                     result += textCode.trim();

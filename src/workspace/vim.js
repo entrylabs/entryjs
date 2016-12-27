@@ -119,6 +119,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             var max = testArr.length - 1;
             var lastLine = 0;
             testArr.forEach(function (text, i) {
+                if(i != max) text += '\n';
                 _self.codeMirror.replaceSelection(text);
                 var cursor = _self.doc.getCursor();
                 lastLine = cursor.line;
