@@ -454,7 +454,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 } 
             }
            
-
             if(callee.property) {
                 if(callee.property.name == "range"){
                     var syntax = String("%1#number");
@@ -552,6 +551,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             var blockSyntax = this.getBlockSyntax(syntax);
                             if(blockSyntax)
                                 type = blockSyntax.key;
+                        }
+                        else if(arg.type == "") {
+
                         }
                         else {
                             syntax = String("%2\[%4\]");
@@ -1290,27 +1292,62 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params[1] = p;
                 }
                 else if(callee.property.name == "pop") {
-                    if(params[0].type == "number" || params[0].type == "text") {
-                        if(!isNaN(params[0].params[0]))
-                            params[0].params[0] += 1;
-                    }
-                    else if(params[0].type == "get_variable") {
-                        var indexBlock = {};
-                        var indexBlockType = "calc_basic";
-                        indexBlock.type = indexBlockType;
-                        var indexParams = [];
-                        indexParams[0] = params[0];
-                        indexParams[1] = "PLUS";
-                        indexParams[2] = {type: "number", params: [1]};
-                        indexBlock.params = indexParams;
-                        params[0] = indexBlock;
-                    }
-                    else if(params[0].type == "calc_basic") {
-                        if(params[0].params && params[0].params[1] == "MINUS" && 
-                            params[0].params[2] && params[0].params[2].params && params[0].params[2].params[0] == "1") {
-                            params[0] = params[0].params[0];
+                    if(params[0].type) {
+                        if(params[0].type == "number" || params[0].type == "text") {
+                            if(!isNaN(params[0].params[0]))
+                                params[0].params[0] += 1;
+                        }
+                        else if(params[0].type == "get_variable") {
+                            var indexBlock = {};
+                            var indexBlockType = "calc_basic";
+                            indexBlock.type = indexBlockType;
+                            var indexParams = [];
+                            indexParams[0] = params[0];
+                            indexParams[1] = "PLUS";
+                            indexParams[2] = {type: "number", params: [1]};
+                            indexBlock.params = indexParams;
+                            params[0] = indexBlock;
+                        }
+                        else if(params[0].type == "calc_basic") {
+                            if(params[0].params && params[0].params[1] == "MINUS" && 
+                                params[0].params[2] && params[0].params[2].params && params[0].params[2].params[0] == "1") {
+                                params[0] = params[0].params[0];
+                            }
+                            else {
+                                var indexBlock = {};
+                                var indexBlockType = "calc_basic";
+                                indexBlock.type = indexBlockType;
+                                var indexParams = [];
+                                indexParams[0] = params[0];
+                                indexParams[1] = "PLUS";
+                                indexParams[2] = {type: "number", params: [1]};
+                                indexBlock.params = indexParams;
+                                params[0] = indexBlock; 
+                            }
                         }
                         else {
+                            var indexBlock = {};
+                            var indexBlockType = "calc_basic";
+                            indexBlock.type = indexBlockType;
+                            var indexParams = [];
+                            indexParams[0] = params[0];
+                            indexParams[1] = "PLUS";
+                            indexParams[2] = {type: "number", params: [1]};
+                            indexBlock.params = indexParams;
+                            params[0] = indexBlock;
+                        }
+                    }
+                    else {
+                        if(!this.isFuncParam(params[0].name)) {
+                            var keyword;
+                            console.log("errorId", 51.1);
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
+                                keyword,
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
+                        } else {
                             var indexBlock = {};
                             var indexBlockType = "calc_basic";
                             indexBlock.type = indexBlockType;
@@ -1325,27 +1362,51 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 }
                 else if(callee.property.name == "insert") {
-                    if(params[2].type == "number" || params[2].type == "text") {
-                        if(!isNaN(params[2].params && params[2].params[0]))
-                            params[2].params[0] += 1;
-                    }
-                    else if(params[2].type == "get_variable") {
-                        var indexBlock = {};
-                        var indexBlockType = "calc_basic";
-                        indexBlock.type = indexBlockType;
-                        var indexParams = [];
-                        indexParams[0] = params[2];
-                        indexParams[1] = "PLUS";
-                        indexParams[2] = {type: "number", params: [1]};
-                        indexBlock.params = indexParams;
-                        params[2] = indexBlock;
-                    }
-                    else if(params[2].type == "calc_basic") {
-                        if(params[2].params && params[2].params[1] == "MINUS" && params[2].params[2] && 
-                            params[2].params[2].params && params[2].params[2].params[0] == "1") {
-                            params[2] = params[2].params[0];
+                    if(params[2].type) {
+                        if(params[2].type == "number" || params[2].type == "text") {
+                            if(!isNaN(params[2].params && params[2].params[0]))
+                                params[2].params[0] += 1;
                         }
-                        else {
+                        else if(params[2].type == "get_variable") {
+                            var indexBlock = {};
+                            var indexBlockType = "calc_basic";
+                            indexBlock.type = indexBlockType;
+                            var indexParams = [];
+                            indexParams[0] = params[2];
+                            indexParams[1] = "PLUS";
+                            indexParams[2] = {type: "number", params: [1]};
+                            indexBlock.params = indexParams;
+                            params[2] = indexBlock;
+                        }
+                        else if(params[2].type == "calc_basic") {
+                            if(params[2].params && params[2].params[1] == "MINUS" && params[2].params[2] && 
+                                params[2].params[2].params && params[2].params[2].params[0] == "1") {
+                                params[2] = params[2].params[0];
+                            }
+                            else {
+                                var indexBlock = {};
+                                var indexBlockType = "calc_basic";
+                                indexBlock.type = indexBlockType;
+                                var indexParams = [];
+                                indexParams[0] = params[2];
+                                indexParams[1] = "PLUS";
+                                indexParams[2] = {type: "number", params: [1]};
+                                indexBlock.params = indexParams;
+                                params[2] = indexBlock;
+                            }
+                        }
+                    }
+                    else {
+                        if(!this.isFuncParam(params[2].name)) {
+                            var keyword;
+                            console.log("errorId", 51.2);
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
+                                keyword,
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
+                        } else {
                             var indexBlock = {};
                             var indexBlockType = "calc_basic";
                             indexBlock.type = indexBlockType;
@@ -1360,28 +1421,51 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 }
                 else if(callee.property.name == "subscriptIndex") {
-                    var p = params[3];
-                    if(params[3].type == "number" || params[3].type == "text") {
-                        if(!isNaN(params[3].params[0]))
-                            params[3].params[0] += 1;
-                    }
-                    else if(params[3].type == "get_variable") {
-                        var indexBlock = {};
-                        var indexBlockType = "calc_basic";
-                        indexBlock.type = indexBlockType;
-                        var indexParams = [];
-                        indexParams[0] = params[3];
-                        indexParams[1] = "PLUS";
-                        indexParams[2] = {type: "number", params: [1]};
-                        indexBlock.params = indexParams;
-                        params[3] = indexBlock;
-                    }
-                    else if(params[3].type == "calc_basic") {
-                        if(params[3].params && params[3].params[1] == "MINUS" && params[3].params[2] && 
-                            params[3].params[2].params && params[3].params[2].params[0] == "1") {
-                            params[3] = params[3].params[0];
+                    if(params[3].type) {
+                        if(params[3].type == "number" || params[3].type == "text") {
+                            if(!isNaN(params[3].params[0]))
+                                params[3].params[0] += 1;
                         }
-                        else {
+                        else if(params[3].type == "get_variable") {
+                            var indexBlock = {};
+                            var indexBlockType = "calc_basic";
+                            indexBlock.type = indexBlockType;
+                            var indexParams = [];
+                            indexParams[0] = params[3];
+                            indexParams[1] = "PLUS";
+                            indexParams[2] = {type: "number", params: [1]};
+                            indexBlock.params = indexParams;
+                            params[3] = indexBlock;
+                        }
+                        else if(params[3].type == "calc_basic") {
+                            if(params[3].params && params[3].params[1] == "MINUS" && params[3].params[2] && 
+                                params[3].params[2].params && params[3].params[2].params[0] == "1") {
+                                params[3] = params[3].params[0];
+                            }
+                            else {
+                                var indexBlock = {};
+                                var indexBlockType = "calc_basic";
+                                indexBlock.type = indexBlockType;
+                                var indexParams = [];
+                                indexParams[0] = params[3];
+                                indexParams[1] = "PLUS";
+                                indexParams[2] = {type: "number", params: [1]};
+                                indexBlock.params = indexParams;
+                                params[3] = indexBlock;
+                            }
+                        }
+                    }
+                    else {
+                        if(!this.isFuncParam(params[3].name)) {
+                            var keyword;
+                            console.log("errorId", 51.3);
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
+                                keyword,
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
+                        } else {
                             var indexBlock = {};
                             var indexBlockType = "calc_basic";
                             indexBlock.type = indexBlockType;
@@ -1400,27 +1484,51 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         console.log("objectData", objectData);
                         var newParams = [];
                         newParams[1] = objectData;
-                        if(params[1].type == "number" || params[1].type == "text") {
-                            if(!isNaN(params[1].params[0]))
-                                params[1].params[0] += 1;
-                        }
-                        else if(params[1].type == "get_variable") {
-                            var indexBlock = {};
-                            var indexBlockType = "calc_basic";
-                            indexBlock.type = indexBlockType;
-                            var indexParams = [];
-                            indexParams[0] = params[1];
-                            indexParams[1] = "PLUS";
-                            indexParams[2] = {type: "number", params: [1]};
-                            indexBlock.params = indexParams;
-                            params[1] = indexBlock;
-                        }
-                        else if(params[1].type == "calc_basic") {
-                            if(params[1].params && params[1].params[1] == "MINUS" && params[1].params[2] && 
-                                params[1].params[2].params && params[1].params[2].params[0] == "1") {
-                                params[1] = params[1].params[0];
+                        if(params[1].type) {
+                            if(params[1].type == "number" || params[1].type == "text") {
+                                if(!isNaN(params[1].params[0]))
+                                    params[1].params[0] += 1;
                             }
-                            else {
+                            else if(params[1].type == "get_variable") {
+                                var indexBlock = {};
+                                var indexBlockType = "calc_basic";
+                                indexBlock.type = indexBlockType;
+                                var indexParams = [];
+                                indexParams[0] = params[1];
+                                indexParams[1] = "PLUS";
+                                indexParams[2] = {type: "number", params: [1]};
+                                indexBlock.params = indexParams;
+                                params[1] = indexBlock;
+                            }
+                            else if(params[1].type == "calc_basic") {
+                                if(params[1].params && params[1].params[1] == "MINUS" && params[1].params[2] && 
+                                    params[1].params[2].params && params[1].params[2].params[0] == "1") {
+                                    params[1] = params[1].params[0];
+                                }
+                                else {
+                                    var indexBlock = {};
+                                    var indexBlockType = "calc_basic";
+                                    indexBlock.type = indexBlockType;
+                                    var indexParams = [];
+                                    indexParams[0] = params[1];
+                                    indexParams[1] = "PLUS";
+                                    indexParams[2] = {type: "number", params: [1]};
+                                    indexBlock.params = indexParams;
+                                    params[1] = indexBlock;
+                                }
+                            }
+                        }
+                        else {
+                            if(!this.isFuncParam(params[1].name)) {
+                                var keyword;
+                                console.log("errorId", 51.4);
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
+                                    keyword,
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
+                            } else {
                                 var indexBlock = {};
                                 var indexBlockType = "calc_basic";
                                 indexBlock.type = indexBlockType;
@@ -1432,6 +1540,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 params[1] = indexBlock;
                             }
                         }
+
                         newParams[3] = params[1];
                         newParams[5] = params[3];
                         params = newParams;
@@ -2543,9 +2652,39 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
                     }
                     else if(rightData.object.property) { // Self List
-                        if(!Entry.TextCodingUtil.isLocalListExisted(rightData.object.property.name, this._currentObject)) {
-                            var keyword = rightData.object.property.name;
-                            console.log("errorId", 45);
+                        if(Entry.TextCodingUtil.isLocalListExisted(rightData.object.property.name, this._currentObject)) {}
+                        else if(Entry.TextCodingUtil.isLocalVariableExisted(rightData.object.property.name, this._currentObject)) {}
+                        else {
+                            if(!Entry.TextCodingUtil.isLocalListExisted(rightData.object.property.name, this._currentObject)) {
+                                var keyword = rightData.object.property.name;
+                                console.log("errorId", 45);
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                    keyword,
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_LIST);
+                            }
+                            if(!Entry.TextCodingUtil.isLocalVariableExisted(rightData.object.property.name, this._currentObject)) {
+                                var keyword = rightData.object.property.name;
+                                console.log("errorId", 45);
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                    keyword,
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_VARIABLE); 
+                            }
+                        }
+                    }
+                }
+                else if(rightData.object) { // List
+                    if(Entry.TextCodingUtil.isGlobalListExisted(rightData.object.name)) {}
+                    else if(Entry.TextCodingUtil.isGlobalVariableExisted(rightData.object.name)) {}
+                    else {
+                        if(!Entry.TextCodingUtil.isGlobalListExisted(rightData.object.name)) {
+                            var keyword = rightData.object.name;
+                            console.log("errorId", 46);
                             Entry.TextCodingError.error(
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -2553,18 +2692,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 this._blockCount,
                                 Entry.TextCodingError.SUBJECT_CONV_LIST);
                         }
-                    }
-                }
-                else if(rightData.object) { // List
-                    if(!Entry.TextCodingUtil.isGlobalListExisted(rightData.object.name)) {
-                        var keyword = rightData.object.name;
-                        console.log("errorId", 46);
-                        Entry.TextCodingError.error(
-                            Entry.TextCodingError.TITLE_CONVERTING,
-                            Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
-                            keyword,
-                            this._blockCount,
-                            Entry.TextCodingError.SUBJECT_CONV_LIST);
+                        if(!Entry.TextCodingUtil.isGlobalVariableExisted(rightData.object.name)) {
+                            var keyword = rightData.object.name;
+                            console.log("errorId", 46);
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                keyword,
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_VARIABLE); 
+                        }
                     }
                 }
             }
@@ -2581,9 +2718,49 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingError.SUBJECT_CONV_LIST);
                     }
                     else if(rightData.property) {
-                        if(!Entry.TextCodingUtil.isLocalVariableExisted(rightData.property.name, this._currentObject)) {
-                            var keyword = rightData.object.name;
-                            console.log("errorId", 48);
+                        if(Entry.TextCodingUtil.isLocalVariableExisted(rightData.property.name, this._currentObject)) {}
+                        else if(Entry.TextCodingUtil.isLocalListExisted(rightData.property.name, this._currentObject)) {}
+                        else {
+                            if(!Entry.TextCodingUtil.isLocalVariableExisted(rightData.property.name, this._currentObject)) {
+                                var keyword = rightData.object.name;
+                                console.log("errorId", 48);
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                    keyword,
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
+                            }
+                            if(!Entry.TextCodingUtil.isLocalListExisted(rightData.property.name, this._currentObject)) {
+                                var keyword = rightData.object.name;
+                                console.log("errorId", 48);
+                                Entry.TextCodingError.error(
+                                    Entry.TextCodingError.TITLE_CONVERTING,
+                                    Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
+                                    keyword,
+                                    this._blockCount,
+                                    Entry.TextCodingError.SUBJECT_CONV_LIST);
+                            }
+                        }
+                    } 
+                }
+                else {
+                    if(Entry.TextCodingUtil.isGlobalVariableExisted(rightData.name)) {}
+                    if(Entry.TextCodingUtil.isGlobalVariableExisted(rightData.name)) {}
+                    else {
+                        if(!Entry.TextCodingUtil.isGlobalVariableExisted(rightData.name)) {
+                            var keyword = rightData.name;
+                            console.log("errorId", 49);
+                            Entry.TextCodingError.error(
+                                Entry.TextCodingError.TITLE_CONVERTING,
+                                Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
+                                keyword,
+                                this._blockCount,
+                                Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
+                        }
+                        if(!Entry.TextCodingUtil.isGlobalListExisted(rightData.name)) {
+                            var keyword = rightData.name;
+                            console.log("errorId", 49);
                             Entry.TextCodingError.error(
                                 Entry.TextCodingError.TITLE_CONVERTING,
                                 Entry.TextCodingError.MESSAGE_CONV_NO_LIST,
@@ -2591,18 +2768,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 this._blockCount,
                                 Entry.TextCodingError.SUBJECT_CONV_LIST);
                         }
-                    } 
-                }
-                else {
-                    if(!Entry.TextCodingUtil.isGlobalVariableExisted(rightData.name)) {
-                        var keyword = rightData.name;
-                        console.log("errorId", 49);
-                        Entry.TextCodingError.error(
-                            Entry.TextCodingError.TITLE_CONVERTING,
-                            Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE,
-                            keyword,
-                            this._blockCount,
-                            Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                     }
                 }
             }
@@ -3415,7 +3580,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(objectData.object) {
                     if(objectData.object.name == "self") {
                         var name = objectData.property.name;
-                        if(objectData.type && (objectData.type == "number" || objectData.type == "text")) {
+                        if(objectData.type && (objectData.type == "number" || objectData.type == "text" || objectData.type == "value_of_index_from_list")) {
                             var syntax = String("%2\[%4\]#char_at");
                         }
                         else {
@@ -3430,7 +3595,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                     else {
                         var name = objectData.object.name;
-                        if(objectData.type && (objectData.type == "number" || objectData.type == "text")) {
+                        if(objectData.type && (objectData.type == "number" || objectData.type == "text" || objectData.type == "get_canvas_input_value" || objectData.type == "value_of_index_from_list")) {
                             var syntax = String("%2\[%4\]#char_at");
                         }
                         else {
@@ -3449,7 +3614,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 else {
                     var name = objectData.name;
-                    if(objectData.type && (objectData.type == "number" || objectData.type == "text")) {
+                    if(objectData.type && (objectData.type == "number" || objectData.type == "text" || objectData.type == "get_canvas_input_value" || objectData.type == "value_of_index_from_list")) {
                         var syntax = String("%2\[%4\]#char_at");
                     }
                     else {
@@ -3510,27 +3675,40 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 console.log("memberexpression arguments", arguments);
                 if(arguments && arguments[1]) {
-                    if(arguments[1].type == "number" || arguments[1].type == "text") {
-                        /*if(!isNaN(arguments[1].params[0]))
-                            arguments[1].params[0] += 1;*/
-                        params[3] = arguments[1];
-                    }
-                    else if(arguments[1].type == "get_variable") {
-                        var indexBlock = {};
-                        var type = "calc_basic";
-                        indexBlock.type = type;
-                        var indexParams = [];
-                        indexParams[0] = arguments[1];
-                        indexParams[1] = "PLUS";
-                        indexParams[2] = {type: "number", params: [1]};
-                        indexBlock.params = indexParams;
-                        params[3] = indexBlock;
-                    }
-                    else if(arguments[1].type == "calc_basic") {
-                        if(arguments[1].params && arguments[1].params[1] == "MINUS" && arguments[1].params[2] && 
-                            arguments[1].params[2].params && arguments[1].params[2].params[0] == "1") {
-                            params[3] = arguments[1].params[0];
-                            console.log("check params[3]", params[3]);
+                    if(arguments[1].type) {
+                        if(arguments[1].type == "number" || arguments[1].type == "text") {
+                            /*if(!isNaN(arguments[1].params[0]))
+                                arguments[1].params[0] += 1;*/
+                            params[3] = arguments[1];
+                        }
+                        else if(arguments[1].type == "get_variable") {
+                            var indexBlock = {};
+                            var type = "calc_basic";
+                            indexBlock.type = type;
+                            var indexParams = [];
+                            indexParams[0] = arguments[1];
+                            indexParams[1] = "PLUS";
+                            indexParams[2] = {type: "number", params: [1]};
+                            indexBlock.params = indexParams;
+                            params[3] = indexBlock;
+                        }
+                        else if(arguments[1].type == "calc_basic") {
+                            if(arguments[1].params && arguments[1].params[1] == "MINUS" && arguments[1].params[2] && 
+                                arguments[1].params[2].params && arguments[1].params[2].params[0] == "1") {
+                                params[3] = arguments[1].params[0];
+                                console.log("check params[3]", params[3]);
+                            }
+                            else {
+                                var indexBlock = {};
+                                var type = "calc_basic";
+                                indexBlock.type = type;
+                                var indexParams = [];
+                                indexParams[0] = arguments[1];
+                                indexParams[1] = "PLUS";
+                                indexParams[2] = {type: "number", params: [1]};
+                                indexBlock.params = indexParams;
+                                params[3] = indexBlock;
+                            }
                         }
                         else {
                             var indexBlock = {};
@@ -3544,7 +3722,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             params[3] = indexBlock;
                         }
                     }
-                    else if(!arguments[1].type) {
+                    else {
                         if(!this.isFuncParam(arguments[1].name)) {
                             var keyword;
                             console.log("errorId", 51);
@@ -4846,7 +5024,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         if(param.object) {
                             if(param.object.name && param.object.name.indexOf("__filbert") < 0) {
                                 if(param.object.name != "self") {
-                                    var keyword = param.object.name;
+                                    var keyword = param.object.name + '.' + param.property.name;
                                     console.log("errorId", 79);
                                     Entry.TextCodingError.error(
                                         Entry.TextCodingError.TITLE_CONVERTING,

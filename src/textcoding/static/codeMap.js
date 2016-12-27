@@ -25,7 +25,7 @@ Entry.CodeMap = {};
             {"색깔": "color", "밝기": "brightness", "투명도": "transparency"}
         ],
         change_effect_amount: [
-            {"색깔": "color", "밝기": "brightness", "투명도": "transparency"} 
+            {"색깔": "color", "밝기": "brightness", "투명도": "transparency"}  
         ],
         change_object_index: [
             {"front": "FRONT", "forward": "FORWARD", "backward": "BACKWARD", "back": "BACK", 
@@ -41,7 +41,7 @@ Entry.CodeMap = {};
             {"mouse": "mouse_pointer", "wall":"edge", "wall_up":"edge_up", 
             "wall_down":"edge_down", "wall_right":"edge_right", "wall_left":"edge_left",
             "mouse_pointer": "mouse", "edge":"wall", "edge_up":"wall_up", "edge_down":"wall_down", 
-            "edge_right":"wall_right", "edge_left":"edge_left", "마우스포인터":"mouse"}, 
+            "edge_right":"wall_right", "edge_left":"wall_left", "마우스포인터":"mouse"}, 
             null
         ],
         create_clone: [
