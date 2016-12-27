@@ -212,9 +212,9 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
                     .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
                     .concat(Entry.Vim.PYTHON_IMPORT_HW)
                     .concat("\n\n")
-                    .concat(textCode); 
+                    .concat(textCode);
                 }
-                //textCode += '\n'; 
+                //textCode += '\n';
                 this.codeMirror.setValue(textCode);
                 if(textType == Entry.Vim.TEXT_TYPE_PY)
                     this.codeMirror.getDoc().markText(
@@ -237,7 +237,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             doc.setCursor({line: doc.lastLine() - 1});
         }
 
-        if(Entry.isTextMode) 
+        if(Entry.isTextMode)
             this._parser._onRunError = false;
     };
 

@@ -109,11 +109,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         var mode = {};
                         mode.boardType = WORKSPACE.MODE_BOARD;
                         mode.textType = -1;
-                        Entry.getMainWS().setMode(mode); 
+                        Entry.getMainWS().setMode(mode);
                         break;
                     }
                     if (this.board) this.board.hide();
-                    if (this.overlayBoard) this.overlayBoard.hide();  
+                    if (this.overlayBoard) this.overlayBoard.hide();
                     blockMenu.banClass('functionInit');
                     this.set({selectedBoard:this.vimBoard});
                     this.vimBoard.show();
@@ -136,7 +136,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.vimBoard && this.vimBoard.hide();
                 } catch(e) {
                     console.log("error start");
-                    
+
                     if(this.board && this.board.code)
                         this.board.code.clear();
                     if (this.board) this.board.hide();
@@ -182,7 +182,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.oldMode = this.mode;
         if(this.mode == WORKSPACE.MODE_VIMBOARD)
             Entry.isTextMode = true;
-        else 
+        else
             Entry.isTextMode = false;
 
         Entry.dispatchEvent('workspaceChangeMode');
@@ -241,7 +241,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.codeToText = function(code, mode) {
         if (!this.vimBoard)
             return;
-        
+
         return this.vimBoard.codeToText(code, mode);
 
     };
@@ -434,16 +434,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p._handleChangeBoard = function() {
         var board = this.selectedBoard;
         if (!board) return;
-        if (board.constructor === Entry.Board) 
+        if (board.constructor === Entry.Board)
             this.trashcan.setBoard(board);
     };
 
     p._syncTextCode = function() {
-        if (this.mode !== Entry.Workspace.MODE_VIMBOARD) 
+        if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
             return;
 
         var changedCode = this.vimBoard.textToCode(this.textType);
-        
+
         var board = this.board;
         var code = board.code;
         if (code) code.load(changedCode);
