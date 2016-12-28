@@ -420,11 +420,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.setMenu = function() {
-        var elems = Object.keys(this._categoryElems);
-
         this._categoryData.forEach(function(data) {
             var category = data.category;
             var threads = data.blocks;
+
+            if (category === 'func') {
+                var funcThreads = this.code.getThreadsByCategory('func')
+                            .map(function(t) {return t.getFirstBlock().type});
+                threads = funcThreads.length ? funcThreads : threads;
+            }
 
             var count = threads.length;
             for (var i=0; i<threads.length; i++) {

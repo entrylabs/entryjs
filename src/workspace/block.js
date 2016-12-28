@@ -43,7 +43,8 @@ Entry.Block = function(block, thread) {
     }
 
     events = this.events.viewAdd;
-    if (events && (Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD)) {
+    if (events && (Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD)
+        && (this.getCode().board && this.getCode().board.constructor !== Entry.BlockMenu)) {
         events.forEach(function(fn) {
             if (Entry.Utils.isFunction(fn))
                 fn.apply(that, [that]);
@@ -304,7 +305,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         }
 
         events = this.events.viewDestroy;
-        if (events && (Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD)) {
+        if (events && (Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD)
+            && (this.getCode().board && this.getCode().board.constructor !== Entry.BlockMenu)) {
             events.forEach(function(fn) {
                 if (Entry.Utils.isFunction(fn))
                     fn.apply(that, [that, notSpliced]);

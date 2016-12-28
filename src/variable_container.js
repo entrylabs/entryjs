@@ -414,11 +414,12 @@ Entry.VariableContainer.prototype.updateList = function() {
 
     var isPythonMode = this._isPythonMode();
     if (isPythonMode)
-        this.listView_.addClass('entryTextMode');
+        this.listView_.addClass('entryVariableContainerTextMode');
     else
-        this.listView_.removeClass('entryTextMode');
+        this.listView_.removeClass('entryVariableContainerTextMode');
 
-    this.listView_.innerHTML = '';
+    while (this.listView_.firstChild)
+        this.listView_.removeChild(this.listView_.lastChild);
 
     var viewMode = this.viewMode_;
     var elementList = [];
@@ -545,8 +546,8 @@ Entry.VariableContainer.prototype.updateList = function() {
     if (viewMode == 'all' || viewMode == 'func') {
         if (viewMode == 'func'){
             var mode = Entry.Workspace.MODE_BOARD;
-            if (Entry.playground && Entry.playground.mainWorkspace)
-                mode = Entry.playground.mainWorkspace.getMode();
+            if (Entry.getMainWS())
+                mode = Entry.getMainWS().getMode();
 
             if (mode === Entry.Workspace.MODE_OVERLAYBOARD || isPythonMode) {
                 this.functionAddButton_.addClass('disable');
@@ -768,8 +769,10 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
     var that = this;
     if (!this.view_) return;
     var view = Entry.createElement('li');
-    view.addClass('entryVariableListElementWorkspace');
-    view.addClass('entryFunctionElementWorkspace');
+    var className = '';
+    className += 'entryVariableListElementWorkspace';
+    className += ' entryFunctionElementWorkspace';
+    view.addClass(className);
     view.bindOnClick(function (e) {
         e.stopPropagation();
         that.select(func);
@@ -786,7 +789,7 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
     });
 
     var editButton = Entry.createElement('button');
-    editButton.addClass('entryVariableListElementEditWorkspace');
+    editButton.addClass('entryVariableListElementEditWorkspace notForTextMode');
     var blockMenu = this._getBlockMenu();
     editButton.bindOnClick(function (e) {
         e.stopPropagation();
@@ -1013,7 +1016,7 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
     var that = this;
     var view = Entry.createElement('li');
     var wrapper = Entry.createElement('div');
-    wrapper.addClass('entryVariableListElementWrapperWorkspace variable');
+    wrapper.addClass('entryVariableListElementWrapperWorkspace');
     view.appendChild(wrapper);
     var className = 'entryVariableListElementWorkspace';
     if (!variable.object_) {
@@ -1029,7 +1032,7 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
         that.select(variable);
     });
     var removeButton = Entry.createElement('button');
-    removeButton.addClass('entryVariableListElementDeleteWorkspace');
+    removeButton.addClass('entryVariableListElementDeleteWorkspace notForTextMode');
     removeButton.bindOnClick(function(e) {
         e.stopPropagation();
         that.removeVariable(variable);
@@ -1309,7 +1312,7 @@ Entry.VariableContainer.prototype.createListView = function(list) {
     var that = this;
     var view = Entry.createElement('li');
     var wrapper = Entry.createElement('div');
-    wrapper.addClass('entryVariableListElementWrapperWorkspace variable');
+    wrapper.addClass('entryVariableListElementWrapperWorkspace');
     view.appendChild(wrapper);
     view.addClass('entryVariableListElementWorkspace');
     if (!list.object_) {
@@ -1325,7 +1328,7 @@ Entry.VariableContainer.prototype.createListView = function(list) {
     });
 
     var removeButton = Entry.createElement('button');
-    removeButton.addClass('entryVariableListElementDeleteWorkspace');
+    removeButton.addClass('entryVariableListElementDeleteWorkspace notForTextMode');
     removeButton.bindOnClick(function(e) {
         e.stopPropagation();
         that.removeList(list);
@@ -2297,7 +2300,7 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
 
 Entry.VariableContainer.prototype.addRef = function(type, block) {
     if (!this.view_ || !Entry.playground.mainWorkspace ||
-        Entry.playground.mainWorkspace.getMode() !== Entry.Workspace.MODE_BOARD)
+        Entry.getMainWS().getMode() !== Entry.Workspace.MODE_BOARD)
         return;
 
     var datum = {
@@ -2353,7 +2356,7 @@ Entry.VariableContainer.prototype.addRef = function(type, block) {
 
 Entry.VariableContainer.prototype.removeRef = function(type, block) {
     if (!Entry.playground.mainWorkspace) return;
-    var wsMode = Entry.playground.mainWorkspace.getMode();
+    var wsMode = Entry.getMainWS().getMode();
     if (wsMode !== Entry.Workspace.MODE_BOARD) return;
 
     var arr = this[type];

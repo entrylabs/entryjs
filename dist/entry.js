@@ -21326,8 +21326,9 @@ Entry.VariableContainer.prototype.updateList = function() {
     this.variableSettingView.addClass("entryRemove");
     this.listSettingView.addClass("entryRemove");
     var b = this._isPythonMode();
-    b ? this.listView_.addClass("entryTextMode") : this.listView_.removeClass("entryTextMode");
-    this.listView_.innerHTML = "";
+    for (b ? this.listView_.addClass("entryVariableContainerTextMode") : this.listView_.removeClass("entryVariableContainerTextMode");this.listView_.firstChild;) {
+      this.listView_.removeChild(this.listView_.lastChild);
+    }
     var a = this.viewMode_, d = [];
     if ("all" == a || "message" == a) {
       "message" == a && this.listView_.appendChild(this.messageAddButton_);
@@ -21388,7 +21389,7 @@ Entry.VariableContainer.prototype.updateList = function() {
       }
     }
     if ("all" == a || "func" == a) {
-      for (c in "func" == a && (a = Entry.Workspace.MODE_BOARD, Entry.playground && Entry.playground.mainWorkspace && (a = Entry.playground.mainWorkspace.getMode()), a === Entry.Workspace.MODE_OVERLAYBOARD || b ? this.functionAddButton_.addClass("disable") : this.functionAddButton_.removeClass("disable"), this.listView_.appendChild(this.functionAddButton_)), this.functions_) {
+      for (c in "func" == a && (a = Entry.Workspace.MODE_BOARD, Entry.getMainWS() && (a = Entry.getMainWS().getMode()), a === Entry.Workspace.MODE_OVERLAYBOARD || b ? this.functionAddButton_.addClass("disable") : this.functionAddButton_.removeClass("disable"), this.listView_.appendChild(this.functionAddButton_)), this.functions_) {
         b = this.functions_[c], d.push(b), !b.funcElement && this.createFunctionView(b), f = b.listElement, this.listView_.appendChild(f), b.callerListElement && this.listView_.appendChild(b.callerListElement);
       }
     }
@@ -21489,21 +21490,21 @@ Entry.VariableContainer.prototype.saveFunction = function(b) {
 Entry.VariableContainer.prototype.createFunctionView = function(b) {
   var a = this;
   if (this.view_) {
-    var d = Entry.createElement("li");
-    d.addClass("entryVariableListElementWorkspace");
-    d.addClass("entryFunctionElementWorkspace");
+    var d = Entry.createElement("li"), c;
+    c = "entryVariableListElementWorkspace entryFunctionElementWorkspace";
+    d.addClass(c);
     d.bindOnClick(function(c) {
       c.stopPropagation();
       a.select(b);
     });
-    var c = Entry.createElement("button");
+    c = Entry.createElement("button");
     c.addClass("entryVariableListElementDeleteWorkspace");
     c.bindOnClick(function(c) {
       c.stopPropagation();
       confirm(Lang.Workspace.will_you_delete_function) && (a.removeFunction(b), a.selected = null);
     });
     var e = Entry.createElement("button");
-    e.addClass("entryVariableListElementEditWorkspace");
+    e.addClass("entryVariableListElementEditWorkspace notForTextMode");
     var f = this._getBlockMenu();
     e.bindOnClick(function(a) {
       a.stopPropagation();
@@ -21592,7 +21593,7 @@ Entry.VariableContainer.prototype.removeList = function(b) {
 };
 Entry.VariableContainer.prototype.createVariableView = function(b) {
   var a = this, d = Entry.createElement("li"), c = Entry.createElement("div");
-  c.addClass("entryVariableListElementWrapperWorkspace variable");
+  c.addClass("entryVariableListElementWrapperWorkspace");
   d.appendChild(c);
   var e = "entryVariableListElementWorkspace", e = b.object_ ? e + " entryVariableLocalElementWorkspace" : b.isCloud_ ? e + " entryVariableCloudElementWorkspace" : e + " entryVariableGlobalElementWorkspace";
   d.addClass(e);
@@ -21600,7 +21601,7 @@ Entry.VariableContainer.prototype.createVariableView = function(b) {
     a.select(b);
   });
   e = Entry.createElement("button");
-  e.addClass("entryVariableListElementDeleteWorkspace");
+  e.addClass("entryVariableListElementDeleteWorkspace notForTextMode");
   e.bindOnClick(function(c) {
     c.stopPropagation();
     a.removeVariable(b);
@@ -21757,7 +21758,7 @@ Entry.VariableContainer.prototype.addList = function(b) {
 };
 Entry.VariableContainer.prototype.createListView = function(b) {
   var a = this, d = Entry.createElement("li"), c = Entry.createElement("div");
-  c.addClass("entryVariableListElementWrapperWorkspace variable");
+  c.addClass("entryVariableListElementWrapperWorkspace");
   d.appendChild(c);
   d.addClass("entryVariableListElementWorkspace");
   b.object_ ? d.addClass("entryListLocalElementWorkspace") : b.isCloud_ ? d.addClass("entryListCloudElementWorkspace") : d.addClass("entryListGlobalElementWorkspace");
@@ -21765,7 +21766,7 @@ Entry.VariableContainer.prototype.createListView = function(b) {
     a.select(b);
   });
   var e = Entry.createElement("button");
-  e.addClass("entryVariableListElementDeleteWorkspace");
+  e.addClass("entryVariableListElementDeleteWorkspace notForTextMode");
   e.bindOnClick(function(c) {
     c.stopPropagation();
     a.removeList(b);
@@ -22379,7 +22380,7 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
   }
 };
 Entry.VariableContainer.prototype.addRef = function(b, a) {
-  if (this.view_ && Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
+  if (this.view_ && Entry.playground.mainWorkspace && Entry.getMainWS().getMode() === Entry.Workspace.MODE_BOARD) {
     var d = {object:a.getCode().object, block:a};
     a.funcBlock && (d.funcBlock = a.funcBlock, delete a.funcBlock);
     this[b].push(d);
@@ -22400,7 +22401,7 @@ Entry.VariableContainer.prototype.addRef = function(b, a) {
   }
 };
 Entry.VariableContainer.prototype.removeRef = function(b, a) {
-  if (Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
+  if (Entry.playground.mainWorkspace && Entry.getMainWS().getMode() === Entry.Workspace.MODE_BOARD) {
     for (var d = this[b], c = 0;c < d.length;c++) {
       if (d[c].block == a) {
         d.splice(c, 1);
@@ -23142,15 +23143,20 @@ Entry.BlockMenu = function(b, a, d, c) {
     this.updateSplitters();
   };
   b.setMenu = function() {
-    Object.keys(this._categoryElems);
     this._categoryData.forEach(function(a) {
-      var b = a.category, c = a.blocks;
-      a = c.length;
-      for (var e = 0;e < c.length;e++) {
-        this.checkBanClass(Entry.block[c[e]]) && a--;
+      var b = a.category;
+      a = a.blocks;
+      if ("func" === b) {
+        var c = this.code.getThreadsByCategory("func").map(function(a) {
+          return a.getFirstBlock().type;
+        });
+        a = c.length ? c : a;
+      }
+      for (var c = a.length, e = 0;e < a.length;e++) {
+        this.checkBanClass(Entry.block[a[e]]) && c--;
       }
       b = this._categoryElems[b];
-      0 === a ? b.addClass("entryRemove") : b.removeClass("entryRemove");
+      0 === c ? b.addClass("entryRemove") : b.removeClass("entryRemove");
     }.bind(this));
   };
   b.getCategoryCodes = function(a) {
@@ -27095,7 +27101,7 @@ Entry.Block = function(b, a) {
   e && c.object && e.forEach(function(a) {
     Entry.Utils.isFunction(a) && a(d);
   });
-  (e = this.events.viewAdd) && Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && e.forEach(function(a) {
+  (e = this.events.viewAdd) && Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && this.getCode().board && this.getCode().board.constructor !== Entry.BlockMenu && e.forEach(function(a) {
     Entry.Utils.isFunction(a) && a.apply(d, [d]);
   });
 };
@@ -27228,7 +27234,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       (a = this.events.dataDestroy) && c.object && a.forEach(function(a) {
         Entry.Utils.isFunction(a) && a.apply(e, [e]);
       });
-      (a = this.events.viewDestroy) && Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && a.forEach(function(a) {
+      (a = this.events.viewDestroy) && Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && this.getCode().board && this.getCode().board.constructor !== Entry.BlockMenu && a.forEach(function(a) {
         Entry.Utils.isFunction(a) && a.apply(e, [e, k]);
       });
     }
