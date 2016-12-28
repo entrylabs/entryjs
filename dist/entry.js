@@ -27100,7 +27100,7 @@ Entry.Block = function(b, a) {
   e && c.object && e.forEach(function(a) {
     Entry.Utils.isFunction(a) && a(d);
   });
-  (e = this.events.viewAdd) && Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && e.forEach(function(a) {
+  (e = this.events.viewAdd) && Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && this.getCode().board && this.getCode().board.constructor !== Entry.BlockMenu && e.forEach(function(a) {
     Entry.Utils.isFunction(a) && a.apply(d, [d]);
   });
 };
@@ -27233,7 +27233,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       (a = this.events.dataDestroy) && c.object && a.forEach(function(a) {
         Entry.Utils.isFunction(a) && a.apply(e, [e]);
       });
-      (a = this.events.viewDestroy) && Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && a.forEach(function(a) {
+      (a = this.events.viewDestroy) && Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && this.getCode().board && this.getCode().board.constructor !== Entry.BlockMenu && a.forEach(function(a) {
         Entry.Utils.isFunction(a) && a.apply(e, [e, k]);
       });
     }
