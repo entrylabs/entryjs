@@ -23142,15 +23142,20 @@ Entry.BlockMenu = function(b, a, d, c) {
     this.updateSplitters();
   };
   b.setMenu = function() {
-    Object.keys(this._categoryElems);
     this._categoryData.forEach(function(a) {
-      var b = a.category, c = a.blocks;
-      a = c.length;
-      for (var e = 0;e < c.length;e++) {
-        this.checkBanClass(Entry.block[c[e]]) && a--;
+      var b = a.category;
+      a = a.blocks;
+      if ("func" === b) {
+        var c = this.code.getThreadsByCategory("func").map(function(a) {
+          return a.getFirstBlock().type;
+        });
+        a = c.length ? c : a;
+      }
+      for (var c = a.length, e = 0;e < a.length;e++) {
+        this.checkBanClass(Entry.block[a[e]]) && c--;
       }
       b = this._categoryElems[b];
-      0 === a ? b.addClass("entryRemove") : b.removeClass("entryRemove");
+      0 === c ? b.addClass("entryRemove") : b.removeClass("entryRemove");
     }.bind(this));
   };
   b.getCategoryCodes = function(a) {
