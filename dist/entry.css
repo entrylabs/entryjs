@@ -489,6 +489,12 @@ span.CodeMirror-selectedtext {
   opacity: 0.5;
   background-color: #767676;
 }
+#entryInputForComputeWidth {
+  visibility: hidden;
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+}
 
 .dragNone {
   -webkit-touch-callout: none;
@@ -518,6 +524,12 @@ span.CodeMirror-selectedtext {
 .entryDimmed {
   opacity: 0.5;
   background-color: #767676;
+}
+#entryInputForComputeWidth {
+  visibility: hidden;
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
 }
 .block.selected > g > .blockPath {
   stroke-width: 3px;

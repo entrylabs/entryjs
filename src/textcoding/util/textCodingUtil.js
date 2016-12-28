@@ -146,7 +146,7 @@ Entry.TextCodingUtil = {};
                 }
             }
         }
-        else if(menuName == "spritesWithMouse" || menuName == "spritesWithSelf" || 
+        else if(menuName == "spritesWithMouse" || menuName == "spritesWithSelf" ||
             menuName == "collision" || menuName == "clone") {
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
@@ -191,7 +191,7 @@ Entry.TextCodingUtil = {};
                 var entryMessage = entryMessages[e];
                 if(entryMessage.name == name) {
                     return entryMessage.id;
-                    
+
                 }
 
             }
@@ -212,7 +212,7 @@ Entry.TextCodingUtil = {};
             }
         }
         else if(menuName == "sounds") {
-            var objects = Entry.container.getAllObjects(); 
+            var objects = Entry.container.getAllObjects();
             for(var o in objects) {
                 var object = objects[o];
                 if(object.scene.id == currentScene.id) {
@@ -903,7 +903,7 @@ Entry.TextCodingUtil = {};
         return false;
     };*/
 
-    tu.entryEventFilter = function(text) {  
+    tu.entryEventFilter = function(text) {
         var startIndex = text.indexOf("(");
         var endIndex = text.indexOf(")");
 
@@ -911,7 +911,7 @@ Entry.TextCodingUtil = {};
         var param = text.substring(startIndex+1, endIndex);
         console.log("filter stmt", stmt, "param", param);
         param = param.replace(/\"/g, "");
-        
+
         if(param) {
             if(isNaN(param)) {
                 param = param.replace(/ /g, "_space_");
@@ -924,9 +924,9 @@ Entry.TextCodingUtil = {};
                 param = 'none';
         }
 
-        
+
         text = stmt + "(" + param + "):\n";
-        
+
 
 
         console.log("entryEventFilter text", text);
@@ -1066,8 +1066,8 @@ Entry.TextCodingUtil = {};
     };
 
     /////////////////////////////////////////////////////
-    //Important 
-    //////////////////////////////////////////////////// 
+    //Important
+    ////////////////////////////////////////////////////
     tu.isEntryEventFuncByFullText = function(text) {
         var index = text.indexOf("(");
         var name = text.substring(0, index);
@@ -1093,7 +1093,7 @@ Entry.TextCodingUtil = {};
             name == "def entry_event_object_up" ||
             name == "def entry_event_signal" ||
             name == "def entry_event_scene_start" ||
-            name == "def entry_event_clone_create") { 
+            name == "def entry_event_clone_create") {
 
 
             return true;
@@ -1103,7 +1103,7 @@ Entry.TextCodingUtil = {};
 
     };
 
-    
+
     tu.eventBlockSyntaxFilter = function(name) {
         var result;
         if( name == "when_start" ||
@@ -1128,7 +1128,7 @@ Entry.TextCodingUtil = {};
             name == "entry_event_object_up" ||
             name == "entry_event_signal" ||
             name == "entry_event_scene_start" ||
-            name == "entry_event_clone_create") { 
+            name == "entry_event_clone_create") {
 
             name = "def " + name;
             result = name;
@@ -1162,7 +1162,7 @@ Entry.TextCodingUtil = {};
             name == "entry_event_object_up" ||
             name == "entry_event_signal" ||
             name == "entry_event_scene_start" ||
-            name == "entry_event_clone_create") { 
+            name == "entry_event_clone_create") {
 
 
             return true;
@@ -1189,7 +1189,7 @@ Entry.TextCodingUtil = {};
         return false;
     }
     /////////////////////////////////////////////////////
-    //Important 
+    //Important
     ////////////////////////////////////////////////////
 
     tu.isEntryEventFuncNameWithParam = function(name) {
@@ -1308,7 +1308,7 @@ Entry.TextCodingUtil = {};
         console.log("blockFuncContents, textFuncStatements", blockFuncContents, textFuncStatements);
         var matchFlag = true;
 
-        if(textFuncStatements.length != blockFuncContents.length) { 
+        if(textFuncStatements.length != blockFuncContents.length) {
             matchFlag = false;
             return matchFlag;
         }
@@ -1331,14 +1331,14 @@ Entry.TextCodingUtil = {};
             }
 
             console.log("textFuncStatement", textFuncStatement, "blockFuncContent", blockFuncContent);
-            
+
             if(blockFuncContent._schema && blockFuncContent._schema.template) {
                 var template = blockFuncContent._schema.template;
                 var blockFuncName = template.trim().split(' ')[0];
                 console.log("blockFuncName", blockFuncName, "textFuncName", textFuncStatement);
                 if(blockFuncName == textFuncStatement.funcName)
                     var reculsive = true;
-                else 
+                else
                     var reculsive = false;
             }
 
@@ -1346,7 +1346,7 @@ Entry.TextCodingUtil = {};
                 matchFlag = true;
                 if(currentFuncKey != textFuncStatement.type)
                     matchFlag = false;
-                
+
                 var textFuncStatementParams = textFuncStatement.params;
                 var blockFuncContentParams = blockFuncContent.data.params;
                 var cleansingParams = [];
@@ -1578,7 +1578,7 @@ Entry.TextCodingUtil = {};
             targetBlock.type = cFuncType;
         }*/
         var tParams = targetBlock.params;
-        
+
         console.log("makeFuncParamBlock tParams", tParams);
         console.log("paramInfo", paramInfo);
 
@@ -1590,18 +1590,18 @@ Entry.TextCodingUtil = {};
                 continue;
 
             if(typeof param != "object")
-                continue; 
+                continue;
 
             if(param.type && param.params && param.params.length != 0) {
                 this.makeFuncParamBlock(param, paramInfo, blockCount);
             }
-            else if(param.type && param.params && param.params.length == 0) { 
+            else if(param.type && param.params && param.params.length == 0) {
                 var paramKey = param.type;
                 var paramBlockType = paramInfo[paramKey];
                 console.log("paramBlockType1", paramBlockType);
                 if(paramBlockType) {
                     var paramBlock = {};
-                    paramBlock.type = paramBlockType; 
+                    paramBlock.type = paramBlockType;
                     paramBlock.params = [];
                     targetBlock.params[i] = paramBlock;
                 }
@@ -1635,7 +1635,7 @@ Entry.TextCodingUtil = {};
                     blockCount,
                     Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
             }
-            
+
         }
 
         var stmts = targetBlock.statements;
@@ -1909,7 +1909,7 @@ Entry.TextCodingUtil = {};
         var targets = vc.variables_ || [];
         for (var i=0; i<targets.length; i++) {
             if (test(targets[i].name_)) {
-                console.log("vari here", Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]); 
+                console.log("vari here", Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]);
                 return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT];
             }
         }
@@ -1941,28 +1941,28 @@ Entry.TextCodingUtil = {};
                 if(funcBlock.params.length == 2) {
                     var paramBlock = funcBlock.params[0];
                     if(paramBlock.data.type == "function_field_label") {
-                        var paramBlockParams = paramBlock.data.params; 
+                        var paramBlockParams = paramBlock.data.params;
                         if(paramBlockParams.length == 2) {
                             if(paramBlockParams[1] == undefined) {
                                 var name = paramBlockParams[0];
                                 if (test(name))
                                     return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT];
                             }
-                            else 
-                                if(paramBlockParams[1].data.type == "function_field_label") 
+                            else
+                                if(paramBlockParams[1].data.type == "function_field_label")
                                     return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
-                                else 
+                                else
                                     if(this.hasFunctionFieldLabel(paramBlockParams[1]))
                                         return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
                         }
                         else
                             return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
                     }
-                    else 
+                    else
                         return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-                } else 
+                } else
                     return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-            } else 
+            } else
                 return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
         }
 
@@ -1972,14 +1972,14 @@ Entry.TextCodingUtil = {};
         }
     };
 
-    tu.isNameIncludeSpace = function(name, type) { 
-        if (type == "variable" && test(name)) { 
+    tu.isNameIncludeSpace = function(name, type) {
+        if (type == "variable" && test(name)) {
             return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE];
         }
-        else if (type == "list" && test(name)) { 
+        else if (type == "list" && test(name)) {
             return Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE];
         }
-        else if (type == "function" && test(name)) { 
+        else if (type == "function" && test(name)) {
             return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE];
         }
 
@@ -2025,7 +2025,7 @@ Entry.TextCodingUtil = {};
         this._funcParams.push(param);
     };
 
-    tu.clearFuncParam = function() { 
+    tu.clearFuncParam = function() {
         this._funcParams = [];
     };
 
@@ -2255,21 +2255,21 @@ Entry.TextCodingUtil = {};
         //inspect variables
         var targets = vc.variables_ || [];
 
-        for (var i=targets.length-1; i>=0; i--) { 
+        for (var i=targets.length-1; i>=0; i--) {
             var v = targets[i];
             var name = v.name_;
             var value = v.value_;
-            
+
             if(v.object_) {
                 if(v.object_ == currentObject.id) {
-                    name = "self." + name; 
+                    name = "self." + name;
                 }
                 else continue;
-            } 
+            }
 
             if(typeof value === "string")
                 value = '"()"'.replace('()', value);
-            
+
             result += name + " = " + value + "\n";
         }
 
@@ -2284,8 +2284,8 @@ Entry.TextCodingUtil = {};
             return;
 
         //inspect lists
-        targets = vc.lists_ || []; 
-        
+        targets = vc.lists_ || [];
+
         for (var i=targets.length-1; i>=0; i--) {
             var l = targets[i];
             var name = l.name_;
@@ -2298,11 +2298,11 @@ Entry.TextCodingUtil = {};
                 else
                     continue;
             }
-            
+
             for(var va in lArray) {
                 var vItem = lArray[va];
                 var data = vItem.data;
-               
+
                 /*if(!isNaN(pData)) {
                     data = pData;
                     console.log("list data1", data);
@@ -2310,7 +2310,7 @@ Entry.TextCodingUtil = {};
                     console.log("list data2", data);
 
                 }*/
-                
+
                 if(isNaN(data))
                     data = "\"" + data + "\"";
                 value += data;
@@ -2319,7 +2319,7 @@ Entry.TextCodingUtil = {};
             }
 
             result += name + " = [" + value + "]" + "\n";
-            
+
         }
 
         return result;
@@ -2330,12 +2330,12 @@ Entry.TextCodingUtil = {};
         var currentObject = Entry.playground.object;
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {
-            var entryVariable = entryVariables[i]; 
+            var entryVariable = entryVariables[i];
             if(type == "global") {
                 if(entryVariable.object_ === null && entryVariable.id_ == id) {
                     if(!isNaN(entryVariable.value_))
                         return true;
-                } 
+                }
             }
             else if(type == "local") {
                 if(entryVariable.object_ === currentObject.id && entryVariable.id_ == id) {
