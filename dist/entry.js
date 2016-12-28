@@ -21325,7 +21325,7 @@ Entry.VariableContainer.prototype.updateList = function() {
     this.variableSettingView.addClass("entryRemove");
     this.listSettingView.addClass("entryRemove");
     var b = this._isPythonMode();
-    for (b ? this.listView_.addClass("entryTextMode") : this.listView_.removeClass("entryTextMode");this.listView_.firstChild;) {
+    for (b ? this.listView_.addClass("entryVariableContainerTextMode") : this.listView_.removeClass("entryVariableContainerTextMode");this.listView_.firstChild;) {
       this.listView_.removeChild(this.listView_.lastChild);
     }
     var a = this.viewMode_, d = [];
@@ -21497,13 +21497,13 @@ Entry.VariableContainer.prototype.createFunctionView = function(b) {
       a.select(b);
     });
     c = Entry.createElement("button");
-    c.addClass("entryVariableListElementDeleteWorkspace notForTextMode");
+    c.addClass("entryVariableListElementDeleteWorkspace");
     c.bindOnClick(function(c) {
       c.stopPropagation();
       confirm(Lang.Workspace.will_you_delete_function) && (a.removeFunction(b), a.selected = null);
     });
     var e = Entry.createElement("button");
-    e.addClass("entryVariableListElementEditWorkspace");
+    e.addClass("entryVariableListElementEditWorkspace notForTextMode");
     var f = this._getBlockMenu();
     e.bindOnClick(function(a) {
       a.stopPropagation();

@@ -6159,7 +6159,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   width: 100%;
   height: 50px;
 }
-.entryTextMode .entryVariableListElementDeleteWorkspace.notForTextMode {
+.entryVariableContainerTextMode .notForTextMode {
   display: none;
 }
 .entryListSettingWorkspace {

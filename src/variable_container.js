@@ -414,9 +414,9 @@ Entry.VariableContainer.prototype.updateList = function() {
 
     var isPythonMode = this._isPythonMode();
     if (isPythonMode)
-        this.listView_.addClass('entryTextMode');
+        this.listView_.addClass('entryVariableContainerTextMode');
     else
-        this.listView_.removeClass('entryTextMode');
+        this.listView_.removeClass('entryVariableContainerTextMode');
 
     while (this.listView_.firstChild)
         this.listView_.removeChild(this.listView_.lastChild);
@@ -779,7 +779,7 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
     });
 
     var removeButton = Entry.createElement('button');
-    removeButton.addClass('entryVariableListElementDeleteWorkspace notForTextMode');
+    removeButton.addClass('entryVariableListElementDeleteWorkspace');
     removeButton.bindOnClick(function(e) {
         e.stopPropagation();
         if (confirm(Lang.Workspace.will_you_delete_function)) {
@@ -789,7 +789,7 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
     });
 
     var editButton = Entry.createElement('button');
-    editButton.addClass('entryVariableListElementEditWorkspace');
+    editButton.addClass('entryVariableListElementEditWorkspace notForTextMode');
     var blockMenu = this._getBlockMenu();
     editButton.bindOnClick(function (e) {
         e.stopPropagation();
