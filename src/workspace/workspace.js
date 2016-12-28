@@ -112,8 +112,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         Entry.getMainWS().setMode(mode);
                         break;
                     }
-                    if (this.board) this.board.hide();
-                    if (this.overlayBoard) this.overlayBoard.hide();
+                    this.board && this.board.hide();
+                    this.overlayBoard && this.overlayBoard.hide();
                     blockMenu.banClass('functionInit');
                     this.set({selectedBoard:this.vimBoard});
                     this.vimBoard.show();
@@ -443,12 +443,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             return;
         if (Entry.engine && Entry.engine.isState('run'))
             return;
-        
-        var changedCode = this.vimBoard.textToCode(this.textType);          
-        
+
+        var changedCode = this.vimBoard.textToCode(this.textType);
+
         var board = this.board;
         var code = board.code;
-        if (code) code.load(changedCode);   
+        if (code) code.load(changedCode);
     };
 
     p.addVimBoard = function(dom) {

@@ -19563,7 +19563,9 @@ Entry.Func.initEditView = function(b) {
   var a = Entry.getMainWS();
   a.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
   a.changeOverlayBoardCode(b);
-  this._workspaceStateEvent = a.changeEvent.attach(this, this.endEdit);
+  this._workspaceStateEvent = a.changeEvent.attach(this, function(b) {
+    a.getMode() === Entry.Workspace.MODE_VIMBOARD && (this.endEdit("cancelEdit"), a.blockMenu.banClass("functionInit"));
+  });
   b.board.alignThreads();
 };
 Entry.Func.endEdit = function(b) {
