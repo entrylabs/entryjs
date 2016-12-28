@@ -21325,8 +21325,9 @@ Entry.VariableContainer.prototype.updateList = function() {
     this.variableSettingView.addClass("entryRemove");
     this.listSettingView.addClass("entryRemove");
     var b = this._isPythonMode();
-    b ? this.listView_.addClass("entryTextMode") : this.listView_.removeClass("entryTextMode");
-    this.listView_.innerHTML = "";
+    for (b ? this.listView_.addClass("entryTextMode") : this.listView_.removeClass("entryTextMode");this.listView_.firstChild;) {
+      this.listView_.removeChild(this.listView_.lastChild);
+    }
     var a = this.viewMode_, d = [];
     if ("all" == a || "message" == a) {
       "message" == a && this.listView_.appendChild(this.messageAddButton_);

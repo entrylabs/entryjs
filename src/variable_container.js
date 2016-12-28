@@ -418,7 +418,8 @@ Entry.VariableContainer.prototype.updateList = function() {
     else
         this.listView_.removeClass('entryTextMode');
 
-    this.listView_.innerHTML = '';
+    while (this.listView_.firstChild)
+        this.listView_.removeChild(this.listView_.lastChild);
 
     var viewMode = this.viewMode_;
     var elementList = [];
