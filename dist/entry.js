@@ -19329,7 +19329,7 @@ Entry.Utils.xmlToJsonData = function(b) {
 Entry.Utils.stopProjectWithToast = function(b, a, d) {
   var c = b.block;
   a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
-  Entry.isTextMode && (Entry.getMainWS().vimBoard._parser._onRunError = !0, Entry.getMainWS().vimBoard._onSync = !1);
+  Entry.isTextMode && (Entry.getMainWS().vimBoard._parser._onRunError = !0);
   Entry.toast && !d && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
   Entry.engine && Entry.engine.toggleStop();
   "workspace" === Entry.type && (b.block && "funcBlock" in b.block ? c = b.block.funcBlock : b.funcExecutor && (c = b.funcExecutor.scope.block, b = b.type.replace("func_", ""), Entry.Func.edit(Entry.variableContainer.functions_[b])), c && (Entry.container.selectObject(c.getCode().object.id, !0), c.view.getBoard().activateBlock(c)));
@@ -27228,7 +27228,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       (a = this.events.dataDestroy) && c.object && a.forEach(function(a) {
         Entry.Utils.isFunction(a) && a.apply(e, [e]);
       });
-      (a = this.events.viewDestroy) && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && a.forEach(function(a) {
+      (a = this.events.viewDestroy) && Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD && a.forEach(function(a) {
         Entry.Utils.isFunction(a) && a.apply(e, [e, k]);
       });
     }

@@ -588,7 +588,7 @@ Entry.Engine.prototype.toggleStop = function() {
 
     if(Entry.isTextMode) {
         var ws = Entry.getMainWS();
-        if(ws && ws.vimBoard) 
+        if(ws && ws.vimBoard)
             ws.vimBoard._onSync = false;
     }
 };
