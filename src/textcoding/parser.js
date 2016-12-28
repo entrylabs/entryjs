@@ -735,7 +735,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         this.py_variableDeclaration = Entry.TextCodingUtil.generateVariablesDeclaration();
         this.py_listDeclaration = Entry.TextCodingUtil.generateListsDeclaration();
         this._hasDeclaration = true;
-        console.log("initDeclaration", "CO", Entry.getMainWS().vimBoard._currentObject);
     };
 
     p.removeDeclaration = function() {

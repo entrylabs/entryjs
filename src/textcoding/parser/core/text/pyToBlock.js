@@ -2253,6 +2253,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 array.push(item);
             }
 
+            console.log("Engine State", Entry.engine.state);
             
             if(Entry.TextCodingUtil.isGlobalListExisted(name)) {
                 if(!this._funcLoop) {
@@ -2264,6 +2265,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     Entry.TextCodingUtil.createGlobalList(name, array);
                 }
             }
+            
         } else {
             var name = id.name;
             if(init.type == "Literal") {
@@ -2289,18 +2291,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 value = parseFloat(value);
 
             console.log("variable name", name, "value", value, "value.length", value.length, "this._funcLoop", this._funcLoop);
-        
+            console.log("Engine State", Entry.engine.state);
+    
             if(value || value == 0) {
                 if(name.search("__filbert") == -1) {
+                    
                     if(Entry.TextCodingUtil.isGlobalVariableExisted(name)) {
                         if(!this._funcLoop)
                             Entry.TextCodingUtil.updateGlobalVariable(name, value);
                     }
-                    else {
+                    else { 
                         if(!this._funcLoop) {
                             Entry.TextCodingUtil.createGlobalVariable(name, value); 
                         }
-                        else {
+                        else { 
                             value = 0;
                             Entry.TextCodingUtil.createGlobalVariable(name, value);
                         }
@@ -2308,7 +2312,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
             
-
             /*var idData = this[id.type](id);
             console.log("VariableDeclarator idData", idData);*/
             result.id = idData;

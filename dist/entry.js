@@ -14956,12 +14956,14 @@ Entry.PyToBlockParser = function(b) {
           isNaN(f) || (f = parseFloat(f));
           k.push(f);
         }
+        console.log("Engine State", Entry.engine.state);
         Entry.TextCodingUtil.isGlobalListExisted(l) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalList(l, k) : this._funcLoop || Entry.TextCodingUtil.createGlobalList(l, k);
       } else {
         l = e.name;
         "Literal" == f.type ? g = f.value : "Identifier" == f.type ? g = f.name : "UnaryExpression" == f.type ? (g = h.params[0], console.log("gl initData", h, "type", typeof g), "string" != typeof g && "number" != typeof g && (g = 0)) : g = 0;
         isNaN(g) || (g = parseFloat(g));
         console.log("variable name", l, "value", g, "value.length", g.length, "this._funcLoop", this._funcLoop);
+        console.log("Engine State", Entry.engine.state);
         !g && 0 != g || -1 != l.search("__filbert") || (Entry.TextCodingUtil.isGlobalVariableExisted(l) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(l, g) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(l, 0) : Entry.TextCodingUtil.createGlobalVariable(l, g));
         b.id = k;
         b.init = h;
@@ -16914,7 +16916,6 @@ Entry.Parser = function(b, a, d, c) {
     this.py_variableDeclaration = Entry.TextCodingUtil.generateVariablesDeclaration();
     this.py_listDeclaration = Entry.TextCodingUtil.generateListsDeclaration();
     this._hasDeclaration = !0;
-    console.log("initDeclaration", "CO", Entry.getMainWS().vimBoard._currentObject);
   };
   b.removeDeclaration = function() {
     this.py_listDeclaration = this.py_variableDeclaration = null;
@@ -27883,7 +27884,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     a && a.constructor === Entry.Board && this.trashcan.setBoard(a);
   };
   b._syncTextCode = function() {
-    if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
+    if (!(this.mode !== Entry.Workspace.MODE_VIMBOARD || Entry.engine && Entry.engine.isState("run"))) {
       var a = this.vimBoard.textToCode(this.textType), b = this.board.code;
       b && b.load(a);
     }
