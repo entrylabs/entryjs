@@ -121,8 +121,9 @@ Entry.Func.initEditView = function(content) {
     this._workspaceStateEvent =
         workspace.changeEvent.attach(this, function(message) {
             this.endEdit(message || 'cancelEdit');
-            if (workspace.getMode() === Entry.Workspace.MODE_VIMBOARD)
+            if (workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
                 workspace.blockMenu.banClass('functionInit');
+            }
         });
     content.board.alignThreads();
 };
@@ -366,18 +367,15 @@ Entry.Func.updateMenu = function() {
     var workspace = Entry.getMainWS();
     if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
-    if (blockMenu.lastSelector === 'func') {
-        if (this.targetFunc) {
-            if (!this.menuCode)
-                this.setupMenuCode();
-            blockMenu.banClass("functionInit", true);
-            blockMenu.unbanClass("functionEdit", true);
-        } else {
-            blockMenu.unbanClass("functionInit", true);
-            blockMenu.banClass("functionEdit", true);
-        }
-        blockMenu.align();
+    if (this.targetFunc) {
+        !this.menuCode && this.setupMenuCode();
+        blockMenu.banClass("functionInit", true);
+        blockMenu.unbanClass("functionEdit", true);
+    } else {
+        blockMenu.unbanClass("functionInit", true);
+        blockMenu.banClass("functionEdit", true);
     }
+    blockMenu.lastSelector === 'func' && blockMenu.align();
 };
 
 Entry.Func.prototype.edit = function() {

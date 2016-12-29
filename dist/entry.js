@@ -19701,7 +19701,7 @@ Entry.Func.createParamBlock = function(b, a, d) {
 };
 Entry.Func.updateMenu = function() {
   var b = Entry.getMainWS();
-  b && (b = b.getBlockMenu(), "func" === b.lastSelector && (this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit", !0), b.unbanClass("functionEdit", !0)) : (b.unbanClass("functionInit", !0), b.banClass("functionEdit", !0)), b.align()));
+  b && (b = b.getBlockMenu(), this.targetFunc ? (!this.menuCode && this.setupMenuCode(), b.banClass("functionInit", !0), b.unbanClass("functionEdit", !0)) : (b.unbanClass("functionInit", !0), b.banClass("functionEdit", !0)), "func" === b.lastSelector && b.align());
 };
 Entry.Func.prototype.edit = function() {
   Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView());
