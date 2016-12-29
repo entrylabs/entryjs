@@ -272,9 +272,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p._keyboardControl = function(e, isForce) {
+        if (Entry.Loader && !Entry.Loader.loaded)
+            return;
         var keyCode = e.keyCode || e.which,
             ctrlKey = e.ctrlKey, shiftKey = e.shiftKey, altKey = e.altKey;
         var playground = Entry.playground;
+        var object = playground && playground.object ?
+            playground.object : undefined;
+
 
         if (Entry.Utils.isInInput(e) && !isForce)
             return;
@@ -292,7 +297,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                             .getFirstBlock().copyToClipboard();
                     break;
                 case 219: //setMode(block) for textcoding
-                    if (playground && !playground.object) {
+                    if (!object) {
                         if (isVimMode) {
                             var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
                             alert(message);
@@ -317,7 +322,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     e.preventDefault();
                     break;
                 case 221: //setMode(python) for textcoding
-                    if (playground && !playground.object) {
+                    if (!object) {
                         if (this.oldMode === Entry.Workspace.MODE_BOARD) {
                             var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
                             alert(message);
@@ -361,7 +366,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
             }
         } else if (altKey) {
-            if (playground && !playground.object) {
+            if (!object) {
                 var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
                 alert(message);
                 return;

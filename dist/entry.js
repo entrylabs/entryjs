@@ -12,7 +12,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   createjs.Ticker.setFPS(Entry.FPS);
   "workspace" == this.type && setTimeout(function() {
     Entry.stateManager.endIgnore();
-  }, 300);
+  }, 500);
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
@@ -27768,107 +27768,109 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.overlayBoard.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1);
   };
   b._keyboardControl = function(a, b) {
-    var c = a.keyCode || a.which, e = a.ctrlKey, f = a.shiftKey, g = a.altKey, h = Entry.playground;
-    if (!Entry.Utils.isInInput(a) || b) {
-      var k = this._isVimMode(), l = this.selectedBlockView;
-      if (e) {
-        switch(c) {
-          case 86:
-            (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
-            break;
-          case 219:
-            if (h && !h.object && k) {
-              alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
-              return;
-            }
-            if (Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
-              return;
-            }
-            if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-              alert(c);
-              return;
-            }
-            this.dSetMode({boardType:Entry.Workspace.MODE_BOARD, textType:-1});
-            a.preventDefault();
-            break;
-          case 221:
-            if (h && !h.object && this.oldMode === Entry.Workspace.MODE_BOARD) {
-              alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
-              return;
-            }
-            if (c = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
-              alert(c);
-              return;
-            }
-            if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-              alert(c);
-              return;
-            }
-            this.dSetMode({boardType:Entry.Workspace.MODE_VIMBOARD, textType:Entry.Vim.TEXT_TYPE_PY, runType:Entry.Vim.WORKSPACE_MODE});
-            a.preventDefault();
-            break;
-          case 67:
-            l && !l.isInBlockMenu && l.block.isDeletable() && l.block.copyToClipboard();
-            break;
-          case 88:
-            l && !l.isInBlockMenu && l.block.isDeletable() && function(a) {
-              a.copyToClipboard();
-              a.destroy(!0, !0);
-              l.getBoard().setSelectedBlock(null);
-            }(l.block);
-        }
-      } else {
-        if (g) {
-          if (h && !h.object) {
-            alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
-            return;
-          }
+    if (!Entry.Loader || Entry.Loader.loaded) {
+      var c = a.keyCode || a.which, e = a.ctrlKey, f = a.shiftKey, g = a.altKey, h = Entry.playground, k = h && h.object ? h.object : void 0;
+      if (!Entry.Utils.isInInput(a) || b) {
+        var l = this._isVimMode(), m = this.selectedBlockView;
+        if (e) {
           switch(c) {
-            case 49:
-              h.changeViewMode("code");
-              a.preventDefault();
-              break;
-            case 50:
-              h.changeViewMode("picture");
-              a.preventDefault();
-              break;
-            case 51:
-              h.changeViewMode("sound");
-              a.preventDefault();
-              break;
-            case 52:
-              h.toggleOnVariableView();
-              h.changeViewMode("variable");
-              a.preventDefault();
+            case 86:
+              (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
               break;
             case 219:
-              Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("prev"));
+              if (!k && l) {
+                alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+                return;
+              }
+              if (Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
+                return;
+              }
+              if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+                alert(c);
+                return;
+              }
+              this.dSetMode({boardType:Entry.Workspace.MODE_BOARD, textType:-1});
+              a.preventDefault();
               break;
             case 221:
-              Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("next"));
+              if (!k && this.oldMode === Entry.Workspace.MODE_BOARD) {
+                alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+                return;
+              }
+              if (c = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
+                alert(c);
+                return;
+              }
+              if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+                alert(c);
+                return;
+              }
+              this.dSetMode({boardType:Entry.Workspace.MODE_VIMBOARD, textType:Entry.Vim.TEXT_TYPE_PY, runType:Entry.Vim.WORKSPACE_MODE});
+              a.preventDefault();
+              break;
+            case 67:
+              m && !m.isInBlockMenu && m.block.isDeletable() && m.block.copyToClipboard();
+              break;
+            case 88:
+              m && !m.isInBlockMenu && m.block.isDeletable() && function(a) {
+                a.copyToClipboard();
+                a.destroy(!0, !0);
+                m.getBoard().setSelectedBlock(null);
+              }(m.block);
           }
         } else {
-          if (f) {
+          if (g) {
+            if (!k) {
+              alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+              return;
+            }
             switch(c) {
-              case 9:
-                k && (CodeMirror.commands.indentLess(this.vimBoard.codeMirror), a.preventDefault());
+              case 49:
+                h.changeViewMode("code");
+                a.preventDefault();
+                break;
+              case 50:
+                h.changeViewMode("picture");
+                a.preventDefault();
+                break;
+              case 51:
+                h.changeViewMode("sound");
+                a.preventDefault();
+                break;
+              case 52:
+                h.toggleOnVariableView();
+                h.changeViewMode("variable");
+                a.preventDefault();
+                break;
+              case 219:
+                Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("prev"));
+                break;
+              case 221:
+                Entry.container && (a.preventDefault(), Entry.container.selectNeighborObject("next"));
             }
           } else {
-            switch(c) {
-              case 9:
-                k && (CodeMirror.commands.indentMore(this.vimBoard.codeMirror), a.preventDefault());
-                break;
-              case 8:
-              ;
-              case 46:
-                l && !l.isInBlockMenu && l.block.isDeletable() && (Entry.do("destroyBlock", l.block), a.preventDefault());
+            if (f) {
+              switch(c) {
+                case 9:
+                  l && (CodeMirror.commands.indentLess(this.vimBoard.codeMirror), a.preventDefault());
+              }
+            } else {
+              switch(c) {
+                case 9:
+                  l && (CodeMirror.commands.indentMore(this.vimBoard.codeMirror), a.preventDefault());
+                  break;
+                case 8:
+                ;
+                case 46:
+                  m && !m.isInBlockMenu && m.block.isDeletable() && (Entry.do("destroyBlock", m.block), a.preventDefault());
+              }
             }
           }
         }
+        setTimeout(function() {
+          Entry.disposeEvent && Entry.disposeEvent.notify(a);
+        }, 0);
       }
-      setTimeout(function() {
-        Entry.disposeEvent && Entry.disposeEvent.notify(a);
-      }, 0);
     }
   };
   b._handleChangeBoard = function() {
