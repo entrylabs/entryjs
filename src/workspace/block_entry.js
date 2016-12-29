@@ -26315,7 +26315,13 @@ Entry.block = {
                 "size": 12
             }
         ],
-        "events": {},
+        "events": {
+            "dataAdd": [
+                function(block) {
+                    console.log(block.params[0]);
+                }
+            ]
+        },
         "def": {
             "params": [
                 null
@@ -26338,7 +26344,7 @@ Entry.block = {
     "check_lecture_goal": {
         "color": "#7C7C7C",
         "skeleton": "basic_loop",
-        "template": "%1 에서 아래 블록이 %2 %3 실행되었는가 %4",
+        "template": "%1 에서 아래 블록이 %2 실행되었는가 %3",
         "statements": [
             {
                 "accept": "basic"
@@ -26354,17 +26360,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    ["언젠가", "16"],
-                    ["지금", "32"]
-                ],
-                "value": "16",
-                "fontSize": 11
-            },
-            {
-                "type": "Dropdown",
-                "options": [
-                    ["비슷하게", "16"],
-                    ["똑같이", "32"]
+                    ["비슷하게", 0],
+                    ["똑같이", 1]
                 ],
                 "value": "16",
                 "fontSize": 11
@@ -26388,15 +26385,32 @@ Entry.block = {
         "class": "etc",
         "isNotFor": [],
         "func": function (sprite, script) {
+            if (this.listener) {
+                if (this.isDone) {
+                    this.listener.destroy();
+                    return;
+                }
+                else
+                    return Entry.STATIC.BREAK;
+            }
             var code = Entry.container.getObject(this.block.params[0]).script,
-                flow = this.block.params[1],
-                propertyKey = this.block.params[2];
-            if (code)
-                return;
-            else if (flow === 0)
-                return Entry.STATIC.BREAK;
-            else
-                this.die();
+                accuracy = this.block.params[1],
+                statements = this.block.statements[0].toJSON();
+            this.isDone = false;
+            var index = 0;
+            this.listener = code.watchEvent.attach(this, function(blocks) {
+                while (blocks.length && index < statements.length) {
+                    var block = blocks.shift();
+                    if (statements[index].type === block.type) {
+                        index++;
+                    } else {
+                        index = 0;
+                    }
+                }
+                if (index === statements.length)
+                    this.isDone = true;
+            })
+            return Entry.STATIC.BREAK;
         }
     }
 };

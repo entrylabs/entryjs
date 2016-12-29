@@ -24486,6 +24486,7 @@ Entry.Code = function(a, b) {
   this._eventMap = {};
   this._blockMap = {};
   this.executors = [];
+  this.watchEvent = new Entry.Event(this);
   this.executeEndEvent = new Entry.Event(this);
   this.changeEvent = new Entry.Event(this);
   this.changeEvent.attach(this, this._handleChange);
@@ -24551,7 +24552,7 @@ Entry.PARAM = -1;
       var e = b[d];
       e.isEnd() ? (b.splice(d--, 1), 0 === b.length && this.executeEndEvent.notify()) : a = a.concat(e.execute());
     }
-    this._reportExecuting(a);
+    this.watchEvent.notify(a);
   };
   a.removeExecutor = function(b) {
     b = this.executors.indexOf(b);
@@ -24688,12 +24689,6 @@ Entry.PARAM = -1;
       b.doDestroy();
     });
   };
-  a.watchExecuting = function(b) {
-  };
-  a._reportExecuting = function() {
-  };
-  a.unwatchExecuting = function() {
-  };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
   Entry.Model(this, !1);
@@ -24760,6 +24755,7 @@ Entry.Executor = function(a, b) {
     if (!this.isEnd()) {
       for (var b = [];;) {
         var a = null;
+        b.push(this.scope.block);
         try {
           var d = this.scope.block.getSchema();
           d && (a = d.func.call(this.scope, this.entity, this.scope));
@@ -24772,7 +24768,6 @@ Entry.Executor = function(a, b) {
             Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", e);
           }
         }
-        b.push(this.scope.block);
         if (this.isEnd()) {
           break;
         }

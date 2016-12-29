@@ -22,6 +22,7 @@ Entry.Code = function(code, object) {
     this._blockMap = {};
 
     this.executors = [];
+    this.watchEvent = new Entry.Event(this);
 
     this.executeEndEvent = new Entry.Event(this);
     this.changeEvent = new Entry.Event(this);
@@ -141,7 +142,7 @@ Entry.PARAM = -1;
                     this.executeEndEvent.notify();
             }
         }
-        this._reportExecuting(executedBlocks);
+        this.watchEvent.notify(executedBlocks);
     };
 
     p.removeExecutor = function(executor) {
@@ -344,14 +345,4 @@ Entry.PARAM = -1;
         this.getBlockList(false, type)
             .forEach(function(b) { b.doDestroy(); });
     };
-
-    p.watchExecuting = function(func) {
-    };
-
-    p._reportExecuting = function() {
-    };
-
-    p.unwatchExecuting = function() {
-    };
-
 })(Entry.Code.prototype);

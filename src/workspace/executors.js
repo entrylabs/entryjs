@@ -20,6 +20,7 @@ Entry.Executor = function(block, entity) {
         var executedBlocks = [];
         while (true) {
             var returnVal = null;
+            executedBlocks.push(this.scope.block);
             try {
                 var schema = this.scope.block.getSchema();
                 if (schema)
@@ -36,8 +37,6 @@ Entry.Executor = function(block, entity) {
                     Entry.Utils.stopProjectWithToast(this.scope, errorMsg, isToastHide);
                 }
             }
-
-            executedBlocks.push(this.scope.block);
 
             //executor can be ended after block function call
             if (this.isEnd()) return executedBlocks;
