@@ -119,11 +119,10 @@ Entry.Func.initEditView = function(content) {
     workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
     workspace.changeOverlayBoardCode(content);
     this._workspaceStateEvent =
-        workspace.changeEvent.attach(this, function(m) {
-            if (workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
-                this.endEdit('cancelEdit');
+        workspace.changeEvent.attach(this, function(message) {
+            this.endEdit(message || 'cancelEdit');
+            if (workspace.getMode() === Entry.Workspace.MODE_VIMBOARD)
                 workspace.blockMenu.banClass('functionInit');
-            }
         });
     content.board.alignThreads();
 };
