@@ -3666,6 +3666,7 @@ Lang.template = {
 	"byrobot_dronefighter_controller_vibrator_on_delay"				: "진동 %1 초 켜기 %2",
 	"byrobot_dronefighter_controller_vibrator_delay"				: "진동 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4",	
 	"byrobot_dronefighter_drone_irmessage"							: "적외선으로 %1 값 보내기 %2",
+	"byrobot_dronefighter_drone_motor_stop"							: "모터 정지 %1",
 	"byrobot_dronefighter_drone_motorsingle"						: "%1 번 모터를 %2 (으)로 회전 %3",
 	"byrobot_dronefighter_drone_motorsingle_input"					: "%1 번 모터를 %2 (으)로 회전 %3",
 	"byrobot_dronefighter_drone_command_mode_vehicle_car"			: "자동차 모드 %1",									/* 작동 모드 변경. */

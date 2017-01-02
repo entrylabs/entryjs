@@ -1720,13 +1720,14 @@ Entry.block.set_brush_tranparency = function(a, b) {
   a.brush && (a.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), a.brush.endStroke(), c = a.brush.rgb, a.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + (1 - a.brush.opacity / 100) + ")"), a.brush.moveTo(a.getX(), -1 * a.getY()));
   return b.callReturn();
 };
-Entry.byrobot_dronefighter = {name:"byrobot_dronefighter", PORT_MAP:{target:0, light_mode_mode:0, light_mode_interval:0, light_event_event:0, light_event_interval:0, light_event_repeat:0, light_manual_flags:0, light_manual_brightness:0, buzzer_mode:0, buzzer_value:0, buzzer_time:0, vibrator_on:0, vibrator_off:0, vibrator_total:0, control_wheel:0, control_accel:0, control_roll:0, control_pitch:0, control_yaw:0, control_throttle:0, command_command:0, command_option:0, motorsingle_target:0, motorsingle_direction:0, 
-motorsingle_value:0, irmessage_data:0}, setZero:function() {
-  var a = Entry.byrobot_dronefighter.PORT_MAP, b = Entry.hw.sendQueue, c;
-  for (c in a) {
-    b[c] = void 0;
+Entry.byrobot_dronefighter = {name:"byrobot_dronefighter", setZero:function() {
+  var a = Entry.hw.sendQueue;
+  a.target = 16;
+  for (var b = 0;3 > b;b++) {
+    a.target = 16, a.command_command = 36, a.command_option = 0, Entry.hw.update(), a.command_command = void 0, a.command_option = void 0, a.target = 17, a.buzzer_mode = 0, a.buzzer_value = 0, a.buzzer_time = 0, Entry.hw.update(), a.buzzer_mode = void 0, a.buzzer_value = void 0, a.buzzer_time = void 0, a.target = 17, a.vibrator_on = 0, a.vibrator_off = 0, a.vibrator_total = 0, Entry.hw.update(), a.vibrator_on = void 0, a.vibrator_off = void 0, a.vibrator_total = void 0, a.target = 16, a.light_manual_flags = 
+    255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0, a.target = 17, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0;
   }
-  Entry.hw.update();
+  a.target = void 0;
 }, monitorTemplate:{imgPath:"hw/byrobot_dronefighter.png", width:500, height:450, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeFlight:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight, type:"input", pos:{x:0, y:0}}, state_modeDrive:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive, type:"input", pos:{x:0, y:0}}, state_coordinate:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate, 
 type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_dronefighter_drone_state_battery, type:"input", pos:{x:0, y:0}}, attitude_roll:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_roll, type:"input", pos:{x:0, y:0}}, attitude_pitch:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, attitude_yaw:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_dronefighter_drone_irmessage, 
 type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event, type:"input", pos:{x:0, 
@@ -25291,18 +25292,18 @@ Entry.FieldStatement = function(a, b, c) {
       (b = this.block.thread.changeEvent) && b.notify();
     }
   };
-  a.insertTopBlock = function(b) {
+  a.insertTopBlock = function(a) {
     this._posObserver && this._posObserver.destroy();
-    var a = this.firstBlock;
-    (this.firstBlock = b) && b.doInsert(this._thread);
-    return a;
+    var b = this.firstBlock;
+    (this.firstBlock = a) && a.doInsert(this._thread);
+    return b;
   };
   a.getNextBlock = function() {
     return this.firstBlock;
   };
   a.checkTopBlock = function() {
-    var b = this._thread.getFirstBlock();
-    b && this.firstBlock !== b ? (this.firstBlock = b, b.view.bindPrev(this), b._updatePos()) : b || (this.firstBlock = null);
+    var a = this._thread.getFirstBlock();
+    a && this.firstBlock !== a ? (this.firstBlock = a, a.view.bindPrev(this), a._updatePos()) : a || (this.firstBlock = null);
   };
 })(Entry.FieldStatement.prototype);
 Entry.FieldText = function(a, b, c) {
@@ -25326,10 +25327,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre;", "font-size":this._fontSize + "px", "font-family":"nanumBarunRegular", "class":"dragNone", fill:this._color});
     this.textElement.textContent = this._text;
-    var b = 0, a = this.textElement.getBoundingClientRect();
-    "center" == this._align && (b = -a.width / 2);
-    this.textElement.attr({x:b, y:.25 * a.height});
-    this.box.set({x:0, y:0, width:a.width, height:a.height});
+    var a = 0, c = this.textElement.getBoundingClientRect();
+    "center" == this._align && (a = -c.width / 2);
+    this.textElement.attr({x:a, y:.25 * c.height});
+    this.box.set({x:0, y:0, width:c.width, height:c.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
@@ -25352,46 +25353,46 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:3, y:4, "font-size":"12px"});
     this.textElement.textContent = this.truncate();
-    var b = this.getTextWidth(), a = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {width:b, height:a, y:(this.position && this.position.y ? this.position.y : 0) - a / 2, rx:3, ry:3, fill:"transparent"});
+    var a = this.getTextWidth(), c = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:a, height:c, y:(this.position && this.position.y ? this.position.y : 0) - c / 2, rx:3, ry:3, fill:"transparent"});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:b, height:a});
+    this.box.set({x:0, y:0, width:a, height:c});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this._attachDisposeEvent(function() {
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(b) {
-      b.stopPropagation();
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(b) {
+      var c = b.keyCode || b.which;
+      a.applyValue(b);
+      -1 < [13, 27].indexOf(c) && a.destroyOption();
     });
-    var a = this.getAbsolutePosFromDocument();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.focus();
-    a = this.optionGroup[0];
-    a.setSelectionRange(0, a.value.length, "backward");
+    c = this.optionGroup[0];
+    c.setSelectionRange(0, c.value.length, "backward");
   };
-  a.applyValue = function(b) {
-    b = this.optionGroup.val();
-    this.setValue(b);
+  a.applyValue = function(a) {
+    a = this.optionGroup.val();
+    this.setValue(a);
     this.textElement.textContent = this.truncate();
     this.resize();
   };
   a.resize = function() {
-    var b = this.getTextWidth();
-    this._header.attr({width:b});
-    this.optionGroup.css({width:b});
-    this.box.set({width:b});
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup.css({width:a});
+    this.box.set({width:a});
     this._blockView.alignContent();
   };
   a.getTextWidth = function() {
@@ -25408,26 +25409,26 @@ Entry.GlobalSvg = {};
     if (!this.inited) {
       $("#globalSvgSurface").remove();
       $("#globalSvg").remove();
-      var b = $("body");
-      this._container = Entry.Dom("div", {classes:["globalSvgSurface", "entryRemove"], id:"globalSvgSurface", parent:b});
+      var a = $("body");
+      this._container = Entry.Dom("div", {classes:["globalSvgSurface", "entryRemove"], id:"globalSvgSurface", parent:a});
       this.svgDom = Entry.Dom($('<svg id="globalSvg" width="10" height="10"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this._container});
       this.svg = Entry.SVG("globalSvg");
       this.top = this.left = 0;
       this._inited = !0;
     }
   };
-  a.setView = function(b, a) {
-    if (b != this._view && !b.block.isReadOnly() && b.movable) {
-      return this._view = b, this._mode = a, a !== Entry.Workspace.MODE_VIMBOARD && b.set({visible:!1}), this.draw(), this.show(), this.align(), this.position(), !0;
+  a.setView = function(a, c) {
+    if (a != this._view && !a.block.isReadOnly() && a.movable) {
+      return this._view = a, this._mode = c, c !== Entry.Workspace.MODE_VIMBOARD && a.set({visible:!1}), this.draw(), this.show(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
-    var b = this._view;
+    var a = this._view;
     this._svg && this.remove();
-    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
+    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
-    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
+    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());

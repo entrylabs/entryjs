@@ -19,62 +19,87 @@ Entry.byrobot_dronefighter =
 {
 	name: 'byrobot_dronefighter',
 
-	// 하드웨어로 전송할 때 사용하는 변수 목록('setZero'에서 sendQueue에 등록하여 사용)
-	// 'entry-hw' 프로젝트 byrobot_dronefighter.js 파일 내부의 'var DataType'에 정의된 것과 동일하게 사용해야 함
-	PORT_MAP:
-	{
-		target: 0,
-
-		light_mode_mode: 0,
-		light_mode_interval: 0,
-
-		light_event_event: 0,
-		light_event_interval: 0,
-		light_event_repeat: 0,
-
-		light_manual_flags: 0,
-		light_manual_brightness: 0,
-		
-		buzzer_mode: 0,
-		buzzer_value: 0,
-		buzzer_time: 0,
-
-		vibrator_on: 0,
-		vibrator_off: 0,
-		vibrator_total: 0,
-		
-		control_wheel: 0,
-		control_accel: 0,
-
-		control_roll: 0,
-		control_pitch: 0,
-		control_yaw: 0,
-		control_throttle: 0,
-
-		command_command: 0,
-		command_option: 0,
-		
-		motorsingle_target: 0,
-		motorsingle_direction: 0,
-		motorsingle_value: 0,
-		
-		irmessage_data: 0,
-	},
-
 	// 초기화
 	setZero: function()
 	{
-		var portMap = Entry.byrobot_dronefighter.PORT_MAP;
-		var send = Entry.hw.sendQueue;
-
-		for (var port in portMap)
+		// 초기화
 		{
-			send[port] = undefined;
+			var send = Entry.hw.sendQueue;	
+			
+			
+			// 한 번 명령으로 전달되지 않는 경우가 있어 중요도에 따라
+			// 명령을 여러번 반복 전송하게 함(2017.01.02)
+			
+			// Drone reset
+			send.target								= 0x10;
+			
+			for (var i = 0; i < 2; i++)
+			{
+				{
+					send.target						= 0x10;
+					send.command_command			= 0x24;
+					send.command_option				= 0;
+					
+					Entry.hw.update();
+			
+					send.command_command			= undefined;
+					send.command_option				= undefined;
+				}
+				
+				{
+					send.target						= 0x11;
+					send.buzzer_mode				= 0;
+					send.buzzer_value				= 0;
+					send.buzzer_time				= 0;
+				
+					Entry.hw.update();
+					
+					send.buzzer_mode				= undefined;
+					send.buzzer_value				= undefined;
+					send.buzzer_time				= undefined;
+				}
+				
+				{
+					send.target						= 0x11;
+					send.vibrator_on				= 0;
+					send.vibrator_off				= 0;
+					send.vibrator_total				= 0;
+					
+					Entry.hw.update();
+			
+					send.vibrator_on				= undefined;
+					send.vibrator_off				= undefined;
+					send.vibrator_total				= undefined;
+				}
+				
+				{
+					send.target						= 0x10;
+					send.light_manual_flags			= 0xff;
+					send.light_manual_brightness	= 0;
+			
+					Entry.hw.update();
+					
+					send.light_manual_flags			= undefined;
+					send.light_manual_brightness	= undefined;
+				}				
+				
+				{
+					send.target						= 0x11;
+					send.light_manual_flags			= 0xff;
+					send.light_manual_brightness	= 0;
+				
+					Entry.hw.update();
+					
+					send.light_manual_flags			= undefined;
+					send.light_manual_brightness	= undefined;
+				}
+				
+			}
+			
+			send.target								= undefined;
 		}
-
-		Entry.hw.update();
-		//var byrobot_dronefighter = Entry.byrobot_dronefighter;
 	},
+	
 	// Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성 
 	// listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
     monitorTemplate:

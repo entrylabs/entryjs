@@ -558,6 +558,7 @@ EntryStatic.getAllBlocks = function() {
 				"byrobot_dronefighter_controller_vibrator_on_delay",
 				"byrobot_dronefighter_controller_vibrator_delay",
 				"byrobot_dronefighter_drone_irmessage",
+				"byrobot_dronefighter_drone_motor_stop",
 				"byrobot_dronefighter_drone_motorsingle",
 				"byrobot_dronefighter_drone_motorsingle_input",
 				"byrobot_dronefighter_drone_command_mode_vehicle_car",
