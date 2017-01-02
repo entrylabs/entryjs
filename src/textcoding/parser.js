@@ -274,7 +274,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         this._onError = true;
                         var sObject = ws.vimBoard._currentObject;
                         var sScene = ws.vimBoard._currentScene;
-                        Entry.container.selectObject(sObject.id, sScene);  
+                        Entry.container.selectObject(sObject.id, sScene);
 
                         var board = ws.board;
                         if(board) board.code.clear();
@@ -322,7 +322,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         }
 
-                        Entry.toast.alert(title, message); 
+                        Entry.toast.alert(title, message);
                         throw error;
                     }
                 }
@@ -367,7 +367,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                 if(parseMode == Entry.Parser.PARSE_GENERAL) {
                     if(this.py_variableDeclaration)
-                        result += this.py_variableDeclaration; 
+                        result += this.py_variableDeclaration;
 
                     if(this.py_listDeclaration)
                         result += this.py_listDeclaration;
@@ -380,7 +380,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         var fd = "";
 
                         for(var f in funcDefMap) {
-                            var funcDef = funcDefMap[f]; 
+                            var funcDef = funcDefMap[f];
                             fd += funcDef + '\n\n';
                         }
                         this.py_funcDeclaration = fd;
@@ -390,9 +390,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
                 if(textCode)
                     result += textCode.trim();
-                
+
                 result = result.replace(/\t/g, "    ");
-                if(this._hasDeclaration) 
+                if(this._hasDeclaration)
                     this.removeDeclaration();
 
                 break;
@@ -653,19 +653,19 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         var optText = "";
         var onEntryEvent = false;
-        
+
         for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
             console.log("textLine", textLine, "length", textLine.length, "[0]", textLine.charAt(0));
             textLine = textLine.replace(/\t/gm, '    ');
-            if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {  
+            if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {
                 textLine = this.entryEventParamConverter(textLine);
                 if(optText.length != 0) {
-                    threads.push(optText); 
+                    threads.push(optText);
                 }
 
                 optText = "";
-                optText += textLine; 
+                optText += textLine;
                 onEntryEvent = true;
             }
             else {
@@ -676,7 +676,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     optText = "";
                 }
                 else if(textLine.length != 1 && textLine.charAt(0) != ' ' && onEntryEvent) { //general line
-                    threads.push(optText);    
+                    threads.push(optText);
                     optText = "";
                     onEntryEvent = false;
                 }
@@ -689,7 +689,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         return threads;
     };
 
-    p.entryEventParamConverter = function(text) {  
+    p.entryEventParamConverter = function(text) {
         var startIndex = text.indexOf("(");
         var endIndex = text.indexOf(")");
 
@@ -697,22 +697,22 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var param = text.substring(startIndex+1, endIndex);
         console.log("filter stmt", stmt, "param", param);
         param = param.replace(/\"/g, "");
-        
+
         if(param) {
             if(isNaN(param))
-                if(!isNaN(param.charAt(0))) 
+                if(!isNaN(param.charAt(0)))
                     param = 'num' + param;
                 else
                     param = param.replace(/ /g, "_space_");
             else
                 param = 'num' + param;
-            
+
             if(param == 'None')
                 param = 'none';
         }
 
         text = stmt + "(" + param + "):\n";
-        
+
         console.log("entryEventFilter text", text);
         return text;
     };

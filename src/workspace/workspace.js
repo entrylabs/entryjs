@@ -444,9 +444,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p._syncTextCode = function() {
-        if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
-            return;
-        if (Entry.engine && Entry.engine.isState('run'))
+        if (this.mode !== Entry.Workspace.MODE_VIMBOARD ||
+           Entry.engine && Entry.engine.isState('run'))
             return;
 
         var changedCode = this.vimBoard.textToCode(this.textType);
