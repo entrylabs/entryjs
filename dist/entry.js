@@ -12710,7 +12710,7 @@ Entry.TextCodingUtil = {};
       var f = c[e];
       console.log("TextCodingUtil updateGlobalVariable", f);
       if (null === f.object_ && f.name_ == a) {
-        variable = {x:f.x_, y:f.y_, id:f.id_, visible:f.visible_, value:b, name:a, isCloud:f.isClud_};
+        variable = {x:f.x_, y:f.y_, id:f.id_, visible:f.visible_, value:b, name:a, isCloud:f.isCloud_};
         f.syncModel_(variable);
         Entry.variableContainer.updateList();
         break;

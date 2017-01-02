@@ -571,7 +571,7 @@ Entry.TextCodingUtil = {};
                     visible: entryVariable.visible_,
                     value: value,
                     name: name,
-                    isCloud: entryVariable.isClud_,
+                    isCloud: entryVariable.isCloud_,
                 };
 
                 entryVariable.syncModel_(variable);
