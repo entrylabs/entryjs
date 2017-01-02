@@ -50,8 +50,6 @@ Entry.BlockMenuScroller.RADIUS = 7;
         this.vScrollbar = this.svgGroup.elem('rect', {
             rx: 4, ry:4
         });
-
-        this.resizeScrollBar();
     };
 
     p.resizeScrollBar = function() {

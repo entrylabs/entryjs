@@ -204,12 +204,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var visibles = blocks[0];
 
         inVisibles.forEach(function(block) {
-            block.view.set({display:false});
+            var blockView = block.view;
+            blockView.set({display:false});
+            blockView.detach();
         });
 
         var shouldReDraw = !this._renderedCategories[this.lastSelector];
         visibles.forEach(function(block) {
             var blockView = block.view;
+            blockView.attach();
             blockView.set({display:true});
             shouldReDraw && blockView.reDraw();
 
@@ -222,7 +225,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
             var left = hPadding - blockView.offsetX;
             if (this._align == 'CENTER')
-                left -= blockView.width /2;
+                left -= blockView.width/2;
 
             marginFromTop -= blockView.offsetY;
             blockView._moveTo(
@@ -255,8 +258,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.cloneToGlobal = function(e) {
         var blockView = this.dragBlock;
-        if (this._boardBlockView) return;
-        if (blockView === null) return;
+        if (this._boardBlockView || blockView === null) return;
 
         var globalSvg = Entry.GlobalSvg;
         var workspace = this.workspace;

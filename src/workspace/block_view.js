@@ -1321,5 +1321,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         return params;
     };
 
+    p.detach = function() { this.svgGroup.remove(); };
+
+    p.attach = function(target) {
+        (target || this._board.svgBlockGroup)
+            .appendChild(this.svgGroup);
+    };
+
 
 })(Entry.BlockView.prototype);

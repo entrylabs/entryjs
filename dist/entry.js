@@ -23018,11 +23018,14 @@ Entry.BlockMenu = function(b, a, d, c) {
       var b = b || this._getSortedBlocks(), c = 10, e = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, f;
       a = b[0];
       b[1].forEach(function(a) {
-        a.view.set({display:!1});
+        a = a.view;
+        a.set({display:!1});
+        a.detach();
       });
       var g = !this._renderedCategories[this.lastSelector];
       a.forEach(function(a) {
         var b = a.view;
+        b.attach();
         b.set({display:!0});
         g && b.reDraw();
         a = Entry.block[a.type].class;
@@ -23488,7 +23491,6 @@ Entry.BlockMenuScroller.RADIUS = 7;
   b.createScrollBar = function() {
     this.svgGroup = this.board.svgGroup.elem("g", {class:"boardScrollbar"});
     this.vScrollbar = this.svgGroup.elem("rect", {rx:4, ry:4});
-    this.resizeScrollBar();
   };
   b.resizeScrollBar = function() {
     this._updateRatio();
@@ -24222,6 +24224,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     var b = this._schema.params;
     a === Entry.BlockView.RENDER_MODE_TEXT && (a = this.getBoard().workspace) && a.vimBoard && (a = a.vimBoard.getBlockSyntax(this)) && a.textParams && (b = a.textParams);
     return b;
+  };
+  b.detach = function() {
+    this.svgGroup.remove();
+  };
+  b.attach = function(a) {
+    (a || this._board.svgBlockGroup).appendChild(this.svgGroup);
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(b, a) {
