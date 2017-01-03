@@ -18405,7 +18405,7 @@ Entry.PyToBlockParser = function(b) {
                         }
                       } else {
                         if ("MemberExpression" == m.type) {
-                          if (Entry.TextCodingUtil.isGlobalVariableExisted(m.property.name) || Entry.TextCodingUtil.isLocalVariableExisted(m.property.name, this._currentObject)) {
+                          if (Entry.TextCodingUtil.isGlobalListExisted(m.object.name) || Entry.TextCodingUtil.isLocalListExisted(m.object.name) || Entry.TextCodingUtil.isGlobalVariableExisted(m.property.name) || Entry.TextCodingUtil.isLocalVariableExisted(m.property.name, this._currentObject)) {
                             u = "len#length_of_string";
                           }
                         } else {

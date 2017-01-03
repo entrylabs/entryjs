@@ -509,7 +509,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                 syntax = String("len#length_of_string");
                         }
                         else if(arg.type == "MemberExpression") {
-                            if(Entry.TextCodingUtil.isGlobalVariableExisted(arg.property.name) ||
+                            if(Entry.TextCodingUtil.isGlobalListExisted(arg.object.name) ||
+                               Entry.TextCodingUtil.isLocalListExisted(arg.object.name) ||
+                               Entry.TextCodingUtil.isGlobalVariableExisted(arg.property.name) ||
                                 Entry.TextCodingUtil.isLocalVariableExisted(arg.property.name, this._currentObject))
                                 syntax = String("len#length_of_string");
                         }
