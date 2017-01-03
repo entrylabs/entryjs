@@ -612,7 +612,7 @@ Entry.TextCodingUtil = {};
             var entryVariable = entryVariables[i];
             //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
-                var model = variable.toJSON();
+                var model = entryVariable.toJSON();
                 model.name = name;
                 model.value = value;
                 entryVariable.syncModel_(model);

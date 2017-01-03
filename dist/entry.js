@@ -14222,7 +14222,7 @@ Entry.TextCodingUtil = {};
     for (f in c) {
       var g = c[f];
       if (g.object_ === d.id && g.name_ == a) {
-        d = variable.toJSON();
+        d = g.toJSON();
         d.name = a;
         d.value = b;
         g.syncModel_(d);
