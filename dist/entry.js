@@ -18400,7 +18400,7 @@ Entry.PyToBlockParser = function(b) {
                       u = "len#length_of_string";
                     } else {
                       if ("Identifier" == m.type) {
-                        if (Entry.TextCodingUtil.isGlobalVariableExisted(m.name) || Entry.TextCodingUtil.isLocalVariableExisted(m.name, this._currentObject)) {
+                        if (this.isFuncParam(m.name) || Entry.TextCodingUtil.isGlobalVariableExisted(m.name) || Entry.TextCodingUtil.isLocalVariableExisted(m.name, this._currentObject)) {
                           u = "len#length_of_string";
                         }
                       } else {

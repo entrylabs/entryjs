@@ -504,7 +504,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         if(arg.type == "Literal")
                             syntax = String("len#length_of_string");
                         else if(arg.type == "Identifier") {
-                            if(Entry.TextCodingUtil.isGlobalVariableExisted(arg.name) ||
+                            if(this.isFuncParam(arg.name) || Entry.TextCodingUtil.isGlobalVariableExisted(arg.name) ||
                                 Entry.TextCodingUtil.isLocalVariableExisted(arg.name, this._currentObject))
                                 syntax = String("len#length_of_string");
                         }
