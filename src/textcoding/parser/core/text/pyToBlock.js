@@ -546,7 +546,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(callee.property.name == "subscriptIndex") {
                     if(component.arguments && component.arguments[0]) {
                         var arg = component.arguments[0];
-                        if(arg.type == "Literal") {
+                        if(Entry.TextCodingUtil.isExpressionLiteral(arg, this.blockSyntax)) {
                             syntax = String("%2\[%4\]#char_at");
                             var blockSyntax = this.getBlockSyntax(syntax);
                             if(blockSyntax)

@@ -2347,4 +2347,22 @@ Entry.TextCodingUtil = {};
         else return str;
 
     };
+
+    tu.isExpressionLiteral = function(component, syntax) {
+        switch (component.type) {
+            case "CallExpression":
+                if (component.callee.type === "MemberExpression") {
+                    var calleeName = component.callee.property.name;
+                    calleeName = syntax["%2"][calleeName];
+                    if (calleeName) {
+                        var key = calleeName.key;
+                        return Entry.block[key].skeleton === "basic_string_field";
+                    }
+                }
+                break;
+            case "Literal":
+                return true;
+        }
+        return false;
+    };
 })(Entry.TextCodingUtil);
