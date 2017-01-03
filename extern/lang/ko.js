@@ -3663,26 +3663,29 @@ Lang.template = {
     "byrobot_dronefighter_controller_buzzer_hz"						: "%1 Hz 소리를 연주 %2",					/* 블럭 딜레이 없음 */	
     "byrobot_dronefighter_controller_buzzer_hz_delay"				: "%1 Hz 소리를 %2 초 연주 %3",				/* 블럭 딜레이 사용 */
 	"byrobot_dronefighter_controller_buzzer_hz_reserve"				: "%1 Hz 소리를 %2 초 예약 %3",				/* 블럭 딜레이 없음 */
+	"byrobot_dronefighter_controller_vibrator_off"					: "진동 끄기 %1",
 	"byrobot_dronefighter_controller_vibrator_on_delay"				: "진동 %1 초 켜기 %2",
+	"byrobot_dronefighter_controller_vibrator_on_reserve"			: "진동 %1 초 예약 %2",
 	"byrobot_dronefighter_controller_vibrator_delay"				: "진동 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4",	
+	"byrobot_dronefighter_controller_vibrator_reserve"				: "진동 %1 초 켜기, %2 초 끄기를 %3 초 예약 %4",	
 	"byrobot_dronefighter_drone_irmessage"							: "적외선으로 %1 값 보내기 %2",
 	"byrobot_dronefighter_drone_motor_stop"							: "모터 정지 %1",
 	"byrobot_dronefighter_drone_motorsingle"						: "%1 번 모터를 %2 (으)로 회전 %3",
 	"byrobot_dronefighter_drone_motorsingle_input"					: "%1 번 모터를 %2 (으)로 회전 %3",
 	"byrobot_dronefighter_drone_command_mode_vehicle_car"			: "자동차 모드 %1",									/* 작동 모드 변경. */
 	"byrobot_dronefighter_drone_control_car_stop"					: "자동차 정지 %1",
-	"byrobot_dronefighter_drone_control_double_one"					: "자동차를 %1 %2 정하기 %3", 						/* 방향 선택에 ComboBox 사용 */
-	"byrobot_dronefighter_drone_control_double_one_delay"			: "자동차를 %1 %2 %3 초 실행 %4", 					/* 방향 선택에 ComboBox 사용 */
-    "byrobot_dronefighter_drone_control_double"						: "자동차를 방향 %1 전진 %2 정하기 %3",
+	"byrobot_dronefighter_drone_control_double_one"					: "자동차를 %1 %2% 정하기 %3", 						/* 방향 선택에 ComboBox 사용 */
+	"byrobot_dronefighter_drone_control_double_one_delay"			: "자동차를 %1 %2% %3 초 실행 %4", 					/* 방향 선택에 ComboBox 사용 */
+    "byrobot_dronefighter_drone_control_double"						: "자동차를 방향 %1%, 전진 %2% 정하기 %3",
 	"byrobot_dronefighter_drone_command_mode_vehicle_drone"			: "드론 모드 %1",									/* 작동 모드 변경. */
 	"byrobot_dronefighter_drone_control_drone_takeoff"				: "드론 이륙 %1",
 	"byrobot_dronefighter_drone_control_drone_landing"				: "드론 착륙 %1",
 	"byrobot_dronefighter_drone_control_drone_stop"					: "드론 정지 %1",
 	"byrobot_dronefighter_drone_control_coordinate"					: "드론 좌표 기준을 %1로 정하기 %2",
 	"byrobot_dronefighter_drone_control_drone_reset_heading"		: "드론 방향 초기화 %1",
-    "byrobot_dronefighter_drone_control_quad_one"					: "드론 %1 %2 정하기 %3", 							/* 방향 선택에 ComboBox 사용 */
-	"byrobot_dronefighter_drone_control_quad_one_delay"				: "드론 %1 %2 %3 초 실행 %4", 						/* 방향 선택에 ComboBox 사용 */
-    "byrobot_dronefighter_drone_control_quad"						: "드론 Roll %1 Pitch %2 Yaw %3 Throttle %4 정하기 %5",
+    "byrobot_dronefighter_drone_control_quad_one"					: "드론 %1 %2% 정하기 %3", 							/* 방향 선택에 ComboBox 사용 */
+	"byrobot_dronefighter_drone_control_quad_one_delay"				: "드론 %1 %2% %3 초 실행 %4", 						/* 방향 선택에 ComboBox 사용 */
+    "byrobot_dronefighter_drone_control_quad"						: "드론 Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% 정하기 %5",
 	/* BYROBOT DroneFighter End */
     "dplay_get_number_sensor_value": "아날로그 %1 번 센서값  ",
     "nemoino_get_number_sensor_value": "아날로그 %1 번 센서값  ",

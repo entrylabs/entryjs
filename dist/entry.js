@@ -1723,9 +1723,9 @@ Entry.block.set_brush_tranparency = function(a, b) {
 Entry.byrobot_dronefighter = {name:"byrobot_dronefighter", setZero:function() {
   var a = Entry.hw.sendQueue;
   a.target = 16;
-  for (var b = 0;3 > b;b++) {
-    a.target = 16, a.command_command = 36, a.command_option = 0, Entry.hw.update(), a.command_command = void 0, a.command_option = void 0, a.target = 17, a.buzzer_mode = 0, a.buzzer_value = 0, a.buzzer_time = 0, Entry.hw.update(), a.buzzer_mode = void 0, a.buzzer_value = void 0, a.buzzer_time = void 0, a.target = 17, a.vibrator_on = 0, a.vibrator_off = 0, a.vibrator_total = 0, Entry.hw.update(), a.vibrator_on = void 0, a.vibrator_off = void 0, a.vibrator_total = void 0, a.target = 16, a.light_manual_flags = 
-    255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0, a.target = 17, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0;
+  for (var b = 0;1 > b;b++) {
+    a.target = 16, a.command_command = 36, a.command_option = 0, Entry.hw.update(), a.command_command = void 0, a.command_option = void 0, a.target = 17, a.buzzer_mode = 0, a.buzzer_value = 0, a.buzzer_time = 0, Entry.hw.update(), a.buzzer_mode = void 0, a.buzzer_value = void 0, a.buzzer_time = void 0, a.target = 17, a.vibrator_mode = 0, a.vibrator_on = 0, a.vibrator_off = 0, a.vibrator_total = 0, Entry.hw.update(), a.vibrator_mode = void 0, a.vibrator_on = void 0, a.vibrator_off = void 0, a.vibrator_total = 
+    void 0, a.target = 16, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0, a.target = 17, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0;
   }
   a.target = void 0;
 }, monitorTemplate:{imgPath:"hw/byrobot_dronefighter.png", width:500, height:450, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeFlight:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight, type:"input", pos:{x:0, y:0}}, state_modeDrive:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive, type:"input", pos:{x:0, y:0}}, state_coordinate:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate, 
@@ -25259,17 +25259,17 @@ Entry.FieldStatement = function(a, b, c) {
     d ? c.animate({transform:f}, 300, mina.easeinout) : c.attr({transform:f});
   };
   a.calcHeight = function() {
-    var b = this._thread.view.requestPartHeight(null);
-    this.set({height:b});
+    var a = this._thread.view.requestPartHeight(null);
+    this.set({height:a});
   };
   a.getValue = function() {
     return this.block.statements[this._index];
   };
   a.requestAbsoluteCoordinate = function() {
-    var b = this._blockView.getAbsoluteCoordinate();
-    b.x += this.x;
-    b.y += this.y;
-    return b;
+    var a = this._blockView.getAbsoluteCoordinate();
+    a.x += this.x;
+    a.y += this.y;
+    return a;
   };
   a.dominate = function() {
     this._blockView.dominate();
@@ -25279,17 +25279,17 @@ Entry.FieldStatement = function(a, b, c) {
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       if (this.magneting) {
-        var b = this._board.dragBlock.getShadow(), a = this.requestAbsoluteCoordinate(), a = "translate(" + a.x + "," + a.y + ")";
-        $(b).attr({transform:a, display:"block"});
-        this._clonedShadow = b;
+        var a = this._board.dragBlock.getShadow(), c = this.requestAbsoluteCoordinate(), c = "translate(" + c.x + "," + c.y + ")";
+        $(a).attr({transform:c, display:"block"});
+        this._clonedShadow = a;
         this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
-        b = this._board.dragBlock.getBelowHeight();
-        this.statementSvgGroup.attr({transform:"translate(0," + b + ")"});
-        this.set({height:this.height + b});
+        a = this._board.dragBlock.getBelowHeight();
+        this.statementSvgGroup.attr({transform:"translate(0," + a + ")"});
+        this.set({height:this.height + a});
       } else {
-        this._clonedShadow && (this._clonedShadow.attr({display:"none"}), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
+        this._clonedShadow && (this._clonedShadow.attr({display:"none"}), delete this._clonedShadow), a = this.originalHeight, void 0 !== a && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
       }
-      (b = this.block.thread.changeEvent) && b.notify();
+      (a = this.block.thread.changeEvent) && a.notify();
     }
   };
   a.insertTopBlock = function(a) {

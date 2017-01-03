@@ -26,14 +26,13 @@ Entry.byrobot_dronefighter =
 		{
 			var send = Entry.hw.sendQueue;	
 			
-			
-			// 한 번 명령으로 전달되지 않는 경우가 있어 중요도에 따라
-			// 명령을 여러번 반복 전송하게 함(2017.01.02)
+			// 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
+			// 명령을 각각 분리하여 전송하게 함(2017.01.03)
 			
 			// Drone reset
 			send.target								= 0x10;
 			
-			for (var i = 0; i < 2; i++)
+			for (var i = 0; i < 1; i++)
 			{
 				{
 					send.target						= 0x10;
@@ -61,12 +60,14 @@ Entry.byrobot_dronefighter =
 				
 				{
 					send.target						= 0x11;
+					send.vibrator_mode				= 0;
 					send.vibrator_on				= 0;
 					send.vibrator_off				= 0;
 					send.vibrator_total				= 0;
 					
 					Entry.hw.update();
 			
+					send.vibrator_mode				= undefined;
 					send.vibrator_on				= undefined;
 					send.vibrator_off				= undefined;
 					send.vibrator_total				= undefined;
