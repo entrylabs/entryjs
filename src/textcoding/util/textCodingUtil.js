@@ -559,22 +559,15 @@ Entry.TextCodingUtil = {};
     };
 
     tu.updateGlobalVariable = function(name, value) {
-        var entryVariables = Entry.variableContainer.variables_;
-        for(var i in entryVariables) {
-            var entryVariable = entryVariables[i];
-            console.log("TextCodingUtil updateGlobalVariable", entryVariable);
-            if(entryVariable.object_ === null && entryVariable.name_ == name) {
-                variable = {
-                    x: entryVariable.x_,
-                    y: entryVariable.y_,
-                    id: entryVariable.id_,
-                    visible: entryVariable.visible_,
-                    value: value,
-                    name: name,
-                    isCloud: entryVariable.isCloud_,
-                };
-
-                entryVariable.syncModel_(variable);
+        var variables = Entry.variableContainer.variables_;
+        for(var i in variables) {
+            var variable = variables[i];
+            console.log("TextCodingUtil updateGlobalVariable", variable);
+            if(variable.object_ === null && variable.name_ == name) {
+                var model = variable.toJSON();
+                model.name = name;
+                model.value = value;
+                variable.syncModel_(model);
                 Entry.variableContainer.updateList();
 
                 break;
@@ -619,17 +612,10 @@ Entry.TextCodingUtil = {};
             var entryVariable = entryVariables[i];
             //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
-                var variable = {
-                    x: entryVariable.x_,
-                    y: entryVariable.y_,
-                    id: entryVariable.id_,
-                    visible: entryVariable.visible_,
-                    value: value,
-                    name: name,
-                    isCloud: entryVariable.isClud_,
-                };
-
-                entryVariable.syncModel_(variable);
+                var model = variable.toJSON();
+                model.name = name;
+                model.value = value;
+                entryVariable.syncModel_(model);
                 Entry.variableContainer.updateList();
 
                 break;
@@ -696,7 +682,7 @@ Entry.TextCodingUtil = {};
                         id: entryList.id_,
                         visible: entryList.visible_,
                         name: name,
-                        isCloud: entryList.isClud_,
+                        isCloud: entryList.isCloud_,
                         width: entryList.width_,
                         height: entryList.height_,
                         array: array,
@@ -754,7 +740,7 @@ Entry.TextCodingUtil = {};
                         id: entryList.id_,
                         visible: entryList.visible_,
                         name: name,
-                        isCloud: entryList.isClud_,
+                        isCloud: entryList.isCloud_,
                         width: entryList.width_,
                         height: entryList.height_,
                         array: array,

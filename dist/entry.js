@@ -12710,8 +12710,10 @@ Entry.TextCodingUtil = {};
       var f = c[e];
       console.log("TextCodingUtil updateGlobalVariable", f);
       if (null === f.object_ && f.name_ == a) {
-        variable = {x:f.x_, y:f.y_, id:f.id_, visible:f.visible_, value:b, name:a, isCloud:f.isCloud_};
-        f.syncModel_(variable);
+        c = f.toJSON();
+        c.name = a;
+        c.value = b;
+        f.syncModel_(c);
         Entry.variableContainer.updateList();
         break;
       }
@@ -12735,7 +12737,10 @@ Entry.TextCodingUtil = {};
     for (f in e) {
       var g = e[f];
       if (g.object_ === c.id && g.name_ == a) {
-        g.syncModel_({x:g.x_, y:g.y_, id:g.id_, visible:g.visible_, value:b, name:a, isCloud:g.isClud_});
+        c = variable.toJSON();
+        c.name = a;
+        c.value = b;
+        g.syncModel_(c);
         Entry.variableContainer.updateList();
         break;
       }
@@ -12770,7 +12775,7 @@ Entry.TextCodingUtil = {};
     for (e in c) {
       var f = c[e];
       if (null === f.object_ && f.name_ == a) {
-        list = {x:f.x_, y:f.y_, id:f.id_, visible:f.visible_, name:a, isCloud:f.isClud_, width:f.width_, height:f.height_, array:b};
+        list = {x:f.x_, y:f.y_, id:f.id_, visible:f.visible_, name:a, isCloud:f.isCloud_, width:f.width_, height:f.height_, array:b};
         f.syncModel_(list);
         f.updateView();
         Entry.variableContainer.updateList();
@@ -12799,7 +12804,7 @@ Entry.TextCodingUtil = {};
     for (f in e) {
       var g = e[f];
       if (g.object_ === c.id && g.name_ == a) {
-        g.syncModel_({x:g.x_, y:g.y_, id:g.id_, visible:g.visible_, name:a, isCloud:g.isClud_, width:g.width_, height:g.height_, array:b});
+        g.syncModel_({x:g.x_, y:g.y_, id:g.id_, visible:g.visible_, name:a, isCloud:g.isCloud_, width:g.width_, height:g.height_, array:b});
         g.updateView();
         Entry.variableContainer.updateList();
         break;
@@ -21119,6 +21124,7 @@ Entry.VariableContainer = function() {
   this._variableRefs = [];
   this._messageRefs = [];
   this._functionRefs = [];
+  this.updateList = Entry.Utils.debounce(this.updateList, 150);
   Entry.addEventListener("workspaceChangeMode", this.updateList.bind(this));
 };
 Entry.VariableContainer.prototype.createDom = function(b) {

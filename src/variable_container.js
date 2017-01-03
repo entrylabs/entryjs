@@ -32,6 +32,7 @@ Entry.VariableContainer = function() {
     this._variableRefs = [];
     this._messageRefs = [];
     this._functionRefs = [];
+    this.updateList = Entry.Utils.debounce(this.updateList, 150);
     Entry.addEventListener('workspaceChangeMode', this.updateList.bind(this));
 }
 
