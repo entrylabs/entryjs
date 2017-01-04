@@ -22109,7 +22109,6 @@ Entry.VariableContainer.prototype.generateTimer = function(b) {
   b.tick = null;
   Entry.engine.projectTimer = b;
   Entry.addEventListener("stop", function() {
-    this.updateList();
     Entry.engine.stopProjectTimer();
   }.bind(this));
 };
@@ -22448,7 +22447,7 @@ Entry.VariableContainer.prototype._truncName = function(b, a) {
 Entry.VariableContainer.prototype._maxNameLength = 10;
 Entry.VariableContainer.prototype._isPythonMode = function() {
   var b = Entry.getMainWS();
-  return b.vimBoard && b.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+  return b && b.isVimMode();
 };
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
@@ -27943,6 +27942,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   b._isVimMode = function() {
     return this.oldMode === Entry.Workspace.MODE_VIMBOARD;
   };
+  b.isVimMode = b._isVimMode;
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {
   this.enableArduino = this.isTextBGMode_ = !1;

@@ -1840,7 +1840,6 @@ Entry.VariableContainer.prototype.generateTimer = function (timer) {
     Entry.engine.projectTimer = timer;
 
     Entry.addEventListener('stop', function () {
-        this.updateList();
         Entry.engine.stopProjectTimer();
     }.bind(this));
 };
@@ -2406,5 +2405,5 @@ Entry.VariableContainer.prototype._maxNameLength = 10;
 
 Entry.VariableContainer.prototype._isPythonMode = function() {
     var ws = Entry.getMainWS();
-    return ws.vimBoard && ws.vimBoard._parserType == Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+    return ws && ws.isVimMode();
 };
