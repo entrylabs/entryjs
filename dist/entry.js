@@ -17196,16 +17196,16 @@ Entry.PyHint = function(b) {
     return {list:e, from:CodeMirror.Pos(b.line, h), to:CodeMirror.Pos(b.line, a.end)};
   };
   b.addScope = function(a) {
-    if (this.syntax[a]) {
-      var b = Object.keys(this.syntax[a]), b = b.filter(function(a) {
-        return 0 > a.indexOf("#");
+    if (this.syntax[a] && !this.scope[a]) {
+      var b = this.syntax[a], d = Object.keys(b), d = d.filter(function(a) {
+        return 0 > a.indexOf("#") && !Entry.block[b[a].key].deprecated;
       });
-      this.scope[a] = b;
+      this.scope[a] = d;
       this.scope._global.unshift(a);
-      b = b.map(function(b) {
+      d = d.map(function(b) {
         return a + "." + b;
       });
-      this.scope._global = this.scope._global.concat(b);
+      this.scope._global = this.scope._global.concat(d);
     }
   };
   b.getScope = function(a) {

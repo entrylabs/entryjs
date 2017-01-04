@@ -2685,14 +2685,13 @@ Entry.block = {
         "class": "ArduinoExtGet",
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
-            var port = script.getValue("PORT", script);
+            var result = script.getValue("PORT", script);
             var ANALOG = Entry.hw.portData.ANALOG;
             var value2 = script.getNumberValue("VALUE2", script);
             var value3 = script.getNumberValue("VALUE3", script);
             var value4 = script.getNumberValue("VALUE4", script);
             var value5 = script.getNumberValue("VALUE5", script);
 
-            var result = ANALOG[port] || 0;
             if (value2 > value3) {
                 var swap = value2;
                 value2 = value3;
@@ -15565,6 +15564,7 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
+        "deprecated": true,
         "params": [
             {
                 "type": "Dropdown",
