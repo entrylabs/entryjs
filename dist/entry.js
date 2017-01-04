@@ -14275,27 +14275,25 @@ Entry.PyToBlockParser = function(b) {
             if (g) {
               var h = g.blockType
             }
-            if ("param" != h) {
-              if ("event" == h) {
-                this._isEntryEventExisted = !0;
+            if ("event" == h) {
+              this._isEntryEventExisted = !0;
+            } else {
+              if ("last" == h) {
+                this.isLastBlock = !0;
               } else {
-                if ("last" == h) {
-                  this.isLastBlock = !0;
-                } else {
-                  if ("variable" == h && !this._isEntryEventExisted) {
-                    continue;
-                  }
+                if ("variable" == h && !this._isEntryEventExisted) {
+                  continue;
                 }
               }
-              if (Entry.TextCodingUtil.isEntryEventFuncByType(f.type)) {
-                if (this._thread.push(f), f.contents) {
-                  for (var k in f.contents) {
-                    this.extractContents(f.contents[k], this._thread);
-                  }
+            }
+            if (Entry.TextCodingUtil.isEntryEventFuncByType(f.type)) {
+              if (this._thread.push(f), f.contents) {
+                for (var k in f.contents) {
+                  this.extractContents(f.contents[k], this._thread);
                 }
-              } else {
-                this._thread.push(f);
               }
+            } else {
+              this._thread.push(f);
             }
           }
         }
