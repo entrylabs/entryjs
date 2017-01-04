@@ -11602,18 +11602,22 @@ Entry.PropertyPanel = function() {
     "hw" == a ? this.modes.hw.obj.listPorts ? b.resizeList() : b.resize && b.resize() : b.resize && b.resize();
   };
   b.select = function(a) {
-    for (var b in this.modes) {
-      var c = this.modes[b];
-      c.tabDom.removeClass("selected");
-      c.contentDom.addClass("entryRemove");
-      c.obj.visible = !1;
+    if (this.selected !== a) {
+      for (var b in this.modes) {
+        var c = this.modes[b];
+        c.tabDom.removeClass("selected");
+        c.contentDom.addClass("entryRemove");
+        $(c.contentDom).remove();
+        c.obj.visible = !1;
+      }
+      b = this.modes[a];
+      $(this._contentView).append(b.contentDom);
+      b.tabDom.addClass("selected");
+      b.contentDom.removeClass("entryRemove");
+      b.obj.resize && b.obj.resize();
+      b.obj.visible = !0;
+      this.selected = a;
     }
-    b = this.modes[a];
-    b.tabDom.addClass("selected");
-    b.contentDom.removeClass("entryRemove");
-    b.obj.resize && b.obj.resize();
-    b.obj.visible = !0;
-    this.selected = a;
   };
   b.initializeSplitter = function(a) {
     var b = this;
@@ -27540,6 +27544,7 @@ Entry.Vim = function(b, a) {
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
   }
+  this._parentView = b;
   this.createDom(b);
   this._parser = new Entry.Parser(null, null, this.codeMirror);
   Entry.addEventListener("hwChanged", function(a) {
@@ -27601,9 +27606,11 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
   };
   b.hide = function() {
     this.view.addClass("entryRemove");
+    this.view.remove();
   };
   b.show = function() {
     this.view.removeClass("entryRemove");
+    this._parentView.append(this.view);
   };
   b.clearText = function() {
     this.codeMirror.setValue("");

@@ -14,17 +14,10 @@ Entry.Vim = function(dom, textType) {
     if (dom.prop("tagName") !== "DIV")
         return console.error("Dom is not div element");
 
+    this._parentView = dom;
     this.createDom(dom);
-    //this._parser = new Entry.Parser("maze", "js", this.codeMirror);
-    //this._blockParser = new Entry.Parser("maze", "block");
 
-    //this._mode = Entry.Vim.WORKSPACE_MODE;
-    //this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
     this._parser = new Entry.Parser(null, null, this.codeMirror);
-
-    //this._pyBlockParser = new Entry.Parser("ws", "blockPy", this.codeMirror);
-    //this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
-    //this._pyParser = new Entry.Parser("ws", "py", this.codeMirror);
 
     Entry.addEventListener('hwChanged', function(e){
         if (Entry.hw.hwModule) {
@@ -123,11 +116,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
                 _self.codeMirror.replaceSelection(text);
                 var cursor = _self.doc.getCursor();
                 lastLine = cursor.line;
-                /*if(!Entry.TextCodingUtil.isEntryEventFuncByFullText(text))
-                    _self.codeMirror.indentLine(lastLine);*/
-                /*if(i === 0 || max !== i) {
-                    _self.codeMirror.replaceSelection('\n');
-                }*/
             });
             var mouseup = Entry.Utils.createMouseEvent('mouseup', e);
             _self.codeMirror.display.scroller.dispatchEvent(mouseup);
@@ -145,10 +133,12 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
 
     p.hide = function() {
         this.view.addClass('entryRemove');
+        this.view.remove();
     };
 
     p.show = function() {
         this.view.removeClass('entryRemove');
+        this._parentView.append(this.view);
     };
 
     p.clearText = function() {
@@ -167,12 +157,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
 
         var textCode = this.codeMirror.getValue();
         var code = this._parser.parse(textCode);
-        //console.log("code", code);
-        /*if(code.length === 0) {
-            throw {
-                message : '지원되지 않는 표현식을 포함하고 있습니다.',
-            };
-        }*/
         console.log("textToCode result", code);
         return code;
     };
@@ -201,7 +185,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             this._currentObject = Entry.playground.object;
 
         this._parser._hasDeclaration = false;
-        
+
         if(textType == Entry.Vim.TEXT_TYPE_PY) {
             if(this._currentObject) {
                 codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이썬 코드";
@@ -215,7 +199,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
                     .concat("\n\n")
                     .concat(textCode);
                 }
-                //textCode += '\n';
                 this.codeMirror.setValue(textCode);
                 if(textType == Entry.Vim.TEXT_TYPE_PY)
                     this.codeMirror.getDoc().markText(
