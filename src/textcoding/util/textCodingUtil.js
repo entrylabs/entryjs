@@ -24,7 +24,6 @@ Entry.TextCodingUtil = {};
 
         var fNameQueue = new Entry.Queue();
         this._funcNameQ = fNameQueue;
-        //console.log("initQueue this._funcParamQ", this._funcParamQ);
     };
 
     tu.clearQueue = function() {
@@ -33,19 +32,16 @@ Entry.TextCodingUtil = {};
     };
 
 	tu.indent = function(textCode) {
-        console.log("indent textCode", textCode);
         var result = "\t";
         var indentedCodeArr = textCode.split("\n");
         indentedCodeArr.pop();
         result += indentedCodeArr.join("\n\t");
         result = "\t" + result.trim();//.concat('\n');
-        console.log("indent result", result);
 
         return result;
     };
 
     tu.isNumeric = function(value) {
-        //console.log("isNumeric value", Math.abs(value));
         value = String(Math.abs(value));
         if(value.match(/^-?\d+$|^-\d+$/) || value.match(/^-?\d+\.\d+$/)) {
             return true;
@@ -64,7 +60,6 @@ Entry.TextCodingUtil = {};
     };
 
     tu.binaryOperatorConvert = function(operator) {
-        //console.log("binaryOperatorConvert", operator);
         var result;
         switch(operator) {
             case '==': {
@@ -111,7 +106,6 @@ Entry.TextCodingUtil = {};
     };
 
     tu.logicalExpressionConvert = function(operator) {
-        //console.log("logicalExpressionConvert", operator);
         var result;
         switch(operator) {
             case '&&': {
@@ -130,7 +124,6 @@ Entry.TextCodingUtil = {};
     };
 
     tu.dropdownDynamicNameToIdConvertor = function(name, menuName, currentObject) {
-        //console.log("dropdownDynamicNameToIdConvertor", name, menuName, currentObject);
         var result = name;
         if(Entry.getMainWS() && Entry.getMainWS().vimBoard) {
             var VIM = Entry.getMainWS().vimBoard;
@@ -227,12 +220,10 @@ Entry.TextCodingUtil = {};
             }
         }
 
-        //console.log("dropdownDynamicNameToIdConvertor result", result);
         return result;
     };
 
     tu.dropdownDynamicIdToNameConvertor = function(id, menuName) {
-        //console.log("dropdownDynamicIdToNameConvertor id", id, "menuName", menuName);
         //var found = false;
         var result;
 
@@ -314,21 +305,18 @@ Entry.TextCodingUtil = {};
             }
         }
 
-        //console.log("dropdownDynamicIdToNameConvertor result", result);
 
         return result;
 
     };
 
     tu.getDynamicIdByNumber = function(value, textParam) {
-        console.log("getDynamicIdByNumber", value, textParam);
         var result = value;
         if(Entry.getMainWS() && Entry.getMainWS().vimBoard)
             var VIM = Entry.getMainWS().vimBoard;
         else return result;
 
         var currentObject = VIM._currentObject;
-        console.log("currentObject", currentObject, "isNumeric", isNumeric(value));
 
         if(typeof value == "number") {
             result = "None";
@@ -369,7 +357,6 @@ Entry.TextCodingUtil = {};
             result = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(value, textParam.menuName);
         }
 
-        console.log("getDynamicIdByNumber result", result);
 
         return result;
 
@@ -379,14 +366,12 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isLocalType = function(id, menuName) {
-        console.log("isLocalType id", id, "menuName", menuName);
         var result = id;
 
         if(menuName == "variables") {
             var entryVariables = Entry.variableContainer.variables_;
             for(var e in entryVariables) {
                 var entryVariable = entryVariables[e];
-                console.log("entryVariable variable", entryVariable);
                 if(entryVariable.id_ == id) {
                     if(entryVariable.object_)
                         return true;
@@ -399,7 +384,6 @@ Entry.TextCodingUtil = {};
             var entryLists = Entry.variableContainer.lists_;
             for(var e in entryLists) {
                 var entryList = entryLists[e];
-                console.log("entryVariable list", entryVariable);
                 if(entryList.id_ == id) {
                     if(entryList.object_)
                         return true;
@@ -417,7 +401,6 @@ Entry.TextCodingUtil = {};
         var result;
         switch(operator) {
             case '\"EQUAL\"': {
-                //console.log("EQUAL");
                 result = "==";
                 break;
             }
@@ -466,12 +449,10 @@ Entry.TextCodingUtil = {};
             }
         }
 
-        //console.log("binaryOperatorValueConvertor result", result);
         return result;
     };
 
     tu.variableListFilter = function(block, index, param) {
-        console.log("paramFilter block index param", block.data.type, index, param);
 
         if(param == "None")
             return result = param;
@@ -480,17 +461,14 @@ Entry.TextCodingUtil = {};
         var type = block.data.type;
         if(type == "change_variable" || type == "set_variable" || type == "get_variable" ) {
             if(index == 1) {
-                //console.log("paramFilter", eval(param));
                 result = eval(param);
             }
         } else if(type == "length_of_list" || type == "is_included_in_list") {
             if(index == 2) {
-                //console.log("paramFilter", eval(param));
                 result = eval(param);
             }
         } else if(type == "value_of_index_from_list") {
             if(index == 2) {
-                //console.log("paramFilter", eval(param));
                 result = eval(param);
             }
             else if(index == 4) {
@@ -499,7 +477,6 @@ Entry.TextCodingUtil = {};
             }
         } else if(type == "remove_value_from_list") {
             if(index == 2) {
-                //console.log("paramFilter", eval(param));
                 result = eval(param);
             }
             else if(index == 1) {
@@ -508,7 +485,6 @@ Entry.TextCodingUtil = {};
             }
         } else if(type == "insert_value_to_list") {
             if(index == 2) {
-                //console.log("paramFilter", eval(param));
                 result = eval(param);
             }
             else if(index == 3) {
@@ -517,7 +493,6 @@ Entry.TextCodingUtil = {};
             }
         } else if(type == "change_value_list_index") {
             if(index == 1) {
-                //console.log("paramFilter", eval(param));
                 result = eval(param);
             }
             else if(index == 2) {
@@ -526,7 +501,6 @@ Entry.TextCodingUtil = {};
             }
         } else if(type == "add_value_to_list") {
             if(index == 2) {
-                //console.log("paramFilter", eval(param));
                 result = eval(param);
             }
         }
@@ -535,12 +509,10 @@ Entry.TextCodingUtil = {};
     };
 
     /*tu.variableListSpaceMessage = function() {
-        console.log("variableListSpaceMessage");
         var error = {};
         error.title = "파이썬변환(Converting) 오류";
         error.message = "공백(띄어쓰기)이 포함된 변수 또는 리스트는 변환할 수 없습니다.";
         error.line = this._blockCount;
-        console.log("send error", error);
         throw error;
     };*/
 
@@ -548,7 +520,6 @@ Entry.TextCodingUtil = {};
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
-            //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === null && entryVariable.name_ == name) {
                 return true;
             }
@@ -562,7 +533,6 @@ Entry.TextCodingUtil = {};
         var variables = Entry.variableContainer.variables_;
         for(var i in variables) {
             var variable = variables[i];
-            console.log("TextCodingUtil updateGlobalVariable", variable);
             if(variable.object_ === null && variable.name_ == name) {
                 var model = variable.toJSON();
                 model.name = name;
@@ -585,18 +555,15 @@ Entry.TextCodingUtil = {};
             variableType: 'variable'
         };
 
-        //console.log("TextCodingUtil variable", variable);
 
         Entry.variableContainer.addVariable(variable);
         Entry.variableContainer.updateList();
     };
 
     tu.isLocalVariableExisted = function(name, object) {
-        //console.log("isLocalVariableExisted name object", name, object);
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
-            //console.log("TextCodingUtil isLocalVariableExisted", entryVariable);
             if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
                 return true;
             }
@@ -610,7 +577,6 @@ Entry.TextCodingUtil = {};
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
-            //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
                 var model = entryVariable.toJSON();
                 model.name = name;
@@ -624,7 +590,6 @@ Entry.TextCodingUtil = {};
     };
 
     tu.createLocalVariable = function(name, value, object) {
-        //console.log("createLocalVariable", name, value, object);
         if(this.isLocalVariableExisted(name, object))
             return;
 
@@ -635,14 +600,12 @@ Entry.TextCodingUtil = {};
             variableType: 'variable'
         };
 
-        //console.log("TextCodingUtil variable name", name);
 
         Entry.variableContainer.addVariable(variable);
         Entry.variableContainer.updateList();
     };
 
     tu.isLocalVariable = function(variableId) {
-        //console.log("TextCodingUtil isLocalVariable", variableId);
         var object = Entry.playground.object;
         var entryVariables = Entry.variableContainer.variables_;
         for(var e in entryVariables) {
@@ -657,11 +620,9 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isGlobalListExisted = function(name) {
-        console.log("isGlobalListExisted name", name);
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) {
             var entryList = entryLists[i];
-            //console.log("TextCodingUtil entryList", entryList);
             if(entryList.object_ === null && entryList.name_ == name) {
                 return true;
             }
@@ -674,7 +635,6 @@ Entry.TextCodingUtil = {};
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) {
             var entryList = entryLists[i];
-            //console.log("TextCodingUtil entryList", entryList);
             if(entryList.object_ === null && entryList.name_ == name) {
                 list = {
                         x: entryList.x_,
@@ -707,19 +667,16 @@ Entry.TextCodingUtil = {};
             variableType: 'list'
         };
 
-        //console.log("TextCodingUtil list", list);
 
         Entry.variableContainer.addList(list);
         Entry.variableContainer.updateList();
     };
 
     tu.isLocalListExisted = function(name, object) {
-        //console.log("TextCodingUtil isLocalListExisted", name, object);
         if(!object) return false;
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) {
             var entryList = entryLists[i];
-            //console.log("TextCodingUtil entryList", entryList);
             if(entryList.object_ === object.id && entryList.name_ == name) {
                 return true;
             }
@@ -732,7 +689,6 @@ Entry.TextCodingUtil = {};
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) {
             var entryList = entryLists[i];
-            //console.log("TextCodingUtil entryList", entryList);
             if(entryList.object_ === object.id && entryList.name_ == name) {
                 var list = {
                         x: entryList.x_,
@@ -766,14 +722,12 @@ Entry.TextCodingUtil = {};
             variableType: 'list'
         };
 
-        //console.log("TextCodingUtil list", list);
 
         Entry.variableContainer.addList(list);
         Entry.variableContainer.updateList();
     };
 
     tu.isLocalList = function(listId) {
-        //console.log("TextCodingUtil listId", listId);
         var object = Entry.playground.object;
         var entryLists = Entry.variableContainer.lists_;
         for(var e in entryLists) {
@@ -895,7 +849,6 @@ Entry.TextCodingUtil = {};
 
         var stmt = text.substring(0, startIndex);
         var param = text.substring(startIndex+1, endIndex);
-        console.log("filter stmt", stmt, "param", param);
         param = param.replace(/\"/g, "");
 
         if(param) {
@@ -915,7 +868,6 @@ Entry.TextCodingUtil = {};
 
 
 
-        console.log("entryEventFilter text", text);
         return text;
     }
 
@@ -927,7 +879,6 @@ Entry.TextCodingUtil = {};
         for(var i in threadArr) {
                 var thread = threadArr[i];
                 var trimedThread = threadArr[i].trim();
-                console.log("trimedThread check", trimedThread);
                 var colonIndex = trimedThread.indexOf(":");
                 var preText = "";
 
@@ -935,7 +886,6 @@ Entry.TextCodingUtil = {};
                     preText = trimedThread.substring(0, colonIndex+1);
                 }
 
-                console.log("preText", preText);
 
                 preText = preText.split("(");
                 preText = preText[0];
@@ -969,7 +919,6 @@ Entry.TextCodingUtil = {};
                         var newThread = funcPart;
                     }
 
-                    console.log("newThread funcPart", newThread);
                     threadArr[i] = newThread;
                     eventFound = true;
                 }
@@ -991,7 +940,6 @@ Entry.TextCodingUtil = {};
                         var newThread = funcPart;
                     }
 
-                    console.log("newThread funcPart", newThread);
                     threadArr[i] = newThread;
                     eventFound = true;
                 }
@@ -1005,7 +953,6 @@ Entry.TextCodingUtil = {};
                 }
         }
 
-        console.log("newEventFunction result", threadArr);
 
         result = threadArr.join('\n');
         return result;
@@ -1057,7 +1004,6 @@ Entry.TextCodingUtil = {};
     tu.isEntryEventFuncByFullText = function(text) {
         var index = text.indexOf("(");
         var name = text.substring(0, index);
-        console.log("isEntryEventFuncByFullText name", name);
 
         if( name == "def when_start" ||
             name == "def when_press_key" ||
@@ -1126,7 +1072,6 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isEntryEventFuncName = function(name) {
-        console.log("isEntryEventFuncName name", name);
         if( name == "when_start" ||
             name == "when_press_key" ||
             name == "when_click_mouse_on" ||
@@ -1154,12 +1099,10 @@ Entry.TextCodingUtil = {};
             return true;
         }
 
-        console.log("isEntryEventFuncName result is NOT");
         return false;
     };
 
     tu.isEntryEventFuncByType = function(type) {
-        console.log("isEntryEventFuncByType", type);
         if( type == "when_run_button_click" ||
             type == "when_some_key_pressed" ||
             type == "mouse_clicked" ||
@@ -1179,12 +1122,10 @@ Entry.TextCodingUtil = {};
     ////////////////////////////////////////////////////
 
     tu.isEntryEventFuncNameWithParam = function(name) {
-        console.log("isEntryEventFuncNameWithParam name", name);
         var lastIndex = name.lastIndexOf("_");
 
         if(lastIndex > 0) {
             var preText = name.substring(0, lastIndex);
-            console.log("isEntryEventFuncNameWithParam preText", preText);
             if( preText == "when_press_key" ||
                 preText == "when_get_signal") {
                 return true;
@@ -1195,11 +1136,9 @@ Entry.TextCodingUtil = {};
     };
 
     tu.searchFuncDefParam = function(block) {
-        //console.log("searchFuncDefParam block", block);
         if(block.data.type == "function_field_label") {
             var name = block.data.params[0];
             this._funcNameQ.enqueue(name);
-            //console.log("searchFuncDefParam name enqueue", name);
 
         }
 
@@ -1291,7 +1230,6 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isFuncContentsMatch = function(blockFuncContents, textFuncStatements, paramMap, paramInfo, currentFuncKey) {
-        console.log("blockFuncContents, textFuncStatements", blockFuncContents, textFuncStatements);
         var matchFlag = true;
 
         if(textFuncStatements.length != blockFuncContents.length) {
@@ -1316,12 +1254,10 @@ Entry.TextCodingUtil = {};
                 return matchFlag;
             }
 
-            console.log("textFuncStatement", textFuncStatement, "blockFuncContent", blockFuncContent);
 
             if(blockFuncContent._schema && blockFuncContent._schema.template) {
                 var template = blockFuncContent._schema.template;
                 var blockFuncName = template.trim().split(' ')[0];
-                console.log("blockFuncName", blockFuncName, "textFuncName", textFuncStatement);
                 if(blockFuncName == textFuncStatement.funcName)
                     var reculsive = true;
                 else
@@ -1354,19 +1290,12 @@ Entry.TextCodingUtil = {};
                 });
                 textFuncStatementParams = cleansingParams;
 
-                console.log("textFuncStatementParams",textFuncStatementParams, "blockFuncContentParams", blockFuncContentParams);
                 if(textFuncStatementParams.length == blockFuncContentParams.length) { //Statement Param Length Comparison
                     matchFlag = true;
                     for(var j = 0; j < textFuncStatementParams.length; j++) {
                         if(!matchFlag)
                             break;
                         matchFlag = false;
-                        console.log("blockFuncContentParams", blockFuncContentParams);
-                        console.log("textFuncStatementParams", textFuncStatementParams);
-                        console.log("paramMap", paramMap);
-                        console.log("paramInfo", paramInfo);
-                        console.log("textFuncStatementParams[j]", textFuncStatementParams[j]);
-                        console.log("blockFuncContentParams[j]", blockFuncContentParams[j]);
 
                         if(typeof textFuncStatementParams[j] !== "object") {
                             if(textFuncStatementParams[j] == blockFuncContentParams[j]) {
@@ -1424,8 +1353,6 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isFuncContentsParamsMatch = function(blockFuncContentParam, textFuncStatementParam, paramMap, paramInfo) {
-        console.log("blockFuncContentParam", blockFuncContentParam);
-        console.log("textFuncStatementParam", textFuncStatementParam);
 
         var matchFlag = false;
 
@@ -1451,7 +1378,6 @@ Entry.TextCodingUtil = {};
             bfcpType = "literal";
         }
 
-        console.log("tfspType", tfspType, "bfcpType", bfcpType);
 
         if(tfspType == bfcpType) {
             var textSubParams = textFuncStatementParam.params;
@@ -1464,8 +1390,6 @@ Entry.TextCodingUtil = {};
                     blockSubParams.push(blockSubParamUncleansed);
             }*/
 
-            console.log("textSubParams", textSubParams);
-            console.log("blockSubParams", blockSubParams);
             if(!textSubParams && !blockSubParams) {
                 matchFlag = true;
             }
@@ -1477,8 +1401,6 @@ Entry.TextCodingUtil = {};
                     matchFlag = false;
                     var textSubParam = textSubParams[t];
                     var blockSubParam = blockSubParams[t];
-                    console.log("textSubParam", textSubParam);
-                    console.log("blockSubParam", blockSubParam);
                     if(!textSubParam && !blockSubParam) {
                         matchFlag = true;
                     }
@@ -1488,10 +1410,8 @@ Entry.TextCodingUtil = {};
                         }
                     }
                     else if(textSubParam.name) {
-                        console.log("paramInfo", paramInfo);
                         var paramKey = textSubParam.name;
                         var paramBlockType = paramInfo[paramKey];
-                        console.log("blockSubParam.data.type", blockSubParam.data.type, "paramBlockType", paramBlockType);
                         if(paramBlockType) {
                             if(blockSubParam.data.type == paramBlockType)
                                 matchFlag = true;
@@ -1523,7 +1443,6 @@ Entry.TextCodingUtil = {};
                 matchFlag = false;
         }
 
-        console.log("isFuncContentsParamsMatch result matchFlag", matchFlag);
 
         return matchFlag;
     };
@@ -1559,19 +1478,15 @@ Entry.TextCodingUtil = {};
     };
 
     tu.makeFuncParamBlock = function(targetBlock, paramInfo, blockCount) {
-        console.log("targetBlock", targetBlock);
         /*if(targetBlock.type == cFuncKey) {
             targetBlock.type = cFuncType;
         }*/
         var tParams = targetBlock.params;
 
-        console.log("makeFuncParamBlock tParams", tParams);
-        console.log("paramInfo", paramInfo);
 
 
         for(var i in tParams) {
             var param = tParams[i];
-            console.log("makeFuncParamBlock param", param, "i", i);
             if(!param)
                 continue;
 
@@ -1584,7 +1499,6 @@ Entry.TextCodingUtil = {};
             else if(param.type && param.params && param.params.length == 0) {
                 var paramKey = param.type;
                 var paramBlockType = paramInfo[paramKey];
-                console.log("paramBlockType1", paramBlockType);
                 if(paramBlockType) {
                     var paramBlock = {};
                     paramBlock.type = paramBlockType;
@@ -1595,7 +1509,6 @@ Entry.TextCodingUtil = {};
             else if(param.name) {
                 var paramKey = param.name;
                 var paramBlockType = paramInfo[paramKey];
-                console.log("paramBlockType2", paramBlockType);
                 if(paramBlockType) {
                     var paramBlock = {};
                     paramBlock.type = paramBlockType;
@@ -1671,13 +1584,11 @@ Entry.TextCodingUtil = {};
     };
 
     tu.assembleRepeatWhileTrueBlock = function(block, syntax) {
-        console.log("assembleRepeatWhileTrueBlock >>", "block", block.data.type, "syntax", syntax);
         var result = '';
         if(block.data.type == "repeat_while_true") {
             var blockArr = syntax.split(" ");
             var lastIndex = blockArr.length-1;
             var option = blockArr[lastIndex];
-            console.log("option", option, "option.length", option.length);
 
             if(option == 'until') {
                 var condition = "not";
@@ -1698,7 +1609,6 @@ Entry.TextCodingUtil = {};
             result = syntax;
         }
 
-        console.log("assembleRepeatWhileTrueBlock result", result);
 
         return result;
     };
@@ -1887,7 +1797,6 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isNamesIncludeSpace = function() {
-        console.log("isNamesIncludeSpace check");
         var vc = Entry.variableContainer;
         if(!vc)
             return;
@@ -1895,7 +1804,6 @@ Entry.TextCodingUtil = {};
         var targets = vc.variables_ || [];
         for (var i=0; i<targets.length; i++) {
             if (test(targets[i].name_)) {
-                console.log("vari here", Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]);
                 return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT];
             }
         }
@@ -1919,7 +1827,6 @@ Entry.TextCodingUtil = {};
         targets = vc.functions_ || {};
         for (i in targets) {
             var target = targets[i];
-            console.log("function space", target);
 
             var funcThread = target.content._data[0];
             var funcBlock = funcThread._data[0];
@@ -1977,15 +1884,12 @@ Entry.TextCodingUtil = {};
     };
 
     tu.hasFunctionFieldLabel = function(fBlock) {
-        console.log("field fBlock", fBlock);
         if(!fBlock || !fBlock.data) return;
         if(fBlock.data.type == "function_field_label")
             return true;
         var params = fBlock.data.params;
-        console.log("has params", params);
         if(params[0]) {
             var type = params[0].data.type;
-            console.log("has type", type);
             if(type == "function_field_label")
                 return true;
             if(params[0].data.params)
@@ -1995,7 +1899,6 @@ Entry.TextCodingUtil = {};
 
         if(params[1]) {
             var type = params[1].data.type;
-            console.log("has type", type);
             if(type == "function_field_label")
                 return true;
             if(params[1].data.params)
@@ -2017,7 +1920,6 @@ Entry.TextCodingUtil = {};
 
     tu.isFuncParam = function(paramName) {
         var result = false;
-        console.log("isFuncParam", this._funcParams);
 
         var funcParams = this._funcParams;
 
@@ -2132,7 +2034,6 @@ Entry.TextCodingUtil = {};
         var textTokens = text.split("(");
         var textName = textTokens[0];
 
-        console.log("isMathExpression textName", textName);
         if(textName == "Entry.math_operation")
             return true;
 
@@ -2140,7 +2041,6 @@ Entry.TextCodingUtil = {};
     };
 
     tu.makeMathExpression = function(text) {
-        console.log("makeMathExpression text", text);
         var result = text;
         var textTokens = text.split("(");
         var paramsParts = textTokens[1];
@@ -2150,7 +2050,6 @@ Entry.TextCodingUtil = {};
 
         mathOption = mathOption.substring(2, mathOption.length-2).trim();
 
-        console.log("makeMathExpression mathOption", mathOption);
 
         if(mathOption == "square") {
             mathProperty = "pow";
@@ -2228,7 +2127,6 @@ Entry.TextCodingUtil = {};
             result = mathText + "(" + mathValue + ")";
         }
 
-        console.log("makeMathExpression result", result);
 
         return result;
     };
@@ -2291,9 +2189,7 @@ Entry.TextCodingUtil = {};
 
                 /*if(!isNaN(pData)) {
                     data = pData;
-                    console.log("list data1", data);
                     data = parseFloat(data);
-                    console.log("list data2", data);
 
                 }*/
 
@@ -2312,7 +2208,6 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isVariableNumber = function(id, type) {
-        console.log("isVariableNumber", id, type);
         var currentObject = Entry.playground.object;
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {

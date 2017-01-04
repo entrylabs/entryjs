@@ -2685,7 +2685,7 @@ Entry.block = {
         "class": "ArduinoExtGet",
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
-            var port = script.getField("PORT", script);
+            var port = script.getValue("PORT", script);
             var ANALOG = Entry.hw.portData.ANALOG;
             var value2 = script.getNumberValue("VALUE2", script);
             var value3 = script.getNumberValue("VALUE3", script);

@@ -2116,7 +2116,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var value = init.name;
             }
             else if(init.type == "UnaryExpression") {
-                /*var initData = this[init.type](init);
                 var value = initData.params[0];
                 if(typeof value != "string" && typeof value != "number") {
                     value = 0;
@@ -2149,10 +2148,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
 
-            /*var idData = this[id.type](id);
             result.id = idData;
 
-            /*var initData = this[init.type](init);
             result.init = initData;
 
             if(init.type == "Literal") {
@@ -2483,6 +2480,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         if(operator) {
+            var operatorData = Entry.TextCodingUtil.logicalExpressionConvert(operator);
         }
 
         result.operator = operatorData;
@@ -4332,6 +4330,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
+    p.LogicalExpression = function(component) {
         var result;
         var structure = {};
 
@@ -4404,6 +4403,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         operator = String(component.operator);
         if(operator) {
+            operator = Entry.TextCodingUtil.logicalExpressionConvert(operator);
             param = operator;
             params.push(param);
         }
