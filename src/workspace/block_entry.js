@@ -3216,7 +3216,8 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [{
-                    "type": "arduino_get_port_number"
+                    "type": "arduino_get_port_number",
+                    "value": 3
                 },
                 {
                     "type": "arduino_ext_tone_list"
