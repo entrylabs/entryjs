@@ -477,4 +477,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p._isVimMode = function() {
         return this.oldMode === Entry.Workspace.MODE_VIMBOARD;
     };
+
+    p.isVimMode = p._isVimMode;
+
 })(Entry.Workspace.prototype);
