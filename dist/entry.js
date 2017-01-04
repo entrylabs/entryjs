@@ -1728,7 +1728,33 @@ Entry.byrobot_dronefighter = {name:"byrobot_dronefighter", setZero:function() {
     void 0, a.target = 16, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0, a.target = 17, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0;
   }
   a.target = void 0;
-}, monitorTemplate:{imgPath:"hw/byrobot_dronefighter.png", width:500, height:450, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeFlight:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight, type:"input", pos:{x:0, y:0}}, state_modeDrive:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive, type:"input", pos:{x:0, y:0}}, state_coordinate:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate, 
+}, monitorTemplate:{imgPath:"hw/byrobot_dronefighter.png", width:500, height:500, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeFlight:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight, type:"input", pos:{x:0, y:0}}, state_modeDrive:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive, type:"input", pos:{x:0, y:0}}, state_coordinate:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate, 
+type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_dronefighter_drone_state_battery, type:"input", pos:{x:0, y:0}}, attitude_roll:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_roll, type:"input", pos:{x:0, y:0}}, attitude_pitch:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, attitude_yaw:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_dronefighter_drone_irmessage, 
+type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event, type:"input", pos:{x:0, 
+y:0}}, joystick_left_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command, type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event, 
+type:"input", pos:{x:0, y:0}}, joystick_right_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command, type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_dronefighter_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_dronefighter_controller_button_event, type:"input", pos:{x:0, y:0}}}, ports:{}, mode:"both"}};
+Entry.byrobot_dronefighter_controller = {name:"byrobot_dronefighter_controller", setZero:function() {
+  var a = Entry.hw.sendQueue;
+  a.target = 16;
+  for (var b = 0;1 > b;b++) {
+    a.target = 16, a.command_command = 36, a.command_option = 0, Entry.hw.update(), a.command_command = void 0, a.command_option = void 0, a.target = 17, a.buzzer_mode = 0, a.buzzer_value = 0, a.buzzer_time = 0, Entry.hw.update(), a.buzzer_mode = void 0, a.buzzer_value = void 0, a.buzzer_time = void 0, a.target = 17, a.vibrator_mode = 0, a.vibrator_on = 0, a.vibrator_off = 0, a.vibrator_total = 0, Entry.hw.update(), a.vibrator_mode = void 0, a.vibrator_on = void 0, a.vibrator_off = void 0, a.vibrator_total = 
+    void 0, a.target = 16, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0, a.target = 17, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0;
+  }
+  a.target = void 0;
+}, monitorTemplate:{imgPath:"hw/byrobot_dronefighter_controller.png", width:500, height:500, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeFlight:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight, type:"input", pos:{x:0, y:0}}, state_modeDrive:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive, type:"input", pos:{x:0, y:0}}, state_coordinate:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate, 
+type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_dronefighter_drone_state_battery, type:"input", pos:{x:0, y:0}}, attitude_roll:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_roll, type:"input", pos:{x:0, y:0}}, attitude_pitch:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, attitude_yaw:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_dronefighter_drone_irmessage, 
+type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event, type:"input", pos:{x:0, 
+y:0}}, joystick_left_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command, type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event, 
+type:"input", pos:{x:0, y:0}}, joystick_right_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command, type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_dronefighter_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_dronefighter_controller_button_event, type:"input", pos:{x:0, y:0}}}, ports:{}, mode:"both"}};
+Entry.byrobot_petrone = {name:"byrobot_petrone", setZero:function() {
+  var a = Entry.hw.sendQueue;
+  a.target = 16;
+  for (var b = 0;1 > b;b++) {
+    a.target = 16, a.command_command = 36, a.command_option = 0, Entry.hw.update(), a.command_command = void 0, a.command_option = void 0, a.target = 17, a.buzzer_mode = 0, a.buzzer_value = 0, a.buzzer_time = 0, Entry.hw.update(), a.buzzer_mode = void 0, a.buzzer_value = void 0, a.buzzer_time = void 0, a.target = 17, a.vibrator_mode = 0, a.vibrator_on = 0, a.vibrator_off = 0, a.vibrator_total = 0, Entry.hw.update(), a.vibrator_mode = void 0, a.vibrator_on = void 0, a.vibrator_off = void 0, a.vibrator_total = 
+    void 0, a.target = 16, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0, a.target = 17, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0;
+  }
+  a.target = void 0;
+}, monitorTemplate:{imgPath:"hw/byrobot_petrone.png", width:500, height:500, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeFlight:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight, type:"input", pos:{x:0, y:0}}, state_modeDrive:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive, type:"input", pos:{x:0, y:0}}, state_coordinate:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate, 
 type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_dronefighter_drone_state_battery, type:"input", pos:{x:0, y:0}}, attitude_roll:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_roll, type:"input", pos:{x:0, y:0}}, attitude_pitch:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, attitude_yaw:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_dronefighter_drone_irmessage, 
 type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event, type:"input", pos:{x:0, 
 y:0}}, joystick_left_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command, type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event, 
@@ -10163,7 +10189,7 @@ Entry.HW = function() {
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
   this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "B.1":Entry.Codestar, 
-  "F.1":Entry.byrobot_dronefighter};
+  "F.1":Entry.byrobot_dronefighter, "F.2":Entry.byrobot_dronefighter_controller, "F.3":Entry.byrobot_petrone};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -24864,29 +24890,29 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.optionGroup.css({left:b.x, top:b.y, width:e});
     this.optionGroup.find(".right").width(e - 20);
   };
-  a.applyValue = function(b) {
-    this.value != b && this.setValue(b);
-    this.textElement.textContent = this.getTextByValue(b);
+  a.applyValue = function(a) {
+    this.value != a && this.setValue(a);
+    this.textElement.textContent = this.getTextByValue(a);
     this.resize();
   };
-  a.getTextByValue = function(b) {
-    if (!b || "null" === b) {
+  a.getTextByValue = function(a) {
+    if (!a || "null" === a) {
       return Lang.Blocks.no_target;
     }
-    for (var a = this._contents.options, d = 0, e = a.length;d < e;d++) {
-      var f = a[d];
-      if (f[1] == b) {
+    for (var b = this._contents.options, d = 0, e = b.length;d < e;d++) {
+      var f = b[d];
+      if (f[1] == a) {
         return f[0];
       }
     }
     return Lang.Blocks.no_target;
   };
-  a.getContentHeight = function(b) {
-    return b = b || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);
+  a.getContentHeight = function(a) {
+    return a = a || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);
   };
   a.getArrow = function() {
-    var b = Entry.isMobile();
-    return {color:this._arrowColor || this._blockView._schema.color, points:b ? "0,0 19,0 9.5,13" : "0,0 6.4,0 3.2,4.2", height:b ? 13 : 4.2, width:b ? 19 : 6.4};
+    var a = Entry.isMobile();
+    return {color:this._arrowColor || this._blockView._schema.color, points:a ? "0,0 19,0 9.5,13" : "0,0 6.4,0 3.2,4.2", height:a ? 13 : 4.2, width:a ? 19 : 6.4};
   };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldDropdownDynamic = function(a, b, c) {
@@ -24908,38 +24934,38 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 (function(a) {
   a.constructor = Entry.FieldDropDownDynamic;
   a._updateValue = function() {
-    var b = this._block.getCode().object, a = [];
-    Entry.container && (a = this._menuName ? Entry.container.getDropdownList(this._menuName, b) : this._menuGenerator());
-    this._contents.options = a;
-    b = this.getValue();
-    if (this._blockView.isInBlockMenu || !b || "null" == b) {
-      b = 0 !== a.length ? a[0][1] : null;
+    var a = this._block.getCode().object, c = [];
+    Entry.container && (c = this._menuName ? Entry.container.getDropdownList(this._menuName, a) : this._menuGenerator());
+    this._contents.options = c;
+    a = this.getValue();
+    if (this._blockView.isInBlockMenu || !a || "null" == a) {
+      a = 0 !== c.length ? c[0][1] : null;
     }
-    this.setValue(b);
+    this.setValue(a);
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
-    this.optionGroup.bind("mousedown touchstart", function(b) {
-      b.stopPropagation();
+    this.optionGroup.bind("mousedown touchstart", function(a) {
+      a.stopPropagation();
     });
-    var a;
-    a = this._menuName ? Entry.container.getDropdownList(this._contents.menuName) : this._menuGenerator();
-    this._contents.options = a;
-    for (var d = 0;d < a.length;d++) {
-      var e = a[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = Entry.Dom("span", {class:"left", parent:g});
+    var c;
+    c = this._menuName ? Entry.container.getDropdownList(this._contents.menuName) : this._menuGenerator();
+    this._contents.options = c;
+    for (var d = 0;d < c.length;d++) {
+      var e = c[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = Entry.Dom("span", {class:"left", parent:g});
       Entry.Dom("span", {class:"right", parent:g}).text(f);
       this.getValue() == e && h.text("\u2713");
-      (function(a, c) {
-        a.mousedown(function(b) {
-          b.stopPropagation();
-        });
-        a.mouseup(function(a) {
+      (function(b, c) {
+        b.mousedown(function(a) {
           a.stopPropagation();
-          b.applyValue(c);
-          b.destroyOption();
-          b._selectBlockView();
+        });
+        b.mouseup(function(b) {
+          b.stopPropagation();
+          a.applyValue(c);
+          a.destroyOption();
+          a._selectBlockView();
         });
       })(g, e);
     }
@@ -24989,19 +25015,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
     this.svgGroup && this.svgGroup.remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this._imgElement = this.svgGroup.elem("image", {href:Entry.mediaFilePath + this._imgUrl, x:this._position ? -1 * this._size : 0, y:-1 * this._size, width:2 * this._size, height:2 * this._size});
-    var b = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
-    this._path = this.svgGroup.elem("path", {d:b, stroke:"none", fill:"none"});
+    var a = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
+    this._path = this.svgGroup.elem("path", {d:a, stroke:"none", fill:"none"});
     this.box.set({width:this._size * this._boxMultiplier + (this._position ? -this._size : 0), height:this._size * this._boxMultiplier});
   };
   a.enableHighlight = function() {
-    var b = this._path.getTotalLength(), a = this._path;
-    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":b + " " + b, "stroke-dashoffset":b});
+    var a = this._path.getTotalLength(), c = this._path;
+    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
     setInterval(function() {
-      a.attr({"stroke-dashoffset":b}).animate({"stroke-dashoffset":0}, 300);
+      c.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 300);
     }, 1400, mina.easeout);
     setTimeout(function() {
       setInterval(function() {
-        a.animate({"stroke-dashoffset":-b}, 300);
+        c.animate({"stroke-dashoffset":-a}, 300);
       }, 1400, mina.easeout);
     }, 500);
   };
@@ -25027,21 +25053,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text").attr({x:5, y:4, "font-size":"11px"});
     this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
-    var b = this.getTextWidth() + 1, a = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {x:0, y:(this.position && this.position.y ? this.position.y : 0) - a / 2, width:b, height:a, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    var a = this.getTextWidth() + 1, c = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {x:0, y:(this.position && this.position.y ? this.position.y : 0) - c / 2, width:a, height:c, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:b, height:a});
+    this.box.set({x:0, y:0, width:a, height:c});
   };
   a.renderOptions = function() {
     Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
     this._optionVisible = !0;
     this._attachDisposeEvent();
-    var b = this.getAbsolutePosFromDocument();
-    b.x -= this.box.width / 2;
-    b.y += this.box.height / 2 + 1;
+    var a = this.getAbsolutePosFromDocument();
+    a.x -= this.box.width / 2;
+    a.y += this.box.height / 2 + 1;
     this.optionGroup = Entry.Dom("img", {class:"entry-widget-keyboard-input", src:Entry.mediaFilePath + "/media/keyboard_workspace.png", parent:$("body")});
-    this.optionGroup.css({left:b.x, top:b.y});
+    this.optionGroup.css({left:a.x, top:a.y});
   };
   a.destroyOption = function() {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.disposeEvent);
@@ -25050,24 +25076,24 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.command();
     this.keyPressed && (Entry.keyPressed.detach(this.keyPressed), delete this.keyPressed);
   };
-  a._keyboardControl = function(b) {
-    b.stopPropagation();
+  a._keyboardControl = function(a) {
+    a.stopPropagation();
     if (this._optionVisible) {
-      b = b.keyCode;
-      var a = Entry.getKeyCodeMap()[b];
-      void 0 !== a && this.applyValue(a, b);
+      a = a.keyCode;
+      var b = Entry.getKeyCodeMap()[a];
+      void 0 !== b && this.applyValue(b, a);
     }
   };
-  a.applyValue = function(b, a) {
-    this.setValue(String(a));
+  a.applyValue = function(a, c) {
+    this.setValue(String(c));
     this.destroyOption();
-    this.textElement.textContent = b;
+    this.textElement.textContent = a;
     this.resize();
   };
   a.resize = function() {
-    var b = this.getTextWidth() + 1;
-    this._header.attr({width:b});
-    this.box.set({width:b});
+    var a = this.getTextWidth() + 1;
+    this._header.attr({width:a});
+    this.box.set({width:a});
     this._blockView.alignContent();
   };
   a.getTextWidth = function() {
@@ -25090,9 +25116,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldLineBreak);
 (function(a) {
   a.renderStart = function() {
   };
-  a.align = function(b) {
-    var a = this._blockView;
-    0 !== a._statements.length && this.box.set({y:(a._statements[b].height || 20) + Math.max(a.contentHeight % 1E3, 30)});
+  a.align = function(a) {
+    var b = this._blockView;
+    0 !== b._statements.length && this.box.set({y:(b._statements[a].height || 20) + Math.max(b.contentHeight % 1E3, 30)});
   };
 })(Entry.FieldLineBreak.prototype);
 Entry.FieldOutput = function(a, b, c, d, e) {
@@ -25116,61 +25142,61 @@ Entry.FieldOutput = function(a, b, c, d, e) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 (function(a) {
   a.schema = {magneting:!1};
-  a.renderStart = function(b, a) {
+  a.renderStart = function(a, c) {
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
-    var c = this.getValue();
-    c && !c.view && (c.setThread(this), c.createView(b, a));
-    this._updateValueBlock(c);
+    var b = this.getValue();
+    b && !b.view && (b.setThread(this), b.createView(a, c));
+    this._updateValueBlock(b);
     this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock && this._valueBlock.view.removeControl();
   };
-  a.align = function(b, a, d) {
-    var c = this.svgGroup;
-    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
+  a.align = function(a, c, d) {
+    var b = this.svgGroup;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
     var f = this._valueBlock;
-    f && (a = -.5 * f.view.height);
-    f = "translate(" + b + "," + a + ")";
-    void 0 === d || d ? c.animate({transform:f}, 300, mina.easeinout) : c.attr({transform:f});
-    this.box.set({x:b, y:a});
+    f && (c = -.5 * f.view.height);
+    f = "translate(" + a + "," + c + ")";
+    void 0 === d || d ? b.animate({transform:f}, 300, mina.easeinout) : b.attr({transform:f});
+    this.box.set({x:a, y:c});
   };
   a.calcWH = function() {
-    var b = this._valueBlock;
-    b ? (b = b.view, this.box.set({width:b.width, height:b.height})) : this.box.set({width:0, height:20});
+    var a = this._valueBlock;
+    a ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:0, height:20});
   };
   a.calcHeight = a.calcWH;
   a.destroy = function() {
   };
   a._inspectBlock = function() {
   };
-  a._setValueBlock = function(b) {
-    if (b != this._valueBlock || !this._valueBlock) {
-      return this._valueBlock = b, this.setValue(b), b && b.setThread(this), this._valueBlock;
+  a._setValueBlock = function(a) {
+    if (a != this._valueBlock || !this._valueBlock) {
+      return this._valueBlock = a, this.setValue(a), a && a.setThread(this), this._valueBlock;
     }
   };
-  a._updateValueBlock = function(b) {
-    b instanceof Entry.Block || (b = void 0);
+  a._updateValueBlock = function(a) {
+    a instanceof Entry.Block || (a = void 0);
     this._sizeObserver && this._sizeObserver.destroy();
     this._posObserver && this._posObserver.destroy();
-    (b = this._setValueBlock(b)) ? (b = b.view, b.bindPrev(), this._posObserver = b.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = b.observe(this, "calcWH", ["width", "height"])) : this.calcWH();
+    (a = this._setValueBlock(a)) ? (a = a.view, a.bindPrev(), this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = a.observe(this, "calcWH", ["width", "height"])) : this.calcWH();
     this._blockView.alignContent();
-    b = this._blockView.getBoard();
-    b.constructor === Entry.Board && b.generateCodeMagnetMap();
+    a = this._blockView.getBoard();
+    a.constructor === Entry.Board && a.generateCodeMagnetMap();
   };
-  a.getPrevBlock = function(b) {
-    return this._valueBlock === b ? this : null;
+  a.getPrevBlock = function(a) {
+    return this._valueBlock === a ? this : null;
   };
   a.getNextBlock = function() {
     return null;
   };
-  a.requestAbsoluteCoordinate = function(b) {
-    b = this._blockView;
-    var a = b.contentPos;
-    b = b.getAbsoluteCoordinate();
-    b.x += this.box.x + a.x;
-    b.y += this.box.y + a.y;
-    return b;
+  a.requestAbsoluteCoordinate = function(a) {
+    a = this._blockView;
+    var b = a.contentPos;
+    a = a.getAbsoluteCoordinate();
+    a.x += this.box.x + b.x;
+    a.y += this.box.y + b.y;
+    return a;
   };
   a.dominate = function() {
     this._blockView.dominate();
@@ -25178,28 +25204,28 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   a.isGlobal = function() {
     return !1;
   };
-  a.separate = function(b) {
-    this.getCode().createThread([b]);
+  a.separate = function(a) {
+    this.getCode().createThread([a]);
     this.changeEvent.notify();
   };
   a.getCode = function() {
     return this._block.thread.getCode();
   };
-  a.cut = function(b) {
-    return this._valueBlock === b ? (delete this._valueBlock, [b]) : null;
+  a.cut = function(a) {
+    return this._valueBlock === a ? (delete this._valueBlock, [a]) : null;
   };
   a._updateBG = function() {
     this.magneting ? this._bg = this.svgGroup.elem("path", {d:"m -4,-12 h 3 l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2 h -3 ", fill:"#fff", stroke:"#fff", "fill-opacity":.7, transform:"translate(0," + (this._valueBlock ? 12 : 0) + ")"}) : this._bg && (this._bg.remove(), delete this._bg);
   };
-  a.replace = function(b) {
-    var a = this._valueBlock;
-    a && (a.view._toGlobalCoordinate(), b.getTerminateOutputBlock().view._contents[1].replace(a));
-    this._updateValueBlock(b);
-    b.view._toLocalCoordinate(this.svgGroup);
+  a.replace = function(a) {
+    var b = this._valueBlock;
+    b && (b.view._toGlobalCoordinate(), a.getTerminateOutputBlock().view._contents[1].replace(b));
+    this._updateValueBlock(a);
+    a.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
   };
-  a.setParent = function(b) {
-    this._parent = b;
+  a.setParent = function(a) {
+    this._parent = a;
   };
   a.getParent = function() {
     return this._parent;
@@ -25210,10 +25236,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   a.getValueBlock = function() {
     return this._valueBlock;
   };
-  a.pointer = function(b) {
-    b.unshift(this._index);
-    b.unshift(Entry.PARAM);
-    return this._block.pointer(b);
+  a.pointer = function(a) {
+    a.unshift(this._index);
+    a.unshift(Entry.PARAM);
+    return this._block.pointer(a);
   };
 })(Entry.FieldOutput.prototype);
 Entry.FieldStatement = function(a, b, c) {
@@ -25232,31 +25258,31 @@ Entry.FieldStatement = function(a, b, c) {
 (function(a) {
   a.schema = {x:0, y:0, width:100, height:20, magneting:!1};
   a.magnet = {next:{x:0, y:0}};
-  a.renderStart = function(b) {
+  a.renderStart = function(a) {
     this.svgGroup = this._blockView.statementSvgGroup.elem("g");
     this._nextGroup = this.statementSvgGroup = this.svgGroup.elem("g");
-    this._initThread(b);
-    this._board = b;
+    this._initThread(a);
+    this._board = a;
   };
-  a._initThread = function(b) {
-    var a = this.getValue();
-    this._thread = a;
-    a.createView(b);
-    a.view.setParent(this);
-    if (b = a.getFirstBlock()) {
-      b.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = b;
+  a._initThread = function(a) {
+    var b = this.getValue();
+    this._thread = b;
+    b.createView(a);
+    b.view.setParent(this);
+    if (a = b.getFirstBlock()) {
+      a.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = a;
     }
-    a.changeEvent.attach(this, this.calcHeight);
-    a.changeEvent.attach(this, this.checkTopBlock);
+    b.changeEvent.attach(this, this.calcHeight);
+    b.changeEvent.attach(this, this.checkTopBlock);
     this.calcHeight();
   };
-  a.align = function(b, a, d) {
+  a.align = function(a, c, d) {
     d = void 0 === d ? !0 : d;
-    var c = this.svgGroup;
-    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
-    var f = "translate(" + b + "," + a + ")";
-    this.set({x:b, y:a});
-    d ? c.animate({transform:f}, 300, mina.easeinout) : c.attr({transform:f});
+    var b = this.svgGroup;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    var f = "translate(" + a + "," + c + ")";
+    this.set({x:a, y:c});
+    d ? b.animate({transform:f}, 300, mina.easeinout) : b.attr({transform:f});
   };
   a.calcHeight = function() {
     var a = this._thread.view.requestPartHeight(null);
