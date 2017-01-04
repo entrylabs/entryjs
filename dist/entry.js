@@ -21696,7 +21696,8 @@ Entry.VariableContainer.prototype.removeMessage = function(b) {
   return new Entry.State(this, this.addMessage, b);
 };
 Entry.VariableContainer.prototype.changeMessageName = function(b, a) {
-  b.name != a && (Entry.isExist(a, "name", this.messages_) ? (b.listElement.nameField.value = b.name, Entry.toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name, Entry.toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_too_long)) : (b.name = a, Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.message_rename, Lang.Workspace.message_rename_ok)));
+  b.name != a && (Entry.isExist(a, "name", this.messages_) ? (b.listElement.nameField.value = b.name, Entry.toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name, Entry.toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_too_long)) : (b.name = a, Entry.playground && Entry.playground.blockMenu && Entry.playground.blockMenu.deleteRendered("start"), Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.message_rename, 
+  Lang.Workspace.message_rename_ok)));
 };
 Entry.VariableContainer.prototype.createMessageView = function(b) {
   var a = this, d = Entry.createElement("li");
@@ -26622,7 +26623,7 @@ Entry.Board.DRAG_RADIUS = 5;
     this._activatedBlockView = a;
   };
   b.reDraw = function() {
-    this.code.view.reDraw();
+    this.code && this.code.view && this.code.view.reDraw();
   };
   b.separate = function(a, b) {
     "string" === typeof a && (a = this.findById(a));
@@ -28624,7 +28625,7 @@ Entry.Playground.prototype.initializeResizeHandle = function(b) {
 };
 Entry.Playground.prototype.reloadPlayground = function() {
   var b = this.mainWorkspace;
-  b && b.getBlockMenu().reDraw();
+  b && (b.getBlockMenu().reDraw(), b.getBoard().reDraw());
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;

@@ -1150,6 +1150,7 @@ Entry.VariableContainer.prototype.removeMessage = function(message) {
 Entry.VariableContainer.prototype.changeMessageName = function(message, name) {
     if (message.name == name)
         return;
+
     var messages = this.messages_;
     var exist = Entry.isExist(name, 'name', messages);
 
@@ -1165,6 +1166,8 @@ Entry.VariableContainer.prototype.changeMessageName = function(message, name) {
         return;
     }
     message.name = name;
+    if (Entry.playground && Entry.playground.blockMenu)
+        Entry.playground.blockMenu.deleteRendered('start')
     Entry.playground.reloadPlayground();
     Entry.toast.success(Lang.Workspace.message_rename,
                         Lang.Workspace.message_rename_ok);

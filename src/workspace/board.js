@@ -855,7 +855,7 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.reDraw = function() {
-        this.code.view.reDraw();
+        this.code && this.code.view && this.code.view.reDraw();
     };
 
     p.separate = function(block, count) {

@@ -825,7 +825,6 @@ Entry.Playground.prototype.injectObject = function(object) {
     else if (viewMode == 'sound')
         this.changeViewMode('sound');
     this.reloadPlayground();
-
 };
 
 /**
@@ -1312,7 +1311,10 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
  */
 Entry.Playground.prototype.reloadPlayground = function () {
     (function(workspace) {
-        workspace && workspace.getBlockMenu().reDraw();
+        if (workspace) {
+            workspace.getBlockMenu().reDraw();
+            workspace.getBoard().reDraw();
+        }
     })(this.mainWorkspace);
 };
 
