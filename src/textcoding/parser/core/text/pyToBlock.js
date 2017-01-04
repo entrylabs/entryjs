@@ -73,8 +73,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             var blockType = targetSyntax.blockType;
                         }
 
-                        if(blockType == "param") continue;
-                        else if(blockType == "event") {
+                        if(blockType == "event") {
                             this._isEntryEventExisted = true;
                         }
                         else if(blockType == "last") {
