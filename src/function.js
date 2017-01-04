@@ -372,7 +372,7 @@ Entry.Func.updateMenu = function() {
         blockMenu.banClass("functionInit", true);
         blockMenu.unbanClass("functionEdit", true);
     } else {
-        blockMenu.unbanClass("functionInit", true);
+        !workspace.isVimMode() && blockMenu.unbanClass("functionInit", true);
         blockMenu.banClass("functionEdit", true);
     }
     blockMenu.lastSelector === 'func' && blockMenu.align();
