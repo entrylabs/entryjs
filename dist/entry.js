@@ -9931,7 +9931,11 @@ Entry.Func.createParamBlock = function(b, a, c) {
 };
 Entry.Func.updateMenu = function() {
   var b = Entry.getMainWS();
-  b && (b = b.getBlockMenu(), this.targetFunc ? (!this.menuCode && this.setupMenuCode(), b.banClass("functionInit", !0), b.unbanClass("functionEdit", !0)) : (b.unbanClass("functionInit", !0), b.banClass("functionEdit", !0)), "func" === b.lastSelector && b.align());
+  if (b) {
+    var a = b.getBlockMenu();
+    this.targetFunc ? (!this.menuCode && this.setupMenuCode(), a.banClass("functionInit", !0), a.unbanClass("functionEdit", !0)) : (!b.isVimMode() && a.unbanClass("functionInit", !0), a.banClass("functionEdit", !0));
+    "func" === a.lastSelector && a.align();
+  }
 };
 Entry.Func.prototype.edit = function() {
   Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView());
@@ -13959,9 +13963,7 @@ Entry.TextCodingUtil = {};
           }
         } else {
           if ("lists" == b) {
-            debugger;
-            l = Entry.variableContainer.lists_;
-            for (g in l) {
+            for (g in l = Entry.variableContainer.lists_, l) {
               if (f = l[g], f.name_ == a) {
                 if (d) {
                   if (d.id == f.object_) {
