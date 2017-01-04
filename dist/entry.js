@@ -9461,10 +9461,12 @@ Entry.EntryObject.prototype.editObjectValues = function(b) {
   }
 };
 Entry.EntryObject.prototype.blurAllInput = function() {
-  var b = document.getElementsByClassName("selectedEditingObject");
-  $(b).removeClass("selectedEditingObject");
+  var b = document.getElementsByClassName("");
+  $(".selectedEditingObject").removeClass("selectedEditingObject");
   for (var b = [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_], a = 0;a < b.length;a++) {
-    b[a].addClass("selectedNotEditingObject"), b[a].setAttribute("readonly", !0);
+    var d = b[a];
+    d.addClass("selectedNotEditingObject");
+    d.setAttribute("readonly", !0);
   }
 };
 Entry.EntryObject.prototype.addStampEntity = function(b) {
@@ -18471,19 +18473,19 @@ Entry.createElement = function(b, a) {
   d = b instanceof HTMLElement ? b : document.createElement(b);
   a && (d.id = a);
   d.hasClass = function(a) {
-    return (this.cachedClassName || this.className).match(new RegExp("(\\s|^)" + a + "(\\s|$)"));
+    return this.className.match(new RegExp("(\\s|^)" + a + "(\\s|$)"));
   };
   d.addClass = function(a) {
-    for (var b = this.cachedClassName || this.className, d = 0;d < arguments.length;d++) {
+    for (var b = this.className, d = 0;d < arguments.length;d++) {
       a = arguments[d], this.hasClass(a) || (b += " " + a);
     }
-    this.className = this.cachedClassName = b;
+    this.className = b;
   };
   d.removeClass = function(a) {
-    for (var b = this.cachedClassName || this.className, d = 0;d < arguments.length;d++) {
+    for (var b = this.className, d = 0;d < arguments.length;d++) {
       a = arguments[d], this.hasClass(a) && (b = b.replace(new RegExp("(\\s|^)" + a + "(\\s|$)"), " "));
     }
-    this.className = this.cachedClassName = b;
+    this.className = b;
   };
   d.bindOnClick = function(a) {
     $(this).on("click tab", function(b) {

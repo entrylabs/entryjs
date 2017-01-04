@@ -395,21 +395,19 @@ Entry.createElement = function(type, elementId) {
         element.id = elementId;
 
     element.hasClass = function(className) {
-        var current = this.cachedClassName || this.className;
-        return current.match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
+        return this.className.match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
     };
     element.addClass = function(className) {
-        var current = this.cachedClassName || this.className;
+        var current = this.className;
         for (var i = 0; i < arguments.length; i++) {
             var className = arguments[i];
             if (!this.hasClass(className))
                 current += " " + className;
         }
-        this.cachedClassName = current;
         this.className = current;
     };
     element.removeClass = function(className) {
-        var current = this.cachedClassName || this.className;
+        var current = this.className;
         for (var i = 0; i < arguments.length; i++) {
             var className = arguments[i];
             if (this.hasClass(className)) {
@@ -417,7 +415,6 @@ Entry.createElement = function(type, elementId) {
                 current = current.replace(reg,' ');
             }
         }
-        this.cachedClassName = current;
         this.className = current;
     };
     element.bindOnClick = function(func) {

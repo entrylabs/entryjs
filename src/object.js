@@ -244,7 +244,6 @@ Entry.EntryObject.prototype.generateView = function() {
         this.nameView_.onblur = function(bool) {
             this.entryObject.name = this.value;
             Entry.playground.reloadPlayground();
-
         };
 
         this.nameView_.onkeypress = function(e) {
@@ -1487,9 +1486,8 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
         }
         this.isEditing = true;
     } else {
-        for(var i=0; i<inputs.length; i++){
+        for(var i=0; i<inputs.length; i++)
             inputs[i].blur(true);
-        }
 
         this.nameView_.blur(true);
 
@@ -1499,32 +1497,21 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
 };
 
 Entry.EntryObject.prototype.blurAllInput = function() {
-    var inputs = document.getElementsByClassName('selectedEditingObject');
-    $(inputs).removeClass('selectedEditingObject');
+    var inputs = document.getElementsByClassName('');
+    $('.selectedEditingObject').removeClass('selectedEditingObject');
 
     inputs = [
-            this.nameView_, this.coordinateView_.xInput_,
-            this.coordinateView_.yInput_, this.rotateInput_,
-            this.directionInput_, this.coordinateView_.sizeInput_
-        ];
+        this.nameView_, this.coordinateView_.xInput_,
+        this.coordinateView_.yInput_, this.rotateInput_,
+        this.directionInput_, this.coordinateView_.sizeInput_
+    ];
 
-        for(var i=0; i<inputs.length; i++){
-            inputs[i].addClass('selectedNotEditingObject');
-            inputs[i].setAttribute('readonly', true);
-        }
-    };
-
-// Entry.EntryObject.prototype.disableInput = function(){
-//     var inputs = [
-//             this.nameView_, this.coordinateView_.xInput_,
-//             this.coordinateView_.yInput_, this.rotateInput_,
-//             this.directionInput_, this.coordinateView_.sizeInput_
-//         ];
-//     for(var i=0; i<inputs.length; i++){
-//         inputs[i].setAttribute('disabled', 'disabled');
-//     }
-// };
-
+    for(var i=0; i<inputs.length; i++) {
+        var input = inputs[i];
+        input.addClass('selectedNotEditingObject');
+        input.setAttribute('readonly', true);
+    }
+};
 
 /**
  * Add stamp entity for brush_stamp block
