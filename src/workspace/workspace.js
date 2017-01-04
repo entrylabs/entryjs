@@ -229,18 +229,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         }.bind(this), 0);
     };
 
-    /*p.loadCodeFromText = function(mode) {
-        if (!this.vimBoard || mode != Entry.Workspace.MODE_VIMBOARD)
-            return;
-        var changedCode = this.vimBoard.(this.textType);
-        var board = this.board;
-        var code = board.code;
-        code.load(changedCode);
-    };*/
-
     p.codeToText = function(code, mode) {
         if (!this.vimBoard)
             return;
+
+        code = code || this.board.code;
+        mode = mode || {
+            textType : this.textType,
+            boardType : this.boardType,
+            runType : this.runType
+        };
 
         return this.vimBoard.codeToText(code, mode);
 

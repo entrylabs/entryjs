@@ -7909,6 +7909,9 @@ Entry.Engine.prototype.toggleStop = function() {
   this.state = "stop";
   Entry.dispatchEvent("stop");
   Entry.stage.hideInputField();
+  (function(a) {
+    a && a.getMode() === Entry.Workspace.MODE_VIMBOARD && a.codeToText();
+  })(Entry.getMainWS());
 };
 Entry.Engine.prototype.togglePause = function() {
   var b = Entry.engine.projectTimer;
@@ -27787,7 +27790,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.codeToText = function(a, b) {
     if (this.vimBoard) {
-      return this.vimBoard.codeToText(a, b);
+      return a = a || this.board.code, b = b || {textType:this.textType, boardType:this.boardType, runType:this.runType}, this.vimBoard.codeToText(a, b);
     }
   };
   b.getCodeToText = function(a) {

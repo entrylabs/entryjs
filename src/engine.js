@@ -552,8 +552,8 @@ Entry.Engine.prototype.toggleStop = function() {
             entity.dialog.remove();
         if (entity.brush)
             entity.removeBrush();
-
     });
+
     variableContainer.mapVariable(function(variable){
         variable.loadSnapshot();
     });
@@ -585,6 +585,9 @@ Entry.Engine.prototype.toggleStop = function() {
     this.state = 'stop';
     Entry.dispatchEvent('stop');
     Entry.stage.hideInputField();
+    (function(w) {
+        w && w.getMode() === Entry.Workspace.MODE_VIMBOARD && w.codeToText();
+    })(Entry.getMainWS());
 };
 
 /**
