@@ -128,6 +128,7 @@ Entry.TextCodingUtil = {};
         if(Entry.getMainWS() && Entry.getMainWS().vimBoard) {
             var VIM = Entry.getMainWS().vimBoard;
             if(VIM) var currentScene = VIM._currentScene;
+            var currentObject = VIM._currentObject;
         }
 
         if(menuName == "scenes") {
@@ -190,32 +191,20 @@ Entry.TextCodingUtil = {};
             }
         }
         else if(menuName == "pictures") {
-            var objects = Entry.container.getAllObjects();
-            for(var o in objects) {
-                var object = objects[o];
-                if(object.scene.id == currentScene.id) {
-                    var pictures = object.pictures;
-                    for(var p in pictures) {
-                        var picture = pictures[p];
-                        if(picture.name == name) {
-                            return picture.id;
-                        }
-                    }
+            var pictures = currentObject.pictures;
+            for(var p in pictures) {
+                var picture = pictures[p];
+                if(picture.name == name) {
+                    return picture.id;
                 }
             }
         }
         else if(menuName == "sounds") {
-            var objects = Entry.container.getAllObjects();
-            for(var o in objects) {
-                var object = objects[o];
-                if(object.scene.id == currentScene.id) {
-                    var sounds = object.sounds;
-                    for(var p in sounds) {
-                        var sound = sounds[p];
-                        if(sound.name == name) {
-                            return sound.id;
-                        }
-                    }
+            var sounds = currentObject.sounds;
+            for(var p in sounds) {
+                var sound = sounds[p];
+                if(sound.name == name) {
+                    return sound.id;
                 }
             }
         }
