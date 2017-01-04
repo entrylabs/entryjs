@@ -161,7 +161,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     p._setTextValue = function() {
         var value = Entry.getKeyCodeMap()[this.getValue()];
         value = this._convert(value, this.getValue());
-        this.textElement.textContent = value || this.getValue();
+        this.textElement.textContent =
+            value === undefined ? Lang.Blocks.no_target : value;
     };
 
 })(Entry.FieldKeyboard.prototype);

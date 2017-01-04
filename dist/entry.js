@@ -27760,7 +27760,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   };
   b._setTextValue = function() {
     var a = Entry.getKeyCodeMap()[this.getValue()], a = this._convert(a, this.getValue());
-    this.textElement.textContent = a || this.getValue();
+    this.textElement.textContent = void 0 === a ? Lang.Blocks.no_target : a;
   };
 })(Entry.FieldKeyboard.prototype);
 Entry.FieldLineBreak = function(b, a, c) {
