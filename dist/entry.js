@@ -11607,7 +11607,7 @@ Entry.PropertyPanel = function() {
         var c = this.modes[b];
         c.tabDom.removeClass("selected");
         c.contentDom.addClass("entryRemove");
-        $(c.contentDom).remove();
+        $(c.contentDom).detach();
         c.obj.visible = !1;
       }
       b = this.modes[a];

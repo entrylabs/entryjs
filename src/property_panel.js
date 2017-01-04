@@ -132,7 +132,7 @@ Entry.PropertyPanel = function() {
             var mode = this.modes[key];
             mode.tabDom.removeClass("selected");
             mode.contentDom.addClass("entryRemove");
-            $(mode.contentDom).remove();
+            $(mode.contentDom).detach();
             mode.obj.visible = false;
         }
 
