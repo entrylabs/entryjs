@@ -12741,7 +12741,7 @@ Entry.TextCodingUtil = {};
     for (f in e) {
       var g = e[f];
       if (g.object_ === c.id && g.name_ == a) {
-        c = variable.toJSON();
+        c = g.toJSON();
         c.name = a;
         c.value = b;
         g.syncModel_(c);
@@ -13397,6 +13397,21 @@ Entry.TextCodingUtil = {};
     var c = Math.floor(a / 3);
     b = ["i", "j", "k"][a % 3] + (b || "");
     return c ? this.generateForStmtIndex(c - 1, b) : b;
+  };
+  b.isExpressionLiteral = function(a, b) {
+    switch(a.type) {
+      case "CallExpression":
+        if ("MemberExpression" === a.callee.type) {
+          var c = a.callee.property.name;
+          if (c = b["%2"][c]) {
+            return "basic_string_field" === Entry.block[c.key].skeleton;
+          }
+        }
+        break;
+      case "Literal":
+        return !0;
+    }
+    return !1;
   };
 })(Entry.TextCodingUtil);
 Entry.BlockToJsParser = function(b, a) {
@@ -14501,12 +14516,12 @@ Entry.PyToBlockParser = function(b) {
                       t = "len#length_of_string";
                     } else {
                       if ("Identifier" == m.type) {
-                        if (Entry.TextCodingUtil.isGlobalVariableExisted(m.name) || Entry.TextCodingUtil.isLocalVariableExisted(m.name, this._currentObject)) {
+                        if (this.isFuncParam(m.name) || Entry.TextCodingUtil.isGlobalVariableExisted(m.name) || Entry.TextCodingUtil.isLocalVariableExisted(m.name, this._currentObject)) {
                           t = "len#length_of_string";
                         }
                       } else {
                         if ("MemberExpression" == m.type) {
-                          if (Entry.TextCodingUtil.isGlobalVariableExisted(m.property.name) || Entry.TextCodingUtil.isLocalVariableExisted(m.property.name, this._currentObject)) {
+                          if (Entry.TextCodingUtil.isGlobalListExisted(m.object.name) || Entry.TextCodingUtil.isLocalListExisted(m.object.name) || Entry.TextCodingUtil.isGlobalVariableExisted(m.property.name) || Entry.TextCodingUtil.isLocalVariableExisted(m.property.name, this._currentObject)) {
                             t = "len#length_of_string";
                           }
                         } else {
@@ -14538,7 +14553,7 @@ Entry.PyToBlockParser = function(b) {
                       } else {
                         if ("subscriptIndex" == f.property.name) {
                           if (a.arguments && a.arguments[0]) {
-                            if (m = a.arguments[0], "Literal" == m.type) {
+                            if (m = a.arguments[0], Entry.TextCodingUtil.isExpressionLiteral(m, this.blockSyntax)) {
                               if (t = "%2[%4]#char_at", n = this.getBlockSyntax(t)) {
                                 e = n.key;
                               }

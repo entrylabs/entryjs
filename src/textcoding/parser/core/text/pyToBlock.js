@@ -504,12 +504,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         if(arg.type == "Literal")
                             syntax = String("len#length_of_string");
                         else if(arg.type == "Identifier") {
-                            if(Entry.TextCodingUtil.isGlobalVariableExisted(arg.name) ||
+                            if(this.isFuncParam(arg.name) || Entry.TextCodingUtil.isGlobalVariableExisted(arg.name) ||
                                 Entry.TextCodingUtil.isLocalVariableExisted(arg.name, this._currentObject))
                                 syntax = String("len#length_of_string");
                         }
                         else if(arg.type == "MemberExpression") {
-                            if(Entry.TextCodingUtil.isGlobalVariableExisted(arg.property.name) ||
+                            if(Entry.TextCodingUtil.isGlobalListExisted(arg.object.name) ||
+                               Entry.TextCodingUtil.isLocalListExisted(arg.object.name) ||
+                               Entry.TextCodingUtil.isGlobalVariableExisted(arg.property.name) ||
                                 Entry.TextCodingUtil.isLocalVariableExisted(arg.property.name, this._currentObject))
                                 syntax = String("len#length_of_string");
                         }
@@ -546,7 +548,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(callee.property.name == "subscriptIndex") {
                     if(component.arguments && component.arguments[0]) {
                         var arg = component.arguments[0];
-                        if(arg.type == "Literal") {
+                        if(Entry.TextCodingUtil.isExpressionLiteral(arg, this.blockSyntax)) {
                             syntax = String("%2\[%4\]#char_at");
                             var blockSyntax = this.getBlockSyntax(syntax);
                             if(blockSyntax)

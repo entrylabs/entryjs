@@ -21086,7 +21086,7 @@ Entry.block = {
             ],
             "type": "sound_something_with_block"
         },
-        "def": {
+        "pyHelpDef": {
             "params": [
                 {
                     "type": "get_sounds",

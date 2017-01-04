@@ -612,7 +612,7 @@ Entry.TextCodingUtil = {};
             var entryVariable = entryVariables[i];
             //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
-                var model = variable.toJSON();
+                var model = entryVariable.toJSON();
                 model.name = name;
                 model.value = value;
                 entryVariable.syncModel_(model);
@@ -2346,5 +2346,23 @@ Entry.TextCodingUtil = {};
         if (quotient) return this.generateForStmtIndex(quotient - 1, str);
         else return str;
 
+    };
+
+    tu.isExpressionLiteral = function(component, syntax) {
+        switch (component.type) {
+            case "CallExpression":
+                if (component.callee.type === "MemberExpression") {
+                    var calleeName = component.callee.property.name;
+                    calleeName = syntax["%2"][calleeName];
+                    if (calleeName) {
+                        var key = calleeName.key;
+                        return Entry.block[key].skeleton === "basic_string_field";
+                    }
+                }
+                break;
+            case "Literal":
+                return true;
+        }
+        return false;
     };
 })(Entry.TextCodingUtil);
