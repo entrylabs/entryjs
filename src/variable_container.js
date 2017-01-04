@@ -1840,8 +1840,9 @@ Entry.VariableContainer.prototype.generateTimer = function (timer) {
     Entry.engine.projectTimer = timer;
 
     Entry.addEventListener('stop', function () {
+        this.updateList();
         Entry.engine.stopProjectTimer();
-    });
+    }.bind(this));
 };
 
 //generate Answer

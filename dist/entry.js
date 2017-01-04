@@ -22109,8 +22109,9 @@ Entry.VariableContainer.prototype.generateTimer = function(b) {
   b.tick = null;
   Entry.engine.projectTimer = b;
   Entry.addEventListener("stop", function() {
+    this.updateList();
     Entry.engine.stopProjectTimer();
-  });
+  }.bind(this));
 };
 Entry.VariableContainer.prototype.generateAnswer = function(b) {
   b || (b = new Entry.Variable({id:Entry.generateHash(), name:Lang.Blocks.VARIABLE_get_canvas_input_value, value:0, variableType:"answer", visible:!1, x:150, y:-100}));
