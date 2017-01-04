@@ -13923,71 +13923,73 @@ Entry.TextCodingUtil = {};
   };
   b.dropdownDynamicNameToIdConvertor = function(a, b, d) {
     if (Entry.getMainWS() && Entry.getMainWS().vimBoard) {
-      if (d = Entry.getMainWS().vimBoard) {
-        var c = d._currentScene;
+      var c = Entry.getMainWS().vimBoard;
+      if (c) {
+        var f = c._currentScene;
       }
-      d = d._currentObject;
     }
     if ("scenes" == b) {
-      var f = Entry.scene.getScenes(), g;
-      for (g in f) {
-        var h = f[g];
-        if (a == h.name) {
-          return h.id;
+      var g = Entry.scene.getScenes(), h;
+      for (h in g) {
+        if (d = g[h], a == d.name) {
+          return d.id;
         }
       }
     } else {
       if ("spritesWithMouse" == b || "spritesWithSelf" == b || "collision" == b || "clone" == b) {
-        var f = Entry.container.getAllObjects(), k;
-        for (k in f) {
-          if (h = f[k], h.scene.id == c.id && a == h.name) {
-            return h.id;
+        var g = Entry.container.getAllObjects(), k;
+        for (k in g) {
+          if (d = g[k], d.scene.id == f.id && a == d.name) {
+            return d.id;
           }
         }
       } else {
         if ("variables" == b) {
-          for (f in h = Entry.variableContainer.variables_, h) {
-            if (c = h[f], c.name_ == a) {
+          var l = Entry.variableContainer.variables_;
+          for (g in l) {
+            if (f = l[g], f.name_ == a) {
               if (d) {
-                if (d.id == c.object_) {
-                  return c.id_;
+                if (d.id == f.object_) {
+                  return f.id_;
                 }
               } else {
-                return c.id_;
+                return f.id_;
               }
             }
           }
         } else {
           if ("lists" == b) {
-            for (f in h = Entry.variableContainer.lists_, h) {
-              if (c = h[f], c.name_ == a) {
+            debugger;
+            l = Entry.variableContainer.lists_;
+            for (g in l) {
+              if (f = l[g], f.name_ == a) {
                 if (d) {
-                  if (d.id == c.object_) {
-                    return c.id_;
+                  if (d.id == f.object_) {
+                    return f.id_;
                   }
                 } else {
-                  return c.id_;
+                  return f.id_;
                 }
               }
             }
           } else {
             if ("messages" == b) {
-              for (f in h = Entry.variableContainer.messages_, h) {
-                if (d = h[f], d.name == a) {
-                  return d.id;
+              for (g in d = Entry.variableContainer.messages_, d) {
+                if (l = d[g], l.name == a) {
+                  return l.id;
                 }
               }
             } else {
               if ("pictures" == b) {
-                for (h in f = d.pictures, f) {
-                  if (d = f[h], d.name == a) {
+                for (l in d = c._currentObject, g = d.pictures, g) {
+                  if (d = g[l], d.name == a) {
                     return d.id;
                   }
                 }
               } else {
                 if ("sounds" == b) {
-                  for (h in f = d.sounds, f) {
-                    if (d = f[h], d.name == a) {
+                  for (l in d = c._currentObject, g = d.sounds, g) {
+                    if (d = g[l], d.name == a) {
                       return d.id;
                     }
                   }
