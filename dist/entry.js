@@ -27313,6 +27313,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       Entry.isTextMode = this.mode == e.MODE_VIMBOARD ? !0 : !1;
       Entry.dispatchEvent("workspaceChangeMode");
       this.changeEvent.notify(b);
+      Entry.dispatchEvent("cancelBlockMenuDynamic");
     }
   };
   b.changeBoardCode = function(a, b) {

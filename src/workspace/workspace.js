@@ -187,6 +187,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         Entry.dispatchEvent('workspaceChangeMode');
         this.changeEvent.notify(message);
+        Entry.dispatchEvent('cancelBlockMenuDynamic');
     };
 
     p.changeBoardCode = function(code, cb) {
