@@ -107,7 +107,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         _self = this;
         target = this.view[0];
         function eventDragEnd(e) {
-            var textCode = _self.getCodeToText(e.block, Entry.Parser.PARSE_GENERAL);
+            var textCode = _self.getCodeToText(e.block, Entry.Parser.PARSE_BLOCK);
 
             _self.codeMirror.display.dragFunctions.leave(e);
             var mousedown = Entry.Utils.createMouseEvent('mousedown', e);

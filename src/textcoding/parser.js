@@ -34,6 +34,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     Entry.Parser.PARSE_GENERAL = 1;
     Entry.Parser.PARSE_SYNTAX = 2;
     Entry.Parser.PARSE_VARIABLE = 3;
+    Entry.Parser.PARSE_BLOCK = 4;
 
     this._onError = false;
     this._onRunError = false;
@@ -358,6 +359,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 Entry.getMainWS().blockMenu.renderText();
                 result = "";
+
+                if (parseMode === Entry.Parser.PARSE_BLOCK &&
+                   code.type.substr(0, 5) === "func_") {
+                    var funcKeysBackup = Object.keys(this._execParser._funcDefMap);
+                }
+
                 var textCode = this._execParser.Code(code, parseMode);
                 if (!this._pyHinter)
                     this._pyHinter = new Entry.PyHint(this.syntax);
@@ -375,18 +382,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     if(this.py_variableDeclaration || this.py_listDeclaration)
                         result += '\n';
 
-                    //if(this.py_funcDeclaration) {
-                        var funcDefMap = this._execParser._funcDefMap;
-                        var fd = "";
+                    var funcDefMap = this._execParser._funcDefMap;
+                    var fd = "";
 
-                        for(var f in funcDefMap) {
-                            var funcDef = funcDefMap[f];
-                            fd += funcDef + '\n\n';
-                        }
-                        this.py_funcDeclaration = fd;
-                        if(this.py_funcDeclaration )
-                            result += this.py_funcDeclaration ;
-                    //}
+                    for(var f in funcDefMap) {
+                        var funcDef = funcDefMap[f];
+                        fd += funcDef + '\n\n';
+                    }
+                    result += fd;
+                } else if (parseMode === Entry.Parser.PARSE_BLOCK) {
+                    if (funcKeysBackup && funcKeysBackup.indexOf(code.type) < 0) {
+                        result += this._execParser._funcDefMap[code.type] + '\n\n';
+                    }
                 }
                 if(textCode)
                     result += textCode.trim();
