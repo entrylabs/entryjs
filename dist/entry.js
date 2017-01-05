@@ -17138,7 +17138,7 @@ Entry.PyHint = function(b) {
   this.scope._global = [];
   this.scope._list = [];
   for (var a in b) {
-    b[a].syntax && 0 > a.indexOf("%") ? this.scope._global.push(a) : "if" === a.substr(0, 2) ? this.scope._global.push(a) : "while" === a.substr(0, 5) && this.scope._global.push(a);
+    b[a].syntax && 0 > a.indexOf("%") && 0 > b[a].key.indexOf("function_field") ? this.scope._global.push(a) : "if" === a.substr(0, 2) ? this.scope._global.push(a) : "while" === a.substr(0, 5) && this.scope._global.push(a);
   }
   this.addScope("Entry");
   this.addScope("random");

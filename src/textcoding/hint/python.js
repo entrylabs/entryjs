@@ -16,7 +16,8 @@ Entry.PyHint = function(syntax) {
     this.scope._global = [];
     this.scope._list = [];
     for (var key in syntax) {
-        if (syntax[key].syntax && key.indexOf("%") < 0)
+        if (syntax[key].syntax && key.indexOf("%") < 0
+            && syntax[key].key.indexOf("function_field") < 0)
             this.scope._global.push(key)
         else if (key.substr(0, 2) === "if")
             this.scope._global.push(key)
