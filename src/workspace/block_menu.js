@@ -12,6 +12,12 @@ goog.require("Entry.Utils");
  */
 Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     Entry.Model(this, false);
+
+    this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
+    this._dAlign = Entry.Utils.debounce(this.align, 100);
+    this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
+    this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
+
     this._align = align || "CENTER";
     this.setAlign(this._align);
     this._scroll = scroll !== undefined ? scroll : false;
@@ -19,6 +25,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._categories = [];
     this.suffix = 'blockMenu';
     this._isSelectingMenu = false;
+    this._dynamicThreads = [];
+    this._setDynamicTimer = null;
+    this._renderedCategories = {};
 
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
@@ -51,9 +60,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.svgBlockGroup.board = this;
 
     this.changeEvent = new Entry.Event(this);
-    if (categoryData) this._generateCategoryCodes(categoryData);
 
     this.observe(this, "_handleDragBlock", ["dragBlock"]);
+
+    this.changeCode(new Entry.Code([]));
+    categoryData && this._generateCategoryCodes()
 
     if (this._scroll) {
         this._scroller = new Entry.BlockMenuScroller(this);
@@ -62,16 +73,26 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
-    if (this._categoryCodes && Entry.keyPressed)
+    if (this.code && Entry.keyPressed)
         Entry.keyPressed.attach(this, this._captureKeyEvent);
     if (Entry.windowResized) {
         var dUpdateOffset = _.debounce(this.updateOffset, 200);
         Entry.windowResized.attach(this, dUpdateOffset);
     }
+
+    Entry.addEventListener('setBlockMenuDynamic', function() {
+        this._setDynamicTimer = this._setDynamic.apply(this, arguments);
+    }.bind(this));
+
+    Entry.addEventListener('cancelBlockMenuDynamic', this._cancelDynamic.bind(this));
 };
 
 (function(p) {
+    var VARIABLE = 'variable';
+    var HW = 'arduino';
+
     var splitterHPadding = 20;
+
     p.schema = {
         code: null,
         dragBlock: null,
@@ -152,16 +173,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         );
         code.createView(this);
         var workspace = this.workspace;
-        var workspaceMode = workspace.getMode();
-        if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
-            if (!code.mode || code.mode === 'code')
-                this.renderText();
-        } else {
-            if (code.mode === 'text')
-                this.renderBlock();
-        }
 
-        this.align();
+        this._dAlign();
     };
 
     p.bindCodeView = function(codeView) {
@@ -175,33 +188,35 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             this.svgGroup.appendChild(this._scroller.svgGroup);
     };
 
-    p.align = function(unReDraw) {
+    p.align = function(reDraw) {
         var code = this.code;
-        if (!code) return;
+        if (!(this._isOn() && code)) return;
         this._clearSplitters();
 
-        if (code.view && !unReDraw && !this._isSelectingMenu)
-            code.view.reDraw();
+        var blocks = blocks || this._getSortedBlocks();
 
-        var threads = code.getThreads();
         var vPadding = 15,
             marginFromTop = 10,
             hPadding = this._align == 'LEFT' ? 10 : this.svgDom.width()/2;
 
         var pastClass;
-        for (var i=0,len=threads.length; i<len; i++) {
-            var thread = threads[i];
-            var block = thread.getFirstBlock();
+        var inVisibles = blocks[1];
+        var visibles = blocks[0];
+
+        inVisibles.forEach(function(block) {
             var blockView = block.view;
+            blockView.set({display:false});
+            blockView.detach();
+        });
 
-            var blockInfo = Entry.block[block.type];
-            if(this.checkBanClass(blockInfo)) {
-                blockView.set({display:false});
-                continue;
-            }
-
+        var shouldReDraw = !this._renderedCategories[this.lastSelector];
+        visibles.forEach(function(block) {
+            var blockView = block.view;
+            blockView.attach();
             blockView.set({display:true});
-            var className = blockInfo.class;
+            shouldReDraw && blockView.reDraw();
+
+            var className = Entry.block[block.type].class;
             if (pastClass && pastClass !== className) {
                 this._createSplitter(marginFromTop);
                 marginFromTop += vPadding;
@@ -209,7 +224,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             pastClass = className;
 
             var left = hPadding - blockView.offsetX;
-            if (this._align == 'CENTER') left -= blockView.width /2;
+            if (this._align == 'CENTER')
+                left -= blockView.width/2;
 
             marginFromTop -= blockView.offsetY;
             blockView._moveTo(
@@ -217,61 +233,79 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 marginFromTop,
                 false);
             marginFromTop += blockView.height + vPadding;
-
-        }
+        }.bind(this));
 
         this.updateSplitters();
+
+        if (this.workspace) {
+            var mode = this.workspace.getMode()
+            switch (mode) {
+                case Entry.Workspace.MODE_BOARD:
+                case Entry.Workspace.MODE_OVERLAYBOARD:
+                    this.renderBlock(blocks);
+                    break;
+                case Entry.Workspace.MODE_VIMBOARD:
+                    this.renderText(blocks);
+                    break;
+                default:
+                    this.renderBlock(blocks);
+            }
+        }
+
+        this._renderedCategories[this.lastSelector] = true;
         this.changeEvent.notify();
     };
 
     p.cloneToGlobal = function(e) {
-        if (this._boardBlockView) return;
-        if (this.dragBlock === null) return;
+        var blockView = this.dragBlock;
+        if (this._boardBlockView || blockView === null) return;
 
         var globalSvg = Entry.GlobalSvg;
         var workspace = this.workspace;
         var workspaceMode = workspace.getMode();
-        var blockView = this.dragBlock;
+        var WORKSPACE = Entry.Workspace;
 
         var svgWidth = this._svgWidth;
 
         var board = workspace.selectedBoard;
+        var mouseDownCoordinate = blockView.mouseDownCoordinate;
+        var dx = 0,
+            dy = 0;
 
-        if (board && (workspaceMode == Entry.Workspace.MODE_BOARD ||
-                      workspaceMode == Entry.Workspace.MODE_OVERLAYBOARD)) {
+        if (mouseDownCoordinate) {
+            dx = e.pageX - mouseDownCoordinate.x;
+            dy = e.pageY - mouseDownCoordinate.y;
+        }
+
+        if (board && (workspaceMode === WORKSPACE.MODE_BOARD ||
+            workspaceMode === WORKSPACE.MODE_OVERLAYBOARD)) {
             if (!board.code) return;
 
             var block = blockView.block;
             var code = this.code;
             var currentThread = block.getThread();
             if (block && currentThread) {
-                var threadJSON = currentThread.toJSON(true);
-                this._boardBlockView = Entry.do("addThread", threadJSON).value
-                    .getFirstBlock().view;
+                this._boardBlockView =
+                    Entry.do("addThread", currentThread.toJSON(true))
+                    .value.getFirstBlock().view;
 
-                var offset = this.offset();
-                var distance = offset.top - board.offset().top - $(window).scrollTop();
-
-                var dx, dy;
-
-                var mouseDownCoordinate = this.dragBlock.mouseDownCoordinate;
-
-                if (mouseDownCoordinate) {
-                    dx = e.pageX - mouseDownCoordinate.x;
-                    dy = e.pageY - mouseDownCoordinate.y;
-                }
+                var distance = this.offset().top - board.offset().top - $(window).scrollTop();
 
                 this._boardBlockView._moveTo(
-                    blockView.x - svgWidth + (dx || 0),
-                    blockView.y + distance + (dy || 0),
+                    blockView.x - svgWidth + dx,
+                    blockView.y + distance + dy,
                     false
                 );
+
                 this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
                 this._boardBlockView.dragInstance.set({isNew:true});
             }
         } else {
-            if(Entry.GlobalSvg.setView(blockView, workspace.getMode()))
-                Entry.GlobalSvg.addControl(e);
+            var GS = Entry.GlobalSvg;
+            if (GS.setView(blockView, workspaceMode)) {
+                GS.adjust(dx, dy);
+                GS.addControl(e);
+            }
         }
     };
 
@@ -293,7 +327,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         return blockLeft < boardLeft - width;
     };
 
-    p.getCode = function(thread) {return this._code;};
+    p.getCode = function(thread) {return this.code;};
 
     p.setSelectedBlock = function(blockView) {
         var old = this.selectedBlockView;
@@ -311,21 +345,40 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.show = function() {this.view.removeClass('entryRemove');};
 
-    p.renderText = function(cb) {
-        var threads = this.code.getThreads();
-        this.code.mode = 'text';
-        for (var i=0; i<threads.length; i++)
-            threads[i].view.renderText();
-        cb && cb();
+    p.renderText = function(blocks) {
+        if (!this._isOn()) return;
+
+        var blocks = blocks || this._getSortedBlocks();
+        var targetMode = Entry.BlockView.RENDER_MODE_TEXT;
+
+        blocks[0].forEach(function(block) {
+            if (targetMode === block.view.renderMode)
+                return;
+            var thread = block.getThread();
+            if (thread.view) {
+                thread.view.renderText();
+            } else
+                thread.createView(this, Entry.BlockView.RENDER_MODE_TEXT)
+        }.bind(this));
+        return blocks;
     };
 
-    p.renderBlock = function(cb) {
-        var threads = this.code.getThreads();
-        this.code.mode = 'code';
-        for (var i=0; i<threads.length; i++)
-            threads[i].view.renderBlock();
+    p.renderBlock = function(blocks) {
+        if (!this._isOn()) return;
 
-        cb && cb();
+        blocks = blocks ||this._getSortedBlocks();
+        var targetMode = Entry.BlockView.RENDER_MODE_BLOCK;
+
+        blocks[0].forEach(function(block) {
+            if (targetMode === block.view.renderMode)
+                return;
+            var thread = block.getThread();
+            if (thread.view) {
+                thread.view.renderBlock();
+            } else
+                thread.createView(this, Entry.BlockView.RENDER_MODE_BLOCK)
+        }.bind(this));
+        return blocks;
     };
 
     p._createSplitter = function(topPos) {
@@ -369,42 +422,30 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.setMenu = function() {
-        var categoryCodes = this._categoryCodes;
-        var elems = this._categoryElems;
-        for (var key in categoryCodes) {
-            var code = categoryCodes[key];
-            var threads;
-            if (code instanceof Entry.Code)
-                threads = code.getThreads();
-            else threads = code;
+        this._categoryData.forEach(function(data) {
+            var category = data.category;
+            var threads = data.blocks;
+
+            if (category === 'func') {
+                var funcThreads = this.code.getThreadsByCategory('func')
+                            .map(function(t) {return t.getFirstBlock().type});
+                threads = funcThreads.length ? funcThreads : threads;
+            }
 
             var count = threads.length;
             for (var i=0; i<threads.length; i++) {
-                var thread = threads[i];
-                var type;
-                if (thread instanceof Entry.Thread) type = thread.getFirstBlock().type;
-                else type = thread[0].type;
-
-                if(this.checkBanClass(Entry.block[type]))
+                if(this.checkBanClass(Entry.block[threads[i]]))
                     count--;
             }
-
-            var elem = elems[key];
-            if (count === 0) elems[key].addClass('entryRemove');
-            else elems[key].removeClass('entryRemove');
-        }
+            var elem = this._categoryElems[category];
+            if (count === 0) elem.addClass('entryRemove');
+            else elem.removeClass('entryRemove');
+        }.bind(this));
     };
 
+
     p.getCategoryCodes = function(selector) {
-        var name = this._convertSelector(selector);
-        var code = this._categoryCodes[name];
-        if (!code) {
-            this._generateCategoryElement(name);
-            code = [];
-        }
-        if (!(code instanceof Entry.Code))
-            code = this._categoryCodes[name] = new Entry.Code(code);
-        return code;
+        //TODO if needed
     };
 
     p._convertSelector = function(selector) {
@@ -416,31 +457,37 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         for (var i = 0; i < categories.length; i++) {
             var key = categories[i];
             var visible = !elems[key].hasClass('entryRemove');
-            if (visible) {
+            if (visible)
                 if (selector-- === 0) return key;
-            }
         }
-
     };
 
-    p.selectMenu = function(selector, doNotFold) {
+    p.selectMenu = function(selector, doNotFold, doNotAlign) {
+        if (!this._isOn()) return;
+
+        var className = 'entrySelectedCategory';
+        var oldView = this._selectedCategoryView;
+
         var name = this._convertSelector(selector);
-        if (!name) {
-            this.align();
+        if (selector !== undefined && !name) {
+            this._dAlign();
             return;
         }
+
+        if (name) this.lastSelector = name;
+
         this._isSelectingMenu = true;
         switch (name) {
-            case 'variable':
+            case VARIABLE:
                 Entry.playground.checkVariables();
                 break;
-            case 'arduino':
+            case HW:
                 this._generateHwCode();
+                this.align();
                 break;
         }
+
         var elem = this._categoryElems[name];
-        var oldView = this._selectedCategoryView;
-        var className = 'entrySelectedCategory';
         var animate = false;
         var board = this.workspace.board,
             boardView = board.view;
@@ -451,7 +498,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (elem == oldView && !doNotFold) {
             boardView.addClass('folding');
             this._selectedCategoryView = null;
-            elem.removeClass(className);
+            elem && elem.removeClass(className);
             Entry.playground.hideTabs();
             animate = true;
             this.visible = false;
@@ -463,7 +510,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             }
             boardView.removeClass('folding');
             this.visible = true;
-        }
+        } else if (!name)
+            this._selectedCategoryView = null;
 
         if (animate) {
             Entry.bindAnimationCallbackOnce(boardView, function(){
@@ -476,72 +524,140 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         this._isSelectingMenu = false;
 
         if (this.visible) {
-            var code = this._categoryCodes[name];
-
             this._selectedCategoryView = elem;
-            elem.addClass(className);
-            if (code.constructor !== Entry.Code)
-                code = this._categoryCodes[name] = new Entry.Code(code);
-
-            this.changeCode(code);
+            elem && elem.addClass(className);
         }
 
-        this.lastSelector = name;
+        doNotAlign !== true && this._dAlign();
+
     };
 
+    p._generateCategoryCodes = function(elems) {
+        if (!elems) {
+            this.view.addClass('init');
+            elems = Object.keys(this._categoryElems);
+        }
+        if (elems.length) {
+            var key = elems.shift();
+            if (key !== HW) {
+                this._generateCategoryCode(key);
+            }  else this._generateHwCode(true);
 
-    p._generateCategoryCodes = function(categoryData) {
-        this._categoryCodes = {};
-        for (var i=0; i<categoryData.length; i++) {
-            var datum = categoryData[i];
-            var blocks = datum.blocks;
-            var codesJSON = [];
-            blocks.forEach(function(b){
-                var block = Entry.block[b];
-                if (!block || !block.def) {
-                    codesJSON.push([{type:b}]);
-                } else {
-                    if (block.defs) {
-                        for (var i =0; i <block.defs.length; i++)
-                            codesJSON.push([
-                                block.defs[i]
-                            ]);
-                    } else
-                        codesJSON.push([
-                            block.def
+            if (elems.length) {
+                this._generateCodesTimer =
+                    setTimeout(function() {
+                        this._generateCategoryCodes(elems);
+                }.bind(this), 0);
+            } else {
+                this._generateCodesTimer = null;
+                this.view.removeClass('init');
+                this.align();
+            }
+        }
+    };
+
+    p._generateCategoryCode = function(key) {
+        var code = this.code;
+        var codes = [];
+        var datum = this._categoryData.filter(function(obj) {
+            return obj.category == key;
+        })[0];
+
+        if (!datum)
+            return;
+        var category = key;
+        var blocks = datum.blocks;
+        blocks.forEach(function(b){
+            var block = Entry.block[b];
+            block.category = datum.category;
+            if (!block || !block.def) {
+                codes.push([{
+                    type:b,
+                    category: category
+                }]);
+            } else {
+                if (block.defs) {
+                    block.defs.forEach(function(d) {
+                        d.category = category;
+                    });
+                    for (var i =0; i <block.defs.length; i++) {
+                        codes.push([
+                            block.defs[i]
                         ]);
+                    }
+                } else {
+                    block.def.category = category;
+                    codes.push([
+                        block.def
+                    ]);
                 }
-            });
-            var categoryName = datum.category;
-            this._categories.push(categoryName);
-            this._categoryCodes[categoryName] = codesJSON;
+            }
+        });
+
+        this._categories.push(category);
+
+        var index;
+        if (key == 'func') {
+            var threads = this.code.getThreadsByCategory('func');
+            if (threads.length)
+                index = this.code.getThreadIndex(threads[0]);
+        }
+        codes.forEach(function(t) {
+            if (!t || !t[0]) return;
+            t[0].x = -99999;
+            code.createThread(t, index);
+            if (index !== undefined)
+                index++;
+            delete t[0].x;
+        });
+    };
+
+    p.banClass = function(className) {
+        var index = this._bannedClass.indexOf(className);
+        if (index < 0) {
+            this._bannedClass.push(className);
+            this._dAlign();
         }
     };
 
-    p.banClass = function(className, unReDraw) {
+    p.unbanClass = function(className) {
         var index = this._bannedClass.indexOf(className);
-        if (index < 0)
-            this._bannedClass.push(className);
-        this.align(unReDraw);
-    };
-
-    p.unbanClass = function(className, unReDraw) {
-        var index = this._bannedClass.indexOf(className);
-        if (index > -1)
+        if (index > -1) {
             this._bannedClass.splice(index, 1);
-        this.align(unReDraw);
+            this._dAlign();
+        }
     };
 
     p.checkBanClass = function(blockInfo) {
         if (!blockInfo) return;
         var isNotFor = blockInfo.isNotFor;
         if (!isNotFor || isNotFor.length === 0) return false;
-        for (var i in isNotFor) {
-            if (isNotFor[i] && this._bannedClass.indexOf(isNotFor[i]) === -1) {
+
+        var current;
+        var banned = this._bannedClass;
+        for (var i=0; i<isNotFor.length; i++) {
+            current = isNotFor[i];
+            if (current && banned.indexOf(current) === -1) {
                 return false;
             }
         }
+
         return true;
+    };
+
+    p.checkCategory = function(blockInfo) {
+        if (!this._categoryData || !blockInfo) return;
+
+        if (!this.lastSelector || this._selectDynamic)
+            return true;
+
+        var category = 'category_' + this.lastSelector;
+        var isFor = blockInfo.isFor;
+
+        if (this.lastSelector && isFor) {
+            if (isFor.indexOf(category) < 0)
+                return true;
+        }
     };
 
     p._addControl = function(dom) {
@@ -619,7 +735,16 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.reDraw = function() {
-        this.selectMenu(this.lastSelector, true);
+        if (!this._isOn()) return;
+        var selector = this.lastSelector;
+        if (this._selectDynamic)
+            selector = undefined;
+        this.selectMenu(selector, true);
+        this._getSortedBlocks()
+            .shift()
+            .forEach(function(block) {
+                block.view.reDraw();
+            });
     };
 
     p._handleDragBlock = function() {
@@ -629,12 +754,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._captureKeyEvent = function(e) {
         var keyCode = e.keyCode;
-        var type = Entry.type;
 
-        if (e.ctrlKey && type == 'workspace') {
+        if (e.ctrlKey && Entry.type == 'workspace') {
             if (keyCode > 48 && keyCode < 58) {
                 e.preventDefault();
-                this.selectMenu(keyCode - 49);
+                setTimeout(function() {
+                    this._cancelDynamic(true);
+                    this._dSelectMenu(keyCode - 49, true);
+                }.bind(this), 200);
             }
         }
     };
@@ -644,9 +771,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.disablePattern = function() {
-        this.pattern.attr({
-            style: "display: none"
-        });
+        this.pattern.attr({ style: "display: none" });
     };
 
     p._clearCategory = function() {
@@ -658,20 +783,19 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             categories[key].remove();
         this._categoryElems = {};
 
-        categories = this._categoryCodes;
-        for (key in categories) {
-            var code = categories[key];
-            if (code.constructor == Entry.Code)
-                code.clear();
-        }
-        this._categoryCodes = null;
+        if (this.code && this.code.constructor == Entry.Code)
+            this.code.clear();
     };
 
     p.setCategoryData = function(data) {
+        if (this._generateCodesTimer) {
+            clearTimeout(this._generateCodesTimer);
+            this._generateCodesTimer = null;
+        }
         this._clearCategory();
         this._categoryData = data;
         this._generateCategoryView(data);
-        this._generateCategoryCodes(data);
+        this._generateCategoryCodes();
     };
 
     p._generateCategoryView = function(data) {
@@ -687,7 +811,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var that = this;
         var element = Entry.Dom('li', {
             id: 'entryCategory' + name,
-            class: 'entryCategoryElementWorkspace',
+            class: 'entryCategoryElementWorkspace entryRemove',
             parent: this._categoryCol
         });
 
@@ -695,7 +819,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             elem.text(Lang.Blocks[name.toUpperCase()]);
             that._categoryElems[name] = elem;
             elem.bindOnClick(function(e) {
-                that.selectMenu(name);
+                that._cancelDynamic(true, function() {
+                    that.selectMenu(name, undefined, true);
+                    that.align();
+                });
             });
         })(element, name);
     };
@@ -712,46 +839,137 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         return this._offset;
     };
 
-    p._generateHwCode = function() {
-        var code = this._categoryCodes.arduino;
+    p._generateHwCode = function(shouldHide) {
+        var code = this.code;
+        var threads = code.getThreadsByCategory(HW);
 
-        if (code instanceof Entry.Code) code.clear();
+        threads.forEach(function(t) {
+            t.destroy();
+        });
 
         var data = this._categoryData;
         var blocks;
         for (var i = data.length-1; i >= 0; i--) {
             var category = data[i].category;
-            if (category === 'arduino') {
+            if (category === HW) {
                 blocks = data[i].blocks;
                 break;
             }
         }
 
-        var codesJSON = [];
+        if (!blocks) return;
+        var threads = [];
+
         for (i =0; i<blocks.length; i++) {
             var type = blocks[i];
             var block = Entry.block[type];
             if(!this.checkBanClass(block)) {
                 if (!block || !block.def) {
-                    codesJSON.push([{type:type}]);
+                    threads.push([{
+                        type:type,
+                        category: HW
+                    }]);
                 } else {
                     if (block.defs) {
+                        block.defs.forEach(function(d) {
+                            d.category = HW;
+                        });
                         for (var i =0; i <block.defs.length; i++)
-                            codesJSON.push([
+                            threads.push([
                                 block.defs[i]
                             ]);
-                    } else
-                        codesJSON.push([
+                    } else {
+                        block.def.category = HW;
+                        threads.push([
                             block.def
                         ]);
+                    }
                 }
             }
         }
-        this._categoryCodes.arduino = codesJSON;
+
+        threads.forEach(function(t) {
+            if (shouldHide)
+                t[0].x = -99999;
+            code.createThread(t);
+            delete t[0].x;
+        });
     };
 
     p.setAlign = function(align) {
         this._align = align || "CENTER";
+    };
+
+    p._isNotVisible = function(blockInfo) {
+        return this.checkCategory(blockInfo) ||
+            this.checkBanClass(blockInfo)
+    };
+
+    p._getSortedBlocks = function() {
+        var visibles = [];
+        var inVisibles = [];
+
+        var threads = this.code.getThreads();
+
+        if (this._selectDynamic) {
+            visibles = new Array(this._dynamicThreads.length)
+            for (var i=0; i<threads.length; i++) {
+                var block = threads[i].getFirstBlock();
+
+                if (!block) continue;
+
+                var type = block.type;
+                var index = this._dynamicThreads.indexOf(type);
+                if (index > -1)
+                    visibles[index] = block
+                else inVisibles.push(block);
+            }
+            visibles = visibles.filter(function(b) {
+                return b instanceof Entry.Block;
+            });
+        } else {
+            for (var i=0; i<threads.length; i++) {
+                var block = threads[i].getFirstBlock();
+
+                if (!block) continue;
+
+                var type = block.type;
+                var blockInfo = Entry.block[type];
+                if (this._isNotVisible(blockInfo))
+                    inVisibles.push(block);
+                else visibles.push(block);
+            }
+        }
+
+        return [visibles, inVisibles];
+    };
+
+    p._setDynamic = function(blocks) {
+        if (!this._isOn()) return;
+
+        this._selectDynamic = true;
+        this._dynamicThreads = blocks;
+        this.selectMenu(undefined, true);
+    };
+
+    p._cancelDynamic = function(fromElement, cb) {
+        if (this._setDynamicTimer) {
+            clearTimeout(this._setDynamicTimer);
+            this._setDynamicTimer = null;
+        }
+        this._selectDynamic = false;
+        this._dynamicThreads = [];
+        if (fromElement !== true)
+            this.selectMenu(this.lastSelector, true);
+        cb && cb();
+    };
+
+    p._isOn = function() {
+        return this.view.css('display') !== 'none';
+    };
+
+    p.deleteRendered = function(name) {
+        delete this._renderedCategories[name];
     };
 
 })(Entry.BlockMenu.prototype);

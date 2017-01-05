@@ -38,6 +38,15 @@ Entry.Container = function() {
      * @type {Array.<object model>}
      */
     this.currentObjects_ = null;
+
+    Entry.addEventListener('workspaceChangeMode', function() {
+        var ws = Entry.getMainWS();
+        if (ws && ws.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+            this.objects_.forEach(function(o) {
+                o.script && o.script.destroyView();
+            });
+        }
+    }.bind(this));
 };
 
 /**
@@ -168,11 +177,18 @@ Entry.Container.prototype.updateListView = function() {
     while (view.hasChildNodes())
         view.removeChild(view.lastChild);
 
-    var objs = this.getCurrentObjects();
-    for (var i in objs)
-        view.appendChild(objs[i].view_);
+    var fragment = document.createDocumentFragment('div');
 
+    var objs = this.getCurrentObjects();
+    for (var i in objs) {
+        var obj = objs[i];
+        !obj.view_ && obj.generateView();
+        fragment.appendChild(obj.view_);
+    }
+
+    view.appendChild(fragment);
     Entry.stage.sortZorder();
+    return true;
 };
 
 /**
@@ -183,25 +199,17 @@ Entry.Container.prototype.setObjects = function(objectModels) {
     for (var i in objectModels) {
         var object = new Entry.EntryObject(objectModels[i]);
         this.objects_.push(object);
-        object.generateView();
-        var pictures = object.pictures;
-        pictures.map(function (p) {
-            Entry.playground.generatePictureElement(p);
-        });
-        var sounds = object.sounds;
-        sounds.map(function (s) {
-            Entry.playground.generateSoundElement(s);
-        });
     }
     this.updateObjectsOrder();
-    this.updateListView();
-    Entry.stage.sortZorder();
+    var isStageSorted = this.updateListView();
+    !isStageSorted && Entry.stage.sortZorder();
     Entry.variableContainer.updateViews();
     var type = Entry.type;
     if (type == 'workspace' || type == 'phone') {
-        var target = this.getCurrentObjects()[0];
-        if (target)
-            this.selectObject(target.id);
+        setTimeout(function() {
+            var target = this.getCurrentObjects()[0];
+            target && this.selectObject(target.id);
+        }.bind(this), 0);
     }
 };
 
@@ -287,15 +295,6 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
         this.objects_.unshift(object);
 
     object.generateView();
-    var pictures = object.pictures;
-    pictures.map(function (p) {
-        Entry.playground.generatePictureElement(p);
-    });
-
-    var sounds = object.sounds;
-    sounds.map(function (s) {
-        Entry.playground.generateSoundElement(s);
-    });
     this.setCurrentObjects();
     this.updateObjectsOrder();
     this.updateListView();
@@ -352,6 +351,7 @@ Entry.Container.prototype.removeObject = function(object) {
 
     if (currentObjects.length)
         this.selectObject(currentObjects[0].id);
+
     else {
         this.selectObject();
         Entry.playground.flushPlayground();
@@ -371,20 +371,62 @@ Entry.Container.prototype.removeObject = function(object) {
  */
 Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     var object = this.getObject(objectId);
+    var workspace = Entry.getMainWS();
+
     if (changeScene && object) {
         Entry.scene.selectScene(object.scene);
     }
 
     this.mapObjectOnScene(function(object) {
-        if (object.view_)
-            object.view_.removeClass('selectedObject');
+        !object.view_ && object.generateView();
+        object.view_.removeClass('selectedObject');
         object.isSelected_ = false;
     });
+
     if (object) {
-        if (object.view_)
-            object.view_.addClass('selectedObject');
+        object.view_ && object.view_.addClass('selectedObject');
         object.isSelected_ = true;
+
+        if(workspace && workspace.vimBoard && Entry.isTextMode) {
+            var sObject = workspace.vimBoard._currentObject;
+            var parser = workspace.vimBoard._parser;
+            if(parser && parser._onError) {
+                if(sObject && (object.id != sObject.id)) {
+                    if(!Entry.scene.isSceneCloning) {
+                        try { workspace._syncTextCode(); } catch(e) {}
+                        if(parser && !parser._onError) {
+                            Entry.container.selectObject(object.id, true);
+                            return
+                        }
+                        else {
+                            Entry.container.selectObject(sObject.id, true);
+                            return;
+                        }
+                    } else {
+                        Entry.container.selectObject(sObject.id);
+                        return;
+                    }
+                }
+            }
+            else {
+                if(sObject && (object.id != sObject.id)) {
+                    if(!Entry.scene.isSceneCloning) {
+                        try { workspace._syncTextCode(); } catch(e) {}
+                        if(parser && parser._onError) {
+                            Entry.container.selectObject(sObject.id, true);
+                            return;
+                        }
+                    } else {
+                        Entry.container.selectObject(sObject.id);
+                        return;
+                    }
+                }
+            }
+        }
+    } else {
+        workspace && workspace.vimBoard && workspace.vimBoard.clearText();
     }
+
     if (Entry.playground)
         Entry.playground.injectObject(object);
     if (Entry.type != "minimize" && Entry.engine.isState('stop'))
@@ -422,9 +464,11 @@ Entry.Container.prototype.getObject = function(objectId) {
 Entry.Container.prototype.getEntity = function(objectId) {
     var object = this.getObject(objectId);
     if (!object) {
-        Entry.toast.alert(Lang.Msgs.runtime_error,
-                          Lang.Workspace.object_not_found,
-                          true);
+        Entry.toast.alert(
+            Lang.Msgs.runtime_error,
+            Lang.Workspace.object_not_found,
+            true
+        );
         return;
     }
     return object.entity;
@@ -914,7 +958,7 @@ Entry.Container.prototype.showProjectAnswer = function() {
 };
 
 
-Entry.Container.prototype.hideProjectAnswer = function(removeBlock) {
+Entry.Container.prototype.hideProjectAnswer = function(removeBlock, notIncludeSelf) {
     var answer = this.inputValue;
     if (!answer || !answer.isVisible() || Entry.engine.isState('run')) return;
 
@@ -927,8 +971,14 @@ Entry.Container.prototype.hideProjectAnswer = function(removeBlock) {
 
     for (var i = 0, len = objects.length; i < len; i++) {
         var code = objects[i].script;
-        for (var j = 0; j < answerTypes.length; j++)
-            if (code.hasBlockType(answerTypes[j])) return;
+        for (var j = 0; j < answerTypes.length; j++) {
+            var blocks = code.getBlockList(false, answerTypes[j]);
+            if (notIncludeSelf) {
+                var index = blocks.indexOf(removeBlock);
+                if (index > -1) blocks.splice(index, 1);
+            }
+            if (blocks.length > 0) return;
+        }
     }
 
     //answer related blocks not found
@@ -971,4 +1021,27 @@ Entry.Container.prototype.removeFuncBlocks = function(functionType) {
     this.objects_.forEach(function(object) {
         object.script.removeBlocksByType(functionType);
     });
+};
+
+Entry.Container.prototype.selectNeighborObject = function(option) {
+    var objects = this.getCurrentObjects();
+    if(!objects || objects.length === 0)
+        return;
+
+    var currentIndex = objects.indexOf(Entry.playground.object);
+    var maxLen = objects.length;
+    switch (option) {
+        case 'prev':
+            if (--currentIndex < 0)
+                currentIndex = objects.length - 1;
+            break;
+        case 'next':
+            currentIndex = ++currentIndex % maxLen;
+            break;
+    }
+
+    var object = objects[currentIndex];
+    if(!object) return;
+
+    Entry.container.selectObject(object.id);
 };

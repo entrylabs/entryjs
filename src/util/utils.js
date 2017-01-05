@@ -10,6 +10,51 @@ Entry.overridePrototype = function() {
     Number.prototype.mod = function(n) {
             return ((this%n)+n)%n;
     };
+
+    //polyfill
+    if (!String.prototype.repeat) {
+      String.prototype.repeat = function(count) {
+        'use strict';
+        if (this == null) {
+          throw new TypeError('can\'t convert ' + this + ' to object');
+        }
+        var str = '' + this;
+        count = +count;
+        if (count != count) {
+          count = 0;
+        }
+        if (count < 0) {
+          throw new RangeError('repeat count must be non-negative');
+        }
+        if (count == Infinity) {
+          throw new RangeError('repeat count must be less than infinity');
+        }
+        count = Math.floor(count);
+        if (str.length == 0 || count == 0) {
+          return '';
+        }
+        // Ensuring count is a 31-bit integer allows us to heavily optimize the
+        // main part. But anyway, most current (August 2014) browsers can't handle
+        // strings 1 << 28 chars or longer, so:
+        if (str.length * count >= 1 << 28) {
+          throw new RangeError('repeat count must not overflow maximum string size');
+        }
+        var rpt = '';
+        for (;;) {
+          if ((count & 1) == 1) {
+            rpt += str;
+          }
+          count >>>= 1;
+          if (count == 0) {
+            break;
+          }
+          str += str;
+        }
+        // Could we try:
+        // return Array(count + 1).join(this);
+        return rpt;
+      }
+    }
 };
 
 
@@ -353,19 +398,24 @@ Entry.createElement = function(type, elementId) {
         return this.className.match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
     };
     element.addClass = function(className) {
+        var current = this.className;
         for (var i = 0; i < arguments.length; i++) {
             var className = arguments[i];
-            if (!this.hasClass(className)) this.className += " " + className;
+            if (!this.hasClass(className))
+                current += " " + className;
         }
+        this.className = current;
     };
     element.removeClass = function(className) {
+        var current = this.className;
         for (var i = 0; i < arguments.length; i++) {
             var className = arguments[i];
             if (this.hasClass(className)) {
                 var reg = new RegExp('(\\s|^)'+className+'(\\s|$)');
-                this.className=this.className.replace(reg,' ');
+                current = current.replace(reg,' ');
             }
         }
+        this.className = current;
     };
     element.bindOnClick = function(func) {
         $(this).on('click tab', function(e) {
@@ -721,13 +771,16 @@ Entry.nodeListToArray = function(nl) {
 };
 
 Entry.computeInputWidth = function(value){
-    var tmp = document.createElement("span");
-    tmp.className = "tmp-element";
-    tmp.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    document.body.appendChild(tmp);
-    var theWidth = tmp.offsetWidth;
-    document.body.removeChild(tmp);
-    return Number(theWidth + 10) + 'px';
+    var elem = document.getElementById('entryInputForComputeWidth');
+    if (!elem) {
+        elem = document.createElement("span");
+        elem.setAttribute('id', 'entryInputForComputeWidth');
+        elem.className = "elem-element";
+        document.body.appendChild(elem);
+    }
+
+    elem.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return Number(elem.offsetWidth + 10) + 'px';
 };
 
 Entry.isArrowOrBackspace = function(keyCode){
@@ -1134,6 +1187,7 @@ Entry.Utils.xmlToJsonData = function(xml) {
 Entry.Utils.stopProjectWithToast = function(scope, message, isHide) {
     var block = scope.block;
     message = message || '런타임 에러 발생';
+
     if (Entry.toast && !isHide)
         Entry.toast.alert(
             Lang.Msgs.warn,
@@ -1158,6 +1212,7 @@ Entry.Utils.stopProjectWithToast = function(scope, message, isHide) {
             block.view.getBoard().activateBlock(block);
         }
     }
+
     throw new Error(message);
 };
 
@@ -1272,6 +1327,22 @@ Entry.Utils.convertIntToHex = function(num) {
 Entry.Utils.hasSpecialCharacter = function(str) {
     var reg = /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g;
     return reg.test(str);
+}
+
+Entry.Utils.debounce = function(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+        return timeout;
+    };
 }
 
 Entry.Utils.isNewVersion = function(old_version, new_version) {

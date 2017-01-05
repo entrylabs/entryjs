@@ -106,18 +106,23 @@ Entry.Board.DRAG_RADIUS = 5;
         this.pattern = returnVal.pattern;
     };
 
-    p.changeCode = function(code) {
+    p.changeCode = function(code, shouldNotCreateView, cb) {
         if (this.code && this.codeListener)
             this.code.changeEvent.detach(this.codeListener);
 
         this.set({code: code});
 
         var that = this;
-        if (code) {
+        if (code && !shouldNotCreateView) {
             this.codeListener = this.code.changeEvent.attach(
                 this, function() {that.changeEvent.notify();}
             );
+            this.svgBlockGroup.remove();
+            this.svgThreadGroup.remove();
             code.createView(this);
+            if (code.isAllThreadsInOrigin())
+                this.alignThreads();
+            cb && cb();
         }
         this.scroller.resizeScrollBar();
     };
@@ -300,7 +305,7 @@ Entry.Board.DRAG_RADIUS = 5;
         this.visible = true;
     };
 
-    p.alignThreads = function() {
+    p.alignThreads = function(reDraw) {
         var domHeight = this.svgDom.height();
         var threads = this.code.getThreads();
 
@@ -311,8 +316,10 @@ Entry.Board.DRAG_RADIUS = 5;
         var left = 50;
 
         for (var i =0; i < threads.length; i++) {
-            var block = threads[i].getFirstBlock();
+            var thread = threads[i];
+            var block = thread.getFirstBlock();
             if (!block) continue;
+            reDraw && thread.view.reDraw();
             var blockView = block.view;
             if (!blockView.movable) continue;
             var bBox = blockView.svgGroup.getBBox();
@@ -386,11 +393,15 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.cancelEdit = function() {
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_BOARD;
         this.workspace.setMode(Entry.Workspace.MODE_BOARD, "cancelEdit");
     };
 
     p.save = function() {
-        this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_BOARD;
+        this.workspace.setMode(mode, "save");
     };
 
     p.generateCodeMagnetMap = function() {
@@ -844,7 +855,7 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.reDraw = function() {
-        this.code.view.reDraw();
+        this.code && this.code.view && this.code.view.reDraw();
     };
 
     p.separate = function(block, count) {
@@ -893,6 +904,7 @@ Entry.Board.DRAG_RADIUS = 5;
     p.adjustThreadsPosition = function() {
         var code = this.code;
         if (!code) return;
+        if (!code.view) return;
 
         var threads = code.getThreads();
         if (!threads || threads.length === 0) return;

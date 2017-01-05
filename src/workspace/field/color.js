@@ -20,6 +20,9 @@ Entry.FieldColor = function(content, blockView, index) {
     this._contents = content;
     this._index = index;
     this._position = content.position;
+    this._fontSize = content.fontSize || blockView.getSkeleton().fontSize || 12;
+    this._color = content.color || this._block.getSchema().fontColor ||
+        blockView.getSkeleton().color || 'black';
     this.key = content.key;
     this.setValue(this.getValue() || '#FF0000');
     this._CONTENT_HEIGHT = this.getContentHeight();
@@ -37,28 +40,59 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         var blockView = this._blockView;
         var that = this;
         var contents = this._contents;
-
-
         this.svgGroup = blockView.contentSvgGroup.elem('g', {
             class: 'entry-field-color'
         });
 
-        var HEIGHT = this._CONTENT_HEIGHT;
-        var WIDTH = this._CONTENT_WIDTH;
-        var position = this._position;
-        var x,y;
-        if (position) {
-            x = position.x || 0;
-            y = position.y || 0;
-        } else {
-            x = 0;
-            y = -HEIGHT/2;
-        }
 
-        this._header = this.svgGroup.elem('rect', {
-            x:x, y:y, width: WIDTH, height: HEIGHT,
-            fill: this.getValue()
+        if (this._blockView.renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
+            var rect = this.svgGroup.elem('rect', {
+                x:0,
+                rx: 3, ry: 3,
+                fill: "#fff",
+                'fill-opacity': 0.4
+                });
+
+            this.textElement = this.svgGroup.elem("text").attr({
+                'style': 'white-space: pre;',
+                'font-size': that._fontSize + 'px',
+                'font-family': 'nanumBarunRegular',
+                "class": "dragNone",
+                "fill": that._color
             });
+
+            this.textElement.textContent = this._convert(this.getValue(), this.getValue());
+            var bBox = this.textElement.getBoundingClientRect();
+            var WIDTH = bBox.width + 12;
+            var HEIGHT = bBox.height;
+            rect.attr({
+                y:-HEIGHT/2,
+                width: WIDTH,
+                height: HEIGHT,
+            });
+            this.textElement.attr({
+                x: 6,
+                y: bBox.height * 0.25
+            });
+
+        } else {
+            var HEIGHT = this._CONTENT_HEIGHT;
+            var WIDTH = this._CONTENT_WIDTH;
+            var position = this._position;
+            var x,y;
+            if (position) {
+                x = position.x || 0;
+                y = position.y || 0;
+            } else {
+                x = 0;
+                y = -HEIGHT/2;
+            }
+
+            this._header = this.svgGroup.elem('rect', {
+                x:x, y:y, width: WIDTH, height: HEIGHT,
+                fill: this.getValue()
+                });
+        }
 
         this._bindRenderOptions();
 
@@ -120,7 +154,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     p.applyValue = function(value) {
         if (this.value == value) return;
         this.setValue(value);
-        this._header.attr({fill: value});
+        if (this._header)
+            this._header.attr({fill: value});
+        else if (this.textElement)
+            this.textElement.textContent = this._convert(this.getValue(), this.getValue());
     };
 
     p.getContentWidth = function() {

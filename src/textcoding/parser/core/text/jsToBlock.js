@@ -7,6 +7,7 @@ goog.provide("Entry.JsToBlockParser");
 goog.require("Entry.TextCodingUtil");
 
 Entry.JsToBlockParser = function(syntax) {
+    this._type ="JsToBlockParser";
     this.syntax = syntax;
 
     this.scopeChain = [];
@@ -19,29 +20,29 @@ Entry.JsToBlockParser = function(syntax) {
 (function(p){
     p.Program = function(astArr) {
         var code = [];
-        var thread = []; 
+        var thread = [];
 
         thread.push({
             type: this.syntax.Program
         });
-        
-        for(var index in astArr) { 
+
+        for(var index in astArr) {
             var node = astArr[index];
             if(node.type != 'Program') return;
-            
+
             //block statement
             var separatedBlocks = this.initScope(node);
             var blocks = this.BlockStatement(node);
 
             for(var i in blocks) {
                 var block = blocks[i];
-                
+
                 thread.push(block);
             }
 
             this.unloadScope();
             if(thread.length != 0)
-                code.push(thread);    
+                code.push(thread);
         }
         return code;
     };
@@ -56,7 +57,7 @@ Entry.JsToBlockParser = function(syntax) {
             return {type:'True'};
         else if(node.value === false)
             return {type:'False'};
-         
+
         if(type == "ai_distance_value")
             return node.value;
         else if(type == "ai_boolean_object")
@@ -71,7 +72,7 @@ Entry.JsToBlockParser = function(syntax) {
         return this[expression.type](expression);
     };
 
-    p.ForStatement = function(node) { 
+    p.ForStatement = function(node) {
         var init = node.init,
             test = node.test,
             update = node.update,
@@ -132,12 +133,12 @@ Entry.JsToBlockParser = function(syntax) {
             var bodyData = body[i];
             var block = this[bodyData.type](bodyData);
 
-            if(!Entry.TextCodingUtil.prototype.hasBlockInfo(bodyData, this._blockInfo))
+            if(!Entry.TextCodingUtil.hasBlockInfo(bodyData, this._blockInfo))
                 this._blockCount++;
 
-            Entry.TextCodingUtil.prototype.updateBlockInfo(bodyData, this._blockInfo);
-            
-            if(!block) {  
+            Entry.TextCodingUtil.updateBlockInfo(bodyData, this._blockInfo);
+
+            if(!block) {
                 continue;
             }
             else if(block.type === undefined) {
@@ -148,8 +149,8 @@ Entry.JsToBlockParser = function(syntax) {
                     blockCount : this._blockCount
                 };
             }
-            else if(Entry.TextCodingUtil.prototype.isParamBlock(block)) { 
-              
+            else if(Entry.TextCodingUtil.isParamBlock(block)) {
+
                 /*throw {
                     title : '파라미터 블록 오류',
                     node : node,
@@ -480,10 +481,8 @@ Entry.JsToBlockParser = function(syntax) {
 
     p.BinaryExpression = function(node) {
         ////console.log("BinaryExpression node", node);
-        
         var result = {};
-        var structure = {}; 
-
+        var structure = {};
         var operator = String(node.operator);  
         var nodeLeftName = node.left.name;
 
@@ -495,47 +494,47 @@ Entry.JsToBlockParser = function(syntax) {
                     var type = "ai_boolean_distance";
                 else
                     var type = null;
-                break;         
-            case "<": 
+                break;
+            case "<":
                 var type = "ai_boolean_distance";
-                break;                 
-            case "<=": 
-                var type = "ai_boolean_distance"; 
-                break;               
-            case ">": 
+                break;
+            case "<=":
                 var type = "ai_boolean_distance";
-                break;               
-            case ">=": 
+                break;
+            case ">":
                 var type = "ai_boolean_distance";
-                break;                
-                             
-            default: 
+                break;
+            case ">=":
+                var type = "ai_boolean_distance";
+                break;
+
+            default:
                 operator = operator;
         }
 
         if(type) {
             //console.log("BinaryExpression type", type);
 
-            var params = []; 
+            var params = [];
             var left = node.left;
-            
+
             if(left.type == "Literal" || left.type == "Identifier") {
                 var arguments = [];
                 arguments.push(left);
                 var paramsMeta = Entry.block[type].params;
-                
+
                 ////console.log("BinaryExpression paramsMeta", paramsMeta);
 
                 for(var p in paramsMeta) {
                     var paramType = paramsMeta[p].type;
                     if(paramType == "Indicator") {
-                        var pendingArg = {raw: null, type: "Literal", value: null}; 
-                        if(p < arguments.length) 
-                            arguments.splice(p, 0, pendingArg);              
+                        var pendingArg = {raw: null, type: "Literal", value: null};
+                        if(p < arguments.length)
+                            arguments.splice(p, 0, pendingArg);
                     }
                     else if(paramType == "Text") {
                         var pendingArg = {raw: "", type: "Literal", value: ""};
-                        if(p < arguments.length) 
+                        if(p < arguments.length)
                             arguments.splice(p, 0, pendingArg);
                     }
                 }
@@ -543,24 +542,24 @@ Entry.JsToBlockParser = function(syntax) {
                 for(var i in arguments) {
                     var argument = arguments[i];
                     ////console.log("BinaryExpression argument", argument);
-                              
+
                     var param = this[argument.type](argument);
                     ////console.log("BinaryExpression param", param);
-                    param = Entry.TextCodingUtil.prototype.radarVariableConvertor(param);
+                    param = Entry.TextCodingUtil.radarVariableConvertor(param);
 
                     if(param && param != null)
-                        params.push(param);   
+                        params.push(param);
                 }
             } else {
                 param = this[left.type](left);
-                param = Entry.TextCodingUtil.prototype.radarVariableConvertor(param);
-                if(param) 
+                param = Entry.TextCodingUtil.radarVariableConvertor(param);
+                if(param)
                     params.push(param);
             }
-            
+
             operator = String(node.operator);
             if(operator) {
-                operator = Entry.TextCodingUtil.prototype.jTobBinaryOperatorConvertor(operator);
+                operator = Entry.TextCodingUtil.jTobBinaryOperatorConvertor(operator);
                 param = operator;
                 if(param)
                     params.push(param);
@@ -569,28 +568,28 @@ Entry.JsToBlockParser = function(syntax) {
             }
 
             var right = node.right;
-           
+
             if(right.type == "Literal" || right.type == "Identifier") {
                 var arguments = [];
                 arguments.push(right);
                 var paramsMeta = Entry.block[type].params;
 
-                for(var p in paramsMeta) { 
+                for(var p in paramsMeta) {
                     var paramType = paramsMeta[p].type;
                     if(paramType == "Indicator") {
-                        var pendingArg = {raw: null, type: "Literal", value: null}; 
-                        if(p < arguments.length) 
-                            arguments.splice(p, 0, pendingArg);              
+                        var pendingArg = {raw: null, type: "Literal", value: null};
+                        if(p < arguments.length)
+                            arguments.splice(p, 0, pendingArg);
                     }
                     else if(paramType == "Text") {
                         var pendingArg = {raw: "", type: "Literal", value: ""};
-                        if(p < arguments.length) 
+                        if(p < arguments.length)
                             arguments.splice(p, 0, pendingArg);
                     }
                 }
 
                 for(var i in arguments) {
-                    var argument = arguments[i];          
+                    var argument = arguments[i];
                     var param = this[argument.type](argument);
 
                     ////console.log("param1", param, "type", type);
@@ -604,21 +603,19 @@ Entry.JsToBlockParser = function(syntax) {
                             result.params = [];
                             result.params.push(nameTokens[1].toUpperCase());
                             param = result;
-                        } 
+                        }
                     }
-                    
+
                     if(param && param != null) {
                         ////console.log("typebbb", type, "parambbb", param);
                         if(type == "ai_boolean_object") {
                             param = param.params[0];
-                            params.splice(1, 1); 
+                            params.splice(1, 1);
                             ////console.log("param vvv", param);
                         }
 
-                        param = Entry.TextCodingUtil.prototype.tTobDropdownValueConvertor(param);
-
+                        param = Entry.TextCodingUtil.tTobDropdownValueConvertor(param);
                         params.push(param);  
-
                         console.log("rigth param", params); 
                         
                         if(params[2] && params[2].type != "text" && params[2].type != "ai_distance_value") {
@@ -633,12 +630,12 @@ Entry.JsToBlockParser = function(syntax) {
                 param = this[right.type](right);
                 if(type == "ai_boolean_object") {
                     param = param.params[0];
-                    params.splice(1, 1); 
+                    params.splice(1, 1);
                 }
 
-                if(param) 
+                if(param)
                     params.push(param);
-            }   
+            }
 
             structure.type = type;
             structure.params = params;
@@ -651,7 +648,7 @@ Entry.JsToBlockParser = function(syntax) {
         }
 
         result = structure;
-        
+
         return result;
     };
 
@@ -660,19 +657,19 @@ Entry.JsToBlockParser = function(syntax) {
         var structure = {};
 
         var operator = String(node.operator);
-        
+
         switch(operator){
-            case '&&': 
+            case '&&':
                 var type = "ai_boolean_and";
                 break;
-            default: 
+            default:
                 var type = "ai_boolean_and";
-                break; 
+                break;
         }
 
-        var params = [];    
+        var params = [];
         var left = node.left;
-        
+
         if(left.type == "Literal" || left.type == "Identifier") {
             var arguments = [];
             arguments.push(left);
@@ -681,38 +678,38 @@ Entry.JsToBlockParser = function(syntax) {
             for(var p in paramsMeta) {
                 var paramType = paramsMeta[p].type;
                 if(paramType == "Indicator") {
-                    var pendingArg = {raw: null, type: "Literal", value: null}; 
-                    if(p < arguments.length) 
-                        arguments.splice(p, 0, pendingArg);              
+                    var pendingArg = {raw: null, type: "Literal", value: null};
+                    if(p < arguments.length)
+                        arguments.splice(p, 0, pendingArg);
                 }
                 else if(paramType == "Text") {
                     var pendingArg = {raw: "", type: "Literal", value: ""};
-                    if(p < arguments.length) 
+                    if(p < arguments.length)
                         arguments.splice(p, 0, pendingArg);
                 }
             }
 
             for(var i in arguments) {
-                var argument = arguments[i];           
+                var argument = arguments[i];
                 var param = this[argument.type](argument);
                 if(param && param != null)
-                    params.push(param);   
+                    params.push(param);
             }
         } else {
             param = this[left.type](left);
-            if(param) 
+            if(param)
                 params.push(param);
         }
-        
+
         operator = String(node.operator);
         if(operator) {
-            operator = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator);
+            operator = Entry.TextCodingUtil.logicalExpressionConvert(operator);
             param = operator;
             params.push(param);
         }
 
         var right = node.right;
-       
+
         if(right.type == "Literal" || right.type == "Identifier") {
             var arguments = [];
             arguments.push(right);
@@ -722,13 +719,13 @@ Entry.JsToBlockParser = function(syntax) {
             for(var p in paramsMeta) {
                 var paramType = paramsMeta[p].type;
                 if(paramType == "Indicator") {
-                    var pendingArg = {raw: null, type: "Literal", value: null}; 
-                    if(p < arguments.length) 
-                        arguments.splice(p, 0, pendingArg);              
+                    var pendingArg = {raw: null, type: "Literal", value: null};
+                    if(p < arguments.length)
+                        arguments.splice(p, 0, pendingArg);
                 }
                 else if(paramType == "Text") {
                     var pendingArg = {raw: "", type: "Literal", value: ""};
-                    if(p < arguments.length) 
+                    if(p < arguments.length)
                         arguments.splice(p, 0, pendingArg);
                 }
             }
@@ -736,9 +733,9 @@ Entry.JsToBlockParser = function(syntax) {
             for(var i in arguments) {
                 var argument = arguments[i];
                 var param = this[argument.type](argument);
-                
+
                 if(param && param != null)
-                    params.push(param);    
+                    params.push(param);
             }
 
             //console.log("&& params", params); 
@@ -768,13 +765,13 @@ Entry.JsToBlockParser = function(syntax) {
             }
         } else {
             param = this[right.type](right);
-            if(param) 
+            if(param)
                 params.push(param);
         }
 
         structure.type = type;
         structure.params = params;
-        
+
         result = structure;
         return result;
     };
@@ -862,7 +859,7 @@ Entry.JsToBlockParser = function(syntax) {
                     var paramBlock = {type: 'number', params:[value]};
                 } else {
                     var paramBlock = value;
-                } 
+                }
 
                 params.push(paramBlock);
             }
@@ -934,7 +931,7 @@ Entry.JsToBlockParser = function(syntax) {
                 }
             }
         }
-        return separatedBlocks; 
+        return separatedBlocks;
     };
 
     p.BasicFunction = function(node, body) {
@@ -981,8 +978,8 @@ Entry.JsToBlockParser = function(syntax) {
         }
     };
 
-    p.BasicIf = function(node) { 
-        //console.log("BasicIf node", node);  
+    p.BasicIf = function(node) {
+        //console.log("BasicIf node", node);
         var result = {};
         result.params = [];
         result.statements = [];
@@ -993,16 +990,16 @@ Entry.JsToBlockParser = function(syntax) {
         var cons = node.consequent;
         if(cons)
             var consequent = this[cons.type](cons);
-        
+
         var alt = node.alternate;
         if(alt)
             var alternate = this[alt.type](alt);
 
         try{
-            var test = ''; 
+            var test = '';
             if(node.test.operator)
                 var operator = (node.test.operator === '===') ? '==' : node.test.operator;
-            else 
+            else
                 var operator = null;
 
             if(node.test.left && node.test.right)
@@ -1018,24 +1015,15 @@ Entry.JsToBlockParser = function(syntax) {
                 type = this.syntax.BasicIf[test];
             } else if(testCondition == "frontstone" && (operator == "==")) {
                 test = "front == \'stone\'";
-                type = this.syntax.BasicIf[test]; 
+                type = this.syntax.BasicIf[test];
             } else if(testCondition == "frontbee" && (operator == "==")) {
                 test = "front == \'bee\'";
-                type = this.syntax.BasicIf[test]; 
+                type = this.syntax.BasicIf[test];
             } else {
                 if(node.test.value || (node.test.left && node.test.right)) {
                     type = "ai_if_else";
                     var callExData = this[node.test.type](node.test, this.syntax.Scope);
                     var value = callExData.params[2];
-
-                    /*console.log("callExData", callExData);
-
-                    if(typeof value.params[0] != "number" && value.type != "ai_distance_value") {
-                        throw {
-                            message : '지원하지 않는 표현식 입니다.',
-                            node : node.test
-                        };
-                    }*/
                     params.push(callExData);
                 } else {
                     throw {
@@ -1043,7 +1031,6 @@ Entry.JsToBlockParser = function(syntax) {
                         node : node.test
                     };
                 }
-
             }
             
             if (type) {    
@@ -1061,7 +1048,7 @@ Entry.JsToBlockParser = function(syntax) {
                     result.type = type;
                 if(params && params.length != 0)
                     result.params = params;
-                
+
                 return result;
             } else {
                 if(consequent && consequent.length != 0)
@@ -1074,9 +1061,9 @@ Entry.JsToBlockParser = function(syntax) {
                     result.type = type;
                 if(params && params.length != 0)
                     result.params = params;
-                
+
                 result.statements = [stmtCons, stmtAlt];
-                
+
                 return result;
                 //throw new Error();
             }
@@ -1087,4 +1074,6 @@ Entry.JsToBlockParser = function(syntax) {
             };
         }
     };
+
+    p.searchSyntax = function(datum) { return null; };
 })(Entry.JsToBlockParser.prototype);
