@@ -2605,7 +2605,7 @@ Entry.block = {
             var ANALOG = Entry.hw.portData.ANALOG;
             if (port[0] === "A")
                 port = port.substring(1)
-            return (ANALOG) ? ANALOG[port] || 0 : 0;
+            return ANALOG ? ANALOG[port] || 0 : 0;
         },
         "syntax": {"js": [], "py": [
             {
@@ -3218,7 +3218,7 @@ Entry.block = {
         "def": {
             "params": [{
                     "type": "arduino_get_port_number",
-                    "value": 3
+                    "value": 4
                 },
                 {
                     "type": "arduino_ext_tone_list"
