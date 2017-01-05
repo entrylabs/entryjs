@@ -5370,6 +5370,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 newFuncDefParams[0] = textFuncName;
                 newFunc.description = textFuncName + ' ';
             }
+            Entry.TextCodingUtil.initQueue();
 
             if(textFuncParams.length > 0) {
             var paramFieldBlock = new Entry.Block({ type: "function_field_string" }, thread);

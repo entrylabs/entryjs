@@ -19758,6 +19758,7 @@ Entry.PyToBlockParser = function(b) {
         } else {
           h[0] = f, x.description = f + " ";
         }
+        Entry.TextCodingUtil.initQueue();
         if (0 < a.length) {
           for (v = new Entry.Block({type:"function_field_string"}, t), v.data.params = [], e = Entry.Func.requestParamBlock("string"), m = new Entry.Block({type:e}, t), v.data.params.push(m), m = Entry.TextCodingUtil.getLastParam(z), m.data.params[1] = v, x.paramMap[e] = Number(0), r = {}, r[a[0]] = e, z = 1;z < a.length;z++) {
             v = new Entry.Block({type:"function_field_string"}, t), v.data.params = [], e = Entry.Func.requestParamBlock("string"), m = new Entry.Block({type:e}, t), v.data.params.push(m), d = Entry.TextCodingUtil.searchFuncDefParam(h[1]), 0 == d.data.params.length ? d.data.params[0] = m : 1 == d.data.params.length && (d.data.params[1] = v), x.paramMap[e] = Number(z), r[a[z]] = e;
