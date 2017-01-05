@@ -165,7 +165,16 @@ Entry.PyHint = function(syntax) {
 
     p.removeScope = function(name) {
         if (this.scope[name]) {
+            var syntax = this.syntax[name]
+            var keys = Object.keys(syntax);
+            keys = keys.filter(function(k){return k.indexOf("#") < 0 && !Entry.block[syntax[k].key].deprecated})
+            keys = keys.map(function(k) {return name + "." + k});
+
             this.scope._global.splice(this.scope._global.indexOf(name), 1);
+            while (keys.length) {
+                var key = keys.pop();
+                this.scope._global.splice(this.scope._global.indexOf(key), 1);
+            }
             delete this.scope[name];
         }
     }
