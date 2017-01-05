@@ -3163,12 +3163,12 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    ["1", "0"],
-                    ["2", "1"],
-                    ["3", "2"],
-                    ["4", "3"],
-                    ["5", "4"],
-                    ["6", "5"]
+                    ["1", "1"],
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["5", "5"],
+                    ["6", "6"]
                 ],
                 "value": "3",
                 "fontSize": 11
@@ -3274,7 +3274,7 @@ Entry.block = {
                     return script.callReturn();
                 }
 
-                var octave = script.getNumberValue("OCTAVE", script);
+                var octave = script.getNumberValue("OCTAVE", script) - 1;
                 if(octave < 0) {
                     octave = 0;
                 } else if(octave > 5) {
