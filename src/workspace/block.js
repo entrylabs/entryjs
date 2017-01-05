@@ -132,8 +132,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
             var paramInjected = thisParams[i] || i<thisParams.length;
 
-            if (value && (params[i].type === 'Output' || params[i].type === 'Block'))
+            if (value && (params[i].type === 'Output' || params[i].type === 'Block')) {
+                if (typeof value !== "object")
+                    value = {type: "number", params: [value]};
                 value = new Entry.Block(value, this.thread);
+            }
 
             if (paramInjected) thisParams.splice(i, 1, value);
             else thisParams.push(value);

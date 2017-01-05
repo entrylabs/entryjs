@@ -24303,7 +24303,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       a = this.params;
       b = this._schema.params;
       for (e = 0;b && e < b.length;e++) {
-        d = void 0 === a[e] || null === a[e] ? b[e].value : a[e], f = a[e] || e < a.length, !d || "Output" !== b[e].type && "Block" !== b[e].type || (d = new Entry.Block(d, this.thread)), f ? a.splice(e, 1, d) : a.push(d);
+        d = void 0 === a[e] || null === a[e] ? b[e].value : a[e], f = a[e] || e < a.length, !d || "Output" !== b[e].type && "Block" !== b[e].type || ("object" !== typeof d && (d = {type:"number", params:[d]}), d = new Entry.Block(d, this.thread)), f ? a.splice(e, 1, d) : a.push(d);
       }
       if (a = this._schema.statements) {
         for (e = 0;e < a.length;e++) {
