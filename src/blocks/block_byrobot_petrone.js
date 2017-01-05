@@ -19,6 +19,37 @@ Entry.byrobot_petrone =
 {
 	name: 'byrobot_petrone',
 
+	// 시간 지연
+	checkFinish: function(script, ms)
+	{
+		if (!script.isStart)
+		{
+			script.isStart = true;
+			script.timeFlag = 1;
+			
+			var fps = Entry.FPS || 60;					
+			timeValue = (60 / fps) * timeValue;
+			
+			setTimeout(function()
+			{
+				script.timeFlag = 0;
+			}, timeValue);
+			
+			return "Start";
+		}
+		else if (script.timeFlag == 1)
+		{
+			return "Running";
+		}
+		else
+		{
+			delete script.timeFlag;
+			delete script.isStart;
+			Entry.engine.isContinue = false;
+			return "Finish";
+		}
+	},
+
 	// 초기화
 	setZero: function()
 	{

@@ -24294,9 +24294,7 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var read	= Entry.hw.portData;
-				var device	= script.getField('DEVICE');	// paramsKeyMap에 정의된 이름 사용
-				return read[device];
+				return Entry.hw.portData[script.getField('DEVICE')];
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.value(%1)"]}
     },
@@ -24331,9 +24329,7 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var read	= Entry.hw.portData;
-				var device	= script.getField('DEVICE');	// paramsKeyMap에 정의된 이름 사용
-				return read[device];
+				return Entry.hw.portData[script.getField('DEVICE')];
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.value(%1)"]}
     },
@@ -24375,9 +24371,7 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var read	= Entry.hw.portData;
-				var device	= script.getField('DEVICE');	// paramsKeyMap에 정의된 이름 사용
-				return read[device];
+				return Entry.hw.portData[script.getField('DEVICE')];
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.value(%1)"]}
     },
@@ -24415,9 +24409,7 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var read	= Entry.hw.portData;
-				var device	= script.getField('DEVICE');	// paramsKeyMap에 정의된 이름 사용
-				return read[device];
+				return Entry.hw.portData[script.getField('DEVICE')];
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.value(%1)"]}
     },
@@ -24558,20 +24550,8 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("light_manual_flags", 0xff);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
-				
-				return script.callReturn();
+				return Entry.byrobot_dronefighter.setLightManual(script, 0x11, 0xff, 0);
 			},
-        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
 	// */
 	//*
@@ -24626,30 +24606,17 @@ Entry.block = {
 				"type": "byrobot_dronefighter_controller_light_manual_single"
 			},
         "paramsKeyMap": {
-				"TARGET"		: 0,
+				"FLAGS"			: 0,
 				"BRIGHTNESS"	: 1
 			},
         "class": "byrobot_dronefighter_controller_light",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var target		= script.getField('TARGET');
-				var brightness	= script.getField('BRIGHTNESS');
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("light_manual_flags", target);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
-				
-				return script.callReturn();
+				var flags		= parseInt(script.getField('FLAGS'));
+				var brightness	= parseInt(script.getField('BRIGHTNESS'));
+				return Entry.byrobot_dronefighter.setLightManual(script, 0x11, flags, brightness);
 			},
-        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
 	// */
 	//*
@@ -24689,37 +24656,17 @@ Entry.block = {
 				"type": "byrobot_dronefighter_controller_light_manual_single_input"
 			},
         "paramsKeyMap": {
-				"TARGET"		: 0,
+				"FLAGS"			: 0,
 				"BRIGHTNESS"	: 1
 			},
         "class": "byrobot_dronefighter_controller_light",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var target		= script.getNumberValue('TARGET');
+				var flags		= script.getNumberValue('FLAGS');
 				var brightness	= script.getNumberValue('BRIGHTNESS');
-		
-				// 범위 조정
-				target = Math.max(target, 0);
-				target = Math.min(target, 255);
-				
-				brightness = Math.max(brightness, 0);
-				brightness = Math.min(brightness, 255);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("light_manual_flags", target);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
-				
-				return script.callReturn();
+				return Entry.byrobot_dronefighter.setLightManual(script, 0x11, flags, brightness);
 			},
-        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
 	// */
 	//*
@@ -24748,20 +24695,8 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("light_manual_flags", 0xff);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
-				
-				return script.callReturn();
+				return Entry.byrobot_dronefighter.setLightManual(script, 0x10, 0xff, 0);
 			},
-        //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
 	// */
 	//*
@@ -24814,28 +24749,16 @@ Entry.block = {
 				"type": "byrobot_dronefighter_drone_light_manual_single"	
 			},
         "paramsKeyMap": {
-				"TARGET"		: 0,
+				"FLAGS"			: 0,
 				"BRIGHTNESS"	: 1
 			},
         "class": "byrobot_dronefighter_drone_light",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var target		= script.getField('TARGET');
-				var brightness	= script.getField('BRIGHTNESS');
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("light_manual_flags", target);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
-				
-				return script.callReturn();
+				var flags		= parseInt(script.getField('FLAGS'));
+				var brightness	= parseInt(script.getField('BRIGHTNESS'));
+				return Entry.byrobot_dronefighter.setLightManual(script, 0x10, flags, brightness);
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -24877,35 +24800,16 @@ Entry.block = {
 				"type": "byrobot_dronefighter_drone_light_manual_single_input"	
 			},
         "paramsKeyMap": {
-				"TARGET"		: 0,
+				"FLAGS"			: 0,
 				"BRIGHTNESS"	: 1
 			},
         "class": "byrobot_dronefighter_drone_light",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var target		= script.getNumberValue('TARGET');
+				var flags		= script.getNumberValue('FLAGS');
 				var brightness	= script.getNumberValue('BRIGHTNESS');
-		
-				// 범위 조정
-				target = Math.max(target, 0);
-				target = Math.min(target, 255);
-				
-				brightness = Math.max(brightness, 0);
-				brightness = Math.min(brightness, 255);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("light_manual_flags", target);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
-				
-				return script.callReturn();
+				return Entry.byrobot_dronefighter.setLightManual(script, 0x10, flags, brightness);
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -24936,24 +24840,43 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var mode		= 0;	// Stop
-				var scale		= 0;
-				var time		= 0;
+				return Entry.byrobot_dronefighter.setBuzzerStop(script);
 				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("buzzer_mode", mode);
-				Entry.hw.setDigitalPortValue("buzzer_value", scale);
-				Entry.hw.setDigitalPortValue("buzzer_time", time);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var mode		= 0;	// Stop
+						var scale		= 0;
+						var time		= 0;
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("buzzer_mode", mode);
+						Entry.hw.setDigitalPortValue("buzzer_value", scale);
+						Entry.hw.setDigitalPortValue("buzzer_time", time);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["buzzer_mode"];
-				delete Entry.hw.sendQueue["buzzer_value"];
-				delete Entry.hw.sendQueue["buzzer_time"];
-			
-				return script.callReturn();
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["buzzer_mode"];
+						delete Entry.hw.sendQueue["buzzer_value"];
+						delete Entry.hw.sendQueue["buzzer_time"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
+				
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -25023,38 +24946,62 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var mode		= 0;
 				var octave		= parseInt(script.getField('OCTAVE'));
 				var scale		= parseInt(script.getField('SCALE'));
-				var time		= 60000;
-				
-				var scalecalc;
 				
 				if( scale == -1 )
-				{
-					mode		= 1;		// MuteInstantally
-					scalecalc	= 0xEE;		// Mute
-				}
+					return Entry.byrobot_dronefighter.setBuzzerMute(script, 60000, false, true);
 				else
+					return Entry.byrobot_dronefighter.setBuzzerScale(script, octave, scale, 60000, false, true);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
 				{
-					mode		= 3;		// ScaleInstantally
-					scalecalc	= (octave * 12) + scale;	// +1인 이유: 0은 mute 이기 때문. C1은 1부터 시작
-				}
+				case "Start":
+					// 데이터 전송
+					{
+						var mode		= 0;
+						var octave		= parseInt(script.getField('OCTAVE'));
+						var scale		= parseInt(script.getField('SCALE'));
+						var time		= 60000;
+						
+						var scalecalc;
+						
+						if( scale == -1 )
+						{
+							mode		= 1;		// MuteInstantally
+							scalecalc	= 0xEE;		// Mute
+						}
+						else
+						{
+							mode		= 3;		// ScaleInstantally
+							scalecalc	= (octave * 12) + scale;	// +1인 이유: 0은 mute 이기 때문. C1은 1부터 시작
+						}
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("buzzer_mode", mode);
+						Entry.hw.setDigitalPortValue("buzzer_value", scalecalc);
+						Entry.hw.setDigitalPortValue("buzzer_time", time);
+
+						Entry.hw.update();
+
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["buzzer_mode"];
+						delete Entry.hw.sendQueue["buzzer_value"];
+						delete Entry.hw.sendQueue["buzzer_time"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("buzzer_mode", mode);
-				Entry.hw.setDigitalPortValue("buzzer_value", scalecalc);
-				Entry.hw.setDigitalPortValue("buzzer_time", time);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["buzzer_mode"];
-				delete Entry.hw.sendQueue["buzzer_value"];
-				delete Entry.hw.sendQueue["buzzer_time"];
-			
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -25133,10 +25080,20 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				if (!script.isStart)
+				var octave		= parseInt(script.getField('OCTAVE'));
+				var scale		= parseInt(script.getField('SCALE'));
+				var time		= parseInt(script.getNumberValue('TIME') * 1000);
+				
+				if( scale == -1 )
+					return Entry.byrobot_dronefighter.setBuzzerMute(script, time, true, true);
+				else
+					return Entry.byrobot_dronefighter.setBuzzerScale(script, octave, scale, time, true, true);
+				
+				
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, parseInt(script.getNumberValue('TIME') * 1000)) )
 				{
-					var timeValue;
-					
+				case "Start":
 					// 데이터 전송
 					{
 						var mode		= 0;
@@ -25172,34 +25129,19 @@ Entry.block = {
 						delete Entry.hw.sendQueue["buzzer_mode"];
 						delete Entry.hw.sendQueue["buzzer_value"];
 						delete Entry.hw.sendQueue["buzzer_time"];
-				
-						timeValue = time;
 					}
-					
-					script.isStart = true;
-					script.timeFlag = 1;
-					
-					var fps = Entry.FPS || 60;					
-					timeValue = (60 / fps) * timeValue;
-					
-					setTimeout(function()
-					{
-						script.timeFlag = 0;
-					}, timeValue);
-					
 					return script;
-				}
-				else if (script.timeFlag == 1)
-				{
+					
+				case "Running":
 					return script;
-				}
-				else
-				{
-					delete script.timeFlag;
-					delete script.isStart;
-					Entry.engine.isContinue = false;
+				
+				case "Finish":
+					return script.callReturn();
+					
+				default:
 					return script.callReturn();
 				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -25278,42 +25220,67 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				// 데이터 전송
-				var mode		= 0;
 				var octave		= parseInt(script.getField('OCTAVE'));
 				var scale		= parseInt(script.getField('SCALE'));
 				var time		= parseInt(script.getNumberValue('TIME') * 1000);
 				
-				time = Math.max(time, 0);
-				time = Math.min(time, 60000);
-				
-				var scalecalc;
-				
 				if( scale == -1 )
-				{
-					mode		= 2;		// MuteContinually
-					scalecalc	= 0xEE;		// Mute
-				}
+					return Entry.byrobot_dronefighter.setBuzzerMute(script, time, false, false);
 				else
+					return Entry.byrobot_dronefighter.setBuzzerScale(script, octave, scale, time, false, false);
+				
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
 				{
-					mode		= 4;		// ScaleContinually
-					scalecalc	= (octave * 12) + scale;	// +1인 이유: 0은 mute 이기 때문. C1은 1부터 시작
+				case "Start":
+					// 데이터 전송
+					{
+						var mode		= 0;
+						var octave		= parseInt(script.getField('OCTAVE'));
+						var scale		= parseInt(script.getField('SCALE'));
+						var time		= parseInt(script.getNumberValue('TIME') * 1000);
+						
+						time = Math.max(time, 0);
+						time = Math.min(time, 60000);
+						
+						var scalecalc;
+						
+						if( scale == -1 )
+						{
+							mode		= 2;		// MuteContinually
+							scalecalc	= 0xEE;		// Mute
+						}
+						else
+						{
+							mode		= 4;		// ScaleContinually
+							scalecalc	= (octave * 12) + scale;	// +1인 이유: 0은 mute 이기 때문. C1은 1부터 시작
+						}
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("buzzer_mode", mode);
+						Entry.hw.setDigitalPortValue("buzzer_value", scalecalc);
+						Entry.hw.setDigitalPortValue("buzzer_time", time);
+
+						Entry.hw.update();
+
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["buzzer_mode"];
+						delete Entry.hw.sendQueue["buzzer_value"];
+						delete Entry.hw.sendQueue["buzzer_time"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
+				
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
 				}
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("buzzer_mode", mode);
-				Entry.hw.setDigitalPortValue("buzzer_value", scalecalc);
-				Entry.hw.setDigitalPortValue("buzzer_time", time);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["buzzer_mode"];
-				delete Entry.hw.sendQueue["buzzer_value"];
-				delete Entry.hw.sendQueue["buzzer_time"];
-				
-				return script.callReturn();
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -25353,28 +25320,48 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var mode		= 5;	// HzInstantally
-				var hz			= parseInt(script.getNumberValue('HZ', script));
-				var time		= 60000;
+				var hz = parseInt(script.getNumberValue('HZ', script));
+				return Entry.byrobot_dronefighter.setBuzzerHz(script, hz, 60000, false, true);
 				
-				// 범위 조정
-				hz = Math.max(hz, 1);
-				hz = Math.min(hz, 63999);
-								
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("buzzer_mode", mode);
-				Entry.hw.setDigitalPortValue("buzzer_value", hz);
-				Entry.hw.setDigitalPortValue("buzzer_time", time);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var mode		= 5;	// HzInstantally
+						var hz			= parseInt(script.getNumberValue('HZ', script));
+						var time		= 60000;
+						
+						// 범위 조정
+						hz = Math.max(hz, 1);
+						hz = Math.min(hz, 63999);
+										
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("buzzer_mode", mode);
+						Entry.hw.setDigitalPortValue("buzzer_value", hz);
+						Entry.hw.setDigitalPortValue("buzzer_time", time);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["buzzer_mode"];
-				delete Entry.hw.sendQueue["buzzer_value"];
-				delete Entry.hw.sendQueue["buzzer_time"];
-			
-				return script.callReturn();
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["buzzer_mode"];
+						delete Entry.hw.sendQueue["buzzer_value"];
+						delete Entry.hw.sendQueue["buzzer_time"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
+				
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -25423,10 +25410,13 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				if (!script.isStart)
+				var hz			= parseInt(script.getNumberValue('HZ', script));
+				var time		= parseInt(script.getNumberValue('TIME') * 1000);
+				return Entry.byrobot_dronefighter.setBuzzerHz(script, hz, time, true, true);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, parseInt(script.getNumberValue('TIME') * 1000)) )
 				{
-					var timeValue;
-					
+				case "Start":
 					// 데이터 전송
 					{
 						var mode		= 5;	// HzInstantally
@@ -25452,34 +25442,19 @@ Entry.block = {
 						delete Entry.hw.sendQueue["buzzer_mode"];
 						delete Entry.hw.sendQueue["buzzer_value"];
 						delete Entry.hw.sendQueue["buzzer_time"];
-				
-						timeValue = time;
 					}
-					
-					script.isStart = true;
-					script.timeFlag = 1;
-					
-					var fps = Entry.FPS || 60;					
-					timeValue = (60 / fps) * timeValue;
-					
-					setTimeout(function()
-					{
-						script.timeFlag = 0;
-					}, timeValue);
-					
 					return script;
-				}
-				else if (script.timeFlag == 1)
-				{
+					
+				case "Running":
 					return script;
-				}
-				else
-				{
-					delete script.timeFlag;
-					delete script.isStart;
-					Entry.engine.isContinue = false;
+				
+				case "Finish":
+					return script.callReturn();
+					
+				default:
 					return script.callReturn();
 				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -25528,31 +25503,51 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var mode		= 6;	// HzContinually
 				var hz			= parseInt(script.getNumberValue('HZ', script));
 				var time		= parseInt(script.getNumberValue('TIME') * 1000);
-				
-				// 범위 조정
-				hz = Math.max(hz, 1);
-				hz = Math.min(hz, 63999);
-				
-				time = Math.max(time, 0);
-				time = Math.min(time, 60000);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("buzzer_mode", mode);
-				Entry.hw.setDigitalPortValue("buzzer_value", hz);
-				Entry.hw.setDigitalPortValue("buzzer_time", time);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["buzzer_mode"];
-				delete Entry.hw.sendQueue["buzzer_value"];
-				delete Entry.hw.sendQueue["buzzer_time"];
+				return Entry.byrobot_dronefighter.setBuzzerHz(script, hz, time, false, false);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var mode		= 6;	// HzContinually
+						var hz			= parseInt(script.getNumberValue('HZ', script));
+						var time		= parseInt(script.getNumberValue('TIME') * 1000);
 						
-				return script.callReturn();
+						// 범위 조정
+						hz = Math.max(hz, 1);
+						hz = Math.min(hz, 63999);
+						
+						time = Math.max(time, 0);
+						time = Math.min(time, 60000);
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("buzzer_mode", mode);
+						Entry.hw.setDigitalPortValue("buzzer_value", hz);
+						Entry.hw.setDigitalPortValue("buzzer_time", time);
+
+						Entry.hw.update();
+
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["buzzer_mode"];
+						delete Entry.hw.sendQueue["buzzer_value"];
+						delete Entry.hw.sendQueue["buzzer_time"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
+				
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -25582,23 +25577,41 @@ Entry.block = {
         "class": "byrobot_dronefighter_vibrator",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
-			{				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("vibrator_mode", 0);		// 0: Stop
-				Entry.hw.setDigitalPortValue("vibrator_on", 0);
-				Entry.hw.setDigitalPortValue("vibrator_off", 0);
-				Entry.hw.setDigitalPortValue("vibrator_total", 0);
+			{
+				return Entry.byrobot_dronefighter.setVibratorStop(script);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("vibrator_mode", 0);		// 0: Stop
+						Entry.hw.setDigitalPortValue("vibrator_on", 0);
+						Entry.hw.setDigitalPortValue("vibrator_off", 0);
+						Entry.hw.setDigitalPortValue("vibrator_total", 0);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["vibrator_mode"];
-				delete Entry.hw.sendQueue["vibrator_on"];
-				delete Entry.hw.sendQueue["vibrator_off"];
-				delete Entry.hw.sendQueue["vibrator_total"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["vibrator_mode"];
+						delete Entry.hw.sendQueue["vibrator_on"];
+						delete Entry.hw.sendQueue["vibrator_off"];
+						delete Entry.hw.sendQueue["vibrator_total"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -25638,10 +25651,12 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				if (!script.isStart)
+				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
+				return Entry.byrobot_dronefighter.setVibrator(script, timeOn, 0, timeOn, true, true);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, parseInt(script.getNumberValue('TIMEON') * 1000)) )
 				{
-					var timeValue;
-					
+				case "Start":
 					// 데이터 전송
 					{
 						var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
@@ -25667,34 +25682,19 @@ Entry.block = {
 						delete Entry.hw.sendQueue["vibrator_on"];
 						delete Entry.hw.sendQueue["vibrator_off"];
 						delete Entry.hw.sendQueue["vibrator_total"];
-						
-						timeValue = timeRun;
 					}
-					
-					script.isStart = true;
-					script.timeFlag = 1;
-					
-					var fps = Entry.FPS || 60;					
-					timeValue = (60 / fps) * timeValue;
-					
-					setTimeout(function()
-					{
-						script.timeFlag = 0;
-					}, timeValue);
-					
 					return script;
-				}
-				else if (script.timeFlag == 1)
-				{
+					
+				case "Running":
 					return script;
-				}
-				else
-				{
-					delete script.timeFlag;
-					delete script.isStart;
-					Entry.engine.isContinue = false;
+				
+				case "Finish":
+					return script.callReturn();
+					
+				default:
 					return script.callReturn();
 				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -25734,30 +25734,49 @@ Entry.block = {
         "func": function (sprite, script)
 			{
 				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
-				
-				// 범위 조정
-				timeOn = Math.max(timeOn, 0);
-				timeOn = Math.min(timeOn, 60000);
-				
-				var timeOff		= 0;
-				var timeRun		= timeOn;
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("vibrator_mode", 2);		// 2: Continually
-				Entry.hw.setDigitalPortValue("vibrator_on", timeOn);
-				Entry.hw.setDigitalPortValue("vibrator_off", timeOff);
-				Entry.hw.setDigitalPortValue("vibrator_total", timeRun);
+				return Entry.byrobot_dronefighter.setVibrator(script, timeOn, 0, timeOn, false, false);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
+						
+						// 범위 조정
+						timeOn = Math.max(timeOn, 0);
+						timeOn = Math.min(timeOn, 60000);
+						
+						var timeOff		= 0;
+						var timeRun		= timeOn;
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("vibrator_mode", 2);		// 2: Continually
+						Entry.hw.setDigitalPortValue("vibrator_on", timeOn);
+						Entry.hw.setDigitalPortValue("vibrator_off", timeOff);
+						Entry.hw.setDigitalPortValue("vibrator_total", timeRun);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["vibrator_mode"];
-				delete Entry.hw.sendQueue["vibrator_on"];
-				delete Entry.hw.sendQueue["vibrator_off"];
-				delete Entry.hw.sendQueue["vibrator_total"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["vibrator_mode"];
+						delete Entry.hw.sendQueue["vibrator_on"];
+						delete Entry.hw.sendQueue["vibrator_off"];
+						delete Entry.hw.sendQueue["vibrator_total"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -25815,10 +25834,16 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				if (!script.isStart)
+				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
+				var timeOff		= parseInt(script.getNumberValue('TIMEOFF') * 1000);
+				var timeRun		= parseInt(script.getNumberValue('TIMERUN') * 1000);
+				return Entry.byrobot_dronefighter.setVibrator(script, timeOn, timeOff, timeRun, true, true);
+				
+				/*
+				
+				switch( Entry.byrobot_dronefighter.checkFinish(script, parseInt(script.getNumberValue('TIMERUN') * 1000)) )
 				{
-					var timeValue;
-					
+				case "Start":
 					// 데이터 전송
 					{
 						var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
@@ -25846,34 +25871,19 @@ Entry.block = {
 						delete Entry.hw.sendQueue["vibrator_on"];
 						delete Entry.hw.sendQueue["vibrator_off"];
 						delete Entry.hw.sendQueue["vibrator_total"];
-						
-						timeValue = timeRun;
 					}
-					
-					script.isStart = true;
-					script.timeFlag = 1;
-					
-					var fps = Entry.FPS || 60;					
-					timeValue = (60 / fps) * timeValue;
-					
-					setTimeout(function()
-					{
-						script.timeFlag = 0;
-					}, timeValue);
-					
 					return script;
-				}
-				else if (script.timeFlag == 1)
-				{
+					
+				case "Running":
 					return script;
-				}
-				else
-				{
-					delete script.timeFlag;
-					delete script.isStart;
-					Entry.engine.isContinue = false;
+				
+				case "Finish":
+					return script.callReturn();
+					
+				default:
 					return script.callReturn();
 				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -25934,30 +25944,52 @@ Entry.block = {
 				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
 				var timeOff		= parseInt(script.getNumberValue('TIMEOFF') * 1000);
 				var timeRun		= parseInt(script.getNumberValue('TIMERUN') * 1000);
+				return Entry.byrobot_dronefighter.setVibrator(script, timeOn, timeOff, timeRun, false, false);
 				
-				timeOn = Math.max(timeOn, 0);
-				timeOn = Math.min(timeOn, 60000);
-				timeOff = Math.max(timeOff, 0);
-				timeOff = Math.min(timeOff, 60000);
-				timeRun = Math.max(timeRun, 0);
-				timeRun = Math.min(timeRun, 60000);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("vibrator_mode", 2);		// 1: Continually
-				Entry.hw.setDigitalPortValue("vibrator_on", timeOn);
-				Entry.hw.setDigitalPortValue("vibrator_off", timeOff);
-				Entry.hw.setDigitalPortValue("vibrator_total", timeRun);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
+						var timeOff		= parseInt(script.getNumberValue('TIMEOFF') * 1000);
+						var timeRun		= parseInt(script.getNumberValue('TIMERUN') * 1000);
+						
+						timeOn = Math.max(timeOn, 0);
+						timeOn = Math.min(timeOn, 60000);
+						timeOff = Math.max(timeOff, 0);
+						timeOff = Math.min(timeOff, 60000);
+						timeRun = Math.max(timeRun, 0);
+						timeRun = Math.min(timeRun, 60000);
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("vibrator_mode", 2);		// 1: Continually
+						Entry.hw.setDigitalPortValue("vibrator_on", timeOn);
+						Entry.hw.setDigitalPortValue("vibrator_off", timeOff);
+						Entry.hw.setDigitalPortValue("vibrator_total", timeRun);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["vibrator_mode"];
-				delete Entry.hw.sendQueue["vibrator_on"];
-				delete Entry.hw.sendQueue["vibrator_off"];
-				delete Entry.hw.sendQueue["vibrator_total"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["vibrator_mode"];
+						delete Entry.hw.sendQueue["vibrator_on"];
+						delete Entry.hw.sendQueue["vibrator_off"];
+						delete Entry.hw.sendQueue["vibrator_total"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -25997,10 +26029,12 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				if (!script.isStart)
+				var irmessage	= script.getNumberValue("IRMESSAGE", script);
+				return Entry.byrobot_dronefighter.sendIrMessage(script, irmessage);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 500) )
 				{
-					var timeValue = 500;
-					
+				case "Start":
 					// 데이터 전송
 					{
 						var irmessage	= script.getNumberValue("IRMESSAGE", script);
@@ -26018,33 +26052,19 @@ Entry.block = {
 						delete Entry.hw.sendQueue["target"];
 						delete Entry.hw.sendQueue["irmessage_data"];
 					}
-					
-					script.isStart = true;
-					script.timeFlag = 1;
-					
-					var fps = Entry.FPS || 60;					
-					timeValue = (60 / fps) * timeValue;
-					
-					setTimeout(function()
-					{
-						script.timeFlag = 0;
-					}, timeValue);
-					
 					return script;
-				}
-				else if (script.timeFlag == 1)
-				{
+					
+				case "Running":
 					return script;
-				}
-				else
-				{
-					delete script.timeFlag;
-					delete script.isStart;
-					Entry.engine.isContinue = false;
+				
+				case "Finish":
+					return script.callReturn();
+					
+				default:
 					return script.callReturn();
 				}
+				*/
 			},
-        //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
 	// */
 	//*
@@ -26073,18 +26093,35 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("command_command", 0x24);		// 0x24: CommandType::Stop
-				Entry.hw.setDigitalPortValue("command_option", 0x00);
+				return Entry.byrobot_dronefighter.sendStop(script);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("command_command", 0x24);		// 0x24: CommandType::Stop
+						Entry.hw.setDigitalPortValue("command_option", 0x00);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["command_command"];
+						delete Entry.hw.sendQueue["command_option"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26141,24 +26178,46 @@ Entry.block = {
 				var motorDirection	= 1;
 				var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
 				
-				// 범위 조정
-				motorSpeed = Math.max(motorSpeed, 0);
-				motorSpeed = Math.min(motorSpeed, 4096);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("motorsingle_target", motorIndex);
-				Entry.hw.setDigitalPortValue("motorsingle_direction", motorDirection);
-				Entry.hw.setDigitalPortValue("motorsingle_value", motorSpeed);
+				return Entry.byrobot_dronefighter.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var motorIndex		= parseInt(script.getField("MOTORINDEX"));
+						var motorDirection	= 1;
+						var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
+						
+						// 범위 조정
+						motorSpeed = Math.max(motorSpeed, 0);
+						motorSpeed = Math.min(motorSpeed, 4096);
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("motorsingle_target", motorIndex);
+						Entry.hw.setDigitalPortValue("motorsingle_direction", motorDirection);
+						Entry.hw.setDigitalPortValue("motorsingle_value", motorSpeed);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["motorsingle_target"];
-				delete Entry.hw.sendQueue["motorsingle_direction"];
-				delete Entry.hw.sendQueue["motorsingle_value"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["motorsingle_target"];
+						delete Entry.hw.sendQueue["motorsingle_direction"];
+						delete Entry.hw.sendQueue["motorsingle_value"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26211,28 +26270,50 @@ Entry.block = {
 				var motorDirection	= 1;
 				var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
 				
-				// 범위를 벗어난 경우 무시
-				if( motorIndex < 0 || motorIndex > 3 )
+				return Entry.byrobot_dronefighter.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var motorIndex		= parseInt(script.getNumberValue("MOTORINDEX", script));
+						var motorDirection	= 1;
+						var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
+						
+						// 범위를 벗어난 경우 무시
+						if( motorIndex < 0 || motorIndex > 3 )
+							return script.callReturn();
+						
+						// 범위 조정
+						motorSpeed = Math.max(motorSpeed, 0);
+						motorSpeed = Math.min(motorSpeed, 4096);
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("motorsingle_target", motorIndex);
+						Entry.hw.setDigitalPortValue("motorsingle_direction", motorDirection);
+						Entry.hw.setDigitalPortValue("motorsingle_value", motorSpeed);
+
+						Entry.hw.update();
+
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["motorsingle_target"];
+						delete Entry.hw.sendQueue["motorsingle_direction"];
+						delete Entry.hw.sendQueue["motorsingle_value"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
+				
+				case "Finish":
 					return script.callReturn();
-				
-				// 범위 조정
-				motorSpeed = Math.max(motorSpeed, 0);
-				motorSpeed = Math.min(motorSpeed, 4096);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("motorsingle_target", motorIndex);
-				Entry.hw.setDigitalPortValue("motorsingle_direction", motorDirection);
-				Entry.hw.setDigitalPortValue("motorsingle_value", motorSpeed);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["motorsingle_target"];
-				delete Entry.hw.sendQueue["motorsingle_direction"];
-				delete Entry.hw.sendQueue["motorsingle_value"];
-				
-				return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26263,29 +26344,46 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("command_command", 0x10);		// 0x10 : CommandType::ModeVehicle
-				Entry.hw.setDigitalPortValue("command_option", 0x20);		// 0x10 : Mode::Vehicle::Drive
+				return Entry.byrobot_dronefighter.setModeVehicle(script, 0x20);		// 0x20 : Mode::Vehicle::Drive
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("command_command", 0x10);		// 0x10 : CommandType::ModeVehicle
+						Entry.hw.setDigitalPortValue("command_option", 0x20);		// 0x20 : Mode::Vehicle::Drive
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["command_command"];
+						delete Entry.hw.sendQueue["command_option"];
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("control_wheel", 0);
+						Entry.hw.setDigitalPortValue("control_accel", 0);
+
+						Entry.hw.update();
+
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["control_wheel"];
+						delete Entry.hw.sendQueue["control_accel"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("control_wheel", 0);
-				Entry.hw.setDigitalPortValue("control_accel", 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["control_wheel"];
-				delete Entry.hw.sendQueue["control_accel"];
-				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26316,18 +26414,35 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("command_command", 0x24);		// 0x24: CommandType::Stop
-				Entry.hw.setDigitalPortValue("command_option", 0x00);
-				
-				Entry.hw.update();
+				return Entry.byrobot_dronefighter.sendStop(script);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("command_command", 0x24);		// 0x24: CommandType::Stop
+						Entry.hw.setDigitalPortValue("command_option", 0x00);
+						
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["command_command"];
+						delete Entry.hw.sendQueue["command_option"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26342,10 +26457,10 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
-						[Lang.Blocks.byrobot_dronefighter_drone_control_double_wheel,			"direction"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_double_accel_forward,	"forward"]
+						[Lang.Blocks.byrobot_dronefighter_drone_control_double_wheel,			"control_wheel"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_double_accel_forward,	"control_accel"]
 					],
-					"value": "forward",
+					"value": "control_accel",
 					"fontSize": 11
 				},
 				{
@@ -26371,54 +26486,77 @@ Entry.block = {
 				"type": "byrobot_dronefighter_drone_control_double_one"
 			},
         "paramsKeyMap": {
-				"DIRECTION":	0,
-				"VALUE":		1
+				"CONTROLTARGET"	: 0,
+				"VALUE"			: 1
 			},
         "class": "byrobot_dronefighter_control_drive",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var direction	= script.getField('DIRECTION');
-				var value		= parseInt(script.getNumberValue("VALUE", script));
+				var controlTarget	= script.getField('CONTROLTARGET');
+				var value			= parseInt(script.getNumberValue("VALUE", script));
 				
-				switch(direction)
-				{
-				case "direction":
-					{
-						// 범위 조정
-						value = Math.max(value, -100);
-						value = Math.min(value, 100);
+				return Entry.byrobot_dronefighter.sendControlDoubleSingle(script, controlTarget, value, 0, false);
+				
 						
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_wheel", value);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_wheel"];
-					}
-					break;
-					
-				case "forward":
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
 					{
-						// 범위 조정
-						value = Math.max(value, 0);
-						value = Math.min(value, 100);
+						var direction	= script.getField('DIRECTION');
+						var value		= parseInt(script.getNumberValue("VALUE", script));
+						
+						switch(direction)
+						{
+						case "direction":
+							{
+								// 범위 조정
+								value = Math.max(value, -100);
+								value = Math.min(value, 100);
+								
+								// 전송
+								Entry.hw.setDigitalPortValue("target", 0x10);
+								Entry.hw.setDigitalPortValue("control_wheel", value);
+
+								Entry.hw.update();
+
+								delete Entry.hw.sendQueue["target"];
+								delete Entry.hw.sendQueue["control_wheel"];
+							}
+							break;
 							
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_accel", value);
+						case "forward":
+							{
+								// 범위 조정
+								value = Math.max(value, 0);
+								value = Math.min(value, 100);
+									
+								// 전송
+								Entry.hw.setDigitalPortValue("target", 0x10);
+								Entry.hw.setDigitalPortValue("control_accel", value);
 
-						Entry.hw.update();
+								Entry.hw.update();
 
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_accel"];
+								delete Entry.hw.sendQueue["target"];
+								delete Entry.hw.sendQueue["control_accel"];
+							}
+							break;
+						}
 					}
-					break;
-				}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26433,10 +26571,10 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
-						[Lang.Blocks.byrobot_dronefighter_drone_control_double_wheel,			"direction"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_double_accel_forward,	"forward"]
+						[Lang.Blocks.byrobot_dronefighter_drone_control_double_wheel,			"control_wheel"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_double_accel_forward,	"control_accel"]
 					],
-					"value": "forward",
+					"value": "control_accel",
 					"fontSize": 11
 				},
 				{
@@ -26470,18 +26608,23 @@ Entry.block = {
 				"type": "byrobot_dronefighter_drone_control_double_one_delay"
 			},
         "paramsKeyMap": {
-				"DIRECTION"	: 0,
-				"VALUE"		: 1,
-				"TIME"		: 2
+				"CONTROLTARGET"	: 0,
+				"VALUE"			: 1,
+				"TIME"			: 2
 			},
         "class": "byrobot_dronefighter_control_drive",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				if (!script.isStart)
+				var controlTarget	= script.getField('CONTROLTARGET');
+				var value			= parseInt(script.getNumberValue("VALUE", script));
+				var time			= parseInt(script.getNumberValue('TIME', script) * 1000);
+				
+				return Entry.byrobot_dronefighter.sendControlDoubleSingle(script, controlTarget, value, time, true);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, parseInt(script.getNumberValue('TIME') * 1000)) )
 				{
-					var timeValue;
-					
+				case "Start":
 					// 데이터 전송
 					{
 						var direction	= script.getField('DIRECTION');
@@ -26524,66 +26667,52 @@ Entry.block = {
 							}
 							break;
 						}
-						
-						timeValue = time;
 					}
-					
-					script.isStart = true;
-					script.timeFlag = 1;
-					
-					var fps = Entry.FPS || 60;					
-					timeValue = (60 / fps) * timeValue;
-					
-					setTimeout(function()
-					{
-						script.timeFlag = 0;
-					}, timeValue);
-					
 					return script;
-				}
-				else if (script.timeFlag == 1)
-				{
-					return script;
-				}
-				else
-				{
-					var direction	= script.getField('DIRECTION');
 					
-					// 블럭을 빠져나갈 때 변경했던 값을 초기화
-					switch(direction)
+				case "Running":
+					return script;
+				
+				case "Finish":
 					{
-					case "direction":
-						{
-							// 전송
-							Entry.hw.setDigitalPortValue("target", 0x10);
-							Entry.hw.setDigitalPortValue("control_wheel", 0);
-
-							Entry.hw.update();
-
-							delete Entry.hw.sendQueue["target"];
-							delete Entry.hw.sendQueue["control_wheel"];
-						}
-						break;
+						var direction	= script.getField('DIRECTION');
 						
-					case "forward":
+						// 블럭을 빠져나갈 때 변경했던 값을 초기화
+						switch(direction)
 						{
-							// 전송
-							Entry.hw.setDigitalPortValue("target", 0x10);
-							Entry.hw.setDigitalPortValue("control_accel", 0);
+						case "direction":
+							{
+								// 전송
+								Entry.hw.setDigitalPortValue("target", 0x10);
+								Entry.hw.setDigitalPortValue("control_wheel", 0);
 
-							Entry.hw.update();
+								Entry.hw.update();
 
-							delete Entry.hw.sendQueue["target"];
-							delete Entry.hw.sendQueue["control_accel"];
+								delete Entry.hw.sendQueue["target"];
+								delete Entry.hw.sendQueue["control_wheel"];
+							}
+							break;
+							
+						case "forward":
+							{
+								// 전송
+								Entry.hw.setDigitalPortValue("target", 0x10);
+								Entry.hw.setDigitalPortValue("control_accel", 0);
+
+								Entry.hw.update();
+
+								delete Entry.hw.sendQueue["target"];
+								delete Entry.hw.sendQueue["control_accel"];
+							}
+							break;
 						}
-						break;
 					}
+					return script.callReturn();
 					
-					delete script.timeFlag;
-					delete script.isStart;
-					Entry.engine.isContinue = false;
+				default:
 					return script.callReturn();
 				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26634,25 +26763,46 @@ Entry.block = {
 			{
 				var wheel		= parseInt(script.getNumberValue("WHEEL", script));
 				var accel		= parseInt(script.getNumberValue("ACCEL", script));
+				return Entry.byrobot_dronefighter.sendControlDouble(script, wheel, accel, 0, false);
 				
-				// 범위 조정
-				wheel		= Math.max(wheel, -100);
-				wheel		= Math.min(wheel, 100);
-				accel		= Math.max(accel, 0);
-				accel		= Math.min(accel, 100);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("control_wheel", wheel);
-				Entry.hw.setDigitalPortValue("control_accel", accel);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var wheel		= parseInt(script.getNumberValue("WHEEL", script));
+						var accel		= parseInt(script.getNumberValue("ACCEL", script));
+						
+						// 범위 조정
+						wheel		= Math.max(wheel, -100);
+						wheel		= Math.min(wheel, 100);
+						accel		= Math.max(accel, 0);
+						accel		= Math.min(accel, 100);
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("control_wheel", wheel);
+						Entry.hw.setDigitalPortValue("control_accel", accel);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["control_wheel"];
-				delete Entry.hw.sendQueue["control_accel"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["control_wheel"];
+						delete Entry.hw.sendQueue["control_accel"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26683,33 +26833,51 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("command_command", 0x10);		// 0x10 : CommandType::ModeVehicle
-				Entry.hw.setDigitalPortValue("command_option", 0x10);		// 0x10 : Mode::Vehicle::Flight
+				return Entry.byrobot_dronefighter.setModeVehicle(script, 0x10);		// 0x10 : Mode::Vehicle::Flight
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("command_command", 0x10);		// 0x10 : CommandType::ModeVehicle
+						Entry.hw.setDigitalPortValue("command_option", 0x10);		// 0x10 : Mode::Vehicle::Flight
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["command_command"];
+						delete Entry.hw.sendQueue["command_option"];
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("control_roll", 0);
+						Entry.hw.setDigitalPortValue("control_pitch", 0);
+						Entry.hw.setDigitalPortValue("control_yaw", 0);
+						Entry.hw.setDigitalPortValue("control_throttle", 0);
+
+						Entry.hw.update();
+
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["control_roll"];
+						delete Entry.hw.sendQueue["control_pitch"];
+						delete Entry.hw.sendQueue["control_yaw"];
+						delete Entry.hw.sendQueue["control_throttle"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("control_roll", 0);
-				Entry.hw.setDigitalPortValue("control_pitch", 0);
-				Entry.hw.setDigitalPortValue("control_yaw", 0);
-				Entry.hw.setDigitalPortValue("control_throttle", 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["control_roll"];
-				delete Entry.hw.sendQueue["control_pitch"];
-				delete Entry.hw.sendQueue["control_yaw"];
-				delete Entry.hw.sendQueue["control_throttle"];
-				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26740,33 +26908,51 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("command_command", 0x22);		// 0x22 : CommandType::FlightEvent
-				Entry.hw.setDigitalPortValue("command_option", 0x11);		// 0x11 : FlightEvent::TakeOff
+				return Entry.byrobot_dronefighter.setEventFlight(script, 0x11, 200);	// 0x11 : FlightEvent::TakeOff
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("command_command", 0x22);		// 0x22 : CommandType::FlightEvent
+						Entry.hw.setDigitalPortValue("command_option", 0x11);		// 0x11 : FlightEvent::TakeOff
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["command_command"];
+						delete Entry.hw.sendQueue["command_option"];
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("control_roll", 0);
+						Entry.hw.setDigitalPortValue("control_pitch", 0);
+						Entry.hw.setDigitalPortValue("control_yaw", 0);
+						Entry.hw.setDigitalPortValue("control_throttle", 0);
+
+						Entry.hw.update();
+
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["control_roll"];
+						delete Entry.hw.sendQueue["control_pitch"];
+						delete Entry.hw.sendQueue["control_yaw"];
+						delete Entry.hw.sendQueue["control_throttle"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("control_roll", 0);
-				Entry.hw.setDigitalPortValue("control_pitch", 0);
-				Entry.hw.setDigitalPortValue("control_yaw", 0);
-				Entry.hw.setDigitalPortValue("control_throttle", 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["control_roll"];
-				delete Entry.hw.sendQueue["control_pitch"];
-				delete Entry.hw.sendQueue["control_yaw"];
-				delete Entry.hw.sendQueue["control_throttle"];
-				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26797,33 +26983,51 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("command_command", 0x22);		// 0x22 : CommandType::FlightEvent
-				Entry.hw.setDigitalPortValue("command_option", 0x12);		// 0x12 : FlightEvent::Landing
+				return Entry.byrobot_dronefighter.setEventFlight(script, 0x12, 200);	// 0x12 : FlightEvent::Landing
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("command_command", 0x22);		// 0x22 : CommandType::FlightEvent
+						Entry.hw.setDigitalPortValue("command_option", 0x12);		// 0x12 : FlightEvent::Landing
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["command_command"];
+						delete Entry.hw.sendQueue["command_option"];
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("control_roll", 0);
+						Entry.hw.setDigitalPortValue("control_pitch", 0);
+						Entry.hw.setDigitalPortValue("control_yaw", 0);
+						Entry.hw.setDigitalPortValue("control_throttle", 0);
+
+						Entry.hw.update();
+
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["control_roll"];
+						delete Entry.hw.sendQueue["control_pitch"];
+						delete Entry.hw.sendQueue["control_yaw"];
+						delete Entry.hw.sendQueue["control_throttle"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("control_roll", 0);
-				Entry.hw.setDigitalPortValue("control_pitch", 0);
-				Entry.hw.setDigitalPortValue("control_yaw", 0);
-				Entry.hw.setDigitalPortValue("control_throttle", 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["control_roll"];
-				delete Entry.hw.sendQueue["control_pitch"];
-				delete Entry.hw.sendQueue["control_yaw"];
-				delete Entry.hw.sendQueue["control_throttle"];
-				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26854,18 +27058,35 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("command_command", 0x24);		// 0x24: CommandType::Stop
-				Entry.hw.setDigitalPortValue("command_option", 0x00);
+				return Entry.byrobot_dronefighter.sendStop(script);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("command_command", 0x24);		// 0x24: CommandType::Stop
+						Entry.hw.setDigitalPortValue("command_option", 0x00);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["command_command"];
+						delete Entry.hw.sendQueue["command_option"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26907,20 +27128,39 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var coordinate		= script.getField('COORDINATE');
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("command_command", 0x20);		// 0x20 : CommandType::Coordinate
-				Entry.hw.setDigitalPortValue("command_option", coordinate);	
+				var coordinate = script.getField('COORDINATE');
+				return Entry.byrobot_dronefighter.sendCommand(script, 0x10, 0x20, coordinate);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var coordinate		= script.getField('COORDINATE');
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("command_command", 0x20);		// 0x20 : CommandType::Coordinate
+						Entry.hw.setDigitalPortValue("command_option", coordinate);	
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["command_command"];
+						delete Entry.hw.sendQueue["command_option"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26951,18 +27191,35 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("command_command", 0x22);		// 0x22 : CommandType::FlightEvent
-				Entry.hw.setDigitalPortValue("command_option", 0xA0);		// 0xA0 : FlightEvent::ResetHeading
+				return Entry.byrobot_dronefighter.sendCommand(script, 0x10, 0x22, 0xA0);	// 0x22 : CommandType::FlightEvent	// 0xA0 : FlightEvent::ResetHeading
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("command_command", 0x22);		// 0x22 : CommandType::FlightEvent
+						Entry.hw.setDigitalPortValue("command_option", 0xA0);		// 0xA0 : FlightEvent::ResetHeading
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["command_command"];
+						delete Entry.hw.sendQueue["command_option"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -26977,12 +27234,12 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_roll,		"roll"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_pitch,		"pitch"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_yaw,		"yaw"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_throttle,	"throttle"]
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_roll,		"control_roll"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_pitch,		"control_pitch"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_yaw,		"control_yaw"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_throttle,	"control_throttle"]
 					],
-					"value": "roll",
+					"value": "control_throttle",
 					"fontSize": 11
 				},
 				{
@@ -27008,76 +27265,97 @@ Entry.block = {
 				"type": "byrobot_dronefighter_drone_control_quad_one"
 			},
         "paramsKeyMap": {
-				"DIRECTION":	0,
-				"VALUE":		1
+				"CONTROLTARGET"	: 0,
+				"VALUE"			: 1
 			},
         "class": "byrobot_dronefighter_control_flight",
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var direction	= script.getField('DIRECTION');
-				var value		= parseInt(script.getNumberValue("VALUE", script));
+				var controlTarget	= script.getField('CONTROLTARGET');
+				var value			= parseInt(script.getNumberValue("VALUE", script));
 				
-				// 범위 조정
-				value		= Math.max(value, -100);
-				value		= Math.min(value, 100);
-				
-				switch(direction)
+				return Entry.byrobot_dronefighter.sendControlQuadSingle(script, controlTarget, value, 0, false);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
 				{
-				case "roll":
+				case "Start":
+					// 데이터 전송
 					{
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_roll", value);
+						var direction	= script.getField('DIRECTION');
+						var value		= parseInt(script.getNumberValue("VALUE", script));
+						
+						// 범위 조정
+						value		= Math.max(value, -100);
+						value		= Math.min(value, 100);
+						
+						switch(direction)
+						{
+						case "roll":
+							{
+								// 전송
+								Entry.hw.setDigitalPortValue("target", 0x10);
+								Entry.hw.setDigitalPortValue("control_roll", value);
 
-						Entry.hw.update();
+								Entry.hw.update();
 
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_roll"];
+								delete Entry.hw.sendQueue["target"];
+								delete Entry.hw.sendQueue["control_roll"];
+							}
+							break;
+							
+						case "pitch":
+							{
+								// 전송
+								Entry.hw.setDigitalPortValue("target", 0x10);
+								Entry.hw.setDigitalPortValue("control_pitch", value);
+
+								Entry.hw.update();
+
+								delete Entry.hw.sendQueue["target"];
+								delete Entry.hw.sendQueue["control_pitch"];
+							}
+							break;
+							
+						case "yaw":
+							{
+								// 전송
+								Entry.hw.setDigitalPortValue("target", 0x10);
+								Entry.hw.setDigitalPortValue("control_yaw", value);
+
+								Entry.hw.update();
+
+								delete Entry.hw.sendQueue["target"];
+								delete Entry.hw.sendQueue["control_yaw"];
+							}
+							break;
+							
+						case "throttle":
+							{
+								// 전송
+								Entry.hw.setDigitalPortValue("target", 0x10);
+								Entry.hw.setDigitalPortValue("control_throttle", value);
+
+								Entry.hw.update();
+
+								delete Entry.hw.sendQueue["target"];
+								delete Entry.hw.sendQueue["control_throttle"];	
+							}
+							break;
+						}
 					}
-					break;
+					return script;
 					
-				case "pitch":
-					{
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_pitch", value);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_pitch"];
-					}
-					break;
-					
-				case "yaw":
-					{
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_yaw", value);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_yaw"];
-					}
-					break;
-					
-				case "throttle":
-					{
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_throttle", value);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_throttle"];	
-					}
-					break;
-				}
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -27092,10 +27370,10 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_roll,		"roll"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_pitch,		"pitch"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_yaw,		"yaw"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_throttle,	"throttle"]
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_roll,		"control_roll"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_pitch,		"control_pitch"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_yaw,		"control_yaw"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_throttle,	"control_throttle"]
 					],
 					"value": "roll",
 					"fontSize": 11
@@ -27131,7 +27409,7 @@ Entry.block = {
 				"type": "byrobot_dronefighter_drone_control_quad_one_delay"
 			},
         "paramsKeyMap": {
-				"DIRECTION"	: 0,
+				"CONTROLTARGET"	: 0,
 				"VALUE"		: 1,
 				"TIME"		: 2
 			},
@@ -27139,10 +27417,15 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				if (!script.isStart)
+				var controlTarget	= script.getField('CONTROLTARGET');
+				var value			= parseInt(script.getNumberValue("VALUE", script));
+				var time			= parseInt(script.getNumberValue("TIME", script) * 1000);
+				
+				return Entry.byrobot_dronefighter.sendControlQuadSingle(script, controlTarget, value, time, true);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, parseInt(script.getNumberValue("TIME", script) * 1000)) )
 				{
-					var timeValue;
-					
+				case "Start":
 					// 데이터 전송
 					{
 						var direction	= script.getField('DIRECTION');
@@ -27207,91 +27490,77 @@ Entry.block = {
 							}
 							break;
 						}
-						
-						timeValue = time;
 					}
-					
-					script.isStart = true;
-					script.timeFlag = 1;
-					
-					var fps = Entry.FPS || 60;					
-					timeValue = (60 / fps) * timeValue;
-					
-					setTimeout(function()
-					{
-						script.timeFlag = 0;
-					}, timeValue);
-					
 					return script;
-				}
-				else if (script.timeFlag == 1)
-				{
-					return script;
-				}
-				else
-				{
-					var direction	= script.getField('DIRECTION');
 					
-					switch(direction)
+				case "Running":
+					return script;
+				
+				case "Finish":
 					{
-					case "roll":
-						{
-							// 전송
-							Entry.hw.setDigitalPortValue("target", 0x10);
-							Entry.hw.setDigitalPortValue("control_roll", 0);
-
-							Entry.hw.update();
-
-							delete Entry.hw.sendQueue["target"];
-							delete Entry.hw.sendQueue["control_roll"];
-						}
-						break;
+						var direction	= script.getField('DIRECTION');
 						
-					case "pitch":
+						switch(direction)
 						{
-							// 전송
-							Entry.hw.setDigitalPortValue("target", 0x10);
-							Entry.hw.setDigitalPortValue("control_pitch", 0);
+						case "roll":
+							{
+								// 전송
+								Entry.hw.setDigitalPortValue("target", 0x10);
+								Entry.hw.setDigitalPortValue("control_roll", 0);
 
-							Entry.hw.update();
+								Entry.hw.update();
 
-							delete Entry.hw.sendQueue["target"];
-							delete Entry.hw.sendQueue["control_pitch"];
+								delete Entry.hw.sendQueue["target"];
+								delete Entry.hw.sendQueue["control_roll"];
+							}
+							break;
+							
+						case "pitch":
+							{
+								// 전송
+								Entry.hw.setDigitalPortValue("target", 0x10);
+								Entry.hw.setDigitalPortValue("control_pitch", 0);
+
+								Entry.hw.update();
+
+								delete Entry.hw.sendQueue["target"];
+								delete Entry.hw.sendQueue["control_pitch"];
+							}
+							break;
+							
+						case "yaw":
+							{
+								// 전송
+								Entry.hw.setDigitalPortValue("target", 0x10);
+								Entry.hw.setDigitalPortValue("control_yaw", 0);
+
+								Entry.hw.update();
+
+								delete Entry.hw.sendQueue["target"];
+								delete Entry.hw.sendQueue["control_yaw"];
+							}
+							break;
+							
+						case "throttle":
+							{
+								// 전송
+								Entry.hw.setDigitalPortValue("target", 0x10);
+								Entry.hw.setDigitalPortValue("control_throttle", 0);
+
+								Entry.hw.update();
+
+								delete Entry.hw.sendQueue["target"];
+								delete Entry.hw.sendQueue["control_throttle"];	
+							}
+							break;
 						}
-						break;
-						
-					case "yaw":
-						{
-							// 전송
-							Entry.hw.setDigitalPortValue("target", 0x10);
-							Entry.hw.setDigitalPortValue("control_yaw", 0);
-
-							Entry.hw.update();
-
-							delete Entry.hw.sendQueue["target"];
-							delete Entry.hw.sendQueue["control_yaw"];
-						}
-						break;
-						
-					case "throttle":
-						{
-							// 전송
-							Entry.hw.setDigitalPortValue("target", 0x10);
-							Entry.hw.setDigitalPortValue("control_throttle", 0);
-
-							Entry.hw.update();
-
-							delete Entry.hw.sendQueue["target"];
-							delete Entry.hw.sendQueue["control_throttle"];	
-						}
-						break;
 					}
+					return script.callReturn();
 					
-					delete script.timeFlag;
-					delete script.isStart;
-					Entry.engine.isContinue = false;
+				default:
 					return script.callReturn();
 				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -27363,32 +27632,55 @@ Entry.block = {
 				var yaw			= parseInt(script.getNumberValue("YAW", script));
 				var throttle	= parseInt(script.getNumberValue("THROTTLE", script));
 				
-				// 범위 조정
-				roll		= Math.max(roll,		-100);
-				roll		= Math.min(roll,		 100);
-				pitch		= Math.max(pitch,		-100);
-				pitch		= Math.min(pitch,		 100);
-				yaw			= Math.max(yaw,			-100);
-				yaw			= Math.min(yaw,			 100);
-				throttle	= Math.max(throttle,	-100);
-				throttle	= Math.min(throttle,	 100);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("control_roll", roll);
-				Entry.hw.setDigitalPortValue("control_pitch", pitch);
-				Entry.hw.setDigitalPortValue("control_yaw", yaw);
-				Entry.hw.setDigitalPortValue("control_throttle", throttle);
+				return Entry.byrobot_dronefighter.sendControlQuad(script, roll, pitch, yaw, throttle, 0, false);
+				/*
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var roll		= parseInt(script.getNumberValue("ROLL", script));
+						var pitch		= parseInt(script.getNumberValue("PITCH", script));
+						var yaw			= parseInt(script.getNumberValue("YAW", script));
+						var throttle	= parseInt(script.getNumberValue("THROTTLE", script));
+						
+						// 범위 조정
+						roll		= Math.max(roll,		-100);
+						roll		= Math.min(roll,		 100);
+						pitch		= Math.max(pitch,		-100);
+						pitch		= Math.min(pitch,		 100);
+						yaw			= Math.max(yaw,			-100);
+						yaw			= Math.min(yaw,			 100);
+						throttle	= Math.max(throttle,	-100);
+						throttle	= Math.min(throttle,	 100);
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("control_roll", roll);
+						Entry.hw.setDigitalPortValue("control_pitch", pitch);
+						Entry.hw.setDigitalPortValue("control_yaw", yaw);
+						Entry.hw.setDigitalPortValue("control_throttle", throttle);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["control_roll"];
-				delete Entry.hw.sendQueue["control_pitch"];
-				delete Entry.hw.sendQueue["control_yaw"];
-				delete Entry.hw.sendQueue["control_throttle"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["control_roll"];
+						delete Entry.hw.sendQueue["control_pitch"];
+						delete Entry.hw.sendQueue["control_yaw"];
+						delete Entry.hw.sendQueue["control_throttle"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
+				*/
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.control(%1, %2, %3, %4)"]}
     },
@@ -27688,18 +27980,32 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter_controller" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("light_manual_flags", 0xff);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", 0);
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("light_manual_flags", 0xff);
+						Entry.hw.setDigitalPortValue("light_manual_brightness", 0);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["light_manual_flags"];
+						delete Entry.hw.sendQueue["light_manual_brightness"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -27763,21 +28069,36 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter_controller" ],
         "func": function (sprite, script)
 			{
-				var target		= script.getField('TARGET');
-				var brightness	= script.getField('BRIGHTNESS');
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("light_manual_flags", target);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var target		= script.getField('TARGET');
+						var brightness	= script.getField('BRIGHTNESS');
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("light_manual_flags", target);
+						Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["light_manual_flags"];
+						delete Entry.hw.sendQueue["light_manual_brightness"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -27826,28 +28147,43 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter_controller" ],
         "func": function (sprite, script)
 			{
-				var target		= script.getNumberValue('TARGET');
-				var brightness	= script.getNumberValue('BRIGHTNESS');
-		
-				// 범위 조정
-				target = Math.max(target, 0);
-				target = Math.min(target, 255);
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var target		= script.getNumberValue('TARGET');
+						var brightness	= script.getNumberValue('BRIGHTNESS');
 				
-				brightness = Math.max(brightness, 0);
-				brightness = Math.min(brightness, 255);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("light_manual_flags", target);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
+						// 범위 조정
+						target = Math.max(target, 0);
+						target = Math.min(target, 255);
+						
+						brightness = Math.max(brightness, 0);
+						brightness = Math.min(brightness, 255);
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("light_manual_flags", target);
+						Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["light_manual_flags"];
+						delete Entry.hw.sendQueue["light_manual_brightness"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -27878,18 +28214,32 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter_controller" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("light_manual_flags", 0xff);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", 0);
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("light_manual_flags", 0xff);
+						Entry.hw.setDigitalPortValue("light_manual_brightness", 0);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["light_manual_flags"];
+						delete Entry.hw.sendQueue["light_manual_brightness"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -27951,21 +28301,36 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter_controller" ],
         "func": function (sprite, script)
 			{
-				var target		= script.getField('TARGET');
-				var brightness	= script.getField('BRIGHTNESS');
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("light_manual_flags", target);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var target		= script.getField('TARGET');
+						var brightness	= script.getField('BRIGHTNESS');
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("light_manual_flags", target);
+						Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["light_manual_flags"];
+						delete Entry.hw.sendQueue["light_manual_brightness"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -28014,28 +28379,43 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter_controller" ],
         "func": function (sprite, script)
 			{
-				var target		= script.getNumberValue('TARGET');
-				var brightness	= script.getNumberValue('BRIGHTNESS');
-		
-				// 범위 조정
-				target = Math.max(target, 0);
-				target = Math.min(target, 255);
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var target		= script.getNumberValue('TARGET');
+						var brightness	= script.getNumberValue('BRIGHTNESS');
 				
-				brightness = Math.max(brightness, 0);
-				brightness = Math.min(brightness, 255);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("light_manual_flags", target);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
+						// 범위 조정
+						target = Math.max(target, 0);
+						target = Math.min(target, 255);
+						
+						brightness = Math.max(brightness, 0);
+						brightness = Math.min(brightness, 255);
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("light_manual_flags", target);
+						Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["light_manual_flags"];
+						delete Entry.hw.sendQueue["light_manual_brightness"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -28066,24 +28446,39 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter_controller" ],
         "func": function (sprite, script)
 			{
-				var mode		= 0;	// Stop
-				var scale		= 0;
-				var time		= 0;
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var mode		= 0;	// Stop
+						var scale		= 0;
+						var time		= 0;
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("buzzer_mode", mode);
+						Entry.hw.setDigitalPortValue("buzzer_value", scale);
+						Entry.hw.setDigitalPortValue("buzzer_time", time);
+
+						Entry.hw.update();
+
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["buzzer_mode"];
+						delete Entry.hw.sendQueue["buzzer_value"];
+						delete Entry.hw.sendQueue["buzzer_time"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("buzzer_mode", mode);
-				Entry.hw.setDigitalPortValue("buzzer_value", scale);
-				Entry.hw.setDigitalPortValue("buzzer_time", time);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["buzzer_mode"];
-				delete Entry.hw.sendQueue["buzzer_value"];
-				delete Entry.hw.sendQueue["buzzer_time"];
-			
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -28263,10 +28658,9 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter_controller" ],
         "func": function (sprite, script)
 			{
-				if (!script.isStart)
+				switch( Entry.byrobot_dronefighter.checkFinish(script, parseInt(script.getNumberValue('TIME') * 1000)) )
 				{
-					var timeValue;
-					
+				case "Start":
 					// 데이터 전송
 					{
 						var mode		= 0;
@@ -28302,35 +28696,21 @@ Entry.block = {
 						delete Entry.hw.sendQueue["buzzer_mode"];
 						delete Entry.hw.sendQueue["buzzer_value"];
 						delete Entry.hw.sendQueue["buzzer_time"];
-				
-						timeValue = time;
 					}
-					
-					script.isStart = true;
-					script.timeFlag = 1;
-					
-					var fps = Entry.FPS || 60;					
-					timeValue = (60 / fps) * timeValue;
-					
-					setTimeout(function()
-					{
-						script.timeFlag = 0;
-					}, timeValue);
-					
 					return script;
-				}
-				else if (script.timeFlag == 1)
-				{
+					
+				case "Running":
 					return script;
-				}
-				else
-				{
-					delete script.timeFlag;
-					delete script.isStart;
-					Entry.engine.isContinue = false;
+				
+				case "Finish":
+					return script.callReturn();
+					
+				default:
 					return script.callReturn();
 				}
+				
 			},
+			
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
 	// */
@@ -30818,18 +31198,32 @@ Entry.block = {
         "isNotFor": [ "byrobot_petrone" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("light_manual_flags", 0xff);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", 0);
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("light_manual_flags", 0xff);
+						Entry.hw.setDigitalPortValue("light_manual_brightness", 0);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["light_manual_flags"];
+						delete Entry.hw.sendQueue["light_manual_brightness"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -30893,21 +31287,36 @@ Entry.block = {
         "isNotFor": [ "byrobot_petrone" ],
         "func": function (sprite, script)
 			{
-				var target		= script.getField('TARGET');
-				var brightness	= script.getField('BRIGHTNESS');
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("light_manual_flags", target);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var target		= script.getField('TARGET');
+						var brightness	= script.getField('BRIGHTNESS');
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("light_manual_flags", target);
+						Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["light_manual_flags"];
+						delete Entry.hw.sendQueue["light_manual_brightness"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -30956,28 +31365,43 @@ Entry.block = {
         "isNotFor": [ "byrobot_petrone" ],
         "func": function (sprite, script)
 			{
-				var target		= script.getNumberValue('TARGET');
-				var brightness	= script.getNumberValue('BRIGHTNESS');
-		
-				// 범위 조정
-				target = Math.max(target, 0);
-				target = Math.min(target, 255);
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var target		= script.getNumberValue('TARGET');
+						var brightness	= script.getNumberValue('BRIGHTNESS');
 				
-				brightness = Math.max(brightness, 0);
-				brightness = Math.min(brightness, 255);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("light_manual_flags", target);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
+						// 범위 조정
+						target = Math.max(target, 0);
+						target = Math.min(target, 255);
+						
+						brightness = Math.max(brightness, 0);
+						brightness = Math.min(brightness, 255);
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("light_manual_flags", target);
+						Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["light_manual_flags"];
+						delete Entry.hw.sendQueue["light_manual_brightness"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -31008,18 +31432,32 @@ Entry.block = {
         "isNotFor": [ "byrobot_petrone" ],
         "func": function (sprite, script)
 			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("light_manual_flags", 0xff);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", 0);
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("light_manual_flags", 0xff);
+						Entry.hw.setDigitalPortValue("light_manual_brightness", 0);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["light_manual_flags"];
+						delete Entry.hw.sendQueue["light_manual_brightness"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -31081,21 +31519,36 @@ Entry.block = {
         "isNotFor": [ "byrobot_petrone" ],
         "func": function (sprite, script)
 			{
-				var target		= script.getField('TARGET');
-				var brightness	= script.getField('BRIGHTNESS');
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("light_manual_flags", target);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var target		= script.getField('TARGET');
+						var brightness	= script.getField('BRIGHTNESS');
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("light_manual_flags", target);
+						Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["light_manual_flags"];
+						delete Entry.hw.sendQueue["light_manual_brightness"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -31144,28 +31597,43 @@ Entry.block = {
         "isNotFor": [ "byrobot_petrone" ],
         "func": function (sprite, script)
 			{
-				var target		= script.getNumberValue('TARGET');
-				var brightness	= script.getNumberValue('BRIGHTNESS');
-		
-				// 범위 조정
-				target = Math.max(target, 0);
-				target = Math.min(target, 255);
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var target		= script.getNumberValue('TARGET');
+						var brightness	= script.getNumberValue('BRIGHTNESS');
 				
-				brightness = Math.max(brightness, 0);
-				brightness = Math.min(brightness, 255);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("light_manual_flags", target);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
+						// 범위 조정
+						target = Math.max(target, 0);
+						target = Math.min(target, 255);
+						
+						brightness = Math.max(brightness, 0);
+						brightness = Math.min(brightness, 255);
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x10);
+						Entry.hw.setDigitalPortValue("light_manual_flags", target);
+						Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
 
-				Entry.hw.update();
+						Entry.hw.update();
 
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["light_manual_flags"];
+						delete Entry.hw.sendQueue["light_manual_brightness"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
@@ -31196,24 +31664,39 @@ Entry.block = {
         "isNotFor": [ "byrobot_petrone" ],
         "func": function (sprite, script)
 			{
-				var mode		= 0;	// Stop
-				var scale		= 0;
-				var time		= 0;
+				switch( Entry.byrobot_dronefighter.checkFinish(script, 40) )
+				{
+				case "Start":
+					// 데이터 전송
+					{
+						var mode		= 0;	// Stop
+						var scale		= 0;
+						var time		= 0;
+						
+						// 전송
+						Entry.hw.setDigitalPortValue("target", 0x11);
+						Entry.hw.setDigitalPortValue("buzzer_mode", mode);
+						Entry.hw.setDigitalPortValue("buzzer_value", scale);
+						Entry.hw.setDigitalPortValue("buzzer_time", time);
+
+						Entry.hw.update();
+
+						delete Entry.hw.sendQueue["target"];
+						delete Entry.hw.sendQueue["buzzer_mode"];
+						delete Entry.hw.sendQueue["buzzer_value"];
+						delete Entry.hw.sendQueue["buzzer_time"];
+					}
+					return script;
+					
+				case "Running":
+					return script;
 				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("buzzer_mode", mode);
-				Entry.hw.setDigitalPortValue("buzzer_value", scale);
-				Entry.hw.setDigitalPortValue("buzzer_time", time);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["buzzer_mode"];
-				delete Entry.hw.sendQueue["buzzer_value"];
-				delete Entry.hw.sendQueue["buzzer_time"];
-			
-				return script.callReturn();
+				case "Finish":
+					return script.callReturn();
+					
+				default:
+					return script.callReturn();
+				}
 			},
         //"syntax": {"js": [], "py": ["byrobot_dronefighter.ledEventColor(%1, %2, %3)"]}
     },
