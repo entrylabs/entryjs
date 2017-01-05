@@ -107,7 +107,7 @@ p.connectWebSocket = function(url, option) {
 
     socket.on('disconnect', function() {
         hw.initSocket();
-    }); 
+    });
 
     return socket;
 }
@@ -120,21 +120,21 @@ p.initSocket = function() {
 
         if(this.tlsSocketIo) {
             this.tlsSocketIo.removeAllListeners();
-        }        
+        }
         if(this.socketIo) {
             this.socketIo.removeAllListeners();
         }
-        
+
         if(!this.isOpenHardware) {
             this.checkOldClient();
         }
         if(location.protocol.indexOf('https') > -1) {
             this.tlsSocketIo = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{ 'client': true, 'roomId' : this.sessionRoomId } });
-        } 
+        }
         // 일단 보류(?)
         /*else if(Entry.isOffline){
             this.tlsSocketIo = this.connectWebSocket('http://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
-        }*/ 
+        }*/
         else {
             try {
                 this.socketIo = this.connectWebSocket('http://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
@@ -170,7 +170,7 @@ p.openHardwareProgram = function() {
     this.isOpenHardware = true;
     Entry.HW.TRIAL_LIMIT = 5;
     this.executeHardware();
-    
+
     if(!this.socket || !this.socket.connected) {
         setTimeout(function() {
             hw.initSocket();

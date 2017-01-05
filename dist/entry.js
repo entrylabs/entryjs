@@ -12187,10 +12187,11 @@ Entry.TextCodingError = {};
 Entry.PyHint = function(b) {
   this.syntax = b;
   this.scope = {};
+  this.lastHW = null;
   this.scope._global = [];
   this.scope._list = [];
   for (var a in b) {
-    b[a].syntax && 0 > a.indexOf("%") ? this.scope._global.push(a) : "if" === a.substr(0, 2) ? this.scope._global.push(a) : "while" === a.substr(0, 5) && this.scope._global.push(a);
+    b[a].syntax && 0 > a.indexOf("%") && 0 > b[a].key.indexOf("function_field") ? this.scope._global.push(a) : "if" === a.substr(0, 2) ? this.scope._global.push(a) : "while" === a.substr(0, 5) && this.scope._global.push(a);
   }
   this.addScope("Entry");
   this.addScope("random");
@@ -12199,7 +12200,7 @@ Entry.PyHint = function(b) {
   this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
   CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
   b = function(a) {
-    Entry.hw.hwModule && (a = Entry.hw.hwModule.name, a = a[0].toUpperCase() + a.slice(1), "ArduinoExt" === a && (a = "Arduino"), this.addScope(a));
+    Entry.hw.hwModule ? (a = Entry.hw.hwModule.name, a = a[0].toUpperCase() + a.slice(1), "ArduinoExt" === a && (a = "Arduino"), this.addScope(a), this.lastHW = a) : (this.removeScope(this.lastHW), this.lastHW = null);
   }.bind(this);
   Entry.addEventListener("hwChanged", b);
   Entry.hw.hwModule && b();
@@ -12261,6 +12262,9 @@ Entry.PyHint = function(b) {
       });
       this.scope._global = this.scope._global.concat(c);
     }
+  };
+  b.removeScope = function(a) {
+    this.scope[a] && (this.scope._global.splice(this.scope._global.indexOf(a), 1), delete this.scope[a]);
   };
   b.getScope = function(a) {
     return this.scope[a] ? this.scope[a] : [];

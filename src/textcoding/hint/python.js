@@ -11,11 +11,13 @@ goog.provide("Entry.PyHint");
 Entry.PyHint = function(syntax) {
     this.syntax = syntax;
     this.scope = {};
+    this.lastHW = null;
 
     this.scope._global = [];
     this.scope._list = [];
     for (var key in syntax) {
-        if (syntax[key].syntax && key.indexOf("%") < 0)
+        if (syntax[key].syntax && key.indexOf("%") < 0
+            && syntax[key].key.indexOf("function_field") < 0)
             this.scope._global.push(key)
         else if (key.substr(0, 2) === "if")
             this.scope._global.push(key)
@@ -37,6 +39,10 @@ Entry.PyHint = function(syntax) {
             name = name[0].toUpperCase() + name.slice(1);
             if (name === "ArduinoExt") name = "Arduino";
             this.addScope(name);
+            this.lastHW = name;
+        } else {
+            this.removeScope(this.lastHW);
+            this.lastHW = null;
         }
     }.bind(this);
     Entry.addEventListener('hwChanged', hwFunc);
@@ -156,6 +162,13 @@ Entry.PyHint = function(syntax) {
             this.scope._global = this.scope._global.concat(keys)
         }
     };
+
+    p.removeScope = function(name) {
+        if (this.scope[name]) {
+            this.scope._global.splice(this.scope._global.indexOf(name), 1);
+            delete this.scope[name];
+        }
+    }
 
     p.getScope = function(name) {
         if (this.scope[name]) return this.scope[name];
