@@ -28465,7 +28465,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
       1 === b.key.length && f({completeSingle:!1});
     }.bind(this));
     this.codeMirror.on("keyup", function(a, b) {
-      "Backspace" === b.key && (this.codeMirror.showHint({completeSingle:!1}), f({completeSingle:!1}));
+      "Backspace" === b.key && f({completeSingle:!1});
     }.bind(this));
     this.doc = this.codeMirror.getDoc();
     e = this;
