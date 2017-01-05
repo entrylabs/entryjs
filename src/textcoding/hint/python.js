@@ -146,9 +146,10 @@ Entry.PyHint = function(syntax) {
     }
 
     p.addScope = function(name) {
-        if (this.syntax[name]) {
-            var keys = Object.keys(this.syntax[name]);
-            keys = keys.filter(function(k){return k.indexOf("#") < 0})
+        if (this.syntax[name] && !this.scope[name]) {
+            var syntax = this.syntax[name]
+            var keys = Object.keys(syntax);
+            keys = keys.filter(function(k){return k.indexOf("#") < 0 && !Entry.block[syntax[k].key].deprecated})
             this.scope[name] = keys;
             this.scope._global.unshift(name);
             keys = keys.map(function(k) {return name + "." + k});
