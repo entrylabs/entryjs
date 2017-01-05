@@ -84,17 +84,21 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             viewportMargin: 10
         });
 
+        var dShowHint =
+            Entry.Utils.debounce(this.codeMirror.showHint.bind(this.codeMirror), 250);
+
         this.codeMirror.on("keydown", function(cm, event) {
             if (Entry && Entry.keyPressed) {
                 Entry.keyPressed.notify(event, true);
             }
             if (event.key.length === 1) {
-                this.codeMirror.showHint({completeSingle: false});
+                dShowHint({completeSingle: false});
             }
         }.bind(this))
         this.codeMirror.on("keyup", function(cm, event) {
             if (event.key === "Backspace") {
                 this.codeMirror.showHint({completeSingle: false});
+                dShowHint({completeSingle: false});
             }
         }.bind(this))
 

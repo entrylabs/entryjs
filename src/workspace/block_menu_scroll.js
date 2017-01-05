@@ -136,7 +136,7 @@ Entry.BlockMenuScroller.RADIUS = 7;
         this.vScrollbar.attr({
             y: this.vY
         });
-        this.resizeScrollBar();
+        this._dResizeScrollBar();
     };
 
 

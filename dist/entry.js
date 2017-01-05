@@ -25154,7 +25154,7 @@ Entry.BlockMenuScroller.RADIUS = 7;
   b._reset = function() {
     this.vY = 0;
     this.vScrollbar.attr({y:this.vY});
-    this.resizeScrollBar();
+    this._dResizeScrollBar();
   };
   b.onMouseDown = function(a) {
     function b(a) {
@@ -28453,12 +28453,13 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
       var b = Array(a.getOption("indentUnit") + 1).join(" ");
       a.replaceSelection(b);
     }}, lint:!0, viewportMargin:10});
+    var f = Entry.Utils.debounce(this.codeMirror.showHint.bind(this.codeMirror), 250);
     this.codeMirror.on("keydown", function(a, b) {
       Entry && Entry.keyPressed && Entry.keyPressed.notify(b, !0);
-      1 === b.key.length && this.codeMirror.showHint({completeSingle:!1});
+      1 === b.key.length && f({completeSingle:!1});
     }.bind(this));
     this.codeMirror.on("keyup", function(a, b) {
-      "Backspace" === b.key && this.codeMirror.showHint({completeSingle:!1});
+      "Backspace" === b.key && (this.codeMirror.showHint({completeSingle:!1}), f({completeSingle:!1}));
     }.bind(this));
     this.doc = this.codeMirror.getDoc();
     e = this;
