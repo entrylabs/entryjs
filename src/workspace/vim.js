@@ -85,19 +85,21 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         });
 
         var dShowHint =
-            Entry.Utils.debounce(this.codeMirror.showHint.bind(this.codeMirror), 250);
+            Entry.Utils.debounce(function(){
+                Entry.isTextMode && this.codeMirror.showHint({completeSingle: false});
+            }.bind(this), 250);
 
         this.codeMirror.on("keydown", function(cm, event) {
             if (Entry && Entry.keyPressed) {
                 Entry.keyPressed.notify(event, true);
             }
             if (event.key.length === 1) {
-                dShowHint({completeSingle: false});
+                dShowHint();
             }
         }.bind(this))
         this.codeMirror.on("keyup", function(cm, event) {
             if (event.key === "Backspace") {
-                dShowHint({completeSingle: false});
+                dShowHint();
             }
         }.bind(this))
 

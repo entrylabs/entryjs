@@ -27154,13 +27154,15 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
       var b = Array(a.getOption("indentUnit") + 1).join(" ");
       a.replaceSelection(b);
     }}, lint:!0, viewportMargin:10});
-    var f = Entry.Utils.debounce(this.codeMirror.showHint.bind(this.codeMirror), 250);
+    var f = Entry.Utils.debounce(function() {
+      Entry.isTextMode && this.codeMirror.showHint({completeSingle:!1});
+    }.bind(this), 250);
     this.codeMirror.on("keydown", function(a, b) {
       Entry && Entry.keyPressed && Entry.keyPressed.notify(b, !0);
-      1 === b.key.length && f({completeSingle:!1});
+      1 === b.key.length && f();
     }.bind(this));
     this.codeMirror.on("keyup", function(a, b) {
-      "Backspace" === b.key && f({completeSingle:!1});
+      "Backspace" === b.key && f();
     }.bind(this));
     this.doc = this.codeMirror.getDoc();
     e = this;
