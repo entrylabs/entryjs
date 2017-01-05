@@ -245,7 +245,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             if(!type) {
-                var funcNameKey = calleeData.name + component.arguments.length;
+                var funcNameKey = calleeData.name;
                 if(calleeData.name.search("__getParam") != -1) {
                     return result;
                 }
@@ -1720,7 +1720,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var idNumber = 0;
             }
 
-            var funcKey = funcName + idNumber;
+            var funcKey = funcName;
             var type = this._funcMap.get(funcKey);
             if(type) {
                 result = {};
@@ -5281,7 +5281,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(foundFlag && matchFlag) {
             var name = textFuncName;
             var paramCount = textFuncParams.length;
-            var funcKey = name + paramCount;
+            var funcKey = name;
             var funcPrefix = "func";
             var targetFuncBlockId = funcPrefix.concat('_').concat(targetFuncId);
             this._funcMap.put(funcKey, targetFuncBlockId);
@@ -5314,7 +5314,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             var name = textFuncName;
             var paramCount = textFuncParams.length;
-            var funcKey = name + paramCount;
+            var funcKey = name;
             //var funcId = targetFuncId;
             var funcPrefix = "func";
             var targetFuncBlockId  = funcPrefix.concat('_').concat(targetFuncId);
@@ -5424,7 +5424,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             var name = textFuncName;
             var paramCount = textFuncParams.length;
-            var funcKey = name + paramCount;
+            var funcKey = name;
             var funcPrefix = "func";
             var targetFuncBlockId = funcPrefix.concat('_').concat(targetFuncId);
             this._funcMap.put(funcKey, targetFuncBlockId);

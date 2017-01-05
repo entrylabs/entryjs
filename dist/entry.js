@@ -14339,7 +14339,7 @@ Entry.PyToBlockParser = function(b) {
       }
       !e && (r = k, u = this.getBlockSyntax(r)) && (e = u.key);
       if (!e) {
-        var v = g.name + a.arguments.length;
+        var v = g.name;
         if (-1 != g.name.search("__getParam")) {
           return b;
         }
@@ -14735,13 +14735,11 @@ Entry.PyToBlockParser = function(b) {
     if (b.callee) {
       f = b.callee.name;
       if (b.arguments) {
-        for (l in e = b.arguments.length, c = [], arguments = b.arguments, arguments) {
+        for (l in c = [], arguments = b.arguments, arguments) {
           m = arguments[l], c.push(m);
         }
-      } else {
-        e = 0;
       }
-      l = f + e;
+      l = f;
       (e = this._funcMap.get(l)) ? (b = {}, b.type = e, c && 0 != c.length && (b.params = c)) : l == this._currentFuncKey ? Entry.TextCodingUtil.isEntryEventFuncName(b.callee.name) || (b.type = l, b.params = c, b.funcName = f, this._hasReculsiveFunc = !0) : 0 != b.callee.isCallParam || Entry.TextCodingUtil.isEntryEventFuncName(b.callee.name) || (y = b.callee.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_FUNCTION, y, this._blockCount, 
       Entry.TextCodingError.SUBJECT_CONV_FUNCTION));
     }
@@ -15856,13 +15854,13 @@ Entry.PyToBlockParser = function(b) {
     }
     if (!x || !v) {
       if (x && !v) {
-        z = Entry.variableContainer.functions_[u];
-        q = z.content._data[0];
+        a = Entry.variableContainer.functions_[u];
+        q = a.content._data[0];
         q._data.splice(1, q._data.length - 1);
         for (k in b) {
-          m = b[k], Entry.TextCodingUtil.makeFuncParamBlock(m, r, this._blockCount), m = new Entry.Block(m, q), q._data.push(m);
+          z = b[k], Entry.TextCodingUtil.makeFuncParamBlock(z, r, this._blockCount), z = new Entry.Block(z, q), q._data.push(z);
         }
-        Entry.variableContainer.saveFunction(z);
+        Entry.variableContainer.saveFunction(a);
       } else {
         x = new Entry.Func;
         x.generateBlock(!0);
@@ -15891,15 +15889,14 @@ Entry.PyToBlockParser = function(b) {
           }
         }
         for (k in b) {
-          m = b[k], Entry.TextCodingUtil.makeFuncParamBlock(m, r, this._blockCount), m = new Entry.Block(m, q), q._data.push(m);
+          z = b[k], Entry.TextCodingUtil.makeFuncParamBlock(z, r, this._blockCount), z = new Entry.Block(z, q), q._data.push(z);
         }
         Entry.Func.generateWsBlock(x);
         Entry.variableContainer.saveFunction(x);
       }
       Entry.variableContainer.updateList();
     }
-    b = a.length;
-    b = f + b;
+    b = f;
     k = "func".concat("_").concat(u);
     this._funcMap.put(b, k);
     if (u = Entry.variableContainer.functions_[u]) {
