@@ -2603,6 +2603,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var port = script.getValue("PORT", script);
             var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
             return (ANALOG) ? ANALOG[port] || 0 : 0;
         },
         "syntax": {"js": [], "py": [
