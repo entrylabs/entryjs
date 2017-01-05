@@ -97,7 +97,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         }.bind(this))
         this.codeMirror.on("keyup", function(cm, event) {
             if (event.key === "Backspace") {
-                this.codeMirror.showHint({completeSingle: false});
                 dShowHint({completeSingle: false});
             }
         }.bind(this))
