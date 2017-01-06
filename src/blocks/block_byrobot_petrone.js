@@ -48,9 +48,7 @@ Entry.byrobot_petrone =
         listPorts:
 		{
             "state_modeVehicle"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,				type: "input", pos: {x: 0, y: 0}},
-            "state_modeFlight"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight,				type: "input", pos: {x: 0, y: 0}},
             "state_modeDrive"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive,				type: "input", pos: {x: 0, y: 0}},
-            "state_coordinate"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate,			type: "input", pos: {x: 0, y: 0}},
             "state_battery"				:{name: Lang.Blocks.byrobot_dronefighter_drone_state_battery,					type: "input", pos: {x: 0, y: 0}},
             "attitude_roll"				:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_roll,					type: "input", pos: {x: 0, y: 0}},
             "attitude_pitch"			:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch,					type: "input", pos: {x: 0, y: 0}},
@@ -73,11 +71,7 @@ Entry.byrobot_petrone =
 		// 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
         ports:
 		{
-			/*
-            "attitude_roll"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_roll,		type: "input", pos: {x: 100, y: 30}},
-            "attitude_pitch"	:{name: Lang.Blocks.byrobot_dronefighter_attitude_pitch,	type: "input", pos: {x: 100, y: 60}},
-            "attitude_yaw"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_yaw,		type: "input", pos: {x: 100, y: 90}}
-			*/
+			
         },
 
 		mode : 'both'	// 표시 모드
@@ -249,36 +243,6 @@ Entry.byrobot_petrone =
 		delete Entry.hw.sendQueue["control_wheel"];
 		delete Entry.hw.sendQueue["control_accel"];
 	},
-	
-	
-	transferControlQuad: function(roll, pitch, yaw, throttle)
-	{
-		// 범위 조정
-		roll		= Math.max(roll,		-100);
-		roll		= Math.min(roll,		 100);
-		pitch		= Math.max(pitch,		-100);
-		pitch		= Math.min(pitch,		 100);
-		yaw			= Math.max(yaw,			-100);
-		yaw			= Math.min(yaw,			 100);
-		throttle	= Math.max(throttle,	-100);
-		throttle	= Math.min(throttle,	 100);
-		
-		// 전송
-		Entry.hw.setDigitalPortValue("target", 0x10);
-		Entry.hw.setDigitalPortValue("control_roll",		roll);
-		Entry.hw.setDigitalPortValue("control_pitch",		pitch);
-		Entry.hw.setDigitalPortValue("control_yaw",			yaw);
-		Entry.hw.setDigitalPortValue("control_throttle",	throttle);
-
-		Entry.hw.update();
-
-		delete Entry.hw.sendQueue["target"];
-		delete Entry.hw.sendQueue["control_roll"];
-		delete Entry.hw.sendQueue["control_pitch"];
-		delete Entry.hw.sendQueue["control_yaw"];
-		delete Entry.hw.sendQueue["control_throttle"];
-	},
-	
 	// functions for block
 	
 	// 데이터 읽기
@@ -715,103 +679,4 @@ Entry.byrobot_petrone =
 			return script.callReturn();
 		}
 	},
-
-	setEventFlight: function(script, eventFlight, time)
-	{
-		switch( this.checkFinish(script, time) )
-		{
-		case "Start":
-			{
-				this.transferCommand(0x10, 0x22, eventFlight);	// 0x22 : CommandType::FlightEvent
-				this.transferControlQuad(0, 0, 0, 0);
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-
-	sendControlQuadSingle: function(script, controlTarget, value, time, flagDelay)
-	{
-		var timeDelay = 40;
-		if( flagDelay )
-			timeDelay = time;
-		
-		switch( this.checkFinish(script, timeDelay) )
-		{
-		case "Start":
-			{
-				// 범위 조정
-				value		= Math.max(value, -100);
-				value		= Math.min(value, 100);
-						
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue(controlTarget, value);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue[controlTarget];
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			if( flagDelay )
-			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue(controlTarget, 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue[controlTarget];
-			}
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-	
-	sendControlQuad: function(script, roll, pitch, yaw, throttle, time, flagDelay)
-	{
-		var timeDelay = 40;
-		if( flagDelay )
-			timeDelay = time;
-		
-		switch( this.checkFinish(script, timeDelay) )
-		{
-		case "Start":
-			{
-				this.transferControlQuad(roll, pitch, yaw, throttle);
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			if( flagDelay )
-			{
-				this.transferControlQuad(0, 0, 0, 0);
-			}
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-
 };

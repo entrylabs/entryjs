@@ -49,7 +49,6 @@ Entry.byrobot_dronefighter =
 		{
             "state_modeVehicle"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,				type: "input", pos: {x: 0, y: 0}},
             "state_modeFlight"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight,				type: "input", pos: {x: 0, y: 0}},
-            "state_modeDrive"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive,				type: "input", pos: {x: 0, y: 0}},
             "state_coordinate"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate,			type: "input", pos: {x: 0, y: 0}},
             "state_battery"				:{name: Lang.Blocks.byrobot_dronefighter_drone_state_battery,					type: "input", pos: {x: 0, y: 0}},
             "attitude_roll"				:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_roll,					type: "input", pos: {x: 0, y: 0}},
@@ -73,11 +72,7 @@ Entry.byrobot_dronefighter =
 		// 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
         ports:
 		{
-			/*
-            "attitude_roll"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_roll,		type: "input", pos: {x: 100, y: 30}},
-            "attitude_pitch"	:{name: Lang.Blocks.byrobot_dronefighter_attitude_pitch,	type: "input", pos: {x: 100, y: 60}},
-            "attitude_yaw"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_yaw,		type: "input", pos: {x: 100, y: 90}}
-			*/
+			
         },
 
 		mode : 'both'	// 표시 모드
@@ -228,27 +223,6 @@ Entry.byrobot_dronefighter =
 		delete Entry.hw.sendQueue["command_command"];
 		delete Entry.hw.sendQueue["command_option"];
 	},
-	
-	transferControlDouble: function(wheel, accel)
-	{
-		// 범위 조정
-		wheel		= Math.max(wheel, -100);
-		wheel		= Math.min(wheel, 100);
-		accel		= Math.max(accel, 0);
-		accel		= Math.min(accel, 100);
-		
-		// 전송
-		Entry.hw.setDigitalPortValue("target", 0x10);
-		Entry.hw.setDigitalPortValue("control_wheel", wheel);
-		Entry.hw.setDigitalPortValue("control_accel", accel);
-
-		Entry.hw.update();
-
-		delete Entry.hw.sendQueue["target"];
-		delete Entry.hw.sendQueue["control_wheel"];
-		delete Entry.hw.sendQueue["control_accel"];
-	},
-	
 	
 	transferControlQuad: function(roll, pitch, yaw, throttle)
 	{
@@ -621,100 +595,7 @@ Entry.byrobot_dronefighter =
 			return script.callReturn();
 		}
 	},
-
-	sendControlDoubleSingle: function(script, controlTarget, value, time, flagDelay)
-	{
-		var timeDelay = 40;
-		if( flagDelay )
-			timeDelay = time;
-		
-		switch( this.checkFinish(script, timeDelay) )
-		{
-		case "Start":
-			{
-				switch(controlTarget)
-				{
-				case "control_wheel":
-					{
-						// 범위 조정
-						value = Math.max(value, -100);
-						value = Math.min(value, 100);
-					}
-					break;
-					
-				case "control_accel":
-					{
-						// 범위 조정
-						value = Math.max(value, 0);
-						value = Math.min(value, 100);
-					}
-					break;
-				}
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue(controlTarget, value);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue[controlTarget];
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			if( flagDelay )
-			{
-				// 블럭을 빠져나갈 때 변경했던 값을 초기화
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue(controlTarget, 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue[controlTarget];
-			}
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-
-	sendControlDouble: function(script, wheel, accel, time, flagDelay)
-	{
-		var timeDelay = 40;
-		if( flagDelay )
-			timeDelay = time;
-		
-		switch( this.checkFinish(script, timeDelay) )
-		{
-		case "Start":
-			{
-				this.transferControlDouble(wheel, accel);
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			if( flagDelay )
-			{
-				this.transferControlDouble(0, 0);
-			}
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-
+	
 	setEventFlight: function(script, eventFlight, time)
 	{
 		switch( this.checkFinish(script, time) )

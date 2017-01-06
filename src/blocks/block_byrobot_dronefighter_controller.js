@@ -28,10 +28,8 @@ Entry.byrobot_dronefighter_controller =
 		// 명령을 각각 분리하여 전송하게 함(2017.01.03)
 		for (var i = 0; i < 1; i++)
 		{
-			this.transferCommand(0x10, 0x24, 0);
 			this.transferVibrator(0, 0, 0, 0);
 			this.transferbuzzer(0, 0, 0);
-			this.transferLightManual(0x10, 0xFF, 0);
 			this.transferLightManual(0x11, 0xFF, 0);
 		}
 	},
@@ -47,15 +45,6 @@ Entry.byrobot_dronefighter_controller =
 		// 모니터 화면 상단에 차례대로 나열하는 값
         listPorts:
 		{
-            "state_modeVehicle"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,				type: "input", pos: {x: 0, y: 0}},
-            "state_modeFlight"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight,				type: "input", pos: {x: 0, y: 0}},
-            "state_modeDrive"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive,				type: "input", pos: {x: 0, y: 0}},
-            "state_coordinate"			:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate,			type: "input", pos: {x: 0, y: 0}},
-            "state_battery"				:{name: Lang.Blocks.byrobot_dronefighter_drone_state_battery,					type: "input", pos: {x: 0, y: 0}},
-            "attitude_roll"				:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_roll,					type: "input", pos: {x: 0, y: 0}},
-            "attitude_pitch"			:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch,					type: "input", pos: {x: 0, y: 0}},
-            "attitude_yaw"				:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw,					type: "input", pos: {x: 0, y: 0}},
-            "irmessage_irdata"			:{name: Lang.Blocks.byrobot_dronefighter_drone_irmessage,						type: "input", pos: {x: 0, y: 0}},
             "joystick_left_x"			:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,			type: "input", pos: {x: 0, y: 0}},
             "joystick_left_y"			:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,			type: "input", pos: {x: 0, y: 0}},
             "joystick_left_direction"	:{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction,	type: "input", pos: {x: 0, y: 0}},
@@ -73,11 +62,7 @@ Entry.byrobot_dronefighter_controller =
 		// 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
         ports:
 		{
-			/*
-            "attitude_roll"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_roll,		type: "input", pos: {x: 100, y: 30}},
-            "attitude_pitch"	:{name: Lang.Blocks.byrobot_dronefighter_attitude_pitch,	type: "input", pos: {x: 100, y: 60}},
-            "attitude_yaw"		:{name: Lang.Blocks.byrobot_dronefighter_attitude_yaw,		type: "input", pos: {x: 100, y: 90}}
-			*/
+			
         },
 
 		mode : 'both'	// 표시 모드
@@ -180,42 +165,6 @@ Entry.byrobot_dronefighter_controller =
 		delete Entry.hw.sendQueue["vibrator_total"];
 	},
 	
-	transferIrMessage: function(irmessage)
-	{
-		// 범위 조정
-		irmessage = Math.max(irmessage, 0);
-		irmessage = Math.min(irmessage, 127);
-		
-		// 전송
-		Entry.hw.setDigitalPortValue("target", 0x10);
-		Entry.hw.setDigitalPortValue("irmessage_data", irmessage);
-
-		Entry.hw.update();
-
-		delete Entry.hw.sendQueue["target"];
-		delete Entry.hw.sendQueue["irmessage_data"];
-	},
-	
-	transferMotorSingle: function(motorIndex, motorDirection, motorSpeed)
-	{
-		// 범위 조정
-		motorSpeed = Math.max(motorSpeed, 0);
-		motorSpeed = Math.min(motorSpeed, 4096);
-		
-		// 전송
-		Entry.hw.setDigitalPortValue("target", 0x10);
-		Entry.hw.setDigitalPortValue("motorsingle_target", motorIndex);
-		Entry.hw.setDigitalPortValue("motorsingle_direction", motorDirection);
-		Entry.hw.setDigitalPortValue("motorsingle_value", motorSpeed);
-
-		Entry.hw.update();
-
-		delete Entry.hw.sendQueue["target"];
-		delete Entry.hw.sendQueue["motorsingle_target"];
-		delete Entry.hw.sendQueue["motorsingle_direction"];
-		delete Entry.hw.sendQueue["motorsingle_value"];
-	},
-	
 	transferCommand: function(target, command, option)
 	{
 		// 전송
@@ -228,55 +177,6 @@ Entry.byrobot_dronefighter_controller =
 		delete Entry.hw.sendQueue["target"];
 		delete Entry.hw.sendQueue["command_command"];
 		delete Entry.hw.sendQueue["command_option"];
-	},
-	
-	transferControlDouble: function(wheel, accel)
-	{
-		// 범위 조정
-		wheel		= Math.max(wheel, -100);
-		wheel		= Math.min(wheel, 100);
-		accel		= Math.max(accel, 0);
-		accel		= Math.min(accel, 100);
-		
-		// 전송
-		Entry.hw.setDigitalPortValue("target", 0x10);
-		Entry.hw.setDigitalPortValue("control_wheel", wheel);
-		Entry.hw.setDigitalPortValue("control_accel", accel);
-
-		Entry.hw.update();
-
-		delete Entry.hw.sendQueue["target"];
-		delete Entry.hw.sendQueue["control_wheel"];
-		delete Entry.hw.sendQueue["control_accel"];
-	},
-	
-	
-	transferControlQuad: function(roll, pitch, yaw, throttle)
-	{
-		// 범위 조정
-		roll		= Math.max(roll,		-100);
-		roll		= Math.min(roll,		 100);
-		pitch		= Math.max(pitch,		-100);
-		pitch		= Math.min(pitch,		 100);
-		yaw			= Math.max(yaw,			-100);
-		yaw			= Math.min(yaw,			 100);
-		throttle	= Math.max(throttle,	-100);
-		throttle	= Math.min(throttle,	 100);
-		
-		// 전송
-		Entry.hw.setDigitalPortValue("target", 0x10);
-		Entry.hw.setDigitalPortValue("control_roll",		roll);
-		Entry.hw.setDigitalPortValue("control_pitch",		pitch);
-		Entry.hw.setDigitalPortValue("control_yaw",			yaw);
-		Entry.hw.setDigitalPortValue("control_throttle",	throttle);
-
-		Entry.hw.update();
-
-		delete Entry.hw.sendQueue["target"];
-		delete Entry.hw.sendQueue["control_roll"];
-		delete Entry.hw.sendQueue["control_pitch"];
-		delete Entry.hw.sendQueue["control_yaw"];
-		delete Entry.hw.sendQueue["control_throttle"];
 	},
 	
 	// functions for block
@@ -504,32 +404,6 @@ Entry.byrobot_dronefighter_controller =
 		}
 	},
 	
-	sendIrMessage: function(script, irmessage)
-	{
-		switch( this.checkFinish(script, 40) )
-		{
-		case "Start":
-			{
-				this.transferIrMessage(irmessage);
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-	
-	sendStop: function(script)
-	{
-		return this.sendCommand(script, 0x10, 0x24, 0);
-	},
-
 	sendCommand: function(script, target, command, option)
 	{
 		switch( this.checkFinish(script, 40) )
@@ -550,268 +424,4 @@ Entry.byrobot_dronefighter_controller =
 			return script.callReturn();
 		}
 	},
-
-	setMotorSingle: function(script, motorIndex, motorDirection, motorSpeed)
-	{
-		switch( this.checkFinish(script, 40) )
-		{
-		case "Start":
-			{
-				this.transferMotorSingle(motorIndex, motorDirection, motorSpeed);
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-	/*
-		None = 0,			///< 없음
-		
-		Flight = 0x10,		///< 비행(가드 포함)
-		FlightNoGuard,		///< 비행(가드 없음)
-		FlightFPV,			///< 비행(FPV)
-		
-		Drive = 0x20,		///< 주행
-		DriveFPV,			///< 주행(FPV)
-		
-		Test = 0x30,		///< 테스트
-	 */
-	setModeVehicle: function(script, modeVehicle)
-	{
-		switch( this.checkFinish(script, 40) )
-		{
-		case "Start":
-			{
-				this.transferCommand(0x10, 0x10, modeVehicle);
-				
-				switch( (modeVehicle & 0xF0) )
-				{
-				case 0x10:
-					{
-						this.transferControlDouble(0, 0);
-					}
-					break;
-					
-				case 0x20:
-					{
-						this.transferControlQuad(0, 0, 0, 0);
-					}
-					break;
-				
-				default:
-					break;
-				}
-				
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-
-	sendControlDoubleSingle: function(script, controlTarget, value, time, flagDelay)
-	{
-		var timeDelay = 40;
-		if( flagDelay )
-			timeDelay = time;
-		
-		switch( this.checkFinish(script, timeDelay) )
-		{
-		case "Start":
-			{
-				switch(controlTarget)
-				{
-				case "control_wheel":
-					{
-						// 범위 조정
-						value = Math.max(value, -100);
-						value = Math.min(value, 100);
-					}
-					break;
-					
-				case "control_accel":
-					{
-						// 범위 조정
-						value = Math.max(value, 0);
-						value = Math.min(value, 100);
-					}
-					break;
-				}
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue(controlTarget, value);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue[controlTarget];
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			if( flagDelay )
-			{
-				// 블럭을 빠져나갈 때 변경했던 값을 초기화
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue(controlTarget, 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue[controlTarget];
-			}
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-
-	sendControlDouble: function(script, wheel, accel, time, flagDelay)
-	{
-		var timeDelay = 40;
-		if( flagDelay )
-			timeDelay = time;
-		
-		switch( this.checkFinish(script, timeDelay) )
-		{
-		case "Start":
-			{
-				this.transferControlDouble(wheel, accel);
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			if( flagDelay )
-			{
-				this.transferControlDouble(0, 0);
-			}
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-
-	setEventFlight: function(script, eventFlight, time)
-	{
-		switch( this.checkFinish(script, time) )
-		{
-		case "Start":
-			{
-				this.transferCommand(0x10, 0x22, eventFlight);	// 0x22 : CommandType::FlightEvent
-				this.transferControlQuad(0, 0, 0, 0);
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-
-	sendControlQuadSingle: function(script, controlTarget, value, time, flagDelay)
-	{
-		var timeDelay = 40;
-		if( flagDelay )
-			timeDelay = time;
-		
-		switch( this.checkFinish(script, timeDelay) )
-		{
-		case "Start":
-			{
-				// 범위 조정
-				value		= Math.max(value, -100);
-				value		= Math.min(value, 100);
-						
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue(controlTarget, value);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue[controlTarget];
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			if( flagDelay )
-			{
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue(controlTarget, 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue[controlTarget];
-			}
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-	
-	sendControlQuad: function(script, roll, pitch, yaw, throttle, time, flagDelay)
-	{
-		var timeDelay = 40;
-		if( flagDelay )
-			timeDelay = time;
-		
-		switch( this.checkFinish(script, timeDelay) )
-		{
-		case "Start":
-			{
-				this.transferControlQuad(roll, pitch, yaw, throttle);
-			}
-			return script;
-			
-		case "Running":
-			return script;
-		
-		case "Finish":
-			if( flagDelay )
-			{
-				this.transferControlQuad(0, 0, 0, 0);
-			}
-			return script.callReturn();
-			
-		default:
-			return script.callReturn();
-		}
-	},
-
 };
