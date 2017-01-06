@@ -19715,10 +19715,7 @@ p.downloadConnector = function() {
   window.open(this.downloadPath, "_blank").focus();
 };
 p.downloadGuide = function() {
-  var b = document.createElement("a");
-  b.href = "http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC%20%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%20%EC%97%B0%EA%B2%B0%20%EB%A7%A4%EB%89%B4%EC%96%BC(%EC%98%A8%EB%9D%BC%EC%9D%B8%EC%9A%A9).pdf";
-  b.download = "download";
-  b.click();
+  window.open("http://download.play-entry.org/data/hardware_manual.zip", "download");
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -24518,16 +24515,14 @@ Entry.FieldBlock = function(b, a, d, c, e) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 (function(b) {
   b.schema = {magneting:!1};
-  b.renderStart = function(a, b) {
+  b.renderStart = function(a, b, c) {
     this.svgGroup || (this.svgGroup = this._blockView.contentSvgGroup.elem("g"));
     this.renderMode = void 0 !== b ? b : this._blockView.renderMode;
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
-    var c = this.getValue();
-    c && !c.view && (c.setThread(this), c.createView(a, this.renderMode), c.getThread().view.setParent(this));
-    this.updateValueBlock(c);
-    this._valueBlock.view._startContentRender(this.renderMode);
+    (b = this.getValue()) && !b.view && (b.setThread(this), b.createView(a, this.renderMode), b.getThread().view.setParent(this));
+    this.updateValueBlock(b);
     this._blockView.getBoard().constructor !== Entry.Board && this._valueBlock.view.removeControl();
   };
   b.align = function(a, b, c) {
