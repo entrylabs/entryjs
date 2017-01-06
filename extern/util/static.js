@@ -542,12 +542,29 @@ EntryStatic.getAllBlocks = function() {
 				'byrobot_dronefighter_common_value_etc',
 				"byrobot_dronefighter_controller_if_button_press",
 				"byrobot_dronefighter_controller_if_joystick_direction",
-				"byrobot_dronefighter_controller_light_manual_single_off",
-				"byrobot_dronefighter_controller_light_manual_single",
-				"byrobot_dronefighter_controller_light_manual_single_input",
+				
+				'byrobot_dronefighter_drone_control_drone_takeoff',
+				'byrobot_dronefighter_drone_control_drone_landing',
+				'byrobot_dronefighter_drone_control_drone_stop',
+				'byrobot_dronefighter_drone_control_coordinate',
+				'byrobot_dronefighter_drone_control_drone_reset_heading',
+				'byrobot_dronefighter_drone_control_quad_one',
+				'byrobot_dronefighter_drone_control_quad_one_delay',
+				'byrobot_dronefighter_drone_control_quad',
+				
+				"byrobot_dronefighter_drone_motor_stop",
+				"byrobot_dronefighter_drone_motorsingle",
+				"byrobot_dronefighter_drone_motorsingle_input",
+				
+				"byrobot_dronefighter_drone_irmessage",
+				
 				"byrobot_dronefighter_drone_light_manual_single_off",
 				"byrobot_dronefighter_drone_light_manual_single",
 				"byrobot_dronefighter_drone_light_manual_single_input",
+				
+				"byrobot_dronefighter_controller_light_manual_single_off",
+				"byrobot_dronefighter_controller_light_manual_single",
+				"byrobot_dronefighter_controller_light_manual_single_input",
 				"byrobot_dronefighter_controller_buzzer_off",
 				"byrobot_dronefighter_controller_buzzer_scale",
 				"byrobot_dronefighter_controller_buzzer_scale_delay",
@@ -560,19 +577,6 @@ EntryStatic.getAllBlocks = function() {
 				"byrobot_dronefighter_controller_vibrator_on_reserve",
 				"byrobot_dronefighter_controller_vibrator_delay",
 				"byrobot_dronefighter_controller_vibrator_reserve",
-				"byrobot_dronefighter_drone_irmessage",
-				"byrobot_dronefighter_drone_motor_stop",
-				"byrobot_dronefighter_drone_motorsingle",
-				"byrobot_dronefighter_drone_motorsingle_input",
-				"byrobot_dronefighter_drone_command_mode_vehicle_drone",
-				'byrobot_dronefighter_drone_control_drone_takeoff',
-				'byrobot_dronefighter_drone_control_drone_landing',
-				'byrobot_dronefighter_drone_control_drone_stop',
-				'byrobot_dronefighter_drone_control_coordinate',
-				'byrobot_dronefighter_drone_control_drone_reset_heading',
-				'byrobot_dronefighter_drone_control_quad_one',
-				'byrobot_dronefighter_drone_control_quad_one_delay',
-				'byrobot_dronefighter_drone_control_quad',
 
 				// BYROBOT - DroneFighter Controller
 				'byrobot_dronefighter_controller_common_value_button',
@@ -602,12 +606,25 @@ EntryStatic.getAllBlocks = function() {
 				'byrobot_petrone_common_value_etc',
 				"byrobot_petrone_controller_if_button_press",
 				"byrobot_petrone_controller_if_joystick_direction",
-				"byrobot_petrone_controller_light_manual_single_off",
-				"byrobot_petrone_controller_light_manual_single",
-				"byrobot_petrone_controller_light_manual_single_input",
+				
+				"byrobot_petrone_drone_control_car_stop",
+				"byrobot_petrone_drone_control_double_one",
+				'byrobot_petrone_drone_control_double_one_delay',
+				"byrobot_petrone_drone_control_double",
+				
+				"byrobot_petrone_drone_motor_stop",
+				"byrobot_petrone_drone_motorsingle",
+				"byrobot_petrone_drone_motorsingle_input",
+				
+				"byrobot_petrone_drone_irmessage",
+				
 				"byrobot_petrone_drone_light_manual_single_off",
 				"byrobot_petrone_drone_light_manual_single",
 				"byrobot_petrone_drone_light_manual_single_input",
+				
+				"byrobot_petrone_controller_light_manual_single_off",
+				"byrobot_petrone_controller_light_manual_single",
+				"byrobot_petrone_controller_light_manual_single_input",
 				"byrobot_petrone_controller_buzzer_off",
 				"byrobot_petrone_controller_buzzer_scale",
 				"byrobot_petrone_controller_buzzer_scale_delay",
@@ -620,15 +637,6 @@ EntryStatic.getAllBlocks = function() {
 				"byrobot_petrone_controller_vibrator_on_reserve",
 				"byrobot_petrone_controller_vibrator_delay",
 				"byrobot_petrone_controller_vibrator_reserve",
-				"byrobot_petrone_drone_irmessage",
-				"byrobot_petrone_drone_motor_stop",
-				"byrobot_petrone_drone_motorsingle",
-				"byrobot_petrone_drone_motorsingle_input",
-				"byrobot_petrone_drone_command_mode_vehicle_car",
-				"byrobot_petrone_drone_control_car_stop",
-				"byrobot_petrone_drone_control_double_one",
-				'byrobot_petrone_drone_control_double_one_delay',
-				"byrobot_petrone_drone_control_double",
             ]
         }
     ]

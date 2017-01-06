@@ -1812,6 +1812,18 @@ joystick_right_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystic
   delete Entry.hw.sendQueue.target;
   delete Entry.hw.sendQueue.command_command;
   delete Entry.hw.sendQueue.command_option;
+}, transferControlDouble:function(a, b) {
+  a = Math.max(a, -100);
+  a = Math.min(a, 100);
+  b = Math.max(b, 0);
+  b = Math.min(b, 100);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("control_wheel", a);
+  Entry.hw.setDigitalPortValue("control_accel", b);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_wheel;
+  delete Entry.hw.sendQueue.control_accel;
 }, transferControlQuad:function(a, b, c, d) {
   a = Math.max(a, -100);
   a = Math.min(a, 100);
@@ -1965,15 +1977,7 @@ joystick_right_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystic
 }, setModeVehicle:function(a, b) {
   switch(this.checkFinish(a, 40)) {
     case "Start":
-      this.transferCommand(16, 16, b);
-      switch(b & 240) {
-        case 16:
-          this.transferControlDouble(0, 0);
-          break;
-        case 32:
-          this.transferControlQuad(0, 0, 0, 0);
-      }
-      return a;
+      return this.transferCommand(16, 16, b), this.transferControlQuad(0, 0, 0, 0), this.transferControlDouble(0, 0), a;
     case "Running":
       return a;
     case "Finish":
@@ -2301,6 +2305,26 @@ y:0}}, button_button:{name:Lang.Blocks.byrobot_dronefighter_controller_button_bu
   delete Entry.hw.sendQueue.target;
   delete Entry.hw.sendQueue.control_wheel;
   delete Entry.hw.sendQueue.control_accel;
+}, transferControlQuad:function(a, b, c, d) {
+  a = Math.max(a, -100);
+  a = Math.min(a, 100);
+  b = Math.max(b, -100);
+  b = Math.min(b, 100);
+  c = Math.max(c, -100);
+  c = Math.min(c, 100);
+  d = Math.max(d, -100);
+  d = Math.min(d, 100);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("control_roll", a);
+  Entry.hw.setDigitalPortValue("control_pitch", b);
+  Entry.hw.setDigitalPortValue("control_yaw", c);
+  Entry.hw.setDigitalPortValue("control_throttle", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_roll;
+  delete Entry.hw.sendQueue.control_pitch;
+  delete Entry.hw.sendQueue.control_yaw;
+  delete Entry.hw.sendQueue.control_throttle;
 }, getData:function(a, b) {
   return Entry.hw.portData[b];
 }, setLightManual:function(a, b, c, d) {
@@ -2434,15 +2458,7 @@ y:0}}, button_button:{name:Lang.Blocks.byrobot_dronefighter_controller_button_bu
 }, setModeVehicle:function(a, b) {
   switch(this.checkFinish(a, 40)) {
     case "Start":
-      this.transferCommand(16, 16, b);
-      switch(b & 240) {
-        case 16:
-          this.transferControlDouble(0, 0);
-          break;
-        case 32:
-          this.transferControlQuad(0, 0, 0, 0);
-      }
-      return a;
+      return this.transferCommand(16, 16, b), this.transferControlDouble(0, 0), this.transferControlQuad(0, 0, 0, 0), a;
     case "Running":
       return a;
     case "Finish":

@@ -224,6 +224,26 @@ Entry.byrobot_dronefighter =
 		delete Entry.hw.sendQueue["command_option"];
 	},
 	
+	transferControlDouble: function(wheel, accel)
+	{
+		// 범위 조정
+		wheel		= Math.max(wheel, -100);
+		wheel		= Math.min(wheel, 100);
+		accel		= Math.max(accel, 0);
+		accel		= Math.min(accel, 100);
+		
+		// 전송
+		Entry.hw.setDigitalPortValue("target", 0x10);
+		Entry.hw.setDigitalPortValue("control_wheel", wheel);
+		Entry.hw.setDigitalPortValue("control_accel", accel);
+
+		Entry.hw.update();
+
+		delete Entry.hw.sendQueue["target"];
+		delete Entry.hw.sendQueue["control_wheel"];
+		delete Entry.hw.sendQueue["control_accel"];
+	},
+	
 	transferControlQuad: function(roll, pitch, yaw, throttle)
 	{
 		// 범위 조정
@@ -563,25 +583,9 @@ Entry.byrobot_dronefighter =
 		case "Start":
 			{
 				this.transferCommand(0x10, 0x10, modeVehicle);
-				
-				switch( (modeVehicle & 0xF0) )
-				{
-				case 0x10:
-					{
-						this.transferControlDouble(0, 0);
-					}
-					break;
-					
-				case 0x20:
-					{
-						this.transferControlQuad(0, 0, 0, 0);
-					}
-					break;
-				
-				default:
-					break;
-				}
-				
+		
+				this.transferControlQuad(0, 0, 0, 0);
+				this.transferControlDouble(0, 0);
 			}
 			return script;
 			

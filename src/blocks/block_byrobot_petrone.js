@@ -243,6 +243,35 @@ Entry.byrobot_petrone =
 		delete Entry.hw.sendQueue["control_wheel"];
 		delete Entry.hw.sendQueue["control_accel"];
 	},
+	
+	transferControlQuad: function(roll, pitch, yaw, throttle)
+	{
+		// 범위 조정
+		roll		= Math.max(roll,		-100);
+		roll		= Math.min(roll,		 100);
+		pitch		= Math.max(pitch,		-100);
+		pitch		= Math.min(pitch,		 100);
+		yaw			= Math.max(yaw,			-100);
+		yaw			= Math.min(yaw,			 100);
+		throttle	= Math.max(throttle,	-100);
+		throttle	= Math.min(throttle,	 100);
+		
+		// 전송
+		Entry.hw.setDigitalPortValue("target", 0x10);
+		Entry.hw.setDigitalPortValue("control_roll",		roll);
+		Entry.hw.setDigitalPortValue("control_pitch",		pitch);
+		Entry.hw.setDigitalPortValue("control_yaw",			yaw);
+		Entry.hw.setDigitalPortValue("control_throttle",	throttle);
+
+		Entry.hw.update();
+
+		delete Entry.hw.sendQueue["target"];
+		delete Entry.hw.sendQueue["control_roll"];
+		delete Entry.hw.sendQueue["control_pitch"];
+		delete Entry.hw.sendQueue["control_yaw"];
+		delete Entry.hw.sendQueue["control_throttle"];
+	},
+	
 	// functions for block
 	
 	// 데이터 읽기
@@ -555,24 +584,8 @@ Entry.byrobot_petrone =
 			{
 				this.transferCommand(0x10, 0x10, modeVehicle);
 				
-				switch( (modeVehicle & 0xF0) )
-				{
-				case 0x10:
-					{
-						this.transferControlDouble(0, 0);
-					}
-					break;
-					
-				case 0x20:
-					{
-						this.transferControlQuad(0, 0, 0, 0);
-					}
-					break;
-				
-				default:
-					break;
-				}
-				
+				this.transferControlDouble(0, 0);
+				this.transferControlQuad(0, 0, 0, 0);
 			}
 			return script;
 			
