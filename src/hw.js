@@ -303,12 +303,8 @@ p.downloadConnector = function() {
 };
 
 p.downloadGuide = function() {
-    var url = "http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC%20%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%20%EC%97%B0%EA%B2%B0%20%EB%A7%A4%EB%89%B4%EC%96%BC(%EC%98%A8%EB%9D%BC%EC%9D%B8%EC%9A%A9).pdf";
-    var anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = 'download';
-    anchor.click();
-    anchor = undefined;
+    var url = "http://download.play-entry.org/data/hardware_manual.zip";
+    window.open(url, 'download');
 };
 
 p.downloadSource = function() {
