@@ -91,7 +91,6 @@ Entry.init = function(container, options) {
         Entry.mediaFilePath + 'sounds/delete.wav'], 'entryDelete');
 
     createjs.Sound.stop();
-
 };
 
 Entry.loadAudio_ = function(filenames, name) {
@@ -414,6 +413,8 @@ Entry.parseOptions = function(options) {
         this.hasVariableManager = true;
 
     this.isForLecture = options.isForLecture;
+
+    this.textCodingEnable = options.textCodingEnable;
 };
 
 

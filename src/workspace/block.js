@@ -21,13 +21,34 @@ Entry.Block = function(block, thread) {
     this.setThread(thread);
     this.load(block);
 
+    var category = block.category;
+    if (category) {
+        this.category = category;
+        if (Entry.block[this.type])
+            Entry.block[this.type].isFor =
+                ['category_' + category];
+    }
+
     var code = this.getCode();
+
+    if (block.display !== undefined)
+        this.display = block.display;
 
     code.registerBlock(this);
     var events = this.events.dataAdd;
     if (events && code.object) {
         events.forEach(function(fn) {
             if (Entry.Utils.isFunction(fn)) fn(that);
+        });
+    }
+
+    events = this.events.viewAdd;
+    var board = this.getCode().board;
+    if (events && (Entry.getMainWS() && Entry.isTextMode)
+        && (!board || (board && board.constructor !== Entry.BlockMenu))) {
+        events.forEach(function(fn) {
+            if (Entry.Utils.isFunction(fn))
+                fn.apply(that, [that]);
         });
     }
 };
@@ -111,8 +132,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
             var paramInjected = thisParams[i] || i<thisParams.length;
 
-            if (value && (params[i].type === 'Output' || params[i].type === 'Block'))
+            if (value && (params[i].type === 'Output' || params[i].type === 'Block')) {
+                if (typeof value !== "object")
+                    value = {type: "number", params: [value]};
                 value = new Entry.Block(value, this.thread);
+            }
 
             if (paramInjected) thisParams.splice(i, 1, value);
             else thisParams.push(value);
@@ -166,6 +190,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.createView = function(board, mode) {
+        board = board || this.getCode().view.board;
         if (!this.view) {
             this.set({view: new Entry.BlockView(
                 this,
@@ -177,8 +202,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.destroyView = function() {
-        this.view.destroy();
-        this.set({view: null});
+        this.view && this.view.destroy();
     };
 
     p.clone = function(thread) {
@@ -245,8 +269,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         var prevBlock = this.getPrevBlock();
         var nextBlock = this.getNextBlock();
+        var code = this.getCode();
 
-        this.getCode().unregisterBlock(this);
+        code.unregisterBlock(this);
         var thread = this.getThread();
         if (this._schema && this._schema.event)
             thread.unregisterEvent(this, this._schema.event);
@@ -254,26 +279,42 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             if (next) nextBlock.destroy(animate, next);
             else {
                 if (!prevBlock) {
-                    var parent = this.getThread().view.getParent();
-                    if (parent.constructor === Entry.FieldStatement) {
-                        nextBlock.view && nextBlock.view.bindPrev(parent);
-                        parent.insertTopBlock(nextBlock);
-                    } else if (parent.constructor === Entry.FieldStatement) {
-                        nextBlock.replace(parent._valueBlock);
-                    } else nextBlock.view._toGlobalCoordinate();
+                    if (thread.view) {
+                        var parent = thread.view.getParent();
+                        if (parent.constructor === Entry.FieldStatement) {
+                            nextBlock.view && nextBlock.view.bindPrev(parent);
+                            parent.insertTopBlock(nextBlock);
+                        } else if (parent.constructor === Entry.FieldStatement) {
+                            nextBlock.replace(parent._valueBlock);
+                        } else nextBlock.view._toGlobalCoordinate();
+                    }
                 } else nextBlock.view && nextBlock.view.bindPrev(prevBlock, true);
             }
         }
+
+        var notSpliced = this.doNotSplice;
         if (!this.doNotSplice && thread.spliceBlock) thread.spliceBlock(this);
         else delete this.doNotSplice;
+
         if (this.view) this.view.destroy(animate);
         if (this._schemaChangeEvent)
             this._schemaChangeEvent.destroy();
 
         var events = this.events.dataDestroy;
-        if (events && this.getCode().object) {
+        if (events && code.object) {
             events.forEach(function(fn) {
-                if (Entry.Utils.isFunction(fn)) fn(that);
+                if (Entry.Utils.isFunction(fn))
+                    fn.apply(that, [that, notSpliced]);
+            });
+        }
+
+        events = this.events.viewDestroy;
+        var board = this.getCode().board;
+        if (events && (Entry.getMainWS() && Entry.isTextMode)
+            && (!board || (board && board.constructor !== Entry.BlockMenu))) {
+            events.forEach(function(fn) {
+                if (Entry.Utils.isFunction(fn))
+                    fn.apply(that, [that, notSpliced]);
             });
         }
     };
@@ -519,6 +560,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
     p.stringify = function(excludeData) {
         return JSON.stringify(this.toJSON(false, excludeData));
+    };
+
+    p.isInOrigin = function() {
+        return this.x === 0 && this.y === 0;
     };
 
 })(Entry.Block.prototype);

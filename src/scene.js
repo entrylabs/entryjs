@@ -16,6 +16,15 @@ Entry.Scene = function() {
     $(window).on('resize', (function(e) {
         that.resize();
     }));
+
+    that.disposeEvent =
+        Entry.disposeEvent.attach(this, function(e) {
+            var elem = document.activeElement;
+            if (elem && elem !== e.target &&
+                $(elem).hasClass('entrySceneFieldWorkspace')) {
+                elem.blur();
+            }
+        });
 };
 
 Entry.Scene.viewBasicWidth = 70;
@@ -48,12 +57,12 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
             var ret = 40 + slope*x;
 
             if (y > ret) {
-                 var nextScene = that.getNextScene();
-                 if (nextScene) {
-                    var $sceneView = $(nextScene.view);
-                    $(document).trigger('mouseup');
-                    $sceneView.trigger('mousedown');
-                 }
+                var nextScene = that.getNextScene();
+                if (nextScene) {
+                   var $sceneView = $(nextScene.view);
+                   $(document).trigger('mouseup');
+                   $sceneView.trigger('mousedown');
+                }
             }
         });
 
@@ -102,9 +111,13 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
 Entry.Scene.prototype.generateElement = function(scene) {
     var that = this;
     var viewTemplate = Entry.createElement('li', scene.id);
-    viewTemplate.addClass('entrySceneElementWorkspace');
-    viewTemplate.addClass('entrySceneButtonWorkspace');
-    viewTemplate.addClass('minValue');
+    var fragment = document.createDocumentFragment('div');
+    fragment.appendChild(viewTemplate);
+    var className = '';
+    className += 'entrySceneElementWorkspace';
+    className += ' entrySceneButtonWorkspace';
+    className += ' minValue';
+    viewTemplate.addClass(className);
     $(viewTemplate).on('mousedown', function(e){
         if (Entry.engine.isState('run')) {
             e.preventDefault();
@@ -125,7 +138,6 @@ Entry.Scene.prototype.generateElement = function(scene) {
 
     var divide = Entry.createElement('span');
     divide.addClass('entrySceneInputCover');
-    divide.style.width = Entry.computeInputWidth(scene.name);
     viewTemplate.appendChild(divide);
     scene.inputWrapper = divide;
 
@@ -219,8 +231,8 @@ Entry.Scene.prototype.addScenes = function(scenes) {
         for (var i=0,len=scenes.length; i<len; i++)
             this.generateElement(scenes[i]);
     }
+
     this.selectScene(this.getScenes()[0]);
-    this.updateView();
 };
 /**
  * add scenes to this.scenes_
@@ -239,7 +251,6 @@ Entry.Scene.prototype.addScene = function(scene, index) {
         this.getScenes().splice(index, 0, scene);
 
     Entry.stage.objectContainers.push(Entry.stage.createObjectContainer(scene));
-    Entry.playground.flushPlayground();
     this.selectScene(scene);
     this.updateView();
     return scene;
@@ -304,6 +315,25 @@ Entry.Scene.prototype.selectScene = function(scene) {
         Entry.playground.refreshPlayground();
     }
     else {
+        if(Entry.isTextMode) {
+            var workspace = Entry.getMainWS();
+            if(workspace && workspace.vimBoard) {
+                var sObject = workspace.vimBoard._currentObject;
+                var sScene = workspace.vimBoard._currentScene;
+                var parser = workspace.vimBoard._parser;
+                try {
+                    if(scene.id != sScene.id)
+                        workspace._syncTextCode();
+                }
+                catch(e) {}
+                if(parser._onError) {
+                    Entry.container.selectObject(sObject.id, true);
+                    return;
+                }
+            }
+            workspace && workspace.vimBoard && workspace.vimBoard.clearText();
+        }
+
         Entry.stage.selectObject(null);
         Entry.playground.flushPlayground();
         Entry.variableContainer.updateList();
@@ -428,8 +458,13 @@ Entry.Scene.prototype.cloneScene = function(scene) {
     this.addScene(clonedScene);
 
     var objects = Entry.container.getSceneObjects(scene);
-    for (var i=objects.length-1; i>=0; i--)
-        Entry.container.addCloneObject(objects[i], clonedScene.id);
+
+    try {
+        this.isSceneCloning = true;
+        for (var i=objects.length-1; i>=0; i--)
+            Entry.container.addCloneObject(objects[i], clonedScene.id);
+        this.isSceneCloning = false;
+    } catch(e) {}
 };
 
 /**

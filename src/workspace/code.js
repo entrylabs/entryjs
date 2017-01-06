@@ -42,6 +42,9 @@ Entry.PARAM = -1;
     };
 
     p.load = function(code) {
+        if (Entry.engine && Entry.engine.isState('run'))
+            return;
+
         if (!(code instanceof Array))
             code = JSON.parse(code);
 
@@ -77,7 +80,7 @@ Entry.PARAM = -1;
         if (!this.view)
             return;
         this.view.destroy();
-        delete this.view;
+        this.set({view:null});
     };
 
     p.recreateView = function() {
@@ -180,6 +183,10 @@ Entry.PARAM = -1;
         return thread;
     };
 
+    p.getThreadIndex = function(thread) {
+        return this._data.indexOf(thread);
+    };
+
     p.cloneThread = function(thread, mode) {
         var newThread = thread.clone(this, mode);
         this._data.push(newThread);
@@ -206,6 +213,18 @@ Entry.PARAM = -1;
         return this._data.map(function(t){return t;});
     };
 
+    p.getThreadsByCategory = function(category) {
+        var arr = [];
+
+        for (var i=0; i<this._data.length; i++) {
+            var thread = this._data[i];
+            var b = thread.getFirstBlock();
+            if (b && b.category === category)
+                arr.push(thread);
+        }
+        return arr;
+    };
+
     p.toJSON = function(excludeData) {
         var threads = this.getThreads();
         var json = [];
@@ -226,12 +245,13 @@ Entry.PARAM = -1;
         var threads = this.getThreads();
         for (var i=0, len=threads.length; i<len; i++) {
             var firstBlock = threads[i].getFirstBlock();
-            if (firstBlock)
+            if (firstBlock && firstBlock.view && firstBlock.view.display)
                 firstBlock.view._moveBy(x, y, false);
         }
 
         var board = this.board;
-        if (board instanceof Entry.BlockMenu) board.updateSplitters(y);
+        if (board instanceof Entry.BlockMenu)
+            board.updateSplitters(y);
     };
 
     p.stringify = function(excludeData) {
@@ -340,5 +360,14 @@ Entry.PARAM = -1;
     p.removeBlocksByType = function(type) {
         this.getBlockList(false, type)
             .forEach(function(b) { b.doDestroy(); });
+    };
+
+    p.isAllThreadsInOrigin = function() {
+        var threads = this.getThreads();
+        for (var i=threads.length-1; i>=0; i--) {
+            if (!threads[i].isInOrigin())
+                return false;
+        }
+        return true;
     };
 })(Entry.Code.prototype);

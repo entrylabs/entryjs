@@ -48,7 +48,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             y: TEXT_Y_PADDING,
             'font-size' : '12px'
         });
-        this.textElement.textContent = this.truncate();
+
+        this._setTextValue();
 
         var width = this.getTextWidth();
 
@@ -125,7 +126,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     p.applyValue = function(event) {
         var value = this.optionGroup.val();
         this.setValue(value);
-        this.textElement.textContent = this.truncate();
+        this._setTextValue();
         this.resize();
     };
 
@@ -136,10 +137,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.optionGroup.css({width: width});
 
         this.box.set({width: width});
-        this._blockView.alignContent();
+        this._blockView.dAlignContent();
     };
 
     p.getTextWidth = function() {
         return this.textElement.getBoundingClientRect().width + X_PADDING + 2;
     };
+
+    p._setTextValue = function() {
+        this.textElement.textContent = this._convert(this.getValue(), this.getValue());
+    };
+
 })(Entry.FieldTextInput.prototype);

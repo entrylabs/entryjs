@@ -26,13 +26,11 @@ Entry.Playground = function() {
     var that = this;
     Entry.addEventListener('textEdited', this.injectText);
     Entry.addEventListener('hwChanged', this.updateHW);
-    Entry.addEventListener('changeMode', function(mode) {
-        that.setMode(mode);
-    });
 };
 
 Entry.Playground.prototype.setMode = function(mode) {
-    //console.log("playground setMode", mode);
+    console.log("playground setMode", mode);
+
     this.mainWorkspace.setMode(mode);
 };
 
@@ -286,24 +284,24 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         class: "entryWorkspaceBlockMenu"
     });
 
-    this.mainWorkspace = new Entry.Workspace(
-        {
-            'blockMenu': {
-                dom: blockMenuView,
-                align: "LEFT",
-                categoryData: EntryStatic.getAllBlocks(),
-                scroll: true
-            },
-            'board': {
-                dom: boardView
-            }/*,
-            'vimBoard': {
-                dom: boardView
-            }*/
-        }
-    );
+    var initOpts = {
+        'blockMenu': {
+            dom: blockMenuView,
+            align: "LEFT",
+            categoryData: EntryStatic.getAllBlocks(),
+            scroll: true
+        },
+        'board': {
+            dom: boardView
+        },
+    }
+    if (Entry.textCodingEnable)
+        initOpts.vimBoard = { dom: boardView };
+
+    this.mainWorkspace = new Entry.Workspace(initOpts);
     this.blockMenu = this.mainWorkspace.blockMenu;
     this.board = this.mainWorkspace.board;
+    this.vimBoard = this.mainWorkspace.vimBoard;
 
     if (Entry.hw) this.updateHW();
 };
@@ -849,7 +847,6 @@ Entry.Playground.prototype.injectObject = function(object) {
     else if (viewMode == 'sound')
         this.changeViewMode('sound');
     this.reloadPlayground();
-
 };
 
 /**
@@ -858,8 +855,28 @@ Entry.Playground.prototype.injectObject = function(object) {
 Entry.Playground.prototype.injectCode = function() {
     var code = this.object.script;
     var ws = this.mainWorkspace;
-    ws.changeBoardCode(code);
-    ws.getBoard().adjustThreadsPosition();
+
+    var workspace = Entry.getMainWS();
+    if (Entry.textCodingEnable && workspace && !workspace.vimBoard._parser._onError) {
+        if(workspace.vimBoard._changedObject) {
+            workspace.vimBoard._currentObject = workspace.vimBoard._changedObject;
+            workspace.vimBoard._currentScene = workspace.vimBoard._changedObject.scene;
+        }
+        else
+            if(Entry.playground) {
+                workspace.vimBoard._currentObject = Entry.playground.object;
+                workspace.vimBoard._currentScene = Entry.playground.object.scene;
+            }
+
+        if(Entry.playground && Entry.textCodingEnable) {
+            workspace.vimBoard._changedObject = Entry.playground.object;
+            workspace.vimBoard._currentScene = Entry.playground.object.scene;
+        }
+    }
+
+    ws.changeBoardCode(code, function() {
+        ws.getBoard().adjustThreadsPosition();
+    });
 };
 
 /**
@@ -868,12 +885,16 @@ Entry.Playground.prototype.injectCode = function() {
 Entry.Playground.prototype.injectPicture = function() {
     var view = this.pictureListView_;
     if (!view) return;
+
     while (view.hasChildNodes()) {
         view.removeChild(view.lastChild);
     }
+
     if (this.object) {
         var pictures = this.object.pictures;
         for (var i=0, len=pictures.length; i<len; i++) {
+            var picture = pictures[i];
+            !picture.view && Entry.playground.generatePictureElement(picture);
             var element = pictures[i].view;
             if (!element)
                 console.log(element);
@@ -1054,13 +1075,17 @@ Entry.Playground.prototype.injectSound = function() {
     var view = this.soundListView_;
     if (!view)
         return;
+
     while (view.hasChildNodes()) {
         view.removeChild(view.lastChild);
     }
+
     if (this.object) {
         var sounds = this.object.sounds;
         for (var i=0, len=sounds.length; i<len; i++) {
-            var element = sounds[i].view;
+            var sound = sounds[i];
+            !sound.view && Entry.playground.generateSoundElement(sound);
+            var element = sound.view;
             element.orderHolder.innerHTML = i+1;
             view.appendChild(element);
         }
@@ -1142,9 +1167,9 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
         this.injectText();
     }
 
-    if (viewType == 'code' && this.resizeHandle_)
+    if (viewType == 'code' && this.resizeHandle_) {
         this.resizeHandle_.removeClass('entryRemove');
-
+    }
     if (Entry.engine.isState('run'))
         this.curtainView_.removeClass('entryRemove');
     this.viewMode_ = viewType;
@@ -1307,13 +1332,12 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
  * Reload playground
  */
 Entry.Playground.prototype.reloadPlayground = function () {
-    var selectedCategory, selector;
-
-    var mainWorkspace = this.mainWorkspace;
-    if (!mainWorkspace) return;
-    mainWorkspace.getBlockMenu().reDraw();
-
-    if (this.object) this.object.script.view.reDraw();
+    (function(workspace) {
+        if (workspace) {
+            workspace.getBlockMenu().reDraw();
+            workspace.getBoard().reDraw();
+        }
+    })(this.mainWorkspace);
 };
 
 /**
@@ -1327,7 +1351,6 @@ Entry.Playground.prototype.flushPlayground = function () {
         var board = Entry.playground.mainWorkspace.getBoard();
         board.clear();
         board.changeCode(null);
-
     }
 };
 
@@ -1643,6 +1666,7 @@ Entry.Playground.prototype.updateHW = function() {
     var hw = Entry.hw;
     if (hw && hw.connected) {
         blockMenu.banClass("arduinoDisconnected", true);
+
         hw.banHW();
 
         if (hw.hwModule) {
@@ -1657,6 +1681,7 @@ Entry.Playground.prototype.updateHW = function() {
         blockMenu.banClass("arduinoConnected", true);
         blockMenu.banClass("arduinoConnect", true);
         blockMenu.unbanClass("arduinoDisconnected", true);
+
         Entry.hw.banHW();
     }
     blockMenu.reDraw();

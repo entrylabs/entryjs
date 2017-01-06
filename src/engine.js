@@ -480,12 +480,15 @@ Entry.Engine.prototype.toggleRun = function() {
         return;
     }
 
+    var activeElem = document.activeElement;
+    activeElem && activeElem.blur && activeElem.blur();
+
     //Text Coding Mode
     if (Entry.playground && Entry.playground.mainWorkspace) {
         var mainWorkspace = Entry.playground.mainWorkspace;
         var boardMode = mainWorkspace.mode;
         if(boardMode == Entry.Workspace.MODE_VIMBOARD)
-            mainWorkspace.loadCodeFromText(boardMode);
+            mainWorkspace._syncTextCode();
     }
 
     Entry.addActivity("run");
@@ -549,8 +552,8 @@ Entry.Engine.prototype.toggleStop = function() {
             entity.dialog.remove();
         if (entity.brush)
             entity.removeBrush();
-
     });
+
     variableContainer.mapVariable(function(variable){
         variable.loadSnapshot();
     });
@@ -582,6 +585,9 @@ Entry.Engine.prototype.toggleStop = function() {
     this.state = 'stop';
     Entry.dispatchEvent('stop');
     Entry.stage.hideInputField();
+    (function(w) {
+        w && w.getMode() === Entry.Workspace.MODE_VIMBOARD && w.codeToText();
+    })(Entry.getMainWS());
 };
 
 /**
@@ -663,9 +669,12 @@ Entry.Engine.prototype.raiseEventOnEntity = function(entity, param) {
  * capture keyboard press input
  * @param {keyboard event} e
  */
-Entry.Engine.prototype.captureKeyEvent = function(e) {
+Entry.Engine.prototype.captureKeyEvent = function(e, isForce) {
     var keyCode = e.keyCode;
     var type = Entry.type;
+
+    if (Entry.Utils.isInInput(e) && !isForce)
+        return;
 
     //mouse shortcuts
     if (e.ctrlKey && type == 'workspace') {
@@ -763,7 +772,7 @@ Entry.Engine.prototype.showProjectTimer = function() {
 };
 
 //decide Entry.engine.projectTimer to show
-Entry.Engine.prototype.hideProjectTimer = function() {
+Entry.Engine.prototype.hideProjectTimer = function(removeBlock, notIncludeSelf) {
     var timer = this.projectTimer;
     if (!timer || !timer.isVisible() || this.isState('run')) return;
     var objects = Entry.container.getAllObjects();
@@ -777,8 +786,14 @@ Entry.Engine.prototype.hideProjectTimer = function() {
 
     for (var i = 0, len = objects.length; i < len; i++) {
         var code = objects[i].script;
-        for (var j = 0; j < timerTypes.length; j++)
-            if(code.hasBlockType(timerTypes[j])) return;
+        for (var j = 0; j < timerTypes.length; j++) {
+            var blocks = code.getBlockList(false, timerTypes[j]);
+            if (notIncludeSelf) {
+                var index = blocks.indexOf(removeBlock);
+                if (index > -1) blocks.splice(index, 1);
+            }
+            if (blocks.length > 0) return;
+        }
     }
     timer.setVisible(false);
 };

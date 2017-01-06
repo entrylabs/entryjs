@@ -44,7 +44,6 @@ Entry.PropertyPanel = function() {
     };
 
     p.addMode = function(mode, contentObj) {
-
         var contentDom = contentObj.getView();
         // will be removed after apply new Dom class
         contentDom = Entry.Dom(contentDom, {
@@ -59,6 +58,9 @@ Entry.PropertyPanel = function() {
         tabDom.bind('click',function() {
             that.select(mode);
         });
+
+        if(mode == "console")
+            contentObj.codeMirror.refresh();
 
         if (this.modes[mode]) {
             this.modes[mode].tabDom.remove();
@@ -112,24 +114,30 @@ Entry.PropertyPanel = function() {
         Entry.dispatchEvent('windowResized');
 
         var selected = this.selected;
-        var modeResize  = this.modes[selected].obj.resize;
+        var obj = this.modes[selected].obj;
         if (selected == 'hw') {
             if (this.modes.hw.obj.listPorts)
-                this.modes[selected].obj.resizeList();
-            else this.modes[selected].obj.resize();
+                obj.resizeList();
+            else obj.resize && obj.resize();
         } else {
-            this.modes[selected].obj.resize();
+            obj.resize && obj.resize();
         }
     };
 
     p.select = function(modeName) {
+        if (this.selected === modeName)
+            return;
+
         for (var key in this.modes) {
             var mode = this.modes[key];
             mode.tabDom.removeClass("selected");
             mode.contentDom.addClass("entryRemove");
+            $(mode.contentDom).detach();
             mode.obj.visible = false;
         }
+
         var selected = this.modes[modeName];
+        $(this._contentView).append(selected.contentDom);
         selected.tabDom.addClass("selected");
         selected.contentDom.removeClass("entryRemove");
         if(selected.obj.resize)
