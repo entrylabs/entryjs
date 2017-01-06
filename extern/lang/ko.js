@@ -74,6 +74,7 @@ Lang.Blocks = {
 	"byrobot_dronefighter_controller_button_bottom_left"		: "왼쪽 둥근 버튼",
 	"byrobot_dronefighter_controller_button_bottom_right"		: "오른쪽 둥근 버튼",
 	"byrobot_dronefighter_controller_button_bottom_left_right"	: "양쪽 둥근 버튼",
+	"byrobot_dronefighter_entryhw_count_transfer_reserved"		: "전송 예약된 데이터 수",
 	/* output */
 	"byrobot_dronefighter_common_roll"							: "Roll",
 	"byrobot_dronefighter_common_pitch"							: "Pitch",

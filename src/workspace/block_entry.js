@@ -25523,10 +25523,10 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
-						["0",	"0"],
-						["1",	"1"],
-						["2",	"2"],
-						["3",	"3"]
+						["1",	"0"],
+						["2",	"1"],
+						["3",	"2"],
+						["4",	"3"]
 					],
 					"value": "0",
 					"fontSize": 11
@@ -25613,7 +25613,7 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter" ],
         "func": function (sprite, script)
 			{
-				var motorIndex		= parseInt(script.getNumberValue("MOTORINDEX", script));
+				var motorIndex		= parseInt(script.getNumberValue("MOTORINDEX", script)) - 1;
 				var motorDirection	= 1;
 				var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
 				
@@ -25883,7 +25883,7 @@ Entry.block = {
 						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_yaw,		"control_yaw"],
 						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_throttle,	"control_throttle"]
 					],
-					"value": "roll",
+					"value": "control_throttle",
 					"fontSize": 11
 				},
 				{
@@ -28242,10 +28242,10 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
-						["0",	"0"],
-						["1",	"1"],
-						["2",	"2"],
-						["3",	"3"]
+						["1",	"0"],
+						["2",	"1"],
+						["3",	"2"],
+						["4",	"3"]
 					],
 					"value": "0",
 					"fontSize": 11
@@ -28332,7 +28332,7 @@ Entry.block = {
         "isNotFor": [ "byrobot_petrone" ],
         "func": function (sprite, script)
 			{
-				var motorIndex		= parseInt(script.getNumberValue("MOTORINDEX", script));
+				var motorIndex		= parseInt(script.getNumberValue("MOTORINDEX", script)) - 1;
 				var motorDirection	= 1;
 				var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
 				

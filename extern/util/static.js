@@ -543,8 +543,6 @@ EntryStatic.getAllBlocks = function() {
 				"byrobot_dronefighter_controller_if_button_press",
 				"byrobot_dronefighter_controller_if_joystick_direction",
 				
-				'byrobot_dronefighter_drone_control_drone_takeoff',
-				'byrobot_dronefighter_drone_control_drone_landing',
 				'byrobot_dronefighter_drone_control_drone_stop',
 				'byrobot_dronefighter_drone_control_coordinate',
 				'byrobot_dronefighter_drone_control_drone_reset_heading',
