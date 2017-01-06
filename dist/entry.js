@@ -2070,37 +2070,15 @@ type:"input", pos:{x:0, y:0}}, joystick_right_command:{name:Lang.Blocks.byrobot_
       return a.callReturn();
   }
 }};
-Entry.byrobot_dronefighter_controller = {name:"byrobot_dronefighter_controller", checkFinish:function(a, b) {
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return "Running";
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    return "Finish";
+Entry.byrobot_dronefighter_controller = {name:"byrobot_dronefighter_controller", setZero:function() {
+  for (var a = 0;1 > a;a++) {
+    this.transferCommand(16, 36, 0), this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(16, 255, 0), this.transferLightManual(17, 255, 0);
   }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  timeValue *= 60 / (Entry.FPS || 60);
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, timeValue);
-  return "Start";
-}, setZero:function() {
-  var a = Entry.hw.sendQueue;
-  a.target = 16;
-  for (var b = 0;1 > b;b++) {
-    a.target = 16, a.command_command = 36, a.command_option = 0, Entry.hw.update(), a.command_command = void 0, a.command_option = void 0, a.target = 17, a.buzzer_mode = 0, a.buzzer_value = 0, a.buzzer_time = 0, Entry.hw.update(), a.buzzer_mode = void 0, a.buzzer_value = void 0, a.buzzer_time = void 0, a.target = 17, a.vibrator_mode = 0, a.vibrator_on = 0, a.vibrator_off = 0, a.vibrator_total = 0, Entry.hw.update(), a.vibrator_mode = void 0, a.vibrator_on = void 0, a.vibrator_off = void 0, a.vibrator_total = 
-    void 0, a.target = 16, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0, a.target = 17, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0;
-  }
-  a.target = void 0;
 }, monitorTemplate:{imgPath:"hw/byrobot_dronefighter_controller.png", width:500, height:500, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeFlight:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight, type:"input", pos:{x:0, y:0}}, state_modeDrive:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive, type:"input", pos:{x:0, y:0}}, state_coordinate:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate, 
 type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_dronefighter_drone_state_battery, type:"input", pos:{x:0, y:0}}, attitude_roll:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_roll, type:"input", pos:{x:0, y:0}}, attitude_pitch:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, attitude_yaw:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_dronefighter_drone_irmessage, 
 type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event, type:"input", pos:{x:0, 
 y:0}}, joystick_left_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command, type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event, 
-type:"input", pos:{x:0, y:0}}, joystick_right_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command, type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_dronefighter_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_dronefighter_controller_button_event, type:"input", pos:{x:0, y:0}}}, ports:{}, mode:"both"}};
-Entry.byrobot_petrone = {name:"byrobot_petrone", checkFinish:function(a, b) {
+type:"input", pos:{x:0, y:0}}, joystick_right_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command, type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_dronefighter_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_dronefighter_controller_button_event, type:"input", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(a, b) {
   if (a.isStart) {
     if (1 == a.timeFlag) {
       return "Running";
@@ -2112,24 +2090,686 @@ Entry.byrobot_petrone = {name:"byrobot_petrone", checkFinish:function(a, b) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  timeValue *= 60 / (Entry.FPS || 60);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, timeValue);
+  }, 60 / (Entry.FPS || 60) * b);
   return "Start";
-}, setZero:function() {
-  var a = Entry.hw.sendQueue;
-  a.target = 16;
-  for (var b = 0;1 > b;b++) {
-    a.target = 16, a.command_command = 36, a.command_option = 0, Entry.hw.update(), a.command_command = void 0, a.command_option = void 0, a.target = 17, a.buzzer_mode = 0, a.buzzer_value = 0, a.buzzer_time = 0, Entry.hw.update(), a.buzzer_mode = void 0, a.buzzer_value = void 0, a.buzzer_time = void 0, a.target = 17, a.vibrator_mode = 0, a.vibrator_on = 0, a.vibrator_off = 0, a.vibrator_total = 0, Entry.hw.update(), a.vibrator_mode = void 0, a.vibrator_on = void 0, a.vibrator_off = void 0, a.vibrator_total = 
-    void 0, a.target = 16, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0, a.target = 17, a.light_manual_flags = 255, a.light_manual_brightness = 0, Entry.hw.update(), a.light_manual_flags = void 0, a.light_manual_brightness = void 0;
+}, transferLightManual:function(a, b, c) {
+  a = Math.max(a, 0);
+  a = Math.min(a, 255);
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  c = Math.max(c, 0);
+  c = Math.min(c, 255);
+  Entry.hw.setDigitalPortValue("target", a);
+  Entry.hw.setDigitalPortValue("light_manual_flags", b);
+  Entry.hw.setDigitalPortValue("light_manual_brightness", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_manual_flags;
+  delete Entry.hw.sendQueue.light_manual_brightness;
+}, transferbuzzer:function(a, b, c) {
+  Entry.hw.setDigitalPortValue("target", 17);
+  Entry.hw.setDigitalPortValue("buzzer_mode", a);
+  Entry.hw.setDigitalPortValue("buzzer_value", b);
+  Entry.hw.setDigitalPortValue("buzzer_time", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.buzzer_mode;
+  delete Entry.hw.sendQueue.buzzer_value;
+  delete Entry.hw.sendQueue.buzzer_time;
+}, transferVibrator:function(a, b, c, d) {
+  b = Math.max(b, 1);
+  b = Math.min(b, 6E4);
+  c = Math.max(c, 1);
+  c = Math.min(c, 6E4);
+  Entry.hw.setDigitalPortValue("target", 17);
+  Entry.hw.setDigitalPortValue("vibrator_mode", a);
+  Entry.hw.setDigitalPortValue("vibrator_on", b);
+  Entry.hw.setDigitalPortValue("vibrator_off", c);
+  Entry.hw.setDigitalPortValue("vibrator_total", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.vibrator_mode;
+  delete Entry.hw.sendQueue.vibrator_on;
+  delete Entry.hw.sendQueue.vibrator_off;
+  delete Entry.hw.sendQueue.vibrator_total;
+}, transferIrMessage:function(a) {
+  a = Math.max(a, 0);
+  a = Math.min(a, 127);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("irmessage_data", a);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.irmessage_data;
+}, transferMotorSingle:function(a, b, c) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 4096);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("motorsingle_target", a);
+  Entry.hw.setDigitalPortValue("motorsingle_direction", b);
+  Entry.hw.setDigitalPortValue("motorsingle_value", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.motorsingle_target;
+  delete Entry.hw.sendQueue.motorsingle_direction;
+  delete Entry.hw.sendQueue.motorsingle_value;
+}, transferCommand:function(a, b, c) {
+  Entry.hw.setDigitalPortValue("target", a);
+  Entry.hw.setDigitalPortValue("command_command", b);
+  Entry.hw.setDigitalPortValue("command_option", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.command_command;
+  delete Entry.hw.sendQueue.command_option;
+}, transferControlDouble:function(a, b) {
+  a = Math.max(a, -100);
+  a = Math.min(a, 100);
+  b = Math.max(b, 0);
+  b = Math.min(b, 100);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("control_wheel", a);
+  Entry.hw.setDigitalPortValue("control_accel", b);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_wheel;
+  delete Entry.hw.sendQueue.control_accel;
+}, transferControlQuad:function(a, b, c, d) {
+  a = Math.max(a, -100);
+  a = Math.min(a, 100);
+  b = Math.max(b, -100);
+  b = Math.min(b, 100);
+  c = Math.max(c, -100);
+  c = Math.min(c, 100);
+  d = Math.max(d, -100);
+  d = Math.min(d, 100);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("control_roll", a);
+  Entry.hw.setDigitalPortValue("control_pitch", b);
+  Entry.hw.setDigitalPortValue("control_yaw", c);
+  Entry.hw.setDigitalPortValue("control_throttle", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_roll;
+  delete Entry.hw.sendQueue.control_pitch;
+  delete Entry.hw.sendQueue.control_yaw;
+  delete Entry.hw.sendQueue.control_throttle;
+}, getData:function(a, b) {
+  return Entry.hw.portData[b];
+}, setLightManual:function(a, b, c, d) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferLightManual(b, c, d), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
   }
-  a.target = void 0;
+}, setBuzzerStop:function(a) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferbuzzer(0, 0, 0), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setBuzzerMute:function(a, b, c, d) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 6E4);
+  var e = 40;
+  c && (e = b);
+  switch(this.checkFinish(a, e)) {
+    case "Start":
+      return c = 2, d && (c = 1), this.transferbuzzer(c, 238, b), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setBuzzerScale:function(a, b, c, d, e, f) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 6E4);
+  var g = 40;
+  e && (g = d);
+  switch(this.checkFinish(a, g)) {
+    case "Start":
+      return e = 4, f && (e = 3), this.transferbuzzer(e, 12 * b + c, d), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setBuzzerHz:function(a, b, c, d, e) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 6E4);
+  var f = 40;
+  d && (f = c);
+  switch(this.checkFinish(a, f)) {
+    case "Start":
+      return d = 6, e && (d = 5), b = Math.max(b, 1), b = Math.min(b, 63999), this.transferbuzzer(d, b, c), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setVibratorStop:function(a) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferVibrator(0, 0, 0, 0), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setVibrator:function(a, b, c, d, e, f) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 6E4);
+  var g = 40;
+  e && (g = d);
+  switch(this.checkFinish(a, g)) {
+    case "Start":
+      return e = 2, f && (e = 1), this.transferVibrator(e, b, c, d), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, sendIrMessage:function(a, b) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferIrMessage(b), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, sendStop:function(a) {
+  return this.sendCommand(a, 16, 36, 0);
+}, sendCommand:function(a, b, c, d) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferCommand(b, c, d), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setMotorSingle:function(a, b, c, d) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferMotorSingle(b, c, d), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setModeVehicle:function(a, b) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      this.transferCommand(16, 16, b);
+      switch(b & 240) {
+        case 16:
+          this.transferControlDouble(0, 0);
+          break;
+        case 32:
+          this.transferControlQuad(0, 0, 0, 0);
+      }
+      return a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, sendControlDoubleSingle:function(a, b, c, d, e) {
+  var f = 40;
+  e && (f = d);
+  switch(this.checkFinish(a, f)) {
+    case "Start":
+      switch(b) {
+        case "control_wheel":
+          c = Math.max(c, -100);
+          c = Math.min(c, 100);
+          break;
+        case "control_accel":
+          c = Math.max(c, 0), c = Math.min(c, 100);
+      }
+      Entry.hw.setDigitalPortValue("target", 16);
+      Entry.hw.setDigitalPortValue(b, c);
+      Entry.hw.update();
+      delete Entry.hw.sendQueue.target;
+      delete Entry.hw.sendQueue[b];
+      return a;
+    case "Running":
+      return a;
+    case "Finish":
+      return e && (Entry.hw.setDigitalPortValue("target", 16), Entry.hw.setDigitalPortValue(b, 0), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue[b]), a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, sendControlDouble:function(a, b, c, d, e) {
+  var f = 40;
+  e && (f = d);
+  switch(this.checkFinish(a, f)) {
+    case "Start":
+      return this.transferControlDouble(b, c), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return e && this.transferControlDouble(0, 0), a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setEventFlight:function(a, b, c) {
+  switch(this.checkFinish(a, c)) {
+    case "Start":
+      return this.transferCommand(16, 34, b), this.transferControlQuad(0, 0, 0, 0), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, sendControlQuadSingle:function(a, b, c, d, e) {
+  var f = 40;
+  e && (f = d);
+  switch(this.checkFinish(a, f)) {
+    case "Start":
+      return c = Math.max(c, -100), c = Math.min(c, 100), Entry.hw.setDigitalPortValue("target", 16), Entry.hw.setDigitalPortValue(b, c), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue[b], a;
+    case "Running":
+      return a;
+    case "Finish":
+      return e && (Entry.hw.setDigitalPortValue("target", 16), Entry.hw.setDigitalPortValue(b, 0), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue[b]), a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, sendControlQuad:function(a, b, c, d, e, f, g) {
+  var h = 40;
+  g && (h = f);
+  switch(this.checkFinish(a, h)) {
+    case "Start":
+      return this.transferControlQuad(b, c, d, e), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return g && this.transferControlQuad(0, 0, 0, 0), a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}};
+Entry.byrobot_petrone = {name:"byrobot_petrone", setZero:function() {
+  for (var a = 0;1 > a;a++) {
+    this.transferCommand(16, 36, 0), this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(16, 255, 0), this.transferLightManual(17, 255, 0);
+  }
 }, monitorTemplate:{imgPath:"hw/byrobot_petrone.png", width:500, height:500, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeFlight:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight, type:"input", pos:{x:0, y:0}}, state_modeDrive:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive, type:"input", pos:{x:0, y:0}}, state_coordinate:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate, 
 type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_dronefighter_drone_state_battery, type:"input", pos:{x:0, y:0}}, attitude_roll:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_roll, type:"input", pos:{x:0, y:0}}, attitude_pitch:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, attitude_yaw:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_dronefighter_drone_irmessage, 
 type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event, type:"input", pos:{x:0, 
 y:0}}, joystick_left_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command, type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event, 
-type:"input", pos:{x:0, y:0}}, joystick_right_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command, type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_dronefighter_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_dronefighter_controller_button_event, type:"input", pos:{x:0, y:0}}}, ports:{}, mode:"both"}};
+type:"input", pos:{x:0, y:0}}, joystick_right_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command, type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_dronefighter_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_dronefighter_controller_button_event, type:"input", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(a, b) {
+  if (a.isStart) {
+    if (1 == a.timeFlag) {
+      return "Running";
+    }
+    delete a.timeFlag;
+    delete a.isStart;
+    Entry.engine.isContinue = !1;
+    return "Finish";
+  }
+  a.isStart = !0;
+  a.timeFlag = 1;
+  setTimeout(function() {
+    a.timeFlag = 0;
+  }, 60 / (Entry.FPS || 60) * b);
+  return "Start";
+}, transferLightManual:function(a, b, c) {
+  a = Math.max(a, 0);
+  a = Math.min(a, 255);
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  c = Math.max(c, 0);
+  c = Math.min(c, 255);
+  Entry.hw.setDigitalPortValue("target", a);
+  Entry.hw.setDigitalPortValue("light_manual_flags", b);
+  Entry.hw.setDigitalPortValue("light_manual_brightness", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_manual_flags;
+  delete Entry.hw.sendQueue.light_manual_brightness;
+}, transferbuzzer:function(a, b, c) {
+  Entry.hw.setDigitalPortValue("target", 17);
+  Entry.hw.setDigitalPortValue("buzzer_mode", a);
+  Entry.hw.setDigitalPortValue("buzzer_value", b);
+  Entry.hw.setDigitalPortValue("buzzer_time", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.buzzer_mode;
+  delete Entry.hw.sendQueue.buzzer_value;
+  delete Entry.hw.sendQueue.buzzer_time;
+}, transferVibrator:function(a, b, c, d) {
+  b = Math.max(b, 1);
+  b = Math.min(b, 6E4);
+  c = Math.max(c, 1);
+  c = Math.min(c, 6E4);
+  Entry.hw.setDigitalPortValue("target", 17);
+  Entry.hw.setDigitalPortValue("vibrator_mode", a);
+  Entry.hw.setDigitalPortValue("vibrator_on", b);
+  Entry.hw.setDigitalPortValue("vibrator_off", c);
+  Entry.hw.setDigitalPortValue("vibrator_total", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.vibrator_mode;
+  delete Entry.hw.sendQueue.vibrator_on;
+  delete Entry.hw.sendQueue.vibrator_off;
+  delete Entry.hw.sendQueue.vibrator_total;
+}, transferIrMessage:function(a) {
+  a = Math.max(a, 0);
+  a = Math.min(a, 127);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("irmessage_data", a);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.irmessage_data;
+}, transferMotorSingle:function(a, b, c) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 4096);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("motorsingle_target", a);
+  Entry.hw.setDigitalPortValue("motorsingle_direction", b);
+  Entry.hw.setDigitalPortValue("motorsingle_value", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.motorsingle_target;
+  delete Entry.hw.sendQueue.motorsingle_direction;
+  delete Entry.hw.sendQueue.motorsingle_value;
+}, transferCommand:function(a, b, c) {
+  Entry.hw.setDigitalPortValue("target", a);
+  Entry.hw.setDigitalPortValue("command_command", b);
+  Entry.hw.setDigitalPortValue("command_option", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.command_command;
+  delete Entry.hw.sendQueue.command_option;
+}, transferControlDouble:function(a, b) {
+  a = Math.max(a, -100);
+  a = Math.min(a, 100);
+  b = Math.max(b, 0);
+  b = Math.min(b, 100);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("control_wheel", a);
+  Entry.hw.setDigitalPortValue("control_accel", b);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_wheel;
+  delete Entry.hw.sendQueue.control_accel;
+}, transferControlQuad:function(a, b, c, d) {
+  a = Math.max(a, -100);
+  a = Math.min(a, 100);
+  b = Math.max(b, -100);
+  b = Math.min(b, 100);
+  c = Math.max(c, -100);
+  c = Math.min(c, 100);
+  d = Math.max(d, -100);
+  d = Math.min(d, 100);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("control_roll", a);
+  Entry.hw.setDigitalPortValue("control_pitch", b);
+  Entry.hw.setDigitalPortValue("control_yaw", c);
+  Entry.hw.setDigitalPortValue("control_throttle", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_roll;
+  delete Entry.hw.sendQueue.control_pitch;
+  delete Entry.hw.sendQueue.control_yaw;
+  delete Entry.hw.sendQueue.control_throttle;
+}, getData:function(a, b) {
+  return Entry.hw.portData[b];
+}, setLightManual:function(a, b, c, d) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferLightManual(b, c, d), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setBuzzerStop:function(a) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferbuzzer(0, 0, 0), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setBuzzerMute:function(a, b, c, d) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 6E4);
+  var e = 40;
+  c && (e = b);
+  switch(this.checkFinish(a, e)) {
+    case "Start":
+      return c = 2, d && (c = 1), this.transferbuzzer(c, 238, b), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setBuzzerScale:function(a, b, c, d, e, f) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 6E4);
+  var g = 40;
+  e && (g = d);
+  switch(this.checkFinish(a, g)) {
+    case "Start":
+      return e = 4, f && (e = 3), this.transferbuzzer(e, 12 * b + c, d), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setBuzzerHz:function(a, b, c, d, e) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 6E4);
+  var f = 40;
+  d && (f = c);
+  switch(this.checkFinish(a, f)) {
+    case "Start":
+      return d = 6, e && (d = 5), b = Math.max(b, 1), b = Math.min(b, 63999), this.transferbuzzer(d, b, c), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setVibratorStop:function(a) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferVibrator(0, 0, 0, 0), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setVibrator:function(a, b, c, d, e, f) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 6E4);
+  var g = 40;
+  e && (g = d);
+  switch(this.checkFinish(a, g)) {
+    case "Start":
+      return e = 2, f && (e = 1), this.transferVibrator(e, b, c, d), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, sendIrMessage:function(a, b) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferIrMessage(b), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, sendStop:function(a) {
+  return this.sendCommand(a, 16, 36, 0);
+}, sendCommand:function(a, b, c, d) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferCommand(b, c, d), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setMotorSingle:function(a, b, c, d) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferMotorSingle(b, c, d), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setModeVehicle:function(a, b) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      this.transferCommand(16, 16, b);
+      switch(b & 240) {
+        case 16:
+          this.transferControlDouble(0, 0);
+          break;
+        case 32:
+          this.transferControlQuad(0, 0, 0, 0);
+      }
+      return a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, sendControlDoubleSingle:function(a, b, c, d, e) {
+  var f = 40;
+  e && (f = d);
+  switch(this.checkFinish(a, f)) {
+    case "Start":
+      switch(b) {
+        case "control_wheel":
+          c = Math.max(c, -100);
+          c = Math.min(c, 100);
+          break;
+        case "control_accel":
+          c = Math.max(c, 0), c = Math.min(c, 100);
+      }
+      Entry.hw.setDigitalPortValue("target", 16);
+      Entry.hw.setDigitalPortValue(b, c);
+      Entry.hw.update();
+      delete Entry.hw.sendQueue.target;
+      delete Entry.hw.sendQueue[b];
+      return a;
+    case "Running":
+      return a;
+    case "Finish":
+      return e && (Entry.hw.setDigitalPortValue("target", 16), Entry.hw.setDigitalPortValue(b, 0), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue[b]), a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, sendControlDouble:function(a, b, c, d, e) {
+  var f = 40;
+  e && (f = d);
+  switch(this.checkFinish(a, f)) {
+    case "Start":
+      return this.transferControlDouble(b, c), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return e && this.transferControlDouble(0, 0), a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setEventFlight:function(a, b, c) {
+  switch(this.checkFinish(a, c)) {
+    case "Start":
+      return this.transferCommand(16, 34, b), this.transferControlQuad(0, 0, 0, 0), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, sendControlQuadSingle:function(a, b, c, d, e) {
+  var f = 40;
+  e && (f = d);
+  switch(this.checkFinish(a, f)) {
+    case "Start":
+      return c = Math.max(c, -100), c = Math.min(c, 100), Entry.hw.setDigitalPortValue("target", 16), Entry.hw.setDigitalPortValue(b, c), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue[b], a;
+    case "Running":
+      return a;
+    case "Finish":
+      return e && (Entry.hw.setDigitalPortValue("target", 16), Entry.hw.setDigitalPortValue(b, 0), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue[b]), a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, sendControlQuad:function(a, b, c, d, e, f, g) {
+  var h = 40;
+  g && (h = f);
+  switch(this.checkFinish(a, h)) {
+    case "Start":
+      return this.transferControlQuad(b, c, d, e), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return g && this.transferControlQuad(0, 0, 0, 0), a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}};
 var calcArrowColor = "#e8b349", calcBlockColor = "#FFD974", calcFontColor = "#3D3D3D";
 Blockly.Blocks.number = {init:function() {
   this.setColour(calcBlockColor);
@@ -24953,48 +25593,48 @@ Entry.Scope = function(a, b) {
     return Entry.block[b.type].func.call(a, this.entity, a);
   };
   a.getParams = function() {
-    var b = this;
-    return this.block.params.map(function(a) {
-      if (a instanceof Entry.Block) {
-        var c = new Entry.Scope(a, b.executor);
-        return Entry.block[a.type].func.call(c, b.entity, c);
+    var a = this;
+    return this.block.params.map(function(b) {
+      if (b instanceof Entry.Block) {
+        var c = new Entry.Scope(b, a.executor);
+        return Entry.block[b.type].func.call(c, a.entity, c);
       }
-      return a;
+      return b;
     });
   };
-  a.getValue = function(b, a) {
-    b = this.block.params[this._getParamIndex(b, a)];
-    a = new Entry.Scope(b, this.executor);
-    return Entry.block[b.type].func.call(a, this.entity, a);
+  a.getValue = function(a, c) {
+    a = this.block.params[this._getParamIndex(a, c)];
+    c = new Entry.Scope(a, this.executor);
+    return Entry.block[a.type].func.call(c, this.entity, c);
   };
-  a.getStringValue = function(b, a) {
-    return String(this.getValue(b, a));
+  a.getStringValue = function(a, c) {
+    return String(this.getValue(a, c));
   };
-  a.getNumberValue = function(b, a) {
-    return Number(this.getValue(b));
+  a.getNumberValue = function(a, c) {
+    return Number(this.getValue(a));
   };
-  a.getBooleanValue = function(b, a) {
-    return Number(this.getValue(b, a)) ? !0 : !1;
+  a.getBooleanValue = function(a, c) {
+    return Number(this.getValue(a, c)) ? !0 : !1;
   };
-  a.getField = function(b, a) {
-    return this.block.params[this._getParamIndex(b)];
+  a.getField = function(a, c) {
+    return this.block.params[this._getParamIndex(a)];
   };
-  a.getStringField = function(b, a) {
-    return String(this.getField(b));
+  a.getStringField = function(a, c) {
+    return String(this.getField(a));
   };
-  a.getNumberField = function(b) {
-    return Number(this.getField(b));
+  a.getNumberField = function(a) {
+    return Number(this.getField(a));
   };
-  a.getStatement = function(b, a) {
-    return this.executor.stepInto(this.block.statements[this._getStatementIndex(b, a)]);
+  a.getStatement = function(a, c) {
+    return this.executor.stepInto(this.block.statements[this._getStatementIndex(a, c)]);
   };
-  a._getParamIndex = function(b) {
+  a._getParamIndex = function(a) {
     this._schema || (this._schema = Entry.block[this.type]);
-    return this._schema.paramsKeyMap[b];
+    return this._schema.paramsKeyMap[a];
   };
-  a._getStatementIndex = function(b) {
+  a._getStatementIndex = function(a) {
     this._schema || (this._schema = Entry.block[this.type]);
-    return this._schema.statementsKeyMap[b];
+    return this._schema.statementsKeyMap[a];
   };
   a.die = function() {
     this.block = null;
@@ -25021,55 +25661,55 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"11px"});
     this.textElement.textContent = this.getText();
-    var b = this.getTextWidth(), a = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {x:0, y:(this.position && this.position.y ? this.position.y : 0) - a / 2, rx:3, ry:3, width:b, height:a, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    var a = this.getTextWidth(), c = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {x:0, y:(this.position && this.position.y ? this.position.y : 0) - c / 2, rx:3, ry:3, width:a, height:c, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:b, height:a});
+    this.box.set({x:0, y:0, width:a, height:c});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this._attachDisposeEvent(function() {
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
-    this.optionGroup.on("mousedown touchstart", function(b) {
-      b.stopPropagation();
+    this.optionGroup.on("mousedown touchstart", function(a) {
+      a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(b) {
+      var c = b.keyCode || b.which;
+      a.applyValue(b);
+      -1 < [13, 27].indexOf(c) && a.destroyOption();
     });
-    var a = this.getAbsolutePosFromDocument();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:c.x, top:c.y, width:a.box.width});
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
-    $(this.svgOptionGroup).on("mousedown touchstart", function(a) {
-      a.stopPropagation();
-      b._updateByCoord(a);
+    $(this.svgOptionGroup).on("mousedown touchstart", function(b) {
+      b.stopPropagation();
+      a._updateByCoord(b);
     });
     this._dividerGroup = this.svgOptionGroup.elem("g");
-    for (a = 0;360 > a;a += 15) {
-      this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === a % 45 ? 10 : 5), y2:0, transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
+    for (c = 0;360 > c;c += 15) {
+      this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === c % 45 ? 10 : 5), y2:0, transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
     }
-    a = this.getAbsolutePosFromBoard();
-    a.x += this.box.width / 2;
-    a.y = a.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + a.x + "," + a.y + ")"});
+    c = this.getAbsolutePosFromBoard();
+    c.x += this.box.width / 2;
+    c.y = c.y + this.box.height / 2 + 49 + 1;
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + c.x + "," + c.y + ")"});
     $(this.svgOptionGroup).bind("mousemove touchmove", this._updateByCoord.bind(this));
     $(this.svgOptionGroup).bind("mouseup touchend", this.destroyOption.bind(this));
     this.updateGraph();
     this.optionGroup.focus();
     this.optionGroup.select();
   };
-  a._updateByCoord = function(b) {
-    b.originalEvent && b.originalEvent.touches && (b = b.originalEvent.touches[0]);
-    b = [b.clientX, b.clientY];
-    var a = this.getAbsolutePosFromDocument();
+  a._updateByCoord = function(a) {
+    a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+    a = [a.clientX, a.clientY];
+    var b = this.getAbsolutePosFromDocument();
     this.optionGroup.val(this.modValue(function(a, b) {
       var c = b[0] - a[0];
       a = b[1] - a[1] - 49 - 1;
@@ -25078,27 +25718,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
       b = 90 - b;
       0 > c ? b += 180 : 0 < a && (b += 360);
       return 15 * Math.round(b / 15);
-    }([a.x + this.box.width / 2, a.y + this.box.height / 2 + 1], b)));
+    }([b.x + this.box.width / 2, b.y + this.box.height / 2 + 1], a)));
     this.applyValue();
   };
   a.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
-    var b = Entry.toRadian(this.getValue()), a = 49 * Math.sin(b), d = -49 * Math.cos(b), b = b > Math.PI ? 1 : 0;
-    this._fillPath = this.svgOptionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", a).replace("%Y", d).replace("%LARGE", b), class:"entry-angle-fill-area"});
+    var a = Entry.toRadian(this.getValue()), c = 49 * Math.sin(a), d = -49 * Math.cos(a), a = a > Math.PI ? 1 : 0;
+    this._fillPath = this.svgOptionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", c).replace("%Y", d).replace("%LARGE", a), class:"entry-angle-fill-area"});
     this.svgOptionGroup.appendChild(this._dividerGroup);
     this._indicator && this._indicator.remove();
-    this._indicator = this.svgOptionGroup.elem("line", {x1:0, y1:0, x2:a, y2:d});
+    this._indicator = this.svgOptionGroup.elem("line", {x1:0, y1:0, x2:c, y2:d});
     this._indicator.attr({class:"entry-angle-indicator"});
   };
   a.applyValue = function() {
-    var b = this.optionGroup.val();
-    isNaN(b) || "" === b || (b = this.modValue(b), this.setValue(b), this.updateGraph(), this.textElement.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(b), this.resize());
+    var a = this.optionGroup.val();
+    isNaN(a) || "" === a || (a = this.modValue(a), this.setValue(a), this.updateGraph(), this.textElement.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(a), this.resize());
   };
   a.resize = function() {
-    var b = this.getTextWidth();
-    this._header.attr({width:b});
-    this.optionGroup && this.optionGroup.css({width:b});
-    this.box.set({width:b});
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup && this.optionGroup.css({width:a});
+    this.box.set({width:a});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -25107,8 +25747,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   a.getText = function() {
     return this.getValue() + "\u00b0";
   };
-  a.modValue = function(b) {
-    return b % 360;
+  a.modValue = function(a) {
+    return a % 360;
   };
   a.destroyOption = function() {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
@@ -25137,11 +25777,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
   a.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-field-color"});
-    var b = this._CONTENT_HEIGHT, a = this._CONTENT_WIDTH, d = this._position, e;
-    d ? (e = d.x || 0, d = d.y || 0) : (e = 0, d = -b / 2);
-    this._header = this.svgGroup.elem("rect", {x:e, y:d, width:a, height:b, fill:this.getValue()});
+    var a = this._CONTENT_HEIGHT, c = this._CONTENT_WIDTH, d = this._position, e;
+    d ? (e = d.x || 0, d = d.y || 0) : (e = 0, d = -a / 2);
+    this._header = this.svgGroup.elem("rect", {x:e, y:d, width:c, height:a, fill:this.getValue()});
     this._bindRenderOptions();
-    this.box.set({x:e, y:d, width:a, height:b});
+    this.box.set({x:e, y:d, width:c, height:a});
   };
   a.renderOptions = function() {
     var a = this;

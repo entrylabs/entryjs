@@ -23,88 +23,16 @@ Entry.byrobot_dronefighter =
 	setZero: function()
 	{
 		// 초기화
+		
+		// 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
+		// 명령을 각각 분리하여 전송하게 함(2017.01.03)
+		for (var i = 0; i < 1; i++)
 		{
-			//var send = Entry.hw.sendQueue;	
-			
-			// 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
-			// 명령을 각각 분리하여 전송하게 함(2017.01.03)
-			
-			// Drone reset
-			//send.target								= 0x10;
-			
-			for (var i = 0; i < 1; i++)
-			{
-				this.transferCommand(0x10, 0x24, 0);
-				this.transferVibrator(0, 0, 0, 0);
-				this.transferbuzzer(0, 0, 0);
-				this.transferLightManual(0x10, 0xFF, 0);
-				this.transferLightManual(0x11, 0xFF, 0);
-				
-				/*
-				{
-					send.target						= 0x10;
-					send.command_command			= 0x24;
-					send.command_option				= 0;
-					
-					Entry.hw.update();
-			
-					send.command_command			= undefined;
-					send.command_option				= undefined;
-				}
-				
-				{
-					send.target						= 0x11;
-					send.buzzer_mode				= 0;
-					send.buzzer_value				= 0;
-					send.buzzer_time				= 0;
-				
-					Entry.hw.update();
-					
-					send.buzzer_mode				= undefined;
-					send.buzzer_value				= undefined;
-					send.buzzer_time				= undefined;
-				}
-				
-				{
-					send.target						= 0x11;
-					send.vibrator_mode				= 0;
-					send.vibrator_on				= 0;
-					send.vibrator_off				= 0;
-					send.vibrator_total				= 0;
-					
-					Entry.hw.update();
-			
-					send.vibrator_mode				= undefined;
-					send.vibrator_on				= undefined;
-					send.vibrator_off				= undefined;
-					send.vibrator_total				= undefined;
-				}
-				
-				{
-					send.target						= 0x10;
-					send.light_manual_flags			= 0xff;
-					send.light_manual_brightness	= 0;
-			
-					Entry.hw.update();
-					
-					send.light_manual_flags			= undefined;
-					send.light_manual_brightness	= undefined;
-				}				
-				
-				{
-					send.target						= 0x11;
-					send.light_manual_flags			= 0xff;
-					send.light_manual_brightness	= 0;
-				
-					Entry.hw.update();
-					
-					send.light_manual_flags			= undefined;
-					send.light_manual_brightness	= undefined;
-				}
-				*/
-			}
-			
-			//send.target								= undefined;
+			this.transferCommand(0x10, 0x24, 0);
+			this.transferVibrator(0, 0, 0, 0);
+			this.transferbuzzer(0, 0, 0);
+			this.transferLightManual(0x10, 0xFF, 0);
+			this.transferLightManual(0x11, 0xFF, 0);
 		}
 	},
 	
@@ -259,7 +187,7 @@ Entry.byrobot_dronefighter =
 		
 		// 전송
 		Entry.hw.setDigitalPortValue("target", 0x10);
-		Entry.hw.setDigitalPortValue("irmessage_data", irmessage);		// 0x10 : CommandType::ModeVehicle
+		Entry.hw.setDigitalPortValue("irmessage_data", irmessage);
 
 		Entry.hw.update();
 
@@ -366,26 +294,6 @@ Entry.byrobot_dronefighter =
 		case "Start":
 			{
 				this.transferLightManual(target, flags, brightness);
-				/*
-				// 범위 조정
-				target = Math.max(target, 0);
-				target = Math.min(target, 255);
-				flags = Math.max(flags, 0);
-				flags = Math.min(flags, 255);
-				brightness = Math.max(brightness, 0);
-				brightness = Math.min(brightness, 255);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", target);
-				Entry.hw.setDigitalPortValue("light_manual_flags", flags);
-				Entry.hw.setDigitalPortValue("light_manual_brightness", brightness);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["light_manual_flags"];
-				delete Entry.hw.sendQueue["light_manual_brightness"];
-				*/
 			}
 			return script;
 			
@@ -419,20 +327,6 @@ Entry.byrobot_dronefighter =
 		case "Start":
 			{
 				this.transferbuzzer(0, 0, 0);
-				/*
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("buzzer_mode", 0);
-				Entry.hw.setDigitalPortValue("buzzer_value", 0);
-				Entry.hw.setDigitalPortValue("buzzer_time", 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["buzzer_mode"];
-				delete Entry.hw.sendQueue["buzzer_value"];
-				delete Entry.hw.sendQueue["buzzer_time"];
-				*/
 			}
 			return script;
 			
@@ -466,20 +360,6 @@ Entry.byrobot_dronefighter =
 					mode = 1;	// 묵음 즉시
 				
 				this.transferbuzzer(mode, 0xEE, time);
-				/*
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("buzzer_mode", mode);
-				Entry.hw.setDigitalPortValue("buzzer_value", 0xEE);
-				Entry.hw.setDigitalPortValue("buzzer_time", time);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["buzzer_mode"];
-				delete Entry.hw.sendQueue["buzzer_value"];
-				delete Entry.hw.sendQueue["buzzer_time"];
-				*/
 			}
 			return script;
 			
@@ -514,20 +394,6 @@ Entry.byrobot_dronefighter =
 				var scalecalc = (octave * 12) + scale;
 				
 				this.transferbuzzer(mode, scalecalc, time);
-				/*
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("buzzer_mode", mode);
-				Entry.hw.setDigitalPortValue("buzzer_value", scalecalc);
-				Entry.hw.setDigitalPortValue("buzzer_time", time);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["buzzer_mode"];
-				delete Entry.hw.sendQueue["buzzer_value"];
-				delete Entry.hw.sendQueue["buzzer_time"];
-				*/
 			}
 			return script;
 			
@@ -564,21 +430,6 @@ Entry.byrobot_dronefighter =
 				hz = Math.min(hz, 63999);
 				
 				this.transferbuzzer(mode, hz, time);
-				/*
-								
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("buzzer_mode", mode);
-				Entry.hw.setDigitalPortValue("buzzer_value", hz);
-				Entry.hw.setDigitalPortValue("buzzer_time", time);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["buzzer_mode"];
-				delete Entry.hw.sendQueue["buzzer_value"];
-				delete Entry.hw.sendQueue["buzzer_time"];
-				*/
 			}
 			return script;
 			
@@ -606,22 +457,6 @@ Entry.byrobot_dronefighter =
 		case "Start":
 			{
 				this.transferVibrator(0, 0, 0, 0);
-				/*
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("vibrator_mode", 0);		// 0: Stop
-				Entry.hw.setDigitalPortValue("vibrator_on", 0);
-				Entry.hw.setDigitalPortValue("vibrator_off", 0);
-				Entry.hw.setDigitalPortValue("vibrator_total", 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["vibrator_mode"];
-				delete Entry.hw.sendQueue["vibrator_on"];
-				delete Entry.hw.sendQueue["vibrator_off"];
-				delete Entry.hw.sendQueue["vibrator_total"];
-				*/
 			}
 			return script;
 			
@@ -654,28 +489,6 @@ Entry.byrobot_dronefighter =
 					mode = 1;	// 즉시
 				
 				this.transferVibrator(mode, timeOn, timeOff, timeRun);
-				/*
-				// 범위 조정
-				timeOn = Math.max(timeOn, 1);
-				timeOn = Math.min(timeOn, 60000);
-				timeOff = Math.max(timeOff, 1);
-				timeOff = Math.min(timeOff, 60000);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x11);
-				Entry.hw.setDigitalPortValue("vibrator_mode", mode);
-				Entry.hw.setDigitalPortValue("vibrator_on", timeOn);
-				Entry.hw.setDigitalPortValue("vibrator_off", timeOff);
-				Entry.hw.setDigitalPortValue("vibrator_total", timeRun);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["vibrator_mode"];
-				delete Entry.hw.sendQueue["vibrator_on"];
-				delete Entry.hw.sendQueue["vibrator_off"];
-				delete Entry.hw.sendQueue["vibrator_total"];
-				*/
 			}
 			return script;
 			
@@ -697,20 +510,6 @@ Entry.byrobot_dronefighter =
 		case "Start":
 			{
 				this.transferIrMessage(irmessage);
-				/*
-				// 범위 조정
-				irmessage = Math.max(irmessage, 0);
-				irmessage = Math.min(irmessage, 127);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("irmessage_data", irmessage);		// 0x10 : CommandType::ModeVehicle
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["irmessage_data"];
-				*/
 			}
 			return script;
 			
@@ -737,17 +536,6 @@ Entry.byrobot_dronefighter =
 		case "Start":
 			{
 				this.transferCommand(target, command, option);
-				/*
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("command_command", command);
-				Entry.hw.setDigitalPortValue("command_option", option);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
-				*/
 			}
 			return script;
 			
@@ -769,24 +557,6 @@ Entry.byrobot_dronefighter =
 		case "Start":
 			{
 				this.transferMotorSingle(motorIndex, motorDirection, motorSpeed);
-				/*
-				// 범위 조정
-				motorSpeed = Math.max(motorSpeed, 0);
-				motorSpeed = Math.min(motorSpeed, 4096);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("motorsingle_target", motorIndex);
-				Entry.hw.setDigitalPortValue("motorsingle_direction", motorDirection);
-				Entry.hw.setDigitalPortValue("motorsingle_value", motorSpeed);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["motorsingle_target"];
-				delete Entry.hw.sendQueue["motorsingle_direction"];
-				delete Entry.hw.sendQueue["motorsingle_value"];
-				*/
 			}
 			return script;
 			
@@ -819,55 +589,18 @@ Entry.byrobot_dronefighter =
 		case "Start":
 			{
 				this.transferCommand(0x10, 0x10, modeVehicle);
-				/*
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("command_command", 0x10);				// 0x10 : CommandType::ModeVehicle
-				Entry.hw.setDigitalPortValue("command_option", modeVehicle);		// 0x10 : Mode::Vehicle::Drive
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
-				*/
 				
 				switch( (modeVehicle & 0xF0) )
 				{
 				case 0x10:
 					{
 						this.transferControlDouble(0, 0);
-						/*
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_wheel", 0);
-						Entry.hw.setDigitalPortValue("control_accel", 0);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_wheel"];
-						delete Entry.hw.sendQueue["control_accel"];						
-						*/
 					}
 					break;
 					
 				case 0x20:
 					{
 						this.transferControlQuad(0, 0, 0, 0);
-						/*
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_roll", 0);
-						Entry.hw.setDigitalPortValue("control_pitch", 0);
-						Entry.hw.setDigitalPortValue("control_yaw", 0);
-						Entry.hw.setDigitalPortValue("control_throttle", 0);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_roll"];
-						delete Entry.hw.sendQueue["control_pitch"];
-						delete Entry.hw.sendQueue["control_yaw"];
-						delete Entry.hw.sendQueue["control_throttle"];						
-						*/
 					}
 					break;
 				
@@ -964,24 +697,6 @@ Entry.byrobot_dronefighter =
 		case "Start":
 			{
 				this.transferControlDouble(wheel, accel);
-				/*
-				// 범위 조정
-				wheel		= Math.max(wheel, -100);
-				wheel		= Math.min(wheel, 100);
-				accel		= Math.max(accel, 0);
-				accel		= Math.min(accel, 100);
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("control_wheel", wheel);
-				Entry.hw.setDigitalPortValue("control_accel", accel);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["control_wheel"];
-				delete Entry.hw.sendQueue["control_accel"];
-				*/
 			}
 			return script;
 			
@@ -992,18 +707,6 @@ Entry.byrobot_dronefighter =
 			if( flagDelay )
 			{
 				this.transferControlDouble(0, 0);
-				/*
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("control_wheel", 0);
-				Entry.hw.setDigitalPortValue("control_accel", 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["control_wheel"];
-				delete Entry.hw.sendQueue["control_accel"];
-				*/
 			}
 			return script.callReturn();
 			
@@ -1018,35 +721,8 @@ Entry.byrobot_dronefighter =
 		{
 		case "Start":
 			{
-				this.transferCommand(0x10, 0x22, eventFlight);
+				this.transferCommand(0x10, 0x22, eventFlight);	// 0x22 : CommandType::FlightEvent
 				this.transferControlQuad(0, 0, 0, 0);
-				/*
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("command_command", 0x22);			// 0x22 : CommandType::FlightEvent
-				Entry.hw.setDigitalPortValue("command_option", eventFlight);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["command_command"];
-				delete Entry.hw.sendQueue["command_option"];
-				
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("control_roll", 0);
-				Entry.hw.setDigitalPortValue("control_pitch", 0);
-				Entry.hw.setDigitalPortValue("control_yaw", 0);
-				Entry.hw.setDigitalPortValue("control_throttle", 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["control_roll"];
-				delete Entry.hw.sendQueue["control_pitch"];
-				delete Entry.hw.sendQueue["control_yaw"];
-				delete Entry.hw.sendQueue["control_throttle"];
-				*/
 			}
 			return script;
 			
@@ -1083,65 +759,6 @@ Entry.byrobot_dronefighter =
 
 				delete Entry.hw.sendQueue["target"];
 				delete Entry.hw.sendQueue[controlTarget];
-				
-				
-				/*
-				switch(direction)
-				{
-				case "roll":
-					{
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_roll", value);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_roll"];
-					}
-					break;
-					
-				case "pitch":
-					{
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_pitch", value);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_pitch"];
-					}
-					break;
-					
-				case "yaw":
-					{
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_yaw", value);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_yaw"];
-					}
-					break;
-					
-				case "throttle":
-					{
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_throttle", value);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_throttle"];	
-					}
-					break;
-				}
-				
-				*/
 			}
 			return script;
 			
@@ -1159,63 +776,6 @@ Entry.byrobot_dronefighter =
 
 				delete Entry.hw.sendQueue["target"];
 				delete Entry.hw.sendQueue[controlTarget];
-				
-				/*
-				switch(direction)
-				{
-				case "roll":
-					{
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_roll", 0);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_roll"];
-					}
-					break;
-					
-				case "pitch":
-					{
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_pitch", 0);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_pitch"];
-					}
-					break;
-					
-				case "yaw":
-					{
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_yaw", 0);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_yaw"];
-					}
-					break;
-					
-				case "throttle":
-					{
-						// 전송
-						Entry.hw.setDigitalPortValue("target", 0x10);
-						Entry.hw.setDigitalPortValue("control_throttle", 0);
-
-						Entry.hw.update();
-
-						delete Entry.hw.sendQueue["target"];
-						delete Entry.hw.sendQueue["control_throttle"];	
-					}
-					break;
-				}
-				*/
 			}
 			return script.callReturn();
 			
@@ -1235,22 +795,6 @@ Entry.byrobot_dronefighter =
 		case "Start":
 			{
 				this.transferControlQuad(roll, pitch, yaw, throttle);
-				/*
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("control_roll", roll);
-				Entry.hw.setDigitalPortValue("control_pitch", pitch);
-				Entry.hw.setDigitalPortValue("control_yaw", yaw);
-				Entry.hw.setDigitalPortValue("control_throttle", throttle);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["control_roll"];
-				delete Entry.hw.sendQueue["control_pitch"];
-				delete Entry.hw.sendQueue["control_yaw"];
-				delete Entry.hw.sendQueue["control_throttle"];
-				*/
 			}
 			return script;
 			
@@ -1260,22 +804,6 @@ Entry.byrobot_dronefighter =
 		case "Finish":
 			if( flagDelay )
 			{
-				/*
-				// 전송
-				Entry.hw.setDigitalPortValue("target", 0x10);
-				Entry.hw.setDigitalPortValue("control_roll", 0);
-				Entry.hw.setDigitalPortValue("control_pitch", 0);
-				Entry.hw.setDigitalPortValue("control_yaw", 0);
-				Entry.hw.setDigitalPortValue("control_throttle", 0);
-
-				Entry.hw.update();
-
-				delete Entry.hw.sendQueue["target"];
-				delete Entry.hw.sendQueue["control_roll"];
-				delete Entry.hw.sendQueue["control_pitch"];
-				delete Entry.hw.sendQueue["control_yaw"];
-				delete Entry.hw.sendQueue["control_throttle"];
-				*/
 				this.transferControlQuad(0, 0, 0, 0);
 			}
 			return script.callReturn();
