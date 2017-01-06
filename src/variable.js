@@ -454,7 +454,7 @@ Entry.Variable.prototype.updateView = function() {
             for (var i = this.scrollPosition;
                  i < this.scrollPosition + maxView && i < this.array_.length;
                  i++) {
-                if (Entry.playground.mainWorkspace.mode === Entry.Workspace.MODE_VIMBOARD)
+                if (Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD)
                     this.elementView.indexView.text = i;
                 else
                     this.elementView.indexView.text = i + 1;
