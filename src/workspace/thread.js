@@ -54,7 +54,6 @@ Entry.Thread = function(thread, code, parent) {
     p.createView = function(board, mode) {
         if (!this.view)
             this.view = new Entry.ThreadView(this, board);
-        var prevBlock = null;
         this._data.getAll().forEach(function(b) {
             b.createView(board, mode);
         });

@@ -24582,16 +24582,14 @@ Entry.FieldBlock = function(b, a, d, c, e) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 (function(b) {
   b.schema = {magneting:!1};
-  b.renderStart = function(a, b) {
+  b.renderStart = function(a, b, c) {
     this.svgGroup || (this.svgGroup = this._blockView.contentSvgGroup.elem("g"));
     this.renderMode = void 0 !== b ? b : this._blockView.renderMode;
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
-    var c = this.getValue();
-    c && !c.view && (c.setThread(this), c.createView(a, this.renderMode), c.getThread().view.setParent(this));
-    this.updateValueBlock(c);
-    this._valueBlock.view._startContentRender(this.renderMode);
+    (b = this.getValue()) && !b.view && (b.setThread(this), b.createView(a, this.renderMode), b.getThread().view.setParent(this));
+    this.updateValueBlock(b);
     this._blockView.getBoard().constructor !== Entry.Board && this._valueBlock.view.removeControl();
   };
   b.align = function(a, b, c) {
