@@ -93,7 +93,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
     p.setParser = function(mode, type, cm) {
         if (this._mode === mode && this._type === type)
             return;
-        console.log("setParser this._type", this._type, "type", type);
         this._mode = mode;
         this._type = type;
         this._cm = cm;
@@ -160,10 +159,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.parse = function(code, parseMode) {
-        console.log("this.syntax", this.syntax);
-        console.log("this._syntax_cache", this._syntax_cache);
         var type = this._type;
-        console.log("parser type", type, "this._type", this._type);
         var result = "";
 
         switch (type) {
@@ -171,7 +167,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 try {
                     //var astTree = acorn.parse(code);
                     //var threads = code.split('\n\n');
-                    //console.log("code", code);
                     var threads = [];
                     threads.push(code);
                     var astArray = [];
@@ -244,14 +239,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                     var pyAstGenerator = new Entry.PyAstGenerator();
                     var threads = this.makeThreads(code);
-                    //console.log("threads", threads);
 
                     var astArray = [];
                     var threadCount = 0;
                     var ast;
                     for(var index = 0; index < threads.length; index++) {
                         var thread = threads[index];
-                        //console.log("thread", thread, "thread.length", thread.length);
                         if(thread.length == 0)
                             continue;
                         thread = thread.replace(/\t/gm, '    ');
@@ -283,7 +276,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                     if (this.codeMirror) {
                         var line;
-                        console.log("main error", error);
                         if (error instanceof SyntaxError) {
                             var err = this.findSyntaxError(error, threadCount);
                             var annotation = {
@@ -317,7 +309,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var message = this.makeSyntaxErrorDisplay(error.subject, error.keyword, error.message, err.from.line);
                         }
                         else if(error.type == "converting") {
-                            console.log("error.keyword", error.keyword);
                             var title = error.title;
                             var message = error.message;
 
@@ -333,7 +324,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 var textCode = this._execParser.Code(code, parseMode);
                 /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
-                //console.log("textCode", textCode);
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
                         var temp = '';
@@ -351,7 +341,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     result = '';
                 }*/
 
-                console.log("js textcode", textCode);
                 result = textCode;
 
                 break;
@@ -427,7 +416,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.mappingSyntax = function(mode) {
-        console.log("this._syntax_cache[mode]", this._syntax_cache[mode]);
         if (this._syntax_cache[mode])
             return this._syntax_cache[mode];
 
@@ -572,7 +560,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.findSyntaxError = function(error, threadCount) {
-        console.log("error.loc", error.loc, "error.pos", error.pos, "error.raisedAt", error.raisedAt, "error.message", error.message);
         var err = {};
         err.from = {};
         err.to = {}
@@ -583,7 +570,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var errorRaisedAt = error.raisedAt;
         var errorMessage = error.message;
 
-        console.log("this._pyThreadCount", this._pyThreadCount, "this._pyBlockCount", this._pyBlockCount);
 
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
@@ -605,13 +591,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
         err.to.line = targetLine;
         err.to.ch = targetText.length;
 
-        console.log("findSyntaxError err", err);
         return err;
 
     };
 
     p.findConvError = function(error) {
-        console.log("error123", error);
         var err = {};
         err.from = {};
         err.to = {}
@@ -619,7 +603,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var errorLine = error.line-1;
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
-        console.log("contentsArr", contentsArr);
         var currentLineCount = 0;
         var emptyLineCount = 0;
         var currentText;
@@ -632,7 +615,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
             if(length == 0)
                 emptyLineCount++;
 
-            console.log("errorLine", errorLine, "emptyLineCount", emptyLineCount, "i", i);
 
             if(errorLine + emptyLineCount + 3 == i) {
                 targetLine = i+1;
@@ -648,12 +630,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
         err.to.line = targetLine;
         err.to.ch = currentText.length;
 
-        console.log("findConvError err", err);
         return err;
     };
 
     p.makeThreads = function(text) {
-        console.log("makeThreads text", text);
         var textArr = text.split("\n");
         var thread = "";
         var threads = [];
@@ -663,7 +643,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
-            console.log("textLine", textLine, "length", textLine.length, "[0]", textLine.charAt(0));
             textLine = textLine.replace(/\t/gm, '    ');
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {
                 textLine = this.entryEventParamConverter(textLine);
@@ -692,7 +671,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
             }
         }
         threads.push(optText);
-        console.log("makeThreads result", threads);
         return threads;
     };
 
@@ -702,7 +680,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         var stmt = text.substring(0, startIndex);
         var param = text.substring(startIndex+1, endIndex);
-        console.log("filter stmt", stmt, "param", param);
         param = param.replace(/\"/g, "");
 
         if(param) {
@@ -720,12 +697,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         text = stmt + "(" + param + "):\n";
 
-        console.log("entryEventFilter text", text);
         return text;
     };
 
     p.makeSyntaxErrorDisplay = function(subject, keyword, message, line) {
-        console.log("subject", subject, "keyword", keyword, "message", message, "line", line);
         var contents;
         if(keyword)
             var kw = "\'" + keyword + "\' ";

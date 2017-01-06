@@ -185,24 +185,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             var calleeName = Entry.TextCodingUtil.eventBlockSyntaxFilter(calleeData.name);
 
-            if(!type) {
-                if(arguments && arguments.length != 0) {
-                    for(var a in arguments) {
-                        var arg = arguments[a];
-                        if(arg.type == "Identifier") {
-                            var option = arg.name;
-                        }
-                        else if(arg.type == "Literal") {
-                            var option = arg.value;
-                        }
-                        else if(arg.type == "MemberExpression") {
-                            var option = arg.object.name + "." + arg.property.name;
-                        }
-                        var syntax = calleeName + "#" + option;
-                        var blockSyntax = this.getBlockSyntax(syntax);
-                        if(blockSyntax) {
-                            type = blockSyntax.key;
-                        }
+            if(arguments && arguments.length != 0) {
+                for(var a in arguments) {
+                    var arg = arguments[a];
+                    if(arg.type == "Identifier") {
+                        var option = arg.name;
+                    }
+                    else if(arg.type == "Literal") {
+                        var option = arg.value;
+                    }
+                    else if(arg.type == "MemberExpression") {
+                        var option = arg.object.name + "." + arg.property.name;
+                    }
+                    var syntax = calleeName + "#" + option;
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if(blockSyntax) {
+                        type = blockSyntax.key;
                     }
                 }
             }
@@ -299,28 +297,23 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             result.callee = calleeName;
 
-            if(!type) {
-                if(arguments && arguments.length != 0) {
-                    for(var a in arguments) {
-                        var arg = arguments[a];
-                        if(arg.type == "Identifier") {
-                            var option = arg.name;
-                        }
-                        else if(arg.type == "Literal") {
-                            var option = arg.value;
-                        }
-                        else if(arg.type == "MemberExpression") {
-                            var option = arg.object.name + "." + arg.property.name;
-                        }
-                        var syntax = calleeName + "#" + option;
-                        var blockSyntax = this.getBlockSyntax(syntax);
-                        if(blockSyntax) {
-                            type = blockSyntax.key;
-                            if(blockSyntax.replaceBlockType)
-                                type = blockSyntax.replaceBlockType;
-
-                        }
-                    }
+            if(arguments && arguments.length != 0) {
+                var arg = arguments[0];
+                if(arg.type == "Identifier") {
+                    var option = arg.name;
+                }
+                else if(arg.type == "Literal") {
+                    var option = arg.value;
+                }
+                else if(arg.type == "MemberExpression") {
+                    var option = arg.object.name + "." + arg.property.name;
+                }
+                var syntax = calleeName + "#" + option;
+                var blockSyntax = this.getBlockSyntax(syntax);
+                if(blockSyntax) {
+                    type = blockSyntax.key;
+                    if(blockSyntax.replaceBlockType)
+                        type = blockSyntax.replaceBlockType;
                 }
             }
 
