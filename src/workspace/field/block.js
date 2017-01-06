@@ -45,7 +45,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         magneting: false
     };
 
-    p.renderStart = function(board, mode) {
+    p.renderStart = function(board, mode, renderMode) {
         if (!this.svgGroup)
             this.svgGroup =
                 this._blockView.contentSvgGroup.elem("g");
@@ -68,7 +68,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         }
 
         this.updateValueBlock(block);
-        this._valueBlock.view._startContentRender(this.renderMode);
+        //this._valueBlock.view._startContentRender(this.renderMode);
 
         if (this._blockView.getBoard().constructor !== Entry.Board)
             this._valueBlock.view.removeControl();
