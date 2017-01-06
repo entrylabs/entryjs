@@ -21832,7 +21832,7 @@ Entry.Variable.prototype.updateView = function() {
             b < this.array_.length ? (this.scrollButton_.y > this.getHeight() - 40 && (this.scrollButton_.y = this.getHeight() - 40), this.elementView.valueWrapper.graphics.clear().f("#1bafea").rr(20, -2, this.getWidth() - 20 - 10 - 2 * this.BORDER, 17, 2), this.scrollButton_.visible = !0, this.scrollButton_.x = this.getWidth() - 12, this.scrollPosition = Math.floor((this.scrollButton_.y - 23) / (this.getHeight() - 23 - 40) * (this.array_.length - b))) : (this.elementView.valueWrapper.graphics.clear().f("#1bafea").rr(20, 
             -2, this.getWidth() - 20 - 2 * this.BORDER, 17, 2), this.scrollButton_.visible = !1, this.scrollPosition = 0);
             for (a = this.scrollPosition;a < this.scrollPosition + b && a < this.array_.length;a++) {
-              this.elementView.indexView.text = Entry.playground.mainWorkspace.mode === Entry.Workspace.MODE_VIMBOARD ? a : a + 1;
+              Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD ? this.elementView.indexView.text = a : this.elementView.indexView.text = a + 1;
               var c = String(this.array_[a].data), d = Math.floor((this.getWidth() - 50) / 7), c = Entry.cutStringByLength(c, d), c = String(this.array_[a].data).length > c.length ? c + ".." : c;
               this.elementView.valueView.text = c;
               c = this.elementView.clone(!0);
