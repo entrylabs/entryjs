@@ -596,6 +596,8 @@ EntryStatic.getAllBlocks = function() {
 				"byrobot_dronefighter_controller_controller_vibrator_on_reserve",
 				"byrobot_dronefighter_controller_controller_vibrator_delay",
 				"byrobot_dronefighter_controller_controller_vibrator_reserve",
+				"byrobot_dronefighter_controller_controller_userinterface_preset",
+				"byrobot_dronefighter_controller_controller_userinterface",
 
 				// BYROBOT - Petrone
 				'byrobot_petrone_common_value_button',

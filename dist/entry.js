@@ -2026,7 +2026,7 @@ checkFinish:function(a, b) {
 }};
 Entry.byrobot_dronefighter_controller = {name:"byrobot_dronefighter_controller", setZero:function() {
   for (var a = 0;1 > a;a++) {
-    this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(17, 255, 0);
+    this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(17, 255, 0), this.transferCommand(17, 129, 0);
   }
 }, monitorTemplate:{imgPath:"hw/byrobot_dronefighter_controller.png", width:500, height:500, listPorts:{joystick_left_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event, 
 type:"input", pos:{x:0, y:0}}, joystick_left_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command, type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction, type:"input", 
@@ -2095,6 +2095,14 @@ type:"output", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(a,
   delete Entry.hw.sendQueue.target;
   delete Entry.hw.sendQueue.command_command;
   delete Entry.hw.sendQueue.command_option;
+}, transferUserInterface:function(a, b) {
+  Entry.hw.setDigitalPortValue("target", 17);
+  Entry.hw.setDigitalPortValue("userinterface_command", a);
+  Entry.hw.setDigitalPortValue("userinterface_function", b);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.userinterface_command;
+  delete Entry.hw.sendQueue.userinterface_function;
 }, getData:function(a, b) {
   return Entry.hw.portData[b];
 }, setLightManual:function(a, b, c, d) {
@@ -2194,6 +2202,17 @@ type:"output", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(a,
   switch(this.checkFinish(a, 40)) {
     case "Start":
       return this.transferCommand(b, c, d), a;
+    case "Running":
+      return a;
+    case "Finish":
+      return a.callReturn();
+    default:
+      return a.callReturn();
+  }
+}, setUserInterface:function(a, b, c) {
+  switch(this.checkFinish(a, 40)) {
+    case "Start":
+      return this.transferUserInterface(b, c), a;
     case "Running":
       return a;
     case "Finish":
@@ -25412,8 +25431,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
-    this.optionGroup.on("mousedown touchstart", function(b) {
-      b.stopPropagation();
+    this.optionGroup.on("mousedown touchstart", function(a) {
+      a.stopPropagation();
     });
     this.optionGroup.on("keyup", function(a) {
       var c = a.keyCode || a.which;

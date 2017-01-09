@@ -31,6 +31,7 @@ Entry.byrobot_dronefighter_controller =
 			this.transferVibrator(0, 0, 0, 0);
 			this.transferbuzzer(0, 0, 0);
 			this.transferLightManual(0x11, 0xFF, 0);
+			this.transferCommand(0x11, 0x81, 0);
 		}
 	},
 	
@@ -179,6 +180,21 @@ Entry.byrobot_dronefighter_controller =
 		delete Entry.hw.sendQueue["command_command"];
 		delete Entry.hw.sendQueue["command_option"];
 	},
+	
+	transferUserInterface: function(uicommand, uifunction)
+	{
+		// 전송
+		Entry.hw.setDigitalPortValue("target", 0x11);
+		Entry.hw.setDigitalPortValue("userinterface_command", uicommand);
+		Entry.hw.setDigitalPortValue("userinterface_function", uifunction);
+
+		Entry.hw.update();
+
+		delete Entry.hw.sendQueue["target"];
+		delete Entry.hw.sendQueue["userinterface_command"];
+		delete Entry.hw.sendQueue["userinterface_function"];
+	},
+	
 	
 	// functions for block
 	
@@ -412,6 +428,27 @@ Entry.byrobot_dronefighter_controller =
 		case "Start":
 			{
 				this.transferCommand(target, command, option);
+			}
+			return script;
+			
+		case "Running":
+			return script;
+		
+		case "Finish":
+			return script.callReturn();
+			
+		default:
+			return script.callReturn();
+		}
+	},
+	
+	setUserInterface: function(script, uicommand, uifunction)
+	{
+		switch( this.checkFinish(script, 40) )
+		{
+		case "Start":
+			{
+				this.transferUserInterface(uicommand, uifunction);
 			}
 			return script;
 			
