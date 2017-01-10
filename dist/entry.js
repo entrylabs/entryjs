@@ -8165,6 +8165,7 @@ Entry.Container.prototype.addObject = function(a, b) {
 };
 Entry.Container.prototype.addExtension = function(a) {
   this._extensionObjects.push(a);
+  this._extensionListView.append(a.renderView());
 };
 Entry.Container.prototype.addCloneObject = function(a, b) {
   a = a.toJSON();
@@ -9624,6 +9625,23 @@ Entry.EntityObject.prototype.alignTextBox = function() {
 Entry.EntityObject.prototype.syncDialogVisible = function() {
   this.dialog && (this.dialog.object.visible = this.visible);
 };
+Entry.Extension = function() {
+};
+(function(a) {
+  a.renderView = function() {
+  };
+})(Entry.Extension.prototype);
+Entry.TargetChecker = function() {
+  this.isForEdit;
+  this.goals = [];
+  this.blocks = ["check_object_property", "check_block_execution", "check_lecture_goal"];
+};
+Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
+(function(a) {
+  a.renderView = function() {
+    return this._view = Entry.Dom("li", {class:"targetChecker"});
+  };
+})(Entry.TargetChecker.prototype);
 Entry.Func = function(a) {
   this.id = a ? a.id : Entry.generateHash();
   this.content = a ? new Entry.Code(a.content) : new Entry.Code([[{type:"function_create", copyable:!1, deletable:!1, x:40, y:40}]]);
@@ -25999,15 +26017,15 @@ Entry.ThreadView = function(a, b) {
   a.destroy = function() {
     this.svgGroup.remove();
   };
-  a.setParent = function(b) {
-    this.parent = b;
+  a.setParent = function(a) {
+    this.parent = a;
   };
   a.getParent = function() {
     return this.parent;
   };
   a.renderText = function() {
-    for (var b = this.thread.getBlocks(), a = 0;a < b.length;a++) {
-      b[a].view.renderText();
+    for (var a = this.thread.getBlocks(), c = 0;c < a.length;c++) {
+      a[c].view.renderText();
     }
   };
   a.renderBlock = function() {

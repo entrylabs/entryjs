@@ -315,7 +315,8 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
 
 Entry.Container.prototype.addExtension = function(obj) {
     this._extensionObjects.push(obj);
-};
+    this._extensionListView.append(obj.renderView());
+}
 
 /**
  * Add Clone object
