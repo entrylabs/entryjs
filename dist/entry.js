@@ -10693,9 +10693,7 @@ Entry.createDom = function(a, b) {
   }
 };
 Entry.start = function(a) {
-  this.FPS || (this.FPS = 60);
-  Entry.assert("number" == typeof this.FPS, "FPS must be number");
-  Entry.engine.start(this.FPS);
+  "invisible" !== Entry.type && (this.FPS || (this.FPS = 60), Entry.assert("number" == typeof this.FPS, "FPS must be number"), Entry.engine.start(this.FPS));
 };
 Entry.parseOptions = function(a) {
   this.type = a.type;
@@ -15325,12 +15323,12 @@ Entry.Stage.prototype.render = function() {
   Entry.stage.timer = setTimeout(Entry.stage.render, 16 - a % 16 + 16 * Math.floor(a / 16));
 };
 Entry.Stage.prototype.update = function() {
-  Entry.requestUpdate ? (Entry.engine.isState("stop") && this.objectUpdated ? (this.canvas.update(), this.objectUpdated = !1) : this.canvas.update(), this.inputField && !this.inputField._isHidden && this.inputField.render(), Entry.requestUpdateTwice ? Entry.requestUpdateTwice = !1 : Entry.requestUpdate = !1) : Entry.requestUpdate = !1;
+  "invisible" !== Entry.type && (Entry.requestUpdate ? (Entry.engine.isState("stop") && this.objectUpdated ? (this.canvas.update(), this.objectUpdated = !1) : this.canvas.update(), this.inputField && !this.inputField._isHidden && this.inputField.render(), Entry.requestUpdateTwice ? Entry.requestUpdateTwice = !1 : Entry.requestUpdate = !1) : Entry.requestUpdate = !1);
 };
 Entry.Stage.prototype.loadObject = function(a) {
   var b = a.entity.object;
   this.getObjectContainerByScene(a.scene).addChild(b);
-  this.canvas.update();
+  Entry.requestUpdate = !0;
 };
 Entry.Stage.prototype.loadEntity = function(a) {
   Entry.stage.getObjectContainerByScene(a.parent.scene).addChild(a.object);
@@ -15392,9 +15390,7 @@ Entry.Stage.prototype.initHandle = function() {
   this.handle.setEditEndListener(this, this.endEdit);
 };
 Entry.Stage.prototype.updateObject = function() {
-  Entry.requestUpdate = !0;
-  this.handle.setDraggable(!0);
-  if (!this.editEntity) {
+  if ("invisible" !== Entry.type && (Entry.requestUpdate = !0, this.handle.setDraggable(!0), !this.editEntity)) {
     var a = this.selectedObject;
     if (a) {
       "textBox" == a.objectType ? this.handle.toggleCenter(!1) : this.handle.toggleCenter(!0);
@@ -15556,7 +15552,7 @@ Entry.Stage.prototype.initObjectContainers = function() {
   } else {
     a = this.createObjectContainer(Entry.scene.selectedScene), this.objectContainers.push(a), this.selectedObjectContainer = a;
   }
-  this.canvas.addChild(this.selectedObjectContainer);
+  "invisible" !== Entry.type && this.canvas.addChild(this.selectedObjectContainer);
   this.selectObjectContainer(Entry.scene.selectedScene);
 };
 Entry.Stage.prototype.selectObjectContainer = function(a) {

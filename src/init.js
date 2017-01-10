@@ -343,6 +343,8 @@ Entry.createDom = function(container, option) {
  * @param {?number} FPS
  */
 Entry.start = function(FPS) {
+    if (Entry.type === "invisible")
+        return;
     /** @type {number} */
     if (!this.FPS)
         this.FPS = 60;
