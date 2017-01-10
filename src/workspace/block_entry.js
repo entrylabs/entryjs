@@ -24640,7 +24640,7 @@ Entry.block = {
 				"params": [
 						{
 							"type": "text",
-							"params": ["255"]
+							"params": ["0b11111111"]
 						},
 						{
 							"type": "text",
@@ -24783,7 +24783,7 @@ Entry.block = {
 				"params": [
 						{
 							"type": "text",
-							"params": ["255"]
+							"params": ["0b11111111"]
 						},
 						{
 							"type": "text",
@@ -26315,7 +26315,7 @@ Entry.block = {
 				"params": [
 						{
 							"type": "text",
-							"params": ["255"]
+							"params": ["0b11111111"]
 						},
 						{
 							"type": "text",
@@ -27483,7 +27483,7 @@ Entry.block = {
 				"params": [
 						{
 							"type": "text",
-							"params": ["255"]
+							"params": ["0b11111111"]
 						},
 						{
 							"type": "text",
@@ -27626,7 +27626,7 @@ Entry.block = {
 				"params": [
 						{
 							"type": "text",
-							"params": ["255"]
+							"params": ["0b11111111"]
 						},
 						{
 							"type": "text",

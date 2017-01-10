@@ -3505,7 +3505,100 @@ Lang.Helper = {
     "neobot_set_output": "OUT1 ~ OUT3에 라이팅블록 및 전자회로를 연결했을 때 출력 전압을 설정할 수 있습니다.</br>0은 0V, 1 ~ 255는 2.4 ~ 4.96V의 전압을 나타냅니다.",
     "neobot_set_fnd": "FND로 0~99 까지의 숫자를 표시할 수 있습니다.",
     "neobot_set_fnd_off": "FND에 표시한 숫자를 끌 수 있습니다.",
-    "neobot_play_note_for": "주파수 발진 방법을 이용해 멜로디에 반음 단위의 멜로디 음을 발생시킬 수 있습니다."
+    "neobot_play_note_for": "주파수 발진 방법을 이용해 멜로디에 반음 단위의 멜로디 음을 발생시킬 수 있습니다.",
+	/* BYROBOT DroneFighter Start */
+    "byrobot_dronefighter_common_value_button"						: "조종기에서 누른 버튼과 해당 버튼과 관련된 이벤트를 반환합니다.",
+    "byrobot_dronefighter_common_value_attitude"					: "드론의 현재 자세를 각도로 반환합니다. Roll은 좌우 기울기(-90 ~ 90), Pitch는 앞뒤 기울기(-90 ~ 90), Yaw는 회전 각도(-180 ~ 180) 입니다.",
+    "byrobot_dronefighter_common_value_joystick"					: "조종기의 조이스틱과 관련된 입력값을 반환합니다. 각 축은 -100 ~ 100 사이의 값을 반환합니다. 조이스틱의 현재 위치에 따라 방향과 이벤트 값을 반환합니다. ",
+    "byrobot_dronefighter_common_value_etc"							: "드론 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.",
+    "byrobot_dronefighter_controller_if_button_press"				: "지정한 조종기의 버튼이 눌러졌을 때 true를 반환합니다.",
+	"byrobot_dronefighter_controller_if_joystick_direction"			: "조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.",
+	"byrobot_dronefighter_controller_light_manual_single_off"		: "조종기의 모든 LED를 끕니다.",
+    "byrobot_dronefighter_controller_light_manual_single"			: "조종기 LED를 조작하는데 사용합니다.",
+    "byrobot_dronefighter_controller_light_manual_single_input"		: "조종기 LED 여러 개의 밝기를 동시에 변경할 때 사용합니다. 2진수(0b11111111), 10진수(255), 16진수(0xFF) 값을 사용할 수 있습니다. 2진수로 표현한 값에서 각각의 비트는 개별 LED를 선택하는 스위치 역할을 합니다.",
+	"byrobot_dronefighter_drone_light_manual_single_off"			: "드론의 모든 LED를 끕니다.",
+    "byrobot_dronefighter_drone_light_manual_single"				: "드론 LED를 조작하는데 사용합니다.",
+    "byrobot_dronefighter_drone_light_manual_single_input"			: "드론 LED 여러 개의 밝기를 동시에 변경할 때 사용합니다. 2진수(0b11111111), 10진수(255), 16진수(0xFF) 값을 사용할 수 있습니다. 2진수로 표현한 값에서 각각의 비트는 개별 LED를 선택하는 스위치 역할을 합니다.",
+    "byrobot_dronefighter_controller_buzzer_off"					: "버저 소리 내는 것을 중단합니다. 예약된 소리도 모두 삭제합니다.",
+    "byrobot_dronefighter_controller_buzzer_scale"					: "지정한 옥타브의 음을 계속해서 연주합니다(최대 60초). 이 블럭은 연주 명령을 실행 후 바로 다음 블럭으로 넘어갑니다.",
+    "byrobot_dronefighter_controller_buzzer_scale_delay"			: "지정한 옥타브의 음을 지정한 시간동안 연주합니다. 이 블럭을 사용하면 소리가 끝날때까지 다음 블럭으로 넘어가지 않습니다.",
+    "byrobot_dronefighter_controller_buzzer_scale_reserve"			: "지정한 옥타브의 음을 지정한 시간동안 연주하도록 예약합니다. 이 블럭은 소리가 나도록 예약하고 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다. 이 블럭은 주로 버저 소리와 함께 다른 행동을 동시에 할 때 사용합니다.",
+    "byrobot_dronefighter_controller_buzzer_hz"						: "지정한 주파수의 소리를 계속해서 연주합니다(최대 60초). 이 블럭은 연주 명령을 실행 후 바로 다음 블럭으로 넘어갑니다.",
+    "byrobot_dronefighter_controller_buzzer_hz_delay"				: "지정한 주파수의 소리를 지정한 시간동안 연주합니다. 이 블럭을 사용하면 소리가 끝날때까지 다음 블럭으로 넘어가지 않습니다.",
+	"byrobot_dronefighter_controller_buzzer_hz_reserve"				: "지정한 주파수의 소리를 지정한 시간동안 연주하도록 예약합니다. 이 블럭은 소리가 나도록 예약하고, 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다. 이 블럭은 주로 버저 소리와 함께 다른 행동을 동시에 할 때 사용합니다.",
+	"byrobot_dronefighter_controller_vibrator_off"					: "진동을 끕니다. 예약된 진동이 있다면 모두 삭제합니다.",
+	"byrobot_dronefighter_controller_vibrator_on_delay"				: "진동을 지정한 시간동안 켭니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.",
+	"byrobot_dronefighter_controller_vibrator_on_reserve"			: "진동을 지정한 시간동안 켜는 것을 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.",
+	"byrobot_dronefighter_controller_vibrator_delay"				: "진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복합니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.",	
+	"byrobot_dronefighter_controller_vibrator_reserve"				: "진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복하도록 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.",
+	"byrobot_dronefighter_drone_irmessage"							: "적외선으로 지정한 값을 보냅니다. 사용 가능한 값의 범위는 0 ~ 127입니다.",
+	"byrobot_dronefighter_drone_motor_stop"							: "모든 모터의 작동을 정지합니다.",
+	"byrobot_dronefighter_drone_motorsingle"						: "지정한 모터를 원하는 빠르기로 회전할 때 사용합니다. 사용 가능한 값의 범위는 0 ~ 4000입니다.",
+	"byrobot_dronefighter_drone_motorsingle_input"					: "지정한 모터(1, 2, 3, 4)를 원하는 빠르기로 회전할 때 사용합니다. 사용 가능한 값의 범위는 0 ~ 4000입니다.",
+	"byrobot_dronefighter_drone_control_drone_stop"					: "드론 작동을 멈춥니다.",
+	"byrobot_dronefighter_drone_control_coordinate"					: "드론 좌표 기준을 변경합니다.",
+	"byrobot_dronefighter_drone_control_drone_reset_heading"		: "드론의 방향을 초기화합니다. 앱솔루트 모드인 경우 현재 드론이 바라보는 방향을 0도로 변경합니다.",
+    "byrobot_dronefighter_drone_control_quad_one"					: "드론 조종 값을 지정합니다. 입력 가능한 값의 범위는 -100 ~ 100입니다.",
+	"byrobot_dronefighter_drone_control_quad_one_delay"				: "드론 조종 값을 지정합니다. 입력 가능한 값의 범위는 -100 ~ 100입니다. 지정한 시간이 지나면 해당 조종 값을 0으로 변경합니다. 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.",
+    "byrobot_dronefighter_drone_control_quad"						: "드론 조종 값을 지정합니다. 입력 가능한 값의 범위는 -100 ~ 100입니다.",
+	/* BYROBOT DroneFighter End */
+	/* BYROBOT DroneFighter Controller Start */
+    "byrobot_dronefighter_controller_common_value_button"						: "%1",
+    "byrobot_dronefighter_controller_common_value_joystick"						: "%1",
+    "byrobot_dronefighter_controller_controller_if_button_press"				: "조종기 %1 눌렀을 때",
+	"byrobot_dronefighter_controller_controller_if_joystick_direction"			: "조종기 %1 조이스틱 %2 움직였을 때",	
+	"byrobot_dronefighter_controller_controller_light_manual_single_off"		: "조종기 LED 끄기 %1",
+    "byrobot_dronefighter_controller_controller_light_manual_single"			: "조종기 LED %1 %2 %3",	
+    "byrobot_dronefighter_controller_controller_light_manual_single_input"		: "조종기 LED %1 밝기 %2 %3",
+    "byrobot_dronefighter_controller_controller_buzzer_off"						: "버저 끄기 %1",
+    "byrobot_dronefighter_controller_controller_buzzer_scale"					: "%1 옥타브 %2 을(를) 연주 %3",
+    "byrobot_dronefighter_controller_controller_buzzer_scale_delay"				: "%1 옥타브 %2 을(를) %3 초 연주 %4",
+    "byrobot_dronefighter_controller_controller_buzzer_scale_reserve"			: "%1 옥타브 %2 을(를) %3 초 예약 %4",
+    "byrobot_dronefighter_controller_controller_buzzer_hz"						: "%1 Hz 소리를 연주 %2",
+    "byrobot_dronefighter_controller_controller_buzzer_hz_delay"				: "%1 Hz 소리를 %2 초 연주 %3",
+	"byrobot_dronefighter_controller_controller_buzzer_hz_reserve"				: "%1 Hz 소리를 %2 초 예약 %3",
+	"byrobot_dronefighter_controller_controller_vibrator_off"					: "진동 끄기 %1",
+	"byrobot_dronefighter_controller_controller_vibrator_on_delay"				: "진동 %1 초 켜기 %2",
+	"byrobot_dronefighter_controller_controller_vibrator_on_reserve"			: "진동 %1 초 예약 %2",
+	"byrobot_dronefighter_controller_controller_vibrator_delay"					: "진동 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4",	
+	"byrobot_dronefighter_controller_controller_vibrator_reserve"				: "진동 %1 초 켜기, %2 초 끄기를 %3 초 예약 %4",	
+	"byrobot_dronefighter_controller_controller_userinterface_preset"			: "조종기 설정 모드 사용자 인터페이스 %1 %2",	
+	"byrobot_dronefighter_controller_controller_userinterface"					: "조종기 설정 모드 %1 %2 %3",	
+	/* BYROBOT DroneFighter Controller End */
+	/* BYROBOT Petrone Start */
+    "byrobot_petrone_common_value_button"						: "%1",
+    "byrobot_petrone_common_value_attitude"						: "%1",
+    "byrobot_petrone_common_value_joystick"						: "%1",
+    "byrobot_petrone_common_value_etc"							: "%1",
+    "byrobot_petrone_controller_if_button_press"				: "조종기 %1 눌렀을 때",
+	"byrobot_petrone_controller_if_joystick_direction"			: "조종기 %1 조이스틱 %2 움직였을 때",	
+	"byrobot_petrone_controller_light_manual_single_off"		: "조종기 LED 끄기 %1",
+    "byrobot_petrone_controller_light_manual_single"			: "조종기 LED %1 %2 %3",						/* 전체 ComboBox 사용 */
+    "byrobot_petrone_controller_light_manual_single_input"		: "조종기 LED %1 밝기 %2 %3",				/* 전체 TextBox 사용 */
+	"byrobot_petrone_drone_light_manual_single_off"				: "자동차 LED 끄기 %1",
+    "byrobot_petrone_drone_light_manual_single"					: "자동차 LED %1 %2 %3",						/* 전체 ComboBox 사용 */
+    "byrobot_petrone_drone_light_manual_single_input"			: "자동차 LED %1 밝기 %2 %3",					/* 전체 TextBox 사용 */	
+    "byrobot_petrone_controller_buzzer_off"						: "버저 끄기 %1",							/* 블럭 딜레이 없음 */
+    "byrobot_petrone_controller_buzzer_scale"					: "%1 옥타브 %2 을(를) 연주 %3",				/* 블럭 딜레이 없음 */
+    "byrobot_petrone_controller_buzzer_scale_delay"				: "%1 옥타브 %2 을(를) %3 초 연주 %4",		/* 블럭 딜레이 사용 */
+    "byrobot_petrone_controller_buzzer_scale_reserve"			: "%1 옥타브 %2 을(를) %3 초 예약 %4",		/* 블럭 딜레이 없음 */
+    "byrobot_petrone_controller_buzzer_hz"						: "%1 Hz 소리를 연주 %2",					/* 블럭 딜레이 없음 */	
+    "byrobot_petrone_controller_buzzer_hz_delay"				: "%1 Hz 소리를 %2 초 연주 %3",				/* 블럭 딜레이 사용 */
+	"byrobot_petrone_controller_buzzer_hz_reserve"				: "%1 Hz 소리를 %2 초 예약 %3",				/* 블럭 딜레이 없음 */
+	"byrobot_petrone_controller_vibrator_off"					: "진동 끄기 %1",
+	"byrobot_petrone_controller_vibrator_on_delay"				: "진동 %1 초 켜기 %2",
+	"byrobot_petrone_controller_vibrator_on_reserve"			: "진동 %1 초 예약 %2",
+	"byrobot_petrone_controller_vibrator_delay"					: "진동 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4",	
+	"byrobot_petrone_controller_vibrator_reserve"				: "진동 %1 초 켜기, %2 초 끄기를 %3 초 예약 %4",	
+	"byrobot_petrone_drone_irmessage"							: "적외선으로 %1 값 보내기 %2",
+	"byrobot_petrone_drone_motor_stop"							: "모터 정지 %1",
+	"byrobot_petrone_drone_motorsingle"							: "%1 번 모터를 %2 (으)로 회전 %3",
+	"byrobot_petrone_drone_motorsingle_input"					: "%1 번 모터를 %2 (으)로 회전 %3",
+	"byrobot_petrone_drone_control_car_stop"					: "자동차 정지 %1",
+	"byrobot_petrone_drone_control_double_one"					: "자동차를 %1 %2% 정하기 %3", 						/* 방향 선택에 ComboBox 사용 */
+	"byrobot_petrone_drone_control_double_one_delay"			: "자동차를 %1 %2% %3 초 실행 %4", 					/* 방향 선택에 ComboBox 사용 */
+    "byrobot_petrone_drone_control_double"						: "자동차를 방향 %1%, 전진 %2% 정하기 %3",
+	/* BYROBOT Petrone End */
 };
 Lang.Category = {
     "entrybot_friends": "엔트리봇 친구들",
