@@ -9634,14 +9634,17 @@ Entry.Extension = function() {
   };
 })(Entry.Extension.prototype);
 Entry.TargetChecker = function(a, b) {
-  this.isForEdit;
+  this.isForEdit = b;
   this.goals = [];
-  this.achievedGoals = [];
+  this.unachievedGoals = [];
+  this.isForEdit && (this.watchingBlocks = []);
   this.blocks = ["check_object_property", "check_block_execution", "check_lecture_goal"];
-  this.isFail = !1;
-  this.script = new Entry.Code([]);
+  this.isSuccess = this.isFail = !1;
+  this.script = new Entry.Code([], this);
   Entry.achieve = this.achieveCheck.bind(this);
+  Entry.achieveEvent = new Entry.Event;
   Entry.addEventListener("stop", this.reset.bind(this));
+  Entry.registerAchievement = this.registerAchievement.bind(this);
 };
 Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
 (function(a) {
@@ -9654,23 +9657,29 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     return this._view;
   };
   a.updateView = function() {
-    this._view.text("\ubaa9\ud45c : " + this.achievedGoals.length + " / " + this.goals.length);
+    var b = this.goals.length;
+    this._view.text("\ubaa9\ud45c : " + (b - this.unachievedGoals.length) + " / " + b);
+    this.isSuccess ? this._view.addClass("success") : this._view.removeClass("success");
+    this.isFail ? this._view.addClass("fail") : this._view.removeClass("fail");
   };
   a.achieveCheck = function(b, a) {
     this.isFail || (b ? this.achieveGoal(a) : this.fail(a));
   };
   a.achieveGoal = function(b) {
-    this.achievedGoals.push(b);
-    this.updateView();
+    this.isSuccess || this.isFail || 0 > this.unachievedGoals.indexOf(b) || (this.unachievedGoals.splice(this.unachievedGoals.indexOf(b), 1), 0 === this.unachievedGoals.length && (this.isSuccess = !0, Entry.achieveEvent.notify("success")), this.updateView());
   };
   a.fail = function() {
-    this.updateView();
-    this.isFail = !0;
+    this.isSuccess || this.isFail || (this.isFail = !0, Entry.achieveEvent.notify("fail"), this.updateView());
   };
   a.reset = function() {
-    this.achievedGoals = [];
-    this.isFail = !1;
+    this.unachievedGoals = this.goals.concat();
+    this.isSuccess = this.isFail = !1;
     this.updateView();
+  };
+  a.registerAchievement = function(b) {
+    this.isForEdit && this.watchingBlocks.push(b);
+    b.params[1] && this.goals.indexOf(0 > b.params[0]) && this.goals.push(b.params[0]);
+    this.reset();
   };
 })(Entry.TargetChecker.prototype);
 Entry.Func = function(a) {
@@ -26011,16 +26020,16 @@ Entry.skinContainer = {_skins:{}};
     this._skins[b.type] || (this._skins[b.type] = []);
     this._skins[b.type].push(a);
   };
-  a.getSkin = function(a) {
-    if (this._skins[a.type]) {
-      for (var b = this._skins[a.type], d = 0;d < b.length;d++) {
-        var e = b[d];
+  a.getSkin = function(b) {
+    if (this._skins[b.type]) {
+      for (var a = this._skins[b.type], d = 0;d < a.length;d++) {
+        var e = a[d];
         if (!e.conditions || !e.conditions.length) {
           return e;
         }
         for (var f = 0;f < e.conditions.length;f++) {
           var g = e.conditions[f];
-          if (a.getDataByPointer(g.pointer) !== g.value) {
+          if (b.getDataByPointer(g.pointer) !== g.value) {
             break;
           }
           if (f === e.conditions.length - 1) {
@@ -26029,7 +26038,7 @@ Entry.skinContainer = {_skins:{}};
         }
       }
     }
-    return Entry.block[a.type];
+    return Entry.block[b.type];
   };
 })(Entry.skinContainer);
 Entry.ThreadView = function(a, b) {
@@ -26044,15 +26053,15 @@ Entry.ThreadView = function(a, b) {
   a.destroy = function() {
     this.svgGroup.remove();
   };
-  a.setParent = function(a) {
-    this.parent = a;
+  a.setParent = function(b) {
+    this.parent = b;
   };
   a.getParent = function() {
     return this.parent;
   };
   a.renderText = function() {
-    for (var a = this.thread.getBlocks(), c = 0;c < a.length;c++) {
-      a[c].view.renderText();
+    for (var b = this.thread.getBlocks(), a = 0;a < b.length;a++) {
+      b[a].view.renderText();
     }
   };
   a.renderBlock = function() {

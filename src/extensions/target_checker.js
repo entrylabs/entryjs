@@ -11,9 +11,11 @@ goog.require("Entry.Extension");
  * @constructor
  */
 Entry.TargetChecker = function(code, isForEdit) {
-    this.isForEdit;
+    this.isForEdit = isForEdit;
     this.goals = [];
-    this.achievedGoals = [];
+    this.unachievedGoals = [];
+    if (this.isForEdit)
+        this.watchingBlocks = [];
     this.blocks = [
         "check_object_property",
         "check_block_execution",
@@ -21,11 +23,15 @@ Entry.TargetChecker = function(code, isForEdit) {
     ];
 
     this.isFail = false;
+    this.isSuccess = false;
 
-    this.script = new Entry.Code([]);
+    this.script = new Entry.Code([], this);
 
     Entry.achieve = this.achieveCheck.bind(this);
+    Entry.achieveEvent = new Entry.Event();
     Entry.addEventListener("stop", this.reset.bind(this));
+
+    Entry.registerAchievement = this.registerAchievement.bind(this);
 };
 
 Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
@@ -44,8 +50,17 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     };
 
     p.updateView = function() {
-        this._view.text("목표 : " + this.achievedGoals.length +
-                        " / " + this.goals.length);
+        var len = this.goals.length;
+        this._view.text("목표 : " + (len - this.unachievedGoals.length) +
+                        " / " + len);
+        if (this.isSuccess)
+            this._view.addClass("success")
+        else
+            this._view.removeClass("success")
+        if (this.isFail)
+            this._view.addClass("fail")
+        else
+            this._view.removeClass("fail")
     };
 
     p.achieveCheck = function(isSuccess, id) {
@@ -58,19 +73,37 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     };
 
     p.achieveGoal = function(id) {
-        this.achievedGoals.push(id);
+        if (this.isSuccess || this.isFail || this.unachievedGoals.indexOf(id) < 0)
+            return;
+        this.unachievedGoals.splice(this.unachievedGoals.indexOf(id), 1);
+        if (this.unachievedGoals.length === 0) {
+            this.isSuccess = true;
+            Entry.achieveEvent.notify("success");
+        }
         this.updateView();
     };
 
     p.fail = function() {
-        this.updateView();
+        if (this.isSuccess || this.isFail)
+            return;
         this.isFail = true;
+        Entry.achieveEvent.notify("fail");
+        this.updateView();
     };
 
     p.reset = function() {
-        this.achievedGoals = [];
+        this.unachievedGoals = this.goals.concat();
         this.isFail = false;
+        this.isSuccess = false;
         this.updateView();
+    };
+
+    p.registerAchievement = function(block) {
+        if (this.isForEdit)
+            this.watchingBlocks.push(block);
+        if (block.params[1] && this.goals.indexOf(block.params[0] < 0))
+            this.goals.push(block.params[0])
+        this.reset();
     };
 
 })(Entry.TargetChecker.prototype);

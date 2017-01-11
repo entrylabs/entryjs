@@ -6180,5 +6180,11 @@ input.entryObjectNameWorkspace:-moz-read-only {
   cursor: pointer;
   padding: 15px;
 }
+.targetChecker.success {
+  background-color: #5cb85c;
+}
+.targetChecker.fail {
+  background-color: #d9534f;
+}
 
 

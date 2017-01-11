@@ -26304,8 +26304,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    ["달성", true],
-                    ["실패", false]
+                    ["달성", 1],
+                    ["실패", 0]
                 ],
                 "fontSize": 11
             },
@@ -26318,13 +26318,14 @@ Entry.block = {
         "events": {
             "dataAdd": [
                 function(block) {
-                    console.log(block);
+                    Entry.registerAchievement(block);
                 }
             ]
         },
         "def": {
             "params": [
-                null
+                0,
+                1
             ],
             "type": "check_block_execution"
         },
