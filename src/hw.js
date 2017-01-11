@@ -44,9 +44,9 @@ Entry.HW = function() {
         '10.2': Entry.Roborobo_SchoolKit,
         '12.1': Entry.EV3,
         'B.1': Entry.Codestar,
-        'F.1': Entry.byrobot_dronefighter,
-        'F.2': Entry.byrobot_dronefighter_controller,
-        'F.3': Entry.byrobot_petrone,
+        'F.1': Entry.byrobot_dronefighter_controller,
+        'F.2': Entry.byrobot_dronefighter_drive,
+        'F.3': Entry.byrobot_dronefighter_flight,
     };
 };
 

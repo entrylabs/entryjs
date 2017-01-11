@@ -15,10 +15,10 @@
  *	장치와 연관된 변수 및 함수 정의
  ***************************************************************************************/
 
-Entry.byrobot_petrone =
+Entry.byrobot_dronefighter_flight =
 {
-	name: 'byrobot_petrone',
-
+	name: 'byrobot_dronefighter_flight',
+	
 	// 초기화
 	setZero: function()
 	{
@@ -40,7 +40,7 @@ Entry.byrobot_petrone =
 	// listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
     monitorTemplate:
 	{
-        imgPath: "hw/byrobot_petrone.png",		// 배경 이미지
+        imgPath: "hw/byrobot_dronefighter_flight.png",		// 배경 이미지
         width: 500,		// 이미지의 폭
         height: 500,	// 이미지의 높이
 		
@@ -48,7 +48,8 @@ Entry.byrobot_petrone =
         listPorts:
 		{
             "state_modeVehicle"				:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,				type: "input", pos: {x: 0, y: 0}},
-            "state_modeDrive"				:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive,				type: "input", pos: {x: 0, y: 0}},
+            "state_modeFlight"				:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight,				type: "input", pos: {x: 0, y: 0}},
+            "state_coordinate"				:{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate,			type: "input", pos: {x: 0, y: 0}},
             "state_battery"					:{name: Lang.Blocks.byrobot_dronefighter_drone_state_battery,					type: "input", pos: {x: 0, y: 0}},
             "attitude_roll"					:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_roll,					type: "input", pos: {x: 0, y: 0}},
             "attitude_pitch"				:{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch,					type: "input", pos: {x: 0, y: 0}},
@@ -77,7 +78,6 @@ Entry.byrobot_petrone =
 
 		mode : 'both'	// 표시 모드
     },
-	
 	
 	// functions
 	
@@ -584,8 +584,30 @@ Entry.byrobot_petrone =
 		case "Start":
 			{
 				this.transferCommand(0x10, 0x10, modeVehicle);
-				
+		
+				this.transferControlQuad(0, 0, 0, 0);
 				this.transferControlDouble(0, 0);
+			}
+			return script;
+			
+		case "Running":
+			return script;
+		
+		case "Finish":
+			return script.callReturn();
+			
+		default:
+			return script.callReturn();
+		}
+	},
+	
+	setEventFlight: function(script, eventFlight, time)
+	{
+		switch( this.checkFinish(script, time) )
+		{
+		case "Start":
+			{
+				this.transferCommand(0x10, 0x22, eventFlight);	// 0x22 : CommandType::FlightEvent
 				this.transferControlQuad(0, 0, 0, 0);
 			}
 			return script;
@@ -601,7 +623,7 @@ Entry.byrobot_petrone =
 		}
 	},
 
-	sendControlDoubleSingle: function(script, controlTarget, value, time, flagDelay)
+	sendControlQuadSingle: function(script, controlTarget, value, time, flagDelay)
 	{
 		var timeDelay = 40;
 		if( flagDelay )
@@ -611,25 +633,10 @@ Entry.byrobot_petrone =
 		{
 		case "Start":
 			{
-				switch(controlTarget)
-				{
-				case "control_wheel":
-					{
-						// 범위 조정
-						value = Math.max(value, -100);
-						value = Math.min(value, 100);
-					}
-					break;
-					
-				case "control_accel":
-					{
-						// 범위 조정
-						value = Math.max(value, 0);
-						value = Math.min(value, 100);
-					}
-					break;
-				}
-				
+				// 범위 조정
+				value		= Math.max(value, -100);
+				value		= Math.min(value, 100);
+						
 				// 전송
 				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue(controlTarget, value);
@@ -647,8 +654,6 @@ Entry.byrobot_petrone =
 		case "Finish":
 			if( flagDelay )
 			{
-				// 블럭을 빠져나갈 때 변경했던 값을 초기화
-				
 				// 전송
 				Entry.hw.setDigitalPortValue("target", 0x10);
 				Entry.hw.setDigitalPortValue(controlTarget, 0);
@@ -664,8 +669,8 @@ Entry.byrobot_petrone =
 			return script.callReturn();
 		}
 	},
-
-	sendControlDouble: function(script, wheel, accel, time, flagDelay)
+	
+	sendControlQuad: function(script, roll, pitch, yaw, throttle, time, flagDelay)
 	{
 		var timeDelay = 40;
 		if( flagDelay )
@@ -675,7 +680,7 @@ Entry.byrobot_petrone =
 		{
 		case "Start":
 			{
-				this.transferControlDouble(wheel, accel);
+				this.transferControlQuad(roll, pitch, yaw, throttle);
 			}
 			return script;
 			
@@ -685,7 +690,7 @@ Entry.byrobot_petrone =
 		case "Finish":
 			if( flagDelay )
 			{
-				this.transferControlDouble(0, 0);
+				this.transferControlQuad(0, 0, 0, 0);
 			}
 			return script.callReturn();
 			
@@ -693,4 +698,5 @@ Entry.byrobot_petrone =
 			return script.callReturn();
 		}
 	},
+
 };

@@ -24264,1750 +24264,9 @@ Entry.block = {
             return Entry.hw.getDigitalPortValue('6');
         }
     },
-	/* BYROBOT DroneFighter Start */
-	//*
-    "byrobot_dronefighter_common_value_button":
-	{
-        "color": "#00979D",
-        "skeleton": "basic_string_field",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_controller_button_button,				"button_button"],
-						[Lang.Blocks.byrobot_dronefighter_controller_button_event,				"button_event"],
-					],
-					"value": "button_button",				// 초기 선택항목 지정
-					"fontSize": 11
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [ null ],
-				"type": "byrobot_dronefighter_common_value_button"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
-			},
-        "paramsKeyMap": {
-				"DEVICE": 0
-			},
-        "class": "byrobot_dronefighter_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.hw.portData[script.getField('DEVICE')];
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_common_value_attitude":
-	{
-        "color": "#00979D",
-        "skeleton": "basic_string_field",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_drone_attitude_roll,					"attitude_roll"],
-						[Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch,					"attitude_pitch"],
-						[Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw,					"attitude_yaw"],
-					],
-					"value": "attitude_roll",				// 초기 선택항목 지정
-					"fontSize": 11
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [ null ],
-				"type": "byrobot_dronefighter_common_value_attitude"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
-			},
-        "paramsKeyMap": {
-				"DEVICE": 0
-			},
-        "class": "byrobot_dronefighter_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.hw.portData[script.getField('DEVICE')];
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_common_value_joystick":
-	{
-        "color": "#00979D",
-        "skeleton": "basic_string_field",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,			"joystick_left_x"],
-						[Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,			"joystick_left_y"],
-						[Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction,	"joystick_left_direction"],
-						[Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event,		"joystick_left_event"],
-						[Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command,		"joystick_left_command"],
-						[Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x,			"joystick_right_x"],
-						[Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y,			"joystick_right_y"],
-						[Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction,	"joystick_right_direction"],
-						[Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event,		"joystick_right_event"],
-						[Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command,	"joystick_right_command"],
-					],
-					"value": "joystick_left_x",				// 초기 선택항목 지정
-					"fontSize": 11
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [ null ],
-				"type": "byrobot_dronefighter_common_value_joystick"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
-			},
-        "paramsKeyMap": {
-				"DEVICE": 0
-			},
-        "class": "byrobot_dronefighter_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.hw.portData[script.getField('DEVICE')];
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_common_value_etc":
-	{
-        "color": "#00979D",
-        "skeleton": "basic_string_field",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,				"state_modeVehicle"],
-						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight,				"state_modeFlight"],
-						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate,			"state_coordinate"],
-						[Lang.Blocks.byrobot_dronefighter_drone_state_battery,					"state_battery"],
-						[Lang.Blocks.byrobot_dronefighter_drone_irmessage,						"irmessage_irdata"],
-					],
-					"value": "irmessage_irdata",				// 초기 선택항목 지정
-					"fontSize": 11
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [ null ],
-				"type": "byrobot_dronefighter_common_value_etc"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
-			},
-        "paramsKeyMap": {
-				"DEVICE": 0
-			},
-        "class": "byrobot_dronefighter_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.hw.portData[script.getField('DEVICE')];
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_if_button_press":
-	{
-        "color": "#00979D",
-		"skeleton": "basic_boolean_field",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[ Lang.Blocks.byrobot_dronefighter_controller_button_front_left,		"1" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_button_front_right,		"2" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_button_front_left_right,	"3" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_up_left,	"4" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_up_right,	"8" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_up,			"16" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_left,		"32" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_right,		"64" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_down,		"128" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_button_bottom_left,		"256" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_button_bottom_right,		"512" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_button_bottom_left_right,	"768" ]
-					],
-					"value": "1",
-					"fontSize": 11
-				},
-			],
-        "events": {},
-        "def": {
-				"params": [ null ],
-				"type": "byrobot_dronefighter_controller_if_button_press"
-			},
-        "paramsKeyMap": {
-				"BUTTON": 0
-			},
-        "class": "byrobot_dronefighter_boolean_input",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script){
-				var read	= Entry.hw.portData;
-				var button		= 'button_button';	// paramsKeyMap에 정의된 이름 사용
-				var buttonevent	= 'button_event';	// paramsKeyMap에 정의된 이름 사용
-				
-				if( read[button] == script.getField('BUTTON') && read[buttonevent] == 2 )
-					return true;
-				else
-					return false;
-			},
-        "syntax": {"js": [], "py": []}
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_if_joystick_direction":
-	{
-        "color": "#00979D",
-		"skeleton": "basic_boolean_field",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[ Lang.Blocks.byrobot_dronefighter_common_left,				"joystick_left_direction" 	],
-						[ Lang.Blocks.byrobot_dronefighter_common_right,			"joystick_right_direction"	]
-					],
-					"value": "joystick_left_direction",
-					"fontSize": 11
-				},
-				{
-					"type": "Dropdown",
-					"options": [
-						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_up,		"17" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_up,			"18" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_up,		"20" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left,			"33" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_center,		"34" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right,			"36" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_down,		"65" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_down,			"66" ],
-						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_down,	"68" ]
-					],
-					"value": "34",
-					"fontSize": 11
-				},
-			],
-        "events": {},
-        "def": {
-				"params": [ 
-						null,
-						null
-					],
-				"type": "byrobot_dronefighter_controller_if_joystick_direction"
-			},
-        "paramsKeyMap": {
-				"DEVICE"	: 0,
-				"DIRECTION"	: 1
-			},
-        "class": "byrobot_dronefighter_boolean_input",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script){
-				var read	= Entry.hw.portData;
-			
-				var device	= script.getField('DEVICE');	// paramsKeyMap에 정의된 이름 사용
-				
-				if( read[device] == script.getField('DIRECTION') )
-					return true;
-				else
-					return false;
-			},
-        "syntax": {"js": [], "py": []}
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_light_manual_single_off":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null
-					],
-				"type": "byrobot_dronefighter_controller_light_manual_single_off"
-			},
-        "paramsKeyMap": {
-			},
-        "class": "byrobot_dronefighter_controller_light",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.byrobot_dronefighter.setLightManual(script, 0x11, 0xff, 0);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_light_manual_single":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_all,		"255"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_1,		"128"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_2,		"64"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_3,		"32"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_4,		"16"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_5,		"8"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_6,		"4"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_blue,		"2"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_red,		"1"],
-					],
-					"value": "128",
-					"fontSize": 11
-				},
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_on,		"220"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_off,		"0"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b25,		"75"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b50,		"125"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b75,		"200"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b100,		"255"],
-					],
-					"value": "220",
-					"fontSize": 11
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						null,
-						null
-					],
-				"type": "byrobot_dronefighter_controller_light_manual_single"
-			},
-        "paramsKeyMap": {
-				"FLAGS"			: 0,
-				"BRIGHTNESS"	: 1
-			},
-        "class": "byrobot_dronefighter_controller_light",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var flags		= parseInt(script.getField('FLAGS'));
-				var brightness	= parseInt(script.getField('BRIGHTNESS'));
-				return Entry.byrobot_dronefighter.setLightManual(script, 0x11, flags, brightness);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_light_manual_single_input":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "text",
-							"params": ["0b11111111"]
-						},
-						{
-							"type": "text",
-							"params": ["255"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_controller_light_manual_single_input"
-			},
-        "paramsKeyMap": {
-				"FLAGS"			: 0,
-				"BRIGHTNESS"	: 1
-			},
-        "class": "byrobot_dronefighter_controller_light",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var flags		= script.getNumberValue('FLAGS');
-				var brightness	= script.getNumberValue('BRIGHTNESS');
-				return Entry.byrobot_dronefighter.setLightManual(script, 0x11, flags, brightness);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_light_manual_single_off":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null
-					],
-				"type": "byrobot_dronefighter_drone_light_manual_single_off"	
-			},
-        "paramsKeyMap": {
-			},
-        "class": "byrobot_dronefighter_drone_light",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.byrobot_dronefighter.setLightManual(script, 0x10, 0xff, 0);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_light_manual_single":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_all,		"255"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_1,		"128"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_2,		"64"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_3,		"32"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_4,		"16"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_blue,		"8"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_red,		"4"],
-					],
-					"value": "128",
-					"fontSize": 11
-				},
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_on,		"220"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_off,		"0"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b25,		"75"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b50,		"125"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b75,		"200"],
-						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b100,		"255"],
-					],
-					"value": "220",
-					"fontSize": 11
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						null,
-						null
-					],
-				"type": "byrobot_dronefighter_drone_light_manual_single"	
-			},
-        "paramsKeyMap": {
-				"FLAGS"			: 0,
-				"BRIGHTNESS"	: 1
-			},
-        "class": "byrobot_dronefighter_drone_light",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var flags		= parseInt(script.getField('FLAGS'));
-				var brightness	= parseInt(script.getField('BRIGHTNESS'));
-				return Entry.byrobot_dronefighter.setLightManual(script, 0x10, flags, brightness);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_light_manual_single_input":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "text",
-							"params": ["0b11111111"]
-						},
-						{
-							"type": "text",
-							"params": ["255"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_drone_light_manual_single_input"	
-			},
-        "paramsKeyMap": {
-				"FLAGS"			: 0,
-				"BRIGHTNESS"	: 1
-			},
-        "class": "byrobot_dronefighter_drone_light",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var flags		= script.getNumberValue('FLAGS');
-				var brightness	= script.getNumberValue('BRIGHTNESS');
-				return Entry.byrobot_dronefighter.setLightManual(script, 0x10, flags, brightness);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_buzzer_off":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-					],
-				"type": "byrobot_dronefighter_controller_buzzer_off"	
-			},
-        "paramsKeyMap": {
-			},
-        "class": "byrobot_dronefighter_buzzer",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.byrobot_dronefighter.setBuzzerStop(script);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_buzzer_scale":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						["4",	"3"],
-						["5",	"4"],
-						["6",	"5"],
-						["7",	"6"],
-						["8",	"7"]
-					],
-					"value": "4",
-					"fontSize": 11
-				},
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute,	"-1"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_c,		"0"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs,		"1"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_d,		"2"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds,		"3"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_e,		"4"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_f,		"5"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs,		"6"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_g,		"7"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs,		"8"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_a,		"9"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_as,		"10"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_b,		"11"]
-					],
-					"value": "0",
-					"fontSize": 11
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						null,
-						null,
-					],
-				"type": "byrobot_dronefighter_controller_buzzer_scale"	
-			},
-        "paramsKeyMap": {
-				"OCTAVE"	: 0,
-				"SCALE"		: 1
-			},
-        "class": "byrobot_dronefighter_buzzer",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var octave		= parseInt(script.getField('OCTAVE'));
-				var scale		= parseInt(script.getField('SCALE'));
-				
-				if( scale == -1 )
-					return Entry.byrobot_dronefighter.setBuzzerMute(script, 60000, false, true);
-				else
-					return Entry.byrobot_dronefighter.setBuzzerScale(script, octave, scale, 60000, false, true);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_buzzer_scale_delay":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						["4",	"3"],
-						["5",	"4"],
-						["6",	"5"],
-						["7",	"6"],
-						["8",	"7"]
-					],
-					"value": "4",
-					"fontSize": 11
-				},
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute,	"-1"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_c,		"0"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs,		"1"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_d,		"2"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds,		"3"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_e,		"4"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_f,		"5"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs,		"6"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_g,		"7"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs,		"8"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_a,		"9"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_as,		"10"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_b,		"11"]
-					],
-					"value": "0",
-					"fontSize": 11
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						null,
-						{
-							"type": "text",
-							"params": ["1"]
-						},
-						null,
-					],
-				"type": "byrobot_dronefighter_controller_buzzer_scale_delay"	
-			},
-        "paramsKeyMap": {
-				"OCTAVE"	: 0,
-				"SCALE"		: 1,
-				"TIME"		: 2
-			},
-        "class": "byrobot_dronefighter_buzzer",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var octave		= parseInt(script.getField('OCTAVE'));
-				var scale		= parseInt(script.getField('SCALE'));
-				var time		= parseInt(script.getNumberValue('TIME') * 1000);
-				
-				if( scale == -1 )
-					return Entry.byrobot_dronefighter.setBuzzerMute(script, time, true, true);
-				else
-					return Entry.byrobot_dronefighter.setBuzzerScale(script, octave, scale, time, true, true);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_buzzer_scale_reserve":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						["4",	"3"],
-						["5",	"4"],
-						["6",	"5"],
-						["7",	"6"],
-						["8",	"7"]
-					],
-					"value": "4",
-					"fontSize": 11
-				},
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute,	"-1"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_c,		"0"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs,		"1"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_d,		"2"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds,		"3"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_e,		"4"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_f,		"5"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs,		"6"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_g,		"7"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs,		"8"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_a,		"9"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_as,		"10"],
-						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_b,		"11"]
-					],
-					"value": "0",
-					"fontSize": 11
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						null,
-						{
-							"type": "text",
-							"params": ["1"]
-						},
-						null,
-					],
-				"type": "byrobot_dronefighter_controller_buzzer_scale_reserve"	
-			},
-        "paramsKeyMap": {
-				"OCTAVE"	: 0,
-				"SCALE"		: 1,
-				"TIME"		: 2
-			},
-        "class": "byrobot_dronefighter_buzzer",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var octave		= parseInt(script.getField('OCTAVE'));
-				var scale		= parseInt(script.getField('SCALE'));
-				var time		= parseInt(script.getNumberValue('TIME') * 1000);
-				
-				if( scale == -1 )
-					return Entry.byrobot_dronefighter.setBuzzerMute(script, time, false, false);
-				else
-					return Entry.byrobot_dronefighter.setBuzzerScale(script, octave, scale, time, false, false);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_buzzer_hz":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "text",
-							"params": ["1000"]
-						},
-						null,
-					],
-				"type": "byrobot_dronefighter_controller_buzzer_hz"	
-			},
-        "paramsKeyMap": {
-				"HZ"		: 0,
-			},
-        "class": "byrobot_dronefighter_buzzer",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var hz = parseInt(script.getNumberValue('HZ', script));
-				return Entry.byrobot_dronefighter.setBuzzerHz(script, hz, 60000, false, true);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_buzzer_hz_delay":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "text",
-							"params": ["1000"]
-						},
-						{
-							"type": "text",
-							"params": ["1"]
-						},
-						null,
-					],
-				"type": "byrobot_dronefighter_controller_buzzer_hz_delay"	
-			},
-        "paramsKeyMap": {
-				"HZ"		: 0,
-				"TIME"		: 1
-			},
-        "class": "byrobot_dronefighter_buzzer",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var hz			= parseInt(script.getNumberValue('HZ', script));
-				var time		= parseInt(script.getNumberValue('TIME') * 1000);
-				return Entry.byrobot_dronefighter.setBuzzerHz(script, hz, time, true, true);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_buzzer_hz_reserve":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "text",
-							"params": ["1000"]
-						},
-						{
-							"type": "text",
-							"params": ["1"]
-						},
-						null,
-					],
-				"type": "byrobot_dronefighter_controller_buzzer_hz_reserve"	
-			},
-        "paramsKeyMap": {
-				"HZ"		: 0,
-				"TIME"		: 1
-			},
-        "class": "byrobot_dronefighter_buzzer",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var hz			= parseInt(script.getNumberValue('HZ', script));
-				var time		= parseInt(script.getNumberValue('TIME') * 1000);
-				return Entry.byrobot_dronefighter.setBuzzerHz(script, hz, time, false, false);
-			},
-    },
-	// */
-		//*
-    "byrobot_dronefighter_controller_vibrator_off":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null
-					],
-				"type": "byrobot_dronefighter_controller_vibrator_off"	
-			},
-        "paramsKeyMap": {
-			},
-        "class": "byrobot_dronefighter_vibrator",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.byrobot_dronefighter.setVibratorStop(script);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_vibrator_on_delay":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "text",
-							"params": ["1"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_controller_vibrator_on_delay"	
-			},
-        "paramsKeyMap": {
-				"TIMEON"	: 0
-			},
-        "class": "byrobot_dronefighter_vibrator",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
-				return Entry.byrobot_dronefighter.setVibrator(script, timeOn, 0, timeOn, true, true);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_vibrator_on_reserve":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "text",
-							"params": ["1"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_controller_vibrator_on_reserve"	
-			},
-        "paramsKeyMap": {
-				"TIMEON"	: 0
-			},
-        "class": "byrobot_dronefighter_vibrator",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
-				return Entry.byrobot_dronefighter.setVibrator(script, timeOn, 0, timeOn, false, false);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_vibrator_delay":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "text",
-							"params": ["0.02"]
-						},
-						{
-							"type": "text",
-							"params": ["0.2"]
-						},
-						{
-							"type": "text",
-							"params": ["1"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_controller_vibrator_delay"	
-			},
-        "paramsKeyMap": {
-				"TIMEON"	: 0,
-				"TIMEOFF"	: 1,
-				"TIMERUN"	: 2
-			},
-        "class": "byrobot_dronefighter_vibrator",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
-				var timeOff		= parseInt(script.getNumberValue('TIMEOFF') * 1000);
-				var timeRun		= parseInt(script.getNumberValue('TIMERUN') * 1000);
-				return Entry.byrobot_dronefighter.setVibrator(script, timeOn, timeOff, timeRun, true, true);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_controller_vibrator_reserve":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "text",
-							"params": ["0.02"]
-						},
-						{
-							"type": "text",
-							"params": ["0.2"]
-						},
-						{
-							"type": "text",
-							"params": ["1"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_controller_vibrator_reserve"	
-			},
-        "paramsKeyMap": {
-				"TIMEON"	: 0,
-				"TIMEOFF"	: 1,
-				"TIMERUN"	: 2
-			},
-        "class": "byrobot_dronefighter_vibrator",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
-				var timeOff		= parseInt(script.getNumberValue('TIMEOFF') * 1000);
-				var timeRun		= parseInt(script.getNumberValue('TIMERUN') * 1000);
-				return Entry.byrobot_dronefighter.setVibrator(script, timeOn, timeOff, timeRun, false, false);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_irmessage":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "text",
-							"params": ["100"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_drone_irmessage"
-			},
-        "paramsKeyMap": {
-				"IRMESSAGE":	0
-			},
-        "class": "byrobot_dronefighter_irmessage",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var irmessage	= script.getNumberValue("IRMESSAGE", script);
-				return Entry.byrobot_dronefighter.sendIrMessage(script, irmessage);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_motor_stop":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null
-					],
-				"type": "byrobot_dronefighter_drone_motor_stop"
-			},
-        "paramsKeyMap": {
-			},
-        "class": "byrobot_dronefighter_motor",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.byrobot_dronefighter.sendStop(script);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_motorsingle":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						["1",	"0"],
-						["2",	"1"],
-						["3",	"2"],
-						["4",	"3"]
-					],
-					"value": "0",
-					"fontSize": 11
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						{
-							"type": "text",
-							"params": ["1000"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_drone_motorsingle"
-			},
-        "paramsKeyMap": {
-				"MOTORINDEX":	0,
-				"MOTORSPEED":	1
-			},
-        "class": "byrobot_dronefighter_motor",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var motorIndex		= parseInt(script.getField("MOTORINDEX"));
-				var motorDirection	= 1;
-				var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
-				
-				return Entry.byrobot_dronefighter.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_motorsingle_input":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "text",
-							"params": ["0"]
-						},
-						{
-							"type": "text",
-							"params": ["1000"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_drone_motorsingle_input"
-			},
-        "paramsKeyMap": {
-				"MOTORINDEX":	0,
-				"MOTORSPEED":	1
-			},
-        "class": "byrobot_dronefighter_motor",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var motorIndex		= parseInt(script.getNumberValue("MOTORINDEX", script)) - 1;
-				var motorDirection	= 1;
-				var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
-				
-				return Entry.byrobot_dronefighter.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_command_mode_vehicle_drone":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null
-					],
-				"type": "byrobot_dronefighter_drone_command_mode_vehicle_drone"
-			},
-        "paramsKeyMap": {
-			},
-        "class": "byrobot_dronefighter_control_flight",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.byrobot_dronefighter.setModeVehicle(script, 0x10);		// 0x10 : Mode::Vehicle::Flight
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_control_drone_takeoff":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null
-					],
-				"type": "byrobot_dronefighter_drone_control_drone_takeoff"
-			},
-        "paramsKeyMap": {
-			},
-        "class": "byrobot_dronefighter_control_flight",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.byrobot_dronefighter.setEventFlight(script, 0x11, 200);	// 0x11 : FlightEvent::TakeOff
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_control_drone_landing":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null
-					],
-				"type": "byrobot_dronefighter_drone_control_drone_landing"
-			},
-        "paramsKeyMap": {
-			},
-        "class": "byrobot_dronefighter_control_flight",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.byrobot_dronefighter.setEventFlight(script, 0x12, 200);	// 0x12 : FlightEvent::Landing
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_control_drone_stop":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null
-					],
-				"type": "byrobot_dronefighter_drone_control_drone_stop"
-			},
-        "paramsKeyMap": {
-			},
-        "class": "byrobot_dronefighter_control_flight",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.byrobot_dronefighter.sendStop(script);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_control_coordinate":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_drone_coordinate_world,	"1"],
-						[Lang.Blocks.byrobot_dronefighter_drone_coordinate_local,	"2"],
-					],
-					"value": "1",
-					"fontSize": 11
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						null
-					],
-				"type": "byrobot_dronefighter_drone_control_coordinate"
-			},
-        "paramsKeyMap": {
-				"COORDINATE"	: 0,
-			},
-        "class": "byrobot_dronefighter_control_flight",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var coordinate = script.getField('COORDINATE');
-				return Entry.byrobot_dronefighter.sendCommand(script, 0x10, 0x20, coordinate);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_control_drone_reset_heading":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null
-					],
-				"type": "byrobot_dronefighter_drone_control_drone_reset_heading"
-			},
-        "paramsKeyMap": {
-			},
-        "class": "byrobot_dronefighter_control_flight",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				return Entry.byrobot_dronefighter.sendCommand(script, 0x10, 0x22, 0xA0);	// 0x22 : CommandType::FlightEvent	// 0xA0 : FlightEvent::ResetHeading
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_control_quad_one":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_roll,		"control_roll"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_pitch,		"control_pitch"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_yaw,		"control_yaw"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_throttle,	"control_throttle"]
-					],
-					"value": "control_throttle",
-					"fontSize": 11
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						{
-							"type": "number",
-							"params": ["0"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_drone_control_quad_one"
-			},
-        "paramsKeyMap": {
-				"CONTROLTARGET"	: 0,
-				"VALUE"			: 1
-			},
-        "class": "byrobot_dronefighter_control_flight",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var controlTarget	= script.getField('CONTROLTARGET');
-				var value			= parseInt(script.getNumberValue("VALUE", script));
-				
-				return Entry.byrobot_dronefighter.sendControlQuadSingle(script, controlTarget, value, 0, false);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_control_quad_one_delay":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_roll,		"control_roll"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_pitch,		"control_pitch"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_yaw,		"control_yaw"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_throttle,	"control_throttle"]
-					],
-					"value": "control_throttle",
-					"fontSize": 11
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						null,
-						{
-							"type": "number",
-							"params": ["100"]
-						},
-						{
-							"type": "number",
-							"params": ["1"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_drone_control_quad_one_delay"
-			},
-        "paramsKeyMap": {
-				"CONTROLTARGET"	: 0,
-				"VALUE"		: 1,
-				"TIME"		: 2
-			},
-        "class": "byrobot_dronefighter_control_flight",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var controlTarget	= script.getField('CONTROLTARGET');
-				var value			= parseInt(script.getNumberValue("VALUE", script));
-				var time			= parseInt(script.getNumberValue("TIME", script) * 1000);
-				
-				return Entry.byrobot_dronefighter.sendControlQuadSingle(script, controlTarget, value, time, true);
-			},
-    },
-	// */
-	//*
-    "byrobot_dronefighter_drone_control_quad":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "number",
-							"params": ["0"]
-						},
-						{
-							"type": "number",
-							"params": ["0"]
-						},
-						{
-							"type": "number",
-							"params": ["0"]
-						},
-						{
-							"type": "number",
-							"params": ["0"]
-						},
-						null
-					],
-				"type": "byrobot_dronefighter_drone_control_quad"
-			},
-        "paramsKeyMap": {
-				"ROLL":		0,
-				"PITCH":	1,
-				"YAW":		2,
-				"THROTTLE":	3
-			},
-        "class": "byrobot_dronefighter_control_flight",
-        "isNotFor": [ "byrobot_dronefighter" ],
-        "func": function (sprite, script)
-			{
-				var roll		= parseInt(script.getNumberValue("ROLL", script));
-				var pitch		= parseInt(script.getNumberValue("PITCH", script));
-				var yaw			= parseInt(script.getNumberValue("YAW", script));
-				var throttle	= parseInt(script.getNumberValue("THROTTLE", script));
-				
-				return Entry.byrobot_dronefighter.sendControlQuad(script, roll, pitch, yaw, throttle, 0, false);
-			},
-    },
-	// */
-	/* BYROBOT DroneFighter End */
 	/* BYROBOT DroneFighter Controller Start */
 	//*
-    "byrobot_dronefighter_controller_common_value_button":
+    "byrobot_dronefighter_controller_controller_value_button":
 	{
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -26026,7 +24285,7 @@ Entry.block = {
         "events": {},
         "def": {
 				"params": [ null ],
-				"type": "byrobot_dronefighter_controller_common_value_button"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+				"type": "byrobot_dronefighter_controller_controller_value_button"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
 			},
         "paramsKeyMap": {
 				"DEVICE": 0
@@ -26042,7 +24301,7 @@ Entry.block = {
     },
 	// */
 	//*
-    "byrobot_dronefighter_controller_common_value_joystick":
+    "byrobot_dronefighter_controller_controller_value_joystick":
 	{
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -26069,7 +24328,7 @@ Entry.block = {
         "events": {},
         "def": {
 				"params": [ null ],
-				"type": "byrobot_dronefighter_controller_common_value_joystick"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+				"type": "byrobot_dronefighter_controller_controller_value_joystick"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
 			},
         "paramsKeyMap": {
 				"DEVICE": 0
@@ -26131,7 +24390,6 @@ Entry.block = {
 				else
 					return false;
 			},
-        "syntax": {"js": [], "py": []}
     },
 	// */
 	//*
@@ -26191,7 +24449,6 @@ Entry.block = {
 				else
 					return false;
 			},
-        "syntax": {"js": [], "py": []}
     },
 	// */
 	//*
@@ -27100,44 +25357,9 @@ Entry.block = {
     },
 	// */
 	/* BYROBOT DroneFighter Controller End */
-	/* BYROBOT Petrone Start */
+	/* BYROBOT DroneFighter Drive Start */
 	//*
-    "byrobot_petrone_common_value_button":
-	{
-        "color": "#00979D",
-        "skeleton": "basic_string_field",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_controller_button_button,				"button_button"],
-						[Lang.Blocks.byrobot_dronefighter_controller_button_event,				"button_event"],
-					],
-					"value": "button_button",				// 초기 선택항목 지정
-					"fontSize": 11
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [ null ],
-				"type": "byrobot_petrone_common_value_button"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
-			},
-        "paramsKeyMap": {
-				"DEVICE": 0
-			},
-        "class": "byrobot_petrone_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
-        "isNotFor": [ "byrobot_petrone" ],
-        "func": function (sprite, script)
-			{
-				var read	= Entry.hw.portData;
-				var device	= script.getField('DEVICE');	// paramsKeyMap에 정의된 이름 사용
-				return read[device];
-			},
-    },
-	// */
-	//*
-    "byrobot_petrone_common_value_attitude":
+    "byrobot_dronefighter_drive_drone_value_attitude":
 	{
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -27157,13 +25379,13 @@ Entry.block = {
         "events": {},
         "def": {
 				"params": [ null ],
-				"type": "byrobot_petrone_common_value_attitude"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+				"type": "byrobot_dronefighter_drive_drone_value_attitude"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
 			},
         "paramsKeyMap": {
 				"DEVICE": 0
 			},
-        "class": "byrobot_petrone_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var read	= Entry.hw.portData;
@@ -27173,7 +25395,79 @@ Entry.block = {
     },
 	// */
 	//*
-    "byrobot_petrone_common_value_joystick":
+    "byrobot_dronefighter_drive_drone_value_etc":
+	{
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,				"state_modeVehicle"],
+						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive,				"state_modeDrive"],
+						[Lang.Blocks.byrobot_dronefighter_drone_state_battery,					"state_battery"],
+						[Lang.Blocks.byrobot_dronefighter_drone_irmessage,						"irmessage_irdata"],
+					],
+					"value": "irmessage_irdata",				// 초기 선택항목 지정
+					"fontSize": 11
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [ null ],
+				"type": "byrobot_dronefighter_drive_drone_value_etc"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+			},
+        "paramsKeyMap": {
+				"DEVICE": 0
+			},
+        "class": "byrobot_dronefighter_drive_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
+        "func": function (sprite, script)
+			{
+				var read	= Entry.hw.portData;
+				var device	= script.getField('DEVICE');	// paramsKeyMap에 정의된 이름 사용
+				return read[device];
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drive_controller_value_button":
+	{
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_controller_button_button,				"button_button"],
+						[Lang.Blocks.byrobot_dronefighter_controller_button_event,				"button_event"],
+					],
+					"value": "button_button",				// 초기 선택항목 지정
+					"fontSize": 11
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [ null ],
+				"type": "byrobot_dronefighter_drive_controller_value_button"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+			},
+        "paramsKeyMap": {
+				"DEVICE": 0
+			},
+        "class": "byrobot_dronefighter_drive_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
+        "func": function (sprite, script)
+			{
+				var read	= Entry.hw.portData;
+				var device	= script.getField('DEVICE');	// paramsKeyMap에 정의된 이름 사용
+				return read[device];
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drive_controller_value_joystick":
 	{
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -27200,13 +25494,13 @@ Entry.block = {
         "events": {},
         "def": {
 				"params": [ null ],
-				"type": "byrobot_petrone_common_value_joystick"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+				"type": "byrobot_dronefighter_drive_controller_value_joystick"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
 			},
         "paramsKeyMap": {
 				"DEVICE": 0
 			},
-        "class": "byrobot_petrone_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var read	= Entry.hw.portData;
@@ -27216,44 +25510,7 @@ Entry.block = {
     },
 	// */
 	//*
-    "byrobot_petrone_common_value_etc":
-	{
-        "color": "#00979D",
-        "skeleton": "basic_string_field",
-        "statements": [],
-        "params": [
-				{
-					"type": "Dropdown",
-					"options": [
-						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,				"state_modeVehicle"],
-						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive,				"state_modeDrive"],
-						[Lang.Blocks.byrobot_dronefighter_drone_state_battery,					"state_battery"],
-						[Lang.Blocks.byrobot_dronefighter_drone_irmessage,						"irmessage_irdata"],
-					],
-					"value": "irmessage_irdata",				// 초기 선택항목 지정
-					"fontSize": 11
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [ null ],
-				"type": "byrobot_petrone_common_value_etc"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
-			},
-        "paramsKeyMap": {
-				"DEVICE": 0
-			},
-        "class": "byrobot_petrone_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
-        "isNotFor": [ "byrobot_petrone" ],
-        "func": function (sprite, script)
-			{
-				var read	= Entry.hw.portData;
-				var device	= script.getField('DEVICE');	// paramsKeyMap에 정의된 이름 사용
-				return read[device];
-			},
-    },
-	// */
-	//*
-    "byrobot_petrone_controller_if_button_press":
+    "byrobot_dronefighter_drive_controller_if_button_press":
 	{
         "color": "#00979D",
 		"skeleton": "basic_boolean_field",
@@ -27282,13 +25539,13 @@ Entry.block = {
         "events": {},
         "def": {
 				"params": [ null ],
-				"type": "byrobot_petrone_controller_if_button_press"
+				"type": "byrobot_dronefighter_drive_controller_if_button_press"
 			},
         "paramsKeyMap": {
 				"BUTTON": 0
 			},
-        "class": "byrobot_petrone_boolean_input",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_boolean_input",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script){
 				var read	= Entry.hw.portData;
 				var button		= 'button_button';	// paramsKeyMap에 정의된 이름 사용
@@ -27303,7 +25560,7 @@ Entry.block = {
     },
 	// */
 	//*
-    "byrobot_petrone_controller_if_joystick_direction":
+    "byrobot_dronefighter_drive_controller_if_joystick_direction":
 	{
         "color": "#00979D",
 		"skeleton": "basic_boolean_field",
@@ -27341,14 +25598,14 @@ Entry.block = {
 						null,
 						null
 					],
-				"type": "byrobot_petrone_controller_if_joystick_direction"
+				"type": "byrobot_dronefighter_drive_controller_if_joystick_direction"
 			},
         "paramsKeyMap": {
 				"DEVICE"	: 0,
 				"DIRECTION"	: 1
 			},
-        "class": "byrobot_petrone_boolean_input",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_boolean_input",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script){
 				var read	= Entry.hw.portData;
 			
@@ -27359,11 +25616,10 @@ Entry.block = {
 				else
 					return false;
 			},
-        "syntax": {"js": [], "py": []}
     },
 	// */
 	//*
-    "byrobot_petrone_controller_light_manual_single_off":
+    "byrobot_dronefighter_drive_drone_control_car_stop":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -27380,20 +25636,394 @@ Entry.block = {
 				"params": [
 						null
 					],
-				"type": "byrobot_petrone_controller_light_manual_single_off"
+				"type": "byrobot_dronefighter_drive_drone_control_car_stop"
 			},
         "paramsKeyMap": {
 			},
-        "class": "byrobot_petrone_controller_light",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_control_drive",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
-				return Entry.byrobot_petrone.setLightManual(script, 0x11, 0xff, 0);
+				return Entry.byrobot_dronefighter_drive.sendStop(script);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_controller_light_manual_single":
+    "byrobot_dronefighter_drive_drone_control_double_one":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_drone_control_double_wheel,			"control_wheel"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_double_accel_forward,	"control_accel"]
+					],
+					"value": "control_accel",
+					"fontSize": 11
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null,
+						{
+							"type": "number",
+							"params": ["0"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_drive_drone_control_double_one"
+			},
+        "paramsKeyMap": {
+				"CONTROLTARGET"	: 0,
+				"VALUE"			: 1
+			},
+        "class": "byrobot_dronefighter_drive_control_drive",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
+        "func": function (sprite, script)
+			{
+				var controlTarget	= script.getField('CONTROLTARGET');
+				var value			= parseInt(script.getNumberValue("VALUE", script));
+				
+				return Entry.byrobot_dronefighter_drive.sendControlDoubleSingle(script, controlTarget, value, 0, false);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drive_drone_control_double_one_delay":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_drone_control_double_wheel,			"control_wheel"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_double_accel_forward,	"control_accel"]
+					],
+					"value": "control_accel",
+					"fontSize": 11
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null,
+						{
+							"type": "number",
+							"params": ["100"]
+						},
+						{
+							"type": "number",
+							"params": ["1"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_drive_drone_control_double_one_delay"
+			},
+        "paramsKeyMap": {
+				"CONTROLTARGET"	: 0,
+				"VALUE"			: 1,
+				"TIME"			: 2
+			},
+        "class": "byrobot_dronefighter_drive_control_drive",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
+        "func": function (sprite, script)
+			{
+				var controlTarget	= script.getField('CONTROLTARGET');
+				var value			= parseInt(script.getNumberValue("VALUE", script));
+				var time			= parseInt(script.getNumberValue('TIME', script) * 1000);
+				
+				return Entry.byrobot_dronefighter_drive.sendControlDoubleSingle(script, controlTarget, value, time, true);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drive_drone_control_double":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "number",
+							"params": ["0"]
+						},
+						{
+							"type": "number",
+							"params": ["0"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_drive_drone_control_double"
+			},
+        "paramsKeyMap": {
+				"WHEEL":	0,
+				"ACCEL":	1
+			},
+        "class": "byrobot_dronefighter_drive_control_drive",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
+        "func": function (sprite, script)
+			{
+				var wheel		= parseInt(script.getNumberValue("WHEEL", script));
+				var accel		= parseInt(script.getNumberValue("ACCEL", script));
+				return Entry.byrobot_dronefighter_drive.sendControlDouble(script, wheel, accel, 0, false);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drive_drone_motor_stop":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null
+					],
+				"type": "byrobot_dronefighter_drive_drone_motor_stop"
+			},
+        "paramsKeyMap": {
+			},
+        "class": "byrobot_dronefighter_drive_motor",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
+        "func": function (sprite, script)
+			{
+				return Entry.byrobot_dronefighter_drive.sendStop(script);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drive_drone_motorsingle":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						["1",	"0"],
+						["2",	"1"],
+						["3",	"2"],
+						["4",	"3"]
+					],
+					"value": "0",
+					"fontSize": 11
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null,
+						{
+							"type": "text",
+							"params": ["1000"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_drive_drone_motorsingle"
+			},
+        "paramsKeyMap": {
+				"MOTORINDEX":	0,
+				"MOTORSPEED":	1
+			},
+        "class": "byrobot_dronefighter_drive_motor",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
+        "func": function (sprite, script)
+			{
+				var motorIndex		= parseInt(script.getField("MOTORINDEX"));
+				var motorDirection	= 1;
+				var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
+				
+				return Entry.byrobot_dronefighter_drive.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drive_drone_motorsingle_input":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["0"]
+						},
+						{
+							"type": "text",
+							"params": ["1000"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_drive_drone_motorsingle_input"
+			},
+        "paramsKeyMap": {
+				"MOTORINDEX":	0,
+				"MOTORSPEED":	1
+			},
+        "class": "byrobot_dronefighter_drive_motor",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
+        "func": function (sprite, script)
+			{
+				var motorIndex		= parseInt(script.getNumberValue("MOTORINDEX", script)) - 1;
+				var motorDirection	= 1;
+				var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
+				
+				return Entry.byrobot_dronefighter_drive.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drive_drone_irmessage":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["100"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_drive_drone_irmessage"
+			},
+        "paramsKeyMap": {
+				"IRMESSAGE":	0
+			},
+        "class": "byrobot_dronefighter_drive_irmessage",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
+        "func": function (sprite, script)
+			{
+				var irmessage	= script.getNumberValue("IRMESSAGE", script);
+				return Entry.byrobot_dronefighter_drive.sendIrMessage(script, irmessage);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drive_controller_light_manual_single_off":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null
+					],
+				"type": "byrobot_dronefighter_drive_controller_light_manual_single_off"
+			},
+        "paramsKeyMap": {
+			},
+        "class": "byrobot_dronefighter_drive_controller_light",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
+        "func": function (sprite, script)
+			{
+				return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x11, 0xff, 0);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drive_controller_light_manual_single":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -27441,24 +26071,24 @@ Entry.block = {
 						null,
 						null
 					],
-				"type": "byrobot_petrone_controller_light_manual_single"
+				"type": "byrobot_dronefighter_drive_controller_light_manual_single"
 			},
         "paramsKeyMap": {
 				"FLAGS"			: 0,
 				"BRIGHTNESS"	: 1
 			},
-        "class": "byrobot_petrone_controller_light",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_controller_light",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var flags		= parseInt(script.getField('FLAGS'));
 				var brightness	= parseInt(script.getField('BRIGHTNESS'));
-				return Entry.byrobot_petrone.setLightManual(script, 0x11, flags, brightness);
+				return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x11, flags, brightness);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_controller_light_manual_single_input":
+    "byrobot_dronefighter_drive_controller_light_manual_single_input":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -27491,24 +26121,24 @@ Entry.block = {
 						},
 						null
 					],
-				"type": "byrobot_petrone_controller_light_manual_single_input"
+				"type": "byrobot_dronefighter_drive_controller_light_manual_single_input"
 			},
         "paramsKeyMap": {
 				"FLAGS"			: 0,
 				"BRIGHTNESS"	: 1
 			},
-        "class": "byrobot_petrone_controller_light",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_controller_light",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var flags		= script.getNumberValue('FLAGS');
 				var brightness	= script.getNumberValue('BRIGHTNESS');
-				return Entry.byrobot_petrone.setLightManual(script, 0x11, flags, brightness);
+				return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x11, flags, brightness);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_drone_light_manual_single_off":
+    "byrobot_dronefighter_drive_drone_light_manual_single_off":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -27525,20 +26155,20 @@ Entry.block = {
 				"params": [
 						null
 					],
-				"type": "byrobot_petrone_drone_light_manual_single_off"	
+				"type": "byrobot_dronefighter_drive_drone_light_manual_single_off"	
 			},
         "paramsKeyMap": {
 			},
-        "class": "byrobot_petrone_drone_light",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_drone_light",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
-				return Entry.byrobot_petrone.setLightManual(script, 0x10, 0xff, 0);
+				return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x10, 0xff, 0);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_drone_light_manual_single":
+    "byrobot_dronefighter_drive_drone_light_manual_single":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -27584,24 +26214,24 @@ Entry.block = {
 						null,
 						null
 					],
-				"type": "byrobot_petrone_drone_light_manual_single"	
+				"type": "byrobot_dronefighter_drive_drone_light_manual_single"	
 			},
         "paramsKeyMap": {
 				"FLAGS"			: 0,
 				"BRIGHTNESS"	: 1
 			},
-        "class": "byrobot_petrone_drone_light",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_drone_light",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var flags		= parseInt(script.getField('FLAGS'));
 				var brightness	= parseInt(script.getField('BRIGHTNESS'));
-				return Entry.byrobot_petrone.setLightManual(script, 0x10, flags, brightness);
+				return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x10, flags, brightness);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_drone_light_manual_single_input":
+    "byrobot_dronefighter_drive_drone_light_manual_single_input":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -27634,24 +26264,24 @@ Entry.block = {
 						},
 						null
 					],
-				"type": "byrobot_petrone_drone_light_manual_single_input"	
+				"type": "byrobot_dronefighter_drive_drone_light_manual_single_input"	
 			},
         "paramsKeyMap": {
 				"FLAGS"			: 0,
 				"BRIGHTNESS"	: 1
 			},
-        "class": "byrobot_petrone_drone_light",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_drone_light",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var flags		= script.getNumberValue('FLAGS');
 				var brightness	= script.getNumberValue('BRIGHTNESS');
-				return Entry.byrobot_dronefighter.setLightManual(script, 0x10, flags, brightness);
+				return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x10, flags, brightness);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_controller_buzzer_off":
+    "byrobot_dronefighter_drive_controller_buzzer_off":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -27668,20 +26298,20 @@ Entry.block = {
 				"params": [
 						null,
 					],
-				"type": "byrobot_petrone_controller_buzzer_off"	
+				"type": "byrobot_dronefighter_drive_controller_buzzer_off"	
 			},
         "paramsKeyMap": {
 			},
-        "class": "byrobot_petrone_buzzer",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
-				return Entry.byrobot_petrone.setBuzzerStop(script);
+				return Entry.byrobot_dronefighter_drive.setBuzzerStop(script);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_controller_buzzer_scale":
+    "byrobot_dronefighter_drive_controller_buzzer_scale":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -27732,28 +26362,28 @@ Entry.block = {
 						null,
 						null,
 					],
-				"type": "byrobot_petrone_controller_buzzer_scale"	
+				"type": "byrobot_dronefighter_drive_controller_buzzer_scale"	
 			},
         "paramsKeyMap": {
 				"OCTAVE"	: 0,
 				"SCALE"		: 1
 			},
-        "class": "byrobot_petrone_buzzer",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var octave		= parseInt(script.getField('OCTAVE'));
 				var scale		= parseInt(script.getField('SCALE'));
 				
 				if( scale == -1 )
-					return Entry.byrobot_petrone.setBuzzerMute(script, 60000, false, true);
+					return Entry.byrobot_dronefighter_drive.setBuzzerMute(script, 60000, false, true);
 				else
-					return Entry.byrobot_petrone.setBuzzerScale(script, octave, scale, 60000, false, true);
+					return Entry.byrobot_dronefighter_drive.setBuzzerScale(script, octave, scale, 60000, false, true);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_controller_buzzer_scale_delay":
+    "byrobot_dronefighter_drive_controller_buzzer_scale_delay":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -27812,15 +26442,15 @@ Entry.block = {
 						},
 						null,
 					],
-				"type": "byrobot_petrone_controller_buzzer_scale_delay"	
+				"type": "byrobot_dronefighter_drive_controller_buzzer_scale_delay"	
 			},
         "paramsKeyMap": {
 				"OCTAVE"	: 0,
 				"SCALE"		: 1,
 				"TIME"		: 2
 			},
-        "class": "byrobot_petrone_buzzer",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var octave		= parseInt(script.getField('OCTAVE'));
@@ -27828,14 +26458,14 @@ Entry.block = {
 				var time		= parseInt(script.getNumberValue('TIME') * 1000);
 				
 				if( scale == -1 )
-					return Entry.byrobot_petrone.setBuzzerMute(script, time, true, true);
+					return Entry.byrobot_dronefighter_drive.setBuzzerMute(script, time, true, true);
 				else
-					return Entry.byrobot_petrone.setBuzzerScale(script, octave, scale, time, true, true);
+					return Entry.byrobot_dronefighter_drive.setBuzzerScale(script, octave, scale, time, true, true);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_controller_buzzer_scale_reserve":
+    "byrobot_dronefighter_drive_controller_buzzer_scale_reserve":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -27894,15 +26524,15 @@ Entry.block = {
 						},
 						null,
 					],
-				"type": "byrobot_petrone_controller_buzzer_scale_reserve"	
+				"type": "byrobot_dronefighter_drive_controller_buzzer_scale_reserve"	
 			},
         "paramsKeyMap": {
 				"OCTAVE"	: 0,
 				"SCALE"		: 1,
 				"TIME"		: 2
 			},
-        "class": "byrobot_petrone_buzzer",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var octave		= parseInt(script.getField('OCTAVE'));
@@ -27910,14 +26540,14 @@ Entry.block = {
 				var time		= parseInt(script.getNumberValue('TIME') * 1000);
 				
 				if( scale == -1 )
-					return Entry.byrobot_petrone.setBuzzerMute(script, time, false, false);
+					return Entry.byrobot_dronefighter_drive.setBuzzerMute(script, time, false, false);
 				else
-					return Entry.byrobot_petrone.setBuzzerScale(script, octave, scale, time, false, false);
+					return Entry.byrobot_dronefighter_drive.setBuzzerScale(script, octave, scale, time, false, false);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_controller_buzzer_hz":
+    "byrobot_dronefighter_drive_controller_buzzer_hz":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -27942,22 +26572,22 @@ Entry.block = {
 						},
 						null,
 					],
-				"type": "byrobot_petrone_controller_buzzer_hz"	
+				"type": "byrobot_dronefighter_drive_controller_buzzer_hz"	
 			},
         "paramsKeyMap": {
 				"HZ"		: 0,
 			},
-        "class": "byrobot_petrone_buzzer",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var hz = parseInt(script.getNumberValue('HZ', script));
-				return Entry.byrobot_petrone.setBuzzerHz(script, hz, 60000, false, true);
+				return Entry.byrobot_dronefighter_drive.setBuzzerHz(script, hz, 60000, false, true);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_controller_buzzer_hz_delay":
+    "byrobot_dronefighter_drive_controller_buzzer_hz_delay":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -27990,24 +26620,24 @@ Entry.block = {
 						},
 						null,
 					],
-				"type": "byrobot_petrone_controller_buzzer_hz_delay"	
+				"type": "byrobot_dronefighter_drive_controller_buzzer_hz_delay"	
 			},
         "paramsKeyMap": {
 				"HZ"		: 0,
 				"TIME"		: 1
 			},
-        "class": "byrobot_petrone_buzzer",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var hz			= parseInt(script.getNumberValue('HZ', script));
 				var time		= parseInt(script.getNumberValue('TIME') * 1000);
-				return Entry.byrobot_petrone.setBuzzerHz(script, hz, time, true, true);
+				return Entry.byrobot_dronefighter_drive.setBuzzerHz(script, hz, time, true, true);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_controller_buzzer_hz_reserve":
+    "byrobot_dronefighter_drive_controller_buzzer_hz_reserve":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28040,24 +26670,24 @@ Entry.block = {
 						},
 						null,
 					],
-				"type": "byrobot_petrone_controller_buzzer_hz_reserve"	
+				"type": "byrobot_dronefighter_drive_controller_buzzer_hz_reserve"	
 			},
         "paramsKeyMap": {
 				"HZ"		: 0,
 				"TIME"		: 1
 			},
-        "class": "byrobot_petrone_buzzer",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var hz			= parseInt(script.getNumberValue('HZ', script));
 				var time		= parseInt(script.getNumberValue('TIME') * 1000);
-				return Entry.byrobot_petrone.setBuzzerHz(script, hz, time, false, false);
+				return Entry.byrobot_dronefighter_drive.setBuzzerHz(script, hz, time, false, false);
 			},
     },
 	// */
 		//*
-    "byrobot_petrone_controller_vibrator_off":
+    "byrobot_dronefighter_drive_controller_vibrator_off":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28074,60 +26704,20 @@ Entry.block = {
 				"params": [
 						null
 					],
-				"type": "byrobot_petrone_controller_vibrator_off"	
+				"type": "byrobot_dronefighter_drive_controller_vibrator_off"	
 			},
         "paramsKeyMap": {
 			},
-        "class": "byrobot_petrone_vibrator",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_vibrator",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
-				return Entry.byrobot_petrone.setVibratorStop(script);
+				return Entry.byrobot_dronefighter_drive.setVibratorStop(script);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_controller_vibrator_on_delay":
-	{
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-				{
-					"type": "Block",
-					"accept": "string"
-				},
-				{
-					"type": "Indicator",
-					"img": "block_icon/hardware_03.png",
-					"size": 12
-				}
-			],
-        "events": {},
-        "def": {
-				"params": [
-						{
-							"type": "text",
-							"params": ["1"]
-						},
-						null
-					],
-				"type": "byrobot_petrone_controller_vibrator_on_delay"	
-			},
-        "paramsKeyMap": {
-				"TIMEON"	: 0
-			},
-        "class": "byrobot_petrone_vibrator",
-        "isNotFor": [ "byrobot_petrone" ],
-        "func": function (sprite, script)
-			{
-				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
-				return Entry.byrobot_petrone.setVibrator(script, timeOn, 0, timeOn, true, true);
-			},
-    },
-	// */
-	//*
-    "byrobot_petrone_controller_vibrator_on_reserve":
+    "byrobot_dronefighter_drive_controller_vibrator_on_delay":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28152,22 +26742,62 @@ Entry.block = {
 						},
 						null
 					],
-				"type": "byrobot_petrone_controller_vibrator_on_reserve"	
+				"type": "byrobot_dronefighter_drive_controller_vibrator_on_delay"	
 			},
         "paramsKeyMap": {
 				"TIMEON"	: 0
 			},
-        "class": "byrobot_petrone_vibrator",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_vibrator",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
-				return Entry.byrobot_petrone.setVibrator(script, timeOn, 0, timeOn, false, false);
+				return Entry.byrobot_dronefighter_drive.setVibrator(script, timeOn, 0, timeOn, true, true);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_controller_vibrator_delay":
+    "byrobot_dronefighter_drive_controller_vibrator_on_reserve":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["1"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_drive_controller_vibrator_on_reserve"	
+			},
+        "paramsKeyMap": {
+				"TIMEON"	: 0
+			},
+        "class": "byrobot_dronefighter_drive_vibrator",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
+        "func": function (sprite, script)
+			{
+				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
+				return Entry.byrobot_dronefighter_drive.setVibrator(script, timeOn, 0, timeOn, false, false);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_drive_controller_vibrator_delay":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28208,26 +26838,26 @@ Entry.block = {
 						},
 						null
 					],
-				"type": "byrobot_petrone_controller_vibrator_delay"	
+				"type": "byrobot_dronefighter_drive_controller_vibrator_delay"	
 			},
         "paramsKeyMap": {
 				"TIMEON"	: 0,
 				"TIMEOFF"	: 1,
 				"TIMERUN"	: 2
 			},
-        "class": "byrobot_petrone_vibrator",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_vibrator",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
 				var timeOff		= parseInt(script.getNumberValue('TIMEOFF') * 1000);
 				var timeRun		= parseInt(script.getNumberValue('TIMERUN') * 1000);
-				return Entry.byrobot_petrone.setVibrator(script, timeOn, timeOff, timeRun, true, true);
+				return Entry.byrobot_dronefighter_drive.setVibrator(script, timeOn, timeOff, timeRun, true, true);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_controller_vibrator_reserve":
+    "byrobot_dronefighter_drive_controller_vibrator_reserve":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28268,26 +26898,1205 @@ Entry.block = {
 						},
 						null
 					],
-				"type": "byrobot_petrone_controller_vibrator_reserve"	
+				"type": "byrobot_dronefighter_drive_controller_vibrator_reserve"	
 			},
         "paramsKeyMap": {
 				"TIMEON"	: 0,
 				"TIMEOFF"	: 1,
 				"TIMERUN"	: 2
 			},
-        "class": "byrobot_petrone_vibrator",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_drive_vibrator",
+        "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script)
 			{
 				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
 				var timeOff		= parseInt(script.getNumberValue('TIMEOFF') * 1000);
 				var timeRun		= parseInt(script.getNumberValue('TIMERUN') * 1000);
-				return Entry.byrobot_petrone.setVibrator(script, timeOn, timeOff, timeRun, false, false);
+				return Entry.byrobot_dronefighter_drive.setVibrator(script, timeOn, timeOff, timeRun, false, false);
+			},
+    },
+	// */
+	/* BYROBOT DroneFighter Drive End */
+	/* BYROBOT DroneFighter Flight Start */
+	//*
+    "byrobot_dronefighter_flight_drone_value_attitude":
+	{
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_drone_attitude_roll,					"attitude_roll"],
+						[Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch,					"attitude_pitch"],
+						[Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw,					"attitude_yaw"],
+					],
+					"value": "attitude_roll",				// 초기 선택항목 지정
+					"fontSize": 11
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [ null ],
+				"type": "byrobot_dronefighter_flight_drone_value_attitude"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+			},
+        "paramsKeyMap": {
+				"DEVICE": 0
+			},
+        "class": "byrobot_dronefighter_flight_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				return Entry.hw.portData[script.getField('DEVICE')];
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_drone_irmessage":
+    "byrobot_dronefighter_flight_drone_value_etc":
+	{
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,				"state_modeVehicle"],
+						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight,				"state_modeFlight"],
+						[Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate,			"state_coordinate"],
+						[Lang.Blocks.byrobot_dronefighter_drone_state_battery,					"state_battery"],
+						[Lang.Blocks.byrobot_dronefighter_drone_irmessage,						"irmessage_irdata"],
+					],
+					"value": "irmessage_irdata",				// 초기 선택항목 지정
+					"fontSize": 11
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [ null ],
+				"type": "byrobot_dronefighter_flight_drone_value_etc"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+			},
+        "paramsKeyMap": {
+				"DEVICE": 0
+			},
+        "class": "byrobot_dronefighter_flight_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				return Entry.hw.portData[script.getField('DEVICE')];
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_value_button":
+	{
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_controller_button_button,				"button_button"],
+						[Lang.Blocks.byrobot_dronefighter_controller_button_event,				"button_event"],
+					],
+					"value": "button_button",				// 초기 선택항목 지정
+					"fontSize": 11
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [ null ],
+				"type": "byrobot_dronefighter_flight_controller_value_button"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+			},
+        "paramsKeyMap": {
+				"DEVICE": 0
+			},
+        "class": "byrobot_dronefighter_flight_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				return Entry.hw.portData[script.getField('DEVICE')];
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_value_joystick":
+	{
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,			"joystick_left_x"],
+						[Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,			"joystick_left_y"],
+						[Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction,	"joystick_left_direction"],
+						[Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event,		"joystick_left_event"],
+						[Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command,		"joystick_left_command"],
+						[Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x,			"joystick_right_x"],
+						[Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y,			"joystick_right_y"],
+						[Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction,	"joystick_right_direction"],
+						[Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event,		"joystick_right_event"],
+						[Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command,	"joystick_right_command"],
+					],
+					"value": "joystick_left_x",				// 초기 선택항목 지정
+					"fontSize": 11
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [ null ],
+				"type": "byrobot_dronefighter_flight_controller_value_joystick"		// 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+			},
+        "paramsKeyMap": {
+				"DEVICE": 0
+			},
+        "class": "byrobot_dronefighter_flight_monitor",			// 같은 이름인 객체들이 그룹으로 형성됨
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				return Entry.hw.portData[script.getField('DEVICE')];
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_if_button_press":
+	{
+        "color": "#00979D",
+		"skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_front_left,		"1" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_front_right,		"2" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_front_left_right,	"3" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_up_left,	"4" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_up_right,	"8" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_up,			"16" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_left,		"32" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_right,		"64" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_center_down,		"128" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_bottom_left,		"256" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_bottom_right,		"512" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_button_bottom_left_right,	"768" ]
+					],
+					"value": "1",
+					"fontSize": 11
+				},
+			],
+        "events": {},
+        "def": {
+				"params": [ null ],
+				"type": "byrobot_dronefighter_flight_controller_if_button_press"
+			},
+        "paramsKeyMap": {
+				"BUTTON": 0
+			},
+        "class": "byrobot_dronefighter_flight_boolean_input",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script){
+				var read	= Entry.hw.portData;
+				var button		= 'button_button';	// paramsKeyMap에 정의된 이름 사용
+				var buttonevent	= 'button_event';	// paramsKeyMap에 정의된 이름 사용
+				
+				if( read[button] == script.getField('BUTTON') && read[buttonevent] == 2 )
+					return true;
+				else
+					return false;
+			},
+        "syntax": {"js": [], "py": []}
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_if_joystick_direction":
+	{
+        "color": "#00979D",
+		"skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[ Lang.Blocks.byrobot_dronefighter_common_left,				"joystick_left_direction" 	],
+						[ Lang.Blocks.byrobot_dronefighter_common_right,			"joystick_right_direction"	]
+					],
+					"value": "joystick_left_direction",
+					"fontSize": 11
+				},
+				{
+					"type": "Dropdown",
+					"options": [
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_up,		"17" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_up,			"18" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_up,		"20" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left,			"33" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_center,		"34" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right,			"36" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_down,		"65" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_down,			"66" ],
+						[ Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_down,	"68" ]
+					],
+					"value": "34",
+					"fontSize": 11
+				},
+			],
+        "events": {},
+        "def": {
+				"params": [ 
+						null,
+						null
+					],
+				"type": "byrobot_dronefighter_flight_controller_if_joystick_direction"
+			},
+        "paramsKeyMap": {
+				"DEVICE"	: 0,
+				"DIRECTION"	: 1
+			},
+        "class": "byrobot_dronefighter_flight_boolean_input",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script){
+				var read	= Entry.hw.portData;
+			
+				var device	= script.getField('DEVICE');	// paramsKeyMap에 정의된 이름 사용
+				
+				if( read[device] == script.getField('DIRECTION') )
+					return true;
+				else
+					return false;
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_light_manual_single_off":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null
+					],
+				"type": "byrobot_dronefighter_flight_controller_light_manual_single_off"
+			},
+        "paramsKeyMap": {
+			},
+        "class": "byrobot_dronefighter_flight_controller_light",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x11, 0xff, 0);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_light_manual_single":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_all,		"255"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_1,		"128"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_2,		"64"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_3,		"32"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_4,		"16"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_5,		"8"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_6,		"4"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_blue,		"2"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_red,		"1"],
+					],
+					"value": "128",
+					"fontSize": 11
+				},
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_on,		"220"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_off,		"0"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b25,		"75"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b50,		"125"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b75,		"200"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b100,		"255"],
+					],
+					"value": "220",
+					"fontSize": 11
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null,
+						null,
+						null
+					],
+				"type": "byrobot_dronefighter_flight_controller_light_manual_single"
+			},
+        "paramsKeyMap": {
+				"FLAGS"			: 0,
+				"BRIGHTNESS"	: 1
+			},
+        "class": "byrobot_dronefighter_flight_controller_light",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var flags		= parseInt(script.getField('FLAGS'));
+				var brightness	= parseInt(script.getField('BRIGHTNESS'));
+				return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x11, flags, brightness);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_light_manual_single_input":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["0b11111111"]
+						},
+						{
+							"type": "text",
+							"params": ["255"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_flight_controller_light_manual_single_input"
+			},
+        "paramsKeyMap": {
+				"FLAGS"			: 0,
+				"BRIGHTNESS"	: 1
+			},
+        "class": "byrobot_dronefighter_flight_controller_light",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var flags		= script.getNumberValue('FLAGS');
+				var brightness	= script.getNumberValue('BRIGHTNESS');
+				return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x11, flags, brightness);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_drone_light_manual_single_off":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null
+					],
+				"type": "byrobot_dronefighter_flight_drone_light_manual_single_off"	
+			},
+        "paramsKeyMap": {
+			},
+        "class": "byrobot_dronefighter_flight_drone_light",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x10, 0xff, 0);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_drone_light_manual_single":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_all,		"255"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_1,		"128"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_2,		"64"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_3,		"32"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_4,		"16"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_blue,		"8"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_red,		"4"],
+					],
+					"value": "128",
+					"fontSize": 11
+				},
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_on,		"220"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_off,		"0"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b25,		"75"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b50,		"125"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b75,		"200"],
+						[Lang.Blocks.byrobot_dronefighter_common_light_manual_b100,		"255"],
+					],
+					"value": "220",
+					"fontSize": 11
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null,
+						null,
+						null
+					],
+				"type": "byrobot_dronefighter_flight_drone_light_manual_single"	
+			},
+        "paramsKeyMap": {
+				"FLAGS"			: 0,
+				"BRIGHTNESS"	: 1
+			},
+        "class": "byrobot_dronefighter_flight_drone_light",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var flags		= parseInt(script.getField('FLAGS'));
+				var brightness	= parseInt(script.getField('BRIGHTNESS'));
+				return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x10, flags, brightness);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_drone_light_manual_single_input":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["0b11111111"]
+						},
+						{
+							"type": "text",
+							"params": ["255"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_flight_drone_light_manual_single_input"	
+			},
+        "paramsKeyMap": {
+				"FLAGS"			: 0,
+				"BRIGHTNESS"	: 1
+			},
+        "class": "byrobot_dronefighter_flight_drone_light",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var flags		= script.getNumberValue('FLAGS');
+				var brightness	= script.getNumberValue('BRIGHTNESS');
+				return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x10, flags, brightness);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_buzzer_off":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null,
+					],
+				"type": "byrobot_dronefighter_flight_controller_buzzer_off"	
+			},
+        "paramsKeyMap": {
+			},
+        "class": "byrobot_dronefighter_flight_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				return Entry.byrobot_dronefighter_flight.setBuzzerStop(script);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_buzzer_scale":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						["4",	"3"],
+						["5",	"4"],
+						["6",	"5"],
+						["7",	"6"],
+						["8",	"7"]
+					],
+					"value": "4",
+					"fontSize": 11
+				},
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute,	"-1"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_c,		"0"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs,		"1"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_d,		"2"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds,		"3"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_e,		"4"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_f,		"5"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs,		"6"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_g,		"7"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs,		"8"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_a,		"9"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_as,		"10"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_b,		"11"]
+					],
+					"value": "0",
+					"fontSize": 11
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null,
+						null,
+						null,
+					],
+				"type": "byrobot_dronefighter_flight_controller_buzzer_scale"	
+			},
+        "paramsKeyMap": {
+				"OCTAVE"	: 0,
+				"SCALE"		: 1
+			},
+        "class": "byrobot_dronefighter_flight_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var octave		= parseInt(script.getField('OCTAVE'));
+				var scale		= parseInt(script.getField('SCALE'));
+				
+				if( scale == -1 )
+					return Entry.byrobot_dronefighter_flight.setBuzzerMute(script, 60000, false, true);
+				else
+					return Entry.byrobot_dronefighter_flight.setBuzzerScale(script, octave, scale, 60000, false, true);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_buzzer_scale_delay":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						["4",	"3"],
+						["5",	"4"],
+						["6",	"5"],
+						["7",	"6"],
+						["8",	"7"]
+					],
+					"value": "4",
+					"fontSize": 11
+				},
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute,	"-1"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_c,		"0"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs,		"1"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_d,		"2"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds,		"3"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_e,		"4"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_f,		"5"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs,		"6"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_g,		"7"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs,		"8"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_a,		"9"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_as,		"10"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_b,		"11"]
+					],
+					"value": "0",
+					"fontSize": 11
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null,
+						null,
+						{
+							"type": "text",
+							"params": ["1"]
+						},
+						null,
+					],
+				"type": "byrobot_dronefighter_flight_controller_buzzer_scale_delay"	
+			},
+        "paramsKeyMap": {
+				"OCTAVE"	: 0,
+				"SCALE"		: 1,
+				"TIME"		: 2
+			},
+        "class": "byrobot_dronefighter_flight_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var octave		= parseInt(script.getField('OCTAVE'));
+				var scale		= parseInt(script.getField('SCALE'));
+				var time		= parseInt(script.getNumberValue('TIME') * 1000);
+				
+				if( scale == -1 )
+					return Entry.byrobot_dronefighter_flight.setBuzzerMute(script, time, true, true);
+				else
+					return Entry.byrobot_dronefighter_flight.setBuzzerScale(script, octave, scale, time, true, true);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_buzzer_scale_reserve":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						["4",	"3"],
+						["5",	"4"],
+						["6",	"5"],
+						["7",	"6"],
+						["8",	"7"]
+					],
+					"value": "4",
+					"fontSize": 11
+				},
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute,	"-1"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_c,		"0"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs,		"1"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_d,		"2"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds,		"3"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_e,		"4"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_f,		"5"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs,		"6"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_g,		"7"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs,		"8"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_a,		"9"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_as,		"10"],
+						[Lang.Blocks.byrobot_dronefighter_controller_buzzer_b,		"11"]
+					],
+					"value": "0",
+					"fontSize": 11
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null,
+						null,
+						{
+							"type": "text",
+							"params": ["1"]
+						},
+						null,
+					],
+				"type": "byrobot_dronefighter_flight_controller_buzzer_scale_reserve"	
+			},
+        "paramsKeyMap": {
+				"OCTAVE"	: 0,
+				"SCALE"		: 1,
+				"TIME"		: 2
+			},
+        "class": "byrobot_dronefighter_flight_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var octave		= parseInt(script.getField('OCTAVE'));
+				var scale		= parseInt(script.getField('SCALE'));
+				var time		= parseInt(script.getNumberValue('TIME') * 1000);
+				
+				if( scale == -1 )
+					return Entry.byrobot_dronefighter_flight.setBuzzerMute(script, time, false, false);
+				else
+					return Entry.byrobot_dronefighter_flight.setBuzzerScale(script, octave, scale, time, false, false);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_buzzer_hz":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["1000"]
+						},
+						null,
+					],
+				"type": "byrobot_dronefighter_flight_controller_buzzer_hz"	
+			},
+        "paramsKeyMap": {
+				"HZ"		: 0,
+			},
+        "class": "byrobot_dronefighter_flight_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var hz = parseInt(script.getNumberValue('HZ', script));
+				return Entry.byrobot_dronefighter_flight.setBuzzerHz(script, hz, 60000, false, true);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_buzzer_hz_delay":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["1000"]
+						},
+						{
+							"type": "text",
+							"params": ["1"]
+						},
+						null,
+					],
+				"type": "byrobot_dronefighter_flight_controller_buzzer_hz_delay"	
+			},
+        "paramsKeyMap": {
+				"HZ"		: 0,
+				"TIME"		: 1
+			},
+        "class": "byrobot_dronefighter_flight_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var hz			= parseInt(script.getNumberValue('HZ', script));
+				var time		= parseInt(script.getNumberValue('TIME') * 1000);
+				return Entry.byrobot_dronefighter_flight.setBuzzerHz(script, hz, time, true, true);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_buzzer_hz_reserve":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["1000"]
+						},
+						{
+							"type": "text",
+							"params": ["1"]
+						},
+						null,
+					],
+				"type": "byrobot_dronefighter_flight_controller_buzzer_hz_reserve"	
+			},
+        "paramsKeyMap": {
+				"HZ"		: 0,
+				"TIME"		: 1
+			},
+        "class": "byrobot_dronefighter_flight_buzzer",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var hz			= parseInt(script.getNumberValue('HZ', script));
+				var time		= parseInt(script.getNumberValue('TIME') * 1000);
+				return Entry.byrobot_dronefighter_flight.setBuzzerHz(script, hz, time, false, false);
+			},
+    },
+	// */
+		//*
+    "byrobot_dronefighter_flight_controller_vibrator_off":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null
+					],
+				"type": "byrobot_dronefighter_flight_controller_vibrator_off"	
+			},
+        "paramsKeyMap": {
+			},
+        "class": "byrobot_dronefighter_flight_vibrator",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				return Entry.byrobot_dronefighter_flight.setVibratorStop(script);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_vibrator_on_delay":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["1"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_flight_controller_vibrator_on_delay"	
+			},
+        "paramsKeyMap": {
+				"TIMEON"	: 0
+			},
+        "class": "byrobot_dronefighter_flight_vibrator",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
+				return Entry.byrobot_dronefighter_flight.setVibrator(script, timeOn, 0, timeOn, true, true);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_vibrator_on_reserve":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["1"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_flight_controller_vibrator_on_reserve"	
+			},
+        "paramsKeyMap": {
+				"TIMEON"	: 0
+			},
+        "class": "byrobot_dronefighter_flight_vibrator",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
+				return Entry.byrobot_dronefighter_flight.setVibrator(script, timeOn, 0, timeOn, false, false);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_vibrator_delay":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["0.02"]
+						},
+						{
+							"type": "text",
+							"params": ["0.2"]
+						},
+						{
+							"type": "text",
+							"params": ["1"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_flight_controller_vibrator_delay"	
+			},
+        "paramsKeyMap": {
+				"TIMEON"	: 0,
+				"TIMEOFF"	: 1,
+				"TIMERUN"	: 2
+			},
+        "class": "byrobot_dronefighter_flight_vibrator",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
+				var timeOff		= parseInt(script.getNumberValue('TIMEOFF') * 1000);
+				var timeRun		= parseInt(script.getNumberValue('TIMERUN') * 1000);
+				return Entry.byrobot_dronefighter_flight.setVibrator(script, timeOn, timeOff, timeRun, true, true);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_controller_vibrator_reserve":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						{
+							"type": "text",
+							"params": ["0.02"]
+						},
+						{
+							"type": "text",
+							"params": ["0.2"]
+						},
+						{
+							"type": "text",
+							"params": ["1"]
+						},
+						null
+					],
+				"type": "byrobot_dronefighter_flight_controller_vibrator_reserve"	
+			},
+        "paramsKeyMap": {
+				"TIMEON"	: 0,
+				"TIMEOFF"	: 1,
+				"TIMERUN"	: 2
+			},
+        "class": "byrobot_dronefighter_flight_vibrator",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var timeOn		= parseInt(script.getNumberValue('TIMEON') * 1000);
+				var timeOff		= parseInt(script.getNumberValue('TIMEOFF') * 1000);
+				var timeRun		= parseInt(script.getNumberValue('TIMERUN') * 1000);
+				return Entry.byrobot_dronefighter_flight.setVibrator(script, timeOn, timeOff, timeRun, false, false);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_drone_irmessage":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28312,22 +28121,22 @@ Entry.block = {
 						},
 						null
 					],
-				"type": "byrobot_petrone_drone_irmessage"
+				"type": "byrobot_dronefighter_flight_drone_irmessage"
 			},
         "paramsKeyMap": {
 				"IRMESSAGE":	0
 			},
-        "class": "byrobot_petrone_irmessage",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_flight_irmessage",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
         "func": function (sprite, script)
 			{
 				var irmessage	= script.getNumberValue("IRMESSAGE", script);
-				return Entry.byrobot_petrone.sendIrMessage(script, irmessage);
+				return Entry.byrobot_dronefighter_flight.sendIrMessage(script, irmessage);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_drone_motor_stop":
+    "byrobot_dronefighter_flight_drone_motor_stop":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28344,20 +28153,20 @@ Entry.block = {
 				"params": [
 						null
 					],
-				"type": "byrobot_petrone_drone_motor_stop"
+				"type": "byrobot_dronefighter_flight_drone_motor_stop"
 			},
         "paramsKeyMap": {
 			},
-        "class": "byrobot_petrone_motor",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_flight_motor",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
         "func": function (sprite, script)
 			{
-				return Entry.byrobot_petrone.sendStop(script);
+				return Entry.byrobot_dronefighter_flight.sendStop(script);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_drone_motorsingle":
+    "byrobot_dronefighter_flight_drone_motorsingle":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28394,26 +28203,26 @@ Entry.block = {
 						},
 						null
 					],
-				"type": "byrobot_petrone_drone_motorsingle"
+				"type": "byrobot_dronefighter_flight_drone_motorsingle"
 			},
         "paramsKeyMap": {
 				"MOTORINDEX":	0,
 				"MOTORSPEED":	1
 			},
-        "class": "byrobot_petrone_motor",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_flight_motor",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
         "func": function (sprite, script)
 			{
 				var motorIndex		= parseInt(script.getField("MOTORINDEX"));
 				var motorDirection	= 1;
 				var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
 				
-				return Entry.byrobot_petrone.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
+				return Entry.byrobot_dronefighter_flight.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_drone_motorsingle_input":
+    "byrobot_dronefighter_flight_drone_motorsingle_input":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28446,26 +28255,26 @@ Entry.block = {
 						},
 						null
 					],
-				"type": "byrobot_petrone_drone_motorsingle_input"
+				"type": "byrobot_dronefighter_flight_drone_motorsingle_input"
 			},
         "paramsKeyMap": {
 				"MOTORINDEX":	0,
 				"MOTORSPEED":	1
 			},
-        "class": "byrobot_petrone_motor",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_flight_motor",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
         "func": function (sprite, script)
 			{
 				var motorIndex		= parseInt(script.getNumberValue("MOTORINDEX", script)) - 1;
 				var motorDirection	= 1;
 				var motorSpeed		= parseInt(script.getNumberValue("MOTORSPEED", script));
 				
-				return Entry.byrobot_petrone.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
+				return Entry.byrobot_dronefighter_flight.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_drone_command_mode_vehicle_car":
+    "byrobot_dronefighter_flight_drone_command_mode_vehicle_drone":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28482,20 +28291,20 @@ Entry.block = {
 				"params": [
 						null
 					],
-				"type": "byrobot_petrone_drone_command_mode_vehicle_car"
+				"type": "byrobot_dronefighter_flight_drone_command_mode_vehicle_drone"
 			},
         "paramsKeyMap": {
 			},
-        "class": "byrobot_petrone_control_drive",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_flight_control_flight",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
         "func": function (sprite, script)
 			{
-				return Entry.byrobot_petrone.setModeVehicle(script, 0x20);		// 0x20 : Mode::Vehicle::Drive
+				return Entry.byrobot_dronefighter_flight.setModeVehicle(script, 0x10);		// 0x10 : Mode::Vehicle::Flight
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_drone_control_car_stop":
+    "byrobot_dronefighter_flight_drone_control_drone_takeoff":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28512,20 +28321,80 @@ Entry.block = {
 				"params": [
 						null
 					],
-				"type": "byrobot_petrone_drone_control_car_stop"
+				"type": "byrobot_dronefighter_flight_drone_control_drone_takeoff"
 			},
         "paramsKeyMap": {
 			},
-        "class": "byrobot_petrone_control_drive",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_flight_control_flight",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
         "func": function (sprite, script)
 			{
-				return Entry.byrobot_petrone.sendStop(script);
+				return Entry.byrobot_dronefighter_flight.setEventFlight(script, 0x11, 200);	// 0x11 : FlightEvent::TakeOff
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_drone_control_double_one":
+    "byrobot_dronefighter_flight_drone_control_drone_landing":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null
+					],
+				"type": "byrobot_dronefighter_flight_drone_control_drone_landing"
+			},
+        "paramsKeyMap": {
+			},
+        "class": "byrobot_dronefighter_flight_control_flight",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				return Entry.byrobot_dronefighter_flight.setEventFlight(script, 0x12, 200);	// 0x12 : FlightEvent::Landing
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_drone_control_drone_stop":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null
+					],
+				"type": "byrobot_dronefighter_flight_drone_control_drone_stop"
+			},
+        "paramsKeyMap": {
+			},
+        "class": "byrobot_dronefighter_flight_control_flight",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				return Entry.byrobot_dronefighter_flight.sendStop(script);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_drone_control_coordinate":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28534,10 +28403,84 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
-						[Lang.Blocks.byrobot_dronefighter_drone_control_double_wheel,			"control_wheel"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_double_accel_forward,	"control_accel"]
+						[Lang.Blocks.byrobot_dronefighter_drone_coordinate_world,	"1"],
+						[Lang.Blocks.byrobot_dronefighter_drone_coordinate_local,	"2"],
 					],
-					"value": "control_accel",
+					"value": "1",
+					"fontSize": 11
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null,
+						null
+					],
+				"type": "byrobot_dronefighter_flight_drone_control_coordinate"
+			},
+        "paramsKeyMap": {
+				"COORDINATE"	: 0,
+			},
+        "class": "byrobot_dronefighter_flight_control_flight",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				var coordinate = script.getField('COORDINATE');
+				return Entry.byrobot_dronefighter_flight.sendCommand(script, 0x10, 0x20, coordinate);
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_drone_control_drone_reset_heading":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+        "events": {},
+        "def": {
+				"params": [
+						null
+					],
+				"type": "byrobot_dronefighter_flight_drone_control_drone_reset_heading"
+			},
+        "paramsKeyMap": {
+			},
+        "class": "byrobot_dronefighter_flight_control_flight",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
+        "func": function (sprite, script)
+			{
+				return Entry.byrobot_dronefighter_flight.sendCommand(script, 0x10, 0x22, 0xA0);	// 0x22 : CommandType::FlightEvent	// 0xA0 : FlightEvent::ResetHeading
+			},
+    },
+	// */
+	//*
+    "byrobot_dronefighter_flight_drone_control_quad_one":
+	{
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_roll,		"control_roll"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_pitch,		"control_pitch"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_yaw,		"control_yaw"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_throttle,	"control_throttle"]
+					],
+					"value": "control_throttle",
 					"fontSize": 11
 				},
 				{
@@ -28560,25 +28503,25 @@ Entry.block = {
 						},
 						null
 					],
-				"type": "byrobot_petrone_drone_control_double_one"
+				"type": "byrobot_dronefighter_flight_drone_control_quad_one"
 			},
         "paramsKeyMap": {
 				"CONTROLTARGET"	: 0,
 				"VALUE"			: 1
 			},
-        "class": "byrobot_petrone_control_drive",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_flight_control_flight",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
         "func": function (sprite, script)
 			{
 				var controlTarget	= script.getField('CONTROLTARGET');
 				var value			= parseInt(script.getNumberValue("VALUE", script));
 				
-				return Entry.byrobot_petrone.sendControlDoubleSingle(script, controlTarget, value, 0, false);
+				return Entry.byrobot_dronefighter_flight.sendControlQuadSingle(script, controlTarget, value, 0, false);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_drone_control_double_one_delay":
+    "byrobot_dronefighter_flight_drone_control_quad_one_delay":
 	{
         "color": "#00979D",
         "skeleton": "basic",
@@ -28587,10 +28530,12 @@ Entry.block = {
 				{
 					"type": "Dropdown",
 					"options": [
-						[Lang.Blocks.byrobot_dronefighter_drone_control_double_wheel,			"control_wheel"],
-						[Lang.Blocks.byrobot_dronefighter_drone_control_double_accel_forward,	"control_accel"]
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_roll,		"control_roll"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_pitch,		"control_pitch"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_yaw,		"control_yaw"],
+						[Lang.Blocks.byrobot_dronefighter_drone_control_quad_throttle,	"control_throttle"]
 					],
-					"value": "control_accel",
+					"value": "control_throttle",
 					"fontSize": 11
 				},
 				{
@@ -28621,32 +28566,40 @@ Entry.block = {
 						},
 						null
 					],
-				"type": "byrobot_petrone_drone_control_double_one_delay"
+				"type": "byrobot_dronefighter_flight_drone_control_quad_one_delay"
 			},
         "paramsKeyMap": {
 				"CONTROLTARGET"	: 0,
-				"VALUE"			: 1,
-				"TIME"			: 2
+				"VALUE"		: 1,
+				"TIME"		: 2
 			},
-        "class": "byrobot_petrone_control_drive",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_flight_control_flight",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
         "func": function (sprite, script)
 			{
 				var controlTarget	= script.getField('CONTROLTARGET');
 				var value			= parseInt(script.getNumberValue("VALUE", script));
-				var time			= parseInt(script.getNumberValue('TIME', script) * 1000);
+				var time			= parseInt(script.getNumberValue("TIME", script) * 1000);
 				
-				return Entry.byrobot_petrone.sendControlDoubleSingle(script, controlTarget, value, time, true);
+				return Entry.byrobot_dronefighter_flight.sendControlQuadSingle(script, controlTarget, value, time, true);
 			},
     },
 	// */
 	//*
-    "byrobot_petrone_drone_control_double":
+    "byrobot_dronefighter_flight_drone_control_quad":
 	{
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
+				{
+					"type": "Block",
+					"accept": "string"
+				},
+				{
+					"type": "Block",
+					"accept": "string"
+				},
 				{
 					"type": "Block",
 					"accept": "string"
@@ -28672,25 +28625,38 @@ Entry.block = {
 							"type": "number",
 							"params": ["0"]
 						},
+						{
+							"type": "number",
+							"params": ["0"]
+						},
+						{
+							"type": "number",
+							"params": ["0"]
+						},
 						null
 					],
-				"type": "byrobot_petrone_drone_control_double"
+				"type": "byrobot_dronefighter_flight_drone_control_quad"
 			},
         "paramsKeyMap": {
-				"WHEEL":	0,
-				"ACCEL":	1
+				"ROLL":		0,
+				"PITCH":	1,
+				"YAW":		2,
+				"THROTTLE":	3
 			},
-        "class": "byrobot_petrone_control_drive",
-        "isNotFor": [ "byrobot_petrone" ],
+        "class": "byrobot_dronefighter_flight_control_flight",
+        "isNotFor": [ "byrobot_dronefighter_flight" ],
         "func": function (sprite, script)
 			{
-				var wheel		= parseInt(script.getNumberValue("WHEEL", script));
-				var accel		= parseInt(script.getNumberValue("ACCEL", script));
-				return Entry.byrobot_petrone.sendControlDouble(script, wheel, accel, 0, false);
+				var roll		= parseInt(script.getNumberValue("ROLL", script));
+				var pitch		= parseInt(script.getNumberValue("PITCH", script));
+				var yaw			= parseInt(script.getNumberValue("YAW", script));
+				var throttle	= parseInt(script.getNumberValue("THROTTLE", script));
+				
+				return Entry.byrobot_dronefighter_flight.sendControlQuad(script, roll, pitch, yaw, throttle, 0, false);
 			},
     },
 	// */
-	/* BYROBOT Petrone End */
+	/* BYROBOT DroneFighter Flight End */
 };
 
 (function() {
