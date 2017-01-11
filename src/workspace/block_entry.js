@@ -26304,8 +26304,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    ["달성", 1],
-                    ["실패", 0]
+                    ["달성", true],
+                    ["실패", false]
                 ],
                 "fontSize": 11
             },
@@ -26318,7 +26318,7 @@ Entry.block = {
         "events": {
             "dataAdd": [
                 function(block) {
-                    console.log(block.params[0]);
+                    console.log(block);
                 }
             ]
         },
@@ -26334,10 +26334,7 @@ Entry.block = {
         "class": "etc",
         "isNotFor": [],
         "func": function (sprite, script) {
-            if (this.block.params[1])
-                alert(this.block.params[0] + " 달성!")
-            else
-                alert(this.block.params[0] + " 실패!")
+            Entry.achieve(this.block.params[1], this.block.params[0]);
             this.die();
         }
     },

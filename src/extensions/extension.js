@@ -15,4 +15,7 @@ Entry.Extension = function() {
     p.renderView = function() {
     };
 
+    p.toggleInformation = function() {
+    };
+
 })(Entry.Extension.prototype);

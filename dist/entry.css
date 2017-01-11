@@ -6173,5 +6173,12 @@ input.entryObjectNameWorkspace:-moz-read-only {
   width: 100%;
   height: 100%;
 }
+.targetChecker {
+  height: 50px;
+  background-color: white;
+  border-bottom: 0.5px solid #5096f5;
+  cursor: pointer;
+  padding: 15px;
+}
 
 

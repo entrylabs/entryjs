@@ -9630,16 +9630,47 @@ Entry.Extension = function() {
 (function(a) {
   a.renderView = function() {
   };
+  a.toggleInformation = function() {
+  };
 })(Entry.Extension.prototype);
-Entry.TargetChecker = function() {
+Entry.TargetChecker = function(a, b) {
   this.isForEdit;
   this.goals = [];
+  this.achievedGoals = [];
   this.blocks = ["check_object_property", "check_block_execution", "check_lecture_goal"];
+  this.isFail = !1;
+  this.script = new Entry.Code([]);
+  Entry.achieve = this.achieveCheck.bind(this);
+  Entry.addEventListener("stop", this.reset.bind(this));
 };
 Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
 (function(a) {
   a.renderView = function() {
-    return this._view = Entry.Dom("li", {class:"targetChecker"});
+    this._view = Entry.Dom("li", {class:"targetChecker"});
+    this._view.bindOnClick(function(b) {
+      Entry.playground.injectObject(this);
+    }.bind(this));
+    this.updateView();
+    return this._view;
+  };
+  a.updateView = function() {
+    this._view.text("\ubaa9\ud45c : " + this.achievedGoals.length + " / " + this.goals.length);
+  };
+  a.achieveCheck = function(b, a) {
+    this.isFail || (b ? this.achieveGoal(a) : this.fail(a));
+  };
+  a.achieveGoal = function(b) {
+    this.achievedGoals.push(b);
+    this.updateView();
+  };
+  a.fail = function() {
+    this.updateView();
+    this.isFail = !0;
+  };
+  a.reset = function() {
+    this.achievedGoals = [];
+    this.isFail = !1;
+    this.updateView();
   };
 })(Entry.TargetChecker.prototype);
 Entry.Func = function(a) {
@@ -25980,16 +26011,16 @@ Entry.skinContainer = {_skins:{}};
     this._skins[b.type] || (this._skins[b.type] = []);
     this._skins[b.type].push(a);
   };
-  a.getSkin = function(b) {
-    if (this._skins[b.type]) {
-      for (var a = this._skins[b.type], d = 0;d < a.length;d++) {
-        var e = a[d];
+  a.getSkin = function(a) {
+    if (this._skins[a.type]) {
+      for (var b = this._skins[a.type], d = 0;d < b.length;d++) {
+        var e = b[d];
         if (!e.conditions || !e.conditions.length) {
           return e;
         }
         for (var f = 0;f < e.conditions.length;f++) {
           var g = e.conditions[f];
-          if (b.getDataByPointer(g.pointer) !== g.value) {
+          if (a.getDataByPointer(g.pointer) !== g.value) {
             break;
           }
           if (f === e.conditions.length - 1) {
@@ -25998,7 +26029,7 @@ Entry.skinContainer = {_skins:{}};
         }
       }
     }
-    return Entry.block[b.type];
+    return Entry.block[a.type];
   };
 })(Entry.skinContainer);
 Entry.ThreadView = function(a, b) {
