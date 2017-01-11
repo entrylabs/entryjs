@@ -9164,9 +9164,7 @@ Entry.block = {
             var str = script.getStringValue("LEFTHAND", script);
             var target = script.getStringValue("RIGHTHAND", script);
             var index = str.indexOf(target);
-            if(Entry.getMainWS().mode == Entry.Workspace.MODE_VIMBOARD)
-                index -= 1;
-            return index > -1 ? index + 1 : 0;
+            return index + 1;
         },
         "syntax": {"js": [], "py": [
             {
