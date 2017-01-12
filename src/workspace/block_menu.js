@@ -292,8 +292,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 var distance = this.offset().top - board.offset().top - $(window).scrollTop();
 
                 this._boardBlockView._moveTo(
-                    blockView.x - svgWidth + dx,
-                    blockView.y + distance + dy,
+                    blockView.x - svgWidth + (dx || 0),
+                    blockView.y + distance + (dy || 0),
                     false
                 );
 
