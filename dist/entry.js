@@ -1530,695 +1530,6 @@ Entry.block.bitbrick_convert_scale = function(a, b) {
   c = Math.max(a, c);
   return Math.round(c);
 };
-var categoryColor = "#FF9E20";
-Blockly.Blocks.start_drawing = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_start_drawing).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.start_drawing = function(a, b) {
-  a.brush ? a.brush.stop = !1 : Entry.setBasicBrush(a);
-  Entry.stage.sortZorder();
-  a.brush.moveTo(a.getX(), -1 * a.getY());
-  return b.callReturn();
-};
-Blockly.Blocks.stop_drawing = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stop_drawing).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.stop_drawing = function(a, b) {
-  a.brush && a.shape && (a.brush.stop = !0);
-  return b.callReturn();
-};
-Blockly.Blocks.set_color = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_color_1);
-  this.appendDummyInput().appendField(new Blockly.FieldColour("#ff0000"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_color_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.set_color = function(a, b) {
-  var c = b.getField("VALUE", b);
-  a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
-  a.brush && (c = Entry.hex2rgb(c), a.brush.rgb = c, a.brush.endStroke(), a.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + a.brush.opacity / 100 + ")"), a.brush.moveTo(a.getX(), -1 * a.getY()));
-  return b.callReturn();
-};
-Blockly.Blocks.set_random_color = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_random_color).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.set_random_color = function(a, b) {
-  a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
-  if (a.brush) {
-    var c = Entry.generateRgb();
-    a.brush.rgb = c;
-    a.brush.endStroke();
-    a.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + a.brush.opacity / 100 + ")");
-    a.brush.moveTo(a.getX(), -1 * a.getY());
-  }
-  return b.callReturn();
-};
-Blockly.Blocks.change_thickness = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_thickness_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_thickness_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.change_thickness = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
-  a.brush && (a.brush.thickness += c, 1 > a.brush.thickness && (a.brush.thickness = 1), a.brush.setStrokeStyle(a.brush.thickness), a.brush.moveTo(a.getX(), -1 * a.getY()));
-  return b.callReturn();
-};
-Blockly.Blocks.set_thickness = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_thickness_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_thickness_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.set_thickness = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
-  a.brush && (a.brush.thickness = c, a.brush.setStrokeStyle(a.brush.thickness), a.brush.moveTo(a.getX(), -1 * a.getY()));
-  return b.callReturn();
-};
-Blockly.Blocks.change_opacity = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_opacity_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_opacity_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.change_opacity = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
-  c = Entry.adjustValueWithMaxMin(a.brush.opacity + c, 0, 100);
-  a.brush && (a.brush.opacity = c, a.brush.endStroke(), c = a.brush.rgb, a.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + a.brush.opacity / 100 + ")"), a.brush.moveTo(a.getX(), -1 * a.getY()));
-  return b.callReturn();
-};
-Blockly.Blocks.set_opacity = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_opacity_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_opacity_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.set_opacity = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
-  a.brush && (a.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), a.brush.endStroke(), c = a.brush.rgb, a.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + a.brush.opacity / 100 + ")"), a.brush.moveTo(a.getX(), -1 * a.getY()));
-  return b.callReturn();
-};
-Blockly.Blocks.brush_erase_all = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_brush_erase_all).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.brush_erase_all = function(a, b) {
-  var c = a.brush;
-  if (c) {
-    var d = c._stroke.style, e = c._strokeStyle.width;
-    c.clear().setStrokeStyle(e).beginStroke(d);
-    c.moveTo(a.getX(), -1 * a.getY());
-  }
-  a = a.parent.getStampEntities();
-  a.map(function(b) {
-    b.removeClone();
-  });
-  a = null;
-  return b.callReturn();
-};
-Blockly.Blocks.brush_stamp = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stamp).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.brush_stamp = function(a, b) {
-  a.parent.addStampEntity(a);
-  return b.callReturn();
-};
-Blockly.Blocks.change_brush_transparency = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_brush_transparency_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_brush_transparency_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.change_brush_transparency = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
-  c = Entry.adjustValueWithMaxMin(a.brush.opacity - c, 0, 100);
-  a.brush && (a.brush.opacity = c, a.brush.endStroke(), c = a.brush.rgb, a.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + a.brush.opacity / 100 + ")"), a.brush.moveTo(a.getX(), -1 * a.getY()));
-  return b.callReturn();
-};
-Blockly.Blocks.set_brush_tranparency = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_brush_transparency_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_brush_transparency_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.set_brush_tranparency = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
-  a.brush && (a.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), a.brush.endStroke(), c = a.brush.rgb, a.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + (1 - a.brush.opacity / 100) + ")"), a.brush.moveTo(a.getX(), -1 * a.getY()));
-  return b.callReturn();
-};
-var calcArrowColor = "#e8b349", calcBlockColor = "#FFD974", calcFontColor = "#3D3D3D";
-Blockly.Blocks.number = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(new Blockly.FieldTextInput(""), "NUM");
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.number = function(a, b) {
-  return b.getField("NUM", b);
-};
-Blockly.Blocks.angle = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(new Blockly.FieldAngle("90"), "ANGLE");
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.angle = function(a, b) {
-  return b.getNumberField("ANGLE");
-};
-Blockly.Blocks.get_x_coordinate = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_x_coordinate, calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.get_x_coordinate = function(a, b) {
-  return a.getX();
-};
-Blockly.Blocks.get_y_coordinate = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_y_coordinate, calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.get_y_coordinate = function(a, b) {
-  return a.getY();
-};
-Blockly.Blocks.get_angle = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_angle, calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.get_angle = function(a, b) {
-  return parseFloat(a.getRotation().toFixed(1));
-};
-Blockly.Blocks.get_rotation_direction = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_rotation_value, "ROTATION"], [Lang.Blocks.CALC_direction_value, "DIRECTION"]], null, !0, calcArrowColor), "OPERATOR");
-  this.appendDummyInput().appendField(" ");
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.get_rotation_direction = function(a, b) {
-  return "DIRECTION" == b.getField("OPERATOR", b).toUpperCase() ? parseFloat(a.getDirection().toFixed(1)) : parseFloat(a.getRotation().toFixed(1));
-};
-Blockly.Blocks.distance_something = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_distance_something_1, calcFontColor).appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse", null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_distance_something_2, calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.distance_something = function(a, b) {
-  b = b.getField("VALUE", b);
-  if ("mouse" == b) {
-    return b = Entry.stage.mouseCoordinate, Math.sqrt(Math.pow(a.getX() - b.x, 2) + Math.pow(a.getY() - b.y, 2));
-  }
-  b = Entry.container.getEntity(b);
-  return Math.sqrt(Math.pow(a.getX() - b.getX(), 2) + Math.pow(a.getY() - b.getY(), 2));
-};
-Blockly.Blocks.coordinate_mouse = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_mouse_1, calcFontColor).appendField(new Blockly.FieldDropdown([["x", "x"], ["y", "y"]], null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_coordinate_mouse_2, calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.coordinate_mouse = function(a, b) {
-  return "x" === b.getField("VALUE", b) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
-};
-Blockly.Blocks.coordinate_object = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_object_1, calcFontColor).appendField(new Blockly.FieldDropdownDynamic("spritesWithSelf", null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_coordinate_object_2, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_coordinate_x_value, "x"], [Lang.Blocks.CALC_coordinate_y_value, "y"], [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"], [Lang.Blocks.CALC_coordinate_direction_value, "direction"], 
-  [Lang.Blocks.CALC_coordinate_size_value, "size"], [Lang.Blocks.CALC_picture_index, "picture_index"], [Lang.Blocks.CALC_picture_name, "picture_name"]], null, !0, calcArrowColor), "COORDINATE").appendField(Lang.Blocks.CALC_coordinate_object_3, calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.coordinate_object = function(a, b) {
-  var c = b.getField("VALUE", b);
-  a = "self" == c ? a : Entry.container.getEntity(c);
-  switch(b.getField("COORDINATE", b)) {
-    case "x":
-      return a.getX();
-    case "y":
-      return a.getY();
-    case "rotation":
-      return a.getRotation();
-    case "direction":
-      return a.getDirection();
-    case "picture_index":
-      return b = a.parent, b = b.pictures, b.indexOf(a.picture) + 1;
-    case "size":
-      return Number(a.getSize().toFixed(1));
-    case "picture_name":
-      return b = a.parent, b = b.pictures, b[b.indexOf(a.picture)].name;
-  }
-};
-Blockly.Blocks.calc_basic = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
-  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], null, !1), "OPERATOR");
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.calc_basic = function(a, b) {
-  a = b.getField("OPERATOR", b);
-  var c = b.getNumberValue("LEFTHAND", b);
-  b = b.getNumberValue("RIGHTHAND", b);
-  return "PLUS" == a ? c + b : "MINUS" == a ? c - b : "MULTI" == a ? c * b : c / b;
-};
-Blockly.Blocks.calc_plus = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("+", calcFontColor);
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.calc_plus = function(a, b) {
-  a = b.getNumberValue("LEFTHAND", b);
-  b = b.getNumberValue("RIGHTHAND", b);
-  return a + b;
-};
-Blockly.Blocks.calc_minus = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("-", calcFontColor);
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.calc_minus = function(a, b) {
-  a = b.getNumberValue("LEFTHAND", b);
-  b = b.getNumberValue("RIGHTHAND", b);
-  return a - b;
-};
-Blockly.Blocks.calc_times = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("x", calcFontColor);
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.calc_times = function(a, b) {
-  a = b.getNumberValue("LEFTHAND", b);
-  b = b.getNumberValue("RIGHTHAND", b);
-  return a * b;
-};
-Blockly.Blocks.calc_divide = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("/", calcFontColor);
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.calc_divide = function(a, b) {
-  a = b.getNumberValue("LEFTHAND", b);
-  b = b.getNumberValue("RIGHTHAND", b);
-  return a / b;
-};
-Blockly.Blocks.calc_mod = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_mod_1, calcFontColor);
-  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_mod_2, calcFontColor);
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_mod_3, calcFontColor);
-  this.setInputsInline(!0);
-}};
-Entry.block.calc_mod = function(a, b) {
-  a = b.getNumberValue("LEFTHAND", b);
-  b = b.getNumberValue("RIGHTHAND", b);
-  return a % b;
-};
-Blockly.Blocks.calc_share = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_share_1, calcFontColor);
-  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_share_2, calcFontColor);
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_share_3, calcFontColor);
-  this.setInputsInline(!0);
-}};
-Entry.block.calc_share = function(a, b) {
-  a = b.getNumberValue("LEFTHAND", b);
-  b = b.getNumberValue("RIGHTHAND", b);
-  return Math.floor(a / b);
-};
-Blockly.Blocks.calc_operation = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_operation_of_1, calcFontColor);
-  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_operation_of_2, calcFontColor);
-  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_calc_operation_square, "square"], [Lang.Blocks.CALC_calc_operation_root, "root"], [Lang.Blocks.CALC_calc_operation_sin, "sin"], [Lang.Blocks.CALC_calc_operation_cos, "cos"], [Lang.Blocks.CALC_calc_operation_tan, "tan"], [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"], [Lang.Blocks.CALC_calc_operation_acos, "acos_radian"], [Lang.Blocks.CALC_calc_operation_atan, "atan_radian"], [Lang.Blocks.CALC_calc_operation_log, 
-  "log"], [Lang.Blocks.CALC_calc_operation_ln, "ln"], [Lang.Blocks.CALC_calc_operation_unnatural, "unnatural"], [Lang.Blocks.CALC_calc_operation_floor, "floor"], [Lang.Blocks.CALC_calc_operation_ceil, "ceil"], [Lang.Blocks.CALC_calc_operation_round, "round"], [Lang.Blocks.CALC_calc_operation_factorial, "factorial"], [Lang.Blocks.CALC_calc_operation_abs, "abs"]], null, !0, calcArrowColor), "VALUE");
-  this.setOutput(!0, "Number");
-  this.appendDummyInput().appendField(" ");
-  this.setInputsInline(!0);
-}};
-Entry.block.calc_operation = function(a, b) {
-  a = b.getNumberValue("LEFTHAND", b);
-  b = b.getField("VALUE", b);
-  if (-1 < ["asin_radian", "acos_radian"].indexOf(b) && (1 < a || -1 > a)) {
-    throw Error("x range exceeded");
-  }
-  b.indexOf("_") && (b = b.split("_")[0]);
-  -1 < ["sin", "cos", "tan"].indexOf(b) && (a = Entry.toRadian(a));
-  switch(b) {
-    case "square":
-      b = a * a;
-      break;
-    case "factorial":
-      b = Entry.factorial(a);
-      break;
-    case "root":
-      b = Math.sqrt(a);
-      break;
-    case "log":
-      b = Math.log(a) / Math.LN10;
-      break;
-    case "ln":
-      b = Math.log(a);
-      break;
-    case "asin":
-    case "acos":
-    case "atan":
-      b = Entry.toDegrees(Math[b](a));
-      break;
-    case "unnatural":
-      b = a - Math.floor(a);
-      0 > a && (b = 1 - b);
-      break;
-    default:
-      b = Math[b](a);
-  }
-  return Math.round(1E3 * b) / 1E3;
-};
-Blockly.Blocks.calc_rand = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_rand_1, calcFontColor);
-  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_2, calcFontColor);
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_3, calcFontColor);
-  this.setInputsInline(!0);
-}};
-Entry.block.calc_rand = function(a, b) {
-  a = b.getStringValue("LEFTHAND", b);
-  b = b.getStringValue("RIGHTHAND", b);
-  var c = Math.min(a, b), d = Math.max(a, b);
-  a = Entry.isFloat(a);
-  return Entry.isFloat(b) || a ? (Math.random() * (d - c) + c).toFixed(2) : Math.floor(Math.random() * (d - c + 1) + c);
-};
-Blockly.Blocks.get_date = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_date_1, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_get_date_year, "YEAR"], [Lang.Blocks.CALC_get_date_month, "MONTH"], [Lang.Blocks.CALC_get_date_day, "DAY"], [Lang.Blocks.CALC_get_date_hour, "HOUR"], [Lang.Blocks.CALC_get_date_minute, "MINUTE"], [Lang.Blocks.CALC_get_date_second, "SECOND"]], null, !0, calcArrowColor), "VALUE");
-  this.appendDummyInput().appendField(" ").appendField(Lang.Blocks.CALC_get_date_2, calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.get_date = function(a, b) {
-  a = b.getField("VALUE", b);
-  b = new Date;
-  return "YEAR" == a ? b.getFullYear() : "MONTH" == a ? b.getMonth() + 1 : "DAY" == a ? b.getDate() : "HOUR" == a ? b.getHours() : "MINUTE" == a ? b.getMinutes() : b.getSeconds();
-};
-Blockly.Blocks.get_sound_duration = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_duration_1, calcFontColor);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds", null, !0, calcArrowColor), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_duration_2, calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.get_sound_duration = function(a, b) {
-  b = b.getField("VALUE", b);
-  a = a.parent.sounds;
-  for (var c = 0;c < a.length;c++) {
-    if (a[c].id == b) {
-      return a[c].duration;
-    }
-  }
-};
-Blockly.Blocks.reset_project_timer = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_reset, calcFontColor);
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}, whenAdd:function() {
-  Entry.engine && Entry.engine.showProjectTimer();
-}, whenRemove:function(a) {
-  Entry.engine && Entry.engine.hideProjectTimer(a);
-}};
-Entry.block.reset_project_timer = function(a, b) {
-  Entry.engine.updateProjectTimer(0);
-  return b.callReturn();
-};
-Blockly.Blocks.set_visible_project_timer = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_1, calcFontColor);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]], null, !0, calcArrowColor), "ACTION");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_2, calcFontColor).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/calc_01.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}, whenAdd:function() {
-  Entry.engine && Entry.engine.showProjectTimer();
-}, whenRemove:function(a) {
-  Entry.engine && Entry.engine.hideProjectTimer(a);
-}};
-Entry.block.set_visible_project_timer = function(a, b) {
-  a = b.getField("ACTION", b);
-  var c = Entry.engine.projectTimer;
-  "SHOW" == a ? c.setVisible(!0) : c.setVisible(!1);
-  return b.callReturn();
-};
-Blockly.Blocks.timer_variable = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_timer_value, calcFontColor).appendField(" ", calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.timer_variable = function(a, b) {
-  return Entry.container.inputValue.getValue();
-};
-Blockly.Blocks.get_project_timer_value = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_timer_value, calcFontColor).appendField(" ", calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}, whenAdd:function() {
-  Entry.engine && Entry.engine.showProjectTimer();
-}, whenRemove:function(a) {
-  Entry.engine && Entry.engine.hideProjectTimer(a);
-}};
-Entry.block.get_project_timer_value = function(a, b) {
-  return Entry.engine.projectTimer.getValue();
-};
-Blockly.Blocks.char_at = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_char_at_1, calcFontColor);
-  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_char_at_2, calcFontColor);
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_char_at_3, calcFontColor);
-  this.setInputsInline(!0);
-}};
-Entry.block.char_at = function(a, b) {
-  a = b.getStringValue("LEFTHAND", b);
-  b = b.getNumberValue("RIGHTHAND", b) - 1;
-  if (0 > b || b > a.length - 1) {
-    throw Error();
-  }
-  return a[b];
-};
-Blockly.Blocks.length_of_string = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_length_of_string_1, calcFontColor);
-  this.appendValueInput("STRING").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_length_of_string_2, calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.length_of_string = function(a, b) {
-  return b.getStringValue("STRING", b).length;
-};
-Blockly.Blocks.substring = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_substring_1, calcFontColor);
-  this.appendValueInput("STRING").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_2, calcFontColor);
-  this.appendValueInput("START").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_3, calcFontColor);
-  this.appendValueInput("END").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_4, calcFontColor);
-  this.setOutput(!0, "String");
-  this.setInputsInline(!0);
-}};
-Entry.block.substring = function(a, b) {
-  a = b.getStringValue("STRING", b);
-  var c = b.getNumberValue("START", b) - 1;
-  b = b.getNumberValue("END", b) - 1;
-  var d = a.length - 1;
-  if (0 > c || 0 > b || c > d || b > d) {
-    throw Error();
-  }
-  return a.substring(Math.min(c, b), Math.max(c, b) + 1);
-};
-Blockly.Blocks.replace_string = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_replace_string_1, calcFontColor);
-  this.appendValueInput("STRING").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_2, calcFontColor);
-  this.appendValueInput("OLD_WORD").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_3, calcFontColor);
-  this.appendValueInput("NEW_WORD").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_4, calcFontColor);
-  this.setOutput(!0, "String");
-  this.setInputsInline(!0);
-}};
-Entry.block.replace_string = function(a, b) {
-  return b.getStringValue("STRING", b).replace(new RegExp(b.getStringValue("OLD_WORD", b), "gm"), b.getStringValue("NEW_WORD", b));
-};
-Blockly.Blocks.change_string_case = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_1, calcFontColor);
-  this.appendValueInput("STRING").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_2, calcFontColor);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_change_string_case_sub_1, "toUpperCase"], [Lang.Blocks.CALC_change_string_case_sub_2, "toLowerCase"]], null, !0, calcArrowColor), "CASE");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_3, calcFontColor);
-  this.setOutput(!0, "String");
-  this.setInputsInline(!0);
-}};
-Entry.block.change_string_case = function(a, b) {
-  return b.getStringValue("STRING", b)[b.getField("CASE", b)]();
-};
-Blockly.Blocks.index_of_string = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_index_of_string_1, calcFontColor);
-  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_2, calcFontColor);
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_3, calcFontColor);
-  this.setInputsInline(!0);
-}};
-Entry.block.index_of_string = function(a, b) {
-  a = b.getStringValue("LEFTHAND", b);
-  b = b.getStringValue("RIGHTHAND", b);
-  b = a.indexOf(b);
-  return -1 < b ? b + 1 : 0;
-};
-Blockly.Blocks.combine_something = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_1, calcFontColor);
-  this.appendValueInput("VALUE1").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_2, calcFontColor);
-  this.appendValueInput("VALUE2").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_3, calcFontColor);
-  this.setInputsInline(!0);
-  this.setOutput(!0, "String");
-}};
-Entry.block.combine_something = function(a, b) {
-  a = b.getStringValue("VALUE1", b);
-  b = b.getStringValue("VALUE2", b);
-  return a + b;
-};
-Blockly.Blocks.get_sound_volume = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_volume, calcFontColor).appendField(" ", calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.get_sound_volume = function(a, b) {
-  return 100 * createjs.Sound.getVolume();
-};
-Blockly.Blocks.quotient_and_mod = {init:function() {
-  this.setColour(calcBlockColor);
-  "ko" == Lang.type ? (this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_1, calcFontColor), this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_2, calcFontColor), this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_3, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_quotient_and_mod_sub_1, 
-  "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, "MOD"]], null, !0, calcArrowColor), "OPERATOR")) : "en" == Lang.type && (this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_1, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, "MOD"]], null, !0, calcArrowColor), "OPERATOR"), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_2, calcFontColor), this.appendValueInput("LEFTHAND").setCheck(["Number", 
-  "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_3, calcFontColor), this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]));
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_4, calcFontColor);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.quotient_and_mod = function(a, b) {
-  a = b.getNumberValue("LEFTHAND", b);
-  var c = b.getNumberValue("RIGHTHAND", b);
-  if (isNaN(a) || isNaN(c)) {
-    throw Error();
-  }
-  return "QUOTIENT" == b.getField("OPERATOR", b) ? Math.floor(a / c) : a % c;
-};
-Blockly.Blocks.choose_project_timer_action = {init:function() {
-  this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_choose_project_timer_action_1, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]], null, !0, calcArrowColor), "ACTION").appendField(Lang.Blocks.CALC_choose_project_timer_action_2, calcFontColor).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/calc_01.png", 
-  "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}, whenAdd:function() {
-  Entry.engine && Entry.engine.showProjectTimer();
-}, whenRemove:function(a) {
-  Entry.engine && Entry.engine.hideProjectTimer(a);
-}};
-Entry.block.choose_project_timer_action = function(a, b) {
-  a = b.getField("ACTION");
-  var c = Entry.engine, d = c.projectTimer;
-  "START" == a ? d.isInit ? d.isInit && d.isPaused && (d.pauseStart && (d.pausedTime += (new Date).getTime() - d.pauseStart), delete d.pauseStart, d.isPaused = !1) : c.startProjectTimer() : "STOP" == a ? d.isInit && !d.isPaused && (d.isPaused = !0, d.pauseStart = (new Date).getTime()) : "RESET" == a && d.isInit && (d.setValue(0), d.start = (new Date).getTime(), d.pausedTime = 0, delete d.pauseStart);
-  return b.callReturn();
-};
 Entry.Cobl = {name:"cobl", setZero:function() {
   for (var a = 0;14 > a;a++) {
     Entry.hw.sendQueue[a] = 0;
@@ -2653,383 +1964,6 @@ Entry.block.ev3_motor_degrees = function(a, b) {
   Entry.hw.sendQueue[a] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Degrees, degree:c, power:"CW" == d ? 50 : -50};
   return b.callReturn();
 };
-Blockly.Blocks.wait_second = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_1);
-  this.appendValueInput("SECOND").setCheck(["Number", "String", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.wait_second = function(a, b) {
-  if (b.isStart) {
-    if (1 == b.timeFlag) {
-      return b;
-    }
-    delete b.timeFlag;
-    delete b.isStart;
-    Entry.engine.isContinue = !1;
-    return b.callReturn();
-  }
-  b.isStart = !0;
-  b.timeFlag = 1;
-  a = b.getNumberValue("SECOND", b);
-  setTimeout(function() {
-    b.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * a * 1E3);
-  return b;
-};
-Blockly.Blocks.repeat_basic = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_basic_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_basic_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.appendStatementInput("DO");
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.repeat_basic = function(a, b) {
-  if (!b.isLooped) {
-    b.isLooped = !0;
-    a = b.getNumberValue("VALUE", b);
-    if (0 > a) {
-      throw Error(Lang.Blocks.FLOW_repeat_basic_errorMsg);
-    }
-    b.iterCount = Math.floor(a);
-  }
-  if (0 == b.iterCount || 0 > b.iterCount) {
-    return delete b.isLooped, delete b.iterCount, b.callReturn();
-  }
-  b.iterCount--;
-  return b.getStatement("DO", b);
-};
-Blockly.Blocks.repeat_inf = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_inf).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.appendStatementInput("DO");
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.repeat_inf = function(a, b) {
-  b.isLooped = !0;
-  return b.getStatement("DO");
-};
-Blockly.Blocks.stop_repeat = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_repeat).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.stop_repeat = function(a, b) {
-  return this.executor.break();
-};
-Blockly.Blocks.wait_until_true = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_until_true_1);
-  this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_until_true_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.wait_until_true = function(a, b) {
-  return b.getBooleanValue("BOOL", b) ? b.callReturn() : b;
-};
-Blockly.Blocks._if = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW__if_1);
-  this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW__if_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.appendStatementInput("STACK");
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block._if = function(a, b) {
-  return b.isLooped ? (delete b.isLooped, b.callReturn()) : b.getBooleanValue("BOOL", b) ? (b.isLooped = !0, b.getStatement("STACK", b)) : b.callReturn();
-};
-Blockly.Blocks.if_else = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_1);
-  this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.appendStatementInput("STACK_IF");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_3);
-  this.appendStatementInput("STACK_ELSE");
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.if_else = function(a, b) {
-  if (b.isLooped) {
-    return delete b.isLooped, b.callReturn();
-  }
-  a = b.getBooleanValue("BOOL", b);
-  b.isLooped = !0;
-  return a ? b.getStatement("STACK_IF", b) : b.getStatement("STACK_ELSE", b);
-};
-Blockly.Blocks.create_clone = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_create_clone_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("clone"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_create_clone_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.create_clone = function(a, b) {
-  var c = b.getField("VALUE", b);
-  b = b.callReturn();
-  "self" == c ? a.parent.addCloneEntity(a.parent, a, null) : Entry.container.getObject(c).addCloneEntity(a.parent, null, null);
-  return b;
-};
-Blockly.Blocks.delete_clone = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.delete_clone = function(a, b) {
-  if (!a.isClone) {
-    return b.callReturn();
-  }
-  a.removeClone();
-};
-Blockly.Blocks.when_clone_start = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_clone.png", "*", "start")).appendField(Lang.Blocks.FLOW_when_clone_start);
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.when_clone_start = function(a, b) {
-  return b.callReturn();
-};
-Blockly.Blocks.stop_run = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_run).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.stop_run = function(a, b) {
-  return Entry.engine.toggleStop();
-};
-Blockly.Blocks.repeat_while_true = {init:function() {
-  this.setColour("#498deb");
-  "ko" == Lang.type ? (this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1), this.appendValueInput("BOOL").setCheck("Boolean"), this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]]), "OPTION").appendField(Lang.Blocks.FLOW_repeat_while_true_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"))) : (this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1), 
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]]), "OPTION"), this.appendValueInput("BOOL").setCheck("Boolean"), this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*")));
-  this.appendStatementInput("DO");
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.repeat_while_true = function(a, b) {
-  a = b.getBooleanValue("BOOL", b);
-  "until" == b.getField("OPTION", b) && (a = !a);
-  return (b.isLooped = a) ? b.getStatement("DO", b) : b.callReturn();
-};
-Blockly.Blocks.stop_object = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_object_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisOnly"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]]), "TARGET");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_object_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.stop_object = function(a, b) {
-  b = b.getField("TARGET", b);
-  var c = Entry.container;
-  switch(b) {
-    case "all":
-      return c.clearRunningState(), this.die();
-    case "thisOnly":
-      return a.parent.script.clearExecutorsByEntity(a), this.die();
-    case "thisThread":
-      return this.die();
-    case "otherThread":
-      a.parent.script.clearExecutors(), a.parent.script.addExecutor(this.executor);
-  }
-};
-Blockly.Blocks.restart_project = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_restart).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.restart_project = function(a, b) {
-  Entry.engine.toggleStop();
-  Entry.engine.toggleRun();
-};
-Blockly.Blocks.remove_all_clones = {init:function() {
-  this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone_all).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.remove_all_clones = function(a, b) {
-  a = a.parent.getClonedEntities();
-  a.map(function(b) {
-    b.removeClone();
-  });
-  a = null;
-  return b.callReturn();
-};
-Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
-  Entry.variableContainer.createFunction();
-}]}};
-Blockly.Blocks.function_field_label = {init:function() {
-  this.setColour("#f9c535");
-  this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
-  this.appendValueInput("NEXT").setCheck(["Param"]);
-  this.setOutput(!0, "Param");
-  this.setInputsInline(!0);
-}};
-Entry.block.function_field_label = {skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]};
-Blockly.Blocks.function_field_string = {init:function() {
-  this.setColour("#FFD974");
-  this.appendValueInput("PARAM").setCheck(["String"]);
-  this.appendValueInput("NEXT").setCheck(["Param"]);
-  this.setOutput(!0, "Param");
-  this.setInputsInline(!0);
-}};
-Entry.block.function_field_string = {skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]};
-Blockly.Blocks.function_field_boolean = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendValueInput("PARAM").setCheck(["Boolean"]);
-  this.appendValueInput("NEXT").setCheck(["Param"]);
-  this.setOutput(!0, "Param");
-  this.setInputsInline(!0);
-}};
-Entry.block.function_field_boolean = {skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]};
-Blockly.Blocks.function_param_string = {init:function() {
-  this.setEditable(!1);
-  this.setColour("#FFD974");
-  this.setOutput(!0, ["String", "Number"]);
-  this.setInputsInline(!0);
-}, domToMutation:function(a) {
-  a.getElementsByTagName("field");
-  this.hashId = a.getAttribute("hashid");
-  (a = Entry.Func.targetFunc.stringHash[this.hashId]) || (a = "");
-  this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_character_variable + a), "");
-}, mutationToDom:function() {
-  var a = document.createElement("mutation");
-  a.setAttribute("hashid", this.hashId);
-  return a;
-}};
-Entry.block.function_param_string = function(a, b, c) {
-  return b.register[b.hashId].run();
-};
-Entry.block.function_param_string = {skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12", func:function() {
-  return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-}};
-Blockly.Blocks.function_param_boolean = {init:function() {
-  this.setEditable(!1);
-  this.setColour("#AEB8FF");
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}, domToMutation:function(a) {
-  a.getElementsByTagName("field");
-  this.hashId = a.getAttribute("hashid");
-  (a = Entry.Func.targetFunc.booleanHash[this.hashId]) || (a = "");
-  this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_logical_variable + a), "");
-}, mutationToDom:function() {
-  var a = document.createElement("mutation");
-  a.setAttribute("hashid", this.hashId);
-  return a;
-}};
-Entry.block.function_param_boolean = function(a, b, c) {
-  return b.register[b.hashId].run();
-};
-Entry.block.function_param_boolean = {skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12", func:function() {
-  return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-}};
-Blockly.Blocks.function_create = {init:function() {
-  this.appendDummyInput().appendField(Lang.Blocks.FUNCTION_define);
-  this.setColour("#cc7337");
-  this.appendValueInput("FIELD").setCheck(["Param"]);
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/function_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.function_create = function(a, b) {
-  return b.callReturn();
-};
-Entry.block.function_create = {skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], func:function() {
-}};
-Blockly.Blocks.function_general = {init:function() {
-  this.setColour("#cc7337");
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}, domToMutation:function(a) {
-  var b = a.getElementsByTagName("field");
-  this.appendDummyInput().appendField("");
-  b.length || this.appendDummyInput().appendField(Lang.Blocks.FUNCTION_function);
-  for (var c = 0;c < b.length;c++) {
-    var d = b[c], e = d.getAttribute("hashid");
-    switch(d.getAttribute("type").toLowerCase()) {
-      case "label":
-        this.appendDummyInput().appendField(d.getAttribute("content"));
-        break;
-      case "string":
-        this.appendValueInput(e).setCheck(["String", "Number"]);
-        break;
-      case "boolean":
-        this.appendValueInput(e).setCheck(["Boolean"]);
-    }
-  }
-  this.hashId = a.getAttribute("hashid");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/function_03.png", "*"));
-}, mutationToDom:function() {
-  for (var a = document.createElement("mutation"), b = 1;b < this.inputList.length;b++) {
-    var c = this.inputList[b];
-    if (c.fieldRow[0] && c.fieldRow[0] instanceof Blockly.FieldLabel) {
-      var c = c.fieldRow[0], d = document.createElement("field");
-      d.setAttribute("type", "label");
-      d.setAttribute("content", c.text_);
-    } else {
-      c.connection && "String" == c.connection.check_[0] ? (d = document.createElement("field"), d.setAttribute("type", "string"), d.setAttribute("hashid", c.name)) : c.connection && "Boolean" == c.connection.check_[0] && (d = document.createElement("field"), d.setAttribute("type", "boolean"), d.setAttribute("hashid", c.name));
-    }
-    a.appendChild(d);
-  }
-  a.setAttribute("hashid", this.hashId);
-  return a;
-}};
-Entry.block.function_general = function(a, b) {
-  if (!b.thread) {
-    var c = Entry.variableContainer.getFunction(b.hashId);
-    b.thread = new Entry.Script(a);
-    b.thread.register = b.values;
-    for (var d = 0;d < c.content.childNodes.length;d++) {
-      "function_create" == c.content.childNodes[d].getAttribute("type") && b.thread.init(c.content.childNodes[d]);
-    }
-  }
-  if (a = Entry.Engine.computeThread(a, b.thread)) {
-    return b.thread = a, b;
-  }
-  delete b.thread;
-  return b.callReturn();
-};
-Entry.block.function_general = {skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[], func:function(a) {
-  if (!this.initiated) {
-    this.initiated = !0;
-    var b = Entry.variableContainer.getFunction(this.block.type.substr(5, 9));
-    this.funcCode = b.content;
-    this.funcExecutor = this.funcCode.raiseEvent("funcDef", a)[0];
-    this.funcExecutor.register.params = this.getParams();
-    this.funcExecutor.register.paramMap = b.paramMap;
-  }
-  this.funcExecutor.execute();
-  if (!this.funcExecutor.isEnd()) {
-    return this.funcCode.removeExecutor(this.funcExecutor), Entry.STATIC.BREAK;
-  }
-}};
 Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0, lineTracerMode:0, lineTracerModeId:0, lineTracerSpeed:5, ioModeA:0, ioModeB:0}, setZero:function() {
   var a = Entry.Hamster.PORT_MAP, b = Entry.hw.sendQueue, c;
   for (c in a) {
@@ -3687,1172 +2621,6 @@ Entry.block.hamster_set_output_to = function(a, b) {
   a = Entry.hw.sendQueue;
   var c = b.getField("PORT"), d = b.getNumberValue("VALUE");
   "A" == c ? a.outputA = d : ("B" != c && (a.outputA = d), a.outputB = d);
-  return b.callReturn();
-};
-Blockly.Blocks.is_clicked = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_is_clicked, "#3D3D3D");
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.is_clicked = function(a, b) {
-  return Entry.stage.isClick;
-};
-Blockly.Blocks.is_press_some_key = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_is_press_some_key_1, "#3D3D3D");
-  this.appendDummyInput().appendField(new Blockly.FieldKeydownInput("81"), "VALUE").appendField(Lang.Blocks.JUDGEMENT_is_press_some_key_2, "#3D3D3D");
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.is_press_some_key = function(a, b) {
-  a = Number(b.getField("VALUE", b));
-  return 0 <= Entry.pressedKeys.indexOf(a);
-};
-Blockly.Blocks.reach_something = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_reach_something_1, "#3D3D3D");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("collision"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_reach_something_2, "#3D3D3D");
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.reach_something = function(a, b) {
-  if (!a.getVisible()) {
-    return !1;
-  }
-  var c = b.getField("VALUE", b);
-  b = a.object;
-  var d = /wall/.test(c), e = ndgmr.checkPixelCollision;
-  if (d) {
-    switch(a = Entry.stage.wall, c) {
-      case "wall":
-        if (e(b, a.up, .2, !0) || e(b, a.down, .2, !0) || e(b, a.left, .2, !0) || e(b, a.right, .2, !0)) {
-          return !0;
-        }
-        break;
-      case "wall_up":
-        if (e(b, a.up, .2, !0)) {
-          return !0;
-        }
-        break;
-      case "wall_down":
-        if (e(b, a.down, .2, !0)) {
-          return !0;
-        }
-        break;
-      case "wall_right":
-        if (e(b, a.right, .2, !0)) {
-          return !0;
-        }
-        break;
-      case "wall_left":
-        if (e(b, a.left, .2, !0)) {
-          return !0;
-        }
-    }
-  } else {
-    if ("mouse" == c) {
-      return e = Entry.stage.canvas, e = b.globalToLocal(e.mouseX, e.mouseY), b.hitTest(e.x, e.y);
-    }
-    c = Entry.container.getEntity(c);
-    if ("textBox" == c.type || "textBox" == a.type) {
-      e = c.object.getTransformedBounds();
-      b = b.getTransformedBounds();
-      if (Entry.checkCollisionRect(b, e)) {
-        return !0;
-      }
-      a = c.parent.clonedEntities;
-      c = 0;
-      for (d = a.length;c < d;c++) {
-        var f = a[c];
-        if (!f.isStamp && f.getVisible() && Entry.checkCollisionRect(b, f.object.getTransformedBounds())) {
-          return !0;
-        }
-      }
-    } else {
-      if (c.getVisible() && e(b, c.object, .2, !0)) {
-        return !0;
-      }
-      a = c.parent.clonedEntities;
-      c = 0;
-      for (d = a.length;c < d;c++) {
-        if (f = a[c], !f.isStamp && f.getVisible() && e(b, f.object, .2, !0)) {
-          return !0;
-        }
-      }
-    }
-  }
-  return !1;
-};
-Blockly.Blocks.boolean_comparison = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["=", "EQUAL"], ["<", "SMALLER"], [">", "BIGGER"]]), "OPERATOR");
-  this.appendValueInput("RIGHTHAND").setCheck(["String", "Number"]);
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.boolean_comparison = function(a, b) {
-  a = b.getField("OPERATOR", b);
-  var c = b.getNumberValue("LEFTHAND", b);
-  b = b.getNumberValue("RIGHTHAND", b);
-  return "EQUAL" == a ? c == b : "BIGGER" == a ? c > b : c < b;
-};
-Blockly.Blocks.boolean_equal = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField("=", "#3D3D3D");
-  this.appendValueInput("RIGHTHAND").setCheck(["String", "Number"]);
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.boolean_equal = function(a, b) {
-  a = b.getStringValue("LEFTHAND", b);
-  b = b.getStringValue("RIGHTHAND", b);
-  return a == b;
-};
-Blockly.Blocks.boolean_bigger = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(">", "#3D3D3D");
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.boolean_bigger = function(a, b) {
-  a = b.getNumberValue("LEFTHAND", b);
-  b = b.getNumberValue("RIGHTHAND", b);
-  return a > b;
-};
-Blockly.Blocks.boolean_smaller = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("<", "#3D3D3D");
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.boolean_smaller = function(a, b) {
-  a = b.getNumberValue("LEFTHAND", b);
-  b = b.getNumberValue("RIGHTHAND", b);
-  return a < b;
-};
-Blockly.Blocks.boolean_and_or = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendValueInput("LEFTHAND").setCheck("Boolean");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.JUDGEMENT_boolean_and, "AND"], [Lang.Blocks.JUDGEMENT_boolean_or, "OR"]]), "OPERATOR");
-  this.appendValueInput("RIGHTHAND").setCheck("Boolean");
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.boolean_and_or = function(a, b) {
-  a = b.getField("OPERATOR", b);
-  var c = b.getBooleanValue("LEFTHAND", b);
-  b = b.getBooleanValue("RIGHTHAND", b);
-  return "AND" == a ? c && b : c || b;
-};
-Blockly.Blocks.boolean_and = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendValueInput("LEFTHAND").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_boolean_and, "#3D3D3D");
-  this.appendValueInput("RIGHTHAND").setCheck("Boolean");
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.boolean_and = function(a, b) {
-  a = b.getBooleanValue("LEFTHAND", b);
-  b = b.getBooleanValue("RIGHTHAND", b);
-  return a && b;
-};
-Blockly.Blocks.boolean_or = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendValueInput("LEFTHAND").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_boolean_or, "#3D3D3D");
-  this.appendValueInput("RIGHTHAND").setCheck("Boolean");
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.boolean_or = function(a, b) {
-  a = b.getBooleanValue("LEFTHAND", b);
-  b = b.getBooleanValue("RIGHTHAND", b);
-  return a || b;
-};
-Blockly.Blocks.boolean_not = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_boolean_not_1, "#3D3D3D");
-  this.appendValueInput("VALUE").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_boolean_not_2, "#3D3D3D");
-  this.appendDummyInput();
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.boolean_not = function(a, b) {
-  return !b.getBooleanValue("VALUE");
-};
-Blockly.Blocks.true_or_false = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.JUDGEMENT_true, "true"], [Lang.Blocks.JUDGEMENT_false, "false"]]), "VALUE");
-  this.appendDummyInput();
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.true_or_false = function(a, b) {
-  return "true" == b.children[0].textContent;
-};
-Blockly.Blocks.True = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_true, "#3D3D3D").appendField(" ");
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.True = function(a, b) {
-  return !0;
-};
-Blockly.Blocks.False = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_false, "#3D3D3D").appendField(" ");
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.False = function(a, b) {
-  return !1;
-};
-Blockly.Blocks.boolean_basic_operator = {init:function() {
-  this.setColour("#AEB8FF");
-  this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
-  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
-  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.boolean_basic_operator = function(a, b) {
-  a = b.getField("OPERATOR", b);
-  var c = b.getStringValue("LEFTHAND", b);
-  b = b.getStringValue("RIGHTHAND", b);
-  switch(a) {
-    case "EQUAL":
-      return c == b;
-    case "GREATER":
-      return Number(c) > Number(b);
-    case "LESS":
-      return Number(c) < Number(b);
-    case "GREATER_OR_EQUAL":
-      return Number(c) >= Number(b);
-    case "LESS_OR_EQUAL":
-      return Number(c) <= Number(b);
-  }
-};
-Blockly.Blocks.show = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_show).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.show = function(a, b) {
-  a.setVisible(!0);
-  return b.callReturn();
-};
-Blockly.Blocks.hide = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_hide).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hide = function(a, b) {
-  a.setVisible(!1);
-  return b.callReturn();
-};
-Blockly.Blocks.dialog_time = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_1);
-  this.appendValueInput("VALUE").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_2);
-  this.appendValueInput("SECOND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_3);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.speak, "speak"]]), "OPTION");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.dialog_time = function(a, b) {
-  if (!b.isStart) {
-    var c = b.getNumberValue("SECOND", b), d = b.getStringValue("VALUE", b), e = b.getField("OPTION", b);
-    b.isStart = !0;
-    b.timeFlag = 1;
-    d || "number" == typeof d || (d = "    ");
-    d = Entry.convertToRoundedDecimals(d, 3);
-    new Entry.Dialog(a, d, e);
-    a.syncDialogVisible(a.getVisible());
-    setTimeout(function() {
-      b.timeFlag = 0;
-    }, 1E3 * c);
-  }
-  return 0 == b.timeFlag ? (delete b.timeFlag, delete b.isStart, a.dialog && a.dialog.remove(), b.callReturn()) : b;
-};
-Blockly.Blocks.dialog = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_1);
-  this.appendValueInput("VALUE").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_2);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.speak, "speak"]]), "OPTION");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.dialog = function(a, b) {
-  var c = b.getStringValue("VALUE", b);
-  c || "number" == typeof c || (c = "    ");
-  var d = b.getField("OPTION", b), c = Entry.convertToRoundedDecimals(c, 3);
-  new Entry.Dialog(a, c, d);
-  a.syncDialogVisible(a.getVisible());
-  return b.callReturn();
-};
-Blockly.Blocks.remove_dialog = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_remove_dialog).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.remove_dialog = function(a, b) {
-  a.dialog && a.dialog.remove();
-  return b.callReturn();
-};
-Blockly.Blocks.change_to_nth_shape = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("pictures"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.change_to_nth_shape = function(a, b) {
-  var c = b.getField("VALUE", b), c = a.parent.getPicture(c);
-  a.setImage(c);
-  return b.callReturn();
-};
-Blockly.Blocks.change_to_next_shape = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_near_shape_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.LOOKS_change_shape_next, "next"], [Lang.Blocks.LOOKS_change_shape_prev, "prev"]]), "DRIECTION").appendField(Lang.Blocks.LOOKS_change_to_near_shape_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.change_to_next_shape = function(a, b) {
-  var c;
-  c = b.fields && "prev" === b.getStringField("DRIECTION") ? a.parent.getPrevPicture(a.picture.id) : a.parent.getNextPicture(a.picture.id);
-  a.setImage(c);
-  return b.callReturn();
-};
-Blockly.Blocks.set_effect_volume = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]]), "EFFECT");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_2);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.set_effect_volume = function(a, b) {
-  var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
-  "color" == c ? a.effect.hue = d + a.effect.hue : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? a.effect.brightness = d + a.effect.brightness : "blur" != c && "opacity" == c && (a.effect.alpha += d / 100));
-  a.applyFilter();
-  return b.callReturn();
-};
-Blockly.Blocks.set_effect = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]]), "EFFECT");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_2);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.set_effect = function(a, b) {
-  var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
-  "color" == c ? a.effect.hue = d : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? a.effect.brightness = d : "blur" != c && "opacity" == c && (a.effect.alpha = d / 100));
-  a.applyFilter();
-  return b.callReturn();
-};
-Blockly.Blocks.erase_all_effects = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_erase_all_effects).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.erase_all_effects = function(a, b) {
-  a.resetFilter();
-  return b.callReturn();
-};
-Blockly.Blocks.change_scale_percent = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.change_scale_percent = function(a, b) {
-  var c = (b.getNumberValue("VALUE", b) + 100) / 100;
-  a.setScaleX(a.getScaleX() * c);
-  a.setScaleY(a.getScaleY() * c);
-  return b.callReturn();
-};
-Blockly.Blocks.set_scale_percent = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.set_scale_percent = function(a, b) {
-  var c = b.getNumberValue("VALUE", b) / 100, d = a.snapshot_;
-  a.setScaleX(c * d.scaleX);
-  a.setScaleY(c * d.scaleY);
-  return b.callReturn();
-};
-Blockly.Blocks.change_scale_size = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.change_scale_size = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setSize(a.getSize() + c);
-  return b.callReturn();
-};
-Blockly.Blocks.set_scale_size = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.set_scale_size = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setSize(c);
-  return b.callReturn();
-};
-Blockly.Blocks.flip_y = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_y).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.flip_y = function(a, b) {
-  a.setScaleX(-1 * a.getScaleX());
-  return b.callReturn();
-};
-Blockly.Blocks.flip_x = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_x).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.flip_x = function(a, b) {
-  a.setScaleY(-1 * a.getScaleY());
-  return b.callReturn();
-};
-Blockly.Blocks.set_object_order = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_object_order_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("objectSequence"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_object_order_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.set_object_order = function(a, b) {
-  var c = b.getField("VALUE", b);
-  a = Entry.container.getCurrentObjects().indexOf(a.parent);
-  if (-1 < a) {
-    return Entry.container.moveElementByBlock(a, c), b.callReturn();
-  }
-  throw Error("object is not available");
-};
-Blockly.Blocks.get_pictures = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField("");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("pictures"), "VALUE");
-  this.appendDummyInput().appendField(" ");
-  this.setOutput(!0, "String");
-  this.setInputsInline(!0);
-}};
-Entry.block.get_pictures = function(a, b) {
-  return b.getStringField("VALUE");
-};
-Blockly.Blocks.change_to_some_shape = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_1);
-  this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.change_to_some_shape = function(a, b) {
-  var c = b.getStringValue("VALUE");
-  Entry.parseNumber(c);
-  c = a.parent.getPicture(c);
-  a.setImage(c);
-  return b.callReturn();
-};
-Blockly.Blocks.add_effect_amount = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_2);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.add_effect_amount = function(a, b) {
-  var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
-  "color" == c ? a.effect.hsv = d + a.effect.hsv : "brightness" == c ? a.effect.brightness = d + a.effect.brightness : "transparency" == c && (a.effect.alpha -= d / 100);
-  a.applyFilter();
-  return b.callReturn();
-};
-Blockly.Blocks.change_effect_amount = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_2);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.change_effect_amount = function(a, b) {
-  var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
-  "color" == c ? a.effect.hsv = d : "brightness" == c ? a.effect.brightness = d : "transparency" == c && (a.effect.alpha = 1 - d / 100);
-  a.applyFilter();
-  return b.callReturn();
-};
-Blockly.Blocks.set_effect_amount = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_2);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.set_effect_amount = function(a, b) {
-  var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
-  "color" == c ? a.effect.hue = d + a.effect.hue : "brightness" == c ? a.effect.brightness = d + a.effect.brightness : "transparency" == c && (a.effect.alpha -= d / 100);
-  a.applyFilter();
-  return b.callReturn();
-};
-Blockly.Blocks.set_entity_effect = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_2);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.set_entity_effect = function(a, b) {
-  var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
-  "color" == c ? a.effect.hue = d : "brightness" == c ? a.effect.brightness = d : "transparency" == c && (a.effect.alpha = 1 - d / 100);
-  a.applyFilter();
-  return b.callReturn();
-};
-Blockly.Blocks.change_object_index = {init:function() {
-  this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_object_index_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.LOOKS_change_object_index_sub_1, "FRONT"], [Lang.Blocks.LOOKS_change_object_index_sub_2, "FORWARD"], [Lang.Blocks.LOOKS_change_object_index_sub_3, "BACKWARD"], [Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK"]]), "LOCATION").appendField(Lang.Blocks.LOOKS_change_object_index_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.change_object_index = function(a, b) {
-  var c, d = b.getField("LOCATION", b), e = Entry.container.getCurrentObjects();
-  a = e.indexOf(a.parent);
-  e = e.length - 1;
-  if (0 > a) {
-    throw Error("object is not available for current scene");
-  }
-  switch(d) {
-    case "FRONT":
-      c = 0;
-      break;
-    case "FORWARD":
-      c = Math.max(0, a - 1);
-      break;
-    case "BACKWARD":
-      c = Math.min(e, a + 1);
-      break;
-    case "BACK":
-      c = e;
-  }
-  Entry.container.moveElementByBlock(a, c);
-  return b.callReturn();
-};
-Blockly.Blocks.move_direction = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.move_direction = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setX(a.getX() + c * Math.cos((a.getRotation() + a.getDirection() - 90) / 180 * Math.PI));
-  a.setY(a.getY() - c * Math.sin((a.getRotation() + a.getDirection() - 90) / 180 * Math.PI));
-  a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
-  return b.callReturn();
-};
-Blockly.Blocks.move_x = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_x_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_x_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.move_x = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setX(a.getX() + c);
-  a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
-  return b.callReturn();
-};
-Blockly.Blocks.move_y = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_y_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_y_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.move_y = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setY(a.getY() + c);
-  a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
-  return b.callReturn();
-};
-Blockly.Blocks.locate_xy_time = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_1);
-  this.appendValueInput("VALUE1").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_2);
-  this.appendValueInput("VALUE2").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_3);
-  this.appendValueInput("VALUE3").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.locate_xy_time = function(a, b) {
-  if (!b.isStart) {
-    var c;
-    c = b.getNumberValue("VALUE1", b);
-    b.isStart = !0;
-    b.frameCount = Math.floor(c * Entry.FPS);
-    b.x = b.getNumberValue("VALUE2", b);
-    b.y = b.getNumberValue("VALUE3", b);
-  }
-  if (0 != b.frameCount) {
-    c = b.x - a.getX();
-    var d = b.y - a.getY();
-    c /= b.frameCount;
-    d /= b.frameCount;
-    a.setX(a.getX() + c);
-    a.setY(a.getY() + d);
-    b.frameCount--;
-    a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
-    return b;
-  }
-  delete b.isStart;
-  delete b.frameCount;
-  return b.callReturn();
-};
-Blockly.Blocks.rotate_by_angle = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.rotate_by_angle = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setRotation(a.getRotation() + c);
-  return b.callReturn();
-};
-Blockly.Blocks.rotate_by_angle_dropdown = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_dropdown_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["45", "45"], ["90", "90"], ["135", "135"], ["180", "180"]]), "VALUE").appendField(Lang.Blocks.MOVING_rotate_by_angle_dropdown_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.rotate_by_angle_dropdown = function(a, b) {
-  var c = b.getField("VALUE", b);
-  a.setRotation(a.getRotation() + Number(c));
-  return b.callReturn();
-};
-Blockly.Blocks.see_angle = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.see_angle = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setDirection(c);
-  return b.callReturn();
-};
-Blockly.Blocks.see_direction = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_direction_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_direction_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.see_direction = function(a, b) {
-  var c = b.getField("VALUE", b), d = Entry.container.getEntity(c), c = d.getX() - a.getX(), d = d.getY() - a.getY();
-  0 <= c ? a.setRotation(Math.atan(d / c) / Math.PI * 180 + 90) : a.setRotation(Math.atan(d / c) / Math.PI * 180 + 270);
-  return b.callReturn();
-};
-Blockly.Blocks.locate_xy = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_1);
-  this.appendValueInput("VALUE1").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_2);
-  this.appendValueInput("VALUE2").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.locate_xy = function(a, b) {
-  var c = b.getNumberValue("VALUE1", b);
-  a.setX(c);
-  c = b.getNumberValue("VALUE2", b);
-  a.setY(c);
-  a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
-  return b.callReturn();
-};
-Blockly.Blocks.locate_x = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_x_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_x_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.locate_x = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setX(c);
-  a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
-  return b.callReturn();
-};
-Blockly.Blocks.locate_y = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_y_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_y_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.locate_y = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setY(c);
-  a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
-  return b.callReturn();
-};
-Blockly.Blocks.locate = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.locate = function(a, b) {
-  var c = b.getField("VALUE", b), d;
-  "mouse" == c ? (c = Entry.stage.mouseCoordinate.x, d = Entry.stage.mouseCoordinate.y) : (d = Entry.container.getEntity(c), c = d.getX(), d = d.getY());
-  a.setX(Number(c));
-  a.setY(Number(d));
-  a.brush && !a.brush.stop && a.brush.lineTo(c, -1 * d);
-  return b.callReturn();
-};
-Blockly.Blocks.move_xy_time = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_1);
-  this.appendValueInput("VALUE1").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_2);
-  this.appendValueInput("VALUE2").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_3);
-  this.appendValueInput("VALUE3").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.move_xy_time = function(a, b) {
-  if (!b.isStart) {
-    var c;
-    c = b.getNumberValue("VALUE1", b);
-    var d = b.getNumberValue("VALUE2", b), e = b.getNumberValue("VALUE3", b);
-    b.isStart = !0;
-    b.frameCount = Math.floor(c * Entry.FPS);
-    b.dX = d / b.frameCount;
-    b.dY = e / b.frameCount;
-  }
-  if (0 != b.frameCount) {
-    return a.setX(a.getX() + b.dX), a.setY(a.getY() + b.dY), b.frameCount--, a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY()), b;
-  }
-  delete b.isStart;
-  delete b.frameCount;
-  return b.callReturn();
-};
-Blockly.Blocks.locate_time = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_time_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_time_2);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_time_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Blockly.Blocks.rotate_by_angle_time = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_time_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_time_2);
-  this.appendDummyInput().appendField(new Blockly.FieldAngle("90"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_time_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.rotate_by_angle_time = function(a, b) {
-  if (!b.isStart) {
-    var c;
-    c = b.getNumberValue("VALUE", b);
-    var d = b.getNumberField("VALUE", b);
-    b.isStart = !0;
-    b.frameCount = Math.floor(c * Entry.FPS);
-    b.dAngle = d / b.frameCount;
-  }
-  if (0 != b.frameCount) {
-    return a.setRotation(a.getRotation() + b.dAngle), b.frameCount--, b;
-  }
-  delete b.isStart;
-  delete b.frameCount;
-  return b.callReturn();
-};
-Blockly.Blocks.bounce_when = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_when_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("bounce"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_when_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setPreviousStatement(!0);
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}};
-Blockly.Blocks.bounce_wall = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_wall).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.bounce_wall = function(a, b) {
-  var c = a.parent.getRotateMethod(), d = "free" == c ? (a.getRotation() + a.getDirection()).mod(360) : a.getDirection(), e;
-  if (90 > d && 0 <= d || 360 > d && 270 <= d) {
-    e = a.collision == Entry.Utils.COLLISION.UP;
-    var f = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1);
-    !f && e && (a.collision = Entry.Utils.COLLISION.NONE);
-    f && e && (f = !1);
-    f ? ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.UP) : (e = a.collision == Entry.Utils.COLLISION.DOWN, f = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1), !f && e && (a.collision = Entry.Utils.COLLISION.NONE), f && e && (f = !1), f && ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = 
-    Entry.Utils.COLLISION.DOWN));
-  } else {
-    270 > d && 90 <= d && (e = a.collision == Entry.Utils.COLLISION.DOWN, f = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1), !f && e && (a.collision = Entry.Utils.COLLISION.NONE), f && e && (f = !1), f ? ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.DOWN) : (e = a.collision == Entry.Utils.COLLISION.UP, f = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1), 
-    !f && e && (a.collision = Entry.Utils.COLLISION.NONE), f && e && (f = !1), f && ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.UP)));
-  }
-  360 > d && 180 <= d ? (e = a.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !1), !d && e && (a.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d ? ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.LEFT) : (e = a.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !1), !d && 
-  e && (a.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d && ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.RIGHT))) : 180 > d && 0 <= d && (e = a.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !1), !d && e && (a.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d ? ("free" == c ? a.setRotation(-a.getRotation() - 
-  2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.RIGHT) : (e = a.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !1), !d && e && (a.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d && ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.LEFT)));
-  return b.callReturn();
-};
-Blockly.Blocks.flip_arrow_horizontal = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_horizontal).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.flip_arrow_horizontal = function(a, b) {
-  a.setDirection(a.getDirection() + 180);
-  return b.callReturn();
-};
-Blockly.Blocks.flip_arrow_vertical = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_vertical).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.flip_arrow_vertical = function(a, b) {
-  a.setDirection(a.getDirection() + 180);
-  return b.callReturn();
-};
-Blockly.Blocks.see_angle_object = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_object_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_object_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.see_angle_object = function(a, b) {
-  var c = b.getField("VALUE", b), d = a.getX(), e = a.getY();
-  if (a.parent.id == c) {
-    return b.callReturn();
-  }
-  "mouse" == c ? (c = Entry.stage.mouseCoordinate.y, d = Entry.stage.mouseCoordinate.x - d, e = c - e) : (c = Entry.container.getEntity(c), d = c.getX() - d, e = c.getY() - e);
-  e = 0 === d && 0 === e ? a.getDirection() + a.getRotation() : 0 <= d ? -Math.atan(e / d) / Math.PI * 180 + 90 : -Math.atan(e / d) / Math.PI * 180 + 270;
-  d = a.getDirection() + a.getRotation();
-  a.setRotation(a.getRotation() + e - d);
-  return b.callReturn();
-};
-Blockly.Blocks.see_angle_direction = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_direction_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_direction_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.see_angle_direction = function(a, b) {
-  var c = b.getNumberValue("VALUE", b), d = a.getDirection() + a.getRotation();
-  a.setRotation(a.getRotation() + c - d);
-  return b.callReturn();
-};
-Blockly.Blocks.rotate_direction = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.rotate_direction = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setDirection(c + a.getDirection());
-  return b.callReturn();
-};
-Blockly.Blocks.locate_object_time = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_object_time_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_object_time_2);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "TARGET");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_object_time_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.locate_object_time = function(a, b) {
-  if (!b.isStart) {
-    var c, d, e;
-    d = b.getField("TARGET", b);
-    c = b.getNumberValue("VALUE", b);
-    c = Math.floor(c * Entry.FPS);
-    e = Entry.stage.mouseCoordinate;
-    if (0 != c) {
-      "mouse" == d ? (d = e.x - a.getX(), e = e.y - a.getY()) : (e = Entry.container.getEntity(d), d = e.getX() - a.getX(), e = e.getY() - a.getY()), b.isStart = !0, b.frameCount = c, b.dX = d / b.frameCount, b.dY = e / b.frameCount;
-    } else {
-      return "mouse" == d ? (d = Number(e.x), e = Number(e.y)) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), a.setX(d), a.setY(e), a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY()), b.callReturn();
-    }
-  }
-  if (0 != b.frameCount) {
-    return a.setX(a.getX() + b.dX), a.setY(a.getY() + b.dY), b.frameCount--, a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY()), b;
-  }
-  delete b.isStart;
-  delete b.frameCount;
-  return b.callReturn();
-};
-Blockly.Blocks.rotate_absolute = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_set_direction_by_angle_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_set_direction_by_angle_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.rotate_absolute = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setRotation(c);
-  return b.callReturn();
-};
-Blockly.Blocks.rotate_relative = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.rotate_relative = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setRotation(c + a.getRotation());
-  return b.callReturn();
-};
-Blockly.Blocks.direction_absolute = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.direction_absolute = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setDirection(c);
-  return b.callReturn();
-};
-Blockly.Blocks.direction_relative = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.direction_relative = function(a, b) {
-  var c = b.getNumberValue("VALUE", b);
-  a.setDirection(c + a.getDirection());
-  return b.callReturn();
-};
-Blockly.Blocks.move_to_angle = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_angle_1);
-  this.appendValueInput("ANGLE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_angle_2);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_angle_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.move_to_angle = function(a, b) {
-  var c = b.getNumberValue("VALUE", b), d = b.getNumberValue("ANGLE", b);
-  a.setX(a.getX() + c * Math.cos((d - 90) / 180 * Math.PI));
-  a.setY(a.getY() - c * Math.sin((d - 90) / 180 * Math.PI));
-  a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
-  return b.callReturn();
-};
-Blockly.Blocks.rotate_by_time = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_explain_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_2);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_1);
-  this.appendValueInput("ANGLE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.rotate_by_time = function(a, b) {
-  if (!b.isStart) {
-    var c;
-    c = b.getNumberValue("VALUE", b);
-    var d = b.getNumberValue("ANGLE", b);
-    b.isStart = !0;
-    b.frameCount = Math.floor(c * Entry.FPS);
-    b.dAngle = d / b.frameCount;
-  }
-  if (0 != b.frameCount) {
-    return a.setRotation(a.getRotation() + b.dAngle), b.frameCount--, b;
-  }
-  delete b.isStart;
-  delete b.frameCount;
-  return b.callReturn();
-};
-Blockly.Blocks.direction_relative_duration = {init:function() {
-  this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_direction_relative_duration_1);
-  this.appendValueInput("DURATION").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_direction_relative_duration_2);
-  this.appendValueInput("AMOUNT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_direction_relative_duration_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.direction_relative_duration = function(a, b) {
-  if (!b.isStart) {
-    var c;
-    c = b.getNumberValue("DURATION", b);
-    var d = b.getNumberValue("AMOUNT", b);
-    b.isStart = !0;
-    b.frameCount = Math.floor(c * Entry.FPS);
-    b.dDirection = d / b.frameCount;
-  }
-  if (0 != b.frameCount) {
-    return a.setDirection(a.getDirection() + b.dDirection), b.frameCount--, b;
-  }
-  delete b.isStart;
-  delete b.frameCount;
-  delete b.dDirection;
   return b.callReturn();
 };
 Entry.Neobot = {name:"neobot", LOCAL_MAP:["IN1", "IN2", "IN3", "IR", "BAT"], REMOTE_MAP:"OUT1 OUT2 OUT3 DCR DCL SND FND OPT".split(" "), setZero:function() {
@@ -5756,921 +3524,6 @@ Entry.block.robotis_carCont_cm_calibration = function(a, b) {
   var d = Entry.Robotis_carCont.INSTRUCTION.WRITE, e;
   "LEFT" == c ? (c = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : (c = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]);
   return Entry.Robotis_carCont.postCallReturn(b, [[d, c, e, a]], Entry.Robotis_carCont.delay);
-};
-Blockly.Blocks.when_scene_start = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_scene_1_2.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.when_scene_start = function(a, b) {
-  return b.callReturn();
-};
-Blockly.Blocks.start_scene = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_scene_1).appendField(new Blockly.FieldDropdownDynamic("scenes"), "VALUE").appendField(Lang.Blocks.SCENE_start_scene_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.start_scene = function(a, b) {
-  a = b.getField("VALUE", b);
-  if (a = Entry.scene.getSceneById(a)) {
-    Entry.scene.selectScene(a), Entry.engine.fireEvent("when_scene_start");
-  }
-  return null;
-};
-Blockly.Blocks.start_neighbor_scene = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_neighbor_scene_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.SCENE_start_scene_next, "next"], [Lang.Blocks.SCENE_start_scene_pre, "pre"]]), "OPERATOR").appendField(Lang.Blocks.SCENE_start_neighbor_scene_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.start_neighbor_scene = function(a, b) {
-  var c = Entry.scene.selectedScene;
-  a = Entry.scene.getScenes();
-  c = a.indexOf(c);
-  "next" == b.getField("OPERATOR", b) ? c + 1 < a.length && (b = Entry.scene.getSceneById(a[c + 1].id)) && (Entry.scene.selectScene(b), Entry.engine.fireEvent("when_scene_start")) : 0 < c && (b = Entry.scene.getSceneById(a[c - 1].id)) && (Entry.scene.selectScene(b), Entry.engine.fireEvent("when_scene_start"));
-  return null;
-};
-Blockly.Blocks.sound_something = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_something = function(a, b) {
-  var c = b.getField("VALUE", b);
-  Entry.isExist(c, "id", a.parent.sounds) && createjs.Sound.play(c);
-  return b.callReturn();
-};
-Blockly.Blocks.sound_something_second = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_2);
-  this.appendValueInput("SECOND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_something_second = function(a, b) {
-  var c = b.getField("VALUE", b), d = b.getNumberValue("SECOND", b);
-  if (Entry.isExist(c, "id", a.parent.sounds)) {
-    var e = createjs.Sound.play(c);
-    setTimeout(function() {
-      e.stop();
-    }, 1E3 * d);
-  }
-  return b.callReturn();
-};
-Blockly.Blocks.sound_something_wait = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_something_wait = function(a, b) {
-  if (b.isPlay) {
-    if (1 == b.playState) {
-      return b;
-    }
-    delete b.playState;
-    delete b.isPlay;
-    return b.callReturn();
-  }
-  b.isPlay = !0;
-  b.playState = 1;
-  var c = b.getField("VALUE", b), d = a.parent.getSound(c);
-  Entry.isExist(c, "id", a.parent.sounds) && (createjs.Sound.play(c), setTimeout(function() {
-    b.playState = 0;
-  }, 1E3 * d.duration));
-  return b;
-};
-Blockly.Blocks.sound_something_second_wait = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_2);
-  this.appendValueInput("SECOND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_something_second_wait = function(a, b) {
-  if (b.isPlay) {
-    if (1 == b.playState) {
-      return b;
-    }
-    delete b.isPlay;
-    delete b.playState;
-    return b.callReturn();
-  }
-  b.isPlay = !0;
-  b.playState = 1;
-  var c = b.getField("VALUE", b);
-  if (Entry.isExist(c, "id", a.parent.sounds)) {
-    var d = createjs.Sound.play(c);
-    a = b.getNumberValue("SECOND", b);
-    setTimeout(function() {
-      d.stop();
-      b.playState = 0;
-    }, 1E3 * a);
-    d.addEventListener("complete", function(b) {
-    });
-  }
-  return b;
-};
-Blockly.Blocks.sound_volume_change = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_change_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_change_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_volume_change = function(a, b) {
-  a = b.getNumberValue("VALUE", b) / 100;
-  a += createjs.Sound.getVolume();
-  1 < a && (a = 1);
-  0 > a && (a = 0);
-  createjs.Sound.setVolume(a);
-  return b.callReturn();
-};
-Blockly.Blocks.sound_volume_set = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_set_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_set_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_volume_set = function(a, b) {
-  a = b.getNumberValue("VALUE", b) / 100;
-  1 < a && (a = 1);
-  0 > a && (a = 0);
-  createjs.Sound.setVolume(a);
-  return b.callReturn();
-};
-Blockly.Blocks.sound_silent_all = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_silent_all).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_silent_all = function(a, b) {
-  createjs.Sound.stop();
-  return b.callReturn();
-};
-Blockly.Blocks.get_sounds = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField("");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(" ");
-  this.setOutput(!0, "String");
-  this.setInputsInline(!0);
-}};
-Entry.block.get_sounds = function(a, b) {
-  return b.getStringField("VALUE");
-};
-Blockly.Blocks.sound_something_with_block = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_1);
-  this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_something_with_block = function(a, b) {
-  var c = b.getStringValue("VALUE", b);
-  (a = a.parent.getSound(c)) && createjs.Sound.play(a.id);
-  return b.callReturn();
-};
-Blockly.Blocks.sound_something_second_with_block = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_1);
-  this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(" ").appendField(Lang.Blocks.SOUND_sound_something_second_2);
-  this.appendValueInput("SECOND").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_something_second_with_block = function(a, b) {
-  var c = b.getStringValue("VALUE", b), d = b.getNumberValue("SECOND", b);
-  (a = a.parent.getSound(c)) && createjs.Sound.play(a.id, {startTime:0, duration:1E3 * d});
-  return b.callReturn();
-};
-Blockly.Blocks.sound_something_wait_with_block = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_1);
-  this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_something_wait_with_block = function(a, b) {
-  if (b.isPlay) {
-    if (1 == b.playState) {
-      return b;
-    }
-    delete b.playState;
-    delete b.isPlay;
-    return b.callReturn();
-  }
-  b.isPlay = !0;
-  b.playState = 1;
-  var c = b.getStringValue("VALUE", b);
-  if (a = a.parent.getSound(c)) {
-    createjs.Sound.play(a.id), setTimeout(function() {
-      b.playState = 0;
-    }, 1E3 * a.duration);
-  }
-  return b;
-};
-Blockly.Blocks.sound_something_second_wait_with_block = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_2).appendField(" ");
-  this.appendValueInput("SECOND").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_something_second_wait_with_block = function(a, b) {
-  if (b.isPlay) {
-    if (1 == b.playState) {
-      return b;
-    }
-    delete b.isPlay;
-    delete b.playState;
-    return b.callReturn();
-  }
-  b.isPlay = !0;
-  b.playState = 1;
-  var c = b.getStringValue("VALUE", b);
-  if (a = a.parent.getSound(c)) {
-    var d = createjs.Sound.play(a.id);
-    a = b.getNumberValue("SECOND", b);
-    setTimeout(function() {
-      d.stop();
-      b.playState = 0;
-    }, 1E3 * a);
-    d.addEventListener("complete", function(b) {
-    });
-  }
-  return b;
-};
-Blockly.Blocks.sound_from_to = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_2);
-  this.appendValueInput("START").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_3);
-  this.appendValueInput("END").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_from_to = function(a, b) {
-  var c = b.getStringValue("VALUE", b);
-  if (a = a.parent.getSound(c)) {
-    var c = 1E3 * b.getNumberValue("START", b), d = 1E3 * b.getNumberValue("END", b);
-    createjs.Sound.play(a.id, {startTime:Math.min(c, d), duration:Math.max(c, d) - Math.min(c, d)});
-  }
-  return b.callReturn();
-};
-Blockly.Blocks.sound_from_to_and_wait = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_2);
-  this.appendValueInput("START").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_3);
-  this.appendValueInput("END").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_from_to_and_wait = function(a, b) {
-  if (b.isPlay) {
-    if (1 == b.playState) {
-      return b;
-    }
-    delete b.isPlay;
-    delete b.playState;
-    return b.callReturn();
-  }
-  b.isPlay = !0;
-  b.playState = 1;
-  var c = b.getStringValue("VALUE", b);
-  if (a = a.parent.getSound(c)) {
-    var d = 1E3 * b.getNumberValue("START", b), e = 1E3 * b.getNumberValue("END", b), c = Math.min(d, e), d = Math.max(d, e) - c;
-    createjs.Sound.play(a.id, {startTime:c, duration:d});
-    setTimeout(function() {
-      b.playState = 0;
-    }, d);
-  }
-  return b;
-};
-Blockly.Blocks.when_run_button_click = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_play.png", "*", "start")).appendField(Lang.Blocks.START_when_run_button_click);
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.when_run_button_click = function(a, b) {
-  return b.callReturn();
-};
-Blockly.Blocks.press_some_key = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_press_some_key_1).appendField(new Blockly.FieldDropdown([["q", "81"], ["w", "87"], ["e", "69"], ["r", "82"], ["a", "65"], ["s", "83"], ["d", "68"], [Lang.Blocks.START_press_some_key_up, "38"], [Lang.Blocks.START_press_some_key_down, "40"], [Lang.Blocks.START_press_some_key_left, "37"], [Lang.Blocks.START_press_some_key_right, "39"], [Lang.Blocks.START_press_some_key_enter, 
-  "13"], [Lang.Blocks.START_press_some_key_space, "32"]]), "VALUE").appendField(Lang.Blocks.START_press_some_key_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.press_some_key = function(a, b) {
-  return b.callReturn();
-};
-Blockly.Blocks.when_some_key_pressed = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_press_some_key_1).appendField(new Blockly.FieldKeydownInput("81"), "VALUE").appendField(Lang.Blocks.START_press_some_key_2);
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.when_some_key_pressed = function(a, b) {
-  return b.callReturn();
-};
-Blockly.Blocks.mouse_clicked = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_mouse_clicked);
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.mouse_clicked = function(a, b) {
-  return b.callReturn();
-};
-Blockly.Blocks.mouse_click_cancled = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_mouse_click_cancled);
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.mouse_click_cancled = function(a, b) {
-  return b.callReturn();
-};
-Blockly.Blocks.when_object_click = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click);
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.when_object_click = function(a, b) {
-  return b.callReturn();
-};
-Blockly.Blocks.when_object_click_canceled = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click_canceled);
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.when_object_click_canceled = function(a, b) {
-  return b.callReturn();
-};
-Blockly.Blocks.when_some_key_click = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_when_some_key_click);
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.when_some_key_click = function(a, b) {
-  return b.callReturn();
-};
-Blockly.Blocks.when_message_cast = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_signal.png", "*", "start")).appendField(Lang.Blocks.START_when_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_when_message_cast_2);
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-}, whenAdd:function(a) {
-  var b = Entry.variableContainer;
-  b && b.addRef("_messageRefs", a);
-}, whenRemove:function(a) {
-  var b = Entry.variableContainer;
-  b && b.removeRef("_messageRefs", a);
-}};
-Entry.block.when_message_cast = function(a, b) {
-  return b.callReturn();
-};
-Blockly.Blocks.message_cast = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_cast_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}, whenAdd:function(a) {
-  var b = Entry.variableContainer;
-  b && b.addRef("_messageRefs", a);
-}, whenRemove:function(a) {
-  var b = Entry.variableContainer;
-  b && b.removeRef("_messageRefs", a);
-}};
-Entry.block.message_cast = function(a, b) {
-  a = b.getField("VALUE", b);
-  var c = Entry.isExist(a, "id", Entry.variableContainer.messages_);
-  if ("null" == a || !c) {
-    throw Error("value can not be null or undefined");
-  }
-  Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", a]);
-  return b.callReturn();
-};
-Blockly.Blocks.message_cast_wait = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_message_send_wait_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_send_wait_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}, whenAdd:function(a) {
-  var b = Entry.variableContainer;
-  b && b.addRef("_messageRefs", a);
-}, whenRemove:function(a) {
-  var b = Entry.variableContainer;
-  b && b.removeRef("_messageRefs", a);
-}};
-Entry.block.message_cast_wait = function(a, b) {
-  if (b.runningScript) {
-    a = b.runningScript;
-    for (var c = a.length, d = 0;d < c;d++) {
-      var e = a.shift();
-      e && !e.isEnd() && a.push(e);
-    }
-    return a.length ? b : b.callReturn();
-  }
-  a = b.getField("VALUE", b);
-  e = Entry.isExist(a, "id", Entry.variableContainer.messages_);
-  if ("null" == a || !e) {
-    throw Error("value can not be null or undefined");
-  }
-  c = Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", a]);
-  for (a = [];c.length;) {
-    (e = c.shift()) && (a = a.concat(e));
-  }
-  b.runningScript = a;
-  return b;
-};
-var colour = "#FFCA36";
-Blockly.Blocks.text = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.TEXT_text), "NAME");
-  this.setOutput(!0, "String");
-  this.setInputsInline(!0);
-}};
-Entry.block.text = function(a, b) {
-  return b.getField("NAME", b);
-};
-Blockly.Blocks.text_write = {init:function() {
-  this.setColour(colour);
-  this.appendDummyInput().appendField(Lang.Blocks.TEXT_text_write_1);
-  this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.TEXT_text_write_2);
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.text_write = function(a, b) {
-  var c = b.getStringValue("VALUE", b), c = Entry.convertToRoundedDecimals(c, 3);
-  a.setText(c);
-  return b.callReturn();
-};
-Blockly.Blocks.text_append = {init:function() {
-  this.setColour(colour);
-  this.appendDummyInput().appendField(Lang.Blocks.TEXT_text_append_1);
-  this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.TEXT_text_append_2);
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.text_append = function(a, b) {
-  var c = b.getStringValue("VALUE", b);
-  a.setText(Entry.convertToRoundedDecimals(a.getText(), 3) + Entry.convertToRoundedDecimals(c, 3));
-  return b.callReturn();
-};
-Blockly.Blocks.text_prepend = {init:function() {
-  this.setColour(colour);
-  this.appendDummyInput().appendField(Lang.Blocks.TEXT_text_prepend_1);
-  this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.TEXT_text_prepend_2);
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.text_prepend = function(a, b) {
-  var c = b.getStringValue("VALUE", b);
-  a.setText(Entry.convertToRoundedDecimals(c, 3) + Entry.convertToRoundedDecimals(a.getText(), 3));
-  return b.callReturn();
-};
-Blockly.Blocks.text_flush = {init:function() {
-  this.setColour(colour);
-  this.appendDummyInput().appendField(Lang.Blocks.TEXT_text_flush);
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.text_flush = function(a, b) {
-  a.setText("");
-  return b.callReturn();
-};
-Entry.block.variableAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
-}, events:{mousedown:[function() {
-  Entry.variableContainer.openVariableAddPanel("variable");
-}]}};
-Entry.block.listAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
-}, events:{mousedown:[function() {
-  Entry.variableContainer.openVariableAddPanel("list");
-}]}};
-Blockly.Blocks.change_variable = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_2);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}, whenAdd:function(a) {
-  var b = Entry.variableContainer;
-  b && b.addRef("_variableRefs", a);
-}, whenRemove:function(a) {
-  var b = Entry.variableContainer;
-  b && b.removeRef("_variableRefs", a);
-}};
-Entry.block.change_variable = function(a, b) {
-  var c = b.getField("VARIABLE", b), d = b.getNumberValue("VALUE", b), d = Entry.parseNumber(d);
-  if (0 == d && "boolean" == typeof d) {
-    throw Error("Type is not correct");
-  }
-  c = Entry.variableContainer.getVariable(c, a);
-  a = Entry.getMaxFloatPoint([d, c.getValue()]);
-  c.setValue((d + c.getValue()).toFixed(a));
-  return b.callReturn();
-};
-Blockly.Blocks.set_variable = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_set_variable_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_set_variable_2);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_set_variable_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}, whenAdd:function(a) {
-  var b = Entry.variableContainer;
-  b && b.addRef("_variableRefs", a);
-}, whenRemove:function(a) {
-  var b = Entry.variableContainer;
-  b && b.removeRef("_variableRefs", a);
-}};
-Entry.block.set_variable = function(a, b) {
-  var c = b.getField("VARIABLE", b), d = b.getValue("VALUE", b);
-  Entry.variableContainer.getVariable(c, a).setValue(d);
-  return b.callReturn();
-};
-Blockly.Blocks.show_variable = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_show_variable_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_show_variable_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}, whenAdd:function(a) {
-  var b = Entry.variableContainer;
-  b && b.addRef("_variableRefs", a);
-}, whenRemove:function(a) {
-  var b = Entry.variableContainer;
-  b && b.removeRef("_variableRefs", a);
-}};
-Entry.block.show_variable = function(a, b) {
-  var c = b.getField("VARIABLE", b);
-  a = Entry.variableContainer.getVariable(c, a);
-  a.setVisible(!0);
-  a.updateView();
-  return b.callReturn();
-};
-Blockly.Blocks.hide_variable = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_hide_variable_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_hide_variable_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}, whenAdd:function(a) {
-  var b = Entry.variableContainer;
-  b && b.addRef("_variableRefs", a);
-}, whenRemove:function(a) {
-  var b = Entry.variableContainer;
-  b && b.removeRef("_variableRefs", a);
-}};
-Entry.block.hide_variable = function(a, b) {
-  var c = b.getField("VARIABLE", b);
-  Entry.variableContainer.getVariable(c, a).setVisible(!1);
-  return b.callReturn();
-};
-Blockly.Blocks.get_y = {init:function() {
-  this.setColour(230);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_y).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setOutput(!0, "Number");
-}};
-Blockly.Blocks.get_variable = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_variable_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_get_variable_2);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}, whenAdd:function(a) {
-  var b = Entry.variableContainer;
-  b && b.addRef("_variableRefs", a);
-}, whenRemove:function(a) {
-  var b = Entry.variableContainer;
-  b && b.removeRef("_variableRefs", a);
-}};
-Entry.block.get_variable = function(a, b) {
-  b = b.getField("VARIABLE", b);
-  return Entry.variableContainer.getVariable(b, a).getValue();
-};
-Blockly.Blocks.ask_and_wait = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_ask_and_wait_1);
-  this.appendValueInput("VALUE").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_ask_and_wait_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}, whenAdd:function() {
-  Entry.container && Entry.container.showProjectAnswer();
-}, whenRemove:function(a) {
-  Entry.container && Entry.container.hideProjectAnswer(a);
-}};
-Entry.block.ask_and_wait = function(a, b) {
-  var c = Entry.container.inputValue, d = Entry.stage.inputField, e = b.getValue("VALUE", b);
-  if (!e) {
-    throw Error("message can not be empty");
-  }
-  if (c.sprite == a && d && !d._isHidden) {
-    return b;
-  }
-  if (c.sprite != a && b.isInit) {
-    return a.dialog && a.dialog.remove(), delete b.isInit, b.callReturn();
-  }
-  if (c.complete && c.sprite == a && d._isHidden && b.isInit) {
-    return a.dialog && a.dialog.remove(), delete c.complete, delete b.isInit, b.callReturn();
-  }
-  e = Entry.convertToRoundedDecimals(e, 3);
-  new Entry.Dialog(a, e, "speak");
-  Entry.stage.showInputField();
-  c.script = b;
-  c.sprite = a;
-  b.isInit = !0;
-  return b;
-};
-Blockly.Blocks.get_canvas_input_value = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_canvas_input_value, "#fff");
-  this.appendDummyInput().appendField(" ");
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}, whenAdd:function() {
-  Entry.container && Entry.container.showProjectAnswer();
-}, whenRemove:function(a) {
-  Entry.container && Entry.container.hideProjectAnswer(a);
-}};
-Entry.block.get_canvas_input_value = function(a, b) {
-  return Entry.container.getInputValue();
-};
-Blockly.Blocks.add_value_to_list = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_add_value_to_list_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_add_value_to_list_2);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_add_value_to_list_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}, whenAdd:function(a) {
-  var b = Entry.variableContainer;
-  b && b.addRef("_variableRefs", a);
-}, whenRemove:function(a) {
-  var b = Entry.variableContainer;
-  b && b.removeRef("_variableRefs", a);
-}};
-Entry.block.add_value_to_list = function(a, b) {
-  var c = b.getField("LIST", b), d = b.getValue("VALUE", b);
-  a = Entry.variableContainer.getList(c, a);
-  a.array_ || (a.array_ = []);
-  a.array_.push({data:d});
-  a.updateView();
-  return b.callReturn();
-};
-Blockly.Blocks.remove_value_from_list = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_remove_value_from_list_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_remove_value_from_list_2);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_remove_value_from_list_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.remove_value_from_list = function(a, b) {
-  var c = b.getField("LIST", b), d = b.getValue("VALUE", b);
-  a = Entry.variableContainer.getList(c, a);
-  if (!a.array_ || isNaN(d) || d > a.array_.length) {
-    throw Error("can not remove value from array");
-  }
-  a.array_.splice(d - 1, 1);
-  a.updateView();
-  return b.callReturn();
-};
-Blockly.Blocks.insert_value_to_list = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_1);
-  this.appendValueInput("DATA").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_2);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_3);
-  this.appendValueInput("INDEX").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.insert_value_to_list = function(a, b) {
-  var c = b.getField("LIST", b), d = b.getValue("DATA", b), e = b.getValue("INDEX", b);
-  a = Entry.variableContainer.getList(c, a);
-  if (!a.array_ || isNaN(e) || 0 == e || e > a.array_.length + 1) {
-    throw Error("can not insert value to array");
-  }
-  a.array_.splice(e - 1, 0, {data:d});
-  a.updateView();
-  return b.callReturn();
-};
-Blockly.Blocks.change_value_list_index = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_2);
-  this.appendValueInput("INDEX").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_3);
-  this.appendValueInput("DATA").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.change_value_list_index = function(a, b) {
-  var c = b.getField("LIST", b), d = b.getValue("DATA", b), e = b.getValue("INDEX", b);
-  a = Entry.variableContainer.getList(c, a);
-  if (!a.array_ || isNaN(e) || e > a.array_.length) {
-    throw Error("can not insert value to array");
-  }
-  a.array_[e - 1].data = d;
-  a.updateView();
-  return b.callReturn();
-};
-Blockly.Blocks.value_of_index_from_list = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_value_of_index_from_list_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_value_of_index_from_list_2);
-  this.appendValueInput("INDEX").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_value_of_index_from_list_3);
-  this.setOutput(!0, "String");
-  this.setInputsInline(!0);
-}};
-Entry.block.value_of_index_from_list = function(a, b) {
-  var c = b.getField("LIST", b);
-  b = b.getValue("INDEX", b);
-  a = Entry.variableContainer.getList(c, a);
-  b = Entry.getListRealIndex(b, a);
-  if (!a.array_ || isNaN(b) || b > a.array_.length) {
-    throw Error("can not insert value to array");
-  }
-  return a.array_[b - 1].data;
-};
-Blockly.Blocks.length_of_list = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_length_of_list_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_length_of_list_2);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.length_of_list = function(a, b) {
-  a = b.getField("LIST", b);
-  return Entry.variableContainer.getList(a).array_.length;
-};
-Blockly.Blocks.show_list = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_show_list_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_show_list_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.show_list = function(a, b) {
-  a = b.getField("LIST", b);
-  Entry.variableContainer.getList(a).setVisible(!0);
-  return b.callReturn();
-};
-Blockly.Blocks.hide_list = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_hide_list_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_hide_list_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hide_list = function(a, b) {
-  a = b.getField("LIST", b);
-  Entry.variableContainer.getList(a).setVisible(!1);
-  return b.callReturn();
-};
-Blockly.Blocks.options_for_list = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField("");
-  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([[Lang.Blocks.VARIABLE_list_option_first, "FIRST"], [Lang.Blocks.VARIABLE_list_option_last, "LAST"], [Lang.Blocks.VARIABLE_list_option_random, "RANDOM"]]), "OPERATOR");
-  this.appendDummyInput().appendField(" ");
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.options_for_list = function(a, b) {
-  return b.getField("OPERATOR", b);
-};
-Blockly.Blocks.set_visible_answer = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_canvas_input_value);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]]), "BOOL");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}, whenAdd:function() {
-  Entry.container && Entry.container.showProjectAnswer();
-}, whenRemove:function(a) {
-  Entry.container && Entry.container.hideProjectAnswer(a);
-}};
-Entry.block.set_visible_answer = function(a, b) {
-  "HIDE" == b.getField("BOOL", b) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
-  return b.callReturn();
-};
-Blockly.Blocks.is_included_in_list = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_2);
-  this.appendValueInput("DATA").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_3);
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.is_included_in_list = function(a, b) {
-  a = b.getField("LIST", b);
-  b = b.getStringValue("DATA", b);
-  a = Entry.variableContainer.getList(a);
-  if (!a) {
-    return !1;
-  }
-  a = a.array_;
-  for (var c = 0, d = a.length;c < d;c++) {
-    if (a[c].data.toString() == b.toString()) {
-      return !0;
-    }
-  }
-  return !1;
 };
 Entry.Xbot = {PORT_MAP:{rightWheel:0, leftWheel:0, head:90, armR:90, armL:90, analogD5:127, analogD6:127, D4:0, D7:0, D12:0, D13:0, ledR:0, ledG:0, ledB:0, lcdNum:0, lcdTxt:"                ", note:262, duration:0}, setZero:function() {
   var a = Entry.Xbot.PORT_MAP, b = Entry.hw.sendQueue, c;
@@ -25160,8 +22013,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         g.css({"background-color":h});
         g.attr({"data-color-value":h});
         (function(a, c) {
-          a.mousedown(function(b) {
-            b.stopPropagation();
+          a.mousedown(function(a) {
+            a.stopPropagation();
           });
           a.mouseup(function(a) {
             b.applyValue(c);
@@ -25175,8 +22028,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     a.y += this.box.height / 2 + 1;
     this.optionGroup.css({left:a.x, top:a.y});
   };
-  a.applyValue = function(b) {
-    this.value != b && (this.setValue(b), this._header.attr({fill:b}));
+  a.applyValue = function(a) {
+    this.value != a && (this.setValue(a), this._header.attr({fill:a}));
   };
   a.getContentWidth = function() {
     return Entry.isMobile() ? 20 : 14.5;
@@ -25206,90 +22059,90 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   a.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this instanceof Entry.FieldDropdownDynamic && this._updateValue();
-    var b = this._blockView, a = Entry.isMobile(), d = a ? 33 : 20, a = a ? 24 : 10;
-    this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
+    var a = this._blockView, c = Entry.isMobile(), d = c ? 33 : 20, c = c ? 24 : 10;
+    this.svgGroup = a.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
     this.textElement = this.svgGroup.elem("text", {x:5});
     this.textElement.textContent = this.getTextByValue(this.getValue());
-    b = this.textElement.getBBox();
-    this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.23 * b.height});
+    a = this.textElement.getBBox();
+    this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.23 * a.height});
     d = this.textElement.getBoundingClientRect().width + d;
-    this._noArrow && (d -= a);
-    a = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {width:d, height:a, y:-a / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
+    this._noArrow && (d -= c);
+    c = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:d, height:c, y:-c / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this._noArrow || (b = this.getArrow(), this._arrow = this.svgGroup.elem("polygon", {points:b.points, fill:b.color, stroke:b.color, transform:"translate(" + (d - b.width - 5) + "," + -b.height / 2 + ")"}));
+    this._noArrow || (a = this.getArrow(), this._arrow = this.svgGroup.elem("polygon", {points:a.points, fill:a.color, stroke:a.color, transform:"translate(" + (d - a.width - 5) + "," + -a.height / 2 + ")"}));
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:d, height:a});
+    this.box.set({x:0, y:0, width:d, height:c});
   };
   a.resize = function() {
-    var b = Entry.isMobile(), a = b ? 33 : 20, b = b ? 24 : 10, a = this.textElement.getBoundingClientRect().width + a;
-    this._noArrow ? a -= b : (b = this.getArrow(), this._arrow.attr({transform:"translate(" + (a - b.width - 5) + "," + -b.height / 2 + ")"}));
-    this._header.attr({width:a});
-    this.box.set({width:a});
+    var a = Entry.isMobile(), c = a ? 33 : 20, a = a ? 24 : 10, c = this.textElement.getBoundingClientRect().width + c;
+    this._noArrow ? c -= a : (a = this.getArrow(), this._arrow.attr({transform:"translate(" + (c - a.width - 5) + "," + -a.height / 2 + ")"}));
+    this._header.attr({width:c});
+    this.box.set({width:c});
     this._block.view.alignContent();
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
-    this.optionGroup.bind("mousedown touchstart", function(b) {
-      b.stopPropagation();
+    this.optionGroup.bind("mousedown touchstart", function(a) {
+      a.stopPropagation();
     });
-    for (var a = this._contents.options, a = this._contents.options, d = 0, e = a.length;d < e;d++) {
-      var f = a[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = Entry.Dom("span", {class:"left", parent:h});
+    for (var c = this._contents.options, c = this._contents.options, d = 0, e = c.length;d < e;d++) {
+      var f = c[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = Entry.Dom("span", {class:"left", parent:h});
       Entry.Dom("span", {class:"right", parent:h}).text(g);
       this.getValue() == f && k.text("\u2713");
-      (function(a, c) {
-        a.bind("mousedown touchstart", function(b) {
-          b.stopPropagation();
-        });
-        a.bind("mouseup touchend", function(a) {
+      (function(b, c) {
+        b.bind("mousedown touchstart", function(a) {
           a.stopPropagation();
-          b.applyValue(c);
-          b.destroyOption();
-          b._selectBlockView();
+        });
+        b.bind("mouseup touchend", function(b) {
+          b.stopPropagation();
+          a.applyValue(c);
+          a.destroyOption();
+          a._selectBlockView();
         });
       })(h, f);
     }
     this._position();
   };
   a._position = function() {
-    var b = this.getAbsolutePosFromDocument();
-    b.y += this.box.height / 2;
-    var a = $(document).height(), d = this.optionGroup.height(), e = this.optionGroup.width() + 30;
-    if (a < b.y + d + 30) {
-      var a = this._blockView.getBoard().svgDom.height(), f = this.getAbsolutePosFromBoard();
-      this._blockView.y < a / 2 ? (b.x += this.box.width / 2 - e / 2, a -= f.y + 30, this.optionGroup.height(a)) : (b.x += this.box.width + 1, a -= a - f.y, a - 30 < d && this.optionGroup.height(a - a % 30), b.y -= this.optionGroup.height());
+    var a = this.getAbsolutePosFromDocument();
+    a.y += this.box.height / 2;
+    var c = $(document).height(), d = this.optionGroup.height(), e = this.optionGroup.width() + 30;
+    if (c < a.y + d + 30) {
+      var c = this._blockView.getBoard().svgDom.height(), f = this.getAbsolutePosFromBoard();
+      this._blockView.y < c / 2 ? (a.x += this.box.width / 2 - e / 2, c -= f.y + 30, this.optionGroup.height(c)) : (a.x += this.box.width + 1, c -= c - f.y, c - 30 < d && this.optionGroup.height(c - c % 30), a.y -= this.optionGroup.height());
     } else {
-      b.x += this.box.width / 2 - e / 2;
+      a.x += this.box.width / 2 - e / 2;
     }
     this.optionGroup.addClass("rendered");
-    this.optionGroup.css({left:b.x, top:b.y, width:e});
+    this.optionGroup.css({left:a.x, top:a.y, width:e});
     this.optionGroup.find(".right").width(e - 20);
   };
-  a.applyValue = function(b) {
-    this.value != b && this.setValue(b);
-    this.textElement.textContent = this.getTextByValue(b);
+  a.applyValue = function(a) {
+    this.value != a && this.setValue(a);
+    this.textElement.textContent = this.getTextByValue(a);
     this.resize();
   };
-  a.getTextByValue = function(b) {
-    if (!b && "number" !== typeof b || "null" === b) {
+  a.getTextByValue = function(a) {
+    if (!a && "number" !== typeof a || "null" === a) {
       return Lang.Blocks.no_target;
     }
-    for (var a = this._contents.options, d = 0, e = a.length;d < e;d++) {
-      var f = a[d];
-      if (f[1] == b) {
+    for (var b = this._contents.options, d = 0, e = b.length;d < e;d++) {
+      var f = b[d];
+      if (f[1] == a) {
         return f[0];
       }
     }
-    return "?" === b ? b : Lang.Blocks.no_target;
+    return "?" === a ? a : Lang.Blocks.no_target;
   };
-  a.getContentHeight = function(b) {
-    return b = b || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);
+  a.getContentHeight = function(a) {
+    return a = a || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);
   };
   a.getArrow = function() {
-    var b = Entry.isMobile();
-    return {color:this._arrowColor || this._blockView._schema.color, points:b ? "0,0 19,0 9.5,13" : "0,0 6.4,0 3.2,4.2", height:b ? 13 : 4.2, width:b ? 19 : 6.4};
+    var a = Entry.isMobile();
+    return {color:this._arrowColor || this._blockView._schema.color, points:a ? "0,0 19,0 9.5,13" : "0,0 6.4,0 3.2,4.2", height:a ? 13 : 4.2, width:a ? 19 : 6.4};
   };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldDropdownDynamic = function(a, b, c) {
@@ -25311,38 +22164,38 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 (function(a) {
   a.constructor = Entry.FieldDropDownDynamic;
   a._updateValue = function() {
-    var b = this._block.getCode().object, a = [];
-    Entry.container && (a = this._menuName ? Entry.container.getDropdownList(this._menuName, b) : this._menuGenerator());
-    this._contents.options = a;
-    b = this.getValue();
-    if (this._blockView.isInBlockMenu || !b || "null" == b) {
-      b = 0 !== a.length ? a[0][1] : null;
+    var a = this._block.getCode().object, c = [];
+    Entry.container && (c = this._menuName ? Entry.container.getDropdownList(this._menuName, a) : this._menuGenerator());
+    this._contents.options = c;
+    a = this.getValue();
+    if (this._blockView.isInBlockMenu || !a || "null" == a) {
+      a = 0 !== c.length ? c[0][1] : null;
     }
-    this.setValue(b);
+    this.setValue(a);
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
-    this.optionGroup.bind("mousedown touchstart", function(b) {
-      b.stopPropagation();
+    this.optionGroup.bind("mousedown touchstart", function(a) {
+      a.stopPropagation();
     });
-    var a;
-    a = this._menuName ? Entry.container.getDropdownList(this._contents.menuName) : this._menuGenerator();
-    this._contents.options = a;
-    for (var d = 0;d < a.length;d++) {
-      var e = a[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = Entry.Dom("span", {class:"left", parent:g});
+    var c;
+    c = this._menuName ? Entry.container.getDropdownList(this._contents.menuName) : this._menuGenerator();
+    this._contents.options = c;
+    for (var d = 0;d < c.length;d++) {
+      var e = c[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = Entry.Dom("span", {class:"left", parent:g});
       Entry.Dom("span", {class:"right", parent:g}).text(f);
       this.getValue() == e && h.text("\u2713");
-      (function(a, c) {
-        a.mousedown(function(b) {
-          b.stopPropagation();
-        });
-        a.mouseup(function(a) {
+      (function(b, c) {
+        b.mousedown(function(a) {
           a.stopPropagation();
-          b.applyValue(c);
-          b.destroyOption();
-          b._selectBlockView();
+        });
+        b.mouseup(function(b) {
+          b.stopPropagation();
+          a.applyValue(c);
+          a.destroyOption();
+          a._selectBlockView();
         });
       })(g, e);
     }
@@ -25392,19 +22245,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
     this.svgGroup && this.svgGroup.remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this._imgUrl && (this._imgElement = this.svgGroup.elem("image", {href:Entry.mediaFilePath + this._imgUrl, x:this._position ? -1 * this._size : 0, y:-1 * this._size, width:2 * this._size, height:2 * this._size}));
-    var b = "m %s,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
-    this._path = this.svgGroup.elem("path", {d:b, x:this._position ? -1 * this._size : 0, y:-1 * this._size, stroke:"none", fill:this._color ? this._color : "none"});
+    var a = "m %s,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
+    this._path = this.svgGroup.elem("path", {d:a, x:this._position ? -1 * this._size : 0, y:-1 * this._size, stroke:"none", fill:this._color ? this._color : "none"});
     this.box.set({width:this._size * this._boxMultiplier + (this._position ? -this._size : 0), height:this._size * this._boxMultiplier});
   };
   a.enableHighlight = function() {
-    var b = this._path.getTotalLength(), a = this._path;
-    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":b + " " + b, "stroke-dashoffset":b});
+    var a = this._path.getTotalLength(), c = this._path;
+    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
     setInterval(function() {
-      a.attr({"stroke-dashoffset":b}).animate({"stroke-dashoffset":0}, 300);
+      c.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 300);
     }, 1400, mina.easeout);
     setTimeout(function() {
       setInterval(function() {
-        a.animate({"stroke-dashoffset":-b}, 300);
+        c.animate({"stroke-dashoffset":-a}, 300);
       }, 1400, mina.easeout);
     }, 500);
   };
@@ -25430,21 +22283,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text").attr({x:5, y:4, "font-size":"11px"});
     this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
-    var b = this.getTextWidth() + 1, a = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {x:0, y:(this.position && this.position.y ? this.position.y : 0) - a / 2, width:b, height:a, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    var a = this.getTextWidth() + 1, c = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {x:0, y:(this.position && this.position.y ? this.position.y : 0) - c / 2, width:a, height:c, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:b, height:a});
+    this.box.set({x:0, y:0, width:a, height:c});
   };
   a.renderOptions = function() {
     Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
     this._optionVisible = !0;
     this._attachDisposeEvent();
-    var b = this.getAbsolutePosFromDocument();
-    b.x -= this.box.width / 2;
-    b.y += this.box.height / 2 + 1;
+    var a = this.getAbsolutePosFromDocument();
+    a.x -= this.box.width / 2;
+    a.y += this.box.height / 2 + 1;
     this.optionGroup = Entry.Dom("img", {class:"entry-widget-keyboard-input", src:Entry.mediaFilePath + "/media/keyboard_workspace.png", parent:$("body")});
-    this.optionGroup.css({left:b.x, top:b.y});
+    this.optionGroup.css({left:a.x, top:a.y});
   };
   a.destroyOption = function() {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.disposeEvent);
@@ -25453,24 +22306,24 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.command();
     this.keyPressed && (Entry.keyPressed.detach(this.keyPressed), delete this.keyPressed);
   };
-  a._keyboardControl = function(b) {
-    b.stopPropagation();
+  a._keyboardControl = function(a) {
+    a.stopPropagation();
     if (this._optionVisible) {
-      b = b.keyCode;
-      var a = Entry.getKeyCodeMap()[b];
-      void 0 !== a && this.applyValue(a, b);
+      a = a.keyCode;
+      var b = Entry.getKeyCodeMap()[a];
+      void 0 !== b && this.applyValue(b, a);
     }
   };
-  a.applyValue = function(b, a) {
-    this.setValue(String(a));
+  a.applyValue = function(a, c) {
+    this.setValue(String(c));
     this.destroyOption();
-    this.textElement.textContent = b;
+    this.textElement.textContent = a;
     this.resize();
   };
   a.resize = function() {
-    var b = this.getTextWidth() + 1;
-    this._header.attr({width:b});
-    this.box.set({width:b});
+    var a = this.getTextWidth() + 1;
+    this._header.attr({width:a});
+    this.box.set({width:a});
     this._blockView.alignContent();
   };
   a.getTextWidth = function() {
@@ -25493,9 +22346,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldLineBreak);
 (function(a) {
   a.renderStart = function() {
   };
-  a.align = function(b) {
-    var a = this._blockView;
-    0 !== a._statements.length && this.box.set({y:(a._statements[b].height || 20) + Math.max(a.contentHeight % 1E3, 30)});
+  a.align = function(a) {
+    var b = this._blockView;
+    0 !== b._statements.length && this.box.set({y:(b._statements[a].height || 20) + Math.max(b.contentHeight % 1E3, 30)});
   };
 })(Entry.FieldLineBreak.prototype);
 Entry.FieldOutput = function(a, b, c, d, e) {
@@ -25519,56 +22372,56 @@ Entry.FieldOutput = function(a, b, c, d, e) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 (function(a) {
   a.schema = {magneting:!1};
-  a.renderStart = function(b, a) {
+  a.renderStart = function(a, c) {
     this.svgGroup || (this.svgGroup = this._blockView.contentSvgGroup.elem("g"));
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
-    var c = this.getValue();
-    c && !c.view ? (c.setThread(this), c.createView(b, a)) : c && c.view && c.view.reDraw();
-    this._updateValueBlock(c);
+    var b = this.getValue();
+    b && !b.view ? (b.setThread(this), b.createView(a, c)) : b && b.view && b.view.reDraw();
+    this._updateValueBlock(b);
     this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock && this._valueBlock.view.removeControl();
   };
-  a.align = function(b, a, d) {
-    var c = this.svgGroup;
-    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
+  a.align = function(a, c, d) {
+    var b = this.svgGroup;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
     var f = this._valueBlock;
-    f && (a = -.5 * f.view.height);
-    f = "translate(" + b + "," + a + ")";
-    void 0 === d || d ? c.animate({transform:f}, 300, mina.easeinout) : c.attr({transform:f});
-    this.box.set({x:b, y:a});
+    f && (c = -.5 * f.view.height);
+    f = "translate(" + a + "," + c + ")";
+    void 0 === d || d ? b.animate({transform:f}, 300, mina.easeinout) : b.attr({transform:f});
+    this.box.set({x:a, y:c});
   };
   a.calcWH = function() {
-    var b = this._valueBlock;
-    b ? (b = b.view, this.box.set({width:b.width, height:b.height})) : this.box.set({width:0, height:20});
+    var a = this._valueBlock;
+    a ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:0, height:20});
   };
   a.calcHeight = a.calcWH;
   a.destroy = function() {
   };
   a._inspectBlock = function() {
   };
-  a._setValueBlock = function(b) {
-    if (b != this._valueBlock || !this._valueBlock) {
-      return this._valueBlock = b, this.setValue(b), b && b.setThread(this), this._valueBlock;
+  a._setValueBlock = function(a) {
+    if (a != this._valueBlock || !this._valueBlock) {
+      return this._valueBlock = a, this.setValue(a), a && a.setThread(this), this._valueBlock;
     }
   };
-  a._updateValueBlock = function(b) {
-    b instanceof Entry.Block || (b = void 0);
-    b && b === this._valueBlock ? this.calcWH() : (this._sizeObserver && this._sizeObserver.destroy(), this._posObserver && this._posObserver.destroy(), (b = this._setValueBlock(b)) ? (b = b.view, b.bindPrev(), this._posObserver = b.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = b.observe(this, "calcWH", ["width", "height"])) : this.calcWH(), this._blockView.alignContent());
+  a._updateValueBlock = function(a) {
+    a instanceof Entry.Block || (a = void 0);
+    a && a === this._valueBlock ? this.calcWH() : (this._sizeObserver && this._sizeObserver.destroy(), this._posObserver && this._posObserver.destroy(), (a = this._setValueBlock(a)) ? (a = a.view, a.bindPrev(), this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = a.observe(this, "calcWH", ["width", "height"])) : this.calcWH(), this._blockView.alignContent());
   };
-  a.getPrevBlock = function(b) {
-    return this._valueBlock === b ? this : null;
+  a.getPrevBlock = function(a) {
+    return this._valueBlock === a ? this : null;
   };
   a.getNextBlock = function() {
     return null;
   };
-  a.requestAbsoluteCoordinate = function(b) {
-    b = this._blockView;
-    var a = b.contentPos;
-    b = b.getAbsoluteCoordinate();
-    b.x += this.box.x + a.x;
-    b.y += this.box.y + a.y;
-    return b;
+  a.requestAbsoluteCoordinate = function(a) {
+    a = this._blockView;
+    var b = a.contentPos;
+    a = a.getAbsoluteCoordinate();
+    a.x += this.box.x + b.x;
+    a.y += this.box.y + b.y;
+    return a;
   };
   a.dominate = function() {
     this._blockView.dominate();
@@ -25576,28 +22429,28 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   a.isGlobal = function() {
     return !1;
   };
-  a.separate = function(b) {
-    this.getCode().createThread([b]);
+  a.separate = function(a) {
+    this.getCode().createThread([a]);
     this.changeEvent.notify();
   };
   a.getCode = function() {
     return this._block.thread.getCode();
   };
-  a.cut = function(b) {
-    return this._valueBlock === b ? (delete this._valueBlock, [b]) : null;
+  a.cut = function(a) {
+    return this._valueBlock === a ? (delete this._valueBlock, [a]) : null;
   };
   a._updateBG = function() {
     this.magneting ? this._bg = this.svgGroup.elem("path", {d:"m -4,-12 h 3 l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2 h -3 ", fill:"#fff", stroke:"#fff", "fill-opacity":.7, transform:"translate(0," + (this._valueBlock ? 12 : 0) + ")"}) : this._bg && (this._bg.remove(), delete this._bg);
   };
-  a.replace = function(b) {
-    var a = this._valueBlock;
-    a && (a.view._toGlobalCoordinate(), b.getTerminateOutputBlock().view._contents[1].replace(a));
-    this._updateValueBlock(b);
-    b.view._toLocalCoordinate(this.svgGroup);
+  a.replace = function(a) {
+    var b = this._valueBlock;
+    b && (b.view._toGlobalCoordinate(), a.getTerminateOutputBlock().view._contents[1].replace(b));
+    this._updateValueBlock(a);
+    a.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
   };
-  a.setParent = function(b) {
-    this._parent = b;
+  a.setParent = function(a) {
+    this._parent = a;
   };
   a.getParent = function() {
     return this._parent;
@@ -25608,10 +22461,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   a.getValueBlock = function() {
     return this._valueBlock;
   };
-  a.pointer = function(b) {
-    b.unshift(this._index);
-    b.unshift(Entry.PARAM);
-    return this._block.pointer(b);
+  a.pointer = function(a) {
+    a.unshift(this._index);
+    a.unshift(Entry.PARAM);
+    return this._block.pointer(a);
   };
 })(Entry.FieldOutput.prototype);
 Entry.FieldStatement = function(a, b, c) {
@@ -25631,84 +22484,84 @@ Entry.FieldStatement = function(a, b, c) {
 (function(a) {
   a.schema = {x:0, y:0, width:100, height:20, magneting:!1};
   a.magnet = {next:{x:0, y:0}};
-  a.renderStart = function(b) {
+  a.renderStart = function(a) {
     this.svgGroup = this._blockView.statementSvgGroup.elem("g");
     this._nextGroup = this.statementSvgGroup = this.svgGroup.elem("g");
-    this._initThread(b);
-    this._board = b;
+    this._initThread(a);
+    this._board = a;
   };
-  a._initThread = function(b) {
-    var a = this.getValue();
-    this._thread = a;
-    a.createView(b);
-    a.view.setParent(this);
-    if (b = a.getFirstBlock()) {
-      b.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = b;
+  a._initThread = function(a) {
+    var b = this.getValue();
+    this._thread = b;
+    b.createView(a);
+    b.view.setParent(this);
+    if (a = b.getFirstBlock()) {
+      a.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = a;
     }
-    b = a.changeEvent.attach(this, this.calcHeight);
-    var d = a.changeEvent.attach(this, this.checkTopBlock);
-    this._events.push([a.changeEvent, b]);
-    this._events.push([a.changeEvent, d]);
+    a = b.changeEvent.attach(this, this.calcHeight);
+    var d = b.changeEvent.attach(this, this.checkTopBlock);
+    this._events.push([b.changeEvent, a]);
+    this._events.push([b.changeEvent, d]);
     this.calcHeight();
   };
-  a.align = function(b, a, d) {
+  a.align = function(a, c, d) {
     d = void 0 === d ? !0 : d;
-    var c = this.svgGroup;
-    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
-    var f = "translate(" + b + "," + a + ")";
-    this.set({x:b, y:a});
-    d ? c.animate({transform:f}, 300, mina.easeinout) : c.attr({transform:f});
+    var b = this.svgGroup;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    var f = "translate(" + a + "," + c + ")";
+    this.set({x:a, y:c});
+    d ? b.animate({transform:f}, 300, mina.easeinout) : b.attr({transform:f});
   };
   a.calcHeight = function() {
-    var b = this._thread.view.requestPartHeight(null);
-    this.set({height:b});
+    var a = this._thread.view.requestPartHeight(null);
+    this.set({height:a});
   };
   a.getValue = function() {
     return this.block.statements[this._index];
   };
   a.requestAbsoluteCoordinate = function() {
-    var b = this._blockView.getAbsoluteCoordinate();
-    b.x += this.x;
-    b.y += this.y;
-    return b;
+    var a = this._blockView.getAbsoluteCoordinate();
+    a.x += this.x;
+    a.y += this.y;
+    return a;
   };
   a.dominate = function() {
     this._blockView.dominate();
   };
   a.destroy = function() {
     for (;this._events.length;) {
-      var b = this._events.pop();
-      b[0].detach(b[1]);
+      var a = this._events.pop();
+      a[0].detach(a[1]);
     }
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       if (this.magneting) {
-        var b = this._board.dragBlock.getShadow(), a = this.requestAbsoluteCoordinate(), a = "translate(" + a.x + "," + a.y + ")";
-        $(b).attr({transform:a, display:"block"});
-        this._clonedShadow = b;
+        var a = this._board.dragBlock.getShadow(), c = this.requestAbsoluteCoordinate(), c = "translate(" + c.x + "," + c.y + ")";
+        $(a).attr({transform:c, display:"block"});
+        this._clonedShadow = a;
         this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
-        b = this._board.dragBlock.getBelowHeight();
-        this.statementSvgGroup.attr({transform:"translate(0," + b + ")"});
-        this.set({height:this.height + b});
+        a = this._board.dragBlock.getBelowHeight();
+        this.statementSvgGroup.attr({transform:"translate(0," + a + ")"});
+        this.set({height:this.height + a});
       } else {
-        this._clonedShadow && (this._clonedShadow.attr({display:"none"}), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
+        this._clonedShadow && (this._clonedShadow.attr({display:"none"}), delete this._clonedShadow), a = this.originalHeight, void 0 !== a && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
       }
-      (b = this.block.thread.changeEvent) && b.notify();
+      (a = this.block.thread.changeEvent) && a.notify();
     }
   };
-  a.insertTopBlock = function(b) {
+  a.insertTopBlock = function(a) {
     this._posObserver && this._posObserver.destroy();
-    var a = this.firstBlock;
-    (this.firstBlock = b) && b.doInsert(this._thread);
-    return a;
+    var b = this.firstBlock;
+    (this.firstBlock = a) && a.doInsert(this._thread);
+    return b;
   };
   a.getNextBlock = function() {
     return this.firstBlock;
   };
   a.checkTopBlock = function() {
-    var b = this._thread.getFirstBlock();
-    b && this.firstBlock !== b ? (this.firstBlock = b, b.view.bindPrev(this), b._updatePos()) : b || (this.firstBlock = null);
+    var a = this._thread.getFirstBlock();
+    a && this.firstBlock !== a ? (this.firstBlock = a, a.view.bindPrev(this), a._updatePos()) : a || (this.firstBlock = null);
   };
 })(Entry.FieldStatement.prototype);
 Entry.FieldText = function(a, b, c) {
@@ -25732,10 +22585,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre;", "font-size":this._fontSize + "px", "font-family":"nanumBarunRegular", "class":"dragNone", fill:this._color});
     this.textElement.textContent = this._text;
-    var b = 0, a = this.textElement.getBoundingClientRect();
-    "center" == this._align && (b = -a.width / 2);
-    this.textElement.attr({x:b, y:.25 * a.height});
-    this.box.set({x:0, y:0, width:a.width, height:a.height});
+    var a = 0, c = this.textElement.getBoundingClientRect();
+    "center" == this._align && (a = -c.width / 2);
+    this.textElement.attr({x:a, y:.25 * c.height});
+    this.box.set({x:0, y:0, width:c.width, height:c.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
@@ -25758,46 +22611,46 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:3, y:4, "font-size":"12px"});
     this.textElement.textContent = this.truncate();
-    var b = this.getTextWidth(), a = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {width:b, height:a, y:(this.position && this.position.y ? this.position.y : 0) - a / 2, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    var a = this.getTextWidth(), c = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:a, height:c, y:(this.position && this.position.y ? this.position.y : 0) - c / 2, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:b, height:a});
+    this.box.set({x:0, y:0, width:a, height:c});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this._attachDisposeEvent(function() {
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(b) {
-      b.stopPropagation();
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(b) {
+      var c = b.keyCode || b.which;
+      a.applyValue(b);
+      -1 < [13, 27].indexOf(c) && a.destroyOption();
     });
-    var a = this.getAbsolutePosFromDocument();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.focus();
-    a = this.optionGroup[0];
-    a.setSelectionRange(0, a.value.length, "backward");
+    c = this.optionGroup[0];
+    c.setSelectionRange(0, c.value.length, "backward");
   };
-  a.applyValue = function(b) {
-    b = this.optionGroup.val();
-    this.setValue(b);
+  a.applyValue = function(a) {
+    a = this.optionGroup.val();
+    this.setValue(a);
     this.textElement.textContent = this.truncate();
     this.resize();
   };
   a.resize = function() {
-    var b = this.getTextWidth();
-    this._header.attr({width:b});
-    this.optionGroup.css({width:b});
-    this.box.set({width:b});
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup.css({width:a});
+    this.box.set({width:a});
     this._blockView.alignContent();
   };
   a.getTextWidth = function() {
@@ -25814,35 +22667,35 @@ Entry.GlobalSvg = {};
     if (!this.inited) {
       $("#globalSvgSurface").remove();
       $("#globalSvg").remove();
-      var b = $("body");
-      this._container = Entry.Dom("div", {classes:["globalSvgSurface", "entryRemove"], id:"globalSvgSurface", parent:b});
+      var a = $("body");
+      this._container = Entry.Dom("div", {classes:["globalSvgSurface", "entryRemove"], id:"globalSvgSurface", parent:a});
       this.svgDom = Entry.Dom($('<svg id="globalSvg" width="10" height="10"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this._container});
       this.svg = Entry.SVG("globalSvg");
       this.top = this.left = 0;
       this._inited = !0;
     }
   };
-  a.setView = function(b, a) {
-    if (b != this._view && !b.block.isReadOnly() && b.movable) {
-      return this._view = b, this._mode = a, a !== Entry.Workspace.MODE_VIMBOARD && b.set({visible:!1}), this.draw(), this.show(), this.align(), this.position(), !0;
+  a.setView = function(a, c) {
+    if (a != this._view && !a.block.isReadOnly() && a.movable) {
+      return this._view = a, this._mode = c, c !== Entry.Workspace.MODE_VIMBOARD && a.set({visible:!1}), this.draw(), this.show(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
-    var b = this._view;
+    var a = this._view;
     this._svg && this.remove();
-    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
+    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
-    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
+    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
-    this._offsetX = b;
-    this._offsetY = a;
-    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
+    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
+    this._offsetX = a;
+    this._offsetY = c;
+    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
   };
   a.show = function() {
     this._container.removeClass("entryRemove");
@@ -25851,57 +22704,57 @@ Entry.GlobalSvg = {};
     this._container.addClass("entryRemove");
   };
   a.position = function() {
-    var b = this._view;
-    if (b) {
-      var a = b.getAbsoluteCoordinate(), b = b.getBoard().offset();
-      this.left = a.x + b.left - this._offsetX;
-      this.top = a.y + b.top - this._offsetY;
+    var a = this._view;
+    if (a) {
+      var c = a.getAbsoluteCoordinate(), a = a.getBoard().offset();
+      this.left = c.x + a.left - this._offsetX;
+      this.top = c.y + a.top - this._offsetY;
       this.svgDom.css({transform:"translate3d(" + this.left + "px," + this.top + "px, 0px)"});
     }
   };
-  a.terminateDrag = function(b) {
-    var a = Entry.mouseCoordinate, d = b.getBoard(), e = d.workspace.blockMenu, f = e.offset().left, g = e.offset().top, h = e.visible ? e.svgDom.width() : 0;
-    return a.y > d.offset().top - 20 && a.x > f + h ? this.DONE : a.y > g && a.x > f && e.visible ? b.block.isDeletable() ? this.REMOVE : this.RETURN : this.RETURN;
+  a.terminateDrag = function(a) {
+    var b = Entry.mouseCoordinate, d = a.getBoard(), e = d.workspace.blockMenu, f = e.offset().left, g = e.offset().top, h = e.visible ? e.svgDom.width() : 0;
+    return b.y > d.offset().top - 20 && b.x > f + h ? this.DONE : b.y > g && b.x > f && e.visible ? a.block.isDeletable() ? this.REMOVE : this.RETURN : this.RETURN;
   };
-  a.addControl = function(b) {
+  a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
   };
-  a.onMouseDown = function(b) {
-    function a(b) {
-      var a = b.pageX;
-      b = b.pageY;
-      var c = e.left + (a - e._startX), d = e.top + (b - e._startY);
+  a.onMouseDown = function(a) {
+    function b(a) {
+      var b = a.pageX;
+      a = a.pageY;
+      var c = e.left + (b - e._startX), d = e.top + (a - e._startY);
       e.svgDom.css({transform:"translate3d(" + c + "px," + d + "px, 0px)"});
-      e._startX = a;
-      e._startY = b;
+      e._startX = b;
+      e._startY = a;
       e.left = c;
       e.top = d;
     }
-    function d(b) {
+    function d(a) {
       $(document).unbind(".block");
     }
-    this._startY = b.pageY;
+    this._startY = a.pageY;
     var e = this;
-    b.stopPropagation();
-    b.preventDefault();
+    a.stopPropagation();
+    a.preventDefault();
     var f = $(document);
-    f.bind("mousemove.block", a);
+    f.bind("mousemove.block", b);
     f.bind("mouseup.block", d);
-    f.bind("touchmove.block", a);
+    f.bind("touchmove.block", b);
     f.bind("touchend.block", d);
-    this._startX = b.pageX;
-    this._startY = b.pageY;
+    this._startX = a.pageX;
+    this._startY = a.pageY;
   };
 })(Entry.GlobalSvg);
 Entry.Mutator = function() {
 };
 (function(a) {
-  a.mutate = function(b, a) {
-    b = Entry.block[b];
-    void 0 === b.changeEvent && (b.changeEvent = new Entry.Event);
-    b.template = a.template;
-    b.params = a.params;
-    b.changeEvent.notify(1);
+  a.mutate = function(a, c) {
+    a = Entry.block[a];
+    void 0 === a.changeEvent && (a.changeEvent = new Entry.Event);
+    a.template = c.template;
+    a.params = c.params;
+    a.changeEvent.notify(1);
   };
 })(Entry.Mutator);
 (function(a) {
@@ -25932,29 +22785,29 @@ Entry.RenderView = function(a, b, c) {
     this.renderViewContainer = Entry.Dom("div", {"class":"renderViewContainer", parent:this.view});
     this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.renderViewContainer});
   };
-  a.changeCode = function(b) {
-    if (!(b instanceof Entry.Code)) {
+  a.changeCode = function(a) {
+    if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
-    this.code = b;
+    this.code = a;
     this.svg || (this.svg = Entry.SVG(this._svgId, this.svgDom[0]), this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
-    b.createView(this);
+    a.createView(this);
     this.align();
     this.resize();
   };
   a.align = function() {
-    var b = this.code.getThreads();
-    if (b && 0 !== b.length) {
-      for (var a = 0, d = this._getHorizontalPadding(), e = 0, f = b.length;e < f;e++) {
-        var g = b[e].getFirstBlock().view, h = g.svgGroup.getBBox().height, k = 0, m = $(g.svgGroup).find(".extension");
+    var a = this.code.getThreads();
+    if (a && 0 !== a.length) {
+      for (var c = 0, d = this._getHorizontalPadding(), e = 0, f = a.length;e < f;e++) {
+        var g = a[e].getFirstBlock().view, h = g.svgGroup.getBBox().height, k = 0, m = $(g.svgGroup).find(".extension");
         if (m) {
           for (var l = 0;l < m.length;l++) {
             var n = parseFloat(m[l].getAttribute("x")), k = Math.min(k, n);
           }
         }
         this._minBlockOffsetX = Math.min(this._minBlockOffsetX, g.offsetX);
-        g._moveTo(d - k - g.offsetX, a - g.offsetY, !1);
-        a += h + 15;
+        g._moveTo(d - k - g.offsetX, c - g.offsetY, !1);
+        c += h + 15;
       }
       this._setSize();
     }
@@ -25969,21 +22822,21 @@ Entry.RenderView = function(a, b, c) {
     this.svgDom && (this._svgWidth = this.svgDom.width(), this.offset = this.svgDom.offset());
     this.svgGroup && (this._bBox = this.svgGroup.getBBox());
   };
-  a.bindCodeView = function(b) {
+  a.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
     this.svgThreadGroup.remove();
-    this.svgBlockGroup = b.svgBlockGroup;
-    this.svgThreadGroup = b.svgThreadGroup;
+    this.svgBlockGroup = a.svgBlockGroup;
+    this.svgThreadGroup = a.svgThreadGroup;
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
   };
   a.resize = function() {
     this.svg && this._bBox && setTimeout(function() {
       this._setSize();
-      var b = Math.round(this._bBox.width), a = Math.round(this._bBox.height);
-      0 !== b && 0 !== a && ($(this.svg).css({width:b + this._getHorizontalPadding() - this._minBlockOffsetX, height:a + 5}), setTimeout(function() {
-        var c = this.svgGroup.getBBox();
-        Math.round(c.width) === b && Math.round(c.height) === a || this.resize();
+      var a = Math.round(this._bBox.width), c = Math.round(this._bBox.height);
+      0 !== a && 0 !== c && ($(this.svg).css({width:a + this._getHorizontalPadding() - this._minBlockOffsetX, height:c + 5}), setTimeout(function() {
+        var b = this.svgGroup.getBBox();
+        Math.round(b.width) === a && Math.round(b.height) === c || this.resize();
       }.bind(this), 1E3));
     }.bind(this), 0);
   };
@@ -25999,37 +22852,37 @@ Entry.RenderView = function(a, b, c) {
     }.bind(this), 0);
   };
   a._getHorizontalPadding = function() {
-    var b = {LEFT:20, LEFT_MOST:0}[this._align];
-    return void 0 !== b ? b : this.svgDom.width() / 2;
+    var a = {LEFT:20, LEFT_MOST:0}[this._align];
+    return void 0 !== a ? a : this.svgDom.width() / 2;
   };
 })(Entry.RenderView.prototype);
 Entry.skinContainer = {_skins:{}};
 (function(a) {
   a.skinSchema = {type:"", condition:[]};
-  a.loadSkins = function(b) {
-    b.map(this.addSkin.bind(this));
+  a.loadSkins = function(a) {
+    a.map(this.addSkin.bind(this));
   };
-  a.addSkin = function(b) {
-    var a = function() {
+  a.addSkin = function(a) {
+    var b = function() {
     };
-    a.prototype = Entry.block[b.type];
-    var a = new a, d;
-    for (d in b) {
-      a[d] = b[d];
+    b.prototype = Entry.block[a.type];
+    var b = new b, d;
+    for (d in a) {
+      b[d] = a[d];
     }
-    this._skins[b.type] || (this._skins[b.type] = []);
-    this._skins[b.type].push(a);
+    this._skins[a.type] || (this._skins[a.type] = []);
+    this._skins[a.type].push(b);
   };
-  a.getSkin = function(b) {
-    if (this._skins[b.type]) {
-      for (var a = this._skins[b.type], d = 0;d < a.length;d++) {
-        var e = a[d];
+  a.getSkin = function(a) {
+    if (this._skins[a.type]) {
+      for (var b = this._skins[a.type], d = 0;d < b.length;d++) {
+        var e = b[d];
         if (!e.conditions || !e.conditions.length) {
           return e;
         }
         for (var f = 0;f < e.conditions.length;f++) {
           var g = e.conditions[f];
-          if (b.getDataByPointer(g.pointer) !== g.value) {
+          if (a.getDataByPointer(g.pointer) !== g.value) {
             break;
           }
           if (f === e.conditions.length - 1) {
@@ -26038,7 +22891,7 @@ Entry.skinContainer = {_skins:{}};
         }
       }
     }
-    return Entry.block[b.type];
+    return Entry.block[a.type];
   };
 })(Entry.skinContainer);
 Entry.ThreadView = function(a, b) {
@@ -26053,15 +22906,15 @@ Entry.ThreadView = function(a, b) {
   a.destroy = function() {
     this.svgGroup.remove();
   };
-  a.setParent = function(b) {
-    this.parent = b;
+  a.setParent = function(a) {
+    this.parent = a;
   };
   a.getParent = function() {
     return this.parent;
   };
   a.renderText = function() {
-    for (var b = this.thread.getBlocks(), a = 0;a < b.length;a++) {
-      b[a].view.renderText();
+    for (var a = this.thread.getBlocks(), c = 0;c < a.length;c++) {
+      a[c].view.renderText();
     }
   };
   a.renderBlock = function() {
