@@ -25,6 +25,8 @@ Entry.TargetChecker = function(code, isForEdit) {
     this.isFail = false;
     this.isSuccess = false;
 
+    this.entity = this;
+    this.parent = this;
     this.script = new Entry.Code([], this);
 
     Entry.achieve = this.achieveCheck.bind(this);
@@ -104,6 +106,10 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         if (block.params[1] && this.goals.indexOf(block.params[0] < 0))
             this.goals.push(block.params[0])
         this.reset();
+    };
+
+    p.clearExecutor = function() {
+        this.script.clearExecutors();
     };
 
 })(Entry.TargetChecker.prototype);

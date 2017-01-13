@@ -1578,6 +1578,11 @@ Entry.EntryObject.prototype.getStampEntities = function() {
 
 Entry.EntryObject.prototype.clearExecutor = function() {
     this.script.clearExecutors();
+    for (var j = this.clonedEntities.length; j>0; j--) {
+        var entity = this.clonedEntities[j-1];
+        entity.removeClone();
+    }
+    this.clonedEntities = [];
 };
 
 Entry.EntryObject.prototype._rightClick = function(e) {

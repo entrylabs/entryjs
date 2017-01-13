@@ -630,11 +630,12 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
 Entry.Container.prototype.clearRunningState = function() {
     this.mapObject(function(object) {
         object.clearExecutor();
-        for (var j = object.clonedEntities.length; j>0; j--) {
-            var entity = object.clonedEntities[j-1];
-            entity.removeClone();
-        }
-        object.clonedEntities = [];
+    });
+};
+
+Entry.Container.prototype.clearRunningStateOnScene = function() {
+    this.mapObjectOnScene(function(object) {
+        object.clearExecutor();
     });
 };
 
@@ -660,22 +661,15 @@ Entry.Container.prototype.mapObjectOnScene = function(mapFunction, param) {
     var objects = this.getCurrentObjects();
     var length = objects.length;
     var output = [];
+    for (var i = 0; i<this._extensionObjects.length; i++) {
+        var object = this._extensionObjects[i];
+        output.push(mapFunction(object, param));
+    }
     for (var i = 0; i<length; i++) {
         var object = objects[i];
         output.push(mapFunction(object, param));
     }
     return output;
-};
-
-Entry.Container.prototype.clearRunningStateOnScene = function() {
-    this.mapObjectOnScene(function(object) {
-        object.clearExecutor();
-        for (var j = object.clonedEntities.length; j>0; j--) {
-            var entity = object.clonedEntities[j-1];
-            entity.removeClone();
-        }
-        object.clonedEntities = [];
-    });
 };
 
 /**
@@ -735,6 +729,10 @@ Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(mapFunction, p
     var objects = this.getCurrentObjects();
     var length = objects.length;
     var output = [];
+    for (var i = 0; i<this._extensionObjects.length; i++) {
+        var object = this._extensionObjects[i];
+        output.push(mapFunction(object.entity, param));
+    }
     for (var i = 0; i<length; i++) {
         var object = objects[i];
         var lenx = object.clonedEntities.length;

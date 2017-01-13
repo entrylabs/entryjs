@@ -5201,10 +5201,11 @@ Entry.Container.prototype.getDropdownList = function(a, b) {
 Entry.Container.prototype.clearRunningState = function() {
   this.mapObject(function(a) {
     a.clearExecutor();
-    for (var b = a.clonedEntities.length;0 < b;b--) {
-      a.clonedEntities[b - 1].removeClone();
-    }
-    a.clonedEntities = [];
+  });
+};
+Entry.Container.prototype.clearRunningStateOnScene = function() {
+  this.mapObjectOnScene(function(a) {
+    a.clearExecutor();
   });
 };
 Entry.Container.prototype.mapObject = function(a, b) {
@@ -5214,19 +5215,14 @@ Entry.Container.prototype.mapObject = function(a, b) {
   return d;
 };
 Entry.Container.prototype.mapObjectOnScene = function(a, b) {
-  for (var c = this.getCurrentObjects(), d = c.length, e = [], f = 0;f < d;f++) {
-    e.push(a(c[f], b));
+  for (var c = this.getCurrentObjects(), d = c.length, e = [], f = 0;f < this._extensionObjects.length;f++) {
+    var g = this._extensionObjects[f];
+    e.push(a(g, b));
+  }
+  for (f = 0;f < d;f++) {
+    g = c[f], e.push(a(g, b));
   }
   return e;
-};
-Entry.Container.prototype.clearRunningStateOnScene = function() {
-  this.mapObjectOnScene(function(a) {
-    a.clearExecutor();
-    for (var b = a.clonedEntities.length;0 < b;b--) {
-      a.clonedEntities[b - 1].removeClone();
-    }
-    a.clonedEntities = [];
-  });
 };
 Entry.Container.prototype.mapEntity = function(a, b) {
   for (var c = this.objects_.length, d = [], e = 0;e < c;e++) {
@@ -5252,7 +5248,11 @@ Entry.Container.prototype.mapEntityIncludeClone = function(a, b) {
   return e;
 };
 Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(a, b) {
-  for (var c = this.getCurrentObjects(), d = c.length, e = [], f = 0;f < d;f++) {
+  for (var c = this.getCurrentObjects(), d = c.length, e = [], f = 0;f < this._extensionObjects.length;f++) {
+    var g = this._extensionObjects[f];
+    e.push(a(g.entity, b));
+  }
+  for (f = 0;f < d;f++) {
     var g = c[f], h = g.clonedEntities.length;
     e.push(a(g.entity, b));
     for (var k = 0;k < h;k++) {
@@ -6493,6 +6493,8 @@ Entry.TargetChecker = function(a, b) {
   this.isForEdit && (this.watchingBlocks = []);
   this.blocks = ["check_object_property", "check_block_execution", "check_lecture_goal"];
   this.isSuccess = this.isFail = !1;
+  this.entity = this;
+  this.parent = this;
   this.script = new Entry.Code([], this);
   Entry.achieve = this.achieveCheck.bind(this);
   Entry.achieveEvent = new Entry.Event;
@@ -6533,6 +6535,9 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     this.isForEdit && this.watchingBlocks.push(b);
     b.params[1] && this.goals.indexOf(0 > b.params[0]) && this.goals.push(b.params[0]);
     this.reset();
+  };
+  a.clearExecutor = function() {
+    this.script.clearExecutors();
   };
 })(Entry.TargetChecker.prototype);
 Entry.Func = function(a) {
@@ -8488,6 +8493,10 @@ Entry.EntryObject.prototype.getStampEntities = function() {
 };
 Entry.EntryObject.prototype.clearExecutor = function() {
   this.script.clearExecutors();
+  for (var a = this.clonedEntities.length;0 < a;a--) {
+    this.clonedEntities[a - 1].removeClone();
+  }
+  this.clonedEntities = [];
 };
 Entry.EntryObject.prototype._rightClick = function(a) {
   var b = this, c = [{text:Lang.Workspace.context_rename, callback:function(a) {
