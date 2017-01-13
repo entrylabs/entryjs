@@ -423,8 +423,15 @@ Entry.Variable.prototype.updateView = function() {
                     name = obj.name + ':' + name;
             }
 
-            name = name.length > 7 ? name.substr(0,6) + '..' : name;
             this.titleView_.text = name;
+            if (this.titleView_.getMeasuredWidth() > this.width_) {
+                name = name + "..";
+                while (this.titleView_.getMeasuredWidth() > this.width_) {
+                    name = name.substr(0, name.length - 3) + "..";
+                    this.titleView_.text = name;
+                }
+            }
+            //name = name.length > 7 ? name.substr(0,6) + '..' : name;
             this.titleView_.x = this.width_/2;
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
                 .rect(0,0,this.width_, this.height_);

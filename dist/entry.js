@@ -21819,8 +21819,12 @@ Entry.Variable.prototype.updateView = function() {
             this.resizeHandle_.y = this.height_ - 2;
             b = this.getName();
             this.object_ && (a = Entry.container.getObject(this.object_)) && (b = a.name + ":" + b);
-            b = 7 < b.length ? b.substr(0, 6) + ".." : b;
             this.titleView_.text = b;
+            if (this.titleView_.getMeasuredWidth() > this.width_) {
+              for (b += "..";this.titleView_.getMeasuredWidth() > this.width_;) {
+                b = b.substr(0, b.length - 3) + "..", this.titleView_.text = b;
+              }
+            }
             this.titleView_.x = this.width_ / 2;
             for (this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rect(0, 0, this.width_, this.height_);this.view_.children[4];) {
               this.view_.removeChild(this.view_.children[4]);
