@@ -20441,8 +20441,12 @@ Entry.Variable.prototype.updateView = function() {
             this.resizeHandle_.y = this.height_ - 2;
             b = this.getName();
             this.object_ && (a = Entry.container.getObject(this.object_)) && (b = a.name + ":" + b);
-            b = 7 < b.length ? b.substr(0, 6) + ".." : b;
             this.titleView_.text = b;
+            if (this.titleView_.getMeasuredWidth() > this.width_) {
+              for (b += "..";this.titleView_.getMeasuredWidth() > this.width_;) {
+                b = b.substr(0, b.length - 3) + "..", this.titleView_.text = b;
+              }
+            }
             this.titleView_.x = this.width_ / 2;
             for (this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rect(0, 0, this.width_, this.height_);this.view_.children[4];) {
               this.view_.removeChild(this.view_.children[4]);
@@ -22577,7 +22581,7 @@ Entry.BlockMenu = function(b, a, d, c) {
     if (!this._boardBlockView && null !== b) {
       var c = this.workspace, e = c.getMode(), f = Entry.Workspace, g = this._svgWidth, h = c.selectedBoard, k = b.mouseDownCoordinate, l = c = 0;
       k && (c = a.pageX - k.x, l = a.pageY - k.y);
-      !h || e !== f.MODE_BOARD && e !== f.MODE_OVERLAYBOARD ? (g = Entry.GlobalSvg, g.setView(b, e) && (g.adjust(c, l), g.addControl(a))) : h.code && (e = b.block, f = e.getThread(), e && f && (this._boardBlockView = Entry.do("addThread", f.toJSON(!0)).value.getFirstBlock().view, e = this.offset().top - h.offset().top - $(window).scrollTop(), this._boardBlockView._moveTo(b.x - g + c, b.y + e + l, !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
+      !h || e !== f.MODE_BOARD && e !== f.MODE_OVERLAYBOARD ? (g = Entry.GlobalSvg, g.setView(b, e) && (g.adjust(c, l), g.addControl(a))) : h.code && (e = b.block, f = e.getThread(), e && f && (this._boardBlockView = Entry.do("addThread", f.toJSON(!0)).value.getFirstBlock().view, e = this.offset().top - h.offset().top - $(window).scrollTop(), this._boardBlockView._moveTo(b.x - g + (c || 0), b.y + e + (l || 0), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
     }
   };
   b.terminateDrag = function() {
