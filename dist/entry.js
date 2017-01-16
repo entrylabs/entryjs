@@ -6495,11 +6495,11 @@ Entry.TargetChecker = function(a, b) {
   this.isSuccess = this.isFail = !1;
   this.entity = this;
   this.parent = this;
-  this.script = new Entry.Code([], this);
   Entry.achieve = this.achieveCheck.bind(this);
   Entry.achieveEvent = new Entry.Event;
   Entry.addEventListener("stop", this.reset.bind(this));
   Entry.registerAchievement = this.registerAchievement.bind(this);
+  this.script = new Entry.Code(a ? a : [], this);
 };
 Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
 (function(a) {
@@ -6512,10 +6512,12 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     return this._view;
   };
   a.updateView = function() {
-    var b = this.goals.length;
-    this._view.text("\ubaa9\ud45c : " + (b - this.unachievedGoals.length) + " / " + b);
-    this.isSuccess ? this._view.addClass("success") : this._view.removeClass("success");
-    this.isFail ? this._view.addClass("fail") : this._view.removeClass("fail");
+    if (this._view) {
+      var b = this.goals.length;
+      this._view.text("\ubaa9\ud45c : " + (b - this.unachievedGoals.length) + " / " + b);
+      this.isSuccess ? this._view.addClass("success") : this._view.removeClass("success");
+      this.isFail ? this._view.addClass("fail") : this._view.removeClass("fail");
+    }
   };
   a.achieveCheck = function(b, a) {
     this.isFail || (b ? this.achieveGoal(a) : this.fail(a));
@@ -22012,30 +22014,30 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     this.box.set({x:e, y:d, width:a, height:b});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this._attachDisposeEvent();
-    var a = Entry.FieldColor.getWidgetColorList();
+    var c = Entry.FieldColor.getWidgetColorList();
     this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
-    for (var d = 0;d < a.length;d++) {
-      for (var e = Entry.Dom("tr", {class:"entry-widget-color-row", parent:this.optionGroup}), f = 0;f < a[d].length;f++) {
-        var g = Entry.Dom("td", {class:"entry-widget-color-cell", parent:e}), h = a[d][f];
+    for (var d = 0;d < c.length;d++) {
+      for (var e = Entry.Dom("tr", {class:"entry-widget-color-row", parent:this.optionGroup}), f = 0;f < c[d].length;f++) {
+        var g = Entry.Dom("td", {class:"entry-widget-color-cell", parent:e}), h = c[d][f];
         g.css({"background-color":h});
         g.attr({"data-color-value":h});
-        (function(a, c) {
-          a.mousedown(function(a) {
+        (function(b, c) {
+          b.mousedown(function(a) {
             a.stopPropagation();
           });
-          a.mouseup(function(a) {
-            b.applyValue(c);
-            b.destroyOption();
-            b._selectBlockView();
+          b.mouseup(function(b) {
+            a.applyValue(c);
+            a.destroyOption();
+            a._selectBlockView();
           });
         })(g, h);
       }
     }
-    a = this.getAbsolutePosFromDocument();
-    a.y += this.box.height / 2 + 1;
-    this.optionGroup.css({left:a.x, top:a.y});
+    c = this.getAbsolutePosFromDocument();
+    c.y += this.box.height / 2 + 1;
+    this.optionGroup.css({left:c.x, top:c.y});
   };
   a.applyValue = function(a) {
     this.value != a && (this.setValue(a), this._header.attr({fill:a}));

@@ -27,13 +27,13 @@ Entry.TargetChecker = function(code, isForEdit) {
 
     this.entity = this;
     this.parent = this;
-    this.script = new Entry.Code([], this);
 
     Entry.achieve = this.achieveCheck.bind(this);
     Entry.achieveEvent = new Entry.Event();
     Entry.addEventListener("stop", this.reset.bind(this));
 
     Entry.registerAchievement = this.registerAchievement.bind(this);
+    this.script = new Entry.Code(code ? code : [], this);
 };
 
 Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
@@ -52,6 +52,8 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     };
 
     p.updateView = function() {
+        if (!this._view)
+            return;
         var len = this.goals.length;
         this._view.text("목표 : " + (len - this.unachievedGoals.length) +
                         " / " + len);
