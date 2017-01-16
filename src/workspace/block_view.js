@@ -203,15 +203,17 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         mode = mode === undefined ?
             this.renderMode : mode;
 
-        var schema = this._schema;
-        if (this.contentSvgGroup)
-            this.contentSvgGroup.remove();
-        if (this.statementSvgGroup)
-            this.statementSvgGroup.remove();
 
+        this.contentSvgGroup && this.contentSvgGroup.remove();
+        this.statementSvgGroup && this.statementSvgGroup.remove();
+
+        this._contents.forEach(function(c) {
+            c.destroy();
+        });
+        this.contentSvgGroup = this.svgGroup.elem("g", {class:'contentsGroup'});
         this._contents = [];
 
-        this.contentSvgGroup = this.svgGroup.elem("g", {class:'contentsGroup'});
+        var schema = this._schema;
         if (schema.statements && schema.statements.length) {
             this.statementSvgGroup =
                 this.svgGroup.elem("g", { class: 'statementGroup' });
