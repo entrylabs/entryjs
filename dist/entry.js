@@ -23194,7 +23194,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this.contentSvgGroup && this.contentSvgGroup.remove();
     this.statementSvgGroup && this.statementSvgGroup.remove();
     this._contents.forEach(function(a) {
-      a.destroy && a.destroy();
+      a.destroy();
     });
     this.contentSvgGroup = this.svgGroup.elem("g", {class:"contentsGroup"});
     this._contents = [];
@@ -24252,7 +24252,7 @@ Entry.Field = function() {
 (function(b) {
   b.TEXT_LIMIT_LENGTH = 20;
   b.destroy = function() {
-    $(this.svgGroup).unbind("mouseup touchend");
+    this.svgGroup && $(this.svgGroup).unbind("mouseup touchend");
     this.destroyOption();
   };
   b.command = function() {
