@@ -23190,11 +23190,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   };
   b._startContentRender = function(a) {
     a = void 0 === a ? this.renderMode : a;
-    var b = this._schema;
     this.contentSvgGroup && this.contentSvgGroup.remove();
     this.statementSvgGroup && this.statementSvgGroup.remove();
-    this._contents = [];
+    this._contents.forEach(function(a) {
+      a.destroy();
+    });
     this.contentSvgGroup = this.svgGroup.elem("g", {class:"contentsGroup"});
+    this._contents = [];
+    var b = this._schema;
     b.statements && b.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g", {class:"statementGroup"}));
     var c = /(%\d)/mi, e = this._getTemplate(a), f = this._getSchemaParams(a);
     a === Entry.BlockView.RENDER_MODE_TEXT && /(if)+(.|\n)+(else)+/gmi.test(e) && !c.test(e) && this.isInBlockMenu && (e = e.replace("else", "%" + f.length + " else"));
@@ -24248,7 +24251,7 @@ Entry.Field = function() {
 (function(b) {
   b.TEXT_LIMIT_LENGTH = 20;
   b.destroy = function() {
-    $(this.svgGroup).unbind("mouseup touchend");
+    this.svgGroup && $(this.svgGroup).unbind("mouseup touchend");
     this.destroyOption();
   };
   b.command = function() {
@@ -24527,6 +24530,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this.box.set({x:0, y:0, width:0, height:20});
     (b = this.getValue()) && !b.view && (b.setThread(this), b.createView(a, this.renderMode), b.getThread().view.setParent(this));
     this.updateValueBlock(b);
+    this._valueBlock.view._startContentRender(this.renderMode);
     this._blockView.getBoard().constructor !== Entry.Board && this._valueBlock.view.removeControl();
   };
   b.align = function(a, b, c) {

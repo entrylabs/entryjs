@@ -68,7 +68,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         }
 
         this.updateValueBlock(block);
-        //this._valueBlock.view._startContentRender(this.renderMode);
+        this._valueBlock.view._startContentRender(this.renderMode);
 
         if (this._blockView.getBoard().constructor !== Entry.Board)
             this._valueBlock.view.removeControl();
