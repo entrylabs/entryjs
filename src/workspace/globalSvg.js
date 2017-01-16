@@ -56,6 +56,13 @@ goog.provide('Entry.GlobalSvg');
         var blockView = this._view;
         if (this._svg) this.remove();
         var isVimMode = this._mode == Entry.Workspace.MODE_VIMBOARD;
+        var bBox = blockView.svgGroup.getBBox();
+
+        this.svgDom.attr({
+            width: Math.round(bBox.width + 4) + 'px',
+            height: Math.round(bBox.height + 4) + 'px'
+        });
+
 
         this.svgGroup = Entry.SVG.createElement(
             blockView.svgGroup.cloneNode(true),
