@@ -20936,8 +20936,8 @@ Entry.VariableContainer.prototype.setVariables = function(b) {
 Entry.VariableContainer.prototype.setFunctions = function(b) {
   for (var a in b) {
     var d = new Entry.Func(b[a]);
-    d.generateBlock();
     this.functions_[d.id] = d;
+    d.generateBlock();
   }
 };
 Entry.VariableContainer.prototype.getFunction = function(b) {
@@ -26620,7 +26620,7 @@ Entry.Block = function(b, a) {
     Entry.Utils.isFunction(a) && a(d);
   });
   c = this.events.viewAdd;
-  e = this.getCode().board;
+  e = e.board;
   c && Entry.getMainWS() && Entry.isTextMode && (!e || e && e.constructor !== Entry.BlockMenu) && c.forEach(function(a) {
     Entry.Utils.isFunction(a) && a.apply(d, [d]);
   });

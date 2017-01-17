@@ -43,7 +43,7 @@ Entry.Block = function(block, thread) {
     }
 
     events = this.events.viewAdd;
-    var board = this.getCode().board;
+    var board = code.board;
     if (events && (Entry.getMainWS() && Entry.isTextMode)
         && (!board || (board && board.constructor !== Entry.BlockMenu))) {
         events.forEach(function(fn) {
@@ -127,8 +127,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         var params = this._schema.params;
         for (var i = 0; params && i < params.length; i++) {
-            var value = (thisParams[i] === undefined || thisParams[i] === null ) ?
-                    params[i].value : thisParams[i];
+            var value = (thisParams[i] === undefined || thisParams[i] === null) ?
+                params[i].value : thisParams[i];
 
             var paramInjected = thisParams[i] || i<thisParams.length;
 
