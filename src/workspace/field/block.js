@@ -60,11 +60,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             width: 0,
             height: 20
         });
+
         var block = this.getValue();
-        if (block && !block.view) {
-            block.setThread(this);
-            block.createView(board, this.renderMode);
-            block.getThread().view.setParent(this);
+        if (block) {
+            if (block.constructor !== Entry.Block)
+                block = new Entry.Block(block, this._block.thread);
+
+            if (!block.view) {
+                block.setThread(this);
+                block.createView(board, this.renderMode);
+                block.getThread().view.setParent(this);
+            }
         }
 
         this.updateValueBlock(block);
