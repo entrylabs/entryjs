@@ -1675,6 +1675,812 @@ Entry.block.set_brush_tranparency = function(b, a) {
   b.brush && (b.brush.opacity = Entry.adjustValueWithMaxMin(d, 0, 100), b.brush.endStroke(), d = b.brush.rgb, b.brush.beginStroke("rgba(" + d.r + "," + d.g + "," + d.b + "," + (1 - b.brush.opacity / 100) + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
 };
+Entry.byrobot_dronefighter_controller = {name:"byrobot_dronefighter_controller", setZero:function() {
+  for (var b = 0;1 > b;b++) {
+    this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(17, 255, 0), this.transferCommand(17, 129, 0);
+  }
+}, monitorTemplate:{imgPath:"hw/byrobot_dronefighter_controller.png", width:500, height:500, listPorts:{joystick_left_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event, 
+type:"input", pos:{x:0, y:0}}, joystick_left_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command, type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction, type:"input", 
+pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event, type:"input", pos:{x:0, y:0}}, joystick_right_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command, type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_dronefighter_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_dronefighter_controller_button_event, type:"input", pos:{x:0, y:0}}, entryhw_countTransferReserved:{name:Lang.Blocks.byrobot_dronefighter_entryhw_count_transfer_reserved, 
+type:"output", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(b, a) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return "Running";
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    return "Finish";
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 60 / (Entry.FPS || 60) * a);
+  return "Start";
+}, transferLightManual:function(b, a, d) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  a = Math.max(a, 0);
+  a = Math.min(a, 255);
+  d = Math.max(d, 0);
+  d = Math.min(d, 255);
+  Entry.hw.setDigitalPortValue("target", b);
+  Entry.hw.setDigitalPortValue("light_manual_flags", a);
+  Entry.hw.setDigitalPortValue("light_manual_brightness", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_manual_flags;
+  delete Entry.hw.sendQueue.light_manual_brightness;
+}, transferbuzzer:function(b, a, d) {
+  Entry.hw.setDigitalPortValue("target", 17);
+  Entry.hw.setDigitalPortValue("buzzer_mode", b);
+  Entry.hw.setDigitalPortValue("buzzer_value", a);
+  Entry.hw.setDigitalPortValue("buzzer_time", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.buzzer_mode;
+  delete Entry.hw.sendQueue.buzzer_value;
+  delete Entry.hw.sendQueue.buzzer_time;
+}, transferVibrator:function(b, a, d, c) {
+  a = Math.max(a, 1);
+  a = Math.min(a, 6E4);
+  d = Math.max(d, 1);
+  d = Math.min(d, 6E4);
+  Entry.hw.setDigitalPortValue("target", 17);
+  Entry.hw.setDigitalPortValue("vibrator_mode", b);
+  Entry.hw.setDigitalPortValue("vibrator_on", a);
+  Entry.hw.setDigitalPortValue("vibrator_off", d);
+  Entry.hw.setDigitalPortValue("vibrator_total", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.vibrator_mode;
+  delete Entry.hw.sendQueue.vibrator_on;
+  delete Entry.hw.sendQueue.vibrator_off;
+  delete Entry.hw.sendQueue.vibrator_total;
+}, transferCommand:function(b, a, d) {
+  Entry.hw.setDigitalPortValue("target", b);
+  Entry.hw.setDigitalPortValue("command_command", a);
+  Entry.hw.setDigitalPortValue("command_option", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.command_command;
+  delete Entry.hw.sendQueue.command_option;
+}, transferUserInterface:function(b, a) {
+  Entry.hw.setDigitalPortValue("target", 17);
+  Entry.hw.setDigitalPortValue("userinterface_command", b);
+  Entry.hw.setDigitalPortValue("userinterface_function", a);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.userinterface_command;
+  delete Entry.hw.sendQueue.userinterface_function;
+}, getData:function(b, a) {
+  return Entry.hw.portData[a];
+}, setLightManual:function(b, a, d, c) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferLightManual(a, d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setBuzzerStop:function(b) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferbuzzer(0, 0, 0), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setBuzzerMute:function(b, a, d, c) {
+  a = Math.max(a, 0);
+  a = Math.min(a, 6E4);
+  var e = 40;
+  d && (e = a);
+  switch(this.checkFinish(b, e)) {
+    case "Start":
+      return d = 2, c && (d = 1), this.transferbuzzer(d, 238, a), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setBuzzerScale:function(b, a, d, c, e, f) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 6E4);
+  var g = 40;
+  e && (g = c);
+  switch(this.checkFinish(b, g)) {
+    case "Start":
+      return e = 4, f && (e = 3), this.transferbuzzer(e, 12 * a + d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setBuzzerHz:function(b, a, d, c, e) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 6E4);
+  var f = 40;
+  c && (f = d);
+  switch(this.checkFinish(b, f)) {
+    case "Start":
+      return c = 6, e && (c = 5), a = Math.max(a, 1), a = Math.min(a, 63999), this.transferbuzzer(c, a, d), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setVibratorStop:function(b) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferVibrator(0, 0, 0, 0), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setVibrator:function(b, a, d, c, e, f) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 6E4);
+  var g = 40;
+  e && (g = c);
+  switch(this.checkFinish(b, g)) {
+    case "Start":
+      return e = 2, f && (e = 1), this.transferVibrator(e, a, d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, sendCommand:function(b, a, d, c) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferCommand(a, d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setUserInterface:function(b, a, d) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferUserInterface(a, d), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}};
+Entry.byrobot_dronefighter_drive = {name:"byrobot_dronefighter_drive", setZero:function() {
+  for (var b = 0;1 > b;b++) {
+    this.transferCommand(16, 36, 0), this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(16, 255, 0), this.transferLightManual(17, 255, 0);
+  }
+}, monitorTemplate:{imgPath:"hw/byrobot_dronefighter_drive.png", width:500, height:500, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeDrive:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive, type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_dronefighter_drone_state_battery, type:"input", pos:{x:0, y:0}}, attitude_roll:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_roll, 
+type:"input", pos:{x:0, y:0}}, attitude_pitch:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, attitude_yaw:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_dronefighter_drone_irmessage, type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y, 
+type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event, type:"input", pos:{x:0, y:0}}, joystick_left_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command, type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x, type:"input", 
+pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event, type:"input", pos:{x:0, y:0}}, joystick_right_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command, type:"input", pos:{x:0, 
+y:0}}, button_button:{name:Lang.Blocks.byrobot_dronefighter_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_dronefighter_controller_button_event, type:"input", pos:{x:0, y:0}}, entryhw_countTransferReserved:{name:Lang.Blocks.byrobot_dronefighter_entryhw_count_transfer_reserved, type:"output", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(b, a) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return "Running";
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    return "Finish";
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 60 / (Entry.FPS || 60) * a);
+  return "Start";
+}, transferLightManual:function(b, a, d) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  a = Math.max(a, 0);
+  a = Math.min(a, 255);
+  d = Math.max(d, 0);
+  d = Math.min(d, 255);
+  Entry.hw.setDigitalPortValue("target", b);
+  Entry.hw.setDigitalPortValue("light_manual_flags", a);
+  Entry.hw.setDigitalPortValue("light_manual_brightness", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_manual_flags;
+  delete Entry.hw.sendQueue.light_manual_brightness;
+}, transferbuzzer:function(b, a, d) {
+  Entry.hw.setDigitalPortValue("target", 17);
+  Entry.hw.setDigitalPortValue("buzzer_mode", b);
+  Entry.hw.setDigitalPortValue("buzzer_value", a);
+  Entry.hw.setDigitalPortValue("buzzer_time", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.buzzer_mode;
+  delete Entry.hw.sendQueue.buzzer_value;
+  delete Entry.hw.sendQueue.buzzer_time;
+}, transferVibrator:function(b, a, d, c) {
+  a = Math.max(a, 1);
+  a = Math.min(a, 6E4);
+  d = Math.max(d, 1);
+  d = Math.min(d, 6E4);
+  Entry.hw.setDigitalPortValue("target", 17);
+  Entry.hw.setDigitalPortValue("vibrator_mode", b);
+  Entry.hw.setDigitalPortValue("vibrator_on", a);
+  Entry.hw.setDigitalPortValue("vibrator_off", d);
+  Entry.hw.setDigitalPortValue("vibrator_total", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.vibrator_mode;
+  delete Entry.hw.sendQueue.vibrator_on;
+  delete Entry.hw.sendQueue.vibrator_off;
+  delete Entry.hw.sendQueue.vibrator_total;
+}, transferIrMessage:function(b) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 127);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("irmessage_data", b);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.irmessage_data;
+}, transferMotorSingle:function(b, a, d) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 4096);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("motorsingle_target", b);
+  Entry.hw.setDigitalPortValue("motorsingle_direction", a);
+  Entry.hw.setDigitalPortValue("motorsingle_value", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.motorsingle_target;
+  delete Entry.hw.sendQueue.motorsingle_direction;
+  delete Entry.hw.sendQueue.motorsingle_value;
+}, transferCommand:function(b, a, d) {
+  Entry.hw.setDigitalPortValue("target", b);
+  Entry.hw.setDigitalPortValue("command_command", a);
+  Entry.hw.setDigitalPortValue("command_option", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.command_command;
+  delete Entry.hw.sendQueue.command_option;
+}, transferControlDouble:function(b, a) {
+  b = Math.max(b, -100);
+  b = Math.min(b, 100);
+  a = Math.max(a, 0);
+  a = Math.min(a, 100);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("control_wheel", b);
+  Entry.hw.setDigitalPortValue("control_accel", a);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_wheel;
+  delete Entry.hw.sendQueue.control_accel;
+}, transferControlQuad:function(b, a, d, c) {
+  b = Math.max(b, -100);
+  b = Math.min(b, 100);
+  a = Math.max(a, -100);
+  a = Math.min(a, 100);
+  d = Math.max(d, -100);
+  d = Math.min(d, 100);
+  c = Math.max(c, -100);
+  c = Math.min(c, 100);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("control_roll", b);
+  Entry.hw.setDigitalPortValue("control_pitch", a);
+  Entry.hw.setDigitalPortValue("control_yaw", d);
+  Entry.hw.setDigitalPortValue("control_throttle", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_roll;
+  delete Entry.hw.sendQueue.control_pitch;
+  delete Entry.hw.sendQueue.control_yaw;
+  delete Entry.hw.sendQueue.control_throttle;
+}, getData:function(b, a) {
+  return Entry.hw.portData[a];
+}, setLightManual:function(b, a, d, c) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferLightManual(a, d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setBuzzerStop:function(b) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferbuzzer(0, 0, 0), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setBuzzerMute:function(b, a, d, c) {
+  a = Math.max(a, 0);
+  a = Math.min(a, 6E4);
+  var e = 40;
+  d && (e = a);
+  switch(this.checkFinish(b, e)) {
+    case "Start":
+      return d = 2, c && (d = 1), this.transferbuzzer(d, 238, a), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setBuzzerScale:function(b, a, d, c, e, f) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 6E4);
+  var g = 40;
+  e && (g = c);
+  switch(this.checkFinish(b, g)) {
+    case "Start":
+      return e = 4, f && (e = 3), this.transferbuzzer(e, 12 * a + d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setBuzzerHz:function(b, a, d, c, e) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 6E4);
+  var f = 40;
+  c && (f = d);
+  switch(this.checkFinish(b, f)) {
+    case "Start":
+      return c = 6, e && (c = 5), a = Math.max(a, 1), a = Math.min(a, 63999), this.transferbuzzer(c, a, d), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setVibratorStop:function(b) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferVibrator(0, 0, 0, 0), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setVibrator:function(b, a, d, c, e, f) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 6E4);
+  var g = 40;
+  e && (g = c);
+  switch(this.checkFinish(b, g)) {
+    case "Start":
+      return e = 2, f && (e = 1), this.transferVibrator(e, a, d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, sendIrMessage:function(b, a) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferIrMessage(a), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, sendStop:function(b) {
+  return this.sendCommand(b, 16, 36, 0);
+}, sendCommand:function(b, a, d, c) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferCommand(a, d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setMotorSingle:function(b, a, d, c) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferMotorSingle(a, d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setModeVehicle:function(b, a) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferCommand(16, 16, a), this.transferControlDouble(0, 0), this.transferControlQuad(0, 0, 0, 0), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, sendControlDoubleSingle:function(b, a, d, c, e) {
+  var f = 40;
+  e && (f = c);
+  switch(this.checkFinish(b, f)) {
+    case "Start":
+      switch(a) {
+        case "control_wheel":
+          d = Math.max(d, -100);
+          d = Math.min(d, 100);
+          break;
+        case "control_accel":
+          d = Math.max(d, 0), d = Math.min(d, 100);
+      }
+      Entry.hw.setDigitalPortValue("target", 16);
+      Entry.hw.setDigitalPortValue(a, d);
+      Entry.hw.update();
+      delete Entry.hw.sendQueue.target;
+      delete Entry.hw.sendQueue[a];
+      return b;
+    case "Running":
+      return b;
+    case "Finish":
+      return e && (Entry.hw.setDigitalPortValue("target", 16), Entry.hw.setDigitalPortValue(a, 0), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue[a]), b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, sendControlDouble:function(b, a, d, c, e) {
+  var f = 40;
+  e && (f = c);
+  switch(this.checkFinish(b, f)) {
+    case "Start":
+      return this.transferControlDouble(a, d), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return e && this.transferControlDouble(0, 0), b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}};
+Entry.byrobot_dronefighter_flight = {name:"byrobot_dronefighter_flight", setZero:function() {
+  for (var b = 0;1 > b;b++) {
+    this.transferCommand(16, 36, 0), this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(16, 255, 0), this.transferLightManual(17, 255, 0);
+  }
+}, monitorTemplate:{imgPath:"hw/byrobot_dronefighter_flight.png", width:500, height:500, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeFlight:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight, type:"input", pos:{x:0, y:0}}, state_coordinate:{name:Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate, type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_dronefighter_drone_state_battery, 
+type:"input", pos:{x:0, y:0}}, attitude_roll:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_roll, type:"input", pos:{x:0, y:0}}, attitude_pitch:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, attitude_yaw:{name:Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_dronefighter_drone_irmessage, type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x, 
+type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event, type:"input", pos:{x:0, y:0}}, joystick_left_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command, type:"input", 
+pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event, type:"input", pos:{x:0, y:0}}, 
+joystick_right_command:{name:Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command, type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_dronefighter_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_dronefighter_controller_button_event, type:"input", pos:{x:0, y:0}}, entryhw_countTransferReserved:{name:Lang.Blocks.byrobot_dronefighter_entryhw_count_transfer_reserved, type:"output", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, 
+checkFinish:function(b, a) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return "Running";
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    return "Finish";
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 60 / (Entry.FPS || 60) * a);
+  return "Start";
+}, transferLightManual:function(b, a, d) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  a = Math.max(a, 0);
+  a = Math.min(a, 255);
+  d = Math.max(d, 0);
+  d = Math.min(d, 255);
+  Entry.hw.setDigitalPortValue("target", b);
+  Entry.hw.setDigitalPortValue("light_manual_flags", a);
+  Entry.hw.setDigitalPortValue("light_manual_brightness", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_manual_flags;
+  delete Entry.hw.sendQueue.light_manual_brightness;
+}, transferbuzzer:function(b, a, d) {
+  Entry.hw.setDigitalPortValue("target", 17);
+  Entry.hw.setDigitalPortValue("buzzer_mode", b);
+  Entry.hw.setDigitalPortValue("buzzer_value", a);
+  Entry.hw.setDigitalPortValue("buzzer_time", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.buzzer_mode;
+  delete Entry.hw.sendQueue.buzzer_value;
+  delete Entry.hw.sendQueue.buzzer_time;
+}, transferVibrator:function(b, a, d, c) {
+  a = Math.max(a, 1);
+  a = Math.min(a, 6E4);
+  d = Math.max(d, 1);
+  d = Math.min(d, 6E4);
+  Entry.hw.setDigitalPortValue("target", 17);
+  Entry.hw.setDigitalPortValue("vibrator_mode", b);
+  Entry.hw.setDigitalPortValue("vibrator_on", a);
+  Entry.hw.setDigitalPortValue("vibrator_off", d);
+  Entry.hw.setDigitalPortValue("vibrator_total", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.vibrator_mode;
+  delete Entry.hw.sendQueue.vibrator_on;
+  delete Entry.hw.sendQueue.vibrator_off;
+  delete Entry.hw.sendQueue.vibrator_total;
+}, transferIrMessage:function(b) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 127);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("irmessage_data", b);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.irmessage_data;
+}, transferMotorSingle:function(b, a, d) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 4096);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("motorsingle_target", b);
+  Entry.hw.setDigitalPortValue("motorsingle_direction", a);
+  Entry.hw.setDigitalPortValue("motorsingle_value", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.motorsingle_target;
+  delete Entry.hw.sendQueue.motorsingle_direction;
+  delete Entry.hw.sendQueue.motorsingle_value;
+}, transferCommand:function(b, a, d) {
+  Entry.hw.setDigitalPortValue("target", b);
+  Entry.hw.setDigitalPortValue("command_command", a);
+  Entry.hw.setDigitalPortValue("command_option", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.command_command;
+  delete Entry.hw.sendQueue.command_option;
+}, transferControlDouble:function(b, a) {
+  b = Math.max(b, -100);
+  b = Math.min(b, 100);
+  a = Math.max(a, 0);
+  a = Math.min(a, 100);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("control_wheel", b);
+  Entry.hw.setDigitalPortValue("control_accel", a);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_wheel;
+  delete Entry.hw.sendQueue.control_accel;
+}, transferControlQuad:function(b, a, d, c) {
+  b = Math.max(b, -100);
+  b = Math.min(b, 100);
+  a = Math.max(a, -100);
+  a = Math.min(a, 100);
+  d = Math.max(d, -100);
+  d = Math.min(d, 100);
+  c = Math.max(c, -100);
+  c = Math.min(c, 100);
+  Entry.hw.setDigitalPortValue("target", 16);
+  Entry.hw.setDigitalPortValue("control_roll", b);
+  Entry.hw.setDigitalPortValue("control_pitch", a);
+  Entry.hw.setDigitalPortValue("control_yaw", d);
+  Entry.hw.setDigitalPortValue("control_throttle", c);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_roll;
+  delete Entry.hw.sendQueue.control_pitch;
+  delete Entry.hw.sendQueue.control_yaw;
+  delete Entry.hw.sendQueue.control_throttle;
+}, getData:function(b, a) {
+  return Entry.hw.portData[a];
+}, setLightManual:function(b, a, d, c) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferLightManual(a, d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setBuzzerStop:function(b) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferbuzzer(0, 0, 0), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setBuzzerMute:function(b, a, d, c) {
+  a = Math.max(a, 0);
+  a = Math.min(a, 6E4);
+  var e = 40;
+  d && (e = a);
+  switch(this.checkFinish(b, e)) {
+    case "Start":
+      return d = 2, c && (d = 1), this.transferbuzzer(d, 238, a), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setBuzzerScale:function(b, a, d, c, e, f) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 6E4);
+  var g = 40;
+  e && (g = c);
+  switch(this.checkFinish(b, g)) {
+    case "Start":
+      return e = 4, f && (e = 3), this.transferbuzzer(e, 12 * a + d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setBuzzerHz:function(b, a, d, c, e) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 6E4);
+  var f = 40;
+  c && (f = d);
+  switch(this.checkFinish(b, f)) {
+    case "Start":
+      return c = 6, e && (c = 5), a = Math.max(a, 1), a = Math.min(a, 63999), this.transferbuzzer(c, a, d), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setVibratorStop:function(b) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferVibrator(0, 0, 0, 0), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setVibrator:function(b, a, d, c, e, f) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 6E4);
+  var g = 40;
+  e && (g = c);
+  switch(this.checkFinish(b, g)) {
+    case "Start":
+      return e = 2, f && (e = 1), this.transferVibrator(e, a, d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, sendIrMessage:function(b, a) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferIrMessage(a), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, sendStop:function(b) {
+  return this.sendCommand(b, 16, 36, 0);
+}, sendCommand:function(b, a, d, c) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferCommand(a, d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setMotorSingle:function(b, a, d, c) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferMotorSingle(a, d, c), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setModeVehicle:function(b, a) {
+  switch(this.checkFinish(b, 40)) {
+    case "Start":
+      return this.transferCommand(16, 16, a), this.transferControlQuad(0, 0, 0, 0), this.transferControlDouble(0, 0), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, setEventFlight:function(b, a, d) {
+  switch(this.checkFinish(b, d)) {
+    case "Start":
+      return this.transferCommand(16, 34, a), this.transferControlQuad(0, 0, 0, 0), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, sendControlQuadSingle:function(b, a, d, c, e) {
+  var f = 40;
+  e && (f = c);
+  switch(this.checkFinish(b, f)) {
+    case "Start":
+      return d = Math.max(d, -100), d = Math.min(d, 100), Entry.hw.setDigitalPortValue("target", 16), Entry.hw.setDigitalPortValue(a, d), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue[a], b;
+    case "Running":
+      return b;
+    case "Finish":
+      return e && (Entry.hw.setDigitalPortValue("target", 16), Entry.hw.setDigitalPortValue(a, 0), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue[a]), b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}, sendControlQuad:function(b, a, d, c, e, f, g) {
+  var h = 40;
+  g && (h = f);
+  switch(this.checkFinish(b, h)) {
+    case "Start":
+      return this.transferControlQuad(a, d, c, e), b;
+    case "Running":
+      return b;
+    case "Finish":
+      return g && this.transferControlQuad(0, 0, 0, 0), b.callReturn();
+    default:
+      return b.callReturn();
+  }
+}};
 var calcArrowColor = "#e8b349", calcBlockColor = "#FFD974", calcFontColor = "#3D3D3D";
 Blockly.Blocks.number = {init:function() {
   this.setColour(calcBlockColor);
@@ -16473,10 +17279,10 @@ Entry.createDom = function(b, a) {
     d.addEventListener("mousewheel", function(a) {
       var b = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
       a = 0 < a.wheelDelta ? !0 : !1;
-      for (var c = 0;c < b.length;c++) {
-        var d = b[c];
-        d.scrollButton_.y = a ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
-        d.updateView();
+      for (var d = 0;d < b.length;d++) {
+        var c = b[d];
+        c.scrollButton_.y = a ? 46 <= c.scrollButton_.y ? c.scrollButton_.y - 23 : 23 : c.scrollButton_.y + 23;
+        c.updateView();
       }
     });
     this.canvas_ = d;
@@ -16614,10 +17420,10 @@ Entry.Utils.hexToHsl = function(b) {
   return {h:360 * f, s:e, l:g};
 };
 Entry.Utils.hslToHex = function(b) {
-  function a(a, b, c) {
-    0 > c && (c += 1);
-    1 < c && --c;
-    return c < 1 / 6 ? a + 6 * (b - a) * c : .5 > c ? b : c < 2 / 3 ? a + (b - a) * (2 / 3 - c) * 6 : a;
+  function a(a, b, d) {
+    0 > d && (d += 1);
+    1 < d && --d;
+    return d < 1 / 6 ? a + 6 * (b - a) * d : .5 > d ? b : d < 2 / 3 ? a + (b - a) * (2 / 3 - d) * 6 : a;
   }
   function d(a) {
     return 1 == a.length ? "0" + a : "" + a;
@@ -17797,7 +18603,7 @@ Entry.HW = function() {
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
   this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "B.1":Entry.Codestar, 
-  "A.1":Entry.SmartBoard, "C.1":Entry.DaduBlock, "D.1":Entry.robotori};
+  "A.1":Entry.SmartBoard, "C.1":Entry.DaduBlock, "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight};
 };
 Entry.HW.TRIAL_LIMIT = 2;
 p = Entry.HW.prototype;

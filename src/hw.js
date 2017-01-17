@@ -54,7 +54,10 @@ Entry.HW = function() {
         'B.1': Entry.Codestar,
         'A.1': Entry.SmartBoard,
         'C.1': Entry.DaduBlock,
-        'D.1': Entry.robotori
+        'D.1': Entry.robotori,
+        'F.1': Entry.byrobot_dronefighter_controller,
+        'F.2': Entry.byrobot_dronefighter_drive,
+        'F.3': Entry.byrobot_dronefighter_flight,
     };
 };
 
