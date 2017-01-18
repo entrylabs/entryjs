@@ -19303,6 +19303,7 @@ Entry.block = {
             var data_address_2 = 0;
             var data_length_2 = 0;
             var data_value_2 = 0;
+	    var interval = 100;
 
             data_address_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
             data_length_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
@@ -19318,7 +19319,7 @@ Entry.block = {
             data_value_2 = cmBuzzerIndex;
 
             var data_sendqueue = [[data_instruction, data_address_1, data_length_1, data_value_1], [data_instruction, data_address_2, data_length_2, data_value_2]];
-            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, cmBuzzerTime * 1000);
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, cmBuzzerTime * 1000 + interval);
         },
         "syntax": {"js": [], "py": ["Robotis.opencm70_cm_buzzer_index(%1, %2)"]}
     },
@@ -19386,6 +19387,7 @@ Entry.block = {
             var data_address_2 = 0;
             var data_length_2 = 0;
             var data_value_2 = 0;
+	    var interval = 100;
 
             data_address_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
             data_length_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
@@ -19396,7 +19398,7 @@ Entry.block = {
             data_value_2 = cmBuzzerMelody;
 
             var data_sendqueue = [[data_instruction, data_address_1, data_length_1, data_value_1], [data_instruction, data_address_2, data_length_2, data_value_2]];
-            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, 1000);
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, 1000 + interval);
         },
         "syntax": {"js": [], "py": ["Robotis.opencm70_cm_buzzer_melody(%1)"]}
     },
