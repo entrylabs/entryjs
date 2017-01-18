@@ -50,6 +50,7 @@ Entry.Robotis_carCont = {
             script.timeFlag = 1;
             //data setting
             this.setRobotisData(data);
+            this.update();
 
             //delay xx ms
             setTimeout(function() {
@@ -59,6 +60,7 @@ Entry.Robotis_carCont = {
             return script;
         } else if (script.timeFlag == 1) {
             this.setRobotisData(null);
+            this.update();
             return script;
         } else {
             delete script.timeFlag;
