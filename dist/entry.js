@@ -6015,7 +6015,7 @@ Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{C
   }
   if (b.isStart) {
     if (1 == b.timeFlag) {
-      return this.setRobotisData(null), b;
+      return this.setRobotisData(null), this.update(), b;
     }
     delete b.timeFlag;
     delete b.isStart;
@@ -6026,6 +6026,7 @@ Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{C
   b.isStart = !0;
   b.timeFlag = 1;
   this.setRobotisData(a);
+  this.update();
   setTimeout(function() {
     b.timeFlag = 0;
   }, d);
