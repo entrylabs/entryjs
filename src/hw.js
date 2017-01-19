@@ -17,6 +17,7 @@ Entry.HW = function() {
     //this.requireVerion = 'v1.6.1';
     this.requireVerion = 'v1.6.1';
     this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.4_Setup.exe";
+    this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.4.dmg";
     this.hwPopupCreate();
     this.initSocket();
     this.connected = false;
@@ -302,7 +303,16 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var win = window.open(this.downloadPath, '_blank');
+    var path;
+    var platform = navigator.platform;
+
+    if(platform === 'MacInter') {
+        path = this.downloadPathOsx;
+    } else {
+        path = this.downloadPath;
+    }
+
+    var win = window.open(path, '_blank');
     win.focus();
 };
 
