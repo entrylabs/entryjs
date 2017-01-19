@@ -111,7 +111,9 @@ Entry.Stage.prototype.initStage = function(canvas) {
             x = ((e.pageX - roundRect.left - document.body.scrollLeft) / roundRect.width - 0.5) * 480;
             y = ((e.pageY - roundRect.top - document.body.scrollTop) / roundRect.height - 0.5) * -270;
         }
-        Entry.stage.mouseCoordinate = {x: x.toFixed(1), y: y.toFixed(1)};
+        Entry.stage.mouseCoordinate = {
+            x: x.toFixed(1), y: y.toFixed(1)
+        };
         Entry.dispatchEvent('stageMouseMove');
     };
     canvas.onmousemove = moveFunc;
@@ -141,7 +143,6 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
 
     this.initWall();
-
 
     this.render();
 };
@@ -278,6 +279,7 @@ Entry.Stage.prototype.sortZorder = function() {
         }
         container.setChildIndex(entity.object, index++);
     }
+    Entry.requestUpdate = true;
 };
 
 /**

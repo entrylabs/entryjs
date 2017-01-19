@@ -14,6 +14,7 @@ Entry.HW = function() {
 
     this.connectTrial = 0;
     this.isFirstConnect = true;
+    //this.requireVerion = 'v1.6.1';
     this.requireVerion = 'v1.6.1';
     this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.4_Setup.exe";
     this.hwPopupCreate();
@@ -110,7 +111,7 @@ p.connectWebSocket = function(url, option) {
 
     socket.on('disconnect', function() {
         hw.initSocket();
-    }); 
+    });
 
     return socket;
 }
@@ -123,21 +124,21 @@ p.initSocket = function() {
 
         if(this.tlsSocketIo) {
             this.tlsSocketIo.removeAllListeners();
-        }        
+        }
         if(this.socketIo) {
             this.socketIo.removeAllListeners();
         }
-        
+
         if(!this.isOpenHardware) {
             this.checkOldClient();
         }
         if(location.protocol.indexOf('https') > -1) {
             this.tlsSocketIo = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{ 'client': true, 'roomId' : this.sessionRoomId } });
-        } 
+        }
         // 일단 보류(?)
         /*else if(Entry.isOffline){
             this.tlsSocketIo = this.connectWebSocket('http://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
-        }*/ 
+        }*/
         else {
             try {
                 this.socketIo = this.connectWebSocket('http://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
@@ -173,7 +174,7 @@ p.openHardwareProgram = function() {
     this.isOpenHardware = true;
     Entry.HW.TRIAL_LIMIT = 5;
     this.executeHardware();
-    
+
     if(!this.socket || !this.socket.connected) {
         setTimeout(function() {
             hw.initSocket();
@@ -306,12 +307,8 @@ p.downloadConnector = function() {
 };
 
 p.downloadGuide = function() {
-    var url = "http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC%20%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%20%EC%97%B0%EA%B2%B0%20%EB%A7%A4%EB%89%B4%EC%96%BC(%EC%98%A8%EB%9D%BC%EC%9D%B8%EC%9A%A9).pdf";
-    var anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = 'download';
-    anchor.click();
-    anchor = undefined;
+    var url = "http://download.play-entry.org/data/hardware_manual.zip";
+    window.open(url, 'download');
 };
 
 p.downloadSource = function() {
@@ -641,3 +638,4 @@ p.hwPopupCreate = function () {
         }
     });
 }
+

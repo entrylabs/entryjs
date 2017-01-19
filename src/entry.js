@@ -39,7 +39,7 @@ Entry.loadProject = function(project) {
     if (this.type == 'workspace') {
         setTimeout(function() {
             Entry.stateManager.endIgnore();
-        }, 300);
+        }, 500);
 
     }
 
@@ -352,6 +352,15 @@ Entry.generateFunctionSchema = function(functionId) {
     blockSchema.template = Lang.template.function_general;
 
     Entry.block[functionId] = blockSchema;
+};
+
+Entry.getMainWS = function() {
+    var ret;
+    if (Entry.mainWorkspace)
+        ret = Entry.mainWorkspace
+    else if (Entry.playground && Entry.playground.mainWorkspace)
+        ret = Entry.playground.mainWorkspace
+    return ret;
 };
 
 window.Entry = Entry;

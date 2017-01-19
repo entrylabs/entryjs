@@ -6,8 +6,11 @@
 goog.provide("Entry.BlockToJsParser");
 goog.require("Entry.TextCodingUtil");
 
-Entry.BlockToJsParser = function(syntax) {
+Entry.BlockToJsParser = function(syntax, parentParser) {
+    this._type = "BlockToJsParser";
     this.syntax = syntax;
+
+    this._parentParser = parentParser;
 
     this._iterVariableCount = 0;
     this._iterVariableChunk = ["i", "j", "k"];
@@ -15,6 +18,7 @@ Entry.BlockToJsParser = function(syntax) {
 
 (function(p){
     p.Code = function(code, parseMode) {
+        console.log("BToJCodeParser", code);
         this._parseMode = parseMode;
         /*if (code instanceof Entry.Thread)
             return this.Thread(code);*/
@@ -90,8 +94,11 @@ Entry.BlockToJsParser = function(syntax) {
             var syntax = block._schema.syntax.concat();
         }
 
+        console.log("scope syntax", syntax);
+
         syntax.shift();
         var syntaxTokens = syntax[0].split(paramReg);
+        console.log("syntaxTokens", syntaxTokens);
 
         var schemaParams = block._schema.params;
         var dataParams = block.data.params;
@@ -122,6 +129,8 @@ Entry.BlockToJsParser = function(syntax) {
             }
         }
 
+        console.log("js result", result);
+
         if(result.charAt(result.length-1) == '#') {
             notParenthesis = true;
             result = result.substring(0, result.length-1);
@@ -131,7 +140,9 @@ Entry.BlockToJsParser = function(syntax) {
         if(!notParenthesis)
             result += "();";
 
-        result = Entry.TextCodingUtil.prototype.jsAdjustSyntax(block, result);
+        result = Entry.TextCodingUtil.jsAdjustSyntax(block, result);
+
+        console.log("js result2", result);
 
         return result;
 
@@ -271,10 +282,17 @@ Entry.BlockToJsParser = function(syntax) {
         if(dataParam == "null") {
             dataParam = "none";
         } else {
-            dataParam = Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(dataParam, schemaParam);
+            dataParam = Entry.TextCodingUtil.dropdownDynamicValueConvertor(dataParam, schemaParam);
         }
 
         return dataParam;
+    };
+
+    p.searchSyntax = function(datum) {
+        if (datum instanceof Entry.BlockView)
+            datum = datum.block;
+        return this._parentParser.parse(datum,
+            Entry.Parser.PARSE_SYNTAX);
     };
 
 })(Entry.BlockToJsParser.prototype);
