@@ -306,7 +306,7 @@ p.downloadConnector = function() {
     var path;
     var platform = navigator.platform;
 
-    if(platform === 'MacInter') {
+    if(platform === 'MacIntel') {
         path = this.downloadPathOsx;
     } else {
         path = this.downloadPath;

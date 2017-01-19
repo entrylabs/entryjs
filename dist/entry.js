@@ -20613,7 +20613,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("MacInter" === navigator.platform ? this.downloadPathOsx : this.downloadPath, "_blank").focus();
+  window.open("MacIntel" === navigator.platform ? this.downloadPathOsx : this.downloadPath, "_blank").focus();
 };
 p.downloadGuide = function() {
   window.open("http://download.play-entry.org/data/hardware_manual.zip", "download");
