@@ -638,11 +638,9 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
             break;
         case 'clone':
             result.push([Lang.Blocks.oneself, 'self']);
-            var length = this.objects_.length;
-            for (var i = 0; i<length; i++) {
-                var object = this.objects_[i];
-                result.push([object.name, object.id]);
-            }
+            this.getCurrentObjects().forEach(function(o) {
+                result.push([o.name, o.id]);
+            });
             break;
         case 'objectSequence':
             var length = this.getCurrentObjects().length;
