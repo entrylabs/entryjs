@@ -5,6 +5,7 @@
 
 goog.provide("Entry.TargetChecker");
 
+goog.require("Entry.Utils");
 goog.require("Entry.Extension");
 
 /**
