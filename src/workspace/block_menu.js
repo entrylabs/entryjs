@@ -124,7 +124,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         );
 
         this.svgDom.mouseenter(function(e) {
-            if (that._scroller) that._scroller.setOpacity(1);
+            that._scroller && that._scroller.setOpacity(1);
 
             var selectedBlockView = that.workspace.selectedBlockView;
             if (!Entry.playground || Entry.playground.resizing ||
@@ -188,18 +188,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             this.svgGroup.appendChild(this._scroller.svgGroup);
     };
 
-    p.align = function(reDraw) {
+    p.align = function() {
         var code = this.code;
         if (!(this._isOn() && code)) return;
         this._clearSplitters();
-
-        var blocks = blocks || this._getSortedBlocks();
 
         var vPadding = 15,
             marginFromTop = 10,
             hPadding = this._align == 'LEFT' ? 10 : this.svgDom.width()/2;
 
         var pastClass;
+        var blocks = this._getSortedBlocks();
         var inVisibles = blocks[1];
         var visibles = blocks[0];
 
@@ -252,7 +251,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             }
         }
 
-        this._renderedCategories[this.lastSelector] = true;
+        if (this.lastSelector !== 'func')
+            this._renderedCategories[this.lastSelector] = true;
         this.changeEvent.notify();
     };
 

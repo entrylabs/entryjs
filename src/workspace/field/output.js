@@ -143,6 +143,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         }
     };
 
+    p.spliceBlock = function() {
+        this._updateValueBlock();
+    };
+
     p._updateValueBlock = function(block) {
         if (!(block instanceof Entry.Block))
             block = undefined;
