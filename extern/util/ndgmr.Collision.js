@@ -54,6 +54,10 @@ this.ndgmr = this.ndgmr || {};
         b1 = getBounds(bitmap1);
         b2 = getBounds(bitmap2);
     }
+    if (Math.min(b1.width, b1.height, b2.width, b2.height) < 2)
+        threshold = 1;
+    else
+        threshold = 2;
     return calculateIntersection(b1,b2);
   }
   ndgmr.checkRectCollision = checkRectCollision;
