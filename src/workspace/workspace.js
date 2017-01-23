@@ -121,7 +121,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     blockMenu.renderText();
                     this.board.clear();
                     this.oldTextType = this.textType;
-                    //destroy view because of performance
                 break;
             case WORKSPACE.MODE_BOARD:
                 try {
@@ -135,8 +134,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.oldTextType = this.textType;
                     this.vimBoard && this.vimBoard.hide();
                 } catch(e) {
-                    console.log("error start");
-
                     if(this.board && this.board.code)
                         this.board.code.clear();
                     if (this.board) this.board.hide();
@@ -144,14 +141,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     blockMenu.banClass('functionInit');
                     this.mode = WORKSPACE.MODE_VIMBOARD;
 
-                    //console.log(("this.oldTextType", this.oldTextType);
-
-                    if(this.oldTextType == VIM.TEXT_TYPE_JS) {
+                    if (this.oldTextType == VIM.TEXT_TYPE_JS) {
                         mode.boardType = WORKSPACE.MODE_VIMBOARD;
                         mode.textType = VIM.TEXT_TYPE_JS;
                         mode.runType = VIM.MAZE_MODE;
                         this.oldTextType = VIM.TEXT_TYPE_JS;
-                    } else if(this.oldTextType == VIM.TEXT_TYPE_PY) {
+                    } else if (this.oldTextType == VIM.TEXT_TYPE_PY) {
                         mode.boardType = WORKSPACE.MODE_VIMBOARD;
                         mode.textType = VIM.TEXT_TYPE_PY;
                         mode.runType = VIM.WORKSPACE_MODE;
@@ -166,9 +161,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 break;
 
             case WORKSPACE.MODE_OVERLAYBOARD:
-                if(this.oldMode == WORKSPACE.MODE_VIMBOARD)
+                if (this.oldMode == WORKSPACE.MODE_VIMBOARD)
                     this.overlayModefrom = WORKSPACE.MODE_VIMBOARD;
-                else if(this.oldMode == WORKSPACE.MODE_BOARD)
+                else if (this.oldMode == WORKSPACE.MODE_BOARD)
                     this.overlayModefrom = WORKSPACE.MODE_BOARD;
 
                 if (!this.overlayBoard)
@@ -271,7 +266,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p._keyboardControl = function(e, isForce) {
-        if (Entry.Loader && !Entry.Loader.loaded)
+        if (Entry.Loader && !Entry.Loader.isLoaded())
             return;
         var keyCode = e.keyCode || e.which,
             ctrlKey = e.ctrlKey, shiftKey = e.shiftKey, altKey = e.altKey;
@@ -423,6 +418,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 case 46:
                     if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
                         Entry.do("destroyBlock", blockView.block);
+                        this.board.set({selectedBlockView:null});
                         e.preventDefault();
                     }
                     break;

@@ -245,15 +245,17 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.destroy = function(animate, next, isNotForce) {
-        if (isNotForce && this.deletable !== Entry.Block.DELETABLE_TRUE)
+        if (isNotForce && !this.isDeletable())
             return;
+
         var that = this;
         var params = this.params;
         if (params) {
             for (var i=0; i<params.length; i++) {
                 var param = params[i];
                 if (param instanceof Entry.Block) {
-                    param.doNotSplice = true;
+                    param.doNotSplice =
+                        !(param.thread instanceof Entry.FieldOutput);
                     param.destroy(animate);
                 }
             }
@@ -293,7 +295,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         }
 
         var notSpliced = this.doNotSplice;
-        if (!this.doNotSplice && thread.spliceBlock) thread.spliceBlock(this);
+        if (!this.doNotSplice && thread.spliceBlock)
+            thread.spliceBlock(this);
         else delete this.doNotSplice;
 
         if (this.view) this.view.destroy(animate);
@@ -341,7 +344,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.isDeletable = function() {
-        return this.deletable === Entry.Block.DELETABLE_TRUE;
+        return this.deletable === Entry.Block.DELETABLE_TRUE ||
+            this.deletable === true;
     };
 
     p.isReadOnly = function() {return this.readOnly;};
@@ -394,12 +398,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         var positionX = this.x;
         var positionY = this.y;
 
-        console.log(
-            "destroyBelow",
-            id,
-            positionX,
-            positionY
-        );
         this.destroy(animate, true);
         this.getCode().changeEvent.notify();
         return this;
@@ -412,8 +410,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             var index = thread.getBlocks().indexOf(this);
             var json = thread.toJSON(true, index);
             for (var i=0; i<json.length; i++) cloned.push(json[i]);
-        } else
-            cloned.push(this.toJSON(true));
+        } else cloned.push(this.toJSON(true));
 
         var pos = this.view.getAbsoluteCoordinate();
         var block = cloned[0];
