@@ -496,8 +496,7 @@ Entry.Scene.prototype.resize = function() {
         $(scene.inputWrapper).width(
             Entry.computeInputWidth(scene.name)
         );
-        view = $(view);
-        normWidth = normWidth + view.width() + marginLeft;
+        normWidth += view.width() + LEFT_MARGIN;
     }
 
     if (normWidth > totalWidth) align();
