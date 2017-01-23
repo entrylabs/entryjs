@@ -20322,7 +20322,7 @@ Entry.RenderView = function(b, a, d) {
     this.renderViewContainer = Entry.Dom("div", {"class":"renderViewContainer", parent:this.view});
     this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.renderViewContainer});
   };
-  b.changeCode = function(a) {
+  b.changeCode = function(a, b) {
     if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
@@ -20330,7 +20330,7 @@ Entry.RenderView = function(b, a, d) {
     this.svg || (this.svg = Entry.SVG(this._svgId, this.svgDom[0]), this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
     a.createView(this);
     this.align();
-    this.resize();
+    this.resize(b);
   };
   b.align = function() {
     var a = this.code.getThreads();

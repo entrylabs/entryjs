@@ -59,14 +59,13 @@ Entry.RenderView = function(dom, align, scale) {
             'parent':parent
         });
 
-
         this.svgDom = Entry.Dom(
             $('<svg id="' + this._svgId +'" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
             { parent: this.renderViewContainer }
         );
     };
 
-    p.changeCode = function(code) {
+    p.changeCode = function(code, resizeImmediately) {
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
         var that = this;
@@ -85,7 +84,7 @@ Entry.RenderView = function(dom, align, scale) {
 
         code.createView(this);
         this.align();
-        this.resize();
+        this.resize(resizeImmediately);
     };
 
     p.align = function() {
@@ -147,6 +146,7 @@ Entry.RenderView = function(dom, align, scale) {
 
     p.resize = function(isImmediate) {
         if (!this.svg || !this._bBox) return;
+
         if (isImmediate) {
             run.call(this);
         } else {
