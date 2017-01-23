@@ -27,8 +27,6 @@ Entry.Scene = function() {
         });
 };
 
-Entry.Scene.viewBasicWidth = 70;
-
 /**
  * Control bar view generator.
  * @param {!Element} sceneView sceneView from Entry.
@@ -145,20 +143,23 @@ Entry.Scene.prototype.generateElement = function(scene) {
         var code = e.keyCode;
         if (Entry.isArrowOrBackspace(code))
             return;
+
         scene.name = this.value;
-        divide.style.width = Entry.computeInputWidth(scene.name);
-        that.resize();
         if (code == 13)
             this.blur();
         if (this.value.length > 10) {
             this.value = this.value.substring(0,10);
+            scene.name = this.value;
             this.blur();
         }
+        setTimeout(function() {
+            that.resize();
+        }, 0);
     };
     nameField.onblur = function (e) {
         nameField.value = this.value;
         scene.name = this.value;
-        divide.style.width = Entry.computeInputWidth(scene.name);
+        that.resize();
     };
     divide.appendChild(nameField);
     var removeButtonCover = Entry.createElement('span');
@@ -298,8 +299,10 @@ Entry.Scene.prototype.selectScene = function(scene) {
     if (prevSelected) {
         var prevSelectedView = prevSelected.view;
         prevSelectedView.removeClass('selectedScene');
-        prevSelectedView = $(prevSelectedView);
-        prevSelectedView.find('input').blur();
+        var elem = document.activeElement;
+
+        if ($(elem).hasClass('entrySceneFieldWorkspace'))
+            elem.blur();
     }
 
     this.selectedScene = scene;
@@ -480,39 +483,37 @@ Entry.Scene.prototype.resize = function() {
     if (scenes.length === 0 || !firstScene) return;
     var startPos = $(firstScene.view).offset().left;
     var marginLeft = parseFloat($(selectedScene.view).css('margin-left'));
-    var totalWidth = $(this.view_).width() - startPos;
+    var totalWidth = Math.floor($(this.view_).width() - startPos - 5);
+    var LEFT_MARGIN = -40;
 
-
-    var normWidth = 0;
+    var normWidth = startPos + 15;
     for (var i in scenes) {
         var scene = scenes[i];
         var view = scene.view;
         view.addClass('minValue');
+        view = $(view);
 
-        var inputWrapper = scene.inputWrapper;
-        $(inputWrapper).width(
+        $(scene.inputWrapper).width(
             Entry.computeInputWidth(scene.name)
         );
         view = $(view);
         normWidth = normWidth + view.width() + marginLeft;
     }
 
-    if (normWidth > totalWidth) align()
+    if (normWidth > totalWidth) align();
 
     function align() {
-        totalWidth = totalWidth - $(selectedScene.view).width();
+        var dummyWidth = 30.5;
         var len = scenes.length - 1;
-        var eachWidth = Entry.Scene.viewBasicWidth + marginLeft;
-        var fieldWidth = totalWidth/len - eachWidth;
+        totalWidth = totalWidth - Math.round($(selectedScene.view).width()) - dummyWidth*len;
+        var fieldWidth = Math.floor(totalWidth/len);
         for (i in scenes) {
             scene = scenes[i];
-
             if (selectedScene.id != scene.id) {
                 scene.view.removeClass('minValue');
                 $(scene.inputWrapper).width(fieldWidth);
             } else scene.view.addClass('minValue');
         }
-
     }
 };
 

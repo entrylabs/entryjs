@@ -11677,7 +11677,6 @@ Entry.Scene = function() {
     b && b !== a.target && $(b).hasClass("entrySceneFieldWorkspace") && b.blur();
   });
 };
-Entry.Scene.viewBasicWidth = 70;
 Entry.Scene.prototype.generateView = function(b, a) {
   var d = this;
   this.view_ = b;
@@ -11725,32 +11724,34 @@ Entry.Scene.prototype.generateElement = function(b) {
   c = Entry.createElement("span");
   c.addClass("entrySceneLeftWorkspace");
   d.appendChild(c);
-  var f = Entry.createElement("span");
-  f.addClass("entrySceneInputCover");
-  d.appendChild(f);
-  b.inputWrapper = f;
+  c = Entry.createElement("span");
+  c.addClass("entrySceneInputCover");
+  d.appendChild(c);
+  b.inputWrapper = c;
   e.onkeyup = function(d) {
     d = d.keyCode;
-    Entry.isArrowOrBackspace(d) || (b.name = this.value, f.style.width = Entry.computeInputWidth(b.name), a.resize(), 13 == d && this.blur(), 10 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
+    Entry.isArrowOrBackspace(d) || (b.name = this.value, 13 == d && this.blur(), 10 < this.value.length && (this.value = this.value.substring(0, 10), b.name = this.value, this.blur()), setTimeout(function() {
+      a.resize();
+    }, 0));
   };
-  e.onblur = function(a) {
+  e.onblur = function(d) {
     e.value = this.value;
     b.name = this.value;
-    f.style.width = Entry.computeInputWidth(b.name);
+    a.resize();
   };
-  f.appendChild(e);
+  c.appendChild(e);
   c = Entry.createElement("span");
   c.addClass("entrySceneRemoveButtonCoverWorkspace");
   d.appendChild(c);
   if (Entry.sceneEditable) {
-    var g = Entry.createElement("button");
-    g.addClass("entrySceneRemoveButtonWorkspace");
-    g.scene = b;
-    g.bindOnClick(function(a) {
+    var f = Entry.createElement("button");
+    f.addClass("entrySceneRemoveButtonWorkspace");
+    f.scene = b;
+    f.bindOnClick(function(a) {
       a.stopPropagation();
       Entry.engine.isState("run") || confirm(Lang.Workspace.will_you_delete_scene) && Entry.scene.removeScene(this.scene);
     });
-    c.appendChild(g);
+    c.appendChild(f);
   }
   Entry.Utils.disableContextmenu(d);
   $(d).on("contextmenu", function() {
@@ -11808,7 +11809,7 @@ Entry.Scene.prototype.selectScene = function(b) {
   if (!this.selectedScene || this.selectedScene.id != b.id) {
     Entry.engine.isState("run") && Entry.container.resetSceneDuringRun();
     var a = this.selectedScene;
-    a && (a = a.view, a.removeClass("selectedScene"), a = $(a), a.find("input").blur());
+    a && (a.view.removeClass("selectedScene"), a = document.activeElement, $(a).hasClass("entrySceneFieldWorkspace") && a.blur());
     this.selectedScene = b;
     b.view.addClass("selectedScene");
     Entry.container.setCurrentObjects();
@@ -11901,17 +11902,19 @@ Entry.Scene.prototype.cloneScene = function(b) {
 Entry.Scene.prototype.resize = function() {
   var b = this.getScenes(), a = this.selectedScene, d = b[0];
   if (0 !== b.length && d) {
-    var c = $(d.view).offset().left, d = parseFloat($(a.view).css("margin-left")), e = $(this.view_).width() - c, f = 0, g;
-    for (g in b) {
-      var c = b[g], h = c.view;
-      h.addClass("minValue");
+    var c = $(d.view).offset().left;
+    parseFloat($(a.view).css("margin-left"));
+    var d = Math.floor($(this.view_).width() - c - 5), e = c + 15, f;
+    for (f in b) {
+      var c = b[f], g = c.view;
+      g.addClass("minValue");
+      g = $(g);
       $(c.inputWrapper).width(Entry.computeInputWidth(c.name));
-      h = $(h);
-      f = f + h.width() + d;
+      e += g.width() + -40;
     }
-    if (f > e) {
-      for (g in e -= $(a.view).width(), d = e / (b.length - 1) - (Entry.Scene.viewBasicWidth + d), b) {
-        c = b[g], a.id != c.id ? (c.view.removeClass("minValue"), $(c.inputWrapper).width(d)) : c.view.addClass("minValue");
+    if (e > d) {
+      for (f in c = b.length - 1, d = d - Math.round($(a.view).width()) - 30.5 * c, d = Math.floor(d / c), b) {
+        c = b[f], a.id != c.id ? (c.view.removeClass("minValue"), $(c.inputWrapper).width(d)) : c.view.addClass("minValue");
       }
     }
   }
