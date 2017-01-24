@@ -153,6 +153,18 @@ if (Entry && Entry.block) {
             return '"()"'.replace('()', value).toUpperCase();
         };
 
+        c.returnValueUpperCase = function(key, value) {
+            if(this.codeMap)
+                var codeMap = eval(this.codeMap);
+            var codeMapKey = value;
+            if(codeMap) {
+                var codeMapValue = codeMap[codeMapKey];
+                if(codeMapValue)
+                    value = codeMapValue;
+            }
+            return value.toUpperCase();
+        };
+
         c.returnStringValueLowerCase = function(key, value) {
             if(this.codeMap)
                 var codeMap = eval(this.codeMap);
@@ -13739,7 +13751,7 @@ Entry.block = {
                         ],
                         "value": "4",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValueUpperCase,
+                        converter: Entry.block.converters.returnValueUpperCase,
                         codeMap: "Entry.CodeMap.Hamster.hamster_play_note_for[0]"
 
                     },
@@ -18938,12 +18950,12 @@ Entry.block = {
 
 	    data_default_address = data_address;
 	    data_default_length = data_length;
-				
+
 	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
 		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
 		    //throw new Entry.Utils.AsyncError();
 		    return Entry.hw.sendQueue.prevResult;
-		}	
+		}
 	    }
 
 	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
@@ -18954,7 +18966,7 @@ Entry.block = {
             Entry.hw.sendQueue.prevAddress = data_default_address;
 	    Entry.hw.sendQueue.prevTime = new Date();
 	    Entry.hw.sendQueue.prevResult = result;
-			
+
             return result;
         },
         "syntax": {"js": [], "py": ["Robotis.opencm70_cm_custom_value(%1, %2)"]}
@@ -19021,12 +19033,12 @@ Entry.block = {
             }
 
 	    data_default_address = data_default_address + increase * data_default_length;
-			
+
 	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
 	    	if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
 	    	    //throw new Entry.Utils.AsyncError();
 		    return Entry.hw.sendQueue.prevResult;
-	        }	
+	        }
 	    }
 
 	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
@@ -19037,7 +19049,7 @@ Entry.block = {
             Entry.hw.sendQueue.prevAddress = data_default_address;
 	    Entry.hw.sendQueue.prevTime = new Date();
 	    Entry.hw.sendQueue.prevResult = result;
-            
+
             return result;
         },
         "syntax": {"js": [], "py": ["Robotis.opencm70_sensor_value(%1)"]}
@@ -19188,7 +19200,7 @@ Entry.block = {
 		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
 		    //throw new Entry.Utils.AsyncError();
 		    return Entry.hw.sendQueue.prevResult;
-		}	
+		}
 	    }
 
 	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
@@ -19199,7 +19211,7 @@ Entry.block = {
             Entry.hw.sendQueue.prevAddress = data_default_address;
 	    Entry.hw.sendQueue.prevTime = new Date();
 	    Entry.hw.sendQueue.prevResult = result;
-            
+
             return result;
         },
         "syntax": {"js": [], "py": ["Robotis.opencm70_aux_sensor_value(%1, %2)"]}
@@ -20163,24 +20175,24 @@ Entry.block = {
             //Entry.Robotis_carCont.update();
 			//
             //return Entry.hw.portData[data_default_address];
-			
+
 	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
 		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 300) {
 		    //throw new Entry.Utils.AsyncError();
 		    return Entry.hw.sendQueue.prevResult;
-		}	
+		}
 	    }
-		
+
 	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
 	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
 	    Entry.Robotis_carCont.update();
-			
+
 	    var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
 	    Entry.hw.sendQueue.prevTime = new Date();
 	    Entry.hw.sendQueue.prevResult = result;
-            
-            return result;		
+
+            return result;
         },
         "syntax": {"js": [], "py": ["Robotis.carcont_sensor_value(%1)"]}
     },
@@ -31687,7 +31699,7 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
 			var dev = script.getStringField("DEVICE", script);
 			var value = script.getNumberValue("VALUE", script);
-			
+
 			if (dev == 'AOUT5')
 			{
 				sq.AOUT5 = value;
@@ -31695,12 +31707,12 @@ Entry.block = {
 			else if(dev == 'AOUT6')
 			{
 				sq.AOUT6 = value;
-			}	
+			}
 			else if(dev == 'AOUT9')
 			{
 				sq.AOUT9 = value;
-			}	
-			
+			}
+
 			return script.callReturn();
         }
     },
@@ -31891,7 +31903,7 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ 
+            "params": [
                 null,
                 {
                     "type": "number",
@@ -31908,7 +31920,7 @@ Entry.block = {
                 {
                     "type": "number",
                     "params": [ "100" ]
-                } 
+                }
             ],
             "type": "dadublock_get_analog_value_map"
         },
@@ -32024,7 +32036,7 @@ Entry.block = {
             return Entry.hw.portData.ULTRASONIC || 0;
         },
     },
-    
+
     "dadublock_get_digital": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -32378,7 +32390,7 @@ Entry.block = {
 
                 var octave = script.getNumberField("OCTAVE", script);
                 var value = Entry.DaduBlock.toneMap[note][octave];
-                
+
                 duration = duration * 1000;
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -32561,7 +32573,7 @@ Entry.block = {
                 var read    = Entry.hw.portData;
                 var button      = 'button_button';  // paramsKeyMap에 정의된 이름 사용
                 var buttonevent = 'button_event';   // paramsKeyMap에 정의된 이름 사용
-                
+
                 if( read[button] == script.getField('BUTTON') && read[buttonevent] == 2 )
                     return true;
                 else
@@ -32604,7 +32616,7 @@ Entry.block = {
             ],
         "events": {},
         "def": {
-                "params": [ 
+                "params": [
                         null,
                         null
                     ],
@@ -32618,9 +32630,9 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter_controller" ],
         "func": function (sprite, script){
                 var read    = Entry.hw.portData;
-            
+
                 var device  = script.getField('DEVICE');    // paramsKeyMap에 정의된 이름 사용
-                
+
                 if( read[device] == script.getField('DIRECTION') )
                     return true;
                 else
@@ -32791,7 +32803,7 @@ Entry.block = {
                 "params": [
                         null,
                     ],
-                "type": "byrobot_dronefighter_controller_controller_buzzer_off" 
+                "type": "byrobot_dronefighter_controller_controller_buzzer_off"
             },
         "paramsKeyMap": {
             },
@@ -32855,7 +32867,7 @@ Entry.block = {
                         null,
                         null,
                     ],
-                "type": "byrobot_dronefighter_controller_controller_buzzer_scale"   
+                "type": "byrobot_dronefighter_controller_controller_buzzer_scale"
             },
         "paramsKeyMap": {
                 "OCTAVE"    : 0,
@@ -32867,7 +32879,7 @@ Entry.block = {
             {
                 var octave      = parseInt(script.getField('OCTAVE'));
                 var scale       = parseInt(script.getField('SCALE'));
-                
+
                 if( scale == -1 )
                     return Entry.byrobot_dronefighter_controller.setBuzzerMute(script, 60000, false, true);
                 else
@@ -32935,7 +32947,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_controller_controller_buzzer_scale_delay" 
+                "type": "byrobot_dronefighter_controller_controller_buzzer_scale_delay"
             },
         "paramsKeyMap": {
                 "OCTAVE"    : 0,
@@ -32949,7 +32961,7 @@ Entry.block = {
                 var octave      = parseInt(script.getField('OCTAVE'));
                 var scale       = parseInt(script.getField('SCALE'));
                 var time        = parseInt(script.getNumberValue('TIME') * 1000);
-                
+
                 if( scale == -1 )
                     return Entry.byrobot_dronefighter_controller.setBuzzerMute(script, time, true, true);
                 else
@@ -33017,7 +33029,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_controller_controller_buzzer_scale_reserve"   
+                "type": "byrobot_dronefighter_controller_controller_buzzer_scale_reserve"
             },
         "paramsKeyMap": {
                 "OCTAVE"    : 0,
@@ -33031,7 +33043,7 @@ Entry.block = {
                 var octave      = parseInt(script.getField('OCTAVE'));
                 var scale       = parseInt(script.getField('SCALE'));
                 var time        = parseInt(script.getNumberValue('TIME') * 1000);
-                
+
                 if( scale == -1 )
                     return Entry.byrobot_dronefighter_controller.setBuzzerMute(script, time, false, false);
                 else
@@ -33065,7 +33077,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_controller_controller_buzzer_hz"  
+                "type": "byrobot_dronefighter_controller_controller_buzzer_hz"
             },
         "paramsKeyMap": {
                 "HZ"        : 0,
@@ -33113,7 +33125,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_controller_controller_buzzer_hz_delay"    
+                "type": "byrobot_dronefighter_controller_controller_buzzer_hz_delay"
             },
         "paramsKeyMap": {
                 "HZ"        : 0,
@@ -33163,7 +33175,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_controller_controller_buzzer_hz_reserve"  
+                "type": "byrobot_dronefighter_controller_controller_buzzer_hz_reserve"
             },
         "paramsKeyMap": {
                 "HZ"        : 0,
@@ -33197,7 +33209,7 @@ Entry.block = {
                 "params": [
                         null
                     ],
-                "type": "byrobot_dronefighter_controller_controller_vibrator_off"   
+                "type": "byrobot_dronefighter_controller_controller_vibrator_off"
             },
         "paramsKeyMap": {
             },
@@ -33235,7 +33247,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_controller_controller_vibrator_on_delay"  
+                "type": "byrobot_dronefighter_controller_controller_vibrator_on_delay"
             },
         "paramsKeyMap": {
                 "TIMEON"    : 0
@@ -33275,7 +33287,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_controller_controller_vibrator_on_reserve"    
+                "type": "byrobot_dronefighter_controller_controller_vibrator_on_reserve"
             },
         "paramsKeyMap": {
                 "TIMEON"    : 0
@@ -33331,7 +33343,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_controller_controller_vibrator_delay" 
+                "type": "byrobot_dronefighter_controller_controller_vibrator_delay"
             },
         "paramsKeyMap": {
                 "TIMEON"    : 0,
@@ -33391,7 +33403,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_controller_controller_vibrator_reserve"   
+                "type": "byrobot_dronefighter_controller_controller_vibrator_reserve"
             },
         "paramsKeyMap": {
                 "TIMEON"    : 0,
@@ -33438,7 +33450,7 @@ Entry.block = {
                         null,
                         null
                     ],
-                "type": "byrobot_dronefighter_controller_controller_userinterface_preset"   
+                "type": "byrobot_dronefighter_controller_controller_userinterface_preset"
             },
         "paramsKeyMap": {
                 "PRESET"    : 0
@@ -33517,7 +33529,7 @@ Entry.block = {
                         null,
                         null
                     ],
-                "type": "byrobot_dronefighter_controller_controller_userinterface"  
+                "type": "byrobot_dronefighter_controller_controller_userinterface"
             },
         "paramsKeyMap": {
                 "COMMAND"   : 0,
@@ -33727,7 +33739,7 @@ Entry.block = {
                 var read    = Entry.hw.portData;
                 var button      = 'button_button';  // paramsKeyMap에 정의된 이름 사용
                 var buttonevent = 'button_event';   // paramsKeyMap에 정의된 이름 사용
-                
+
                 if( read[button] == script.getField('BUTTON') && read[buttonevent] == 2 )
                     return true;
                 else
@@ -33771,7 +33783,7 @@ Entry.block = {
             ],
         "events": {},
         "def": {
-                "params": [ 
+                "params": [
                         null,
                         null
                     ],
@@ -33785,9 +33797,9 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter_drive" ],
         "func": function (sprite, script){
                 var read    = Entry.hw.portData;
-            
+
                 var device  = script.getField('DEVICE');    // paramsKeyMap에 정의된 이름 사용
-                
+
                 if( read[device] == script.getField('DIRECTION') )
                     return true;
                 else
@@ -33873,7 +33885,7 @@ Entry.block = {
             {
                 var controlTarget   = script.getField('CONTROLTARGET');
                 var value           = parseInt(script.getNumberValue("VALUE", script));
-                
+
                 return Entry.byrobot_dronefighter_drive.sendControlDoubleSingle(script, controlTarget, value, 0, false);
             },
     },
@@ -33936,7 +33948,7 @@ Entry.block = {
                 var controlTarget   = script.getField('CONTROLTARGET');
                 var value           = parseInt(script.getNumberValue("VALUE", script));
                 var time            = parseInt(script.getNumberValue('TIME', script) * 1000);
-                
+
                 return Entry.byrobot_dronefighter_drive.sendControlDoubleSingle(script, controlTarget, value, time, true);
             },
     },
@@ -34072,7 +34084,7 @@ Entry.block = {
                 var motorIndex      = parseInt(script.getField("MOTORINDEX"));
                 var motorDirection  = 1;
                 var motorSpeed      = parseInt(script.getNumberValue("MOTORSPEED", script));
-                
+
                 return Entry.byrobot_dronefighter_drive.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
             },
     },
@@ -34124,7 +34136,7 @@ Entry.block = {
                 var motorIndex      = parseInt(script.getNumberValue("MOTORINDEX", script)) - 1;
                 var motorDirection  = 1;
                 var motorSpeed      = parseInt(script.getNumberValue("MOTORSPEED", script));
-                
+
                 return Entry.byrobot_dronefighter_drive.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
             },
     },
@@ -34332,7 +34344,7 @@ Entry.block = {
                 "params": [
                         null
                     ],
-                "type": "byrobot_dronefighter_drive_drone_light_manual_single_off"  
+                "type": "byrobot_dronefighter_drive_drone_light_manual_single_off"
             },
         "paramsKeyMap": {
             },
@@ -34391,7 +34403,7 @@ Entry.block = {
                         null,
                         null
                     ],
-                "type": "byrobot_dronefighter_drive_drone_light_manual_single"  
+                "type": "byrobot_dronefighter_drive_drone_light_manual_single"
             },
         "paramsKeyMap": {
                 "FLAGS"         : 0,
@@ -34441,7 +34453,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_drive_drone_light_manual_single_input"    
+                "type": "byrobot_dronefighter_drive_drone_light_manual_single_input"
             },
         "paramsKeyMap": {
                 "FLAGS"         : 0,
@@ -34475,7 +34487,7 @@ Entry.block = {
                 "params": [
                         null,
                     ],
-                "type": "byrobot_dronefighter_drive_controller_buzzer_off"  
+                "type": "byrobot_dronefighter_drive_controller_buzzer_off"
             },
         "paramsKeyMap": {
             },
@@ -34539,7 +34551,7 @@ Entry.block = {
                         null,
                         null,
                     ],
-                "type": "byrobot_dronefighter_drive_controller_buzzer_scale"    
+                "type": "byrobot_dronefighter_drive_controller_buzzer_scale"
             },
         "paramsKeyMap": {
                 "OCTAVE"    : 0,
@@ -34551,7 +34563,7 @@ Entry.block = {
             {
                 var octave      = parseInt(script.getField('OCTAVE'));
                 var scale       = parseInt(script.getField('SCALE'));
-                
+
                 if( scale == -1 )
                     return Entry.byrobot_dronefighter_drive.setBuzzerMute(script, 60000, false, true);
                 else
@@ -34619,7 +34631,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_drive_controller_buzzer_scale_delay"  
+                "type": "byrobot_dronefighter_drive_controller_buzzer_scale_delay"
             },
         "paramsKeyMap": {
                 "OCTAVE"    : 0,
@@ -34633,7 +34645,7 @@ Entry.block = {
                 var octave      = parseInt(script.getField('OCTAVE'));
                 var scale       = parseInt(script.getField('SCALE'));
                 var time        = parseInt(script.getNumberValue('TIME') * 1000);
-                
+
                 if( scale == -1 )
                     return Entry.byrobot_dronefighter_drive.setBuzzerMute(script, time, true, true);
                 else
@@ -34701,7 +34713,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_drive_controller_buzzer_scale_reserve"    
+                "type": "byrobot_dronefighter_drive_controller_buzzer_scale_reserve"
             },
         "paramsKeyMap": {
                 "OCTAVE"    : 0,
@@ -34715,7 +34727,7 @@ Entry.block = {
                 var octave      = parseInt(script.getField('OCTAVE'));
                 var scale       = parseInt(script.getField('SCALE'));
                 var time        = parseInt(script.getNumberValue('TIME') * 1000);
-                
+
                 if( scale == -1 )
                     return Entry.byrobot_dronefighter_drive.setBuzzerMute(script, time, false, false);
                 else
@@ -34749,7 +34761,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_drive_controller_buzzer_hz"   
+                "type": "byrobot_dronefighter_drive_controller_buzzer_hz"
             },
         "paramsKeyMap": {
                 "HZ"        : 0,
@@ -34797,7 +34809,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_drive_controller_buzzer_hz_delay" 
+                "type": "byrobot_dronefighter_drive_controller_buzzer_hz_delay"
             },
         "paramsKeyMap": {
                 "HZ"        : 0,
@@ -34847,7 +34859,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_drive_controller_buzzer_hz_reserve"   
+                "type": "byrobot_dronefighter_drive_controller_buzzer_hz_reserve"
             },
         "paramsKeyMap": {
                 "HZ"        : 0,
@@ -34881,7 +34893,7 @@ Entry.block = {
                 "params": [
                         null
                     ],
-                "type": "byrobot_dronefighter_drive_controller_vibrator_off"    
+                "type": "byrobot_dronefighter_drive_controller_vibrator_off"
             },
         "paramsKeyMap": {
             },
@@ -34919,7 +34931,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_drive_controller_vibrator_on_delay"   
+                "type": "byrobot_dronefighter_drive_controller_vibrator_on_delay"
             },
         "paramsKeyMap": {
                 "TIMEON"    : 0
@@ -34959,7 +34971,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_drive_controller_vibrator_on_reserve" 
+                "type": "byrobot_dronefighter_drive_controller_vibrator_on_reserve"
             },
         "paramsKeyMap": {
                 "TIMEON"    : 0
@@ -35015,7 +35027,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_drive_controller_vibrator_delay"  
+                "type": "byrobot_dronefighter_drive_controller_vibrator_delay"
             },
         "paramsKeyMap": {
                 "TIMEON"    : 0,
@@ -35075,7 +35087,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_drive_controller_vibrator_reserve"    
+                "type": "byrobot_dronefighter_drive_controller_vibrator_reserve"
             },
         "paramsKeyMap": {
                 "TIMEON"    : 0,
@@ -35280,7 +35292,7 @@ Entry.block = {
                 var read    = Entry.hw.portData;
                 var button      = 'button_button';  // paramsKeyMap에 정의된 이름 사용
                 var buttonevent = 'button_event';   // paramsKeyMap에 정의된 이름 사용
-                
+
                 if( read[button] == script.getField('BUTTON') && read[buttonevent] == 2 )
                     return true;
                 else
@@ -35324,7 +35336,7 @@ Entry.block = {
             ],
         "events": {},
         "def": {
-                "params": [ 
+                "params": [
                         null,
                         null
                     ],
@@ -35338,9 +35350,9 @@ Entry.block = {
         "isNotFor": [ "byrobot_dronefighter_flight" ],
         "func": function (sprite, script){
                 var read    = Entry.hw.portData;
-            
+
                 var device  = script.getField('DEVICE');    // paramsKeyMap에 정의된 이름 사용
-                
+
                 if( read[device] == script.getField('DIRECTION') )
                     return true;
                 else
@@ -35511,7 +35523,7 @@ Entry.block = {
                 "params": [
                         null
                     ],
-                "type": "byrobot_dronefighter_flight_drone_light_manual_single_off" 
+                "type": "byrobot_dronefighter_flight_drone_light_manual_single_off"
             },
         "paramsKeyMap": {
             },
@@ -35570,7 +35582,7 @@ Entry.block = {
                         null,
                         null
                     ],
-                "type": "byrobot_dronefighter_flight_drone_light_manual_single" 
+                "type": "byrobot_dronefighter_flight_drone_light_manual_single"
             },
         "paramsKeyMap": {
                 "FLAGS"         : 0,
@@ -35620,7 +35632,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_flight_drone_light_manual_single_input"   
+                "type": "byrobot_dronefighter_flight_drone_light_manual_single_input"
             },
         "paramsKeyMap": {
                 "FLAGS"         : 0,
@@ -35654,7 +35666,7 @@ Entry.block = {
                 "params": [
                         null,
                     ],
-                "type": "byrobot_dronefighter_flight_controller_buzzer_off" 
+                "type": "byrobot_dronefighter_flight_controller_buzzer_off"
             },
         "paramsKeyMap": {
             },
@@ -35718,7 +35730,7 @@ Entry.block = {
                         null,
                         null,
                     ],
-                "type": "byrobot_dronefighter_flight_controller_buzzer_scale"   
+                "type": "byrobot_dronefighter_flight_controller_buzzer_scale"
             },
         "paramsKeyMap": {
                 "OCTAVE"    : 0,
@@ -35730,7 +35742,7 @@ Entry.block = {
             {
                 var octave      = parseInt(script.getField('OCTAVE'));
                 var scale       = parseInt(script.getField('SCALE'));
-                
+
                 if( scale == -1 )
                     return Entry.byrobot_dronefighter_flight.setBuzzerMute(script, 60000, false, true);
                 else
@@ -35798,7 +35810,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_flight_controller_buzzer_scale_delay" 
+                "type": "byrobot_dronefighter_flight_controller_buzzer_scale_delay"
             },
         "paramsKeyMap": {
                 "OCTAVE"    : 0,
@@ -35812,7 +35824,7 @@ Entry.block = {
                 var octave      = parseInt(script.getField('OCTAVE'));
                 var scale       = parseInt(script.getField('SCALE'));
                 var time        = parseInt(script.getNumberValue('TIME') * 1000);
-                
+
                 if( scale == -1 )
                     return Entry.byrobot_dronefighter_flight.setBuzzerMute(script, time, true, true);
                 else
@@ -35880,7 +35892,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_flight_controller_buzzer_scale_reserve"   
+                "type": "byrobot_dronefighter_flight_controller_buzzer_scale_reserve"
             },
         "paramsKeyMap": {
                 "OCTAVE"    : 0,
@@ -35894,7 +35906,7 @@ Entry.block = {
                 var octave      = parseInt(script.getField('OCTAVE'));
                 var scale       = parseInt(script.getField('SCALE'));
                 var time        = parseInt(script.getNumberValue('TIME') * 1000);
-                
+
                 if( scale == -1 )
                     return Entry.byrobot_dronefighter_flight.setBuzzerMute(script, time, false, false);
                 else
@@ -35928,7 +35940,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_flight_controller_buzzer_hz"  
+                "type": "byrobot_dronefighter_flight_controller_buzzer_hz"
             },
         "paramsKeyMap": {
                 "HZ"        : 0,
@@ -35976,7 +35988,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_flight_controller_buzzer_hz_delay"    
+                "type": "byrobot_dronefighter_flight_controller_buzzer_hz_delay"
             },
         "paramsKeyMap": {
                 "HZ"        : 0,
@@ -36026,7 +36038,7 @@ Entry.block = {
                         },
                         null,
                     ],
-                "type": "byrobot_dronefighter_flight_controller_buzzer_hz_reserve"  
+                "type": "byrobot_dronefighter_flight_controller_buzzer_hz_reserve"
             },
         "paramsKeyMap": {
                 "HZ"        : 0,
@@ -36060,7 +36072,7 @@ Entry.block = {
                 "params": [
                         null
                     ],
-                "type": "byrobot_dronefighter_flight_controller_vibrator_off"   
+                "type": "byrobot_dronefighter_flight_controller_vibrator_off"
             },
         "paramsKeyMap": {
             },
@@ -36098,7 +36110,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_flight_controller_vibrator_on_delay"  
+                "type": "byrobot_dronefighter_flight_controller_vibrator_on_delay"
             },
         "paramsKeyMap": {
                 "TIMEON"    : 0
@@ -36138,7 +36150,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_flight_controller_vibrator_on_reserve"    
+                "type": "byrobot_dronefighter_flight_controller_vibrator_on_reserve"
             },
         "paramsKeyMap": {
                 "TIMEON"    : 0
@@ -36194,7 +36206,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_flight_controller_vibrator_delay" 
+                "type": "byrobot_dronefighter_flight_controller_vibrator_delay"
             },
         "paramsKeyMap": {
                 "TIMEON"    : 0,
@@ -36254,7 +36266,7 @@ Entry.block = {
                         },
                         null
                     ],
-                "type": "byrobot_dronefighter_flight_controller_vibrator_reserve"   
+                "type": "byrobot_dronefighter_flight_controller_vibrator_reserve"
             },
         "paramsKeyMap": {
                 "TIMEON"    : 0,
@@ -36393,7 +36405,7 @@ Entry.block = {
                 var motorIndex      = parseInt(script.getField("MOTORINDEX"));
                 var motorDirection  = 1;
                 var motorSpeed      = parseInt(script.getNumberValue("MOTORSPEED", script));
-                
+
                 return Entry.byrobot_dronefighter_flight.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
             },
     },
@@ -36445,7 +36457,7 @@ Entry.block = {
                 var motorIndex      = parseInt(script.getNumberValue("MOTORINDEX", script)) - 1;
                 var motorDirection  = 1;
                 var motorSpeed      = parseInt(script.getNumberValue("MOTORSPEED", script));
-                
+
                 return Entry.byrobot_dronefighter_flight.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
             },
     },
@@ -36692,7 +36704,7 @@ Entry.block = {
             {
                 var controlTarget   = script.getField('CONTROLTARGET');
                 var value           = parseInt(script.getNumberValue("VALUE", script));
-                
+
                 return Entry.byrobot_dronefighter_flight.sendControlQuadSingle(script, controlTarget, value, 0, false);
             },
     },
@@ -36757,7 +36769,7 @@ Entry.block = {
                 var controlTarget   = script.getField('CONTROLTARGET');
                 var value           = parseInt(script.getNumberValue("VALUE", script));
                 var time            = parseInt(script.getNumberValue("TIME", script) * 1000);
-                
+
                 return Entry.byrobot_dronefighter_flight.sendControlQuadSingle(script, controlTarget, value, time, true);
             },
     },
@@ -36828,7 +36840,7 @@ Entry.block = {
                 var pitch       = parseInt(script.getNumberValue("PITCH", script));
                 var yaw         = parseInt(script.getNumberValue("YAW", script));
                 var throttle    = parseInt(script.getNumberValue("THROTTLE", script));
-                
+
                 return Entry.byrobot_dronefighter_flight.sendControlQuad(script, roll, pitch, yaw, throttle, 0, false);
             },
     },
