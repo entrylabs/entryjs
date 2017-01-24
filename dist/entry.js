@@ -11905,17 +11905,18 @@ Entry.Scene.prototype.resize = function() {
   if (0 !== b.length && d) {
     var c = $(d.view).offset().left;
     parseFloat($(a.view).css("margin-left"));
-    var d = Math.floor($(this.view_).width() - c - 5), e = c + 15, f;
+    var d = Math.floor($(this.view_).width() - c - 5), e = c + 15, c = 0, f;
     for (f in b) {
-      var c = b[f], g = c.view;
-      g.addClass("minValue");
-      g = $(g);
-      $(c.inputWrapper).width(Entry.computeInputWidth(c.name));
-      e += g.width() + -40;
+      var g = b[f], h = g.view;
+      h.addClass("minValue");
+      var h = $(h), k = parseFloat(Entry.computeInputWidth(g.name)), l = 10 * k / 9;
+      g === this.selectedScene && (c = l - k);
+      $(g.inputWrapper).width(l + "px");
+      e += h.width() + -40;
     }
     if (e > d) {
-      for (f in c = b.length - 1, d = d - Math.round($(a.view).width()) - 30.5 * c, d = Math.floor(d / c), b) {
-        c = b[f], a.id != c.id ? (c.view.removeClass("minValue"), $(c.inputWrapper).width(d)) : c.view.addClass("minValue");
+      for (f in g = b.length - 1, d = d - Math.round($(a.view).width()) - 30.5 * g - c, d = Math.floor(d / g), b) {
+        g = b[f], a.id != g.id ? (g.view.removeClass("minValue"), $(g.inputWrapper).width(d)) : g.view.addClass("minValue");
       }
     }
   }

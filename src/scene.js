@@ -488,15 +488,18 @@ Entry.Scene.prototype.resize = function() {
     var LEFT_MARGIN = -40;
 
     var normWidth = startPos + 15;
+    var diff = 0;
     for (var i in scenes) {
         var scene = scenes[i];
         var view = scene.view;
         view.addClass('minValue');
         view = $(view);
 
-        $(scene.inputWrapper).width(
-            Entry.computeInputWidth(scene.name)
-        );
+        var width = parseFloat(Entry.computeInputWidth(scene.name));
+        var adjusted =  width*10/9;
+        if (scene === this.selectedScene)
+            diff = adjusted - width;
+        $(scene.inputWrapper).width(adjusted + 'px');
         normWidth += view.width() + LEFT_MARGIN;
     }
 
@@ -505,7 +508,8 @@ Entry.Scene.prototype.resize = function() {
     function align() {
         var dummyWidth = 30.5;
         var len = scenes.length - 1;
-        totalWidth = totalWidth - Math.round($(selectedScene.view).width()) - dummyWidth*len;
+        totalWidth = totalWidth - Math.round($(selectedScene.view).width())
+                        - dummyWidth*len - diff;
         var fieldWidth = Math.floor(totalWidth/len);
         for (i in scenes) {
             scene = scenes[i];
