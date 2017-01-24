@@ -36,10 +36,9 @@ Entry.init = function(container, options) {
     this.initialize_();
     /** @type {!Element} */
     this.view_ = container;
+    $(this.view_).addClass("entry");
     if (this.device === 'tablet')
-        this.view_.setAttribute('class', 'entry tablet');
-    else
-        this.view_.setAttribute('class', 'entry');
+        $(this.view_).addClass("tablet");
 
     Entry.initFonts(options.fonts);
     this.createDom(container, this.type);

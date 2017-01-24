@@ -26255,7 +26255,7 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 0
         },
-        "class": "etc",
+        "class": "checker",
         "isNotFor": [],
         "func": function (sprite, script) {
             var obj = Entry.container.getObject(this.block.params[0]),
@@ -26332,7 +26332,7 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 0
         },
-        "class": "etc",
+        "class": "checker",
         "isNotFor": [],
         "func": function (sprite, script) {
             Entry.achieve(this.block.params[1], this.block.params[0]);
@@ -26380,7 +26380,7 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 0
         },
-        "class": "etc",
+        "class": "checker",
         "isNotFor": [],
         "func": function (sprite, script) {
             if (this.listener) {

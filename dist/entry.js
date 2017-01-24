@@ -7477,7 +7477,8 @@ Entry.init = function(a, b) {
   "workspace" == this.type && this.isPhone() && (this.type = "phone");
   this.initialize_();
   this.view_ = a;
-  "tablet" === this.device ? this.view_.setAttribute("class", "entry tablet") : this.view_.setAttribute("class", "entry");
+  $(this.view_).addClass("entry");
+  "tablet" === this.device && $(this.view_).addClass("tablet");
   Entry.initFonts(b.fonts);
   this.createDom(a, this.type);
   this.loadInterfaceState();
