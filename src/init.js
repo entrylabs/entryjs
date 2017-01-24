@@ -351,6 +351,13 @@ Entry.start = function(FPS) {
     Entry.engine.start(this.FPS);
 };
 
+Entry.stop = function() {
+    if (Entry.type === "invisible")
+        return;
+    this.FPS = null;
+    Entry.engine.stop();
+}
+
 /**
  * Parse init options
  * @param {!object} options for parse

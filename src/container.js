@@ -981,3 +981,10 @@ Entry.Container.prototype.removeFuncBlocks = function(functionType) {
         object.script.removeBlocksByType(functionType);
     });
 };
+
+Entry.Container.prototype.clear = function() {
+    this.objects_.map(function(o) {o.destroy()});
+    this.objects_ = [];
+    this.selectObject();
+    Entry.playground.flushPlayground();
+};

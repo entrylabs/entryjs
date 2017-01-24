@@ -402,13 +402,15 @@ Entry.Engine.prototype.start = function(FPS) {
     /** @type {!number} */
     createjs.Ticker.setFPS(Entry.FPS);
 
-    this.ticker = setInterval(this.update, Math.floor(1000/Entry.FPS));
+    if (!this.ticker)
+        this.ticker = setInterval(this.update, Math.floor(1000/Entry.FPS));
 };
 
 /**
  * Stop engine
  */
 Entry.Engine.prototype.stop = function() {
+    createjs.Ticker.reset();
     clearInterval(this.ticker);
     this.ticker = null;
 };

@@ -2331,3 +2331,22 @@ Entry.VariableContainer.prototype._truncName = function(name, type) {
 };
 
 Entry.VariableContainer.prototype._maxNameLength = 10;
+
+Entry.VariableContainer.prototype.clear = function() {
+    this.variables_.map(function(v) {v.remove()});
+    this.variables_ = [];
+
+    this.lists_.map(function(v) {v.remove()});
+    this.lists_ = [];
+
+    this.messages_ = [];
+
+    for (var key in this.functions_) {
+        var func = this.functions_[key]
+        func.destroy();
+        delete this.functions_[key];
+    }
+
+    Entry.playground.reloadPlayground();
+    this.updateList();
+};

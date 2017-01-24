@@ -53,6 +53,14 @@ Entry.loadProject = function(project) {
     return project;
 };
 
+Entry.clearProject = function() {
+    Entry.stop();
+    Entry.projectId = null;
+    Entry.variableContainer.clear();
+    Entry.container.clear();
+    Entry.scene.clear();
+}
+
 /**
  * Export project
  * @param {?Project} project
