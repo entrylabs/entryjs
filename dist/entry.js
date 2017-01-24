@@ -27149,7 +27149,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
     this._parser._hasDeclaration = !1;
     if (e == Entry.Vim.TEXT_TYPE_PY) {
       if (this._currentObject) {
-        c = "# " + this._currentObject.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc";
+        c = "# " + this._currentObject.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc120 \ucf54\ub4dc";
         var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
         e === Entry.Vim.TEXT_TYPE_PY && (f = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(f));
         this.codeMirror.setValue(f);
