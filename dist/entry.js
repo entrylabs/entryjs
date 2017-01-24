@@ -7527,6 +7527,9 @@ Entry.init = function(a, b) {
   Entry.loadAudio_([Entry.mediaFilePath + "sounds/delete.mp3", Entry.mediaFilePath + "sounds/delete.ogg", Entry.mediaFilePath + "sounds/delete.wav"], "entryDelete");
   createjs.Sound.stop();
 };
+Entry.changeContainer = function(a) {
+  a.appendChild(this.view_);
+};
 Entry.loadAudio_ = function(a, b) {
   if (window.Audio && a.length) {
     for (;0 < a.length;) {

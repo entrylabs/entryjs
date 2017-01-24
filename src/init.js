@@ -93,6 +93,10 @@ Entry.init = function(container, options) {
 
 };
 
+Entry.changeContainer = function(container) {
+    container.appendChild(this.view_);
+};
+
 Entry.loadAudio_ = function(filenames, name) {
   if (!window.Audio || !filenames.length) {
     // No browser support for Audio.
