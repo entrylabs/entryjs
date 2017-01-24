@@ -354,4 +354,13 @@ Entry.generateFunctionSchema = function(functionId) {
     Entry.block[functionId] = blockSchema;
 };
 
+Entry.getMainWS = function() {
+    var ret;
+    if (Entry.mainWorkspace)
+        ret = Entry.mainWorkspace
+    else if (Entry.playground && Entry.playground.mainWorkspace)
+        ret = Entry.playground.mainWorkspace
+    return ret;
+};
+
 window.Entry = Entry;
