@@ -304,6 +304,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
     );
     this.blockMenu = this.mainWorkspace.blockMenu;
     this.board = this.mainWorkspace.board;
+    this.blockMenu.banClass("checker");
 
     if (Entry.hw) this.updateHW();
 };

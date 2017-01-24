@@ -26256,7 +26256,7 @@ Entry.block = {
             "VALUE": 0
         },
         "class": "checker",
-        "isNotFor": [],
+        "isNotFor": [ "checker" ],
         "func": function (sprite, script) {
             var obj = Entry.container.getObject(this.block.params[0]),
                 flow = this.block.params[1],
@@ -26333,7 +26333,7 @@ Entry.block = {
             "VALUE": 0
         },
         "class": "checker",
-        "isNotFor": [],
+        "isNotFor": [ "checker" ],
         "func": function (sprite, script) {
             Entry.achieve(this.block.params[1], this.block.params[0]);
             this.die();
@@ -26381,7 +26381,7 @@ Entry.block = {
             "VALUE": 0
         },
         "class": "checker",
-        "isNotFor": [],
+        "isNotFor": [ "checker" ],
         "func": function (sprite, script) {
             if (this.listener) {
                 if (this.isDone) {

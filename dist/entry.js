@@ -592,18 +592,11 @@ Blockly.Blocks.albert_set_eye_to = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-<<<<<<< HEAD
 Entry.block.albert_set_eye_to = function(a, b) {
   a = Entry.hw.sendQueue;
   var c = b.getField("DIRECTION", b), d = Number(b.getField("COLOR", b));
   "LEFT" == c ? a.leftEye = d : ("RIGHT" != c && (a.leftEye = d), a.rightEye = d);
   return b.callReturn();
-=======
-Entry.block.albert_set_eye_to = function(b, a) {
-  var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
-  "LEFT" == c ? d.leftEye = e : ("RIGHT" != c && (d.leftEye = e), d.rightEye = e);
-  return a.callReturn();
->>>>>>> origin/new/courseware
 };
 Blockly.Blocks.albert_clear_eye = {init:function() {
   this.setColour("#00979D");
@@ -906,7 +899,6 @@ Blockly.Blocks.arduino_get_string = {init:function() {
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
 }};
-<<<<<<< HEAD
 Entry.block.arduino_get_number = function(a, b) {
   a = b.getValue("VALUE", b);
   b = new XMLHttpRequest;
@@ -914,14 +906,6 @@ Entry.block.arduino_get_number = function(a, b) {
   b.send(String(a));
   Entry.assert(200 == b.status, "arduino is not connected");
   return Number(b.responseText);
-=======
-Entry.block.arduino_get_number = function(b, a) {
-  var d = a.getValue("VALUE", a), c = new XMLHttpRequest;
-  c.open("POST", "http://localhost:23518/arduino/", !1);
-  c.send(String(d));
-  Entry.assert(200 == c.status, "arduino is not connected");
-  return +c.responseText;
->>>>>>> origin/new/courseware
 };
 Blockly.Blocks.arduino_get_number = {init:function() {
   this.setColour("#00979D");
@@ -1003,18 +987,11 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-<<<<<<< HEAD
 Entry.block.arduino_toggle_led = function(a, b) {
   a = b.getNumberValue("VALUE");
   var c = b.getField("OPERATOR");
   Entry.hw.setDigitalPortValue(a, "on" == c ? 255 : 0);
   return b.callReturn();
-=======
-Entry.block.arduino_toggle_led = function(b, a) {
-  var d = a.getNumberValue("VALUE"), c = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(d, c);
-  return a.callReturn();
->>>>>>> origin/new/courseware
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
   this.setColour("#00979D");
@@ -1217,7 +1194,6 @@ Blockly.Blocks.dplay_select_led = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-<<<<<<< HEAD
 Entry.block.dplay_select_led = function(a, b) {
   var c = b.getField("PORT");
   a = 7;
@@ -1225,14 +1201,6 @@ Entry.block.dplay_select_led = function(a, b) {
   c = b.getField("OPERATOR");
   Entry.hw.setDigitalPortValue(a, "on" == c ? 255 : 0);
   return b.callReturn();
-=======
-Entry.block.dplay_select_led = function(b, a) {
-  var d = a.getField("PORT"), c = 7;
-  "7" == d ? c = 7 : "8" == d ? c = 8 : "9" == d ? c = 9 : "10" == d && (c = 10);
-  d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
-  return a.callReturn();
->>>>>>> origin/new/courseware
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
   this.setColour("#00979D");
@@ -1899,20 +1867,12 @@ Blockly.Blocks.ev3_touch_sensor = {init:function() {
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
 }};
-<<<<<<< HEAD
 Entry.block.ev3_touch_sensor = function(a, b) {
   b.getStringField("PORT", b);
   a = Entry.hw.getDigitalPortValue(b.getNumberField("PORT", b));
   b = !1;
   a.type == Entry.EV3.deviceTypes.Touch && 1 <= Number(a.siValue) && (b = !0);
   return b;
-=======
-Entry.block.ev3_touch_sensor = function(b, a) {
-  a.getStringField("PORT", a);
-  var d = Entry.hw.getDigitalPortValue(a.getNumberField("PORT", a)), c = !1;
-  d.type == Entry.EV3.deviceTypes.Touch && 1 <= +d.siValue && (c = !0);
-  return c;
->>>>>>> origin/new/courseware
 };
 Blockly.Blocks.ev3_color_sensor = {init:function() {
   this.setColour("#00979D");
@@ -2408,15 +2368,9 @@ Blockly.Blocks.hamster_set_following_speed_to = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-<<<<<<< HEAD
 Entry.block.hamster_set_following_speed_to = function(a, b) {
   Entry.hw.sendQueue.lineTracerSpeed = Number(b.getField("SPEED", b));
   return b.callReturn();
-=======
-Entry.block.hamster_set_following_speed_to = function(b, a) {
-  Entry.hw.sendQueue.lineTracerSpeed = +a.getField("SPEED", a);
-  return a.callReturn();
->>>>>>> origin/new/courseware
 };
 Blockly.Blocks.hamster_stop = {init:function() {
   this.setColour("#00979D");
@@ -2440,18 +2394,11 @@ Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-<<<<<<< HEAD
 Entry.block.hamster_set_led_to = function(a, b) {
   a = Entry.hw.sendQueue;
   var c = b.getField("DIRECTION", b), d = Number(b.getField("COLOR", b));
   "LEFT" == c ? a.leftLed = d : ("RIGHT" != c && (a.leftLed = d), a.rightLed = d);
   return b.callReturn();
-=======
-Entry.block.hamster_set_led_to = function(b, a) {
-  var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
-  "LEFT" == c ? d.leftLed = e : ("RIGHT" != c && (d.leftLed = e), d.rightLed = e);
-  return a.callReturn();
->>>>>>> origin/new/courseware
 };
 Blockly.Blocks.hamster_clear_led = {init:function() {
   this.setColour("#00979D");
@@ -2650,18 +2597,11 @@ Blockly.Blocks.hamster_set_port_to = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-<<<<<<< HEAD
 Entry.block.hamster_set_port_to = function(a, b) {
   a = Entry.hw.sendQueue;
   var c = b.getField("PORT", b), d = Number(b.getField("MODE", b));
   "A" == c ? a.ioModeA = d : ("B" != c && (a.ioModeA = d), a.ioModeB = d);
   return b.callReturn();
-=======
-Entry.block.hamster_set_port_to = function(b, a) {
-  var d = Entry.hw.sendQueue, c = a.getField("PORT", a), e = +a.getField("MODE", a);
-  "A" == c ? d.ioModeA = e : ("B" != c && (d.ioModeA = e), d.ioModeB = e);
-  return a.callReturn();
->>>>>>> origin/new/courseware
 };
 Blockly.Blocks.hamster_change_output_by = {init:function() {
   this.setColour("#00979D");
@@ -3007,18 +2947,11 @@ Blockly.Blocks.roduino_set_digital = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-<<<<<<< HEAD
 Entry.block.roduino_set_digital = function(a, b) {
   a = b.getNumberValue("VALUE");
   var c = b.getField("OPERATOR");
   Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, a, "on" == c ? 1 : 0]);
   return b.callReturn();
-=======
-Entry.block.roduino_set_digital = function(b, a) {
-  var d = a.getNumberValue("VALUE"), c = "on" == a.getField("OPERATOR") ? 1 : 0;
-  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, d, c]);
-  return a.callReturn();
->>>>>>> origin/new/courseware
 };
 Blockly.Blocks.roduino_motor = {init:function() {
   this.setColour("#00979D");
@@ -3097,18 +3030,11 @@ Blockly.Blocks.schoolkit_set_output = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-<<<<<<< HEAD
 Entry.block.schoolkit_set_output = function(a, b) {
   a = b.getNumberValue("VALUE");
   var c = b.getField("OPERATOR");
   Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, a, "on" == c ? 1 : 0]);
   return b.callReturn();
-=======
-Entry.block.schoolkit_set_output = function(b, a) {
-  var d = a.getNumberValue("VALUE"), c = "on" == a.getField("OPERATOR") ? 1 : 0;
-  Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, d, c]);
-  return a.callReturn();
->>>>>>> origin/new/courseware
 };
 Blockly.Blocks.schoolkit_get_in_port_number = {init:function() {
   this.setColour("#00979D");
@@ -3142,7 +3068,6 @@ Blockly.Blocks.schoolkit_motor = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-<<<<<<< HEAD
 Entry.block.schoolkit_motor = function(a, b) {
   var c;
   c = b.getField("MODE");
@@ -3152,13 +3077,6 @@ Entry.block.schoolkit_motor = function(a, b) {
   255 < d ? d = 255 : 0 > d && (d = 0);
   "cw" == a ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 1, c, d]) : "ccw" == a ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 2, c, d]) : "stop" == a && Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 0, c, d]);
   return b.callReturn();
-=======
-Entry.block.schoolkit_motor = function(b, a) {
-  var d = 0, c = 0, d = a.getField("MODE"), e = a.getField("OPERATOR"), f = a.getNumberValue("VALUE"), d = "motor1" == d ? 7 : 8;
-  255 < f ? f = 255 : 0 > f && (f = 0);
-  "cw" == e ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 1, d, f]) : "ccw" == e ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 2, d, f]) : "stop" == e && Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, c, d, f]);
-  return a.callReturn();
->>>>>>> origin/new/courseware
 };
 Blockly.Blocks.schoolkit_set_servo_value = {init:function() {
   this.setColour("#00979D");
@@ -6241,332 +6159,8 @@ Entry.EntityObject.prototype.setWidth = function(a) {
   this.updateBG();
   Entry.requestUpdate = !0;
 };
-<<<<<<< HEAD
 Entry.EntityObject.prototype.getWidth = function() {
   return this.width;
-=======
-Entry.EntryObject.prototype.generateView = function() {
-  if ("workspace" == Entry.type) {
-    var b = Entry.createElement("li", this.id);
-    b.addClass("entryContainerListElementWorkspace");
-    b.object = this;
-    Entry.Utils.disableContextmenu(b);
-    var a = this;
-    longPressTimer = null;
-    $(b).bind("mousedown touchstart", function(b) {
-      function d(a) {
-        a.stopPropagation();
-        h && 5 < Math.sqrt(Math.pow(a.pageX - h.x, 2) + Math.pow(a.pageY - h.y, 2)) && longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
-      }
-      function c(a) {
-        a.stopPropagation();
-        e.unbind(".object");
-        longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
-      }
-      Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
-      var e = $(document), f = b.type, g = !1;
-      if (Entry.Utils.isRightButton(b)) {
-        b.stopPropagation(), Entry.documentMousedown.notify(b), g = !0, a._rightClick(b);
-      } else {
-        var h = {x:b.clientX, y:b.clientY};
-        "touchstart" !== f || g || (b.stopPropagation(), Entry.documentMousedown.notify(b), longPressTimer = setTimeout(function() {
-          longPressTimer && (longPressTimer = null, a._rightClick(b));
-        }, 1E3), e.bind("mousemove.object touchmove.object", d), e.bind("mouseup.object touchend.object", c));
-      }
-    });
-    this.view_ = b;
-    var d = this, b = Entry.createElement("ul");
-    b.addClass("objectInfoView");
-    Entry.objectEditable || b.addClass("entryHide");
-    var c = Entry.createElement("li");
-    c.addClass("objectInfo_visible");
-    this.entity.getVisible() || c.addClass("objectInfo_unvisible");
-    c.bindOnClick(function(a) {
-      Entry.engine.isState("run") || (a = d.entity, a.setVisible(!a.getVisible()) ? this.removeClass("objectInfo_unvisible") : this.addClass("objectInfo_unvisible"));
-    });
-    var e = Entry.createElement("li");
-    e.addClass("objectInfo_unlock");
-    this.getLock() && e.addClass("objectInfo_lock");
-    e.bindOnClick(function(a) {
-      Entry.engine.isState("run") || (a = d, a.setLock(!a.getLock()) ? this.addClass("objectInfo_lock") : this.removeClass("objectInfo_lock"), a.updateInputViews(a.getLock()));
-    });
-    b.appendChild(c);
-    b.appendChild(e);
-    this.view_.appendChild(b);
-    b = Entry.createElement("div");
-    b.addClass("entryObjectThumbnailWorkspace");
-    this.view_.appendChild(b);
-    this.thumbnailView_ = b;
-    b = Entry.createElement("div");
-    b.addClass("entryObjectWrapperWorkspace");
-    this.view_.appendChild(b);
-    c = Entry.createElement("input");
-    c.bindOnClick(function(a) {
-      a.preventDefault();
-      Entry.container.selectObject(d.id);
-      this.readOnly || (this.focus(), this.select());
-    });
-    c.addClass("entryObjectNameWorkspace");
-    b.appendChild(c);
-    this.nameView_ = c;
-    this.nameView_.entryObject = this;
-    c.setAttribute("readonly", !0);
-    var f = this;
-    this.nameView_.onblur = function(a) {
-      this.entryObject.name = this.value;
-      Entry.playground.reloadPlayground();
-    };
-    this.nameView_.onkeypress = function(a) {
-      13 == a.keyCode && f.editObjectValues(!1);
-    };
-    this.nameView_.value = this.name;
-    c = Entry.createElement("div");
-    c.addClass("entryObjectEditWorkspace");
-    c.object = this;
-    this.editView_ = c;
-    this.view_.appendChild(c);
-    $(c).mousedown(function(b) {
-      var d = a.isEditing;
-      b.stopPropagation();
-      Entry.documentMousedown.notify(b);
-      Entry.engine.isState("run") || !1 !== d || (a.editObjectValues(!d), Entry.playground.object !== a && Entry.container.selectObject(a.id), a.nameView_.select());
-    });
-    c.blur = function(b) {
-      a.editObjectComplete();
-    };
-    Entry.objectEditable && Entry.objectDeletable && (c = Entry.createElement("div"), c.addClass("entryObjectDeleteWorkspace"), c.object = this, this.deleteView_ = c, this.view_.appendChild(c), c.bindOnClick(function(a) {
-      Entry.engine.isState("run") || Entry.container.removeObject(this.object);
-    }));
-    c = Entry.createElement("div");
-    c.addClass("entryObjectInformationWorkspace");
-    c.object = this;
-    this.isInformationToggle = !1;
-    b.appendChild(c);
-    this.informationView_ = c;
-    b = Entry.createElement("div");
-    b.addClass("entryObjectRotationWrapperWorkspace");
-    b.object = this;
-    this.view_.appendChild(b);
-    c = Entry.createElement("span");
-    c.addClass("entryObjectCoordinateWorkspace");
-    b.appendChild(c);
-    e = Entry.createElement("span");
-    e.addClass("entryObjectCoordinateSpanWorkspace");
-    e.innerHTML = "X:";
-    var g = Entry.createElement("input");
-    g.addClass("entryObjectCoordinateInputWorkspace");
-    g.setAttribute("readonly", !0);
-    g.bindOnClick(function(a) {
-      a.stopPropagation();
-      this.select();
-    });
-    var h = Entry.createElement("span");
-    h.addClass("entryObjectCoordinateSpanWorkspace");
-    h.innerHTML = "Y:";
-    var k = Entry.createElement("input");
-    k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right");
-    k.bindOnClick(function(a) {
-      a.stopPropagation();
-      this.select();
-    });
-    k.setAttribute("readonly", !0);
-    var l = Entry.createElement("span");
-    l.addClass("entryObjectCoordinateSizeWorkspace");
-    l.innerHTML = Lang.Workspace.Size + " : ";
-    var m = Entry.createElement("input");
-    m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
-    m.bindOnClick(function(a) {
-      a.stopPropagation();
-      this.select();
-    });
-    m.setAttribute("readonly", !0);
-    c.appendChild(e);
-    c.appendChild(g);
-    c.appendChild(h);
-    c.appendChild(k);
-    c.appendChild(l);
-    c.appendChild(m);
-    c.xInput_ = g;
-    c.yInput_ = k;
-    c.sizeInput_ = m;
-    this.coordinateView_ = c;
-    d = this;
-    g.onkeypress = function(a) {
-      13 == a.keyCode && d.editObjectValues(!1);
-    };
-    g.onblur = function(a) {
-      isNaN(g.value) || d.entity.setX(+g.value);
-      d.updateCoordinateView();
-      Entry.stage.updateObject();
-    };
-    k.onkeypress = function(a) {
-      13 == a.keyCode && d.editObjectValues(!1);
-    };
-    k.onblur = function(a) {
-      isNaN(k.value) || d.entity.setY(+k.value);
-      d.updateCoordinateView();
-      Entry.stage.updateObject();
-    };
-    m.onkeypress = function(a) {
-      13 == a.keyCode && d.editObjectValues(!1);
-    };
-    m.onblur = function(a) {
-      isNaN(m.value) || d.entity.setSize(+m.value);
-      d.updateCoordinateView();
-      Entry.stage.updateObject();
-    };
-    c = Entry.createElement("div");
-    c.addClass("entryObjectRotateLabelWrapperWorkspace");
-    this.view_.appendChild(c);
-    this.rotateLabelWrapperView_ = c;
-    e = Entry.createElement("span");
-    e.addClass("entryObjectRotateSpanWorkspace");
-    e.innerHTML = Lang.Workspace.rotation + " : ";
-    var n = Entry.createElement("input");
-    n.addClass("entryObjectRotateInputWorkspace");
-    n.setAttribute("readonly", !0);
-    n.bindOnClick(function(a) {
-      a.stopPropagation();
-      this.select();
-    });
-    this.rotateSpan_ = e;
-    this.rotateInput_ = n;
-    h = Entry.createElement("span");
-    h.addClass("entryObjectDirectionSpanWorkspace");
-    h.innerHTML = Lang.Workspace.direction + " : ";
-    var q = Entry.createElement("input");
-    q.addClass("entryObjectDirectionInputWorkspace");
-    q.setAttribute("readonly", !0);
-    q.bindOnClick(function(a) {
-      a.stopPropagation();
-      this.select();
-    });
-    this.directionInput_ = q;
-    c.appendChild(e);
-    c.appendChild(n);
-    c.appendChild(h);
-    c.appendChild(q);
-    c.rotateInput_ = n;
-    c.directionInput_ = q;
-    d = this;
-    n.onkeypress = function(a) {
-      13 == a.keyCode && d.editObjectValues(!1);
-    };
-    n.onblur = function(a) {
-      a = n.value;
-      -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || d.entity.setRotation(+a);
-      d.updateRotationView();
-      Entry.stage.updateObject();
-    };
-    q.onkeypress = function(a) {
-      13 == a.keyCode && d.editObjectValues(!1);
-    };
-    q.onblur = function(a) {
-      a = q.value;
-      -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || d.entity.setDirection(+a);
-      d.updateRotationView();
-      Entry.stage.updateObject();
-    };
-    c = Entry.createElement("div");
-    c.addClass("rotationMethodWrapper");
-    b.appendChild(c);
-    this.rotationMethodWrapper_ = c;
-    b = Entry.createElement("span");
-    b.addClass("entryObjectRotateMethodLabelWorkspace");
-    c.appendChild(b);
-    b.innerHTML = Lang.Workspace.rotate_method + " : ";
-    b = Entry.createElement("div");
-    b.addClass("entryObjectRotateModeWorkspace");
-    b.addClass("entryObjectRotateModeAWorkspace");
-    b.object = this;
-    this.rotateModeAView_ = b;
-    c.appendChild(b);
-    b.bindOnClick(function(a) {
-      Entry.engine.isState("run") || this.object.getLock() || (this.object.initRotateValue("free"), this.object.setRotateMethod("free"));
-    });
-    b = Entry.createElement("div");
-    b.addClass("entryObjectRotateModeWorkspace");
-    b.addClass("entryObjectRotateModeBWorkspace");
-    b.object = this;
-    this.rotateModeBView_ = b;
-    c.appendChild(b);
-    b.bindOnClick(function(a) {
-      Entry.engine.isState("run") || this.object.getLock() || (this.object.initRotateValue("vertical"), this.object.setRotateMethod("vertical"));
-    });
-    b = Entry.createElement("div");
-    b.addClass("entryObjectRotateModeWorkspace");
-    b.addClass("entryObjectRotateModeCWorkspace");
-    b.object = this;
-    this.rotateModeCView_ = b;
-    c.appendChild(b);
-    b.bindOnClick(function(a) {
-      Entry.engine.isState("run") || this.object.getLock() || (this.object.initRotateValue("none"), this.object.setRotateMethod("none"));
-    });
-    this.updateThumbnailView();
-    this.updateCoordinateView();
-    this.updateRotateMethodView();
-    this.updateInputViews();
-    this.updateCoordinateView(!0);
-    this.updateRotationView(!0);
-    return this.view_;
-  }
-  if ("phone" == Entry.type) {
-    return b = Entry.createElement("li", this.id), b.addClass("entryContainerListElementWorkspace"), b.object = this, b.bindOnClick(function(a) {
-      Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
-    }), $ && (a = this, context.attach("#" + this.id, [{text:Lang.Workspace.context_rename, href:"/", action:function(a) {
-      a.preventDefault();
-    }}, {text:Lang.Workspace.context_duplicate, href:"/", action:function(b) {
-      b.preventDefault();
-      Entry.container.addCloneObject(a);
-    }}, {text:Lang.Workspace.context_remove, href:"/", action:function(b) {
-      b.preventDefault();
-      Entry.container.removeObject(a);
-    }}])), this.view_ = b, b = Entry.createElement("ul"), b.addClass("objectInfoView"), c = Entry.createElement("li"), c.addClass("objectInfo_visible"), e = Entry.createElement("li"), e.addClass("objectInfo_lock"), b.appendChild(c), b.appendChild(e), this.view_.appendChild(b), b = Entry.createElement("div"), b.addClass("entryObjectThumbnailWorkspace"), this.view_.appendChild(b), this.thumbnailView_ = b, b = Entry.createElement("div"), b.addClass("entryObjectWrapperWorkspace"), this.view_.appendChild(b), 
-    c = Entry.createElement("input"), c.addClass("entryObjectNameWorkspace"), b.appendChild(c), this.nameView_ = c, this.nameView_.entryObject = this, this.nameView_.onblur = function() {
-      this.entryObject.name = this.value;
-      Entry.playground.reloadPlayground();
-    }, this.nameView_.onkeypress = function(a) {
-      13 == a.keyCode && d.editObjectValues(!1);
-    }, this.nameView_.value = this.name, Entry.objectEditable && Entry.objectDeletable && (c = Entry.createElement("div"), c.addClass("entryObjectDeletePhone"), c.object = this, this.deleteView_ = c, this.view_.appendChild(c), c.bindOnClick(function(a) {
-      Entry.engine.isState("run") || Entry.container.removeObject(this.object);
-    })), c = Entry.createElement("button"), c.addClass("entryObjectEditPhone"), c.object = this, c.bindOnClick(function(a) {
-      if (a = Entry.container.getObject(this.id)) {
-        Entry.container.selectObject(a.id), Entry.playground.injectObject(a);
-      }
-    }), this.view_.appendChild(c), c = Entry.createElement("div"), c.addClass("entryObjectInformationWorkspace"), c.object = this, this.isInformationToggle = !1, b.appendChild(c), this.informationView_ = c, c = Entry.createElement("div"), c.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(c), this.rotateLabelWrapperView_ = c, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
-    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, c.appendChild(e), c.appendChild(n), c.appendChild(h), c.appendChild(q), c.rotateInput_ = n, c.directionInput_ = q, d = this, n.onkeypress = function(a) {
-      13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setRotation(+a), d.updateRotationView(), n.blur());
-    }, n.onblur = function(a) {
-      d.entity.setRotation(d.entity.getRotation());
-      Entry.stage.updateObject();
-    }, q.onkeypress = function(a) {
-      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setDirection(+a), d.updateRotationView(), q.blur());
-    }, q.onblur = function(a) {
-      d.entity.setDirection(d.entity.getDirection());
-      Entry.stage.updateObject();
-    }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), c = Entry.createElement("span"), c.addClass("entryObjectCoordinateWorkspace"), b.appendChild(c), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
-    h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, m = Entry.createElement("input"), m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), c.appendChild(e), c.appendChild(g), c.appendChild(h), c.appendChild(k), c.appendChild(l), c.appendChild(m), 
-    c.xInput_ = g, c.yInput_ = k, c.sizeInput_ = m, this.coordinateView_ = c, d = this, g.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(g.value) || d.entity.setX(+g.value), d.updateCoordinateView(), d.blur());
-    }, g.onblur = function(a) {
-      d.entity.setX(d.entity.getX());
-      Entry.stage.updateObject();
-    }, k.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(k.value) || d.entity.setY(+k.value), d.updateCoordinateView(), d.blur());
-    }, k.onblur = function(a) {
-      d.entity.setY(d.entity.getY());
-      Entry.stage.updateObject();
-    }, c = Entry.createElement("div"), c.addClass("rotationMethodWrapper"), b.appendChild(c), this.rotationMethodWrapper_ = c, b = Entry.createElement("span"), b.addClass("entryObjectRotateMethodLabelWorkspace"), c.appendChild(b), b.innerHTML = Lang.Workspace.rotate_method + " : ", b = Entry.createElement("div"), b.addClass("entryObjectRotateModeWorkspace"), b.addClass("entryObjectRotateModeAWorkspace"), b.object = this, this.rotateModeAView_ = b, c.appendChild(b), b.bindOnClick(function(a) {
-      Entry.engine.isState("run") || this.object.setRotateMethod("free");
-    }), b = Entry.createElement("div"), b.addClass("entryObjectRotateModeWorkspace"), b.addClass("entryObjectRotateModeBWorkspace"), b.object = this, this.rotateModeBView_ = b, c.appendChild(b), b.bindOnClick(function(a) {
-      Entry.engine.isState("run") || this.object.setRotateMethod("vertical");
-    }), b = Entry.createElement("div"), b.addClass("entryObjectRotateModeWorkspace"), b.addClass("entryObjectRotateModeCWorkspace"), b.object = this, this.rotateModeCView_ = b, c.appendChild(b), b.bindOnClick(function(a) {
-      Entry.engine.isState("run") || this.object.setRotateMethod("none");
-    }), this.updateThumbnailView(), this.updateCoordinateView(), this.updateRotateMethodView(), this.updateInputViews(), this.view_;
-  }
->>>>>>> origin/new/courseware
 };
 Entry.EntityObject.prototype.setHeight = function(a) {
   this.height = a;
@@ -6915,8 +6509,7 @@ Entry.TargetChecker = function(a, b) {
   this.isForEdit = b;
   this.goals = [];
   this.unachievedGoals = [];
-  this.isForEdit && (this.watchingBlocks = []);
-  this.blocks = ["check_object_property", "check_block_execution", "check_lecture_goal"];
+  this.isForEdit && (this.watchingBlocks = [], Entry.playground.mainWorkspace.blockMenu.unbanClass("checker"));
   this.isSuccess = this.isFail = !1;
   this.entity = this;
   this.parent = this;
@@ -7112,7 +6705,6 @@ Entry.Func.setupMenuCode = function() {
   var a = Entry.playground.mainWorkspace;
   a && (a = a.getBlockMenu().getCategoryCodes("func"), this._fieldLabel = a.createThread([{type:"function_field_label"}]).getFirstBlock(), this._fieldString = a.createThread([{type:"function_field_string", params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock(), this._fieldBoolean = a.createThread([{type:"function_field_boolean", params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock(), this.menuCode = a);
 };
-<<<<<<< HEAD
 Entry.Func.refreshMenuCode = function() {
   if (Entry.playground.mainWorkspace) {
     this.menuCode || this.setupMenuCode();
@@ -7133,34 +6725,6 @@ Entry.Func.requestParamBlock = function(a) {
       break;
     default:
       return null;
-=======
-Entry.Painter.prototype.fill = function() {
-  if (!this.stroke.locked) {
-    this.stroke.locked = !0;
-    this.initCommand();
-    this.doCommand();
-    this.clearHandle();
-    var b = this.canvas.width, a = this.canvas.height;
-    this.colorLayerData = this.ctx.getImageData(0, 0, b, a);
-    var d = new createjs.Point(this.stage.mouseX, this.stage.mouseY);
-    d.x = Math.round(d.x);
-    d.y = Math.round(d.y);
-    for (var c = 4 * (d.y * b + d.x), e = this.colorLayerData.data[c], f = this.colorLayerData.data[c + 1], g = this.colorLayerData.data[c + 2], h = this.colorLayerData.data[c + 3], k, l, d = [[d.x, d.y]], m = Entry.hex2rgb(this.stroke.lineColor);d.length;) {
-      for (var c = d.pop(), n = c[0], q = c[1], c = 4 * (q * b + n);0 <= q && this.matchColor(c, e, f, g, h);) {
-        --q, c -= 4 * b;
-      }
-      c += 4 * b;
-      q += 1;
-      for (l = k = !1;q < a - 1 && this.matchColor(c, e, f, g, h);) {
-        q += 1, this.colorPixel(c, m.r, m.g, m.b), 0 < n && (this.matchColor(c - 4, e, f, g, h) ? k || (d.push([n - 1, q]), k = !0) : k && (k = !1)), n < b - 1 && (this.matchColor(c + 4, e, f, g, h) ? l || (d.push([n + 1, q]), l = !0) : l && (l = !1)), c += 4 * b;
-      }
-      if (1080 < d.length) {
-        break;
-      }
-    }
-    this.file.modified = !0;
-    this.reloadContext();
->>>>>>> origin/new/courseware
   }
   b = a + "Param_" + b;
   a = Entry.Func.createParamBlock(b, c, a);
@@ -8185,41 +7749,9 @@ Entry.StateManager.prototype.undo = function() {
         break;
       }
     }
-<<<<<<< HEAD
     this.updateView();
     this.endRestore();
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
-=======
-  };
-})(Entry.JSParser.prototype);
-Entry.ParserOld = {};
-Entry.Parser = function(b, a, d) {
-  this._mode = b;
-  this.syntax = {};
-  this.codeMirror = d;
-  this._lang = a || "js";
-  this.availableCode = [];
-  "maze" === b && (this._stageId = +Ntry.configManager.getConfig("stageId"), "object" == typeof NtryData && this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
-  this.mappingSyntax(b);
-  switch(this._lang) {
-    case "js":
-      this._parser = new Entry.JSParser(this.syntax);
-      a = this.syntax;
-      var c = {}, e;
-      for (e in a.Scope) {
-        c[e + "();\n"] = a.Scope[e];
-      }
-      "BasicIf" in a && (c.front = "BasicIf");
-      CodeMirror.commands.javascriptComplete = function(a) {
-        CodeMirror.showHint(a, null, {globalScope:c});
-      };
-      d.on("keyup", function(a, b) {
-        !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:c});
-      });
-      break;
-    case "block":
-      this._parser = new Entry.BlockParser(this.syntax);
->>>>>>> origin/new/courseware
   }
 };
 Entry.StateManager.prototype.redo = function() {
@@ -8765,46 +8297,9 @@ Entry.EntryObject.prototype.getPicture = function(a) {
       return b[d];
     }
   }
-<<<<<<< HEAD
   for (d = 0;d < c;d++) {
     if (b[d].name == a) {
       return b[d];
-=======
-};
-Entry.Scene.prototype.getNextScene = function() {
-  var b = this.getScenes();
-  return b[b.indexOf(this.selectedScene) + 1];
-};
-Entry.Scene.prototype.isMax = function() {
-  return this.scenes_.length >= this.maxCount;
-};
-Entry.Script = function(b) {
-  this.entity = b;
-};
-p = Entry.Script.prototype;
-p.init = function(b, a, d) {
-  Entry.assert("BLOCK" == b.tagName.toUpperCase(), b.tagName);
-  this.type = b.getAttribute("type");
-  this.id = +b.getAttribute("id");
-  b.getElementsByTagName("mutation").length && b.getElementsByTagName("mutation")[0].hasAttribute("hashid") && (this.hashId = b.childNodes[0].getAttribute("hashid"));
-  "REPEAT" == this.type.substr(0, 6).toUpperCase() && (this.isRepeat = !0);
-  a instanceof Entry.Script && (this.previousScript = a, a.parentScript && (this.parentScript = a.parentScript));
-  d instanceof Entry.Script && (this.parentScript = d);
-  b = b.childNodes;
-  for (a = 0;a < b.length;a++) {
-    if (d = b[a], "NEXT" == d.tagName.toUpperCase()) {
-      this.nextScript = new Entry.Script(this.entity), this.register && (this.nextScript.register = this.register), this.nextScript.init(b[a].childNodes[0], this);
-    } else {
-      if ("VALUE" == d.tagName.toUpperCase()) {
-        this.values || (this.values = {});
-        var c = new Entry.Script(this.entity);
-        this.register && (c.register = this.register);
-        c.init(d.childNodes[0]);
-        this.values[d.getAttribute("name")] = c;
-      } else {
-        "FIELD" == d.tagName.toUpperCase() ? (this.fields || (this.fields = {}), this.fields[d.getAttribute("name")] = d.textContent) : "STATEMENT" == d.tagName.toUpperCase() && (this.statements || (this.statements = {}), c = new Entry.Script(this.entity), this.register && (c.register = this.register), c.init(d.childNodes[0], null, this), c.key = d.getAttribute("name"), this.statements[d.getAttribute("name")] = c);
-      }
->>>>>>> origin/new/courseware
     }
   }
   a = Entry.parseNumber(a);
@@ -8865,16 +8360,11 @@ Entry.EntryObject.prototype.getRotateMethod = function() {
   this.rotateMethod || (this.rotateMethod = "free");
   return this.rotateMethod;
 };
-<<<<<<< HEAD
 Entry.EntryObject.prototype.setRotateMethod = function(a) {
   a || (a = "free");
   this.rotateMethod = a;
   this.updateRotateMethodView();
   Entry.stage.selectedObject && Entry.stage.selectedObject.entity && (Entry.stage.updateObject(), Entry.stage.updateHandle());
-=======
-p.getNumberValue = function(b) {
-  return +this.values[b].run();
->>>>>>> origin/new/courseware
 };
 Entry.EntryObject.prototype.initRotateValue = function(a) {
   this.rotateMethod != a && (a = this.entity, a.rotation = 0, a.direction = 90, a.flip = !1);
@@ -8892,7 +8382,6 @@ Entry.EntryObject.prototype.addCloneEntity = function(a, b, c) {
   this.clonedEntities.length > Entry.maxCloneLimit || (a = new Entry.EntityObject(this), b ? (a.injectModel(b.picture ? b.picture : null, b.toJSON()), a.snapshot_ = b.snapshot_, b.effect && (a.effect = Entry.cloneSimpleObject(b.effect), a.applyFilter()), b.brush && Entry.setCloneBrush(a, b.brush)) : (a.injectModel(this.entity.picture ? this.entity.picture : null, this.entity.toJSON(a)), a.snapshot_ = this.entity.snapshot_, this.entity.effect && (a.effect = Entry.cloneSimpleObject(this.entity.effect), 
   a.applyFilter()), this.entity.brush && Entry.setCloneBrush(a, this.entity.brush)), Entry.engine.raiseEventOnEntity(a, [a, "when_clone_start"]), a.isClone = !0, a.isStarted = !0, this.addCloneVariables(this, a, b ? b.variables : null, b ? b.lists : null), this.clonedEntities.push(a), Entry.stage.loadEntity(a));
 };
-<<<<<<< HEAD
 Entry.EntryObject.prototype.initializeSplitter = function(a) {
   a.onmousedown = function(b) {
     Entry.container.disableSort();
@@ -8905,10 +8394,6 @@ Entry.EntryObject.prototype.initializeSplitter = function(a) {
     Entry.container.splitterEnable = !1;
     Entry.container.enableSort();
   });
-=======
-p.getNumberField = function(b) {
-  return +this.fields[b];
->>>>>>> origin/new/courseware
 };
 Entry.EntryObject.prototype.isSelected = function() {
   return this.isSelected_;
@@ -10834,16 +10319,8 @@ Entry.JSParser = function(a) {
     }
     return a;
   };
-<<<<<<< HEAD
   a.BasicFunction = function(b, a) {
     return null;
-=======
-  b.eventBlockSyntaxFilter = function(a) {
-    if ("entry_event_start" == a || "entry_event_key" == a || "entry_event_mouse_down" == a || "entry_event_mouse_up" == a || "entry_event_object_down" == a || "entry_event_signal" == a || "entry_event_scene_start" == a || "entry_event_clone_create" == a) {
-      a = "def " + a;
-    }
-    return a;
->>>>>>> origin/new/courseware
   };
   a.BasicIteration = function(b, a, d) {
     var c = this.syntax.BasicIteration;
@@ -11285,41 +10762,8 @@ Entry.BlockMockup = function(a, b, c) {
     for (e in this.paramsKeyMap) {
       d.test(e) && delete this.paramsKeyMap[e];
     }
-<<<<<<< HEAD
     for (e in this.statementsKeyMap) {
       d.test(e) && delete this.statementsKeyMap[e];
-=======
-    for (var q = 0;q < c.length;q++) {
-      if (n = c[q], 0 !== n.length) {
-        if (e.test(n)) {
-          var n = n.split("%")[1], r = +n - 1;
-          if (g[r] && "Indicator" != g[r].type) {
-            if ("Block" == g[r].type) {
-              if (m = this.Block(h[r]).trim(), r = this._funcMap.get(m)) {
-                b += r;
-              } else {
-                var r = m.split("_"), t = r[0];
-                2 == r.length && ("stringParam" == t ? m = "string_param" : "booleanParam" == t && (m = "boolean_param"));
-                m = Entry.TextCodingUtil.prototype.variableFilter(a, n, m);
-                b += m;
-                this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (r = Object.keys(l), n = String(r[n++]), n = n.toLowerCase(), this._variableMap.put(n, m), this._queue.enqueue(n));
-              }
-            } else {
-              m = this["Field" + g[r].type](h[r], g[r]), null == m && (m = g[r].text ? g[r].text : null), m = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(m), m = String(m), Entry.TextCodingUtil.prototype.isNumeric(m) || Entry.TextCodingUtil.prototype.isBinaryOperator(m) || (m = String('"' + m + '"')), m = Entry.TextCodingUtil.prototype.variableFilter(a, n, m), Entry.TextCodingUtil.prototype.isLocalType(a, h[r]) && (m = "self".concat(".").concat(m)), b += m, this._parseMode == Entry.Parser.PARSE_VARIABLE && 
-              k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (r = Object.keys(l), n = String(r[n++]), n = n.toLowerCase(), this._variableMap.put(n, m), this._queue.enqueue(n));
-            }
-          }
-        } else {
-          if (f.test(n)) {
-            for (n = n.split(f), m = 0;m < n.length;m++) {
-              r = n[m], 0 !== r.length && (f.test(r) ? (r = +r.split("$")[1] - 1, b += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[r]))) : b += r);
-            }
-          } else {
-            m = 0, n.search("#"), -1 != n.search("#") && (m = n.indexOf("#"), n = n.substring(m + 1)), b += n;
-          }
-        }
-      }
->>>>>>> origin/new/courseware
     }
     return {color:this.color, skeleton:a, statements:this.statements, template:this.templates.filter(function(b) {
       return "string" === typeof b;
@@ -11460,6 +10904,7 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:b}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
+  this.blockMenu.banClass("checker");
   Entry.hw && this.updateHW();
 };
 Entry.Playground.prototype.generatePictureView = function(a) {
@@ -11660,7 +11105,6 @@ Entry.Playground.prototype.generateTextView = function(a) {
   a.onblur = function() {
     Entry.dispatchEvent("textEdited");
   };
-<<<<<<< HEAD
   this.textEditArea = a;
   b.appendChild(a);
   a = Entry.createElement("div");
@@ -11686,24 +11130,6 @@ Entry.Playground.prototype.generateTextView = function(a) {
   r.onmousedown = function(b) {
     t = !0;
     u = $(n).offset().left;
-=======
-  b.makeFuncSyntax = function(a) {
-    var b = "", c = a._schema.template.trim();
-    a = a._schema.params;
-    var b = /(%.)/mi, c = c.trim().split(b), e = "", f = "", g;
-    for (g in c) {
-      var h = c[g].trim();
-      if (b.test(h)) {
-        var k = +h.split("%")[1] - 1;
-        "Indicator" != a[k].type && (f += h.concat(", "));
-      } else {
-        h = h.split(" "), e += h.join("__");
-      }
-    }
-    k = f.lastIndexOf(",");
-    f = f.substring(0, k);
-    return b = e.trim().concat("(").concat(f.trim()).concat(")");
->>>>>>> origin/new/courseware
   };
   r.addEventListener("touchstart", function(b) {
     t = !0;
@@ -12400,169 +11826,9 @@ Entry.Reporter.prototype.start = function(a, b, c) {
 Entry.Reporter.prototype.report = function(a) {
   if (!this.isRealTime || this.io) {
     var b = [], c;
-<<<<<<< HEAD
     for (c in a.params) {
       var d = a.params[c];
       "object" !== typeof d ? b.push(d) : d.id && b.push(d.id);
-=======
-    for (c in a) {
-      if ("Program" != a[c].type) {
-        return;
-      }
-      var e = [], f = a[c].body;
-      console.log("nodes", f);
-      for (c in f) {
-        var g = f[c];
-        console.log("Program node", g);
-        g = this[g.type](g);
-        console.log("result block", g);
-        g && g.type && e.push(g);
-      }
-      console.log("thread", e);
-      0 != e.length && b.push(e);
-    }
-    return b;
-  };
-  b.ExpressionStatement = function(a) {
-    console.log("ExpressionStatement component", a);
-    var b = {};
-    a = a.expression;
-    a.type && (a = this[a.type](a), console.log("ExpressionStatement expressionData", a), a.type && a.params ? (b.type = a.type, b.params = a.params) : a.type ? b.type = a.type : b = a, result = b);
-    console.log("ExpressionStatement result", result);
-    return result;
-  };
-  b.CallExpression = function(a) {
-    console.log("CallExpression component", a);
-    var b = {}, c = [], e, f = a.callee, g = this[f.type](f);
-    console.log("CallExpression calleeData", g);
-    arguments = a.arguments;
-    if ("Identifier" == f.type) {
-      console.log("CallExpression Identifier calleeData", g), b.callee = g, t = Entry.TextCodingUtil.prototype.eventBlockSyntaxFilter(g.name), e = this.getBlockType(t);
-    } else {
-      var h = g.object;
-      e = g.property;
-      if (h.statements && "call" == e.name && 0 == e.userCode) {
-        e = h.statements, console.log("CallExpression statement", e), b.statements = e;
-      } else {
-        var k = h.name ? String(h.name).concat(".").concat(String(e.name)) : h.object.name ? String(h.object.name).concat(".").concat(String(h.property.name)).concat(".").concat(String(e.name)) : null
-      }
-      console.log("CallExpression calleeName", k);
-      e = this.getBlockType(k);
-      console.log("CallExpression type before", e);
-      if (k) {
-        var l = k.split(".")
-      }
-      console.log("CallExpression calleeTokens", l);
-      if ("__pythonRuntime.functions.range" == k) {
-        var m = "%1number#";
-        e = this.getBlockType(m);
-      } else {
-        if ("__pythonRuntime.ops.add" == k) {
-          m = "(%1 %2calc_basic# %3)", e = this.getBlockType(m), f = {raw:"PLUS", type:"Literal", value:"PLUS"}, console.log("arguments geniuse", arguments), 2 == arguments.length && arguments.splice(1, 0, f), b.operator = "PLUS";
-        } else {
-          if ("__pythonRuntime.ops.multiply" == k) {
-            m = "(%1 %2calc_basic# %3)", e = this.getBlockType(m), f = {raw:"MULTI", type:"Literal", value:"MULTI"}, 2 == arguments.length && arguments.splice(1, 0, f), b.operator = "MULTI";
-          } else {
-            if ("__pythonRuntime.ops.in" == k) {
-              m = "%4 in %2", e = this.getBlockType(m);
-            } else {
-              if ("__pythonRuntime.functions.len" == k) {
-                m = "len", e = this.getBlockType(m);
-              } else {
-                if ("Identifier" == f.object.type && "append" == l[1] || "MemberExpression" == f.object.type && "self" == l[0] && "append" == l[2]) {
-                  m = "%2.append", e = this.getBlockType(m);
-                } else {
-                  if ("Identifier" == f.object.type && "insert" == l[1] || "MemberExpression" == f.object.type && "self" == l[0] && "insert" == l[2]) {
-                    m = "%2.insert", e = this.getBlockType(m);
-                  } else {
-                    if ("Identifier" == f.object.type && "pop" == l[1] || "MemberExpression" == f.object.type && "self" == l[0] && "pop" == l[2]) {
-                      m = "%2.pop", e = this.getBlockType(m);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      b.callee = k;
-    }
-    console.log("CallExpression type after", e);
-    if (e) {
-      var n = Entry.block[e], f = n.params, n = n.def.params;
-      console.log("CallExpression component.arguments", arguments);
-      console.log("CallExpression paramsMeta", f);
-      console.log("CallExpression paramsDefMeta", n);
-      for (var q in f) {
-        h = f[q].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, q < arguments.length && arguments.splice(q, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, q < arguments.length && arguments.splice(q, 0, h));
-      }
-      console.log("CallExpression arguments", arguments);
-      for (var r in arguments) {
-        if (q = arguments[r]) {
-          console.log("CallExpression argument", q, "typeof", typeof q), q = this[q.type](q, f[r], n[r], !0), console.log("CallExpression param", q), "__pythonRuntime.functions.range" == k && q.type ? (e = q.type, c = q.params) : c.push(q);
-        }
-      }
-      console.log("CallExpression syntax", m);
-      console.log("CallExpression argument params", c);
-      if ("%2.append" == m || "%2.pop" == m) {
-        if ("self" == l[0]) {
-          var h = Entry.playground.object, t = l[1];
-          if (!Entry.TextCodingUtil.prototype.isLocalListExisted(t, h)) {
-            return b;
-          }
-        } else {
-          if (t = l[0], !Entry.TextCodingUtil.prototype.isGlobalListExisted(t)) {
-            return b;
-          }
-        }
-        console.log("CallExpression append calleeData", g);
-        r = this.ParamDropdownDynamic(t, f[1], n[1]);
-        console.log("CallExpression listName", r);
-        c.push(r);
-        console.log("CallExpression params[0]", c[0]);
-        "%2.pop" == m && ("number" == c[0].type ? c[0].params[0] += 1 : "text" == c[0].type && (c[0].params[0] = String(+c[0].params[0] + 1)));
-      } else {
-        if ("%2.insert" == m) {
-          if ("self" == l[0]) {
-            if (h = Entry.playground.object, t = l[1], !Entry.TextCodingUtil.prototype.isLocalListExisted(t, h)) {
-              return b;
-            }
-          } else {
-            if (t = l[0], !Entry.TextCodingUtil.prototype.isGlobalListExisted(t)) {
-              return b;
-            }
-          }
-          console.log("CallExpression insert params", c);
-          c.pop();
-          console.log("CallExpression append calleeData", g);
-          r = this.ParamDropdownDynamic(t, f[1], n[1]);
-          console.log("CallExpression listName", r);
-          c.splice(0, 0, r);
-          console.log("CallExpression check arguments", arguments);
-          console.log("CallExpression arguments[1] 2", arguments[1]);
-          q = this[arguments[1].type](arguments[1], f[2], n[2], !0);
-          console.log("CallExpression check param", q);
-          c.splice(0, 0, q);
-          console.log("CallExpression insert params", c);
-          "number" == c[2].type ? c[2].params[0] += 1 : "text" == c[2].type && (c[2].params[0] = String(+c[2].params[0] + 1));
-        } else {
-          "len" == m ? (r = this.ParamDropdownDynamic(c[1].name, f[1], n[1]), delete c[1], c[1] = r) : "%4 in %2" == m && (q = a.arguments[1], q = this[q.type](q, f[3], n[3], !0), r = a.arguments[3].name, r = this.ParamDropdownDynamic(r, f[1], n[1]), c = [], c.push(""), c.push(r), c.push(""), c.push(q), c.push(""));
-        }
-      }
-      e && (b.type = e);
-      c && (b.params = c);
-    } else {
-      c = [];
-      for (r in arguments) {
-        q = arguments[r], console.log("CallExpression argument", q, "typeof", typeof q), f = this[q.type](q), console.log("CallExpression argumentData", f), "__pythonRuntime.utils.createParamsObj" == f.callee ? c = f.arguments : c.push(f);
-      }
-      console.log("CallExpression args", c);
-      b.arguments = c;
-    }
-    console.log("CallExpression Function Check result", b);
-    if (b.arguments && b.arguments[0] && "__pythonRuntime.utils.createParamsObj" == b.arguments[0].callee) {
-      return b;
->>>>>>> origin/new/courseware
     }
     a = {message:a.message, userId:this.userId, projectId:this.projectId, time:a.time, params:b};
     this.isRealTime ? this.io.emit("activity", a) : this.activities.push(a);
@@ -12666,7 +11932,6 @@ Entry.Scene.prototype.addScenes = function(a) {
     for (var b = 0, c = a.length;b < c;b++) {
       this.generateElement(a[b]);
     }
-<<<<<<< HEAD
   } else {
     this.scenes_ = [], this.scenes_.push(this.createScene());
   }
@@ -12691,17 +11956,6 @@ Entry.Scene.prototype.removeScene = function(a) {
     this.getScenes().splice(b, 1);
     for (var b = Entry.container.getSceneObjects(a), c = 0;c < b.length;c++) {
       Entry.container.removeObject(b[c]);
-=======
-  };
-  b.Literal = function(a, b, c, e) {
-    console.log("Literal component", a, "paramMeta", b, "paramDefMeta", c, "aflag", e);
-    e = a.value;
-    console.log("Literal value", e);
-    b || (b = {type:"Block"}, c || (c = "number" == typeof e ? {type:"number"} : {type:"text"}));
-    if ("Indicator" == b.type) {
-      var f;
-      return null;
->>>>>>> origin/new/courseware
     }
     Entry.stage.removeObjectContainer(a);
     $(a.view).remove();
@@ -12747,7 +12001,6 @@ Entry.Scene.prototype.getSceneById = function(a) {
     if (b[c].id == a) {
       return b[c];
     }
-<<<<<<< HEAD
   }
   return !1;
 };
@@ -12776,20 +12029,6 @@ Entry.Scene.prototype.cloneScene = function(a) {
     a = Entry.container.getSceneObjects(a);
     for (var c = a.length - 1;0 <= c;c--) {
       Entry.container.addCloneObject(a[c], b.id);
-=======
-    console.log("Literal paramMeta", b, "paramDefMeta", c);
-    null != a.value ? (b = this["Param" + b.type](e, b, c), console.log("Literal param", f)) : (b = [], f = this[a.left.type](a.left), b.push(f), b.push(a.operator), a = this[a.right.type](a.right), b.push(a));
-    a = b;
-    console.log("Literal result", a);
-    return a;
-  };
-  b.ParamBlock = function(a, b, c) {
-    console.log("ParamBlock value", a, "paramMeta", b, "paramDefMeta", c);
-    b = {};
-    var e = a, f = [];
-    if (!0 === a) {
-      return b.type = "True", b;
->>>>>>> origin/new/courseware
     }
   }
 };
@@ -12809,7 +12048,6 @@ Entry.Scene.prototype.resize = function() {
         d = a[g], b.id != d.id ? (d.view.removeClass("minValue"), $(d.inputWrapper).width(c)) : d.view.addClass("minValue");
       }
     }
-<<<<<<< HEAD
   }
 };
 Entry.Scene.prototype.getNextScene = function() {
@@ -12851,38 +12089,6 @@ p.init = function(a, b, c) {
         this.values[c.getAttribute("name")] = d;
       } else {
         "FIELD" == c.tagName.toUpperCase() ? (this.fields || (this.fields = {}), this.fields[c.getAttribute("name")] = c.textContent) : "STATEMENT" == c.tagName.toUpperCase() && (this.statements || (this.statements = {}), d = new Entry.Script(this.entity), this.register && (d.register = this.register), d.init(c.childNodes[0], null, this), d.key = c.getAttribute("name"), this.statements[c.getAttribute("name")] = d);
-=======
-    console.log("ParamBlock param", e);
-    f.push(e);
-    b.type = c.type;
-    b.params = f;
-    a = b;
-    console.log("ParamBlock result", a);
-    return a;
-  };
-  b.ParamAngle = function(a, b, c) {
-    console.log("ParamAngle value, paramMeta, paramDefMeta", a, b, c);
-    return a;
-  };
-  b.ParamTextInput = function(a, b, c) {
-    console.log("ParamTextInput value, paramMeta, paramDefMeta", a, b, c);
-    return a;
-  };
-  b.ParamColor = function(a, b, c) {
-    console.log("ParamColor value, paramMeta, paramDefMeta", a, b, c);
-    console.log("ParamColor result", a);
-    return a;
-  };
-  b.ParamDropdown = function(a, b, c) {
-    console.log("ParamDropdown value, paramMeta, paramDefMeta", a, b, c);
-    var e;
-    b = b.options;
-    console.log("options", b);
-    for (var f in b) {
-      if (c = b[f], a == c[1]) {
-        e = c[1];
-        break;
->>>>>>> origin/new/courseware
       }
     }
   }
@@ -12910,54 +12116,11 @@ p.clone = function(a, b) {
     for (e in c.values = {}, this.values) {
       c.values[e] = this.values[e].clone(a);
     }
-<<<<<<< HEAD
   }
   if (this.statements) {
     for (e in c.statements = {}, this.statements) {
       for (c.statements[e] = this.statements[e].clone(a, 2), d = c.statements[e], d.parentScript = c;d.nextScript;) {
         d = d.nextScript, d.parentScript = c;
-=======
-    if ("__pythonRuntime.ops.subscriptIndex" == g.callee) {
-      e = Entry.playground.object;
-      if (c.object && "self" == c.object.name) {
-        if (f = c.property.name, !Entry.TextCodingUtil.prototype.isLocalListExisted(f, e)) {
-          return b;
-        }
-      } else {
-        if (f = c.name, !Entry.TextCodingUtil.prototype.isGlobalListExisted(f)) {
-          return b;
-        }
-      }
-      c = e = this.getBlockType("%2[%4]");
-      var arguments = g.arguments, e = Entry.block[e], h = e.params, k = e.def.params, f = this.ParamDropdownDynamic(f, h[1], k[1]);
-      console.log("MemberExpression listName", f);
-      g = [];
-      g.push("");
-      g.push(f);
-      g.push("");
-      "number" == arguments[0].type ? arguments[0].params[0] += 1 : "text" == arguments[0].type && (arguments[0].params[0] = String(+arguments[0].params[0] + 1));
-      g.push(arguments[0]);
-      g.push("");
-      b.type = c;
-      b.params = g;
-    } else {
-      if (g = [], "self" == e.name) {
-        c = e = this.getBlockType("%1");
-        e = Entry.block[e];
-        h = e.params;
-        k = e.def.params;
-        f = f.name;
-        e = Entry.playground.object;
-        if (!Entry.TextCodingUtil.prototype.isLocalVariableExisted(f, e)) {
-          return b;
-        }
-        f = this.ParamDropdownDynamic(f, h[0], k[0]);
-        g.push(f);
-        b.type = c;
-        0 != g.length && (b.params = g);
-      } else {
-        return b;
->>>>>>> origin/new/courseware
       }
     }
   }
@@ -13428,23 +12591,14 @@ Entry.Map = function() {
   a.getKey = function(b) {
     return b;
   };
-<<<<<<< HEAD
   a.put = function(b, a) {
     b = this.getKey(b);
     this._map.repo[b] = a;
-=======
-  b.ForInStatement = function(a) {
-    console.log("ForInStatement component", a);
-    a = null;
-    console.log("ForInStatement result", a);
-    return a;
->>>>>>> origin/new/courseware
   };
   a.contains = function(b) {
     b = this.getKey(b);
     return this._map.repo[b] ? !0 : !1;
   };
-<<<<<<< HEAD
   a.get = function(b) {
     b = this.getKey(b);
     return this._map.repo[b] ? this._map.repo[b] : null;
@@ -13455,15 +12609,6 @@ Entry.Map = function() {
   };
   a.clear = function() {
     this._map.repo = {};
-=======
-  b.UnaryExpression = function(a) {
-    console.log("UnaryExpression component", a);
-    var b;
-    a.prefix && (b = a.operator, a = a.argument, console.log("UnaryExpression operator", b), a.value = +b.concat(a.value), b = this[a.type](a), console.log("UnaryExpression data", b));
-    a = b;
-    console.log("UnaryExpression result", a);
-    return a;
->>>>>>> origin/new/courseware
   };
   a.toString = function() {
     return this._map.repo;
@@ -13630,7 +12775,6 @@ Entry.TextCodingUtil = function() {
         return console.log("dropdownDynamicValueConvertor value", b, f[1]), c = f[0];
       }
     }
-<<<<<<< HEAD
     c = b;
     if ("variables" == a.menuName) {
       var g = Entry.variableContainer.variables_, h;
@@ -13638,53 +12782,9 @@ Entry.TextCodingUtil = function() {
         var k = g[h];
         if (k.id_ == b) {
           c = k.name_;
-=======
-    console.log("FunctionDeclaration textFuncName", f);
-    console.log("FunctionDeclaration textFuncParams", c);
-    console.log("FunctionDeclaration textFuncStatements", a);
-    var k, l, m, e = Entry.variableContainer.functions_, n;
-    for (n in e) {
-      var q = e[n];
-      Entry.TextCodingUtil.prototype.initQueue();
-      Entry.TextCodingUtil.prototype.gatherFuncDefParam(q.content._data[0]._data[0].data.params[0]);
-      console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil.prototype._funcParamQ);
-      for (var r = [], h = {};g = Entry.TextCodingUtil.prototype._funcParamQ.dequeue();) {
-        r.push(g), console.log("param", g);
-      }
-      console.log("funcParams", r);
-      for (var t in r) {
-        h[r[t]] = t;
-      }
-      console.log("paramMap", h);
-      console.log("funcNameQueue", Entry.TextCodingUtil.prototype._funcNameQ);
-      for (g = [];nameToken = Entry.TextCodingUtil.prototype._funcNameQ.dequeue();) {
-        g.push(nameToken), console.log("funcNames", nameToken);
-      }
-      Entry.TextCodingUtil.prototype.clearQueue();
-      blockFuncName = g.join("__").trim();
-      console.log("first blockFuncName", blockFuncName);
-      console.log("first textFuncName", f);
-      if (f == blockFuncName) {
-        if (console.log("textFuncName", f), console.log("blockFuncName", blockFuncName), console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), c.length == Object.keys(h).length ? (k = !0, console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), l = q.content._data[0]._data, g = l.slice(), g.shift(), console.log("blockFuncContents", l), l = Entry.TextCodingUtil.prototype.isFuncContentsMatch(g, 
-        a, h)) : l = k = !1, k && l) {
-          m = "func";
-          m = m.concat("_").concat(n);
->>>>>>> origin/new/courseware
           break;
         }
       }
-<<<<<<< HEAD
-=======
-    }
-    console.log("FunctionDeclaration foundFlag", k);
-    console.log("FunctionDeclaration matchFlag", l);
-    if (k && l) {
-      console.log("targetFuncId", m);
-      var u = c.length, u = f + u;
-      this._funcMap.put(u, m);
-      console.log("FunctionDeclaration this._funcMap", this._funcMap);
-      b = m;
->>>>>>> origin/new/courseware
     } else {
       if ("lists" == a.menuName) {
         for (h in g = Entry.variableContainer.lists, g) {
@@ -13703,7 +12803,6 @@ Entry.TextCodingUtil = function() {
             }
           }
         } else {
-<<<<<<< HEAD
           if ("sounds" == a.menuName) {
             for (g in h = Entry.container.getAllObjects(), h) {
               for (k in a = h[g], a = a.sounds, a) {
@@ -13712,19 +12811,6 @@ Entry.TextCodingUtil = function() {
                 }
               }
             }
-=======
-          m[0] = f, k.description = f + " ";
-        }
-        if (0 < c.length) {
-          for (e = new Entry.Block({type:"function_field_string"}, n), e.data.params = [], h = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", h), g = new Entry.Block({type:h}, n), e.data.params.push(g), l = Entry.TextCodingUtil.prototype.getLastParam(t), l.data.params[1] = e, k.paramMap[h] = 0, console.log("FunctionDeclaration paramBlock", k), t = 1;t < c.length;t++) {
-            e = new Entry.Block({type:"function_field_string"}, n), e.data.params = [], h = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", h), g = new Entry.Block({type:h}, n), e.data.params.push(g), l = Entry.TextCodingUtil.prototype.searchFuncDefParam(m[1]), console.log("FunctionDeclaration paramBlock", l), 0 == l.data.params.length ? l.data.params[0] = g : 1 == l.data.params.length && (l.data.params[1] = e), k.paramMap[h] = +t, console.log("FunctionDeclaration paramBlock", 
-            k);
-          }
-        }
-        if (0 < a.length) {
-          for (u in a) {
-            t = a[u], t = new Entry.Block(t, n), n._data.push(t);
->>>>>>> origin/new/courseware
           }
         }
       }
@@ -15532,120 +14618,6 @@ Entry.PyToBlockParser = function(a) {
     b.type = a;
     console.log("BreakStatement result", b);
     return b;
-<<<<<<< HEAD
-=======
-  }, log:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    return [b.separateBlock.type, ["blockId", a.id], ["x", a.x], ["y", a.y], ["code", this.editor.board.code.stringify()]];
-  }, undo:"insertBlock"};
-  b.moveBlock = {type:Entry.STATIC.COMMAND_TYPES.moveBlock, do:function(a, b, c) {
-    void 0 !== b ? (a = this.editor.board.findById(a), a.moveTo(b, c)) : a._updatePos();
-  }, state:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    return [a.id, a.x, a.y];
-  }, log:function(a, d, c) {
-    return [b.moveBlock.type, ["blockId", a.id], ["x", a.x], ["y", a.y], ["code", this.editor.board.code.stringify()]];
-  }, undo:"moveBlock"};
-  b.cloneBlock = {type:Entry.STATIC.COMMAND_TYPES.cloneBlock, do:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    this.editor.board.code.createThread(a.copy());
-  }, state:function(a) {
-    "string" !== typeof a && (a = a.id);
-    return [a];
-  }, log:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    var d = this.editor.board.code.getThreads().pop();
-    return [b.cloneBlock.type, ["blockId", a.id], ["thread", d.stringify()], ["code", this.editor.board.code.stringify()]];
-  }, undo:"uncloneBlock"};
-  b.uncloneBlock = {type:Entry.STATIC.COMMAND_TYPES.uncloneBlock, do:function(a) {
-    a = this.editor.board.code.getThreads().pop().getFirstBlock();
-    this._tempStorage = a.id;
-    a.destroy(!0, !0);
-  }, state:function(a) {
-    return [a];
-  }, log:function(a) {
-    a = this._tempStorage;
-    this._tempStorage = null;
-    return [b.uncloneBlock.type, ["blockId", a], ["code", this.editor.board.code.stringify()]];
-  }, undo:"cloneBlock"};
-  b.scrollBoard = {type:Entry.STATIC.COMMAND_TYPES.scrollBoard, do:function(a, b, c) {
-    c || this.editor.board.scroller._scroll(a, b);
-    delete this.editor.board.scroller._diffs;
-  }, state:function(a, b) {
-    return [-a, -b];
-  }, log:function(a, d) {
-    return [b.scrollBoard.type, ["dx", a], ["dy", d]];
-  }, undo:"scrollBoard"};
-  b.setFieldValue = {type:Entry.STATIC.COMMAND_TYPES.setFieldValue, do:function(a, b, c, e, f) {
-    b.setValue(f, !0);
-  }, state:function(a, b, c, e, f) {
-    return [a, b, c, f, e];
-  }, log:function(a, d, c, e, f) {
-    return [b.setFieldValue.type, ["pointer", c], ["newValue", f], ["code", this.editor.board.code.stringify()]];
-  }, undo:"setFieldValue"};
-})(Entry.Command);
-(function(b) {
-  b.selectObject = {type:Entry.STATIC.COMMAND_TYPES.selectObject, do:function(a) {
-    return Entry.container.selectObject(a);
-  }, state:function(a) {
-    if ((a = Entry.playground) && a.object) {
-      return [a.object.id];
-    }
-  }, log:function(a) {
-    return [a];
-  }, undo:"selectObject"};
-})(Entry.Command);
-(function(b) {
-  b.editPicture = {type:Entry.STATIC.COMMAND_TYPES.editPicture, do:function(a, b) {
-    Entry.playground.painter.lc.canRedo() && Entry.playground.painter.lc.redo();
-  }, state:function(a) {
-  }, log:function(a) {
-    return [a];
-  }, undo:"uneditPicture"};
-  b.uneditPicture = {type:Entry.STATIC.COMMAND_TYPES.uneditPicture, do:function(a, b) {
-    Entry.playground.painter.lc.undo();
-  }, state:function(a) {
-  }, log:function(a) {
-    return [a];
-  }, undo:"editPicture"};
-  b.processPicture = {type:Entry.STATIC.COMMAND_TYPES.processPicture, do:function(a, b) {
-    Entry.playground.painter.lc.canRedo() && Entry.playground.painter.lc.redo();
-  }, state:function(a) {
-  }, log:function(a) {
-    return [a];
-  }, undo:"unprocessPicture", isPass:!0};
-  b.unprocessPicture = {type:Entry.STATIC.COMMAND_TYPES.unprocessPicture, do:function(a, b) {
-    Entry.playground.painter.lc.undo();
-  }, state:function(a) {
-  }, log:function(a) {
-    return [a];
-  }, undo:"processPicture", isPass:!0};
-})(Entry.Command);
-Entry.init = function(b, a) {
-  Entry.assert("object" === typeof a, "Init option is not object");
-  this.events_ = {};
-  this.interfaceState = {menuWidth:264};
-  Entry.Utils.bindGlobalEvent("resize mousedown mousemove keydown keyup dispose".split(" "));
-  this.options = a;
-  this.parseOptions(a);
-  this.mediaFilePath = (a.libDir ? a.libDir : "/lib") + "/entryjs/images/";
-  this.defaultPath = a.defaultDir || "";
-  this.blockInjectPath = a.blockInjectDir || "";
-  "workspace" == this.type && this.isPhone() && (this.type = "phone");
-  this.initialize_();
-  this.view_ = b;
-  $(this.view_).addClass("entry");
-  "tablet" === this.device && $(this.view_).addClass("tablet");
-  Entry.initFonts(a.fonts);
-  this.createDom(b, this.type);
-  this.loadInterfaceState();
-  this.overridePrototype();
-  this.maxCloneLimit = 302;
-  this.cloudSavable = !0;
-  this.startTime = (new Date).getTime();
-  document.onkeydown = function(a) {
-    Entry.dispatchEvent("keyPressed", a);
->>>>>>> origin/new/courseware
   };
   a.UnaryExpression = function(b) {
     console.log("UnaryExpression component", b);
@@ -15842,7 +14814,6 @@ Entry.init = function(b, a) {
       var k = this[g.type](g);
       console.log("AssignmentExpression rightData", k);
     }
-<<<<<<< HEAD
     a.right = k;
     switch(operator) {
       case "=":
@@ -15870,122 +14841,6 @@ Entry.init = function(b, a) {
     }
     if (operator) {
       var t = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator);
-=======
-  }
-  return !1;
-};
-Entry.getColourCodes = function() {
-  return "transparent #660000 #663300 #996633 #003300 #003333 #003399 #000066 #330066 #660066 #FFFFFF #990000 #993300 #CC9900 #006600 #336666 #0033FF #000099 #660099 #990066 #000000 #CC0000 #CC3300 #FFCC00 #009900 #006666 #0066FF #0000CC #663399 #CC0099 #333333 #FF0000 #FF3300 #FFFF00 #00CC00 #009999 #0099FF #0000FF #9900CC #FF0099 #666666 #CC3333 #FF6600 #FFFF33 #00FF00 #00CCCC #00CCFF #3366FF #9933FF #FF00FF #999999 #FF6666 #FF6633 #FFFF66 #66FF66 #66CCCC #00FFFF #3399FF #9966FF #FF66FF #BBBBBB #FF9999 #FF9966 #FFFF99 #99FF99 #66FFCC #99FFFF #66CCff #9999FF #FF99FF #CCCCCC #FFCCCC #FFCC99 #FFFFCC #CCFFCC #99FFCC #CCFFFF #99CCFF #CCCCFF #FFCCFF".split(" ");
-};
-Entry.removeElement = function(b) {
-  b && b.parentNode && b.parentNode.removeChild(b);
-};
-Entry.getElementsByClassName = function(b) {
-  for (var a = [], d = document.getElementsByTagName("*"), c = 0;c < d.length;c++) {
-    -1 < (" " + d[c].className + " ").indexOf(" " + b + " ") && a.push(d[c]);
-  }
-  return a;
-};
-Entry.parseNumber = function(b) {
-  return "string" != typeof b || isNaN(+b) ? "number" != typeof b || isNaN(+b) ? !1 : b : +b;
-};
-Entry.countStringLength = function(b) {
-  var a, d = 0;
-  for (a = 0;a < b.length;a++) {
-    255 < b.charCodeAt(a) ? d += 2 : d++;
-  }
-  return d;
-};
-Entry.cutStringByLength = function(b, a) {
-  var d, c = 0;
-  for (d = 0;c < a && d < b.length;d++) {
-    255 < b.charCodeAt(d) ? c += 2 : c++;
-  }
-  return b.substr(0, d);
-};
-Entry.isChild = function(b, a) {
-  if (!a) {
-    for (;a.parentNode;) {
-      if ((a = a.parentNode) == b) {
-        return !0;
-      }
-    }
-  }
-  return !1;
-};
-Entry.launchFullScreen = function(b) {
-  b.requestFullscreen ? b.requestFullscreen() : b.mozRequestFulScreen ? b.mozRequestFulScreen() : b.webkitRequestFullscreen ? b.webkitRequestFullscreen() : b.msRequestFullScreen && b.msRequestFullScreen();
-};
-Entry.exitFullScreen = function() {
-  document.exitFullScreen ? document.exitFullScreen() : document.mozCancelFullScreen ? document.mozCancelFullScreen() : document.webkitExitFullscreen && document.webkitExitFullscreen();
-};
-Entry.isPhone = function() {
-  return !1;
-};
-Entry.getKeyCodeMap = function() {
-  return {65:"a", 66:"b", 67:"c", 68:"d", 69:"e", 70:"f", 71:"g", 72:"h", 73:"i", 74:"j", 75:"k", 76:"l", 77:"m", 78:"n", 79:"o", 80:"p", 81:"q", 82:"r", 83:"s", 84:"t", 85:"u", 86:"v", 87:"w", 88:"x", 89:"y", 90:"z", 32:Lang.Blocks.START_press_some_key_space, 37:Lang.Blocks.START_press_some_key_left, 38:Lang.Blocks.START_press_some_key_up, 39:Lang.Blocks.START_press_some_key_right, 40:Lang.Blocks.START_press_some_key_down, 48:"0", 49:"1", 50:"2", 51:"3", 52:"4", 53:"5", 54:"6", 55:"7", 56:"8", 57:"9", 
-  13:Lang.Blocks.START_press_some_key_enter};
-};
-Entry.checkCollisionRect = function(b, a) {
-  return !(b.y + b.height < a.y || b.y > a.y + a.height || b.x + b.width < a.x || b.x > a.x + a.width);
-};
-Entry.bindAnimationCallback = function(b, a) {
-  b.addEventListener("webkitAnimationEnd", a, !1);
-  b.addEventListener("animationend", a, !1);
-  b.addEventListener("oanimationend", a, !1);
-};
-Entry.cloneSimpleObject = function(b) {
-  var a = {}, d;
-  for (d in b) {
-    a[d] = b[d];
-  }
-  return a;
-};
-Entry.nodeListToArray = function(b) {
-  for (var a = Array(b.length), d = -1, c = b.length;++d !== c;a[d] = b[d]) {
-  }
-  return a;
-};
-Entry.computeInputWidth = function(b) {
-  var a = document.createElement("span");
-  a.className = "tmp-element";
-  a.innerHTML = b.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  document.body.appendChild(a);
-  b = a.offsetWidth;
-  document.body.removeChild(a);
-  return +(b + 10) + "px";
-};
-Entry.isArrowOrBackspace = function(b) {
-  return -1 < [37, 38, 39, 40, 8].indexOf(b);
-};
-Entry.hexStringToBin = function(b) {
-  for (var a = [], d = 0;d < b.length - 1;d += 2) {
-    a.push(parseInt(b.substr(d, 2), 16));
-  }
-  return String.fromCharCode.apply(String, a);
-};
-Entry.findObjsByKey = function(b, a, d) {
-  for (var c = [], e = 0;e < b.length;e++) {
-    b[e][a] == d && c.push(b[e]);
-  }
-  return c;
-};
-Entry.factorials = [];
-Entry.factorial = function(b) {
-  return 0 === b || 1 == b ? 1 : 0 < Entry.factorials[b] ? Entry.factorials[b] : Entry.factorials[b] = Entry.factorial(b - 1) * b;
-};
-Entry.getListRealIndex = function(b, a) {
-  if (isNaN(b)) {
-    switch(b) {
-      case "FIRST":
-        b = 1;
-        break;
-      case "LAST":
-        b = a.array_.length;
-        break;
-      case "RANDOM":
-        b = Math.floor(Math.random() * a.array_.length) + 1;
->>>>>>> origin/new/courseware
     }
     a.operator = t;
     console.log("AssignmentExpression syntax", l);
@@ -16038,41 +14893,10 @@ Entry.getListRealIndex = function(b, a) {
     if ("__getParam0" == b.name) {
       return a;
     }
-<<<<<<< HEAD
     var e = this[d.type](d);
     console.log("FunctionDeclaration bodyData", e);
     if ("Identifier" == b.type) {
       var f = this[b.type](b);
-=======
-  }
-  return b;
-};
-Entry.getMaxFloatPoint = function(b) {
-  for (var a = 0, d = 0, c = b.length;d < c;d++) {
-    var e = String(b[d]), f = e.indexOf(".");
-    -1 !== f && (e = e.length - (f + 1), e > a && (a = e));
-  }
-  return Math.min(a, 20);
-};
-Entry.convertToRoundedDecimals = function(b, a) {
-  return isNaN(b) || !this.isFloat(b) ? b : +(Math.round(b + "e" + a) + "e-" + a);
-};
-Entry.attachEventListener = function(b, a, d) {
-  setTimeout(function() {
-    b.addEventListener(a, d);
-  }, 0);
-};
-Entry.deAttachEventListener = function(b, a, d) {
-  b.removeEventListener(a, d);
-};
-Entry.isEmpty = function(b) {
-  if (!b) {
-    return !0;
-  }
-  for (var a in b) {
-    if (b.hasOwnProperty(a)) {
-      return !1;
->>>>>>> origin/new/courseware
     }
     console.log("FunctionDeclaration idData", f);
     d = [];
@@ -16202,7 +15026,6 @@ Entry.isEmpty = function(b) {
     }
     console.log("FunctionDeclaration result", a);
   };
-<<<<<<< HEAD
   a.FunctionExpression = function(b) {
     console.log("FunctionExpression component", b);
     var a = {};
@@ -16218,65 +15041,6 @@ Entry.isEmpty = function(b) {
     var a = {};
     if (b = b.argument) {
       var d = this[b.type](b);
-=======
-}();
-Entry.isMobile = function() {
-  if (Entry.device) {
-    return "tablet" === Entry.device;
-  }
-  var b = window.platform;
-  if (b && b.type && ("tablet" === b.type || "mobile" === b.type)) {
-    return Entry.device = "tablet", !0;
-  }
-  Entry.device = "desktop";
-  return !1;
-};
-Entry.Utils.convertMouseEvent = function(b) {
-  return b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-};
-Entry.Utils.convertIntToHex = function(b) {
-  return b.toString(16).toUpperCase();
-};
-Entry.Utils.hasSpecialCharacter = function(b) {
-  return /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g.test(b);
-};
-Entry.Utils.isNewVersion = function(b, a) {
-  try {
-    b = b.replace("v", "");
-    a = a.replace("v", "");
-    for (var d = b.split("."), c = a.split("."), e = d.length < c.length ? d.length : c.length, f = !1, g = !0, h = 0;h < e;h++) {
-      +d[h] < +c[h] ? (f = !0, g = !1) : +d[h] > +c[h] && (g = !1);
-    }
-    g && d.length < c.length && (f = !0);
-    return f;
-  } catch (k) {
-    return !1;
-  }
-};
-Entry.Model = function(b, a) {
-  var d = Entry.Model;
-  d.generateSchema(b);
-  d.generateSetter(b);
-  d.generateObserve(b);
-  (void 0 === a || a) && Object.seal(b);
-  return b;
-};
-(function(b) {
-  b.generateSchema = function(a) {
-    var b = a.schema;
-    if (void 0 !== b) {
-      b = JSON.parse(JSON.stringify(b));
-      a.data = {};
-      for (var c in b) {
-        (function(c) {
-          a.data[c] = b[c];
-          Object.defineProperty(a, c, {get:function() {
-            return a.data[c];
-          }});
-        })(c);
-      }
-      a._toJSON = this._toJSON;
->>>>>>> origin/new/courseware
     }
     d && (a.argument = d);
     console.log("ReturnStaement result", a);
@@ -16679,7 +15443,6 @@ Entry.PyBlockAssembler = function(a) {
     }
     return a;
   };
-<<<<<<< HEAD
   a.ExpressionStatement = function(b) {
     console.log("ExpressionStatement component", b);
     var a = {};
@@ -16687,116 +15450,6 @@ Entry.PyBlockAssembler = function(a) {
     "Literal" == b.type ? (b = this[b.type]({type:"Block", accept:"booleanMagnet"}, b), a.type = b.type, result = a, console.log("ExpressionStatement type literal", result)) : (b = this[b.type](b), a.type = b.type, a.params = b.params, result = a, console.log("ExpressionStatement type not literal", result));
     console.log("ExpressionStatement result", result);
     return result;
-=======
-  d = "string" === d ? "function_param_string" : "function_param_boolean";
-  c.prototype = a;
-  c = new c;
-  c.changeEvent = new Entry.Event;
-  c.template = Lang.template[d];
-  return Entry.block[b] = c;
-};
-Entry.Func.updateMenu = function() {
-  if (Entry.playground && Entry.playground.mainWorkspace) {
-    var b = Entry.playground.mainWorkspace.getBlockMenu();
-    this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit", !0), b.unbanClass("functionEdit", !0)) : (b.unbanClass("functionInit", !0), b.banClass("functionEdit", !0));
-    b.reDraw();
-  }
-};
-Entry.Func.prototype.edit = function() {
-  Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView());
-};
-Entry.Func.generateBlock = function(b) {
-  b = Entry.block["func_" + b.id];
-  var a = {template:b.template, params:b.params}, d = /(%\d)/mi, c = b.template.split(d), e = "", f = 0, g = 0, h;
-  for (h in c) {
-    var k = c[h];
-    d.test(k) ? (k = +k.split("%")[1] - 1, k = b.params[k], "Indicator" !== k.type && ("boolean" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.template.function_param_string + (g ? g : ""), g++))) : e += k;
-  }
-  return {block:a, description:e};
-};
-Entry.Func.prototype.generateBlock = function(b) {
-  b = Entry.Func.generateBlock(this);
-  this.block = b.block;
-  this.description = b.description;
-};
-Entry.Func.generateWsBlock = function(b) {
-  this.unbindFuncChangeEvent();
-  b = b ? b : this.targetFunc;
-  for (var a = b.content.getEventMap("funcDef")[0].params[0], d = 0, c = 0, e = [], f = "", g = b.hashMap, h = b.paramMap;a;) {
-    var k = a.params[0];
-    switch(a.type) {
-      case "function_field_label":
-        f = f + " " + k;
-        break;
-      case "function_field_boolean":
-        Entry.Mutator.mutate(k.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (d ? d : "")});
-        g[k.type] = !1;
-        h[k.type] = d + c;
-        d++;
-        e.push({type:"Block", accept:"boolean"});
-        f += " %" + (d + c);
-        break;
-      case "function_field_string":
-        Entry.Mutator.mutate(k.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (c ? c : "")}), g[k.type] = !1, h[k.type] = d + c, c++, f += " %" + (d + c), e.push({type:"Block", accept:"string"});
-    }
-    a = a.getOutputBlock();
-  }
-  d++;
-  f += " %" + (d + c);
-  e.push({type:"Indicator", img:"block_icon/function_03.png", size:12});
-  a = "func_" + b.id;
-  d = Entry.block[a];
-  c = !1;
-  if (d.template !== f) {
-    c = !0;
-  } else {
-    if (d.params.length === e.length) {
-      for (h = 0;h < d.params.length - 1;h++) {
-        var k = d.params[h], l = e[h];
-        if (k.type !== l.type || k.accept !== l.accept) {
-          c = !0;
-          break;
-        }
-      }
-    }
-  }
-  c && Entry.Mutator.mutate(a, {params:e, template:f});
-  for (var m in g) {
-    g[m] ? (e = -1 < m.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(m, {template:e})) : g[m] = !0;
-  }
-  this.bindFuncChangeEvent(b);
-};
-Entry.Func.bindFuncChangeEvent = function(b) {
-  b = b ? b : this.targetFunc;
-  !this._funcChangeEvent && b.content.getEventMap("funcDef")[0].view && (this._funcChangeEvent = b.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
-};
-Entry.Func.unbindFuncChangeEvent = function() {
-  this._funcChangeEvent && (this._funcChangeEvent.destroy(), delete this._funcChangeEvent);
-};
-Entry.Func.unbindWorkspaceStateChangeEvent = function() {
-  this._workspaceStateEvent && (this._workspaceStateEvent.destroy(), delete this._workspaceStateEvent);
-};
-Entry.HWMontior = {};
-Entry.HWMonitor = function(b) {
-  this.svgDom = Entry.Dom($('<svg id="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'));
-  this._hwModule = b;
-  var a = this;
-  Entry.addEventListener("windowResized", function() {
-    var b = a._hwModule.monitorTemplate.mode;
-    "both" == b && (a.resize(), a.resizeList());
-    "list" == b ? a.resizeList() : a.resize();
-  });
-  Entry.addEventListener("hwModeChange", function() {
-    a.changeMode();
-  });
-  this.changeOffset = 0;
-  this.scale = .5;
-  this._listPortViews = {};
-};
-(function(b) {
-  b.initView = function() {
-    this.svgDom = Entry.Dom($('<svg id="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'));
->>>>>>> origin/new/courseware
   };
   a.AssignmentExpression = function(b) {
     console.log("AssignmentExpression component", b);
@@ -16980,7 +15633,6 @@ Entry.HWMonitor = function(b) {
     console.log("WhileStatement result", a);
     return a;
   };
-<<<<<<< HEAD
   a.BlockStatement = function(b) {
     console.log("BlockStatement component", b);
     this._blockStatmentIndex = 0;
@@ -17003,226 +15655,6 @@ Entry.HWMonitor = function(b) {
         }
       } else {
         0 == this._blockStatmentIndex && this._blockStatments.push(e);
-=======
-})(Entry.HWMonitor.prototype);
-Entry.HW = function() {
-  this.sessionRoomId = localStorage.getItem("entryhwRoomId");
-  this.sessionRoomId || (this.sessionRoomId = this.createRandomRoomId(), localStorage.setItem("entryhwRoomId", this.sessionRoomId));
-  this.connectTrial = 0;
-  this.isFirstConnect = !0;
-  this.requireVerion = "v1.6.1";
-  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.2_Setup.exe";
-  this.hwPopupCreate();
-  this.initSocket();
-  this.connected = !1;
-  this.portData = {};
-  this.sendQueue = {};
-  this.outputQueue = {};
-  this.settingQueue = {};
-  this.socketType = this.hwModule = this.selectedDevice = null;
-  Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "B.1":Entry.Codestar, 
-  "A.1":Entry.SmartBoard};
-};
-Entry.HW.TRIAL_LIMIT = 2;
-p = Entry.HW.prototype;
-p.createRandomRoomId = function() {
-  return "xxxxxxxxyx".replace(/[xy]/g, function(b) {
-    var a = 16 * Math.random() | 0;
-    return ("x" == b ? a : a & 3 | 8).toString(16);
-  });
-};
-p.connectWebSocket = function(b, a) {
-  var d = this, c = io(b, a);
-  c.io.reconnectionAttempts(Entry.HW.TRIAL_LIMIT);
-  c.io.reconnectionDelayMax(1E3);
-  c.io.timeout(1E3);
-  c.on("connect", function() {
-    d.socketType = "WebSocket";
-    d.initHardware(c);
-  });
-  c.on("mode", function(a) {
-    0 === c.mode && 1 === a && d.disconnectHardware();
-    d.socketMode = a;
-    c.mode = a;
-  });
-  c.on("message", function(a) {
-    if (a.data && "string" === typeof a.data) {
-      switch(a.data) {
-        case "disconnectHardware":
-          d.disconnectHardware();
-          break;
-        default:
-          var b = JSON.parse(a.data);
-          d.checkDevice(b, a.version);
-          d.updatePortData(b);
-      }
-    }
-  });
-  c.on("disconnect", function() {
-    d.initSocket();
-  });
-  return c;
-};
-p.initSocket = function() {
-  try {
-    this.connected = !1;
-    this.tlsSocketIo && this.tlsSocketIo.removeAllListeners();
-    this.socketIo && this.socketIo.removeAllListeners();
-    this.isOpenHardware || this.checkOldClient();
-    if (-1 < location.protocol.indexOf("https")) {
-      this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-    } else {
-      try {
-        this.socketIo = this.connectWebSocket("http://127.0.0.1:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-      } catch (b) {
-      }
-      try {
-        this.tlsSocketIo = this.connectWebSocket("https://hardware.play-entry.org:23518", {query:{client:!0, roomId:this.sessionRoomId}});
-      } catch (b) {
-      }
-    }
-    Entry.dispatchEvent("hwChanged");
-  } catch (b) {
-  }
-};
-p.checkOldClient = function() {
-  try {
-    var b = this, a = new WebSocket("wss://hardware.play-entry.org:23518");
-    a.onopen = function() {
-      b.popupHelper.show("newVersion", !0);
-      a.close();
-    };
-  } catch (d) {
-  }
-};
-p.retryConnect = function() {
-  this.isOpenHardware = !1;
-  Entry.HW.TRIAL_LIMIT = 5;
-  this.initSocket();
-};
-p.openHardwareProgram = function() {
-  this.isOpenHardware = !0;
-  Entry.HW.TRIAL_LIMIT = 5;
-  this.socket ? this.executeHardware() : (this.executeHardware(), this.initSocket());
-};
-p.initHardware = function(b) {
-  this.socket = b;
-  this.connectTrial = 0;
-  this.connected = !0;
-  Entry.dispatchEvent("hwChanged");
-  Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
-};
-p.disconnectHardware = function() {
-  Entry.propertyPanel.removeMode("hw");
-  this.hwModule = this.selectedDevice = void 0;
-  Entry.dispatchEvent("hwChanged");
-};
-p.disconnectedSocket = function() {
-  this.tlsSocketIo.close();
-  this.socketIo && this.socketIo.close();
-  Entry.propertyPanel.removeMode("hw");
-  this.socket = void 0;
-  this.connectTrial = 0;
-  this.connected = !1;
-  this.hwModule = this.selectedDevice = void 0;
-  Entry.dispatchEvent("hwChanged");
-  Entry.toast.alert("\ud558\ub4dc\uc6e8\uc5b4 \ud504\ub85c\uadf8\ub7a8 \uc5f0\uacb0 \uc885\ub8cc", "\ud558\ub4dc\uc6e8\uc5b4 \ud504\ub85c\uadf8\ub7a8\uacfc\uc758 \uc5f0\uacb0\uc774 \uc885\ub8cc\ub418\uc5c8\uc2b5\ub2c8\ub2e4.", !1);
-};
-p.setDigitalPortValue = function(b, a) {
-  this.sendQueue[b] = a;
-  this.removePortReadable(b);
-};
-p.getAnalogPortValue = function(b) {
-  return this.connected ? this.portData["a" + b] : 0;
-};
-p.getDigitalPortValue = function(b) {
-  if (!this.connected) {
-    return 0;
-  }
-  this.setPortReadable(b);
-  return void 0 !== this.portData[b] ? this.portData[b] : 0;
-};
-p.setPortReadable = function(b) {
-  this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
-  var a = !1, d;
-  for (d in this.sendQueue.readablePorts) {
-    if (this.sendQueue.readablePorts[d] == b) {
-      a = !0;
-      break;
-    }
-  }
-  a || this.sendQueue.readablePorts.push(b);
-};
-p.removePortReadable = function(b) {
-  if (this.sendQueue.readablePorts || Array.isArray(this.sendQueue.readablePorts)) {
-    var a, d;
-    for (d in this.sendQueue.readablePorts) {
-      if (this.sendQueue.readablePorts[d] == b) {
-        a = +d;
-        break;
-      }
-    }
-    this.sendQueue.readablePorts = void 0 != a ? this.sendQueue.readablePorts.slice(0, a).concat(this.sendQueue.readablePorts.slice(a + 1, this.sendQueue.readablePorts.length)) : [];
-  }
-};
-p.update = function() {
-  this.socket && (this.socket.disconnected || this.socket.emit("message", {data:JSON.stringify(this.sendQueue), mode:this.socket.mode, type:"utf8"}));
-};
-p.updatePortData = function(b) {
-  this.portData = b;
-  this.hwMonitor && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
-};
-p.closeConnection = function() {
-  this.socket && this.socket.close();
-};
-p.downloadConnector = function() {
-  window.open(this.downloadPath, "_blank").focus();
-};
-p.downloadGuide = function() {
-  var b = document.createElement("a");
-  b.href = "http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC%20%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%20%EC%97%B0%EA%B2%B0%20%EB%A7%A4%EB%89%B4%EC%96%BC(%EC%98%A8%EB%9D%BC%EC%9D%B8%EC%9A%A9).pdf";
-  b.download = "download";
-  b.click();
-};
-p.downloadSource = function() {
-  window.open("http://play-entry.com/down/board.ino", "_blank").focus();
-};
-p.setZero = function() {
-  Entry.hw.hwModule && Entry.hw.hwModule.setZero();
-};
-p.checkDevice = function(b, a) {
-  if (void 0 !== b.company) {
-    var d = [Entry.Utils.convertIntToHex(b.company), ".", Entry.Utils.convertIntToHex(b.model)].join("");
-    d != this.selectedDevice && (Entry.Utils.isNewVersion(a, this.requireVerion) && this.popupHelper.show("newVersion", !0), this.selectedDevice = d, this.hwModule = this.hwInfo[d], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !1), this.hwModule.monitorTemplate && (this.hwMonitor ? 
-    (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), d = this.hwModule.monitorTemplate, "both" == d.mode ? (d.mode = "list", this.hwMonitor.generateListView(), d.mode = "general", this.hwMonitor.generateView(), d.mode = "both") : "list" == d.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView()));
-  }
-};
-p.banHW = function() {
-  var b = this.hwInfo, a;
-  for (a in b) {
-    Entry.playground.mainWorkspace.blockMenu.banClass(b[a].name, !0);
-  }
-};
-p.executeHardware = function() {
-  function b(a) {
-    navigator.msLaunchUri(a, function() {
-    }, function() {
-      c.popupHelper.show("hwDownload", !0);
-    });
-  }
-  function a(a) {
-    var b = document.createElement("iframe");
-    b.src = "about:blank";
-    b.style = "display:none";
-    document.getElementsByTagName("body")[0].appendChild(b);
-    var d = null, d = setTimeout(function() {
-      var e = !1;
-      try {
-        b.contentWindow.location.href = a, e = !0;
-      } catch (f) {
-        "NS_ERROR_UNKNOWN_PROTOCOL" == f.name && (e = !1);
->>>>>>> origin/new/courseware
       }
     }
     a.statements = [this._blockStatments];
@@ -18352,18 +16784,13 @@ Entry.Variable.prototype.getId = function() {
   return this.id_;
 };
 Entry.Variable.prototype.getValue = function() {
-  return this.isNumber() ? +this.value_ : this.value_;
+  return this.isNumber() ? Number(this.value_) : this.value_;
 };
 Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
 };
-<<<<<<< HEAD
 Entry.Variable.prototype.setValue = function(a) {
   "slide" != this.type ? this.value_ = a : (a = Number(a), this.value_ = a < this.minValue_ ? this.minValue_ : a > this.maxValue_ ? this.maxValue_ : a);
-=======
-Entry.Variable.prototype.setValue = function(b) {
-  "slide" != this.type ? this.value_ = b : (b = +b, this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b);
->>>>>>> origin/new/courseware
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this._valueWidth = null;
   this.updateView();
@@ -18464,7 +16891,6 @@ Entry.Variable.prototype.setSlideCommandX = function(a) {
   this.updateSlideValueByView();
 };
 Entry.Variable.prototype.updateSlideValueByView = function() {
-<<<<<<< HEAD
   var a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > a && (a = 0);
   1 < a && (a = 1);
@@ -18472,15 +16898,6 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   a < b ? a = this.minValue_ : a > c && (a = this.maxValue_);
   this.isFloatPoint() || (a = Math.round(a));
   this.setValue(a);
-=======
-  var b = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
-  0 > b && (b = 0);
-  1 < b && (b = 1);
-  var a = parseFloat(this.minValue_), d = parseFloat(this.maxValue_), b = (a + Math.abs(d - a) * b).toFixed(2), b = parseFloat(b);
-  b < a ? b = this.minValue_ : b > d && (b = this.maxValue_);
-  this.isFloatPoint() || (b = Math.round(b));
-  this.setValue(b);
->>>>>>> origin/new/courseware
 };
 Entry.Variable.prototype.getMinValue = function() {
   return this.minValue_;
@@ -19155,562 +17572,8 @@ Entry.VariableContainer.prototype.createListView = function(a) {
     h.setAttribute("disabled", "disabled");
     f.removeClass("entryRemove");
     this.addClass("entryRemove");
-<<<<<<< HEAD
     b.select(a);
     b.updateSelectedVariable(null, "list");
-=======
-    a.select(b);
-    a.updateSelectedVariable(null, "list");
-  });
-  d.editSaveButton = g;
-  var h = Entry.createElement("input");
-  h.setAttribute("disabled", "disabled");
-  h.addClass("entryVariableListElementNameWorkspace");
-  h.value = b.name_;
-  h.bindOnClick(function(a) {
-    a.stopPropagation();
-  });
-  h.onblur = function(c) {
-    (c = this.value.trim()) && 0 !== c.length ? a.changeListName(b, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.list_can_not_space), this.value = b.getName());
-  };
-  h.onkeydown = function(a) {
-    13 == a.keyCode && this.blur();
-  };
-  d.nameField = h;
-  c.appendChild(h);
-  c.appendChild(f);
-  c.appendChild(g);
-  c.appendChild(e);
-  b.listElement = d;
-};
-Entry.VariableContainer.prototype.mapVariable = function(b, a) {
-  for (var d = this.variables_.length, c = 0;c < d;c++) {
-    b(this.variables_[c], a);
-  }
-};
-Entry.VariableContainer.prototype.mapList = function(b, a) {
-  for (var d = this.lists_.length, c = 0;c < d;c++) {
-    b(this.lists_[c], a);
-  }
-};
-Entry.VariableContainer.prototype.getVariableJSON = function() {
-  for (var b = [], a = 0;a < this.variables_.length;a++) {
-    b.push(this.variables_[a].toJSON());
-  }
-  for (a = 0;a < this.lists_.length;a++) {
-    b.push(this.lists_[a].toJSON());
-  }
-  Entry.engine.projectTimer && b.push(Entry.engine.projectTimer.toJSON());
-  a = Entry.container.inputValue;
-  Entry.isEmpty(a) || b.push(a.toJSON());
-  return b;
-};
-Entry.VariableContainer.prototype.getMessageJSON = function() {
-  for (var b = [], a = 0;a < this.messages_.length;a++) {
-    b.push({id:this.messages_[a].id, name:this.messages_[a].name});
-  }
-  return b;
-};
-Entry.VariableContainer.prototype.getFunctionJSON = function() {
-  var b = [], a;
-  for (a in this.functions_) {
-    var d = this.functions_[a], d = {id:d.id, content:JSON.stringify(d.content.toJSON())};
-    b.push(d);
-  }
-  return b;
-};
-Entry.VariableContainer.prototype.resetVariableAddPanel = function(b) {
-  b = b || "variable";
-  var a = "variable" == b ? this.variableAddPanel : this.listAddPanel, d = a.info;
-  d.isCloud = !1;
-  d.object = null;
-  a.view.name.value = "";
-  a.isOpen = !1;
-  this.updateVariableAddView(b);
-};
-Entry.VariableContainer.prototype.generateVariableAddView = function() {
-  var b = this, a = Entry.createElement("li");
-  this.variableAddPanel.view = a;
-  this.variableAddPanel.isOpen = !1;
-  a.addClass("entryVariableAddSpaceWorkspace");
-  a.addClass("entryRemove");
-  var d = Entry.createElement("div");
-  d.addClass("entryVariableAddSpaceNameWrapperWorkspace");
-  a.appendChild(d);
-  var c = Entry.createElement("input");
-  c.addClass("entryVariableAddSpaceInputWorkspace");
-  c.setAttribute("placeholder", Lang.Workspace.Variable_placeholder_name);
-  c.variableContainer = this;
-  c.onkeypress = function(a) {
-    13 == a.keyCode && (Entry.variableContainer.addVariable(), b.updateSelectedVariable(b.variables_[0]), a = b.variables_[0].listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"));
-  };
-  this.variableAddPanel.view.name = c;
-  d.appendChild(c);
-  d = Entry.createElement("div");
-  d.addClass("entryVariableAddSpaceGlobalWrapperWorkspace");
-  d.bindOnClick(function(a) {
-    b.variableAddPanel.info.object = null;
-    b.updateVariableAddView("variable");
-  });
-  a.appendChild(d);
-  c = Entry.createElement("span");
-  c.innerHTML = Lang.Workspace.Variable_use_all_objects;
-  d.appendChild(c);
-  c = Entry.createElement("span");
-  c.addClass("entryVariableAddSpaceCheckWorkspace");
-  this.variableAddPanel.view.globalCheck = c;
-  this.variableAddPanel.info.object || c.addClass("entryVariableAddChecked");
-  d.appendChild(c);
-  d = Entry.createElement("div");
-  d.addClass("entryVariableAddSpaceLocalWrapperWorkspace");
-  d.bindOnClick(function(a) {
-    Entry.playground.object && (a = b.variableAddPanel.info, a.object = Entry.playground.object.id, a.isCloud = !1, b.updateVariableAddView("variable"));
-  });
-  a.appendChild(d);
-  c = Entry.createElement("span");
-  c.innerHTML = Lang.Workspace.Variable_use_this_object;
-  d.appendChild(c);
-  c = Entry.createElement("span");
-  c.addClass("entryVariableAddSpaceCheckWorkspace");
-  this.variableAddPanel.view.localCheck = c;
-  this.variableAddPanel.info.object && c.addClass("entryVariableAddChecked");
-  d.appendChild(c);
-  d = Entry.createElement("div");
-  a.cloudWrapper = d;
-  d.addClass("entryVariableAddSpaceCloudWrapperWorkspace");
-  d.bindOnClick(function(a) {
-    a = b.variableAddPanel.info;
-    a.object || (a.isCloud = !a.isCloud, b.updateVariableAddView("variable"));
-  });
-  a.appendChild(d);
-  c = Entry.createElement("span");
-  c.addClass("entryVariableAddSpaceCloudSpanWorkspace");
-  c.innerHTML = Lang.Workspace.Variable_create_cloud;
-  d.appendChild(c);
-  c = Entry.createElement("span");
-  this.variableAddPanel.view.cloudCheck = c;
-  c.addClass("entryVariableAddSpaceCheckWorkspace");
-  c.addClass("entryVariableAddSpaceCloudCheckWorkspace");
-  this.variableAddPanel.info.isCloud && c.addClass("entryVariableAddChecked");
-  d.appendChild(c);
-  d = Entry.createElement("div");
-  d.addClass("entryVariableAddSpaceButtonWrapperWorkspace");
-  a.appendChild(d);
-  a = Entry.createElement("span");
-  a.addClass("entryVariableAddSpaceCancelWorkspace");
-  a.addClass("entryVariableAddSpaceButtonWorkspace");
-  a.innerHTML = Lang.Buttons.cancel;
-  a.bindOnClick(function(a) {
-    b.variableAddPanel.view.addClass("entryRemove");
-    b.resetVariableAddPanel("variable");
-  });
-  d.appendChild(a);
-  a = Entry.createElement("span");
-  a.addClass("entryVariableAddSpaceConfirmWorkspace");
-  a.addClass("entryVariableAddSpaceButtonWorkspace");
-  a.innerHTML = Lang.Buttons.save;
-  a.variableContainer = this;
-  a.bindOnClick(function(a) {
-    Entry.variableContainer.addVariable();
-    b.updateSelectedVariable(b.variables_[0]);
-    a = b.variables_[0].listElement;
-    a.editButton.addClass("entryRemove");
-    a.editSaveButton.removeClass("entryRemove");
-    a.nameField.removeAttribute("disabled");
-  });
-  d.appendChild(a);
-};
-Entry.VariableContainer.prototype.generateListAddView = function() {
-  var b = this, a = Entry.createElement("li");
-  this.listAddPanel.view = a;
-  this.listAddPanel.isOpen = !1;
-  a.addClass("entryVariableAddSpaceWorkspace");
-  a.addClass("entryRemove");
-  var d = Entry.createElement("div");
-  d.addClass("entryVariableAddSpaceNameWrapperWorkspace");
-  d.addClass("entryListAddSpaceNameWrapperWorkspace");
-  a.appendChild(d);
-  var c = Entry.createElement("input");
-  c.addClass("entryVariableAddSpaceInputWorkspace");
-  c.setAttribute("placeholder", Lang.Workspace.list_name);
-  this.listAddPanel.view.name = c;
-  c.variableContainer = this;
-  c.onkeypress = function(a) {
-    13 == a.keyCode && (b.addList(), a = b.lists_[0], b.updateSelectedVariable(a), a = a.listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"));
-  };
-  d.appendChild(c);
-  d = Entry.createElement("div");
-  d.addClass("entryVariableAddSpaceGlobalWrapperWorkspace");
-  d.bindOnClick(function(a) {
-    b.listAddPanel.info.object = null;
-    b.updateVariableAddView("list");
-  });
-  a.appendChild(d);
-  c = Entry.createElement("span");
-  c.innerHTML = Lang.Workspace.use_all_objects;
-  d.appendChild(c);
-  c = Entry.createElement("span");
-  c.addClass("entryVariableAddSpaceCheckWorkspace");
-  this.listAddPanel.view.globalCheck = c;
-  this.listAddPanel.info.object || c.addClass("entryVariableAddChecked");
-  d.appendChild(c);
-  d = Entry.createElement("div");
-  d.addClass("entryVariableAddSpaceLocalWrapperWorkspace");
-  d.bindOnClick(function(a) {
-    Entry.playground.object && (a = b.listAddPanel.info, a.object = Entry.playground.object.id, a.isCloud = !1, b.updateVariableAddView("list"));
-  });
-  a.appendChild(d);
-  c = Entry.createElement("span");
-  c.innerHTML = Lang.Workspace.Variable_use_this_object;
-  d.appendChild(c);
-  c = Entry.createElement("span");
-  c.addClass("entryVariableAddSpaceCheckWorkspace");
-  this.listAddPanel.view.localCheck = c;
-  this.variableAddPanel.info.object && addVariableLocalCheck.addClass("entryVariableAddChecked");
-  d.appendChild(c);
-  d = Entry.createElement("div");
-  a.cloudWrapper = d;
-  d.addClass("entryVariableAddSpaceCloudWrapperWorkspace");
-  d.bindOnClick(function(a) {
-    a = b.listAddPanel.info;
-    a.object || (a.isCloud = !a.isCloud, b.updateVariableAddView("list"));
-  });
-  a.appendChild(d);
-  c = Entry.createElement("span");
-  c.addClass("entryVariableAddSpaceCloudSpanWorkspace");
-  c.innerHTML = Lang.Workspace.List_create_cloud;
-  d.appendChild(c);
-  c = Entry.createElement("span");
-  this.listAddPanel.view.cloudCheck = c;
-  c.addClass("entryVariableAddSpaceCheckWorkspace");
-  c.addClass("entryVariableAddSpaceCloudCheckWorkspace");
-  this.listAddPanel.info.isCloud && c.addClass("entryVariableAddChecked");
-  d.appendChild(c);
-  d = Entry.createElement("div");
-  d.addClass("entryVariableAddSpaceButtonWrapperWorkspace");
-  a.appendChild(d);
-  a = Entry.createElement("span");
-  a.addClass("entryVariableAddSpaceCancelWorkspace");
-  a.addClass("entryVariableAddSpaceButtonWorkspace");
-  a.innerHTML = Lang.Buttons.cancel;
-  a.bindOnClick(function(a) {
-    b.listAddPanel.view.addClass("entryRemove");
-    b.resetVariableAddPanel("list");
-  });
-  d.appendChild(a);
-  a = Entry.createElement("span");
-  a.addClass("entryVariableAddSpaceConfirmWorkspace");
-  a.addClass("entryVariableAddSpaceButtonWorkspace");
-  a.innerHTML = Lang.Buttons.save;
-  a.variableContainer = this;
-  a.bindOnClick(function(a) {
-    b.addList();
-    a = b.lists_[0];
-    b.updateSelectedVariable(a);
-    a = a.listElement;
-    a.editButton.addClass("entryRemove");
-    a.editSaveButton.removeClass("entryRemove");
-    a.nameField.removeAttribute("disabled");
-  });
-  d.appendChild(a);
-};
-Entry.VariableContainer.prototype.generateVariableSplitterView = function() {
-  var b = Entry.createElement("li");
-  b.addClass("entryVariableSplitterWorkspace");
-  var a = Entry.createElement("li");
-  a.addClass("entryVariableSplitterWorkspace");
-  this.variableSplitters = {top:b, bottom:a};
-};
-Entry.VariableContainer.prototype.openVariableAddPanel = function(b) {
-  b = b ? b : "variable";
-  Entry.playground.toggleOnVariableView();
-  Entry.playground.changeViewMode("variable");
-  "variable" == b ? this.variableAddPanel.isOpen = !0 : this.listAddPanel.isOpen = !0;
-  this.selectFilter(b);
-  this.updateVariableAddView(b);
-};
-Entry.VariableContainer.prototype.getMenuXml = function(b) {
-  for (var a = [], d = 0 !== this.variables_.length, c = 0 !== this.lists_.length, e, f = 0, g;g = b[f];f++) {
-    var h = g.tagName;
-    h && "BLOCK" == h.toUpperCase() ? (e = g.getAttribute("bCategory"), !d && "variable" == e || !c && "list" == e || a.push(g)) : !h || "SPLITTER" != h.toUpperCase() && "BTN" != h.toUpperCase() || !d && "variable" == e || (c || "list" != e) && a.push(g);
-  }
-  return a;
-};
-Entry.VariableContainer.prototype.addCloneLocalVariables = function(b) {
-  var a = [], d = this;
-  this.mapVariable(function(b, d) {
-    if (b.object_ && b.object_ == d.objectId) {
-      var f = b.toJSON();
-      f.originId = f.id;
-      f.id = Entry.generateHash();
-      f.object = d.newObjectId;
-      delete f.x;
-      delete f.y;
-      a.push(f);
-      d.json.script = d.json.script.replace(new RegExp(f.originId, "g"), f.id);
-    }
-  }, b);
-  a.map(function(a) {
-    d.addVariable(a);
-  });
-};
-Entry.VariableContainer.prototype.generateTimer = function(b) {
-  b || (b = {}, b.id = Entry.generateHash(), b.name = Lang.Workspace.Variable_Timer, b.value = 0, b.variableType = "timer", b.visible = !1, b.x = 150, b.y = -70, b = new Entry.Variable(b));
-  b.generateView();
-  b.tick = null;
-  Entry.engine.projectTimer = b;
-  Entry.addEventListener("stop", function() {
-    Entry.engine.stopProjectTimer();
-  });
-};
-Entry.VariableContainer.prototype.generateAnswer = function(b) {
-  b || (b = new Entry.Variable({id:Entry.generateHash(), name:Lang.Blocks.VARIABLE_get_canvas_input_value, value:0, variableType:"answer", visible:!1, x:150, y:-100}));
-  b.generateView();
-  Entry.container.inputValue = b;
-};
-Entry.VariableContainer.prototype.generateVariableSettingView = function() {
-  var b = this, a = Entry.createElement("div");
-  a.bindOnClick(function(a) {
-    a.stopPropagation();
-  });
-  this.variableSettingView = a;
-  a.addClass("entryVariableSettingWorkspace");
-  this.listView_.appendChild(a);
-  a.addClass("entryRemove");
-  var d = Entry.createElement("div");
-  d.addClass("entryVariableSettingVisibleWrapperWorkspace");
-  d.bindOnClick(function(a) {
-    a = b.selectedVariable;
-    var c = b.variableSettingView.visibleCheck;
-    a.setVisible(!a.isVisible());
-    a.isVisible() ? c.addClass("entryVariableSettingChecked") : c.removeClass("entryVariableSettingChecked");
-  });
-  a.appendChild(d);
-  var c = Entry.createElement("span");
-  c.innerHTML = Lang.Workspace.show_variable;
-  d.appendChild(c);
-  c = Entry.createElement("span");
-  c.addClass("entryVariableSettingCheckWorkspace");
-  a.visibleCheck = c;
-  d.appendChild(c);
-  d = Entry.createElement("div");
-  d.addClass("entryVariableSettingInitValueWrapperWorkspace");
-  a.appendChild(d);
-  c = Entry.createElement("span");
-  c.innerHTML = Lang.Workspace.default_value;
-  d.appendChild(c);
-  c = Entry.createElement("input");
-  c.addClass("entryVariableSettingInitValueInputWorkspace");
-  a.initValueInput = c;
-  c.value = 0;
-  c.onkeyup = function(a) {
-    b.selectedVariable.setValue(this.value);
-  };
-  c.onblur = function(a) {
-    b.selectedVariable.setValue(this.value);
-  };
-  a.initValueInput = c;
-  d.appendChild(c);
-  d = Entry.createElement("div");
-  d.addClass("entryVariableSettingSplitterWorkspace");
-  a.appendChild(d);
-  d = Entry.createElement("div");
-  d.addClass("entryVariableSettingSlideWrapperWorkspace");
-  a.appendChild(d);
-  c = Entry.createElement("span");
-  c.innerHTML = Lang.Workspace.slide;
-  d.appendChild(c);
-  c = Entry.createElement("span");
-  c.addClass("entryVariableSettingCheckWorkspace");
-  a.slideCheck = c;
-  d.appendChild(c);
-  d.bindOnClick(function(a) {
-    var c;
-    a = b.selectedVariable;
-    var d = b.variables_, f = a.getType();
-    "variable" == f ? (c = a.toJSON(), c.variableType = "slide", c = new Entry.Variable(c), d.splice(d.indexOf(a), 0, c), 0 > c.getValue() && c.setValue(0), 100 < c.getValue() && c.setValue(100), e.removeAttribute("disabled"), g.removeAttribute("disabled")) : "slide" == f && (c = a.toJSON(), c.variableType = "variable", c = new Entry.Variable(c), d.splice(d.indexOf(a), 0, c), e.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
-    b.createVariableView(c);
-    b.removeVariable(a);
-    b.updateSelectedVariable(c);
-    c.generateView();
-  });
-  d = Entry.createElement("div");
-  a.minMaxWrapper = d;
-  d.addClass("entryVariableSettingMinMaxWrapperWorkspace");
-  a.appendChild(d);
-  c = Entry.createElement("span");
-  c.innerHTML = Lang.Workspace.min_value;
-  d.appendChild(c);
-  var e = Entry.createElement("input");
-  e.addClass("entryVariableSettingMinValueInputWorkspace");
-  c = b.selectedVariable;
-  e.value = c && "slide" == c.type ? c.minValue_ : 0;
-  e.onkeypress = function(a) {
-    13 === a.keyCode && this.blur();
-  };
-  e.onblur = function(a) {
-    isNaN(this.value) || (a = b.selectedVariable, a.setMinValue(this.value), b.updateVariableSettingView(a));
-  };
-  a.minValueInput = e;
-  d.appendChild(e);
-  var f = Entry.createElement("span");
-  f.addClass("entryVariableSettingMaxValueSpanWorkspace");
-  f.innerHTML = Lang.Workspace.max_value;
-  d.appendChild(f);
-  var g = Entry.createElement("input");
-  g.addClass("entryVariableSettingMaxValueInputWorkspace");
-  g.value = c && "slide" == c.type ? c.maxValue_ : 100;
-  g.onkeypress = function(a) {
-    13 === a.keyCode && this.blur();
-  };
-  g.onblur = function(a) {
-    isNaN(this.value) || (a = b.selectedVariable, a.setMaxValue(this.value), b.updateVariableSettingView(a));
-  };
-  a.maxValueInput = g;
-  d.appendChild(g);
-};
-Entry.VariableContainer.prototype.updateVariableSettingView = function(b) {
-  var a = this.variableSettingView, d = a.visibleCheck, c = a.initValueInput, e = a.slideCheck, f = a.minValueInput, g = a.maxValueInput, h = a.minMaxWrapper;
-  d.removeClass("entryVariableSettingChecked");
-  b.isVisible() && d.addClass("entryVariableSettingChecked");
-  e.removeClass("entryVariableSettingChecked");
-  "slide" == b.getType() ? (e.addClass("entryVariableSettingChecked"), f.removeAttribute("disabled"), g.removeAttribute("disabled"), f.value = b.getMinValue(), g.value = b.getMaxValue(), h.removeClass("entryVariableMinMaxDisabledWorkspace")) : (h.addClass("entryVariableMinMaxDisabledWorkspace"), f.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
-  c.value = b.getValue();
-  b.listElement.appendChild(a);
-  a.removeClass("entryRemove");
-};
-Entry.VariableContainer.prototype.generateListSettingView = function() {
-  var b = this, a = Entry.createElement("div");
-  a.bindOnClick(function(a) {
-    a.stopPropagation();
-  });
-  this.listSettingView = a;
-  a.addClass("entryListSettingWorkspace");
-  this.listView_.appendChild(a);
-  a.addClass("entryRemove");
-  var d = Entry.createElement("div");
-  d.addClass("entryListSettingVisibleWrapperWorkspace");
-  d.bindOnClick(function(a) {
-    a = b.selectedList;
-    var c = b.listSettingView.visibleCheck;
-    a.setVisible(!a.isVisible());
-    a.isVisible() ? c.addClass("entryListSettingCheckedWorkspace") : c.removeClass("entryListSettingCheckedWorkspace");
-  });
-  a.appendChild(d);
-  var c = Entry.createElement("span");
-  c.innerHTML = Lang.Workspace.show_list_workspace;
-  d.appendChild(c);
-  c = Entry.createElement("span");
-  c.addClass("entryListSettingCheckWorkspace");
-  a.visibleCheck = c;
-  d.appendChild(c);
-  c = Entry.createElement("div");
-  c.addClass("entryListSettingLengthWrapperWorkspace");
-  d = Entry.createElement("span");
-  d.addClass("entryListSettingLengthSpanWorkspace");
-  d.innerHTML = Lang.Workspace.number_of_list;
-  c.appendChild(d);
-  a.appendChild(c);
-  d = Entry.createElement("div");
-  d.addClass("entryListSettingLengthControllerWorkspace");
-  c.appendChild(d);
-  c = Entry.createElement("span");
-  c.addClass("entryListSettingMinusWorkspace");
-  c.bindOnClick(function(a) {
-    b.selectedList.array_.pop();
-    b.updateListSettingView(b.selectedList);
-  });
-  d.appendChild(c);
-  c = Entry.createElement("input");
-  c.addClass("entryListSettingLengthInputWorkspace");
-  c.onblur = function() {
-    b.setListLength(this.value);
-  };
-  c.onkeypress = function(a) {
-    13 == a.keyCode && this.blur();
-  };
-  a.lengthInput = c;
-  d.appendChild(c);
-  c = Entry.createElement("span");
-  c.addClass("entryListSettingPlusWorkspace");
-  c.bindOnClick(function(a) {
-    b.selectedList.array_.push({data:0});
-    b.updateListSettingView(b.selectedList);
-  });
-  d.appendChild(c);
-  d = Entry.createElement("div");
-  a.seperator = d;
-  a.appendChild(d);
-  d.addClass("entryListSettingSeperatorWorkspace");
-  d = Entry.createElement("div");
-  d.addClass("entryListSettingListValuesWorkspace");
-  a.listValues = d;
-  a.appendChild(d);
-};
-Entry.VariableContainer.prototype.updateListSettingView = function(b) {
-  var a = this;
-  b = b || this.selectedList;
-  var d = this.listSettingView, c = d.listValues, e = d.visibleCheck, f = d.lengthInput, g = d.seperator;
-  e.removeClass("entryListSettingCheckedWorkspace");
-  b.isVisible() && e.addClass("entryListSettingCheckedWorkspace");
-  f.value = b.array_.length;
-  for (b.listElement.appendChild(d);c.firstChild;) {
-    c.removeChild(c.firstChild);
-  }
-  var h = b.array_;
-  0 === h.length ? g.addClass("entryRemove") : g.removeClass("entryRemove");
-  for (e = 0;e < h.length;e++) {
-    (function(d) {
-      var e = Entry.createElement("div");
-      e.addClass("entryListSettingValueWrapperWorkspace");
-      var f = Entry.createElement("span");
-      f.addClass("entryListSettingValueNumberSpanWorkspace");
-      f.innerHTML = d + 1;
-      e.appendChild(f);
-      f = Entry.createElement("input");
-      f.value = h[d].data;
-      f.onblur = function() {
-        h[d].data = this.value;
-        b.updateView();
-      };
-      f.onkeypress = function(a) {
-        13 == a.keyCode && this.blur();
-      };
-      f.addClass("entryListSettingEachInputWorkspace");
-      e.appendChild(f);
-      f = Entry.createElement("span");
-      f.bindOnClick(function() {
-        h.splice(d, 1);
-        a.updateListSettingView();
-      });
-      f.addClass("entryListSettingValueRemoveWorkspace");
-      e.appendChild(f);
-      c.appendChild(e);
-    })(e);
-  }
-  b.updateView();
-  d.removeClass("entryRemove");
-};
-Entry.VariableContainer.prototype.setListLength = function(b) {
-  b = +b;
-  var a = this.selectedList.array_;
-  if (!isNaN(b)) {
-    var d = a.length;
-    if (d < b) {
-      for (b -= d, d = 0;d < b;d++) {
-        a.push({data:0});
-      }
-    } else {
-      d > b && (a.length = b);
-    }
-  }
-  this.updateListSettingView();
-};
-Entry.VariableContainer.prototype.updateViews = function() {
-  var b = this.lists_;
-  this.variables_.map(function(a) {
-    a.updateView();
->>>>>>> origin/new/courseware
   });
   c.editSaveButton = g;
   var h = Entry.createElement("input");
@@ -20421,7 +18284,6 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %
     delete this.isContinue;
   } else {
     this.isAction = this.isContinue = !0;
-<<<<<<< HEAD
     var a = Ntry.STATIC, b = this, c = function() {
       window.setTimeout(function() {
         Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
@@ -20441,328 +18303,6 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %
         break;
       default:
         c();
-=======
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
-  }
-}};
-Entry.block.test_wrapper = {skeleton:"basic", mode:"maze", color:"#3BBD70", template:"%1 this is test block %2", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
-}};
-Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}], func:function() {
-}};
-Entry.BlockMenu = function(b, a, d, c) {
-  Entry.Model(this, !1);
-  this._align = a || "CENTER";
-  this.setAlign(this._align);
-  this._scroll = void 0 !== c ? c : !1;
-  this._bannedClass = [];
-  this._categories = [];
-  this.suffix = "blockMenu";
-  this._isSelectingMenu = !1;
-  b = "string" === typeof b ? $("#" + b) : $(b);
-  if ("DIV" !== b.prop("tagName")) {
-    return console.error("Dom is not div element");
-  }
-  this.view = b;
-  this.visible = !0;
-  this._svgId = "blockMenu" + (new Date).getTime();
-  this._clearCategory();
-  this._categoryData = d;
-  this._generateView(d);
-  this._splitters = [];
-  this.setWidth();
-  this.svg = Entry.SVG(this._svgId);
-  Entry.Utils.addFilters(this.svg, this.suffix);
-  this.pattern = Entry.Utils.addBlockPattern(this.svg, this.suffix).pattern;
-  this.svgGroup = this.svg.elem("g");
-  this.svgThreadGroup = this.svgGroup.elem("g");
-  this.svgThreadGroup.board = this;
-  this.svgBlockGroup = this.svgGroup.elem("g");
-  this.svgBlockGroup.board = this;
-  this.changeEvent = new Entry.Event(this);
-  d && this._generateCategoryCodes(d);
-  this.observe(this, "_handleDragBlock", ["dragBlock"]);
-  this._scroll && (this._scroller = new Entry.BlockMenuScroller(this), this._addControl(b));
-  Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
-  this._categoryCodes && Entry.keyPressed && Entry.keyPressed.attach(this, this._captureKeyEvent);
-  Entry.windowResized && (b = _.debounce(this.updateOffset, 200), Entry.windowResized.attach(this, b));
-};
-(function(b) {
-  b.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
-  b._generateView = function(a) {
-    var b = this.view, c = this;
-    a && (this._categoryCol = Entry.Dom("ul", {class:"entryCategoryListWorkspace", parent:b}), this._generateCategoryView(a));
-    this.blockMenuContainer = Entry.Dom("div", {"class":"blockMenuContainer", parent:b});
-    this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.blockMenuContainer});
-    this.svgDom.mouseenter(function(a) {
-      c._scroller && c._scroller.setOpacity(1);
-      a = c.workspace.selectedBlockView;
-      !Entry.playground || Entry.playground.resizing || a && a.dragMode === Entry.DRAG_MODE_DRAG || (Entry.playground.focusBlockMenu = !0, a = c.svgGroup.getBBox(), a = a.width + a.x + 64, a > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:a - 62}, 200)));
-    });
-    this.svgDom.mouseleave(function(a) {
-      Entry.playground && !Entry.playground.resizing && (c._scroller && c._scroller.setOpacity(0), (a = this.widthBackup) && $(this).stop().animate({width:a}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
-    });
-    $(window).scroll(function() {
-      c.updateOffset();
-    });
-  };
-  b.changeCode = function(a) {
-    if (!(a instanceof Entry.Code)) {
-      return console.error("You must inject code instance");
-    }
-    this.codeListener && this.code.changeEvent.detach(this.codeListener);
-    var b = this;
-    this.set({code:a});
-    this.codeListener = this.code.changeEvent.attach(this, function() {
-      b.changeEvent.notify();
-    });
-    a.createView(this);
-    this.workspace.getMode();
-    this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD ? a.mode && "code" !== a.mode || this.renderText() : "text" === a.mode && this.renderBlock();
-    this.align();
-  };
-  b.bindCodeView = function(a) {
-    this.svgBlockGroup.remove();
-    this.svgThreadGroup.remove();
-    this.svgBlockGroup = a.svgBlockGroup;
-    this.svgThreadGroup = a.svgThreadGroup;
-    this.svgGroup.appendChild(this.svgThreadGroup);
-    this.svgGroup.appendChild(this.svgBlockGroup);
-    this._scroller && this.svgGroup.appendChild(this._scroller.svgGroup);
-  };
-  b.align = function(a) {
-    var b = this.code;
-    if (b) {
-      this._clearSplitters();
-      !b.view || a || this._isSelectingMenu || b.view.reDraw();
-      a = b.getThreads();
-      for (var b = 10, c = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
-        var h = a[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
-        this.checkBanClass(h) ? k.set({display:!1}) : (k.set({display:!0}), h = h.class, e && e !== h && (this._createSplitter(b), b += 15), e = h, h = c - k.offsetX, "CENTER" == this._align && (h -= k.width / 2), b -= k.offsetY, k._moveTo(h, b, !1), b += k.height + 15);
-      }
-      this.updateSplitters();
-      this.changeEvent.notify();
-    }
-  };
-  b.cloneToGlobal = function(a) {
-    if (!this._boardBlockView && null !== this.dragBlock) {
-      var b = this.workspace, c = b.getMode(), e = this.dragBlock, f = this._svgWidth, g = b.selectedBoard;
-      if (!g || c != Entry.Workspace.MODE_BOARD && c != Entry.Workspace.MODE_OVERLAYBOARD) {
-        Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a);
-      } else {
-        if (g.code && (b = e.block, c = b.getThread(), b && c)) {
-          b = c.toJSON(!0);
-          this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view;
-          var g = this.offset().top - g.offset().top - $(window).scrollTop(), h, k;
-          if (b = this.dragBlock.mouseDownCoordinate) {
-            h = a.pageX - b.x, k = a.pageY - b.y;
-          }
-          this._boardBlockView._moveTo(e.x - f + (h || 0), e.y + g + (k || 0), !1);
-          this._boardBlockView.onMouseDown.call(this._boardBlockView, a);
-          this._boardBlockView.dragInstance.set({isNew:!0});
-        }
-      }
-    }
-  };
-  b.terminateDrag = function() {
-    if (this._boardBlockView) {
-      var a = this._boardBlockView;
-      if (a) {
-        this.workspace.getBoard();
-        this._boardBlockView = null;
-        var b = Entry.GlobalSvg.left, c = Entry.GlobalSvg.width / 2, a = a.getBoard().offset().left;
-        return b < a - c;
-      }
-    }
-  };
-  b.getCode = function(a) {
-    return this._code;
-  };
-  b.setSelectedBlock = function(a) {
-    var b = this.selectedBlockView;
-    b && b.removeSelected();
-    a instanceof Entry.BlockView ? a.addSelected() : a = null;
-    this.set({selectedBlockView:a});
-  };
-  b.hide = function() {
-    this.view.addClass("entryRemove");
-  };
-  b.show = function() {
-    this.view.removeClass("entryRemove");
-  };
-  b.renderText = function(a) {
-    var b = this.code.getThreads();
-    this.code.mode = "text";
-    for (var c = 0;c < b.length;c++) {
-      b[c].view.renderText();
-    }
-    a && a();
-  };
-  b.renderBlock = function(a) {
-    var b = this.code.getThreads();
-    this.code.mode = "code";
-    for (var c = 0;c < b.length;c++) {
-      b[c].view.renderBlock();
-    }
-    a && a();
-  };
-  b._createSplitter = function(a) {
-    a = this.svgBlockGroup.elem("line", {x1:20, y1:a, x2:this._svgWidth - 20, y2:a, stroke:"#b5b5b5"});
-    this._splitters.push(a);
-  };
-  b.updateSplitters = function(a) {
-    a = void 0 === a ? 0 : a;
-    var b = this._svgWidth - 20, c;
-    this._splitters.forEach(function(e) {
-      c = parseFloat(e.getAttribute("y1")) + a;
-      e.attr({x2:b, y1:c, y2:c});
-    });
-  };
-  b._clearSplitters = function() {
-    for (var a = this._splitters, b = a.length - 1;0 <= b;b--) {
-      a[b].remove(), a.pop();
-    }
-  };
-  b.setWidth = function() {
-    this._svgWidth = this.blockMenuContainer.width();
-    this.updateSplitters();
-  };
-  b.setMenu = function() {
-    var a = this._categoryCodes, b = this._categoryElems, c;
-    for (c in a) {
-      for (var e = a[c], e = e instanceof Entry.Code ? e.getThreads() : e, f = e.length, g = 0;g < e.length;g++) {
-        var h = e[g], h = h instanceof Entry.Thread ? h.getFirstBlock().type : h[0].type;
-        this.checkBanClass(Entry.block[h]) && f--;
-      }
-      0 === f ? b[c].addClass("entryRemove") : b[c].removeClass("entryRemove");
-    }
-  };
-  b.getCategoryCodes = function(a) {
-    a = this._convertSelector(a);
-    var b = this._categoryCodes[a];
-    b || (this._generateCategoryElement(a), b = []);
-    b instanceof Entry.Code || (b = this._categoryCodes[a] = new Entry.Code(b));
-    return b;
-  };
-  b._convertSelector = function(a) {
-    if (isNaN(a)) {
-      return a;
-    }
-    a = +a;
-    for (var b = this._categories, c = this._categoryElems, e = 0;e < b.length;e++) {
-      var f = b[e];
-      if (!c[f].hasClass("entryRemove") && 0 === a--) {
-        return f;
-      }
-    }
-  };
-  b.selectMenu = function(a, b) {
-    var c = this._convertSelector(a);
-    if (c) {
-      this._isSelectingMenu = !0;
-      switch(c) {
-        case "variable":
-          Entry.playground.checkVariables();
-          break;
-        case "arduino":
-          this._generateHwCode();
-      }
-      var e = this._categoryElems[c], f = this._selectedCategoryView, g = !1, h = this.workspace.board, k = h.view;
-      f && f.removeClass("entrySelectedCategory");
-      e != f || b ? f || (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, e.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
-      g && Entry.bindAnimationCallbackOnce(k, function() {
-        h.scroller.resizeScrollBar.call(h.scroller);
-        k.removeClass("foldOut");
-        Entry.windowResized.notify();
-      });
-      this._isSelectingMenu = !1;
-      this.visible && (f = this._categoryCodes[c], this._selectedCategoryView = e, e.addClass("entrySelectedCategory"), f.constructor !== Entry.Code && (f = this._categoryCodes[c] = new Entry.Code(f)), this.changeCode(f));
-      this.lastSelector = c;
-    } else {
-      this.align();
-    }
-  };
-  b._generateCategoryCodes = function(a) {
-    this._categoryCodes = {};
-    for (var b = 0;b < a.length;b++) {
-      var c = a[b], e = [];
-      c.blocks.forEach(function(a) {
-        var b = Entry.block[a];
-        if (b && b.def) {
-          if (b.defs) {
-            for (a = 0;a < b.defs.length;a++) {
-              e.push([b.defs[a]]);
-            }
-          } else {
-            e.push([b.def]);
-          }
-        } else {
-          e.push([{type:a}]);
-        }
-      });
-      c = c.category;
-      this._categories.push(c);
-      this._categoryCodes[c] = e;
-    }
-  };
-  b.banClass = function(a, b) {
-    0 > this._bannedClass.indexOf(a) && this._bannedClass.push(a);
-    this.align(b);
-  };
-  b.unbanClass = function(a, b) {
-    var c = this._bannedClass.indexOf(a);
-    -1 < c && this._bannedClass.splice(c, 1);
-    this.align(b);
-  };
-  b.checkBanClass = function(a) {
-    if (a) {
-      a = a.isNotFor;
-      for (var b in this._bannedClass) {
-        if (a && -1 < a.indexOf(this._bannedClass[b])) {
-          return !0;
-        }
-      }
-      return !1;
-    }
-  };
-  b._addControl = function(a) {
-    var b = this;
-    a.on("wheel", function() {
-      b._mouseWheel.apply(b, arguments);
-    });
-    b._scroller && $(this.svg).bind("mousedown touchstart", function(a) {
-      b.onMouseDown.apply(b, arguments);
-    });
-  };
-  b.onMouseDown = function(a) {
-    function b(a) {
-      a.stopPropagation && a.stopPropagation();
-      a.preventDefault && a.preventDefault();
-      a = Entry.Utils.convertMouseEvent(a);
-      var c = e.dragInstance;
-      e._scroller.scroll(-a.pageY + c.offsetY);
-      c.set({offsetY:a.pageY});
-    }
-    function c(a) {
-      $(document).unbind(".blockMenu");
-      delete e.dragInstance;
-    }
-    a.stopPropagation && a.stopPropagation();
-    a.preventDefault && a.preventDefault();
-    var e = this;
-    if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-      a = Entry.Utils.convertMouseEvent(a);
-      Entry.documentMousedown && Entry.documentMousedown.notify(a);
-      var f = $(document);
-      f.bind("mousemove.blockMenu", b);
-      f.bind("mouseup.blockMenu", c);
-      f.bind("touchmove.blockMenu", b);
-      f.bind("touchend.blockMenu", c);
-      this.dragInstance = new Entry.DragInstance({startY:a.pageY, offsetY:a.pageY});
->>>>>>> origin/new/courseware
     }
     d && Ntry.dispatchEvent("unitAction", d, c);
     return Entry.STATIC.CONTINUE;
@@ -20969,7 +18509,6 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:Lang
     for (c in a) {
       b = a[c];
     }
-<<<<<<< HEAD
     a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
     b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
     b = {x:b.x, y:b.y};
@@ -20979,61 +18518,6 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:Lang
     a = this.block.statements[0];
     if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
-=======
-    e.outerLine && (f["stroke-width"] = "0.6");
-    this._path.attr(f);
-    this._moveTo(this.x, this.y, !1);
-    this._startContentRender(b);
-    this._startExtension(b);
-    !0 !== this._board.disableMouseEvent && this._addControl();
-    (e = this.guideSvgGroup) && this.svgGroup.insertBefore(e, this.svgGroup.firstChild);
-    this.bindPrev();
-  };
-  b._startContentRender = function(a) {
-    a = void 0 === a ? Entry.Workspace.MODE_BOARD : a;
-    var b = this._schema;
-    this.contentSvgGroup && this.contentSvgGroup.remove();
-    this.statementSvgGroup && this.statementSvgGroup.remove();
-    this._contents = [];
-    this.contentSvgGroup = this.svgGroup.elem("g", {class:"contentsGroup"});
-    b.statements && b.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g", {class:"statementGroup"}));
-    switch(a) {
-      case Entry.Workspace.MODE_BOARD:
-      ;
-      case Entry.Workspace.MODE_OVERLAYBOARD:
-        for (var c = /(%\d)/mi, e = (b.template ? b.template : Lang.template[this.block.type]).split(c), f = b.params, g = 0;g < e.length;g++) {
-          var h = e[g];
-          " " === h[0] && (h = h.substring(1));
-          " " === h[h.length - 1] && (h = h.substring(0, h.length - 1));
-          if (0 !== h.length) {
-            if (c.test(h)) {
-              var k = +h.split("%")[1] - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
-              this._contents.push(h);
-              this._paramMap[k] = h;
-            } else {
-              this._contents.push(new Entry.FieldText({text:h}, this));
-            }
-          }
-        }
-        if ((a = b.statements) && a.length) {
-          for (g = 0;g < a.length;g++) {
-            this._statements.push(new Entry.FieldStatement(a[g], this, g));
-          }
-        }
-        break;
-      case Entry.Workspace.MODE_VIMBOARD:
-        if ("basic_button" === this._schema.skeleton) {
-          this._startContentRender(Entry.Workspace.MODE_BOARD);
-          return;
-        }
-        b = this.getBoard().workspace.getCodeToText(this.block);
-        a = !1;
-        /(if)+(.|\n)+(else)+/.test(b) && (g = b.split("\n"), b = g.shift() + " " + g.shift(), a = !0, g = g.join(" "));
-        b = {text:b, color:"white"};
-        this.block._schema.vimModeFontColor && (b.color = this.block._schema.vimModeFontColor);
-        this._contents.push(new Entry.FieldText(b, this));
-        a && (this._contents.push(new Entry.FieldLineBreak(null, this)), b.text = g, this._contents.push(new Entry.FieldText(b, this)));
->>>>>>> origin/new/courseware
     }
   }
 }};
@@ -21843,29 +19327,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       if ("Output" === b[a].type) {
         return this.params[a];
       }
-<<<<<<< HEAD
     }
     return null;
-=======
-      return b;
-    });
-  };
-  b.getValue = function(a, b) {
-    var c = this.block.params[this._getParamIndex(a, b)], e = new Entry.Scope(c, this.executor);
-    return Entry.block[c.type].func.call(e, this.entity, e);
-  };
-  b.getStringValue = function(a, b) {
-    return String(this.getValue(a, b));
-  };
-  b.getNumberValue = function(a, b) {
-    return +this.getValue(a);
-  };
-  b.getBooleanValue = function(a, b) {
-    return +this.getValue(a, b) ? !0 : !1;
-  };
-  b.getField = function(a, b) {
-    return this.block.params[this._getParamIndex(a)];
->>>>>>> origin/new/courseware
   };
   a.getTerminateOutputBlock = function() {
     for (var b = this;;) {
@@ -21876,17 +19339,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       b = a;
     }
   };
-<<<<<<< HEAD
   a.getBlockType = function() {
     if (!this.view) {
       return null;
     }
     var b = Entry.skeleton[this._schema.skeleton].magnets(this.view);
     return b.next || b.previous ? "basic" : b.boolean || b.string ? "field" : b.output ? "output" : null;
-=======
-  b.getNumberField = function(a) {
-    return +this.getField(a);
->>>>>>> origin/new/courseware
   };
   a.indexOfStatements = function(b) {
     return this.statements.indexOf(b);
@@ -21928,7 +19386,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   a.stringify = function(b) {
     return JSON.stringify(this.toJSON(!1, b));
   };
-<<<<<<< HEAD
 })(Entry.Block.prototype);
 Entry.BlockMenu = function(a, b, c, d) {
   Entry.Model(this, !1);
@@ -21984,23 +19441,6 @@ Entry.BlockMenu = function(a, b, c, d) {
     });
     $(window).scroll(function() {
       d.updateOffset();
-=======
-})(Entry.ExtGuide.prototype);
-Entry.ExtSideTag = function(b, a, d) {
-  this.blockView = a;
-  this.color = b.color ? b.color : "#EBC576";
-  this.text = b.text ? b.text : "";
-  this.height = b.height ? +b.height : 31 * +b.count;
-  this.render();
-  this.updatePos();
-};
-(function(b) {
-  b.render = function() {
-    this.svgGroup = this.blockView.svgGroup.elem("g");
-    $(this.svgGroup).bind("mousedown touchstart", function(a) {
-      a.stopPropagation && a.stopPropagation();
-      a.preventDefault && a.preventDefault();
->>>>>>> origin/new/courseware
     });
   };
   a.changeCode = function(b) {
@@ -25072,41 +22512,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   a.getParent = function() {
     return this._parent;
   };
-<<<<<<< HEAD
   a.getThread = function() {
     return this;
-=======
-  b.setMode = function(a, b) {
-    isNaN(a) ? (this.mode = a.boardType, this.runType = a.runType, this.textType = a.textType) : this.mode = a;
-    this.mode = +this.mode;
-    switch(this.mode) {
-      case this.oldMode:
-        return;
-      case Entry.Workspace.MODE_VIMBOARD:
-        try {
-          this.board && this.board.hide(), this.overlayBoard && this.overlayBoard.hide(), this.set({selectedBoard:this.vimBoard}), this.vimBoard.show(), this.codeToText(this.board.code, a), this.blockMenu.renderText(function() {
-            this.blockMenu.reDraw();
-          }.bind(this)), this.board.clear(), this.oldTextType = this.textType;
-        } catch (c) {
-        }
-        break;
-      case Entry.Workspace.MODE_BOARD:
-        try {
-          this.board.show(), this.set({selectedBoard:this.board}), this.vimBoard && (this.textToCode(this.oldMode, this.oldTextType), this.vimBoard.hide()), this.overlayBoard && this.overlayBoard.hide(), this.oldMode === Entry.Workspace.MODE_VIMBOARD && this.blockMenu.renderBlock(function() {
-            this.blockMenu.reDraw();
-          }.bind(this)), this.oldTextType = this.textType;
-        } catch (c) {
-          this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.PARSER_TYPE_JS_TO_BLOCK ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, Entry.dispatchEvent("changeMode", a), Ntry.dispatchEvent("textError", a)) : this.oldTextType == Entry.Vim.PARSER_TYPE_PY_TO_BLOCK && (a.boardType = 
-          Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, Entry.dispatchEvent("changeMode", a));
-        }
-        Entry.commander.setCurrentEditor("board", this.board);
-        break;
-      case Entry.Workspace.MODE_OVERLAYBOARD:
-        this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard}), Entry.commander.setCurrentEditor("board", this.overlayBoard);
-    }
-    this.oldMode = this.mode;
-    this.changeEvent.notify(b);
->>>>>>> origin/new/courseware
   };
   a.getValueBlock = function() {
     return this._valueBlock;
@@ -25772,15 +23179,9 @@ Entry.Xml.getNumberValue = function(a, b, c) {
   if (!c.length) {
     return null;
   }
-<<<<<<< HEAD
   for (var d in c) {
     if (c[d].tagName && "VALUE" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == b) {
       return Number(Entry.Xml.operate(a, c[d].children[0]));
-=======
-  for (var c in d) {
-    if (d[c].tagName && "VALUE" == d[c].tagName.toUpperCase() && d[c].getAttribute("name") == a) {
-      return +Entry.Xml.operate(b, d[c].children[0]);
->>>>>>> origin/new/courseware
     }
   }
   return null;
@@ -25801,15 +23202,9 @@ Entry.Xml.getNumberField = function(a, b) {
   if (!b.length) {
     return null;
   }
-<<<<<<< HEAD
   for (var c in b) {
     if ("FIELD" == b[c].tagName.toUpperCase() && b[c].getAttribute("name") == a) {
       return Number(b[c].textContent);
-=======
-  for (var c in d) {
-    if ("FIELD" == d[c].tagName.toUpperCase() && d[c].getAttribute("name") == b) {
-      return +d[c].textContent;
->>>>>>> origin/new/courseware
     }
   }
 };

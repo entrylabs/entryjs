@@ -15,13 +15,10 @@ Entry.TargetChecker = function(code, isForEdit) {
     this.isForEdit = isForEdit;
     this.goals = [];
     this.unachievedGoals = [];
-    if (this.isForEdit)
+    if (this.isForEdit) {
         this.watchingBlocks = [];
-    this.blocks = [
-        "check_object_property",
-        "check_block_execution",
-        "check_lecture_goal"
-    ];
+        Entry.playground.mainWorkspace.blockMenu.unbanClass("checker");
+    }
 
     this.isFail = false;
     this.isSuccess = false;
