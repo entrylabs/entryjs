@@ -11885,7 +11885,7 @@ Entry.Scene.prototype.cloneScene = function(b) {
   if (this.isMax()) {
     Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_add_error, !1);
   } else {
-    var a = {name:b.name + Lang.Workspace.replica_of_object, id:Entry.generateHash()};
+    var a = {name:(Lang.Workspace.cloned_scene + b.name).substring(0, 10), id:Entry.generateHash()};
     this.generateElement(a);
     this.addScene(a);
     b = Entry.container.getSceneObjects(b);
@@ -11894,6 +11894,7 @@ Entry.Scene.prototype.cloneScene = function(b) {
       for (var d = b.length - 1;0 <= d;d--) {
         Entry.container.addCloneObject(b[d], a.id);
       }
+      this._focusSceneNameField(a);
       this.isSceneCloning = !1;
     } catch (c) {
     }
@@ -11925,6 +11926,9 @@ Entry.Scene.prototype.getNextScene = function() {
 };
 Entry.Scene.prototype.isMax = function() {
   return this.scenes_.length >= this.maxCount;
+};
+Entry.Scene.prototype._focusSceneNameField = function(b) {
+  (b = $(b.view).find("input")) && b.focus && b.focus();
 };
 Entry.Script = function(b) {
   this.entity = b;

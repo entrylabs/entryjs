@@ -453,7 +453,7 @@ Entry.Scene.prototype.cloneScene = function(scene) {
     }
 
     var clonedScene = {
-        name: scene.name + Lang.Workspace.replica_of_object,
+        name: (Lang.Workspace.cloned_scene + scene.name).substring(0, 10),
         id: Entry.generateHash()
     };
 
@@ -466,6 +466,7 @@ Entry.Scene.prototype.cloneScene = function(scene) {
         this.isSceneCloning = true;
         for (var i=objects.length-1; i>=0; i--)
             Entry.container.addCloneObject(objects[i], clonedScene.id);
+        this._focusSceneNameField(clonedScene);
         this.isSceneCloning = false;
     } catch(e) {}
 };
@@ -523,4 +524,9 @@ Entry.Scene.prototype.getNextScene = function() {
 
 Entry.Scene.prototype.isMax = function() {
     return this.scenes_.length >= this.maxCount;
+};
+
+Entry.Scene.prototype._focusSceneNameField = function(scene) {
+    var input = $(scene.view).find('input');
+    input && input.focus && input.focus();
 };
