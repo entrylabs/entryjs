@@ -14065,6 +14065,23 @@ Entry.Utils.isNewVersion = function(b, a) {
     return !1;
   }
 };
+Entry.Utils.getBlockCategory = function() {
+  var b = {}, a;
+  return function(d) {
+    if (d) {
+      if (b[d]) {
+        return b[d];
+      }
+      a || (a = EntryStatic.getAllBlocks());
+      for (var c = 0;c < a.length;c++) {
+        var e = a[c], f = e.category;
+        if (-1 < e.blocks.indexOf(d)) {
+          return b[d] = f;
+        }
+      }
+    }
+  };
+}();
 Entry.Model = function(b, a) {
   var d = Entry.Model;
   d.generateSchema(b);

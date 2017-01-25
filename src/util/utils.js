@@ -1301,3 +1301,26 @@ Entry.Utils.isNewVersion = function(old_version, new_version) {
         return false;
     }
 }
+
+Entry.Utils.getBlockCategory = (function() {
+    var map = {};
+    var allBlocks;
+    return function(blockType) {
+        if (!blockType) return;
+
+        if (map[blockType])
+            return map[blockType];
+
+        if (!allBlocks)
+            allBlocks = EntryStatic.getAllBlocks();
+
+        for (var i=0; i<allBlocks.length; i++) {
+            var data = allBlocks[i];
+            var category = data.category;
+            if (data.blocks.indexOf(blockType) > -1) {
+                map[blockType] = category;
+                return category;
+            }
+        }
+    }
+})();
