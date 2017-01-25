@@ -1375,7 +1375,7 @@ Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
         var sorted = [];
 
         blocks.forEach(function(b) {
-            if (selectedBlocks.indexOf(b)> -1)
+            if (selectedBlocks.indexOf(b) > -1)
                 sorted.push(b);
         });
 

@@ -4277,7 +4277,6 @@ Entry.Container.prototype.clear = function() {
     b.destroy();
   });
   this.objects_ = [];
-  this.selectObject();
   Entry.playground.flushPlayground();
 };
 Entry.db = {data:{}, typeMap:{}};
