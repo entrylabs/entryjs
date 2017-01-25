@@ -1343,7 +1343,6 @@ Entry.Utils.getUniqObjectsBlocks = function(objects) {
     return ret;
 };
 
-//TODO sorting blocks
 Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
     if (!blockArr) return;
     var that = this;
@@ -1362,6 +1361,26 @@ Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
         if (index === undefined) return;
         data[index].blocks.push(b);
     });
+
+    var allBlocksInfo = EntryStatic.getAllBlocks();
+    for (var i=0; i<allBlocksInfo.length; i++) {
+        var info = allBlocksInfo[i];
+        var category = info.category;
+        var blocks = info.blocks;
+        if (category === 'func') {
+            allBlocksInfo.splice(i, 1);
+            continue;
+        }
+        var selectedBlocks = data[i].blocks;
+        var sorted = [];
+
+        blocks.forEach(function(b) {
+            if (selectedBlocks.indexOf(b)> -1)
+                sorted.push(b);
+        });
+
+        data[i].blocks = sorted;
+    }
 
     return data;
 };

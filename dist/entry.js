@@ -14105,6 +14105,19 @@ Entry.Utils.makeCategoryDataByBlocks = function(b) {
       var e = a.getBlockCategory(b), e = c[e];
       void 0 !== e && d[e].blocks.push(b);
     });
+    b = EntryStatic.getAllBlocks();
+    for (e = 0;e < b.length;e++) {
+      var f = b[e], g = f.blocks;
+      if ("func" === f.category) {
+        b.splice(e, 1);
+      } else {
+        var h = d[e].blocks, k = [];
+        g.forEach(function(a) {
+          -1 < h.indexOf(a) && k.push(a);
+        });
+        d[e].blocks = k;
+      }
+    }
     return d;
   }
 };
