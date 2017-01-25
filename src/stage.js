@@ -672,7 +672,7 @@ Entry.Stage.prototype.createObjectContainer = function(scene) {
 Entry.Stage.prototype.removeObjectContainer = function(scene) {
     var containers = this.objectContainers;
     var objContainer = this.getObjectContainerByScene(scene);
-    this.canvas.removeChild(objContainer);
+    this.canvas && this.canvas.removeChild(objContainer);
     containers.splice(this.objectContainers.indexOf(objContainer),1);
 };
 
