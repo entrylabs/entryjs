@@ -14082,6 +14082,32 @@ Entry.Utils.getBlockCategory = function() {
     }
   };
 }();
+Entry.Utils.getUniqObjectsBlocks = function(b) {
+  b = b || Entry.container.objects_;
+  var a = [];
+  b.forEach(function(b) {
+    b = b.script;
+    b instanceof Entry.Code || (b = new Entry.Code(b));
+    b.getBlockList().forEach(function(b) {
+      0 > a.indexOf(b.type) && a.push(b.type);
+    });
+  });
+  return a;
+};
+Entry.Utils.makeCategoryDataByBlocks = function(b) {
+  if (b) {
+    for (var a = this, d = EntryStatic.getAllBlocks(), c = {}, e = 0;e < d.length;e++) {
+      var f = d[e];
+      f.blocks = [];
+      c[f.category] = e;
+    }
+    b.forEach(function(b) {
+      var e = a.getBlockCategory(b), e = c[e];
+      void 0 !== e && d[e].blocks.push(b);
+    });
+    return d;
+  }
+};
 Entry.Model = function(b, a) {
   var d = Entry.Model;
   d.generateSchema(b);

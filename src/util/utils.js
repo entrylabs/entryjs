@@ -1324,3 +1324,45 @@ Entry.Utils.getBlockCategory = (function() {
         }
     }
 })();
+
+Entry.Utils.getUniqObjectsBlocks = function(objects) {
+    objects = objects || Entry.container.objects_;
+    var ret = [];
+
+    objects.forEach(function(o) {
+        var script = o.script;
+        if (!(script instanceof Entry.Code))
+            script = new Entry.Code(script);
+        var blocks = script.getBlockList();
+        blocks.forEach(function(b) {
+            if (ret.indexOf(b.type) < 0)
+                ret.push(b.type);
+        });
+    });
+
+    return ret;
+};
+
+//TODO sorting blocks
+Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
+    if (!blockArr) return;
+    var that = this;
+
+    var data = EntryStatic.getAllBlocks();
+    var categoryIndexMap = {};
+    for (var i=0; i<data.length; i++) {
+        var datum = data[i];
+        datum.blocks = [];
+        categoryIndexMap[datum.category] = i;
+    }
+
+    blockArr.forEach(function(b) {
+        var category = that.getBlockCategory(b);
+        var index = categoryIndexMap[category];
+        if (index === undefined) return;
+        data[index].blocks.push(b);
+    });
+
+    return data;
+};
+
