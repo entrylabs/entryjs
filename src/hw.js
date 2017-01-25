@@ -16,8 +16,8 @@ Entry.HW = function() {
     this.isFirstConnect = true;
     //this.requireVerion = 'v1.6.1';
     this.requireVerion = 'v1.6.1';
-    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.3_Setup.exe";
-
+    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.4_Setup.exe";
+    this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.4.dmg";
     this.hwPopupCreate();
     this.initSocket();
     this.connected = false;
@@ -54,7 +54,12 @@ Entry.HW = function() {
         '10.2': Entry.Roborobo_SchoolKit,
         '12.1': Entry.EV3,
         'B.1': Entry.Codestar,
-        'A.1': Entry.SmartBoard
+        'A.1': Entry.SmartBoard,
+        'C.1': Entry.DaduBlock,
+        'D.1': Entry.robotori,
+        'F.1': Entry.byrobot_dronefighter_controller,
+        'F.2': Entry.byrobot_dronefighter_drive,
+        'F.3': Entry.byrobot_dronefighter_flight,
     };
 };
 
@@ -298,7 +303,16 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var win = window.open(this.downloadPath, '_blank');
+    var path;
+    var platform = navigator.platform;
+
+    if(platform === 'MacIntel') {
+        path = this.downloadPathOsx;
+    } else {
+        path = this.downloadPath;
+    }
+
+    var win = window.open(path, '_blank');
     win.focus();
 };
 
