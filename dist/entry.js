@@ -3414,7 +3414,6 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var d = a.getNumberValue("SECOND", a), d = 60 / (Entry.FPS || 60) * d * 1E3;
   var d = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
