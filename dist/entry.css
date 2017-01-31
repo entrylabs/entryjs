@@ -6186,5 +6186,8 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .targetChecker.fail {
   background-color: #d9534f;
 }
+.entryCurtainElem {
+  position: fixed;
+}
 
 

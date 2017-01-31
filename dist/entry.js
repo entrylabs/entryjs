@@ -12979,6 +12979,36 @@ Entry.ContextMenu = {};
     this._hideEvent && (Entry.documentMousedown.detach(this._hideEvent), this._hideEvent = null);
   };
 })(Entry.ContextMenu);
+Entry.Curtain = {};
+(function() {
+  this._visible = !1;
+  this._doms = null;
+  this._createDom = function() {
+    var b = {parent:$("body"), class:"entryCurtainElem entryRemove"};
+    this._doms = {top:Entry.Dom("div", b), right:Entry.Dom("div", b), bottom:Entry.Dom("div", b), left:Entry.Dom("div", b)};
+  };
+  this.show = function(b) {
+    b = {top:400, left:130, width:64, height:56};
+    !this._doms && this._createDom();
+    this._position(b);
+    for (var a in this._doms) {
+      this._doms[a].removeClass("entryRemove");
+    }
+  };
+  this._position = function(b) {
+    b = $(window);
+    b.width();
+    b.height();
+  };
+  this.hide = function() {
+    if (this._doms) {
+      for (var b in this._doms) {
+        this._doms[b].addClass("entryRemove");
+      }
+    }
+  };
+  this._createDom();
+}).call(Entry.Curtain);
 Entry.Loader = {queueCount:0, totalCount:0, loaded:!1};
 Entry.Loader.addQueue = function(b) {
   this.queueCount || Entry.dispatchEvent("loadStart");
