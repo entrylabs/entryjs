@@ -26410,6 +26410,42 @@ Entry.block = {
             })
             return Entry.STATIC.BREAK;
         }
+    },
+    "hidden_string": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_string_field",
+        "template": "    ?    ",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "hidden_string"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {}
+    },
+    "hidden_boolean": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_boolean_field",
+        "template": "    ?    ",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "hidden_boolean"
+        },
+        "paramsKeyMap": {},
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {}
     }
 };
 

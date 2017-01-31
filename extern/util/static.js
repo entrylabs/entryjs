@@ -2652,6 +2652,17 @@ EntryStatic.COMMAND_TYPES = {
     'redo': 303
 };
 
+EntryStatic.getQuestionCategoryData = function() {
+    return {
+        category: 'dummy',
+        blocks: [
+            'hidden',
+            'hidden_string',
+            'hidden_boolean'
+        ]
+    }
+};
+
 // for server node js code
 if (typeof exports == "object") {
     exports.blockInfo = EntryStatic.blockInfo;
