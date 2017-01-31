@@ -19271,7 +19271,7 @@ Entry.Field = function() {
   };
   b.getAbsolutePosFromDocument = function() {
     var a = this._block.view, b = a.getContentPos(), c = a.getAbsoluteCoordinate(), a = a.getBoard().svgDom.offset();
-    return {x:c.x + this.box.x + b.x + a.left, y:c.y + this.box.y + b.y + a.top};
+    return {x:c.x + this.box.x + b.x + a.left, y:c.y + this.box.y + b.y + a.top - $(window).scrollTop()};
   };
   b.getRelativePos = function() {
     var a = this._block.view.getContentPos(), b = this.box;
