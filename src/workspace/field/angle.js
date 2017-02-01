@@ -38,7 +38,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         RADIUS = 49,
         FILL_PATH = 'M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
 
-    p.renderStart = function() {
+    p.renderStart = function(board, mode) {
         if (this.svgGroup) $(this.svgGroup).remove();
         var blockView = this._blockView;
         var that = this;
@@ -54,7 +54,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
                 'font-size': '11px'
             });
 
-        this.textElement.textContent = this.getText();
+        this._setTextValue();
 
         var width = this.getTextWidth();
 
@@ -62,13 +62,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var y = this.position && this.position.y ? this.position.y : 0;
         y -= CONTENT_HEIGHT/2;
         this._header = this.svgGroup.elem('rect', {
-                x: 0, y: y,
-                rx: 3, ry: 3,
+                x: 0,
+                y: y,
+                rx: 3,
+                ry: 3,
                 width: width,
                 height: CONTENT_HEIGHT,
                 fill: "#fff",
                 'fill-opacity': 0.4
-                });
+        });
 
         this.svgGroup.appendChild(this.textElement);
 
@@ -239,19 +241,28 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             this.optionGroup.css({width: width});
 
         this.box.set({width: width});
-        this._block.view.alignContent();
+        this._block.view.dAlignContent();
     };
 
     p.getTextWidth = function() {
         if (!this.textElement) return X_PADDING;
-        return this.textElement.getComputedTextLength() + X_PADDING;
+        return this.textElement.getBoundingClientRect().width + X_PADDING;
     };
 
     p.getText = function() {
-        return this.getValue() + '\u00B0';
+        var value = this.getValue();
+        var reg = /&value/gm;
+        if (reg.test(value))
+            return value.replace(reg, '');
+        return value + '\u00B0';
     };
 
-    p.modValue = function(value) {return value % 360;};
+    p.modValue = function(value) {
+        var reg = /&value/gm;
+        if (reg.test(value))
+            return value;
+        return value % 360;
+    };
 
     p.destroyOption = function() {
         if (this.disposeEvent) {
@@ -268,8 +279,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             this.svgOptionGroup.remove();
             delete this.svgOptionGroup;
         }
-        this.textElement.textContent = this.getText();
+        this._setTextValue();
         this.command();
+    };
+
+    p._setTextValue = function() {
+        var value = this._convert(this.getText(), this.getValue());
+
+        this.textElement.textContent = value;
     };
 
 })(Entry.FieldAngle.prototype);

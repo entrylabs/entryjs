@@ -12,7 +12,11 @@ goog.require("Entry.Utils");
  */
 Entry.Func = function(func) {
     this.id = func ? func.id : Entry.generateHash();
-    this.content = func ? new Entry.Code(func.content) : new Entry.Code([
+    var content;
+    //inspect empty content
+    if (func && func.content && func.content.length > 4)
+        content = func.content;
+    this.content = content ? new Entry.Code(content) : new Entry.Code([
         [
             {
                 type: "function_create",
@@ -51,9 +55,11 @@ Entry.Func.registerFunction = function(func) {
     var workspace = Entry.playground.mainWorkspace;
     if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
-    var menuCode = blockMenu.getCategoryCodes("func");
+    var menuCode = blockMenu.code;
     this._targetFuncBlock = menuCode.createThread([{
-        type: "func_" + func.id
+        type: "func_" + func.id,
+        category: 'func',
+        x: -9999
     }]);
     func.blockMenuBlock = this._targetFuncBlock;
 };
@@ -109,22 +115,27 @@ Entry.Func.edit = function(func) {
 Entry.Func.initEditView = function(content) {
     if (!this.menuCode)
         this.setupMenuCode();
-    var workspace = Entry.playground.mainWorkspace;
+    var workspace = Entry.getMainWS();
     workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
     workspace.changeOverlayBoardCode(content);
-    content.recreateView();
-    workspace.changeOverlayBoardCode(content);
     this._workspaceStateEvent =
-        workspace.changeEvent.attach(this, this.endEdit);
-    content.view.reDraw();
-    content.view.board.alignThreads();
+        workspace.changeEvent.attach(this, function(message) {
+            this.endEdit(message || 'cancelEdit');
+            if (workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+                workspace.blockMenu.banClass('functionInit');
+            }
+        });
+    content.board.alignThreads();
 };
 
 Entry.Func.endEdit = function(message) {
     this.unbindFuncChangeEvent();
     this.unbindWorkspaceStateChangeEvent();
 
-    switch(message) {
+    if (this.targetFunc && this.targetFunc.content)
+        this.targetFunc.content.destroyView();
+
+    switch (message) {
         case "save":
             this.save();
             break;
@@ -134,6 +145,7 @@ Entry.Func.endEdit = function(message) {
     }
 
     this._backupContent = null;
+
     delete this.targetFunc;
     this.updateMenu();
     Entry.Func.isEdit = false;
@@ -142,6 +154,16 @@ Entry.Func.endEdit = function(message) {
 Entry.Func.save = function() {
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
+
+    var ws = Entry.getMainWS();
+    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) {
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+        mode.textType = Entry.Vim.TEXT_TYPE_PY;
+        mode.runType = Entry.Vim.WORKSPACE_MODE;
+        Entry.getMainWS().setMode(mode);
+        Entry.variableContainer.functionAddButton_.addClass('disable');
+    }
 };
 
 Entry.Func.syncFuncName = function(dstFName) {
@@ -203,6 +225,16 @@ Entry.Func.cancelEdit = function() {
         }
     }
     Entry.variableContainer.updateList();
+
+    var ws = Entry.getMainWS();
+    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) {
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+        mode.textType = Entry.Vim.TEXT_TYPE_PY;
+        mode.runType = Entry.Vim.WORKSPACE_MODE;
+        Entry.getMainWS().setMode(mode);
+        Entry.variableContainer.functionAddButton_.addClass('disable');
+    }
 };
 
 Entry.Func.getMenuXml = function() {
@@ -249,23 +281,34 @@ Entry.Func.setupMenuCode = function() {
     var workspace = Entry.playground.mainWorkspace;
     if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
-    var menuCode = blockMenu.getCategoryCodes("func");
+    var menuCode = blockMenu.code;
+    var CATEGORY = 'func';
     this._fieldLabel = menuCode.createThread([{
-        type: "function_field_label"
+        type: "function_field_label",
+        category: CATEGORY,
+        x: -9999
     }]).getFirstBlock();
+
     this._fieldString = menuCode.createThread([{
         type: "function_field_string",
+        category: CATEGORY,
+        x: -9999,
         params: [
             {type: this.requestParamBlock("string")}
         ]
     }]).getFirstBlock();
+
     this._fieldBoolean = menuCode.createThread([{
         type: "function_field_boolean",
+        category: CATEGORY,
+        x: -9999,
         params: [
             {type: this.requestParamBlock("boolean")}
         ]
     }]).getFirstBlock();
+
     this.menuCode = menuCode;
+    blockMenu.align();
 }
 
 Entry.Func.refreshMenuCode = function() {
@@ -324,19 +367,18 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
 }
 
 Entry.Func.updateMenu = function() {
-    if (!Entry.playground || !Entry.playground.mainWorkspace) return;
-    var workspace = Entry.playground.mainWorkspace;
+    var workspace = Entry.getMainWS();
+    if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
     if (this.targetFunc) {
-        if (!this.menuCode)
-            this.setupMenuCode();
+        !this.menuCode && this.setupMenuCode();
         blockMenu.banClass("functionInit", true);
         blockMenu.unbanClass("functionEdit", true);
     } else {
-        blockMenu.unbanClass("functionInit", true);
+        !workspace.isVimMode() && blockMenu.unbanClass("functionInit", true);
         blockMenu.banClass("functionEdit", true);
     }
-    blockMenu.reDraw();
+    blockMenu.lastSelector === 'func' && blockMenu.align();
 };
 
 Entry.Func.prototype.edit = function() {
@@ -396,6 +438,7 @@ Entry.Func.generateWsBlock = function(targetFunc) {
     this.unbindFuncChangeEvent();
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
     var defBlock = targetFunc.content.getEventMap("funcDef")[0];
+    if (!defBlock) return;
     var outputBlock = defBlock.params[0];
     var booleanIndex = 0;
     var stringIndex = 0;

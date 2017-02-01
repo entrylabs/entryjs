@@ -32,7 +32,9 @@ Entry.VariableContainer = function() {
     this._variableRefs = [];
     this._messageRefs = [];
     this._functionRefs = [];
-};
+    this.updateList = Entry.Utils.debounce(this.updateList, 150);
+    Entry.addEventListener('workspaceChangeMode', this.updateList.bind(this));
+}
 
 Entry.VariableContainer.prototype.createDom = function(view) {
     var that = this;
@@ -63,8 +65,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     this.listView_ = listView;
 
     var variableAddButton = Entry.createElement('li');
-    variableAddButton.addClass('entryVariableAddWorkspace');
-    variableAddButton.addClass('entryVariableListElementWorkspace');
+    variableAddButton.addClass('entryVariableAddWorkspace entryVariableListElementWorkspace');
     variableAddButton.innerHTML = '+ ' + Lang.Workspace.variable_add;
     var thisPointer = this;
     this.variableAddButton_ = variableAddButton;
@@ -92,8 +93,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     this.generateListSettingView();
 
     var messageAddButton = Entry.createElement('li');
-    messageAddButton.addClass('entryVariableAddWorkspace');
-    messageAddButton.addClass('entryVariableListElementWorkspace');
+    messageAddButton.addClass('entryVariableAddWorkspace entryVariableListElementWorkspace');
     messageAddButton.innerHTML = '+ ' + Lang.Workspace.message_create;
     this.messageAddButton_ = messageAddButton;
     messageAddButton.bindOnClick(function(e) {
@@ -104,8 +104,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     });
 
     var listAddButton = Entry.createElement('li');
-    listAddButton.addClass('entryVariableAddWorkspace');
-    listAddButton.addClass('entryVariableListElementWorkspace');
+    listAddButton.addClass('entryVariableAddWorkspace entryVariableListElementWorkspace');
     listAddButton.innerHTML = '+ ' + Lang.Workspace.list_create;
     this.listAddButton_ = listAddButton;
     listAddButton.bindOnClick(function(e) {
@@ -125,8 +124,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     });
 
     var functionAddButton = Entry.createElement('li');
-    functionAddButton.addClass('entryVariableAddWorkspace');
-    functionAddButton.addClass('entryVariableListElementWorkspace');
+    functionAddButton.addClass('entryVariableAddWorkspace entryVariableListElementWorkspace');
     functionAddButton.innerHTML = '+ ' + Lang.Workspace.function_add;
     //functionAddButton.innerHTML = '+ ' + Lang.Msgs.to_be_continue;
     this.functionAddButton_ = functionAddButton;
@@ -148,7 +146,8 @@ Entry.VariableContainer.prototype.createDom = function(view) {
  */
 Entry.VariableContainer.prototype.createSelectButton = function(type, isEnable) {
     var that = this;
-    if (isEnable === undefined) isEnable = true;
+    if (isEnable === undefined)
+        isEnable = true;
     var view = Entry.createElement('td');
     view.addClass('entryVariableSelectButtonWorkspace', type);
     view.innerHTML = Lang.Workspace[type];
@@ -255,6 +254,7 @@ Entry.VariableContainer.prototype.renderMessageReference = function(message) {
         var caller = callers[i];
         var element = Entry.createElement('li');
         element.addClass('entryVariableListCallerWorkspace');
+        !caller.object.thumbnailView_ && caller.object.generateView();
         element.appendChild(caller.object.thumbnailView_.cloneNode());
         var nameElement = Entry.createElement('div');
         nameElement.addClass('entryVariableListCallerNameWorkspace');
@@ -279,8 +279,8 @@ Entry.VariableContainer.prototype.renderMessageReference = function(message) {
     }
     if (callers.length === 0) {
         var element = Entry.createElement('li');
-        element.addClass('entryVariableListCallerWorkspace');
-        element.addClass('entryVariableListCallerNoneWorkspace');
+        element.addClass(
+            'entryVariableListCallerWorkspace entryVariableListCallerNoneWorkspace');
         element.innerHTML = Lang.Workspace.no_use;
         listView.appendChild(element);
     }
@@ -312,6 +312,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
         var caller = callers[i];
         var element = Entry.createElement('li');
         element.addClass('entryVariableListCallerWorkspace');
+        !caller.object.thumbnailView_ && caller.object.generateView();
         element.appendChild(caller.object.thumbnailView_.cloneNode());
         var nameElement = Entry.createElement('div');
         nameElement.addClass('entryVariableListCallerNameWorkspace');
@@ -337,8 +338,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
 
     if (callers.length === 0) {
         var element = Entry.createElement('li');
-        element.addClass('entryVariableListCallerWorkspace');
-        element.addClass('entryVariableListCallerNoneWorkspace');
+        element.addClass('entryVariableListCallerWorkspace entryVariableListCallerNoneWorkspace');
         element.innerHTML = Lang.Workspace.no_use;
         listView.appendChild(element);
     }
@@ -367,6 +367,7 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
         var caller = callers[i];
         var element = Entry.createElement('li');
         element.addClass('entryVariableListCallerWorkspace');
+        !caller.object.thumbnailView_ && caller.object.generateView();
         element.appendChild(caller.object.thumbnailView_.cloneNode());
         var nameElement = Entry.createElement('div');
         nameElement.addClass('entryVariableListCallerNameWorkspace');
@@ -389,8 +390,7 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
     }
     if (callers.length === 0) {
         var element = Entry.createElement('li');
-        element.addClass('entryVariableListCallerWorkspace');
-        element.addClass('entryVariableListCallerNoneWorkspace');
+        element.addClass('entryVariableListCallerWorkspace entryVariableListCallerNoneWorkspace');
         element.innerHTML = Lang.Workspace.no_use;
         listView.appendChild(element);
     }
@@ -403,14 +403,20 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
  * update list view
  */
 Entry.VariableContainer.prototype.updateList = function() {
-    if (!this.listView_)
+    if (!this.listView_ || (Entry.playground && Entry.playground.getViewMode() !== 'code'))
         return;
 
     this.variableSettingView.addClass('entryRemove');
     this.listSettingView.addClass('entryRemove');
 
+    var isPythonMode = this._isPythonMode();
+    if (isPythonMode)
+        this.listView_.addClass('entryVariableContainerTextMode');
+    else
+        this.listView_.removeClass('entryVariableContainerTextMode');
+
     while (this.listView_.firstChild)
-        this.listView_.removeChild(this.listView_.firstChild);
+        this.listView_.removeChild(this.listView_.lastChild);
 
     var viewMode = this.viewMode_;
     var elementList = [];
@@ -421,6 +427,7 @@ Entry.VariableContainer.prototype.updateList = function() {
         for (var i in this.messages_) {
             var message = this.messages_[i];
             elementList.push(message);
+            !message.listElement && this.createMessageView(message);
             var view = message.listElement;
 
             this.listView_.appendChild(view);
@@ -446,6 +453,7 @@ Entry.VariableContainer.prototype.updateList = function() {
                 if (variable.object_)
                     continue;
                 elementList.push(variable);
+                !variable.listElement && this.createVariableView(variable);
                 var view = variable.listElement;
                 this.listView_.appendChild(view);
                 if (variable.callerListElement)
@@ -460,6 +468,7 @@ Entry.VariableContainer.prototype.updateList = function() {
                 if (!variable.object_)
                     continue;
                 elementList.push(variable);
+                !variable.listElement && this.createVariableView(variable);
                 var view = variable.listElement;
                 this.listView_.appendChild(view);
                 if (variable.callerListElement)
@@ -470,6 +479,7 @@ Entry.VariableContainer.prototype.updateList = function() {
             for (var i in this.variables_) {
                 var variable = this.variables_[i];
                 elementList.push(variable);
+                !variable.listElement && this.createVariableView(variable);
                 var view = variable.listElement;
                 this.listView_.appendChild(view);
                 if (variable.callerListElement)
@@ -496,6 +506,7 @@ Entry.VariableContainer.prototype.updateList = function() {
                 if (list.object_)
                     continue;
                 elementList.push(list);
+                !list.listElement && this.createListView(list);
                 var view = list.listElement;
                 this.listView_.appendChild(view);
                 if (list.callerListElement)
@@ -509,6 +520,7 @@ Entry.VariableContainer.prototype.updateList = function() {
                 if (!list.object_)
                     continue;
                 elementList.push(list);
+                !list.listElement && this.createListView(list);
                 var view = list.listElement;
                 this.listView_.appendChild(view);
                 if (list.callerListElement)
@@ -519,6 +531,7 @@ Entry.VariableContainer.prototype.updateList = function() {
             for (var i in this.lists_) {
                 var list = this.lists_[i];
                 elementList.push(list);
+                !list.listElement && this.createListView(list);
                 var view = list.listElement;
                 this.listView_.appendChild(view);
                 if (list.callerListElement)
@@ -530,10 +543,10 @@ Entry.VariableContainer.prototype.updateList = function() {
     if (viewMode == 'all' || viewMode == 'func') {
         if (viewMode == 'func'){
             var mode = Entry.Workspace.MODE_BOARD;
-            if (Entry.playground && Entry.playground.mainWorkspace)
-                mode = Entry.playground.mainWorkspace.getMode();
+            if (Entry.getMainWS())
+                mode = Entry.getMainWS().getMode();
 
-            if (mode === Entry.Workspace.MODE_OVERLAYBOARD) {
+            if (mode === Entry.Workspace.MODE_OVERLAYBOARD || isPythonMode) {
                 this.functionAddButton_.addClass('disable');
             } else
                 this.functionAddButton_.removeClass('disable');
@@ -543,11 +556,13 @@ Entry.VariableContainer.prototype.updateList = function() {
         for (var i in this.functions_) {
             var func = this.functions_[i];
             elementList.push(func);
+            !func.funcElement && this.createFunctionView(func);
             var view = func.listElement;
             this.listView_.appendChild(view);
             if (func.callerListElement)
                 this.listView_.appendChild(func.callerListElement);
         }
+
     }
 
     //select the first element(view) if exist
@@ -567,11 +582,9 @@ Entry.VariableContainer.prototype.setMessages = function(messages) {
         var message = messages[i];
         if (!message.id)
             message.id = Entry.generateHash();
-        this.createMessageView(message);
         this.messages_.push(message);
     }
     Entry.playground.reloadPlayground();
-    this.updateList();
 };
 
 /**
@@ -584,11 +597,9 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
         var type = variable.getType();
         if (type == 'variable' || type == 'slide') {
             variable.generateView(this.variables_.length);
-            this.createVariableView(variable);
             this.variables_.push(variable);
         } else if (type == 'list') {
             variable.generateView(this.lists_.length);
-            this.createListView(variable);
             this.lists_.push(variable);
         } else if (type == 'timer') that.generateTimer(variable);
         else if (type == 'answer') that.generateAnswer(variable);
@@ -596,7 +607,6 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
     if (Entry.isEmpty(Entry.engine.projectTimer)) Entry.variableContainer.generateTimer();
     if (Entry.isEmpty(Entry.container.inputValue)) Entry.variableContainer.generateAnswer();
     Entry.playground.reloadPlayground();
-    this.updateList();
 };
 
 /**
@@ -606,10 +616,8 @@ Entry.VariableContainer.prototype.setFunctions = function(functions) {
     for (var i in functions) {
         var func = new Entry.Func(functions[i]);
         func.generateBlock();
-        this.createFunctionView(func);
         this.functions_[func.id] = func;
     }
-    this.updateList();
 };
 
 /**
@@ -712,6 +720,11 @@ Entry.VariableContainer.prototype.getListById = function(mouseevt) {
     return false;
 };
 
+Entry.VariableContainer.prototype.getListByName = function(name) {
+    var lists = this.lists_;
+    lists = lists.filter(function(l) {return l.getName() === name})
+    return lists[0];
+};
 
 /**
  * @param {Entry.Variable} variable
@@ -726,6 +739,18 @@ Entry.VariableContainer.prototype.editFunction = function(variable, name) {
  */
 Entry.VariableContainer.prototype.saveFunction = function(func) {
     /* add to function list when not exist */
+    var ws = Entry.getMainWS();
+    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) {
+        if(func && func.description) {
+            var funcName = func.description.substring(1, func.description.length-1);
+            if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(funcName, 'function')) {
+                alert(alert_msg);
+                Entry.Func.cancelEdit();
+                return;
+            }
+        }
+    }
+
     if (!this.functions_[func.id]) {
         this.functions_[func.id] = func;
         this.createFunctionView(func);
@@ -741,8 +766,10 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
     var that = this;
     if (!this.view_) return;
     var view = Entry.createElement('li');
-    view.addClass('entryVariableListElementWorkspace');
-    view.addClass('entryFunctionElementWorkspace');
+    var className = '';
+    className += 'entryVariableListElementWorkspace';
+    className += ' entryFunctionElementWorkspace';
+    view.addClass(className);
     view.bindOnClick(function (e) {
         e.stopPropagation();
         that.select(func);
@@ -759,7 +786,7 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
     });
 
     var editButton = Entry.createElement('button');
-    editButton.addClass('entryVariableListElementEditWorkspace');
+    editButton.addClass('entryVariableListElementEditWorkspace notForTextMode');
     var blockMenu = this._getBlockMenu();
     editButton.bindOnClick(function (e) {
         e.stopPropagation();
@@ -799,6 +826,17 @@ Entry.VariableContainer.prototype.checkAllVariableName = function(name,variable)
 };
 
 Entry.VariableContainer.prototype.addVariable = function(variable) {
+    if (Entry.isTextMode) {
+        var panel = this.variableAddPanel;
+        var variableName = panel.view.name.value;
+        if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(variableName, 'variable')) {
+            alert(alert_msg);
+            this.variableAddPanel.view.addClass('entryRemove');
+            this.resetVariableAddPanel('variable');
+            return;
+        }
+    }
+
     if (!variable) {
         var variableContainer = this;
         var panel = this.variableAddPanel;
@@ -810,6 +848,7 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
             name = this._truncName(name, 'variable');
 
         name = this.checkAllVariableName(name,'variables_') ? Entry.getOrderedName(name, this.variables_, 'name_') : name;
+
         var info = panel.info;
         variable = {
             name: name,
@@ -831,6 +870,8 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
     variable.generateView(this.variables_.length);
     this.createVariableView(variable);
     this.variables_.unshift(variable);
+    if (Entry.playground && Entry.playground.blockMenu)
+        Entry.playground.blockMenu.deleteRendered('variable')
     Entry.playground.reloadPlayground();
 
     this.updateList();
@@ -874,6 +915,15 @@ Entry.VariableContainer.prototype.removeVariable = function(variable) {
 Entry.VariableContainer.prototype.changeVariableName = function(variable, name) {
     if (variable.name_ == name)
         return;
+
+    if (Entry.isTextMode) {
+        if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'variable')) {
+            alert(alert_msg);
+            variable.listElement.nameField.value = variable.name_;
+            return;
+        }
+    }
+
     var variables = this.variables_;
     var exist = Entry.isExist(name, 'name_', variables);
 
@@ -901,6 +951,15 @@ Entry.VariableContainer.prototype.changeVariableName = function(variable, name) 
 Entry.VariableContainer.prototype.changeListName = function(list, name) {
     if (list.name_ == name)
         return;
+
+    if (Entry.isTextMode) {
+        if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'list')) {
+            alert(alert_msg);
+            list.listElement.nameField.value = list.name_;
+            return;
+        }
+    }
+
     var lists = this.lists_;
     var exist = Entry.isExist(name, 'name_', lists);
 
@@ -956,26 +1015,29 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
     var wrapper = Entry.createElement('div');
     wrapper.addClass('entryVariableListElementWrapperWorkspace');
     view.appendChild(wrapper);
-    view.addClass('entryVariableListElementWorkspace');
+    var className = 'entryVariableListElementWorkspace';
     if (!variable.object_) {
         if (variable.isCloud_)
-            view.addClass('entryVariableCloudElementWorkspace');
+            className += ' entryVariableCloudElementWorkspace';
         else
-            view.addClass('entryVariableGlobalElementWorkspace');
+            className += ' entryVariableGlobalElementWorkspace';
     } else
-        view.addClass('entryVariableLocalElementWorkspace');
+        className += ' entryVariableLocalElementWorkspace';
 
+    view.addClass(className);
     view.bindOnClick(function(e) {
         that.select(variable);
     });
     var removeButton = Entry.createElement('button');
-    removeButton.addClass('entryVariableListElementDeleteWorkspace');
+    removeButton.addClass('entryVariableListElementDeleteWorkspace notForTextMode');
     removeButton.bindOnClick(function(e) {
         e.stopPropagation();
         that.removeVariable(variable);
         that.selectedVariable = null;
         that.variableSettingView.addClass('entryRemove');
     });
+    view.removeButton = removeButton;
+    this._removeButton = removeButton;
 
     var editButton = Entry.createElement('button');
     editButton.addClass('entryVariableListElementEditWorkspace');
@@ -990,8 +1052,7 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
     view.editButton = editButton;
 
     var editSaveButton = Entry.createElement('button');
-    editSaveButton.addClass('entryVariableListElementEditWorkspace');
-    editSaveButton.addClass('entryRemove');
+    editSaveButton.addClass('entryVariableListElementEditWorkspace entryRemove');
     editSaveButton.bindOnClick(function (e) {
         e.stopPropagation();
         nameField.blur();
@@ -1049,6 +1110,8 @@ Entry.VariableContainer.prototype.addMessage = function(message) {
         );
     this.createMessageView(message);
     this.messages_.unshift(message);
+    if (Entry.playground && Entry.playground.blockMenu)
+        Entry.playground.blockMenu.deleteRendered('start')
     Entry.playground.reloadPlayground();
     this.updateList();
     message.listElement.nameField.focus();
@@ -1087,6 +1150,7 @@ Entry.VariableContainer.prototype.removeMessage = function(message) {
 Entry.VariableContainer.prototype.changeMessageName = function(message, name) {
     if (message.name == name)
         return;
+
     var messages = this.messages_;
     var exist = Entry.isExist(name, 'name', messages);
 
@@ -1102,6 +1166,8 @@ Entry.VariableContainer.prototype.changeMessageName = function(message, name) {
         return;
     }
     message.name = name;
+    if (Entry.playground && Entry.playground.blockMenu)
+        Entry.playground.blockMenu.deleteRendered('start')
     Entry.playground.reloadPlayground();
     Entry.toast.success(Lang.Workspace.message_rename,
                         Lang.Workspace.message_rename_ok);
@@ -1113,8 +1179,7 @@ Entry.VariableContainer.prototype.changeMessageName = function(message, name) {
 Entry.VariableContainer.prototype.createMessageView = function(message) {
     var that = this;
     var view = Entry.createElement('li');
-    view.addClass('entryVariableListElementWorkspace');
-    view.addClass('entryMessageElementWorkspace');
+    view.addClass('entryVariableListElementWorkspace entryMessageElementWorkspace');
     view.bindOnClick(function (e) {
         that.select(message);
     });
@@ -1137,8 +1202,7 @@ Entry.VariableContainer.prototype.createMessageView = function(message) {
     });
 
     var editSaveButton = Entry.createElement('button');
-    editSaveButton.addClass('entryVariableListElementEditWorkspace');
-    editSaveButton.addClass('entryRemove');
+    editSaveButton.addClass('entryVariableListElementEditWorkspace entryRemove');
     editSaveButton.bindOnClick(function (e) {
         e.stopPropagation();
         nameField.blur();
@@ -1183,6 +1247,17 @@ Entry.VariableContainer.prototype.createMessageView = function(message) {
  * @return {boolean} return true when success
  */
 Entry.VariableContainer.prototype.addList = function(list) {
+    if (Entry.isTextMode) {
+        var panel = this.listAddPanel;
+        var listName = panel.view.name.value;
+        if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(listName, 'list')) {
+            alert(alert_msg);
+            this.listAddPanel.view.addClass('entryRemove');
+            this.resetVariableAddPanel('list');
+            return;
+        }
+    }
+
     if (!list) {
         var variableContainer = this;
         var panel = this.listAddPanel;
@@ -1196,6 +1271,7 @@ Entry.VariableContainer.prototype.addList = function(list) {
             name = this._truncName(name, 'list');
 
         name = this.checkAllVariableName(name, 'lists_') ? Entry.getOrderedName(name, this.lists_, 'name_') : name;
+
         list = {
             name: name,
             isCloud: info.isCloud,
@@ -1216,6 +1292,8 @@ Entry.VariableContainer.prototype.addList = function(list) {
     list.generateView(this.lists_.length);
     this.createListView(list);
     this.lists_.unshift(list);
+    if (Entry.playground && Entry.playground.blockMenu)
+        Entry.playground.blockMenu.deleteRendered('variable')
     Entry.playground.reloadPlayground();
 
     this.updateList();
@@ -1247,7 +1325,7 @@ Entry.VariableContainer.prototype.createListView = function(list) {
     });
 
     var removeButton = Entry.createElement('button');
-    removeButton.addClass('entryVariableListElementDeleteWorkspace');
+    removeButton.addClass('entryVariableListElementDeleteWorkspace notForTextMode');
     removeButton.bindOnClick(function(e) {
         e.stopPropagation();
         that.removeList(list);
@@ -1268,8 +1346,7 @@ Entry.VariableContainer.prototype.createListView = function(list) {
     view.editButton = editButton;
 
     var editSaveButton = Entry.createElement('button');
-    editSaveButton.addClass('entryVariableListElementEditWorkspace');
-    editSaveButton.addClass('entryRemove');
+    editSaveButton.addClass('entryVariableListElementEditWorkspace entryRemove');
     editSaveButton.bindOnClick(function (e) {
         e.stopPropagation();
         nameField.blur();
@@ -1410,8 +1487,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
     var variableAddSpace = Entry.createElement('li');
     this.variableAddPanel.view = variableAddSpace;
     this.variableAddPanel.isOpen = false;
-    variableAddSpace.addClass('entryVariableAddSpaceWorkspace');
-    variableAddSpace.addClass('entryRemove');
+    variableAddSpace.addClass('entryVariableAddSpaceWorkspace entryRemove');
 
     var addSpaceNameWrapper = Entry.createElement('div');
     addSpaceNameWrapper.addClass('entryVariableAddSpaceNameWrapperWorkspace');
@@ -1502,8 +1578,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
     addSpaceCloudWrapper.appendChild(addSpaceCloudSpan);
     var addVariableCloudCheck = Entry.createElement('span');
     this.variableAddPanel.view.cloudCheck = addVariableCloudCheck;
-    addVariableCloudCheck.addClass('entryVariableAddSpaceCheckWorkspace');
-    addVariableCloudCheck.addClass('entryVariableAddSpaceCloudCheckWorkspace');
+    addVariableCloudCheck.addClass('entryVariableAddSpaceCheckWorkspace entryVariableAddSpaceCloudCheckWorkspace');
     if (this.variableAddPanel.info.isCloud)
         addVariableCloudCheck.addClass('entryVariableAddChecked');
 
@@ -1514,8 +1589,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
     variableAddSpace.appendChild(addSpaceButtonWrapper);
 
     var addSpaceCancelButton = Entry.createElement('span');
-    addSpaceCancelButton.addClass('entryVariableAddSpaceCancelWorkspace');
-    addSpaceCancelButton.addClass('entryVariableAddSpaceButtonWorkspace');
+    addSpaceCancelButton.addClass('entryVariableAddSpaceCancelWorkspace entryVariableAddSpaceButtonWorkspace');
     addSpaceCancelButton.innerHTML = Lang.Buttons.cancel;
     addSpaceCancelButton.bindOnClick(function (e) {
         that.variableAddPanel.view.addClass('entryRemove');
@@ -1524,8 +1598,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
     addSpaceButtonWrapper.appendChild(addSpaceCancelButton);
 
     var addSpaceConfirmButton = Entry.createElement('span');
-    addSpaceConfirmButton.addClass('entryVariableAddSpaceConfirmWorkspace');
-    addSpaceConfirmButton.addClass('entryVariableAddSpaceButtonWorkspace');
+    addSpaceConfirmButton.addClass('entryVariableAddSpaceConfirmWorkspace entryVariableAddSpaceButtonWorkspace');
     addSpaceConfirmButton.innerHTML = Lang.Buttons.save;
     addSpaceConfirmButton.variableContainer = this;
     addSpaceConfirmButton.bindOnClick(function (e) {
@@ -1547,12 +1620,10 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     var listAddSpace = Entry.createElement('li');
     this.listAddPanel.view = listAddSpace;
     this.listAddPanel.isOpen = false;
-    listAddSpace.addClass('entryVariableAddSpaceWorkspace');
-    listAddSpace.addClass('entryRemove');
+    listAddSpace.addClass('entryVariableAddSpaceWorkspace entryRemove');
 
     var addSpaceNameWrapper = Entry.createElement('div');
-    addSpaceNameWrapper.addClass('entryVariableAddSpaceNameWrapperWorkspace');
-    addSpaceNameWrapper.addClass('entryListAddSpaceNameWrapperWorkspace');
+    addSpaceNameWrapper.addClass('entryVariableAddSpaceNameWrapperWorkspace entryListAddSpaceNameWrapperWorkspace');
     listAddSpace.appendChild(addSpaceNameWrapper);
 
     var addSpaceInput = Entry.createElement('input');
@@ -1639,8 +1710,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     addSpaceCloudWrapper.appendChild(addSpaceCloudSpan);
     var addListCloudCheck = Entry.createElement('span');
     this.listAddPanel.view.cloudCheck = addListCloudCheck;
-    addListCloudCheck.addClass('entryVariableAddSpaceCheckWorkspace');
-    addListCloudCheck.addClass('entryVariableAddSpaceCloudCheckWorkspace');
+    addListCloudCheck.addClass('entryVariableAddSpaceCheckWorkspace entryVariableAddSpaceCloudCheckWorkspace');
     if (this.listAddPanel.info.isCloud)
         addListCloudCheck.addClass('entryVariableAddChecked');
 
@@ -1651,8 +1721,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     listAddSpace.appendChild(addSpaceButtonWrapper);
 
     var addSpaceCancelButton = Entry.createElement('span');
-    addSpaceCancelButton.addClass('entryVariableAddSpaceCancelWorkspace');
-    addSpaceCancelButton.addClass('entryVariableAddSpaceButtonWorkspace');
+    addSpaceCancelButton.addClass('entryVariableAddSpaceCancelWorkspace entryVariableAddSpaceButtonWorkspace');
     addSpaceCancelButton.innerHTML = Lang.Buttons.cancel;
     addSpaceCancelButton.bindOnClick(function (e) {
         that.listAddPanel.view.addClass('entryRemove');
@@ -1661,8 +1730,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     addSpaceButtonWrapper.appendChild(addSpaceCancelButton);
 
     var addSpaceConfirmButton = Entry.createElement('span');
-    addSpaceConfirmButton.addClass('entryVariableAddSpaceConfirmWorkspace');
-    addSpaceConfirmButton.addClass('entryVariableAddSpaceButtonWorkspace');
+    addSpaceConfirmButton.addClass('entryVariableAddSpaceConfirmWorkspace entryVariableAddSpaceButtonWorkspace');
     addSpaceConfirmButton.innerHTML = Lang.Buttons.save;
     addSpaceConfirmButton.variableContainer = this;
     addSpaceConfirmButton.bindOnClick(function (e) {
@@ -1773,7 +1841,7 @@ Entry.VariableContainer.prototype.generateTimer = function (timer) {
 
     Entry.addEventListener('stop', function () {
         Entry.engine.stopProjectTimer();
-    });
+    }.bind(this));
 };
 
 //generate Answer
@@ -2084,39 +2152,42 @@ Entry.VariableContainer.prototype.updateListSettingView = function(list) {
 
     while(listValues.firstChild)
         listValues.removeChild(listValues.firstChild);
-
     var arr = list.array_;
     if (arr.length === 0) seperator.addClass('entryRemove');
     else seperator.removeClass('entryRemove');
 
+    var startIndex = 1;
+    if (Entry.playground.mainWorkspace.mode === Entry.Workspace.MODE_VIMBOARD)
+        startIndex = 0;
+
     for (var i=0; i<arr.length; i++) {
         (function (i) {
-             var wrapper = Entry.createElement('div');
-             wrapper.addClass('entryListSettingValueWrapperWorkspace');
-             var numberSpan = Entry.createElement('span');
-             numberSpan.addClass('entryListSettingValueNumberSpanWorkspace');
-             numberSpan.innerHTML = i+1;
-             wrapper.appendChild(numberSpan);
-             var input = Entry.createElement('input');
-             input.value = arr[i].data;
-             input.onblur = function () {
-                 arr[i].data = this.value;
-                 list.updateView();
-             };
-             input.onkeypress = function (e) {
-                 if (e.keyCode == 13)
-                     this.blur();
-             };
-             input.addClass('entryListSettingEachInputWorkspace');
-             wrapper.appendChild(input);
-             var removeButton = Entry.createElement('span');
-             removeButton.bindOnClick(function () {
-                 arr.splice(i,1);
-                 that.updateListSettingView();
-             });
-             removeButton.addClass('entryListSettingValueRemoveWorkspace');
-             wrapper.appendChild(removeButton);
-             listValues.appendChild(wrapper);
+            var wrapper = Entry.createElement('div');
+            wrapper.addClass('entryListSettingValueWrapperWorkspace');
+            var numberSpan = Entry.createElement('span');
+            numberSpan.addClass('entryListSettingValueNumberSpanWorkspace');
+            numberSpan.innerHTML = i + startIndex;
+            wrapper.appendChild(numberSpan);
+            var input = Entry.createElement('input');
+            input.value = arr[i].data;
+            input.onblur = function () {
+                arr[i].data = this.value;
+                list.updateView();
+            };
+            input.onkeypress = function (e) {
+                if (e.keyCode == 13)
+                    this.blur();
+            };
+            input.addClass('entryListSettingEachInputWorkspace');
+            wrapper.appendChild(input);
+            var removeButton = Entry.createElement('span');
+            removeButton.bindOnClick(function () {
+                arr.splice(i,1);
+                that.updateListSettingView();
+            });
+            removeButton.addClass('entryListSettingValueRemoveWorkspace');
+            wrapper.appendChild(removeButton);
+            listValues.appendChild(wrapper);
         })(i);
     }
 
@@ -2216,7 +2287,7 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
 
 Entry.VariableContainer.prototype.addRef = function(type, block) {
     if (!this.view_ || !Entry.playground.mainWorkspace ||
-        Entry.playground.mainWorkspace.getMode() !== Entry.Workspace.MODE_BOARD)
+        Entry.getMainWS().getMode() !== Entry.Workspace.MODE_BOARD)
         return;
 
     var datum = {
@@ -2272,7 +2343,7 @@ Entry.VariableContainer.prototype.addRef = function(type, block) {
 
 Entry.VariableContainer.prototype.removeRef = function(type, block) {
     if (!Entry.playground.mainWorkspace) return;
-    var wsMode = Entry.playground.mainWorkspace.getMode();
+    var wsMode = Entry.getMainWS().getMode();
     if (wsMode !== Entry.Workspace.MODE_BOARD) return;
 
     var arr = this[type];
@@ -2349,4 +2420,10 @@ Entry.VariableContainer.prototype.clear = function() {
 
     Entry.playground.reloadPlayground();
     this.updateList();
+};
+
+
+Entry.VariableContainer.prototype._isPythonMode = function() {
+    var ws = Entry.getMainWS();
+    return ws && ws.isVimMode();
 };

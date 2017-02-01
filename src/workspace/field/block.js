@@ -32,7 +32,7 @@ Entry.FieldBlock = function(content, blockView, index, mode, contentIndex) {
 
     this._position = content.position;
 
-    this.box.observe(blockView, "alignContent", ["width", "height"]);
+    this.box.observe(blockView, "dAlignContent", ["width", "height"]);
     this.observe(this, "_updateBG", ["magneting"], false);
 
     this.renderStart(blockView.getBoard(), mode);
@@ -45,10 +45,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         magneting: false
     };
 
-    p.renderStart = function(board, mode) {
+    p.renderStart = function(board, mode, renderMode) {
         if (!this.svgGroup)
             this.svgGroup =
                 this._blockView.contentSvgGroup.elem("g");
+        this.renderMode = mode !== undefined ?
+            mode : this._blockView.renderMode;
+
         this.view = this;
         this._nextGroup = this.svgGroup;
         this.box.set({
@@ -57,20 +60,24 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             width: 0,
             height: 20
         });
+
         var block = this.getValue();
-        if (block && !block.view) {
-            block.setThread(this);
-            block.createView(board, mode);
-            block.getThread().view.setParent(this);
-        } else if (block && block.view) {
-            block.view.reDraw();
+        if (block) {
+            if (block.constructor !== Entry.Block)
+                block = new Entry.Block(block, this._block.thread);
+
+            if (!block.view) {
+                block.setThread(this);
+                block.createView(board, this.renderMode);
+                block.getThread().view.setParent(this);
+            }
         }
 
         this.updateValueBlock(block);
+        this._valueBlock.view._startContentRender(this.renderMode);
 
         if (this._blockView.getBoard().constructor !== Entry.Board)
             this._valueBlock.view.removeControl();
-
     };
 
     p.align = function(x, y, animate) {
@@ -123,7 +130,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.calcHeight = p.calcWH;
 
-    p.destroy = function() {};
+    p.destroy = function() {
+        this._valueBlock && this._valueBlock.destroyView();
+    };
 
     p.inspectBlock = function() {
         var blockType = null;
@@ -268,12 +277,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         var board = this._blockView.getBoard();
 
         var block = new Entry.Block({type: blockType}, this);
-        var workspace = board.workspace;
-        var mode;
-        if (workspace)
-            mode = workspace.getMode();
-
-        block.createView(board, mode);
+        block.createView(board, this.renderMode);
         return block;
     };
 

@@ -32,11 +32,12 @@
   white-space: nowrap;
 }
 .CodeMirror-linenumber {
-  padding: 0 3px 0 5px;
+  padding: 0 5px 0 5px;
   min-width: 20px;
   text-align: right;
   color: #A0A0A0;
   white-space: nowrap;
+  border-right: 1px solid #ddd;
 }
 .CodeMirror-guttermarker {
   color: black;
@@ -120,36 +121,74 @@
 .cm-strikethrough {
   text-decoration: line-through;
 }
+/*
+.cm-s-default .cm-keyword {color: #2BBFED ;}
+.cm-s-default .cm-atom {color: #FF9E00;}
+.cm-s-default .cm-number {color: #E22C0B;}
+.cm-s-default .cm-def {color: #4F39DB;}
+.cm-s-default .cm-variable,
+.cm-s-default .cm-punctuation,
+.cm-s-default .cm-property,
+.cm-s-default .cm-operator {color: #E22C0B;}
+.cm-s-default .cm-variable-2 {color: #0FC764;}
+.cm-s-default .cm-variable-3 {color: #085;}
+.cm-s-default .cm-comment {color: #a50;}
+.cm-s-default .cm-string {color: #4F39DB;}
+.cm-s-default .cm-string-2 {color: #f50;}
+.cm-s-default .cm-meta {color: #555;}
+.cm-s-default .cm-qualifier {color: #555;}
+.cm-s-default .cm-builtin {color: #30a;}
+.cm-s-default .cm-bracket {color: #997;}
+.cm-s-default .cm-tag {color: #170;}
+.cm-s-default .cm-attribute {color: #00c;}
+.cm-s-default .cm-hr {color: #999;}
+.cm-s-default .cm-link {color: #00c;}
+.cm-s-default .cm-error {color: #f00;}
+.cm-invalidchar {color: #f00;} */
+/*Entry Textcoding Font*/
 .cm-s-default .cm-keyword {
   color: #2BBFED ;
 }
+/* applied */
 .cm-s-default .cm-atom {
   color: #FF9E00;
 }
 .cm-s-default .cm-number {
-  color: #E22C0B;
+  color: #0FC764;
 }
+/* applied */
 .cm-s-default .cm-def {
   color: #4F39DB;
 }
-.cm-s-default .cm-variable,
-.cm-s-default .cm-punctuation,
-.cm-s-default .cm-property,
-.cm-s-default .cm-operator {
+/* applied */
+.cm-s-default .cm-variable {
   color: #E22C0B;
 }
-.cm-s-default .cm-variable-2 {
-  color: #0FC764;
+/* applied */
+.cm-s-default .cm-punctuation,
+.cm-s-default .cm-property {
+  color: #E22C0B;
 }
+/* applied */
+.cm-s-default .cm-operator {
+  color: #000000;
+}
+/* applied */
+.cm-s-default .cm-variable-2 {
+  color: #E22C0B;
+}
+/* applied */
 .cm-s-default .cm-variable-3 {
   color: #085;
 }
 .cm-s-default .cm-comment {
-  color: #a50;
+  color: #FF9E00;
 }
+/* applied */
 .cm-s-default .cm-string {
-  color: #4F39DB;
+  color: #2A7DEF;
 }
+/* applied */
 .cm-s-default .cm-string-2 {
   color: #f50;
 }
@@ -160,8 +199,9 @@
   color: #555;
 }
 .cm-s-default .cm-builtin {
-  color: #30a;
+  color: #C93AD8;
 }
+/* applied */
 .cm-s-default .cm-bracket {
   color: #997;
 }
@@ -178,7 +218,7 @@
   color: #00c;
 }
 .cm-s-default .cm-error {
-  color: #f00;
+  color: #E22C0B;
 }
 .cm-invalidchar {
   color: #f00;
@@ -267,6 +307,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   height: 100%;
   display: inline-block;
   margin-bottom: -30px;
+  margin-right: -1px;
   /* Hack to make IE7 behave */
   *zoom: 1;
   *display: inline;
@@ -287,6 +328,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   position: absolute;
   cursor: default;
   z-index: 4;
+  background-color: #f7f7f7;
+  padding-right: 6px;
 }
 .CodeMirror-gutter-wrapper {
   -webkit-user-select: none;
@@ -442,6 +485,16 @@ span.CodeMirror-selectedtext {
   margin: 0;
   background-color: transparent;
 }
+.entryDimmed {
+  opacity: 0.5;
+  background-color: #767676;
+}
+#entryInputForComputeWidth {
+  visibility: hidden;
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+}
 
 .dragNone {
   -webkit-touch-callout: none;
@@ -467,6 +520,16 @@ span.CodeMirror-selectedtext {
   border: none;
   margin: 0;
   background-color: transparent;
+}
+.entryDimmed {
+  opacity: 0.5;
+  background-color: #767676;
+}
+#entryInputForComputeWidth {
+  visibility: hidden;
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
 }
 .block.selected > g > .blockPath {
   stroke-width: 3px;
@@ -789,6 +852,11 @@ svg .svgBlockGroup text {
   position: absolute;
   top: 45px;
   bottom: 0px;
+}
+.entryWorkspaceBlockMenu.entryRemove.init {
+  opacity: 0 !important;
+  display: block !important;
+  z-index: -9999;
 }
 .entryCategoryListWorkspace {
   min-width: 64px;
@@ -2451,8 +2519,6 @@ svg .svgBlockGroup text {
 }
 #globalSvg {
   position: fixed;
-  width: 10px;
-  height: 10px;
   overflow: visible;
   z-index: 1111;
   opacity: 0.8;
@@ -2610,25 +2676,18 @@ svg .svgBlockGroup text {
   margin-left: 6px;
   z-index: 100;
 }
-#entryBlockHelperBlockWorkspace {
-  width: 400px;
-  height: 160px;
-  top: 16px;
-  overflow: hidden;
+.entryBlockHelperIntro .renderViewContainer {
+  display: none;
 }
 #entryBlockHelperBlockWorkspace > .renderViewContainer {
   width: 100%;
 }
 #entryBlockHelperBlockWorkspace > .renderViewContainer > svg {
-  position: absolute;
   overflow: visible;
-  left: 50%;
 }
 #entryBlockHelperDescriptionWorkspace {
-  position: absolute;
   line-height: 20px;
   width: 100%;
-  top: 100px;
   font-size: 13px;
   color: #707074;
   padding: 0 50px;
@@ -2792,25 +2851,77 @@ svg .svgBlockGroup text {
   z-index: 100;
 }
 #entryBlockHelperBlockWorkspace {
-  position: absolute;
   width: 100%;
   bottom: 0px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
+  top: 16px;
+  text-align: center;
 }
 #entryBlockHelperBlockWorkspace > svg {
   position: relative;
-  left: -50%;
 }
 #entryBlockHelperDescriptionWorkspace {
-  position: absolute;
   line-height: 20px;
   width: 100%;
-  top: 100px;
   font-size: 13px;
   color: #707074;
   padding: 0 50px;
   text-align: center;
+}
+.textModeElem {
+  display: none;
+}
+#entryBlockHelperContentWorkspace.textMode {
+  padding: 18px;
+  top: 0;
+}
+#entryBlockHelperContentWorkspace.textMode .textModeElem {
+  display: block;
+}
+#entryBlockHelperContentWorkspace.textMode .entryBlockHelperTitle {
+  font-family: NanumGothic;
+  font-size: 18px;
+  font-weight: bold;
+  color: #3b3b3b;
+}
+#entryBlockHelperContentWorkspace.textMode .entryBlockHelperTitle:not(:first-child) {
+  margin-top: 20px;
+}
+#entryBlockHelperContentWorkspace.textMode .renderViewContainer {
+  text-align: left;
+  margin-top: 9px;
+}
+#entryBlockHelperContentWorkspace.textMode #entryBlockHelperBlockWorkspace {
+  height: auto;
+}
+#entryBlockHelperContentWorkspace.textMode #entryBlockHelperBlockWorkspace > div > svg {
+  position: relative;
+  left: auto;
+}
+#entryBlockHelperContentWorkspace.textMode #entryBlockHelperDescriptionWorkspace {
+  text-align: left;
+  padding: 0;
+}
+#entryBlockHelperContentWorkspace.textMode .entryBlockHelperContent {
+  font-family: NanumGothic;
+  font-size: 14px;
+  color: #3b3b3b;
+  margin-top: 8px;
+}
+#entryBlockHelperContentWorkspace.textMode .entryBlockHelperElementsContainer .elementLeft {
+  display: inline-block;
+  vertical-align: top;
+}
+#entryBlockHelperContentWorkspace.textMode .entryBlockHelperElementsContainer .elementRight {
+  display: inline-block;
+  margin-left: 15px;
+  max-width: 80%;
+}
+#entryBlockHelperContentWorkspace.textMode .entryBlockHelperElementsContainer:not(:first-child) {
+  margin-top: 12px;
+}
+#entryBlockHelperContentWorkspace.textMode #entryBlockHelperCodeMirrorContainer {
+  margin-top: 8px;
 }
 .hwMonitor {
   background-color: #363c46;
@@ -4413,15 +4524,15 @@ input.entryObjectNameWorkspace:-moz-read-only {
   position: absolute;
   width: 15px;
   height: 4px;
-  margin-top: -15px;
-  margin-left: 345px;
+  margin-top: -10px;
+  margin-left: 8px;
 }
 .entryPlayground_bgColorDiv {
   position: absolute;
   width: 15px;
   height: 4px;
-  margin-top: -15px;
-  margin-left: 379px;
+  margin-top: -10px;
+  margin-left: 8px;
 }
 .entryPlayground_textBox {
   margin-top: 5px;
@@ -5106,15 +5217,15 @@ input.entryObjectNameWorkspace:-moz-read-only {
   position: absolute;
   width: 15px;
   height: 4px;
-  margin-top: -15px;
-  margin-left: 373px;
+  margin-top: -10px;
+  margin-left: 8px;
 }
 .entryPlayground_bgColorDiv {
   position: absolute;
   width: 15px;
   height: 4px;
-  margin-top: -15px;
-  margin-left: 379px;
+  margin-top: -10px;
+  margin-left: 8px;
 }
 .entryPlayground_textBox {
   margin-top: 5px;
@@ -5167,8 +5278,6 @@ input.entryObjectNameWorkspace:-moz-read-only {
   height: 226px;
   z-index: 10;
   cursor: pointer;
-  margin-top: -5px;
-  margin-left: 362px;
   padding: 20px 5px;
   position: absolute;
   background-image: url("../images/text_color_bg.png");
@@ -5180,8 +5289,6 @@ input.entryObjectNameWorkspace:-moz-read-only {
   height: 226px;
   z-index: 10;
   cursor: pointer;
-  margin-top: -5px;
-  margin-left: 369px;
   padding: 20px 5px;
   position: absolute;
   background-image: url("../images/text_color_bg_1.png");
@@ -5374,6 +5481,12 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .propertyTabpdf.selected {
   background-image: url("../images/property/pdf_on.png");
 }
+.propertyTabconsole {
+  background-image: url("../images/property/console_off.png");
+}
+.propertyTabconsole.selected {
+  background-image: url("../images/property/console_on.png");
+}
 .propertyContent {
   position: absolute;
   top: 0;
@@ -5402,6 +5515,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entrySceneListWorkspace {
   margin: 0px;
   padding: 0px 5px 0px 55px;
+  float: left;
 }
 .entrySceneElementWorkspace {
   float: left;
@@ -5615,9 +5729,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryToastContainer {
   position: fixed;
   right: 0px;
-  bottom: 0px;
+  bottom: 15px;
   margin: 0px;
-  padding: 10px;
+  padding: 2px;
   width: 300px;
   max-height: 100%;
   overflow: auto;
@@ -6066,6 +6180,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
   width: 100%;
   height: 50px;
 }
+.entryVariableContainerTextMode .notForTextMode {
+  display: none;
+}
 .entryListSettingWorkspace {
   width: 100%;
   padding-top: 24px;
@@ -6194,6 +6311,192 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryCurtainElem {
   position: fixed;
+}
+#entryConsole {
+  height: 100%;
+}
+#entryConsole > .CodeMirror {
+  height: 100%;
+  background: black;
+}
+#entryConsole .CodeMirror-cursor {
+  border-left: 1px solid white;
+}
+#entryConsole span {
+  color: white;
+}
+#entryConsole .speak span {
+  color: #fff2a4;
+}
+#entryConsole .ask span {
+  color: #bdd1ff;
+}
+#textCodingExampleView {
+  position: absolute;
+  width: 100%;
+  top: 150px;
+}
+@keyframes fIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+.entryTooltipBG {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 9990;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  animation-name: fIn;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+}
+@keyframes stretch {
+  0% {
+    opacity: 0;
+    transform: translate(0, -10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+.entryTooltipWrapper {
+  position: absolute;
+  z-index: 9999;
+  animation-name: stretch;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+}
+.entryTooltip {
+  position: relative;
+  padding: 25px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+  font-family: NanumGothic;
+  color: #3b3b3b;
+  box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.19);
+}
+.entryTooltip:before {
+  position: absolute;
+  content: "";
+}
+.entryTooltip.up {
+  -webkit-transform: translate(-50%, -100%);
+  -moz-transform: translate(-50%, -100%);
+  -ms-transform: translate(-50%, -100%);
+  -o-transform: translate(-50%, -100%);
+  transform: translate(-50%, -100%);
+}
+.entryTooltip.up:before {
+  background: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2225px%22%20height%3D%2211px%22%3E%3Cpath%20fill%3D%22%23FFF%22%20transform%3D%22rotate%280%29%22%20d%3D%22M0,0%20l10,10%20c2.5%201.5%202.5%201.5%205%200%20l10,-10%20Z%22/%3E%3C/svg%3E') no-repeat;
+  background-size: 100% auto;
+  height: 11px;
+  width: 25px;
+  top: 100%;
+  left: 50%;
+  margin-left: -12.5px;
+}
+.entryTooltip.down {
+  margin-top: 11px;
+  left: -50%;
+}
+.entryTooltip.down:before {
+  background: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2225px%22%20height%3D%2211px%22%3E%3Cpath%20fill%3D%22%23FFF%22%20transform%3D%22rotate%28180%2012.5%205.5%29%22%20d%3D%22M0,0%20l10,10%20c2.5%201.5%202.5%201.5%205%200%20l10,-10%20Z%22/%3E%3C/svg%3E') no-repeat;
+  background-size: 100% auto;
+  height: 11px;
+  width: 25px;
+  top: -11px;
+  left: 50%;
+  margin-left: -12.5px;
+}
+.entryTooltip.left {
+  -webkit-transform: translate(-100%, -50%);
+  -moz-transform: translate(-100%, -50%);
+  -ms-transform: translate(-100%, -50%);
+  -o-transform: translate(-100%, -50%);
+  transform: translate(-100%, -50%);
+}
+.entryTooltip.left:before {
+  background: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2211px%22%20height%3D%2225px%22%3E%3Cpath%20fill%3D%22%23FFF%22%20transform%3D%22rotate%28-90%2012.5%2012.5%29%22%20d%3D%22M0,0%20l10,10%20c2.5%201.5%202.5%201.5%205%200%20l10,-10%20Z%22/%3E%3C/svg%3E') no-repeat;
+  background-size: 100% auto;
+  height: 25px;
+  width: 11px;
+  left: 100%;
+  top: 50%;
+  margin-top: -12.5px;
+}
+.entryTooltip.right {
+  margin-left: 11px;
+  -webkit-transform: translate(0, -50%);
+  -moz-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  -o-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+}
+.entryTooltip.right:before {
+  background: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2211px%22%20height%3D%2225px%22%3E%3Cpath%20fill%3D%22%23FFF%22%20transform%3D%22rotate%2890%205.5%205.5%29%22%20d%3D%22M0,0%20l10,10%20c2.5%201.5%202.5%201.5%205%200%20l10,-10%20Z%22/%3E%3C/svg%3E') no-repeat;
+  background-size: 100% auto;
+  height: 25px;
+  width: 11px;
+  top: 50%;
+  left: -11px;
+  margin-top: -12.5px;
+}
+@keyframes IndicatorPop {
+  0% {
+    opacity: 1;
+    transform: scale(0);
+  }
+  75% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+.entryTooltipIndicator {
+  position: absolute;
+  padding-top: 25px;
+}
+.entryTooltipIndicator > div {
+  width: 50px;
+  height: 50px;
+  background-color: #FFFFFF;
+  margin: -100% -50%;
+  border-radius: 100%;
+  position: relative;
+  z-index: 9999;
+  animation-name: IndicatorPop;
+  animation-duration: 1.3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-out;
+  transform: scale(0);
+}
+.entryTooltipIndicator > div:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.entryTooltipIndicator > div:nth-child(3) {
+  animation-delay: 0.6s;
+}
+.entryTooltip.edge_up {
+  -webkit-transform: translate(-100%, -20%);
+  -moz-transform: translate(-100%, -20%);
+  -ms-transform: translate(-100%, -20%);
+  -o-transform: translate(-100%, -20%);
+  transform: translate(-100%, -20%);
+}
+.entryTooltip.edge_up:before {
+  top: 20%;
 }
 
 

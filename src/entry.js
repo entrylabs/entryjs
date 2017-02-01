@@ -39,7 +39,7 @@ Entry.loadProject = function(project) {
     if (this.type == 'workspace') {
         setTimeout(function() {
             Entry.stateManager.endIgnore();
-        }, 300);
+        }, 500);
 
     }
 

@@ -52,7 +52,7 @@ Entry.EntryObject = function(model) {
         }
 
 
-        this.scene = Entry.scene.getSceneById(model.scene)|| Entry.scene.selectedScene;
+        this.scene = Entry.scene.getSceneById(model.scene) || Entry.scene.selectedScene;
 
         this.setRotateMethod(model.rotateMethod);
 
@@ -106,6 +106,8 @@ Entry.EntryObject = function(model) {
 Entry.EntryObject.prototype.generateView = function() {
     if (Entry.type == "workspace") {
         var objectView = Entry.createElement('li', this.id);
+        var fragment = document.createDocumentFragment('div');
+        fragment.appendChild(objectView);
         objectView.addClass('entryContainerListElementWorkspace');
         objectView.object = this;
         // generate context menu
@@ -226,7 +228,6 @@ Entry.EntryObject.prototype.generateView = function() {
         var nameView = Entry.createElement('input');
         nameView.bindOnClick(function (e) {
             e.preventDefault();
-            Entry.container.selectObject(thisPointer.id);
             if (!this.readOnly) {
                 this.focus();
                 this.select();
@@ -243,15 +244,12 @@ Entry.EntryObject.prototype.generateView = function() {
         this.nameView_.onblur = function(bool) {
             this.entryObject.name = this.value;
             Entry.playground.reloadPlayground();
-
         };
 
         this.nameView_.onkeypress = function(e) {
             if (e.keyCode == 13) {
                 self.editObjectValues(false);
             }
-
-
         };
 
         this.nameView_.value = this.name;
@@ -479,8 +477,7 @@ Entry.EntryObject.prototype.generateView = function() {
         rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
 
         var rotateModeAView = Entry.createElement('div');
-        rotateModeAView.addClass('entryObjectRotateModeWorkspace');
-        rotateModeAView.addClass('entryObjectRotateModeAWorkspace');
+        rotateModeAView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace');
         rotateModeAView.object = this;
         this.rotateModeAView_ = rotateModeAView;
         rotationMethodWrapper.appendChild(rotateModeAView);
@@ -493,8 +490,7 @@ Entry.EntryObject.prototype.generateView = function() {
         });
 
         var rotateModeBView = Entry.createElement('div');
-        rotateModeBView.addClass('entryObjectRotateModeWorkspace');
-        rotateModeBView.addClass('entryObjectRotateModeBWorkspace');
+        rotateModeBView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace');
         rotateModeBView.object = this;
         this.rotateModeBView_ = rotateModeBView;
         rotationMethodWrapper.appendChild(rotateModeBView);
@@ -507,8 +503,7 @@ Entry.EntryObject.prototype.generateView = function() {
         });
 
         var rotateModeCView = Entry.createElement('div');
-        rotateModeCView.addClass('entryObjectRotateModeWorkspace');
-        rotateModeCView.addClass('entryObjectRotateModeCWorkspace');
+        rotateModeCView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace');
         rotateModeCView.object = this;
         this.rotateModeCView_ = rotateModeCView;
         rotationMethodWrapper.appendChild(rotateModeCView);
@@ -526,7 +521,6 @@ Entry.EntryObject.prototype.generateView = function() {
 
         this.updateCoordinateView(true);
         this.updateRotationView(true);
-
 
         return this.view_;
     } else if (Entry.type == "phone") {
@@ -1261,7 +1255,6 @@ Entry.EntryObject.prototype.toggleInformation = function(isToggle) {
         isToggle = this.isInformationToggle = !this.isInformationToggle;
     if (isToggle) {
         this.view_.addClass('informationToggle');
-
     } else {
         this.view_.removeClass('informationToggle');
 
@@ -1493,9 +1486,8 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
         }
         this.isEditing = true;
     } else {
-        for(var i=0; i<inputs.length; i++){
+        for(var i=0; i<inputs.length; i++)
             inputs[i].blur(true);
-        }
 
         this.nameView_.blur(true);
 
@@ -1505,32 +1497,21 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
 };
 
 Entry.EntryObject.prototype.blurAllInput = function() {
-    var inputs = document.getElementsByClassName('selectedEditingObject');
-    $(inputs).removeClass('selectedEditingObject');
+    var inputs = document.getElementsByClassName('');
+    $('.selectedEditingObject').removeClass('selectedEditingObject');
 
     inputs = [
-            this.nameView_, this.coordinateView_.xInput_,
-            this.coordinateView_.yInput_, this.rotateInput_,
-            this.directionInput_, this.coordinateView_.sizeInput_
-        ];
+        this.nameView_, this.coordinateView_.xInput_,
+        this.coordinateView_.yInput_, this.rotateInput_,
+        this.directionInput_, this.coordinateView_.sizeInput_
+    ];
 
-        for(var i=0; i<inputs.length; i++){
-            inputs[i].addClass('selectedNotEditingObject');
-            inputs[i].setAttribute('readonly', true);
-        }
-    };
-
-// Entry.EntryObject.prototype.disableInput = function(){
-//     var inputs = [
-//             this.nameView_, this.coordinateView_.xInput_,
-//             this.coordinateView_.yInput_, this.rotateInput_,
-//             this.directionInput_, this.coordinateView_.sizeInput_
-//         ];
-//     for(var i=0; i<inputs.length; i++){
-//         inputs[i].setAttribute('disabled', 'disabled');
-//     }
-// };
-
+    for(var i=0; i<inputs.length; i++) {
+        var input = inputs[i];
+        input.addClass('selectedNotEditingObject');
+        input.setAttribute('readonly', true);
+    }
+};
 
 /**
  * Add stamp entity for brush_stamp block

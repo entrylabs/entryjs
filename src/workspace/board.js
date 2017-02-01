@@ -106,18 +106,23 @@ Entry.Board.DRAG_RADIUS = 5;
         this.pattern = returnVal.pattern;
     };
 
-    p.changeCode = function(code) {
+    p.changeCode = function(code, shouldNotCreateView, cb) {
         if (this.code && this.codeListener)
             this.code.changeEvent.detach(this.codeListener);
 
         this.set({code: code});
 
         var that = this;
-        if (code) {
+        if (code && !shouldNotCreateView) {
             this.codeListener = this.code.changeEvent.attach(
                 this, function() {that.changeEvent.notify();}
             );
+            this.svgBlockGroup.remove();
+            this.svgThreadGroup.remove();
             code.createView(this);
+            if (code.isAllThreadsInOrigin())
+                this.alignThreads();
+            cb && cb();
         }
         this.scroller.resizeScrollBar();
     };
@@ -132,12 +137,10 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.setMagnetedBlock = function(block, magnetType) {
-        if (this.magnetedBlockView) {
-            if (this.magnetedBlockView === block)
-                return;
-            else
-                this.magnetedBlockView.set({magneting: false});
-        }
+        if (this.magnetedBlockView === block)
+            return;
+
+        this.magnetedBlockView && this.magnetedBlockView.set({magneting: false});
         this.set({magnetedBlockView: block});
         if (block) {
             block.set({magneting: magnetType});
@@ -145,13 +148,9 @@ Entry.Board.DRAG_RADIUS = 5;
         }
     };
 
-    p.getCode = function() {
-        return this.code;
-    };
+    p.getCode = function() { return this.code; };
 
-    p.findById = function(id) {
-        return this.code.findById(id);
-    };
+    p.findById = function(id) { return this.code.findById(id); };
 
     p._addControl = function() {
         var dom = this.svgDom;
@@ -278,18 +277,6 @@ Entry.Board.DRAG_RADIUS = 5;
         this.set({selectedBlockView:blockView});
     };
 
-    p._keyboardControl = function(event) {
-        var selected = this.selectedBlockView;
-        if (!selected) return;
-
-        if (event.keyCode == 46) {
-            if (selected.block && !Entry.Utils.isInInput(event)) {
-                Entry.do("destroyBlock", selected.block);
-                this.set({selectedBlockView:null});
-            }
-        }
-    };
-
     p.hide = function() {
         this.wrapper.addClass('entryRemove');
         this.visible = false;
@@ -300,7 +287,7 @@ Entry.Board.DRAG_RADIUS = 5;
         this.visible = true;
     };
 
-    p.alignThreads = function() {
+    p.alignThreads = function(reDraw) {
         var domHeight = this.svgDom.height();
         var threads = this.code.getThreads();
 
@@ -311,8 +298,10 @@ Entry.Board.DRAG_RADIUS = 5;
         var left = 50;
 
         for (var i =0; i < threads.length; i++) {
-            var block = threads[i].getFirstBlock();
+            var thread = threads[i];
+            var block = thread.getFirstBlock();
             if (!block) continue;
+            reDraw && thread.view.reDraw();
             var blockView = block.view;
             if (!blockView.movable) continue;
             var bBox = blockView.svgGroup.getBBox();
@@ -386,11 +375,15 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.cancelEdit = function() {
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_BOARD;
         this.workspace.setMode(Entry.Workspace.MODE_BOARD, "cancelEdit");
     };
 
     p.save = function() {
-        this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_BOARD;
+        this.workspace.setMode(mode, "save");
     };
 
     p.generateCodeMagnetMap = function() {
@@ -844,7 +837,7 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.reDraw = function() {
-        this.code.view.reDraw();
+        this.code && this.code.view && this.code.view.reDraw();
     };
 
     p.separate = function(block, count) {
@@ -893,6 +886,7 @@ Entry.Board.DRAG_RADIUS = 5;
     p.adjustThreadsPosition = function() {
         var code = this.code;
         if (!code) return;
+        if (!code.view) return;
 
         var threads = code.getThreads();
         if (!threads || threads.length === 0) return;
@@ -993,12 +987,9 @@ Entry.Board.DRAG_RADIUS = 5;
             Entry.documentMousedown.attach(this, this.setSelectedBlock);
             Entry.documentMousedown.attach(this, this._removeActivated);
         }
-        if (Entry.keyPressed)
-            Entry.keyPressed.attach(this, this._keyboardControl);
-
         if (Entry.windowResized) {
-            var dUpdateOffset = _.debounce(this.updateOffset, 200);
-            Entry.windowResized.attach(this, dUpdateOffset);
+            Entry.windowResized
+                .attach(this, _.debounce(this.updateOffset, 200));
         }
     };
 
@@ -1012,8 +1003,7 @@ Entry.Board.DRAG_RADIUS = 5;
 
     p._rightClick = function(e) {
         var disposeEvent = Entry.disposeEvent;
-        if (disposeEvent)
-            disposeEvent.notify(e);
+        disposeEvent && disposeEvent.notify(e);
         if (!this.visible) return;
         var that = this;
 
@@ -1033,9 +1023,7 @@ Entry.Board.DRAG_RADIUS = 5;
         Entry.ContextMenu.show(options, null,
             { x: e.clientX, y: e.clientY }
         );
-    }
-
-
+    };
 
 })(Entry.Board.prototype);
 

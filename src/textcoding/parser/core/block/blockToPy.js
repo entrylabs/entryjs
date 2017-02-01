@@ -11,40 +11,38 @@ goog.require("Entry.Map");
 goog.require("Entry.Queue");
 
 Entry.BlockToPyParser = function(blockSyntax) {
-    this.blockSyntax = blockSyntax;
+    this._type ="BlockToPyParser";
 
-    var variableMap = new Entry.Map();
-    this._variableMap = variableMap;
+    var funcParamMap = new Entry.Map();
+    this._funcParamMap = funcParamMap;
 
-    var funcMap = new Entry.Map();
-    this._funcMap = funcMap;
+    var funcDefMap = {};
+    this._funcDefMap = {};
 
-    var queue = new Entry.Queue();
-    this._queue = queue;
+    this._variableDeclaration = null;
+    this._listDeclaration = null;
+    this._forIdCharIndex = 0;
 };
 
 (function(p){
     p.Code = function(code, parseMode) {
         this._parseMode = parseMode;
-        //console.log("parseMode", this._parseMode);
-
+        if(!code) return;
         if (code instanceof Entry.Thread)
             return this.Thread(code);
-        if (code instanceof Entry.Block) 
+        if (code instanceof Entry.Block)
             return this.Block(code);
 
         var textCode = "",
             threads = code.getThreads();
 
-            //console.log("threads", threads);
-
         for (var i = 0; i < threads.length; i++) {
+            this._forIdCharIndex = 0;
             var thread = threads[i];
 
             textCode += this.Thread(thread) + '\n';
         }
-
-        textCode = textCode.trim(); 
+        textCode = textCode.trim();
 
         return textCode;
     };
@@ -54,250 +52,171 @@ Entry.BlockToPyParser = function(blockSyntax) {
             return this.Block(thread);
         var result = "",
             blocks = thread.getBlocks();
-
-            //console.log("blocks", blocks);
-
         var isEventBlock = false;
+        var rootBlock;
         var rootResult = '';
         var contentResult = '';
         var definition = '';
+
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
-            //console.log("blockToPy block", block, "this._parseMode", this._parseMode);
             if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
-                if(Entry.TextCodingUtil.prototype.isNoPrintBlock(block))
-                    continue;
+                /*if(Entry.TextCodingUtil.isNoPrintBlock(block))
+                    continue;*/
                 if(i == 0) {
-                    isEventBlock = Entry.TextCodingUtil.prototype.isEventBlock(block);
-                    if(isEventBlock) {
+                    rootBlock = block;
+                    isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
+                    if(isEventBlock)
                         rootResult = this.Block(block) + '\n';
-                        //definition = Entry.TextCodingUtil.prototype.makeDefinition(block) + '\n';
-                    }
                     else
                         contentResult += this.Block(block) + '\n';
                 }
-                else if(i != 0) { 
-                    contentResult += this.Block(block) + '\n';
+                else if(i != 0) {
+                    var content = this.Block(block) + '\n';
+                    contentResult += content;
                 }
             } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
-                isEventBlock = Entry.TextCodingUtil.prototype.isEventBlock(block);
-                if(isEventBlock) {
-                    //definition = Entry.TextCodingUtil.prototype.makeDefinition(block) + '\n';
+                isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
+                if(isEventBlock)
                     result = definition;
-                } else {
+                else
                     result = this.Block(block) + '\n';
-                } 
             }
-
-            this._queue.clear();
-            this._variableMap.clear(); 
         }
 
         if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
             if(isEventBlock) {
-                result = rootResult + Entry.TextCodingUtil.prototype.indent(contentResult) + '\n';
-                // Declaration
-                /*var declaration = rootResult.split('def')[1];
-                declaration = declaration.substring(0, declaration.length-1);
-                result = result.trim() + '\n\n' + declaration.trim() + '\n';*/
-
+                contentResult = Entry.TextCodingUtil.indent(contentResult);
+                result = rootResult + contentResult + '\n';
             }
             else {
                 result = rootResult + contentResult + '\n';
             }
         }
-
         result = result.trim() + '\n';
-
         return result;
     };
 
-    p.Block = function(block) {
-        /*if(!block._schema)
-            return "";*/
-        var result = ""; 
-        var syntax;
+    p.Block = function(block, template) {
+        var result = "";
+        var syntaxObj, syntax, textParams;
 
-        if(block._schema && block._schema.syntax)
-            syntax = block._schema.syntax.py[0];
-        
+        syntaxObj = this.searchSyntax(block);
+        if(syntaxObj)
+            syntax = syntaxObj.syntax;
+            if(syntaxObj.textParams)
+                textParams = syntaxObj.textParams;
+
         // User Function
         if(this.isFunc(block)) {
-            //console.log("Block isFunc", block);
-            result += this.makeFuncDef(block);
-
+            if(!this._hasRootFunc) {
+                this._rootFuncId = block.data.type;
+                this._funcDefMap[block.data.type] = this.makeFuncDef(block, this._hasRootFunc);
+                this._hasRootFunc = false;
+            }
             if(this.isRegisteredFunc(block))
                 syntax = this.makeFuncSyntax(block);
-            
-            //console.log("Func Fianl Syntax", syntax);
+                if(this._parseMode == Entry.Parser.PARSE_SYNTAX)
+                    return syntax;
         } else if(this.isFuncStmtParam(block)) {
             result += block.data.type;
-        } /*else if(this.isFuncDefUnit(block)) {
+        }
 
+        /*if(block && block.data) {
+            var btype = block.data.type;
+            var prefix = btype.split('_')[0]
+            if(prefix == "stringParam" || prefix == "booleanParam")
+                return result;
+        }
+        if(template) syntax = template;
+        if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
+            if(!syntax || syntax == null || syntax == "def when_start():") {
+                var error = {};
+                var message = Lang.TextCoding[Entry.TextCodingError.ALERT_LEGACY_NO_SUPPORT];
+                var block_name = this.Block(block, Lang.template[block.data.type]);
+                var alert_message = message + '\n' + Lang.TextCoding[block_name] + ':' + block_name;
+
+                alert(alert_message);
+            }
         }*/
-
-        //console.log("Block Syntax", syntax);
 
         if(!syntax || syntax == null)
             return result;
+
 
         var blockReg = /(%.)/mi;
         var statementReg = /(\$.)/mi;
         var blockTokens = syntax.split(blockReg);
         var schemaParams = block._schema.params;
         var dataParams = block.data.params;
-
-        //console.log("Block blockTokens", blockTokens);
-
-        var currentBlock = block; 
+        var currentBlock = block;
         var currentBlockSkeleton = currentBlock._schema.skeleton;
         var currentBlockParamsKeyMap = currentBlock._schema.paramsKeyMap;
-
-
-        //console.log("currentBlock", currentBlock, "currentBlockSkeleton", currentBlockSkeleton,
-            //"currentBlockParamsKeyMap", currentBlockParamsKeyMap);
-
         var blockParam = "";
-        if(this._parseMode == Entry.Parser.PARSE_VARIABLE) { //In PASRSE_VARIABLE Mode
-            if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
-                if(currentBlockParamsKeyMap) {  //If Block has Parameters
-                    blockParam = "";
-                    var blockParamIndex = 0;
-                }
-            }
-        }
 
-        //console.log("Block schemaParams", schemaParams);
-        //console.log("Block dataParams", dataParams);
-
-        for (var i = 0; i < blockTokens.length; i++) { 
-            var blockToken = blockTokens[i];  
+        for (var i = 0; i < blockTokens.length; i++) {
+            var blockToken = blockTokens[i];
             if (blockToken.length === 0) continue;
+            if (blockToken == '% ') { result += blockToken; continue; }
             if (blockReg.test(blockToken)) {
                 var blockParamIndex = blockToken.split('%')[1];
                 var index = Number(blockParamIndex) - 1;
                 if(schemaParams[index]) {
                     if(schemaParams[index].type == "Indicator") {
-                        index++;    
+                        index++;
                     } else if(schemaParams[index].type == "Block") {
-                        //console.log("Block dataParams[index]", dataParams[index]);
-
-                        //console.log("Block param current block1", currentBlock);
                         var param = this.Block(dataParams[index]).trim();
+                        if(syntaxObj.textParams && syntaxObj.textParams[index])
+                            var textParam = syntaxObj.textParams[index];
 
-                        //console.log("funcMap", this._funcMap.toString());
-                        var funcParam = this._funcMap.get(param);
+                        var funcParam = this._funcParamMap.get(param);
 
-                        //console.log("param", param, "func param", funcParam);
                         if(funcParam) {
-                            //console.log("func param current result", result);
-                            result += funcParam;
-                            continue;
+                            param = funcParam;
+                            //continue;
                         } else {
                             var funcParamTokens = param.split('_');
-                            //console.log("funcParamTokens", funcParamTokens);
                             var prefix = funcParamTokens[0];
                             if(funcParamTokens.length == 2) {
                                 if(prefix == "stringParam"){
                                     param = "string_param";
                                 } else if(prefix == "booleanParam") {
                                     param = "boolean_param";
-                                } 
-                            }
-                        }
-
-                        //console.log("Block param current block2", currentBlock);
-
-                        param = Entry.TextCodingUtil.prototype.variableFilter(block, blockParamIndex, param);
-
-                        result += param;
-
-                        //console.log("PARAM BLOCK", param);
-                        //console.log("PARAM BLOCK RESULT ", result);
-                        
-                        if(this._parseMode == Entry.Parser.PARSE_VARIABLE) { //In PARSE_VARIABLE Mode
-                            if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
-                                if(currentBlockParamsKeyMap) {  //If Block has Parameters
-                                    blockParam = param;
-                                    //console.log("basic block param", param, "i", i);
-
-                                    var paramsKey = Object.keys(currentBlockParamsKeyMap);        
-                                    var variable = String(paramsKey[blockParamIndex++]);
-                                    variable = variable.toLowerCase();
-                                    //console.log("variable", variable);
-
-                                    var value = blockParam;
-                                    //console.log("value", value);
-
-                                    this._variableMap.put(variable, value);
-                                    this._queue.enqueue(variable); 
-                                    //console.log("Variable Map", this._variableMap.toString());
-                                    //console.log("Queue", this._queue.toString());
                                 }
                             }
                         }
-                    } else {
-                        
-                        var param = this['Field' + schemaParams[index].type]
-                                                    (dataParams[index], schemaParams[index]);
-                        
-                        if(param == null) {
-                            if(schemaParams[index].text) {
-                                param = schemaParams[index].text;
-                            }
+
+                        if(textParam && textParam.paramType == "index") {
+                            if(!isNaN(param))
+                                param = param - 1;
                             else {
-                                param = null;    
-                            }
-                        }   
-                        
-                        param = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(param);   
-                        param = String(param);
-
-                        if(!Entry.TextCodingUtil.prototype.isNumeric(param) &&
-                           !Entry.TextCodingUtil.prototype.isBinaryOperator(param))
-                           param = String("\"" + param + "\""); 
-
-
-
-                        param = Entry.TextCodingUtil.prototype.variableFilter(block, blockParamIndex, param);
-
-                        //Local Type Processing
-                        if(Entry.TextCodingUtil.prototype.isLocalType(currentBlock, dataParams[index]))
-                            param = "self".concat('.').concat(param);
-                            
-                        //console.log("param variableFilter", param);
-
-                        result += param;
-
-                        //console.log("PARAM BLOCK", param);
-                        //console.log("PARAM BLOCK RESULT ", result);
-                        
-                        if(this._parseMode == Entry.Parser.PARSE_VARIABLE) { //In PARSE_VARIABLE Mode
-                            if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
-                                if(currentBlockParamsKeyMap) {  //If Block has Parameters
-                                    blockParam = param;
-                                    //console.log("basic block param", param, "i", i);
-
-                                    var param = "";
-                                    var paramsKey = Object.keys(currentBlockParamsKeyMap);        
-                                    var variable = String(paramsKey[blockParamIndex++]);
-                                    variable = variable.toLowerCase();
-                                    //console.log("variable", variable);
-
-                                    var value = blockParam;
-                                    //console.log("value", value);
-
-                                    this._variableMap.put(variable, value);
-                                    this._queue.enqueue(variable); 
-                                    //console.log("Variable Map", this._variableMap);
-                                    //console.log("Queue", this._queue);
+                                var tokens = param.split('+');
+                                if(tokens[tokens.length-1] == ' 1)') {
+                                    delete tokens[tokens.length-1];
+                                    param = tokens.join("+");
+                                    param = param.substring(1, param.length-2);
                                 }
+                                else param += " - 1";
                             }
                         }
 
+                        if(textParam && textParam.paramType == "integer") {
+                            if(!isNaN(param) && param % 1 !== 0)
+                                result = result.replace("randint", "uniform");
+                        }
+
+                        result += param;
+                    } else {
+                        if(syntaxObj.textParams)
+                            var textParams = syntaxObj.textParams
+                        else var textParams = [];
+
+                        param = this['Field' + schemaParams[index].type](dataParams[index], textParams[index]);
+
+                        result += param;
+                        if(syntaxObj && syntaxObj.key == "repeat_while_true")
+                            result = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(currentBlock, result);
                     }
-                } else {
-                    //console.log("This Block has No Schema");
                 }
             } else if (statementReg.test(blockToken)) {
                 var statements = blockToken.split(statementReg);
@@ -306,202 +225,200 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     if (statementToken.length === 0) continue;
                     if (statementReg.test(statementToken)) {
                         var index = Number(statementToken.split('$')[1]) - 1;
-                        result += Entry.TextCodingUtil.prototype.indent(this.Thread(block.statements[index]));
-                    } 
-                    else {
-                        result += statementToken;  
-                        
-                        if(this._parseMode == Entry.Parser.PARSE_VARIABLE) { //In PARSE_VARIABLE Mode
-                            if(this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_LOOP ||
-                            this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP) { //If Block Sekeleton is basic
-                                if(this._currentBlockParamsKeyMap) {  //If Block has Parameters
-                                    if(j == 0) { //The beginning of Block Statement
-                                        //console.log("This result is the beginning of Block Statement");
-                                    }
-                                }
-                            }
-                        }
-                    } 
+                        result += Entry.TextCodingUtil.indent(this.Thread(block.statements[index]));
+                    }
+                    else result += statementToken;
                 }
             } else {
-                var tagIndex = 0;
-                var bb = blockToken.search('#');
-                if(blockToken.search('#') != -1) {
-                    var tagIndex = blockToken.indexOf('#');
-                    blockToken = blockToken.substring(tagIndex+1);
+                if(syntaxObj && syntaxObj.key == "repeat_basic" && i == 0) {
+                    var forStmtTokens = blockToken.split(" ");
+                    forStmtTokens[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++);
+                    var forStmtText = forStmtTokens.join(" ");
+                    blockToken = forStmtText;
                 }
-
                 result += blockToken;
-
-                //console.log("check result", result);
-
             }
         }
+        return result;
+    };
 
-        if(this._parseMode == Entry.Parser.PARSE_VARIABLE) { //In PARSE_VARIABLE Mode
-            //console.log("check1");
-            if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
-                //console.log("check2");
-                if(currentBlockParamsKeyMap) {  //If Block has Parameters
-                    //console.log("check3");
-                    var paramsCount = Object.keys(currentBlockParamsKeyMap).length;
-                    if(paramsCount)
-                        result = this.makeExpressionWithVariable(result, paramsCount); 
+    p.searchSyntax = function(datum) {
+        var schema;
+        var appliedParams;
+        if(datum instanceof Entry.BlockView) {
+            schema = datum.block._schema;
+            applliedParams = datum.block.data.params;
+        } else if (datum instanceof Entry.Block) {
+            schema = datum._schema;
+            applliedParams = datum.params;
+        }
+        else schema = datum;
+
+        if(schema && schema.syntax) {
+            var syntaxes = schema.syntax.py.concat();
+            while (syntaxes.length) {
+                var isFail = false;
+                var syntax = syntaxes.shift();
+                if (typeof syntax === "string")
+                    return {syntax: syntax, template: syntax};
+                if (syntax.params) {
+                    for (var i = 0; i < syntax.params.length; i++) {
+                        if (syntax.params[i] && syntax.params[i] !== applliedParams[i]) {
+                            isFail = true;
+                            break;
+                        }
+                    }
+                }
+                if(!syntax.template)
+                    syntax.template = syntax.syntax;
+                if (isFail) {
+                    continue;
+                }
+                return syntax;
+            }
+        }
+        return null;
+    };
+
+    p.FieldAngle = function(dataParam, textParam) {
+        if(textParam && textParam.converter)
+            dataParam = textParam.converter(dataParam);
+
+        return dataParam;
+    };
+
+    p.FieldColor = function(dataParam, textParam) {
+        if(textParam && textParam.converter)
+            dataParam = textParam.converter(null, dataParam);
+        return dataParam;
+    };
+
+    p.FieldDropdown = function(dataParam, textParam) {
+        if(typeof dataParam == "object")
+             return "None".replace(/\"/gm, '');
+
+        if(textParam && textParam.converter && textParam.options) {
+            var options = textParam.options;
+            for(var i in options) {
+                var key = options[i][0];
+                var value = options[i][1];
+                if(dataParam == value) {
+                    return dataParam = textParam.converter(key, value);
                 }
             }
+            dataParam = textParam.converter(dataParam, dataParam);
         }
 
-        return result;
-    };
-
-    p.FieldAngle = function(dataParam) {
-        //console.log("FieldAngle", dataParam);
-
         return dataParam;
     };
 
-    p.FieldColor = function(dataParam) {
-        //console.log("FieldColor", dataParam);
+    p.FieldDropdownDynamic = function(dataParam, textParam) {
+        if(typeof dataParam == "object")
+             return "None".replace(/\"/gm, '');
 
-        return dataParam;
-    };
-
-    p.FieldDropdown = function(dataParam) {
-        //console.log("FieldDropdown", dataParam);
-        
-        return dataParam; 
-    };
-
-    p.FieldDropdownDynamic = function(dataParam, schemaParam) {
-        console.log("FieldDropdownDynamic", dataParam, schemaParam);
-        var object = Entry.playground.object;
-        console.log("FieldDropdownDynamic Object", object);
-
-        if(dataParam == "null") {
-            dataParam = "None";
-        } else {
-            dataParam = Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(dataParam, schemaParam);
-        }                    
-       
-        //console.log("FieldDropdownDynamic result ", dataParam);
-        return dataParam;
-    };
-
-    p.FieldImage = function(dataParam) {
-        //console.log("FieldImage", dataParam);
-
-        return dataParam;
-    };
-
-    p.FieldIndicator = function(dataParam) {
-        //console.log("FieldIndicator", dataParam);
-
-        return dataParam;
-    };
-
-    p.FieldKeyboard = function(dataParam) {
-        //console.log("FieldKeyboardInput", dataParam);
-
-        return dataParam;
-    };
-
-    p.FieldOutput = function(dataParam) {
-        //console.log("FieldOutput", dataParam);
-
-        return dataParam;
-    };
-
-    p.FieldText = function(dataParam) {
-        //console.log("FieldText", dataParam);
-
-        return dataParam;
-    };
-
-    p.FieldTextInput = function(dataParam) {
-        //console.log("FieldTextInput", dataParam);
-
-        return dataParam;
-    };
-
-    p.FieldNumber = function(dataParam) {
-        //console.log("FieldNumber", dataParam);
-
-        return dataParam;
-    };
-
-    p.FieldKeyboard = function(dataParam) {
-        //console.log("FieldKeyboard Before", dataParam);
-
-        dataParam = Entry.KeyboardCode.prototype.keyCodeToChar[dataParam];
-
-        if(!dataParam || dataParam == null)
-            dataParam = "Q";
-
-        //console.log("FieldKeyboard After", dataParam);
-
-        return dataParam;
-    };
-
-    p.getBlockType = function(syntax) {
-        return this.blockSyntax[syntax];
-    };
-
-    p.makeExpressionWithVariable = function(blockExp, paramCount) {
-        //console.log("makeExpressionWithVariable blockExp", blockExp);
-        //console.log("makeExpressionWithVariable Queue", this._queue.toString());
-        //console.log("makeExpressionWithVariable VariableMap", this._variableMap.toString());
-
-        var result;
-        var expression = "";
-        var variableDeclarations = "";
-        var safeIndex = 0;
-        
-        //if(exp.match(/.*\..*\)/)) {
-        var index = blockExp.indexOf('(');
-        var exp = blockExp.substring(0, index);
-        //}
-        
-        var expression = exp.trim().concat("(");  
-        
-        if(this._queue.toString()) {
-            while(variable = this._queue.dequeue()) { 
-                //console.log("makeExpressionWithVariable variable", variable);
-                
-                var value = this._variableMap.get(variable);
-                //console.log("makeExpressionWithVariable value", value);
-                
-                var variableDeclaration = variable.concat(" = ").concat(value).concat('\n');
-                variableDeclarations += variableDeclaration;
-                
-                expression = expression.concat(variable).concat(',').concat(' ');
-                safeIndex++;
-
-                if(safeIndex > 10)
-                    break;
+        if(textParam && textParam.converter && textParam.options) {
+            var options = textParam.options;
+            for(var i in options) {
+                var key = options[i][0];
+                var value = options[i][1];
+                if(dataParam == value) {
+                    var name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(value, textParam.menuName);
+                    if(name) key = name;
+                    return dataParam = textParam.converter(key, value);
+                }
             }
-           
-            var index = expression.lastIndexOf(',');
-            expression = expression.substring(0, index);
-            expression = expression.trim().concat(')');
-           
-            result = variableDeclarations.concat(expression);
-        } else {
-            result = blockExp;
+            var value = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(dataParam, textParam.menuName);
+            if(value) dataParam = textParam.converter(value, value);
+            else dataParam = textParam.converter(dataParam, dataParam);
+
+            var reg = /None/;
+            if(reg.test(dataParam)) {
+                dataParam = dataParam.replace(/\"/gm, '');
+            }
         }
 
-        //console.log("makeExpressionWithVariable result", result);
+        return dataParam;
+    };
 
-        return result;
+    p.FieldImage = function(dataParam, textParam) {
+        if(textParam && textParam.converter)
+            dataParam = textParam.converter(null, dataParam);
+
+        return dataParam;
+    };
+
+    p.FieldIndicator = function(dataParam, textParam) {
+
+        return dataParam;
+    };
+
+    p.FieldKeyboard = function(dataParam, textParam) {
+        var reg = /None/;
+        if(reg.test(dataParam)) {
+            return dataParam.replace(/\"/gm, '');
+        }
+
+        var map = Entry.KeyboardCode.map;
+        for(var key in map) {
+            var value = map[key];
+            if(value == dataParam) {
+                dataParam = key;
+                break;
+            }
+        }
+
+        if(textParam && textParam.converter)
+            dataParam = textParam.converter(dataParam, null);
+
+        dataParam = dataParam.toLowerCase();
+        return dataParam;
+    };
+
+    p.FieldOutput = function(dataParam, textParam) {
+
+        return dataParam;
+    };
+
+    p.FieldText = function(dataParam, textParam) {
+        if(textParam && textParam.converter)
+            dataParam = textParam.converter(null, dataParam);
+
+        return dataParam;
+    };
+
+    p.FieldTextInput = function(dataParam, textParam) {
+        if(typeof dataParam != "number") {
+            dataParam = dataParam.replace('\t', '    ');
+            var spaces = dataParam.split(/ /);
+
+            if(dataParam.length == spaces.length-1)
+                dataParam = '"()"'.replace('()', dataParam);
+        }
+
+        if(textParam && textParam.converter)
+            dataParam = textParam.converter(null, dataParam);
+
+        return dataParam;
+    };
+
+    p.FieldNumber = function(dataParam, textParam) {
+
+        if(textParam && textParam.converter)
+            dataParam = textParam.converter(null, dataParam);
+
+        return dataParam;
     };
 
     p.isFunc = function(block) {
+        if(!block || !block.data || !block.data.type)
+            return false;
         var tokens = block.data.type.split('_');
         var prefix = tokens[0];
         var funcId = tokens[1];
-        
+
         if(prefix == "func")
             return true;
-        else 
+        else
             return false;
     };
 
@@ -509,50 +426,61 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var tokens = block.data.type.split('_');
         var prefix = tokens[0];
         var funcId = tokens[1];
-
         var funcBlock = Entry.variableContainer.functions_[funcId];
 
         if(funcBlock)
             return true;
-        else 
+        else
             return false;
     };
 
     p.isFuncStmtParam = function(block) {
+        if(!block || !block.data || !block.data.type)
+            return false;
         var blockType = block.data.type;
         var tokens = blockType.split('_');
         var prefix = tokens[0];
-        //console.log("isFuncStmtParam prefix", prefix);
+
         if(prefix == "stringParam" || prefix == "booleanParam")
             return true;
-        else 
+        else
             return false;
     };
 
     p.makeFuncSyntax = function(funcBlock) {
         var syntax = "";
-        var schemaTemplate = funcBlock._schema.template.trim();
-        //console.log("Func schemaTemplate", schemaTemplate);
-        var schemaParams = funcBlock._schema.params;
-        //console.log("Func schemaParams", schemaParams);
-        
-        var paramReg = /(%.)/mi;
+        if(funcBlock && funcBlock._schema)
+            if(funcBlock._schema.template)
+                var schemaTemplate = funcBlock._schema.template.trim();
+            else if(funcBlock._schema.params)
+                var schemaParams = funcBlock._schema.params;
+        else if(funcBlock && !funcBlock._schema) {
+            if(this._hasRootFunc) {
+                var rootFunc = Entry.block[this._rootFuncId];
+                var schemaParams = rootFunc.block.params;
+                var schemaTemplate = rootFunc.block.template;
+            }
+        }
 
-        var funcTokens = schemaTemplate.trim().split(paramReg);
-        //console.log("funcTokens", funcTokens);
+        var paramReg = /(%.)/mi;
+        if(schemaTemplate)
+            var funcTokens = schemaTemplate.trim().split(paramReg);
 
         var funcName = "";
         var funcParams = "";
-       
+
         for(var f in funcTokens) {
             var funcToken = funcTokens[f].trim();
-            //console.log("funcToken", funcToken);
             if(paramReg.test(funcToken)) {
                 var num = funcToken.split('%')[1];
-                var index = Number(num) - 1;
-                if(schemaParams[index].type == "Indicator")
+                if(num == 1) continue;
+                else num -= 1;
+                var index = num - 1;
+                if(schemaParams && schemaParams[index] &&
+                    schemaParams[index].type == "Indicator")
                     continue;
-                funcParams += funcToken.concat(', ');
+
+                funcParams += '%'.concat(num).concat(', ');
             }
             else {
                 var funcTokenArr = funcToken.split(' ');
@@ -568,125 +496,143 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return syntax;
     };
 
-    p.makeFuncDef = function(funcBlock) {
-        var result = 'def ';
+    p.makeFuncDef = function(funcBlock, exp) {
+        if(!this.isRegisteredFunc(funcBlock))
+            return;
+        var result = '';
         var func = this.getFuncInfo(funcBlock);
+        if(func) result += func.name;
+        else return;
 
-        //console.log("makeFuncDef func", func);
-
-        if(!this.isRegisteredFunc(funcBlock)) 
-            func.name = "f"; 
-
-
-        if(!func.name) { 
-            return result;
-        }
-        else {
-            result += func.name;
-        }
-
-        result = result.concat('(');
+        var paramResult = '';
         if(func.params && func.params.length != 0) {
             for(var p in func.params) {
-                result += func.params[p]
-                result = result.concat(', ');
+                //var param = func.params[p];
+                /*if(param instanceof Entry.Block)
+                    paramResult += this.Block(param);
+                else*/
+                    paramResult += func.params[p];
+                if(p != func.params.length-1)
+                    paramResult = paramResult.concat(', ');
             }
-            var index = result.lastIndexOf(',');
-            result = result.substring(0, index);
-            result = result.trim();
+            paramResult = paramResult.trim();
         }
-        result = result.concat('):').concat('\n');
+        result = result.concat('(').concat(paramResult).concat(')');
+        if(exp) return result;
+        else result =  'def ' + result;
 
-        //console.log("curious func statements", func.statements);
+        this._hasRootFunc = true;
 
+        result = result.concat(':\n');
         if(func.statements && func.statements.length) {
             var stmtResult = "";
             for(var s in func.statements) {
                 var block = func.statements[s];
-                //console.log("makeFuncDef statements", block);
-                stmtResult += this.Block(block).concat('\n'); 
 
+                if(this.getFuncInfo(block)){
+                    stmtResult += this.makeFuncDef(block, true).concat('\n');
+                }
+                else{
+                    stmtResult += this.Block(block).concat('\n');
+                }
             }
-            stmtResult = stmtResult.concat('\n');
-            result += Entry.TextCodingUtil.prototype.indent(stmtResult).concat('\n');
+            //stmtResult = stmtResult.concat('\n');
+            result += Entry.TextCodingUtil.indent(stmtResult).concat('\n');
         }
-        
-        //console.log("makeFuncDef result", result);
+        //this._funcParamMap.clear();
 
-        this._funcMap.clear();
-
-        return result;
+        return result.trim();
     };
 
     p.getFuncInfo = function(funcBlock) {
-        //console.log("getFuncInfo funcBlock", funcBlock);
         var result = {};
-
         var tokens = funcBlock.data.type.split('_');
         var prefix = tokens[0];
         var id = tokens[1];
 
-        //console.log("getFuncInfo id", id);
         if(id) {
             var _functions = Entry.variableContainer.functions_;
             var func = _functions[id];
             if(!func) {
-                result.name = "함수";
-                return result;
+                return null;
             }
         } else {
-            return result;
+            return null;
         }
-
-        //console.log("getFuncInfo func", func);
 
         var template = func.block.template;
         var index = template.search(/(%.)/);
-        //console.log("getFuncInfo index", index);
         var funcNameTemplate = template.substring(0, index).trim();
         var funcNameArr = funcNameTemplate.split(' ');
 
         //func name join
         var funcName = funcNameArr.join('__');
-        //console.log("getFuncInfo funcName", funcName);
-        
-        Entry.TextCodingUtil.prototype.initQueue();
-        Entry.TextCodingUtil.prototype.gatherFuncDefParam(func.content._data[0]._data[0].data.params[0]);
-        //console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil.prototype._funcParamQ);
-        var funcParams = [];
-        
-        var paramMap = {}; 
-        while(param = Entry.TextCodingUtil.prototype._funcParamQ.dequeue()) {
-            funcParams.push(param);
-            //console.log("param", param);
-        }
-        //console.log("funcParams", funcParams);
-        for(var p in funcParams) {
-            var funcParam = funcParams[p];
-            paramMap[funcParam] = p;
-        }
-        Entry.TextCodingUtil.prototype.clearQueue();
-        //console.log("paramMap", paramMap);
+        Entry.TextCodingUtil.initQueue();
+        Entry.TextCodingUtil.gatherFuncDefParam(func.content._data[0]._data[0].data.params[0]);
+        var funcDefParams = [];
 
-
-        var funcParamMap = paramMap;
-
-        if(funcParamMap) {
-            var funcParams = {};
-            for(var key in funcParamMap) {
-                var index = funcParamMap[key];
-                var i = key.search('_');
-                var nickname = key.substring(0, i);
-                if(nickname == 'stringParam')
-                    var name = 'value' + String(index+1);
-                else if (nickname == 'booleanParam')
-                    var name = 'boolean' + String(index+1);
-
-                var param = name;
-                funcParams[index] = param;
-                this._funcMap.put(key, param);
+        if(!this._hasRootFunc) {
+            while(param = Entry.TextCodingUtil._funcParamQ.dequeue()) {
+                funcDefParams.push(param);
             }
         }
+
+        /*var funcParamMap = {};
+        for(var p in funcParams) {
+            var funcParam = funcParams[p];
+            funcParamMap[funcParam] = p;
+        }*/
+
+        Entry.TextCodingUtil.clearQueue();
+        //var funcParamMap = paramMap;
+
+
+        //var funcParams = {};
+        var funcParams = [];
+        if(!this._hasRootFunc) {
+            //if(Object.keys(funcParamMap).length != 0) {
+                for(var index in funcDefParams) {
+                    var value = funcDefParams[index];
+                    var i = value.search('_');
+                    var fieldType = value.substring(0, i);
+
+                    if(fieldType == 'stringParam')
+                        var name = 'param' + (parseInt(index)+1);
+                    else if (fieldType == 'booleanParam')
+                        var name = 'param' + (parseInt(index)+1);
+
+                    if(name) {
+                        //funcParams[index] = name;
+                        funcParams.push(name);
+                        this._funcParamMap.put(value, name);
+                    }
+                }
+            //}
+        }
+        else {
+            var params = funcBlock.data.params;
+            for(var i in params) {
+                var param = params[i];
+                if(param) {
+                    var paramText = this.Block(param);
+                    if(paramType = this._funcParamMap.get(paramText))
+                        paramText = paramType;
+                    funcParams.push(paramText);
+                }
+            }
+        }
+
+        /*var params = funcBlock.data.params;
+        for(var i in params) {
+            var param = params[i];
+            if(param) {
+                var paramText = this.Block(param);
+                if(pText = this._funcParamMap.get(paramText))
+                    paramText = pText;
+                funcParams.push(paramText);
+            }
+
+        }*/
 
         var contents  = func.content._data[0]._data;
         var funcContents = [];
@@ -695,17 +641,17 @@ Entry.BlockToPyParser = function(blockSyntax) {
             funcContents.push(block);
         }
 
-        //console.log("getFuncInfo funcContents", funcContents);
-
         if(funcName)
             result.name = funcName;
-        if(Object.keys(funcParams).length != 0)
+
+        if(funcParams.length != 0)
             result.params = funcParams;
+
         if(funcContents.length != 0)
             result.statements = funcContents;
 
         return result;
     };
 
-    
+
 })(Entry.BlockToPyParser.prototype);

@@ -32,7 +32,7 @@ Entry.FieldOutput = function(content, blockView, index, mode, contentIndex) {
 
     this._position = content.position;
 
-    this.box.observe(blockView, "alignContent", ["width", "height"]);
+    this.box.observe(blockView, "dAlignContent", ["width", "height"]);
     this.observe(this, "_updateBG", ["magneting"], false);
 
     this.renderStart(blockView.getBoard(), mode);
@@ -62,11 +62,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         if (block && !block.view) {
             block.setThread(this);
             block.createView(board, mode);
-        } else if (block && block.view) {
-            block.view.reDraw();
         }
 
         this._updateValueBlock(block);
+        this._valueBlock && this._valueBlock.view._startContentRender(this.renderMode);
 
         if (this._blockView.getBoard().constructor == Entry.BlockMenu &&
             this._valueBlock)
@@ -108,7 +107,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     p.calcWH = function() {
         var block = this._valueBlock;
 
-        if (block) {
+        if (block && block.view) {
             var blockView = block.view;
             this.box.set({
                 width: blockView.width,
@@ -124,7 +123,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
     p.calcHeight = p.calcWH;
 
-    p.destroy = function() {};
+    p.destroy = function() {
+        this._valueBlock && this._valueBlock.destroyView();
+    };
 
     p._inspectBlock = function() {
     };
@@ -140,6 +141,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
             return this._valueBlock;
         }
+    };
+
+    p.spliceBlock = function() {
+        this._updateValueBlock();
     };
 
     p._updateValueBlock = function(block) {
@@ -163,7 +168,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         } else {
             this.calcWH();
         }
-        this._blockView.alignContent();
+        this._blockView.dAlignContent();
     };
 
     p.getPrevBlock = function(block) {

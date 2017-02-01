@@ -55,6 +55,8 @@ Entry.Variable = function(variable) {
         this.BORDER = 6;
         this.FONT = "10pt NanumGothic";
     }
+
+    Entry.addEventListener('workspaceChangeMode', this.updateView.bind(this));
 };
 
 /**
@@ -421,8 +423,15 @@ Entry.Variable.prototype.updateView = function() {
                     name = obj.name + ':' + name;
             }
 
-            name = name.length > 7 ? name.substr(0,6) + '..' : name;
             this.titleView_.text = name;
+            if (this.titleView_.getMeasuredWidth() > this.width_) {
+                name = name + "..";
+                while (this.titleView_.getMeasuredWidth() > this.width_) {
+                    name = name.substr(0, name.length - 3) + "..";
+                    this.titleView_.text = name;
+                }
+            }
+            //name = name.length > 7 ? name.substr(0,6) + '..' : name;
             this.titleView_.x = this.width_/2;
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
                 .rect(0,0,this.width_, this.height_);
@@ -452,7 +461,10 @@ Entry.Variable.prototype.updateView = function() {
             for (var i = this.scrollPosition;
                  i < this.scrollPosition + maxView && i < this.array_.length;
                  i++) {
-                this.elementView.indexView.text = i + 1;
+                if (Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD)
+                    this.elementView.indexView.text = i;
+                else
+                    this.elementView.indexView.text = i + 1;
                 var data = String(this.array_[i].data);
                 var stringLength = Math.floor((this.getWidth() - 50)/7);
                 data = Entry.cutStringByLength(data, stringLength);

@@ -26,13 +26,11 @@ Entry.Playground = function() {
     var that = this;
     Entry.addEventListener('textEdited', this.injectText);
     Entry.addEventListener('hwChanged', this.updateHW);
-    Entry.addEventListener('changeMode', function(mode) {
-        that.setMode(mode);
-    });
 };
 
 Entry.Playground.prototype.setMode = function(mode) {
-    //console.log("playground setMode", mode);
+    console.log("playground setMode", mode);
+
     this.mainWorkspace.setMode(mode);
 };
 
@@ -286,25 +284,25 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         class: "entryWorkspaceBlockMenu"
     });
 
-    this.mainWorkspace = new Entry.Workspace(
-        {
-            'blockMenu': {
-                dom: blockMenuView,
-                align: "LEFT",
-                categoryData: EntryStatic.getAllBlocks(),
-                scroll: true
-            },
-            'board': {
-                dom: boardView
-            }/*,
-            'vimBoard': {
-                dom: boardView
-            }*/
-        }
-    );
+    var initOpts = {
+        'blockMenu': {
+            dom: blockMenuView,
+            align: "LEFT",
+            categoryData: EntryStatic.getAllBlocks(),
+            scroll: true
+        },
+        'board': {
+            dom: boardView
+        },
+    }
+    if (Entry.textCodingEnable)
+        initOpts.vimBoard = { dom: boardView };
+
+    this.mainWorkspace = new Entry.Workspace(initOpts);
     this.blockMenu = this.mainWorkspace.blockMenu;
     this.board = this.mainWorkspace.board;
     this.blockMenu.banClass("checker");
+    this.vimBoard = this.mainWorkspace.vimBoard;
 
     if (Entry.hw) this.updateHW();
 };
@@ -399,6 +397,17 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     fontName.size = '1';
     fontName.onchange = function(evt) {
         var font = evt.target.value;
+        if (font == 'Nanum Pen Script' || font == 'Jeju Hallasan') {
+            var textValue = textEditInput.value;
+            if (Entry.playground.object.entity.getLineBreak())
+                textValue = textEditArea.value;
+
+            if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
+                font = "KoPub Batang";
+                fontName.value = font;
+                alert(Lang.Menus.not_supported_text);
+            }
+        }
         Entry.playground.object.entity.setFontType(font);
     };
     for (var i=0; i<Entry.fonts.length; i++) {
@@ -534,13 +543,13 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var bgColorDiv = Entry.createElement("div");
     bgColorDiv.addClass("entryPlayground_bgColorDiv");
 
-    textProperties.appendChild(fgColorDiv);
-    textProperties.appendChild(bgColorDiv);
+    foregroundButton.appendChild(fgColorDiv);
+    backgroundButton.appendChild(bgColorDiv);
 
     var coloursWrapper = Entry.createElement("div");
     coloursWrapper.addClass("entryPlaygroundTextColoursWrapper");
     this.coloursWrapper = coloursWrapper;
-    wrap.appendChild(coloursWrapper);
+    foregroundButton.appendChild(coloursWrapper);
     var colours = Entry.getColourCodes();
     for (var i=0; i<colours.length; i++) {
         var cell = Entry.createElement("div");
@@ -559,7 +568,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var backgroundsWrapper = Entry.createElement("div");
     backgroundsWrapper.addClass("entryPlaygroundTextBackgroundsWrapper");
     this.backgroundsWrapper = backgroundsWrapper;
-    wrap.appendChild(backgroundsWrapper);
+    backgroundButton.appendChild(backgroundsWrapper);
     for (var i=0; i<colours.length; i++) {
         var cell = Entry.createElement("div");
         cell.addClass("modal_colour");
@@ -576,10 +585,22 @@ Entry.Playground.prototype.generateTextView = function(textView) {
 
     var textEditInput = Entry.createElement("input");
     textEditInput.addClass("entryPlayground_textBox");
-    textEditInput.onkeyup = function() {
+    var textChangeApply = function() {
+        var fontName = Entry.getElementsByClassName('entryPlaygroundPainterAttrFontName')[0];
+        if (fontName.value == 'Nanum Pen Script' || fontName.value == 'Jeju Hallasan') {
+            if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
+                var font = "KoPub Batang";
+                fontName.value = font;
+                Entry.playground.object.entity.setFontType(font);
+                alert(Lang.Menus.not_supported_text);
+            }
+        }
         Entry.playground.object.setText(this.value);
         Entry.playground.object.entity.setText(this.value);
     };
+    textEditInput.onkeyup = textChangeApply;
+    textEditInput.onchange = textChangeApply;
+
     textEditInput.onblur = function() {
         Entry.dispatchEvent('textEdited');
     };
@@ -589,10 +610,9 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var textEditArea = Entry.createElement("textarea");
     textEditArea.addClass("entryPlayground_textArea");
     textEditArea.style.display = 'none';
-    textEditArea.onkeyup = function() {
-        Entry.playground.object.setText(this.value);
-        Entry.playground.object.entity.setText(this.value);
-    };
+    textEditArea.onkeyup = textChangeApply;
+    textEditArea.onchange = textChangeApply;
+    
     textEditArea.onblur = function() {
         Entry.dispatchEvent('textEdited');
     };
@@ -828,7 +848,6 @@ Entry.Playground.prototype.injectObject = function(object) {
     else if (viewMode == 'sound')
         this.changeViewMode('sound');
     this.reloadPlayground();
-
 };
 
 /**
@@ -837,8 +856,28 @@ Entry.Playground.prototype.injectObject = function(object) {
 Entry.Playground.prototype.injectCode = function() {
     var code = this.object.script;
     var ws = this.mainWorkspace;
-    ws.changeBoardCode(code);
-    ws.getBoard().adjustThreadsPosition();
+
+    var workspace = Entry.getMainWS();
+    if (Entry.textCodingEnable && workspace && !workspace.vimBoard._parser._onError) {
+        if(workspace.vimBoard._changedObject) {
+            workspace.vimBoard._currentObject = workspace.vimBoard._changedObject;
+            workspace.vimBoard._currentScene = workspace.vimBoard._changedObject.scene;
+        }
+        else
+            if(Entry.playground) {
+                workspace.vimBoard._currentObject = Entry.playground.object;
+                workspace.vimBoard._currentScene = Entry.playground.object.scene;
+            }
+
+        if(Entry.playground && Entry.textCodingEnable) {
+            workspace.vimBoard._changedObject = Entry.playground.object;
+            workspace.vimBoard._currentScene = Entry.playground.object.scene;
+        }
+    }
+
+    ws.changeBoardCode(code, function() {
+        ws.getBoard().adjustThreadsPosition();
+    });
 };
 
 /**
@@ -847,12 +886,16 @@ Entry.Playground.prototype.injectCode = function() {
 Entry.Playground.prototype.injectPicture = function() {
     var view = this.pictureListView_;
     if (!view) return;
+
     while (view.hasChildNodes()) {
         view.removeChild(view.lastChild);
     }
+
     if (this.object) {
         var pictures = this.object.pictures;
         for (var i=0, len=pictures.length; i<len; i++) {
+            var picture = pictures[i];
+            !picture.view && Entry.playground.generatePictureElement(picture);
             var element = pictures[i].view;
             if (!element)
                 console.log(element);
@@ -1033,13 +1076,17 @@ Entry.Playground.prototype.injectSound = function() {
     var view = this.soundListView_;
     if (!view)
         return;
+
     while (view.hasChildNodes()) {
         view.removeChild(view.lastChild);
     }
+
     if (this.object) {
         var sounds = this.object.sounds;
         for (var i=0, len=sounds.length; i<len; i++) {
-            var element = sounds[i].view;
+            var sound = sounds[i];
+            !sound.view && Entry.playground.generateSoundElement(sound);
+            var element = sound.view;
             element.orderHolder.innerHTML = i+1;
             view.appendChild(element);
         }
@@ -1121,9 +1168,9 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
         this.injectText();
     }
 
-    if (viewType == 'code' && this.resizeHandle_)
+    if (viewType == 'code' && this.resizeHandle_) {
         this.resizeHandle_.removeClass('entryRemove');
-
+    }
     if (Entry.engine.isState('run'))
         this.curtainView_.removeClass('entryRemove');
     this.viewMode_ = viewType;
@@ -1286,13 +1333,12 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
  * Reload playground
  */
 Entry.Playground.prototype.reloadPlayground = function () {
-    var selectedCategory, selector;
-
-    var mainWorkspace = this.mainWorkspace;
-    if (!mainWorkspace) return;
-    mainWorkspace.getBlockMenu().reDraw();
-
-    if (this.object) this.object.script.view.reDraw();
+    (function(workspace) {
+        if (workspace) {
+            workspace.getBlockMenu().reDraw();
+            workspace.getBoard().reDraw();
+        }
+    })(this.mainWorkspace);
 };
 
 /**
@@ -1306,7 +1352,6 @@ Entry.Playground.prototype.flushPlayground = function () {
         var board = Entry.playground.mainWorkspace.getBoard();
         board.clear();
         board.changeCode(null);
-
     }
 };
 
@@ -1621,15 +1666,23 @@ Entry.Playground.prototype.updateHW = function() {
 
     var hw = Entry.hw;
     if (hw && hw.connected) {
-        blockMenu.unbanClass("arduinoConnected", true);
         blockMenu.banClass("arduinoDisconnected", true);
 
         hw.banHW();
-        if (hw.hwModule)
+
+        if (hw.hwModule) {
+            blockMenu.banClass("arduinoConnect", true);
+            blockMenu.unbanClass("arduinoConnected", true);
             blockMenu.unbanClass(hw.hwModule.name);
+        } else {
+            blockMenu.banClass("arduinoConnected", true);
+            blockMenu.unbanClass("arduinoConnect", true);
+        }
     } else {
         blockMenu.banClass("arduinoConnected", true);
+        blockMenu.banClass("arduinoConnect", true);
         blockMenu.unbanClass("arduinoDisconnected", true);
+
         Entry.hw.banHW();
     }
     blockMenu.reDraw();
