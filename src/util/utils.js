@@ -1385,3 +1385,8 @@ Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
     return data;
 };
 
+Entry.Utils.blur = function() {
+    var elem = document.activeElement;
+    elem && elem.blur && elem.blur();
+};
+
