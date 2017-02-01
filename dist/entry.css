@@ -1683,6 +1683,12 @@ svg .svgBlockGroup text {
 .propertyTabhelper.selected {
   background-image: url("../images/property/helper_on.png");
 }
+.propertyTabhint {
+  background-image: url("../images/property/hint_off.png");
+}
+.propertyTabhint.selected {
+  background-image: url("../images/property/hint_on.png");
+}
 .propertyTabContainer {
   background-image: url("../images/property/container_off.png");
 }

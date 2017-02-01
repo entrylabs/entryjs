@@ -11,4 +11,6 @@ Entry.PopupList = function(dom) {
     p.getView = function() {
         return this.view;
     };
+
+    p.resize = function() {}
 })(Entry.PopupList.prototype)
