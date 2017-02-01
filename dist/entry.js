@@ -8646,22 +8646,20 @@ Entry.PropertyPanel = function() {
     "hw" == b ? this.modes.hw.obj.listPorts ? a.resizeList() : a.resize && a.resize() : a.resize && a.resize();
   };
   a.select = function(b) {
-    if (this.selected !== b) {
-      for (var a in this.modes) {
-        var d = this.modes[a];
-        d.tabDom.removeClass("selected");
-        d.contentDom.addClass("entryRemove");
-        $(d.contentDom).detach();
-        d.obj.visible = !1;
-      }
-      a = this.modes[b];
-      $(this._contentView).append(a.contentDom);
-      a.tabDom.addClass("selected");
-      a.contentDom.removeClass("entryRemove");
-      a.obj.resize && a.obj.resize();
-      a.obj.visible = !0;
-      this.selected = b;
+    for (var a in this.modes) {
+      var d = this.modes[a];
+      d.tabDom.removeClass("selected");
+      d.contentDom.addClass("entryRemove");
+      $(d.contentDom).detach();
+      d.obj.visible = !1;
     }
+    a = this.modes[b];
+    $(this._contentView).append(a.contentDom);
+    a.tabDom.addClass("selected");
+    a.contentDom.removeClass("entryRemove");
+    a.obj.resize && a.obj.resize();
+    a.obj.visible = !0;
+    this.selected = b;
   };
   a.initializeSplitter = function(b) {
     var a = this;

@@ -128,9 +128,6 @@ Entry.PropertyPanel = function() {
     };
 
     p.select = function(modeName) {
-        if (this.selected === modeName)
-            return;
-
         for (var key in this.modes) {
             var mode = this.modes[key];
             mode.tabDom.removeClass("selected");
