@@ -26012,109 +26012,6 @@ Entry.block = {
             return script.callReturn();
         }
     },
-    "smartBoard_set_servo_port_power": {
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "SM3", "9" ],
-                    [ "SM2", "10" ],
-                    [ "SM1", "11" ]
-                ],
-                "value": "11",
-                "fontSize": 11
-            },
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "끄기", "2"],
-                    [ "어둡게 켜기", "40"],
-                    [ "보통 밝기로 켜기    ", "124" ],
-                    [ "밝게 켜기", "254" ]
-                ],
-                "value": "124",
-                "fontSize": 11
-            },
-            {
-                "type": "Indicator",
-                "img": "block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [ null, null, null ],
-            "type": "smartBoard_set_servo_port_power"
-        },
-        "paramsKeyMap": {
-            "PORT": 0,
-            "OPERATOR": 1
-        },
-        "class": "smartBoard_led",
-        "isNotFor": [ "smartBoard" ],
-        "func": function (sprite, script) {
-            Entry.hw.setDigitalPortValue(script.getField("PORT"),
-                                         script.getNumberField("OPERATOR"));
-                                         return script.callReturn();
-        }
-    },
-    "smartBoard_set_servo_port_pwm": {
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "SM3", "9" ],
-                    [ "SM2", "10" ],
-                    [ "SM1", "11" ]
-                ],
-                "value": "9",
-                "fontSize": 11
-            },
-            {
-                "type": "Block",
-                "accept": "string"
-            },
-            {
-                "type": "Indicator",
-                "img": "block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [
-                null,
-                {
-                    "type": "arduino_text",
-                    "params": [ "255" ]
-                },
-                null
-            ],
-            "type": "smartBoard_set_servo_port_pwm"
-        },
-        "paramsKeyMap": {
-            "PORT": 0,
-            "VALUE": 1
-        },
-        "class": "smartBoard_led",
-        "isNotFor": [ "smartBoard" ],
-        "func": function (sprite, script) {
-            var port = script.getField("PORT"); //script.getNumberValue("PORT");
-            var value = script.getNumberValue("VALUE");
-            value = Math.round(value);
-            if(value%2 == 1) value = value + 1;
-            value = Math.max(value, 2);
-            value = Math.min(value, 254);
-            Entry.hw.setDigitalPortValue(port, value);
-            return script.callReturn();
-        }
-    },
     "smartBoard_set_servo_speed": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -26220,12 +26117,11 @@ Entry.block = {
         "class": "smartBoard_servo_motor",
         "isNotFor": [ "smartBoard" ],
         "func": function (sprite, script) {
-            var port = script.getField("PORT"); //script.getNumberValue("PORT");
+            var port = script.getField("PORT");
             var value = script.getNumberValue("VALUE");
             value = Math.round(value);
-            if( value%2 == 0 ) value = value + 1;
             value = Math.max(value, 1);
-            value = Math.min(value, 179);
+            value = Math.min(value, 180);
             Entry.hw.setDigitalPortValue(port, value);
             return script.callReturn();
         }
@@ -26280,55 +26176,46 @@ Entry.block = {
                                          return script.callReturn();
         }
     },
-    /*
-    "smartBoard_set_number_eight_pin": {
+    "smartBoard_set_gs1_pwm": {
         "color": "#00979D",
-        "fontColor": "#fff",
         "skeleton": "basic",
         "statements": [],
         "params": [
             {
-                "type": "Dropdown",
-                "options": [
-                    [ "PIN 2", "2"],
-                    [ "PIN 3", "3"],
-                    [ "PIN 8", "8"],
-                ],
-                "value": "8",
-                "fontSize": 11
+                "type": "Block",
+                "accept": "string"
             },
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "끄기", "0"],
-                    [ "켜기", "255"]
-                ],
-                "value": "255",
-                "fontSize": 11
-            }, 
             {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
+        "events": {},
         "def": {
-            "params": [ null ],
-            "type": "smartBoard_set_number_eight_pin"
+            "params": [
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                }
+            ],
+            "type": "smartBoard_set_gs1_pwm"
         },
         "paramsKeyMap": {
-            "PORT": 0,
-            "OPERATOR": 1
+            "VALUE": 0
         },
-        "class": "smartBoard_ext",
-        "isNotFor": ["smartBoard"],
+        "class": "ext",
+        "isNotFor": [ "smartBoard" ],
         "func": function (sprite, script) {
-            var port = script.getField("PORT");
-            var operator = script.getField("OPERATOR");
-            Entry.hw.setDigitalPortValue(port, operator);
+            var port = 3;
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            Entry.hw.setDigitalPortValue(port, value);
             return script.callReturn();
         }
-    },*/    
+    },
     "hidden": {
         "color": "#7C7C7C",
         "skeleton": "basic",

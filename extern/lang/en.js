@@ -3575,6 +3575,7 @@ Lang.Device = {
     "dplay": "DPLAY",
     "nemoino": "NEMOino",
     "ev3": "EV3"
+    "smartBoard": "smartBoard",
 };
 Lang.General = {
     "turn_on": "turn on",
@@ -4103,21 +4104,16 @@ Lang.template = {
     "ai_boolean_and": "%1 %2 %3",
     "ai_True": "%1",
     "ai_if_else": "If %1 then %2 %3 else",
-    "smartBoard_get_number_sensor_value": "아날로그 %1 번 센서값  ",
-    "smartBoard_get_digital_value": "디지털 %1 번 센서값  ",
-    "smartBoard_toggle_led": "디지털 %1 번 핀 %2 %3",
-    "smartBoard_toggle_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
-    "smartBoard_convert_scale": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ",
-    "smartBoard_get_named_sensor_value": "%1  센서값",
-    "smartBoard_is_button_pressed": "%1  버튼을 눌렀는가?",
-    "smartBoard_set_dc_motor_direction": "%1 DC 모터를 %2 방향으로 정하기 %3 ",
-    "smartBoard_set_dc_motor_speed": "%1 DC모터를 %2 %3 ",
-    "smartBoard_set_dc_motor_pwm": "%1 DC모터를 %2 속도로 돌리기 %3 ",
-    "smartBoard_set_servo_port_power": "%1 LED를 %2 %3",
-    "smartBoard_set_servo_port_pwm": "%1 핀을 %2 로 정하기 %3 ",
-    "smartBoard_set_servo_speed": "%1 번 서보모터의 속도를 %2 %3",
-    "smartBoard_set_servo_angle": "%1 번 서보모터를 %2 도 로 움직이기 %3",
-    "smartBoard_set_number_eight_pin": "예비포트(디지털 8번핀) %1 %2 "
+    "smartBoard_convert_scale": "Map Value %1 %2 ~ %3 to %4 ~ %5",
+    "smartBoard_get_named_sensor_value": "%1  Sensor value",
+    "smartBoard_is_button_pressed": "Pressed %1 button?",
+    "smartBoard_set_dc_motor_direction": "%1 DC Motor change direction %2 %3",
+    "smartBoard_set_dc_motor_speed": "%1 DC Motor %2 %3",
+    "smartBoard_set_dc_motor_pwm": "%1 DC Motor set speed %2 %3",
+    "smartBoard_set_servo_speed": "%1 RC Servo Motor Speed %2 %3",
+    "smartBoard_set_servo_angle": "%1 RC Servo Motor set angle %2 %3",
+    "smartBoard_set_number_eight_pin": "%1 port %2 %3",
+    "smartBoard_set_gs1_pwm": "GS1 port %1 %2"
 };
 
 if (typeof exports == "object")

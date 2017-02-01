@@ -86,8 +86,16 @@ Entry.ArduinoExt = {
 
 Entry.SmartBoard = {
     name: 'smartBoard',
-    setZero: Entry.Arduino.setZero,
-
+    setZero: function() {
+        Entry.hw.sendQueue.readablePorts = [];
+        for (var port = 0; port < 20; port++) {
+            if(port != 9 || port != 10 || port != 11 ) {
+                Entry.hw.sendQueue[port] = 0;
+                Entry.hw.sendQueue.readablePorts.push(port);
+            }
+        }
+        Entry.hw.update();
+    },
     monitorTemplate: {
 //        imgPath: "hw/smartBoard.png",
 //        width: 658,
@@ -100,9 +108,9 @@ Entry.SmartBoard = {
             "6":{name: Lang.Hw.port_en + " MT2 PWM ", type: "output", pos: {x: 0, y: 0}},
             "7":{name: Lang.Hw.port_en + " MT2 회전 방향 ", type: "output", pos: {x: 0, y: 0}},
             "8":{name: Lang.Hw.port_en + " RELAY ", type: "output", pos: {x: 0, y: 0}},
-            "9":{name: Lang.Hw.port_en + " SM3 각도(PWM) ", type: "output", pos: {x: 0, y: 0}},
-            "10":{name: Lang.Hw.port_en + " SM2 각도(PWM) ", type: "output", pos: {x: 0, y: 0}},
-            "11":{name: Lang.Hw.port_en + "SM1 각도(PWM", type: "output", pos: {x: 0, y: 0}},
+            "9":{name: Lang.Hw.port_en + " SM3 각도 ", type: "output", pos: {x: 0, y: 0}},
+            "10":{name: Lang.Hw.port_en + " SM2 각도 ", type: "output", pos: {x: 0, y: 0}},
+            "11":{name: Lang.Hw.port_en + "SM1 각도 ", type: "output", pos: {x: 0, y: 0}},
             "12":{name: Lang.Hw.port_en + " 빨간 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
             "13":{name: Lang.Hw.port_en + " 노란 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
             "14":{name: Lang.Hw.port_en + " 초록 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},

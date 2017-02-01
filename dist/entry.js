@@ -819,10 +819,17 @@ Entry.ArduinoExt = {name:"ArduinoExt", setZero:function() {
   Entry.hw.update();
 }, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 
 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, BlockState:{}};
-Entry.SmartBoard = {name:"smartBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{listPorts:{2:{name:Lang.Hw.port_en + " GS2 ", type:"output", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " GS1 ", type:"output", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " MT1 \ud68c\uc804 \ubc29\ud5a5 ", type:"output", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " MT1 PWM ", type:"output", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " MT2 PWM ", type:"output", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + " MT2 \ud68c\uc804 \ubc29\ud5a5 ", 
-type:"output", pos:{x:0, y:0}}, 8:{name:Lang.Hw.port_en + " RELAY ", type:"output", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " SM3 \uac01\ub3c4(PWM) ", type:"output", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " SM2 \uac01\ub3c4(PWM) ", type:"output", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + "SM1 \uac01\ub3c4(PWM", type:"output", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " \ube68\uac04 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " \ub178\ub780 " + Lang.Hw.button, 
-type:"input", pos:{x:0, y:0}}, 14:{name:Lang.Hw.port_en + " \ucd08\ub85d " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 15:{name:Lang.Hw.port_en + " \ud30c\ub780 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " 1\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " 2\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " 3\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + 
-" 4\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
+Entry.SmartBoard = {name:"smartBoard", setZero:function() {
+  Entry.hw.sendQueue.readablePorts = [];
+  for (var a = 0;20 > a;a++) {
+    if (9 != a || 10 != a || 11 != a) {
+      Entry.hw.sendQueue[a] = 0, Entry.hw.sendQueue.readablePorts.push(a);
+    }
+  }
+  Entry.hw.update();
+}, monitorTemplate:{listPorts:{2:{name:Lang.Hw.port_en + " GS2 ", type:"output", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " GS1 ", type:"output", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " MT1 \ud68c\uc804 \ubc29\ud5a5 ", type:"output", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " MT1 PWM ", type:"output", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " MT2 PWM ", type:"output", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + " MT2 \ud68c\uc804 \ubc29\ud5a5 ", type:"output", pos:{x:0, y:0}}, 8:{name:Lang.Hw.port_en + 
+" RELAY ", type:"output", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " SM3 \uac01\ub3c4 ", type:"output", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " SM2 \uac01\ub3c4 ", type:"output", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + "SM1 \uac01\ub3c4 ", type:"output", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " \ube68\uac04 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " \ub178\ub780 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 14:{name:Lang.Hw.port_en + " \ucd08\ub85d " + 
+Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 15:{name:Lang.Hw.port_en + " \ud30c\ub780 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " 1\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " 2\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " 3\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " 4\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
 Entry.ardublock = {name:"ardublock", setZero:Entry.Arduino.setZero};
 Entry.dplay = {name:"dplay", vel_value:255, Left_value:255, Right_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(a) {
@@ -26085,23 +26092,23 @@ Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
 Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino, Dplay \n\t   Neobot, Nemoino, Robotis, Sensorboard, Xbot from Hw";
 (function(a) {
   a.createDom = function(b) {
-    function a(b) {
-      var a = e.getCodeToText(b.block);
-      e.codeMirror.display.dragFunctions.leave(b);
-      var c = Entry.Utils.createMouseEvent("mousedown", b);
+    function a(a) {
+      var b = e.getCodeToText(a.block);
+      e.codeMirror.display.dragFunctions.leave(a);
+      var c = Entry.Utils.createMouseEvent("mousedown", a);
       e.codeMirror.display.scroller.dispatchEvent(c);
-      var a = a.split("\n"), d = a.length - 1, f = 0;
-      a.forEach(function(b, a) {
-        e.codeMirror.replaceSelection(b);
+      var b = b.split("\n"), d = b.length - 1, f = 0;
+      b.forEach(function(a, b) {
+        e.codeMirror.replaceSelection(a);
         f = e.doc.getCursor().line;
         e.codeMirror.indentLine(f);
-        0 !== a && d === a || e.codeMirror.replaceSelection("\n");
+        0 !== b && d === b || e.codeMirror.replaceSelection("\n");
       });
-      b = Entry.Utils.createMouseEvent("mouseup", b);
-      e.codeMirror.display.scroller.dispatchEvent(b);
+      a = Entry.Utils.createMouseEvent("mouseup", a);
+      e.codeMirror.display.scroller.dispatchEvent(a);
     }
-    function d(b) {
-      e.codeMirror.display.dragFunctions.over(b);
+    function d(a) {
+      e.codeMirror.display.dragFunctions.over(a);
     }
     var e;
     this.view = Entry.Dom("div", {parent:b, class:"entryVimBoard"});
@@ -26120,28 +26127,28 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
   a.show = function() {
     this.view.removeClass("entryRemove");
   };
-  a.textToCode = function(b) {
-    b === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : b === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
-    b = this.codeMirror.getValue();
-    return this._parser.parse(b);
+  a.textToCode = function(a) {
+    a === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : a === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
+    a = this.codeMirror.getValue();
+    return this._parser.parse(a);
   };
-  a.codeToText = function(b, a) {
-    var c;
-    a && (this._mode = a.runType);
-    Entry.playground && (c = Entry.playground.object, c = "# " + c.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc");
-    a = a.textType;
-    a === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : a === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
-    b = this._parser.parse(b, Entry.Parser.PARSE_GENERAL);
-    a === Entry.Vim.TEXT_TYPE_PY && (b = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat("\n\n").concat(b));
-    this.codeMirror.setValue(b + "\n");
-    a == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:4, ch:0}, {readOnly:!0});
-    b = this.codeMirror.getDoc();
-    b.setCursor({line:b.lastLine() - 1});
+  a.codeToText = function(a, c) {
+    var b;
+    c && (this._mode = c.runType);
+    Entry.playground && (b = Entry.playground.object, b = "# " + b.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc");
+    c = c.textType;
+    c === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : c === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
+    a = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
+    c === Entry.Vim.TEXT_TYPE_PY && (a = b.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat("\n\n").concat(a));
+    this.codeMirror.setValue(a + "\n");
+    c == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:4, ch:0}, {readOnly:!0});
+    a = this.codeMirror.getDoc();
+    a.setCursor({line:a.lastLine() - 1});
   };
-  a.getCodeToText = function(b) {
-    var a = this.workspace.oldTextType;
-    a === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : a === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
-    return this._parser.parse(b, Entry.Parser.PARSE_SYNTAX);
+  a.getCodeToText = function(a) {
+    var b = this.workspace.oldTextType;
+    b === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : b === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
+    return this._parser.parse(a, Entry.Parser.PARSE_SYNTAX);
   };
   a.setParserAvailableCode = function(a, c) {
     this._parser.setAvailableCode(a, c);

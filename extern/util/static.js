@@ -543,20 +543,15 @@ EntryStatic.getAllBlocks = function() {
                 //jeil science smartBoard. 2016-11-03
                 //smartBoard
                 "smartBoard_get_named_sensor_value",
+                "smartBoard_convert_scale",
                 "smartBoard_is_button_pressed",
                 "smartBoard_set_dc_motor_direction",
                 "smartBoard_set_dc_motor_speed",
                 "smartBoard_set_dc_motor_pwm",
-                "smartBoard_set_servo_port_power",
-                "smartBoard_set_servo_port_pwm",
                 "smartBoard_set_servo_speed",
                 "smartBoard_set_servo_angle",
                 "smartBoard_set_number_eight_pin",
-                "smartBoard_get_number_sensor_value",
-                "smartBoard_get_digital_value",
-                "smartBoard_toggle_led",
-                "smartBoard_toggle_pwm",
-                "smartBoard_convert_scale"
+                "smartBoard_set_gs1_pwm",
             ]
         }
     ]

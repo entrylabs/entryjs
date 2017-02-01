@@ -4104,21 +4104,16 @@ Lang.template = {
     "ai_boolean_and": "%1 %2 %3",
     "ai_True": "%1",
     "ai_if_else": "만일 %1 이라면 %2 %3 아니면",
-    "smartBoard_get_number_sensor_value": "아날로그 %1 번 센서값  ",
-    "smartBoard_get_digital_value": "디지털 %1 번 센서값  ",
-    "smartBoard_toggle_led": "디지털 %1 번 핀 %2 %3",
-    "smartBoard_toggle_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
     "smartBoard_get_named_sensor_value": "%1  센서값",
-    "smartBoard_convert_scale": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ",
+    "smartBoard_convert_scale": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값",
     "smartBoard_is_button_pressed": "%1  버튼을 눌렀는가?",
-    "smartBoard_set_dc_motor_direction": "%1 DC 모터를 %2 방향으로 정하기 %3 ",
-    "smartBoard_set_dc_motor_speed": "%1 DC모터를 %2 %3 ",
-    "smartBoard_set_dc_motor_pwm": "%1 DC모터를 %2 속도로 돌리기 %3 ",
-    "smartBoard_set_servo_port_power": "%1 LED를 %2 %3",
-    "smartBoard_set_servo_port_pwm": "%1 핀을 %2 로 정하기 %3 ",
+    "smartBoard_set_dc_motor_direction": "%1 DC 모터를 %2 방향으로 정하기 %3",
+    "smartBoard_set_dc_motor_speed": "%1 DC모터를 %2 %3",
+    "smartBoard_set_dc_motor_pwm": "%1 DC모터를 %2 속도로 돌리기 %3",
     "smartBoard_set_servo_speed": "%1 번 서보모터의 속도를 %2 %3",
     "smartBoard_set_servo_angle": "%1 번 서보모터를 %2 도 로 움직이기 %3",
-    "smartBoard_set_number_eight_pin": "%1을(를) %2 %3 "
+    "smartBoard_set_number_eight_pin": "%1 포트를 %2 %3",
+    "smartBoard_set_gs1_pwm": "GS1 포트의 PWM을 %1 로 정하기 %2"
 };
 
 if (typeof exports == "object")
