@@ -26291,7 +26291,7 @@ Entry.block = {
                 this.die();
         }
     },
-    "check_block_execution": {
+    "check_lecture_goal": {
         "color": "#7C7C7C",
         "skeleton": "basic",
         "template": "목표 %1 %2 %3",
@@ -26327,7 +26327,7 @@ Entry.block = {
                 0,
                 1
             ],
-            "type": "check_block_execution"
+            "type": "check_lecture_goal"
         },
         "paramsKeyMap": {
             "VALUE": 0
@@ -26339,7 +26339,7 @@ Entry.block = {
             this.die();
         }
     },
-    "check_lecture_goal": {
+    "check_block_execution": {
         "color": "#7C7C7C",
         "skeleton": "basic_loop",
         "template": "%1 에서 아래 블록이 %2 실행되었는가 %3",
@@ -26373,9 +26373,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                null
+                null,
+                0
             ],
-            "type": "check_lecture_goal"
+            "type": "check_block_execution"
         },
         "paramsKeyMap": {
             "VALUE": 0

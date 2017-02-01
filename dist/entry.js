@@ -6509,7 +6509,7 @@ Entry.TargetChecker = function(a, b) {
   this.isForEdit = b;
   this.goals = [];
   this.unachievedGoals = [];
-  this.isForEdit && (this.watchingBlocks = [], Entry.playground.mainWorkspace.blockMenu.unbanClass("checker"));
+  this.isForEdit && (this.watchingBlocks = [], Entry.playground.mainWorkspace.blockMenu.unbanClass("checker"), Entry.addEventListener("run", this.reRegisterAll.bind(this)));
   this.isSuccess = this.isFail = !1;
   this.entity = this;
   this.parent = this;
@@ -6527,6 +6527,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
       Entry.playground.injectObject(this);
     }.bind(this));
     this.updateView();
+    this.isForEdit || this._view.addClass("entryRemove");
     return this._view;
   };
   a.updateView = function() {
@@ -6555,6 +6556,15 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     this.isForEdit && this.watchingBlocks.push(b);
     b.params[1] && this.goals.indexOf(0 > b.params[0]) && this.goals.push(b.params[0]);
     this.reset();
+  };
+  a.reRegisterAll = function() {
+    var b = this.script.getBlockList(!1, "check_lecture_goal");
+    this.watchingBlocks = b;
+    this.goals = _.uniq(b.filter(function(b) {
+      return 1 === b.params[1];
+    }).map(function(b) {
+      return b.params[0] + "";
+    }));
   };
   a.clearExecutor = function() {
     this.script.clearExecutors();
@@ -22002,11 +22012,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   a.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
-    var a = Entry.toRadian(this.getValue()), c = 49 * Math.sin(a), d = -49 * Math.cos(a), a = a > Math.PI ? 1 : 0;
-    this._fillPath = this.svgOptionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", c).replace("%Y", d).replace("%LARGE", a), class:"entry-angle-fill-area"});
+    var b = Entry.toRadian(this.getValue()), a = 49 * Math.sin(b), d = -49 * Math.cos(b), b = b > Math.PI ? 1 : 0;
+    this._fillPath = this.svgOptionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", a).replace("%Y", d).replace("%LARGE", b), class:"entry-angle-fill-area"});
     this.svgOptionGroup.appendChild(this._dividerGroup);
     this._indicator && this._indicator.remove();
-    this._indicator = this.svgOptionGroup.elem("line", {x1:0, y1:0, x2:c, y2:d});
+    this._indicator = this.svgOptionGroup.elem("line", {x1:0, y1:0, x2:a, y2:d});
     this._indicator.attr({class:"entry-angle-indicator"});
   };
   a.applyValue = function() {
