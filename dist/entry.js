@@ -14151,6 +14151,10 @@ Entry.Utils.makeCategoryDataByBlocks = function(b) {
     return d;
   }
 };
+Entry.Utils.blur = function() {
+  var b = document.activeElement;
+  b && b.blur && b.blur();
+};
 Entry.Model = function(b, a) {
   var d = Entry.Model;
   d.generateSchema(b);
