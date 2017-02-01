@@ -11876,6 +11876,14 @@ Entry.popupHelper.prototype.hide = function() {
   this.window_.children().detach();
   0 < this.nextPopupList.length && this.show(this.nextPopupList.shift());
 };
+Entry.PopupList = function(a) {
+  this.view = a;
+};
+(function(a) {
+  a.getView = function() {
+    return this.view;
+  };
+})(Entry.PopupList.prototype);
 Entry.getStartProject = function(a) {
   return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"when_run_button_click", x:40, y:50}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}]], 
   selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + "media/entrybot1.png", name:Lang.Blocks.walking_entryBot + "1", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:Lang.Blocks.walking_entryBot + "2", scale:100, dimension:{width:284, height:350}}]}, 
@@ -22044,38 +22052,38 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.box.set({x:0, y:0, width:b, height:a});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this._attachDisposeEvent(function() {
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
     this.optionGroup.on("mousedown touchstart", function(a) {
       a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(b) {
+      var c = b.keyCode || b.which;
+      a.applyValue(b);
+      -1 < [13, 27].indexOf(c) && a.destroyOption();
     });
-    var a = this.getAbsolutePosFromDocument();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:c.x, top:c.y, width:a.box.width});
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
-    $(this.svgOptionGroup).on("mousedown touchstart", function(a) {
-      a.stopPropagation();
-      b._updateByCoord(a);
+    $(this.svgOptionGroup).on("mousedown touchstart", function(b) {
+      b.stopPropagation();
+      a._updateByCoord(b);
     });
     this._dividerGroup = this.svgOptionGroup.elem("g");
-    for (a = 0;360 > a;a += 15) {
-      this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === a % 45 ? 10 : 5), y2:0, transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
+    for (c = 0;360 > c;c += 15) {
+      this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === c % 45 ? 10 : 5), y2:0, transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
     }
-    a = this.getAbsolutePosFromBoard();
-    a.x += this.box.width / 2;
-    a.y = a.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + a.x + "," + a.y + ")"});
+    c = this.getAbsolutePosFromBoard();
+    c.x += this.box.width / 2;
+    c.y = c.y + this.box.height / 2 + 49 + 1;
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + c.x + "," + c.y + ")"});
     $(this.svgOptionGroup).bind("mousemove touchmove", this._updateByCoord.bind(this));
     $(this.svgOptionGroup).bind("mouseup touchend", this.destroyOption.bind(this));
     this.updateGraph();
@@ -23357,9 +23365,8 @@ p.getView = function() {
   return this.movieContainer;
 };
 p.resize = function() {
-  var a = document.getElementsByClassName("propertyContent")[0], b = document.getElementById("youtubeIframe");
-  w = a.offsetWidth;
-  b.width = w + "px";
-  b.height = 9 * w / 16 + "px";
+  var a = document.getElementsByClassName("propertyContent")[0], b = document.getElementById("youtubeIframe"), a = a.offsetWidth;
+  b.width = a + "px";
+  b.height = 9 * a / 16 + "px";
 };
 
