@@ -288,6 +288,7 @@ Entry.Func.setupMenuCode = function() {
         category: CATEGORY,
         x: -9999
     }]).getFirstBlock();
+
     this._fieldString = menuCode.createThread([{
         type: "function_field_string",
         category: CATEGORY,
@@ -296,6 +297,7 @@ Entry.Func.setupMenuCode = function() {
             {type: this.requestParamBlock("string")}
         ]
     }]).getFirstBlock();
+
     this._fieldBoolean = menuCode.createThread([{
         type: "function_field_boolean",
         category: CATEGORY,
@@ -304,6 +306,7 @@ Entry.Func.setupMenuCode = function() {
             {type: this.requestParamBlock("boolean")}
         ]
     }]).getFirstBlock();
+
     this.menuCode = menuCode;
     blockMenu.align();
 }
@@ -435,6 +438,7 @@ Entry.Func.generateWsBlock = function(targetFunc) {
     this.unbindFuncChangeEvent();
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
     var defBlock = targetFunc.content.getEventMap("funcDef")[0];
+    if (!defBlock) return;
     var outputBlock = defBlock.params[0];
     var booleanIndex = 0;
     var stringIndex = 0;

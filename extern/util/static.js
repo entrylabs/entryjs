@@ -2725,7 +2725,7 @@ EntryStatic.getName = function(str, type) {
     if (window.user && window.user.language)
         lang = window.user.language;
 
-    if (!dict || lang == 'ko' || lang == 'code') {
+    if (!dict || (lang && lang.indexOf('ko') != -1)) {
         return str;
     } else {
         return dict[str] ? dict[str] : str;

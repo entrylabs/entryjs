@@ -29422,10 +29422,11 @@ Entry.block = {
             }
             var value = this.getParam(0);
             script.isCondition = true;
-            if (value)
-                return this.executor.stepInto(this.block.statements[0]);
-            else
-                return this.executor.stepInto(this.block.statements[1]);
+            var statement = this.block.statements[value ? 0 : 1];
+            //no blocks end execute
+            if (statement.getBlocks().length === 0)
+                return this.executor.end();
+            else return this.executor.stepInto(statement);
         },
         "syntax": [
             "BasicIf",

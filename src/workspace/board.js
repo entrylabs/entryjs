@@ -137,12 +137,10 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.setMagnetedBlock = function(block, magnetType) {
-        if (this.magnetedBlockView) {
-            if (this.magnetedBlockView === block)
-                return;
-            else
-                this.magnetedBlockView.set({magneting: false});
-        }
+        if (this.magnetedBlockView === block)
+            return;
+
+        this.magnetedBlockView && this.magnetedBlockView.set({magneting: false});
         this.set({magnetedBlockView: block});
         if (block) {
             block.set({magneting: magnetType});
@@ -150,13 +148,9 @@ Entry.Board.DRAG_RADIUS = 5;
         }
     };
 
-    p.getCode = function() {
-        return this.code;
-    };
+    p.getCode = function() { return this.code; };
 
-    p.findById = function(id) {
-        return this.code.findById(id);
-    };
+    p.findById = function(id) { return this.code.findById(id); };
 
     p._addControl = function() {
         var dom = this.svgDom;
@@ -281,18 +275,6 @@ Entry.Board.DRAG_RADIUS = 5;
         } else blockView = null;
 
         this.set({selectedBlockView:blockView});
-    };
-
-    p._keyboardControl = function(event) {
-        var selected = this.selectedBlockView;
-        if (!selected) return;
-
-        if (event.keyCode == 46) {
-            if (selected.block && !Entry.Utils.isInInput(event)) {
-                Entry.do("destroyBlock", selected.block);
-                this.set({selectedBlockView:null});
-            }
-        }
     };
 
     p.hide = function() {
@@ -1005,12 +987,9 @@ Entry.Board.DRAG_RADIUS = 5;
             Entry.documentMousedown.attach(this, this.setSelectedBlock);
             Entry.documentMousedown.attach(this, this._removeActivated);
         }
-        if (Entry.keyPressed)
-            Entry.keyPressed.attach(this, this._keyboardControl);
-
         if (Entry.windowResized) {
-            var dUpdateOffset = _.debounce(this.updateOffset, 200);
-            Entry.windowResized.attach(this, dUpdateOffset);
+            Entry.windowResized
+                .attach(this, _.debounce(this.updateOffset, 200));
         }
     };
 
@@ -1024,8 +1003,7 @@ Entry.Board.DRAG_RADIUS = 5;
 
     p._rightClick = function(e) {
         var disposeEvent = Entry.disposeEvent;
-        if (disposeEvent)
-            disposeEvent.notify(e);
+        disposeEvent && disposeEvent.notify(e);
         if (!this.visible) return;
         var that = this;
 
@@ -1045,9 +1023,7 @@ Entry.Board.DRAG_RADIUS = 5;
         Entry.ContextMenu.show(options, null,
             { x: e.clientX, y: e.clientY }
         );
-    }
-
-
+    };
 
 })(Entry.Board.prototype);
 

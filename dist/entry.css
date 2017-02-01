@@ -2505,8 +2505,6 @@ svg .svgBlockGroup text {
 }
 #globalSvg {
   position: fixed;
-  width: 10px;
-  height: 10px;
   overflow: visible;
   z-index: 1111;
   opacity: 0.8;
@@ -5503,6 +5501,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entrySceneListWorkspace {
   margin: 0px;
   padding: 0px 5px 0px 55px;
+  float: left;
 }
 .entrySceneElementWorkspace {
   float: left;

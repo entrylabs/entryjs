@@ -193,7 +193,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
 
         if(textType == Entry.Vim.TEXT_TYPE_PY) {
             if(this._currentObject) {
-                codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이썬 코드";
+                codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이선 코드";
                 var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
 
                 if(textType === Entry.Vim.TEXT_TYPE_PY) {

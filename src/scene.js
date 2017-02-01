@@ -27,8 +27,6 @@ Entry.Scene = function() {
         });
 };
 
-Entry.Scene.viewBasicWidth = 70;
-
 /**
  * Control bar view generator.
  * @param {!Element} sceneView sceneView from Entry.
@@ -145,20 +143,23 @@ Entry.Scene.prototype.generateElement = function(scene) {
         var code = e.keyCode;
         if (Entry.isArrowOrBackspace(code))
             return;
+
         scene.name = this.value;
-        divide.style.width = Entry.computeInputWidth(scene.name);
-        that.resize();
         if (code == 13)
             this.blur();
         if (this.value.length > 10) {
             this.value = this.value.substring(0,10);
+            scene.name = this.value;
             this.blur();
         }
+        setTimeout(function() {
+            that.resize();
+        }, 0);
     };
     nameField.onblur = function (e) {
         nameField.value = this.value;
         scene.name = this.value;
-        divide.style.width = Entry.computeInputWidth(scene.name);
+        that.resize();
     };
     divide.appendChild(nameField);
     var removeButtonCover = Entry.createElement('span');
@@ -298,8 +299,10 @@ Entry.Scene.prototype.selectScene = function(scene) {
     if (prevSelected) {
         var prevSelectedView = prevSelected.view;
         prevSelectedView.removeClass('selectedScene');
-        prevSelectedView = $(prevSelectedView);
-        prevSelectedView.find('input').blur();
+        var elem = document.activeElement;
+
+        if ($(elem).hasClass('entrySceneFieldWorkspace'))
+            elem.blur();
     }
 
     this.selectedScene = scene;
@@ -450,7 +453,7 @@ Entry.Scene.prototype.cloneScene = function(scene) {
     }
 
     var clonedScene = {
-        name: scene.name + Lang.Workspace.replica_of_object,
+        name: (Lang.Workspace.cloned_scene + scene.name).substring(0, 10),
         id: Entry.generateHash()
     };
 
@@ -463,6 +466,7 @@ Entry.Scene.prototype.cloneScene = function(scene) {
         this.isSceneCloning = true;
         for (var i=objects.length-1; i>=0; i--)
             Entry.container.addCloneObject(objects[i], clonedScene.id);
+        this._focusSceneNameField(clonedScene);
         this.isSceneCloning = false;
     } catch(e) {}
 };
@@ -480,39 +484,40 @@ Entry.Scene.prototype.resize = function() {
     if (scenes.length === 0 || !firstScene) return;
     var startPos = $(firstScene.view).offset().left;
     var marginLeft = parseFloat($(selectedScene.view).css('margin-left'));
-    var totalWidth = $(this.view_).width() - startPos;
+    var totalWidth = Math.floor($(this.view_).width() - startPos - 5);
+    var LEFT_MARGIN = -40;
 
-
-    var normWidth = 0;
+    var normWidth = startPos + 15;
+    var diff = 0;
     for (var i in scenes) {
         var scene = scenes[i];
         var view = scene.view;
         view.addClass('minValue');
-
-        var inputWrapper = scene.inputWrapper;
-        $(inputWrapper).width(
-            Entry.computeInputWidth(scene.name)
-        );
         view = $(view);
-        normWidth = normWidth + view.width() + marginLeft;
+
+        var width = parseFloat(Entry.computeInputWidth(scene.name));
+        var adjusted =  width*10/9;
+        if (scene === this.selectedScene)
+            diff = adjusted - width;
+        $(scene.inputWrapper).width(adjusted + 'px');
+        normWidth += view.width() + LEFT_MARGIN;
     }
 
-    if (normWidth > totalWidth) align()
+    if (normWidth > totalWidth) align();
 
     function align() {
-        totalWidth = totalWidth - $(selectedScene.view).width();
+        var dummyWidth = 30.5;
         var len = scenes.length - 1;
-        var eachWidth = Entry.Scene.viewBasicWidth + marginLeft;
-        var fieldWidth = totalWidth/len - eachWidth;
+        totalWidth = totalWidth - Math.round($(selectedScene.view).width())
+                        - dummyWidth*len - diff;
+        var fieldWidth = Math.floor(totalWidth/len);
         for (i in scenes) {
             scene = scenes[i];
-
             if (selectedScene.id != scene.id) {
                 scene.view.removeClass('minValue');
                 $(scene.inputWrapper).width(fieldWidth);
             } else scene.view.addClass('minValue');
         }
-
     }
 };
 
@@ -523,4 +528,9 @@ Entry.Scene.prototype.getNextScene = function() {
 
 Entry.Scene.prototype.isMax = function() {
     return this.scenes_.length >= this.maxCount;
+};
+
+Entry.Scene.prototype._focusSceneNameField = function(scene) {
+    var input = $(scene.view).find('input');
+    input && input.focus && input.focus();
 };
