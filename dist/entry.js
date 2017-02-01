@@ -6065,7 +6065,7 @@ Entry.Container.prototype.selectObject = function(a, b) {
   b && a && Entry.scene.selectScene(a.scene);
   this.mapObjectOnScene(function(b) {
     !b.view_ && b.generateView();
-    b.view_.removeClass("selectedObject");
+    b.view_ && b.view_.removeClass("selectedObject");
     b.isSelected_ = !1;
   });
   if (a) {
@@ -7599,6 +7599,8 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     this.updateView();
     this.isForEdit || this._view.addClass("entryRemove");
     return this._view;
+  };
+  a.generateView = function() {
   };
   a.updateView = function() {
     if (this._view) {

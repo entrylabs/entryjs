@@ -388,7 +388,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
 
     this.mapObjectOnScene(function(object) {
         !object.view_ && object.generateView();
-        object.view_.removeClass('selectedObject');
+        object.view_ && object.view_.removeClass('selectedObject');
         object.isSelected_ = false;
     });
 

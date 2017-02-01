@@ -52,6 +52,10 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         return this._view;
     };
 
+    p.generateView = function() {
+        
+    }
+
     p.updateView = function() {
         if (!this._view)
             return;
