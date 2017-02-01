@@ -393,6 +393,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             if (count === 0) elems[key].addClass('entryRemove');
             else elems[key].removeClass('entryRemove');
         }
+        this.selectMenu(0, true);
     };
 
     p.getCategoryCodes = function(selector) {
@@ -670,6 +671,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         this._categoryData = data;
         this._generateCategoryView(data);
         this._generateCategoryCodes(data);
+        this.setMenu();
     };
 
     p._generateCategoryView = function(data) {

@@ -114,7 +114,8 @@ Entry.Field = function() {};
 
         return {
             x: absPos.x + this.box.x + contentPos.x + offset.left,
-            y: absPos.y + this.box.y + contentPos.y + offset.top
+            y: absPos.y + this.box.y + contentPos.y
+                + offset.top - $(window).scrollTop()
         };
     };
 

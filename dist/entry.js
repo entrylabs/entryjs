@@ -4567,6 +4567,62 @@ Entry.Utils.isNewVersion = function(a, b) {
     return !1;
   }
 };
+Entry.Utils.getBlockCategory = function() {
+  var a = {}, b;
+  return function(c) {
+    if (c) {
+      if (a[c]) {
+        return a[c];
+      }
+      b || (b = EntryStatic.getAllBlocks());
+      for (var d = 0;d < b.length;d++) {
+        var e = b[d], f = e.category;
+        if (-1 < e.blocks.indexOf(c)) {
+          return a[c] = f;
+        }
+      }
+    }
+  };
+}();
+Entry.Utils.getUniqObjectsBlocks = function(a) {
+  a = a || Entry.container.objects_;
+  var b = [];
+  a.forEach(function(a) {
+    a = a.script;
+    a instanceof Entry.Code || (a = new Entry.Code(a));
+    a.getBlockList().forEach(function(a) {
+      0 > b.indexOf(a.type) && b.push(a.type);
+    });
+  });
+  return b;
+};
+Entry.Utils.makeCategoryDataByBlocks = function(a) {
+  if (a) {
+    for (var b = this, c = EntryStatic.getAllBlocks(), d = {}, e = 0;e < c.length;e++) {
+      var f = c[e];
+      f.blocks = [];
+      d[f.category] = e;
+    }
+    a.forEach(function(a) {
+      var e = b.getBlockCategory(a), e = d[e];
+      void 0 !== e && c[e].blocks.push(a);
+    });
+    a = EntryStatic.getAllBlocks();
+    for (e = 0;e < a.length;e++) {
+      var f = a[e], g = f.blocks;
+      if ("func" === f.category) {
+        a.splice(e, 1);
+      } else {
+        var h = c[e].blocks, k = [];
+        g.forEach(function(b) {
+          -1 < h.indexOf(b) && k.push(b);
+        });
+        c[e].blocks = k;
+      }
+    }
+    return c;
+  }
+};
 Entry.Model = function(a, b) {
   var c = Entry.Model;
   c.generateSchema(a);
@@ -5396,7 +5452,6 @@ Entry.Container.prototype.clear = function() {
     a.destroy();
   });
   this.objects_ = [];
-  this.selectObject();
   Entry.playground.flushPlayground();
 };
 Entry.db = {data:{}, typeMap:{}};
@@ -12525,7 +12580,7 @@ Entry.Stage.prototype.createObjectContainer = function(a) {
 Entry.Stage.prototype.removeObjectContainer = function(a) {
   var b = this.objectContainers;
   a = this.getObjectContainerByScene(a);
-  this.canvas.removeChild(a);
+  this.canvas && this.canvas.removeChild(a);
   b.splice(this.objectContainers.indexOf(a), 1);
 };
 Entry.Stage.prototype.getObjectContainerByScene = function(a) {
@@ -16594,6 +16649,36 @@ Entry.ContextMenu = {};
     this._hideEvent && (Entry.documentMousedown.detach(this._hideEvent), this._hideEvent = null);
   };
 })(Entry.ContextMenu);
+Entry.Curtain = {};
+(function() {
+  this._visible = !1;
+  this._doms = null;
+  this._createDom = function() {
+    var a = {parent:$("body"), class:"entryCurtainElem entryRemove"};
+    this._doms = {top:Entry.Dom("div", a), right:Entry.Dom("div", a), bottom:Entry.Dom("div", a), left:Entry.Dom("div", a)};
+  };
+  this.show = function(a) {
+    a = {top:400, left:130, width:64, height:56};
+    !this._doms && this._createDom();
+    this._position(a);
+    for (var b in this._doms) {
+      this._doms[b].removeClass("entryRemove");
+    }
+  };
+  this._position = function(a) {
+    a = $(window);
+    a.width();
+    a.height();
+  };
+  this.hide = function() {
+    if (this._doms) {
+      for (var a in this._doms) {
+        this._doms[a].addClass("entryRemove");
+      }
+    }
+  };
+  this._createDom();
+}).call(Entry.Curtain);
 Entry.Loader = {queueCount:0, totalCount:0, loaded:!1};
 Entry.Loader.addQueue = function(a) {
   this.queueCount || Entry.dispatchEvent("loadStart");
@@ -19586,6 +19671,7 @@ Entry.BlockMenu = function(a, b, c, d) {
       }
       0 === f ? a[d].addClass("entryRemove") : a[d].removeClass("entryRemove");
     }
+    this.selectMenu(0, !0);
   };
   a.getCategoryCodes = function(b) {
     b = this._convertSelector(b);
@@ -19757,6 +19843,7 @@ Entry.BlockMenu = function(a, b, c, d) {
     this._categoryData = b;
     this._generateCategoryView(b);
     this._generateCategoryCodes(b);
+    this.setMenu();
   };
   a._generateCategoryView = function(b) {
     if (b) {
@@ -20609,7 +20696,7 @@ Entry.Field = function() {
   };
   a.getAbsolutePosFromDocument = function() {
     var b = this._block.view, a = b.getContentPos(), d = b.getAbsoluteCoordinate(), b = b.getBoard().svgDom.offset();
-    return {x:d.x + this.box.x + a.x + b.left, y:d.y + this.box.y + a.y + b.top};
+    return {x:d.x + this.box.x + a.x + b.left, y:d.y + this.box.y + a.y + b.top - $(window).scrollTop()};
   };
   a.getRelativePos = function() {
     var b = this._block.view.getContentPos(), a = this.box;
@@ -21964,8 +22051,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
-    this.optionGroup.on("mousedown touchstart", function(b) {
-      b.stopPropagation();
+    this.optionGroup.on("mousedown touchstart", function(a) {
+      a.stopPropagation();
     });
     this.optionGroup.on("keyup", function(a) {
       var c = a.keyCode || a.which;
@@ -21995,28 +22082,28 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.optionGroup.focus();
     this.optionGroup.select();
   };
-  a._updateByCoord = function(b) {
-    b.originalEvent && b.originalEvent.touches && (b = b.originalEvent.touches[0]);
-    b = [b.clientX, b.clientY];
-    var a = this.getAbsolutePosFromDocument();
-    this.optionGroup.val(this.modValue(function(b, a) {
-      var c = a[0] - b[0];
-      b = a[1] - b[1] - 49 - 1;
-      a = Math.atan(-b / c);
-      a = Entry.toDegrees(a);
-      a = 90 - a;
-      0 > c ? a += 180 : 0 < b && (a += 360);
-      return 15 * Math.round(a / 15);
-    }([a.x + this.box.width / 2, a.y + this.box.height / 2 + 1], b)));
+  a._updateByCoord = function(a) {
+    a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+    a = [a.clientX, a.clientY];
+    var b = this.getAbsolutePosFromDocument();
+    this.optionGroup.val(this.modValue(function(a, b) {
+      var c = b[0] - a[0];
+      a = b[1] - a[1] - 49 - 1;
+      b = Math.atan(-a / c);
+      b = Entry.toDegrees(b);
+      b = 90 - b;
+      0 > c ? b += 180 : 0 < a && (b += 360);
+      return 15 * Math.round(b / 15);
+    }([b.x + this.box.width / 2, b.y + this.box.height / 2 + 1], a)));
     this.applyValue();
   };
   a.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
-    var b = Entry.toRadian(this.getValue()), a = 49 * Math.sin(b), d = -49 * Math.cos(b), b = b > Math.PI ? 1 : 0;
-    this._fillPath = this.svgOptionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", a).replace("%Y", d).replace("%LARGE", b), class:"entry-angle-fill-area"});
+    var a = Entry.toRadian(this.getValue()), c = 49 * Math.sin(a), d = -49 * Math.cos(a), a = a > Math.PI ? 1 : 0;
+    this._fillPath = this.svgOptionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", c).replace("%Y", d).replace("%LARGE", a), class:"entry-angle-fill-area"});
     this.svgOptionGroup.appendChild(this._dividerGroup);
     this._indicator && this._indicator.remove();
-    this._indicator = this.svgOptionGroup.elem("line", {x1:0, y1:0, x2:a, y2:d});
+    this._indicator = this.svgOptionGroup.elem("line", {x1:0, y1:0, x2:c, y2:d});
     this._indicator.attr({class:"entry-angle-indicator"});
   };
   a.applyValue = function() {

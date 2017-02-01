@@ -1301,3 +1301,87 @@ Entry.Utils.isNewVersion = function(old_version, new_version) {
         return false;
     }
 }
+
+Entry.Utils.getBlockCategory = (function() {
+    var map = {};
+    var allBlocks;
+    return function(blockType) {
+        if (!blockType) return;
+
+        if (map[blockType])
+            return map[blockType];
+
+        if (!allBlocks)
+            allBlocks = EntryStatic.getAllBlocks();
+
+        for (var i=0; i<allBlocks.length; i++) {
+            var data = allBlocks[i];
+            var category = data.category;
+            if (data.blocks.indexOf(blockType) > -1) {
+                map[blockType] = category;
+                return category;
+            }
+        }
+    }
+})();
+
+Entry.Utils.getUniqObjectsBlocks = function(objects) {
+    objects = objects || Entry.container.objects_;
+    var ret = [];
+
+    objects.forEach(function(o) {
+        var script = o.script;
+        if (!(script instanceof Entry.Code))
+            script = new Entry.Code(script);
+        var blocks = script.getBlockList();
+        blocks.forEach(function(b) {
+            if (ret.indexOf(b.type) < 0)
+                ret.push(b.type);
+        });
+    });
+
+    return ret;
+};
+
+Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
+    if (!blockArr) return;
+    var that = this;
+
+    var data = EntryStatic.getAllBlocks();
+    var categoryIndexMap = {};
+    for (var i=0; i<data.length; i++) {
+        var datum = data[i];
+        datum.blocks = [];
+        categoryIndexMap[datum.category] = i;
+    }
+
+    blockArr.forEach(function(b) {
+        var category = that.getBlockCategory(b);
+        var index = categoryIndexMap[category];
+        if (index === undefined) return;
+        data[index].blocks.push(b);
+    });
+
+    var allBlocksInfo = EntryStatic.getAllBlocks();
+    for (var i=0; i<allBlocksInfo.length; i++) {
+        var info = allBlocksInfo[i];
+        var category = info.category;
+        var blocks = info.blocks;
+        if (category === 'func') {
+            allBlocksInfo.splice(i, 1);
+            continue;
+        }
+        var selectedBlocks = data[i].blocks;
+        var sorted = [];
+
+        blocks.forEach(function(b) {
+            if (selectedBlocks.indexOf(b) > -1)
+                sorted.push(b);
+        });
+
+        data[i].blocks = sorted;
+    }
+
+    return data;
+};
+
