@@ -8404,6 +8404,7 @@ Entry.PropertyPanel = function() {
     this.initializeSplitter(c);
   };
   b.addMode = function(a, b) {
+    this.modes[a] && this.removeMode(a);
     var c = b.getView(), c = Entry.Dom(c, {parent:this._contentView}), e = Entry.Dom("<div>" + Lang.Menus[a] + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
     e.bind("click", function() {
       f.select(a);
@@ -23261,9 +23262,8 @@ p.getView = function() {
   return this.movieContainer;
 };
 p.resize = function() {
-  var b = document.getElementsByClassName("propertyContent")[0], a = document.getElementById("youtubeIframe");
-  w = b.offsetWidth;
-  a.width = w + "px";
-  a.height = 9 * w / 16 + "px";
+  var b = document.getElementsByClassName("propertyContent")[0], a = document.getElementById("youtubeIframe"), b = b.offsetWidth;
+  a.width = b + "px";
+  a.height = 9 * b / 16 + "px";
 };
 

@@ -44,6 +44,8 @@ Entry.PropertyPanel = function() {
     };
 
     p.addMode = function(mode, contentObj) {
+        if (this.modes[mode])
+            this.removeMode(mode);
 
         var contentDom = contentObj.getView();
         // will be removed after apply new Dom class
