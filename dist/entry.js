@@ -14227,7 +14227,7 @@ Entry.TargetChecker = function(b, a) {
   this.isForEdit = a;
   this.goals = [];
   this.unachievedGoals = [];
-  this.isForEdit && (this.watchingBlocks = [], Entry.playground.mainWorkspace.blockMenu.unbanClass("checker"));
+  this.isForEdit && (this.watchingBlocks = [], Entry.playground.mainWorkspace.blockMenu.unbanClass("checker"), Entry.addEventListener("run", this.reRegisterAll.bind(this)));
   this.isSuccess = this.isFail = !1;
   this.entity = this;
   this.parent = this;
@@ -14245,6 +14245,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
       Entry.playground.injectObject(this);
     }.bind(this));
     this.updateView();
+    this.isForEdit || this._view.addClass("entryRemove");
     return this._view;
   };
   b.updateView = function() {
@@ -14273,6 +14274,15 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     this.isForEdit && this.watchingBlocks.push(a);
     a.params[1] && this.goals.indexOf(0 > a.params[0]) && this.goals.push(a.params[0]);
     this.reset();
+  };
+  b.reRegisterAll = function() {
+    var a = this.script.getBlockList(!1, "check_lecture_goal");
+    this.watchingBlocks = a;
+    this.goals = _.uniq(a.filter(function(a) {
+      return 1 === a.params[1];
+    }).map(function(a) {
+      return a.params[0] + "";
+    }));
   };
   b.clearExecutor = function() {
     this.script.clearExecutors();

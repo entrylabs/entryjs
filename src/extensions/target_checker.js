@@ -18,6 +18,7 @@ Entry.TargetChecker = function(code, isForEdit) {
     if (this.isForEdit) {
         this.watchingBlocks = [];
         Entry.playground.mainWorkspace.blockMenu.unbanClass("checker");
+        Entry.addEventListener("run", this.reRegisterAll.bind(this));
     }
 
     this.isFail = false;
@@ -46,6 +47,8 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
             Entry.playground.injectObject(this);
         }.bind(this));
         this.updateView();
+        if (!this.isForEdit)
+            this._view.addClass("entryRemove");
         return this._view;
     };
 
@@ -106,6 +109,15 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         if (block.params[1] && this.goals.indexOf(block.params[0] < 0))
             this.goals.push(block.params[0])
         this.reset();
+    };
+
+    p.reRegisterAll = function() {
+        var blocks = this.script.getBlockList(false, "check_lecture_goal");
+        this.watchingBlocks = blocks;
+        this.goals = _.uniq(
+            blocks.filter(function(b) {return b.params[1] === 1})
+                  .map(function(b) {return b.params[0] + ""})
+        )
     };
 
     p.clearExecutor = function() {
