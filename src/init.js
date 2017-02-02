@@ -286,7 +286,7 @@ Entry.createDom = function(container, option) {
         this.helper.bindWorkspace(this.playground.mainWorkspace);
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');
-        canvas.className = 'entryCanvasWorkspace';
+        canvas.className = 'entryCanvasWorkspace minimize';
         canvas.id = 'entryCanvas';
         canvas.width = 640;
         canvas.height = 360;
