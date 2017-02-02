@@ -271,8 +271,10 @@ Entry.PARAM = -1;
     };
 
     p._handleChange = function() {
-        if (Entry.creationChangedEvent)
+        if (Entry.creationChangedEvent &&
+            this.view && this.view.board.constructor !== Entry.BlockMenu) {
             Entry.creationChangedEvent.notify();
+        }
     };
 
     p.hasBlockType = function(type) {

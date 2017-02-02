@@ -4758,10 +4758,7 @@ Entry.Container.prototype.setObjects = function(b) {
   !this.updateListView() && Entry.stage.sortZorder();
   Entry.variableContainer.updateViews();
   b = Entry.type;
-  "workspace" != b && "phone" != b || setTimeout(function() {
-    var a = this.getCurrentObjects()[0];
-    a && this.selectObject(a.id);
-  }.bind(this), 0);
+  ("workspace" == b || "phone" == b) && (b = this.getCurrentObjects()[0]) && this.selectObject(b.id);
 };
 Entry.Container.prototype.getPictureElement = function(b, a) {
   var d = this.getObject(a).getPicture(b);
@@ -21970,7 +21967,7 @@ Entry.PARAM = -1;
     return this._data.indexOf(a);
   };
   b._handleChange = function() {
-    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
+    Entry.creationChangedEvent && this.view && this.view.board.constructor !== Entry.BlockMenu && Entry.creationChangedEvent.notify();
   };
   b.hasBlockType = function(a) {
     for (var b = this.getThreads(), c = 0;c < b.length;c++) {

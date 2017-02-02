@@ -210,10 +210,8 @@ Entry.Container.prototype.setObjects = function(objectModels) {
     Entry.variableContainer.updateViews();
     var type = Entry.type;
     if (type == 'workspace' || type == 'phone') {
-        setTimeout(function() {
-            var target = this.getCurrentObjects()[0];
-            target && this.selectObject(target.id);
-        }.bind(this), 0);
+        var target = this.getCurrentObjects()[0];
+        target && this.selectObject(target.id);
     }
 };
 
