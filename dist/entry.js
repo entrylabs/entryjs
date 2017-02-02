@@ -16003,6 +16003,7 @@ Entry.stop = function() {
 };
 Entry.parseOptions = function(b) {
   this.type = b.type;
+  this.hashId = b.hashId;
   b.device && (this.device = b.device);
   this.projectSaveable = b.projectsaveable;
   void 0 === this.projectSaveable && (this.projectSaveable = !0);
@@ -16881,6 +16882,16 @@ Entry.Utils.makeCategoryDataByBlocks = function(b) {
 Entry.Utils.blur = function() {
   var b = document.activeElement;
   b && b.blur && b.blur();
+};
+Entry.Utils.getWindow = function(b) {
+  if (b) {
+    for (var a = 0;a < window.frames.length;a++) {
+      var d = window.frames[a];
+      if (d.Entry && d.Entry.hashId === b) {
+        return d;
+      }
+    }
+  }
 };
 Entry.Model = function(b, a) {
   var d = Entry.Model;

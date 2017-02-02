@@ -368,6 +368,9 @@ Entry.stop = function() {
 Entry.parseOptions = function(options) {
     /** @type {string} */
     this.type = options.type;
+
+    this.hashId = options.hashId;
+
     if (options.device)
         this.device = options.device;
 

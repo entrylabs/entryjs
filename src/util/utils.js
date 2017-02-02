@@ -1461,3 +1461,11 @@ Entry.Utils.blur = function() {
     elem && elem.blur && elem.blur();
 };
 
+Entry.Utils.getWindow = function(hashId) {
+    if (!hashId) return;
+    for (var i=0; i<window.frames.length; i++) {
+        var frame = window.frames[i];
+        if (frame.Entry && frame.Entry.hashId === hashId)
+            return frame;
+    }
+};
