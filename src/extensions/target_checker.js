@@ -53,7 +53,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     };
 
     p.generateView = function() {
-        
+
     }
 
     p.updateView = function() {

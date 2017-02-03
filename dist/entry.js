@@ -5598,8 +5598,8 @@ Entry.Utils.restrictAction = function(a, b) {
     return b[0];
   });
   var c = function(c) {
-    console.log("");
     c = c || window.event;
+    console.log(c);
     0 > a.indexOf(c.target || c.srcElement) ? (c.preventDefault || (c.returnValue = !1, c.cancelBubble = !0), c.preventDefault(), c.stopPropagation()) : b();
   };
   this._restrictHandler = c;
@@ -5608,7 +5608,7 @@ Entry.Utils.restrictAction = function(a, b) {
 };
 Entry.Utils.allowAction = function() {
   var a = Entry.getDom();
-  this._restrictHandler && (a.addEventListener ? (console.log("asdf"), a.removeEventListener("click", this._restrictHandler, !0), a.removeEventListener("mousedown", this._restrictHandler, !0), a.removeEventListener("touchstart", this._restrictHandler, !0)) : (a.detachEvent("onclick", this._restrictHandler), a.detachEvent("onmousedown", this._restrictHandler), a.detachEvent("ontouchstart", this._restrictHandler)), delete this._restrictHandler);
+  this._restrictHandler && (a.addEventListener ? (a.removeEventListener("click", this._restrictHandler, !0), a.removeEventListener("mousedown", this._restrictHandler, !0), a.removeEventListener("touchstart", this._restrictHandler, !0)) : (a.detachEvent("onclick", this._restrictHandler), a.detachEvent("onmousedown", this._restrictHandler), a.detachEvent("ontouchstart", this._restrictHandler)), delete this._restrictHandler);
 };
 Entry.Model = function(a, b) {
   var c = Entry.Model;
@@ -7657,7 +7657,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     }
   };
   a.achieveCheck = function(b, a) {
-    this.isFail || (b ? this.achieveGoal(a) : this.fail(a));
+    this.isFail || (a = String(a), b ? this.achieveGoal(a) : this.fail(a));
   };
   a.achieveGoal = function(b) {
     this.isSuccess || this.isFail || 0 > this.unachievedGoals.indexOf(b) || (this.unachievedGoals.splice(this.unachievedGoals.indexOf(b), 1), 0 === this.unachievedGoals.length && (this.isSuccess = !0, Entry.achieveEvent.notify("success")), this.updateView());
@@ -25375,8 +25375,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     var b = this.getValue(), a = /&value/gm;
     return a.test(b) ? b.replace(a, "") : b + "\u00b0";
   };
-  a.modValue = function(b) {
-    return /&value/gm.test(b) ? b : b % 360;
+  a.modValue = function(a) {
+    return /&value/gm.test(a) ? a : a % 360;
   };
   a.destroyOption = function() {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
@@ -25386,8 +25386,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.command();
   };
   a._setTextValue = function() {
-    var b = this._convert(this.getText(), this.getValue());
-    this.textElement.textContent = b;
+    var a = this._convert(this.getText(), this.getValue());
+    this.textElement.textContent = a;
   };
 })(Entry.FieldAngle.prototype);
 Entry.FieldColor = function(a, b, c) {
@@ -25412,15 +25412,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-field-color"});
     if (this._blockView.renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
-      var b = this.svgGroup.elem("rect", {x:0, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+      var a = this.svgGroup.elem("rect", {x:0, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
       this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre;", "font-size":this._fontSize + "px", "font-family":"nanumBarunRegular", "class":"dragNone", fill:this._color});
       this.textElement.textContent = this._convert(this.getValue(), this.getValue());
-      var a = this.textElement.getBoundingClientRect(), d = a.width + 12, e = a.height;
-      b.attr({y:-e / 2, width:d, height:e});
-      this.textElement.attr({x:6, y:.25 * a.height});
+      var c = this.textElement.getBoundingClientRect(), d = c.width + 12, e = c.height;
+      a.attr({y:-e / 2, width:d, height:e});
+      this.textElement.attr({x:6, y:.25 * c.height});
     } else {
-      var e = this._CONTENT_HEIGHT, d = this._CONTENT_WIDTH, b = this._position, f, g;
-      b ? (f = b.x || 0, g = b.y || 0) : (f = 0, g = -e / 2);
+      var e = this._CONTENT_HEIGHT, d = this._CONTENT_WIDTH, a = this._position, f, g;
+      a ? (f = a.x || 0, g = a.y || 0) : (f = 0, g = -e / 2);
       this._header = this.svgGroup.elem("rect", {x:f, y:g, width:d, height:e, fill:this.getValue()});
     }
     this._bindRenderOptions();
