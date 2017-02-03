@@ -25585,7 +25585,6 @@ Entry.Playground.prototype.generateTabView = function(b) {
   b.addClass("entryTabListItemWorkspace entryTabSelected");
   d.appendChild(b);
   b.bindOnClick(function(b) {
-    console.log(2222222);
     a.changeViewMode("code");
     a.blockMenu.reDraw();
   });
