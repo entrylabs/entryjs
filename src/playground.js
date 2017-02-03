@@ -218,6 +218,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         //that.blockMenu.reDraw();
     });
     this.tabViewElements.code = codeTab;
+    this._codeTab = codeTab;
 
     if (Entry.pictureEditable) {
         var pictureTab = Entry.createElement('li', 'entryPictureTab');
@@ -1739,6 +1740,12 @@ Entry.Playground.prototype.showBlockMenu = function() {
     this.mainWorkspace.getBlockMenu().show();
 };
 
-
-Entry.Playground.prototype.getDom = function() {
+Entry.Playground.prototype.getDom = function(query) {
+    if (query.length === 1) {
+        switch(query.shift()) {
+            case "code":
+                return this._codeTab;
+        }
+    } else {
+    }
 };

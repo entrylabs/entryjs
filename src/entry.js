@@ -371,4 +371,14 @@ Entry.getMainWS = function() {
     return ret;
 };
 
+Entry.getDom = function(query) {
+    if (!query) {
+        return this.view_;
+    } else if (query.length > 1) {
+        var key = query.shift();
+        return this[key].getDom(query);
+    } else {
+    }
+}
+
 window.Entry = Entry;

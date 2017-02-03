@@ -3,10 +3,19 @@
 goog.provide("Entry.Tooltip");
 
 goog.require("Entry.Dom");
+goog.require("Entry.Utils");
 
 Entry.Tooltip = function(data, opts) {
     this.data = data instanceof Array ? data : [data];
-    this.opts = opts || {};
+    this.data.map(function(d) {
+        if (d.target instanceof Array)
+            d.target = Entry.getDom(d.target);
+        d.target = $(d.target);
+    });
+    this.opts = opts || {
+        dimmed: true,
+        restirct: false
+    };
     this._tooltips = [];
     this._indicators = [];
 
@@ -14,6 +23,8 @@ Entry.Tooltip = function(data, opts) {
         this.isIndicator = true;
 
     this.render();
+    if (this.opts.restrict)
+        this.restrictAction();
 
     this._resizeEventFunc =Entry.Utils.debounce(function() {
         this.alignTooltips();
@@ -125,6 +136,8 @@ Entry.Tooltip = function(data, opts) {
     p.dispose = function() {
         if (this._bg)
             this._bg.remove();
+        if (this.opts.restrict)
+            Entry.Utils.allowAction();
         if (this.opts.callBack)
             this.opts.callBack.call();
         while (this._tooltips.length)
@@ -132,5 +145,10 @@ Entry.Tooltip = function(data, opts) {
         while (this._indicators.length)
             this._indicators.pop().remove();
         Entry.removeEventListener('windowResized', this._resizeEventFunc);
+    };
+
+    p.restrictAction = function() {
+        var targets = this.data.map(function(d) {return d.target});
+        Entry.Utils.restrictAction(targets, this.dispose.bind(this));
     };
 })(Entry.Tooltip.prototype);
