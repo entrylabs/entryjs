@@ -209,8 +209,13 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
     codeTab.addClass('entryTabListItemWorkspace entryTabSelected');
     tabList.appendChild(codeTab);
     codeTab.bindOnClick(function(e) {
-        that.changeViewMode('code');
-        that.blockMenu.reDraw();
+        Entry.do(
+            'playgroundChangeViewMode',
+            'code',
+            that.selectedViewMode
+        );
+        //that.changeViewMode('picture');
+        //that.blockMenu.reDraw();
     });
     this.tabViewElements.code = codeTab;
 

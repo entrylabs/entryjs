@@ -25585,8 +25585,7 @@ Entry.Playground.prototype.generateTabView = function(b) {
   b.addClass("entryTabListItemWorkspace entryTabSelected");
   d.appendChild(b);
   b.bindOnClick(function(b) {
-    a.changeViewMode("code");
-    a.blockMenu.reDraw();
+    Entry.do("playgroundChangeViewMode", "code", a.selectedViewMode);
   });
   this.tabViewElements.code = b;
   Entry.pictureEditable && (b = Entry.createElement("li", "entryPictureTab"), b.innerHTML = Lang.Workspace.tab_picture, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(a) {
