@@ -15860,6 +15860,19 @@ Entry.Commander = function(b) {
     return [a];
   }, undo:"processPicture", isPass:!0};
 })(Entry.Command);
+(function(b) {
+  b.playgroundChangeViewMode = function() {
+    return {type:"changeViewMode", do:function(a, b) {
+      var c = Entry.playground;
+      c.changeViewMode(a);
+      "code" === a && c.blockMenu.reDraw();
+    }, state:function(a, b) {
+      return [b, a];
+    }, log:function(a, b, c) {
+      return ["changeViewMode", ["oldType", b], ["newType", a]];
+    }, undo:"playgroundChangeViewMode", dom:["playground", "&0"]};
+  }();
+})(Entry.Command);
 Entry.init = function(b, a) {
   Entry.assert("object" === typeof a, "Init option is not object");
   this.events_ = {};
@@ -25569,10 +25582,10 @@ Entry.Playground.prototype.generateTabView = function(b) {
   this.tabViewElements = {};
   b = Entry.createElement("li", "entryCodeTab");
   b.innerHTML = Lang.Workspace.tab_code;
-  b.addClass("entryTabListItemWorkspace");
-  b.addClass("entryTabSelected");
+  b.addClass("entryTabListItemWorkspace entryTabSelected");
   d.appendChild(b);
   b.bindOnClick(function(b) {
+    console.log(2222222);
     a.changeViewMode("code");
     a.blockMenu.reDraw();
   });
@@ -25585,7 +25598,7 @@ Entry.Playground.prototype.generateTabView = function(b) {
   Entry.soundEditable && (b = Entry.createElement("li", "entrySoundTab"), b.innerHTML = Lang.Workspace.tab_sound, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(a) {
     Entry.playground.changeViewMode("sound");
   }), this.tabViewElements.sound = b);
-  Entry.hasVariableManager && (b = Entry.createElement("li", "entryVariableTab"), b.innerHTML = Lang.Workspace.tab_attribute, b.addClass("entryTabListItemWorkspace"), b.addClass("entryVariableTabWorkspace"), d.appendChild(b), b.bindOnClick(function(a) {
+  Entry.hasVariableManager && (b = Entry.createElement("li", "entryVariableTab"), b.innerHTML = Lang.Workspace.tab_attribute, b.addClass("entryTabListItemWorkspace entryVariableTabWorkspace"), d.appendChild(b), b.bindOnClick(function(a) {
     Entry.playground.toggleOnVariableView();
     Entry.playground.changeViewMode("variable");
   }), this.tabViewElements.variable = b);
@@ -26100,7 +26113,7 @@ Entry.Playground.prototype.changeViewMode = function(b) {
     }
     "code" == b && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove");
     Entry.engine.isState("run") && this.curtainView_.removeClass("entryRemove");
-    this.viewMode_ = b;
+    this.selectedViewMode = this.viewMode_ = b;
     this.toggleOffVariableView();
   }
 };
@@ -26395,6 +26408,8 @@ Entry.Playground.prototype.hideBlockMenu = function() {
 };
 Entry.Playground.prototype.showBlockMenu = function() {
   this.mainWorkspace.getBlockMenu().show();
+};
+Entry.Playground.prototype.getDom = function() {
 };
 Entry.Xml = {};
 Entry.Xml.isTypeOf = function(b, a) {

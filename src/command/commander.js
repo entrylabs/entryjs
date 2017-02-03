@@ -129,6 +129,5 @@ Entry.Commander = function(injectType) {
             reporter.add(data);
         });
     };
-
 })(Entry.Commander.prototype)
 

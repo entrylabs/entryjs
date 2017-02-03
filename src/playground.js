@@ -206,8 +206,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
     this.tabViewElements = {};
     var codeTab = Entry.createElement('li', 'entryCodeTab');
     codeTab.innerHTML = Lang.Workspace.tab_code;
-    codeTab.addClass('entryTabListItemWorkspace');
-    codeTab.addClass('entryTabSelected');
+    codeTab.addClass('entryTabListItemWorkspace entryTabSelected');
     tabList.appendChild(codeTab);
     codeTab.bindOnClick(function(e) {
         that.changeViewMode('code');
@@ -250,8 +249,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
     if (Entry.hasVariableManager) {
         var variableTab = Entry.createElement('li', 'entryVariableTab');
         variableTab.innerHTML = Lang.Workspace.tab_attribute;
-        variableTab.addClass('entryTabListItemWorkspace');
-        variableTab.addClass('entryVariableTabWorkspace');
+        variableTab.addClass('entryTabListItemWorkspace entryVariableTabWorkspace');
         tabList.appendChild(variableTab);
         variableTab.bindOnClick(function(e) {
             Entry.playground.toggleOnVariableView();
@@ -259,7 +257,6 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         });
         this.tabViewElements.variable = variableTab;
     }
-
 };
 /**
  * Inject Blockly and generate code view
@@ -612,7 +609,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     textEditArea.style.display = 'none';
     textEditArea.onkeyup = textChangeApply;
     textEditArea.onchange = textChangeApply;
-    
+
     textEditArea.onblur = function() {
         Entry.dispatchEvent('textEdited');
     };
@@ -1174,6 +1171,7 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
     if (Entry.engine.isState('run'))
         this.curtainView_.removeClass('entryRemove');
     this.viewMode_ = viewType;
+    this.selectedViewMode = viewType;
     this.toggleOffVariableView();
 };
 
@@ -1734,4 +1732,8 @@ Entry.Playground.prototype.hideBlockMenu = function() {
 
 Entry.Playground.prototype.showBlockMenu = function() {
     this.mainWorkspace.getBlockMenu().show();
+};
+
+
+Entry.Playground.prototype.getDom = function() {
 };
