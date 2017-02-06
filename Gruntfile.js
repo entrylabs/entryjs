@@ -19,6 +19,8 @@ module.exports = function(grunt) {
                 files: ['src/**'],
                 tasks: [
                     'closureCompiler:targetName',
+                    'karma',
+                    'jshint',
                     'less'
                 ]
             }
@@ -94,7 +96,7 @@ module.exports = function(grunt) {
 
     // Load NPM tasks
     grunt.loadNpmTasks('grunt-closure-tools');
-    //grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
@@ -106,6 +108,7 @@ module.exports = function(grunt) {
     grunt.registerTask('default', [
         'closureCompiler',
         'karma',
+        'jshint',
         'less'
     ]);
 
