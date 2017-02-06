@@ -18,10 +18,13 @@ Entry.Restrictor = function() {
             else
                 return q;
         });
+
         new Entry.Tooltip([{
             content: "asdf",
             target: domQuery,
-            direction: "down"
-        }], {restrict: true, dimmed: true});
+            direction: "down",
+        }], {
+            restrict: true, dimmed: true
+        });
     };
 })(Entry.Restrictor.prototype);

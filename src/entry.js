@@ -382,9 +382,10 @@ Entry.getMainWS = function() {
 };
 
 Entry.getDom = function(query) {
-    if (!query) {
-        return this.view_;
-    } else if (query.length > 1) {
+    if (!query) return this.view_;
+
+    query = JSON.parse(JSON.stringify(query));
+    if (query.length > 1) {
         var key = query.shift();
         return this[key].getDom(query);
     } else {

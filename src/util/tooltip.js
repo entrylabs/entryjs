@@ -47,8 +47,9 @@ Entry.Tooltip = function(data, opts) {
                 ],
                 parent: $(document.body)
             });
-            var bound = this.data[0].target.get(0).getBoundingClientRect();
-
+            var targetDom = this.data[0].target.get(0);
+            var bound = targetDom.getBoundingClientRect();
+            this.opts.dimmed && Entry.Curtain.show(targetDom);
         } else {
             this._bg = Entry.Dom("div", {
                 classes: [
@@ -134,7 +135,7 @@ Entry.Tooltip = function(data, opts) {
     p.renderIndicator = function(left, top) {
         var indicator = Entry.Dom("div", {
             classes: [
-                 "entryTooltipIndicator"
+                "entryTooltipIndicator"
             ],
             parent: $(document.body)
         });
@@ -146,14 +147,17 @@ Entry.Tooltip = function(data, opts) {
     p.dispose = function() {
         if (this._bg)
             this._bg.remove();
-        if (this.opts.restrict)
+        if (this.opts.restrict) {
             Entry.Utils.allowAction();
+            this.opts.dimmed && Entry.Curtain.hide();
+        }
         if (this.opts.callBack)
             this.opts.callBack.call();
         while (this._tooltips.length)
             this._tooltips.pop().remove();
         while (this._indicators.length)
             this._indicators.pop().remove();
+            Entry.Curtain.hide();
         Entry.removeEventListener('windowResized', this._resizeEventFunc);
     };
 
