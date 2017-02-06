@@ -12,6 +12,8 @@ Entry.Restrictor = function() {
     p.restrict = function(commandType, data) {
         var command = Entry.Command[commandType];
         var domQuery = command.dom;
+        if (!domQuery)
+            return;
         domQuery = domQuery.map(function(q) {
             if (q[0] === "&")
                 return data[Number(q.substr(1))];
@@ -23,8 +25,6 @@ Entry.Restrictor = function() {
             content: "asdf",
             target: domQuery,
             direction: "down",
-        }], {
-            restrict: true, dimmed: true
-        });
+        }], { restrict: true, dimmed: true });
     };
 })(Entry.Restrictor.prototype);

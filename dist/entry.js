@@ -18314,10 +18314,10 @@ Entry.Restrictor = function() {
 };
 (function(b) {
   b.restrict = function(a, b) {
-    var c = Entry.Command[a].dom, c = c.map(function(a) {
+    var c = Entry.Command[a].dom;
+    c && (c = c.map(function(a) {
       return "&" === a[0] ? b[Number(a.substr(1))] : a;
-    });
-    new Entry.Tooltip([{content:"asdf", target:c, direction:"down"}], {restrict:!0, dimmed:!0});
+    }), new Entry.Tooltip([{content:"asdf", target:c, direction:"down"}], {restrict:!0, dimmed:!0}));
   };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(b, a) {
