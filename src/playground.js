@@ -1741,10 +1741,12 @@ Entry.Playground.prototype.showBlockMenu = function() {
 };
 
 Entry.Playground.prototype.getDom = function(query) {
-    if (query.length === 1) {
+    if (query.length >= 1) {
         switch(query.shift()) {
             case "code":
                 return this._codeTab;
+            case "blockMenu":
+                return this.blockMenu.getDom(query);
         }
     } else {
     }

@@ -25,7 +25,8 @@ goog.require("Entry.STATIC");
                 ['code', this.editor.board.code.stringify()]
             ];
         },
-        undo: "destroyThread"
+        undo: "destroyThread",
+        dom: ['playground', 'blockMenu', '&0']
     };
 
     c.destroyThread = {

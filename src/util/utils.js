@@ -1476,20 +1476,21 @@ Entry.Utils.restrictAction = function(exceptions, callback) {
     var handler = function(e)
     {
         e = e || window.event;
-		console.log(e);
         var target = e.target || e.srcElement;
-        if (exceptions.indexOf(target) < 0)
-        {
-            if (!e.preventDefault)
-            {//IE quirks
-                e.returnValue = false;
-                e.cancelBubble = true;
-            }
-            e.preventDefault();
-            e.stopPropagation();
-        } else {
-            callback();
-        }
+		for (var i = 0; i < exceptions.length; i++) {
+			var exception = exceptions[i];
+			if (exception === target || $.contains(exception, target)) {
+        		callback();
+				return;
+			}
+		}
+		if (!e.preventDefault)
+		{//IE quirks
+			e.returnValue = false;
+			e.cancelBubble = true;
+		}
+		e.preventDefault();
+		e.stopPropagation();
     };
     this._restrictHandler = handler;
     var entryDom = Entry.getDom();

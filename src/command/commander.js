@@ -28,6 +28,8 @@ Entry.Commander = function(injectType) {
     this._tempStorage = null;
 
     Entry.Command.editor = this.editor;
+
+    this.doEvent = new Entry.Event(this);
 };
 
 
@@ -45,6 +47,7 @@ Entry.Commander = function(injectType) {
             );
         }
         var value = Entry.Command[commandType].do.apply(this, argumentArray);
+        this.doEvent.notify(commandType, argumentArray);
 
         //intentionally delay reporting
         setTimeout(function() {

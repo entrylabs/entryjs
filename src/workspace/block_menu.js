@@ -999,4 +999,21 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         return !!this._categoryData;
     };
 
+    p.getDom = function(query) {
+        var type = query[0][0].type;
+        return this.getSvgDom(type);
+    };
+
+    p.getSvgDom = function(type) {
+        var code = this.code;
+
+        var threads = code.getThreads();
+
+        for (var i=0; i<threads.length; i++) {
+            var block = threads[i].getFirstBlock();
+            if (block.type === type)
+                return block.view.svgGroup;
+        }
+    };
+
 })(Entry.BlockMenu.prototype);
