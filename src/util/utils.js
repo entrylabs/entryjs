@@ -1475,8 +1475,8 @@ Entry.Utils.restrictAction = function(exceptions, callback) {
     exceptions = exceptions.map(function(e) {return e[0]});
     var handler = function(e)
     {
-		console.log('')
         e = e || window.event;
+		console.log(e);
         var target = e.target || e.srcElement;
         if (exceptions.indexOf(target) < 0)
         {
@@ -1487,37 +1487,36 @@ Entry.Utils.restrictAction = function(exceptions, callback) {
             }
             e.preventDefault();
             e.stopPropagation();
-		} else {
-			callback();
-		}
+        } else {
+            callback();
+        }
     };
     this._restrictHandler = handler;
-	var entryDom = Entry.getDom();
-	if (entryDom.addEventListener) {
+    var entryDom = Entry.getDom();
+    if (entryDom.addEventListener) {
         entryDom.addEventListener('click', handler, true);
         entryDom.addEventListener('mousedown', handler, true);
         entryDom.addEventListener('touchstart', handler, true);
-	}
-	else {
+    }
+    else {
         entryDom.attachEvent('onclick', handler);
         entryDom.attachEvent('onmousedown', handler);
         entryDom.attachEvent('ontouchstart', handler);
-	}
+    }
 };
 
 Entry.Utils.allowAction = function() {
-	var entryDom = Entry.getDom();
+    var entryDom = Entry.getDom();
     if (this._restrictHandler) {
-		if (entryDom.addEventListener) {
-			console.log('asdf')
+        if (entryDom.addEventListener) {
             entryDom.removeEventListener("click", this._restrictHandler, true);
             entryDom.removeEventListener("mousedown", this._restrictHandler, true);
             entryDom.removeEventListener("touchstart", this._restrictHandler, true);
-		} else {
+        } else {
             entryDom.detachEvent('onclick', this._restrictHandler);
             entryDom.detachEvent('onmousedown', this._restrictHandler);
             entryDom.detachEvent('ontouchstart', this._restrictHandler);
-		}
+        }
         delete this._restrictHandler;
     }
 };

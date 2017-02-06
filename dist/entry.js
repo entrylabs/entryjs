@@ -16842,8 +16842,8 @@ Entry.Utils.restrictAction = function(b, a) {
     return a[0];
   });
   var d = function(c) {
-    console.log("");
     c = c || window.event;
+    console.log(c);
     0 > b.indexOf(c.target || c.srcElement) ? (c.preventDefault || (c.returnValue = !1, c.cancelBubble = !0), c.preventDefault(), c.stopPropagation()) : a();
   };
   this._restrictHandler = d;
@@ -16852,7 +16852,7 @@ Entry.Utils.restrictAction = function(b, a) {
 };
 Entry.Utils.allowAction = function() {
   var b = Entry.getDom();
-  this._restrictHandler && (b.addEventListener ? (console.log("asdf"), b.removeEventListener("click", this._restrictHandler, !0), b.removeEventListener("mousedown", this._restrictHandler, !0), b.removeEventListener("touchstart", this._restrictHandler, !0)) : (b.detachEvent("onclick", this._restrictHandler), b.detachEvent("onmousedown", this._restrictHandler), b.detachEvent("ontouchstart", this._restrictHandler)), delete this._restrictHandler);
+  this._restrictHandler && (b.addEventListener ? (b.removeEventListener("click", this._restrictHandler, !0), b.removeEventListener("mousedown", this._restrictHandler, !0), b.removeEventListener("touchstart", this._restrictHandler, !0)) : (b.detachEvent("onclick", this._restrictHandler), b.detachEvent("onmousedown", this._restrictHandler), b.detachEvent("ontouchstart", this._restrictHandler)), delete this._restrictHandler);
 };
 Entry.Model = function(b, a) {
   var d = Entry.Model;
