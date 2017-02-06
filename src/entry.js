@@ -204,6 +204,13 @@ Entry.loadInterfaceState = function() {
  * @param {!json} interfaceModel
  */
 Entry.resizeElement = function(interfaceModel) {
+    var mainWorkspace = Entry.getMainWS();
+    if (!mainWorkspace)
+        return;
+
+    if (!interfaceModel)
+        interfaceModel = this.interfaceState;
+
     if (Entry.type == 'workspace') {
         var interfaceState = this.interfaceState;
         if (!interfaceModel.canvasWidth && interfaceState.canvasWidth)
@@ -286,9 +293,12 @@ Entry.resizeElement = function(interfaceModel) {
             menuWidth = 400;
         interfaceModel.menuWidth = menuWidth;
 
-        $('.blockMenuContainer').css({width: (menuWidth - 64) + 'px'});
-        $('.blockMenuContainer>svg').css({width: (menuWidth - 64) + 'px'});
-        Entry.playground.mainWorkspace.blockMenu.setWidth();
+        var blockMenu = mainWorkspace.blockMenu;
+        var adjust = blockMenu.hasCategory() ? -64 : 0;
+
+        $('.blockMenuContainer').css({width: (menuWidth + adjust) + 'px'});
+        $('.blockMenuContainer>svg').css({width: (menuWidth + adjust) + 'px'});
+        blockMenu.setWidth();
         $('.entryWorkspaceBoard').css({left: (menuWidth) + 'px'});
         Entry.playground.resizeHandle_.style.left = (menuWidth) + 'px';
         Entry.playground.variableViewWrapper_.style.width = menuWidth + 'px';

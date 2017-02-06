@@ -104,14 +104,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var parent = this.view;
         var that = this;
 
-        if (categoryData) {
-            this._categoryCol = Entry.Dom('ul', {
-                class: 'entryCategoryListWorkspace',
-                parent: parent
-            });
-
-            this._generateCategoryView(categoryData);
-        }
+        categoryData && this._generateCategoryView(categoryData);
 
         this.blockMenuContainer = Entry.Dom('div', {
             'class':'blockMenuContainer',
@@ -131,11 +124,12 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)) return;
             Entry.playground.focusBlockMenu = true;
             var bBox = that.svgGroup.getBBox();
-            var expandWidth = bBox.width + bBox.x + 64;
+            var adjust = that.hasCategory() ? 64 : 0;
+            var expandWidth = bBox.width + bBox.x + adjust;
             if (expandWidth > Entry.interfaceState.menuWidth) {
-                this.widthBackup = Entry.interfaceState.menuWidth - 64;
+                this.widthBackup = Entry.interfaceState.menuWidth - adjust;
                 $(this).stop().animate({
-                    width: expandWidth - 62
+                    width: expandWidth - adjust
                 }, 200);
             }
         });
@@ -161,10 +155,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.changeCode = function(code) {
+        if (code instanceof Array)
+            code = new Entry.Code(code);
+
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
         if (this.codeListener)
             this.code.changeEvent.detach(this.codeListener);
+
         var that = this;
         this.set({code:code});
         this.codeListener = this.code.changeEvent.attach(
@@ -422,6 +420,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.setMenu = function() {
+        if (!this.hasCategory())
+            return;
         this._categoryData.forEach(function(data) {
             var category = data.category;
             var threads = data.blocks;
@@ -496,6 +496,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (oldView)
             oldView.removeClass(className);
 
+        doNotFold = doNotFold || !this.hasCategory();
+
         if (elem == oldView && !doNotFold) {
             boardView.addClass('folding');
             this._selectedCategoryView = null;
@@ -503,7 +505,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             Entry.playground.hideTabs();
             animate = true;
             this.visible = false;
-        } else if (!oldView) {
+        } else if (!oldView && this.hasCategory()) {
             if (!this.visible) {
                 animate = true;
                 boardView.addClass('foldOut');
@@ -530,7 +532,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         }
 
         doNotAlign !== true && this._dAlign();
-
     };
 
     p._generateCategoryCodes = function(elems) {
@@ -558,6 +559,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p._generateCategoryCode = function(key) {
+        if (!this._categoryData)
+            return;
         var code = this.code;
         var codes = [];
         var datum = this._categoryData.filter(function(obj) {
@@ -647,7 +650,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.checkCategory = function(blockInfo) {
-        if (!this._categoryData || !blockInfo) return;
+        if (!this.hasCategory() || !blockInfo) return;
 
         if (!this.lastSelector || this._selectDynamic)
             return true;
@@ -776,6 +779,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p._clearCategory = function() {
+        if (this._generateCodesTimer) {
+            clearTimeout(this._generateCodesTimer);
+            this._generateCodesTimer = null;
+        }
         this._selectedCategoryView = null;
         this._categories = [];
 
@@ -786,27 +793,39 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
         if (this.code && this.code.constructor == Entry.Code)
             this.code.clear();
+        this._categoryCol && this._categoryCol.remove();
+        this._categoryData = null;
     };
 
+    p.clearCategory = p._clearCategory;
+
     p.setCategoryData = function(data) {
-        if (this._generateCodesTimer) {
-            clearTimeout(this._generateCodesTimer);
-            this._generateCodesTimer = null;
-        }
         this._clearCategory();
         this._categoryData = data;
         this._generateCategoryView(data);
         this._generateCategoryCodes();
         this.setMenu();
+        Entry.resizeElement();
+    };
+
+    p.setNoCategoryData = function(data) {
+        this._clearCategory();
+        Entry.resizeElement();
+        this.changeCode(data);
     };
 
     p._generateCategoryView = function(data) {
         if (!data) return;
 
-        for (var i=0; i<data.length; i++) {
-            var name = data[i].category;
-            this._generateCategoryElement(name);
-        }
+        this._categoryCol && this._categoryCol.remove && this._categoryCol.remove();
+
+        this._categoryCol = Entry.Dom('ul', {
+            class: 'entryCategoryListWorkspace'
+        });
+        this.view.prepend(this._categoryCol);
+
+        for (var i=0; i<data.length; i++)
+            this._generateCategoryElement(data[i].category);
     };
 
     p._generateCategoryElement = function(name) {
@@ -842,6 +861,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p._generateHwCode = function(shouldHide) {
+        if (!this._categoryData)
+            return;
         var code = this.code;
         var threads = code.getThreadsByCategory(HW);
 
@@ -904,7 +925,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._isNotVisible = function(blockInfo) {
         return this.checkCategory(blockInfo) ||
-            this.checkBanClass(blockInfo)
+            this.checkBanClass(blockInfo);
     };
 
     p._getSortedBlocks = function() {
@@ -972,6 +993,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.deleteRendered = function(name) {
         delete this._renderedCategories[name];
+    };
+
+    p.hasCategory = function() {
+        return !!this._categoryData;
     };
 
 })(Entry.BlockMenu.prototype);

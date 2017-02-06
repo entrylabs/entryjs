@@ -104,6 +104,8 @@ Entry.PropertyPanel = function() {
     }
 
     p.resize = function(canvasSize) {
+        var selected = this.selected;
+        if (!selected) return;
         var canvasHeight = canvasSize*9/16;
         this._view.css({
             width: canvasSize + 'px',
@@ -116,7 +118,6 @@ Entry.PropertyPanel = function() {
 
         Entry.dispatchEvent('windowResized');
 
-        var selected = this.selected;
         var obj = this.modes[selected].obj;
         if (selected == 'hw') {
             if (this.modes.hw.obj.listPorts)
