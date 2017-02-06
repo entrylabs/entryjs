@@ -41,15 +41,25 @@ Entry.Tooltip = function(data, opts) {
     };
 
     p.renderBG = function() {
-        this._bg = Entry.Dom("div", {
-            classes: [
-                "entryDimmed",
-                "entryTooltipBG"
-            ],
-            parent: $(document.body)
-        });
+        if (this.opts.restrict) {
+            this._bg = Entry.Dom("div", {
+                classes: [
+                ],
+                parent: $(document.body)
+            });
+            var bound = this.data[0].target.get(0).getBoundingClientRect();
 
-        this._bg.bindOnClick(this.dispose.bind(this))
+        } else {
+            this._bg = Entry.Dom("div", {
+                classes: [
+                    "entryDimmed",
+                    "entryTooltipBG"
+                ],
+                parent: $(document.body)
+            });
+
+            this._bg.bindOnClick(this.dispose.bind(this))
+        }
     };
 
     p.renderTooltips = function() {
