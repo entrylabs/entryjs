@@ -32665,7 +32665,6 @@ Entry.block = {
             this.listener = code.watchEvent.attach(this, function(blocks) {
                 while (blocks.length && index < statements.length) {
                     var block = blocks.shift();
-                    console.log(block);
                     if (accuracy === 0 && statements[index].type === block.type) {
                         index++;
                     } else if (accuracy === 1 && statements[index].isSameParamWith(block)) {
