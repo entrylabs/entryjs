@@ -15864,7 +15864,7 @@ Entry.Commander = function(b) {
     }, state:function() {
     }, log:function() {
       return [];
-    }, undo:"toggleStop", dom:["container", "&0"]};
+    }, undo:"", dom:["container", "&0"]};
   }();
 })(Entry.Command);
 (function(b) {
@@ -19270,7 +19270,7 @@ Entry.VariableContainer.prototype.removeList = function(b) {
 };
 Entry.VariableContainer.prototype.createVariableView = function(b) {
   var a = this, d = Entry.createElement("li"), c = Entry.createElement("div");
-  c.addClass("entryVariableListElementWrapperWorkspace");
+  c.addClass("entryVariableListElementWrapperWorkspace variable");
   d.appendChild(c);
   var e = "entryVariableListElementWorkspace", e = b.object_ ? e + " entryVariableLocalElementWorkspace" : b.isCloud_ ? e + " entryVariableCloudElementWorkspace" : e + " entryVariableGlobalElementWorkspace";
   d.addClass(e);
@@ -19433,7 +19433,7 @@ Entry.VariableContainer.prototype.addList = function(b) {
 };
 Entry.VariableContainer.prototype.createListView = function(b) {
   var a = this, d = Entry.createElement("li"), c = Entry.createElement("div");
-  c.addClass("entryVariableListElementWrapperWorkspace");
+  c.addClass("entryVariableListElementWrapperWorkspace list");
   d.appendChild(c);
   d.addClass("entryVariableListElementWorkspace");
   b.object_ ? d.addClass("entryListLocalElementWorkspace") : b.isCloud_ ? d.addClass("entryListCloudElementWorkspace") : d.addClass("entryListGlobalElementWorkspace");

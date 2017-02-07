@@ -1013,7 +1013,7 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
     var that = this;
     var view = Entry.createElement('li');
     var wrapper = Entry.createElement('div');
-    wrapper.addClass('entryVariableListElementWrapperWorkspace');
+    wrapper.addClass('entryVariableListElementWrapperWorkspace variable');
     view.appendChild(wrapper);
     var className = 'entryVariableListElementWorkspace';
     if (!variable.object_) {
@@ -1309,7 +1309,7 @@ Entry.VariableContainer.prototype.createListView = function(list) {
     var that = this;
     var view = Entry.createElement('li');
     var wrapper = Entry.createElement('div');
-    wrapper.addClass('entryVariableListElementWrapperWorkspace');
+    wrapper.addClass('entryVariableListElementWrapperWorkspace list');
     view.appendChild(wrapper);
     view.addClass('entryVariableListElementWorkspace');
     if (!list.object_) {
