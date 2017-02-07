@@ -5245,6 +5245,9 @@ Entry.Container.prototype.selectNeighborObject = function(b) {
     (b = a[d]) && Entry.container.selectObject(b.id);
   }
 };
+Entry.Container.prototype.getObjectIndex = function(b) {
+  return this.objects_.indexOf(this.getObject(b));
+};
 Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
@@ -15854,6 +15857,15 @@ Entry.Commander = function(b) {
   }, log:function(a, d, c, e, f) {
     return [b.setFieldValue.type, ["pointer", c], ["newValue", f], ["code", this.editor.board.code.stringify()]];
   }, undo:"setFieldValue"};
+})(Entry.Command);
+(function(b) {
+  b.containerSelectObject = function() {
+    return {type:"containerSelectObject", do:function(a) {
+    }, state:function() {
+    }, log:function() {
+      return [];
+    }, undo:"toggleStop", dom:["container", "&0"]};
+  }();
 })(Entry.Command);
 (function(b) {
   b.toggleRun = function() {

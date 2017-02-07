@@ -116,8 +116,9 @@ Entry.EntryObject.prototype.generateView = function() {
         longPressTimer = null;
 
         $(objectView).bind('mousedown touchstart', function(e){
-            if (Entry.container.getObject(this.id))
+            if (Entry.container.getObject(this.id)) {
                 Entry.container.selectObject(this.id);
+            }
             var doc = $(document);
             var eventType = e.type;
             var handled = false;

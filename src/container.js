@@ -1054,3 +1054,7 @@ Entry.Container.prototype.selectNeighborObject = function(option) {
 
     Entry.container.selectObject(object.id);
 };
+
+Entry.Container.prototype.getObjectIndex = function(objectId) {
+    return this.objects_.indexOf(this.getObject(objectId));
+};
