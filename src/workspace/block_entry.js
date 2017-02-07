@@ -32659,12 +32659,17 @@ Entry.block = {
             }
             var code = Entry.container.getObject(this.block.params[0]).script,
                 accuracy = this.block.params[1],
-                statements = this.block.statements[0].getBlocks();
+                statements = this.block.statements[0].getBlocks(),
+                lastBlock = null;
             this.isDone = false;
             var index = 0;
             this.listener = code.watchEvent.attach(this, function(blocks) {
+                blocks = blocks.concat();
+                var block;
                 while (blocks.length && index < statements.length) {
-                    var block = blocks.shift();
+                    block = blocks.shift();
+                    if (block === lastBlock)
+                        continue;
                     if (accuracy === 0 && statements[index].type === block.type) {
                         index++;
                     } else if (accuracy === 1 && statements[index].isSameParamWith(block)) {
@@ -32673,6 +32678,7 @@ Entry.block = {
                         index = 0;
                     }
                 }
+                lastBlock = block;
                 if (index === statements.length)
                     this.isDone = true;
             })
