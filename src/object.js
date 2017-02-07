@@ -97,6 +97,7 @@ Entry.EntryObject = function(model) {
             })(this.pictures[i]);
         }
     }
+    this._isContextMenuEnabled = true;
 };
 
 /**
@@ -116,8 +117,9 @@ Entry.EntryObject.prototype.generateView = function() {
         longPressTimer = null;
 
         $(objectView).bind('mousedown touchstart', function(e){
-            if (Entry.container.getObject(this.id))
+            if (Entry.container.getObject(this.id)) {
                 Entry.container.selectObject(this.id);
+            }
             var doc = $(document);
             var eventType = e.type;
             var handled = false;
@@ -1567,6 +1569,9 @@ Entry.EntryObject.prototype.clearExecutor = function() {
 };
 
 Entry.EntryObject.prototype._rightClick = function(e) {
+    if (!this._isContextMenuEnabled)
+        return;
+
     var object = this;
     var options = [
         {
@@ -1616,4 +1621,12 @@ Entry.EntryObject.prototype._rightClick = function(e) {
         options, 'workspace-contextmenu',
         { x: e.clientX, y: e.clientY }
     );
+};
+
+Entry.EntryObject.prototype.enableContextMenu = function() {
+    this._isContextMenuEnabled = true;
+};
+
+Entry.EntryObject.prototype.disableContextMenu = function() {
+    this._isContextMenuEnabled = false;
 };
