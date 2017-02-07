@@ -6705,6 +6705,7 @@ Entry.EntryObject = function(b) {
       })(this.pictures[d]);
     }
   }
+  this._isContextMenuEnabled = !0;
 };
 Entry.EntryObject.prototype.generateView = function() {
   if ("workspace" == Entry.type) {
@@ -7351,22 +7352,30 @@ Entry.EntryObject.prototype.clearExecutor = function() {
   this.clonedEntities = [];
 };
 Entry.EntryObject.prototype._rightClick = function(b) {
-  var a = this, d = [{text:Lang.Workspace.context_rename, callback:function(b) {
-    b.stopPropagation();
-    a.setLock(!1);
-    a.editObjectValues(!0);
-    a.nameView_.select();
-  }}, {text:Lang.Workspace.context_duplicate, enable:!Entry.engine.isState("run"), callback:function() {
-    Entry.container.addCloneObject(a);
-  }}, {text:Lang.Workspace.context_remove, callback:function() {
-    Entry.container.removeObject(a);
-  }}, {text:Lang.Workspace.copy_file, callback:function() {
-    Entry.container.setCopiedObject(a);
-  }}, {text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
-    Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-  }}];
-  b = Entry.Utils.convertMouseEvent(b);
-  Entry.ContextMenu.show(d, "workspace-contextmenu", {x:b.clientX, y:b.clientY});
+  if (this._isContextMenuEnabled) {
+    var a = this, d = [{text:Lang.Workspace.context_rename, callback:function(b) {
+      b.stopPropagation();
+      a.setLock(!1);
+      a.editObjectValues(!0);
+      a.nameView_.select();
+    }}, {text:Lang.Workspace.context_duplicate, enable:!Entry.engine.isState("run"), callback:function() {
+      Entry.container.addCloneObject(a);
+    }}, {text:Lang.Workspace.context_remove, callback:function() {
+      Entry.container.removeObject(a);
+    }}, {text:Lang.Workspace.copy_file, callback:function() {
+      Entry.container.setCopiedObject(a);
+    }}, {text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
+      Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
+    }}];
+    b = Entry.Utils.convertMouseEvent(b);
+    Entry.ContextMenu.show(d, "workspace-contextmenu", {x:b.clientX, y:b.clientY});
+  }
+};
+Entry.EntryObject.prototype.enableContextMenu = function() {
+  this._isContextMenuEnabled = !0;
+};
+Entry.EntryObject.prototype.disableContextMenu = function() {
+  this._isContextMenuEnabled = !1;
 };
 Entry.Painter = function() {
   this.toolbox = {selected:"cursor"};

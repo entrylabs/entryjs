@@ -97,6 +97,7 @@ Entry.EntryObject = function(model) {
             })(this.pictures[i]);
         }
     }
+    this._isContextMenuEnabled = true;
 };
 
 /**
@@ -1568,6 +1569,9 @@ Entry.EntryObject.prototype.clearExecutor = function() {
 };
 
 Entry.EntryObject.prototype._rightClick = function(e) {
+    if (!this._isContextMenuEnabled)
+        return;
+
     var object = this;
     var options = [
         {
@@ -1617,4 +1621,12 @@ Entry.EntryObject.prototype._rightClick = function(e) {
         options, 'workspace-contextmenu',
         { x: e.clientX, y: e.clientY }
     );
+};
+
+Entry.EntryObject.prototype.enableContextMenu = function() {
+    this._isContextMenuEnabled = true;
+};
+
+Entry.EntryObject.prototype.disableContextMenu = function() {
+    this._isContextMenuEnabled = false;
 };
