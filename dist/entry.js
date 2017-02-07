@@ -5492,372 +5492,385 @@ Entry.Engine = function() {
   }.bind(this), 100);
   Entry.message = new Entry.Event(window);
 };
-Entry.Engine.prototype.generateView = function(b, a) {
-  if (a && "workspace" != a) {
-    "minimize" == a ? (this.view_ = b, this.view_.addClass("entryEngine"), this.view_.addClass("entryEngineMinimize"), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonMinimize"), this.maximizeButton.addClass("entryMaximizeButtonMinimize"), this.view_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
-      Entry.engine.toggleFullscreen();
-    }), this.coordinateButton = Entry.createElement("button"), this.coordinateButton.addClass("entryEngineButtonMinimize"), this.coordinateButton.addClass("entryCoordinateButtonMinimize"), this.view_.appendChild(this.coordinateButton), this.coordinateButton.bindOnClick(function(a) {
-      this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
-      Entry.stage.toggleCoordinator();
-    }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonMinimize"), this.stopButton.addClass("entryStopButtonMinimize"), this.stopButton.addClass("entryRemove"), this.stopButton.innerHTML = Lang.Workspace.stop, this.view_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(a) {
-      this.blur();
-      Entry.engine.toggleStop();
-    }), this.pauseButton = Entry.createElement("button"), this.pauseButton.innerHTML = Lang.Workspace.pause, this.pauseButton.addClass("entryEngineButtonMinimize"), this.pauseButton.addClass("entryPauseButtonMinimize"), this.pauseButton.addClass("entryRemove"), this.view_.appendChild(this.pauseButton), this.pauseButton.bindOnClick(function(a) {
-      this.blur();
-      Entry.engine.togglePause();
-    }), this.mouseView = Entry.createElement("div"), this.mouseView.addClass("entryMouseViewMinimize"), this.mouseView.addClass("entryRemove"), this.view_.appendChild(this.mouseView), Entry.addEventListener("loadComplete", function() {
-      this.runButton = Entry.Dom("div", {class:"entryRunButtonBigMinimize", parent:$("#entryCanvasWrapper")});
+(function(b) {
+  b.generateView = function(a, b) {
+    if (b && "workspace" != b) {
+      "minimize" == b ? (this.view_ = a, this.view_.addClass("entryEngine"), this.view_.addClass("entryEngineMinimize"), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonMinimize"), this.maximizeButton.addClass("entryMaximizeButtonMinimize"), this.view_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
+        Entry.engine.toggleFullscreen();
+      }), this.coordinateButton = Entry.createElement("button"), this.coordinateButton.addClass("entryEngineButtonMinimize"), this.coordinateButton.addClass("entryCoordinateButtonMinimize"), this.view_.appendChild(this.coordinateButton), this.coordinateButton.bindOnClick(function(a) {
+        this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
+        Entry.stage.toggleCoordinator();
+      }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonMinimize"), this.stopButton.addClass("entryStopButtonMinimize"), this.stopButton.addClass("entryRemove"), this.stopButton.innerHTML = Lang.Workspace.stop, this.view_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(a) {
+        this.blur();
+        Entry.engine.toggleStop();
+      }), this.pauseButton = Entry.createElement("button"), this.pauseButton.innerHTML = Lang.Workspace.pause, this.pauseButton.addClass("entryEngineButtonMinimize"), this.pauseButton.addClass("entryPauseButtonMinimize"), this.pauseButton.addClass("entryRemove"), this.view_.appendChild(this.pauseButton), this.pauseButton.bindOnClick(function(a) {
+        this.blur();
+        Entry.engine.togglePause();
+      }), this.mouseView = Entry.createElement("div"), this.mouseView.addClass("entryMouseViewMinimize"), this.mouseView.addClass("entryRemove"), this.view_.appendChild(this.mouseView), Entry.addEventListener("loadComplete", function() {
+        this.runButton = Entry.Dom("div", {class:"entryRunButtonBigMinimize", parent:$("#entryCanvasWrapper")});
+        this.runButton.bindOnClick(function(a) {
+          Entry.engine.toggleRun();
+        });
+      }.bind(this))) : "phone" == b && (this.view_ = a, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
+        Entry.engine.footerView_.addClass("entryRemove");
+        Entry.engine.headerView_.addClass("entryRemove");
+        Entry.launchFullScreen(Entry.engine.view_);
+      }), document.addEventListener("fullscreenchange", function(a) {
+        Entry.engine.exitFullScreen();
+      }), document.addEventListener("webkitfullscreenchange", function(a) {
+        Entry.engine.exitFullScreen();
+      }), document.addEventListener("mozfullscreenchange", function(a) {
+        Entry.engine.exitFullScreen();
+      }), this.footerView_ = Entry.createElement("div", "entryEngineFooter"), this.footerView_.addClass("entryEngineFooterPhone"), this.view_.appendChild(this.footerView_), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonPhone", "entryRunButtonPhone"), Entry.objectAddable && this.runButton.addClass("small"), this.runButton.innerHTML = Lang.Workspace.run, this.footerView_.appendChild(this.runButton), this.runButton.bindOnClick(function(a) {
+        Entry.engine.toggleRun();
+      }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonPhone", "entryStopButtonPhone", "entryRemove"), Entry.objectAddable && this.stopButton.addClass("small"), this.stopButton.innerHTML = Lang.Workspace.stop, this.footerView_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(a) {
+        Entry.engine.toggleStop();
+      }));
+    } else {
+      this.view_ = a;
+      this.view_.addClass("entryEngine_w");
+      this.view_.addClass("entryEngineWorkspace_w");
+      var c = Entry.createElement("button");
+      this.speedButton = c;
+      this.speedButton.addClass("entrySpeedButtonWorkspace", "entryEngineTopWorkspace", "entryEngineButtonWorkspace_w");
+      this.view_.appendChild(this.speedButton);
+      this.speedButton.bindOnClick(function(a) {
+        Entry.engine.toggleSpeedPanel();
+        c.blur();
+      });
+      this.maximizeButton = Entry.createElement("button");
+      this.maximizeButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryMaximizeButtonWorkspace_w");
+      this.view_.appendChild(this.maximizeButton);
+      this.maximizeButton.bindOnClick(function(a) {
+        Entry.engine.toggleFullscreen();
+        this.blur();
+      });
+      var e = Entry.createElement("button");
+      this.coordinateButton = e;
+      this.coordinateButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryCoordinateButtonWorkspace_w");
+      this.view_.appendChild(this.coordinateButton);
+      this.coordinateButton.bindOnClick(function(a) {
+        this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
+        e.blur();
+        this.blur();
+        Entry.stage.toggleCoordinator();
+      });
+      this.addButton = Entry.createElement("button");
+      this.addButton.addClass("entryEngineButtonWorkspace_w");
+      this.addButton.addClass("entryAddButtonWorkspace_w");
+      this.addButton.innerHTML = Lang.Workspace.add_object;
+      this.addButton.bindOnClick(function(a) {
+        Entry.dispatchEvent("openSpriteManager");
+        this.blur();
+      });
+      this.view_.appendChild(this.addButton);
+      this.runButton = Entry.createElement("button");
+      this.runButton.addClass("entryEngineButtonWorkspace_w");
+      this.runButton.addClass("entryRunButtonWorkspace_w");
+      this.runButton.innerHTML = Lang.Workspace.run;
+      this.view_.appendChild(this.runButton);
       this.runButton.bindOnClick(function(a) {
+        Entry.do("toggleRun", "runButton");
+      });
+      this.runButton2 = Entry.createElement("button");
+      this.runButton2.addClass("entryEngineButtonWorkspace_w");
+      this.runButton2.addClass("entryRunButtonWorkspace_w2");
+      this.view_.appendChild(this.runButton2);
+      this.runButton2.bindOnClick(function(a) {
         Entry.engine.toggleRun();
       });
-    }.bind(this))) : "phone" == a && (this.view_ = b, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
-      Entry.engine.footerView_.addClass("entryRemove");
-      Entry.engine.headerView_.addClass("entryRemove");
-      Entry.launchFullScreen(Entry.engine.view_);
-    }), document.addEventListener("fullscreenchange", function(a) {
-      Entry.engine.exitFullScreen();
-    }), document.addEventListener("webkitfullscreenchange", function(a) {
-      Entry.engine.exitFullScreen();
-    }), document.addEventListener("mozfullscreenchange", function(a) {
-      Entry.engine.exitFullScreen();
-    }), this.footerView_ = Entry.createElement("div", "entryEngineFooter"), this.footerView_.addClass("entryEngineFooterPhone"), this.view_.appendChild(this.footerView_), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonPhone", "entryRunButtonPhone"), Entry.objectAddable && this.runButton.addClass("small"), this.runButton.innerHTML = Lang.Workspace.run, this.footerView_.appendChild(this.runButton), this.runButton.bindOnClick(function(a) {
-      Entry.engine.toggleRun();
-    }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonPhone", "entryStopButtonPhone", "entryRemove"), Entry.objectAddable && this.stopButton.addClass("small"), this.stopButton.innerHTML = Lang.Workspace.stop, this.footerView_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(a) {
-      Entry.engine.toggleStop();
-    }));
-  } else {
-    this.view_ = b;
-    this.view_.addClass("entryEngine_w");
-    this.view_.addClass("entryEngineWorkspace_w");
-    var d = Entry.createElement("button");
-    this.speedButton = d;
-    this.speedButton.addClass("entrySpeedButtonWorkspace", "entryEngineTopWorkspace", "entryEngineButtonWorkspace_w");
-    this.view_.appendChild(this.speedButton);
-    this.speedButton.bindOnClick(function(a) {
-      Entry.engine.toggleSpeedPanel();
-      d.blur();
+      this.stopButton = Entry.createElement("button");
+      this.stopButton.addClass("entryEngineButtonWorkspace_w");
+      this.stopButton.addClass("entryStopButtonWorkspace_w");
+      this.stopButton.addClass("entryRemove");
+      this.stopButton.innerHTML = Lang.Workspace.stop;
+      this.view_.appendChild(this.stopButton);
+      this.stopButton.bindOnClick(function(a) {
+        Entry.do("toggleStop", "stopButton");
+      });
+      this.stopButton2 = Entry.createElement("button");
+      this.stopButton2.addClass("entryEngineButtonWorkspace_w");
+      this.stopButton2.addClass("entryStopButtonWorkspace_w2");
+      this.stopButton2.addClass("entryRemove");
+      this.stopButton2.innerHTML = Lang.Workspace.stop;
+      this.view_.appendChild(this.stopButton2);
+      this.stopButton2.bindOnClick(function(a) {
+        this.blur();
+        Entry.engine.toggleStop();
+      });
+      this.pauseButton = Entry.createElement("button");
+      this.pauseButton.addClass("entryEngineButtonWorkspace_w");
+      this.pauseButton.addClass("entryPauseButtonWorkspace_w");
+      this.pauseButton.addClass("entryRemove");
+      this.view_.appendChild(this.pauseButton);
+      this.pauseButton.bindOnClick(function(a) {
+        this.blur();
+        Entry.engine.togglePause();
+      });
+      this.mouseView = Entry.createElement("div");
+      this.mouseView.addClass("entryMouseViewWorkspace_w");
+      this.mouseView.addClass("entryRemove");
+      this.view_.appendChild(this.mouseView);
+    }
+  };
+  b.toggleSpeedPanel = function() {
+    if (this.speedPanelOn) {
+      this.speedPanelOn = !1, $(Entry.stage.canvas.canvas).animate({top:"24px"}), this.coordinateButton.removeClass("entryRemove"), this.maximizeButton.removeClass("entryRemove"), this.mouseView.removeClass("entryRemoveElement"), $(this.speedLabel_).remove(), delete this.speedLabel_, $(this.speedProgress_).fadeOut(null, function(a) {
+        $(this).remove();
+        delete this.speedProgress_;
+      }), $(this.speedHandle_).remove(), delete this.speedHandle_;
+    } else {
+      this.speedPanelOn = !0;
+      $(Entry.stage.canvas.canvas).animate({top:"41px"});
+      this.coordinateButton.addClass("entryRemove");
+      this.maximizeButton.addClass("entryRemove");
+      this.mouseView.addClass("entryRemoveElement");
+      this.speedLabel_ = Entry.createElement("div", "entrySpeedLabelWorkspace");
+      this.speedLabel_.innerHTML = Lang.Workspace.speed;
+      this.view_.insertBefore(this.speedLabel_, this.maximizeButton);
+      this.speedProgress_ = Entry.createElement("table", "entrySpeedProgressWorkspace");
+      for (var a = Entry.createElement("tr"), b = this.speeds, c = 0;5 > c;c++) {
+        (function(c) {
+          var e = Entry.createElement("td", "progressCell" + c);
+          e.bindOnClick(function() {
+            Entry.engine.setSpeedMeter(b[c]);
+          });
+          a.appendChild(e);
+        })(c);
+      }
+      this.view_.insertBefore(this.speedProgress_, this.maximizeButton);
+      this.speedProgress_.appendChild(a);
+      this.speedHandle_ = Entry.createElement("div", "entrySpeedHandleWorkspace");
+      var e = (Entry.interfaceState.canvasWidth - 84) / 5;
+      $(this.speedHandle_).bind("mousedown.speedPanel touchstart.speedPanel", function(a) {
+        function b(a) {
+          a.stopPropagation();
+          a = Entry.Utils.convertMouseEvent(a);
+          a = Math.floor((a.clientX - 80) / (5 * e) * 5);
+          0 > a || 4 < a || Entry.engine.setSpeedMeter(Entry.engine.speeds[a]);
+        }
+        function d(a) {
+          $(document).unbind(".speedPanel");
+        }
+        a.stopPropagation && a.stopPropagation();
+        a.preventDefault && a.preventDefault();
+        if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
+          Entry.Utils.convertMouseEvent(a), a = $(document), a.bind("mousemove.speedPanel touchmove.speedPanel", b), a.bind("mouseup.speedPanel touchend.speedPanel", d);
+        }
+      });
+      this.view_.insertBefore(this.speedHandle_, this.maximizeButton);
+      this.setSpeedMeter(Entry.FPS);
+    }
+  };
+  b.setSpeedMeter = function(a) {
+    var b = this.speeds.indexOf(a);
+    0 > b || (b = Math.min(4, b), b = Math.max(0, b), this.speedPanelOn && (this.speedHandle_.style.left = (Entry.interfaceState.canvasWidth - 80) / 10 * (2 * b + 1) + 80 - 9 + "px"), Entry.FPS != a && (clearInterval(this.ticker), this.ticker = setInterval(this.update, Math.floor(1E3 / a)), Entry.FPS = a));
+  };
+  b.start = function(a) {
+    createjs.Ticker.setFPS(Entry.FPS);
+    this.ticker || (this.ticker = setInterval(this.update, Math.floor(1E3 / Entry.FPS)));
+  };
+  b.stop = function() {
+    createjs.Ticker.reset();
+    clearInterval(this.ticker);
+    this.ticker = null;
+  };
+  b.update = function() {
+    Entry.engine.isState("run") && (Entry.engine.computeObjects(), Entry.hw.update());
+  };
+  b.computeObjects = function() {
+    Entry.container.mapObjectOnScene(this.computeFunction);
+  };
+  b.computeFunction = function(a) {
+    a.script.tick();
+  };
+  Entry.Engine.computeThread = function(a, b) {
+    Entry.engine.isContinue = !0;
+    for (var c = !1;b && Entry.engine.isContinue && !c;) {
+      Entry.engine.isContinue = !b.isRepeat;
+      var e = b.run(), c = e && e === b;
+      b = e;
+    }
+    return b;
+  };
+  b.isState = function(a) {
+    return -1 < this.state.indexOf(a);
+  };
+  b.run = function() {
+    this.isState("run") ? this.toggleStop() : (this.isState("stop") || this.isState("pause")) && this.toggleRun();
+  };
+  b.toggleRun = function() {
+    var a = Entry.variableContainer, b = Entry.container;
+    if ("pause" === this.state) {
+      this.togglePause();
+    } else {
+      Entry.Utils.blur();
+      if (Entry.playground && Entry.playground.mainWorkspace) {
+        var c = Entry.playground.mainWorkspace;
+        c.mode == Entry.Workspace.MODE_VIMBOARD && c._syncTextCode();
+      }
+      Entry.addActivity("run");
+      "stop" == this.state && (b.mapEntity(function(a) {
+        a.takeSnapshot();
+      }), a.mapVariable(function(a) {
+        a.takeSnapshot();
+      }), a.mapList(function(a) {
+        a.takeSnapshot();
+      }), this.projectTimer.takeSnapshot(), b.inputValue.takeSnapshot(), b.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
+      this.state = "run";
+      "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
+      this.runButton && (this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("run"), this.runButton.addClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.pauseButton && this.pauseButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove"), this.stopButton2 && this.stopButton2.removeClass("entryRemove"));
+      this.isUpdating || (this.update(), this.isUpdating = !0);
+      Entry.stage.selectObject();
+      Entry.dispatchEvent("run");
+    }
+  };
+  b.toggleStop = function() {
+    var a = Entry.container, b = Entry.variableContainer;
+    Entry.Utils.blur();
+    Entry.addActivity("stop");
+    a.mapEntity(function(a) {
+      a.loadSnapshot();
+      a.object.filters = [];
+      a.resetFilter();
+      a.dialog && a.dialog.remove();
+      a.brush && a.removeBrush();
     });
-    this.maximizeButton = Entry.createElement("button");
-    this.maximizeButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryMaximizeButtonWorkspace_w");
-    this.view_.appendChild(this.maximizeButton);
-    this.maximizeButton.bindOnClick(function(a) {
-      Entry.engine.toggleFullscreen();
-      this.blur();
+    b.mapVariable(function(a) {
+      a.loadSnapshot();
     });
-    var c = Entry.createElement("button");
-    this.coordinateButton = c;
-    this.coordinateButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryCoordinateButtonWorkspace_w");
-    this.view_.appendChild(this.coordinateButton);
-    this.coordinateButton.bindOnClick(function(a) {
-      this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
-      c.blur();
-      this.blur();
-      Entry.stage.toggleCoordinator();
+    b.mapList(function(a) {
+      a.loadSnapshot();
     });
-    this.addButton = Entry.createElement("button");
-    this.addButton.addClass("entryEngineButtonWorkspace_w");
-    this.addButton.addClass("entryAddButtonWorkspace_w");
-    this.addButton.innerHTML = Lang.Workspace.add_object;
-    this.addButton.bindOnClick(function(a) {
-      Entry.dispatchEvent("openSpriteManager");
-      this.blur();
-    });
-    this.view_.appendChild(this.addButton);
-    this.runButton = Entry.createElement("button");
-    this.runButton.addClass("entryEngineButtonWorkspace_w");
-    this.runButton.addClass("entryRunButtonWorkspace_w");
-    this.runButton.innerHTML = Lang.Workspace.run;
-    this.view_.appendChild(this.runButton);
-    this.runButton.bindOnClick(function(a) {
-      Entry.engine.toggleRun();
-      this.blur();
-    });
-    this.runButton2 = Entry.createElement("button");
-    this.runButton2.addClass("entryEngineButtonWorkspace_w");
-    this.runButton2.addClass("entryRunButtonWorkspace_w2");
-    this.view_.appendChild(this.runButton2);
-    this.runButton2.bindOnClick(function(a) {
-      this.blur();
-      Entry.engine.toggleRun();
-    });
-    this.stopButton = Entry.createElement("button");
-    this.stopButton.addClass("entryEngineButtonWorkspace_w");
-    this.stopButton.addClass("entryStopButtonWorkspace_w");
-    this.stopButton.addClass("entryRemove");
-    this.stopButton.innerHTML = Lang.Workspace.stop;
-    this.view_.appendChild(this.stopButton);
-    this.stopButton.bindOnClick(function(a) {
-      this.blur();
-      Entry.engine.toggleStop();
-    });
-    this.stopButton2 = Entry.createElement("button");
-    this.stopButton2.addClass("entryEngineButtonWorkspace_w");
-    this.stopButton2.addClass("entryStopButtonWorkspace_w2");
-    this.stopButton2.addClass("entryRemove");
-    this.stopButton2.innerHTML = Lang.Workspace.stop;
-    this.view_.appendChild(this.stopButton2);
-    this.stopButton2.bindOnClick(function(a) {
-      this.blur();
-      Entry.engine.toggleStop();
-    });
-    this.pauseButton = Entry.createElement("button");
-    this.pauseButton.addClass("entryEngineButtonWorkspace_w");
-    this.pauseButton.addClass("entryPauseButtonWorkspace_w");
-    this.pauseButton.addClass("entryRemove");
-    this.view_.appendChild(this.pauseButton);
-    this.pauseButton.bindOnClick(function(a) {
-      this.blur();
-      Entry.engine.togglePause();
-    });
-    this.mouseView = Entry.createElement("div");
-    this.mouseView.addClass("entryMouseViewWorkspace_w");
+    this.stopProjectTimer();
+    a.clearRunningState();
+    a.loadSequenceSnapshot();
+    this.projectTimer.loadSnapshot();
+    Entry.container.inputValue.loadSnapshot();
+    Entry.scene.loadStartSceneSnapshot();
+    Entry.Func.clearThreads();
+    createjs.Sound.setVolume(1);
+    createjs.Sound.stop();
+    this.view_.removeClass("entryEngineBlueWorkspace");
+    this.runButton && (this.runButton.removeClass("entryRemove"), this.stopButton.addClass("entryRemove"), this.pauseButton && this.pauseButton.addClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove"), this.stopButton2 && this.stopButton2.addClass("entryRemove"));
+    this.state = "stop";
+    Entry.dispatchEvent("stop");
+    Entry.stage.hideInputField();
+    (function(a) {
+      a && a.getMode() === Entry.Workspace.MODE_VIMBOARD && a.codeToText();
+    })(Entry.getMainWS());
+  };
+  b.togglePause = function() {
+    var a = Entry.engine.projectTimer;
+    "pause" == this.state ? (a.pausedTime += (new Date).getTime() - a.pauseStart, a.isPaused ? a.pauseStart = (new Date).getTime() : delete a.pauseStart, this.state = "run", this.runButton && (this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove"))) : (this.state = "pause", a.isPaused && (a.pausedTime += (new Date).getTime() - a.pauseStart), a.pauseStart = (new Date).getTime(), this.runButton && (this.pauseButton.innerHTML = 
+    Lang.Workspace.restart, this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove")));
+  };
+  b.fireEvent = function(a) {
+    "run" === this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, a);
+  };
+  b.raiseEvent = function(a, b) {
+    a.parent.script.raiseEvent(b, a);
+  };
+  b.fireEventOnEntity = function(a, b) {
+    "run" == this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEventOnEntity, [b, a]);
+  };
+  b.raiseEventOnEntity = function(a, b) {
+    a === b[0] && a.parent.script.raiseEvent(b[1], a);
+  };
+  b.captureKeyEvent = function(a, b) {
+    var c = a.keyCode, e = Entry.type;
+    if (!Entry.Utils.isInInput(a) || b) {
+      a.ctrlKey && "workspace" == e ? 83 == c ? (a.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == c ? (a.preventDefault(), Entry.engine.run()) : 90 == c && (a.preventDefault(), Entry.dispatchEvent(a.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", c]), Entry.engine.isState("stop") && "workspace" === e && 37 <= c && 40 >= c && Entry.stage.moveSprite(a);
+    }
+  };
+  b.raiseKeyEvent = function(a, b) {
+    return a.parent.script.raiseEvent(b[0], a, String(b[1]));
+  };
+  b.updateMouseView = function() {
+    var a = Entry.stage.mouseCoordinate;
+    this.mouseView.textContent = "X : " + a.x + ", Y : " + a.y;
+    this.mouseView.removeClass("entryRemove");
+  };
+  b.hideMouseView = function() {
     this.mouseView.addClass("entryRemove");
-    this.view_.appendChild(this.mouseView);
-  }
-};
-Entry.Engine.prototype.toggleSpeedPanel = function() {
-  if (this.speedPanelOn) {
-    this.speedPanelOn = !1, $(Entry.stage.canvas.canvas).animate({top:"24px"}), this.coordinateButton.removeClass("entryRemove"), this.maximizeButton.removeClass("entryRemove"), this.mouseView.removeClass("entryRemoveElement"), $(this.speedLabel_).remove(), delete this.speedLabel_, $(this.speedProgress_).fadeOut(null, function(a) {
-      $(this).remove();
-      delete this.speedProgress_;
-    }), $(this.speedHandle_).remove(), delete this.speedHandle_;
-  } else {
-    this.speedPanelOn = !0;
-    $(Entry.stage.canvas.canvas).animate({top:"41px"});
-    this.coordinateButton.addClass("entryRemove");
-    this.maximizeButton.addClass("entryRemove");
-    this.mouseView.addClass("entryRemoveElement");
-    this.speedLabel_ = Entry.createElement("div", "entrySpeedLabelWorkspace");
-    this.speedLabel_.innerHTML = Lang.Workspace.speed;
-    this.view_.insertBefore(this.speedLabel_, this.maximizeButton);
-    this.speedProgress_ = Entry.createElement("table", "entrySpeedProgressWorkspace");
-    for (var b = Entry.createElement("tr"), a = this.speeds, d = 0;5 > d;d++) {
-      (function(d) {
-        var c = Entry.createElement("td", "progressCell" + d);
-        c.bindOnClick(function() {
-          Entry.engine.setSpeedMeter(a[d]);
-        });
-        b.appendChild(c);
-      })(d);
+  };
+  b.toggleFullscreen = function() {
+    if (this.popup) {
+      this.popup.remove(), this.popup = null;
+    } else {
+      this.popup = new Entry.Popup;
+      if ("workspace" != Entry.type) {
+        var a = $(document);
+        $(this.popup.body_).css("top", a.scrollTop());
+        $("body").css("overflow", "hidden");
+        popup.window_.appendChild(Entry.stage.canvas.canvas);
+        popup.window_.appendChild(Entry.engine.runButton[0]);
+      }
+      popup.window_.appendChild(Entry.engine.view_);
     }
-    this.view_.insertBefore(this.speedProgress_, this.maximizeButton);
-    this.speedProgress_.appendChild(b);
-    this.speedHandle_ = Entry.createElement("div", "entrySpeedHandleWorkspace");
-    var c = (Entry.interfaceState.canvasWidth - 84) / 5;
-    $(this.speedHandle_).bind("mousedown.speedPanel touchstart.speedPanel", function(a) {
-      function b(a) {
-        a.stopPropagation();
-        a = Entry.Utils.convertMouseEvent(a);
-        a = Math.floor((a.clientX - 80) / (5 * c) * 5);
-        0 > a || 4 < a || Entry.engine.setSpeedMeter(Entry.engine.speeds[a]);
-      }
-      function d(a) {
-        $(document).unbind(".speedPanel");
-      }
-      a.stopPropagation && a.stopPropagation();
-      a.preventDefault && a.preventDefault();
-      if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-        Entry.Utils.convertMouseEvent(a), a = $(document), a.bind("mousemove.speedPanel touchmove.speedPanel", b), a.bind("mouseup.speedPanel touchend.speedPanel", d);
-      }
-    });
-    this.view_.insertBefore(this.speedHandle_, this.maximizeButton);
-    this.setSpeedMeter(Entry.FPS);
-  }
-};
-Entry.Engine.prototype.setSpeedMeter = function(b) {
-  var a = this.speeds.indexOf(b);
-  0 > a || (a = Math.min(4, a), a = Math.max(0, a), this.speedPanelOn && (this.speedHandle_.style.left = (Entry.interfaceState.canvasWidth - 80) / 10 * (2 * a + 1) + 80 - 9 + "px"), Entry.FPS != b && (clearInterval(this.ticker), this.ticker = setInterval(this.update, Math.floor(1E3 / b)), Entry.FPS = b));
-};
-Entry.Engine.prototype.start = function(b) {
-  createjs.Ticker.setFPS(Entry.FPS);
-  this.ticker || (this.ticker = setInterval(this.update, Math.floor(1E3 / Entry.FPS)));
-};
-Entry.Engine.prototype.stop = function() {
-  createjs.Ticker.reset();
-  clearInterval(this.ticker);
-  this.ticker = null;
-};
-Entry.Engine.prototype.update = function() {
-  Entry.engine.isState("run") && (Entry.engine.computeObjects(), Entry.hw.update());
-};
-Entry.Engine.prototype.computeObjects = function() {
-  Entry.container.mapObjectOnScene(this.computeFunction);
-};
-Entry.Engine.prototype.computeFunction = function(b) {
-  b.script.tick();
-};
-Entry.Engine.computeThread = function(b, a) {
-  Entry.engine.isContinue = !0;
-  for (var d = !1;a && Entry.engine.isContinue && !d;) {
-    Entry.engine.isContinue = !a.isRepeat;
-    var c = a.run(), d = c && c === a;
-    a = c;
-  }
-  return a;
-};
-Entry.Engine.prototype.isState = function(b) {
-  return -1 < this.state.indexOf(b);
-};
-Entry.Engine.prototype.run = function() {
-  this.isState("run") ? this.toggleStop() : (this.isState("stop") || this.isState("pause")) && this.toggleRun();
-};
-Entry.Engine.prototype.toggleRun = function() {
-  if ("pause" === this.state) {
-    this.togglePause();
-  } else {
-    var b = document.activeElement;
-    b && b.blur && b.blur();
-    Entry.playground && Entry.playground.mainWorkspace && (b = Entry.playground.mainWorkspace, b.mode == Entry.Workspace.MODE_VIMBOARD && b._syncTextCode());
-    Entry.addActivity("run");
-    "stop" == this.state && (Entry.container.mapEntity(function(a) {
-      a.takeSnapshot();
-    }), Entry.variableContainer.mapVariable(function(a) {
-      a.takeSnapshot();
-    }), Entry.variableContainer.mapList(function(a) {
-      a.takeSnapshot();
-    }), this.projectTimer.takeSnapshot(), Entry.container.inputValue.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
-    this.state = "run";
-    "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
-    this.runButton && (this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("run"), this.runButton.addClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.pauseButton && this.pauseButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove"), this.stopButton2 && this.stopButton2.removeClass("entryRemove"));
-    this.isUpdating || (Entry.engine.update(), Entry.engine.isUpdating = !0);
-    Entry.stage.selectObject();
-    Entry.dispatchEvent("run");
-  }
-};
-Entry.Engine.prototype.toggleStop = function() {
-  Entry.addActivity("stop");
-  var b = Entry.container, a = Entry.variableContainer;
-  b.mapEntity(function(a) {
-    a.loadSnapshot();
-    a.object.filters = [];
-    a.resetFilter();
-    a.dialog && a.dialog.remove();
-    a.brush && a.removeBrush();
-  });
-  a.mapVariable(function(a) {
-    a.loadSnapshot();
-  });
-  a.mapList(function(a) {
-    a.loadSnapshot();
-  });
-  this.stopProjectTimer();
-  b.clearRunningState();
-  b.loadSequenceSnapshot();
-  this.projectTimer.loadSnapshot();
-  Entry.container.inputValue.loadSnapshot();
-  Entry.scene.loadStartSceneSnapshot();
-  Entry.Func.clearThreads();
-  createjs.Sound.setVolume(1);
-  createjs.Sound.stop();
-  this.view_.removeClass("entryEngineBlueWorkspace");
-  this.runButton && (this.runButton.removeClass("entryRemove"), this.stopButton.addClass("entryRemove"), this.pauseButton && this.pauseButton.addClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove"), this.stopButton2 && this.stopButton2.addClass("entryRemove"));
-  this.state = "stop";
-  Entry.dispatchEvent("stop");
-  Entry.stage.hideInputField();
-  (function(a) {
-    a && a.getMode() === Entry.Workspace.MODE_VIMBOARD && a.codeToText();
-  })(Entry.getMainWS());
-};
-Entry.Engine.prototype.togglePause = function() {
-  var b = Entry.engine.projectTimer;
-  "pause" == this.state ? (b.pausedTime += (new Date).getTime() - b.pauseStart, b.isPaused ? b.pauseStart = (new Date).getTime() : delete b.pauseStart, this.state = "run", this.runButton && (this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove"))) : (this.state = "pause", b.isPaused && (b.pausedTime += (new Date).getTime() - b.pauseStart), b.pauseStart = (new Date).getTime(), this.runButton && (this.pauseButton.innerHTML = 
-  Lang.Workspace.restart, this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove")));
-};
-Entry.Engine.prototype.fireEvent = function(b) {
-  "run" === this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, b);
-};
-Entry.Engine.prototype.raiseEvent = function(b, a) {
-  b.parent.script.raiseEvent(a, b);
-};
-Entry.Engine.prototype.fireEventOnEntity = function(b, a) {
-  "run" == this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEventOnEntity, [a, b]);
-};
-Entry.Engine.prototype.raiseEventOnEntity = function(b, a) {
-  b === a[0] && b.parent.script.raiseEvent(a[1], b);
-};
-Entry.Engine.prototype.captureKeyEvent = function(b, a) {
-  var d = b.keyCode, c = Entry.type;
-  if (!Entry.Utils.isInInput(b) || a) {
-    b.ctrlKey && "workspace" == c ? 83 == d ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == d ? (b.preventDefault(), Entry.engine.run()) : 90 == d && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", d]), Entry.engine.isState("stop") && "workspace" === c && 37 <= d && 40 >= d && Entry.stage.moveSprite(b);
-  }
-};
-Entry.Engine.prototype.raiseKeyEvent = function(b, a) {
-  return b.parent.script.raiseEvent(a[0], b, String(a[1]));
-};
-Entry.Engine.prototype.updateMouseView = function() {
-  var b = Entry.stage.mouseCoordinate;
-  this.mouseView.textContent = "X : " + b.x + ", Y : " + b.y;
-  this.mouseView.removeClass("entryRemove");
-};
-Entry.Engine.prototype.hideMouseView = function() {
-  this.mouseView.addClass("entryRemove");
-};
-Entry.Engine.prototype.toggleFullscreen = function() {
-  if (this.popup) {
-    this.popup.remove(), this.popup = null;
-  } else {
-    this.popup = new Entry.Popup;
-    if ("workspace" != Entry.type) {
-      var b = $(document);
-      $(this.popup.body_).css("top", b.scrollTop());
-      $("body").css("overflow", "hidden");
-      popup.window_.appendChild(Entry.stage.canvas.canvas);
-      popup.window_.appendChild(Entry.engine.runButton[0]);
-    }
-    popup.window_.appendChild(Entry.engine.view_);
-  }
-  Entry.windowResized.notify();
-};
-Entry.Engine.prototype.exitFullScreen = function() {
-  document.webkitIsFullScreen || document.mozIsFullScreen || document.isFullScreen || (Entry.engine.footerView_.removeClass("entryRemove"), Entry.engine.headerView_.removeClass("entryRemove"));
-  Entry.windowResized.notify();
-};
-Entry.Engine.prototype.showProjectTimer = function() {
-  Entry.engine.projectTimer && this.projectTimer.setVisible(!0);
-};
-Entry.Engine.prototype.hideProjectTimer = function(b, a) {
-  var d = this.projectTimer;
-  if (d && d.isVisible() && !this.isState("run")) {
-    for (var c = Entry.container.getAllObjects(), e = ["get_project_timer_value", "reset_project_timer", "set_visible_project_timer", "choose_project_timer_action"], f = 0, g = c.length;f < g;f++) {
-      for (var h = c[f].script, k = 0;k < e.length;k++) {
-        var l = h.getBlockList(!1, e[k]);
-        if (a) {
-          var n = l.indexOf(b);
-          -1 < n && l.splice(n, 1);
-        }
-        if (0 < l.length) {
-          return;
+    Entry.windowResized.notify();
+  };
+  b.exitFullScreen = function() {
+    document.webkitIsFullScreen || document.mozIsFullScreen || document.isFullScreen || (Entry.engine.footerView_.removeClass("entryRemove"), Entry.engine.headerView_.removeClass("entryRemove"));
+    Entry.windowResized.notify();
+  };
+  b.showProjectTimer = function() {
+    Entry.engine.projectTimer && this.projectTimer.setVisible(!0);
+  };
+  b.hideProjectTimer = function(a, b) {
+    var c = this.projectTimer;
+    if (c && c.isVisible() && !this.isState("run")) {
+      for (var e = Entry.container.getAllObjects(), f = ["get_project_timer_value", "reset_project_timer", "set_visible_project_timer", "choose_project_timer_action"], g = 0, h = e.length;g < h;g++) {
+        for (var k = e[g].script, l = 0;l < f.length;l++) {
+          var n = k.getBlockList(!1, f[l]);
+          if (b) {
+            var m = n.indexOf(a);
+            -1 < m && n.splice(m, 1);
+          }
+          if (0 < n.length) {
+            return;
+          }
         }
       }
+      c.setVisible(!1);
     }
-    d.setVisible(!1);
-  }
-};
-Entry.Engine.prototype.clearTimer = function() {
-  clearInterval(this.ticker);
-  clearInterval(this.projectTimer.tick);
-};
-Entry.Engine.prototype.startProjectTimer = function() {
-  var b = this.projectTimer;
-  b && (b.start = (new Date).getTime(), b.isInit = !0, b.pausedTime = 0, b.tick = setInterval(function(a) {
-    Entry.engine.updateProjectTimer();
-  }, 1E3 / 60));
-};
-Entry.Engine.prototype.stopProjectTimer = function() {
-  var b = this.projectTimer;
-  b && (this.updateProjectTimer(0), b.isPaused = !1, b.isInit = !1, b.pausedTime = 0, clearInterval(b.tick));
-};
-Entry.Engine.prototype.updateProjectTimer = function(b) {
-  var a = Entry.engine, d = a.projectTimer;
-  if (d) {
-    var c = (new Date).getTime();
-    "undefined" == typeof b ? d.isPaused || a.isState("pause") || d.setValue((c - d.start - d.pausedTime) / 1E3) : (d.setValue(b), d.pausedTime = 0, d.start = c);
-  }
-};
-Entry.Engine.prototype.raiseMessage = function(b) {
-  Entry.message.notify(Entry.variableContainer.getMessage(b));
-  return Entry.container.mapEntityIncludeCloneOnScene(this.raiseKeyEvent, ["when_message_cast", b]);
-};
+  };
+  b.clearTimer = function() {
+    clearInterval(this.ticker);
+    clearInterval(this.projectTimer.tick);
+  };
+  b.startProjectTimer = function() {
+    var a = this.projectTimer;
+    a && (a.start = (new Date).getTime(), a.isInit = !0, a.pausedTime = 0, a.tick = setInterval(function(a) {
+      Entry.engine.updateProjectTimer();
+    }, 1E3 / 60));
+  };
+  b.stopProjectTimer = function() {
+    var a = this.projectTimer;
+    a && (this.updateProjectTimer(0), a.isPaused = !1, a.isInit = !1, a.pausedTime = 0, clearInterval(a.tick));
+  };
+  b.updateProjectTimer = function(a) {
+    var b = Entry.engine, c = b.projectTimer;
+    if (c) {
+      var e = (new Date).getTime();
+      "undefined" == typeof a ? c.isPaused || b.isState("pause") || c.setValue((e - c.start - c.pausedTime) / 1E3) : (c.setValue(a), c.pausedTime = 0, c.start = e);
+    }
+  };
+  b.raiseMessage = function(a) {
+    Entry.message.notify(Entry.variableContainer.getMessage(a));
+    return Entry.container.mapEntityIncludeCloneOnScene(this.raiseKeyEvent, ["when_message_cast", a]);
+  };
+  b.getDom = function(a) {
+    if (1 <= a.length) {
+      switch(a.shift()) {
+        case "runButton":
+          return this.runButton;
+        case "stopButton":
+          return this.stopButton;
+      }
+    }
+  };
+})(Entry.Engine.prototype);
 Entry.EntityObject = function(b) {
   this.parent = b;
   this.type = b.objectType;
@@ -15841,6 +15854,24 @@ Entry.Commander = function(b) {
   }, log:function(a, d, c, e, f) {
     return [b.setFieldValue.type, ["pointer", c], ["newValue", f], ["code", this.editor.board.code.stringify()]];
   }, undo:"setFieldValue"};
+})(Entry.Command);
+(function(b) {
+  b.toggleRun = function() {
+    return {type:"toggleRun", do:function(a) {
+      Entry.engine.toggleRun();
+    }, state:function() {
+    }, log:function() {
+      return [];
+    }, undo:"toggleStop", dom:["engine", "&0"]};
+  }();
+  b.toggleStop = function() {
+    return {type:"toggleStop", do:function(a) {
+      Entry.engine.toggleStop();
+    }, state:function() {
+    }, log:function() {
+      return [];
+    }, undo:"toggleStart", dom:["engine", "&0"]};
+  }();
 })(Entry.Command);
 (function(b) {
   b.selectObject = {type:Entry.STATIC.COMMAND_TYPES.selectObject, do:function(a) {
