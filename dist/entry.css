@@ -6311,6 +6311,27 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryCurtainElem {
   position: fixed;
+  background-color: black;
+  opacity: 0.5;
+  z-index: 1001;
+}
+.entryCurtainElem.top {
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1001;
+}
+.entryCurtainElem.right {
+  right: 0;
+  bottom: 0;
+}
+.entryCurtainElem.bottom {
+  left: 0;
+  bottom: 0;
+}
+.entryCurtainElem.left {
+  left: 0;
 }
 #entryConsole {
   height: 100%;

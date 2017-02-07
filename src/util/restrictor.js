@@ -12,16 +12,19 @@ Entry.Restrictor = function() {
     p.restrict = function(commandType, data) {
         var command = Entry.Command[commandType];
         var domQuery = command.dom;
+        if (!domQuery)
+            return;
         domQuery = domQuery.map(function(q) {
             if (q[0] === "&")
                 return data[Number(q.substr(1))];
             else
                 return q;
         });
+
         new Entry.Tooltip([{
             content: "asdf",
             target: domQuery,
-            direction: "down"
-        }], {restrict: true, dimmed: true});
+            direction: "down",
+        }], { restrict: true, dimmed: true });
     };
 })(Entry.Restrictor.prototype);

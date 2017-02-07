@@ -145,6 +145,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   if (!a) {
     return this.view_;
   }
+  a = JSON.parse(JSON.stringify(a));
   if (1 < a.length) {
     return this[a.shift()].getDom(a);
   }
@@ -6257,7 +6258,7 @@ Entry.Container.prototype.getDropdownList = function(a, b) {
       if (!b) {
         break;
       }
-      b = b.pictures;
+      b = b.pictures || [];
       for (a = 0;a < b.length;a++) {
         d = b[a], c.push([d.name, d.id]);
       }
@@ -6294,7 +6295,7 @@ Entry.Container.prototype.getDropdownList = function(a, b) {
       if (!b) {
         break;
       }
-      b = b.sounds;
+      b = b.sounds || [];
       for (a = 0;a < b.length;a++) {
         d = b[a], c.push([d.name, d.id]);
       }
@@ -19558,28 +19559,35 @@ Entry.Curtain = {};
   this._createDom = function() {
     var a = {parent:$("body"), class:"entryCurtainElem entryRemove"};
     this._doms = {top:Entry.Dom("div", a), right:Entry.Dom("div", a), bottom:Entry.Dom("div", a), left:Entry.Dom("div", a)};
+    for (var b in this._doms) {
+      this._doms[b].addClass(b);
+    }
   };
   this.show = function(a) {
-    a = {top:400, left:130, width:64, height:56};
     !this._doms && this._createDom();
+    a instanceof Array && (a = Entry.getDom(a));
+    a = $(a);
     this._position(a);
     for (var b in this._doms) {
       this._doms[b].removeClass("entryRemove");
     }
+    this._visible = !0;
   };
   this._position = function(a) {
-    a = $(window);
-    a.width();
-    a.height();
+    var b = $(window), c = b.width(), b = b.height(), d = this._doms;
+    a.get(0) && (a = a.get(0).getBoundingClientRect(), d.top.css({height:a.top}), d.right.css({top:a.top, left:a.right}), d.bottom.css({top:a.bottom, right:c - a.right}), d.left.css({top:a.top, right:c - a.right + a.width, bottom:b - a.bottom}));
   };
   this.hide = function() {
     if (this._doms) {
       for (var a in this._doms) {
         this._doms[a].addClass("entryRemove");
       }
+      this._visible = !1;
     }
   };
-  this._createDom();
+  this.isVisible = function() {
+    return this._visible;
+  };
 }).call(Entry.Curtain);
 Entry.fuzzy = {};
 (function(a) {
@@ -19646,11 +19654,11 @@ Entry.Restrictor = function() {
 };
 (function(a) {
   a.restrict = function(b, a) {
-    b = Entry.Command[b].dom;
-    b = b.map(function(b) {
-      return "&" === b[0] ? a[Number(b.substr(1))] : b;
-    });
-    new Entry.Tooltip([{content:"asdf", target:b, direction:"down"}], {restrict:!0, dimmed:!0});
+    if (b = Entry.Command[b].dom) {
+      b = b.map(function(b) {
+        return "&" === b[0] ? a[Number(b.substr(1))] : b;
+      }), new Entry.Tooltip([{content:"asdf", target:b, direction:"down"}], {restrict:!0, dimmed:!0});
+    }
   };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(a, b) {
@@ -19676,7 +19684,14 @@ Entry.Tooltip = function(a, b) {
     this.renderTooltips();
   };
   a.renderBG = function() {
-    this.opts.restrict ? (this._bg = Entry.Dom("div", {classes:[], parent:$(document.body)}), this.data[0].target.get(0).getBoundingClientRect()) : (this._bg = Entry.Dom("div", {classes:["entryDimmed", "entryTooltipBG"], parent:$(document.body)}), this._bg.bindOnClick(this.dispose.bind(this)));
+    if (this.opts.restrict) {
+      this._bg = Entry.Dom("div", {classes:[], parent:$(document.body)});
+      var b = this.data[0].target.get(0);
+      b.getBoundingClientRect();
+      this.opts.dimmed && Entry.Curtain.show(b);
+    } else {
+      this._bg = Entry.Dom("div", {classes:["entryDimmed", "entryTooltipBG"], parent:$(document.body)}), this._bg.bindOnClick(this.dispose.bind(this));
+    }
   };
   a.renderTooltips = function() {
     this.data.map(this._renderTooltip.bind(this));
@@ -19724,13 +19739,14 @@ Entry.Tooltip = function(a, b) {
   };
   a.dispose = function() {
     this._bg && this._bg.remove();
-    this.opts.restrict && Entry.Utils.allowAction();
+    this.opts.restrict && (Entry.Utils.allowAction(), this.opts.dimmed && Entry.Curtain.hide());
     for (this.opts.callBack && this.opts.callBack.call();this._tooltips.length;) {
       this._tooltips.pop().remove();
     }
     for (;this._indicators.length;) {
       this._indicators.pop().remove();
     }
+    Entry.Curtain.hide();
     Entry.removeEventListener("windowResized", this._resizeEventFunc);
   };
   a.restrictAction = function() {
@@ -24091,6 +24107,10 @@ Entry.Field = function() {
       }
     }
   };
+  a._shouldReturnValue = function(b) {
+    var a = this._block.getCode().object;
+    return "?" === b || !a || a.constructor !== Entry.EntryObject;
+  };
 })(Entry.Field.prototype);
 Entry.FieldBlock = function(a, b, c, d, e) {
   Entry.Model(this, !1);
@@ -25375,38 +25395,38 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.box.set({x:0, y:0, width:b, height:a});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this._attachDisposeEvent(function() {
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
     this.optionGroup.on("mousedown touchstart", function(a) {
       a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(b) {
+      var c = b.keyCode || b.which;
+      a.applyValue(b);
+      -1 < [13, 27].indexOf(c) && a.destroyOption();
     });
-    var a = this.getAbsolutePosFromDocument();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:c.x, top:c.y, width:a.box.width});
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
-    $(this.svgOptionGroup).on("mousedown touchstart", function(a) {
-      a.stopPropagation();
-      b._updateByCoord(a);
+    $(this.svgOptionGroup).on("mousedown touchstart", function(b) {
+      b.stopPropagation();
+      a._updateByCoord(b);
     });
     this._dividerGroup = this.svgOptionGroup.elem("g");
-    for (a = 0;360 > a;a += 15) {
-      this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === a % 45 ? 10 : 5), y2:0, transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
+    for (c = 0;360 > c;c += 15) {
+      this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === c % 45 ? 10 : 5), y2:0, transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
     }
-    a = this.getAbsolutePosFromBoard();
-    a.x += this.box.width / 2;
-    a.y = a.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + a.x + "," + a.y + ")"});
+    c = this.getAbsolutePosFromBoard();
+    c.x += this.box.width / 2;
+    c.y = c.y + this.box.height / 2 + 49 + 1;
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + c.x + "," + c.y + ")"});
     $(this.svgOptionGroup).bind("mousemove touchmove", this._updateByCoord.bind(this));
     $(this.svgOptionGroup).bind("mouseup touchend", this.destroyOption.bind(this));
     this.updateGraph();
@@ -25643,7 +25663,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         return f[0];
       }
     }
-    return "?" === a ? a : Lang.Blocks.no_target;
+    return this._shouldReturnValue(a) ? a : Lang.Blocks.no_target;
   };
   a.getContentHeight = function(a) {
     return a = a || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);

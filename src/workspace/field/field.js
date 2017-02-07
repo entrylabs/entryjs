@@ -262,4 +262,10 @@ Entry.Field = function() {};
         }
     };
 
+    p._shouldReturnValue = function(value) {
+        var obj = this._block.getCode().object;
+        return value === '?' ||
+            !obj || obj.constructor !== Entry.EntryObject;
+    };
+
 })(Entry.Field.prototype);
