@@ -32659,13 +32659,15 @@ Entry.block = {
             }
             var code = Entry.container.getObject(this.block.params[0]).script,
                 accuracy = this.block.params[1],
-                statements = this.block.statements[0].toJSON();
+                statements = this.block.statements[0].getBlocks();
             this.isDone = false;
             var index = 0;
             this.listener = code.watchEvent.attach(this, function(blocks) {
                 while (blocks.length && index < statements.length) {
                     var block = blocks.shift();
-                    if (statements[index].type === block.type) {
+                    if (accuracy === 0 && statements[index].type === block.type) {
+                        index++;
+                    } else if (accuracy === 1 && statements[index].isSameParamWith(block)) {
                         index++;
                     } else {
                         index = 0;

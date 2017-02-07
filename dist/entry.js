@@ -25122,6 +25122,24 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   b.isInOrigin = function() {
     return 0 === this.x && 0 === this.y;
   };
+  b.isSameParamWith = function(a) {
+    if (a.type !== this.type) {
+      return !1;
+    }
+    for (var b = 0;b < this.params.length;b++) {
+      var c = this.params[b];
+      if (c instanceof Entry.Block) {
+        if (!c.isSameParamWith(a.params[b])) {
+          return !1;
+        }
+      } else {
+        if (this.params[b] !== a.params[b]) {
+          return !1;
+        }
+      }
+    }
+    return !0;
+  };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(b, a) {
   Entry.Model(this, !1);
