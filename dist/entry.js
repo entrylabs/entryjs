@@ -4978,7 +4978,7 @@ Entry.Container.prototype.getDropdownList = function(b, a) {
       if (!a) {
         break;
       }
-      c = a.pictures;
+      c = a.pictures || [];
       for (f = 0;f < c.length;f++) {
         e = c[f], d.push([e.name, e.id]);
       }
@@ -5015,7 +5015,7 @@ Entry.Container.prototype.getDropdownList = function(b, a) {
       if (!a) {
         break;
       }
-      c = a.sounds;
+      c = a.sounds || [];
       for (f = 0;f < c.length;f++) {
         e = c[f], d.push([e.name, e.id]);
       }
@@ -22555,6 +22555,10 @@ Entry.Field = function() {
       }
     }
   };
+  b._shouldReturnValue = function(a) {
+    var b = this._block.getCode().object;
+    return "?" === a || !b || b.constructor !== Entry.EntryObject;
+  };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, d) {
   this._block = a.block;
@@ -23005,7 +23009,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         return f[0];
       }
     }
-    return "?" === a ? a : Lang.Blocks.no_target;
+    return this._shouldReturnValue(a) ? a : Lang.Blocks.no_target;
   };
   b.getContentHeight = function(a) {
     return a = a || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);

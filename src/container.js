@@ -588,7 +588,7 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
         case 'pictures':
             var object = Entry.playground.object || object;
             if (!object) break;
-            var pictures = object.pictures;
+            var pictures = object.pictures || [];
             for (var i = 0; i<pictures.length; i++) {
                 var picture = pictures[i];
                 result.push([picture.name, picture.id]);
@@ -637,7 +637,7 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
         case 'sounds':
             var object = Entry.playground.object || object;
             if (!object) break;
-            var sounds = object.sounds;
+            var sounds = object.sounds || [];
             for (var i = 0; i<sounds.length; i++) {
                 var sound = sounds[i];
                 result.push([sound.name, sound.id]);
