@@ -563,4 +563,20 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return this.x === 0 && this.y === 0;
     };
 
+    p.isSameParamWith = function(target) {
+        if (target.type !== this.type)
+            return false;
+        for (var i = 0; i < this.params.length; i++) {
+            var param = this.params[i];
+            if (param instanceof Entry.Block) {
+                if (!param.isSameParamWith(target.params[i]))
+                    return false;
+            } else {
+                if (this.params[i] !== target.params[i])
+                    return false;
+            }
+        }
+        return true;
+    };
+
 })(Entry.Block.prototype);

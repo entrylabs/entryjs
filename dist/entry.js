@@ -22580,6 +22580,24 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   a.isInOrigin = function() {
     return 0 === this.x && 0 === this.y;
   };
+  a.isSameParamWith = function(b) {
+    if (b.type !== this.type) {
+      return !1;
+    }
+    for (var a = 0;a < this.params.length;a++) {
+      var d = this.params[a];
+      if (d instanceof Entry.Block) {
+        if (!d.isSameParamWith(b.params[a])) {
+          return !1;
+        }
+      } else {
+        if (this.params[a] !== b.params[a]) {
+          return !1;
+        }
+      }
+    }
+    return !0;
+  };
 })(Entry.Block.prototype);
 Entry.BlockMenu = function(a, b, c, d) {
   Entry.Model(this, !1);
