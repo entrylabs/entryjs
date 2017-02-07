@@ -16,7 +16,7 @@ Entry.HW = function() {
     this.isFirstConnect = true;
     //this.requireVerion = 'v1.6.1';
     this.requireVerion = 'v1.6.1';
-    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.4_Setup.exe";
+    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.5_Setup.exe";
     this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.4.dmg";
     this.hwPopupCreate();
     this.initSocket();
