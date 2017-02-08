@@ -15880,7 +15880,7 @@ Entry.Commander = function(b) {
     return [a, b, c, f, e];
   }, log:function(a, b, c, e, f) {
     return [["pointer", c], ["newValue", f]];
-  }, undo:"setFieldValue"};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
 })(Entry.Command);
 (function(b) {
   b[Entry.STATIC.COMMAND_TYPES.containerSelectObject] = {do:function(a) {

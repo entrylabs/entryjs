@@ -266,6 +266,8 @@ goog.require("Entry.STATIC");
                 ['newValue', newValue]
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['playground', 'board', '&0'],
         undo: "setFieldValue"
     };
 
