@@ -7,6 +7,7 @@ goog.require('Entry.Dom');
 (function() {
     this._visible = false;
     this._doms = null;
+    this._targetDom = null;
 
     this._createDom = function() {
         var option = {
@@ -32,15 +33,18 @@ goog.require('Entry.Dom');
             datum = Entry.getDom(datum);
 
         datum = $(datum);
+        this._targetDom = datum;
 
-        this._position(datum);
+        this.align();
 
         for (var key in this._doms)
             this._doms[key].removeClass('entryRemove');
         this._visible = true;
     };
 
-    this._position = function(dom) {
+    this.align = function() {
+        var dom = this._targetDom;
+        if (!dom) return;
         var $win = $(window);
         var winWidth = $win.width();
         var winHeight = $win.height();
@@ -75,6 +79,7 @@ goog.require('Entry.Dom');
         for (var key in this._doms)
             this._doms[key].addClass('entryRemove');
         this._visible = false;
+        this._targetDom = null;
     };
 
     this.isVisible = function() {

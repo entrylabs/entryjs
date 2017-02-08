@@ -15628,7 +15628,7 @@ Entry.ContextMenu = {};
 Entry.Curtain = {};
 (function() {
   this._visible = !1;
-  this._doms = null;
+  this._targetDom = this._doms = null;
   this._createDom = function() {
     var b = {parent:$("body"), class:"entryCurtainElem entryRemove"};
     this._doms = {top:Entry.Dom("div", b), right:Entry.Dom("div", b), bottom:Entry.Dom("div", b), left:Entry.Dom("div", b)};
@@ -15639,16 +15639,19 @@ Entry.Curtain = {};
   this.show = function(b) {
     !this._doms && this._createDom();
     b instanceof Array && (b = Entry.getDom(b));
-    b = $(b);
-    this._position(b);
+    this._targetDom = b = $(b);
+    this.align();
     for (var a in this._doms) {
       this._doms[a].removeClass("entryRemove");
     }
     this._visible = !0;
   };
-  this._position = function(b) {
-    var a = $(window), d = a.width(), a = a.height(), c = this._doms;
-    b.get(0) && (b = b.get(0).getBoundingClientRect(), c.top.css({height:b.top}), c.right.css({top:b.top, left:b.right}), c.bottom.css({top:b.bottom, right:d - b.right}), c.left.css({top:b.top, right:d - b.right + b.width, bottom:a - b.bottom}));
+  this.align = function() {
+    var b = this._targetDom;
+    if (b) {
+      var a = $(window), d = a.width(), a = a.height(), c = this._doms;
+      b.get(0) && (b = b.get(0).getBoundingClientRect(), c.top.css({height:b.top}), c.right.css({top:b.top, left:b.right}), c.bottom.css({top:b.bottom, right:d - b.right}), c.left.css({top:b.top, right:d - b.right + b.width, bottom:a - b.bottom}));
+    }
   };
   this.hide = function() {
     if (this._doms) {
@@ -15656,6 +15659,7 @@ Entry.Curtain = {};
         this._doms[b].addClass("entryRemove");
       }
       this._visible = !1;
+      this._targetDom = null;
     }
   };
   this.isVisible = function() {
@@ -18436,6 +18440,7 @@ Entry.Tooltip = function(b, a) {
   };
   b.alignTooltips = function() {
     this.data.map(this._alignTooltip.bind(this));
+    this.opts.dimmed && Entry.Curtain.align();
   };
   b._renderTooltip = function(a) {
     if (a.content) {
