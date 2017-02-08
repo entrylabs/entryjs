@@ -5800,7 +5800,7 @@ Entry.Commander = function(a) {
     b.length && (b[0].id = Entry.Utils.generateId());
     return [b];
   }, log:function(b) {
-    return [["thread", this.editor.board.code.getThreads().pop().stringify()]];
+    return [["thread", this.editor.board.code.getThreads().pop().toJSON()]];
   }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "&0"]};
   a[Entry.STATIC.COMMAND_TYPES.destroyThread] = {do:function(b) {
     this.editor.board.findById(b[0].id).destroy(!0, !0);
@@ -5906,7 +5906,8 @@ Entry.Commander = function(a) {
 })(Entry.Command);
 (function(a) {
   a.containerSelectObject = function() {
-    return {type:"containerSelectObject", do:function(b) {
+    return {type:"containerSelectObject", do:function(b, a) {
+      Entry.container.selectObject(a);
     }, state:function() {
     }, log:function() {
       return [];
@@ -5969,17 +5970,15 @@ Entry.Commander = function(a) {
   }, undo:"processPicture", isPass:!0};
 })(Entry.Command);
 (function(a) {
-  a.playgroundChangeViewMode = function() {
-    return {type:"changeViewMode", do:function(b, a) {
-      a = Entry.playground;
-      a.changeViewMode(b);
-      "code" === b && a.blockMenu.reDraw();
-    }, state:function(b, a) {
-      return [a, b];
-    }, log:function(b, a, d) {
-      return ["changeViewMode", ["oldType", a], ["newType", b]];
-    }, undo:"playgroundChangeViewMode", dom:["playground", "&0"]};
-  }();
+  a[Entry.STATIC.COMMAND_TYPES.playgroundChangeViewMode] = {do:function(b, a) {
+    a = Entry.playground;
+    a.changeViewMode(b);
+    "code" === b && a.blockMenu.reDraw();
+  }, state:function(b, a) {
+    return [a, b];
+  }, log:function(b, a, d) {
+    return [["oldType", a], ["newType", b]];
+  }, undo:"playgroundChangeViewMode", dom:["playground", "&0"]};
 })(Entry.Command);
 Entry.Container = function() {
   this.objects_ = [];
@@ -6554,6 +6553,11 @@ Entry.Container.prototype.selectNeighborObject = function(a) {
 };
 Entry.Container.prototype.getObjectIndex = function(a) {
   return this.objects_.indexOf(this.getObject(a));
+};
+Entry.Container.prototype.getDom = function(a) {
+  if (1 <= a.length && (a = a.shift(), /index(\d+)/.test(a))) {
+    return a = /index(\d+)/.exec(a)[1], this.objects_[a].view_;
+  }
 };
 Entry.db = {data:{}, typeMap:{}};
 (function(a) {
@@ -19735,7 +19739,7 @@ Entry.Restrictor = function() {
     if (a = Entry.Command[a].dom) {
       a = a.map(function(a) {
         return "&" === a[0] ? b[Number(a.substr(1))][1] : a;
-      }), console.log(a), new Entry.Tooltip([{content:"asdf", target:a, direction:"down"}], {restrict:!0, dimmed:!0});
+      }), new Entry.Tooltip([{content:"asdf", target:a, direction:"down"}], {restrict:!0, dimmed:!0});
     }
   };
 })(Entry.Restrictor.prototype);
@@ -25605,30 +25609,30 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     this.box.set({x:f, y:g, width:d, height:e});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this._attachDisposeEvent();
-    var a = Entry.FieldColor.getWidgetColorList();
+    var c = Entry.FieldColor.getWidgetColorList();
     this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
-    for (var d = 0;d < a.length;d++) {
-      for (var e = Entry.Dom("tr", {class:"entry-widget-color-row", parent:this.optionGroup}), f = 0;f < a[d].length;f++) {
-        var g = Entry.Dom("td", {class:"entry-widget-color-cell", parent:e}), h = a[d][f];
+    for (var d = 0;d < c.length;d++) {
+      for (var e = Entry.Dom("tr", {class:"entry-widget-color-row", parent:this.optionGroup}), f = 0;f < c[d].length;f++) {
+        var g = Entry.Dom("td", {class:"entry-widget-color-cell", parent:e}), h = c[d][f];
         g.css({"background-color":h});
         g.attr({"data-color-value":h});
-        (function(a, c) {
-          a.mousedown(function(a) {
+        (function(b, c) {
+          b.mousedown(function(a) {
             a.stopPropagation();
           });
-          a.mouseup(function(a) {
-            b.applyValue(c);
-            b.destroyOption();
-            b._selectBlockView();
+          b.mouseup(function(b) {
+            a.applyValue(c);
+            a.destroyOption();
+            a._selectBlockView();
           });
         })(g, h);
       }
     }
-    a = this.getAbsolutePosFromDocument();
-    a.y += this.box.height / 2 + 1;
-    this.optionGroup.css({left:a.x, top:a.y});
+    c = this.getAbsolutePosFromDocument();
+    c.y += this.box.height / 2 + 1;
+    this.optionGroup.css({left:c.x, top:c.y});
   };
   a.applyValue = function(a) {
     this.value != a && (this.setValue(a), this._header ? this._header.attr({fill:a}) : this.textElement && (this.textElement.textContent = this._convert(this.getValue(), this.getValue())));

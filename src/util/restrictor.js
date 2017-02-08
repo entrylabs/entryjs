@@ -22,7 +22,6 @@ Entry.Restrictor = function() {
             else
                 return q;
         });
-        console.log(domQuery);
 
         new Entry.Tooltip([{
             content: "asdf",

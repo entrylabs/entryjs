@@ -19,7 +19,7 @@ goog.require("Entry.STATIC");
         log: function(thread) {
             var lastThread = this.editor.board.code.getThreads().pop();
             return [
-                ['thread', lastThread.stringify()]
+                ['thread', lastThread.toJSON()]
             ];
         },
         undo: "destroyThread",
