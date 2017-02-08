@@ -60,6 +60,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.svgBlockGroup.board = this;
 
     this.changeEvent = new Entry.Event(this);
+    this.categoryDoneEvent = new Entry.Event(this);
 
     this.observe(this, "_handleDragBlock", ["dragBlock"]);
 
@@ -554,6 +555,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 this._generateCodesTimer = null;
                 this.view.removeClass('init');
                 this.align();
+                this.categoryDoneEvent.notify();
             }
         }
     };

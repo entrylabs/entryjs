@@ -20689,6 +20689,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   this.svgBlockGroup = this.svgGroup.elem("g");
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
+  this.categoryDoneEvent = new Entry.Event(this);
   this.observe(this, "_handleDragBlock", ["dragBlock"]);
   this.changeCode(new Entry.Code([]));
   d && this._generateCategoryCodes();
@@ -20937,7 +20938,7 @@ Entry.BlockMenu = function(b, a, d, c) {
       "arduino" !== b ? this._generateCategoryCode(b) : this._generateHwCode(!0);
       a.length ? this._generateCodesTimer = setTimeout(function() {
         this._generateCategoryCodes(a);
-      }.bind(this), 0) : (this._generateCodesTimer = null, this.view.removeClass("init"), this.align());
+      }.bind(this), 0) : (this._generateCodesTimer = null, this.view.removeClass("init"), this.align(), this.categoryDoneEvent.notify());
     }
   };
   b._generateCategoryCode = function(a) {
