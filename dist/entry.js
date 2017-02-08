@@ -15774,7 +15774,7 @@ Entry.Commander = function(b) {
     a.length && (a[0].id = Entry.Utils.generateId());
     return [a];
   }, log:function(a) {
-    return [["thread", this.editor.board.code.getThreads().pop().stringify()]];
+    return [["thread", this.editor.board.code.getThreads().pop().toJSON()]];
   }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "&0"]};
   b[Entry.STATIC.COMMAND_TYPES.destroyThread] = {do:function(a) {
     this.editor.board.findById(a[0].id).destroy(!0, !0);
@@ -15903,7 +15903,7 @@ Entry.Commander = function(b) {
   }, undo:"toggleStart", dom:["engine", "&0"]};
 })(Entry.Command);
 (function(b) {
-  b.selectObject = {type:Entry.STATIC.COMMAND_TYPES.selectObject, do:function(a) {
+  b[Entry.STATIC.COMMAND_TYPES.selectObject] = {do:function(a) {
     return Entry.container.selectObject(a);
   }, state:function(a) {
     if ((a = Entry.playground) && a.object) {
@@ -15940,17 +15940,15 @@ Entry.Commander = function(b) {
   }, undo:"processPicture", isPass:!0};
 })(Entry.Command);
 (function(b) {
-  b.playgroundChangeViewMode = function() {
-    return {type:"changeViewMode", do:function(a, b) {
-      var c = Entry.playground;
-      c.changeViewMode(a);
-      "code" === a && c.blockMenu.reDraw();
-    }, state:function(a, b) {
-      return [b, a];
-    }, log:function(a, b, c) {
-      return ["changeViewMode", ["oldType", b], ["newType", a]];
-    }, undo:"playgroundChangeViewMode", dom:["playground", "&0"]};
-  }();
+  b[Entry.STATIC.COMMAND_TYPES.playgroundChangeViewMode] = {do:function(a, b) {
+    var c = Entry.playground;
+    c.changeViewMode(a);
+    "code" === a && c.blockMenu.reDraw();
+  }, state:function(a, b) {
+    return [b, a];
+  }, log:function(a, b, c) {
+    return [["oldType", b], ["newType", a]];
+  }, undo:"playgroundChangeViewMode", dom:["playground", "&0"]};
 })(Entry.Command);
 Entry.init = function(b, a) {
   Entry.assert("object" === typeof a, "Init option is not object");
@@ -15966,7 +15964,7 @@ Entry.init = function(b, a) {
   this.initialize_();
   this.view_ = b;
   $(this.view_).addClass("entry");
-  $(this.view_).addClass(this.type);
+  "minimize" === this.type && $(this.view_).addClass(this.type);
   "tablet" === this.device && $(this.view_).addClass("tablet");
   Entry.initFonts(a.fonts);
   this.createDom(b, this.type);
@@ -18396,11 +18394,14 @@ Entry.Restrictor = function() {
   this.endEvent = new Entry.Event(this);
 };
 (function(b) {
-  b.restrict = function(a, b) {
-    var c = Entry.Command[a].dom;
-    c && (c = c.map(function(a) {
-      return "&" === a[0] ? b[Number(a.substr(1))] : a;
-    }), new Entry.Tooltip([{content:"asdf", target:c, direction:"down"}], {restrict:!0, dimmed:!0}));
+  b.restrict = function(a) {
+    a = a.concat();
+    var b = a.shift();
+    if (b = Entry.Command[b].dom) {
+      b = b.map(function(b) {
+        return "&" === b[0] ? a[Number(b.substr(1))][1] : b;
+      }), new Entry.Tooltip([{content:"asdf", target:b, direction:"down"}], {restrict:!0, dimmed:!0});
+    }
   };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(b, a) {

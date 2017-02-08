@@ -7,8 +7,7 @@ goog.require("Entry.Command");
 goog.require("Entry.STATIC");
 
 (function(c) {
-    c.selectObject = {
-        type: Entry.STATIC.COMMAND_TYPES.selectObject,
+    c[Entry.STATIC.COMMAND_TYPES.selectObject] = {
         do: function(objectId) {
             return Entry.container.selectObject(objectId);
         },
