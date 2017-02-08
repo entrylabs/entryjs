@@ -15682,7 +15682,7 @@ Entry.Loader.handleLoad = function() {
   this.loaded || (this.loaded = !0, Entry.dispatchEvent("loadComplete"));
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectObject:201, "do":301, 
-undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
+undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
 Entry.Command = {};
 (function(b) {
   b[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(a) {
@@ -15884,22 +15884,19 @@ Entry.Commander = function(b) {
   }();
 })(Entry.Command);
 (function(b) {
-  b.toggleRun = function() {
-    return {type:"toggleRun", do:function(a) {
-      Entry.engine.toggleRun();
-    }, state:function() {
-    }, log:function() {
-      return [];
-    }, undo:"toggleStop", dom:["engine", "&0"]};
-  }();
-  b.toggleStop = function() {
-    return {type:"toggleStop", do:function(a) {
-      Entry.engine.toggleStop();
-    }, state:function() {
-    }, log:function() {
-      return [];
-    }, undo:"toggleStart", dom:["engine", "&0"]};
-  }();
+  var a = Entry.STATIC.COMMAND_TYPES;
+  b[a.toggleRun] = {do:function(a) {
+    Entry.engine.toggleRun();
+  }, state:function() {
+  }, log:function() {
+    return [];
+  }, undo:"toggleStop", dom:["engine", "&0"]};
+  b[a.toggleStop] = {do:function(a) {
+    Entry.engine.toggleStop();
+  }, state:function() {
+  }, log:function() {
+    return [];
+  }, undo:"toggleStart", dom:["engine", "&0"]};
 })(Entry.Command);
 (function(b) {
   b.selectObject = {type:Entry.STATIC.COMMAND_TYPES.selectObject, do:function(a) {

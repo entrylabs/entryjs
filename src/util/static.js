@@ -51,7 +51,10 @@ Entry.STATIC = {
         editPicture: 401,
         uneditPicture: 402,
         processPicture: 403,
-        unprocessPicture: 404
+        unprocessPicture: 404,
+
+        toggleRun: 501,
+        toggleStop: 502,
     },
 
     RECORDABLE: {
