@@ -28,6 +28,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._dynamicThreads = [];
     this._setDynamicTimer = null;
     this._renderedCategories = {};
+    this.categoryRendered = false;
 
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
@@ -537,6 +538,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._generateCategoryCodes = function(elems) {
         if (!elems) {
+            this.categoryRendered = false;
             this.view.addClass('init');
             elems = Object.keys(this._categoryElems);
         }
@@ -555,6 +557,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 this._generateCodesTimer = null;
                 this.view.removeClass('init');
                 this.align();
+                this.categoryRendered = true;
                 this.categoryDoneEvent.notify();
             }
         }

@@ -20668,6 +20668,7 @@ Entry.BlockMenu = function(b, a, d, c) {
   this._dynamicThreads = [];
   this._setDynamicTimer = null;
   this._renderedCategories = {};
+  this.categoryRendered = !1;
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -20932,13 +20933,13 @@ Entry.BlockMenu = function(b, a, d, c) {
     }
   };
   b._generateCategoryCodes = function(a) {
-    a || (this.view.addClass("init"), a = Object.keys(this._categoryElems));
+    a || (this.categoryRendered = !1, this.view.addClass("init"), a = Object.keys(this._categoryElems));
     if (a.length) {
       var b = a.shift();
       "arduino" !== b ? this._generateCategoryCode(b) : this._generateHwCode(!0);
       a.length ? this._generateCodesTimer = setTimeout(function() {
         this._generateCategoryCodes(a);
-      }.bind(this), 0) : (this._generateCodesTimer = null, this.view.removeClass("init"), this.align(), this.categoryDoneEvent.notify());
+      }.bind(this), 0) : (this._generateCodesTimer = null, this.view.removeClass("init"), this.align(), this.categoryRendered = !0, this.categoryDoneEvent.notify());
     }
   };
   b._generateCategoryCode = function(a) {
