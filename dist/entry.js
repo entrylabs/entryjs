@@ -19736,8 +19736,11 @@ Entry.Restrictor = function() {
     if (a = Entry.Command[a].dom) {
       a = a.map(function(a) {
         return "&" === a[0] ? b[Number(a.substr(1))][1] : a;
-      }), new Entry.Tooltip([{content:"asdf", target:a, direction:"down"}], {restrict:!0, dimmed:!0});
+      }), new Entry.Tooltip([{content:"asdf", target:a, direction:"down", callback:this.restrictEnd.bind(this)}], {restrict:!0, dimmed:!0});
     }
+  };
+  a.restrictEnd = function() {
+    this.endEvent.notify();
   };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(a, b) {

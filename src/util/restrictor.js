@@ -27,6 +27,11 @@ Entry.Restrictor = function() {
             content: "asdf",
             target: domQuery,
             direction: "down",
+            callback: this.restrictEnd.bind(this)
         }], { restrict: true, dimmed: true });
+    };
+
+    p.restrictEnd = function() {
+        this.endEvent.notify();
     };
 })(Entry.Restrictor.prototype);
