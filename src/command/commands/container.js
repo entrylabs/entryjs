@@ -11,7 +11,8 @@ goog.require("Entry.STATIC");
         var commandType = "containerSelectObject";
         return {
             type: commandType,
-            do: function(callerName) {
+            do: function(name, objectId) {
+                Entry.container.selectObject(objectId);
             },
             state: function() {
             },

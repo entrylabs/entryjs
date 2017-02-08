@@ -5248,6 +5248,11 @@ Entry.Container.prototype.selectNeighborObject = function(b) {
 Entry.Container.prototype.getObjectIndex = function(b) {
   return this.objects_.indexOf(this.getObject(b));
 };
+Entry.Container.prototype.getDom = function(b) {
+  if (1 <= b.length && (b = b.shift(), /index(\d+)/.test(b))) {
+    return b = /index(\d+)/.exec(b)[1], this.objects_[b].view_;
+  }
+};
 Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
@@ -15869,7 +15874,8 @@ Entry.Commander = function(b) {
 })(Entry.Command);
 (function(b) {
   b.containerSelectObject = function() {
-    return {type:"containerSelectObject", do:function(a) {
+    return {type:"containerSelectObject", do:function(a, b) {
+      Entry.container.selectObject(b);
     }, state:function() {
     }, log:function() {
       return [];

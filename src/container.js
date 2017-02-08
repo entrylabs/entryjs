@@ -1058,3 +1058,14 @@ Entry.Container.prototype.selectNeighborObject = function(option) {
 Entry.Container.prototype.getObjectIndex = function(objectId) {
     return this.objects_.indexOf(this.getObject(objectId));
 };
+
+Entry.Container.prototype.getDom = function(query) {
+    if (query.length >= 1) {
+        var key = query.shift();
+        if (/index(\d+)/.test(key)) {
+            var index = /index(\d+)/.exec(key)[1];
+            return this.objects_[index].view_;
+        }
+    } else {
+    }
+};
