@@ -30,8 +30,8 @@ Entry.Commander = function(injectType) {
     Entry.Command.editor = this.editor;
 
     this.doEvent = new Entry.Event(this);
+    this.logEvent = new Entry.Event(this);
 };
-
 
 (function(p) {
     p.do = function(commandType) {
@@ -113,27 +113,23 @@ Entry.Commander = function(injectType) {
     };
 
     p.addReporter = function(reporter) {
-        this.reporters.push(reporter);
+        reporter.logEventListener = this.logEvent.attach(reporter, reporter.add);
     };
 
     p.removeReporter = function(reporter) {
-        var index = this.reporters.indexOf(reporter);
-        if (index > -1) this.reporters.splice(index, 1);
+        if (reporter.logEventListener)
+            this.logEvent.detatch(reporter.logEventListener)
+        delete reporter.logEventListener;
     };
 
     p.report = function(commandType, argumentsArray) {
-        var reporters = this.reporters;
-        if (reporters.length === 0) return;
-
         var data;
 
         if (commandType && Entry.Command[commandType] && Entry.Command[commandType].log)
             data = Entry.Command[commandType].log.apply(this, argumentsArray)
         else data = argumentsArray;
         data.unshift(commandType);
-        reporters.forEach(function(reporter) {
-            reporter.add(data);
-        });
+        this.logEvent.notify(data);
     };
 })(Entry.Commander.prototype)
 
