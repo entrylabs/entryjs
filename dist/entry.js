@@ -5845,7 +5845,9 @@ Entry.Commander = function(a) {
   }, log:function(b, a, d) {
     "string" === typeof b && (b = this.editor.board.findById(b));
     return [["blockId", b.id], ["targetPointer", b.targetPointer()], ["count", d]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock"};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, a, d) {
+    return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:a, direction:"right"}], {callBack:d});
+  }, dom:["playground", "board", "&1"]};
   a[Entry.STATIC.COMMAND_TYPES.separateBlock] = {do:function(b) {
     b.view && b.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
     b.doSeparate();
@@ -5895,7 +5897,7 @@ Entry.Commander = function(a) {
     return [-b, -a];
   }, log:function(b, a) {
     return [["dx", b], ["dy", a]];
-  }, undo:"scrollBoard"};
+  }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
   a[Entry.STATIC.COMMAND_TYPES.setFieldValue] = {do:function(b, a, d, e, f) {
     a.setValue(f, !0);
   }, state:function(b, a, d, e, f) {
@@ -14173,6 +14175,8 @@ Entry.Playground.prototype.getDom = function(a) {
         return this._codeTab;
       case "blockMenu":
         return this.blockMenu.getDom(a);
+      case "board":
+        return this.board.getDom(a);
     }
   }
 };
@@ -19737,12 +19741,13 @@ Entry.Restrictor = function() {
 (function(a) {
   a.restrict = function(b) {
     b = b.concat();
-    var a = b.shift();
-    if (a = Entry.Command[a].dom) {
-      a = a.map(function(a) {
-        return "&" === a[0] ? b[Number(a.substr(1))][1] : a;
-      }), this.currentTooltip = new Entry.Tooltip([{content:"asdf", target:a, direction:"down", callback:this.restrictEnd.bind(this)}], {restrict:!0, dimmed:!0});
-    }
+    var a = b.shift(), a = Entry.Command[a], d = a.dom;
+    d && (d = d.map(function(a) {
+      return "&" === a[0] ? b[Number(a.substr(1))][1] : a;
+    }), this.currentTooltip = a.restrict ? a.restrict(b, d, this.restrictEnd.bind(this)) : new Entry.Tooltip([{content:"asdf", target:d, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}));
+  };
+  a.end = function() {
+    this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);
   };
   a.restrictEnd = function() {
     this.endEvent.notify();
@@ -24964,6 +24969,13 @@ Entry.Board.DRAG_RADIUS = 5;
       }
       b = Entry.Utils.convertMouseEvent(b);
       Entry.ContextMenu.show(a, null, {x:b.clientX, y:b.clientY});
+    }
+  };
+  a.getDom = function(b) {
+    b = b.shift();
+    targetObj = this.code.getTargetByPointer(b);
+    if (targetObj instanceof Entry.Block) {
+      return targetObj.view.svgGroup;
     }
   };
 })(Entry.Board.prototype);

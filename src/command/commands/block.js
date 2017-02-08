@@ -122,7 +122,17 @@ goog.require("Entry.STATIC");
             ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        undo: "insertBlock"
+        undo: "insertBlock",
+        restrict: function(data, domQuery, callback) {
+            return new Entry.Tooltip([{
+                content: "여기 밑에 끼워넣으셈",
+                target: domQuery,
+                direction: "right"
+            }], {
+                callBack: callback
+            });
+        },
+        dom: ['playground', 'board', '&1']
     };
 
     c[Entry.STATIC.COMMAND_TYPES.separateBlock] = {
@@ -239,6 +249,7 @@ goog.require("Entry.STATIC");
                 ['dx', dx], ['dy', dy]
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         undo: "scrollBoard"
     };
 

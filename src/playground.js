@@ -1747,6 +1747,8 @@ Entry.Playground.prototype.getDom = function(query) {
                 return this._codeTab;
             case "blockMenu":
                 return this.blockMenu.getDom(query);
+            case "board":
+                return this.board.getDom(query);
         }
     } else {
     }

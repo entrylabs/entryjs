@@ -25,12 +25,28 @@ Entry.Restrictor = function() {
                 return q;
         });
 
-        this.currentTooltip = new Entry.Tooltip([{
-            content: "asdf",
-            target: domQuery,
-            direction: "down",
-            callback: this.restrictEnd.bind(this)
-        }], { restrict: true, dimmed: true });
+        if (command.restrict) {
+            this.currentTooltip = command.restrict(
+                data, domQuery, this.restrictEnd.bind(this));
+            return;
+        } else {
+            this.currentTooltip = new Entry.Tooltip([{
+                content: "asdf",
+                target: domQuery,
+                direction: "down"
+            }], {
+                restrict: true,
+                dimmed: true,
+                callBack: this.restrictEnd.bind(this)
+            });
+        }
+    };
+
+    p.end = function() {
+        if (this.currentTooltip) {
+            this.currentTooltip.dispose();
+            this.currentTooltip = null;
+        }
     };
 
     p.restrictEnd = function() {
