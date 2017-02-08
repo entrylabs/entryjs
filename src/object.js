@@ -118,7 +118,10 @@ Entry.EntryObject.prototype.generateView = function() {
 
         $(objectView).bind('mousedown touchstart', function(e){
             if (Entry.container.getObject(this.id)) {
-                Entry.container.selectObject(this.id);
+                Entry.do(
+                    'containerSelectObject',
+                    this.id
+                );
             }
             var doc = $(document);
             var eventType = e.type;

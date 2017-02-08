@@ -1061,10 +1061,9 @@ Entry.Container.prototype.getObjectIndex = function(objectId) {
 
 Entry.Container.prototype.getDom = function(query) {
     if (query.length >= 1) {
-        var key = query.shift();
-        if (/index(\d+)/.test(key)) {
-            var index = /index(\d+)/.exec(key)[1];
-            return this.objects_[index].view_;
+        switch(query.shift()) {
+            case "objectIndex":
+                return this.objects_[query.shift()].view_;
         }
     } else {
     }

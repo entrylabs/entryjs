@@ -55,6 +55,8 @@ Entry.STATIC = {
 
         toggleRun: 501,
         toggleStop: 502,
+
+        containerSelectObject: 601,
     },
 
     RECORDABLE: {
