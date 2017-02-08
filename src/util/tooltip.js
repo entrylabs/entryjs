@@ -69,6 +69,7 @@ Entry.Tooltip = function(data, opts) {
 
     p.alignTooltips = function() {
         this.data.map(this._alignTooltip.bind(this));
+        this.opts.dimmed && Entry.Curtain.align();
     };
 
     p._renderTooltip = function(data) {

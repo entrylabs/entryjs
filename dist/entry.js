@@ -19632,7 +19632,7 @@ Entry.ContextMenu = {};
 Entry.Curtain = {};
 (function() {
   this._visible = !1;
-  this._doms = null;
+  this._targetDom = this._doms = null;
   this._createDom = function() {
     var a = {parent:$("body"), class:"entryCurtainElem entryRemove"};
     this._doms = {top:Entry.Dom("div", a), right:Entry.Dom("div", a), bottom:Entry.Dom("div", a), left:Entry.Dom("div", a)};
@@ -19643,16 +19643,19 @@ Entry.Curtain = {};
   this.show = function(a) {
     !this._doms && this._createDom();
     a instanceof Array && (a = Entry.getDom(a));
-    a = $(a);
-    this._position(a);
+    this._targetDom = a = $(a);
+    this.align();
     for (var b in this._doms) {
       this._doms[b].removeClass("entryRemove");
     }
     this._visible = !0;
   };
-  this._position = function(a) {
-    var b = $(window), c = b.width(), b = b.height(), d = this._doms;
-    a.get(0) && (a = a.get(0).getBoundingClientRect(), d.top.css({height:a.top}), d.right.css({top:a.top, left:a.right}), d.bottom.css({top:a.bottom, right:c - a.right}), d.left.css({top:a.top, right:c - a.right + a.width, bottom:b - a.bottom}));
+  this.align = function() {
+    var a = this._targetDom;
+    if (a) {
+      var b = $(window), c = b.width(), b = b.height(), d = this._doms;
+      a.get(0) && (a = a.get(0).getBoundingClientRect(), d.top.css({height:a.top}), d.right.css({top:a.top, left:a.right}), d.bottom.css({top:a.bottom, right:c - a.right}), d.left.css({top:a.top, right:c - a.right + a.width, bottom:b - a.bottom}));
+    }
   };
   this.hide = function() {
     if (this._doms) {
@@ -19660,6 +19663,7 @@ Entry.Curtain = {};
         this._doms[a].addClass("entryRemove");
       }
       this._visible = !1;
+      this._targetDom = null;
     }
   };
   this.isVisible = function() {
@@ -19728,6 +19732,7 @@ Entry.Loader.handleLoad = function() {
 };
 Entry.Restrictor = function() {
   this.endEvent = new Entry.Event(this);
+  this.currentTooltip = null;
 };
 (function(a) {
   a.restrict = function(b) {
@@ -19736,11 +19741,15 @@ Entry.Restrictor = function() {
     if (a = Entry.Command[a].dom) {
       a = a.map(function(a) {
         return "&" === a[0] ? b[Number(a.substr(1))][1] : a;
-      }), new Entry.Tooltip([{content:"asdf", target:a, direction:"down", callback:this.restrictEnd.bind(this)}], {restrict:!0, dimmed:!0});
+      }), this.currentTooltip = new Entry.Tooltip([{content:"asdf", target:a, direction:"down", callback:this.restrictEnd.bind(this)}], {restrict:!0, dimmed:!0});
     }
   };
   a.restrictEnd = function() {
     this.endEvent.notify();
+    this.currentTooltip = null;
+  };
+  a.align = function() {
+    this.currentTooltip && this.currentTooltip.alignTooltips();
   };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(a, b) {
@@ -19780,6 +19789,7 @@ Entry.Tooltip = function(a, b) {
   };
   a.alignTooltips = function() {
     this.data.map(this._alignTooltip.bind(this));
+    this.opts.dimmed && Entry.Curtain.align();
   };
   a._renderTooltip = function(b) {
     if (b.content) {

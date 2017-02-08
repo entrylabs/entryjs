@@ -6,6 +6,8 @@ goog.require("Entry.Utils");
 
 Entry.Restrictor = function() {
     this.endEvent = new Entry.Event(this);
+
+    this.currentTooltip = null;
 };
 
 (function(p) {
@@ -23,7 +25,7 @@ Entry.Restrictor = function() {
                 return q;
         });
 
-        new Entry.Tooltip([{
+        this.currentTooltip = new Entry.Tooltip([{
             content: "asdf",
             target: domQuery,
             direction: "down",
@@ -33,5 +35,11 @@ Entry.Restrictor = function() {
 
     p.restrictEnd = function() {
         this.endEvent.notify();
+        this.currentTooltip = null;
+    };
+
+    p.align = function() {
+        if (this.currentTooltip)
+            this.currentTooltip.alignTooltips();
     };
 })(Entry.Restrictor.prototype);
