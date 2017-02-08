@@ -8783,7 +8783,7 @@ Entry.init = function(a, b) {
   this.initialize_();
   this.view_ = a;
   $(this.view_).addClass("entry");
-  $(this.view_).addClass(this.type);
+  "minimize" === this.type && $(this.view_).addClass(this.type);
   "tablet" === this.device && $(this.view_).addClass("tablet");
   Entry.initFonts(b.fonts);
   this.createDom(a, this.type);
@@ -19729,11 +19729,13 @@ Entry.Restrictor = function() {
   this.endEvent = new Entry.Event(this);
 };
 (function(a) {
-  a.restrict = function(b, a) {
-    if (b = Entry.Command[b].dom) {
-      b = b.map(function(b) {
-        return "&" === b[0] ? a[Number(b.substr(1))] : b;
-      }), new Entry.Tooltip([{content:"asdf", target:b, direction:"down"}], {restrict:!0, dimmed:!0});
+  a.restrict = function(b) {
+    b = b.concat();
+    var a = b.shift();
+    if (a = Entry.Command[a].dom) {
+      a = a.map(function(a) {
+        return "&" === a[0] ? b[Number(a.substr(1))][1] : a;
+      }), console.log(a), new Entry.Tooltip([{content:"asdf", target:a, direction:"down"}], {restrict:!0, dimmed:!0});
     }
   };
 })(Entry.Restrictor.prototype);
@@ -25613,8 +25615,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         g.css({"background-color":h});
         g.attr({"data-color-value":h});
         (function(a, c) {
-          a.mousedown(function(b) {
-            b.stopPropagation();
+          a.mousedown(function(a) {
+            a.stopPropagation();
           });
           a.mouseup(function(a) {
             b.applyValue(c);
@@ -25628,8 +25630,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     a.y += this.box.height / 2 + 1;
     this.optionGroup.css({left:a.x, top:a.y});
   };
-  a.applyValue = function(b) {
-    this.value != b && (this.setValue(b), this._header ? this._header.attr({fill:b}) : this.textElement && (this.textElement.textContent = this._convert(this.getValue(), this.getValue())));
+  a.applyValue = function(a) {
+    this.value != a && (this.setValue(a), this._header ? this._header.attr({fill:a}) : this.textElement && (this.textElement.textContent = this._convert(this.getValue(), this.getValue())));
   };
   a.getContentWidth = function() {
     return Entry.isMobile() ? 20 : 14.5;
@@ -25659,20 +25661,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   a.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this instanceof Entry.FieldDropdownDynamic && this._updateValue();
-    var b = this._blockView, a = Entry.isMobile(), d = a ? 33 : 20, a = a ? 24 : 10;
-    this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
+    var a = this._blockView, c = Entry.isMobile(), d = c ? 33 : 20, c = c ? 24 : 10;
+    this.svgGroup = a.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
     this.textElement = this.svgGroup.elem("text", {x:5});
     this._setTextValue();
-    b = this.textElement.getBBox();
-    this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.23 * b.height});
+    a = this.textElement.getBBox();
+    this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.23 * a.height});
     d = this.textElement.getBoundingClientRect().width + d;
-    this._noArrow && (d -= a);
-    a = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {width:d, height:a, y:-a / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
+    this._noArrow && (d -= c);
+    c = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:d, height:c, y:-c / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this._noArrow || (b = this.getArrow(), this._arrow = this.svgGroup.elem("polygon", {points:b.points, fill:b.color, stroke:b.color, transform:"translate(" + (d - b.width - 5) + "," + -b.height / 2 + ")"}));
+    this._noArrow || (a = this.getArrow(), this._arrow = this.svgGroup.elem("polygon", {points:a.points, fill:a.color, stroke:a.color, transform:"translate(" + (d - a.width - 5) + "," + -a.height / 2 + ")"}));
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:d, height:a});
+    this.box.set({x:0, y:0, width:d, height:c});
   };
   a.resize = function() {
     var a = Entry.isMobile(), c = a ? 33 : 20, a = a ? 24 : 10, c = this.textElement.getBoundingClientRect().width + c;

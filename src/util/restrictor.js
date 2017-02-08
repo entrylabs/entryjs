@@ -9,17 +9,20 @@ Entry.Restrictor = function() {
 };
 
 (function(p) {
-    p.restrict = function(commandType, data) {
+    p.restrict = function(data) {
+        data = data.concat();
+        var commandType = data.shift();
         var command = Entry.Command[commandType];
         var domQuery = command.dom;
         if (!domQuery)
             return;
         domQuery = domQuery.map(function(q) {
             if (q[0] === "&")
-                return data[Number(q.substr(1))];
+                return data[Number(q.substr(1))][1];
             else
                 return q;
         });
+        console.log(domQuery);
 
         new Entry.Tooltip([{
             content: "asdf",
