@@ -8,15 +8,19 @@ goog.require("Entry.STATIC");
 
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+
     c[COMMAND_TYPES.toggleRun] = {
         do: function(callerName) {
             Entry.engine.toggleRun();
         },
         state: function() {
         },
-        log: function() {
-            return [];
+        log: function(callerName) {
+            return [
+                ['callerName', callerName]
+            ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "toggleStop",
         dom: ['engine', '&0']
     };
@@ -27,9 +31,12 @@ goog.require("Entry.STATIC");
         },
         state: function() {
         },
-        log: function() {
-            return [];
+        log: function(callerName) {
+            return [
+                ['callerName', callerName]
+            ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "toggleStart",
         dom: ['engine', '&0']
     };

@@ -15895,15 +15895,15 @@ Entry.Commander = function(b) {
   b[a.toggleRun] = {do:function(a) {
     Entry.engine.toggleRun();
   }, state:function() {
-  }, log:function() {
-    return [];
-  }, undo:"toggleStop", dom:["engine", "&0"]};
+  }, log:function(a) {
+    return [["callerName", a]];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
   b[a.toggleStop] = {do:function(a) {
     Entry.engine.toggleStop();
   }, state:function() {
-  }, log:function() {
-    return [];
-  }, undo:"toggleStart", dom:["engine", "&0"]};
+  }, log:function(a) {
+    return [["callerName", a]];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStart", dom:["engine", "&0"]};
 })(Entry.Command);
 (function(b) {
   b[Entry.STATIC.COMMAND_TYPES.selectObject] = {do:function(a) {

@@ -14,7 +14,7 @@ Entry.Engine = function() {
     this.isUpdating = true;
     this.speeds = [1, 15, 30, 45, 60];
 
-    this._mouseMoved = false;;
+    this._mouseMoved = false;
 
     if (Entry.keyPressed)
         Entry.keyPressed.attach(this, this.captureKeyEvent);
