@@ -5712,7 +5712,7 @@ Entry.Observer = function(a, b, c, d) {
   };
 })(Entry.Observer.prototype);
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectObject:201, "do":301, 
-undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
+undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
 Entry.Command = {};
 (function(a) {
   a[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
@@ -5915,25 +5915,22 @@ Entry.Commander = function(a) {
   }();
 })(Entry.Command);
 (function(a) {
-  a.toggleRun = function() {
-    return {type:"toggleRun", do:function(b) {
-      Entry.engine.toggleRun();
-    }, state:function() {
-    }, log:function() {
-      return [];
-    }, undo:"toggleStop", dom:["engine", "&0"]};
-  }();
-  a.toggleStop = function() {
-    return {type:"toggleStop", do:function(b) {
-      Entry.engine.toggleStop();
-    }, state:function() {
-    }, log:function() {
-      return [];
-    }, undo:"toggleStart", dom:["engine", "&0"]};
-  }();
+  var b = Entry.STATIC.COMMAND_TYPES;
+  a[b.toggleRun] = {do:function(b) {
+    Entry.engine.toggleRun();
+  }, state:function() {
+  }, log:function() {
+    return [];
+  }, undo:"toggleStop", dom:["engine", "&0"]};
+  a[b.toggleStop] = {do:function(b) {
+    Entry.engine.toggleStop();
+  }, state:function() {
+  }, log:function() {
+    return [];
+  }, undo:"toggleStart", dom:["engine", "&0"]};
 })(Entry.Command);
 (function(a) {
-  a.selectObject = {type:Entry.STATIC.COMMAND_TYPES.selectObject, do:function(b) {
+  a[Entry.STATIC.COMMAND_TYPES.selectObject] = {do:function(b) {
     return Entry.container.selectObject(b);
   }, state:function(b) {
     if ((b = Entry.playground) && b.object) {
@@ -22713,6 +22710,7 @@ Entry.BlockMenu = function(a, b, c, d) {
   this._dynamicThreads = [];
   this._setDynamicTimer = null;
   this._renderedCategories = {};
+  this.categoryRendered = !1;
   a = "string" === typeof a ? $("#" + a) : $(a);
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -22734,6 +22732,7 @@ Entry.BlockMenu = function(a, b, c, d) {
   this.svgBlockGroup = this.svgGroup.elem("g");
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
+  this.categoryDoneEvent = new Entry.Event(this);
   this.observe(this, "_handleDragBlock", ["dragBlock"]);
   this.changeCode(new Entry.Code([]));
   c && this._generateCategoryCodes();
@@ -22975,13 +22974,13 @@ Entry.BlockMenu = function(a, b, c, d) {
     }
   };
   a._generateCategoryCodes = function(b) {
-    b || (this.view.addClass("init"), b = Object.keys(this._categoryElems));
+    b || (this.categoryRendered = !1, this.view.addClass("init"), b = Object.keys(this._categoryElems));
     if (b.length) {
       var a = b.shift();
       "arduino" !== a ? this._generateCategoryCode(a) : this._generateHwCode(!0);
       b.length ? this._generateCodesTimer = setTimeout(function() {
         this._generateCategoryCodes(b);
-      }.bind(this), 0) : (this._generateCodesTimer = null, this.view.removeClass("init"), this.align());
+      }.bind(this), 0) : (this._generateCodesTimer = null, this.view.removeClass("init"), this.align(), this.categoryRendered = !0, this.categoryDoneEvent.notify());
     }
   };
   a._generateCategoryCode = function(b) {
