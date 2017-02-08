@@ -8783,6 +8783,7 @@ Entry.init = function(a, b) {
   this.initialize_();
   this.view_ = a;
   $(this.view_).addClass("entry");
+  $(this.view_).addClass(this.type);
   "tablet" === this.device && $(this.view_).addClass("tablet");
   Entry.initFonts(b.fonts);
   this.createDom(a, this.type);

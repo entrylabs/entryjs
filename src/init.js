@@ -37,6 +37,7 @@ Entry.init = function(container, options) {
     /** @type {!Element} */
     this.view_ = container;
     $(this.view_).addClass("entry");
+    $(this.view_).addClass(this.type);
     if (this.device === 'tablet')
         $(this.view_).addClass("tablet");
 
