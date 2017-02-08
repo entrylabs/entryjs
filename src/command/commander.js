@@ -35,6 +35,8 @@ Entry.Commander = function(injectType) {
 
 (function(p) {
     p.do = function(commandType) {
+        if (typeof commandType === "string")
+            commandType = Entry.STATIC.COMMAND_TYPES[commandType];
         var that = this;
         var argumentArray = Array.prototype.slice.call(arguments);
         argumentArray.shift();
@@ -51,7 +53,7 @@ Entry.Commander = function(injectType) {
 
         //intentionally delay reporting
         setTimeout(function() {
-            that.report('do');
+            that.report(Entry.STATIC.COMMAND_TYPES.do);
             that.report(commandType, argumentArray);
         }, 0);
 
@@ -66,7 +68,7 @@ Entry.Commander = function(injectType) {
         var commandType = argumentArray.shift();
         var commandFunc = Entry.Command[commandType];
 
-        this.report('undo');
+        this.report(Entry.STATIC.COMMAND_TYPES.undo);
 
         if (Entry.stateManager) {
             Entry.stateManager.addCommand.apply(
@@ -86,7 +88,7 @@ Entry.Commander = function(injectType) {
         var commandType = argumentArray.shift();
         var commandFunc = Entry.Command[commandType];
 
-        that.report('redo');
+        that.report(Entry.STATIC.COMMAND_TYPES.redo);
 
         if (Entry.stateManager) {
             Entry.stateManager.addCommand.apply(
@@ -128,6 +130,7 @@ Entry.Commander = function(injectType) {
         if (commandType && Entry.Command[commandType] && Entry.Command[commandType].log)
             data = Entry.Command[commandType].log.apply(this, argumentsArray)
         else data = argumentsArray;
+        data.unshift(commandType);
         reporters.forEach(function(reporter) {
             reporter.add(data);
         });

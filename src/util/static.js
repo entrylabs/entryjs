@@ -52,5 +52,11 @@ Entry.STATIC = {
         uneditPicture: 402,
         processPicture: 403,
         unprocessPicture: 404
-    }
+    },
+
+    RECORDABLE: {
+        SUPPORT: 1,
+        SKIP: 2,
+        ABANDONE: 3
+    },
 };
