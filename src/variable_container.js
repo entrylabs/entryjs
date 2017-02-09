@@ -837,9 +837,9 @@ Entry.VariableContainer = function() {
             }
         }
 
+        var variableContainer = this;
+        var panel = this.variableAddPanel;
         if (!variable) {
-            var variableContainer = this;
-            var panel = this.variableAddPanel;
             var name = panel.view.name.value.trim();
             if (!name || name.length === 0)
                 name = Lang.Workspace.variable;
@@ -856,17 +856,12 @@ Entry.VariableContainer = function() {
                 object: info.object,
                 variableType: 'variable'
             };
-            panel.view.addClass('entryRemove');
-            this.resetVariableAddPanel('variable');
         }
-        var variable = new Entry.Variable(variable);
-        if (Entry.stateManager)
-            Entry.stateManager.addCommand(
-                "add variable",
-                this,
-                this.removeVariable,
-                variable
-            );
+        panel.view.addClass('entryRemove');
+        this.resetVariableAddPanel('variable');
+        if (!(variable instanceof Entry.Variable))
+            variable = new Entry.Variable(variable);
+
         variable.generateView(this.variables_.length);
         this.createVariableView(variable);
         this.variables_.unshift(variable);
@@ -875,9 +870,6 @@ Entry.VariableContainer = function() {
         Entry.playground.reloadPlayground();
 
         this.updateList();
-        return new Entry.State(this,
-                               this.removeVariable,
-                               variable);
     };
 
     /**
@@ -885,6 +877,12 @@ Entry.VariableContainer = function() {
      * @param {Entry.Variable} variable
      */
     p.removeVariable = function(variable) {
+        if (!(variable instanceof Entry.Variable)) {
+            variable = this.variables_.filter(function(v) {
+                return variable.id === v.id_;
+            })[0];
+        }
+
         var index = this.variables_.indexOf(variable);
         var variableJSON = variable.toJSON();
 
@@ -892,20 +890,8 @@ Entry.VariableContainer = function() {
             this.select(null);
         variable.remove();
         this.variables_.splice(index, 1);
-
-        if (Entry.stateManager)
-            Entry.stateManager.addCommand(
-                "remove variable",
-                this,
-                this.addVariable,
-                variableJSON
-            );
-
         Entry.playground.reloadPlayground();
         this.updateList();
-        return new Entry.State(this,
-                               this.addVariable,
-                               variableJSON);
     };
 
     /**
@@ -1499,10 +1485,12 @@ Entry.VariableContainer = function() {
         addSpaceInput.variableContainer = this;
         addSpaceInput.onkeypress = function (e) {
             if (e.keyCode == 13) {
-                var variableContainer = this.variableContainer;
-                var panel = variableContainer.variableAddPanel;
-
-                Entry.variableContainer.addVariable();
+                var variable = that._makeVariableData();
+                variable = new Entry.Variable(variable);
+                Entry.do(
+                    'variableContainerAddVariable',
+                    variable
+                );
                 that.updateSelectedVariable(that.variables_[0]);
                 var view = that.variables_[0].listElement;
                 view.editButton.addClass('entryRemove');
@@ -1602,17 +1590,21 @@ Entry.VariableContainer = function() {
         addSpaceConfirmButton.innerHTML = Lang.Buttons.save;
         addSpaceConfirmButton.variableContainer = this;
         addSpaceConfirmButton.bindOnClick(function (e) {
-            var variableContainer = this.variableContainer;
-            var panel = variableContainer.variableAddPanel;
-
-            Entry.variableContainer.addVariable();
+            var variable = that._makeVariableData();
+            variable = new Entry.Variable(variable);
+            Entry.do(
+                'variableContainerAddVariable',
+                variable
+            );
             that.updateSelectedVariable(that.variables_[0]);
             var view = that.variables_[0].listElement;
             view.editButton.addClass('entryRemove');
             view.editSaveButton.removeClass('entryRemove');
             view.nameField.removeAttribute('disabled');
+
         });
         addSpaceButtonWrapper.appendChild(addSpaceConfirmButton);
+        this.variableAddConfirmButton = addSpaceConfirmButton;
     };
 
     p.generateListAddView = function() {
@@ -2435,6 +2427,8 @@ Entry.VariableContainer = function() {
                     return this.filterElements[query.shift()];
                 case "variableAddButton":
                     return this.variableAddButton_;
+                case "variableAddConfirmButton":
+                    return this.variableAddConfirmButton;
             }
         } else {
         }
@@ -2447,8 +2441,14 @@ Entry.VariableContainer = function() {
             if (!value || value.length === 0){
                 panel.view.addClass('entryRemove');
                 panel.isOpen = false;
-            } else
-                this.addVariable();
+            } else {
+                var variable = this._makeVariableData();
+                variable = new Entry.Variable(variable);
+                Entry.do(
+                    'variableContainerAddVariable',
+                    variable
+                );
+            }
         } else {
             panel.view.removeClass('entryRemove');
             panel.view.name.focus();
@@ -2456,9 +2456,24 @@ Entry.VariableContainer = function() {
         }
     };
 
+    p._makeVariableData = function() {
+        var panel = this.variableAddPanel;
+        var name = panel.view.name.value.trim();
+        if (!name || name.length === 0)
+            name = Lang.Workspace.variable;
 
+        if (name.length > this._maxNameLength)
+            name = this._truncName(name, 'variable');
 
+        name = this.checkAllVariableName(name,'variables_') ? Entry.getOrderedName(name, this.variables_, 'name_') : name;
 
-
+        var info = panel.info;
+        return {
+            name: name,
+            isCloud: info.isCloud,
+            object: info.object,
+            variableType: 'variable'
+        };
+    };
 })(Entry.VariableContainer.prototype);
 

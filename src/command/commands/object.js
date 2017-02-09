@@ -7,7 +7,9 @@ goog.require("Entry.Command");
 goog.require("Entry.STATIC");
 
 (function(c) {
-    c[Entry.STATIC.COMMAND_TYPES.selectObject] = {
+    var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+
+    c[COMMAND_TYPES.selectObject] = {
         do: function(objectId) {
             return Entry.container.selectObject(objectId);
         },
@@ -22,4 +24,21 @@ goog.require("Entry.STATIC");
         undo: "selectObject"
     };
 
+    c[COMMAND_TYPES.objectEditButtonClick] = {
+        do: function(objectId) {
+            Entry.container.getObject(objectId).toggleEditObject();
+        },
+        state: function(objectId) {
+                return [];
+        },
+        log: function(objectId) {
+            return [
+                ['objectId', objectId],
+                ['objectIndex', Entry.container.getObjectIndex(objectId)],
+            ];
+        },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['container', 'objectIndex', '&1', 'editButton'],
+        undo: "selectObject"
+    };
 })(Entry.Command);

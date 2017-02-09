@@ -41,8 +41,10 @@ Entry.STATIC = {
         uncloneBlock: 109,
         scrollBoard: 110,
         setFieldValue: 111,
+        selectBlockMenu: 112,
 
         selectObject: 201,
+        objectEditButtonClick: 202,
 
         'do': 301,
         'undo': 302,
@@ -62,6 +64,8 @@ Entry.STATIC = {
 
         variableContainerSelectFilter: 801,
         variableContainerClickVariableAddButton: 802,
+        variableContainerAddVariable: 803,
+        variableContainerRemoveVariable: 804,
     },
 
     RECORDABLE: {

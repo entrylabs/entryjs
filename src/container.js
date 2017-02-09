@@ -1063,7 +1063,7 @@ Entry.Container.prototype.getDom = function(query) {
     if (query.length >= 1) {
         switch(query.shift()) {
             case "objectIndex":
-                return this.objects_[query.shift()].view_;
+                return this.objects_[query.shift()].getDom(query);
         }
     } else {
     }

@@ -7,7 +7,9 @@ goog.require("Entry.Command");
 goog.require("Entry.STATIC");
 
 (function(c) {
-    c[Entry.STATIC.COMMAND_TYPES.addThread] = {
+    var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+
+    c[COMMAND_TYPES.addThread] = {
         do: function(thread) {
             return this.editor.board.code.createThread(thread);
         },
@@ -28,7 +30,7 @@ goog.require("Entry.STATIC");
         dom: ['playground', 'blockMenu', '&0']
     };
 
-    c[Entry.STATIC.COMMAND_TYPES.destroyThread] = {
+    c[COMMAND_TYPES.destroyThread] = {
         do: function(thread) {
             var blockId = thread[0].id;
             var block = this.editor.board.findById(blockId);
@@ -47,7 +49,7 @@ goog.require("Entry.STATIC");
         undo: "addThread"
     };
 
-    c[Entry.STATIC.COMMAND_TYPES.destroyBlock] = {
+    c[COMMAND_TYPES.destroyBlock] = {
         do: function(block) {
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
@@ -68,7 +70,7 @@ goog.require("Entry.STATIC");
         undo: "recoverBlock"
     };
 
-    c[Entry.STATIC.COMMAND_TYPES.recoverBlock] = {
+    c[COMMAND_TYPES.recoverBlock] = {
         do: function(blockModel, pointer) {
             var block = this.editor.board.code.createThread([blockModel]).getFirstBlock();
             if (typeof block === "string")
@@ -90,7 +92,7 @@ goog.require("Entry.STATIC");
         undo: "destroyBlock"
     };
 
-    c[Entry.STATIC.COMMAND_TYPES.insertBlock] = {
+    c[COMMAND_TYPES.insertBlock] = {
         type: Entry.STATIC.COMMAND_TYPES.insertBlock,
         do: function(block, targetBlock, count) {
             if (typeof block === "string")
@@ -138,7 +140,7 @@ goog.require("Entry.STATIC");
         dom: ['playground', 'board', '&1']
     };
 
-    c[Entry.STATIC.COMMAND_TYPES.separateBlock] = {
+    c[COMMAND_TYPES.separateBlock] = {
         do: function(block) {
             if (block.view)
                 block.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
@@ -167,7 +169,7 @@ goog.require("Entry.STATIC");
         undo: "insertBlock"
     };
 
-    c[Entry.STATIC.COMMAND_TYPES.moveBlock] = {
+    c[COMMAND_TYPES.moveBlock] = {
         do: function(block, x, y) {
             if (x !== undefined) { // do from undo stack
                 block = this.editor.board.findById(block);
@@ -195,7 +197,7 @@ goog.require("Entry.STATIC");
         undo: "moveBlock"
     };
 
-    c[Entry.STATIC.COMMAND_TYPES.cloneBlock] = {
+    c[COMMAND_TYPES.cloneBlock] = {
         do: function(block) {
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
@@ -218,7 +220,7 @@ goog.require("Entry.STATIC");
         undo: "uncloneBlock"
     };
 
-    c[Entry.STATIC.COMMAND_TYPES.uncloneBlock] = {
+    c[COMMAND_TYPES.uncloneBlock] = {
         do: function(block) {
             var threads = this.editor.board.code.getThreads();
             var lastBlock = threads.pop().getFirstBlock();
@@ -238,7 +240,7 @@ goog.require("Entry.STATIC");
         undo: "cloneBlock"
     };
 
-    c[Entry.STATIC.COMMAND_TYPES.scrollBoard] = {
+    c[COMMAND_TYPES.scrollBoard] = {
         do: function(dx, dy, isPass) {
             if (!isPass)
                 this.editor.board.scroller._scroll(dx, dy);
@@ -256,7 +258,7 @@ goog.require("Entry.STATIC");
         undo: "scrollBoard"
     };
 
-    c[Entry.STATIC.COMMAND_TYPES.setFieldValue] = {
+    c[COMMAND_TYPES.setFieldValue] = {
         do: function(block, field, pointer, oldValue, newValue) { //TODO
             field.setValue(newValue, true);
         },
@@ -272,6 +274,26 @@ goog.require("Entry.STATIC");
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['playground', 'board', '&0'],
         undo: "setFieldValue"
+    };
+
+    c[COMMAND_TYPES.selectBlockMenu] = {
+        do: function(selector, doNotFold, doNotAlign) {
+            var blockMenu = Entry.getMainWS().blockMenu;
+            blockMenu.selectMenu(selector, doNotFold, doNotAlign);
+            blockMenu.align();
+        },
+        state: function(selector, doNotFold, doNotAlign) {
+            var blockMenu = Entry.getMainWS().blockMenu;
+            return [blockMenu.lastSelector, doNotFold, doNotAlign];
+        },
+        log: function(selector, doNotFold, doNotAlign) {
+            return [
+                ['selector', selector]
+            ];
+        },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['playground', 'blockMenu', 'category', '&0'],
+        undo: "selectBlockMenu"
     };
 
 })(Entry.Command);
