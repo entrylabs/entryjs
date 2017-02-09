@@ -44,6 +44,7 @@ Entry.STATIC = {
         selectBlockMenu: 112,
 
         selectObject: 201,
+        objectEditButtonClick: 202,
 
         'do': 301,
         'undo': 302,

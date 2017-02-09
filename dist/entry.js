@@ -5252,7 +5252,7 @@ Entry.Container.prototype.getDom = function(b) {
   if (1 <= b.length) {
     switch(b.shift()) {
       case "objectIndex":
-        return this.objects_[b.shift()].view_;
+        return this.objects_[b.shift()].getDom(b);
     }
   }
 };
@@ -6797,10 +6797,9 @@ Entry.EntryObject = function(b) {
       this.editView_ = d;
       this.view_.appendChild(d);
       $(d).mousedown(function(a) {
-        var b = e.isEditing;
         a.stopPropagation();
         Entry.documentMousedown.notify(a);
-        Entry.engine.isState("run") || !1 !== b || (e.editObjectValues(!b), Entry.playground.object !== e && Entry.container.selectObject(e.id), e.nameView_.select());
+        Entry.do("objectEditButtonClick", e.id);
       });
       d.blur = function(a) {
         e.editObjectComplete();
@@ -7385,6 +7384,25 @@ Entry.EntryObject = function(b) {
   };
   b.disableContextMenu = function() {
     this._isContextMenuEnabled = !1;
+  };
+  b.toggleEditObject = function() {
+    var a = this.isEditing;
+    Entry.engine.isState("run") || !1 !== a || (this.editObjectValues(!a), Entry.playground.object !== this && Entry.container.selectObject(this.id), this.nameView_.select());
+  };
+  b.toggleEditObject = function() {
+    var a = this.isEditing;
+    Entry.engine.isState("run") || !1 !== a || (this.editObjectValues(!a), Entry.playground.object !== this && Entry.container.selectObject(this.id), this.nameView_.select());
+  };
+  b.getDom = function(a) {
+    if (!a || 0 === a.length) {
+      return this.view_;
+    }
+    if (1 <= a.length) {
+      switch(a.shift()) {
+        case "editButton":
+          return this.editView_;
+      }
+    }
   };
 })(Entry.EntryObject.prototype);
 Entry.Painter = function() {
@@ -10511,11 +10529,11 @@ Entry.TextCodingUtil = {};
     }
     return b;
   };
-  b.isLocalType = function(a, b) {
-    if ("variables" == b) {
-      var c = Entry.variableContainer.variables_, d;
-      for (d in c) {
-        var f = c[d];
+  b.isLocalType = function(a, e) {
+    if ("variables" == e) {
+      var b = Entry.variableContainer.variables_, d;
+      for (d in b) {
+        var f = b[d];
         if (f.id_ == a) {
           if (f.object_) {
             return !0;
@@ -10524,9 +10542,9 @@ Entry.TextCodingUtil = {};
         }
       }
     } else {
-      if ("lists" == b) {
-        for (d in c = Entry.variableContainer.lists_, c) {
-          if (f = c[d], f.id_ == a) {
+      if ("lists" == e) {
+        for (d in b = Entry.variableContainer.lists_, b) {
+          if (f = b[d], f.id_ == a) {
             if (f.object_) {
               return !0;
             }
@@ -15691,7 +15709,7 @@ Entry.Loader.handleLoad = function() {
   this.loaded || (this.loaded = !0, Entry.dispatchEvent("loadComplete"));
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, selectObject:201, 
-"do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
+objectEditButtonClick:202, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
 Entry.Command = {};
 (function(b) {
   b[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(a) {
@@ -15912,7 +15930,8 @@ Entry.Commander = function(b) {
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStart", dom:["engine", "&0"]};
 })(Entry.Command);
 (function(b) {
-  b[Entry.STATIC.COMMAND_TYPES.selectObject] = {do:function(a) {
+  var a = Entry.STATIC.COMMAND_TYPES;
+  b[a.selectObject] = {do:function(a) {
     return Entry.container.selectObject(a);
   }, state:function(a) {
     if ((a = Entry.playground) && a.object) {
@@ -15921,6 +15940,13 @@ Entry.Commander = function(b) {
   }, log:function(a) {
     return [a];
   }, undo:"selectObject"};
+  b[a.objectEditButtonClick] = {do:function(a) {
+    Entry.container.getObject(a).toggleEditObject();
+  }, state:function(a) {
+    return [];
+  }, log:function(a) {
+    return [["objectId", a], ["objectIndex", Entry.container.getObjectIndex(a)]];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["container", "objectIndex", "&1", "editButton"], undo:"selectObject"};
 })(Entry.Command);
 (function(b) {
   b.editPicture = {type:Entry.STATIC.COMMAND_TYPES.editPicture, do:function(a, b) {

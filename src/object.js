@@ -267,24 +267,17 @@ Entry.EntryObject = function(model) {
             this.view_.appendChild(editView);
 
             $(editView).mousedown(function(e) {
-                var current = object.isEditing;
                 e.stopPropagation();
                 Entry.documentMousedown.notify(e);
-                if(Entry.engine.isState('run')) return;
-
-                if (current === false) {
-                    object.editObjectValues(!current);
-                    if (Entry.playground.object !== object)
-                        Entry.container.selectObject(object.id);
-                    object.nameView_.select();
-                    return;
-                }
+                Entry.do(
+                    'objectEditButtonClick',
+                    object.id
+                );
             });
 
             editView.blur = function(e){
                 object.editObjectComplete();
             };
-
 
             if (Entry.objectEditable && Entry.objectDeletable) {
                 var deleteView = Entry.createElement('div');
@@ -386,7 +379,6 @@ Entry.EntryObject = function(model) {
                 }
                 thisPointer.updateCoordinateView();
                 Entry.stage.updateObject();
-
             };
 
             sizeInput.onkeypress = function (e) {
@@ -1633,6 +1625,45 @@ Entry.EntryObject = function(model) {
 
     p.disableContextMenu = function() {
         this._isContextMenuEnabled = false;
+    };
+
+    p.toggleEditObject = function() {
+        var current = this.isEditing;
+        if(Entry.engine.isState('run')) return;
+
+        if (current === false) {
+            this.editObjectValues(!current);
+            if (Entry.playground.object !== this)
+                Entry.container.selectObject(this.id);
+            this.nameView_.select();
+            return;
+        }
+    };
+
+    p.toggleEditObject = function() {
+        var current = this.isEditing;
+        if(Entry.engine.isState('run')) return;
+
+        if (current === false) {
+            this.editObjectValues(!current);
+            if (Entry.playground.object !== this)
+                Entry.container.selectObject(this.id);
+            this.nameView_.select();
+            return;
+        }
+    };
+
+    p.getDom = function(query) {
+        if (!query || query.length === 0)
+            return this.view_;
+
+        if (query.length >= 1) {
+            switch(query.shift()) {
+                case "editButton":
+                    return this.editView_;
+            }
+        } else {
+        }
     };
 
 })(Entry.EntryObject.prototype);
