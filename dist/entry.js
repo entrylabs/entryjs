@@ -15689,7 +15689,7 @@ Entry.Loader.handleLoad = function() {
   this.loaded || (this.loaded = !0, Entry.dispatchEvent("loadComplete"));
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectObject:201, "do":301, 
-undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, variableContainerSelectFilter:801}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
+undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
 Entry.Command = {};
 (function(b) {
   b[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(a) {
@@ -15948,13 +15948,21 @@ Entry.Commander = function(b) {
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"playgroundChangeViewMode", dom:["playground", "tabViewElements", "&1"]};
 })(Entry.Command);
 (function(b) {
-  b[Entry.STATIC.COMMAND_TYPES.variableContainerSelectFilter] = {do:function(a, b) {
+  var a = Entry.STATIC.COMMAND_TYPES;
+  b[a.variableContainerSelectFilter] = {do:function(a, b) {
     Entry.variableContainer.selectFilter(a);
   }, state:function(a, b) {
     return [b, a];
   }, log:function(a, b) {
     return [["oldType", b || "all"], ["newType", a]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerSelectFilter", dom:["variableContainer", "filter", "&1"]};
+  b[a.variableContainerClickVariableAddButton] = {do:function() {
+    Entry.variableContainer.clickVariableAddButton();
+  }, state:function() {
+    return [];
+  }, log:function() {
+    return [];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerClickVariableAddButton", dom:["variableContainer", "variableAddButton"]};
 })(Entry.Command);
 Entry.init = function(b, a) {
   Entry.assert("object" === typeof a, "Init option is not object");
@@ -18853,7 +18861,6 @@ Entry.VariableContainer = function() {
   this._variableRefs = [];
   this._messageRefs = [];
   this._functionRefs = [];
-  this.updateList = Entry.Utils.debounce(this.updateList, 150);
   Entry.addEventListener("workspaceChangeMode", this.updateList.bind(this));
 };
 (function(b) {
@@ -18891,9 +18898,7 @@ Entry.VariableContainer = function() {
     var g = this;
     this.variableAddButton_ = c;
     c.bindOnClick(function(a) {
-      a = g.variableAddPanel;
-      var c = a.view.name.value.trim();
-      a.isOpen ? c && 0 !== c.length ? b.addVariable() : (a.view.addClass("entryRemove"), a.isOpen = !1) : (a.view.removeClass("entryRemove"), a.view.name.focus(), a.isOpen = !0);
+      Entry.do("variableContainerClickVariableAddButton");
     });
     this.generateVariableAddView();
     this.generateListAddView();
@@ -20182,8 +20187,14 @@ Entry.VariableContainer = function() {
       switch(a.shift()) {
         case "filter":
           return this.filterElements[a.shift()];
+        case "variableAddButton":
+          return this.variableAddButton_;
       }
     }
+  };
+  b.clickVariableAddButton = function() {
+    var a = this.variableAddPanel, b = a.view.name.value.trim();
+    a.isOpen ? b && 0 !== b.length ? this.addVariable() : (a.view.addClass("entryRemove"), a.isOpen = !1) : (a.view.removeClass("entryRemove"), a.view.name.focus(), a.isOpen = !0);
   };
 })(Entry.VariableContainer.prototype);
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {

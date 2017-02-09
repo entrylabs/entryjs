@@ -32,7 +32,6 @@ Entry.VariableContainer = function() {
     this._variableRefs = [];
     this._messageRefs = [];
     this._functionRefs = [];
-    this.updateList = Entry.Utils.debounce(this.updateList, 150);
     Entry.addEventListener('workspaceChangeMode', this.updateList.bind(this));
 };
 
@@ -80,19 +79,9 @@ Entry.VariableContainer = function() {
         this.variableAddButton_ = variableAddButton;
 
         variableAddButton.bindOnClick(function(e) {
-            var panel = thisPointer.variableAddPanel;
-            var value = panel.view.name.value.trim();
-            if (panel.isOpen){
-                if (!value || value.length === 0){
-                    panel.view.addClass('entryRemove');
-                    panel.isOpen = false;
-                } else
-                    that.addVariable();
-            } else {
-                panel.view.removeClass('entryRemove');
-                panel.view.name.focus();
-                panel.isOpen = true;
-            }
+            Entry.do(
+                "variableContainerClickVariableAddButton"
+            );
         });
 
         this.generateVariableAddView();
@@ -882,7 +871,7 @@ Entry.VariableContainer = function() {
         this.createVariableView(variable);
         this.variables_.unshift(variable);
         if (Entry.playground && Entry.playground.blockMenu)
-            Entry.playground.blockMenu.deleteRendered('variable')
+            Entry.playground.blockMenu.deleteRendered('variable');
         Entry.playground.reloadPlayground();
 
         this.updateList();
@@ -2444,10 +2433,31 @@ Entry.VariableContainer = function() {
             switch(query.shift()) {
                 case "filter":
                     return this.filterElements[query.shift()];
+                case "variableAddButton":
+                    return this.variableAddButton_;
             }
         } else {
         }
     };
+
+    p.clickVariableAddButton = function() {
+        var panel = this.variableAddPanel;
+        var value = panel.view.name.value.trim();
+        if (panel.isOpen){
+            if (!value || value.length === 0){
+                panel.view.addClass('entryRemove');
+                panel.isOpen = false;
+            } else
+                this.addVariable();
+        } else {
+            panel.view.removeClass('entryRemove');
+            panel.view.name.focus();
+            panel.isOpen = true;
+        }
+    };
+
+
+
 
 
 })(Entry.VariableContainer.prototype);
