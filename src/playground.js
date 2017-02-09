@@ -214,8 +214,6 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
             'code',
             that.selectedViewMode
         );
-        //that.changeViewMode('picture');
-        //that.blockMenu.reDraw();
     });
     this.tabViewElements.code = codeTab;
     this._codeTab = codeTab;
@@ -226,7 +224,11 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         pictureTab.addClass('entryTabListItemWorkspace');
         tabList.appendChild(pictureTab);
         pictureTab.bindOnClick(function(e) {
-            Entry.playground.changeViewMode('picture');
+            Entry.do(
+                'playgroundChangeViewMode',
+                'picture',
+                that.selectedViewMode
+            );
         });
         this.tabViewElements.picture = pictureTab;
 
@@ -235,7 +237,11 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         textboxTab.addClass('entryTabListItemWorkspace');
         tabList.appendChild(textboxTab);
         textboxTab.bindOnClick(function(e) {
-            Entry.playground.changeViewMode('text');
+            Entry.do(
+                'playgroundChangeViewMode',
+                'text',
+                that.selectedViewMode
+            );
         });
         this.tabViewElements.text = textboxTab;
         textboxTab.addClass('entryRemove');
@@ -247,7 +253,11 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         soundTab.addClass('entryTabListItemWorkspace');
         tabList.appendChild(soundTab);
         soundTab.bindOnClick(function(e) {
-            Entry.playground.changeViewMode('sound');
+            Entry.do(
+                'playgroundChangeViewMode',
+                'sound',
+                that.selectedViewMode
+            );
         });
         this.tabViewElements.sound = soundTab;
     }
@@ -258,8 +268,11 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         variableTab.addClass('entryTabListItemWorkspace entryVariableTabWorkspace');
         tabList.appendChild(variableTab);
         variableTab.bindOnClick(function(e) {
-            Entry.playground.toggleOnVariableView();
-            Entry.playground.changeViewMode('variable');
+            Entry.do(
+                'playgroundChangeViewMode',
+                'variable',
+                that.selectedViewMode
+            );
         });
         this.tabViewElements.variable = variableTab;
     }
@@ -1139,8 +1152,12 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
     }
     if (viewType != 'default')
         this.tabViewElements[viewType].addClass('entryTabSelected');
-    if (viewType == 'variable')
+    if (viewType == 'variable') {
+        Entry.playground.toggleOnVariableView();
+        this.tabViewElements.code.removeClass('entryTabSelected');
+        this.tabViewElements[viewType].addClass('entryTabSelected');
         return;
+    }
     var views = this.view_.children;
     for (var i = 0; i<views.length; i++) {
         var view = views[i];
@@ -1171,8 +1188,9 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
         this.injectText();
     }
 
-    if (viewType == 'code' && this.resizeHandle_) {
-        this.resizeHandle_.removeClass('entryRemove');
+    if (viewType == 'code') {
+        this.resizeHandle_ && this.resizeHandle_.removeClass('entryRemove');
+        this.blockMenu.reDraw();
     }
     if (Entry.engine.isState('run'))
         this.curtainView_.removeClass('entryRemove');
@@ -1743,8 +1761,8 @@ Entry.Playground.prototype.showBlockMenu = function() {
 Entry.Playground.prototype.getDom = function(query) {
     if (query.length >= 1) {
         switch(query.shift()) {
-            case "code":
-                return this._codeTab;
+            case "tabViewElements":
+                return this.tabViewElements[query.shift()];
             case "blockMenu":
                 return this.blockMenu.getDom(query);
             case "board":
