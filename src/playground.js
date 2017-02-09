@@ -1169,13 +1169,13 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
 
     if (Entry.pictureEditable) {
         if (viewType == 'picture') {
-            this.painter.show()
+            this.painter.show();
             if (!this.pictureView_.object ||
                 this.pictureView_.object != this.object) {
                 this.pictureView_.object = this.object;
                 this.injectPicture();
             }
-        } else this.painter.hide()
+        } else this.painter.hide();
     }
 
     if (viewType == 'sound' && (!this.soundView_.object ||

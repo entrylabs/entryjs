@@ -58,7 +58,9 @@ Entry.STATIC = {
 
         containerSelectObject: 601,
 
-        playgroundChangeViewMode: 701
+        playgroundChangeViewMode: 701,
+
+        variableContainerSelectFilter: 801,
     },
 
     RECORDABLE: {
