@@ -26,6 +26,11 @@ Entry.Restrictor = function() {
         });
 
         console.log(data);
+        if (!data.tooltip)
+            data.tooltip = {
+                title: "액션",
+                content: "지시 사항을 따르시오"
+            }
 
         if (command.restrict) {
             this.currentTooltip = command.restrict(

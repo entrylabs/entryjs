@@ -19755,7 +19755,7 @@ Entry.Restrictor = function() {
     var a = b.content.concat(), c = a.shift(), c = Entry.Command[c], e = c.dom;
     e && (e = e.map(function(b) {
       return "&" === b[0] ? a[Number(b.substr(1))][1] : b;
-    }), console.log(b), this.currentTooltip = c.restrict ? c.restrict(b, e, this.restrictEnd.bind(this)) : new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:e, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}));
+    }), console.log(b), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), this.currentTooltip = c.restrict ? c.restrict(b, e, this.restrictEnd.bind(this)) : new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:e, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}));
   };
   a.end = function() {
     this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);
@@ -26188,41 +26188,41 @@ Entry.FieldStatement = function(a, b, d) {
     c ? d.animate({transform:f}, 300, mina.easeinout) : d.attr({transform:f});
   };
   a.calcHeight = function() {
-    var a = this._thread.view.requestPartHeight(null);
-    this.set({height:a});
+    var b = this._thread.view.requestPartHeight(null);
+    this.set({height:b});
   };
   a.getValue = function() {
     return this.block.statements[this._index];
   };
   a.requestAbsoluteCoordinate = function() {
-    var a = this._blockView.getAbsoluteCoordinate();
-    a.x += this.x;
-    a.y += this.y;
-    return a;
+    var b = this._blockView.getAbsoluteCoordinate();
+    b.x += this.x;
+    b.y += this.y;
+    return b;
   };
   a.dominate = function() {
     this._blockView.dominate();
   };
   a.destroy = function() {
     for (;this._events.length;) {
-      var a = this._events.pop();
-      a[0].detach(a[1]);
+      var b = this._events.pop();
+      b[0].detach(b[1]);
     }
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       if (this.magneting) {
-        var a = this._board.dragBlock.getShadow(), d = this.requestAbsoluteCoordinate(), d = "translate(" + d.x + "," + d.y + ")";
-        $(a).attr({transform:d, display:"block"});
-        this._clonedShadow = a;
+        var b = this._board.dragBlock.getShadow(), a = this.requestAbsoluteCoordinate(), a = "translate(" + a.x + "," + a.y + ")";
+        $(b).attr({transform:a, display:"block"});
+        this._clonedShadow = b;
         this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
-        a = this._board.dragBlock.getBelowHeight();
-        this.statementSvgGroup.attr({transform:"translate(0," + a + ")"});
-        this.set({height:this.height + a});
+        b = this._board.dragBlock.getBelowHeight();
+        this.statementSvgGroup.attr({transform:"translate(0," + b + ")"});
+        this.set({height:this.height + b});
       } else {
-        this._clonedShadow && (this._clonedShadow.attr({display:"none"}), delete this._clonedShadow), a = this.originalHeight, void 0 !== a && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
+        this._clonedShadow && (this._clonedShadow.attr({display:"none"}), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
       }
-      (a = this.block.thread.changeEvent) && a.notify();
+      (b = this.block.thread.changeEvent) && b.notify();
     }
   };
   a.insertTopBlock = function(a) {
