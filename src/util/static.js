@@ -41,6 +41,7 @@ Entry.STATIC = {
         uncloneBlock: 109,
         scrollBoard: 110,
         setFieldValue: 111,
+        selectBlockMenu: 112,
 
         selectObject: 201,
 

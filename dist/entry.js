@@ -4501,37 +4501,37 @@ Entry.Collection = function(b) {
   this.set(b);
 };
 (function(b, a) {
-  b.set = function(b) {
+  b.set = function(e) {
     for (;this.length;) {
       a.pop.call(this);
     }
-    var c = this._hashMap, d;
-    for (d in c) {
-      delete c[d];
+    var b = this._hashMap, d;
+    for (d in b) {
+      delete b[d];
     }
-    if (void 0 !== b) {
+    if (void 0 !== e) {
       d = 0;
-      for (var f = b.length;d < f;d++) {
-        var g = b[d];
-        c[g.id] = g;
+      for (var f = e.length;d < f;d++) {
+        var g = e[d];
+        b[g.id] = g;
         a.push.call(this, g);
       }
     }
   };
-  b.push = function(b) {
-    this._hashMap[b.id] = b;
-    a.push.call(this, b);
+  b.push = function(e) {
+    this._hashMap[e.id] = e;
+    a.push.call(this, e);
   };
   b.unshift = function() {
-    for (var b = Array.prototype.slice.call(arguments, 0), c = this._hashMap, d = b.length - 1;0 <= d;d--) {
-      var f = b[d];
+    for (var e = Array.prototype.slice.call(arguments, 0), b = this._hashMap, d = e.length - 1;0 <= d;d--) {
+      var f = e[d];
       a.unshift.call(this, f);
-      c[f.id] = f;
+      b[f.id] = f;
     }
   };
-  b.insert = function(b, c) {
-    a.splice.call(this, c, 0, b);
-    this._hashMap[b.id] = b;
+  b.insert = function(e, b) {
+    a.splice.call(this, b, 0, e);
+    this._hashMap[e.id] = e;
   };
   b.has = function(a) {
     return !!this._hashMap[a];
@@ -4548,8 +4548,8 @@ Entry.Collection = function(b) {
     }
     return b;
   };
-  b.indexOf = function(b) {
-    return a.indexOf.call(this, b);
+  b.indexOf = function(e) {
+    return a.indexOf.call(this, e);
   };
   b.find = function(a) {
     for (var b = [], d, f = 0, g = this.length;f < g;f++) {
@@ -4566,17 +4566,17 @@ Entry.Collection = function(b) {
     return b;
   };
   b.pop = function() {
-    var b = a.pop.call(this);
-    delete this._hashMap[b.id];
-    return b;
+    var e = a.pop.call(this);
+    delete this._hashMap[e.id];
+    return e;
   };
   b.shift = function() {
-    var b = a.shift.call(this);
-    delete this._hashMap[b.id];
-    return b;
+    var e = a.shift.call(this);
+    delete this._hashMap[e.id];
+    return e;
   };
-  b.slice = function(b, c) {
-    var d = a.slice.call(this, b, c), f = this._hashMap, g;
+  b.slice = function(e, b) {
+    var d = a.slice.call(this, e, b), f = this._hashMap, g;
     for (g in d) {
       delete f[d[g].id];
     }
@@ -4586,15 +4586,15 @@ Entry.Collection = function(b) {
     var b = this.indexOf(a);
     -1 < b && (delete this._hashMap[a.id], this.splice(b, 1));
   };
-  b.splice = function(b, c) {
+  b.splice = function(e, b) {
     var d = a.slice.call(arguments, 2), f = this._hashMap;
-    c = void 0 === c ? this.length - b : c;
-    for (var g = a.splice.call(this, b, c), h = 0, k = g.length;h < k;h++) {
+    b = void 0 === b ? this.length - e : b;
+    for (var g = a.splice.call(this, e, b), h = 0, k = g.length;h < k;h++) {
       delete f[g[h].id];
     }
     h = 0;
     for (k = d.length;h < k;h++) {
-      f = d[h], a.splice.call(this, b++, 0, f), this._hashMap[f.id] = f;
+      f = d[h], a.splice.call(this, e++, 0, f), this._hashMap[f.id] = f;
     }
     return g;
   };
@@ -4610,9 +4610,9 @@ Entry.Collection = function(b) {
     }
     return d;
   };
-  b.moveFromTo = function(b, c) {
+  b.moveFromTo = function(e, b) {
     var d = this.length - 1;
-    0 > b || 0 > c || b > d || c > d || a.splice.call(this, c, 0, a.splice.call(this, b, 1)[0]);
+    0 > e || 0 > b || e > d || b > d || a.splice.call(this, b, 0, a.splice.call(this, e, 1)[0]);
   };
   b.sort = function() {
   };
@@ -4638,18 +4638,18 @@ Entry.Event = function(b) {
   this._listeners = [];
 };
 (function(b) {
-  b.attach = function(a, b) {
-    var c = this, d = {obj:a, fn:b, destroy:function() {
-      c.detach(this);
+  b.attach = function(a, e) {
+    var b = this, d = {obj:a, fn:e, destroy:function() {
+      b.detach(this);
     }};
     this._listeners.push(d);
     return d;
   };
   b.detach = function(a) {
-    var b = this._listeners;
-    a = b.indexOf(a);
+    var e = this._listeners;
+    a = e.indexOf(a);
     if (-1 < a) {
-      return b.splice(a, 1);
+      return e.splice(a, 1);
     }
   };
   b.clear = function() {
@@ -4659,8 +4659,8 @@ Entry.Event = function(b) {
   };
   b.notify = function() {
     var a = arguments;
-    this._listeners.slice().forEach(function(b) {
-      b.fn.apply(b.obj, a);
+    this._listeners.slice().forEach(function(e) {
+      e.fn.apply(e.obj, a);
     });
   };
 })(Entry.Event.prototype);
@@ -4673,8 +4673,8 @@ Entry.Observer = function(b, a, e, c) {
 };
 (function(b) {
   b.destroy = function() {
-    var a = this.parent, b = a.indexOf(this);
-    -1 < b && a.splice(b, 1);
+    var a = this.parent, e = a.indexOf(this);
+    -1 < e && a.splice(e, 1);
     return this;
   };
 })(Entry.Observer.prototype);
@@ -5260,9 +5260,9 @@ Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
     this.data[a.id] = a;
-    var b = a.type;
-    void 0 === this.typeMap[b] && (this.typeMap[b] = {});
-    this.typeMap[b][a.id] = a;
+    var e = a.type;
+    void 0 === this.typeMap[e] && (this.typeMap[e] = {});
+    this.typeMap[e][a.id] = a;
   };
   b.has = function(a) {
     return this.data.hasOwnProperty(a);
@@ -5294,17 +5294,17 @@ Entry.Dom = function(b, a) {
   a.src && c.attr("src", a.src);
   a.parent && a.parent.append(c);
   c.bindOnClick = function() {
-    var a, b, e = function(a) {
+    var a, e, b = function(a) {
       a.stopImmediatePropagation();
-      a.handled || (a.handled = !0, b.call(this, a));
+      a.handled || (a.handled = !0, e.call(this, a));
     };
-    1 < arguments.length ? (b = arguments[1] instanceof Function ? arguments[1] : function() {
-    }, a = "string" === typeof arguments[0] ? arguments[0] : "") : b = arguments[0] instanceof Function ? arguments[0] : function() {
+    1 < arguments.length ? (e = arguments[1] instanceof Function ? arguments[1] : function() {
+    }, a = "string" === typeof arguments[0] ? arguments[0] : "") : e = arguments[0] instanceof Function ? arguments[0] : function() {
     };
     if (a) {
-      $(this).on("click tab", a, e);
+      $(this).on("click tab", a, b);
     } else {
-      $(this).on("click tab", e);
+      $(this).on("click tab", b);
     }
   };
   return c;
@@ -5466,8 +5466,8 @@ p.resize = function() {
 };
 Entry.Engine = function() {
   function b(a) {
-    var b = [37, 38, 39, 40, 32], c = a.keyCode || a.which, d = Entry.stage.inputField;
-    32 == c && d && d.hasFocus() || -1 < b.indexOf(c) && a.preventDefault();
+    var e = [37, 38, 39, 40, 32], b = a.keyCode || a.which, d = Entry.stage.inputField;
+    32 == b && d && d.hasFocus() || -1 < e.indexOf(b) && a.preventDefault();
   }
   this.state = "stop";
   this.popup = null;
@@ -5504,9 +5504,9 @@ Entry.Engine = function() {
   Entry.message = new Entry.Event(window);
 };
 (function(b) {
-  b.generateView = function(a, b) {
-    if (b && "workspace" != b) {
-      "minimize" == b ? (this.view_ = a, this.view_.addClass("entryEngine"), this.view_.addClass("entryEngineMinimize"), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonMinimize"), this.maximizeButton.addClass("entryMaximizeButtonMinimize"), this.view_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
+  b.generateView = function(a, e) {
+    if (e && "workspace" != e) {
+      "minimize" == e ? (this.view_ = a, this.view_.addClass("entryEngine"), this.view_.addClass("entryEngineMinimize"), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonMinimize"), this.maximizeButton.addClass("entryMaximizeButtonMinimize"), this.view_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
         Entry.engine.toggleFullscreen();
       }), this.coordinateButton = Entry.createElement("button"), this.coordinateButton.addClass("entryEngineButtonMinimize"), this.coordinateButton.addClass("entryCoordinateButtonMinimize"), this.view_.appendChild(this.coordinateButton), this.coordinateButton.bindOnClick(function(a) {
         this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
@@ -5522,7 +5522,7 @@ Entry.Engine = function() {
         this.runButton.bindOnClick(function(a) {
           Entry.engine.toggleRun();
         });
-      }.bind(this))) : "phone" == b && (this.view_ = a, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
+      }.bind(this))) : "phone" == e && (this.view_ = a, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
         Entry.engine.footerView_.addClass("entryRemove");
         Entry.engine.headerView_.addClass("entryRemove");
         Entry.launchFullScreen(Entry.engine.view_);
@@ -5541,13 +5541,13 @@ Entry.Engine = function() {
       this.view_ = a;
       this.view_.addClass("entryEngine_w");
       this.view_.addClass("entryEngineWorkspace_w");
-      var c = Entry.createElement("button");
-      this.speedButton = c;
+      var b = Entry.createElement("button");
+      this.speedButton = b;
       this.speedButton.addClass("entrySpeedButtonWorkspace", "entryEngineTopWorkspace", "entryEngineButtonWorkspace_w");
       this.view_.appendChild(this.speedButton);
       this.speedButton.bindOnClick(function(a) {
         Entry.engine.toggleSpeedPanel();
-        c.blur();
+        b.blur();
       });
       this.maximizeButton = Entry.createElement("button");
       this.maximizeButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryMaximizeButtonWorkspace_w");
@@ -5640,14 +5640,14 @@ Entry.Engine = function() {
       this.speedLabel_.innerHTML = Lang.Workspace.speed;
       this.view_.insertBefore(this.speedLabel_, this.maximizeButton);
       this.speedProgress_ = Entry.createElement("table", "entrySpeedProgressWorkspace");
-      for (var a = Entry.createElement("tr"), b = this.speeds, c = 0;5 > c;c++) {
-        (function(c) {
-          var d = Entry.createElement("td", "progressCell" + c);
-          d.bindOnClick(function() {
-            Entry.engine.setSpeedMeter(b[c]);
+      for (var a = Entry.createElement("tr"), e = this.speeds, b = 0;5 > b;b++) {
+        (function(b) {
+          var c = Entry.createElement("td", "progressCell" + b);
+          c.bindOnClick(function() {
+            Entry.engine.setSpeedMeter(e[b]);
           });
-          a.appendChild(d);
-        })(c);
+          a.appendChild(c);
+        })(b);
       }
       this.view_.insertBefore(this.speedProgress_, this.maximizeButton);
       this.speedProgress_.appendChild(a);
@@ -15688,8 +15688,8 @@ Entry.Loader.isLoaded = function() {
 Entry.Loader.handleLoad = function() {
   this.loaded || (this.loaded = !0, Entry.dispatchEvent("loadComplete"));
 };
-Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectObject:201, "do":301, 
-undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, selectObject:201, 
+"do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
 Entry.Command = {};
 (function(b) {
   b[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(a) {
@@ -15765,7 +15765,8 @@ Entry.Commander = function(b) {
   };
 })(Entry.Commander.prototype);
 (function(b) {
-  b[Entry.STATIC.COMMAND_TYPES.addThread] = {do:function(a) {
+  var a = Entry.STATIC.COMMAND_TYPES;
+  b[a.addThread] = {do:function(a) {
     return this.editor.board.code.createThread(a);
   }, state:function(a) {
     a.length && (a[0].id = Entry.Utils.generateId());
@@ -15773,14 +15774,14 @@ Entry.Commander = function(b) {
   }, log:function(a) {
     return [["thread", this.editor.board.code.getThreads().pop().toJSON()]];
   }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
-  b[Entry.STATIC.COMMAND_TYPES.destroyThread] = {do:function(a) {
+  b[a.destroyThread] = {do:function(a) {
     this.editor.board.findById(a[0].id).destroy(!0, !0);
   }, state:function(a) {
     return [this.editor.board.findById(a[0].id).thread.toJSON()];
   }, log:function(a) {
     return [["block", a[0].pointer ? a[0].pointer() : a[0]]];
   }, undo:"addThread"};
-  b[Entry.STATIC.COMMAND_TYPES.destroyBlock] = {do:function(a) {
+  b[a.destroyBlock] = {do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     a.doDestroy(!0);
   }, state:function(a) {
@@ -15790,10 +15791,10 @@ Entry.Commander = function(b) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     return [["block", a.pointer ? a.pointer() : a]];
   }, undo:"recoverBlock"};
-  b[Entry.STATIC.COMMAND_TYPES.recoverBlock] = {do:function(a, b) {
-    var c = this.editor.board.code.createThread([a]).getFirstBlock();
-    "string" === typeof c && (c = this.editor.board.findById(c));
-    this.editor.board.insert(c, b);
+  b[a.recoverBlock] = {do:function(a, b) {
+    var d = this.editor.board.code.createThread([a]).getFirstBlock();
+    "string" === typeof d && (d = this.editor.board.findById(d));
+    this.editor.board.insert(d, b);
   }, state:function(a) {
     "string" !== typeof a && (a = a.id);
     return [a];
@@ -15801,44 +15802,44 @@ Entry.Commander = function(b) {
     a = this.editor.board.findById(a.id);
     return [["block", a.pointer()], ["pointer", b]];
   }, undo:"destroyBlock"};
-  b[Entry.STATIC.COMMAND_TYPES.insertBlock] = {type:Entry.STATIC.COMMAND_TYPES.insertBlock, do:function(a, b, c) {
+  b[a.insertBlock] = {type:Entry.STATIC.COMMAND_TYPES.insertBlock, do:function(a, b, d) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    this.editor.board.insert(a, b, c);
+    this.editor.board.insert(a, b, d);
   }, state:function(a, b) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    var c = [a], d = a.targetPointer();
-    c.push(d);
-    "string" !== typeof a && "basic" === a.getBlockType() && c.push(a.thread.getCount(a));
-    return c;
-  }, log:function(a, b, c) {
+    var d = [a], f = a.targetPointer();
+    d.push(f);
+    "string" !== typeof a && "basic" === a.getBlockType() && d.push(a.thread.getCount(a));
+    return d;
+  }, log:function(a, b, d) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    return [["block", a ? a.pointer() : ""], ["targetPointer", a.targetPointer()], ["count", c ? c : null]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(a, b, c) {
-    c();
+    return [["block", a ? a.pointer() : ""], ["targetPointer", a.targetPointer()], ["count", d ? d : null]];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(a, b, d) {
+    d();
     return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:b, direction:"right"}], {callBack:function() {
     }});
   }, dom:["playground", "board", "&1"]};
-  b[Entry.STATIC.COMMAND_TYPES.separateBlock] = {do:function(a) {
+  b[a.separateBlock] = {do:function(a) {
     a.view && a.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
     a.doSeparate();
   }, state:function(a) {
-    var b = [a.id], c = a.targetPointer();
-    b.push(c);
+    var b = [a.id], d = a.targetPointer();
+    b.push(d);
     "basic" === a.getBlockType() && b.push(a.thread.getCount(a));
     return b;
   }, log:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     return [["block", a.pointer()], ["x", a.x], ["y", a.y]];
   }, undo:"insertBlock"};
-  b[Entry.STATIC.COMMAND_TYPES.moveBlock] = {do:function(a, b, c) {
-    void 0 !== b ? (a = this.editor.board.findById(a), a.moveTo(b, c)) : a._updatePos();
+  b[a.moveBlock] = {do:function(a, b, d) {
+    void 0 !== b ? (a = this.editor.board.findById(a), a.moveTo(b, d)) : a._updatePos();
   }, state:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     return [a.id, a.x, a.y];
-  }, log:function(a, b, c) {
+  }, log:function(a, b, d) {
     return [Entry.STATIC.COMMAND_TYPES.moveBlock, ["block", a.pointer()], ["x", a.x], ["y", a.y]];
   }, undo:"moveBlock"};
-  b[Entry.STATIC.COMMAND_TYPES.cloneBlock] = {do:function(a) {
+  b[a.cloneBlock] = {do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     this.editor.board.code.createThread(a.copy());
   }, state:function(a) {
@@ -15849,7 +15850,7 @@ Entry.Commander = function(b) {
     var b = this.editor.board.code.getThreads().pop();
     return [["block", a.pointer()], ["thread", b.stringify()]];
   }, undo:"uncloneBlock"};
-  b[Entry.STATIC.COMMAND_TYPES.uncloneBlock] = {do:function(a) {
+  b[a.uncloneBlock] = {do:function(a) {
     a = this.editor.board.code.getThreads().pop().getFirstBlock();
     this._tempStorage = a.id;
     a.destroy(!0, !0);
@@ -15860,21 +15861,30 @@ Entry.Commander = function(b) {
     this._tempStorage = null;
     return [["blockId", a]];
   }, undo:"cloneBlock"};
-  b[Entry.STATIC.COMMAND_TYPES.scrollBoard] = {do:function(a, b, c) {
-    c || this.editor.board.scroller._scroll(a, b);
+  b[a.scrollBoard] = {do:function(a, b, d) {
+    d || this.editor.board.scroller._scroll(a, b);
     delete this.editor.board.scroller._diffs;
   }, state:function(a, b) {
     return [-a, -b];
   }, log:function(a, b) {
     return [["dx", a], ["dy", b]];
   }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
-  b[Entry.STATIC.COMMAND_TYPES.setFieldValue] = {do:function(a, b, c, d, f) {
-    b.setValue(f, !0);
-  }, state:function(a, b, c, d, f) {
-    return [a, b, c, f, d];
-  }, log:function(a, b, c, d, f) {
-    return [["pointer", c], ["newValue", f]];
+  b[a.setFieldValue] = {do:function(a, b, d, f, g) {
+    b.setValue(g, !0);
+  }, state:function(a, b, d, f, g) {
+    return [a, b, d, g, f];
+  }, log:function(a, b, d, f, g) {
+    return [["pointer", d], ["newValue", g]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
+  b[a.selectBlockMenu] = {do:function(a, b, d) {
+    var f = Entry.getMainWS().blockMenu;
+    f.selectMenu(a, b, d);
+    f.align();
+  }, state:function(a, b, d) {
+    return [Entry.getMainWS().blockMenu.lastSelector, b, d];
+  }, log:function(a, b, d) {
+    return [["selector", a]];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "category", "&0"], undo:"selectBlockMenu"};
 })(Entry.Command);
 (function(b) {
   b[Entry.STATIC.COMMAND_TYPES.containerSelectObject] = {do:function(a) {
@@ -21202,8 +21212,7 @@ Entry.BlockMenu = function(b, a, e, c) {
       b._categoryElems[d] = a;
       a.bindOnClick(function(a) {
         b._cancelDynamic(!0, function() {
-          b.selectMenu(d, void 0, !0);
-          b.align();
+          Entry.do("selectBlockMenu", d, void 0, !0);
         });
       });
     })(Entry.Dom("li", {id:"entryCategory" + a, class:"entryCategoryElementWorkspace entryRemove", parent:this._categoryCol}), a);
@@ -21303,9 +21312,11 @@ Entry.BlockMenu = function(b, a, e, c) {
     return !!this._categoryData;
   };
   b.getDom = function(a) {
-    return this.getSvgDom(a[0][0].type);
+    if (1 <= a.length) {
+      return "category" === a[0] ? this._categoryElems[a[1]] : this.getSvgDomByType(a[0][0].type);
+    }
   };
-  b.getSvgDom = function(a) {
+  b.getSvgDomByType = function(a) {
     for (var b = this.code.getThreads(), c = 0;c < b.length;c++) {
       var d = b[c].getFirstBlock();
       if (d.type === a) {

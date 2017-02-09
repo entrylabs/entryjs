@@ -846,8 +846,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             that._categoryElems[name] = elem;
             elem.bindOnClick(function(e) {
                 that._cancelDynamic(true, function() {
-                    that.selectMenu(name, undefined, true);
-                    that.align();
+                    Entry.do(
+                        'selectBlockMenu',
+                        name, undefined, true
+                    );
                 });
             });
         })(element, name);
@@ -1005,11 +1007,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.getDom = function(query) {
-        var type = query[0][0].type;
-        return this.getSvgDom(type);
+        if (query.length >= 1) {
+            if (query[0] === 'category')
+                return this._categoryElems[query[1]];
+            else return this.getSvgDomByType(query[0][0].type);
+        } else {
+        }
     };
 
-    p.getSvgDom = function(type) {
+    p.getSvgDomByType = function(type) {
         var code = this.code;
 
         var threads = code.getThreads();
