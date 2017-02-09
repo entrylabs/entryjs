@@ -214,8 +214,6 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
             'code',
             that.selectedViewMode
         );
-        //that.changeViewMode('picture');
-        //that.blockMenu.reDraw();
     });
     this.tabViewElements.code = codeTab;
     this._codeTab = codeTab;
@@ -226,7 +224,11 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         pictureTab.addClass('entryTabListItemWorkspace');
         tabList.appendChild(pictureTab);
         pictureTab.bindOnClick(function(e) {
-            Entry.playground.changeViewMode('picture');
+            Entry.do(
+                'playgroundChangeViewMode',
+                'picture',
+                that.selectedViewMode
+            );
         });
         this.tabViewElements.picture = pictureTab;
 
@@ -1171,8 +1173,9 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
         this.injectText();
     }
 
-    if (viewType == 'code' && this.resizeHandle_) {
-        this.resizeHandle_.removeClass('entryRemove');
+    if (viewType == 'code') {
+        this.resizeHandle_ && this.resizeHandle_.removeClass('entryRemove');
+        this.blockMenu.reDraw();
     }
     if (Entry.engine.isState('run'))
         this.curtainView_.removeClass('entryRemove');
@@ -1745,6 +1748,8 @@ Entry.Playground.prototype.getDom = function(query) {
         switch(query.shift()) {
             case "code":
                 return this._codeTab;
+            case "picture":
+                return this.tabViewElements.picture;
             case "blockMenu":
                 return this.blockMenu.getDom(query);
             case "board":

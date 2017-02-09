@@ -15689,7 +15689,7 @@ Entry.Loader.handleLoad = function() {
   this.loaded || (this.loaded = !0, Entry.dispatchEvent("loadComplete"));
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectObject:201, "do":301, 
-undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
+undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
 Entry.Command = {};
 (function(b) {
   b[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(a) {
@@ -15944,14 +15944,12 @@ Entry.Commander = function(b) {
 })(Entry.Command);
 (function(b) {
   b[Entry.STATIC.COMMAND_TYPES.playgroundChangeViewMode] = {do:function(a, b) {
-    var c = Entry.playground;
-    c.changeViewMode(a);
-    "code" === a && c.blockMenu.reDraw();
+    Entry.playground.changeViewMode(a);
   }, state:function(a, b) {
     return [b, a];
-  }, log:function(a, b, c) {
-    return [["oldType", b], ["newType", a]];
-  }, undo:"playgroundChangeViewMode", dom:["playground", "&0"]};
+  }, log:function(a, b) {
+    return [["oldType", b || "code"], ["newType", a]];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"playgroundChangeViewMode", dom:["playground", "&1"]};
 })(Entry.Command);
 Entry.init = function(b, a) {
   Entry.assert("object" === typeof a, "Init option is not object");
@@ -25828,8 +25826,8 @@ Entry.Playground.prototype.generateTabView = function(b) {
     Entry.do("playgroundChangeViewMode", "code", a.selectedViewMode);
   });
   this._codeTab = this.tabViewElements.code = b;
-  Entry.pictureEditable && (b = Entry.createElement("li", "entryPictureTab"), b.innerHTML = Lang.Workspace.tab_picture, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(a) {
-    Entry.playground.changeViewMode("picture");
+  Entry.pictureEditable && (b = Entry.createElement("li", "entryPictureTab"), b.innerHTML = Lang.Workspace.tab_picture, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(b) {
+    Entry.do("playgroundChangeViewMode", "picture", a.selectedViewMode);
   }), this.tabViewElements.picture = b, b = Entry.createElement("li", "entryTextboxTab"), b.innerHTML = Lang.Workspace.tab_text, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(a) {
     Entry.playground.changeViewMode("text");
   }), this.tabViewElements.text = b, b.addClass("entryRemove"));
@@ -26349,7 +26347,7 @@ Entry.Playground.prototype.changeViewMode = function(b) {
         this.textView_.object = this.object, this.injectText();
       }
     }
-    "code" == b && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove");
+    "code" == b && (this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove"), this.blockMenu.reDraw());
     Entry.engine.isState("run") && this.curtainView_.removeClass("entryRemove");
     this.selectedViewMode = this.viewMode_ = b;
     this.toggleOffVariableView();
@@ -26652,6 +26650,8 @@ Entry.Playground.prototype.getDom = function(b) {
     switch(b.shift()) {
       case "code":
         return this._codeTab;
+      case "picture":
+        return this.tabViewElements.picture;
       case "blockMenu":
         return this.blockMenu.getDom(b);
       case "board":
