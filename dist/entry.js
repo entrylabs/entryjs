@@ -5835,7 +5835,9 @@ Entry.Commander = function(a) {
     return a;
   }, log:function(b, a, c) {
     "string" === typeof b && (b = this.editor.board.findById(b));
-    return [["block", b ? b.pointer() : ""], ["targetPointer", b.targetPointer()], ["count", c ? c : null]];
+    result = [["block", b ? b.pointer() : ""], ["targetPointer", b.targetPointer()]];
+    c && result.push(["count", c ? c : null]);
+    return result;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, a, c) {
     c();
     return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:a, direction:"right"}], {callBack:function() {
@@ -9001,7 +9003,7 @@ Entry.Recorder = function() {
       switch(Entry.Command[a].recordable) {
         case Entry.STATIC.RECORDABLE.SUPPORT:
           this._recordData.push(b);
-          Entry.toast.warning(a);
+          Entry.toast.warning("Record", Lang.Command[a + ""]);
           break;
         case Entry.STATIC.RECORDABLE.ABANDONE:
           Entry.toast.alert("\uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc74c");
@@ -19750,11 +19752,10 @@ Entry.Restrictor = function() {
 };
 (function(a) {
   a.restrict = function(b) {
-    b = b.concat();
-    var a = b.shift(), a = Entry.Command[a], c = a.dom;
-    c && (c = c.map(function(a) {
-      return "&" === a[0] ? b[Number(a.substr(1))][1] : a;
-    }), this.currentTooltip = a.restrict ? a.restrict(b, c, this.restrictEnd.bind(this)) : new Entry.Tooltip([{content:"asdf", target:c, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}));
+    var a = b.content.concat(), c = a.shift(), c = Entry.Command[c], e = c.dom;
+    e && (e = e.map(function(b) {
+      return "&" === b[0] ? a[Number(b.substr(1))][1] : b;
+    }), console.log(b), this.currentTooltip = c.restrict ? c.restrict(b, e, this.restrictEnd.bind(this)) : new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:e, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}));
   };
   a.end = function() {
     this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);
@@ -26178,13 +26179,13 @@ Entry.FieldStatement = function(a, b, d) {
     this._events.push([a.changeEvent, c]);
     this.calcHeight();
   };
-  a.align = function(a, d, c) {
+  a.align = function(b, a, c) {
     c = void 0 === c ? !0 : c;
-    var b = this.svgGroup;
-    this._position && (this._position.x && (a = this._position.x), this._position.y && (d = this._position.y));
-    var f = "translate(" + a + "," + d + ")";
-    this.set({x:a, y:d});
-    c ? b.animate({transform:f}, 300, mina.easeinout) : b.attr({transform:f});
+    var d = this.svgGroup;
+    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
+    var f = "translate(" + b + "," + a + ")";
+    this.set({x:b, y:a});
+    c ? d.animate({transform:f}, 300, mina.easeinout) : d.attr({transform:f});
   };
   a.calcHeight = function() {
     var a = this._thread.view.requestPartHeight(null);

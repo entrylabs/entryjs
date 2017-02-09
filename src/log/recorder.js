@@ -18,7 +18,7 @@ Entry.Recorder = function() {
         switch (command.recordable) {
             case Entry.STATIC.RECORDABLE.SUPPORT:
                 this._recordData.push(data);
-                Entry.toast.warning(commandType);
+                Entry.toast.warning("Record", Lang.Command[commandType + ""]);
                 return;
             case Entry.STATIC.RECORDABLE.SKIP:
                 return;

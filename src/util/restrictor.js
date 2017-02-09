@@ -12,18 +12,20 @@ Entry.Restrictor = function() {
 
 (function(p) {
     p.restrict = function(data) {
-        data = data.concat();
-        var commandType = data.shift();
+        var log = data.content.concat();
+        var commandType = log.shift();
         var command = Entry.Command[commandType];
         var domQuery = command.dom;
         if (!domQuery)
             return;
         domQuery = domQuery.map(function(q) {
             if (q[0] === "&")
-                return data[Number(q.substr(1))][1];
+                return log[Number(q.substr(1))][1];
             else
                 return q;
         });
+
+        console.log(data);
 
         if (command.restrict) {
             this.currentTooltip = command.restrict(
@@ -31,7 +33,8 @@ Entry.Restrictor = function() {
             return;
         } else {
             this.currentTooltip = new Entry.Tooltip([{
-                content: "asdf",
+                title: data.tooltip.title,
+                content: data.tooltip.content,
                 target: domQuery,
                 direction: "down"
             }], {

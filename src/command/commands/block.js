@@ -114,11 +114,13 @@ goog.require("Entry.STATIC");
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
 
-            return [
+            result = [
                 ['block', block ? block.pointer() : ""],
-                ['targetPointer', block.targetPointer()],
-                ['count', count ? count : null]
+                ['targetPointer', block.targetPointer()]
             ];
+            if (count)
+                result.push(['count', count ? count : null])
+            return result;
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "insertBlock",
