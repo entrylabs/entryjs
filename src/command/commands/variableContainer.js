@@ -58,6 +58,7 @@ goog.require("Entry.STATIC");
             return [ 'variable', variable ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        validate: false,
         undo: "variableContainerRemoveVariable",
         dom: ['variableContainer', 'variableAddConfirmButton']
     };
@@ -77,6 +78,7 @@ goog.require("Entry.STATIC");
             return [ 'variable', variable ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        validate: false,
         undo: "variableContainerAddVariable",
         dom: ['variableContainer', 'variableAddConfirmButton']
     };

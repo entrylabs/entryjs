@@ -15718,17 +15718,15 @@ Entry.Commander = function(b) {
 (function(b) {
   b.do = function(a) {
     "string" === typeof a && (a = Entry.STATIC.COMMAND_TYPES[a]);
-    var b = this, c = Array.prototype.slice.call(arguments);
-    c.shift();
-    var d = Entry.Command[a];
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.do, d.undo].concat(d.state.apply(this, c)));
-    d = Entry.Command[a].do.apply(this, c);
-    this.doEvent.notify(a, c);
-    setTimeout(function() {
-      b.report(Entry.STATIC.COMMAND_TYPES.do);
-      b.report(a, c);
-    }, 0);
-    return {value:d, isPass:this.isPass.bind(this)};
+    var b = Array.prototype.slice.call(arguments);
+    b.shift();
+    var c = Entry.Command[a];
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.do, c.undo].concat(c.state.apply(this, b)));
+    c = Entry.Command[a].do.apply(this, b);
+    this.doEvent.notify(a, b);
+    this.report(Entry.STATIC.COMMAND_TYPES.do);
+    this.report(a, b);
+    return {value:c, isPass:this.isPass.bind(this)};
   };
   b.undo = function() {
     var a = Array.prototype.slice.call(arguments), b = a.shift(), c = Entry.Command[b];
@@ -15774,15 +15772,13 @@ Entry.Commander = function(b) {
     return [a];
   }, log:function(a) {
     return [["thread", this.editor.board.code.getThreads().pop().toJSON()]];
-  }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "&0"]};
+  }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
   b[Entry.STATIC.COMMAND_TYPES.destroyThread] = {do:function(a) {
     this.editor.board.findById(a[0].id).destroy(!0, !0);
   }, state:function(a) {
     return [this.editor.board.findById(a[0].id).thread.toJSON()];
   }, log:function(a) {
-    a = a[0].id;
-    this.editor.board.findById(a);
-    return [["blockId", a]];
+    return [["block", a[0].pointer ? a[0].pointer() : a[0]]];
   }, undo:"addThread"};
   b[Entry.STATIC.COMMAND_TYPES.destroyBlock] = {do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
@@ -15792,7 +15788,7 @@ Entry.Commander = function(b) {
     return [a.toJSON(), a.pointer()];
   }, log:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    return [["blockId", a.id]];
+    return [["block", a.pointer ? a.pointer() : a]];
   }, undo:"recoverBlock"};
   b[Entry.STATIC.COMMAND_TYPES.recoverBlock] = {do:function(a, b) {
     var c = this.editor.board.code.createThread([a]).getFirstBlock();
@@ -15803,22 +15799,24 @@ Entry.Commander = function(b) {
     return [a];
   }, log:function(a, b) {
     a = this.editor.board.findById(a.id);
-    return [["block", a.stringify()], ["pointer", b]];
+    return [["block", a.pointer()], ["pointer", b]];
   }, undo:"destroyBlock"};
   b[Entry.STATIC.COMMAND_TYPES.insertBlock] = {type:Entry.STATIC.COMMAND_TYPES.insertBlock, do:function(a, b, c) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     this.editor.board.insert(a, b, c);
   }, state:function(a, b) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    var c = [a.id], d = a.targetPointer();
+    var c = [a], d = a.targetPointer();
     c.push(d);
     "string" !== typeof a && "basic" === a.getBlockType() && c.push(a.thread.getCount(a));
     return c;
   }, log:function(a, b, c) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    return [["blockId", a.id], ["targetPointer", a.targetPointer()], ["count", c]];
+    return [["block", a ? a.pointer() : ""], ["targetPointer", a.targetPointer()], ["count", c ? c : null]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(a, b, c) {
-    return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:b, direction:"right"}], {callBack:c});
+    c();
+    return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:b, direction:"right"}], {callBack:function() {
+    }});
   }, dom:["playground", "board", "&1"]};
   b[Entry.STATIC.COMMAND_TYPES.separateBlock] = {do:function(a) {
     a.view && a.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
@@ -15830,7 +15828,7 @@ Entry.Commander = function(b) {
     return b;
   }, log:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    return [["blockId", a.id], ["x", a.x], ["y", a.y]];
+    return [["block", a.pointer()], ["x", a.x], ["y", a.y]];
   }, undo:"insertBlock"};
   b[Entry.STATIC.COMMAND_TYPES.moveBlock] = {do:function(a, b, c) {
     void 0 !== b ? (a = this.editor.board.findById(a), a.moveTo(b, c)) : a._updatePos();
@@ -15838,7 +15836,7 @@ Entry.Commander = function(b) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     return [a.id, a.x, a.y];
   }, log:function(a, b, c) {
-    return [Entry.STATIC.COMMAND_TYPES.moveBlock, ["blockId", a.id], ["x", a.x], ["y", a.y]];
+    return [Entry.STATIC.COMMAND_TYPES.moveBlock, ["block", a.pointer()], ["x", a.x], ["y", a.y]];
   }, undo:"moveBlock"};
   b[Entry.STATIC.COMMAND_TYPES.cloneBlock] = {do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
@@ -15849,7 +15847,7 @@ Entry.Commander = function(b) {
   }, log:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     var b = this.editor.board.code.getThreads().pop();
-    return [["blockId", a.id], ["thread", b.stringify()]];
+    return [["block", a.pointer()], ["thread", b.stringify()]];
   }, undo:"uncloneBlock"};
   b[Entry.STATIC.COMMAND_TYPES.uncloneBlock] = {do:function(a) {
     a = this.editor.board.code.getThreads().pop().getFirstBlock();
@@ -15971,7 +15969,7 @@ Entry.Commander = function(b) {
   }, log:function(a) {
     a instanceof Entry.Variable && (a = a.toJSON());
     return ["variable", a];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerRemoveVariable", dom:["variableContainer", "variableAddConfirmButton"]};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"variableContainerRemoveVariable", dom:["variableContainer", "variableAddConfirmButton"]};
   b[a.variableContainerRemoveVariable] = {do:function(a) {
     Entry.variableContainer.removeVariable(a);
   }, state:function(a) {
@@ -15980,7 +15978,7 @@ Entry.Commander = function(b) {
   }, log:function(a) {
     a instanceof Entry.Variable && (a = a.toJSON());
     return ["variable", a];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerAddVariable", dom:["variableContainer", "variableAddConfirmButton"]};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"variableContainerAddVariable", dom:["variableContainer", "variableAddConfirmButton"]};
 })(Entry.Command);
 Entry.init = function(b, a) {
   Entry.assert("object" === typeof a, "Init option is not object");
