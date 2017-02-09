@@ -52,10 +52,8 @@ Entry.Commander = function(injectType) {
         this.doEvent.notify(commandType, argumentArray);
 
         //intentionally delay reporting
-        setTimeout(function() {
-            that.report(Entry.STATIC.COMMAND_TYPES.do);
-            that.report(commandType, argumentArray);
-        }, 0);
+        that.report(Entry.STATIC.COMMAND_TYPES.do);
+        that.report(commandType, argumentArray);
 
         return {
             value: value,

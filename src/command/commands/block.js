@@ -24,6 +24,7 @@ goog.require("Entry.STATIC");
         },
         undo: "destroyThread",
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        validate: false,
         dom: ['playground', 'blockMenu', '&0']
     };
 
@@ -39,10 +40,8 @@ goog.require("Entry.STATIC");
             return [block.thread.toJSON()];
         },
         log: function(thread) {
-            var blockId = thread[0].id;
-            var block = this.editor.board.findById(blockId);
             return [
-                ['blockId', blockId]
+                ['block', thread[0].pointer ?  thread[0].pointer() : thread[0]]
             ];
         },
         undo: "addThread"
@@ -63,7 +62,7 @@ goog.require("Entry.STATIC");
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
             return [
-                ['blockId', block.id]
+                ['block', block.pointer ? block.pointer() : block]
             ];
         },
         undo: "recoverBlock"
@@ -84,7 +83,7 @@ goog.require("Entry.STATIC");
         log: function(block, pointer) {
             block = this.editor.board.findById(block.id);
             return [
-                ['block', block.stringify()],
+                ['block', block.pointer()],
                 ['pointer', pointer]
             ];
         },
@@ -102,7 +101,7 @@ goog.require("Entry.STATIC");
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
             var data = [
-                block.id
+                block
             ];
             var pointer = block.targetPointer()
             data.push(pointer);
@@ -116,20 +115,22 @@ goog.require("Entry.STATIC");
                 block = this.editor.board.findById(block);
 
             return [
-                ['blockId', block.id],
+                ['block', block ? block.pointer() : ""],
                 ['targetPointer', block.targetPointer()],
-                ['count', count]
+                ['count', count ? count : null]
             ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "insertBlock",
         restrict: function(data, domQuery, callback) {
+            callback();
             return new Entry.Tooltip([{
                 content: "여기 밑에 끼워넣으셈",
                 target: domQuery,
                 direction: "right"
             }], {
-                callBack: callback
+                callBack: function() {
+                }
             });
         },
         dom: ['playground', 'board', '&1']
@@ -157,7 +158,7 @@ goog.require("Entry.STATIC");
                 block = this.editor.board.findById(block);
 
             return [
-                ['blockId', block.id],
+                ['block', block.pointer()],
                 ['x', block.x], ['y', block.y]
             ];
         },
@@ -185,7 +186,7 @@ goog.require("Entry.STATIC");
         log: function(block, x, y) {
             return [
                 Entry.STATIC.COMMAND_TYPES.moveBlock,
-                ['blockId', block.id],
+                ['block', block.pointer()],
                 ['x', block.x], ['y', block.y]
             ];
         },
@@ -208,7 +209,7 @@ goog.require("Entry.STATIC");
                 block = this.editor.board.findById(block);
             var lastThread = this.editor.board.code.getThreads().pop();
             return [
-                ['blockId', block.id],
+                ['block', block.pointer()],
                 ['thread', lastThread.stringify()]
             ];
         },
@@ -254,7 +255,7 @@ goog.require("Entry.STATIC");
     };
 
     c[Entry.STATIC.COMMAND_TYPES.setFieldValue] = {
-        do: function(block, field, pointer, oldValue, newValue) {
+        do: function(block, field, pointer, oldValue, newValue) { //TODO
             field.setValue(newValue, true);
         },
         state: function(block, field, pointer, oldValue, newValue) {

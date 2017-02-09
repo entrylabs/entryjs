@@ -5741,17 +5741,15 @@ Entry.Commander = function(a) {
 (function(a) {
   a.do = function(b) {
     "string" === typeof b && (b = Entry.STATIC.COMMAND_TYPES[b]);
-    var a = this, d = Array.prototype.slice.call(arguments);
-    d.shift();
-    var e = Entry.Command[b];
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, e.undo].concat(e.state.apply(this, d)));
-    e = Entry.Command[b].do.apply(this, d);
-    this.doEvent.notify(b, d);
-    setTimeout(function() {
-      a.report(Entry.STATIC.COMMAND_TYPES.do);
-      a.report(b, d);
-    }, 0);
-    return {value:e, isPass:this.isPass.bind(this)};
+    var a = Array.prototype.slice.call(arguments);
+    a.shift();
+    var d = Entry.Command[b];
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, d.undo].concat(d.state.apply(this, a)));
+    d = Entry.Command[b].do.apply(this, a);
+    this.doEvent.notify(b, a);
+    this.report(Entry.STATIC.COMMAND_TYPES.do);
+    this.report(b, a);
+    return {value:d, isPass:this.isPass.bind(this)};
   };
   a.undo = function() {
     var b = Array.prototype.slice.call(arguments), a = b.shift(), d = Entry.Command[a];
@@ -5796,15 +5794,13 @@ Entry.Commander = function(a) {
     return [b];
   }, log:function(b) {
     return [["thread", this.editor.board.code.getThreads().pop().toJSON()]];
-  }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "&0"]};
+  }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
   a[Entry.STATIC.COMMAND_TYPES.destroyThread] = {do:function(b) {
     this.editor.board.findById(b[0].id).destroy(!0, !0);
   }, state:function(b) {
     return [this.editor.board.findById(b[0].id).thread.toJSON()];
   }, log:function(b) {
-    b = b[0].id;
-    this.editor.board.findById(b);
-    return [["blockId", b]];
+    return [["block", b[0].pointer ? b[0].pointer() : b[0]]];
   }, undo:"addThread"};
   a[Entry.STATIC.COMMAND_TYPES.destroyBlock] = {do:function(b) {
     "string" === typeof b && (b = this.editor.board.findById(b));
@@ -5814,7 +5810,7 @@ Entry.Commander = function(a) {
     return [b.toJSON(), b.pointer()];
   }, log:function(b) {
     "string" === typeof b && (b = this.editor.board.findById(b));
-    return [["blockId", b.id]];
+    return [["block", b.pointer ? b.pointer() : b]];
   }, undo:"recoverBlock"};
   a[Entry.STATIC.COMMAND_TYPES.recoverBlock] = {do:function(b, a) {
     b = this.editor.board.code.createThread([b]).getFirstBlock();
@@ -5825,23 +5821,25 @@ Entry.Commander = function(a) {
     return [b];
   }, log:function(b, a) {
     b = this.editor.board.findById(b.id);
-    return [["block", b.stringify()], ["pointer", a]];
+    return [["block", b.pointer()], ["pointer", a]];
   }, undo:"destroyBlock"};
   a[Entry.STATIC.COMMAND_TYPES.insertBlock] = {type:Entry.STATIC.COMMAND_TYPES.insertBlock, do:function(b, a, d) {
     "string" === typeof b && (b = this.editor.board.findById(b));
     this.editor.board.insert(b, a, d);
   }, state:function(b, a) {
     "string" === typeof b && (b = this.editor.board.findById(b));
-    a = [b.id];
+    a = [b];
     var c = b.targetPointer();
     a.push(c);
     "string" !== typeof b && "basic" === b.getBlockType() && a.push(b.thread.getCount(b));
     return a;
   }, log:function(b, a, d) {
     "string" === typeof b && (b = this.editor.board.findById(b));
-    return [["blockId", b.id], ["targetPointer", b.targetPointer()], ["count", d]];
+    return [["block", b ? b.pointer() : ""], ["targetPointer", b.targetPointer()], ["count", d ? d : null]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, a, d) {
-    return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:a, direction:"right"}], {callBack:d});
+    d();
+    return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:a, direction:"right"}], {callBack:function() {
+    }});
   }, dom:["playground", "board", "&1"]};
   a[Entry.STATIC.COMMAND_TYPES.separateBlock] = {do:function(b) {
     b.view && b.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
@@ -5853,7 +5851,7 @@ Entry.Commander = function(a) {
     return a;
   }, log:function(b) {
     "string" === typeof b && (b = this.editor.board.findById(b));
-    return [["blockId", b.id], ["x", b.x], ["y", b.y]];
+    return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
   }, undo:"insertBlock"};
   a[Entry.STATIC.COMMAND_TYPES.moveBlock] = {do:function(b, a, d) {
     void 0 !== a ? (b = this.editor.board.findById(b), b.moveTo(a, d)) : b._updatePos();
@@ -5861,7 +5859,7 @@ Entry.Commander = function(a) {
     "string" === typeof b && (b = this.editor.board.findById(b));
     return [b.id, b.x, b.y];
   }, log:function(b, a, d) {
-    return [Entry.STATIC.COMMAND_TYPES.moveBlock, ["blockId", b.id], ["x", b.x], ["y", b.y]];
+    return [Entry.STATIC.COMMAND_TYPES.moveBlock, ["block", b.pointer()], ["x", b.x], ["y", b.y]];
   }, undo:"moveBlock"};
   a[Entry.STATIC.COMMAND_TYPES.cloneBlock] = {do:function(b) {
     "string" === typeof b && (b = this.editor.board.findById(b));
@@ -5872,7 +5870,7 @@ Entry.Commander = function(a) {
   }, log:function(b) {
     "string" === typeof b && (b = this.editor.board.findById(b));
     var a = this.editor.board.code.getThreads().pop();
-    return [["blockId", b.id], ["thread", a.stringify()]];
+    return [["block", b.pointer()], ["thread", a.stringify()]];
   }, undo:"uncloneBlock"};
   a[Entry.STATIC.COMMAND_TYPES.uncloneBlock] = {do:function(b) {
     b = this.editor.board.code.getThreads().pop().getFirstBlock();
