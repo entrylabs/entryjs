@@ -22885,19 +22885,19 @@ Entry.BlockMenu = function(b, a, d, c) {
       c.updateOffset();
     });
   };
-  b.changeCode = function(a) {
+  b.changeCode = function(a, b) {
     a instanceof Array && (a = new Entry.Code(a));
     if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
     this.codeListener && this.code.changeEvent.detach(this.codeListener);
-    var b = this;
+    var c = this;
     this.set({code:a});
     this.codeListener = this.code.changeEvent.attach(this, function() {
-      b.changeEvent.notify();
+      c.changeEvent.notify();
     });
     a.createView(this);
-    this._dAlign();
+    b ? this.align() : this._dAlign();
   };
   b.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
@@ -23264,7 +23264,8 @@ Entry.BlockMenu = function(b, a, d, c) {
   b.setNoCategoryData = function(a) {
     this._clearCategory();
     Entry.resizeElement();
-    this.changeCode(a);
+    this.changeCode(a, !0);
+    this.categoryDoneEvent.notify();
   };
   b._generateCategoryView = function(a) {
     if (a) {
@@ -23283,7 +23284,8 @@ Entry.BlockMenu = function(b, a, d, c) {
       b._categoryElems[d] = a;
       a.bindOnClick(function(a) {
         b._cancelDynamic(!0, function() {
-          Entry.do("selectBlockMenu", d, void 0, !0);
+          b.selectMenu(d, void 0, !0);
+          b.align();
         });
       });
     })(Entry.Dom("li", {id:"entryCategory" + a, class:"entryCategoryElementWorkspace entryRemove", parent:this._categoryCol}), a);

@@ -156,7 +156,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         });
     };
 
-    p.changeCode = function(code) {
+    p.changeCode = function(code, isImmediate) {
         if (code instanceof Array)
             code = new Entry.Code(code);
 
@@ -174,7 +174,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         code.createView(this);
         var workspace = this.workspace;
 
-        this._dAlign();
+        if (isImmediate)
+            this.align();
+        else this._dAlign();
     };
 
     p.bindCodeView = function(codeView) {
@@ -816,7 +818,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p.setNoCategoryData = function(data) {
         this._clearCategory();
         Entry.resizeElement();
-        this.changeCode(data);
+        this.changeCode(data, true);
+        this.categoryDoneEvent.notify();
     };
 
     p._generateCategoryView = function(data) {
@@ -846,10 +849,12 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             that._categoryElems[name] = elem;
             elem.bindOnClick(function(e) {
                 that._cancelDynamic(true, function() {
-                    Entry.do(
-                        'selectBlockMenu',
-                        name, undefined, true
-                    );
+                    that.selectMenu(name, undefined, true);
+                    that.align();
+                    //Entry.do(
+                        //'selectBlockMenu',
+                        //name, undefined, true
+                    //);
                 });
             });
         })(element, name);
