@@ -237,7 +237,11 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         textboxTab.addClass('entryTabListItemWorkspace');
         tabList.appendChild(textboxTab);
         textboxTab.bindOnClick(function(e) {
-            Entry.playground.changeViewMode('text');
+            Entry.do(
+                'playgroundChangeViewMode',
+                'text',
+                that.selectedViewMode
+            );
         });
         this.tabViewElements.text = textboxTab;
         textboxTab.addClass('entryRemove');
@@ -249,7 +253,11 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         soundTab.addClass('entryTabListItemWorkspace');
         tabList.appendChild(soundTab);
         soundTab.bindOnClick(function(e) {
-            Entry.playground.changeViewMode('sound');
+            Entry.do(
+                'playgroundChangeViewMode',
+                'sound',
+                that.selectedViewMode
+            );
         });
         this.tabViewElements.sound = soundTab;
     }
@@ -260,6 +268,11 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         variableTab.addClass('entryTabListItemWorkspace entryVariableTabWorkspace');
         tabList.appendChild(variableTab);
         variableTab.bindOnClick(function(e) {
+            Entry.do(
+                'playgroundChangeViewMode',
+                'variable',
+                that.selectedViewMode
+            );
             Entry.playground.toggleOnVariableView();
             Entry.playground.changeViewMode('variable');
         });
@@ -1750,6 +1763,10 @@ Entry.Playground.prototype.getDom = function(query) {
                 return this._codeTab;
             case "picture":
                 return this.tabViewElements.picture;
+            case "text":
+                return this.tabViewElements.text;
+            case "sound":
+                return this.tabViewElements.sound;
             case "blockMenu":
                 return this.blockMenu.getDom(query);
             case "board":

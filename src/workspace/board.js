@@ -1030,8 +1030,8 @@ Entry.Board.DRAG_RADIUS = 5;
         targetObj = this.code.getTargetByPointer(query);
         if (targetObj instanceof Entry.Block) {
             return targetObj.view.svgGroup;
-        } else if (targetObj instanceof Entry.FieldStatement) {
         } else {
+            return targetObj.svgGroup;
         }
     };
 

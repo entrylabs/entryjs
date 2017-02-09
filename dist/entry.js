@@ -15713,6 +15713,7 @@ Entry.Commander = function(b) {
   this._tempStorage = null;
   Entry.Command.editor = this.editor;
   this.doEvent = new Entry.Event(this);
+  this.logEvent = new Entry.Event(this);
 };
 (function(b) {
   b.do = function(a) {
@@ -15752,22 +15753,17 @@ Entry.Commander = function(b) {
     }
   };
   b.addReporter = function(a) {
-    this.reporters.push(a);
+    a.logEventListener = this.logEvent.attach(a, a.add);
   };
   b.removeReporter = function(a) {
-    a = this.reporters.indexOf(a);
-    -1 < a && this.reporters.splice(a, 1);
+    a.logEventListener && this.logEvent.detatch(a.logEventListener);
+    delete a.logEventListener;
   };
   b.report = function(a, b) {
-    var c = this.reporters;
-    if (0 !== c.length) {
-      var e;
-      e = a && Entry.Command[a] && Entry.Command[a].log ? Entry.Command[a].log.apply(this, b) : b;
-      e.unshift(a);
-      c.forEach(function(a) {
-        a.add(e);
-      });
-    }
+    var c;
+    c = a && Entry.Command[a] && Entry.Command[a].log ? Entry.Command[a].log.apply(this, b) : b;
+    c.unshift(a);
+    this.logEvent.notify(c);
   };
 })(Entry.Commander.prototype);
 (function(b) {
@@ -24462,9 +24458,7 @@ Entry.Board.DRAG_RADIUS = 5;
   b.getDom = function(a) {
     a = a.shift();
     targetObj = this.code.getTargetByPointer(a);
-    if (targetObj instanceof Entry.Block) {
-      return targetObj.view.svgGroup;
-    }
+    return targetObj instanceof Entry.Block ? targetObj.view.svgGroup : targetObj.svgGroup;
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
@@ -25828,13 +25822,14 @@ Entry.Playground.prototype.generateTabView = function(b) {
   this._codeTab = this.tabViewElements.code = b;
   Entry.pictureEditable && (b = Entry.createElement("li", "entryPictureTab"), b.innerHTML = Lang.Workspace.tab_picture, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(b) {
     Entry.do("playgroundChangeViewMode", "picture", a.selectedViewMode);
-  }), this.tabViewElements.picture = b, b = Entry.createElement("li", "entryTextboxTab"), b.innerHTML = Lang.Workspace.tab_text, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(a) {
-    Entry.playground.changeViewMode("text");
+  }), this.tabViewElements.picture = b, b = Entry.createElement("li", "entryTextboxTab"), b.innerHTML = Lang.Workspace.tab_text, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(b) {
+    Entry.do("playgroundChangeViewMode", "text", a.selectedViewMode);
   }), this.tabViewElements.text = b, b.addClass("entryRemove"));
-  Entry.soundEditable && (b = Entry.createElement("li", "entrySoundTab"), b.innerHTML = Lang.Workspace.tab_sound, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(a) {
-    Entry.playground.changeViewMode("sound");
+  Entry.soundEditable && (b = Entry.createElement("li", "entrySoundTab"), b.innerHTML = Lang.Workspace.tab_sound, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(b) {
+    Entry.do("playgroundChangeViewMode", "sound", a.selectedViewMode);
   }), this.tabViewElements.sound = b);
-  Entry.hasVariableManager && (b = Entry.createElement("li", "entryVariableTab"), b.innerHTML = Lang.Workspace.tab_attribute, b.addClass("entryTabListItemWorkspace entryVariableTabWorkspace"), d.appendChild(b), b.bindOnClick(function(a) {
+  Entry.hasVariableManager && (b = Entry.createElement("li", "entryVariableTab"), b.innerHTML = Lang.Workspace.tab_attribute, b.addClass("entryTabListItemWorkspace entryVariableTabWorkspace"), d.appendChild(b), b.bindOnClick(function(b) {
+    Entry.do("playgroundChangeViewMode", "variable", a.selectedViewMode);
     Entry.playground.toggleOnVariableView();
     Entry.playground.changeViewMode("variable");
   }), this.tabViewElements.variable = b);
@@ -26652,6 +26647,10 @@ Entry.Playground.prototype.getDom = function(b) {
         return this._codeTab;
       case "picture":
         return this.tabViewElements.picture;
+      case "text":
+        return this.tabViewElements.text;
+      case "sound":
+        return this.tabViewElements.sound;
       case "blockMenu":
         return this.blockMenu.getDom(b);
       case "board":
