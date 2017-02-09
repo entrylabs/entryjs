@@ -15689,7 +15689,7 @@ Entry.Loader.handleLoad = function() {
   this.loaded || (this.loaded = !0, Entry.dispatchEvent("loadComplete"));
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectObject:201, "do":301, 
-undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
+undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
 Entry.Command = {};
 (function(b) {
   b[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(a) {
@@ -15963,6 +15963,24 @@ Entry.Commander = function(b) {
   }, log:function() {
     return [];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerClickVariableAddButton", dom:["variableContainer", "variableAddButton"]};
+  b[a.variableContainerAddVariable] = {do:function(a) {
+    Entry.variableContainer.addVariable(a);
+  }, state:function(a) {
+    a instanceof Entry.Variable && (a = a.toJSON());
+    return [a];
+  }, log:function(a) {
+    a instanceof Entry.Variable && (a = a.toJSON());
+    return ["variable", a];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerRemoveVariable", dom:["variableContainer", "variableAddConfirmButton"]};
+  b[a.variableContainerRemoveVariable] = {do:function(a) {
+    Entry.variableContainer.removeVariable(a);
+  }, state:function(a) {
+    a instanceof Entry.Variable && (a = a.toJSON());
+    return [a];
+  }, log:function(a) {
+    a instanceof Entry.Variable && (a = a.toJSON());
+    return ["variable", a];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerAddVariable", dom:["variableContainer", "variableAddConfirmButton"]};
 })(Entry.Command);
 Entry.init = function(b, a) {
   Entry.assert("object" === typeof a, "Init option is not object");
@@ -19286,36 +19304,36 @@ Entry.VariableContainer = function() {
         return;
       }
     }
+    b = this.variableAddPanel;
     if (!a) {
-      b = this.variableAddPanel;
       a = b.view.name.value.trim();
       a && 0 !== a.length || (a = Lang.Workspace.variable);
       a.length > this._maxNameLength && (a = this._truncName(a, "variable"));
       a = this.checkAllVariableName(a, "variables_") ? Entry.getOrderedName(a, this.variables_, "name_") : a;
       var c = b.info;
       a = {name:a, isCloud:c.isCloud, object:c.object, variableType:"variable"};
-      b.view.addClass("entryRemove");
-      this.resetVariableAddPanel("variable");
     }
-    a = new Entry.Variable(a);
-    Entry.stateManager && Entry.stateManager.addCommand("add variable", this, this.removeVariable, a);
+    b.view.addClass("entryRemove");
+    this.resetVariableAddPanel("variable");
+    a instanceof Entry.Variable || (a = new Entry.Variable(a));
     a.generateView(this.variables_.length);
     this.createVariableView(a);
     this.variables_.unshift(a);
     Entry.playground && Entry.playground.blockMenu && Entry.playground.blockMenu.deleteRendered("variable");
     Entry.playground.reloadPlayground();
     this.updateList();
-    return new Entry.State(this, this.removeVariable, a);
   };
   b.removeVariable = function(a) {
-    var b = this.variables_.indexOf(a), c = a.toJSON();
+    a instanceof Entry.Variable || (a = this.variables_.filter(function(b) {
+      return a.id === b.id_;
+    })[0]);
+    var b = this.variables_.indexOf(a);
+    a.toJSON();
     this.selected == a && this.select(null);
     a.remove();
     this.variables_.splice(b, 1);
-    Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
     Entry.playground.reloadPlayground();
     this.updateList();
-    return new Entry.State(this, this.addVariable, c);
   };
   b.changeVariableName = function(a, b) {
     a.name_ != b && (Entry.isTextMode && (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(b, "variable")) ? (alert(alert_msg), a.listElement.nameField.value = a.name_) : Entry.isExist(b, "name_", this.variables_) ? (a.listElement.nameField.value = a.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_dup)) : 10 < b.length ? (a.listElement.nameField.value = a.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_too_long)) : 
@@ -19616,7 +19634,7 @@ Entry.VariableContainer = function() {
     d.setAttribute("placeholder", Lang.Workspace.Variable_placeholder_name);
     d.variableContainer = this;
     d.onkeypress = function(b) {
-      13 == b.keyCode && (Entry.variableContainer.addVariable(), a.updateSelectedVariable(a.variables_[0]), b = a.variables_[0].listElement, b.editButton.addClass("entryRemove"), b.editSaveButton.removeClass("entryRemove"), b.nameField.removeAttribute("disabled"));
+      13 == b.keyCode && (b = a._makeVariableData(), b = new Entry.Variable(b), Entry.do("variableContainerAddVariable", b), a.updateSelectedVariable(a.variables_[0]), b = a.variables_[0].listElement, b.editButton.addClass("entryRemove"), b.editSaveButton.removeClass("entryRemove"), b.nameField.removeAttribute("disabled"));
     };
     this.variableAddPanel.view.name = d;
     c.appendChild(d);
@@ -19682,7 +19700,9 @@ Entry.VariableContainer = function() {
     b.innerHTML = Lang.Buttons.save;
     b.variableContainer = this;
     b.bindOnClick(function(b) {
-      Entry.variableContainer.addVariable();
+      b = a._makeVariableData();
+      b = new Entry.Variable(b);
+      Entry.do("variableContainerAddVariable", b);
       a.updateSelectedVariable(a.variables_[0]);
       b = a.variables_[0].listElement;
       b.editButton.addClass("entryRemove");
@@ -19690,6 +19710,7 @@ Entry.VariableContainer = function() {
       b.nameField.removeAttribute("disabled");
     });
     c.appendChild(b);
+    this.variableAddConfirmButton = b;
   };
   b.generateListAddView = function() {
     var a = this, b = Entry.createElement("li");
@@ -20189,12 +20210,22 @@ Entry.VariableContainer = function() {
           return this.filterElements[a.shift()];
         case "variableAddButton":
           return this.variableAddButton_;
+        case "variableAddConfirmButton":
+          return this.variableAddConfirmButton;
       }
     }
   };
   b.clickVariableAddButton = function() {
     var a = this.variableAddPanel, b = a.view.name.value.trim();
-    a.isOpen ? b && 0 !== b.length ? this.addVariable() : (a.view.addClass("entryRemove"), a.isOpen = !1) : (a.view.removeClass("entryRemove"), a.view.name.focus(), a.isOpen = !0);
+    a.isOpen ? b && 0 !== b.length ? (a = this._makeVariableData(), a = new Entry.Variable(a), Entry.do("variableContainerAddVariable", a)) : (a.view.addClass("entryRemove"), a.isOpen = !1) : (a.view.removeClass("entryRemove"), a.view.name.focus(), a.isOpen = !0);
+  };
+  b._makeVariableData = function() {
+    var a = this.variableAddPanel, b = a.view.name.value.trim();
+    b && 0 !== b.length || (b = Lang.Workspace.variable);
+    b.length > this._maxNameLength && (b = this._truncName(b, "variable"));
+    b = this.checkAllVariableName(b, "variables_") ? Entry.getOrderedName(b, this.variables_, "name_") : b;
+    a = a.info;
+    return {name:b, isCloud:a.isCloud, object:a.object, variableType:"variable"};
   };
 })(Entry.VariableContainer.prototype);
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {

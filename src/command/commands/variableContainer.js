@@ -42,5 +42,43 @@ goog.require("Entry.STATIC");
         undo: "variableContainerClickVariableAddButton",
         dom: ['variableContainer', 'variableAddButton']
     };
+
+    c[COMMAND_TYPES.variableContainerAddVariable] = {
+        do: function(variable) {
+            Entry.variableContainer.addVariable(variable);
+        },
+        state: function(variable) {
+            if (variable instanceof Entry.Variable)
+                variable = variable.toJSON();
+            return [variable];
+        },
+        log: function(variable) {
+            if (variable instanceof Entry.Variable)
+                variable = variable.toJSON();
+            return [ 'variable', variable ];
+        },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: "variableContainerRemoveVariable",
+        dom: ['variableContainer', 'variableAddConfirmButton']
+    };
+
+    c[COMMAND_TYPES.variableContainerRemoveVariable] = {
+        do: function(variable) {
+            Entry.variableContainer.removeVariable(variable);
+        },
+        state: function(variable) {
+            if (variable instanceof Entry.Variable)
+                variable = variable.toJSON();
+            return [variable];
+        },
+        log: function(variable) {
+            if (variable instanceof Entry.Variable)
+                variable = variable.toJSON();
+            return [ 'variable', variable ];
+        },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: "variableContainerAddVariable",
+        dom: ['variableContainer', 'variableAddConfirmButton']
+    };
 })(Entry.Command);
 

@@ -62,6 +62,8 @@ Entry.STATIC = {
 
         variableContainerSelectFilter: 801,
         variableContainerClickVariableAddButton: 802,
+        variableContainerAddVariable: 803,
+        variableContainerRemoveVariable: 804,
     },
 
     RECORDABLE: {
