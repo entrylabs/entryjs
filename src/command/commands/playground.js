@@ -23,7 +23,7 @@ goog.require("Entry.STATIC");
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "playgroundChangeViewMode",
-        dom: ['playground', '&1']
+        dom: ['playground', 'tabViewElements', '&1']
     };
 })(Entry.Command);
 

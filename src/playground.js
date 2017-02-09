@@ -273,8 +273,6 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
                 'variable',
                 that.selectedViewMode
             );
-            Entry.playground.toggleOnVariableView();
-            Entry.playground.changeViewMode('variable');
         });
         this.tabViewElements.variable = variableTab;
     }
@@ -1154,8 +1152,12 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
     }
     if (viewType != 'default')
         this.tabViewElements[viewType].addClass('entryTabSelected');
-    if (viewType == 'variable')
+    if (viewType == 'variable') {
+        Entry.playground.toggleOnVariableView();
+        this.tabViewElements.code.removeClass('entryTabSelected');
+        this.tabViewElements[viewType].addClass('entryTabSelected');
         return;
+    }
     var views = this.view_.children;
     for (var i = 0; i<views.length; i++) {
         var view = views[i];
@@ -1759,14 +1761,8 @@ Entry.Playground.prototype.showBlockMenu = function() {
 Entry.Playground.prototype.getDom = function(query) {
     if (query.length >= 1) {
         switch(query.shift()) {
-            case "code":
-                return this._codeTab;
-            case "picture":
-                return this.tabViewElements.picture;
-            case "text":
-                return this.tabViewElements.text;
-            case "sound":
-                return this.tabViewElements.sound;
+            case "tabViewElements":
+                return this.tabViewElements[query.shift()];
             case "blockMenu":
                 return this.blockMenu.getDom(query);
             case "board":

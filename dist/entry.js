@@ -15945,7 +15945,7 @@ Entry.Commander = function(b) {
     return [b, a];
   }, log:function(a, b) {
     return [["oldType", b || "code"], ["newType", a]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"playgroundChangeViewMode", dom:["playground", "&1"]};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"playgroundChangeViewMode", dom:["playground", "tabViewElements", "&1"]};
 })(Entry.Command);
 Entry.init = function(b, a) {
   Entry.assert("object" === typeof a, "Init option is not object");
@@ -25830,8 +25830,6 @@ Entry.Playground.prototype.generateTabView = function(b) {
   }), this.tabViewElements.sound = b);
   Entry.hasVariableManager && (b = Entry.createElement("li", "entryVariableTab"), b.innerHTML = Lang.Workspace.tab_attribute, b.addClass("entryTabListItemWorkspace entryVariableTabWorkspace"), d.appendChild(b), b.bindOnClick(function(b) {
     Entry.do("playgroundChangeViewMode", "variable", a.selectedViewMode);
-    Entry.playground.toggleOnVariableView();
-    Entry.playground.changeViewMode("variable");
   }), this.tabViewElements.variable = b);
 };
 Entry.Playground.prototype.generateCodeView = function(b) {
@@ -26328,7 +26326,9 @@ Entry.Playground.prototype.changeViewMode = function(b) {
     this.tabViewElements[a].removeClass("entryTabSelected");
   }
   "default" != b && this.tabViewElements[b].addClass("entryTabSelected");
-  if ("variable" != b) {
+  if ("variable" == b) {
+    Entry.playground.toggleOnVariableView(), this.tabViewElements.code.removeClass("entryTabSelected"), this.tabViewElements[b].addClass("entryTabSelected");
+  } else {
     var d = this.view_.children;
     for (a = 0;a < d.length;a++) {
       var c = d[a];
@@ -26641,16 +26641,11 @@ Entry.Playground.prototype.showBlockMenu = function() {
   this.mainWorkspace.getBlockMenu().show();
 };
 Entry.Playground.prototype.getDom = function(b) {
+  console.log(b);
   if (1 <= b.length) {
     switch(b.shift()) {
-      case "code":
-        return this._codeTab;
-      case "picture":
-        return this.tabViewElements.picture;
-      case "text":
-        return this.tabViewElements.text;
-      case "sound":
-        return this.tabViewElements.sound;
+      case "tabViewElements":
+        return this.tabViewElements[b.shift()];
       case "blockMenu":
         return this.blockMenu.getDom(b);
       case "board":
