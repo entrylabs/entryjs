@@ -9,23 +9,21 @@ goog.require("Entry.STATIC");
 (function(c) {
     c[Entry.STATIC.COMMAND_TYPES.playgroundChangeViewMode] = {
         do: function(newType, oldType) {
-            oldType = oldType || 'code';
-            var playground = Entry.playground;
-            playground.changeViewMode(newType);
-            if (newType === 'code')
-                playground.blockMenu.reDraw();
+            Entry.playground.changeViewMode(newType);
         },
         state: function(newType, oldType) {
             return [oldType, newType];
         },
-        log: function(newType, oldType, domData) {
+        log: function(newType, oldType) {
+            oldType = oldType || 'code';
             return [
                 ['oldType', oldType],
                 ['newType', newType]
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "playgroundChangeViewMode",
-        dom: ['playground', '&0']
+        dom: ['playground', 'tabViewElements', '&1']
     };
 })(Entry.Command);
 
