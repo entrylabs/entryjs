@@ -5474,7 +5474,7 @@ Entry.Engine = function() {
   this.isUpdating = !0;
   this.speeds = [1, 15, 30, 45, 60];
   this._mouseMoved = !1;
-  Entry.keyPressed && Entry.keyPressed.attach(this, this.captureKeyEvent);
+  this.attachKeyboardCapture();
   Entry.addEventListener("canvasClick", function(a) {
     Entry.engine.fireEvent("mouse_clicked");
   });
@@ -5880,6 +5880,12 @@ Entry.Engine = function() {
           return this.stopButton;
       }
     }
+  };
+  b.attachKeyboardCapture = function() {
+    Entry.keyPressed && (this._keyboardEvent && this.detachKeyboardCapture(), this._keyboardEvent = Entry.keyPressed.attach(this, this.captureKeyEvent));
+  };
+  b.detachKeyboardCapture = function() {
+    Entry.keyPressed && this._keyboardEvent && (Entry.keyPressed.detach(this._keyboardEvent), delete this._keyboardEvent);
   };
 })(Entry.Engine.prototype);
 Entry.EntityObject = function(b) {

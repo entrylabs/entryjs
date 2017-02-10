@@ -16,8 +16,7 @@ Entry.Engine = function() {
 
     this._mouseMoved = false;
 
-    if (Entry.keyPressed)
-        Entry.keyPressed.attach(this, this.captureKeyEvent);
+    this.attachKeyboardCapture();
 
     Entry.addEventListener('canvasClick', function(e) {
         Entry.engine.fireEvent('mouse_clicked');
@@ -64,7 +63,7 @@ Entry.Engine = function() {
             this.updateMouseView();
             this._mouseMoved = false;
         }
-    }.bind(this), 100)
+    }.bind(this), 100);
 
     Entry.message = new Entry.Event(window);
 };
@@ -863,6 +862,21 @@ Entry.Engine = function() {
             }
         } else {
         }
-    }
+    };
+
+    p.attachKeyboardCapture = function() {
+        if (Entry.keyPressed) {
+            this._keyboardEvent && this.detachKeyboardCapture();
+            this._keyboardEvent =
+                Entry.keyPressed.attach(this, this.captureKeyEvent);
+        }
+    };
+
+    p.detachKeyboardCapture = function() {
+        if (Entry.keyPressed && this._keyboardEvent) {
+            Entry.keyPressed.detach(this._keyboardEvent);
+            delete this._keyboardEvent;
+        }
+    };
 })(Entry.Engine.prototype);
 
