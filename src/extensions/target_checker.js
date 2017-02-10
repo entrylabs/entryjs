@@ -63,13 +63,13 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         this._view.text("목표 : " + (len - this.unachievedGoals.length) +
                         " / " + len);
         if (this.isSuccess)
-            this._view.addClass("success")
+            this._view.addClass("success");
         else
-            this._view.removeClass("success")
+            this._view.removeClass("success");
         if (this.isFail)
-            this._view.addClass("fail")
+            this._view.addClass("fail");
         else
-            this._view.removeClass("fail")
+            this._view.removeClass("fail");
     };
 
     p.achieveCheck = function(isSuccess, id) {
@@ -111,7 +111,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         if (this.isForEdit)
             this.watchingBlocks.push(block);
         if (block.params[1] && this.goals.indexOf(block.params[0] < 0))
-            this.goals.push(block.params[0])
+            this.goals.push(block.params[0]);
         this.reset();
     };
 
