@@ -21,6 +21,7 @@ goog.require("Entry.STATIC");
                 ['objectIndex', Entry.container.getObjectIndex(objectId)],
             ];
         },
+        skipUndoStack: true,
         undo: "",
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['container', 'objectIndex', '&1']

@@ -17,6 +17,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
   Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
+  window.parent && window.parent.childIframeLoaded && window.parent.childIframeLoaded();
   return b;
 }, clearProject:function() {
   Entry.stop();
@@ -5743,7 +5744,7 @@ Entry.Commander = function(b) {
     var b = Array.prototype.slice.call(arguments);
     b.shift();
     var c = Entry.Command[a];
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.do, c.undo].concat(c.state.apply(this, b)));
+    Entry.stateManager && !0 !== c.skipUndoStack && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.do, c.undo].concat(c.state.apply(this, b)));
     c = Entry.Command[a].do.apply(this, b);
     this.doEvent.notify(a, b);
     this.report(Entry.STATIC.COMMAND_TYPES.do);
@@ -5753,13 +5754,15 @@ Entry.Commander = function(b) {
   b.undo = function() {
     var a = Array.prototype.slice.call(arguments), b = a.shift(), c = Entry.Command[b];
     this.report(Entry.STATIC.COMMAND_TYPES.undo);
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, c.undo].concat(c.state.apply(this, a)));
+    var e = Entry.Command[b];
+    Entry.stateManager && !0 !== e.skipUndoStack && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, c.undo].concat(c.state.apply(this, a)));
     return {value:Entry.Command[b].do.apply(this, a), isPass:this.isPass.bind(this)};
   };
   b.redo = function() {
     var a = Array.prototype.slice.call(arguments), b = a.shift(), c = Entry.Command[b];
-    that.report(Entry.STATIC.COMMAND_TYPES.redo);
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.undo, b].concat(c.state.apply(null, a)));
+    this.report(Entry.STATIC.COMMAND_TYPES.redo);
+    var e = Entry.Command[b];
+    Entry.stateManager && !0 !== e.skipUndoStack && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.undo, b].concat(c.state.apply(null, a)));
     c.undo.apply(this, a);
   };
   b.setCurrentEditor = function(a, b) {
@@ -5908,7 +5911,7 @@ Entry.Commander = function(b) {
     return [Entry.getMainWS().blockMenu.lastSelector, b, e];
   }, log:function(a, b, e) {
     return [["selector", a]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "category", "&0"], undo:"selectBlockMenu"};
+  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "category", "&0"], undo:"selectBlockMenu"};
 })(Entry.Command);
 (function(b) {
   b[Entry.STATIC.COMMAND_TYPES.containerSelectObject] = {do:function(a) {
@@ -5916,7 +5919,7 @@ Entry.Commander = function(b) {
   }, state:function() {
   }, log:function(a) {
     return [["objectId", a], ["objectIndex", Entry.container.getObjectIndex(a)]];
-  }, undo:"", recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["container", "objectIndex", "&1"]};
+  }, skipUndoStack:!0, undo:"", recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["container", "objectIndex", "&1"]};
 })(Entry.Command);
 (function(b) {
   var a = Entry.STATIC.COMMAND_TYPES;
@@ -5925,13 +5928,13 @@ Entry.Commander = function(b) {
   }, state:function() {
   }, log:function(a) {
     return [["callerName", a]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
+  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
   b[a.toggleStop] = {do:function(a) {
     Entry.engine.toggleStop();
   }, state:function() {
   }, log:function(a) {
     return [["callerName", a]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStart", dom:["engine", "&0"]};
+  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStart", dom:["engine", "&0"]};
 })(Entry.Command);
 (function(b) {
   var a = Entry.STATIC.COMMAND_TYPES;
@@ -5950,7 +5953,7 @@ Entry.Commander = function(b) {
     return [];
   }, log:function(a) {
     return [["objectId", a], ["objectIndex", Entry.container.getObjectIndex(a)]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["container", "objectIndex", "&1", "editButton"], undo:"selectObject"};
+  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["container", "objectIndex", "&1", "editButton"], undo:"selectObject"};
 })(Entry.Command);
 (function(b) {
   b.editPicture = {type:Entry.STATIC.COMMAND_TYPES.editPicture, do:function(a, b) {
@@ -5985,7 +5988,7 @@ Entry.Commander = function(b) {
     return [b, a];
   }, log:function(a, b) {
     return [["oldType", b || "code"], ["newType", a]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"playgroundChangeViewMode", dom:["playground", "tabViewElements", "&1"]};
+  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"playgroundChangeViewMode", dom:["playground", "tabViewElements", "&1"]};
 })(Entry.Command);
 (function(b) {
   var a = Entry.STATIC.COMMAND_TYPES;
@@ -5995,14 +5998,14 @@ Entry.Commander = function(b) {
     return [b, a];
   }, log:function(a, b) {
     return [["oldType", b || "all"], ["newType", a]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerSelectFilter", dom:["variableContainer", "filter", "&1"]};
+  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerSelectFilter", dom:["variableContainer", "filter", "&1"]};
   b[a.variableContainerClickVariableAddButton] = {do:function() {
     Entry.variableContainer.clickVariableAddButton();
   }, state:function() {
     return [];
   }, log:function() {
     return [];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerClickVariableAddButton", dom:["variableContainer", "variableAddButton"]};
+  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerClickVariableAddButton", dom:["variableContainer", "variableAddButton"]};
   b[a.variableContainerAddVariable] = {do:function(a) {
     Entry.variableContainer.addVariable(a);
   }, state:function(a) {

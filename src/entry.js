@@ -50,6 +50,8 @@ Entry.loadProject = function(project) {
         Entry.variableContainer.generateAnswer();
     Entry.start();
     Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
+    if (window.parent && window.parent.childIframeLoaded)
+        window.parent.childIframeLoaded();
     return project;
 };
 

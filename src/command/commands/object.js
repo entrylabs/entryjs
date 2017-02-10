@@ -37,6 +37,7 @@ goog.require("Entry.STATIC");
                 ['objectIndex', Entry.container.getObjectIndex(objectId)],
             ];
         },
+        skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['container', 'objectIndex', '&1', 'editButton'],
         undo: "selectObject"

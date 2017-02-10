@@ -41,7 +41,7 @@ Entry.Commander = function(injectType) {
         var argumentArray = Array.prototype.slice.call(arguments);
         argumentArray.shift();
         var command = Entry.Command[commandType];
-        if (Entry.stateManager) {
+        if (Entry.stateManager && command.skipUndoStack !== true) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
                 [commandType, this, this.do, command.undo]
@@ -58,7 +58,7 @@ Entry.Commander = function(injectType) {
         return {
             value: value,
             isPass: this.isPass.bind(this)
-        }
+        };
     };
 
     p.undo = function() {
@@ -68,7 +68,9 @@ Entry.Commander = function(injectType) {
 
         this.report(Entry.STATIC.COMMAND_TYPES.undo);
 
-        if (Entry.stateManager) {
+        var command = Entry.Command[commandType];
+
+        if (Entry.stateManager && command.skipUndoStack !== true) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
                 [commandType, this, this.do, commandFunc.undo]
@@ -78,7 +80,7 @@ Entry.Commander = function(injectType) {
         return {
             value: Entry.Command[commandType].do.apply(this, argumentArray),
             isPass: this.isPass.bind(this)
-        }
+        };
     };
 
     p.redo = function() {
@@ -86,9 +88,11 @@ Entry.Commander = function(injectType) {
         var commandType = argumentArray.shift();
         var commandFunc = Entry.Command[commandType];
 
-        that.report(Entry.STATIC.COMMAND_TYPES.redo);
+        this.report(Entry.STATIC.COMMAND_TYPES.redo);
 
-        if (Entry.stateManager) {
+        var command = Entry.Command[commandType];
+
+        if (Entry.stateManager && command.skipUndoStack !== true) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
                 [commandType, this, this.undo, commandType]
@@ -116,7 +120,7 @@ Entry.Commander = function(injectType) {
 
     p.removeReporter = function(reporter) {
         if (reporter.logEventListener)
-            this.logEvent.detatch(reporter.logEventListener)
+            this.logEvent.detatch(reporter.logEventListener);
         delete reporter.logEventListener;
     };
 
@@ -124,10 +128,10 @@ Entry.Commander = function(injectType) {
         var data;
 
         if (commandType && Entry.Command[commandType] && Entry.Command[commandType].log)
-            data = Entry.Command[commandType].log.apply(this, argumentsArray)
+            data = Entry.Command[commandType].log.apply(this, argumentsArray);
         else data = argumentsArray;
         data.unshift(commandType);
         this.logEvent.notify(data);
     };
-})(Entry.Commander.prototype)
+})(Entry.Commander.prototype);
 
