@@ -50,8 +50,7 @@ Entry.Workspace = function(options) {
 
     this.mode = Entry.Workspace.MODE_BOARD;
 
-    if (Entry.keyPressed)
-        Entry.keyPressed.attach(this, this._keyboardControl);
+    this.attachKeyboardCapture();
 
     // view state change event
     this.changeEvent = new Entry.Event(this);
@@ -477,4 +476,18 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.isVimMode = p._isVimMode;
 
+    p.attachKeyboardCapture = function() {
+        if (Entry.keyPressed) {
+            this._keyboardEvent && this.detachKeyboardCapture();
+            this._keyboardEvent =
+                Entry.keyPressed.attach(this, this._keyboardControl);
+        }
+    };
+
+    p.detachKeyboardCapture = function() {
+        if (Entry.keyPressed && this._keyboardEvent) {
+            Entry.keyPressed.detach(this._keyboardEvent);
+            delete this._keyboardEvent;
+        }
+    };
 })(Entry.Workspace.prototype);

@@ -5,6 +5,7 @@ goog.provide("Entry.Restrictor");
 goog.require("Entry.Utils");
 
 Entry.Restrictor = function() {
+    this.startEvent = new Entry.Event(this);
     this.endEvent = new Entry.Event(this);
 
     this.currentTooltip = null;
@@ -30,7 +31,7 @@ Entry.Restrictor = function() {
             data.tooltip = {
                 title: "액션",
                 content: "지시 사항을 따르시오"
-            }
+            };
 
         if (command.restrict) {
             this.currentTooltip = command.restrict(
@@ -48,6 +49,7 @@ Entry.Restrictor = function() {
                 callBack: this.restrictEnd.bind(this)
             });
         }
+        this.startEvent.notify();
     };
 
     p.end = function() {

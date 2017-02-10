@@ -18461,6 +18461,7 @@ Entry.fuzzy = {};
   };
 })(Entry.Utils);
 Entry.Restrictor = function() {
+  this.startEvent = new Entry.Event(this);
   this.endEvent = new Entry.Event(this);
   this.currentTooltip = null;
 };
@@ -18469,7 +18470,7 @@ Entry.Restrictor = function() {
     var b = a.content.concat(), c = b.shift(), c = Entry.Command[c], d = c.dom;
     d && (d = d.map(function(a) {
       return "&" === a[0] ? b[Number(a.substr(1))][1] : a;
-    }), console.log(a), a.tooltip || (a.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), this.currentTooltip = c.restrict ? c.restrict(a, d, this.restrictEnd.bind(this)) : new Entry.Tooltip([{title:a.tooltip.title, content:a.tooltip.content, target:d, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}));
+    }), console.log(a), a.tooltip || (a.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), c.restrict ? this.currentTooltip = c.restrict(a, d, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:a.tooltip.title, content:a.tooltip.content, target:d, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), this.startEvent.notify()));
   };
   b.end = function() {
     this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);
@@ -25588,7 +25589,7 @@ Entry.Workspace = function(b) {
   this.board && this.vimBoard && this.vimBoard.hide();
   Entry.GlobalSvg.createDom();
   this.mode = Entry.Workspace.MODE_BOARD;
-  Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
+  this.attachKeyboardCapture();
   this.changeEvent = new Entry.Event(this);
   Entry.commander.setCurrentEditor("board", this.board);
   this.textType = void 0 !== b.textType ? b.textType : Entry.Vim.TEXT_TYPE_PY;
@@ -25835,6 +25836,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.oldMode === Entry.Workspace.MODE_VIMBOARD;
   };
   b.isVimMode = b._isVimMode;
+  b.attachKeyboardCapture = function() {
+    Entry.keyPressed && (this._keyboardEvent && this.detachKeyboardCapture(), this._keyboardEvent = Entry.keyPressed.attach(this, this._keyboardControl));
+  };
+  b.detachKeyboardCapture = function() {
+    Entry.keyPressed && this._keyboardEvent && (Entry.keyPressed.detach(this._keyboardEvent), delete this._keyboardEvent);
+  };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {
   this.enableArduino = this.isTextBGMode_ = !1;
