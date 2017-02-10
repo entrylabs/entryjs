@@ -116,12 +116,12 @@ goog.require("Entry.STATIC");
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
 
-            result = [
+            var result = [
                 ['block', block ? block.pointer() : ""],
                 ['targetPointer', block.targetPointer()]
             ];
             if (count)
-                result.push(['count', count ? count : null])
+                result.push(['count', count ? count : null]);
             return result;
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -150,7 +150,7 @@ goog.require("Entry.STATIC");
             var data = [
                 block.id
             ];
-            var pointer = block.targetPointer()
+            var pointer = block.targetPointer();
             data.push(pointer);
 
             if (block.getBlockType() === "basic")

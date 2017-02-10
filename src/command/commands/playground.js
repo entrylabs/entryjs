@@ -29,23 +29,37 @@ goog.require("Entry.STATIC");
     };
 
     c[COMMAND_TYPES.playgroundClickAddPicture] = {
-        do: function(newType, oldType) {
-            Entry.playground.changeViewMode(newType);
+        do: function() {
+            Entry.dispatchEvent('openPictureManager');
         },
-        state: function(newType, oldType) {
-            return [oldType, newType];
+        state: function() {
+            return [];
         },
-        log: function(newType, oldType) {
-            oldType = oldType || 'code';
-            return [
-                ['oldType', oldType],
-                ['newType', newType]
-            ];
+        log: function() {
+            return [];
         },
+        validate: false,
         skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        undo: "playgroundChangeViewMode",
-        dom: ['playground', 'tabViewElements', '&1']
+        undo: "",
+        dom: ['playground', 'pictureAddButton']
+    };
+
+    c[COMMAND_TYPES.playgroundClickAddSound] = {
+        do: function() {
+            Entry.dispatchEvent('openSoundManager');
+        },
+        state: function() {
+            return [];
+        },
+        log: function() {
+            return [];
+        },
+        validate: false,
+        skipUndoStack: true,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: "",
+        dom: ['playground', 'soundAddButton']
     };
 })(Entry.Command);
 
