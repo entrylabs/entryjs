@@ -18487,7 +18487,7 @@ Entry.Restrictor = function() {
     var b = a.content.concat(), c = b.shift(), c = Entry.Command[c], d = c.dom;
     d && (d = d.map(function(a) {
       return "&" === a[0] ? b[Number(a.substr(1))][1] : a;
-    }), console.log(a), a.tooltip || (a.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), c.restrict ? this.currentTooltip = c.restrict(a, d, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:a.tooltip.title, content:a.tooltip.content, target:d, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), this.startEvent.notify()));
+    }), a.tooltip || (a.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), c.restrict ? this.currentTooltip = c.restrict(a, d, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:a.tooltip.title, content:a.tooltip.content, target:d, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), this.startEvent.notify()));
   };
   b.end = function() {
     this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);
@@ -18543,7 +18543,7 @@ Entry.Tooltip = function(b, a) {
     if (a.content) {
       var b = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), c = Entry.Dom("div", {classes:["entryTooltip", a.direction, a.style], parent:b});
       this.isIndicator && (a.indicator = this.renderIndicator());
-      c.html(a.content.replace(/\n/gi, "<br>"));
+      c.html(a.content);
       this._tooltips.push(b);
       a.wrapper = b;
       a.dom = c;
