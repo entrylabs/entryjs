@@ -26,7 +26,6 @@ Entry.Restrictor = function() {
                 return q;
         });
 
-        console.log(data);
         if (!data.tooltip)
             data.tooltip = {
                 title: "액션",
