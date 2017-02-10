@@ -22,6 +22,7 @@ goog.require("Entry.STATIC");
                 ['newType', newType]
             ];
         },
+        skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "variableContainerSelectFilter",
         dom: ['variableContainer', 'filter', '&1']
@@ -38,6 +39,7 @@ goog.require("Entry.STATIC");
             return [
             ];
         },
+        skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "variableContainerClickVariableAddButton",
         dom: ['variableContainer', 'variableAddButton']

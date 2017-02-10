@@ -291,6 +291,7 @@ goog.require("Entry.STATIC");
                 ['selector', selector]
             ];
         },
+        skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['playground', 'blockMenu', 'category', '&0'],
         undo: "selectBlockMenu"
