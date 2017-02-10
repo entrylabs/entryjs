@@ -17,6 +17,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
   Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
+  window.parent && window.parent.childIframeLoaded && window.parent.childIframeLoaded();
   return b;
 }, clearProject:function() {
   Entry.stop();
