@@ -9825,6 +9825,7 @@ Entry.Scene.prototype.clear = function() {
   });
   $(this.listView_).html("");
   this.scenes_ = [];
+  this.selectedScene = null;
 };
 Entry.Scene.prototype._focusSceneNameField = function(b) {
   (b = $(b.view).find("input")) && b.focus && b.focus();

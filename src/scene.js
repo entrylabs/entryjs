@@ -536,6 +536,7 @@ Entry.Scene.prototype.clear = function() {
     })
     $(this.listView_).html("");
     this.scenes_ = [];
+    this.selectedScene = null;
 };
 
 
