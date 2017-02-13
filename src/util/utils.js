@@ -469,10 +469,12 @@ Entry.addEventListener = function(eventName, fn) {
 Entry.dispatchEvent = function(eventName, params) {
     if (!this.events_)
         this.events_ = {};
-    if (!this.events_[eventName])
-        return;
-    for (var index = 0, l = this.events_[eventName].length; index < l; index++) {
-        this.events_[eventName][index].call(window, params);
+
+    var events = this.events_[eventName];
+    if (!events) return;
+
+    for (var index = 0, l = events.length; index < l; index++) {
+        events[index].apply(window, Array.prototype.slice.call(arguments).splice(1));
     }
 };
 
@@ -1473,24 +1475,23 @@ Entry.Utils.getWindow = function(hashId) {
 Entry.Utils.restrictAction = function(exceptions, callback) {
     exceptions = exceptions || [];
     exceptions = exceptions.map(function(e) {return e[0]});
-    var handler = function(e)
-    {
+    var handler = function(e) {
         e = e || window.event;
         var target = e.target || e.srcElement;
-		for (var i = 0; i < exceptions.length; i++) {
-			var exception = exceptions[i];
-			if (exception === target || $.contains(exception, target)) {
-        		callback();
-				return;
-			}
-		}
-		if (!e.preventDefault)
-		{//IE quirks
-			e.returnValue = false;
-			e.cancelBubble = true;
-		}
-		e.preventDefault();
-		e.stopPropagation();
+        for (var i = 0; i < exceptions.length; i++) {
+            var exception = exceptions[i];
+            if (exception === target || $.contains(exception, target)) {
+                callback();
+                return;
+            }
+        }
+        if (!e.preventDefault)
+        {//IE quirks
+            e.returnValue = false;
+            e.cancelBubble = true;
+        }
+        e.preventDefault();
+        e.stopPropagation();
     };
     this._restrictHandler = handler;
     var entryDom = Entry.getDom();

@@ -19,12 +19,15 @@ Entry.Restrictor = function() {
         var domQuery = command.dom;
         if (!domQuery)
             return;
-        domQuery = domQuery.map(function(q) {
-            if (q[0] === "&")
-                return log[Number(q.substr(1))][1];
-            else
-                return q;
-        });
+
+        if (domQuery instanceof Array) {
+            domQuery = domQuery.map(function(q) {
+                if (q[0] === "&")
+                    return log[Number(q.substr(1))][1];
+                else
+                    return q;
+            });
+        }
 
         if (!data.tooltip)
             data.tooltip = {
@@ -48,6 +51,7 @@ Entry.Restrictor = function() {
                 callBack: this.restrictEnd.bind(this)
             });
         }
+
         this.startEvent.notify();
     };
 

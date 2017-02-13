@@ -45,6 +45,8 @@ Entry.STATIC = {
 
         selectObject: 201,
         objectEditButtonClick: 202,
+        objectAddPicture: 203,
+        objectRemovePicture: 204,
 
         'do': 301,
         'undo': 302,

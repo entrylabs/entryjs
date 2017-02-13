@@ -931,7 +931,7 @@ Entry.Playground = function() {
      * Add picture
      * @param {picture model} picture
      */
-    p.addPicture = function(picture, NotForView) {
+    p.addPicture = function(picture) {
         var tempPicture = Entry.cloneSimpleObject(picture);
         delete tempPicture.id;
         delete tempPicture.view;
@@ -941,7 +941,11 @@ Entry.Playground = function() {
         picture.name = Entry.getOrderedName(picture.name, this.object.pictures);
 
         this.generatePictureElement(picture);
-        this.object.addPicture(picture);
+        Entry.do(
+            'objectAddPicture',
+            this.object.id,
+            picture
+        );
         this.injectPicture();
         this.selectPicture(picture);
     };
