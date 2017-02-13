@@ -7180,20 +7180,16 @@ Entry.EntryObject = function(b) {
   };
   b.addSound = function(a, e) {
     a.id || (a.id = Entry.generateHash());
-    Entry.stateManager && Entry.stateManager.addCommand("add sound", this, this.removeSound, a.id);
     Entry.initSound(a, e);
-    e || 0 === e ? (this.sounds.splice(e, 0, a), Entry.playground.injectSound(this)) : this.sounds.push(a);
-    return new Entry.State(this, this.removeSound, a.id);
+    e || 0 === e ? this.sounds.splice(e, 0, a) : this.sounds.push(a);
+    Entry.playground.injectSound(this);
   };
   b.removeSound = function(a) {
-    var e;
-    e = this.getSound(a);
-    a = this.sounds.indexOf(e);
-    Entry.stateManager && Entry.stateManager.addCommand("remove sound", this, this.addSound, e, a);
+    a = this.getSound(a);
+    a = this.sounds.indexOf(a);
     this.sounds.splice(a, 1);
     Entry.playground.reloadPlayground();
     Entry.playground.injectSound(this);
-    return new Entry.State(this, this.addSound, e, a);
   };
   b.getRotateMethod = function() {
     this.rotateMethod || (this.rotateMethod = "free");
@@ -11202,12 +11198,12 @@ Entry.TextCodingUtil = {};
     return e;
   };
   b.generateVariablesDeclaration = function() {
-    var a = "", b = Entry.playground.object, c = Entry.variableContainer;
-    if (c) {
-      for (var c = c.variables_ || [], d = c.length - 1;0 <= d;d--) {
-        var f = c[d], g = f.name_, h = f.value_;
+    var a = "", e = Entry.playground.object, b = Entry.variableContainer;
+    if (b) {
+      for (var b = b.variables_ || [], d = b.length - 1;0 <= d;d--) {
+        var f = b[d], g = f.name_, h = f.value_;
         if (f.object_) {
-          if (f.object_ == b.id) {
+          if (f.object_ == e.id) {
             g = "self." + g;
           } else {
             continue;
@@ -15713,8 +15709,8 @@ Entry.Loader.handleLoad = function() {
   this.loaded || (this.loaded = !0, Entry.dispatchEvent("loadComplete"));
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, selectObject:201, 
-objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, 
-SKIP:2, ABANDONE:3}};
+objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, 
+RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
 Entry.Command = {};
 (function(b) {
   b[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(a) {
@@ -15980,8 +15976,34 @@ Entry.Commander = function(b) {
   }, state:function(a, b) {
     return [a, b];
   }, log:function(a, b) {
-    return [["objectId", a], ["picture", b._id]];
+    return [["objectId", a], ["pictureId", b._id]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"objectAddPicture"};
+  b[a.objectAddSound] = {do:function(a, b) {
+    Entry.container.getObject(a).addSound(b);
+  }, state:function(a, b) {
+    return [a, b];
+  }, log:function(a, b) {
+    var d = {};
+    d._id = b._id;
+    d.duration = b.duration;
+    d.ext = b.ext;
+    d.id = b.id;
+    d.filename = b.filename;
+    d.fileurl = b.fileurl;
+    d.name = b.name;
+    return [["objectId", a], ["sound", d]];
+  }, dom:[".btn_confirm_modal"], restrict:function(a, b, d) {
+    b = new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:".btn_confirm_modal", direction:"right"}], {callBack:d, dimmed:!0, restrict:!0});
+    Entry.dispatchEvent("openSoundManager", a.content[2][1]._id, b.render.bind(b));
+    return b;
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"objectRemoveSound"};
+  b[a.objectRemoveSound] = {do:function(a, b) {
+    return Entry.container.getObject(a).removeSound(b.id);
+  }, state:function(a, b) {
+    return [a, b];
+  }, log:function(a, b) {
+    return [["objectId", a], ["soundId", b._id]];
+  }, dom:[".btn_confirm_modal"], recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"objectAddSound"};
 })(Entry.Command);
 (function(b) {
   b.editPicture = {type:Entry.STATIC.COMMAND_TYPES.editPicture, do:function(a, b) {
@@ -26482,7 +26504,7 @@ Entry.Playground = function() {
     a.id = Entry.generateHash();
     a.name = Entry.getOrderedName(a.name, this.object.sounds);
     this.generateSoundElement(a);
-    this.object.addSound(a);
+    Entry.do("objectAddSound", this.object.id, a);
     this.injectSound();
   };
   b.changeViewMode = function(a) {
@@ -26695,7 +26717,7 @@ Entry.Playground = function() {
       }}, {text:Lang.Workspace.context_duplicate, callback:function() {
         Entry.playground.addSound(a, !0);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
-        Entry.playground.object.removeSound(a.id) ? (Entry.removeElement(b), Entry.toast.success(Lang.Workspace.sound_remove_ok, a.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
+        Entry.do("objectRemoveSound", Entry.playground.object.id, a) ? (Entry.removeElement(b), Entry.toast.success(Lang.Workspace.sound_remove_ok, a.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
         Entry.removeElement(b);
       }}], "workspace-contextmenu");
     });

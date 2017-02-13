@@ -1144,7 +1144,11 @@ Entry.Playground = function() {
         sound.name = Entry.getOrderedName(sound.name, this.object.sounds);
 
         this.generateSoundElement(sound);
-        this.object.addSound(sound);
+        Entry.do(
+            'objectAddSound',
+            this.object.id,
+            sound
+        );
         this.injectSound();
     };
 
@@ -1548,7 +1552,13 @@ Entry.Playground = function() {
                 {
                     text: Lang.Workspace.context_remove,
                     callback: function(){
-                        if (Entry.playground.object.removeSound(sound.id)) {
+                        var result =
+                            Entry.do(
+                                'objectRemoveSound',
+                                Entry.playground.object.id,
+                                sound
+                            );
+                        if (result) {
                             Entry.removeElement(element);
                             Entry.toast.success(Lang.Workspace.sound_remove_ok,
                                 sound.name +' '+Lang.Workspace.sound_remove_ok_msg);

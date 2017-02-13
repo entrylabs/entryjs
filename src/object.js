@@ -1122,25 +1122,14 @@ Entry.EntryObject = function(model) {
         if (!sound.id)
             sound.id = Entry.generateHash();
 
-        if (Entry.stateManager)
-            Entry.stateManager.addCommand(
-                "add sound",
-                this,
-                this.removeSound,
-                sound.id
-            );
         Entry.initSound(sound, index);
 
         if (!index && index !== 0)
             this.sounds.push(sound);
         else {
             this.sounds.splice(index, 0, sound);
-            Entry.playground.injectSound(this);
         }
-        return new Entry.State(this,
-            this.removeSound,
-            sound.id);
-
+        Entry.playground.injectSound(this);
     };
 
     /**
@@ -1152,21 +1141,9 @@ Entry.EntryObject = function(model) {
         var index, sound;
         sound = this.getSound(soundId);
         index = this.sounds.indexOf(sound);
-        if (Entry.stateManager)
-            Entry.stateManager.addCommand(
-                "remove sound",
-                this,
-                this.addSound,
-                sound,
-                index
-            );
         this.sounds.splice(index, 1);
         Entry.playground.reloadPlayground();
         Entry.playground.injectSound(this);
-        return new Entry.State(this,
-            this.addSound,
-            sound,
-            index);
     };
 
     /**

@@ -47,6 +47,8 @@ Entry.STATIC = {
         objectEditButtonClick: 202,
         objectAddPicture: 203,
         objectRemovePicture: 204,
+        objectAddSound: 205,
+        objectRemoveSound: 206,
 
         'do': 301,
         'undo': 302,
