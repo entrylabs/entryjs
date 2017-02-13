@@ -7,15 +7,11 @@ goog.require("Entry.Utils");
 
 Entry.Tooltip = function(data, opts) {
     this.data = data instanceof Array ? data : [data];
-    this.data.map(function(d) {
-        if (d.target instanceof Array)
-            d.target = Entry.getDom(d.target);
-        d.target = $(d.target);
-    });
     this.opts = opts || {
         dimmed: true,
         restirct: false
     };
+    this._rendered = false;
     this._tooltips = [];
     this._indicators = [];
 
@@ -23,10 +19,8 @@ Entry.Tooltip = function(data, opts) {
         this.isIndicator = true;
 
     this.render();
-    if (this.opts.restrict)
-        this.restrictAction();
 
-    this._resizeEventFunc =Entry.Utils.debounce(function() {
+    this._resizeEventFunc = Entry.Utils.debounce(function() {
         this.alignTooltips();
     }.bind(this), 200);
     Entry.addEventListener('windowResized', this._resizeEventFunc);
@@ -34,10 +28,31 @@ Entry.Tooltip = function(data, opts) {
 
 (function(p) {
     p.render = function() {
+        if (this._rendered) return;
+
+        this._convertDoms();
+
         if (this.opts.dimmed)
             this.renderBG();
 
-        this.renderTooltips();
+        var datum = this.data[0].target;
+        if (typeof datum !== 'string' && datum.length) {
+            this.opts.restrict && this.opts.dimmed && Entry.Curtain.show(datum.get(0));
+            this.renderTooltips();
+            this._rendered = true;
+            if (this.opts.restrict)
+                this.restrictAction();
+        }
+    };
+
+    p._convertDoms = function() {
+        this.data.map(function(d) {
+            if (d.target instanceof Array)
+                d.target = Entry.getDom(d.target);
+            var dom = $(d.target);
+            if (dom.length)
+                d.target =  dom;
+        });
     };
 
     p.renderBG = function() {
@@ -47,9 +62,6 @@ Entry.Tooltip = function(data, opts) {
                 ],
                 parent: $(document.body)
             });
-            var targetDom = this.data[0].target.get(0);
-            var bound = targetDom.getBoundingClientRect();
-            this.opts.dimmed && Entry.Curtain.show(targetDom);
         } else {
             this._bg = Entry.Dom("div", {
                 classes: [
@@ -59,7 +71,7 @@ Entry.Tooltip = function(data, opts) {
                 parent: $(document.body)
             });
 
-            this._bg.bindOnClick(this.dispose.bind(this))
+            this._bg.bindOnClick(this.dispose.bind(this));
         }
     };
 
@@ -144,6 +156,7 @@ Entry.Tooltip = function(data, opts) {
         this._indicators.push(indicator);
         return indicator;
     };
+
 
     p.dispose = function() {
         if (this._bg)

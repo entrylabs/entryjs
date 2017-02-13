@@ -1000,23 +1000,13 @@ Entry.EntryObject = function(model) {
      * @param {picture model} picture
      */
     p.addPicture = function(picture, index) {
-        if (Entry.stateManager)
-            Entry.stateManager.addCommand(
-                "add sprite",
-                this,
-                this.removePicture,
-                picture.id
-            );
         picture.objectId = this.id;
         if (!index && index !== 0)
             this.pictures.push(picture);
         else {
             this.pictures.splice(index, 0, picture);
-            Entry.playground.injectPicture(this);
         }
-        return new Entry.State(this,
-            this.removePicture,
-            picture.id);
+        Entry.playground.injectPicture(this);
     };
 
     /**
@@ -1029,24 +1019,12 @@ Entry.EntryObject = function(model) {
             return false;
         var picture = this.getPicture(pictureId);
         var index = this.pictures.indexOf(picture);
-        if (Entry.stateManager)
-            Entry.stateManager.addCommand(
-                "remove sprite",
-                this,
-                this.addPicture,
-                picture,
-                index
-            );
         this.pictures.splice(index, 1);
         if (picture === this.selectedPicture)
             Entry.playground.selectPicture(this.pictures[0]);
 
         Entry.playground.injectPicture(this);
         Entry.playground.reloadPlayground();
-        return new Entry.State(this,
-            this.addPicture,
-            picture,
-            index);
     };
 
     /**

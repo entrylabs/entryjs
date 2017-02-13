@@ -6313,14 +6313,13 @@ input.entryObjectNameWorkspace:-moz-read-only {
   position: fixed;
   background-color: black;
   opacity: 0.5;
-  z-index: 1001;
+  z-index: 1051;
 }
 .entryCurtainElem.top {
   width: 100%;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1001;
 }
 .entryCurtainElem.right {
   right: 0;

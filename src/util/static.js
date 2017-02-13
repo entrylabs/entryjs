@@ -45,6 +45,8 @@ Entry.STATIC = {
 
         selectObject: 201,
         objectEditButtonClick: 202,
+        objectAddPicture: 203,
+        objectRemovePicture: 204,
 
         'do': 301,
         'undo': 302,
@@ -61,6 +63,8 @@ Entry.STATIC = {
         containerSelectObject: 601,
 
         playgroundChangeViewMode: 701,
+        playgroundClickAddPicture: 702,
+        playgroundClickAddSound: 703,
 
         variableContainerSelectFilter: 801,
         variableContainerClickVariableAddButton: 802,
