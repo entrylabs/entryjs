@@ -1090,7 +1090,7 @@ Entry.Utils.isFunction = function(fn) {
 };
 
 Entry.Utils.addFilters = function (boardSvgDom, suffix) {
-        var defs = boardSvgDom.elem('defs');
+    var defs = boardSvgDom.elem('defs');
 
     //trashcan filter
     var trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter_' + suffix});
@@ -1473,27 +1473,31 @@ Entry.Utils.getWindow = function(hashId) {
 };
 
 Entry.Utils.restrictAction = function(exceptions, callback) {
+    var that = this;
     exceptions = exceptions || [];
     exceptions = exceptions.map(function(e) {return e[0]});
     var handler = function(e) {
         e = e || window.event;
         var target = e.target || e.srcElement;
-        for (var i = 0; i < exceptions.length; i++) {
-            var exception = exceptions[i];
-            if (exception === target || $.contains(exception, target)) {
-                callback();
-                return;
+        if (!that.isRightButton(e)) {
+            for (var i = 0; i < exceptions.length; i++) {
+                var exception = exceptions[i];
+                if (exception === target || $.contains(exception, target)) {
+                    callback();
+                    return;
+                }
             }
         }
-        if (!e.preventDefault)
-        {//IE quirks
+        if (!e.preventDefault) {//IE quirks
             e.returnValue = false;
             e.cancelBubble = true;
         }
         e.preventDefault();
         e.stopPropagation();
     };
+
     this._restrictHandler = handler;
+
     var entryDom = Entry.getDom();
     if (entryDom.addEventListener) {
         entryDom.addEventListener('click', handler, true);

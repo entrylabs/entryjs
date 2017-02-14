@@ -17070,26 +17070,30 @@ Entry.Utils.getWindow = function(b) {
   }
 };
 Entry.Utils.restrictAction = function(b, a) {
+  var e = this;
   b = b || [];
   b = b.map(function(a) {
     return a[0];
   });
-  var e = function(e) {
-    e = e || window.event;
-    for (var c = e.target || e.srcElement, g = 0;g < b.length;g++) {
-      var h = b[g];
-      if (h === c || $.contains(h, c)) {
-        a();
-        return;
+  var c = function(c) {
+    c = c || window.event;
+    var d = c.target || c.srcElement;
+    if (!e.isRightButton(c)) {
+      for (var h = 0;h < b.length;h++) {
+        var k = b[h];
+        if (k === d || $.contains(k, d)) {
+          a();
+          return;
+        }
       }
     }
-    e.preventDefault || (e.returnValue = !1, e.cancelBubble = !0);
-    e.preventDefault();
-    e.stopPropagation();
+    c.preventDefault || (c.returnValue = !1, c.cancelBubble = !0);
+    c.preventDefault();
+    c.stopPropagation();
   };
-  this._restrictHandler = e;
-  var c = Entry.getDom();
-  c.addEventListener ? (c.addEventListener("click", e, !0), c.addEventListener("mousedown", e, !0), c.addEventListener("touchstart", e, !0)) : (c.attachEvent("onclick", e), c.attachEvent("onmousedown", e), c.attachEvent("ontouchstart", e));
+  this._restrictHandler = c;
+  var d = Entry.getDom();
+  d.addEventListener ? (d.addEventListener("click", c, !0), d.addEventListener("mousedown", c, !0), d.addEventListener("touchstart", c, !0)) : (d.attachEvent("onclick", c), d.attachEvent("onmousedown", c), d.attachEvent("ontouchstart", c));
 };
 Entry.Utils.allowAction = function() {
   var b = Entry.getDom();
