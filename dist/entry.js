@@ -11217,13 +11217,13 @@ Entry.TextCodingUtil = {};
     }
   };
   b.generateListsDeclaration = function() {
-    var a = "", b = Entry.playground.object, c = Entry.variableContainer;
-    if (c) {
-      targets = c.lists_ || [];
-      for (c = targets.length - 1;0 <= c;c--) {
-        var d = targets[c], f = d.name_, g = "", h = d.array_;
+    var a = "", e = Entry.playground.object, b = Entry.variableContainer;
+    if (b) {
+      targets = b.lists_ || [];
+      for (b = targets.length - 1;0 <= b;b--) {
+        var d = targets[b], f = d.name_, g = "", h = d.array_;
         if (d.object_) {
-          if (d.object_ == b.id) {
+          if (d.object_ == e.id) {
             f = "self." + f;
           } else {
             continue;
@@ -18540,9 +18540,9 @@ Entry.Restrictor = function() {
 (function(b) {
   b.restrict = function(a) {
     var b = a.content.concat(), c = b.shift(), c = Entry.Command[c], d = c.dom;
-    d && (d instanceof Array && (d = d.map(function(a) {
+    d && (this.startEvent.notify(), d instanceof Array && (d = d.map(function(a) {
       return "&" === a[0] ? b[Number(a.substr(1))][1] : a;
-    })), a.tooltip || (a.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), c.restrict ? this.currentTooltip = c.restrict(a, d, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:a.tooltip.title, content:a.tooltip.content, target:d, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), this.startEvent.notify()));
+    })), a.tooltip || (a.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), c.restrict ? this.currentTooltip = c.restrict(a, d, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:a.tooltip.title, content:a.tooltip.content, target:d, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this), 200)));
   };
   b.end = function() {
     this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);
@@ -18591,8 +18591,7 @@ Entry.Tooltip = function(b, a) {
     this.data.map(this._renderTooltip.bind(this));
   };
   b.alignTooltips = function() {
-    this.data.map(this._alignTooltip.bind(this));
-    this.opts.dimmed && Entry.Curtain.align();
+    this._rendered && (this.data.map(this._alignTooltip.bind(this)), this.opts.dimmed && Entry.Curtain.align());
   };
   b._renderTooltip = function(a) {
     if (a.content) {
@@ -20843,6 +20842,7 @@ Entry.BlockMenu = function(b, a, e, c) {
   Entry.Model(this, !1);
   this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
   this._dAlign = Entry.Utils.debounce(this.align, 100);
+  this._dAlign = this.align;
   this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
   this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
   this._align = a || "CENTER";
@@ -20987,7 +20987,7 @@ Entry.BlockMenu = function(b, a, e, c) {
     if (!this._boardBlockView && null !== b) {
       var c = this.workspace, d = c.getMode(), f = Entry.Workspace, g = this._svgWidth, h = c.selectedBoard, k = b.mouseDownCoordinate, l = c = 0;
       k && (c = a.pageX - k.x, l = a.pageY - k.y);
-      !h || d !== f.MODE_BOARD && d !== f.MODE_OVERLAYBOARD ? (g = Entry.GlobalSvg, g.setView(b, d) && (g.adjust(c, l), g.addControl(a))) : h.code && (d = b.block, f = d.getThread(), d && f && (this._boardBlockView = Entry.do("addThread", f.toJSON(!0)).value.getFirstBlock().view, d = this.offset().top - h.offset().top - $(window).scrollTop(), this._boardBlockView._moveTo(b.x - g + (c || 0), b.y + d + (l || 0), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
+      !h || d !== f.MODE_BOARD && d !== f.MODE_OVERLAYBOARD ? (g = Entry.GlobalSvg, g.setView(b, d) && (g.adjust(c, l), g.addControl(a))) : h.code && (d = b.block, b = d.getThread(), d && b && (d = this.offset().top - h.offset().top - $(window).scrollTop(), b = b.toJSON(!0), b[0].x = b[0].x - g + (c || 0), b[0].y = b[0].y + d + (l || 0), this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view, this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
     }
   };
   b.terminateDrag = function() {
@@ -21089,7 +21089,7 @@ Entry.BlockMenu = function(b, a, e, c) {
     }
   };
   b.selectMenu = function(a, b, c) {
-    if (this._isOn()) {
+    if (this._isOn() && this._categoryData) {
       var d = this._selectedCategoryView, f = this._convertSelector(a);
       if (void 0 === a || f) {
         f && (this.lastSelector = f);
@@ -21417,7 +21417,14 @@ Entry.BlockMenu = function(b, a, e, c) {
   };
   b.getDom = function(a) {
     if (1 <= a.length) {
-      return "category" === a[0] ? this._categoryElems[a[1]] : this.getSvgDomByType(a[0][0].type);
+      if ("category" === a[0]) {
+        return this._categoryElems[a[1]];
+      }
+      a = a[0][0].type;
+      var b = this.getSvgDomByType(a);
+      this.align();
+      this.scrollToType(a);
+      return b;
     }
   };
   b.getSvgDomByType = function(a) {
@@ -21426,6 +21433,12 @@ Entry.BlockMenu = function(b, a, e, c) {
       if (d.type === a) {
         return d.view.svgGroup;
       }
+    }
+  };
+  b.scrollToType = function(a) {
+    if (a) {
+      var b = this.code.getBlockList(!1, a)[0].view;
+      this.getSvgDomByType(a).getBoundingClientRect().bottom > $(window).height() - 10 && this._scroller.scrollByPx(b.y - 20);
     }
   };
 })(Entry.BlockMenu.prototype);
@@ -21467,6 +21480,9 @@ Entry.BlockMenuScroller.RADIUS = 7;
   };
   b.scroll = function(a) {
     this.isVisible() && (a = this._adjustValue(a) - this.vY, 0 !== a && (this.board.code.moveBy(0, -a * this.vRatio), this.updateScrollBar(a)));
+  };
+  b.scrollByPx = function(a) {
+    this.scroll(a / this.vRatio);
   };
   b._adjustValue = function(a) {
     var b = this.board.svgDom.height(), b = b - b / this.vRatio;
@@ -24103,18 +24119,15 @@ Entry.Scroller.RADIUS = 7;
     this._horizontal && (this.hX += a * this.hRatio, this.hScrollbar.attr({x:this.hX}));
     this._vertical && (this.vY += b * this.vRatio, this.vScrollbar.attr({y:this.vY}));
   };
-  b.scroll = function(a, b) {
+  b.scroll = function(a, b, c) {
     if (this.board.code) {
-      var c = this.board.svgBlockGroup.getBoundingClientRect(), d = this.board.svgDom, f = c.left - this.board.offset().left, g = c.top - this.board.offset().top, h = c.height;
-      a = Math.max(-c.width + Entry.BOARD_PADDING - f, a);
-      b = Math.max(-h + Entry.BOARD_PADDING - g, b);
-      a = Math.min(d.width() - Entry.BOARD_PADDING - f, a);
-      b = Math.min(d.height() - Entry.BOARD_PADDING - g, b);
+      var d = this.board.svgBlockGroup.getBoundingClientRect(), f = this.board.svgDom, g = d.left - this.board.offset().left, h = d.top - this.board.offset().top, k = d.height;
+      a = Math.max(-d.width + Entry.BOARD_PADDING - g, a);
+      b = Math.max(-k + Entry.BOARD_PADDING - h, b);
+      a = Math.min(f.width() - Entry.BOARD_PADDING - g, a);
+      b = Math.min(f.height() - Entry.BOARD_PADDING - h, b);
       this._scroll(a, b);
-      this._diffs || (this._diffs = [0, 0]);
-      this._diffs[0] += a;
-      this._diffs[1] += b;
-      this._scrollCommand("scrollBoard", this._diffs[0], this._diffs[1], !0);
+      !0 !== c && (this._diffs || (this._diffs = [0, 0]), this._diffs[0] += a, this._diffs[1] += b, this._scrollCommand("scrollBoard", this._diffs[0], this._diffs[1], !0));
     }
   };
   b._scroll = function(a, b) {
@@ -24584,7 +24597,7 @@ Entry.Board.DRAG_RADIUS = 5;
     var a = this.code;
     a && a.view && (a = a.getThreads()) && 0 !== a.length && (a = a.sort(function(a, b) {
       return a.getFirstBlock().view.x - b.getFirstBlock().view.x;
-    }), a = a[0].getFirstBlock()) && (a = a.view, a = a.getAbsoluteCoordinate(), this.scroller.scroll(50 - a.x, 30 - a.y));
+    }), a = a[0].getFirstBlock()) && (a = a.view, a = a.getAbsoluteCoordinate(), this.scroller.scroll(50 - a.x, 30 - a.y, !0));
   };
   b._initContextOptions = function() {
     var a = this;

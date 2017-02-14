@@ -170,7 +170,7 @@ Entry.Scroller.RADIUS = 7;
 
     };
 
-    p.scroll = function(x, y) {
+    p.scroll = function(x, y, skipCommand) {
         if (!this.board.code) return;
         var clientRect = this.board.svgBlockGroup.getBoundingClientRect(),
             svgDom = this.board.svgDom,
@@ -192,17 +192,20 @@ Entry.Scroller.RADIUS = 7;
         );
 
         this._scroll(x,y);
-        if (!this._diffs) {
-            this._diffs = [0,0];
+        if (skipCommand !== true) {
+            if (!this._diffs) {
+                this._diffs = [0,0];
+            }
+            this._diffs[0] += x;
+            this._diffs[1] += y;
+
+            this._scrollCommand(
+                'scrollBoard',
+                this._diffs[0],
+                this._diffs[1],
+                true
+            );
         }
-        this._diffs[0] += x;
-        this._diffs[1] += y;
-        this._scrollCommand(
-            'scrollBoard',
-            this._diffs[0],
-            this._diffs[1],
-            true
-        );
     };
 
     p._scroll = function(x, y) {

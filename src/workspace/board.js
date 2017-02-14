@@ -901,7 +901,8 @@ Entry.Board.DRAG_RADIUS = 5;
             var pos = block.getAbsoluteCoordinate();
 
             this.scroller.scroll(
-                50 - pos.x, 30 - pos.y
+                50 - pos.x, 30 - pos.y,
+                true
             );
         }
     };

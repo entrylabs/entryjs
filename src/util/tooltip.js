@@ -80,6 +80,8 @@ Entry.Tooltip = function(data, opts) {
     };
 
     p.alignTooltips = function() {
+        if (!this._rendered) return;
+
         this.data.map(this._alignTooltip.bind(this));
         this.opts.dimmed && Entry.Curtain.align();
     };
@@ -113,7 +115,7 @@ Entry.Tooltip = function(data, opts) {
     };
 
     p._alignTooltip = function(data) {
-        var pos = data.target.offset()
+        var pos = data.target.offset();
         var bound = data.target.get(0).getBoundingClientRect();
         if (this.isIndicator) {
             data.indicator.css({

@@ -15,6 +15,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
     this._dAlign = Entry.Utils.debounce(this.align, 100);
+    this._dAlign = this.align;
     this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
     this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
 
@@ -66,7 +67,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.observe(this, "_handleDragBlock", ["dragBlock"]);
 
     this.changeCode(new Entry.Code([]));
-    categoryData && this._generateCategoryCodes()
+    categoryData && this._generateCategoryCodes();
 
     if (this._scroll) {
         this._scroller = new Entry.BlockMenuScroller(this);
@@ -287,17 +288,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var code = this.code;
             var currentThread = block.getThread();
             if (block && currentThread) {
-                this._boardBlockView =
-                    Entry.do("addThread", currentThread.toJSON(true))
-                    .value.getFirstBlock().view;
-
                 var distance = this.offset().top - board.offset().top - $(window).scrollTop();
-
-                this._boardBlockView._moveTo(
-                    blockView.x - svgWidth + (dx || 0),
-                    blockView.y + distance + (dy || 0),
-                    false
-                );
+                var datum = currentThread.toJSON(true);
+                datum[0].x = datum[0].x - svgWidth + (dx || 0);
+                datum[0].y = datum[0].y + distance + (dy || 0);
+                this._boardBlockView =
+                    Entry.do("addThread", datum)
+                    .value.getFirstBlock().view;
 
                 this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
                 this._boardBlockView.dragInstance.set({isNew:true});
@@ -468,7 +465,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.selectMenu = function(selector, doNotFold, doNotAlign) {
-        if (!this._isOn()) return;
+        if (!this._isOn() || !this._categoryData) return;
 
         var className = 'entrySelectedCategory';
         var oldView = this._selectedCategoryView;
@@ -1015,7 +1012,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (query.length >= 1) {
             if (query[0] === 'category')
                 return this._categoryElems[query[1]];
-            else return this.getSvgDomByType(query[0][0].type);
+            else {
+                var type = query[0][0].type;
+                var dom = this.getSvgDomByType(type);
+                this.align();
+                this.scrollToType(type);
+                return dom;
+            }
         } else {
         }
     };
@@ -1029,6 +1032,23 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var block = threads[i].getFirstBlock();
             if (block.type === type)
                 return block.view.svgGroup;
+        }
+    };
+
+    p.scrollToType = function(type) {
+        if (!type) return;
+        var blockView = this.code.getBlockList(false, type)[0].view;
+        var dom = this.getSvgDomByType(type);
+        var rect = dom.getBoundingClientRect();
+        if (isOverFlow()) {
+            var currentY = blockView.y;
+            var targetY = 20;
+            var diff = currentY - targetY;
+            this._scroller.scrollByPx(diff);
+        }
+
+        function isOverFlow() {
+            return rect.bottom > $(window).height() - 10;
         }
     };
 

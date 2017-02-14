@@ -19,7 +19,7 @@ Entry.Restrictor = function() {
         var domQuery = command.dom;
         if (!domQuery)
             return;
-
+        this.startEvent.notify();
         if (domQuery instanceof Array) {
             domQuery = domQuery.map(function(q) {
                 if (q[0] === "&")
@@ -52,7 +52,7 @@ Entry.Restrictor = function() {
             });
         }
 
-        this.startEvent.notify();
+        window.setTimeout(this.align.bind(this), 200);
     };
 
     p.end = function() {
