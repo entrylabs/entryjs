@@ -499,9 +499,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.pointer = function(pointer) {
-        if (!pointer)
-            pointer = [];
-        return this.thread.pointer(pointer, this);
+        return this.thread.pointer(pointer || [], this);
     };
 
     p.targetPointer = function() {
@@ -512,7 +510,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.getDataByPointer = function(pointer) {
-        pointer = pointer.concat()
+        pointer = pointer.concat();
         var data = this.params[pointer.shift()];
         if (pointer.length)
             if (data.getDataByPointer)

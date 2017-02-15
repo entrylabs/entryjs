@@ -22415,8 +22415,7 @@ Entry.PARAM = -1;
   };
   b.getTargetByPointer = function(a) {
     a = a.concat();
-    a.shift();
-    a.shift();
+    a.splice(0, 2);
     var b = this._data[a.shift()], c;
     if (1 === a.length) {
       c = b.getBlock(a.shift() - 1);
@@ -24652,8 +24651,8 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   b.getDom = function(a) {
     a = a.shift();
-    targetObj = this.code.getTargetByPointer(a);
-    return targetObj instanceof Entry.Block ? targetObj.view.svgGroup : targetObj.svgGroup;
+    a = this.code.getTargetByPointer(a);
+    return a instanceof Entry.Block ? a.view.svgGroup : a.svgGroup;
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
@@ -25345,10 +25344,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     return this.statements.indexOf(a);
   };
   b.pointer = function(a) {
-    a || (a = []);
-    return this.thread.pointer(a, this);
+    return this.thread.pointer(a || [], this);
   };
   b.targetPointer = function() {
+    debugger;
     var a = this.thread.pointer([], this);
     4 === a.length && 0 === a[3] && a.pop();
     return a;
