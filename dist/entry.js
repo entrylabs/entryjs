@@ -11237,34 +11237,34 @@ Entry.TextCodingUtil = {};
       return a;
     }
   };
-  b.isVariableNumber = function(a, b) {
-    var c = Entry.playground.object, d = Entry.variableContainer.variables_, f;
+  b.isVariableNumber = function(a, e) {
+    var b = Entry.playground.object, d = Entry.variableContainer.variables_, f;
     for (f in d) {
       var g = d[f];
-      if ("global" == b) {
+      if ("global" == e) {
         if (null === g.object_ && g.id_ == a && !isNaN(g.value_)) {
           return !0;
         }
       } else {
-        if ("local" == b && g.object_ === c.id && g.id_ == a && !isNaN(g.value_)) {
+        if ("local" == e && g.object_ === b.id && g.id_ == a && !isNaN(g.value_)) {
           return !0;
         }
       }
     }
     return !1;
   };
-  b.generateForStmtIndex = function(a, b) {
-    var c = Math.floor(a / 3);
-    b = ["i", "j", "k"][a % 3] + (b || "");
-    return c ? this.generateForStmtIndex(c - 1, b) : b;
+  b.generateForStmtIndex = function(a, e) {
+    var b = Math.floor(a / 3);
+    e = ["i", "j", "k"][a % 3] + (e || "");
+    return b ? this.generateForStmtIndex(b - 1, e) : e;
   };
-  b.isExpressionLiteral = function(a, b) {
+  b.isExpressionLiteral = function(a, e) {
     switch(a.type) {
       case "CallExpression":
         if ("MemberExpression" === a.callee.type) {
-          var c = a.callee.property.name;
-          if (c = b["%2"][c]) {
-            return "basic_string_field" === Entry.block[c.key].skeleton;
+          var b = a.callee.property.name;
+          if (b = e["%2"][b]) {
+            return "basic_string_field" === Entry.block[b.key].skeleton;
           }
         }
         break;
@@ -16007,30 +16007,31 @@ Entry.Commander = function(b) {
   }, dom:[".btn_confirm_modal"], recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"objectAddSound"};
 })(Entry.Command);
 (function(b) {
-  b.editPicture = {type:Entry.STATIC.COMMAND_TYPES.editPicture, do:function(a, b) {
+  var a = Entry.STATIC.COMMAND_TYPES;
+  b[a.editPicture] = {do:function(a, b) {
     Entry.playground.painter.lc.canRedo() && Entry.playground.painter.lc.redo();
   }, state:function(a) {
   }, log:function(a) {
     return [a];
-  }, undo:"uneditPicture"};
-  b.uneditPicture = {type:Entry.STATIC.COMMAND_TYPES.uneditPicture, do:function(a, b) {
+  }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"uneditPicture"};
+  b[a.uneditPicture] = {type:Entry.STATIC.COMMAND_TYPES.uneditPicture, do:function(a, b) {
     Entry.playground.painter.lc.undo();
   }, state:function(a) {
   }, log:function(a) {
     return [a];
-  }, undo:"editPicture"};
-  b.processPicture = {type:Entry.STATIC.COMMAND_TYPES.processPicture, do:function(a, b) {
+  }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"editPicture"};
+  b[a.processPicture] = {do:function(a, b) {
     Entry.playground.painter.lc.canRedo() && Entry.playground.painter.lc.redo();
   }, state:function(a) {
   }, log:function(a) {
     return [a];
-  }, undo:"unprocessPicture", isPass:!0};
-  b.unprocessPicture = {type:Entry.STATIC.COMMAND_TYPES.unprocessPicture, do:function(a, b) {
+  }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"unprocessPicture", isPass:!0};
+  b[a.unprocessPicture] = {do:function(a, b) {
     Entry.playground.painter.lc.undo();
   }, state:function(a) {
   }, log:function(a) {
     return [a];
-  }, undo:"processPicture", isPass:!0};
+  }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"processPicture", isPass:!0};
 })(Entry.Command);
 (function(b) {
   var a = Entry.STATIC.COMMAND_TYPES;
