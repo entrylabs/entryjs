@@ -25347,7 +25347,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     return this.thread.pointer(a || [], this);
   };
   b.targetPointer = function() {
-    debugger;
     var a = this.thread.pointer([], this);
     4 === a.length && 0 === a[3] && a.pop();
     return a;
