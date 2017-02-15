@@ -13,9 +13,15 @@ Entry.Restrictor = function() {
 
 (function(p) {
     p.restrict = function(data) {
+        this._data = data;
+
+        if (data.skip) return this.skip();
+
         var log = data.content.concat();
         var commandType = log.shift();
         var command = Entry.Command[commandType];
+
+
         var domQuery = command.dom;
         if (!domQuery)
             return;
@@ -70,5 +76,21 @@ Entry.Restrictor = function() {
     p.align = function() {
         if (this.currentTooltip)
             this.currentTooltip.alignTooltips();
+    };
+
+    p.skip = function() {
+        var data = this._data;
+
+        var log = data.content.concat();
+        var commandType = log.shift();
+        var command = Entry.Command[commandType];
+
+        var args = log.map(function(l) {
+            return l[1];
+        });
+        this.end();
+        this.restrictEnd();
+        args.unshift(commandType);
+        return Entry.do.apply(null, args);
     };
 })(Entry.Restrictor.prototype);

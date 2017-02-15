@@ -18,14 +18,14 @@ goog.require("Entry.STATIC");
         log: function(newType, oldType) {
             oldType = oldType || 'all';
             return [
+                ['newType', newType],
                 ['oldType', oldType],
-                ['newType', newType]
             ];
         },
         skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "variableContainerSelectFilter",
-        dom: ['variableContainer', 'filter', '&1']
+        dom: ['variableContainer', 'filter', '&0']
     };
 
     c[COMMAND_TYPES.variableContainerClickVariableAddButton] = {
@@ -36,8 +36,7 @@ goog.require("Entry.STATIC");
             return [];
         },
         log: function() {
-            return [
-            ];
+            return [];
         },
         skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -47,6 +46,7 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.variableContainerAddVariable] = {
         do: function(variable) {
+            console.log(variable);
             Entry.variableContainer.addVariable(variable);
         },
         state: function(variable) {
@@ -57,7 +57,9 @@ goog.require("Entry.STATIC");
         log: function(variable) {
             if (variable instanceof Entry.Variable)
                 variable = variable.toJSON();
-            return [ 'variable', variable ];
+            return [
+                [ 'variable', variable ]
+            ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
@@ -77,7 +79,9 @@ goog.require("Entry.STATIC");
         log: function(variable) {
             if (variable instanceof Entry.Variable)
                 variable = variable.toJSON();
-            return [ 'variable', variable ];
+            return [
+                [ 'variable', variable ]
+            ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,

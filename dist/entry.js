@@ -16039,8 +16039,8 @@ Entry.Commander = function(b) {
   }, state:function(a, b) {
     return [b, a];
   }, log:function(a, b) {
-    return [["oldType", b || "code"], ["newType", a]];
-  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"playgroundChangeViewMode", dom:["playground", "tabViewElements", "&1"]};
+    return [["newType", a], ["oldType", b || "code"]];
+  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"playgroundChangeViewMode", dom:["playground", "tabViewElements", "&0"]};
   b[a.playgroundClickAddPicture] = {do:function() {
     Entry.dispatchEvent("openPictureManager");
   }, state:function() {
@@ -16063,8 +16063,8 @@ Entry.Commander = function(b) {
   }, state:function(a, b) {
     return [b, a];
   }, log:function(a, b) {
-    return [["oldType", b || "all"], ["newType", a]];
-  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerSelectFilter", dom:["variableContainer", "filter", "&1"]};
+    return [["newType", a], ["oldType", b || "all"]];
+  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerSelectFilter", dom:["variableContainer", "filter", "&0"]};
   b[a.variableContainerClickVariableAddButton] = {do:function() {
     Entry.variableContainer.clickVariableAddButton();
   }, state:function() {
@@ -16073,13 +16073,14 @@ Entry.Commander = function(b) {
     return [];
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerClickVariableAddButton", dom:["variableContainer", "variableAddButton"]};
   b[a.variableContainerAddVariable] = {do:function(a) {
+    console.log(a);
     Entry.variableContainer.addVariable(a);
   }, state:function(a) {
     a instanceof Entry.Variable && (a = a.toJSON());
     return [a];
   }, log:function(a) {
     a instanceof Entry.Variable && (a = a.toJSON());
-    return ["variable", a];
+    return [["variable", a]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"variableContainerRemoveVariable", dom:["variableContainer", "variableAddConfirmButton"]};
   b[a.variableContainerRemoveVariable] = {do:function(a) {
     Entry.variableContainer.removeVariable(a);
@@ -16088,7 +16089,7 @@ Entry.Commander = function(b) {
     return [a];
   }, log:function(a) {
     a instanceof Entry.Variable && (a = a.toJSON());
-    return ["variable", a];
+    return [["variable", a]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"variableContainerAddVariable", dom:["variableContainer", "variableAddConfirmButton"]};
 })(Entry.Command);
 Entry.init = function(b, a) {
@@ -18543,6 +18544,10 @@ Entry.Restrictor = function() {
 };
 (function(b) {
   b.restrict = function(a) {
+    this._data = a;
+    if (a.skip) {
+      return this.skip();
+    }
     var b = a.content.concat(), c = b.shift(), c = Entry.Command[c], d = c.dom;
     d && (this.startEvent.notify(), d instanceof Array && (d = d.map(function(a) {
       return "&" === a[0] ? b[Number(a.substr(1))][1] : a;
@@ -18557,6 +18562,15 @@ Entry.Restrictor = function() {
   };
   b.align = function() {
     this.currentTooltip && this.currentTooltip.alignTooltips();
+  };
+  b.skip = function() {
+    var a = this._data.content.concat(), b = a.shift(), a = a.map(function(a) {
+      return a[1];
+    });
+    this.end();
+    this.restrictEnd();
+    a.unshift(b);
+    return Entry.do.apply(null, a);
   };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(b, a) {
