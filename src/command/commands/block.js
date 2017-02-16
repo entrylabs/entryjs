@@ -197,6 +197,8 @@ goog.require("Entry.STATIC");
             ];
         },
         log: function(block, x, y) {
+            if (typeof block === "string")
+                block = this.editor.board.findById(block);
             return [
                 ['block', block.pointer()],
                 ['x', block.x], ['y', block.y]

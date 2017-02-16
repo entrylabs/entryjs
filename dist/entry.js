@@ -15867,6 +15867,7 @@ Entry.Commander = function(b) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     return [a.id, a.x, a.y];
   }, log:function(a, b, d) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
     return [["block", a.pointer()], ["x", a.x], ["y", a.y]];
   }, undo:"moveBlock"};
   b[a.cloneBlock] = {do:function(a) {
