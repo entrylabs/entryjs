@@ -42,6 +42,7 @@ Entry.STATIC = {
         scrollBoard: 110,
         setFieldValue: 111,
         selectBlockMenu: 112,
+        destroyBlockBelow: 113,
 
         selectObject: 201,
         objectEditButtonClick: 202,
