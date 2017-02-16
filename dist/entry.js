@@ -11307,16 +11307,16 @@ Entry.BlockToJsParser = function(b, a) {
     return e + "\n";
   };
   b.Block = function(a) {
-    var e = a._schema.syntax.js ? a._schema.syntax.js : a._schema.syntax;
-    return e ? a = this[e[0]](a) : "";
+    var b = a._schema.syntax.js ? a._schema.syntax.js : a._schema.syntax;
+    return b ? a = this[b[0]](a) : "";
   };
   b.Program = function(a) {
     return "";
   };
   b.Scope = function(a) {
-    var e = !1, b = "", d = /(%.)/mi;
+    var b = !1, c = "", d = /(%.)/mi;
     if (a._schema.syntax.js) {
-      var f = a._schema.syntax.js.concat(), e = !0
+      var f = a._schema.syntax.js.concat(), b = !0
     } else {
       f = a._schema.syntax.concat();
     }
@@ -11326,14 +11326,14 @@ Entry.BlockToJsParser = function(b, a) {
     console.log("syntaxTokens", f);
     for (var g = a._schema.params, h = a.data.params, k = 0;k < f.length;k++) {
       var l = f[k];
-      0 !== l.length && "Scope" !== l && ("Judge" === l ? e = !0 : d.test(l) ? (l = l.split("%")[1], l = parseInt(l) - 1, g[l] && "Image" != g[l].type && ("Block" == g[l].type ? (l = this.Block(h[l]), b += l) : b += this[g[l].type](h[l], g[l]))) : b += l);
+      0 !== l.length && "Scope" !== l && ("Judge" === l ? b = !0 : d.test(l) ? (l = l.split("%")[1], l = parseInt(l) - 1, g[l] && "Image" != g[l].type && ("Block" == g[l].type ? (l = this.Block(h[l]), c += l) : c += this[g[l].type](h[l], g[l]))) : c += l);
     }
-    console.log("js result", b);
-    "#" == b.charAt(b.length - 1) && (e = !0, b = b.substring(0, b.length - 1), b = b.trim());
-    e || (b += "();");
-    b = Entry.TextCodingUtil.jsAdjustSyntax(a, b);
-    console.log("js result2", b);
-    return b;
+    console.log("js result", c);
+    "#" == c.charAt(c.length - 1) && (b = !0, c = c.substring(0, c.length - 1), c = c.trim());
+    b || (c += "();");
+    c = Entry.TextCodingUtil.jsAdjustSyntax(a, c);
+    console.log("js result2", c);
+    return c;
   };
   b.BasicFunction = function(a) {
     a = this.Thread(a.statements[0]);
@@ -15801,46 +15801,45 @@ Entry.Commander = function(b) {
     return [["thread", a]];
   }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
   b[a.destroyThread] = {do:function(a) {
-    (a instanceof Entry.Thread ? a.getFirstBlock() : this.editor.board.findById(a[0].id)).destroy(!0, !0);
+    (a instanceof Entry.Thread ? a.getFirstBlock() : this.editor.board.findBlock(a[0].id)).destroy(!0, !0);
   }, state:function(a) {
-    a instanceof Entry.Thread || (a = this.editor.board.findById(a[0].id).thread);
+    a instanceof Entry.Thread || (a = this.editor.board.findBlock(a[0].id).thread);
     return [a.toJSON()];
   }, log:function(a) {
     a = a instanceof Entry.Thread ? a.getFirstBlock() : a[0];
     return [["block", a.pointer ? a.pointer() : a]];
   }, undo:"addThread"};
   b[a.destroyBlock] = {do:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
+    a = this.editor.board.findBlock(a);
     a.doDestroy(!0);
   }, state:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
+    a = this.editor.board.findBlock(a);
     return [a.toJSON(), a.pointer()];
   }, log:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
+    a = this.editor.board.findBlock(a);
     return [["block", a.pointer ? a.pointer() : a]];
   }, undo:"recoverBlock"};
   b[a.recoverBlock] = {do:function(a, b) {
     var d = this.editor.board.code.createThread([a]).getFirstBlock();
-    "string" === typeof d && (d = this.editor.board.findById(d));
     this.editor.board.insert(d, b);
   }, state:function(a) {
     "string" !== typeof a && (a = a.id);
     return [a];
   }, log:function(a, b) {
-    "string" !== typeof a && (a = this.editor.board.findById(a.id));
+    a = this.editor.board.findBlock(a.id);
     return [["block", a], ["pointer", b]];
   }, undo:"destroyBlock"};
   b[a.insertBlock] = {type:Entry.STATIC.COMMAND_TYPES.insertBlock, do:function(a, b, d) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
+    a = this.editor.board.findBlock(a);
     this.editor.board.insert(a, b, d);
   }, state:function(a, b) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
+    a = this.editor.board.findBlock(a);
     var d = [a], f = a.targetPointer();
     d.push(f);
     "string" !== typeof a && "basic" === a.getBlockType() && d.push(a.thread.getCount(a));
     return d;
   }, log:function(a, b, d) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
+    a = this.editor.board.findBlock(a);
     a = [["block", a ? a.pointer() : ""], ["targetPointer", a.targetPointer()]];
     d && a.push(["count", d ? d : null]);
     return a;
@@ -15858,26 +15857,26 @@ Entry.Commander = function(b) {
     "basic" === a.getBlockType() && b.push(a.thread.getCount(a));
     return b;
   }, log:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
+    a = this.editor.board.findBlock(a);
     return [["block", a.pointer()], ["x", a.x], ["y", a.y]];
   }, undo:"insertBlock"};
   b[a.moveBlock] = {do:function(a, b, d) {
-    void 0 !== b ? (a = this.editor.board.findById(a), a.moveTo(b, d)) : a._updatePos();
+    void 0 !== b ? (a = this.editor.board.findBlock(a), a.moveTo(b, d)) : a._updatePos();
   }, state:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
+    a = this.editor.board.findBlock(a);
     return [a.id, a.x, a.y];
   }, log:function(a, b, d) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
+    a = this.editor.board.findBlock(a);
     return [["block", a.pointer()], ["x", a.x], ["y", a.y]];
   }, undo:"moveBlock"};
   b[a.cloneBlock] = {do:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
+    a = this.editor.board.findBlock(a);
     this.editor.board.code.createThread(a.copy());
   }, state:function(a) {
     "string" !== typeof a && (a = a.id);
     return [a];
   }, log:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
+    a = this.editor.board.findBlock(a);
     var b = this.editor.board.code.getThreads().pop();
     return [["block", a.pointer()], ["thread", b.stringify()]];
   }, undo:"uncloneBlock"};
@@ -21237,9 +21236,9 @@ Entry.BlockMenu = function(b, a, e, c) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
       a = Entry.Utils.convertMouseEvent(a);
-      var e = d.dragInstance;
-      d._scroller.scroll(-a.pageY + e.offsetY);
-      e.set({offsetY:a.pageY});
+      var c = d.dragInstance;
+      d._scroller.scroll(-a.pageY + c.offsetY);
+      c.set({offsetY:a.pageY});
     }
     function c(a) {
       $(document).unbind(".blockMenu");
@@ -24675,6 +24674,9 @@ Entry.Board.DRAG_RADIUS = 5;
     a = a.shift();
     a = this.code.getTargetByPointer(a);
     return a instanceof Entry.Block ? a.view.svgGroup : a.svgGroup;
+  };
+  b.findBlock = function(a) {
+    return "string" === typeof a ? this.findById(a) : a instanceof Array ? this.code.getTargetByPointer(a) : a instanceof Entry.Block || !a || !a.id ? a : this.findById(a);
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {

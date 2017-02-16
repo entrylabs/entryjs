@@ -1036,5 +1036,17 @@ Entry.Board.DRAG_RADIUS = 5;
         }
     };
 
+    p.findBlock = function(block) {
+        if (typeof block === 'string')
+            return this.findById(block);
+        else if (block instanceof Array)
+            return this.code.getTargetByPointer(block);
+        else if (block instanceof Entry.Block)
+            return block;
+        else if (block && block.id)
+            return this.findById(block);
+        return block;
+    };
+
 })(Entry.Board.prototype);
 
