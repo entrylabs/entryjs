@@ -15809,8 +15809,9 @@ Entry.Commander = function(b) {
     a instanceof Entry.Thread || (a = this.editor.board.findBlock(a[0].id).thread);
     return [a.toJSON()];
   }, log:function(a) {
-    a = a instanceof Entry.Thread ? a.getFirstBlock() : a[0];
-    return [["block", a.pointer ? a.pointer() : a]];
+    var b;
+    b = a instanceof Entry.Thread ? a.getFirstBlock() : a[0];
+    return [["block", b.pointer ? b.pointer() : b], ["thread", a.toJSON ? a.toJSON() : a]];
   }, undo:"addThread"};
   b[a.destroyBlock] = {do:function(a) {
     a = this.editor.board.findBlock(a);

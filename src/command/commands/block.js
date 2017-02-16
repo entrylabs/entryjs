@@ -49,12 +49,14 @@ goog.require("Entry.STATIC");
             return [thread.toJSON()];
         },
         log: function(thread) {
+            var block;
             if (thread instanceof Entry.Thread) {
-                thread = thread.getFirstBlock();
-            } else thread = thread[0];
+                block = thread.getFirstBlock();
+            } else block = thread[0];
 
             return [
-                ['block', thread.pointer ?  thread.pointer() : thread]
+                ['block', block.pointer ?  block.pointer() : block],
+                ['thread', thread.toJSON ? thread.toJSON() : thread],
             ];
         },
         undo: "addThread"
