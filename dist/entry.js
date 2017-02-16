@@ -17040,6 +17040,18 @@ Entry.Utils.getUniqObjectsBlocks = function(b) {
   });
   return a;
 };
+Entry.Utils.getObjectsBlocks = function(b) {
+  b = b || Entry.container.objects_;
+  var a = [];
+  b.forEach(function(b) {
+    b = b.script;
+    b instanceof Entry.Code || (b = new Entry.Code(b));
+    b.getBlockList(!0).forEach(function(b) {
+      a.push(b.type);
+    });
+  });
+  return a;
+};
 Entry.Utils.makeCategoryDataByBlocks = function(b) {
   if (b) {
     for (var a = this, e = EntryStatic.getAllBlocks(), c = {}, d = 0;d < e.length;d++) {
