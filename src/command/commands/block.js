@@ -14,8 +14,11 @@ goog.require("Entry.STATIC");
             return this.editor.board.code.createThread(thread);
         },
         state: function(thread) {
-            if (thread.length)
-                thread[0].id = Entry.Utils.generateId();
+            if (thread.length) {
+                var block = thread[0];
+                if (this.editor.board.findBlock(block.id))
+                    block.id = Entry.Utils.generateId();
+            }
             return [thread];
         },
         log: function(thread) {
@@ -49,6 +52,7 @@ goog.require("Entry.STATIC");
             if (thread instanceof Entry.Thread) {
                 thread = thread.getFirstBlock();
             } else thread = thread[0];
+
             return [
                 ['block', thread.pointer ?  thread.pointer() : thread]
             ];
@@ -95,7 +99,6 @@ goog.require("Entry.STATIC");
     };
 
     c[COMMAND_TYPES.insertBlock] = {
-        type: Entry.STATIC.COMMAND_TYPES.insertBlock,
         do: function(block, targetBlock, count) {
             block = this.editor.board.findBlock(block);
             this.editor.board.insert(block, targetBlock, count);

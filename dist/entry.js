@@ -15794,7 +15794,10 @@ Entry.Commander = function(b) {
   b[a.addThread] = {do:function(a) {
     return this.editor.board.code.createThread(a);
   }, state:function(a) {
-    a.length && (a[0].id = Entry.Utils.generateId());
+    if (a.length) {
+      var b = a[0];
+      this.editor.board.findBlock(b.id) && (b.id = Entry.Utils.generateId());
+    }
     return [a];
   }, log:function(a) {
     a instanceof Entry.Thread && (a = a.toJSON());
@@ -15829,7 +15832,7 @@ Entry.Commander = function(b) {
     a = this.editor.board.findBlock(a.id);
     return [["block", a], ["pointer", b]];
   }, undo:"destroyBlock"};
-  b[a.insertBlock] = {type:Entry.STATIC.COMMAND_TYPES.insertBlock, do:function(a, b, d) {
+  b[a.insertBlock] = {do:function(a, b, d) {
     a = this.editor.board.findBlock(a);
     this.editor.board.insert(a, b, d);
   }, state:function(a, b) {
@@ -24676,7 +24679,7 @@ Entry.Board.DRAG_RADIUS = 5;
     return a instanceof Entry.Block ? a.view.svgGroup : a.svgGroup;
   };
   b.findBlock = function(a) {
-    return "string" === typeof a ? this.findById(a) : a instanceof Array ? this.code.getTargetByPointer(a) : a instanceof Entry.Block || !a || !a.id ? a : this.findById(a);
+    return "string" === typeof a ? this.findById(a) : a && a.id ? this.findById(a.id) : a instanceof Array ? this.code.getTargetByPointer(a) : a;
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
