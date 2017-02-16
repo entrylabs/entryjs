@@ -429,6 +429,11 @@ Entry.parseOptions = function(options) {
     else if (this.hasVariableManager === undefined)
         this.hasVariableManager = true;
 
+    this.readOnly = options.readOnly || false;
+    if (this.readOnly) {
+         this.soundEditable = a.sceneEditable = this.objectAddable = false;
+    }
+
     this.isForLecture = options.isForLecture;
 
     this.textCodingEnable = options.textCodingEnable;

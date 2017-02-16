@@ -116,6 +116,9 @@ Entry.PARAM = -1;
         if (blocks === undefined) return;
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
+            var pointer = block.pointer();
+            if (pointer[3] !== 0 || pointer.length !== 4)
+                continue;
             if (value === undefined ||
                 block.params.indexOf(value) > -1) {
                     var executor = new Entry.Executor(blocks[i], entity);

@@ -562,6 +562,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.isSameParamWith = function(target) {
+        if (target.type.substr(0,8) === "wildcard" ||
+            this.type.substr(0,8) === "wildcard")
+            return true;
         if (target.type !== this.type)
             return false;
         for (var i = 0; i < this.params.length; i++) {
