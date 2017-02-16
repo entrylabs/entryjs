@@ -11298,25 +11298,25 @@ Entry.BlockToJsParser = function(b, a) {
     if (a instanceof Entry.Block) {
       return this.Block(a);
     }
-    var b = "";
+    var e = "";
     a = a.getBlocks();
-    for (var c = 0;c < a.length;c++) {
-      var d = a[c];
-      c != a.length - 1 ? (d = this.Block(d), this._parseMode == Entry.Parser.PARSE_GENERAL ? b += d + "\n" : this._parseMode == Entry.Parser.PARSE_SYNTAX && (b = d + "\n")) : (d = this.Block(d), this._parseMode == Entry.Parser.PARSE_GENERAL ? b += d : this._parseMode == Entry.Parser.PARSE_SYNTAX && (b = d));
+    for (var b = 0;b < a.length;b++) {
+      var d = a[b];
+      b != a.length - 1 ? (d = this.Block(d), this._parseMode == Entry.Parser.PARSE_GENERAL ? e += d + "\n" : this._parseMode == Entry.Parser.PARSE_SYNTAX && (e = d + "\n")) : (d = this.Block(d), this._parseMode == Entry.Parser.PARSE_GENERAL ? e += d : this._parseMode == Entry.Parser.PARSE_SYNTAX && (e = d));
     }
-    return b + "\n";
+    return e + "\n";
   };
   b.Block = function(a) {
-    var b = a._schema.syntax.js ? a._schema.syntax.js : a._schema.syntax;
-    return b ? a = this[b[0]](a) : "";
+    var e = a._schema.syntax.js ? a._schema.syntax.js : a._schema.syntax;
+    return e ? a = this[e[0]](a) : "";
   };
   b.Program = function(a) {
     return "";
   };
   b.Scope = function(a) {
-    var b = !1, c = "", d = /(%.)/mi;
+    var e = !1, b = "", d = /(%.)/mi;
     if (a._schema.syntax.js) {
-      var f = a._schema.syntax.js.concat(), b = !0
+      var f = a._schema.syntax.js.concat(), e = !0
     } else {
       f = a._schema.syntax.concat();
     }
@@ -11326,14 +11326,14 @@ Entry.BlockToJsParser = function(b, a) {
     console.log("syntaxTokens", f);
     for (var g = a._schema.params, h = a.data.params, k = 0;k < f.length;k++) {
       var l = f[k];
-      0 !== l.length && "Scope" !== l && ("Judge" === l ? b = !0 : d.test(l) ? (l = l.split("%")[1], l = parseInt(l) - 1, g[l] && "Image" != g[l].type && ("Block" == g[l].type ? (l = this.Block(h[l]), c += l) : c += this[g[l].type](h[l], g[l]))) : c += l);
+      0 !== l.length && "Scope" !== l && ("Judge" === l ? e = !0 : d.test(l) ? (l = l.split("%")[1], l = parseInt(l) - 1, g[l] && "Image" != g[l].type && ("Block" == g[l].type ? (l = this.Block(h[l]), b += l) : b += this[g[l].type](h[l], g[l]))) : b += l);
     }
-    console.log("js result", c);
-    "#" == c.charAt(c.length - 1) && (b = !0, c = c.substring(0, c.length - 1), c = c.trim());
-    b || (c += "();");
-    c = Entry.TextCodingUtil.jsAdjustSyntax(a, c);
-    console.log("js result2", c);
-    return c;
+    console.log("js result", b);
+    "#" == b.charAt(b.length - 1) && (e = !0, b = b.substring(0, b.length - 1), b = b.trim());
+    e || (b += "();");
+    b = Entry.TextCodingUtil.jsAdjustSyntax(a, b);
+    console.log("js result2", b);
+    return b;
   };
   b.BasicFunction = function(a) {
     a = this.Thread(a.statements[0]);
@@ -15797,14 +15797,17 @@ Entry.Commander = function(b) {
     a.length && (a[0].id = Entry.Utils.generateId());
     return [a];
   }, log:function(a) {
-    return [["thread", this.editor.board.code.getThreads().pop().toJSON()]];
+    a instanceof Entry.Thread && (a = a.toJSON());
+    return [["thread", a]];
   }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
   b[a.destroyThread] = {do:function(a) {
-    this.editor.board.findById(a[0].id).destroy(!0, !0);
+    (a instanceof Entry.Thread ? a.getFirstBlock() : this.editor.board.findById(a[0].id)).destroy(!0, !0);
   }, state:function(a) {
-    return [this.editor.board.findById(a[0].id).thread.toJSON()];
+    a instanceof Entry.Thread || (a = this.editor.board.findById(a[0].id).thread);
+    return [a.toJSON()];
   }, log:function(a) {
-    return [["block", a[0].pointer ? a[0].pointer() : a[0]]];
+    a = a instanceof Entry.Thread ? a.getFirstBlock() : a[0];
+    return [["block", a.pointer ? a.pointer() : a]];
   }, undo:"addThread"};
   b[a.destroyBlock] = {do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
@@ -15824,8 +15827,8 @@ Entry.Commander = function(b) {
     "string" !== typeof a && (a = a.id);
     return [a];
   }, log:function(a, b) {
-    a = this.editor.board.findById(a.id);
-    return [["block", a.pointer()], ["pointer", b]];
+    "string" !== typeof a && (a = this.editor.board.findById(a.id));
+    return [["block", a], ["pointer", b]];
   }, undo:"destroyBlock"};
   b[a.insertBlock] = {type:Entry.STATIC.COMMAND_TYPES.insertBlock, do:function(a, b, d) {
     "string" === typeof a && (a = this.editor.board.findById(a));
@@ -15864,7 +15867,7 @@ Entry.Commander = function(b) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     return [a.id, a.x, a.y];
   }, log:function(a, b, d) {
-    return [Entry.STATIC.COMMAND_TYPES.moveBlock, ["block", a.pointer()], ["x", a.x], ["y", a.y]];
+    return [["block", a.pointer()], ["x", a.x], ["y", a.y]];
   }, undo:"moveBlock"};
   b[a.cloneBlock] = {do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
@@ -21233,9 +21236,9 @@ Entry.BlockMenu = function(b, a, e, c) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
       a = Entry.Utils.convertMouseEvent(a);
-      var c = d.dragInstance;
-      d._scroller.scroll(-a.pageY + c.offsetY);
-      c.set({offsetY:a.pageY});
+      var e = d.dragInstance;
+      d._scroller.scroll(-a.pageY + e.offsetY);
+      e.set({offsetY:a.pageY});
     }
     function c(a) {
       $(document).unbind(".blockMenu");
@@ -25504,7 +25507,7 @@ Entry.FieldTrashcan = function(b) {
   b.updateDragBlock = function() {
     var a = this.board.dragBlock, b = this.dragBlockObserver;
     b && (b.destroy(), this.dragBlockObserver = null);
-    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (this.dragBlock.block.doDestroyBelow(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
+    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (Entry.do("destroyThread", this.dragBlock.block.thread), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
     this.dragBlock = a;
   };
   b.checkBlock = function() {

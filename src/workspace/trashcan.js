@@ -62,7 +62,10 @@ Entry.FieldTrashcan = function(board) {
             if (this.isOver && this.dragBlock) {
                 var prevBlock = this.dragBlock.block.getPrevBlock();
                 if (!prevBlock) {
-                    this.dragBlock.block.doDestroyBelow(true);
+                    Entry.do(
+                        'destroyThread',
+                        this.dragBlock.block.thread
+                    );
                     createjs.Sound.play('entryDelete');
                 }
             }

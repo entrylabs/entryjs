@@ -19,9 +19,10 @@ goog.require("Entry.STATIC");
             return [thread];
         },
         log: function(thread) {
-            var lastThread = this.editor.board.code.getThreads().pop();
+            if (thread instanceof Entry.Thread)
+                thread = thread.toJSON();
             return [
-                ['thread', lastThread.toJSON()]
+                ['thread', thread]
             ];
         },
         undo: "destroyThread",
@@ -32,18 +33,24 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.destroyThread] = {
         do: function(thread) {
-            var blockId = thread[0].id;
-            var block = this.editor.board.findById(blockId);
+            var block;
+            if (thread instanceof Entry.Thread)
+                block = thread.getFirstBlock();
+            else
+                block = this.editor.board.findById(thread[0].id);
             block.destroy(true, true);
         },
         state: function(thread) {
-            var blockId = thread[0].id;
-            var block = this.editor.board.findById(blockId);
-            return [block.thread.toJSON()];
+            if (!(thread instanceof Entry.Thread))
+                thread = this.editor.board.findById(thread[0].id).thread;
+            return [thread.toJSON()];
         },
         log: function(thread) {
+            if (thread instanceof Entry.Thread) {
+                thread = thread.getFirstBlock();
+            } else thread = thread[0];
             return [
-                ['block', thread[0].pointer ?  thread[0].pointer() : thread[0]]
+                ['block', thread.pointer ?  thread.pointer() : thread]
             ];
         },
         undo: "addThread"
@@ -83,9 +90,11 @@ goog.require("Entry.STATIC");
             return [block];
         },
         log: function(block, pointer) {
-            block = this.editor.board.findById(block.id);
+            if (typeof block !== "string") {
+                block = this.editor.board.findById(block.id);
+            }
             return [
-                ['block', block.pointer()],
+                ['block', block],
                 ['pointer', pointer]
             ];
         },
@@ -189,7 +198,6 @@ goog.require("Entry.STATIC");
         },
         log: function(block, x, y) {
             return [
-                Entry.STATIC.COMMAND_TYPES.moveBlock,
                 ['block', block.pointer()],
                 ['x', block.x], ['y', block.y]
             ];
