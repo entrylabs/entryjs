@@ -1029,6 +1029,9 @@ Entry.Container.prototype.removeFuncBlocks = function(functionType) {
 Entry.Container.prototype.clear = function() {
     this.objects_.map(function(o) {o.destroy()});
     this.objects_ = [];
+    // INFO : clear 시도할때 _extensionObjects 초기화
+    this._extensionObjects = [];
+    // TODO: clear 때 this._extensionListView 도 비워 줘야 하는지 확인 필요.
     Entry.playground.flushPlayground();
 };
 

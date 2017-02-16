@@ -130,7 +130,7 @@ Entry.initialize_ = function() {
      */
     this.stage = new Entry.Stage();
 
-    if (Entry.engine)
+    if (Entry.engine && Entry.engine.projectTimer)
         Entry.engine.clearTimer();
     /**
      * Initialize engine for run.

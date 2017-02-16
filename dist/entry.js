@@ -5230,6 +5230,7 @@ Entry.Container.prototype.clear = function() {
     b.destroy();
   });
   this.objects_ = [];
+  this._extensionObjects = [];
   Entry.playground.flushPlayground();
 };
 Entry.Container.prototype.selectNeighborObject = function(b) {
@@ -11282,16 +11283,16 @@ Entry.BlockToJsParser = function(b, a) {
   this._iterVariableChunk = ["i", "j", "k"];
 };
 (function(b) {
-  b.Code = function(a, b) {
+  b.Code = function(a, e) {
     console.log("BToJCodeParser", a);
-    this._parseMode = b;
+    this._parseMode = e;
     if (a instanceof Entry.Block) {
       return this.Block(a);
     }
-    for (var c = "", d = a._data, f = 0;f < d.length;f++) {
-      c += this.Thread(d[f]);
+    for (var b = "", d = a._data, f = 0;f < d.length;f++) {
+      b += this.Thread(d[f]);
     }
-    return c.trim();
+    return b.trim();
   };
   b.Thread = function(a) {
     if (a instanceof Entry.Block) {
@@ -15927,6 +15928,8 @@ Entry.Commander = function(b) {
   }, state:function() {
   }, log:function(a) {
     return [["callerName", a]];
+  }, restrict:function(a, b, d) {
+    return new Entry.Tooltip([{title:a.tooltip.title, content:a.tooltip.content, target:b, direction:"down"}], {restrict:!0, dimmed:!0});
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
   b[a.toggleStop] = {do:function(a) {
     Entry.engine.toggleStop();
@@ -16154,7 +16157,7 @@ Entry.loadAudio_ = function(b, a) {
 };
 Entry.initialize_ = function() {
   this.stage = new Entry.Stage;
-  Entry.engine && Entry.engine.clearTimer();
+  Entry.engine && Entry.engine.projectTimer && Entry.engine.clearTimer();
   this.engine = new Entry.Engine;
   this.propertyPanel = new Entry.PropertyPanel;
   this.container = new Entry.Container;
