@@ -105,7 +105,7 @@ goog.require("Entry.STATIC");
             var data = [
                 block
             ];
-            var pointer = block.targetPointer()
+            var pointer = block.targetPointer();
             data.push(pointer);
 
             if (typeof block !== "string" && block.getBlockType() === "basic")

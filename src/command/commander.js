@@ -40,6 +40,7 @@ Entry.Commander = function(injectType) {
         var that = this;
         var argumentArray = Array.prototype.slice.call(arguments);
         argumentArray.shift();
+
         var command = Entry.Command[commandType];
         if (Entry.stateManager && command.skipUndoStack !== true) {
             Entry.stateManager.addCommand.apply(

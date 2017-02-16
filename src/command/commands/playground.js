@@ -8,6 +8,7 @@ goog.require("Entry.STATIC");
 
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+
     c[COMMAND_TYPES.playgroundChangeViewMode] = {
         do: function(newType, oldType) {
             Entry.playground.changeViewMode(newType);
@@ -18,14 +19,14 @@ goog.require("Entry.STATIC");
         log: function(newType, oldType) {
             oldType = oldType || 'code';
             return [
+                ['newType', newType],
                 ['oldType', oldType],
-                ['newType', newType]
             ];
         },
         skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "playgroundChangeViewMode",
-        dom: ['playground', 'tabViewElements', '&1']
+        dom: ['playground', 'tabViewElements', '&0']
     };
 
     c[COMMAND_TYPES.playgroundClickAddPicture] = {
