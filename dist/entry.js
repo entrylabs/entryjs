@@ -25541,7 +25541,7 @@ Entry.FieldTrashcan = function(c) {
   c.updateDragBlock = function() {
     var b = this.board.dragBlock, c = this.dragBlockObserver;
     c && (c.destroy(), this.dragBlockObserver = null);
-    b ? this.dragBlockObserver = b.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (Entry.do("destroyThread", this.dragBlock.block.thread), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
+    b ? this.dragBlockObserver = b.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (Entry.do("destroyThread", this.dragBlock.block.thread).isPass(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
     this.dragBlock = b;
   };
   c.checkBlock = function() {
