@@ -32663,7 +32663,7 @@ Entry.block = {
                 lastBlock = null;
             this.isDone = false;
             var index = 0;
-            this.listener = code.watchEvent.attach(this, function(blocks) {
+            this.listener = code.watchEvent.attach(this, function(blocks) { //dangerous
                 blocks = blocks.concat();
                 var block;
                 while (blocks.length && index < statements.length) {
@@ -32684,6 +32684,42 @@ Entry.block = {
             })
             return Entry.STATIC.BREAK;
         }
+    },
+    "wildcard_string": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_string_field",
+        "template": "    *    ",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "wildcard_string"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {}
+    },
+    "wildcard_boolean": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_boolean_field",
+        "template": "    *    ",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "wildcard_boolean"
+        },
+        "paramsKeyMap": {},
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {}
     },
     "hidden_string": {
         "color": "#7C7C7C",

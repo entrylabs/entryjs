@@ -311,6 +311,7 @@ Entry.Playground = function() {
             'board': {
                 dom: boardView
             },
+            readOnly: Entry.readOnly
         }
         if (Entry.textCodingEnable)
             initOpts.vimBoard = { dom: boardView };

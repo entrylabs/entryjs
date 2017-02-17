@@ -96,7 +96,9 @@ EntryStatic.getAllBlocks = function() {
                 "start_neighbor_scene",
                 "check_object_property",
                 "check_block_execution",
-                "check_lecture_goal"
+                "check_lecture_goal",
+                "wildcard_string",
+                "wildcard_boolean"
             ]
         },
         {
@@ -560,7 +562,7 @@ EntryStatic.getAllBlocks = function() {
                 "smartBoard_toggle_led",
                 "smartBoard_toggle_pwm",
                 "smartBoard_convert_scale",
-                
+
                 //robotori Add 20161129 begin
                 "robotori_digitalInput",
                 "robotori_analogInput",
@@ -636,7 +638,7 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_dronefighter_drive_controller_vibrator_on_reserve",
                 "byrobot_dronefighter_drive_controller_vibrator_delay",
                 "byrobot_dronefighter_drive_controller_vibrator_reserve",
-                
+
                 // BYROBOT - DroneFighter Flight
                 "byrobot_dronefighter_flight_drone_value_attitude",
                 "byrobot_dronefighter_flight_drone_value_etc",

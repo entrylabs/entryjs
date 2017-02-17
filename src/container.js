@@ -687,6 +687,10 @@ Entry.Container.prototype.clearRunningStateOnScene = function() {
 Entry.Container.prototype.mapObject = function(mapFunction, param) {
     var length = this.objects_.length;
     var output = [];
+    for (var i = 0; i<this._extensionObjects.length; i++) {
+        var object = this._extensionObjects[i];
+        output.push(mapFunction(object, param));
+    }
     for (var i = 0; i<length; i++) {
         var object = this.objects_[i];
         output.push(mapFunction(object, param));

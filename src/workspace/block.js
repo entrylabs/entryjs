@@ -554,6 +554,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.isSameParamWith = function(target) {
+        if (target.type.substr(0,8) === "wildcard" ||
+            this.type.substr(0,8) === "wildcard")
+            return true;
         if (target.type !== this.type)
             return false;
         for (var i = 0; i < this.params.length; i++) {
@@ -562,7 +565,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                 if (!param.isSameParamWith(target.params[i]))
                     return false;
             } else {
-                if (this.params[i] !== target.params[i])
+                var l = this.params[i], r = target.params[i];
+                l = typeof l === "number" ? l + "" : l
+                r = typeof r === "number" ? r + "" : r
+                if (l !== r)
                     return false;
             }
         }
