@@ -5863,7 +5863,8 @@ Entry.Commander = function(c) {
     return c;
   }, log:function(b, c, f) {
     b = this.editor.board.findBlock(b);
-    b = [["block", b ? b.pointer() : ""], ["targetPointer", b.targetPointer()]];
+    c instanceof Array || (c = c.pointer());
+    b = [["block", b ? b.pointer() : ""], ["targetPointer", c]];
     f && b.push(["count", f ? f : null]);
     return b;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, f) {
@@ -5879,16 +5880,16 @@ Entry.Commander = function(c) {
     c.push(e);
     "basic" === b.getBlockType() && c.push(b.thread.getCount(b));
     return c;
-  }, log:function(b) {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
-  }, undo:"insertBlock"};
+  }, undo:"insertBlock", dom:["playground", "board", "&0"]};
   c[b.moveBlock] = {do:function(b, c, f) {
     void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, f)) : b._updatePos();
   }, state:function(b) {
     b = this.editor.board.findBlock(b);
     return [b.id, b.x, b.y];
-  }, log:function(b, c, f) {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b, c, f) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
   }, undo:"moveBlock"};
@@ -25434,7 +25435,7 @@ Entry.PARAM = -1;
       for (d = c.getBlock(b.shift());b.length;) {
         d instanceof Entry.Block || (d = d.getValueBlock());
         var f = b.shift(), c = b.shift();
-        -1 < f ? (d = d.statements[f], d = b.length ? d.getBlock(c) : 0 === c ? d.view.getParent() : d.getBlock(c - 1)) : -1 === f && (d = d.view.getParam(c));
+        -1 < f ? (d = d.statements[f], d = b.length ? 0 > c ? d : d.getBlock(c) : 0 === c ? d.view.getParent() : d.getBlock(c - 1)) : -1 === f && (d = d.view.getParam(c));
       }
     }
     return d;
@@ -26460,6 +26461,12 @@ Entry.FieldStatement = function(c, b, e) {
   c.checkTopBlock = function() {
     var b = this._thread.getFirstBlock();
     b && this.firstBlock !== b ? (this.firstBlock = b, b.view.bindPrev(this), b._updatePos()) : b || (this.firstBlock = null);
+  };
+  c.pointer = function(b) {
+    b = b || [];
+    b.unshift(this._index);
+    b.unshift(-1);
+    return this.block.pointer(b);
   };
 })(Entry.FieldStatement.prototype);
 Entry.FieldText = function(c, b, e) {

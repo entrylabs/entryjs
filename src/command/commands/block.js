@@ -119,10 +119,12 @@ goog.require("Entry.STATIC");
         },
         log: function(block, targetBlock, count) {
             block = this.editor.board.findBlock(block);
+            if (!(targetBlock instanceof Array))
+                targetBlock = targetBlock.pointer();
 
             var result = [
                 ['block', block ? block.pointer() : ""],
-                ['targetPointer', block.targetPointer()]
+                ['targetPointer', targetBlock]
             ];
             if (count)
                 result.push(['count', count ? count : null]);
@@ -161,6 +163,7 @@ goog.require("Entry.STATIC");
                 data.push(block.thread.getCount(block));
             return data;
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         log: function(block) {
             block = this.editor.board.findBlock(block);
 
@@ -169,7 +172,8 @@ goog.require("Entry.STATIC");
                 ['x', block.x], ['y', block.y]
             ];
         },
-        undo: "insertBlock"
+        undo: "insertBlock",
+        dom: ['playground', 'board', '&0']
     };
 
     c[COMMAND_TYPES.moveBlock] = {
@@ -189,6 +193,7 @@ goog.require("Entry.STATIC");
                 block.y
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         log: function(block, x, y) {
             block = this.editor.board.findBlock(block);
             return [
