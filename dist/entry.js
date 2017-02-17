@@ -15816,7 +15816,7 @@ Entry.Commander = function(c) {
     var c;
     c = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
     return [["block", c.pointer ? c.pointer() : c], ["thread", b.toJSON ? b.toJSON() : b]];
-  }, undo:"addThread"};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "board", "&0"], undo:"addThread"};
   c[b.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
     b.doDestroy(!0);
