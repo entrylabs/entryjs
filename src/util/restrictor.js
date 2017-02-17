@@ -41,7 +41,9 @@ Entry.Restrictor = function() {
                 content: "지시 사항을 따르시오"
             };
 
+            console.log(commandType, "asdfasdfafads")
         if (command.restrict) {
+            console.log(commandType, "asdfasdfafads")
             this.currentTooltip = command.restrict(
                 data, domQuery, this.restrictEnd.bind(this));
             return;

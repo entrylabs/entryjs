@@ -5830,7 +5830,9 @@ Entry.Commander = function(c) {
     var c;
     c = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
     return [["block", c.pointer ? c.pointer() : c], ["thread", b.toJSON ? b.toJSON() : b]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "board", "&0"], undo:"addThread"};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, restrict:function(b, c, f) {
+    f();
+  }, dom:["playground", "board", "&1"], undo:"addThread"};
   c[b.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
     b.doDestroy(!0);
@@ -5883,7 +5885,7 @@ Entry.Commander = function(c) {
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
-  }, undo:"insertBlock", dom:["playground", "board", "&0"]};
+  }, validate:!1, undo:"insertBlock", dom:["playground", "board", "&0"]};
   c[b.moveBlock] = {do:function(b, c, f) {
     void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, f)) : b._updatePos();
   }, state:function(b) {
@@ -19940,10 +19942,11 @@ Entry.Restrictor = function() {
     if (b.skip) {
       return this.skip();
     }
-    var c = b.content.concat(), d = c.shift(), d = Entry.Command[d], f = d.dom;
-    f && (this.startEvent.notify(), f instanceof Array && (f = f.map(function(b) {
+    var c = b.content.concat(), d = c.shift(), f = Entry.Command[d], g = f.dom;
+    g && (this.startEvent.notify(), g instanceof Array && (g = g.map(function(b) {
       return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
-    })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), d.restrict ? this.currentTooltip = d.restrict(b, f, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:f, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this), 200)));
+    })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), console.log(d, "asdfasdfafads"), f.restrict ? (console.log(d, "asdfasdfafads"), this.currentTooltip = f.restrict(b, g, this.restrictEnd.bind(this))) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:g, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this), 
+    200)));
   };
   c.end = function() {
     this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);

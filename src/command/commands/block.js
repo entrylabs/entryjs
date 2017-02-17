@@ -61,7 +61,10 @@ goog.require("Entry.STATIC");
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
-        dom: ['playground', 'board', '&0'],
+        restrict: function(data, domQuery, callback) {
+            callback();
+        },
+        dom: ['playground', 'board', '&1'],
         undo: "addThread"
     };
 
@@ -175,6 +178,7 @@ goog.require("Entry.STATIC");
                 ['x', block.x], ['y', block.y]
             ];
         },
+        validate: false,
         undo: "insertBlock",
         dom: ['playground', 'board', '&0']
     };
