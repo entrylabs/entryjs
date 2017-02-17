@@ -32663,12 +32663,11 @@ Entry.block = {
                 lastBlock = null;
             this.isDone = false;
             var index = 0;
-            this.listener = code.watchEvent.attach(this, function(blocks) {
+            this.listener = code.watchEvent.attach(this, function(blocks) { //dangerous
                 blocks = blocks.concat();
                 var block;
                 while (blocks.length && index < statements.length) {
                     block = blocks.shift();
-                    console.log(block.type, statements[index].type)
                     if (block === lastBlock)
                         continue;
                     if (accuracy === 0 && statements[index].type === block.type) {

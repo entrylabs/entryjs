@@ -21315,8 +21315,8 @@ Entry.VariableContainer = function() {
   };
   c.addCloneLocalVariables = function(b) {
     var c = [], d = this;
-    this.mapVariable(function(b, e) {
-      b.object_ && b.object_ == e.objectId && (b = b.toJSON(), b.originId = b.id, b.id = Entry.generateHash(), b.object = e.newObjectId, delete b.x, delete b.y, c.push(b), e.json.script = e.json.script.replace(new RegExp(b.originId, "g"), b.id));
+    this.mapVariable(function(b, d) {
+      b.object_ && b.object_ == d.objectId && (b = b.toJSON(), b.originId = b.id, b.id = Entry.generateHash(), b.object = d.newObjectId, delete b.x, delete b.y, c.push(b), d.json.script = d.json.script.replace(new RegExp(b.originId, "g"), b.id));
     }, b);
     c.map(function(b) {
       d.addVariable(b);
@@ -22915,7 +22915,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
           return !1;
         }
       } else {
-        if (this.params[c] !== b.params[c]) {
+        var d = this.params[c], f = b.params[c], d = "number" === typeof d ? d + "" : d, f = "number" === typeof f ? f + "" : f;
+        if (d !== f) {
           return !1;
         }
       }

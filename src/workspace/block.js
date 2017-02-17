@@ -573,7 +573,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                 if (!param.isSameParamWith(target.params[i]))
                     return false;
             } else {
-                if (this.params[i] !== target.params[i])
+                var l = this.params[i], r = target.params[i];
+                l = typeof l === "number" ? l + "" : l
+                r = typeof r === "number" ? r + "" : r
+                if (l !== r)
                     return false;
             }
         }
