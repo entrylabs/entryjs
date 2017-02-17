@@ -1027,11 +1027,15 @@ Entry.Board.DRAG_RADIUS = 5;
 
     p.getDom = function(query) {
         query = query.shift();
-        var targetObj = this.code.getTargetByPointer(query);
-        if (targetObj instanceof Entry.Block) {
-            return targetObj.view.svgGroup;
-        } else {
-            return targetObj.svgGroup;
+        if (query === 'trashcan')
+            return this.workspace.trashcan.svgGroup;
+        else if (query instanceof Array) {
+            var targetObj = this.code.getTargetByPointer(query);
+            if (targetObj instanceof Entry.Block) {
+                return targetObj.view.svgGroup;
+            } else {
+                return targetObj.svgGroup;
+            }
         }
     };
 

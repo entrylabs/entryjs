@@ -5826,13 +5826,13 @@ Entry.Commander = function(c) {
   }, state:function(b) {
     b instanceof Entry.Thread || (b = this.editor.board.findBlock(b[0].id).thread);
     return [b.toJSON()];
-  }, log:function(b) {
-    var c;
-    c = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
-    return [["block", c.pointer ? c.pointer() : c], ["thread", b.toJSON ? b.toJSON() : b]];
+  }, log:function(b, c) {
+    var e;
+    e = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
+    return [["block", e.pointer ? e.pointer() : e], ["thread", b.toJSON ? b.toJSON() : b], ["callerName", c]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, restrict:function(b, c, f) {
     f();
-  }, dom:["playground", "board", "&1"], undo:"addThread"};
+  }, dom:["playground", "board", "&2"], undo:"addThread"};
   c[b.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
     b.doDestroy(!0);
@@ -12007,7 +12007,7 @@ Entry.FieldTrashcan = function(c) {
   c.updateDragBlock = function() {
     var b = this.board.dragBlock, c = this.dragBlockObserver;
     c && (c.destroy(), this.dragBlockObserver = null);
-    b ? this.dragBlockObserver = b.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (Entry.do("destroyThread", this.dragBlock.block.thread).isPass(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
+    b ? this.dragBlockObserver = b.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (Entry.do("destroyThread", this.dragBlock.block.thread, "trashcan").isPass(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
     this.dragBlock = b;
   };
   c.checkBlock = function() {
@@ -21346,8 +21346,8 @@ Entry.VariableContainer = function() {
   };
   c.addCloneLocalVariables = function(b) {
     var c = [], d = this;
-    this.mapVariable(function(b, d) {
-      b.object_ && b.object_ == d.objectId && (b = b.toJSON(), b.originId = b.id, b.id = Entry.generateHash(), b.object = d.newObjectId, delete b.x, delete b.y, c.push(b), d.json.script = d.json.script.replace(new RegExp(b.originId, "g"), b.id));
+    this.mapVariable(function(b, e) {
+      b.object_ && b.object_ == e.objectId && (b = b.toJSON(), b.originId = b.id, b.id = Entry.generateHash(), b.object = e.newObjectId, delete b.x, delete b.y, c.push(b), e.json.script = e.json.script.replace(new RegExp(b.originId, "g"), b.id));
     }, b);
     c.map(function(b) {
       d.addVariable(b);
@@ -25235,8 +25235,12 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   c.getDom = function(b) {
     b = b.shift();
-    b = this.code.getTargetByPointer(b);
-    return b instanceof Entry.Block ? b.view.svgGroup : b.svgGroup;
+    if ("trashcan" === b) {
+      return this.workspace.trashcan.svgGroup;
+    }
+    if (b instanceof Array) {
+      return b = this.code.getTargetByPointer(b), b instanceof Entry.Block ? b.view.svgGroup : b.svgGroup;
+    }
   };
   c.findBlock = function(b) {
     return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) : b instanceof Array ? this.code.getTargetByPointer(b) : b;
