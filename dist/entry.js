@@ -11291,16 +11291,16 @@ Entry.BlockToJsParser = function(c, b) {
   this._iterVariableChunk = ["i", "j", "k"];
 };
 (function(c) {
-  c.Code = function(b, f) {
+  c.Code = function(b, c) {
     console.log("BToJCodeParser", b);
-    this._parseMode = f;
+    this._parseMode = c;
     if (b instanceof Entry.Block) {
       return this.Block(b);
     }
-    for (var c = "", e = b._data, g = 0;g < e.length;g++) {
-      c += this.Thread(e[g]);
+    for (var d = "", e = b._data, g = 0;g < e.length;g++) {
+      d += this.Thread(e[g]);
     }
-    return c.trim();
+    return d.trim();
   };
   c.Thread = function(b) {
     if (b instanceof Entry.Block) {
@@ -15852,7 +15852,8 @@ Entry.Commander = function(c) {
     return e;
   }, log:function(b, c, e) {
     b = this.editor.board.findBlock(b);
-    b = [["block", b ? b.pointer() : ""], ["targetPointer", b.targetPointer()]];
+    c instanceof Array || (c = c.pointer());
+    b = [["block", b ? b.pointer() : ""], ["targetPointer", c]];
     e && b.push(["count", e ? e : null]);
     return b;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, e) {
@@ -15868,16 +15869,16 @@ Entry.Commander = function(c) {
     c.push(e);
     "basic" === b.getBlockType() && c.push(b.thread.getCount(b));
     return c;
-  }, log:function(b) {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"insertBlock"};
+  }, undo:"insertBlock", dom:["playground", "board", "&0"]};
   c[b.moveBlock] = {do:function(b, c, e) {
     void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, e)) : b._updatePos();
   }, state:function(b) {
     b = this.editor.board.findBlock(b);
     return [b.id, b.x, b.y];
-  }, log:function(b, c, e) {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b, c, e) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
   }, undo:"moveBlock"};
@@ -22470,7 +22471,7 @@ Entry.PARAM = -1;
       for (d = c.getBlock(b.shift());b.length;) {
         d instanceof Entry.Block || (d = d.getValueBlock());
         var e = b.shift(), c = b.shift();
-        -1 < e ? (d = d.statements[e], d = b.length ? d.getBlock(c) : 0 === c ? d.view.getParent() : d.getBlock(c - 1)) : -1 === e && (d = d.view.getParam(c));
+        -1 < e ? (d = d.statements[e], d = b.length ? 0 > c ? d : d.getBlock(c) : 0 === c ? d.view.getParent() : d.getBlock(c - 1)) : -1 === e && (d = d.view.getParam(c));
       }
     }
     return d;
@@ -23789,6 +23790,12 @@ Entry.FieldStatement = function(c, b, f) {
     var b = this._thread.getFirstBlock();
     b && this.firstBlock !== b ? (this.firstBlock = b, b.view.bindPrev(this), b._updatePos()) : b || (this.firstBlock = null);
   };
+  c.pointer = function(b) {
+    b = b || [];
+    b.unshift(this._index);
+    b.unshift(-1);
+    return this.block.pointer(b);
+  };
 })(Entry.FieldStatement.prototype);
 Entry.FieldText = function(c, b, f) {
   this._block = b.block;
@@ -24700,7 +24707,6 @@ Entry.Board.DRAG_RADIUS = 5;
   c.getDom = function(b) {
     b = b.shift();
     if ("trashcan" === b) {
-      debugger;
       return this.workspace.trashcan.svgGroup;
     }
     if (b instanceof Array) {

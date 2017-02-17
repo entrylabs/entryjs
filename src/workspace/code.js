@@ -346,7 +346,10 @@ Entry.PARAM = -1;
                         else
                             block = statement.getBlock(index - 1);
                     } else {
-                        block = statement.getBlock(index);
+                        if (index < 0)
+                            block = statement;
+                        else
+                            block = statement.getBlock(index);
                     }
                 } else if (type === -1) {
                     block = block.view.getParam(index);

@@ -208,4 +208,11 @@ Entry.FieldStatement = function(content, blockView, index) {
         }
     };
 
+    p.pointer = function(pointer) {
+        pointer = pointer || [];
+        pointer.unshift(this._index);
+        pointer.unshift(-1);
+        return this.block.pointer(pointer);
+    };
+
 })(Entry.FieldStatement.prototype);
