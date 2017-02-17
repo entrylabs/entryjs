@@ -10,7 +10,7 @@ goog.require("Entry.Utils");
  *
  * @param {object} dom which to inject playground
  */
-Entry.BlockMenu = function(dom, align, categoryData, scroll) {
+Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     Entry.Model(this, false);
 
     this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
@@ -30,6 +30,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._setDynamicTimer = null;
     this._renderedCategories = {};
     this.categoryRendered = false;
+    this.readOnly = readOnly === undefined ? true : readOnly;
 
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);

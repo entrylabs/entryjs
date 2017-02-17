@@ -31,7 +31,7 @@ Entry.BlockView = function(block, board, mode) {
     }
 
     if (mode === undefined) {
-        var workspace = this.getBoard().workspace
+        var workspace = this.getBoard().workspace;
         if (workspace && workspace.getBlockViewRenderMode)
             this.renderMode = workspace.getBlockViewRenderMode();
         else
@@ -40,11 +40,11 @@ Entry.BlockView = function(block, board, mode) {
         this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
 
     if (this._schema.deletable)
-        this.block.setDeletable(this._schema.deletable)
+        this.block.setDeletable(this._schema.deletable);
     if (this._schema.copyable)
-        this.block.setCopyable(this._schema.copyable)
+        this.block.setCopyable(this._schema.copyable);
     if (this._schema.display === false || block.display === false) {
-        this.set({display: false})
+        this.set({display: false});
     }
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
@@ -188,7 +188,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this._moveTo(this.x, this.y, false);
         this._startContentRender(mode);
-        this._startExtension(mode)
+        this._startExtension(mode);
         if (this._board.disableMouseEvent !== true) {
             this._addControl();
         }
@@ -428,8 +428,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var events = that.block.events;
         if (events && events.dblclick) {
             $(this.svgGroup).dblclick(function() {
-                events.dblclick.forEach(function(fn){
-                    if (fn) fn(that);});
+                if (!that._board.readOnly) {
+                    events.dblclick.forEach(function(fn){
+                        if (fn) fn(that);});
+                }
             });
         }
     };
@@ -454,7 +456,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         board.setSelectedBlock(this);
         this.dominate();
         //left mousedown
-        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+        if ((e.button === 0 ||
+            (e.originalEvent && e.originalEvent.touches)) &&
+            !this._board.readOnly) {
             var eventType = e.type;
             var mouseEvent;
             if (e.originalEvent && e.originalEvent.touches) {
@@ -1228,10 +1232,11 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (this.isInBlockMenu) return;
 
         var options = [];
+        var isBoardReadOnly = this._board.readOnly;
 
         var copyAndPaste = {
             text: Lang.Blocks.Duplication_option,
-            enable: this.copyable,
+            enable: this.copyable && !isBoardReadOnly,
             callback: function(){
                 Entry.do("cloneBlock", block);
             }
@@ -1239,7 +1244,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         var copy = {
             text: Lang.Blocks.CONTEXT_COPY_option,
-            enable: this.copyable,
+            enable: this.copyable && !isBoardReadOnly,
             callback: function(){
                 that.block.copyToClipboard();
             }
@@ -1247,7 +1252,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         var remove = {
             text: Lang.Blocks.Delete_Blocks,
-            enable: block.isDeletable(),
+            enable: block.isDeletable() && !isBoardReadOnly,
             callback: function(){
                 Entry.do("destroyBlock", that.block);
             }
