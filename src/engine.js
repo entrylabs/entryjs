@@ -756,6 +756,15 @@ Entry.Engine = function() {
         Entry.windowResized.notify();
     };
 
+    p.closeFullScreen = function() {
+        if(this.popup) {
+            this.popup.remove();
+            this.popup = null;
+        }
+
+        Entry.windowResized.notify();
+    }
+
     p.exitFullScreen = function() {
         if (document.webkitIsFullScreen ||
            document.mozIsFullScreen ||

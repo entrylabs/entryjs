@@ -5827,6 +5827,10 @@ Entry.Engine = function() {
     }
     Entry.windowResized.notify();
   };
+  c.closeFullScreen = function() {
+    this.popup && (this.popup.remove(), this.popup = null);
+    Entry.windowResized.notify();
+  };
   c.exitFullScreen = function() {
     document.webkitIsFullScreen || document.mozIsFullScreen || document.isFullScreen || (Entry.engine.footerView_.removeClass("entryRemove"), Entry.engine.headerView_.removeClass("entryRemove"));
     Entry.windowResized.notify();
