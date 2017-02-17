@@ -5560,6 +5560,18 @@ Entry.Utils.getUniqObjectsBlocks = function(c) {
   });
   return b;
 };
+Entry.Utils.getObjectsBlocks = function(c) {
+  c = c || Entry.container.objects_;
+  var b = [];
+  c.forEach(function(c) {
+    c = c.script;
+    c instanceof Entry.Code || (c = new Entry.Code(c));
+    c.getBlockList(!0).forEach(function(c) {
+      b.push(c.type);
+    });
+  });
+  return b;
+};
 Entry.Utils.makeCategoryDataByBlocks = function(c) {
   if (c) {
     for (var b = this, e = EntryStatic.getAllBlocks(), d = {}, f = 0;f < e.length;f++) {
@@ -5717,9 +5729,9 @@ Entry.Observer = function(c, b, e, d) {
     return this;
   };
 })(Entry.Observer.prototype);
-Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, selectObject:201, 
-objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, 
-RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, destroyBlockBelow:113, 
+selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, 
+variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
 Entry.Command = {};
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
@@ -5750,12 +5762,12 @@ Entry.Commander = function(c) {
     "string" === typeof b && (b = Entry.STATIC.COMMAND_TYPES[b]);
     var c = Array.prototype.slice.call(arguments);
     c.shift();
+    this.report(Entry.STATIC.COMMAND_TYPES.do);
+    this.report(b, c);
     var d = Entry.Command[b];
     Entry.stateManager && !0 !== d.skipUndoStack && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, d.undo].concat(d.state.apply(this, c)));
     d = Entry.Command[b].do.apply(this, c);
     this.doEvent.notify(b, c);
-    this.report(Entry.STATIC.COMMAND_TYPES.do);
-    this.report(b, c);
     return {value:d, isPass:this.isPass.bind(this)};
   };
   c.undo = function() {
@@ -5800,51 +5812,57 @@ Entry.Commander = function(c) {
   c[b.addThread] = {do:function(b) {
     return this.editor.board.code.createThread(b);
   }, state:function(b) {
-    b.length && (b[0].id = Entry.Utils.generateId());
+    if (b.length) {
+      var c = b[0];
+      this.editor.board.findBlock(c.id) && (c.id = Entry.Utils.generateId());
+    }
     return [b];
   }, log:function(b) {
-    return [["thread", this.editor.board.code.getThreads().pop().toJSON()]];
+    b instanceof Entry.Thread && (b = b.toJSON());
+    return [["thread", b]];
   }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
   c[b.destroyThread] = {do:function(b) {
-    this.editor.board.findById(b[0].id).destroy(!0, !0);
+    (b instanceof Entry.Thread ? b.getFirstBlock() : this.editor.board.findBlock(b[0].id)).destroy(!0, !0);
   }, state:function(b) {
-    return [this.editor.board.findById(b[0].id).thread.toJSON()];
+    b instanceof Entry.Thread || (b = this.editor.board.findBlock(b[0].id).thread);
+    return [b.toJSON()];
   }, log:function(b) {
-    return [["block", b[0].pointer ? b[0].pointer() : b[0]]];
+    var c;
+    c = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
+    return [["block", c.pointer ? c.pointer() : c], ["thread", b.toJSON ? b.toJSON() : b]];
   }, undo:"addThread"};
   c[b.destroyBlock] = {do:function(b) {
-    "string" === typeof b && (b = this.editor.board.findById(b));
+    b = this.editor.board.findBlock(b);
     b.doDestroy(!0);
   }, state:function(b) {
-    "string" === typeof b && (b = this.editor.board.findById(b));
+    b = this.editor.board.findBlock(b);
     return [b.toJSON(), b.pointer()];
   }, log:function(b) {
-    "string" === typeof b && (b = this.editor.board.findById(b));
+    b = this.editor.board.findBlock(b);
     return [["block", b.pointer ? b.pointer() : b]];
   }, undo:"recoverBlock"};
   c[b.recoverBlock] = {do:function(b, c) {
     b = this.editor.board.code.createThread([b]).getFirstBlock();
-    "string" === typeof b && (b = this.editor.board.findById(b));
     this.editor.board.insert(b, c);
   }, state:function(b) {
     "string" !== typeof b && (b = b.id);
     return [b];
   }, log:function(b, c) {
-    b = this.editor.board.findById(b.id);
-    return [["block", b.pointer()], ["pointer", c]];
+    b = this.editor.board.findBlock(b.id);
+    return [["block", b], ["pointer", c]];
   }, undo:"destroyBlock"};
-  c[b.insertBlock] = {type:Entry.STATIC.COMMAND_TYPES.insertBlock, do:function(b, c, f) {
-    "string" === typeof b && (b = this.editor.board.findById(b));
+  c[b.insertBlock] = {do:function(b, c, f) {
+    b = this.editor.board.findBlock(b);
     this.editor.board.insert(b, c, f);
   }, state:function(b, c) {
-    "string" === typeof b && (b = this.editor.board.findById(b));
+    b = this.editor.board.findBlock(b);
     c = [b];
     var e = b.targetPointer();
     c.push(e);
     "string" !== typeof b && "basic" === b.getBlockType() && c.push(b.thread.getCount(b));
     return c;
   }, log:function(b, c, f) {
-    "string" === typeof b && (b = this.editor.board.findById(b));
+    b = this.editor.board.findBlock(b);
     b = [["block", b ? b.pointer() : ""], ["targetPointer", b.targetPointer()]];
     f && b.push(["count", f ? f : null]);
     return b;
@@ -5862,25 +5880,26 @@ Entry.Commander = function(c) {
     "basic" === b.getBlockType() && c.push(b.thread.getCount(b));
     return c;
   }, log:function(b) {
-    "string" === typeof b && (b = this.editor.board.findById(b));
+    b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
   }, undo:"insertBlock"};
   c[b.moveBlock] = {do:function(b, c, f) {
-    void 0 !== c ? (b = this.editor.board.findById(b), b.moveTo(c, f)) : b._updatePos();
+    void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, f)) : b._updatePos();
   }, state:function(b) {
-    "string" === typeof b && (b = this.editor.board.findById(b));
+    b = this.editor.board.findBlock(b);
     return [b.id, b.x, b.y];
   }, log:function(b, c, f) {
-    return [Entry.STATIC.COMMAND_TYPES.moveBlock, ["block", b.pointer()], ["x", b.x], ["y", b.y]];
+    b = this.editor.board.findBlock(b);
+    return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
   }, undo:"moveBlock"};
   c[b.cloneBlock] = {do:function(b) {
-    "string" === typeof b && (b = this.editor.board.findById(b));
+    b = this.editor.board.findBlock(b);
     this.editor.board.code.createThread(b.copy());
   }, state:function(b) {
     "string" !== typeof b && (b = b.id);
     return [b];
   }, log:function(b) {
-    "string" === typeof b && (b = this.editor.board.findById(b));
+    b = this.editor.board.findBlock(b);
     var c = this.editor.board.code.getThreads().pop();
     return [["block", b.pointer()], ["thread", c.stringify()]];
   }, undo:"uncloneBlock"};
@@ -5935,6 +5954,8 @@ Entry.Commander = function(c) {
   }, state:function() {
   }, log:function(b) {
     return [["callerName", b]];
+  }, restrict:function(b, c, f) {
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c, direction:"down"}], {restrict:!0, dimmed:!0});
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
   c[b.toggleStop] = {do:function(b) {
     Entry.engine.toggleStop();
@@ -6660,6 +6681,7 @@ Entry.Container.prototype.clear = function() {
     c.destroy();
   });
   this.objects_ = [];
+  this._extensionObjects = [];
   Entry.playground.flushPlayground();
 };
 Entry.Container.prototype.selectNeighborObject = function(c) {
@@ -8968,7 +8990,7 @@ Entry.loadAudio_ = function(c, b) {
 };
 Entry.initialize_ = function() {
   this.stage = new Entry.Stage;
-  Entry.engine && Entry.engine.clearTimer();
+  Entry.engine && Entry.engine.projectTimer && Entry.engine.clearTimer();
   this.engine = new Entry.Engine;
   this.propertyPanel = new Entry.PropertyPanel;
   this.container = new Entry.Container;
@@ -11978,7 +12000,7 @@ Entry.FieldTrashcan = function(c) {
   c.updateDragBlock = function() {
     var b = this.board.dragBlock, c = this.dragBlockObserver;
     c && (c.destroy(), this.dragBlockObserver = null);
-    b ? this.dragBlockObserver = b.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (this.dragBlock.block.doDestroyBelow(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
+    b ? this.dragBlockObserver = b.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (Entry.do("destroyThread", this.dragBlock.block.thread), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
     this.dragBlock = b;
   };
   c.checkBlock = function() {
@@ -25204,6 +25226,9 @@ Entry.Board.DRAG_RADIUS = 5;
     b = b.shift();
     b = this.code.getTargetByPointer(b);
     return b instanceof Entry.Block ? b.view.svgGroup : b.svgGroup;
+  };
+  c.findBlock = function(b) {
+    return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) : b instanceof Array ? this.code.getTargetByPointer(b) : b;
   };
 })(Entry.Board.prototype);
 Entry.Code = function(c, b) {

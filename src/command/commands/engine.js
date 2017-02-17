@@ -20,6 +20,17 @@ goog.require("Entry.STATIC");
                 ['callerName', callerName]
             ];
         },
+        restrict: function (data, domQuery, callback) {
+             return new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery,
+                direction: "down"
+            }], {
+                restrict: true,
+                dimmed: true,
+            });
+        },
         skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "toggleStop",

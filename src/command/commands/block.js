@@ -14,14 +14,18 @@ goog.require("Entry.STATIC");
             return this.editor.board.code.createThread(thread);
         },
         state: function(thread) {
-            if (thread.length)
-                thread[0].id = Entry.Utils.generateId();
+            if (thread.length) {
+                var block = thread[0];
+                if (this.editor.board.findBlock(block.id))
+                    block.id = Entry.Utils.generateId();
+            }
             return [thread];
         },
         log: function(thread) {
-            var lastThread = this.editor.board.code.getThreads().pop();
+            if (thread instanceof Entry.Thread)
+                thread = thread.toJSON();
             return [
-                ['thread', lastThread.toJSON()]
+                ['thread', thread]
             ];
         },
         undo: "destroyThread",
@@ -32,18 +36,27 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.destroyThread] = {
         do: function(thread) {
-            var blockId = thread[0].id;
-            var block = this.editor.board.findById(blockId);
+            var block;
+            if (thread instanceof Entry.Thread)
+                block = thread.getFirstBlock();
+            else
+                block = this.editor.board.findBlock(thread[0].id);
             block.destroy(true, true);
         },
         state: function(thread) {
-            var blockId = thread[0].id;
-            var block = this.editor.board.findById(blockId);
-            return [block.thread.toJSON()];
+            if (!(thread instanceof Entry.Thread))
+                thread = this.editor.board.findBlock(thread[0].id).thread;
+            return [thread.toJSON()];
         },
         log: function(thread) {
+            var block;
+            if (thread instanceof Entry.Thread) {
+                block = thread.getFirstBlock();
+            } else block = thread[0];
+
             return [
-                ['block', thread[0].pointer ?  thread[0].pointer() : thread[0]]
+                ['block', block.pointer ?  block.pointer() : block],
+                ['thread', thread.toJSON ? thread.toJSON() : thread],
             ];
         },
         undo: "addThread"
@@ -51,18 +64,15 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.destroyBlock] = {
         do: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             block.doDestroy(true);
         },
         state: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             return [block.toJSON(), block.pointer()];
         },
         log: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             return [
                 ['block', block.pointer ? block.pointer() : block]
             ];
@@ -73,8 +83,6 @@ goog.require("Entry.STATIC");
     c[COMMAND_TYPES.recoverBlock] = {
         do: function(blockModel, pointer) {
             var block = this.editor.board.code.createThread([blockModel]).getFirstBlock();
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
             this.editor.board.insert(block, pointer);
         },
         state: function(block) {
@@ -83,9 +91,9 @@ goog.require("Entry.STATIC");
             return [block];
         },
         log: function(block, pointer) {
-            block = this.editor.board.findById(block.id);
+            block = this.editor.board.findBlock(block.id);
             return [
-                ['block', block.pointer()],
+                ['block', block],
                 ['pointer', pointer]
             ];
         },
@@ -93,15 +101,12 @@ goog.require("Entry.STATIC");
     };
 
     c[COMMAND_TYPES.insertBlock] = {
-        type: Entry.STATIC.COMMAND_TYPES.insertBlock,
         do: function(block, targetBlock, count) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             this.editor.board.insert(block, targetBlock, count);
         },
         state: function(block, targetBlock) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             var data = [
                 block
             ];
@@ -113,8 +118,7 @@ goog.require("Entry.STATIC");
             return data;
         },
         log: function(block, targetBlock, count) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
 
             var result = [
                 ['block', block ? block.pointer() : ""],
@@ -158,8 +162,7 @@ goog.require("Entry.STATIC");
             return data;
         },
         log: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
 
             return [
                 ['block', block.pointer()],
@@ -172,15 +175,14 @@ goog.require("Entry.STATIC");
     c[COMMAND_TYPES.moveBlock] = {
         do: function(block, x, y) {
             if (x !== undefined) { // do from undo stack
-                block = this.editor.board.findById(block);
+                block = this.editor.board.findBlock(block);
                 block.moveTo(x, y);
             } else {
                 block._updatePos();
             }
         },
         state: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             return [
                 block.id,
                 block.x,
@@ -188,8 +190,8 @@ goog.require("Entry.STATIC");
             ];
         },
         log: function(block, x, y) {
+            block = this.editor.board.findBlock(block);
             return [
-                Entry.STATIC.COMMAND_TYPES.moveBlock,
                 ['block', block.pointer()],
                 ['x', block.x], ['y', block.y]
             ];
@@ -199,8 +201,7 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.cloneBlock] = {
         do: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             this.editor.board.code.createThread(block.copy());
         },
         state: function(block) {
@@ -209,8 +210,7 @@ goog.require("Entry.STATIC");
             return [block];
         },
         log: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             var lastThread = this.editor.board.code.getThreads().pop();
             return [
                 ['block', block.pointer()],

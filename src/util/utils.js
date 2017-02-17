@@ -1416,6 +1416,23 @@ Entry.Utils.getUniqObjectsBlocks = function(objects) {
     return ret;
 };
 
+Entry.Utils.getObjectsBlocks = function(objects) {
+    objects = objects || Entry.container.objects_;
+    var ret = [];
+
+    objects.forEach(function(o) {
+        var script = o.script;
+        if (!(script instanceof Entry.Code))
+            script = new Entry.Code(script);
+        var blocks = script.getBlockList(true);
+        blocks.forEach(function(b) {
+            ret.push(b.type);
+        });
+    });
+
+    return ret;
+};
+
 Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
     if (!blockArr) return;
     var that = this;

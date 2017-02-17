@@ -41,6 +41,10 @@ Entry.Commander = function(injectType) {
         var argumentArray = Array.prototype.slice.call(arguments);
         argumentArray.shift();
 
+        //intentionally delay reporting
+        that.report(Entry.STATIC.COMMAND_TYPES.do);
+        that.report(commandType, argumentArray);
+
         var command = Entry.Command[commandType];
         if (Entry.stateManager && command.skipUndoStack !== true) {
             Entry.stateManager.addCommand.apply(
@@ -51,10 +55,6 @@ Entry.Commander = function(injectType) {
         }
         var value = Entry.Command[commandType].do.apply(this, argumentArray);
         this.doEvent.notify(commandType, argumentArray);
-
-        //intentionally delay reporting
-        that.report(Entry.STATIC.COMMAND_TYPES.do);
-        that.report(commandType, argumentArray);
 
         return {
             value: value,

@@ -384,20 +384,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.doDestroy = function(animate) {
-        var id = this.id;
-        var positionX = this.x;
-        var positionY = this.y;
-
         this.destroy(animate);
         this.getCode().changeEvent.notify();
         return this;
     };
 
     p.doDestroyBelow = function(animate) {
-        var id = this.id;
-        var positionX = this.x;
-        var positionY = this.y;
-
         this.destroy(animate, true);
         this.getCode().changeEvent.notify();
         return this;
