@@ -48,7 +48,7 @@ goog.require("Entry.STATIC");
                 thread = this.editor.board.findBlock(thread[0].id).thread;
             return [thread.toJSON()];
         },
-        log: function(thread) {
+        log: function(thread, callerName) {
             var block;
             if (thread instanceof Entry.Thread) {
                 block = thread.getFirstBlock();
@@ -57,11 +57,12 @@ goog.require("Entry.STATIC");
             return [
                 ['block', block.pointer ?  block.pointer() : block],
                 ['thread', thread.toJSON ? thread.toJSON() : thread],
+                ['callerName', callerName]
             ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
-        dom: ['playground', 'board', '&0'],
+        dom: ['playground', 'board', '&2'],
         undo: "addThread"
     };
 
@@ -172,6 +173,8 @@ goog.require("Entry.STATIC");
                 ['x', block.x], ['y', block.y]
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['playground', 'board', '&0'],
         undo: "insertBlock"
     };
 

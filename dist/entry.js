@@ -15816,11 +15816,11 @@ Entry.Commander = function(c) {
   }, state:function(b) {
     b instanceof Entry.Thread || (b = this.editor.board.findBlock(b[0].id).thread);
     return [b.toJSON()];
-  }, log:function(b) {
-    var c;
-    c = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
-    return [["block", c.pointer ? c.pointer() : c], ["thread", b.toJSON ? b.toJSON() : b]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "board", "&0"], undo:"addThread"};
+  }, log:function(b, c) {
+    var e;
+    e = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
+    return [["block", e.pointer ? e.pointer() : e], ["thread", b.toJSON ? b.toJSON() : b], ["callerName", c]];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "board", "&2"], undo:"addThread"};
   c[b.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
     b.doDestroy(!0);
@@ -15871,7 +15871,7 @@ Entry.Commander = function(c) {
   }, log:function(b) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
-  }, undo:"insertBlock"};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"insertBlock"};
   c[b.moveBlock] = {do:function(b, c, e) {
     void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, e)) : b._updatePos();
   }, state:function(b) {
@@ -24699,8 +24699,13 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   c.getDom = function(b) {
     b = b.shift();
-    b = this.code.getTargetByPointer(b);
-    return b instanceof Entry.Block ? b.view.svgGroup : b.svgGroup;
+    if ("trashcan" === b) {
+      debugger;
+      return this.workspace.trashcan.svgGroup;
+    }
+    if (b instanceof Array) {
+      return b = this.code.getTargetByPointer(b), b instanceof Entry.Block ? b.view.svgGroup : b.svgGroup;
+    }
   };
   c.findBlock = function(b) {
     return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) : b instanceof Array ? this.code.getTargetByPointer(b) : b;
@@ -25541,7 +25546,7 @@ Entry.FieldTrashcan = function(c) {
   c.updateDragBlock = function() {
     var b = this.board.dragBlock, c = this.dragBlockObserver;
     c && (c.destroy(), this.dragBlockObserver = null);
-    b ? this.dragBlockObserver = b.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (Entry.do("destroyThread", this.dragBlock.block.thread).isPass(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
+    b ? this.dragBlockObserver = b.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (Entry.do("destroyThread", this.dragBlock.block.thread, "trashcan").isPass(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
     this.dragBlock = b;
   };
   c.checkBlock = function() {
