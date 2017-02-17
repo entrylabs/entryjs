@@ -431,7 +431,7 @@ Entry.parseOptions = function(options) {
 
     this.readOnly = options.readOnly || false;
     if (this.readOnly) {
-         this.soundEditable = a.sceneEditable = this.objectAddable = false;
+        this.soundEditable = a.sceneEditable = this.objectAddable = false;
     }
 
     this.isForLecture = options.isForLecture;

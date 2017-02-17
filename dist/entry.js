@@ -5830,7 +5830,7 @@ Entry.Commander = function(c) {
     var c;
     c = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
     return [["block", c.pointer ? c.pointer() : c], ["thread", b.toJSON ? b.toJSON() : b]];
-  }, undo:"addThread"};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "board", "&0"], undo:"addThread"};
   c[b.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
     b.doDestroy(!0);
@@ -7274,6 +7274,10 @@ Entry.Engine = function() {
       }
       popup.window_.appendChild(Entry.engine.view_);
     }
+    Entry.windowResized.notify();
+  };
+  c.closeFullScreen = function() {
+    this.popup && (this.popup.remove(), this.popup = null);
     Entry.windowResized.notify();
   };
   c.exitFullScreen = function() {
@@ -13070,10 +13074,11 @@ Entry.Workspace = function(c) {
   this.dSetMode = Entry.Utils.debounce(this.setMode, 200);
   this.observe(this, "_handleChangeBoard", ["selectedBoard"], !1);
   this.trashcan = new Entry.FieldTrashcan;
+  this.readOnly = void 0 === c.readOnly ? !1 : c.readOnly;
   var b = c.blockMenu;
-  b && (this.blockMenu = new Entry.BlockMenu(b.dom, b.align, b.categoryData, b.scroll), this.blockMenu.workspace = this, this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1));
+  b && (this.blockMenu = new Entry.BlockMenu(b.dom, b.align, b.categoryData, b.scroll, this.readOnly), this.blockMenu.workspace = this, this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1));
   if (b = c.board) {
-    b.workspace = this, this.board = new Entry.Board(b), this.board.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1), this.set({selectedBoard:this.board});
+    b.workspace = this, b.readOnly = this.readOnly, this.board = new Entry.Board(b), this.board.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1), this.set({selectedBoard:this.board});
   }
   if (b = c.vimBoard) {
     this.vimBoard = new Entry.Vim(b.dom), this.vimBoard.workspace = this;
@@ -13114,8 +13119,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       var e = Entry.Vim, f = Entry.Workspace, g = this.blockMenu;
       switch(this.mode) {
         case f.MODE_VIMBOARD:
-          if (alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-            alert(alert_message);
+          if (e = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+            alert(e);
             b = {};
             b.boardType = f.MODE_BOARD;
             b.textType = -1;
@@ -13198,11 +13203,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       var e = b.keyCode || b.which, f = b.ctrlKey, g = b.shiftKey, h = b.altKey, k = Entry.playground, l = k && k.object ? k.object : void 0;
       if (!Entry.Utils.isInInput(b) || c) {
         c = this._isVimMode();
-        var m = this.selectedBlockView;
+        var m = this.selectedBlockView, q = this.selectedBoard, n = q.readOnly;
         if (f) {
           switch(e) {
             case 86:
-              (e = this.selectedBoard) && e instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
+              !n && q && q instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
               break;
             case 219:
               if (!l && c) {
@@ -13239,7 +13244,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
               m && !m.isInBlockMenu && m.block.isDeletable() && m.block.copyToClipboard();
               break;
             case 88:
-              m && !m.isInBlockMenu && m.block.isDeletable() && function(b) {
+              !n && m && !m.isInBlockMenu && m.block.isDeletable() && function(b) {
                 b.copyToClipboard();
                 b.destroy(!0, !0);
                 m.getBoard().setSelectedBlock(null);
@@ -13288,7 +13293,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                   break;
                 case 8:
                 case 46:
-                  m && !m.isInBlockMenu && m.block.isDeletable() && (Entry.do("destroyBlock", m.block), this.board.set({selectedBlockView:null}), b.preventDefault());
+                  !n && m && !m.isInBlockMenu && m.block.isDeletable() && (Entry.do("destroyBlock", m.block), this.board.set({selectedBlockView:null}), b.preventDefault());
               }
             }
           }
@@ -13544,7 +13549,7 @@ Entry.Playground = function() {
     this.variableView_ = c;
     b = Entry.Dom(b);
     c = Entry.Dom("div", {parent:b, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
-    b = {blockMenu:{dom:Entry.Dom("div", {parent:b, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"}), align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:c}};
+    b = {blockMenu:{dom:Entry.Dom("div", {parent:b, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"}), align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:c}, readOnly:Entry.readOnly};
     Entry.textCodingEnable && (b.vimBoard = {dom:c});
     this.mainWorkspace = new Entry.Workspace(b);
     this.blockMenu = this.mainWorkspace.blockMenu;
@@ -22947,7 +22952,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     return !0;
   };
 })(Entry.Block.prototype);
-Entry.BlockMenu = function(c, b, e, d) {
+Entry.BlockMenu = function(c, b, e, d, f) {
   Entry.Model(this, !1);
   this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
   this._dAlign = Entry.Utils.debounce(this.align, 100);
@@ -22965,6 +22970,7 @@ Entry.BlockMenu = function(c, b, e, d) {
   this._setDynamicTimer = null;
   this._renderedCategories = {};
   this.categoryRendered = !1;
+  this.readOnly = void 0 === f ? !0 : f;
   c = "string" === typeof c ? $("#" + c) : $(c);
   if ("DIV" !== c.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -23864,7 +23870,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     $(this.svgGroup).bind("mousedown.blockViewMousedown touchstart.blockViewMousedown", b.mouseHandler);
     var c = b.block.events;
     c && c.dblclick && $(this.svgGroup).dblclick(function() {
-      c.dblclick.forEach(function(c) {
+      b._board.readOnly || c.dblclick.forEach(function(c) {
         c && c(b);
       });
     });
@@ -23904,7 +23910,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     if (!this.readOnly && !h.viewOnly) {
       h.setSelectedBlock(this);
       this.dominate();
-      if (0 === b.button || b.originalEvent && b.originalEvent.touches) {
+      if ((0 === b.button || b.originalEvent && b.originalEvent.touches) && !this._board.readOnly) {
         var k = b.type, l;
         l = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
         this.mouseDownCoordinate = {x:l.pageX, y:l.pageY};
@@ -24281,18 +24287,18 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     c && c.notify(b);
     var d = this, f = d.block;
     if (!this.isInBlockMenu) {
-      var c = [], g = {text:Lang.Blocks.Duplication_option, enable:this.copyable, callback:function() {
+      var c = [], g = this._board.readOnly, h = {text:Lang.Blocks.Duplication_option, enable:this.copyable && !g, callback:function() {
         Entry.do("cloneBlock", f);
-      }}, h = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable, callback:function() {
+      }}, k = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable && !g, callback:function() {
         d.block.copyToClipboard();
-      }}, k = {text:Lang.Blocks.Delete_Blocks, enable:f.isDeletable(), callback:function() {
+      }}, g = {text:Lang.Blocks.Delete_Blocks, enable:f.isDeletable() && !g, callback:function() {
         Entry.do("destroyBlock", d.block);
       }}, l = {text:Lang.Menus.save_as_image, callback:function() {
         d.downloadAsImage();
       }};
-      c.push(g);
       c.push(h);
       c.push(k);
+      c.push(g);
       Entry.Utils.isChrome() && "workspace" == Entry.type && !Entry.isMobile() && c.push(l);
       b.originalEvent && b.originalEvent.touches && (b = b.originalEvent.touches[0]);
       Entry.ContextMenu.show(c, null, {x:b.clientX, y:b.clientY});
@@ -24406,7 +24412,7 @@ Entry.Field = function() {
     }
   };
   c._isEditable = function() {
-    if (Entry.ContextMenu.visible || this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
+    if (Entry.ContextMenu.visible || this._blockView.getBoard().readOnly || this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
       return !1;
     }
     var b = this._block.view, c = b.getBoard();
@@ -24740,6 +24746,7 @@ Entry.Scroller.RADIUS = 7;
 })(Entry.Scroller.prototype);
 Entry.Board = function(c) {
   Entry.Model(this, !1);
+  this.readOnly = void 0 === c.readOnly ? !0 : c.readOnly;
   this.changeEvent = new Entry.Event(this);
   this.createView(c);
   this.updateOffset();
@@ -25177,13 +25184,13 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   c._initContextOptions = function() {
     var b = this;
-    this._contextOptions = [{activated:!0, option:{text:Lang.Blocks.Paste_blocks, enable:!!Entry.clipboard, callback:function() {
+    this._contextOptions = [{activated:!0, option:{text:Lang.Blocks.Paste_blocks, enable:!!Entry.clipboard && !this.readOnly, callback:function() {
       Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
-    }}}, {activated:!0, option:{text:Lang.Blocks.tidy_up_block, callback:function() {
+    }}}, {activated:!0, option:{text:Lang.Blocks.tidy_up_block, enable:!this.readOnly, callback:function() {
       b.alignThreads();
-    }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, callback:function() {
+    }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, enable:!this.readOnly, callback:function() {
       b.code.clear(!0);
-    }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome() && !Entry.isMobile(), option:{text:Lang.Menus.save_as_image_all, enable:!0, callback:function() {
+    }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome() && !Entry.isMobile(), option:{text:Lang.Menus.save_as_image_all, enable:!this.readOnly, callback:function() {
       var c = b.code.getThreads(), d = [];
       c.forEach(function(b, e) {
         if (b = b.getFirstBlock()) {

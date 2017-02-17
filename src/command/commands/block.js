@@ -59,6 +59,9 @@ goog.require("Entry.STATIC");
                 ['thread', thread.toJSON ? thread.toJSON() : thread],
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        validate: false,
+        dom: ['playground', 'board', '&0'],
         undo: "addThread"
     };
 

@@ -266,7 +266,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('mousedown') > -1) {
         if (Entry.documentMousedown) {
             doc.off('mousedown');
-            Entry.documentMousedown.clear()
+            Entry.documentMousedown.clear();
         }
         Entry.documentMousedown = new Entry.Event(window);
         doc.on('mousedown', (function(e) {
@@ -277,7 +277,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('mousemove') > -1) {
         if (Entry.documentMousemove) {
             doc.off('touchmove mousemove');
-            Entry.documentMousemove.clear()
+            Entry.documentMousemove.clear();
         }
 
         Entry.mouseCoordinate = {};
@@ -294,7 +294,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('keydown') > -1) {
         if (Entry.keyPressed)  {
             doc.off('keydown');
-            Entry.keyPressed.clear()
+            Entry.keyPressed.clear();
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
@@ -309,7 +309,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('keyup') > -1) {
         if (Entry.keyUpped) {
             doc.off('keyup');
-            Entry.keyUpped.clear()
+            Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
         doc.on('keyup', (function(e) {
@@ -321,7 +321,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     }
 
     if (options.indexOf('dispose') > -1) {
-        if (Entry.disposeEvent) Entry.disposeEvent.clear()
+        if (Entry.disposeEvent) Entry.disposeEvent.clear();
         Entry.disposeEvent = new Entry.Event(window);
         if (Entry.documentMousedown)
             Entry.documentMousedown.attach(this, function(e) {
