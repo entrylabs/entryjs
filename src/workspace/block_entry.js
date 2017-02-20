@@ -22392,15 +22392,25 @@ Entry.block = {
         "isNotFor": [ "variableNotExist" ],
         "func": function (sprite, script) {
             var variableId = script.getField("VARIABLE", script);
-            var value = script.getNumberValue("VALUE", script);
+            var value = script.getValue("VALUE", script);
             var fixed = 0;
 
-            value = Entry.parseNumber(value);
             if ((value == false && typeof value == 'boolean'))
                 throw new Error('Type is not correct');
+
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
-            fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
-            variable.setValue((value + variable.getValue()).toFixed(fixed));
+            var variableValue = variable.getValue();
+            var sumValue;
+            if(!isNaN(value) && variable.isNumber()) {
+                value = Entry.parseNumber(value);
+                variableValue = Entry.parseNumber(variableValue);
+                fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
+                sumValue = (value + variableValue).toFixed(fixed);
+            } else {
+                sumValue = '' + variableValue + value;
+            }
+
+            variable.setValue(sumValue);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
