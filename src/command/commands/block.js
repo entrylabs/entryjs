@@ -65,7 +65,7 @@ goog.require("Entry.STATIC");
         restrict: function(data, domQuery, callback) {
             callback();
         },
-        dom: ['playground', 'board', '&2'],
+        dom: ['playground', 'board', '&0'],
         undo: "addThread"
     };
 

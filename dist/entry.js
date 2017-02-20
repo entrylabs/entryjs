@@ -5832,7 +5832,7 @@ Entry.Commander = function(c) {
     return [["block", e.pointer ? e.pointer() : e], ["thread", b.toJSON ? b.toJSON() : b], ["callerName", c]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, restrict:function(b, c, f) {
     f();
-  }, dom:["playground", "board", "&2"], undo:"addThread"};
+  }, dom:["playground", "board", "&0"], undo:"addThread"};
   c[b.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
     b.doDestroy(!0);
