@@ -22162,7 +22162,6 @@ Entry.block = {
         "isNotFor": [ "sprite" ],
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
-            text = Entry.convertToRoundedDecimals(text, 3);
             sprite.setText(text);
             return script.callReturn();
         },
@@ -22211,9 +22210,7 @@ Entry.block = {
         "isNotFor": [ "sprite" ],
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
-            sprite.setText(
-                Entry.convertToRoundedDecimals(sprite.getText(),3) +
-                "" + Entry.convertToRoundedDecimals(text, 3));
+            sprite.setText(sprite.getText() + "" + text);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.append_text(%1)"]}
@@ -22261,10 +22258,7 @@ Entry.block = {
         "isNotFor": [ "sprite" ],
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
-            sprite.setText(
-                Entry.convertToRoundedDecimals(text, 3) +
-                "" + Entry.convertToRoundedDecimals(sprite.getText(), 3)
-            );
+            sprite.setText(text + "" + sprite.getText());
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.prepend_text(%1)"]}
