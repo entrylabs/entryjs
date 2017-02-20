@@ -8551,8 +8551,8 @@ Entry.Utils.xmlToJsonData = function(b) {
   }
   return a;
 };
-Entry.Utils.stopProjectWithToast = function(b, a, c) {
-  var d = b.block;
+Entry.Utils.stopProjectWithToast = function(b, a, c, d) {
+  d = b.block;
   a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
   Entry.toast && !c && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
   Entry.engine && Entry.engine.toggleStop();
@@ -27944,7 +27944,7 @@ Entry.Executor = function(b, a) {
           } else {
             var d = !1;
             "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec" != e.message && (d = !0);
-            Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", d);
+            Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", d, e);
           }
         }
         if (this.isEnd()) {

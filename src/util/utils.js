@@ -1184,7 +1184,7 @@ Entry.Utils.xmlToJsonData = function(xml) {
     return result;
 };
 
-Entry.Utils.stopProjectWithToast = function(scope, message, isHide) {
+Entry.Utils.stopProjectWithToast = function(scope, message, isHide, error) {
     var block = scope.block;
     message = message || '런타임 에러 발생';
 
