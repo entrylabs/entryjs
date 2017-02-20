@@ -343,7 +343,8 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = this.textView_.getMeasuredWidth();
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
-            if (this.isNumber())
+            // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
+            if (this.type === 'slide' && this.isNumber())
                 this.valueView_.text = this.getValue().toFixed(2).replace('.00', '');
             else
                 this.valueView_.text = this.getValue();
@@ -568,7 +569,8 @@ Entry.Variable.prototype.getId = function() {
  * @return {number}
  */
 Entry.Variable.prototype.getValue = function() {
-    if (this.isNumber())
+    // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
+    if (this.type === 'slide' && this.isNumber())
         return Number(this.value_);
     else
         return this.value_;
