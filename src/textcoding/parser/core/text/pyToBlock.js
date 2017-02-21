@@ -551,7 +551,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var arg = component.arguments[0];
                         if(arg.type == "Literal") {
                             var value = arg.value;
-                            if(!isNaN(value) && value % 1 !== 0) {
+                            if(Entry.Utils.isNumber(value) && value % 1 !== 0) {
                                 var syntax = String("random.uniform(%2, %4)");
                                 var blockSyntax = this.getBlockSyntax(syntax);
                                 if(blockSyntax)
@@ -564,7 +564,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         arg = component.arguments[1];
                         if(arg.type == "Literal") {
                             var value = arg.value;
-                            if(!isNaN(value) && value % 1 !== 0) {
+                            if(Entry.Utils.isNumber(value) && value % 1 !== 0) {
                                 var syntax = String("random.uniform(%2, %4)");
                                 var blockSyntax = this.getBlockSyntax(syntax);
                                 if(blockSyntax)
@@ -1131,7 +1131,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     (typeof params[1] == "string" || typeof params[1] == "number")) {
                                     var count = parseInt(params[1]) - parseInt(params[0]);
 
-                                    if(!isNaN(count)) {
+                                    if(Entry.Utils.isNumber(count)) {
                                         var rParams = [];
                                         rParams.push(count);
                                         params = rParams;
@@ -1254,7 +1254,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(callee.property.name == "pop") {
                     if(params[0].type) {
                         if(params[0].type == "number" || params[0].type == "text") {
-                            if(!isNaN(params[0].params[0]))
+                            if(Entry.Utils.isNumber(params[0].params[0]))
                                 params[0].params[0] += 1;
                         }
                         else if(params[0].type == "get_variable") {
@@ -1323,7 +1323,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(callee.property.name == "insert") {
                     if(params[2].type) {
                         if(params[2].type == "number" || params[2].type == "text") {
-                            if(!isNaN(params[2].params && params[2].params[0]))
+                            if(Entry.Utils.isNumber(params[2].params && params[2].params[0]))
                                 params[2].params[0] += 1;
                         }
                         else if(params[2].type == "get_variable") {
@@ -1392,7 +1392,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(callee.property.name == "subscriptIndex") {
                     if(params[3].type) {
                         if(params[3].type == "number" || params[3].type == "text") {
-                            if(!isNaN(params[3].params[0]))
+                            if(Entry.Utils.isNumber(params[3].params[0]))
                                 params[3].params[0] += 1;
                         }
                         else if(params[3].type == "get_variable") {
@@ -1453,7 +1453,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         newParams[1] = objectData;
                         if(params[1].type) {
                             if(params[1].type == "number" || params[1].type == "text") {
-                                if(!isNaN(params[1].params[0]))
+                                if(Entry.Utils.isNumber(params[1].params[0]))
                                     params[1].params[0] += 1;
                             }
                             else if(params[1].type == "get_variable") {
@@ -2082,7 +2082,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         this._blockCount,
                         Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                 }
-                if(!isNaN(item))
+                if(Entry.Utils.isNumber(item))
                     item = parseFloat(item);
                 array.push(item);
             }
@@ -2117,7 +2117,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var value = 0
             }
 
-            if(!isNaN(value))
+            if(Entry.Utils.isNumber(value))
                 value = parseFloat(value);
 
 
@@ -2752,7 +2752,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         for(var a in arguments) {
                             var argument = arguments[a];
                             var item = {};
-                            if(!isNaN(argument.params[0]))
+                            if(Entry.Utils.isNumber(argument.params[0]))
                                 argument.params[0] = parseFloat(argument.params[0]);
                             item.data = String(argument.params[0]);
                             array.push(item);
@@ -2780,7 +2780,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             value = 0;
                         }*/
 
-                        if(!isNaN(value))
+                        if(Entry.Utils.isNumber(value))
                             value = parseFloat(value);
 
                         if(value || value == 0) {
@@ -3165,7 +3165,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Literal = function(component, paramMeta, paramDefMeta, textParam) {
         var result;
         var value = component.value;
-        if(value && isNaN(value))
+        if(value && !Entry.Utils.isNumber(value))
             value = value.replace(/\t/gm, '    ');
 
         if(!paramMeta) {
@@ -3276,7 +3276,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.ParamTextInput = function(value, paramMeta, paramDefMeta) {
-        /*if(isNaN(value))
+        /*if(!Entry.Utils.isNumber(value))
             value = value.replace(/\t/gm, '    ');*/
 
         var result = value;
@@ -3320,13 +3320,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
 
-        if(!isNaN(value))
+        if(Entry.Utils.isNumber(value))
             return value;
 
         if(textParam && textParam.codeMap) {
             var codeMap = textParam.codeMap;
             if(codeMap && eval(codeMap)) {
-                if(isNaN(value))
+                if(!Entry.Utils.isNumber(value))
                     value = value.toLowerCase();
                 var codeMapValue =  eval(codeMap)[value];
             }
@@ -3348,7 +3348,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(textParam)
             value = Entry.TextCodingUtil.getDynamicIdByNumber(value, textParam, this._currentObject);
 
-        if(value && isNaN(value) && value.split(".").length > 2 && value.split(".")[0] == "self") {
+        if(value && !Entry.Utils.isNumber(value) && value.split(".").length > 2 && value.split(".")[0] == "self") {
             value = value.split(".")[1];
             currentObject = this._currentObject;
         }
@@ -3358,7 +3358,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(textParam && textParam.codeMap) {
             var codeMap = textParam.codeMap;
             if(codeMap && eval(codeMap))
-                if(isNaN(value))
+                if(!Entry.Utils.isNumber(value))
                     value = value.toLowerCase();
                 var codeMapValue =  eval(codeMap)[value];
             if(codeMapValue) value = codeMapValue;
@@ -3374,7 +3374,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var reg = /None/;
         if(reg.test(value)) return "None";
 
-        if(isNaN(value)) {
+        if(!Entry.Utils.isNumber(value)) {
             var keyChar = Entry.KeyboardCode.map[value.toLowerCase()];
             if(keyChar) result = keyChar.toString();
         }
@@ -3513,7 +3513,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(arguments && arguments[1]) {
                     if(arguments[1].type) {
                         if(arguments[1].type == "number" || arguments[1].type == "text") {
-                            /*if(!isNaN(arguments[1].params[0]))
+                            /*if(Entry.Utils.isNumber(arguments[1].params[0]))
                                 arguments[1].params[0] += 1;*/
                             params[3] = arguments[1];
                         }

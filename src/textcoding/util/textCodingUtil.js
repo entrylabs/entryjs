@@ -842,7 +842,7 @@ Entry.TextCodingUtil = {};
         param = param.replace(/\"/g, "");
 
         if(param) {
-            if(isNaN(param)) {
+            if(!Entry.Utils.isNumber(param)) {
                 param = param.replace(/ /g, "_space_");
             }
             else {
@@ -2177,13 +2177,13 @@ Entry.TextCodingUtil = {};
                 var vItem = lArray[va];
                 var data = vItem.data;
 
-                /*if(!isNaN(pData)) {
+                /*if(Entry.Utils.isNumber(pData)) {
                     data = pData;
                     data = parseFloat(data);
 
                 }*/
 
-                if(isNaN(data))
+                if(!Entry.Utils.isNumber(data))
                     data = "\"" + data + "\"";
                 value += data;
                 if(va != lArray.length-1)
@@ -2204,13 +2204,13 @@ Entry.TextCodingUtil = {};
             var entryVariable = entryVariables[i];
             if(type == "global") {
                 if(entryVariable.object_ === null && entryVariable.id_ == id) {
-                    if(!isNaN(entryVariable.value_))
+                    if(Entry.Utils.isNumber(entryVariable.value_))
                         return true;
                 }
             }
             else if(type == "local") {
                 if(entryVariable.object_ === currentObject.id && entryVariable.id_ == id) {
-                    if(!isNaN(entryVariable.value_))
+                    if(Entry.Utils.isNumber(entryVariable.value_))
                         return true;
                 }
             }

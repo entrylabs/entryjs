@@ -224,7 +224,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
     p.applyValue = function() {
         var value = this.optionGroup.val();
-        if (isNaN(value) || value === '') return;
+        if (!Entry.Utils.isNumber(value) || value === '') return;
         value = this.modValue(value);
         this.setValue(value);
         this.updateGraph();

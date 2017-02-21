@@ -57,6 +57,17 @@ Entry.overridePrototype = function() {
     }
 };
 
+Entry.Utils.isNumber = function(num) {
+    if(typeof num === 'number') {
+        return true;
+    }
+    var reg = /^-?\d+\.?\d*$/;
+    if(typeof num === 'string' && reg.test(num)) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 Entry.Utils.generateId = function() {
     return ("0000"+(Math.random()*Math.pow(36,4)<<0).toString(36)).substr(-4);
@@ -509,7 +520,7 @@ Entry.removeAllEventListener = function(eventName) {
  * @param {!number} b
  */
 Entry.addTwoNumber = function(a, b) {
-  if (isNaN(a) || isNaN(b)) {
+  if (!Entry.Utils.isNumber(a) || !Entry.Utils.isNumber(b)) {
     return a+b;
   }
   a += ''; b+= '';
@@ -637,9 +648,9 @@ Entry.getElementsByClassName = function(cl) {
  * @return {Boolean||Number} arr
  */
 Entry.parseNumber = function(value) {
-    if (typeof value == "string" && !isNaN(Number(value)))
+    if (typeof value == "string" && Entry.Utils.isNumber(Number(value)))
         return Number(value);
-    else if (typeof value == "number" && !isNaN(Number(value)))
+    else if (typeof value == "number" && Entry.Utils.isNumber(Number(value)))
         return value;
     return false;
 };
@@ -819,7 +830,7 @@ Entry.factorial = function(n){
 };
 
 Entry.getListRealIndex = function(index, list){
-    if (isNaN(index)) {
+    if (!Entry.Utils.isNumber(index)) {
         switch(index) {
             case 'FIRST':
                 index = 1;
@@ -957,7 +968,7 @@ Entry.getStringIndex = function(str) {
     var len = str.length;
     for (var i=len-1; i>0; --i) {
         var ch = str.charAt(i);
-        if (!isNaN(ch)) {
+        if (Entry.Utils.isNumber(ch)) {
             num.unshift(ch);
             idx = i;
         } else {
@@ -1022,7 +1033,7 @@ Entry.getMaxFloatPoint = function(numbers) {
 };
 
 Entry.convertToRoundedDecimals = function (value, decimals) {
-    if (isNaN(value) || !this.isFloat(value))
+    if (!Entry.Utils.isNumber(value) || !this.isFloat(value))
         return value;
     else
         return Number(Math.round(value+'e'+decimals)+'e-'+decimals);

@@ -187,7 +187,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
 
                         if(textParam && textParam.paramType == "index") {
-                            if(!isNaN(param))
+                            if(Entry.Utils.isNumber(param))
                                 param = param - 1;
                             else {
                                 var tokens = param.split('+');
@@ -201,7 +201,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
 
                         if(textParam && textParam.paramType == "integer") {
-                            if(!isNaN(param) && param % 1 !== 0)
+                            if(Entry.Utils.isNumber(param) && param % 1 !== 0)
                                 result = result.replace("randint", "uniform");
                         }
 

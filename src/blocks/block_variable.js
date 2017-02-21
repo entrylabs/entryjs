@@ -378,7 +378,7 @@ Entry.block.remove_value_from_list = function (sprite, script) {
     var value = script.getValue("VALUE", script);
     var list = Entry.variableContainer.getList(listId, sprite);
 
-    if (!list.array_ || isNaN(value) || value > list.array_.length)
+    if (!list.array_ || !Entry.Utils.isNumber(value) || value > list.array_.length)
         throw new Error('can not remove value from array');
 
     list.array_.splice(value-1,1);
@@ -417,7 +417,7 @@ Entry.block.insert_value_to_list = function (sprite, script) {
     var index = script.getValue("INDEX", script);
     var list = Entry.variableContainer.getList(listId, sprite);
 
-    if (!list.array_ || isNaN(index) || index == 0 || index > list.array_.length +1)
+    if (!list.array_ || !Entry.Utils.isNumber(index) || index == 0 || index > list.array_.length +1)
         throw new Error('can not insert value to array');
 
     list.array_.splice(index-1, 0, {'data': data});
@@ -455,7 +455,7 @@ Entry.block.change_value_list_index = function (sprite, script) {
     var index = script.getValue("INDEX", script);
     var list = Entry.variableContainer.getList(listId, sprite);
 
-    if (!list.array_ || isNaN(index) || index > list.array_.length)
+    if (!list.array_ || !Entry.Utils.isNumber(index) || index > list.array_.length)
         throw new Error('can not insert value to array');
 
     list.array_[index-1].data = data;
@@ -487,7 +487,7 @@ Entry.block.value_of_index_from_list = function (sprite, script) {
     var list = Entry.variableContainer.getList(listId, sprite);
     index = Entry.getListRealIndex(index, list);
 
-    if (!list.array_ || isNaN(index) || index > list.array_.length)
+    if (!list.array_ || !Entry.Utils.isNumber(index) || index > list.array_.length)
         throw new Error('can not insert value to array');
 
     return list.array_[index-1].data

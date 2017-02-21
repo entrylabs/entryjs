@@ -253,7 +253,7 @@ Entry.Scroller.RADIUS = 7;
 
             var hWidth = (bWidth + 2 * Entry.Scroller.RADIUS) * bBox.width /
                 (hLimitB - hLimitA + bBox.width);
-            if (isNaN(hWidth)) hWidth = 0;
+            if (!Entry.Utils.isNumber(hWidth)) hWidth = 0;
             this.hX = (bBox.x - hLimitA) / (hLimitB - hLimitA) *
                 (bWidth - hWidth - 2 * Entry.Scroller.RADIUS);
             this.hScrollbar.attr({
