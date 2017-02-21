@@ -31,7 +31,7 @@ Entry.Executor = function(block, entity) {
                     if(e.message != errorMsg) {
                         isToastHide = true;
                     }
-                    Entry.Utils.stopProjectWithToast(this.scope, errorMsg, isToastHide);
+                    Entry.Utils.stopProjectWithToast(this.scope, errorMsg, isToastHide, e);
                 }
             }
             //executor can be ended after block function call
