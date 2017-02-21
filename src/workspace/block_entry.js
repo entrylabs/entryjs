@@ -24595,10 +24595,6 @@ Entry.block = {
                 "value": 3,
                 "fontSize": 14,
                 "roundValue": 3
-            },
-            {
-                "type": "Text",
-                "text": "반복"
             }
         ],
         statements: [
@@ -24659,10 +24655,6 @@ Entry.block = {
         "color": "#8ABC1D",
         "params": [
             {
-                "type": "Text",
-                "text": "연필 줍기"
-            },
-            {
                 "type": "Indicator",
                 "img": "../../../img/assets/ntry/bitmap/cpartyjr/pen.png",
                 "highlightColor": "#FFF",
@@ -24697,10 +24689,6 @@ Entry.block = {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
         "params": [
-            {
-                "type": "Text",
-                "text": "  위쪽"
-            },
             {
                 "type": "Indicator",
                 "img": "../../../img/assets/ntry/bitmap/jr/block_up_image.png",
@@ -24754,10 +24742,6 @@ Entry.block = {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
         "params": [
-            {
-                "type": "Text",
-                "text": "오른쪽"
-            },
             {
                 "type": "Indicator",
                 "img": "../../../img/assets/ntry/bitmap/jr/block_right_image.png",
@@ -24817,10 +24801,6 @@ Entry.block = {
         "color": "#A751E3",
         "params": [
             {
-                "type": "Text",
-                "text": "  아래쪽"
-            },
-            {
                 "type": "Indicator",
                 "img": "../../../img/assets/ntry/bitmap/jr/block_down_image.png",
                 "position": {
@@ -24878,10 +24858,6 @@ Entry.block = {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
         "params": [
-            {
-                "type": "Text",
-                "text": "  왼쪽"
-            },
             {
                 "type": "Indicator",
                 "img": "../../../img/assets/ntry/bitmap/jr/block_left_image.png",
@@ -24971,10 +24947,6 @@ Entry.block = {
         "color": "#A751E3",
         "params": [
             {
-                text: "앞으로 가기",
-                type: "Text"
-            },
-            {
                 "type": "Image",
                 "img": "../../../img/assets/ntry/bitmap/jr/cparty_go_straight.png",
                 "size": 24
@@ -25009,10 +24981,6 @@ Entry.block = {
         "skeleton": "basic",
         "color": "#A751E3",
         "params": [
-            {
-                text: "왼쪽으로 돌기",
-                type: "Text"
-            },
             {
                 "type": "Image",
                 "img": "../../../img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
@@ -25050,10 +25018,6 @@ Entry.block = {
         "color": "#A751E3",
         "params": [
             {
-                text: "오른쪽으로 돌기",
-                type: "Text"
-            },
-            {
                 "type": "Image",
                 "img": "../../../img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
                 "size": 24
@@ -25089,10 +25053,6 @@ Entry.block = {
         "skeleton": "basic",
         "color": "#f46c6c",
         "params": [
-            {
-                text: "천천히 가기",
-                type: "Text"
-            },
             {
                 "type": "Image",
                 "img": "../../../img/assets/ntry/bitmap/jr/cparty_go_slow.png",
@@ -25139,10 +25099,6 @@ Entry.block = {
                 "size": 18
             },
             {
-                text: "만날 때 까지 반복하기",
-                type: "Text"
-            },
-            {
                 "type": "Image",
                 "img": "/img/assets/week/blocks/for.png",
                 "size": 24
@@ -25171,17 +25127,9 @@ Entry.block = {
         ],
         "params": [
             {
-                text: "만약",
-                type: "Text"
-            },
-            {
                 "type": "Image",
                 "img": "../../../img/assets/ntry/bitmap/jr/jr_construction_image.png",
                 "size": 18
-            },
-            {
-                text: "앞에 있다면",
-                type: "Text"
             },
             {
                 "type": "Image",
