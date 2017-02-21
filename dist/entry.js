@@ -24021,7 +24021,6 @@ Entry.BlockView = function(b, a, d) {
     this._schema.deletable && this.block.setDeletable(this._schema.deletable);
     this._schema.copyable && this.block.setCopyable(this._schema.copyable);
     !1 !== this._schema.display && !1 !== b.display || this.set({display:!1});
-    this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
     e = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
     this._statements = [];
@@ -24127,10 +24126,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
       }
     }
-    if ((a = b.statements) && a.length) {
-      for (e = 0;e < a.length;e++) {
-        this._statements.push(new Entry.FieldStatement(a[e], this, e));
-      }
+    a = b.statements || [];
+    for (e = 0;e < a.length;e++) {
+      this._statements.push(new Entry.FieldStatement(a[e], this, e));
     }
     this.alignContent(!1);
   };
@@ -24143,16 +24141,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this._startContentRender();
   };
   b.changeType = function(a) {
-    this._schemaChangeEvent && this._schemaChangeEvent.destroy();
-    this._schema = Entry.block[a];
-    this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
+    this._schema = Entry.block[a || this.type];
     this._updateSchema();
   };
   b.alignContent = function(a) {
     !0 !== a && (a = !1);
     for (var b = 0, c = 0, e = 0, f = 0, g = 0, h = 0, k = 0;k < this._contents.length;k++) {
       var l = this._contents[k];
-      l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, c = l.box.y, b = 8) : (l.align(b, c, a), k === this._contents.length - 1 || l instanceof Entry.FieldText && 0 == l._text.length || (b += Entry.BlockView.PARAM_SPACE));
+      l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, c = l.box.y, b = 8) : (l.align(b, c, a), k === this._contents.length - 1 || l instanceof Entry.FieldText && 0 === l._text.length || (b += Entry.BlockView.PARAM_SPACE));
       l = l.box;
       0 !== f ? h = Math.max(1E6 * Math.round(l.height), h) : e = Math.max(l.height, e);
       b += l.width;
@@ -24353,7 +24349,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     "workspace" == Entry.type && a && !this.isInBlockMenu && a.forEach(function(a) {
       Entry.Utils.isFunction(a) && a(c);
     });
-    this._schemaChangeEvent && this._schemaChangeEvent.destroy();
   };
   b.getShadow = function() {
     this._shadow || (this._shadow = Entry.SVG.createElement(this.svgGroup.cloneNode(!0), {opacity:.5}), this.getBoard().svgGroup.appendChild(this._shadow));
@@ -24514,17 +24509,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     if (this.visible && this.display) {
       var a = this.block;
       this._updateContents();
-      var b = a.statements;
-      if (b) {
-        for (a = 0;a < b.length;a++) {
-          b[a].view.reDraw();
-        }
+      for (var b = a.statements || [], a = 0;a < b.length;a++) {
+        b[a].view.reDraw();
       }
-      if (b = this._extensions) {
-        for (a = 0;a < b.length;a++) {
-          var c = b[a];
-          c.updatePos && c.updatePos();
-        }
+      b = this._extensions || [];
+      for (a = 0;a < b.length;a++) {
+        var c = b[a];
+        c.updatePos && c.updatePos();
       }
     }
   };
@@ -26388,9 +26379,12 @@ Entry.Mutator = function() {
   b.mutate = function(a, b) {
     var c = Entry.block[a];
     void 0 === c.changeEvent && (c.changeEvent = new Entry.Event);
+    var e = /(%\d)/gi, f = c.template.split(e);
+    e.lastIndex = 0;
+    e = b.template.split(e);
     c.template = b.template;
     c.params = b.params;
-    c.changeEvent.notify(1);
+    c.changeEvent.notify(1, f.length !== e.length);
   };
 })(Entry.Mutator);
 (function(b) {
@@ -27537,9 +27531,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     this.set(a);
     this.loadSchema();
   };
-  b.changeSchema = function(a) {
-    this.set({params:[]});
-    this.loadSchema();
+  b.changeSchema = function(a, b) {
+    b && (this.set({params:[]}), this.loadSchema());
+    this.view && this.view.changeType();
   };
   b.getSchema = function() {
     this._schema || this.loadSchema();

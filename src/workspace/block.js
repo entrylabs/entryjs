@@ -86,9 +86,13 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         this.loadSchema();
     };
 
-    p.changeSchema = function(diff) {
-        this.set({params: []});
-        this.loadSchema();
+    p.changeSchema = function(diff, shouldApply) {
+        if (shouldApply) {
+            this.set({params: []});
+            this.loadSchema();
+        }
+        if (this.view)
+            this.view.changeType();
     };
 
     p.getSchema = function() { // for lazy loading
