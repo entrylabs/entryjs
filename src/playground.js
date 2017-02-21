@@ -1383,7 +1383,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
     });
 
     Entry.Utils.disableContextmenu(picture.view);
-    $(picture.view).on('contextmenu', function(){
+    Entry.ContextMenu.onContextmenu($(picture.view), function (coordinate) {
         var options = [
             {
                 text: Lang.Workspace.context_rename,
@@ -1418,7 +1418,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
                 }
             }
         ];
-        Entry.ContextMenu.show(options, 'workspace-contextmenu');
+        Entry.ContextMenu.show(options, 'workspace-contextmenu', coordinate);
     });
 
     var orderHolder = Entry.createElement('div');
@@ -1501,7 +1501,7 @@ Entry.Playground.prototype.generateSoundElement = function(sound) {
     element.sound = sound;
 
     Entry.Utils.disableContextmenu(sound.view);
-    $(sound.view).on('contextmenu', function(){
+    Entry.ContextMenu.onContextmenu($(sound.view), function (coordinate) {
         var options = [
             {
                 text: Lang.Workspace.context_rename,
@@ -1529,7 +1529,7 @@ Entry.Playground.prototype.generateSoundElement = function(sound) {
                 }
             }
         ];
-        Entry.ContextMenu.show(options, 'workspace-contextmenu');
+        Entry.ContextMenu.show(options, 'workspace-contextmenu', coordinate);
     });
 
     var orderHolder = Entry.createElement('div');
