@@ -831,7 +831,17 @@ Entry.DaduBlock = {name:"dadublock", setZero:function() {
   Entry.hw.update();
 }, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 
 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, BlockState:{}};
-Entry.SmartBoard = {name:"smartBoard", setZero:Entry.Arduino.setZero};
+Entry.SmartBoard = {name:"smartBoard", setZero:function() {
+  Entry.hw.sendQueue.readablePorts = [];
+  for (var b = 0;20 > b;b++) {
+    if (9 != b || 10 != b || 11 != b) {
+      Entry.hw.sendQueue[b] = 0, Entry.hw.sendQueue.readablePorts.push(b);
+    }
+  }
+  Entry.hw.update();
+}, monitorTemplate:{listPorts:{2:{name:Lang.Hw.port_en + " GS2 ", type:"output", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " GS1 ", type:"output", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " MT1 \ud68c\uc804 \ubc29\ud5a5 ", type:"output", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " MT1 PWM ", type:"output", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " MT2 PWM ", type:"output", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + " MT2 \ud68c\uc804 \ubc29\ud5a5 ", type:"output", pos:{x:0, y:0}}, 8:{name:Lang.Hw.port_en + 
+" RELAY ", type:"output", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " SM3 \uac01\ub3c4 ", type:"output", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " SM2 \uac01\ub3c4 ", type:"output", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + "SM1 \uac01\ub3c4 ", type:"output", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " \ube68\uac04 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " \ub178\ub780 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 14:{name:Lang.Hw.port_en + " \ucd08\ub85d " + 
+Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 15:{name:Lang.Hw.port_en + " \ud30c\ub780 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " 1\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " 2\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " 3\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " 4\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
 Entry.ardublock = {name:"ardublock", setZero:Entry.Arduino.setZero};
 Entry.dplay = {name:"dplay", vel_value:255, Left_value:255, Right_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
@@ -8551,8 +8561,8 @@ Entry.Utils.xmlToJsonData = function(b) {
   }
   return a;
 };
-Entry.Utils.stopProjectWithToast = function(b, a, c) {
-  var d = b.block;
+Entry.Utils.stopProjectWithToast = function(b, a, c, d) {
+  d = b.block;
   a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
   Entry.toast && !c && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
   Entry.engine && Entry.engine.toggleStop();
@@ -11298,7 +11308,7 @@ Entry.HW = function() {
   this.connectTrial = 0;
   this.isFirstConnect = !0;
   this.requireVerion = "v1.6.1";
-  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.4_Setup.exe";
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.5_Setup.exe";
   this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.4.dmg";
   this.hwPopupCreate();
   this.initSocket();
@@ -22751,7 +22761,7 @@ Entry.Variable.prototype.updateView = function() {
         null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth());
         this.valueView_.x = this._nameWidth + 14;
         this.valueView_.y = 1;
-        this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", "") : this.valueView_.text = this.getValue();
+        "slide" === this.type && this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", "") : this.valueView_.text = this.getValue();
         null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth());
         this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4);
         this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
@@ -22815,7 +22825,7 @@ Entry.Variable.prototype.getId = function() {
   return this.id_;
 };
 Entry.Variable.prototype.getValue = function() {
-  return this.isNumber() ? Number(this.value_) : this.value_;
+  return "slide" === this.type && this.isNumber() ? Number(this.value_) : this.value_;
 };
 Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
@@ -27969,7 +27979,7 @@ Entry.Executor = function(b, a) {
           } else {
             var d = !1;
             "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec" != e.message && (d = !0);
-            Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", d);
+            Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", d, e);
           }
         }
         if (this.isEnd()) {
