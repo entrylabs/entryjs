@@ -360,7 +360,7 @@ Entry.EntryObject.prototype.generateView = function() {
         };
 
         xInput.onblur = function (bool) {
-            if (!isNaN(xInput.value)) {
+            if (Entry.Utils.isNumber(xInput.value)) {
                 thisPointer.entity.setX(Number(xInput.value));
             }
             thisPointer.updateCoordinateView();
@@ -375,7 +375,7 @@ Entry.EntryObject.prototype.generateView = function() {
         };
 
         yInput.onblur =  function(bool){
-            if (!isNaN(yInput.value)) {
+            if (Entry.Utils.isNumber(yInput.value)) {
                 thisPointer.entity.setY(Number(yInput.value));
             }
             thisPointer.updateCoordinateView();
@@ -391,7 +391,7 @@ Entry.EntryObject.prototype.generateView = function() {
 
 
         sizeInput.onblur = function (bool) {
-            if (!isNaN(sizeInput.value)) {
+            if (Entry.Utils.isNumber(sizeInput.value)) {
                 thisPointer.entity.setSize(Number(sizeInput.value));
             }
             thisPointer.updateCoordinateView();
@@ -444,7 +444,7 @@ Entry.EntryObject.prototype.generateView = function() {
             var value = rotateInput.value;
             if (value.indexOf('˚') != -1)
                 value = value.substring(0, value.indexOf('˚'));
-            if (!isNaN(value)) {
+            if (Entry.Utils.isNumber(value)) {
                 thisPointer.entity.setRotation(Number(value));
             }
             thisPointer.updateRotationView();
@@ -460,7 +460,7 @@ Entry.EntryObject.prototype.generateView = function() {
             var value = directionInput.value;
             if (value.indexOf('˚') != -1)
                 value = value.substring(0,value.indexOf('˚'));
-            if (!isNaN(value))
+            if (Entry.Utils.isNumber(value))
                 thisPointer.entity.setDirection(Number(value));
             thisPointer.updateRotationView();
             Entry.stage.updateObject();
@@ -669,7 +669,7 @@ Entry.EntryObject.prototype.generateView = function() {
                 var value = rotateInput.value;
                 if (value.indexOf('˚') != -1)
                     value = value.substring(0, value.indexOf('˚'));
-                if (!isNaN(value)) {
+                if (Entry.Utils.isNumber(value)) {
                     thisPointer.entity.setRotation(Number(value));
                 }
                 thisPointer.updateRotationView();
@@ -685,7 +685,7 @@ Entry.EntryObject.prototype.generateView = function() {
                 var value = directionInput.value;
                 if (value.indexOf('˚') != -1)
                     value = value.substring(0,value.indexOf('˚'));
-                if (!isNaN(value)) {
+                if (Entry.Utils.isNumber(value)) {
                     thisPointer.entity.setDirection(Number(value));
                 }
                 thisPointer.updateRotationView();
@@ -734,7 +734,7 @@ Entry.EntryObject.prototype.generateView = function() {
         var thisPointer = this;
         xInput.onkeypress = function (e) {
             if (e.keyCode == 13) {
-                if (!isNaN(xInput.value)) {
+                if (Entry.Utils.isNumber(xInput.value)) {
                     thisPointer.entity.setX(Number(xInput.value));
                 }
                 thisPointer.updateCoordinateView();
@@ -748,7 +748,7 @@ Entry.EntryObject.prototype.generateView = function() {
 
         yInput.onkeypress = function (e) {
             if (e.keyCode == 13) {
-                if (!isNaN(yInput.value)) {
+                if (Entry.Utils.isNumber(yInput.value)) {
                     thisPointer.entity.setY(Number(yInput.value));
                 }
                 thisPointer.updateCoordinateView();

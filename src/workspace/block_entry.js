@@ -30,7 +30,7 @@ if (Entry && Entry.block) {
             };
 
             code = map[value] || code || value;
-            if(isNaN(code)) {
+            if(!Entry.Utils.isNumber(code)) {
                 return '"()"'.replace('()', code);
             }
             else
@@ -116,7 +116,7 @@ if (Entry && Entry.block) {
         };
 
         c.returnStringOrNumberByValue = function(key, value) {
-            if (isNaN(value)) {
+            if (!Entry.Utils.isNumber(value)) {
                 value = value.replace(/\"/gi, '');
                 return '"()"'.replace('()', value);
             } else return value;
@@ -3260,7 +3260,7 @@ Entry.block = {
 
             if (!script.isStart) {
                 var note = script.getValue("NOTE", script);
-                if(isNaN(note))
+                if(!Entry.Utils.isNumber(note))
                     note = Entry.ArduinoExt.toneTable[note];
 
                 if(note < 0) {
@@ -7476,9 +7476,9 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             if (operator == "PLUS") {
-                if (isNaN(leftValue))
+                if (!Entry.Utils.isNumber(leftValue))
                     leftValue = script.getStringValue("LEFTHAND", script);
-                if (isNaN(rightValue))
+                if (!Entry.Utils.isNumber(rightValue))
                     rightValue = script.getStringValue("RIGHTHAND", script);
                 return leftValue + rightValue;
             }
@@ -9384,7 +9384,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var left = script.getNumberValue("LEFTHAND", script);
             var right = script.getNumberValue("RIGHTHAND", script);
-            if (isNaN(left) || isNaN(right))
+            if (!Entry.Utils.isNumber(left) || !Entry.Utils.isNumber(right))
                 throw new Error();
             var operator = script.getField("OPERATOR", script);
             if (operator == 'QUOTIENT')
@@ -22401,7 +22401,7 @@ Entry.block = {
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
             var variableValue = variable.getValue();
             var sumValue;
-            if(!isNaN(value) && variable.isNumber()) {
+            if(Entry.Utils.isNumber(value) && variable.isNumber()) {
                 value = Entry.parseNumber(value);
                 variableValue = Entry.parseNumber(variableValue);
                 fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
@@ -23077,7 +23077,7 @@ Entry.block = {
             var value = script.getValue("VALUE", script);
             var list = Entry.variableContainer.getList(listId, sprite);
 
-            if (!list.array_ || isNaN(value) || value > list.array_.length)
+            if (!list.array_ || !Entry.Utils.isNumber(value) || value > list.array_.length)
                 throw new Error('can not remove value from array');
 
             list.array_.splice(value-1,1);
@@ -23189,7 +23189,7 @@ Entry.block = {
             var index = script.getValue("INDEX", script);
             var list = Entry.variableContainer.getList(listId, sprite);
 
-            if (!list.array_ || isNaN(index) || index == 0 || index > list.array_.length +1)
+            if (!list.array_ || !Entry.Utils.isNumber(index) || index == 0 || index > list.array_.length +1)
                 throw new Error('can not insert value to array');
 
             list.array_.splice(index-1, 0, {'data': data});
@@ -23304,7 +23304,7 @@ Entry.block = {
             var index = script.getValue("INDEX", script);
             var list = Entry.variableContainer.getList(listId, sprite);
 
-            if (!list.array_ || isNaN(index) || index > list.array_.length)
+            if (!list.array_ || !Entry.Utils.isNumber(index) || index > list.array_.length)
                 throw new Error('can not insert value to array');
 
             list.array_[index-1].data = data;
@@ -23419,7 +23419,7 @@ Entry.block = {
             var list = Entry.variableContainer.getList(listId, sprite);
             index = Entry.getListRealIndex(index, list);
 
-            if (!list.array_ || isNaN(index) || index > list.array_.length)
+            if (!list.array_ || !Entry.Utils.isNumber(index) || index > list.array_.length)
                 throw new Error('can not insert value to array');
 
             return list.array_[index-1].data
@@ -30662,7 +30662,7 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
             sq.outport = script.getField('PORT');
             sq.value = 0;
-            if(!isNaN(value)){
+            if(Entry.Utils.isNumber(value)){
                 var tmp = value;
                 if(value < 0) tmp = 0;
                 if(value > 255) tmp = 255;

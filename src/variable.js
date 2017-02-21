@@ -277,7 +277,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
             this.cursor = 'pointer';
-            this.offsetY = isNaN(this.offsetY) || (this.offsetY < 0) ? evt.rawY/2 : this.offsetY;
+            this.offsetY = !Entry.Utils.isNumber(this.offsetY) || (this.offsetY < 0) ? evt.rawY/2 : this.offsetY;
         });
         this.scrollButton_.on("pressmove", function(evt) {
             // if(Entry.type != 'workspace') return;
@@ -581,10 +581,7 @@ Entry.Variable.prototype.getValue = function() {
  * @return {boolean}
  */
 Entry.Variable.prototype.isNumber = function() {
-    if (isNaN(this.value_))
-        return false;
-    else
-        return true;
+    return Entry.Utils.isNumber(this.value_);
 };
 
 /**

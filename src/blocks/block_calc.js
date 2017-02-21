@@ -893,7 +893,7 @@ Blockly.Blocks.quotient_and_mod = {
 Entry.block.quotient_and_mod = function (sprite, script) {
     var left = script.getNumberValue("LEFTHAND", script);
     var right = script.getNumberValue("RIGHTHAND", script);
-    if (isNaN(left) || isNaN(right))
+    if (!Entry.Utils.isNumber(left) || !Entry.Utils.isNumber(right))
         throw new Error();
     var operator = script.getField("OPERATOR", script);
     if (operator == 'QUOTIENT')

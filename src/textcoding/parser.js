@@ -683,8 +683,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
         param = param.replace(/\"/g, "");
 
         if(param) {
-            if(isNaN(param))
-                if(!isNaN(param.charAt(0)))
+            if(!Entry.Utils.isNumber(param))
+                if(Entry.Utils.isNumber(param.charAt(0)))
                     param = 'num' + param;
                 else
                     param = param.replace(/ /g, "_space_");
