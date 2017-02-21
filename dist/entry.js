@@ -15809,7 +15809,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   b.setMode = function(a, b) {
-    isNaN(a) ? (this.mode = a.boardType, this.runType = a.runType, this.textType = a.textType) : this.mode = a;
+    Entry.Utils.isNumber(a) ? this.mode = a : (this.mode = a.boardType, this.runType = a.runType, this.textType = a.textType);
     this.mode = Number(this.mode);
     if (this.oldMode !== this.mode) {
       var c = Entry.Vim, e = Entry.Workspace, f = this.blockMenu;
@@ -28240,7 +28240,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   b.applyValue = function() {
     var a = this.optionGroup.val();
-    isNaN(a) || "" === a || (a = this.modValue(a), this.setValue(a), this.updateGraph(), this.textElement.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(a), this.resize());
+    Entry.Utils.isNumber(a) && "" !== a && (a = this.modValue(a), this.setValue(a), this.updateGraph(), this.textElement.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(a), this.resize());
   };
   b.resize = function() {
     var a = this.getTextWidth();
