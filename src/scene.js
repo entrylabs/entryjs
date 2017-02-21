@@ -182,8 +182,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
     }
 
     Entry.Utils.disableContextmenu(viewTemplate);
-
-    $(viewTemplate).on('contextmenu', function() {
+    Entry.ContextMenu.onContextmenu($(viewTemplate), function (coordinate) {
         var options = [
             {
                 text: Lang.Workspace.duplicate_scene,
@@ -193,7 +192,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
                 }
             }
         ];
-        Entry.ContextMenu.show(options, 'workspace-contextmenu');
+        Entry.ContextMenu.show(options, 'workspace-contextmenu', coordinate);
     }.bind(this));
 
     scene.view = viewTemplate;
