@@ -17,13 +17,16 @@ Entry.Workspace = function(options) {
     this.observe(this, "_handleChangeBoard", ["selectedBoard"], false);
     this.trashcan = new Entry.FieldTrashcan();
 
+    this.readOnly = options.readOnly === undefined ? false : options.readOnly;
+
     var option = options.blockMenu;
     if (option) {
         this.blockMenu = new Entry.BlockMenu(
             option.dom,
             option.align,
             option.categoryData,
-            option.scroll
+            option.scroll,
+            this.readOnly
         );
         this.blockMenu.workspace = this;
         this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
@@ -32,6 +35,7 @@ Entry.Workspace = function(options) {
     option = options.board;
     if (option) {
         option.workspace = this;
+        option.readOnly = this.readOnly;
         this.board = new Entry.Board(option);
         this.board.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
         this.set({selectedBoard:this.board});
@@ -46,12 +50,12 @@ Entry.Workspace = function(options) {
     if (this.board && this.vimBoard)
         this.vimBoard.hide();
 
+
     Entry.GlobalSvg.createDom();
 
     this.mode = Entry.Workspace.MODE_BOARD;
 
-    if (Entry.keyPressed)
-        Entry.keyPressed.attach(this, this._keyboardControl);
+    this.attachKeyboardCapture();
 
     // view state change event
     this.changeEvent = new Entry.Event(this);
@@ -102,9 +106,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             WORKSPACE = Entry.Workspace,
             blockMenu = this.blockMenu;
 
+        var alert_message;
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
-                    if(alert_message = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+                    alert_message = Entry.TextCodingUtil.isNamesIncludeSpace();
+                    if(alert_message) {
                         alert(alert_message);
                         var mode = {};
                         mode.boardType = WORKSPACE.MODE_BOARD;
@@ -281,12 +287,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var isVimMode = this._isVimMode();
 
         var blockView = this.selectedBlockView;
+        var board = this.selectedBoard;
+        var isBoardReadOnly = board.readOnly;
 
         if (ctrlKey) {
             switch (keyCode) {
                 case 86:  //paste
-                    var board = this.selectedBoard;
-                    if (board && board instanceof Entry.Board && Entry.clipboard)
+                    if (!isBoardReadOnly &&board && board instanceof Entry.Board && Entry.clipboard)
                         Entry.do('addThread', Entry.clipboard).value
                             .getFirstBlock().copyToClipboard();
                     break;
@@ -303,7 +310,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     if(oldMode == Entry.Workspace.MODE_OVERLAYBOARD)
                         return;
 
-                    var message = Entry.TextCodingUtil.isNamesIncludeSpace()
+                    var message = Entry.TextCodingUtil.isNamesIncludeSpace();
                     if(message) {
                         alert(message);
                         return;
@@ -350,7 +357,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     }
                     break;
                 case 88:
-                    if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
+                    if (!isBoardReadOnly &&blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
                         (function(block) {
                             block.copyToClipboard();
                             block.destroy(true, true);
@@ -416,7 +423,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
                 case 8:
                 case 46:
-                    if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
+                    if (!isBoardReadOnly && blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
                         Entry.do("destroyBlock", blockView.block);
                         this.board.set({selectedBlockView:null});
                         e.preventDefault();
@@ -477,4 +484,18 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.isVimMode = p._isVimMode;
 
+    p.attachKeyboardCapture = function() {
+        if (Entry.keyPressed) {
+            this._keyboardEvent && this.detachKeyboardCapture();
+            this._keyboardEvent =
+                Entry.keyPressed.attach(this, this._keyboardControl);
+        }
+    };
+
+    p.detachKeyboardCapture = function() {
+        if (Entry.keyPressed && this._keyboardEvent) {
+            Entry.keyPressed.detach(this._keyboardEvent);
+            delete this._keyboardEvent;
+        }
+    };
 })(Entry.Workspace.prototype);

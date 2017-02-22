@@ -66,8 +66,7 @@ Entry.StateManager.prototype.generateView = function (stateManagerView, option) 
  * @param {!func} func function to restore
  * @param {} params function's parameters or state data
  */
-Entry.StateManager.prototype.addCommand =
-    function(type, caller, func, params) {
+Entry.StateManager.prototype.addCommand = function(type, caller, func, params) {
     if (this.isIgnoring())
         return;
     if (this.isRestoring()) {

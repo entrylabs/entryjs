@@ -529,6 +529,16 @@ Entry.Scene.prototype.isMax = function() {
     return this.scenes_.length >= this.maxCount;
 };
 
+Entry.Scene.prototype.clear = function() {
+    this.scenes_.map(function(s) {
+        Entry.stage.removeObjectContainer(s);
+    })
+    $(this.listView_).html("");
+    this.scenes_ = [];
+    this.selectedScene = null;
+};
+
+
 Entry.Scene.prototype._focusSceneNameField = function(scene) {
     var input = $(scene.view).find('input');
     input && input.focus && input.focus();

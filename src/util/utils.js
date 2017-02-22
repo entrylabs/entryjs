@@ -280,7 +280,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('mousedown') > -1) {
         if (Entry.documentMousedown) {
             doc.off('mousedown');
-            Entry.documentMousedown.clear()
+            Entry.documentMousedown.clear();
         }
         Entry.documentMousedown = new Entry.Event(window);
         doc.on('mousedown', (function(e) {
@@ -291,7 +291,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('mousemove') > -1) {
         if (Entry.documentMousemove) {
             doc.off('touchmove mousemove');
-            Entry.documentMousemove.clear()
+            Entry.documentMousemove.clear();
         }
 
         Entry.mouseCoordinate = {};
@@ -308,7 +308,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('keydown') > -1) {
         if (Entry.keyPressed)  {
             doc.off('keydown');
-            Entry.keyPressed.clear()
+            Entry.keyPressed.clear();
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
@@ -323,7 +323,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('keyup') > -1) {
         if (Entry.keyUpped) {
             doc.off('keyup');
-            Entry.keyUpped.clear()
+            Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
         doc.on('keyup', (function(e) {
@@ -335,7 +335,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     }
 
     if (options.indexOf('dispose') > -1) {
-        if (Entry.disposeEvent) Entry.disposeEvent.clear()
+        if (Entry.disposeEvent) Entry.disposeEvent.clear();
         Entry.disposeEvent = new Entry.Event(window);
         if (Entry.documentMousedown)
             Entry.documentMousedown.attach(this, function(e) {
@@ -483,10 +483,12 @@ Entry.addEventListener = function(eventName, fn) {
 Entry.dispatchEvent = function(eventName, params) {
     if (!this.events_)
         this.events_ = {};
-    if (!this.events_[eventName])
-        return;
-    for (var index = 0, l = this.events_[eventName].length; index < l; index++) {
-        this.events_[eventName][index].call(window, params);
+
+    var events = this.events_[eventName];
+    if (!events) return;
+
+    for (var index = 0, l = events.length; index < l; index++) {
+        events[index].apply(window, Array.prototype.slice.call(arguments).splice(1));
     }
 };
 
@@ -1102,7 +1104,7 @@ Entry.Utils.isFunction = function(fn) {
 };
 
 Entry.Utils.addFilters = function (boardSvgDom, suffix) {
-        var defs = boardSvgDom.elem('defs');
+    var defs = boardSvgDom.elem('defs');
 
     //trashcan filter
     var trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter_' + suffix});
@@ -1386,3 +1388,172 @@ Entry.Utils.isNewVersion = function(old_version, new_version) {
         return false;
     }
 }
+
+Entry.Utils.getBlockCategory = (function() {
+    var map = {};
+    var allBlocks;
+    return function(blockType) {
+        if (!blockType) return;
+
+        if (map[blockType])
+            return map[blockType];
+
+        if (!allBlocks)
+            allBlocks = EntryStatic.getAllBlocks();
+
+        for (var i=0; i<allBlocks.length; i++) {
+            var data = allBlocks[i];
+            var category = data.category;
+            if (data.blocks.indexOf(blockType) > -1) {
+                map[blockType] = category;
+                return category;
+            }
+        }
+    }
+})();
+
+Entry.Utils.getUniqObjectsBlocks = function(objects) {
+    objects = objects || Entry.container.objects_;
+    var ret = [];
+
+    objects.forEach(function(o) {
+        var script = o.script;
+        if (!(script instanceof Entry.Code))
+            script = new Entry.Code(script);
+        var blocks = script.getBlockList();
+        blocks.forEach(function(b) {
+            if (ret.indexOf(b.type) < 0)
+                ret.push(b.type);
+        });
+    });
+
+    return ret;
+};
+
+Entry.Utils.getObjectsBlocks = function(objects) {
+    objects = objects || Entry.container.objects_;
+    var ret = [];
+
+    objects.forEach(function(o) {
+        var script = o.script;
+        if (!(script instanceof Entry.Code))
+            script = new Entry.Code(script);
+        var blocks = script.getBlockList(true);
+        blocks.forEach(function(b) {
+            ret.push(b.type);
+        });
+    });
+
+    return ret;
+};
+
+Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
+    if (!blockArr) return;
+    var that = this;
+
+    var data = EntryStatic.getAllBlocks();
+    var categoryIndexMap = {};
+    for (var i=0; i<data.length; i++) {
+        var datum = data[i];
+        datum.blocks = [];
+        categoryIndexMap[datum.category] = i;
+    }
+
+    blockArr.forEach(function(b) {
+        var category = that.getBlockCategory(b);
+        var index = categoryIndexMap[category];
+        if (index === undefined) return;
+        data[index].blocks.push(b);
+    });
+
+    var allBlocksInfo = EntryStatic.getAllBlocks();
+    for (var i=0; i<allBlocksInfo.length; i++) {
+        var info = allBlocksInfo[i];
+        var category = info.category;
+        var blocks = info.blocks;
+        if (category === 'func') {
+            allBlocksInfo.splice(i, 1);
+            continue;
+        }
+        var selectedBlocks = data[i].blocks;
+        var sorted = [];
+
+        blocks.forEach(function(b) {
+            if (selectedBlocks.indexOf(b) > -1)
+                sorted.push(b);
+        });
+
+        data[i].blocks = sorted;
+    }
+
+    return data;
+};
+
+Entry.Utils.blur = function() {
+    var elem = document.activeElement;
+    elem && elem.blur && elem.blur();
+};
+
+Entry.Utils.getWindow = function(hashId) {
+    if (!hashId) return;
+    for (var i=0; i<window.frames.length; i++) {
+        var frame = window.frames[i];
+        if (frame.Entry && frame.Entry.hashId === hashId)
+            return frame;
+    }
+};
+
+Entry.Utils.restrictAction = function(exceptions, callback) {
+    var that = this;
+    exceptions = exceptions || [];
+    exceptions = exceptions.map(function(e) {return e[0]});
+    var handler = function(e) {
+        e = e || window.event;
+        var target = e.target || e.srcElement;
+        if (!that.isRightButton(e)) {
+            for (var i = 0; i < exceptions.length; i++) {
+                var exception = exceptions[i];
+                if (exception === target || $.contains(exception, target)) {
+                    callback();
+                    return;
+                }
+            }
+        }
+        if (!e.preventDefault) {//IE quirks
+            e.returnValue = false;
+            e.cancelBubble = true;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+    this._restrictHandler = handler;
+
+    var entryDom = Entry.getDom();
+    if (entryDom.addEventListener) {
+        entryDom.addEventListener('click', handler, true);
+        entryDom.addEventListener('mousedown', handler, true);
+        entryDom.addEventListener('touchstart', handler, true);
+    }
+    else {
+        entryDom.attachEvent('onclick', handler);
+        entryDom.attachEvent('onmousedown', handler);
+        entryDom.attachEvent('ontouchstart', handler);
+    }
+};
+
+Entry.Utils.allowAction = function() {
+    var entryDom = Entry.getDom();
+    if (this._restrictHandler) {
+        if (entryDom.addEventListener) {
+            entryDom.removeEventListener("click", this._restrictHandler, true);
+            entryDom.removeEventListener("mousedown", this._restrictHandler, true);
+            entryDom.removeEventListener("touchstart", this._restrictHandler, true);
+        } else {
+            entryDom.detachEvent('onclick', this._restrictHandler);
+            entryDom.detachEvent('onmousedown', this._restrictHandler);
+            entryDom.detachEvent('ontouchstart', this._restrictHandler);
+        }
+        delete this._restrictHandler;
+    }
+};

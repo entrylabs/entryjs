@@ -17,6 +17,7 @@ goog.require("Entry.SVG");
  */
 Entry.Board = function(option) {
     Entry.Model(this, false);
+    this.readOnly = option.readOnly === undefined ? false : option.readOnly;
     this.changeEvent = new Entry.Event(this);
 
     this.createView(option);
@@ -901,7 +902,8 @@ Entry.Board.DRAG_RADIUS = 5;
             var pos = block.getAbsoluteCoordinate();
 
             this.scroller.scroll(
-                50 - pos.x, 30 - pos.y
+                50 - pos.x, 30 - pos.y,
+                true
             );
         }
     };
@@ -913,7 +915,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 activated: true,
                 option: {
                     text: Lang.Blocks.Paste_blocks,
-                    enable: !!Entry.clipboard,
+                    enable: !!Entry.clipboard && !this.readOnly,
                     callback: function(){
                         Entry.do('addThread', Entry.clipboard).value
                             .getFirstBlock().copyToClipboard();
@@ -924,6 +926,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 activated: true,
                 option: {
                     text: Lang.Blocks.tidy_up_block,
+                    enable: !this.readOnly,
                     callback: function(){
                         that.alignThreads();
                     }
@@ -933,6 +936,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 activated: true,
                 option: {
                     text: Lang.Blocks.Clear_all_blocks,
+                    enable: !this.readOnly,
                     callback: function(){
                         that.code.clear(true);
                     }
@@ -942,7 +946,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 activated: Entry.type === 'workspace' && Entry.Utils.isChrome() && !Entry.isMobile(),
                 option: {
                     text: Lang.Menus.save_as_image_all,
-                    enable: true,
+                    enable: !this.readOnly,
                     callback: function(){
                         var threads = that.code.getThreads();
                         var images = [];
@@ -953,20 +957,16 @@ Entry.Board.DRAG_RADIUS = 5;
                             if (threads.length > 1 && Entry.isOffline) {
                                 topBlock.view.getDataUrl().then(function(data) {
                                     images.push(data);
-                                    //console.log('add an image');
                                     if (images.length == threads.length) {
-                                        //console.log('images completely added');
                                         Entry.dispatchEvent(
                                             'saveBlockImages',
                                             { images: images }
                                         );
                                     }
-
                                 });
                             } else {
                                 topBlock.view.downloadAsImage(++i);
                             }
-
                         });
                     }
                 }
@@ -1025,5 +1025,28 @@ Entry.Board.DRAG_RADIUS = 5;
         );
     };
 
-})(Entry.Board.prototype);
+    p.getDom = function(query) {
+        query = query.shift();
+        if (query === 'trashcan')
+            return this.workspace.trashcan.svgGroup;
+        else if (query instanceof Array) {
+            var targetObj = this.code.getTargetByPointer(query);
+            if (targetObj instanceof Entry.Block) {
+                return targetObj.view.svgGroup;
+            } else {
+                return targetObj.svgGroup;
+            }
+        }
+    };
 
+    p.findBlock = function(block) {
+        if (typeof block === 'string')
+            return this.findById(block);
+        else if (block && block.id)
+            return this.findById(block.id);
+        else if (block instanceof Array)
+            return this.code.getTargetByPointer(block);
+        return block;
+    };
+
+})(Entry.Board.prototype);

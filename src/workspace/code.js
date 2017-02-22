@@ -22,6 +22,7 @@ Entry.Code = function(code, object) {
     this._blockMap = {};
 
     this.executors = [];
+    this.watchEvent = new Entry.Event(this);
 
     this.executeEndEvent = new Entry.Event(this);
     this.changeEvent = new Entry.Event(this);
@@ -115,6 +116,9 @@ Entry.PARAM = -1;
         if (blocks === undefined) return;
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
+            var pointer = block.pointer();
+            if (pointer[3] !== 0 || pointer.length !== 4)
+                continue;
             if (value === undefined ||
                 block.params.indexOf(value) > -1) {
                     var executor = new Entry.Executor(blocks[i], entity);
@@ -133,15 +137,18 @@ Entry.PARAM = -1;
 
     p.tick = function() {
         var executors = this.executors;
+        var executedBlocks = [];
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
-            if (!executor.isEnd()) executor.execute();
+            if (!executor.isEnd())
+                executedBlocks = executedBlocks.concat(executor.execute());
             else {
                 executors.splice(i--, 1);
                 if (executors.length === 0)
                     this.executeEndEvent.notify();
             }
         }
+        this.watchEvent.notify(executedBlocks);
     };
 
     p.removeExecutor = function(executor) {
@@ -267,8 +274,10 @@ Entry.PARAM = -1;
     };
 
     p._handleChange = function() {
-        if (Entry.creationChangedEvent)
+        if (Entry.creationChangedEvent &&
+            this.view && this.view.board.constructor !== Entry.BlockMenu) {
             Entry.creationChangedEvent.notify();
+        }
     };
 
     p.hasBlockType = function(type) {
@@ -315,10 +324,11 @@ Entry.PARAM = -1;
 
     p.getTargetByPointer = function(pointer) {
         pointer = pointer.concat();
-        pointer.shift();
-        pointer.shift();
+        pointer.splice(0,2);
+
         var thread = this._data[pointer.shift()];
         var block;
+
         if (pointer.length === 1) {
             block = thread.getBlock(pointer.shift() - 1);
         } else {
@@ -336,7 +346,10 @@ Entry.PARAM = -1;
                         else
                             block = statement.getBlock(index - 1);
                     } else {
-                        block = statement.getBlock(index);
+                        if (index < 0)
+                            block = statement;
+                        else
+                            block = statement.getBlock(index);
                     }
                 } else if (type === -1) {
                     block = block.view.getParam(index);
