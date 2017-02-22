@@ -343,6 +343,8 @@ Entry.PARAM = -1;
                     if (!pointer.length) {
                         if (index === 0)
                             block = statement.view.getParent();
+                        else if (index === undefined)
+                            block = statement;
                         else
                             block = statement.getBlock(index - 1);
                     } else {

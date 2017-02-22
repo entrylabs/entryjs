@@ -5870,6 +5870,7 @@ Entry.Commander = function(c) {
     return [["block", b], ["pointer", c]];
   }, undo:"destroyBlock"};
   c[b.insertBlock] = {do:function(b, c, f) {
+    console.log(c);
     b = this.editor.board.findBlock(b);
     this.editor.board.insert(b, c, f);
   }, state:function(b, c) {
@@ -5906,7 +5907,7 @@ Entry.Commander = function(c) {
     void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, f)) : b._updatePos();
   }, state:function(b) {
     b = this.editor.board.findBlock(b);
-    return [b.id, b.x, b.y];
+    return [b, b.x, b.y];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b, c, f) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
@@ -25490,7 +25491,7 @@ Entry.PARAM = -1;
       for (d = c.getBlock(b.shift());b.length;) {
         d instanceof Entry.Block || (d = d.getValueBlock());
         var f = b.shift(), c = b.shift();
-        -1 < f ? (d = d.statements[f], d = b.length ? 0 > c ? d : d.getBlock(c) : 0 === c ? d.view.getParent() : d.getBlock(c - 1)) : -1 === f && (d = d.view.getParam(c));
+        -1 < f ? (d = d.statements[f], d = b.length ? 0 > c ? d : d.getBlock(c) : 0 === c ? d.view.getParent() : void 0 === c ? d : d.getBlock(c - 1)) : -1 === f && (d = d.view.getParam(c));
       }
     }
     return d;
