@@ -46,9 +46,6 @@ Entry.BlockView = function(block, board, mode) {
     if (this._schema.display === false || block.display === false) {
         this.set({display: false});
     }
-    if (this._schema.changeEvent)
-        this._schemaChangeEvent = this._schema.changeEvent.attach(
-            this, this._updateSchema);
 
     var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
@@ -131,7 +128,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var attr = { class: "block" };
 
         if (this.display === false)
-            attr.display = 'none'
+            attr.display = 'none';
 
         this.svgGroup.attr(attr);
 
@@ -247,11 +244,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             } else this._contents.push(new Entry.FieldText({text: param}, this));
         }
 
-        var statements = schema.statements;
-        if (statements && statements.length) {
-            for (i=0; i<statements.length; i++)
-                this._statements.push(new Entry.FieldStatement(statements[i], this, i));
-        }
+        var statements = schema.statements || [];
+        for (i=0; i<statements.length; i++)
+            this._statements.push(new Entry.FieldStatement(statements[i], this, i));
 
         this.alignContent(false);
     };
@@ -267,12 +262,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.changeType = function(type) {
-        if (this._schemaChangeEvent)
-            this._schemaChangeEvent.destroy();
-        this._schema = Entry.block[type];
-        if (this._schema.changeEvent)
-            this._schemaChangeEvent = this._schema.changeEvent.attach(
-                this, this._updateSchema);
+        this._schema = Entry.block[type || this.type];
         this._updateSchema();
     };
 
@@ -294,7 +284,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 c.align(cursor.x, cursor.y, animate);
                 // space between content
                 if (i !== this._contents.length - 1 &&
-                    (!(c instanceof Entry.FieldText && c._text.length == 0)))
+                    (!(c instanceof Entry.FieldText && c._text.length === 0)))
                     cursor.x += Entry.BlockView.PARAM_SPACE;
             }
 
@@ -761,9 +751,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             events.forEach(function(fn) {
                 if (Entry.Utils.isFunction(fn)) fn(block);
             });
-
-        if (this._schemaChangeEvent)
-            this._schemaChangeEvent.destroy();
     };
 
     p.getShadow = function() {
@@ -1051,19 +1038,17 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         var block = this.block;
         this._updateContents();
-        var statements = block.statements;
-        if (statements) {
-            for (var i=0; i<statements.length; i++) {
-                var statement = statements[i];
-                statement.view.reDraw();
-            }
+
+        var statements = block.statements || [];
+        for (var i=0; i<statements.length; i++) {
+            var statement = statements[i];
+            statement.view.reDraw();
         }
-        var extensions = this._extensions;
-        if (extensions) {
-            for (var i=0; i<extensions.length; i++) {
-                var ext = extensions[i];
-                ext.updatePos && ext.updatePos();
-            }
+
+        var extensions = this._extensions || [];
+        for (var i=0; i<extensions.length; i++) {
+            var ext = extensions[i];
+            ext.updatePos && ext.updatePos();
         }
     };
 

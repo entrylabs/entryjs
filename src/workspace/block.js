@@ -18,6 +18,9 @@ Entry.Block = function(block, thread) {
     Entry.Model(this, false);
     this._schema = null;
 
+    if (block._backupParams)
+        this._backupParams = block._backupParams;
+
     this.setThread(thread);
     this.load(block);
 
@@ -86,9 +89,52 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         this.loadSchema();
     };
 
-    p.changeSchema = function(diff) {
-        this.set({params: []});
+    p.changeSchema = function(diff, changeData) {
+        var params = [];
+
+        if (changeData) {
+            if (changeData.isRestore) {
+                params = this._backupParams || [];
+                delete this._backupParams;
+            } else {
+                var changeType = changeData.type;
+
+                switch (changeData.type){
+                    case 'noChange':
+                        params = this.params;
+                        break;
+                    case 'cut':
+                        var pos = changeData.pos;
+                        this.params.splice(pos);
+                        params = this.params;
+                        break;
+                    case 'insert':
+                        var startPos = changeData.startPos;
+                        var endPos = changeData.endPos;
+                        var schemaParams = Entry.block[this.type].params;
+                        params = new Array(schemaParams.length);
+
+                        for (var i=0; i<startPos; i++)
+                            params[i] = this.params[i];
+
+                        var adjust = endPos - startPos + 1;
+                        for (i=endPos+1; i<schemaParams.length; i++)
+                            params[i] = this.params[i-adjust];
+                        break;
+                }
+            }
+        }
+
+        params.forEach(function(p) {
+            if (p instanceof Entry.Block) {
+                p.destroyView();
+            }
+        });
+
+        this.set({params: params});
+
         this.loadSchema();
+        this.view && this.view.changeType();
     };
 
     p.getSchema = function() { // for lazy loading
@@ -106,6 +152,16 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (!this._schemaChangeEvent && this._schema.changeEvent)
             this._schemaChangeEvent = this._schema.changeEvent.attach(
                 this, this.changeSchema);
+
+        if (!this._paramsBackupEvent && this._schema.paramsBackupEvent) {
+            this._paramsBackupEvent = this._schema.paramsBackupEvent.attach(
+                this, this.paramsBackup);
+
+        }
+
+        if (!this._destroyParamsBackupEvent && this._schema.destroyParamsBackupEvent)
+            this._destroyParamsBackupEvent = this._schema.destroyParamsBackupEvent.attach(
+                this, this.destroyParamsBackup);
 
         var events = this._schema.events;
         if (events) {
@@ -156,6 +212,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     p.changeType = function(type) {
         if (this._schemaChangeEvent)
             this._schemaChangeEvent.destroy();
+        if (this._backupEvent)
+            this._backupEvent.destroy();
+        if (this._destroyBackupEvent)
+            this._destroyBackupEvent.destroy();
+
         this.set({type: type});
         this.loadSchema();
         if (this.view)
@@ -236,6 +297,13 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         json.movable = this.movable;
         json.deletable = this.deletable;
         json.readOnly = this.readOnly;
+        if (this._backupParams) {
+            json._backupParams = this._backupParams.map(function(p) {
+                if (p instanceof Entry.Block)
+                    return p.toJSON();
+                else return p;
+            });
+        }
 
         if (excludeData && excludeData instanceof Array) {
             excludeData.forEach(function(i) { delete json[i]; });
@@ -302,6 +370,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (this.view) this.view.destroy(animate);
         if (this._schemaChangeEvent)
             this._schemaChangeEvent.destroy();
+        if (this._paramsBackupEvent)
+            this._paramsBackupEvent.destroy();
+        if (this._destroyParamsBackupEvent)
+            this._destroyParamsBackupEvent.destroy();
 
         var events = this.events.dataDestroy;
         if (events && code.object) {
@@ -313,8 +385,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         events = this.events.viewDestroy;
         var board = this.getCode().board;
-        if (events && (Entry.getMainWS() && Entry.isTextMode)
-            && (!board || (board && board.constructor !== Entry.BlockMenu))) {
+        if (events && (Entry.getMainWS() && Entry.isTextMode) &&
+            (!board || (board && board.constructor !== Entry.BlockMenu))) {
             events.forEach(function(fn) {
                 if (Entry.Utils.isFunction(fn))
                     fn.apply(that, [that, notSpliced]);
@@ -566,8 +638,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                     return false;
             } else {
                 var l = this.params[i], r = target.params[i];
-                l = typeof l === "number" ? l + "" : l
-                r = typeof r === "number" ? r + "" : r
+                l = typeof l === "number" ? l + "" : l;
+                r = typeof r === "number" ? r + "" : r;
                 if (l !== r)
                     return false;
             }
@@ -575,4 +647,15 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return true;
     };
 
+    p.paramsBackup = function() {
+        //do not backup params for blockMenu block
+        if (this.view && this.view.isInBlockMenu)
+            return;
+
+        this._backupParams = this.params.slice();
+    };
+
+    p.destroyParamsBackup = function() {
+        this._backupParams = null;
+    };
 })(Entry.Block.prototype);

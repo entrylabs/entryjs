@@ -653,9 +653,9 @@ Entry.getElementsByClassName = function(cl) {
  * @return {Boolean||Number} arr
  */
 Entry.parseNumber = function(value) {
-    if (typeof value == "string" && Entry.Utils.isNumber(Number(value)))
+    if (typeof value == "string" && Entry.Utils.isNumber(value))
         return Number(value);
-    else if (typeof value == "number" && Entry.Utils.isNumber(Number(value)))
+    else if (typeof value == "number" && Entry.Utils.isNumber(value))
         return value;
     return false;
 };
