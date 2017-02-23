@@ -56,6 +56,7 @@ Entry.HW = function() {
         'B.1': Entry.Codestar,
         'A.1': Entry.SmartBoard,
         'C.1': Entry.DaduBlock,
+        'C.2': Entry.DaduBlock_Car,
         'D.1': Entry.robotori,
         'F.1': Entry.byrobot_dronefighter_controller,
         'F.2': Entry.byrobot_dronefighter_drive,
