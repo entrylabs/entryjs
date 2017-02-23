@@ -105,6 +105,10 @@ Entry.StateManager.prototype.getLastCommand = function() {
     return this.undoStack_[this.undoStack_.length - 1];
 };
 
+Entry.StateManager.prototype.getLastRedoCommand = function() {
+    return this.redoStack_[this.redoStack_.length - 1];
+};
+
 /**
  * Do undo
  */
@@ -113,9 +117,18 @@ Entry.StateManager.prototype.undo = function() {
         return;
     this.addActivity("undo");
     this.startRestore();
+    var prevIsPass = false;
+    var isFirst = true;
     while (this.undoStack_.length) {
         var state = this.undoStack_.pop();
         state.func.apply(state.caller, state.params);
+        var command = this.getLastRedoCommand();
+
+        if (isFirst) {
+            command.isPass = false;
+            isFirst = !isFirst;
+        } else command.isPass = true;
+
         if (state.isPass !== true)
             break;
     }
@@ -131,10 +144,18 @@ Entry.StateManager.prototype.undo = function() {
 Entry.StateManager.prototype.redo = function() {
     if (!this.canRedo() || this.isRestoring())
         return;
+    this.addActivity("undo");
     this.addActivity("redo");
+    var isFirst = true;
     while (this.redoStack_.length) {
         var state = this.redoStack_.pop();
-        state.func.apply(state.caller, state.params);
+        var ret = state.func.apply(state.caller, state.params);
+
+        if (isFirst) {
+            ret.isPass(false);
+            isFirst = !isFirst;
+        } else ret.isPass(true);
+
         if (state.isPass !== true)
             break;
     }
@@ -149,11 +170,11 @@ Entry.StateManager.prototype.redo = function() {
  */
 Entry.StateManager.prototype.updateView = function () {
     if (this.undoButton && this.redoButton) {
-
         if (this.canUndo())
             this.undoButton.addClass('active');
         else
             this.undoButton.removeClass('active');
+
         if (this.canRedo())
             this.redoButton.addClass('active');
         else
