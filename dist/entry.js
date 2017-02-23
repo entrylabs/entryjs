@@ -5746,8 +5746,8 @@ Entry.Observer = function(c, b, e, d) {
   };
 })(Entry.Observer.prototype);
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, destroyBlockBelow:113, 
-selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, 
-variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
+destroyThreads:114, addThreads:115, selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, 
+variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
 Entry.Command = {};
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
@@ -5958,6 +5958,31 @@ Entry.Commander = function(c) {
   }, log:function(b, c, f) {
     return [["selector", b]];
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "category", "&0"], undo:"selectBlockMenu"};
+  c[b.destroyThreads] = {do:function() {
+    this.editor.board.code.getThreads().filter(function(b) {
+      return b.getFirstBlock().isDeletable();
+    }).forEach(function(b) {
+      b.destroy();
+    });
+  }, state:function() {
+    return [this.editor.board.code.getThreads().filter(function(b) {
+      return b.getFirstBlock().isDeletable();
+    }).map(function(b) {
+      return b.toJSON();
+    })];
+  }, log:function() {
+    return [];
+  }, undo:"addThreads"};
+  c[b.addThreads] = {do:function(b) {
+    var c = this.editor.board.code;
+    b.forEach(function(b) {
+      c.createThread(b);
+    });
+  }, state:function() {
+    return [];
+  }, log:function() {
+    return [];
+  }, undo:"destroyThreads"};
 })(Entry.Command);
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.containerSelectObject] = {do:function(b) {
@@ -25253,7 +25278,7 @@ Entry.Board.DRAG_RADIUS = 5;
     }}}, {activated:!0, option:{text:Lang.Blocks.tidy_up_block, enable:!this.readOnly, callback:function() {
       b.alignThreads();
     }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, enable:!this.readOnly, callback:function() {
-      b.code.clear(!0);
+      Entry.do("destroyThreads");
     }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome() && !Entry.isMobile(), option:{text:Lang.Menus.save_as_image_all, enable:!this.readOnly, callback:function() {
       var c = b.code.getThreads(), d = [];
       c.forEach(function(b, e) {

@@ -43,6 +43,8 @@ Entry.STATIC = {
         setFieldValue: 111,
         selectBlockMenu: 112,
         destroyBlockBelow: 113,
+        destroyThreads: 114,
+        addThreads: 115,
 
         selectObject: 201,
         objectEditButtonClick: 202,
