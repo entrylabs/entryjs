@@ -311,4 +311,49 @@ goog.require("Entry.STATIC");
         undo: "selectBlockMenu"
     };
 
+    c[COMMAND_TYPES.destroyThreads] = {
+        do: function() {
+            var threads =
+                this.editor.board.code.getThreads()
+                    .filter(function(t) {
+                        return t.getFirstBlock().isDeletable();
+                    })
+                    .forEach(function(t) {
+                        t.destroy();
+                    });
+        },
+        state: function() {
+            var threads =
+                this.editor.board.code.getThreads()
+                    .filter(function(t) {
+                        return t.getFirstBlock().isDeletable();
+                    })
+                    .map(function(t) {
+                        return t.toJSON();
+                    });
+
+            return [threads];
+        },
+        log: function() {
+            return [];
+        },
+        undo: 'addThreads'
+    };
+
+    c[COMMAND_TYPES.addThreads] = {
+        do: function(threads) {
+            var code = this.editor.board.code;
+            threads.forEach(function(t) {
+                code.createThread(t);
+            });
+        },
+        state: function() {
+            return [];
+        },
+        log: function() {
+            return [];
+        },
+        undo: 'destroyThreads'
+    };
+
 })(Entry.Command);

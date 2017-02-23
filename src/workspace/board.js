@@ -916,7 +916,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 option: {
                     text: Lang.Blocks.Paste_blocks,
                     enable: !!Entry.clipboard && !this.readOnly,
-                    callback: function(){
+                    callback: function() {
                         Entry.do('addThread', Entry.clipboard).value
                             .getFirstBlock().copyToClipboard();
                     }
@@ -937,8 +937,8 @@ Entry.Board.DRAG_RADIUS = 5;
                 option: {
                     text: Lang.Blocks.Clear_all_blocks,
                     enable: !this.readOnly,
-                    callback: function(){
-                        that.code.clear(true);
+                    callback: function() {
+                        Entry.do('destroyThreads');
                     }
                 }
             },
