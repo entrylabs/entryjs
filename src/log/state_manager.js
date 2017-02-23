@@ -120,6 +120,7 @@ Entry.StateManager.prototype.removeAllPictureCommand = function () {
         return !(stack.message >= 400 && stack.message < 500);
     });
 };
+
 /**
  * Do undo
  */
