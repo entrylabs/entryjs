@@ -253,6 +253,9 @@ Entry.Scene.prototype.addScene = function(scene, index) {
     Entry.stage.objectContainers.push(Entry.stage.createObjectContainer(scene));
     this.selectScene(scene);
     this.updateView();
+
+    if (Entry.creationChangedEvent)
+        Entry.creationChangedEvent.notify();
     return scene;
 };
 
