@@ -7,81 +7,89 @@ goog.require("Entry.Command");
 goog.require("Entry.STATIC");
 
 (function(c) {
-    c.addThread = {
-        type: Entry.STATIC.COMMAND_TYPES.addThread,
+    var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+
+    c[COMMAND_TYPES.addThread] = {
         do: function(thread) {
             return this.editor.board.code.createThread(thread);
         },
         state: function(thread) {
-            if (thread.length)
-                thread[0].id = Entry.Utils.generateId();
+            if (thread.length) {
+                var block = thread[0];
+                if (this.editor.board.findBlock(block.id))
+                    block.id = Entry.Utils.generateId();
+            }
             return [thread];
         },
         log: function(thread) {
-            var lastThread = this.editor.board.code.getThreads().pop();
+            if (thread instanceof Entry.Thread)
+                thread = thread.toJSON();
             return [
-                c.addThread.type,
-                ['thread', lastThread.stringify()],
-                ['code', this.editor.board.code.stringify()]
+                ['thread', thread]
             ];
         },
-        undo: "destroyThread"
+        undo: "destroyThread",
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        validate: false,
+        dom: ['playground', 'blockMenu', '&0']
     };
 
-    c.destroyThread = {
-        type: Entry.STATIC.COMMAND_TYPES.destroyThread,
+    c[COMMAND_TYPES.destroyThread] = {
         do: function(thread) {
-            var blockId = thread[0].id;
-            var block = this.editor.board.findById(blockId);
+            var block;
+            if (thread instanceof Entry.Thread)
+                block = thread.getFirstBlock();
+            else
+                block = this.editor.board.findBlock(thread[0].id);
             block.destroy(true, true);
         },
         state: function(thread) {
-            var blockId = thread[0].id;
-            var block = this.editor.board.findById(blockId);
-            return [block.thread.toJSON()];
+            if (!(thread instanceof Entry.Thread))
+                thread = this.editor.board.findBlock(thread[0].id).thread;
+            return [thread.toJSON()];
         },
-        log: function(thread) {
-            var blockId = thread[0].id;
-            var block = this.editor.board.findById(blockId);
+        log: function(thread, callerName) {
+            var block;
+            if (thread instanceof Entry.Thread) {
+                block = thread.getFirstBlock();
+            } else block = thread[0];
+
             return [
-                c.destroyThread.type,
-                ['blockId', blockId],
-                ['code', this.editor.board.code.stringify()]
+                ['block', block.pointer ?  block.pointer() : block],
+                ['thread', thread.toJSON ? thread.toJSON() : thread],
+                ['callerName', callerName]
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        validate: false,
+        restrict: function(data, domQuery, callback) {
+            callback();
+        },
+        dom: ['playground', 'board', '&0'],
         undo: "addThread"
     };
 
-    c.destroyBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.destroyBlock,
+    c[COMMAND_TYPES.destroyBlock] = {
         do: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             block.doDestroy(true);
         },
         state: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             return [block.toJSON(), block.pointer()];
         },
         log: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             return [
-                c.destroyBlock.type,
-                ['blockId', block.id],
-                ['code', this.editor.board.code.stringify()]
+                ['block', block.pointer ? block.pointer() : block]
             ];
         },
         undo: "recoverBlock"
     };
 
-    c.recoverBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.recoverBlock,
+    c[COMMAND_TYPES.recoverBlock] = {
         do: function(blockModel, pointer) {
             var block = this.editor.board.code.createThread([blockModel]).getFirstBlock();
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
             this.editor.board.insert(block, pointer);
         },
         state: function(block) {
@@ -90,31 +98,27 @@ goog.require("Entry.STATIC");
             return [block];
         },
         log: function(block, pointer) {
-            block = this.editor.board.findById(block.id);
+            block = this.editor.board.findBlock(block.id);
             return [
-                c.recoverBlock.type,
-                ['block', block.stringify()],
-                ['pointer', pointer],
-                ['code', this.editor.board.code.stringify()]
+                ['block', block],
+                ['pointer', pointer]
             ];
         },
         undo: "destroyBlock"
     };
 
-    c.insertBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.insertBlock,
+    c[COMMAND_TYPES.insertBlock] = {
         do: function(block, targetBlock, count) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            console.log(targetBlock)
+            block = this.editor.board.findBlock(block);
             this.editor.board.insert(block, targetBlock, count);
         },
         state: function(block, targetBlock) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             var data = [
-                block.id
+                block
             ];
-            var pointer = block.targetPointer()
+            var pointer = block.targetPointer();
             data.push(pointer);
 
             if (typeof block !== "string" && block.getBlockType() === "basic")
@@ -122,22 +126,35 @@ goog.require("Entry.STATIC");
             return data;
         },
         log: function(block, targetBlock, count) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
+            if (!(targetBlock instanceof Array))
+                targetBlock = targetBlock.pointer();
 
-            return [
-                c.insertBlock.type,
-                ['blockId', block.id],
-                ['targetPointer', block.targetPointer()],
-                ['count', count],
-                ['code', this.editor.board.code.stringify()]
+            var result = [
+                ['block', block ? block.pointer() : ""],
+                ['targetPointer', targetBlock]
             ];
+            if (count)
+                result.push(['count', count ? count : null]);
+            return result;
         },
-        undo: "insertBlock"
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: "insertBlock",
+        restrict: function(data, domQuery, callback) {
+            callback();
+            return new Entry.Tooltip([{
+                content: "여기 밑에 끼워넣으셈",
+                target: domQuery,
+                direction: "right"
+            }], {
+                callBack: function() {
+                }
+            });
+        },
+        dom: ['playground', 'board', '&1']
     };
 
-    c.separateBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.separateBlock,
+    c[COMMAND_TYPES.separateBlock] = {
         do: function(block) {
             if (block.view)
                 block.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
@@ -147,62 +164,58 @@ goog.require("Entry.STATIC");
             var data = [
                 block.id
             ];
-            var pointer = block.targetPointer()
+            var pointer = block.targetPointer();
             data.push(pointer);
 
             if (block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
             return data;
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         log: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
 
             return [
-                c.separateBlock.type,
-                ['blockId', block.id],
-                ['x', block.x], ['y', block.y],
-                ['code', this.editor.board.code.stringify()]
+                ['block', block.pointer()],
+                ['x', block.x], ['y', block.y]
             ];
         },
-        undo: "insertBlock"
+        validate: false,
+        undo: "insertBlock",
+        dom: ['playground', 'board', '&0']
     };
 
-    c.moveBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.moveBlock,
+    c[COMMAND_TYPES.moveBlock] = {
         do: function(block, x, y) {
             if (x !== undefined) { // do from undo stack
-                block = this.editor.board.findById(block);
+                block = this.editor.board.findBlock(block);
                 block.moveTo(x, y);
             } else {
                 block._updatePos();
             }
         },
         state: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             return [
-                block.id,
+                block,
                 block.x,
                 block.y
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         log: function(block, x, y) {
+            block = this.editor.board.findBlock(block);
             return [
-                c.moveBlock.type,
-                ['blockId', block.id],
-                ['x', block.x], ['y', block.y],
-                ['code', this.editor.board.code.stringify()]
+                ['block', block.pointer()],
+                ['x', block.x], ['y', block.y]
             ];
         },
         undo: "moveBlock"
     };
 
-    c.cloneBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.cloneBlock,
+    c[COMMAND_TYPES.cloneBlock] = {
         do: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             this.editor.board.code.createThread(block.copy());
         },
         state: function(block) {
@@ -211,21 +224,17 @@ goog.require("Entry.STATIC");
             return [block];
         },
         log: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             var lastThread = this.editor.board.code.getThreads().pop();
             return [
-                c.cloneBlock.type,
-                ['blockId', block.id],
-                ['thread', lastThread.stringify()],
-                ['code', this.editor.board.code.stringify()]
+                ['block', block.pointer()],
+                ['thread', lastThread.stringify()]
             ];
         },
         undo: "uncloneBlock"
     };
 
-    c.uncloneBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.uncloneBlock,
+    c[COMMAND_TYPES.uncloneBlock] = {
         do: function(block) {
             var threads = this.editor.board.code.getThreads();
             var lastBlock = threads.pop().getFirstBlock();
@@ -239,16 +248,13 @@ goog.require("Entry.STATIC");
             var blockId = this._tempStorage;
             this._tempStorage = null;
             return [
-                c.uncloneBlock.type,
-                ['blockId', blockId],
-                ['code', this.editor.board.code.stringify()]
+                ['blockId', blockId]
             ];
         },
         undo: "cloneBlock"
     };
 
-    c.scrollBoard = {
-        type: Entry.STATIC.COMMAND_TYPES.scrollBoard,
+    c[COMMAND_TYPES.scrollBoard] = {
         do: function(dx, dy, isPass) {
             if (!isPass)
                 this.editor.board.scroller._scroll(dx, dy);
@@ -259,16 +265,15 @@ goog.require("Entry.STATIC");
         },
         log: function(dx, dy) {
             return [
-                c.scrollBoard.type,
                 ['dx', dx], ['dy', dy]
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         undo: "scrollBoard"
     };
 
-    c.setFieldValue = {
-        type: Entry.STATIC.COMMAND_TYPES.setFieldValue,
-        do: function(block, field, pointer, oldValue, newValue) {
+    c[COMMAND_TYPES.setFieldValue] = {
+        do: function(block, field, pointer, oldValue, newValue) { //TODO
             field.setValue(newValue, true);
         },
         state: function(block, field, pointer, oldValue, newValue) {
@@ -276,13 +281,121 @@ goog.require("Entry.STATIC");
         },
         log: function(block, field, pointer, oldValue, newValue) {
             return [
-                c.setFieldValue.type,
                 ['pointer', pointer],
-                ['newValue', newValue],
-                ['code', this.editor.board.code.stringify()]
+                ['newValue', newValue]
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['playground', 'board', '&0'],
         undo: "setFieldValue"
+    };
+
+    c[COMMAND_TYPES.selectBlockMenu] = {
+        do: function(selector, doNotFold, doNotAlign) {
+            var blockMenu = Entry.getMainWS().blockMenu;
+            blockMenu.selectMenu(selector, doNotFold, doNotAlign);
+            blockMenu.align();
+        },
+        state: function(selector, doNotFold, doNotAlign) {
+            var blockMenu = Entry.getMainWS().blockMenu;
+            return [blockMenu.lastSelector, doNotFold, doNotAlign];
+        },
+        log: function(selector, doNotFold, doNotAlign) {
+            return [
+                ['selector', selector]
+            ];
+        },
+        skipUndoStack: true,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['playground', 'blockMenu', 'category', '&0'],
+        undo: "selectBlockMenu"
+    };
+
+    c[COMMAND_TYPES.destroyThreads] = {
+        do: function() {
+            var threads =
+                this.editor.board.code.getThreads()
+                    .filter(function(t) {
+                        return t.getFirstBlock().isDeletable();
+                    })
+                    .forEach(function(t) {
+                        t.destroy();
+                    });
+        },
+        state: function() {
+            var threads =
+                this.editor.board.code.getThreads()
+                    .filter(function(t) {
+                        return t.getFirstBlock().isDeletable();
+                    })
+                    .map(function(t) {
+                        return t.toJSON();
+                    });
+
+            return [threads];
+        },
+        log: function() {
+            return [];
+        },
+        undo: 'addThreads'
+    };
+
+    c[COMMAND_TYPES.addThreads] = {
+        do: function(threads) {
+            var code = this.editor.board.code;
+            threads.forEach(function(t) {
+                code.createThread(t);
+            });
+        },
+        state: function() {
+            return [];
+        },
+        log: function() {
+            return [];
+        },
+        undo: 'destroyThreads'
+    };
+
+    c[COMMAND_TYPES.destroyBlockBelow] = {
+        do: function(block) {
+            block = this.editor.board.findBlock(block);
+            block.doDestroyBelow(true);
+        },
+        state: function(block) {
+            block = this.editor.board.findBlock(block);
+            var thread = block.thread;
+            var data;
+            if (thread instanceof Entry.Thread) {
+                data = thread.toJSON(false, block);
+            } else data = [block.toJSON()];
+
+            return [
+                data,
+                block.targetPointer()
+            ];
+        },
+        log: function(block) {
+            return [
+            ];
+        },
+        undo: "recoverBlockBelow"
+    };
+
+    c[COMMAND_TYPES.recoverBlockBelow] = {
+        do: function(thread, targetPointer) {
+            var board = this.editor.board;
+            var thread = board.code.createThread(thread);
+            board.insert(thread.getFirstBlock(), targetPointer);
+        },
+        state: function(thread, targetPointer) {
+            return [
+                thread[0]
+            ];
+        },
+        log: function(thread, targetPointer) {
+            return [];
+        },
+        undo: "destroyBlockBelow"
     };
 
 })(Entry.Command);

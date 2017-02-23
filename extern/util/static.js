@@ -94,6 +94,11 @@ EntryStatic.getAllBlocks = function() {
                 "when_scene_start",
                 "start_scene",
                 "start_neighbor_scene",
+                "check_object_property",
+                "check_block_execution",
+                "check_lecture_goal",
+                "wildcard_string",
+                "wildcard_boolean"
             ]
         },
         {
@@ -552,7 +557,7 @@ EntryStatic.getAllBlocks = function() {
                 "smartBoard_set_servo_angle",
                 "smartBoard_set_number_eight_pin",
                 "smartBoard_set_gs1_pwm",
-                
+
                 //robotori Add 20161129 begin
                 "robotori_digitalInput",
                 "robotori_analogInput",
@@ -628,7 +633,7 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_dronefighter_drive_controller_vibrator_on_reserve",
                 "byrobot_dronefighter_drive_controller_vibrator_delay",
                 "byrobot_dronefighter_drive_controller_vibrator_reserve",
-                
+
                 // BYROBOT - DroneFighter Flight
                 "byrobot_dronefighter_flight_drone_value_attitude",
                 "byrobot_dronefighter_flight_drone_value_etc",
@@ -2756,6 +2761,17 @@ EntryStatic.COMMAND_TYPES = {
     'do': 301,
     'undo': 302,
     'redo': 303
+};
+
+EntryStatic.getQuestionCategoryData = function() {
+    return {
+        category: 'dummy',
+        blocks: [
+            'hidden',
+            'hidden_string',
+            'hidden_boolean'
+        ]
+    }
 };
 
 // for server node js code

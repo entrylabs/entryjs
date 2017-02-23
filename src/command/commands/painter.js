@@ -7,8 +7,9 @@ goog.require("Entry.Command");
 goog.require("Entry.STATIC");
 
 (function(c) {
-    c.editPicture = {
-        type: Entry.STATIC.COMMAND_TYPES.editPicture,
+    var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+
+    c[COMMAND_TYPES.editPicture] = {
         do: function(action, lc) {
             if (Entry.playground.painter.lc.canRedo())
                 Entry.playground.painter.lc.redo()
@@ -18,10 +19,11 @@ goog.require("Entry.STATIC");
         log: function(objectId) {
             return [objectId];
         },
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         undo: "uneditPicture"
     };
 
-    c.uneditPicture = {
+    c[COMMAND_TYPES.uneditPicture] = {
         type: Entry.STATIC.COMMAND_TYPES.uneditPicture,
         do: function(action, lc) {
             Entry.playground.painter.lc.undo()
@@ -31,26 +33,27 @@ goog.require("Entry.STATIC");
         log: function(objectId) {
             return [objectId];
         },
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         undo: "editPicture"
     };
 
-    c.processPicture = {
-        type: Entry.STATIC.COMMAND_TYPES.processPicture,
+    c[COMMAND_TYPES.processPicture] = {
         do: function(action, lc) {
-            if (Entry.playground.painter.lc.canRedo())
+            if (Entry.playground.painter.lc.canRedo()) {
                 Entry.playground.painter.lc.redo()
+            }
         },
         state: function(objectId) {
         },
         log: function(objectId) {
             return [objectId];
         },
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         undo: "unprocessPicture",
         isPass: true
     };
 
-    c.unprocessPicture = {
-        type: Entry.STATIC.COMMAND_TYPES.unprocessPicture,
+    c[COMMAND_TYPES.unprocessPicture] = {
         do: function(action, lc) {
             Entry.playground.painter.lc.undo()
         },
@@ -59,6 +62,7 @@ goog.require("Entry.STATIC");
         log: function(objectId) {
             return [objectId];
         },
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         undo: "processPicture",
         isPass: true
     };

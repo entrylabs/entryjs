@@ -3,10 +3,15 @@
 goog.provide("Entry.Tooltip");
 
 goog.require("Entry.Dom");
+goog.require("Entry.Utils");
 
 Entry.Tooltip = function(data, opts) {
     this.data = data instanceof Array ? data : [data];
-    this.opts = opts || {};
+    this.opts = opts || {
+        dimmed: true,
+        restirct: false
+    };
+    this._rendered = false;
     this._tooltips = [];
     this._indicators = [];
 
@@ -15,7 +20,7 @@ Entry.Tooltip = function(data, opts) {
 
     this.render();
 
-    this._resizeEventFunc =Entry.Utils.debounce(function() {
+    this._resizeEventFunc = Entry.Utils.debounce(function() {
         this.alignTooltips();
     }.bind(this), 200);
     Entry.addEventListener('windowResized', this._resizeEventFunc);
@@ -23,22 +28,51 @@ Entry.Tooltip = function(data, opts) {
 
 (function(p) {
     p.render = function() {
+        if (this._rendered) return;
+
+        this._convertDoms();
+
         if (this.opts.dimmed)
             this.renderBG();
 
-        this.renderTooltips();
+        var datum = this.data[0].target;
+        if (typeof datum !== 'string' && datum.length) {
+            this.opts.restrict && this.opts.dimmed && Entry.Curtain.show(datum.get(0));
+            this.renderTooltips();
+            this._rendered = true;
+            if (this.opts.restrict)
+                this.restrictAction();
+        }
+    };
+
+    p._convertDoms = function() {
+        this.data.map(function(d) {
+            if (d.target instanceof Array)
+                d.target = Entry.getDom(d.target);
+            var dom = $(d.target);
+            if (dom.length)
+                d.target =  dom;
+        });
     };
 
     p.renderBG = function() {
-        this._bg = Entry.Dom("div", {
-            classes: [
-                "entryDimmed",
-                "entryTooltipBG"
-            ],
-            parent: $(document.body)
-        });
+        if (this.opts.restrict) {
+            this._bg = Entry.Dom("div", {
+                classes: [
+                ],
+                parent: $(document.body)
+            });
+        } else {
+            this._bg = Entry.Dom("div", {
+                classes: [
+                    "entryDimmed",
+                    "entryTooltipBG"
+                ],
+                parent: $(document.body)
+            });
 
-        this._bg.bindOnClick(this.dispose.bind(this))
+            this._bg.bindOnClick(this.dispose.bind(this));
+        }
     };
 
     p.renderTooltips = function() {
@@ -46,7 +80,10 @@ Entry.Tooltip = function(data, opts) {
     };
 
     p.alignTooltips = function() {
+        if (!this._rendered) return;
+
         this.data.map(this._alignTooltip.bind(this));
+        this.opts.dimmed && Entry.Curtain.align();
     };
 
     p._renderTooltip = function(data) {
@@ -70,7 +107,7 @@ Entry.Tooltip = function(data, opts) {
         if (this.isIndicator)
             data.indicator = this.renderIndicator();
 
-        tooltipDom.html(data.content.replace(/\n/gi, "<br>"));
+        tooltipDom.html(data.content);
         this._tooltips.push(tooltipWrapper);
         data.wrapper = tooltipWrapper;
         data.dom = tooltipDom;
@@ -78,7 +115,7 @@ Entry.Tooltip = function(data, opts) {
     };
 
     p._alignTooltip = function(data) {
-        var pos = data.target.offset()
+        var pos = data.target.offset();
         var bound = data.target.get(0).getBoundingClientRect();
         if (this.isIndicator) {
             data.indicator.css({
@@ -113,7 +150,7 @@ Entry.Tooltip = function(data, opts) {
     p.renderIndicator = function(left, top) {
         var indicator = Entry.Dom("div", {
             classes: [
-                 "entryTooltipIndicator"
+                "entryTooltipIndicator"
             ],
             parent: $(document.body)
         });
@@ -122,15 +159,26 @@ Entry.Tooltip = function(data, opts) {
         return indicator;
     };
 
+
     p.dispose = function() {
         if (this._bg)
             this._bg.remove();
+        if (this.opts.restrict) {
+            Entry.Utils.allowAction();
+            this.opts.dimmed && Entry.Curtain.hide();
+        }
         if (this.opts.callBack)
             this.opts.callBack.call();
         while (this._tooltips.length)
             this._tooltips.pop().remove();
         while (this._indicators.length)
             this._indicators.pop().remove();
+            Entry.Curtain.hide();
         Entry.removeEventListener('windowResized', this._resizeEventFunc);
+    };
+
+    p.restrictAction = function() {
+        var targets = this.data.map(function(d) {return d.target});
+        Entry.Utils.restrictAction(targets, this.dispose.bind(this));
     };
 })(Entry.Tooltip.prototype);

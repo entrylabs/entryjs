@@ -253,12 +253,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     };
 
     p.getThread = function() {
-         return this;
+        return this;
     };
 
     p.getValueBlock = function() {return this._valueBlock;};
 
     p.pointer = function(pointer) {
+        pointer = pointer || [];
         pointer.unshift(this._index);
         pointer.unshift(Entry.PARAM);
         return this._block.pointer(pointer);

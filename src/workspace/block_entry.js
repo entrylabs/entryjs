@@ -27288,7 +27288,6 @@ Entry.block = {
             "VALUE": 0
         },
         "class": "dplay_get",
-        "isNotFor": ["dplay"],
         "func": function (sprite, script) {
             var signal = script.getValue("VALUE", script);
             return Entry.hw.getAnalogPortValue(signal[1]);
@@ -32443,6 +32442,310 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 0
         },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {}
+    },
+    "check_object_property": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "%1 가 %2 %3 %4 %5 %6",
+        "statements": [],
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "menuName": "sprites",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["언젠가", 0],
+                    ["지금", 1]
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["x", "x"],
+                    ["y", "y"],
+                    ["크기", "size"],
+                    ["방향", "rotation"],
+                    ["이동 방향", "direction"],
+                    ["텍스트", "text"]
+                ],
+                "value": "x",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "=", "EQUAL" ],
+                    [ ">", "GREATER" ],
+                    [ "<", "LESS" ],
+                    [ "≥", "GREATER_OR_EQUAL" ],
+                    [ "≤", "LESS_OR_EQUAL" ]
+                ],
+                "value": "EQUAL",
+                "fontSize": 11,
+                noArrow: true
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "check_object_property"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var obj = Entry.container.getObject(this.block.params[0]),
+                flow = this.block.params[1],
+                propertyKey = this.block.params[2],
+                rightValue = this.getParam(4);
+            propertyKey = propertyKey[0].toUpperCase() + propertyKey.substr(1);
+            var leftValue = obj.entity["get" + propertyKey].call(obj.entity),
+                returnVal;
+
+            switch(this.block.params[3]) {
+                case 'EQUAL':
+                    returnVal = leftValue == rightValue;
+                    break;
+                case 'GREATER':
+                    returnVal = Number(leftValue) > Number(rightValue);
+                    break;
+                case 'LESS':
+                    returnVal = Number(leftValue) < Number(rightValue);
+                    break;
+                case 'GREATER_OR_EQUAL':
+                    returnVal = Number(leftValue) >= Number(rightValue);
+                    break;
+                case 'LESS_OR_EQUAL':
+                    returnVal = Number(leftValue) <= Number(rightValue);
+                    break;
+            }
+            if (returnVal)
+                return;
+            else if (flow === 0)
+                return Entry.STATIC.BREAK;
+            else
+                this.die();
+        }
+    },
+    "check_lecture_goal": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "목표 %1 %2 %3",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": 0
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["달성", 1],
+                    ["실패", 0]
+                ],
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {
+            "dataAdd": [
+                function(block) {
+                    Entry.registerAchievement(block);
+                }
+            ]
+        },
+        "def": {
+            "params": [
+                0,
+                1
+            ],
+            "type": "check_lecture_goal"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            Entry.achieve(this.block.params[1], this.block.params[0] + "");
+            this.die();
+        }
+    },
+    "check_block_execution": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_loop",
+        "template": "%1 에서 아래 블록이 %2 실행되었는가 %3",
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "menuName": "sprites",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["비슷하게", 0],
+                    ["똑같이", 1]
+                ],
+                "value": "16",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                0
+            ],
+            "type": "check_block_execution"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            if (this.listener) {
+                if (this.isDone) {
+                    this.listener.destroy();
+                    return;
+                }
+                else
+                    return Entry.STATIC.BREAK;
+            }
+            var code = Entry.container.getObject(this.block.params[0]).script,
+                accuracy = this.block.params[1],
+                statements = this.block.statements[0].getBlocks(),
+                lastBlock = null;
+            this.isDone = false;
+            var index = 0;
+            this.listener = code.watchEvent.attach(this, function(blocks) { //dangerous
+                blocks = blocks.concat();
+                var block;
+                while (blocks.length && index < statements.length) {
+                    block = blocks.shift();
+                    if (block === lastBlock)
+                        continue;
+                    if (accuracy === 0 && statements[index].type === block.type) {
+                        index++;
+                    } else if (accuracy === 1 && statements[index].isSameParamWith(block)) {
+                        index++;
+                    } else {
+                        index = 0;
+                    }
+                }
+                lastBlock = block;
+                if (index === statements.length)
+                    this.isDone = true;
+            })
+            return Entry.STATIC.BREAK;
+        }
+    },
+    "wildcard_string": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_string_field",
+        "template": "    *    ",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "wildcard_string"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {}
+    },
+    "wildcard_boolean": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_boolean_field",
+        "template": "    *    ",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "wildcard_boolean"
+        },
+        "paramsKeyMap": {},
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {}
+    },
+    "hidden_string": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_string_field",
+        "template": "    ?    ",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "hidden_string"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {}
+    },
+    "hidden_boolean": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_boolean_field",
+        "template": "    ?    ",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "hidden_boolean"
+        },
+        "paramsKeyMap": {},
         "class": "etc",
         "isNotFor": [],
         "func": function (sprite, script) {}

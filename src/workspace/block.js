@@ -456,20 +456,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.doDestroy = function(animate) {
-        var id = this.id;
-        var positionX = this.x;
-        var positionY = this.y;
-
         this.destroy(animate);
         this.getCode().changeEvent.notify();
         return this;
     };
 
     p.doDestroyBelow = function(animate) {
-        var id = this.id;
-        var positionX = this.x;
-        var positionY = this.y;
-
         this.destroy(animate, true);
         this.getCode().changeEvent.notify();
         return this;
@@ -571,9 +563,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.pointer = function(pointer) {
-        if (!pointer)
-            pointer = [];
-        return this.thread.pointer(pointer, this);
+        return this.thread.pointer(pointer || [], this);
     };
 
     p.targetPointer = function() {
@@ -584,7 +574,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.getDataByPointer = function(pointer) {
-        pointer = pointer.concat()
+        pointer = pointer.concat();
         var data = this.params[pointer.shift()];
         if (pointer.length)
             if (data.getDataByPointer)
@@ -633,6 +623,28 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
     p.isInOrigin = function() {
         return this.x === 0 && this.y === 0;
+    };
+
+    p.isSameParamWith = function(target) {
+        if (target.type.substr(0,8) === "wildcard" ||
+            this.type.substr(0,8) === "wildcard")
+            return true;
+        if (target.type !== this.type)
+            return false;
+        for (var i = 0; i < this.params.length; i++) {
+            var param = this.params[i];
+            if (param instanceof Entry.Block) {
+                if (!param.isSameParamWith(target.params[i]))
+                    return false;
+            } else {
+                var l = this.params[i], r = target.params[i];
+                l = typeof l === "number" ? l + "" : l;
+                r = typeof r === "number" ? r + "" : r;
+                if (l !== r)
+                    return false;
+            }
+        }
+        return true;
     };
 
     p.paramsBackup = function() {
