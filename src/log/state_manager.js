@@ -112,6 +112,14 @@ Entry.StateManager.prototype.getLastRedoCommand = function() {
     return this.redoStack_[this.redoStack_.length - 1];
 };
 
+Entry.StateManager.prototype.removeAllPictureCommand = function () {
+    this.undoStack_ = this.undoStack_.filter(function (stack) {
+        return !(stack.message >= 400 && stack.message < 500);
+    });
+    this.redoStack_ = this.redoStack_.filter(function (stack) {
+        return !(stack.message >= 400 && stack.message < 500);
+    });
+};
 /**
  * Do undo
  */

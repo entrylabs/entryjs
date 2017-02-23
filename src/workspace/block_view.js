@@ -673,7 +673,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     case gs.REMOVE:
                         createjs.Sound.play('entryDelete');
                         if (!fromBlockMenu) {
-                            this.block.doDestroyBelow(false);
+                            Entry.do(
+                                'destroyBlockBelow',
+                                this.block
+                            );
                         } else {
                             this.block.destroy(false, true);
                         }

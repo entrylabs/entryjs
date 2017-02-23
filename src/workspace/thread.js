@@ -115,13 +115,18 @@ Entry.Thread = function(thread, code, parent) {
         return newThread;
     };
 
-    p.toJSON = function(isNew, start, excludeData) {
+    p.toJSON = function(isNew, index, excludeData) {
         var array = [];
-        start = start === undefined ? 0 : start;
-        for (var i = start; i < this._data.length; i++) {
-            var block = this._data[i];
+
+        if (index === undefined) index = 0;
+        else if (index instanceof Entry.Block)
+            index = this.indexOf(index);
+
+        var data = this._data;
+        for (index; index < data.length; index++) {
+            var block = data[index];
             if (block instanceof Entry.Block)
-                array.push(this._data[i].toJSON(isNew, excludeData));
+                array.push(block.toJSON(isNew, excludeData));
         }
         return array;
     };

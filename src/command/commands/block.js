@@ -356,4 +356,46 @@ goog.require("Entry.STATIC");
         undo: 'destroyThreads'
     };
 
+    c[COMMAND_TYPES.destroyBlockBelow] = {
+        do: function(block) {
+            block = this.editor.board.findBlock(block);
+            block.doDestroyBelow(true);
+        },
+        state: function(block) {
+            block = this.editor.board.findBlock(block);
+            var thread = block.thread;
+            var data;
+            if (thread instanceof Entry.Thread) {
+                data = thread.toJSON(false, block);
+            } else data = [block.toJSON()];
+
+            return [
+                data,
+                block.targetPointer()
+            ];
+        },
+        log: function(block) {
+            return [
+            ];
+        },
+        undo: "recoverBlockBelow"
+    };
+
+    c[COMMAND_TYPES.recoverBlockBelow] = {
+        do: function(thread, targetPointer) {
+            var board = this.editor.board;
+            var thread = board.code.createThread(thread);
+            board.insert(thread.getFirstBlock(), targetPointer);
+        },
+        state: function(thread, targetPointer) {
+            return [
+                thread[0]
+            ];
+        },
+        log: function(thread, targetPointer) {
+            return [];
+        },
+        undo: "destroyBlockBelow"
+    };
+
 })(Entry.Command);
