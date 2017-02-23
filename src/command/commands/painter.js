@@ -39,8 +39,9 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.processPicture] = {
         do: function(action, lc) {
-            if (Entry.playground.painter.lc.canRedo())
+            if (Entry.playground.painter.lc.canRedo()) {
                 Entry.playground.painter.lc.redo()
+            }
         },
         state: function(objectId) {
         },

@@ -110,6 +110,9 @@ p.changePicture = function(picture) {
     this.file.mode = 'edit';
 
     this.addPicture(picture, true);
+    // INFO: picture 변경시마다 undoStack 리셋
+    this.lc.undoStack = [];
+    Entry.stateManager.removeAllPictureCommand();
 };
 
 p.addPicture = function(picture, isOriginal) {
