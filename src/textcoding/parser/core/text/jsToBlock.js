@@ -853,14 +853,15 @@ Entry.JsToBlockParser = function(syntax, parentParser) {
             }
 
             if (value.type !== paramType && this._parentParser) {
-                var title = '경고';
+                var title = Lang.Msgs.warn;
                 //lineNubmer start from 0
                 var lineNumber = this._parentParser
                                     .getLineNumber(node.start, node.end)
                                     .from.line + 1;
-                var content = callee.name +
-                                '(); 는 괄호 사이에 값이 입력될 필요가 없는 명령어 입니다. (line:' +
-                                lineNumber + ')';
+                var content = Lang.TextCoding.warn_unnecessary_arguments;
+                content = content
+                    .replace('&(calleeName)', callee.name)
+                    .replace('&(lineNumber)', lineNumber);
                 Entry.toast.warning(title, content);
             }
         }
