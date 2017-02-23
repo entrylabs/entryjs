@@ -20018,6 +20018,8 @@ Entry.Func.edit = function(b) {
   this.bindFuncChangeEvent();
   this.updateMenu();
   setTimeout(function() {
+    var a = Entry.block["func_" + b.id];
+    a && a.paramsBackupEvent && a.paramsBackupEvent.notify();
     this._backupContent = b.content.stringify();
   }.bind(this), 0);
 };
@@ -20035,6 +20037,7 @@ Entry.Func.initEditView = function(b) {
 Entry.Func.endEdit = function(b) {
   this.unbindFuncChangeEvent();
   this.unbindWorkspaceStateChangeEvent();
+  var a = this.targetFunc.id;
   this.targetFunc && this.targetFunc.content && this.targetFunc.content.destroyView();
   switch(b) {
     case "save":
@@ -20045,6 +20048,7 @@ Entry.Func.endEdit = function(b) {
   }
   this._backupContent = null;
   delete this.targetFunc;
+  (b = Entry.block["func_" + a]) && b.destroyParamsBackupEvent && b.destroyParamsBackupEvent.notify();
   this.updateMenu();
   Entry.Func.isEdit = !1;
 };
@@ -20088,7 +20092,7 @@ Entry.Func.syncFuncName = function(b) {
 };
 Entry.Func.cancelEdit = function() {
   if (this.targetFunc) {
-    this.targetFunc.block ? this._backupContent && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected);
+    this.targetFunc.block ? this._backupContent && (this.targetFunc.content.load(this._backupContent), Entry.generateFunctionSchema(this.targetFunc.id), Entry.Func.generateWsBlock(this.targetFunc, !0)) : (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected);
     Entry.variableContainer.updateList();
     var b = Entry.getMainWS();
     b && b.overlayModefrom == Entry.Workspace.MODE_VIMBOARD && (b = {}, b.boardType = Entry.Workspace.MODE_VIMBOARD, b.textType = Entry.Vim.TEXT_TYPE_PY, b.runType = Entry.Vim.WORKSPACE_MODE, Entry.getMainWS().setMode(b), Entry.variableContainer.functionAddButton_.addClass("disable"));
@@ -20187,52 +20191,61 @@ Entry.Func.prototype.generateBlock = function(b) {
   this.block = b.block;
   this.description = b.description;
 };
-Entry.Func.generateWsBlock = function(b) {
+Entry.Func.generateWsBlock = function(b, a) {
   this.unbindFuncChangeEvent();
   b = b ? b : this.targetFunc;
-  var a = b.content.getEventMap("funcDef")[0];
-  if (a) {
-    for (var d = a.params[0], c = 0, e = 0, f = [], g = "", a = b.hashMap, h = b.paramMap;d;) {
-      var k = d.params[0];
-      switch(d.type) {
+  var d = b.content.getEventMap("funcDef")[0];
+  if (d) {
+    for (var c = d.params[0], e = 0, f = 0, g = [], h = "", d = b.hashMap, k = b.paramMap, l = [];c;) {
+      var n = c.params[0];
+      switch(c.type) {
         case "function_field_label":
-          g = g + " " + k;
+          h = h + " " + n;
           break;
         case "function_field_boolean":
-          Entry.Mutator.mutate(k.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (c ? c : "")});
-          a[k.type] = !1;
-          h[k.type] = c + e;
-          c++;
-          f.push({type:"Block", accept:"boolean"});
-          g += " %" + (c + e);
+          Entry.Mutator.mutate(n.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (e ? e : "")});
+          d[n.type] = !1;
+          k[n.type] = e + f;
+          e++;
+          g.push({type:"Block", accept:"boolean"});
+          h += " %" + (e + f);
+          l.push(c.id);
           break;
         case "function_field_string":
-          Entry.Mutator.mutate(k.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (e ? e : "")}), a[k.type] = !1, h[k.type] = c + e, e++, g += " %" + (c + e), f.push({type:"Block", accept:"string"});
+          Entry.Mutator.mutate(n.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (f ? f : "")}), d[n.type] = !1, k[n.type] = e + f, f++, h += " %" + (e + f), g.push({type:"Block", accept:"string"}), l.push(c.id);
       }
-      d = d.getOutputBlock();
+      c = c.getOutputBlock();
     }
-    c++;
-    g += " %" + (c + e);
-    f.push({type:"Indicator", img:"block_icon/function_03.png", size:12});
-    d = "func_" + b.id;
-    c = Entry.block[d];
-    e = !1;
-    if (c.template !== g) {
-      e = !0;
-    } else {
-      if (c.params.length === f.length) {
-        for (h = 0;h < c.params.length - 1;h++) {
-          var k = c.params[h], l = f[h];
-          if (k.type !== l.type || k.accept !== l.accept) {
-            e = !0;
-            break;
-          }
+    e++;
+    h += " %" + (e + f);
+    g.push({type:"Indicator", img:"block_icon/function_03.png", size:12});
+    c = "func_" + b.id;
+    e = Entry.block[c].params.slice();
+    e.pop();
+    f = g.slice();
+    f.pop();
+    e = e.length;
+    k = f.length;
+    f = {};
+    if (k > e) {
+      if (e = b.outputBlockIds) {
+        for (f = 0;e[f] === l[f];) {
+          f++;
         }
+        for (k = 0;e[e.length - k - 1] === l[l.length - k - 1];) {
+          k++;
+        }
+        k = l.length - k - 1;
+        f = {type:"insert", startPos:f, endPos:k};
       }
+    } else {
+      f = k < e ? {type:"cut", pos:k} : {type:"noChange"};
     }
-    e && Entry.Mutator.mutate(d, {params:f, template:g});
-    for (var n in a) {
-      a[n] ? (f = -1 < n.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(n, {template:f})) : a[n] = !0;
+    f.isRestore = a;
+    b.outputBlockIds = l;
+    Entry.Mutator.mutate(c, {params:g, template:h}, f);
+    for (var m in d) {
+      d[m] ? (g = -1 < m.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(m, {template:g})) : d[m] = !0;
     }
     this.bindFuncChangeEvent(b);
   }
@@ -24062,7 +24075,6 @@ Entry.BlockView = function(b, a, d) {
     this._schema.deletable && this.block.setDeletable(this._schema.deletable);
     this._schema.copyable && this.block.setCopyable(this._schema.copyable);
     !1 !== this._schema.display && !1 !== b.display || this.set({display:!1});
-    this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
     e = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
     this._statements = [];
@@ -24168,10 +24180,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
       }
     }
-    if ((a = b.statements) && a.length) {
-      for (e = 0;e < a.length;e++) {
-        this._statements.push(new Entry.FieldStatement(a[e], this, e));
-      }
+    a = b.statements || [];
+    for (e = 0;e < a.length;e++) {
+      this._statements.push(new Entry.FieldStatement(a[e], this, e));
     }
     this.alignContent(!1);
   };
@@ -24184,16 +24195,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this._startContentRender();
   };
   b.changeType = function(a) {
-    this._schemaChangeEvent && this._schemaChangeEvent.destroy();
-    this._schema = Entry.block[a];
-    this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
+    this._schema = Entry.block[a || this.type];
     this._updateSchema();
   };
   b.alignContent = function(a) {
     !0 !== a && (a = !1);
     for (var b = 0, c = 0, e = 0, f = 0, g = 0, h = 0, k = 0;k < this._contents.length;k++) {
       var l = this._contents[k];
-      l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, c = l.box.y, b = 8) : (l.align(b, c, a), k === this._contents.length - 1 || l instanceof Entry.FieldText && 0 == l._text.length || (b += Entry.BlockView.PARAM_SPACE));
+      l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, c = l.box.y, b = 8) : (l.align(b, c, a), k === this._contents.length - 1 || l instanceof Entry.FieldText && 0 === l._text.length || (b += Entry.BlockView.PARAM_SPACE));
       l = l.box;
       0 !== f ? h = Math.max(1E6 * Math.round(l.height), h) : e = Math.max(l.height, e);
       b += l.width;
@@ -24394,7 +24403,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     "workspace" == Entry.type && a && !this.isInBlockMenu && a.forEach(function(a) {
       Entry.Utils.isFunction(a) && a(c);
     });
-    this._schemaChangeEvent && this._schemaChangeEvent.destroy();
   };
   b.getShadow = function() {
     this._shadow || (this._shadow = Entry.SVG.createElement(this.svgGroup.cloneNode(!0), {opacity:.5}), this.getBoard().svgGroup.appendChild(this._shadow));
@@ -24555,17 +24563,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     if (this.visible && this.display) {
       var a = this.block;
       this._updateContents();
-      var b = a.statements;
-      if (b) {
-        for (a = 0;a < b.length;a++) {
-          b[a].view.reDraw();
-        }
+      for (var b = a.statements || [], a = 0;a < b.length;a++) {
+        b[a].view.reDraw();
       }
-      if (b = this._extensions) {
-        for (a = 0;a < b.length;a++) {
-          var c = b[a];
-          c.updatePos && c.updatePos();
-        }
+      b = this._extensions || [];
+      for (a = 0;a < b.length;a++) {
+        var c = b[a];
+        c.updatePos && c.updatePos();
       }
     }
   };
@@ -26426,12 +26430,14 @@ Entry.GlobalSvg = {};
 Entry.Mutator = function() {
 };
 (function(b) {
-  b.mutate = function(a, b) {
-    var c = Entry.block[a];
-    void 0 === c.changeEvent && (c.changeEvent = new Entry.Event);
-    c.template = b.template;
-    c.params = b.params;
-    c.changeEvent.notify(1);
+  b.mutate = function(a, b, c) {
+    a = Entry.block[a];
+    void 0 === a.changeEvent && (a.changeEvent = new Entry.Event);
+    void 0 === a.paramsBackupEvent && (a.paramsBackupEvent = new Entry.Event);
+    void 0 === a.destroyParamsBackupEvent && (a.destroyParamsBackupEvent = new Entry.Event);
+    a.template = b.template;
+    a.params = b.params;
+    a.changeEvent.notify(1, c);
   };
 })(Entry.Mutator);
 (function(b) {
@@ -27550,6 +27556,7 @@ Entry.Block = function(b, a) {
   var d = this;
   Entry.Model(this, !1);
   this._schema = null;
+  b._backupParams && (this._backupParams = b._backupParams);
   this.setThread(a);
   this.load(b);
   var c = b.category;
@@ -27578,9 +27585,38 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     this.set(a);
     this.loadSchema();
   };
-  b.changeSchema = function(a) {
-    this.set({params:[]});
+  b.changeSchema = function(a, b) {
+    var c = [];
+    if (b) {
+      if (b.isRestore) {
+        c = this._backupParams || [], delete this._backupParams;
+      } else {
+        switch(b.type) {
+          case "noChange":
+            c = this.params;
+            break;
+          case "cut":
+            this.params.splice(b.pos);
+            c = this.params;
+            break;
+          case "insert":
+            for (var e = b.startPos, f = b.endPos, g = Entry.block[this.type].params, c = Array(g.length), h = 0;h < e;h++) {
+              c[h] = this.params[h];
+            }
+            e = f - e + 1;
+            for (h = f + 1;h < g.length;h++) {
+              c[h] = this.params[h - e];
+            }
+          ;
+        }
+      }
+    }
+    c.forEach(function(a) {
+      a instanceof Entry.Block && a.destroyView();
+    });
+    this.set({params:c});
     this.loadSchema();
+    this.view && this.view.changeType();
   };
   b.getSchema = function() {
     this._schema || this.loadSchema();
@@ -27589,6 +27625,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   b.loadSchema = function() {
     if (this._schema = Entry.block[this.type]) {
       !this._schemaChangeEvent && this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this.changeSchema));
+      !this._paramsBackupEvent && this._schema.paramsBackupEvent && (this._paramsBackupEvent = this._schema.paramsBackupEvent.attach(this, this.paramsBackup));
+      !this._destroyParamsBackupEvent && this._schema.destroyParamsBackupEvent && (this._destroyParamsBackupEvent = this._schema.destroyParamsBackupEvent.attach(this, this.destroyParamsBackup));
       var a = this._schema.events;
       if (a) {
         for (var b in a) {
@@ -27614,6 +27652,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   b.changeType = function(a) {
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
+    this._backupEvent && this._backupEvent.destroy();
+    this._destroyBackupEvent && this._destroyBackupEvent.destroy();
     this.set({type:a});
     this.loadSchema();
     this.view && this.view.changeType(a);
@@ -27663,6 +27703,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     c.movable = this.movable;
     c.deletable = this.deletable;
     c.readOnly = this.readOnly;
+    this._backupParams && (c._backupParams = this._backupParams.map(function(a) {
+      return a instanceof Entry.Block ? a.toJSON() : a;
+    }));
     b && b instanceof Array && b.forEach(function(a) {
       delete c[a];
     });
@@ -27692,6 +27735,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       !this.doNotSplice && g.spliceBlock ? g.spliceBlock(this) : delete this.doNotSplice;
       this.view && this.view.destroy(a);
       this._schemaChangeEvent && this._schemaChangeEvent.destroy();
+      this._paramsBackupEvent && this._paramsBackupEvent.destroy();
+      this._destroyParamsBackupEvent && this._destroyParamsBackupEvent.destroy();
       (a = this.events.dataDestroy) && c.object && a.forEach(function(a) {
         Entry.Utils.isFunction(a) && a.apply(e, [e, k]);
       });
@@ -27862,6 +27907,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   b.isInOrigin = function() {
     return 0 === this.x && 0 === this.y;
+  };
+  b.paramsBackup = function() {
+    this.view && this.view.isInBlockMenu || (this._backupParams = this.params.slice());
+  };
+  b.destroyParamsBackup = function() {
+    this._backupParams = null;
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(b, a) {
