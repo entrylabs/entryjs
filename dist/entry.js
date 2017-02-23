@@ -9241,6 +9241,9 @@ Entry.StateManager.prototype.cancelLastCommand = function() {
 Entry.StateManager.prototype.getLastCommand = function() {
   return this.undoStack_[this.undoStack_.length - 1];
 };
+Entry.StateManager.prototype.getLastRedoCommand = function() {
+  return this.redoStack_[this.redoStack_.length - 1];
+};
 Entry.StateManager.prototype.removeAllPictureCommand = function() {
   this.undoStack_ = this.undoStack_.filter(function(c) {
     return !(400 <= c.message && 500 > c.message);
@@ -9252,10 +9255,13 @@ Entry.StateManager.prototype.removeAllPictureCommand = function() {
 Entry.StateManager.prototype.undo = function() {
   if (this.canUndo() && !this.isRestoring()) {
     this.addActivity("undo");
-    for (this.startRestore();this.undoStack_.length;) {
-      var c = this.undoStack_.pop();
-      c.func.apply(c.caller, c.params);
-      if (!0 !== c.isPass) {
+    this.startRestore();
+    for (var c = !0;this.undoStack_.length;) {
+      var b = this.undoStack_.pop();
+      b.func.apply(b.caller, b.params);
+      var e = this.getLastRedoCommand();
+      c ? (e.isPass = !1, c = !c) : e.isPass = !0;
+      if (!0 !== b.isPass) {
         break;
       }
     }
@@ -9266,10 +9272,12 @@ Entry.StateManager.prototype.undo = function() {
 };
 Entry.StateManager.prototype.redo = function() {
   if (this.canRedo() && !this.isRestoring()) {
-    for (this.addActivity("redo");this.redoStack_.length;) {
-      var c = this.redoStack_.pop();
-      c.func.apply(c.caller, c.params);
-      if (!0 !== c.isPass) {
+    this.addActivity("undo");
+    this.addActivity("redo");
+    for (var c = !0;this.redoStack_.length;) {
+      var b = this.redoStack_.pop(), e = b.func.apply(b.caller, b.params);
+      c ? (e.isPass(!1), c = !c) : e.isPass(!0);
+      if (!0 !== b.isPass) {
         break;
       }
     }
