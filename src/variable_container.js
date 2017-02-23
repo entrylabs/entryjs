@@ -1980,7 +1980,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
         e.keyCode === 13  && this.blur();
     };
     minValueInput.onblur = function (e) {
-        if (!isNaN(this.value)) {
+        if (Entry.Utils.isNumber(this.value)) {
             var v = that.selectedVariable;
             v.setMinValue(this.value);
             that.updateVariableSettingView(v);
@@ -2003,7 +2003,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
         e.keyCode === 13  && this.blur();
     };
     maxValueInput.onblur = function (e) {
-        if (!isNaN(this.value)) {
+        if (Entry.Utils.isNumber(this.value)) {
             var v = that.selectedVariable;
             v.setMaxValue(this.value);
             that.updateVariableSettingView(v);
@@ -2198,7 +2198,7 @@ Entry.VariableContainer.prototype.updateListSettingView = function(list) {
 Entry.VariableContainer.prototype.setListLength = function(value) {
     value = Number(value);
     var arr = this.selectedList.array_;
-    if (!isNaN(value)) {
+    if (Entry.Utils.isNumber(value)) {
         var arrLen = arr.length;
         if (arrLen < value) {
             var len = value - arrLen;

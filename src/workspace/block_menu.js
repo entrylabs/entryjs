@@ -449,7 +449,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p._convertSelector = function(selector) {
-        if (isNaN(selector)) return selector;
+        if (!Entry.Utils.isNumber(selector)) return selector;
 
         selector = Number(selector);
         var categories = this._categories;
