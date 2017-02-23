@@ -11,6 +11,7 @@ Entry.StateManager = function() {
     this.redoStack_ = [];
     /** prevent add command when undo and redo */
     this.isRestore = false;
+    this._isRedoing = false;
     this.isIgnore = false;
     Entry.addEventListener('cancelLastCommand', function(e) {
         Entry.stateManager.cancelLastCommand();});
@@ -81,6 +82,8 @@ Entry.StateManager.prototype.addCommand = function(type, caller, func, params) {
         var argumentArray = Array.prototype.slice.call(arguments);
         Entry.State.prototype.constructor.apply(state, argumentArray);
         this.undoStack_.push(state);
+        if (!this._isRedoing)
+            this.redoStack_ = [];
         if (Entry.reporter)
             Entry.reporter.report(state);
         this.updateView();
@@ -109,14 +112,6 @@ Entry.StateManager.prototype.getLastRedoCommand = function() {
     return this.redoStack_[this.redoStack_.length - 1];
 };
 
-Entry.StateManager.prototype.removeAllPictureCommand = function () {
-    this.undoStack_ = this.undoStack_.filter(function (stack) {
-        return !(stack.message >= 400 && stack.message < 500);
-    });
-    this.redoStack_ = this.redoStack_.filter(function (stack) {
-        return !(stack.message >= 400 && stack.message < 500);
-    });
-}
 /**
  * Do undo
  */
@@ -152,6 +147,8 @@ Entry.StateManager.prototype.undo = function() {
 Entry.StateManager.prototype.redo = function() {
     if (!this.canRedo() || this.isRestoring())
         return;
+
+    this._isRedoing = true;
     this.addActivity("undo");
     this.addActivity("redo");
     var isFirst = true;
@@ -167,6 +164,7 @@ Entry.StateManager.prototype.redo = function() {
         if (state.isPass !== true)
             break;
     }
+    this._isRedoing = false;
     this.updateView();
     if (Entry.creationChangedEvent)
         Entry.creationChangedEvent.notify();
