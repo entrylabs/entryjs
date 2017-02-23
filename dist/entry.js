@@ -12697,6 +12697,7 @@ Entry.Scene.prototype.addScene = function(b, a) {
   Entry.stage.objectContainers.push(Entry.stage.createObjectContainer(b));
   this.selectScene(b);
   this.updateView();
+  Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   return b;
 };
 Entry.Scene.prototype.removeScene = function(b) {
