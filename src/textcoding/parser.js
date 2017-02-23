@@ -38,18 +38,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     this._onError = false;
     this._onRunError = false;
-    /*Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
-    Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
-    Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP = "basic_double_loop";*/
-
-    /*this.syntax.js = this.mappingSyntaxJs(mode);
-    this.syntax.py = this.mappingSyntaxPy(mode);*/
 
     this._console = new Entry.Console();
 
     switch (this._lang) {
         case "js":
-            this._execParser = new Entry.JsToBlockParser(this.syntax);
+            this._execParser = new Entry.JsToBlockParser(this.syntax, this);
 
             var syntax = this.syntax;
             var assistScope = {};
@@ -108,7 +102,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-                this._execParser = new Entry.JsToBlockParser(this.syntax);
+                this._execParser = new Entry.JsToBlockParser(this.syntax, this);
 
                 this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
 
@@ -323,28 +317,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 var textCode = this._execParser.Code(code, parseMode);
-                /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
-                if(Array.isArray(textArr)) {
-                    result = textArr.reduce(function (prev, current, index) {
-                        var temp = '';
-                        if(index === 1) {
-                            prev = prev + '\n';
-                        }
-                        if(current.indexOf('function') > -1) {
-                            temp = current + prev;
-                        } else {
-                            temp = prev + current;
-                        }
-                        return temp + '\n';
-                    });
-                } else {
-                    result = '';
-                }*/
-
                 result = textCode;
-
                 break;
-
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 Entry.getMainWS().blockMenu.renderText();
                 result = "";
@@ -486,7 +460,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         tokens = tokens.split('(');
 
                         if(tokens[1] && tokens[1].indexOf('%') > -1) {
-                            if(tokens[0].length != 0)
+                            if(tokens[0].length !== 0)
                                 tokens = tokens[0];
                             else
                                 tokens = tokens.join('(');
@@ -562,7 +536,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     p.findSyntaxError = function(error, threadCount) {
         var err = {};
         err.from = {};
-        err.to = {}
+        err.to = {};
 
         var errorLine = error.loc.line;
         var errorColumn = error.loc.column;
@@ -592,13 +566,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
         err.to.ch = targetText.length;
 
         return err;
-
     };
 
     p.findConvError = function(error) {
         var err = {};
         err.from = {};
-        err.to = {}
+        err.to = {};
 
         var errorLine = error.line-1;
         var contents = this.codeMirror.getValue();
@@ -612,7 +585,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             currentText = contentsArr[i];
 
             var length = currentText.trim().length;
-            if(length == 0)
+            if(length === 0)
                 emptyLineCount++;
 
 
@@ -701,16 +674,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.makeSyntaxErrorDisplay = function(subject, keyword, message, line) {
-        var contents;
-        if(keyword)
-            var kw = "\'" + keyword + "\' ";
-        else
-            var kw = '';
+        var kw;
+        if(keyword) kw = "\'" + keyword + "\' ";
+        else kw = '';
 
-        contents = '[' + subject + ']' + ' ' + kw + ' : ' +
+        return '[' + subject + ']' + ' ' + kw + ' : ' +
                     message + ' ' + '(line ' + line + ')';
-
-        return contents;
     };
 
     p.initDeclaration = function() {
@@ -723,4 +692,5 @@ Entry.Parser = function(mode, type, cm, syntax) {
         this.py_variableDeclaration = null;
         this.py_listDeclaration = null;
     };
+
 })(Entry.Parser.prototype);
