@@ -36,11 +36,11 @@ Entry.loadProject = function(project) {
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     createjs.Ticker.setFPS(Entry.FPS);
+
     if (this.type == 'workspace') {
         setTimeout(function() {
             Entry.stateManager.endIgnore();
         }, 500);
-
     }
 
     if (!Entry.engine.projectTimer)
@@ -50,8 +50,18 @@ Entry.loadProject = function(project) {
         Entry.variableContainer.generateAnswer();
     Entry.start();
     Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
+    if (window.parent && window.parent.childIframeLoaded)
+        window.parent.childIframeLoaded();
     return project;
 };
+
+Entry.clearProject = function() {
+    Entry.stop();
+    Entry.projectId = null;
+    Entry.variableContainer.clear();
+    Entry.container.clear();
+    Entry.scene.clear();
+}
 
 /**
  * Export project
@@ -196,6 +206,13 @@ Entry.loadInterfaceState = function() {
  * @param {!json} interfaceModel
  */
 Entry.resizeElement = function(interfaceModel) {
+    var mainWorkspace = Entry.getMainWS();
+    if (!mainWorkspace)
+        return;
+
+    if (!interfaceModel)
+        interfaceModel = this.interfaceState;
+
     if (Entry.type == 'workspace') {
         var interfaceState = this.interfaceState;
         if (!interfaceModel.canvasWidth && interfaceState.canvasWidth)
@@ -278,9 +295,12 @@ Entry.resizeElement = function(interfaceModel) {
             menuWidth = 400;
         interfaceModel.menuWidth = menuWidth;
 
-        $('.blockMenuContainer').css({width: (menuWidth - 64) + 'px'});
-        $('.blockMenuContainer>svg').css({width: (menuWidth - 64) + 'px'});
-        Entry.playground.mainWorkspace.blockMenu.setWidth();
+        var blockMenu = mainWorkspace.blockMenu;
+        var adjust = blockMenu.hasCategory() ? -64 : 0;
+
+        $('.blockMenuContainer').css({width: (menuWidth + adjust) + 'px'});
+        $('.blockMenuContainer>svg').css({width: (menuWidth + adjust) + 'px'});
+        blockMenu.setWidth();
         $('.entryWorkspaceBoard').css({left: (menuWidth) + 'px'});
         Entry.playground.resizeHandle_.style.left = (menuWidth) + 'px';
         Entry.playground.variableViewWrapper_.style.width = menuWidth + 'px';
@@ -362,5 +382,16 @@ Entry.getMainWS = function() {
         ret = Entry.playground.mainWorkspace
     return ret;
 };
+
+Entry.getDom = function(query) {
+    if (!query) return this.view_;
+
+    query = JSON.parse(JSON.stringify(query));
+    if (query.length > 1) {
+        var key = query.shift();
+        return this[key].getDom(query);
+    } else {
+    }
+}
 
 window.Entry = Entry;

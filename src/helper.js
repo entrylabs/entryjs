@@ -75,37 +75,39 @@ p.generateView = function(parentView, option) {
     this._elementsContainer.addClass('entryBlockHelperContent textModeElem selectAble');
     blockHelperContent.appendChild(this._elementsContainer);
 
-    var codeMirrorTitle = Entry.createElement('div');
-    codeMirrorTitle.addClass('entryBlockHelperTitle textModeElem');
-    codeMirrorTitle.innerHTML = '예시 코드';
-    blockHelperContent.appendChild(codeMirrorTitle);
+    if (typeof CodeMirror !== 'undefined') {
+        var codeMirrorTitle = Entry.createElement('div');
+        codeMirrorTitle.addClass('entryBlockHelperTitle textModeElem');
+        codeMirrorTitle.innerHTML = '예시 코드';
+        blockHelperContent.appendChild(codeMirrorTitle);
 
-    var codeMirrorView = Entry.createElement('div', 'entryBlockHelperCodeMirrorContainer');
-    codeMirrorView.addClass('textModeElem');
-    blockHelperContent.appendChild(codeMirrorView);
+        var codeMirrorView = Entry.createElement('div', 'entryBlockHelperCodeMirrorContainer');
+        codeMirrorView.addClass('textModeElem');
+        blockHelperContent.appendChild(codeMirrorView);
 
-    this.codeMirror = CodeMirror(codeMirrorView, {
-        lineNumbers: true,
-        value: "",
-        mode: {name: "python"},
-        indentUnit: 4,
-        theme: "default",
-        viewportMargin: 10,
-        styleActiveLine: false,
-        readOnly: true
-    });
+        this.codeMirror = CodeMirror(codeMirrorView, {
+            lineNumbers: true,
+            value: "",
+            mode: {name: "python"},
+            indentUnit: 4,
+            theme: "default",
+            viewportMargin: 10,
+            styleActiveLine: false,
+            readOnly: true
+        });
 
-    this._doc = this.codeMirror.getDoc();
-    this._codeMirror = this.codeMirror;
+        this._doc = this.codeMirror.getDoc();
+        this._codeMirror = this.codeMirror;
 
-    var codeMirrorDescTitle = Entry.createElement('div');
-    codeMirrorDescTitle.addClass('entryBlockHelperTitle textModeElem');
-    codeMirrorDescTitle.innerHTML = '예시 설명';
-    blockHelperContent.appendChild(codeMirrorDescTitle);
+        var codeMirrorDescTitle = Entry.createElement('div');
+        codeMirrorDescTitle.addClass('entryBlockHelperTitle textModeElem');
+        codeMirrorDescTitle.innerHTML = '예시 설명';
+        blockHelperContent.appendChild(codeMirrorDescTitle);
 
-    this._codeMirrorDesc = Entry.createElement('div');
-    this._codeMirrorDesc.addClass('entryBlockHelperContent textModeElem selectAble');
-    blockHelperContent.appendChild(this._codeMirrorDesc);
+        this._codeMirrorDesc = Entry.createElement('div');
+        this._codeMirrorDesc.addClass('entryBlockHelperContent textModeElem selectAble');
+        blockHelperContent.appendChild(this._codeMirrorDesc);
+    }
 
     this._renderView = new Entry.RenderView($(blockHelperBlock), 'LEFT_MOST');
     this.code = new Entry.Code([]);

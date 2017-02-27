@@ -41,8 +41,18 @@ Entry.STATIC = {
         uncloneBlock: 109,
         scrollBoard: 110,
         setFieldValue: 111,
+        selectBlockMenu: 112,
+        destroyBlockBelow: 113,
+        destroyThreads: 114,
+        addThreads: 115,
+        recoverBlockBelow: 116,
 
         selectObject: 201,
+        objectEditButtonClick: 202,
+        objectAddPicture: 203,
+        objectRemovePicture: 204,
+        objectAddSound: 205,
+        objectRemoveSound: 206,
 
         'do': 301,
         'undo': 302,
@@ -51,6 +61,26 @@ Entry.STATIC = {
         editPicture: 401,
         uneditPicture: 402,
         processPicture: 403,
-        unprocessPicture: 404
-    }
+        unprocessPicture: 404,
+
+        toggleRun: 501,
+        toggleStop: 502,
+
+        containerSelectObject: 601,
+
+        playgroundChangeViewMode: 701,
+        playgroundClickAddPicture: 702,
+        playgroundClickAddSound: 703,
+
+        variableContainerSelectFilter: 801,
+        variableContainerClickVariableAddButton: 802,
+        variableContainerAddVariable: 803,
+        variableContainerRemoveVariable: 804,
+    },
+
+    RECORDABLE: {
+        SUPPORT: 1,
+        SKIP: 2,
+        ABANDONE: 3
+    },
 };

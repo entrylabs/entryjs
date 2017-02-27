@@ -38,7 +38,7 @@ Entry.Container = function() {
      * @type {Array.<object model>}
      */
     this.currentObjects_ = null;
-
+    this._extensionObjects = [];
     Entry.addEventListener('workspaceChangeMode', function() {
         var ws = Entry.getMainWS();
         if (ws && ws.getMode() === Entry.Workspace.MODE_VIMBOARD) {
@@ -128,13 +128,17 @@ Entry.Container.prototype.generateView = function(containerView, option) {
 
     this._view.appendChild(ulWrapper);
 
+    var extensionListView = Entry.createElement('ul');
+    ulWrapper.appendChild(extensionListView);
+    this._extensionListView = Entry.Dom(extensionListView, {
+        class: "entryContainerExtensions"
+    });
+
     var listView = Entry.createElement('ul');
     listView.addClass('entryContainerListWorkspace');
-
     ulWrapper.appendChild(listView);
-    //this._view.appendChild(listView);
-    /** @param {!Element} */
     this.listView_ = listView;
+
     this.enableSort();
 };
 /**
@@ -206,10 +210,8 @@ Entry.Container.prototype.setObjects = function(objectModels) {
     Entry.variableContainer.updateViews();
     var type = Entry.type;
     if (type == 'workspace' || type == 'phone') {
-        setTimeout(function() {
-            var target = this.getCurrentObjects()[0];
-            target && this.selectObject(target.id);
-        }.bind(this), 0);
+        var target = this.getCurrentObjects()[0];
+        target && this.selectObject(target.id);
     }
 };
 
@@ -306,6 +308,11 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
                            object);
 };
 
+Entry.Container.prototype.addExtension = function(obj) {
+    this._extensionObjects.push(obj);
+    this._extensionListView.append(obj.renderView());
+}
+
 /**
  * Add Clone object
  * @param {!Entry.EntryObject} object
@@ -379,7 +386,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
 
     this.mapObjectOnScene(function(object) {
         !object.view_ && object.generateView();
-        object.view_.removeClass('selectedObject');
+        object.view_ && object.view_.removeClass('selectedObject');
         object.isSelected_ = false;
     });
 
@@ -581,7 +588,7 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
         case 'pictures':
             var object = Entry.playground.object || object;
             if (!object) break;
-            var pictures = object.pictures;
+            var pictures = object.pictures || [];
             for (var i = 0; i<pictures.length; i++) {
                 var picture = pictures[i];
                 result.push([picture.name, picture.id]);
@@ -630,7 +637,7 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
         case 'sounds':
             var object = Entry.playground.object || object;
             if (!object) break;
-            var sounds = object.sounds;
+            var sounds = object.sounds || [];
             for (var i = 0; i<sounds.length; i++) {
                 var sound = sounds[i];
                 result.push([sound.name, sound.id]);
@@ -661,11 +668,12 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
 Entry.Container.prototype.clearRunningState = function() {
     this.mapObject(function(object) {
         object.clearExecutor();
-        for (var j = object.clonedEntities.length; j>0; j--) {
-            var entity = object.clonedEntities[j-1];
-            entity.removeClone();
-        }
-        object.clonedEntities = [];
+    });
+};
+
+Entry.Container.prototype.clearRunningStateOnScene = function() {
+    this.mapObjectOnScene(function(object) {
+        object.clearExecutor();
     });
 };
 
@@ -679,6 +687,10 @@ Entry.Container.prototype.clearRunningState = function() {
 Entry.Container.prototype.mapObject = function(mapFunction, param) {
     var length = this.objects_.length;
     var output = [];
+    for (var i = 0; i<this._extensionObjects.length; i++) {
+        var object = this._extensionObjects[i];
+        output.push(mapFunction(object, param));
+    }
     for (var i = 0; i<length; i++) {
         var object = this.objects_[i];
         output.push(mapFunction(object, param));
@@ -691,22 +703,15 @@ Entry.Container.prototype.mapObjectOnScene = function(mapFunction, param) {
     var objects = this.getCurrentObjects();
     var length = objects.length;
     var output = [];
+    for (var i = 0; i<this._extensionObjects.length; i++) {
+        var object = this._extensionObjects[i];
+        output.push(mapFunction(object, param));
+    }
     for (var i = 0; i<length; i++) {
         var object = objects[i];
         output.push(mapFunction(object, param));
     }
     return output;
-};
-
-Entry.Container.prototype.clearRunningStateOnScene = function() {
-    this.mapObjectOnScene(function(object) {
-        object.clearExecutor();
-        for (var j = object.clonedEntities.length; j>0; j--) {
-            var entity = object.clonedEntities[j-1];
-            entity.removeClone();
-        }
-        object.clonedEntities = [];
-    });
 };
 
 /**
@@ -766,6 +771,10 @@ Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(mapFunction, p
     var objects = this.getCurrentObjects();
     var length = objects.length;
     var output = [];
+    for (var i = 0; i<this._extensionObjects.length; i++) {
+        var object = this._extensionObjects[i];
+        output.push(mapFunction(object.entity, param));
+    }
     for (var i = 0; i<length; i++) {
         var object = objects[i];
         var lenx = object.clonedEntities.length;
@@ -1021,6 +1030,15 @@ Entry.Container.prototype.removeFuncBlocks = function(functionType) {
     });
 };
 
+Entry.Container.prototype.clear = function() {
+    this.objects_.map(function(o) {o.destroy()});
+    this.objects_ = [];
+    // INFO : clear 시도할때 _extensionObjects 초기화
+    this._extensionObjects = [];
+    // TODO: clear 때 this._extensionListView 도 비워 줘야 하는지 확인 필요.
+    Entry.playground.flushPlayground();
+};
+
 Entry.Container.prototype.selectNeighborObject = function(option) {
     var objects = this.getCurrentObjects();
     if(!objects || objects.length === 0)
@@ -1042,4 +1060,18 @@ Entry.Container.prototype.selectNeighborObject = function(option) {
     if(!object) return;
 
     Entry.container.selectObject(object.id);
+};
+
+Entry.Container.prototype.getObjectIndex = function(objectId) {
+    return this.objects_.indexOf(this.getObject(objectId));
+};
+
+Entry.Container.prototype.getDom = function(query) {
+    if (query.length >= 1) {
+        switch(query.shift()) {
+            case "objectIndex":
+                return this.objects_[query.shift()].getDom(query);
+        }
+    } else {
+    }
 };

@@ -36,10 +36,11 @@ Entry.init = function(container, options) {
     this.initialize_();
     /** @type {!Element} */
     this.view_ = container;
+    $(this.view_).addClass("entry");
+    if (this.type === "minimize")
+        $(this.view_).addClass(this.type);
     if (this.device === 'tablet')
-        this.view_.setAttribute('class', 'entry tablet');
-    else
-        this.view_.setAttribute('class', 'entry');
+        $(this.view_).addClass("tablet");
 
     Entry.initFonts(options.fonts);
     this.createDom(container, this.type);
@@ -93,6 +94,10 @@ Entry.init = function(container, options) {
     createjs.Sound.stop();
 };
 
+Entry.changeContainer = function(container) {
+    container.appendChild(this.view_);
+};
+
 Entry.loadAudio_ = function(filenames, name) {
   if (!window.Audio || !filenames.length) {
     // No browser support for Audio.
@@ -125,7 +130,7 @@ Entry.initialize_ = function() {
      */
     this.stage = new Entry.Stage();
 
-    if (Entry.engine)
+    if (Entry.engine && Entry.engine.projectTimer)
         Entry.engine.clearTimer();
     /**
      * Initialize engine for run.
@@ -283,7 +288,7 @@ Entry.createDom = function(container, option) {
         this.helper.bindWorkspace(this.playground.mainWorkspace);
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');
-        canvas.className = 'entryCanvasWorkspace';
+        canvas.className = 'entryCanvasWorkspace minimize';
         canvas.id = 'entryCanvas';
         canvas.width = 640;
         canvas.height = 360;
@@ -342,12 +347,21 @@ Entry.createDom = function(container, option) {
  * @param {?number} FPS
  */
 Entry.start = function(FPS) {
+    if (Entry.type === "invisible")
+        return;
     /** @type {number} */
     if (!this.FPS)
         this.FPS = 60;
     Entry.assert(typeof(this.FPS) == 'number', 'FPS must be number');
     Entry.engine.start(this.FPS);
 };
+
+Entry.stop = function() {
+    if (Entry.type === "invisible")
+        return;
+    this.FPS = null;
+    Entry.engine.stop();
+}
 
 /**
  * Parse init options
@@ -356,6 +370,9 @@ Entry.start = function(FPS) {
 Entry.parseOptions = function(options) {
     /** @type {string} */
     this.type = options.type;
+
+    this.hashId = options.hashId;
+
     if (options.device)
         this.device = options.device;
 
@@ -411,6 +428,11 @@ Entry.parseOptions = function(options) {
         this.hasVariableManager = false;
     else if (this.hasVariableManager === undefined)
         this.hasVariableManager = true;
+
+    this.readOnly = options.readOnly || false;
+    if (this.readOnly) {
+        this.soundEditable = a.sceneEditable = this.objectAddable = false;
+    }
 
     this.isForLecture = options.isForLecture;
 
