@@ -7476,9 +7476,9 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             if (operator == "PLUS") {
-                if (!Entry.Utils.isNumber(leftValue))
+                if (isNaN(leftValue))
                     leftValue = script.getStringValue("LEFTHAND", script);
-                if (!Entry.Utils.isNumber(rightValue))
+                if (isNaN(rightValue))
                     rightValue = script.getStringValue("RIGHTHAND", script);
                 return leftValue + rightValue;
             }
