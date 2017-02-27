@@ -621,19 +621,19 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         });
     };
 
-    p.banClass = function(className) {
+    p.banClass = function(className, doNotAlign) {
         var index = this._bannedClass.indexOf(className);
         if (index < 0) {
             this._bannedClass.push(className);
-            this._dAlign();
+            doNotAlign !== true && this._dAlign();
         }
     };
 
-    p.unbanClass = function(className) {
+    p.unbanClass = function(className, doNotAlign) {
         var index = this._bannedClass.indexOf(className);
         if (index > -1) {
             this._bannedClass.splice(index, 1);
-            this._dAlign();
+            doNotAlign !== true && this._dAlign();
         }
     };
 
