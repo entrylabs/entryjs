@@ -3165,7 +3165,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Literal = function(component, paramMeta, paramDefMeta, textParam) {
         var result;
         var value = component.value;
-        if(value && !Entry.Utils.isNumber(value))
+        if(value && typeof value === 'string')
             value = value.replace(/\t/gm, '    ');
 
         if(!paramMeta) {
@@ -3326,7 +3326,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(textParam && textParam.codeMap) {
             var codeMap = textParam.codeMap;
             if(codeMap && eval(codeMap)) {
-                if(!Entry.Utils.isNumber(value))
+                if(typeof value === 'string')
                     value = value.toLowerCase();
                 var codeMapValue =  eval(codeMap)[value];
             }
@@ -3348,7 +3348,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(textParam)
             value = Entry.TextCodingUtil.getDynamicIdByNumber(value, textParam, this._currentObject);
 
-        if(value && !Entry.Utils.isNumber(value) && value.split(".").length > 2 && value.split(".")[0] == "self") {
+        if(value && isNaN(value) && value.split(".").length > 2 && value.split(".")[0] == "self") {
             value = value.split(".")[1];
             currentObject = this._currentObject;
         }
@@ -3358,7 +3358,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(textParam && textParam.codeMap) {
             var codeMap = textParam.codeMap;
             if(codeMap && eval(codeMap))
-                if(!Entry.Utils.isNumber(value))
+                if(isNaN(value))
                     value = value.toLowerCase();
                 var codeMapValue =  eval(codeMap)[value];
             if(codeMapValue) value = codeMapValue;
@@ -3374,7 +3374,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var reg = /None/;
         if(reg.test(value)) return "None";
 
-        if(!Entry.Utils.isNumber(value)) {
+        if(isNaN(value)) {
             var keyChar = Entry.KeyboardCode.map[value.toLowerCase()];
             if(keyChar) result = keyChar.toString();
         }
