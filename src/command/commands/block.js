@@ -109,7 +109,6 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.insertBlock] = {
         do: function(block, targetBlock, count) {
-            console.log(targetBlock)
             block = this.editor.board.findBlock(block);
             this.editor.board.insert(block, targetBlock, count);
         },
