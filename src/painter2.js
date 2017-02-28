@@ -49,8 +49,8 @@ p.initialize = function() {
     }.bind(this);
 
     var watchFunc = function(e) {
-        if ((e.shape && !e.opts && e.shape.isPass) ||
-            e.opts && e.opts.isPass) {
+        if (e && ((e.shape && !e.opts && e.shape.isPass) ||
+            e.opts && e.opts.isPass)) {
             Entry.do("processPicture", e, this.lc)
         } else {
             Entry.do("editPicture", e, this.lc)
@@ -59,6 +59,7 @@ p.initialize = function() {
     }.bind(this)
 
     this.lc.on("clear", watchFunc);
+    this.lc.on("remove", watchFunc);
     this.lc.on("shapeEdit", watchFunc);
     this.lc.on("shapeSave", watchFunc);
 
@@ -110,6 +111,9 @@ p.changePicture = function(picture) {
     this.file.mode = 'edit';
 
     this.addPicture(picture, true);
+    // INFO: picture 변경시마다 undoStack 리셋
+    this.lc.undoStack = [];
+    Entry.stateManager.removeAllPictureCommand();
 };
 
 p.addPicture = function(picture, isOriginal) {

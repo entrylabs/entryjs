@@ -30,7 +30,7 @@ if (Entry && Entry.block) {
             };
 
             code = map[value] || code || value;
-            if(isNaN(code)) {
+            if(!Entry.Utils.isNumber(code)) {
                 return '"()"'.replace('()', code);
             }
             else
@@ -116,7 +116,7 @@ if (Entry && Entry.block) {
         };
 
         c.returnStringOrNumberByValue = function(key, value) {
-            if (isNaN(value)) {
+            if (!Entry.Utils.isNumber(value)) {
                 value = value.replace(/\"/gi, '');
                 return '"()"'.replace('()', value);
             } else return value;
@@ -3260,7 +3260,7 @@ Entry.block = {
 
             if (!script.isStart) {
                 var note = script.getValue("NOTE", script);
-                if(isNaN(note))
+                if(!Entry.Utils.isNumber(note))
                     note = Entry.ArduinoExt.toneTable[note];
 
                 if(note < 0) {
@@ -22162,7 +22162,6 @@ Entry.block = {
         "isNotFor": [ "sprite" ],
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
-            text = Entry.convertToRoundedDecimals(text, 3);
             sprite.setText(text);
             return script.callReturn();
         },
@@ -22211,9 +22210,7 @@ Entry.block = {
         "isNotFor": [ "sprite" ],
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
-            sprite.setText(
-                Entry.convertToRoundedDecimals(sprite.getText(),3) +
-                "" + Entry.convertToRoundedDecimals(text, 3));
+            sprite.setText(sprite.getText() + "" + text);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.append_text(%1)"]}
@@ -22261,10 +22258,7 @@ Entry.block = {
         "isNotFor": [ "sprite" ],
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
-            sprite.setText(
-                Entry.convertToRoundedDecimals(text, 3) +
-                "" + Entry.convertToRoundedDecimals(sprite.getText(), 3)
-            );
+            sprite.setText(text + "" + sprite.getText());
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.prepend_text(%1)"]}
@@ -22398,15 +22392,25 @@ Entry.block = {
         "isNotFor": [ "variableNotExist" ],
         "func": function (sprite, script) {
             var variableId = script.getField("VARIABLE", script);
-            var value = script.getNumberValue("VALUE", script);
+            var value = script.getValue("VALUE", script);
             var fixed = 0;
 
-            value = Entry.parseNumber(value);
             if ((value == false && typeof value == 'boolean'))
                 throw new Error('Type is not correct');
+
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
-            fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
-            variable.setValue((value + variable.getValue()).toFixed(fixed));
+            var variableValue = variable.getValue();
+            var sumValue;
+            if(Entry.Utils.isNumber(value) && variable.isNumber()) {
+                value = Entry.parseNumber(value);
+                variableValue = Entry.parseNumber(variableValue);
+                fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
+                sumValue = (value + variableValue).toFixed(fixed);
+            } else {
+                sumValue = '' + variableValue + value;
+            }
+
+            variable.setValue(sumValue);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
@@ -23073,7 +23077,7 @@ Entry.block = {
             var value = script.getValue("VALUE", script);
             var list = Entry.variableContainer.getList(listId, sprite);
 
-            if (!list.array_ || isNaN(value) || value > list.array_.length)
+            if (!list.array_ || !Entry.Utils.isNumber(value) || value > list.array_.length)
                 throw new Error('can not remove value from array');
 
             list.array_.splice(value-1,1);
@@ -23185,7 +23189,7 @@ Entry.block = {
             var index = script.getValue("INDEX", script);
             var list = Entry.variableContainer.getList(listId, sprite);
 
-            if (!list.array_ || isNaN(index) || index == 0 || index > list.array_.length +1)
+            if (!list.array_ || !Entry.Utils.isNumber(index) || index == 0 || index > list.array_.length +1)
                 throw new Error('can not insert value to array');
 
             list.array_.splice(index-1, 0, {'data': data});
@@ -23300,7 +23304,7 @@ Entry.block = {
             var index = script.getValue("INDEX", script);
             var list = Entry.variableContainer.getList(listId, sprite);
 
-            if (!list.array_ || isNaN(index) || index > list.array_.length)
+            if (!list.array_ || !Entry.Utils.isNumber(index) || index > list.array_.length)
                 throw new Error('can not insert value to array');
 
             list.array_[index-1].data = data;
@@ -23415,7 +23419,7 @@ Entry.block = {
             var list = Entry.variableContainer.getList(listId, sprite);
             index = Entry.getListRealIndex(index, list);
 
-            if (!list.array_ || isNaN(index) || index > list.array_.length)
+            if (!list.array_ || !Entry.Utils.isNumber(index) || index > list.array_.length)
                 throw new Error('can not insert value to array');
 
             return list.array_[index-1].data
@@ -24591,10 +24595,6 @@ Entry.block = {
                 "value": 3,
                 "fontSize": 14,
                 "roundValue": 3
-            },
-            {
-                "type": "Text",
-                "text": "반복"
             }
         ],
         statements: [
@@ -24655,10 +24655,6 @@ Entry.block = {
         "color": "#8ABC1D",
         "params": [
             {
-                "type": "Text",
-                "text": "연필 줍기"
-            },
-            {
                 "type": "Indicator",
                 "img": "../../../img/assets/ntry/bitmap/cpartyjr/pen.png",
                 "highlightColor": "#FFF",
@@ -24693,10 +24689,6 @@ Entry.block = {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
         "params": [
-            {
-                "type": "Text",
-                "text": "  위쪽"
-            },
             {
                 "type": "Indicator",
                 "img": "../../../img/assets/ntry/bitmap/jr/block_up_image.png",
@@ -24750,10 +24742,6 @@ Entry.block = {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
         "params": [
-            {
-                "type": "Text",
-                "text": "오른쪽"
-            },
             {
                 "type": "Indicator",
                 "img": "../../../img/assets/ntry/bitmap/jr/block_right_image.png",
@@ -24813,10 +24801,6 @@ Entry.block = {
         "color": "#A751E3",
         "params": [
             {
-                "type": "Text",
-                "text": "  아래쪽"
-            },
-            {
                 "type": "Indicator",
                 "img": "../../../img/assets/ntry/bitmap/jr/block_down_image.png",
                 "position": {
@@ -24874,10 +24858,6 @@ Entry.block = {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
         "params": [
-            {
-                "type": "Text",
-                "text": "  왼쪽"
-            },
             {
                 "type": "Indicator",
                 "img": "../../../img/assets/ntry/bitmap/jr/block_left_image.png",
@@ -24967,10 +24947,6 @@ Entry.block = {
         "color": "#A751E3",
         "params": [
             {
-                text: "앞으로 가기",
-                type: "Text"
-            },
-            {
                 "type": "Image",
                 "img": "../../../img/assets/ntry/bitmap/jr/cparty_go_straight.png",
                 "size": 24
@@ -25005,10 +24981,6 @@ Entry.block = {
         "skeleton": "basic",
         "color": "#A751E3",
         "params": [
-            {
-                text: "왼쪽으로 돌기",
-                type: "Text"
-            },
             {
                 "type": "Image",
                 "img": "../../../img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
@@ -25046,10 +25018,6 @@ Entry.block = {
         "color": "#A751E3",
         "params": [
             {
-                text: "오른쪽으로 돌기",
-                type: "Text"
-            },
-            {
                 "type": "Image",
                 "img": "../../../img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
                 "size": 24
@@ -25085,10 +25053,6 @@ Entry.block = {
         "skeleton": "basic",
         "color": "#f46c6c",
         "params": [
-            {
-                text: "천천히 가기",
-                type: "Text"
-            },
             {
                 "type": "Image",
                 "img": "../../../img/assets/ntry/bitmap/jr/cparty_go_slow.png",
@@ -25135,10 +25099,6 @@ Entry.block = {
                 "size": 18
             },
             {
-                text: "만날 때 까지 반복하기",
-                type: "Text"
-            },
-            {
                 "type": "Image",
                 "img": "/img/assets/week/blocks/for.png",
                 "size": 24
@@ -25167,17 +25127,9 @@ Entry.block = {
         ],
         "params": [
             {
-                text: "만약",
-                type: "Text"
-            },
-            {
                 "type": "Image",
                 "img": "../../../img/assets/ntry/bitmap/jr/jr_construction_image.png",
                 "size": 18
-            },
-            {
-                text: "앞에 있다면",
-                type: "Text"
             },
             {
                 "type": "Image",
@@ -27336,7 +27288,6 @@ Entry.block = {
             "VALUE": 0
         },
         "class": "dplay_get",
-        "isNotFor": ["dplay"],
         "func": function (sprite, script) {
             var signal = script.getValue("VALUE", script);
             return Entry.hw.getAnalogPortValue(signal[1]);
@@ -32491,6 +32442,310 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 0
         },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {}
+    },
+    "check_object_property": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "%1 가 %2 %3 %4 %5 %6",
+        "statements": [],
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "menuName": "sprites",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["언젠가", 0],
+                    ["지금", 1]
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["x", "x"],
+                    ["y", "y"],
+                    ["크기", "size"],
+                    ["방향", "rotation"],
+                    ["이동 방향", "direction"],
+                    ["텍스트", "text"]
+                ],
+                "value": "x",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "=", "EQUAL" ],
+                    [ ">", "GREATER" ],
+                    [ "<", "LESS" ],
+                    [ "≥", "GREATER_OR_EQUAL" ],
+                    [ "≤", "LESS_OR_EQUAL" ]
+                ],
+                "value": "EQUAL",
+                "fontSize": 11,
+                noArrow: true
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "check_object_property"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var obj = Entry.container.getObject(this.block.params[0]),
+                flow = this.block.params[1],
+                propertyKey = this.block.params[2],
+                rightValue = this.getParam(4);
+            propertyKey = propertyKey[0].toUpperCase() + propertyKey.substr(1);
+            var leftValue = obj.entity["get" + propertyKey].call(obj.entity),
+                returnVal;
+
+            switch(this.block.params[3]) {
+                case 'EQUAL':
+                    returnVal = leftValue == rightValue;
+                    break;
+                case 'GREATER':
+                    returnVal = Number(leftValue) > Number(rightValue);
+                    break;
+                case 'LESS':
+                    returnVal = Number(leftValue) < Number(rightValue);
+                    break;
+                case 'GREATER_OR_EQUAL':
+                    returnVal = Number(leftValue) >= Number(rightValue);
+                    break;
+                case 'LESS_OR_EQUAL':
+                    returnVal = Number(leftValue) <= Number(rightValue);
+                    break;
+            }
+            if (returnVal)
+                return;
+            else if (flow === 0)
+                return Entry.STATIC.BREAK;
+            else
+                this.die();
+        }
+    },
+    "check_lecture_goal": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "목표 %1 %2 %3",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": 0
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["달성", 1],
+                    ["실패", 0]
+                ],
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {
+            "dataAdd": [
+                function(block) {
+                    Entry.registerAchievement(block);
+                }
+            ]
+        },
+        "def": {
+            "params": [
+                0,
+                1
+            ],
+            "type": "check_lecture_goal"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            Entry.achieve(this.block.params[1], this.block.params[0] + "");
+            this.die();
+        }
+    },
+    "check_block_execution": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_loop",
+        "template": "%1 에서 아래 블록이 %2 실행되었는가 %3",
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "menuName": "sprites",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["비슷하게", 0],
+                    ["똑같이", 1]
+                ],
+                "value": "16",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                0
+            ],
+            "type": "check_block_execution"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            if (this.listener) {
+                if (this.isDone) {
+                    this.listener.destroy();
+                    return;
+                }
+                else
+                    return Entry.STATIC.BREAK;
+            }
+            var code = Entry.container.getObject(this.block.params[0]).script,
+                accuracy = this.block.params[1],
+                statements = this.block.statements[0].getBlocks(),
+                lastBlock = null;
+            this.isDone = false;
+            var index = 0;
+            this.listener = code.watchEvent.attach(this, function(blocks) { //dangerous
+                blocks = blocks.concat();
+                var block;
+                while (blocks.length && index < statements.length) {
+                    block = blocks.shift();
+                    if (block === lastBlock)
+                        continue;
+                    if (accuracy === 0 && statements[index].type === block.type) {
+                        index++;
+                    } else if (accuracy === 1 && statements[index].isSameParamWith(block)) {
+                        index++;
+                    } else {
+                        index = 0;
+                    }
+                }
+                lastBlock = block;
+                if (index === statements.length)
+                    this.isDone = true;
+            })
+            return Entry.STATIC.BREAK;
+        }
+    },
+    "wildcard_string": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_string_field",
+        "template": "    *    ",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "wildcard_string"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {}
+    },
+    "wildcard_boolean": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_boolean_field",
+        "template": "    *    ",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "wildcard_boolean"
+        },
+        "paramsKeyMap": {},
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {}
+    },
+    "hidden_string": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_string_field",
+        "template": "    ?    ",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "hidden_string"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {}
+    },
+    "hidden_boolean": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_boolean_field",
+        "template": "    ?    ",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "hidden_boolean"
+        },
+        "paramsKeyMap": {},
         "class": "etc",
         "isNotFor": [],
         "func": function (sprite, script) {}

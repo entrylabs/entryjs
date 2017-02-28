@@ -9,25 +9,28 @@ goog.require("Entry.STATIC");
 Entry.Command = {};
 
 (function(c) {
-    c.do = {
-        type: Entry.STATIC.COMMAND_TYPES['do'],
+    c[Entry.STATIC.COMMAND_TYPES.do] = {
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         log: function(objectId) {
-            return [ c['do'].type ];
-        }
+            return [];
+        },
+        skipUndoStack: true
     };
 
-    c.undo = {
-        type: Entry.STATIC.COMMAND_TYPES['undo'],
+    c[Entry.STATIC.COMMAND_TYPES.undo] = {
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         log: function(objectId) {
-            return [ c['undo'].type ];
-        }
+            return [];
+        },
+        skipUndoStack: true
     };
 
-    c.redo = {
-        type: Entry.STATIC.COMMAND_TYPES['redo'],
+    c[Entry.STATIC.COMMAND_TYPES.redo] = {
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         log: function(objectId) {
-            return [ c['redo'].type ];
-        }
+            return [];
+        },
+        skipUndoStack: true
     };
 
 })(Entry.Command);

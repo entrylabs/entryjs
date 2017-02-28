@@ -10,11 +10,12 @@ goog.require("Entry.Utils");
  *
  * @param {object} dom which to inject playground
  */
-Entry.BlockMenu = function(dom, align, categoryData, scroll) {
+Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     Entry.Model(this, false);
 
     this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
     this._dAlign = Entry.Utils.debounce(this.align, 100);
+    this._dAlign = this.align;
     this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
     this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
 
@@ -28,6 +29,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._dynamicThreads = [];
     this._setDynamicTimer = null;
     this._renderedCategories = {};
+    this.categoryRendered = false;
+    this.readOnly = readOnly === undefined ? true : readOnly;
 
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
@@ -60,11 +63,12 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.svgBlockGroup.board = this;
 
     this.changeEvent = new Entry.Event(this);
+    this.categoryDoneEvent = new Entry.Event(this);
 
     this.observe(this, "_handleDragBlock", ["dragBlock"]);
 
     this.changeCode(new Entry.Code([]));
-    categoryData && this._generateCategoryCodes()
+    categoryData && this._generateCategoryCodes();
 
     if (this._scroll) {
         this._scroller = new Entry.BlockMenuScroller(this);
@@ -104,14 +108,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var parent = this.view;
         var that = this;
 
-        if (categoryData) {
-            this._categoryCol = Entry.Dom('ul', {
-                class: 'entryCategoryListWorkspace',
-                parent: parent
-            });
-
-            this._generateCategoryView(categoryData);
-        }
+        categoryData && this._generateCategoryView(categoryData);
 
         this.blockMenuContainer = Entry.Dom('div', {
             'class':'blockMenuContainer',
@@ -131,11 +128,12 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)) return;
             Entry.playground.focusBlockMenu = true;
             var bBox = that.svgGroup.getBBox();
-            var expandWidth = bBox.width + bBox.x + 64;
+            var adjust = that.hasCategory() ? 64 : 0;
+            var expandWidth = bBox.width + bBox.x + adjust;
             if (expandWidth > Entry.interfaceState.menuWidth) {
-                this.widthBackup = Entry.interfaceState.menuWidth - 64;
+                this.widthBackup = Entry.interfaceState.menuWidth - adjust;
                 $(this).stop().animate({
-                    width: expandWidth - 62
+                    width: expandWidth - adjust
                 }, 200);
             }
         });
@@ -160,11 +158,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         });
     };
 
-    p.changeCode = function(code) {
+    p.changeCode = function(code, isImmediate) {
+        if (code instanceof Array)
+            code = new Entry.Code(code);
+
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
         if (this.codeListener)
             this.code.changeEvent.detach(this.codeListener);
+
         var that = this;
         this.set({code:code});
         this.codeListener = this.code.changeEvent.attach(
@@ -174,7 +176,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         code.createView(this);
         var workspace = this.workspace;
 
-        this._dAlign();
+        if (isImmediate)
+            this.align();
+        else this._dAlign();
     };
 
     p.bindCodeView = function(codeView) {
@@ -285,19 +289,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var code = this.code;
             var currentThread = block.getThread();
             if (block && currentThread) {
+                var distance = this.offset().top - board.offset().top - $(window).scrollTop();
+                var datum = currentThread.toJSON(true);
+                datum[0].x = datum[0].x - svgWidth + (dx || 0);
+                datum[0].y = datum[0].y + distance + (dy || 0);
                 this._boardBlockView =
-                    Entry.do("addThread", currentThread.toJSON(true))
+                    Entry.do("addThread", datum)
                     .value.getFirstBlock().view;
 
-                var distance = this.offset().top - board.offset().top - $(window).scrollTop();
-
-                this._boardBlockView._moveTo(
-                    blockView.x - svgWidth + (dx || 0),
-                    blockView.y + distance + (dy || 0),
-                    false
+                this._boardBlockView.onMouseDown.call(
+                    this._boardBlockView, e, true
                 );
-
-                this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
                 this._boardBlockView.dragInstance.set({isNew:true});
             }
         } else {
@@ -422,6 +424,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.setMenu = function() {
+        if (!this.hasCategory())
+            return;
         this._categoryData.forEach(function(data) {
             var category = data.category;
             var threads = data.blocks;
@@ -441,6 +445,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             if (count === 0) elem.addClass('entryRemove');
             else elem.removeClass('entryRemove');
         }.bind(this));
+        this.selectMenu(0, true);
     };
 
 
@@ -449,7 +454,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p._convertSelector = function(selector) {
-        if (isNaN(selector)) return selector;
+        if (!Entry.Utils.isNumber(selector)) return selector;
 
         selector = Number(selector);
         var categories = this._categories;
@@ -463,7 +468,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.selectMenu = function(selector, doNotFold, doNotAlign) {
-        if (!this._isOn()) return;
+        if (!this._isOn() || !this._categoryData) return;
 
         var className = 'entrySelectedCategory';
         var oldView = this._selectedCategoryView;
@@ -495,6 +500,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (oldView)
             oldView.removeClass(className);
 
+        doNotFold = doNotFold || !this.hasCategory();
+
         if (elem == oldView && !doNotFold) {
             boardView.addClass('folding');
             this._selectedCategoryView = null;
@@ -502,7 +509,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             Entry.playground.hideTabs();
             animate = true;
             this.visible = false;
-        } else if (!oldView) {
+        } else if (!oldView && this.hasCategory()) {
             if (!this.visible) {
                 animate = true;
                 boardView.addClass('foldOut');
@@ -529,11 +536,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         }
 
         doNotAlign !== true && this._dAlign();
-
     };
 
     p._generateCategoryCodes = function(elems) {
         if (!elems) {
+            this.categoryRendered = false;
             this.view.addClass('init');
             elems = Object.keys(this._categoryElems);
         }
@@ -552,11 +559,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 this._generateCodesTimer = null;
                 this.view.removeClass('init');
                 this.align();
+                this.categoryRendered = true;
+                this.categoryDoneEvent.notify();
             }
         }
     };
 
     p._generateCategoryCode = function(key) {
+        if (!this._categoryData)
+            return;
         var code = this.code;
         var codes = [];
         var datum = this._categoryData.filter(function(obj) {
@@ -612,19 +623,19 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         });
     };
 
-    p.banClass = function(className) {
+    p.banClass = function(className, doNotAlign) {
         var index = this._bannedClass.indexOf(className);
         if (index < 0) {
             this._bannedClass.push(className);
-            this._dAlign();
+            doNotAlign !== true && this._dAlign();
         }
     };
 
-    p.unbanClass = function(className) {
+    p.unbanClass = function(className, doNotAlign) {
         var index = this._bannedClass.indexOf(className);
         if (index > -1) {
             this._bannedClass.splice(index, 1);
-            this._dAlign();
+            doNotAlign !== true && this._dAlign();
         }
     };
 
@@ -646,7 +657,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.checkCategory = function(blockInfo) {
-        if (!this._categoryData || !blockInfo) return;
+        if (!this.hasCategory() || !blockInfo) return;
 
         if (!this.lastSelector || this._selectDynamic)
             return true;
@@ -775,6 +786,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p._clearCategory = function() {
+        if (this._generateCodesTimer) {
+            clearTimeout(this._generateCodesTimer);
+            this._generateCodesTimer = null;
+        }
         this._selectedCategoryView = null;
         this._categories = [];
 
@@ -785,26 +800,40 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
         if (this.code && this.code.constructor == Entry.Code)
             this.code.clear();
+        this._categoryCol && this._categoryCol.remove();
+        this._categoryData = null;
     };
 
+    p.clearCategory = p._clearCategory;
+
     p.setCategoryData = function(data) {
-        if (this._generateCodesTimer) {
-            clearTimeout(this._generateCodesTimer);
-            this._generateCodesTimer = null;
-        }
         this._clearCategory();
         this._categoryData = data;
         this._generateCategoryView(data);
         this._generateCategoryCodes();
+        this.setMenu();
+        Entry.resizeElement();
+    };
+
+    p.setNoCategoryData = function(data) {
+        this._clearCategory();
+        Entry.resizeElement();
+        this.changeCode(data, true);
+        this.categoryDoneEvent.notify();
     };
 
     p._generateCategoryView = function(data) {
         if (!data) return;
 
-        for (var i=0; i<data.length; i++) {
-            var name = data[i].category;
-            this._generateCategoryElement(name);
-        }
+        this._categoryCol && this._categoryCol.remove && this._categoryCol.remove();
+
+        this._categoryCol = Entry.Dom('ul', {
+            class: 'entryCategoryListWorkspace'
+        });
+        this.view.prepend(this._categoryCol);
+
+        for (var i=0; i<data.length; i++)
+            this._generateCategoryElement(data[i].category);
     };
 
     p._generateCategoryElement = function(name) {
@@ -822,6 +851,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 that._cancelDynamic(true, function() {
                     that.selectMenu(name, undefined, true);
                     that.align();
+                    //Entry.do(
+                        //'selectBlockMenu',
+                        //name, undefined, true
+                    //);
                 });
             });
         })(element, name);
@@ -840,6 +873,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p._generateHwCode = function(shouldHide) {
+        if (!this._categoryData)
+            return;
         var code = this.code;
         var threads = code.getThreadsByCategory(HW);
 
@@ -902,7 +937,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._isNotVisible = function(blockInfo) {
         return this.checkCategory(blockInfo) ||
-            this.checkBanClass(blockInfo)
+            this.checkBanClass(blockInfo);
     };
 
     p._getSortedBlocks = function() {
@@ -970,6 +1005,54 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.deleteRendered = function(name) {
         delete this._renderedCategories[name];
+    };
+
+    p.hasCategory = function() {
+        return !!this._categoryData;
+    };
+
+    p.getDom = function(query) {
+        if (query.length >= 1) {
+            if (query[0] === 'category')
+                return this._categoryElems[query[1]];
+            else {
+                var type = query[0][0].type;
+                var dom = this.getSvgDomByType(type);
+                this.align();
+                this.scrollToType(type);
+                return dom;
+            }
+        } else {
+        }
+    };
+
+    p.getSvgDomByType = function(type) {
+        var code = this.code;
+
+        var threads = code.getThreads();
+
+        for (var i=0; i<threads.length; i++) {
+            var block = threads[i].getFirstBlock();
+            if (block.type === type)
+                return block.view.svgGroup;
+        }
+    };
+
+    p.scrollToType = function(type) {
+        if (!type) return;
+        var blockView = this.code.getBlockList(false, type)[0].view;
+        var dom = this.getSvgDomByType(type);
+        var rect = dom.getBoundingClientRect();
+        if (isOverFlow()) {
+            var currentY = blockView.y;
+            var targetY = 20;
+            var diff = currentY - targetY;
+            this._scroller.scrollByPx(diff);
+        }
+
+        function isOverFlow() {
+            return rect.bottom > $(window).height() - 10;
+        }
     };
 
 })(Entry.BlockMenu.prototype);

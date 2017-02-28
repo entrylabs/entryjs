@@ -59,14 +59,13 @@ Entry.RenderView = function(dom, align, scale) {
             'parent':parent
         });
 
-
         this.svgDom = Entry.Dom(
             $('<svg id="' + this._svgId +'" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
             { parent: this.renderViewContainer }
         );
     };
 
-    p.changeCode = function(code) {
+    p.changeCode = function(code, resizeImmediately) {
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
         var that = this;
@@ -85,7 +84,7 @@ Entry.RenderView = function(dom, align, scale) {
 
         code.createView(this);
         this.align();
-        this.resize();
+        this.resize(resizeImmediately);
     };
 
     p.align = function() {
@@ -145,9 +144,18 @@ Entry.RenderView = function(dom, align, scale) {
         this.svgGroup.appendChild(this.svgBlockGroup);
     };
 
-    p.resize = function() {
+    p.resize = function(isImmediate) {
         if (!this.svg || !this._bBox) return;
-        setTimeout(function() {
+
+        if (isImmediate) {
+            run.call(this);
+        } else {
+            setTimeout(function() {
+                run.call(this);
+            }.bind(this), 0);
+        }
+
+        function run() {
             this._setSize();
             var width = Math.round(this._bBox.width);
             var height = Math.round(this._bBox.height);
@@ -167,15 +175,15 @@ Entry.RenderView = function(dom, align, scale) {
                     Math.round(bBox.height) !== height)
                     this.resize();
             }.bind(this), 1000);
-        }.bind(this), 0);
+        }
     };
 
-    p.setDomSize = function() {
+    p.setDomSize = function(isImmediate) {
         if (this.svgBlockGroup)
             this.svgBlockGroup.attr('transform', 'scale(1)');
         this.code.view.reDraw();
         this.align();
-        this.resize();
+        this.resize(isImmediate);
         if (this._scale !== 1) {
             window.setTimeout(function() {
                 this.svgBlockGroup.attr('transform', 'scale(%scale)'.replace('%scale', this._scale));
@@ -183,6 +191,8 @@ Entry.RenderView = function(dom, align, scale) {
                 this.resize();
             }.bind(this), 0);
         }
+
+
     };
 
     p._getHorizontalPadding = function() {

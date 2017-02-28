@@ -114,7 +114,8 @@ Entry.Field = function() {};
 
         return {
             x: absPos.x + this.box.x + contentPos.x + offset.left,
-            y: absPos.y + this.box.y + contentPos.y + offset.top
+            y: absPos.y + this.box.y + contentPos.y
+                + offset.top - $(window).scrollTop()
         };
     };
 
@@ -175,7 +176,7 @@ Entry.Field = function() {};
     };
 
     p._isEditable = function() {
-        if (Entry.ContextMenu.visible) return false;
+        if (Entry.ContextMenu.visible || this._blockView.getBoard().readOnly) return false;
         var dragMode = this._block.view.dragMode;
         if (dragMode == Entry.DRAG_MODE_DRAG) return false;
         var blockView = this._block.view;
@@ -259,6 +260,12 @@ Entry.Field = function() {};
 
             textParams[this._index].options = this._contents.options;
         }
+    };
+
+    p._shouldReturnValue = function(value) {
+        var obj = this._block.getCode().object;
+        return value === '?' ||
+            !obj || obj.constructor !== Entry.EntryObject;
     };
 
 })(Entry.Field.prototype);

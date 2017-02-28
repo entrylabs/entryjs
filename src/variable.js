@@ -277,7 +277,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
             this.cursor = 'pointer';
-            this.offsetY = isNaN(this.offsetY) || (this.offsetY < 0) ? evt.rawY/2 : this.offsetY;
+            this.offsetY = !Entry.Utils.isNumber(this.offsetY) || (this.offsetY < 0) ? evt.rawY/2 : this.offsetY;
         });
         this.scrollButton_.on("pressmove", function(evt) {
             // if(Entry.type != 'workspace') return;
@@ -343,7 +343,8 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = this.textView_.getMeasuredWidth();
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
-            if (this.isNumber())
+            // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
+            if (this.type === 'slide' && this.isNumber())
                 this.valueView_.text = this.getValue().toFixed(2).replace('.00', '');
             else
                 this.valueView_.text = this.getValue();
@@ -568,7 +569,8 @@ Entry.Variable.prototype.getId = function() {
  * @return {number}
  */
 Entry.Variable.prototype.getValue = function() {
-    if (this.isNumber())
+    // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
+    if (this.type === 'slide' && this.isNumber())
         return Number(this.value_);
     else
         return this.value_;
@@ -579,10 +581,7 @@ Entry.Variable.prototype.getValue = function() {
  * @return {boolean}
  */
 Entry.Variable.prototype.isNumber = function() {
-    if (isNaN(this.value_))
-        return false;
-    else
-        return true;
+    return Entry.Utils.isNumber(this.value_);
 };
 
 /**

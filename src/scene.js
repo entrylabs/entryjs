@@ -182,8 +182,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
     }
 
     Entry.Utils.disableContextmenu(viewTemplate);
-
-    $(viewTemplate).on('contextmenu', function() {
+    Entry.ContextMenu.onContextmenu($(viewTemplate), function (coordinate) {
         var options = [
             {
                 text: Lang.Workspace.duplicate_scene,
@@ -193,7 +192,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
                 }
             }
         ];
-        Entry.ContextMenu.show(options, 'workspace-contextmenu');
+        Entry.ContextMenu.show(options, 'workspace-contextmenu', coordinate);
     }.bind(this));
 
     scene.view = viewTemplate;
@@ -254,6 +253,9 @@ Entry.Scene.prototype.addScene = function(scene, index) {
     Entry.stage.objectContainers.push(Entry.stage.createObjectContainer(scene));
     this.selectScene(scene);
     this.updateView();
+
+    if (Entry.creationChangedEvent)
+        Entry.creationChangedEvent.notify();
     return scene;
 };
 
@@ -529,6 +531,16 @@ Entry.Scene.prototype.getNextScene = function() {
 Entry.Scene.prototype.isMax = function() {
     return this.scenes_.length >= this.maxCount;
 };
+
+Entry.Scene.prototype.clear = function() {
+    this.scenes_.map(function(s) {
+        Entry.stage.removeObjectContainer(s);
+    })
+    $(this.listView_).html("");
+    this.scenes_ = [];
+    this.selectedScene = null;
+};
+
 
 Entry.Scene.prototype._focusSceneNameField = function(scene) {
     var input = $(scene.view).find('input');
