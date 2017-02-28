@@ -297,7 +297,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                     Entry.do("addThread", datum)
                     .value.getFirstBlock().view;
 
-                this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
+                this._boardBlockView.onMouseDown.call(
+                    this._boardBlockView, e, true
+                );
                 this._boardBlockView.dragInstance.set({isNew:true});
             }
         } else {
