@@ -842,7 +842,7 @@ Entry.TextCodingUtil = {};
         param = param.replace(/\"/g, "");
 
         if(param) {
-            if(!Entry.Utils.isNumber(param)) {
+            if(isNaN(param)) {
                 param = param.replace(/ /g, "_space_");
             }
             else {
@@ -2183,7 +2183,7 @@ Entry.TextCodingUtil = {};
 
                 }*/
 
-                if(!Entry.Utils.isNumber(data))
+                if(isNaN(data))
                     data = "\"" + data + "\"";
                 value += data;
                 if(va != lArray.length-1)
