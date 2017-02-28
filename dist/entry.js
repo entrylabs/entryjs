@@ -22335,7 +22335,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     var d = this, e = d.block;
     if (!this.isInBlockMenu) {
       var c = [], g = this._board.readOnly, h = {text:Lang.Blocks.Duplication_option, enable:this.copyable && !g, callback:function() {
-        Entry.do("cloneBlock", e);
+        Entry.do("addThread", e.copy());
       }}, k = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable && !g, callback:function() {
         d.block.copyToClipboard();
       }}, g = {text:Lang.Blocks.Delete_Blocks, enable:e.isDeletable() && !g, callback:function() {
@@ -22565,8 +22565,7 @@ Entry.PARAM = -1;
   };
   c.getByPointer = function(b) {
     b = b.concat();
-    b.shift();
-    b.shift();
+    b.splice(0, 2);
     for (var c = this._data[b.shift()].getBlock(b.shift());b.length;) {
       c instanceof Entry.Block || (c = c.getValueBlock());
       var d = b.shift(), e = b.shift();
@@ -25230,8 +25229,9 @@ Entry.Thread = function(c, b, f) {
   c.pointer = function(b, c) {
     var d = this.indexOf(c);
     b.unshift(d);
-    this.parent instanceof Entry.Block && b.unshift(this.parent.indexOfStatements(this));
-    return this._code === this.parent ? (1 === this._data.length && b.shift(), b.unshift(this._code.indexOf(this)), d = this._data[0], b.unshift(d.y), b.unshift(d.x), b) : this.parent.pointer(b);
+    d = this.parent;
+    d instanceof Entry.Block && b.unshift(d.indexOfStatements(this));
+    return this._code === d ? (b.unshift(this._code.indexOf(this)), d = this._data[0], b.unshift(d.y), b.unshift(d.x), b) : d.pointer(b);
   };
   c.getBlockList = function(b, c) {
     for (var d = [], e = 0;e < this._data.length;e++) {

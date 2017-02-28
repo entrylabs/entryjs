@@ -114,9 +114,8 @@ goog.require("Entry.STATIC");
         },
         state: function(block, targetBlock) {
             block = this.editor.board.findBlock(block);
-            var data = [
-                block
-            ];
+            var data = [ block ];
+
             var pointer = block.targetPointer();
             data.push(pointer);
 
