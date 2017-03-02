@@ -27,7 +27,7 @@ Entry.PyHint = function(syntax) {
     this.addScope("Entry");
     this.addScope("random");
     this.addScope("math");
-    this.addScope("%2", "_list")
+    this.addScope("%2", "_list");
 
     this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
 
@@ -96,12 +96,12 @@ Entry.PyHint = function(syntax) {
                     var localKey;
                     if (key.indexOf(".") > -1) {
                         key = key.split(".");
-                        localSyntax = syntax[key[0]]
+                        localSyntax = syntax[key[0]];
                         localKey = key.shift();
                         key = key.join(".");
                     }
                     if (localSyntax[key].key)
-                        menuResult.push(localSyntax[key].key)
+                        menuResult.push(localSyntax[key].key);
                     return {
                         displayText: displayText,
                         hint: hintFunc,
@@ -131,12 +131,12 @@ Entry.PyHint = function(syntax) {
                         displayText: displayText,
                         hint: hintFunc,
                         syntax: syntax[variableToken.string][key]
-                    }
+                    };
                 })
                 var scope = this.syntax[variableToken.string];
                 menuResult = searchResult.map(function(key) {
                     return scope[key].key;
-                })
+                });
                 break;
             default:
                 break;
