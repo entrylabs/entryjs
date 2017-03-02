@@ -18,7 +18,6 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
 
 (function(p){
     p.Code = function(code, parseMode) {
-        console.log("BToJCodeParser", code);
         this._parseMode = parseMode;
         /*if (code instanceof Entry.Thread)
             return this.Thread(code);*/
@@ -94,11 +93,8 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
             var syntax = block._schema.syntax.concat();
         }
 
-        console.log("scope syntax", syntax);
-
         syntax.shift();
         var syntaxTokens = syntax[0].split(paramReg);
-        console.log("syntaxTokens", syntaxTokens);
 
         var schemaParams = block._schema.params;
         var dataParams = block.data.params;
@@ -129,8 +125,6 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
             }
         }
 
-        console.log("js result", result);
-
         if(result.charAt(result.length-1) == '#') {
             notParenthesis = true;
             result = result.substring(0, result.length-1);
@@ -142,8 +136,6 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
 
         result = Entry.TextCodingUtil.jsAdjustSyntax(block, result);
 
-        console.log("js result2", result);
-
         return result;
 
         //return syntax.splice(1, syntax.length - 1).join(".") + "();\n";
@@ -152,7 +144,7 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
     p.BasicFunction = function(block) {
         var statementCode = this.Thread(block.statements[0]);
         var code = "function promise() {\n" +
-            this.indent(statementCode).trim() + "}"
+            this.indent(statementCode).trim() + "}";
         return code;
     };
 
@@ -256,7 +248,6 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
     };
 
     p.Dropdown = function(dataParam) {
-        //console.log("Dropdown", dataParam);
         var value = dataParam;
         if(value == 'OBSTACLE')
             value = 'stone';
@@ -294,5 +285,18 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
         return this._parentParser.parse(datum,
             Entry.Parser.PARSE_SYNTAX);
     };
+
+    p.getAssistScope = function() {
+        if (this._assist)
+            return this._assist;
+
+        var assist = {};
+        for (var key in this.syntax.Scope) {
+            assist[key + '();\n'] = this.syntax.Scope[key];
+        }
+        this._assist = assist;
+        return assist;
+    };
+
 
 })(Entry.BlockToJsParser.prototype);
