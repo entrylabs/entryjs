@@ -4763,12 +4763,13 @@ Entry.Container.prototype.updateListView = function() {
     for (var c = this.listView_;c.hasChildNodes();) {
       c.removeChild(c.lastChild);
     }
-    var b = document.createDocumentFragment("div"), f = this.getCurrentObjects(), d;
-    for (d in f) {
-      var e = f[d];
-      !e.view_ && e.generateView();
-      b.appendChild(e.view_);
-    }
+    var b = document.createDocumentFragment("div");
+    this.getCurrentObjects().slice().sort(function(b, c) {
+      return b.index - c.index;
+    }).forEach(function(f) {
+      !f.view_ && f.generateView();
+      b.appendChild(f.view_);
+    });
     c.appendChild(b);
     Entry.stage.sortZorder();
     return !0;
@@ -5183,7 +5184,7 @@ Entry.Container.prototype.setCurrentObjects = function() {
 Entry.Container.prototype.getCurrentObjects = function() {
   var c = this.currentObjects_;
   c && 0 !== c.length || this.setCurrentObjects();
-  return this.currentObjects_;
+  return this.currentObjects_ || [];
 };
 Entry.Container.prototype.getProjectWithJSON = function(c) {
   c.objects = Entry.container.toJSON();
