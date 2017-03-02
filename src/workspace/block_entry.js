@@ -7476,9 +7476,9 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             if (operator == "PLUS") {
-                if (!Entry.Utils.isNumber(leftValue))
+                if (isNaN(leftValue))
                     leftValue = script.getStringValue("LEFTHAND", script);
-                if (!Entry.Utils.isNumber(rightValue))
+                if (isNaN(rightValue))
                     rightValue = script.getStringValue("RIGHTHAND", script);
                 return leftValue + rightValue;
             }
@@ -9384,7 +9384,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var left = script.getNumberValue("LEFTHAND", script);
             var right = script.getNumberValue("RIGHTHAND", script);
-            if (!Entry.Utils.isNumber(left) || !Entry.Utils.isNumber(right))
+            if (isNaN(left) || isNaN(right))
                 throw new Error();
             var operator = script.getField("OPERATOR", script);
             if (operator == 'QUOTIENT')
@@ -30661,7 +30661,7 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
             sq.outport = script.getField('PORT');
             sq.value = 0;
-            if(Entry.Utils.isNumber(value)){
+            if(!isNaN(value)){
                 var tmp = value;
                 if(value < 0) tmp = 0;
                 if(value > 255) tmp = 255;

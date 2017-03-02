@@ -1000,8 +1000,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(c, b) {
-  var f = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(f, "on" == d ? 255 : 0);
+  var f = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(f, d);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1205,8 +1205,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(c, b) {
   var f = b.getField("PORT"), d = 7;
   "7" == f ? d = 7 : "8" == f ? d = 8 : "9" == f ? d = 9 : "10" == f && (d = 10);
-  f = b.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(d, "on" == f ? 255 : 0);
+  f = "on" == b.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(d, f);
   return b.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -3707,8 +3707,8 @@ Blockly.Blocks.roduino_set_digital = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.roduino_set_digital = function(c, b) {
-  var f = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
-  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, f, "on" == d ? 1 : 0]);
+  var f = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 1 : 0;
+  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, f, d]);
   return b.callReturn();
 };
 Blockly.Blocks.roduino_motor = {init:function() {
@@ -3784,8 +3784,8 @@ Blockly.Blocks.schoolkit_set_output = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.schoolkit_set_output = function(c, b) {
-  var f = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
-  Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, f, "on" == d ? 1 : 0]);
+  var f = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 1 : 0;
+  Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, f, d]);
   return b.callReturn();
 };
 Blockly.Blocks.schoolkit_get_in_port_number = {init:function() {
@@ -3821,9 +3821,9 @@ Blockly.Blocks.schoolkit_motor = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.schoolkit_motor = function(c, b) {
-  var f = 0, f = b.getField("MODE"), d = b.getField("OPERATOR"), e = b.getNumberValue("VALUE"), f = "motor1" == f ? 7 : 8;
-  255 < e ? e = 255 : 0 > e && (e = 0);
-  "cw" == d ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 1, f, e]) : "ccw" == d ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 2, f, e]) : "stop" == d && Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 0, f, e]);
+  var f = 0, d = 0, f = b.getField("MODE"), e = b.getField("OPERATOR"), g = b.getNumberValue("VALUE"), f = "motor1" == f ? 7 : 8;
+  255 < g ? g = 255 : 0 > g && (g = 0);
+  "cw" == e ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 1, f, g]) : "ccw" == e ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 2, f, g]) : "stop" == e && Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, d, f, g]);
   return b.callReturn();
 };
 Blockly.Blocks.schoolkit_set_servo_value = {init:function() {
@@ -10795,7 +10795,7 @@ Entry.TextCodingUtil = {};
     var f = b.indexOf("("), c = b.indexOf(")"), e = b.substring(0, f);
     b = b.substring(f + 1, c);
     if (b = b.replace(/\"/g, "")) {
-      b = Entry.Utils.isNumber(b) ? "num" + b : b.replace(/ /g, "_space_"), "None" == b && (b = "none");
+      b = isNaN(b) ? b.replace(/ /g, "_space_") : "num" + b, "None" == b && (b = "none");
     }
     return e + "(" + b + "):\n";
   };
@@ -11267,7 +11267,7 @@ Entry.TextCodingUtil = {};
           }
         }
         for (var l in k) {
-          e = k[l].data, Entry.Utils.isNumber(e) || (e = '"' + e + '"'), h += e, l != k.length - 1 && (h += ", ");
+          e = k[l].data, isNaN(e) && (e = '"' + e + '"'), h += e, l != k.length - 1 && (h += ", ");
         }
         b += g + " = [" + h + "]\n";
       }
@@ -12740,14 +12740,13 @@ Entry.PyToBlockParser = function(c) {
         }
         k && l && m && (q = k.concat(".").concat(l).concat(".").concat(m));
       }
-      "__pythonRuntime.objects.list" == q ? (m = e.name, l = [], Entry.TextCodingUtil.isGlobalListExisted(m) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalList(m, l) : this._funcLoop || Entry.TextCodingUtil.createGlobalList(m, l)) : (m = e.name, h = 0, !h && 0 != h || -1 != m.search("__filbert") || (Entry.TextCodingUtil.isGlobalVariableExisted(m) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(m, h) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(m, 0) : Entry.TextCodingUtil.createGlobalVariable(m, 
-      h)));
+      "__pythonRuntime.objects.list" == q ? (m = e.name, l = [], Entry.TextCodingUtil.isGlobalListExisted(m) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalList(m, l) : this._funcLoop || Entry.TextCodingUtil.createGlobalList(m, l)) : (m = e.name, (h = 0, 0 == h) && -1 == m.search("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(m) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(m, h) : (this._funcLoop && (h = 0), Entry.TextCodingUtil.createGlobalVariable(m, h))));
       l = this[e.type](e);
       k = this[g.type](g);
       if ("Identifier" == g.type || "MemberExpression" == g.type) {
         k.property && "__pythonRuntime.ops.subscriptIndex" == k.property.callee ? k.object && k.object.object ? "self" != k.object.object.name ? (m = k.object.object.name, Entry.TextCodingUtil.isGlobalListExisted(m) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, m, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)) : k.object.property && (m = k.object.property.name, Entry.TextCodingUtil.isLocalListExisted(k.object.property.name, 
-        this._currentObject) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, m, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)) : k.object && (m = k.object.name, "get_variable" == k.object.type && (Entry.TextCodingUtil.isGlobalListExisted(m) || Entry.TextCodingUtil.isGlobalVariableExisted(m) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, m, this._blockCount, 
-        Entry.TextCodingError.SUBJECT_CONV_LIST))) : k.object ? "self" != k.object.name ? (h = k.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : k.property.name && (m = k.property.name, Entry.TextCodingUtil.isLocalVariableExisted(m, this._currentObject) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, 
+        this._currentObject) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, m, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)) : k.object && (m = k.object.name, "get_variable" != k.object.type || Entry.TextCodingUtil.isGlobalListExisted(m) || Entry.TextCodingUtil.isGlobalVariableExisted(m) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, m, this._blockCount, 
+        Entry.TextCodingError.SUBJECT_CONV_LIST)) : k.object ? "self" != k.object.name ? (h = k.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : k.property.name && (m = k.property.name, Entry.TextCodingUtil.isLocalVariableExisted(m, this._currentObject) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, 
         m, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : (m = k.name, Entry.TextCodingUtil.isGlobalVariableExisted(m) || (h = m, this.isFuncParam(m) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)));
       }
       var q;
@@ -12768,7 +12767,7 @@ Entry.PyToBlockParser = function(c) {
         m = e.name;
         "Literal" == g.type ? h = g.value : "Identifier" == g.type ? h = g.name : "UnaryExpression" == g.type ? (h = k.params[0], "string" != typeof h && "number" != typeof h && (h = 0)) : h = 0;
         Entry.Utils.isNumber(h) && (h = parseFloat(h));
-        !h && 0 != h || -1 != m.search("__filbert") || (Entry.TextCodingUtil.isGlobalVariableExisted(m) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(m, h) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(m, 0) : Entry.TextCodingUtil.createGlobalVariable(m, h));
+        !h && 0 != h || -1 != m.search("__filbert") || (Entry.TextCodingUtil.isGlobalVariableExisted(m) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(m, h) : (this._funcLoop && (h = 0), Entry.TextCodingUtil.createGlobalVariable(m, h)));
         c.id = l;
         c.init = k;
         if ("Literal" == g.type) {
@@ -12920,7 +12919,7 @@ Entry.PyToBlockParser = function(c) {
               g = "number" == m.type || "text" == m.type ? m.params[0] : 0;
               Entry.Utils.isNumber(g) && (g = parseFloat(g));
               if (g || 0 == g) {
-                Entry.TextCodingUtil.isLocalVariableExisted(t, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateLocalVariable(t, g, this._currentObject) : this._funcLoop ? Entry.TextCodingUtil.createLocalVariable(t, 0, this._currentObject) : Entry.TextCodingUtil.createLocalVariable(t, g, this._currentObject);
+                Entry.TextCodingUtil.isLocalVariableExisted(t, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateLocalVariable(t, g, this._currentObject) : (this._funcLoop && (g = 0), Entry.TextCodingUtil.createLocalVariable(t, g, this._currentObject));
               }
               t = this.ParamDropdownDynamic(t, l[0], y[0]);
               e.push(t);
@@ -12939,7 +12938,7 @@ Entry.PyToBlockParser = function(c) {
           } else {
             t = k.name;
             if ((g = "number" == m.type || "text" == m.type ? m.params[0] : 0) || 0 == g) {
-              Entry.TextCodingUtil.isGlobalVariableExisted(t) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(t, g) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(t, 0) : Entry.TextCodingUtil.createGlobalVariable(t, g);
+              Entry.TextCodingUtil.isGlobalVariableExisted(t) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(t, g) : (this._funcLoop && (g = 0), Entry.TextCodingUtil.createGlobalVariable(t, g));
             }
             t = this.ParamDropdownDynamic(t, l[0], y[0]);
             e.push(t);
@@ -13052,7 +13051,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.Literal = function(b, c, d, e) {
     var g, h = b.value;
-    h && !Entry.Utils.isNumber(h) && (h = h.replace(/\t/gm, "    "));
+    h && "string" === typeof h && (h = h.replace(/\t/gm, "    "));
     c || (c = {type:"Block"}, d || (d = "number" == typeof h ? {type:"number"} : {type:"text"}));
     if ("Indicator" == c.type) {
       return null;
@@ -13119,7 +13118,7 @@ Entry.PyToBlockParser = function(c) {
     }
     if (e && e.codeMap) {
       if ((g = e.codeMap) && eval(g)) {
-        Entry.Utils.isNumber(b) || (b = b.toLowerCase());
+        "string" === typeof b && (b = b.toLowerCase());
         var h = eval(g)[b];
       }
       h && (b = h);
@@ -13129,9 +13128,9 @@ Entry.PyToBlockParser = function(c) {
   };
   c.ParamDropdownDynamic = function(b, c, d, e, g) {
     e && (b = Entry.TextCodingUtil.getDynamicIdByNumber(b, e, this._currentObject));
-    b && !Entry.Utils.isNumber(b) && 2 < b.split(".").length && "self" == b.split(".")[0] && (b = b.split(".")[1], g = this._currentObject);
+    b && isNaN(b) && 2 < b.split(".").length && "self" == b.split(".")[0] && (b = b.split(".")[1], g = this._currentObject);
     b = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(b, c.menuName, g);
-    e && e.codeMap && ((c = e.codeMap) && eval(c) && (Entry.Utils.isNumber(b) || (b = b.toLowerCase())), (c = eval(c)[b]) && (b = c));
+    e && e.codeMap && ((c = e.codeMap) && eval(c) && isNaN(b) && (b = b.toLowerCase()), (c = eval(c)[b]) && (b = c));
     return b;
   };
   c.ParamKeyboard = function(b, c, d) {
@@ -13139,7 +13138,7 @@ Entry.PyToBlockParser = function(c) {
     if (/None/.test(b)) {
       return "None";
     }
-    (b = Entry.Utils.isNumber(b) ? Entry.KeyboardCode.map[b] : Entry.KeyboardCode.map[b.toLowerCase()]) && (c = b.toString());
+    (b = isNaN(b) ? Entry.KeyboardCode.map[b.toLowerCase()] : Entry.KeyboardCode.map[b]) && (c = b.toString());
     return c;
   };
   c.Indicator = function(b, c, d) {
@@ -15751,13 +15750,13 @@ Entry.Command = {};
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
     return [];
-  }};
+  }, skipUndoStack:!0};
   c[Entry.STATIC.COMMAND_TYPES.undo] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
     return [];
-  }};
+  }, skipUndoStack:!0};
   c[Entry.STATIC.COMMAND_TYPES.redo] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
     return [];
-  }};
+  }, skipUndoStack:!0};
 })(Entry.Command);
 Entry.Commander = function(c) {
   if ("workspace" == c || "phone" == c) {
@@ -15870,7 +15869,6 @@ Entry.Commander = function(c) {
     return [["block", b], ["pointer", c]];
   }, undo:"destroyBlock"};
   c[b.insertBlock] = {do:function(b, c, e) {
-    console.log(c);
     b = this.editor.board.findBlock(b);
     this.editor.board.insert(b, c, e);
   }, state:function(b, c) {
@@ -21135,7 +21133,7 @@ Entry.BlockMenu = function(c, b, f, d, e) {
     if (!this._boardBlockView && null !== c) {
       var d = this.workspace, e = d.getMode(), g = Entry.Workspace, h = this._svgWidth, k = d.selectedBoard, l = c.mouseDownCoordinate, m = d = 0;
       l && (d = b.pageX - l.x, m = b.pageY - l.y);
-      !k || e !== g.MODE_BOARD && e !== g.MODE_OVERLAYBOARD ? (h = Entry.GlobalSvg, h.setView(c, e) && (h.adjust(d, m), h.addControl(b))) : k.code && (e = c.block, c = e.getThread(), e && c && (e = this.offset().top - k.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - h + (d || 0), c[0].y = c[0].y + e + (m || 0), this._boardBlockView = Entry.do("addThread", c).value.getFirstBlock().view, this._boardBlockView.onMouseDown.call(this._boardBlockView, b), this._boardBlockView.dragInstance.set({isNew:!0})));
+      !k || e !== g.MODE_BOARD && e !== g.MODE_OVERLAYBOARD ? (h = Entry.GlobalSvg, h.setView(c, e) && (h.adjust(d, m), h.addControl(b))) : k.code && (e = c.block, c = e.getThread(), e && c && (e = this.offset().top - k.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - h + (d || 0), c[0].y = c[0].y + e + (m || 0), this._boardBlockView = Entry.do("addThread", c).value.getFirstBlock().view, this._boardBlockView.onMouseDown.call(this._boardBlockView, b, !0), this._boardBlockView.dragInstance.set({isNew:!0})));
     }
   };
   c.terminateDrag = function() {
@@ -21877,20 +21875,20 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this._moveTo(0, 0, !1);
     b.appendChild(this.svgGroup);
   };
-  c._toGlobalCoordinate = function(b) {
-    b = this.getAbsoluteCoordinate(b);
-    this._moveTo(b.x, b.y, !1);
+  c._toGlobalCoordinate = function(b, c) {
+    var d = this.getAbsoluteCoordinate(b);
+    this._moveTo(d.x, d.y, !1, c);
     this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
   };
-  c._moveTo = function(b, c, d) {
-    var e = this.x, g = this.y;
+  c._moveTo = function(b, c, d, e) {
+    var g = this.x, h = this.y;
     this.display || (c = b = -99999);
-    e === b && g === c || this.set({x:b, y:c});
-    this._lazyUpdatePos();
+    g === b && h === c || this.set({x:b, y:c});
+    !0 !== e && this._lazyUpdatePos();
     this.visible && this.display && this._setPosition(d);
   };
-  c._moveBy = function(b, c, d) {
-    return this._moveTo(this.x + b, this.y + c, d);
+  c._moveBy = function(b, c, d, e) {
+    return this._moveTo(this.x + b, this.y + c, d, e);
   };
   c._addControl = function() {
     var b = this;
@@ -21915,7 +21913,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
       f = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
       var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(f.pageX - k.x, 2) + Math.pow(f.pageY - k.y, 2));
       if (g.dragMode == Entry.DRAG_MODE_DRAG || k > Entry.BlockView.DRAG_RADIUS) {
-        e && (clearTimeout(e), e = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, d), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), d = g.dragInstance, g._moveBy(f.pageX - d.offsetX, f.pageY - d.offsetY, !1), d.set({offsetX:f.pageX, 
+        e && (clearTimeout(e), e = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, d), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), d = g.dragInstance, g._moveBy(f.pageX - d.offsetX, f.pageY - d.offsetY, !1, !0), d.set({offsetX:f.pageX, 
         offsetY:f.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
       }
     }
