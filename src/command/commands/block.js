@@ -153,9 +153,14 @@ goog.require("Entry.STATIC");
     };
 
     c[COMMAND_TYPES.separateBlock] = {
-        do: function(block) {
+        do: function(block, dragMode) {
+            dragMode =
+                dragMode === undefined ?
+                Entry.DRAG_MODE_DRAG :
+                dragMode;
+
             if (block.view)
-                block.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
+                block.view._toGlobalCoordinate(dragMode);
             block.doSeparate();
         },
         state: function(block) {
@@ -212,43 +217,16 @@ goog.require("Entry.STATIC");
     };
 
     c[COMMAND_TYPES.cloneBlock] = {
-        do: function(block) {
-            block = this.editor.board.findBlock(block);
-            this.editor.board.code.createThread(block.copy());
-        },
-        state: function(block) {
-            if (typeof block !== "string")
-                block = block.id;
-            return [block];
-        },
-        log: function(block) {
-            block = this.editor.board.findBlock(block);
-            var lastThread = this.editor.board.code.getThreads().pop();
-            return [
-                ['block', block.pointer()],
-                ['thread', lastThread.stringify()]
-            ];
-        },
+        do: c[COMMAND_TYPES.addThread].do,
+        state: c[COMMAND_TYPES.addThread].state,
+        log: c[COMMAND_TYPES.addThread].log,
         undo: "uncloneBlock"
     };
 
     c[COMMAND_TYPES.uncloneBlock] = {
-        do: function(block) {
-            var threads = this.editor.board.code.getThreads();
-            var lastBlock = threads.pop().getFirstBlock();
-            this._tempStorage = lastBlock.id;
-            lastBlock.destroy(true, true);
-        },
-        state: function(block) {
-            return [block];
-        },
-        log: function(block) {
-            var blockId = this._tempStorage;
-            this._tempStorage = null;
-            return [
-                ['blockId', blockId]
-            ];
-        },
+        do: c[COMMAND_TYPES.destroyThread].do,
+        state: c[COMMAND_TYPES.destroyThread].state,
+        log: c[COMMAND_TYPES.destroyThread].log,
         undo: "cloneBlock"
     };
 
