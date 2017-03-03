@@ -126,22 +126,38 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         target = this.view[0];
 
         function eventDragEnd(e) {
-            var textCode = _self.getCodeToText(e.block, Entry.Parser.PARSE_BLOCK);
+            var block = e.block;
 
-            _self.codeMirror.display.dragFunctions.leave(e);
-            var mousedown = Entry.Utils.createMouseEvent('mousedown', e);
-            _self.codeMirror.display.scroller.dispatchEvent(mousedown);
+            if (!block) return;
+
+            var codeMirror = _self.codeMirror;
+            var textCode = _self.getCodeToText(block, Entry.Parser.PARSE_BLOCK);
+
+            codeMirror.display.dragFunctions.leave(e);
+            codeMirror.display.scroller.dispatchEvent(
+                Entry.Utils.createMouseEvent('mousedown', e));
+
             var testArr = textCode.split('\n');
             var max = testArr.length - 1;
-            var lastLine = 0;
+            var statementCursorLine = _self.doc.getCursor().line;
             testArr.forEach(function (text, i) {
-                if(i != max) text += '\n';
-                _self.codeMirror.replaceSelection(text);
-                var cursor = _self.doc.getCursor();
-                lastLine = cursor.line;
+                if (i != max) text += '\n';
+                codeMirror.replaceSelection(text);
             });
-            var mouseup = Entry.Utils.createMouseEvent('mouseup', e);
-            _self.codeMirror.display.scroller.dispatchEvent(mouseup);
+
+            //set cursor for statement block
+            if (block.statements && block.statements.length) {
+                statementCursorLine++;
+                codeMirror.setCursor(statementCursorLine);
+                if (codeMirror.getLine(statementCursorLine)) {
+                    codeMirror.replaceSelection('\n');
+                    codeMirror.setCursor(statementCursorLine);
+                }
+                CodeMirror.commands.indentAuto(codeMirror);
+            }
+
+            codeMirror.display.scroller.dispatchEvent(
+                Entry.Utils.createMouseEvent('mouseup', e));
         }
 
         function eventDragOver(e) {
