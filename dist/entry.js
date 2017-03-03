@@ -11376,8 +11376,11 @@ Entry.BlockToJsParser = function(c, b) {
     return "for (var " + d + " = 0; " + d + " < " + c + "; " + d + "++) {\n" + this.indent(b) + "}";
   };
   c.BasicIf = function(b) {
+    var c;
     if (2 == b.data.statements.length) {
-      var c = this.Thread(b.statements[0]), d = this.Thread(b.statements[1]), e = b._schema.syntax.concat(), e = (b = b.data.params[0]) && "True" == b.data.type ? e[1] : void 0 === b ? e[1] : this.Block(b), c = "if (" + e + ") {\n" + this.indent(c) + "}\nelse {\n" + this.indent(d) + "}\n"
+      c = this.Thread(b.statements[0]);
+      var d = this.Thread(b.statements[1]), e = b._schema.syntax.concat(), e = (b = b.data.params[0]) && "True" == b.data.type ? e[1] : void 0 === b ? e[1] : this.Block(b);
+      c = "if (" + e + ") {\n" + this.indent(c) + "}\nelse {\n" + this.indent(d) + "}\n";
     } else {
       c = this.Thread(b.statements[0]), e = b._schema.syntax.concat(), e = (b = b.data.params[0]) && "True" == b.data.type ? e[1] : void 0 === b ? e[1] : this.Block(b), c = "if (" + e + ") {\n" + this.indent(c) + "}\n";
     }
@@ -25741,18 +25744,19 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
 (function(c) {
   c.createDom = function(b) {
     function c(b) {
-      var d = e.getCodeToText(b.block, Entry.Parser.PARSE_BLOCK);
-      e.codeMirror.display.dragFunctions.leave(b);
-      var f = Entry.Utils.createMouseEvent("mousedown", b);
-      e.codeMirror.display.scroller.dispatchEvent(f);
-      var d = d.split("\n"), g = d.length - 1;
-      d.forEach(function(b, c) {
-        c != g && (b += "\n");
-        e.codeMirror.replaceSelection(b);
-        e.doc.getCursor();
-      });
-      b = Entry.Utils.createMouseEvent("mouseup", b);
-      e.codeMirror.display.scroller.dispatchEvent(b);
+      var d = b.block;
+      if (d) {
+        var f = e.codeMirror, g = e.getCodeToText(d, Entry.Parser.PARSE_BLOCK);
+        f.display.dragFunctions.leave(b);
+        f.display.scroller.dispatchEvent(Entry.Utils.createMouseEvent("mousedown", b));
+        var g = g.split("\n"), q = g.length - 1, n = e.doc.getCursor().line;
+        g.forEach(function(b, c) {
+          c != q && (b += "\n");
+          f.replaceSelection(b);
+        });
+        d.statements && d.statements.length && (n++, f.setCursor(n), f.getLine(n) && (f.replaceSelection("\n"), f.setCursor(n)), CodeMirror.commands.indentAuto(f));
+        f.display.scroller.dispatchEvent(Entry.Utils.createMouseEvent("mouseup", b));
+      }
     }
     function d(b) {
       e.codeMirror.display.dragFunctions.over(b);
