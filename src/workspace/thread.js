@@ -248,17 +248,19 @@ Entry.Thread = function(thread, code, parent) {
     p.pointer = function(pointer, block) {
         var index = this.indexOf(block);
         pointer.unshift(index);
-        if (this.parent instanceof Entry.Block)
-            pointer.unshift(this.parent.indexOfStatements(this));
-        if (this._code === this.parent) {
-            this._data.length === 1 && pointer.shift();
+        var parent = this.parent;
+
+        if (parent instanceof Entry.Block)
+            pointer.unshift(parent.indexOfStatements(this));
+
+        if (this._code === parent) {
             pointer.unshift(this._code.indexOf(this));
             var topBlock = this._data[0];
             pointer.unshift(topBlock.y);
             pointer.unshift(topBlock.x);
             return pointer;
         }
-        return this.parent.pointer(pointer);
+        return parent.pointer(pointer);
     };
 
     p.getBlockList = function(excludePrimitive, type) {
