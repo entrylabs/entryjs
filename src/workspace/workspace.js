@@ -120,23 +120,21 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     }
                     this.board && this.board.hide();
                     this.overlayBoard && this.overlayBoard.hide();
-                    blockMenu.banClass('functionInit');
                     this.set({selectedBoard:this.vimBoard});
                     this.vimBoard.show();
+                    blockMenu.banClass('functionInit', true);
                     this.codeToText(this.board.code, mode);
-                    blockMenu.renderText();
                     this.board.clear();
                     this.oldTextType = this.textType;
                 break;
             case WORKSPACE.MODE_BOARD:
                 try {
                     this.board.show();
-                    blockMenu.unbanClass('functionInit');
+                    blockMenu.unbanClass('functionInit', true);
                     this.set({selectedBoard:this.board});
                     this.textToCode(this.oldMode, this.oldTextType);
                     if (this.overlayBoard)
                         this.overlayBoard.hide();
-                    blockMenu.renderBlock();
                     this.oldTextType = this.textType;
                     this.vimBoard && this.vimBoard.hide();
                 } catch(e) {
@@ -157,11 +155,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         mode.textType = VIM.TEXT_TYPE_PY;
                         mode.runType = VIM.WORKSPACE_MODE;
                         this.oldTextType = VIM.TEXT_TYPE_PY;
-                        //console.log(("mode", mode);
                     }
                     Entry.getMainWS().setMode(mode);
-
-                    //throw e;
                 }
                 Entry.commander.setCurrentEditor("board", this.board);
                 break;
@@ -181,11 +176,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         }
 
         this.oldMode = this.mode;
-        if(this.mode == WORKSPACE.MODE_VIMBOARD)
-            Entry.isTextMode = true;
-        else
-            Entry.isTextMode = false;
+        Entry.isTextMode = this.mode == WORKSPACE.MODE_VIMBOARD;
 
+        blockMenu.align();
         Entry.dispatchEvent('workspaceChangeMode');
         this.changeEvent.notify(message);
         Entry.dispatchEvent('cancelBlockMenuDynamic');

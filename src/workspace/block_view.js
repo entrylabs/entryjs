@@ -379,13 +379,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         parentSvgGroup.appendChild(this.svgGroup);
     };
 
-    p._toGlobalCoordinate = function(dragMode) {
+    p._toGlobalCoordinate = function(dragMode, doNotUpdatePos) {
         var pos = this.getAbsoluteCoordinate(dragMode);
-        this._moveTo(pos.x, pos.y, false);
+        this._moveTo(pos.x, pos.y, false, doNotUpdatePos);
         this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
     };
 
-    p._moveTo = function(x, y, animate) {
+    p._moveTo = function(x, y, animate, doNotUpdatePos) {
         var thisX = this.x;
         var thisY = this.y;
         if (!this.display) {
@@ -394,16 +394,19 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
         if (thisX !== x || thisY !== y)
             this.set({ x: x, y: y });
-        this._lazyUpdatePos();
+
+        doNotUpdatePos !== true && this._lazyUpdatePos();
+
         if (this.visible && this.display)
             this._setPosition(animate);
     };
 
-    p._moveBy = function(x, y, animate) {
+    p._moveBy = function(x, y, animate, doNotUpdatePos) {
         return this._moveTo(
             this.x + x,
             this.y + y,
-            animate
+            animate,
+            doNotUpdatePos
         );
     };
 
@@ -519,7 +522,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 if (!blockView.isInBlockMenu) {
                     var isFirst = false;
                     if (blockView.dragMode != Entry.DRAG_MODE_DRAG) {
-                        blockView._toGlobalCoordinate();
+                        blockView._toGlobalCoordinate(undefined, true);
                         blockView.dragMode = Entry.DRAG_MODE_DRAG;
                         blockView.block.getThread().changeEvent.notify();
                         Entry.GlobalSvg.setView(blockView, workspaceMode);
@@ -541,7 +544,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     blockView._moveBy(
                         mouseEvent.pageX - dragInstance.offsetX,
                         mouseEvent.pageY - dragInstance.offsetY,
-                        false
+                        false,
+                        true
                     );
                     dragInstance.set({
                         offsetX: mouseEvent.pageX,
@@ -629,17 +633,20 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                     this.dragMode = dragMode;
                                     board.separate(block);
                                     this.dragMode = Entry.DRAG_MODE_NONE;
-                                    Entry.do("insertBlock", closeBlock, lastBlock).isPass(fromBlockMenu);
+                                    Entry.do("insertBlock", closeBlock, lastBlock)
+                                        .isPass(fromBlockMenu);
                                     Entry.ConnectionRipple
                                         .setView(closeBlock.view)
                                         .dispose();
                                 } else {
-                                    Entry.do("insertBlock", block, closeBlock).isPass(fromBlockMenu);
+                                    Entry.do("insertBlock", block, closeBlock)
+                                        .isPass(fromBlockMenu);
                                     ripple = true;
                                 }
                                 createjs.Sound.play('entryMagneting');
                             } else {
-                                Entry.do("moveBlock", block).isPass(fromBlockMenu);
+                                Entry.do("moveBlock", block)
+                                    .isPass(fromBlockMenu);
                             }
                         }
                         break;
@@ -1226,7 +1233,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             text: Lang.Blocks.Duplication_option,
             enable: this.copyable && !isBoardReadOnly,
             callback: function(){
-                Entry.do("cloneBlock", block);
+                Entry.do("cloneBlock", block.copy());
             }
         };
 

@@ -4763,12 +4763,13 @@ Entry.Container.prototype.updateListView = function() {
     for (var c = this.listView_;c.hasChildNodes();) {
       c.removeChild(c.lastChild);
     }
-    var b = document.createDocumentFragment("div"), f = this.getCurrentObjects(), d;
-    for (d in f) {
-      var e = f[d];
-      !e.view_ && e.generateView();
-      b.appendChild(e.view_);
-    }
+    var b = document.createDocumentFragment("div");
+    this.getCurrentObjects().slice().sort(function(b, c) {
+      return b.index - c.index;
+    }).forEach(function(f) {
+      !f.view_ && f.generateView();
+      b.appendChild(f.view_);
+    });
     c.appendChild(b);
     Entry.stage.sortZorder();
     return !0;
@@ -5183,7 +5184,7 @@ Entry.Container.prototype.setCurrentObjects = function() {
 Entry.Container.prototype.getCurrentObjects = function() {
   var c = this.currentObjects_;
   c && 0 !== c.length || this.setCurrentObjects();
-  return this.currentObjects_;
+  return this.currentObjects_ || [];
 };
 Entry.Container.prototype.getProjectWithJSON = function(c) {
   c.objects = Entry.container.toJSON();
@@ -9496,7 +9497,7 @@ Entry.popupHelper.prototype.hide = function() {
   0 < this.nextPopupList.length && this.show(this.nextPopupList.shift());
 };
 Entry.getStartProject = function(c) {
-  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"when_run_button_click", x:40, y:50}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}]], 
+  return {category:"\uae30\ud0c0", scenes:[{name:Lang.Blocks.SCENE + " 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"when_run_button_click", x:40, y:50}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}]], 
   selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:c + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:c + "media/entrybot1.png", name:Lang.Blocks.walking_entryBot + "1", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:c + "media/entrybot2.png", name:Lang.Blocks.walking_entryBot + "2", scale:100, dimension:{width:284, height:350}}]}, 
   entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
 };
@@ -10795,7 +10796,7 @@ Entry.TextCodingUtil = {};
     var f = b.indexOf("("), c = b.indexOf(")"), e = b.substring(0, f);
     b = b.substring(f + 1, c);
     if (b = b.replace(/\"/g, "")) {
-      b = Entry.Utils.isNumber(b) ? "num" + b : b.replace(/ /g, "_space_"), "None" == b && (b = "none");
+      b = isNaN(b) ? b.replace(/ /g, "_space_") : "num" + b, "None" == b && (b = "none");
     }
     return e + "(" + b + "):\n";
   };
@@ -11267,7 +11268,7 @@ Entry.TextCodingUtil = {};
           }
         }
         for (var l in k) {
-          e = k[l].data, Entry.Utils.isNumber(e) || (e = '"' + e + '"'), h += e, l != k.length - 1 && (h += ", ");
+          e = k[l].data, isNaN(e) && (e = '"' + e + '"'), h += e, l != k.length - 1 && (h += ", ");
         }
         b += g + " = [" + h + "]\n";
       }
@@ -11290,18 +11291,18 @@ Entry.TextCodingUtil = {};
     }
     return !1;
   };
-  c.generateForStmtIndex = function(b, f) {
-    var c = Math.floor(b / 3);
-    f = ["i", "j", "k"][b % 3] + (f || "");
-    return c ? this.generateForStmtIndex(c - 1, f) : f;
+  c.generateForStmtIndex = function(b, c) {
+    var d = Math.floor(b / 3);
+    c = ["i", "j", "k"][b % 3] + (c || "");
+    return d ? this.generateForStmtIndex(d - 1, c) : c;
   };
-  c.isExpressionLiteral = function(b, f) {
+  c.isExpressionLiteral = function(b, c) {
     switch(b.type) {
       case "CallExpression":
         if ("MemberExpression" === b.callee.type) {
-          var c = b.callee.property.name;
-          if (c = f["%2"][c]) {
-            return "basic_string_field" === Entry.block[c.key].skeleton;
+          var d = b.callee.property.name;
+          if (d = c["%2"][d]) {
+            return "basic_string_field" === Entry.block[d.key].skeleton;
           }
         }
         break;
@@ -11319,57 +11320,50 @@ Entry.BlockToJsParser = function(c, b) {
   this._iterVariableChunk = ["i", "j", "k"];
 };
 (function(c) {
-  c.Code = function(b, f) {
-    console.log("BToJCodeParser", b);
-    this._parseMode = f;
+  c.Code = function(b, c) {
+    this._parseMode = c;
     if (b instanceof Entry.Block) {
       return this.Block(b);
     }
-    for (var c = "", e = b._data, g = 0;g < e.length;g++) {
-      c += this.Thread(e[g]);
+    for (var d = "", e = b._data, g = 0;g < e.length;g++) {
+      d += this.Thread(e[g]);
     }
-    return c.trim();
+    return d.trim();
   };
   c.Thread = function(b) {
     if (b instanceof Entry.Block) {
       return this.Block(b);
     }
-    var f = "";
+    var c = "";
     b = b.getBlocks();
-    for (var c = 0;c < b.length;c++) {
-      var e = b[c];
-      c != b.length - 1 ? (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? f += e + "\n" : this._parseMode == Entry.Parser.PARSE_SYNTAX && (f = e + "\n")) : (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? f += e : this._parseMode == Entry.Parser.PARSE_SYNTAX && (f = e));
+    for (var d = 0;d < b.length;d++) {
+      var e = b[d];
+      d != b.length - 1 ? (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? c += e + "\n" : this._parseMode == Entry.Parser.PARSE_SYNTAX && (c = e + "\n")) : (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? c += e : this._parseMode == Entry.Parser.PARSE_SYNTAX && (c = e));
     }
-    return f + "\n";
+    return c + "\n";
   };
   c.Block = function(b) {
-    var f = b._schema.syntax.js ? b._schema.syntax.js : b._schema.syntax;
-    return f ? b = this[f[0]](b) : "";
+    var c = b._schema.syntax.js ? b._schema.syntax.js : b._schema.syntax;
+    return c ? b = this[c[0]](b) : "";
   };
   c.Program = function(b) {
     return "";
   };
   c.Scope = function(b) {
-    var f = !1, c = "", e = /(%.)/mi;
+    var c = !1, d = "", e = /(%.)/mi;
     if (b._schema.syntax.js) {
-      var g = b._schema.syntax.js.concat(), f = !0
+      var g = b._schema.syntax.js.concat(), c = !0
     } else {
       g = b._schema.syntax.concat();
     }
-    console.log("scope syntax", g);
     g.shift();
-    g = g[0].split(e);
-    console.log("syntaxTokens", g);
-    for (var h = b._schema.params, k = b.data.params, l = 0;l < g.length;l++) {
+    for (var g = g[0].split(e), h = b._schema.params, k = b.data.params, l = 0;l < g.length;l++) {
       var m = g[l];
-      0 !== m.length && "Scope" !== m && ("Judge" === m ? f = !0 : e.test(m) ? (m = m.split("%")[1], m = parseInt(m) - 1, h[m] && "Image" != h[m].type && ("Block" == h[m].type ? (m = this.Block(k[m]), c += m) : c += this[h[m].type](k[m], h[m]))) : c += m);
+      0 !== m.length && "Scope" !== m && ("Judge" === m ? c = !0 : e.test(m) ? (m = m.split("%")[1], m = parseInt(m) - 1, h[m] && "Image" != h[m].type && ("Block" == h[m].type ? (m = this.Block(k[m]), d += m) : d += this[h[m].type](k[m], h[m]))) : d += m);
     }
-    console.log("js result", c);
-    "#" == c.charAt(c.length - 1) && (f = !0, c = c.substring(0, c.length - 1), c = c.trim());
-    f || (c += "();");
-    c = Entry.TextCodingUtil.jsAdjustSyntax(b, c);
-    console.log("js result2", c);
-    return c;
+    "#" == d.charAt(d.length - 1) && (c = !0, d = d.substring(0, d.length - 1), d = d.trim());
+    c || (d += "();");
+    return d = Entry.TextCodingUtil.jsAdjustSyntax(b, d);
   };
   c.BasicFunction = function(b) {
     b = this.Thread(b.statements[0]);
@@ -11426,6 +11420,16 @@ Entry.BlockToJsParser = function(c, b) {
   c.searchSyntax = function(b) {
     b instanceof Entry.BlockView && (b = b.block);
     return this._parentParser.parse(b, Entry.Parser.PARSE_SYNTAX);
+  };
+  c.getAssistScope = function() {
+    if (this._assist) {
+      return this._assist;
+    }
+    var b = {}, c;
+    for (c in this.syntax.Scope) {
+      b[c + "();\n"] = this.syntax.Scope[c];
+    }
+    return this._assist = b;
   };
 })(Entry.BlockToJsParser.prototype);
 Entry.BlockToPyParser = function(c) {
@@ -11978,7 +11982,7 @@ Entry.JsToBlockParser = function(c, b) {
           k = c[h].type, "Indicator" == k ? (k = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, k)) : "Text" == k && (k = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, k));
         }
         for (l in arguments) {
-          if (c = arguments[l], k = this[c.type](c), "string" == typeof k && (h = k.split("_"), "radar" == h[0] && (c = {type:"ai_distance_value", params:[]}, c.params.push(h[1].toUpperCase()), k = c)), k && null != k && ("ai_boolean_object" == g && (k = k.params[0], e.splice(1, 1)), k = Entry.TextCodingUtil.tTobDropdownValueConvertor(k), e.push(k), console.log("rigth param", e), e[2] && "text" != e[2].type && "ai_distance_value" != e[2].type)) {
+          if (c = arguments[l], k = this[c.type](c), "string" == typeof k && (h = k.split("_"), "radar" == h[0] && (c = {type:"ai_distance_value", params:[]}, c.params.push(h[1].toUpperCase()), k = c)), k && null != k && ("ai_boolean_object" == g && (k = k.params[0], e.splice(1, 1)), k = Entry.TextCodingUtil.tTobDropdownValueConvertor(k), e.push(k), e[2] && "text" != e[2].type && "ai_distance_value" != e[2].type)) {
             throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b.test};
           }
         }
@@ -13048,7 +13052,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.Literal = function(b, c, d, e) {
     var g, h = b.value;
-    h && !Entry.Utils.isNumber(h) && (h = h.replace(/\t/gm, "    "));
+    h && "string" === typeof h && (h = h.replace(/\t/gm, "    "));
     c || (c = {type:"Block"}, d || (d = "number" == typeof h ? {type:"number"} : {type:"text"}));
     if ("Indicator" == c.type) {
       return null;
@@ -13115,7 +13119,7 @@ Entry.PyToBlockParser = function(c) {
     }
     if (e && e.codeMap) {
       if ((g = e.codeMap) && eval(g)) {
-        Entry.Utils.isNumber(b) || (b = b.toLowerCase());
+        "string" === typeof b && (b = b.toLowerCase());
         var h = eval(g)[b];
       }
       h && (b = h);
@@ -13125,9 +13129,9 @@ Entry.PyToBlockParser = function(c) {
   };
   c.ParamDropdownDynamic = function(b, c, d, e, g) {
     e && (b = Entry.TextCodingUtil.getDynamicIdByNumber(b, e, this._currentObject));
-    b && !Entry.Utils.isNumber(b) && 2 < b.split(".").length && "self" == b.split(".")[0] && (b = b.split(".")[1], g = this._currentObject);
+    b && isNaN(b) && 2 < b.split(".").length && "self" == b.split(".")[0] && (b = b.split(".")[1], g = this._currentObject);
     b = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(b, c.menuName, g);
-    e && e.codeMap && ((c = e.codeMap) && eval(c) && (Entry.Utils.isNumber(b) || (b = b.toLowerCase())), (c = eval(c)[b]) && (b = c));
+    e && e.codeMap && ((c = e.codeMap) && eval(c) && isNaN(b) && (b = b.toLowerCase()), (c = eval(c)[b]) && (b = c));
     return b;
   };
   c.ParamKeyboard = function(b, c, d) {
@@ -13135,7 +13139,7 @@ Entry.PyToBlockParser = function(c) {
     if (/None/.test(b)) {
       return "None";
     }
-    (b = Entry.Utils.isNumber(b) ? Entry.KeyboardCode.map[b] : Entry.KeyboardCode.map[b.toLowerCase()]) && (c = b.toString());
+    (b = isNaN(b) ? Entry.KeyboardCode.map[b.toLowerCase()] : Entry.KeyboardCode.map[b]) && (c = b.toString());
     return c;
   };
   c.Indicator = function(b, c, d) {
@@ -14074,7 +14078,7 @@ Entry.Parser = function(c, b, f, d) {
   this._mode = c;
   this.syntax = {};
   this.codeMirror = f;
-  this._lang = d || "blockPy";
+  this._lang = d;
   this._type = b;
   this.availableCode = [];
   this._syntax_cache = {};
@@ -14086,25 +14090,6 @@ Entry.Parser = function(c, b, f, d) {
   Entry.Parser.PARSE_BLOCK = 4;
   this._onRunError = this._onError = !1;
   this._console = new Entry.Console;
-  switch(this._lang) {
-    case "js":
-      this._execParser = new Entry.JsToBlockParser(this.syntax, this);
-      d = this.syntax;
-      for (var e in d.Scope) {
-      }
-      break;
-    case "py":
-      this._execParser = new Entry.PyToBlockParser(this.syntax);
-      d = this.syntax;
-      for (e in d.Scope) {
-      }
-      break;
-    case "blockJs":
-      this._execParser = new Entry.BlockToJsParser(this.syntax, this);
-      break;
-    case "blockPy":
-      this._execParser = new Entry.BlockToPyParser(this.syntax);
-  }
 };
 (function(c) {
   c.setParser = function(b, c, d) {
@@ -14120,15 +14105,6 @@ Entry.Parser = function(c, b, f, d) {
           break;
         case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
           this._execParser = new Entry.BlockToJsParser(this.syntax, this);
-          b = this.syntax;
-          var e = {}, g;
-          for (g in b.Scope) {
-            e[g + "();\n"] = b.Scope[g];
-          }
-          d.on("keydown", function(b, c) {
-            var f = c.keyCode;
-            (65 <= f && 95 >= f || 167 == f || !c.shiftKey && 190 == f) && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:e});
-          });
           this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
           break;
         case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
@@ -14153,12 +14129,8 @@ Entry.Parser = function(c, b, f, d) {
           if (this.codeMirror) {
             t instanceof SyntaxError ? (d = {from:{line:t.loc.line - 1, ch:0}, to:{line:t.loc.line - 1, ch:t.loc.column}}, t.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", t.type = 1) : (d = this.getLineNumber(t.node.start, t.node.end), d.message = t.message, d.severity = "converting error", t.type = 2);
             this.codeMirror.markText(d.from, d.to, {className:"CodeMirror-lint-mark-error", __annotation:d, clearOnEnter:!0});
-            d = t.title ? t.title : "\ubb38\ubc95 \uc624\ub958";
-            if (2 == t.type && t.message) {
-              var m = t.message
-            } else {
-              2 != t.type || t.message ? 1 == t.type && (m = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ubb38\ubc95\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694.") : m = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694.";
-            }
+            var d = t.title ? t.title : "\ubb38\ubc95 \uc624\ub958", m;
+            2 == t.type && t.message ? m = t.message : 2 != t.type || t.message ? 1 == t.type && (m = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ubb38\ubc95\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694.") : m = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694.";
             Entry.toast.alert(d, m);
             d = {};
             d.boardType = Entry.Workspace.MODE_BOARD;
@@ -14176,8 +14148,8 @@ Entry.Parser = function(c, b, f, d) {
           this._pyThreadCount = 1;
           var q = new Entry.PyAstGenerator, e = this.makeThreads(b), g = [], n = 0;
           for (h = 0;h < e.length;h++) {
-            if (k = e[h], 0 != k.length && (k = k.replace(/\t/gm, "    "), l = q.generate(k))) {
-              this._pyThreadCount = n++, this._pyBlockCount[n] = k.split("\n").length - 1, 0 != l.body.length && g.push(l);
+            if (k = e[h], 0 !== k.length && (k = k.replace(/\t/gm, "    "), l = q.generate(k))) {
+              this._pyThreadCount = n++, this._pyBlockCount[n] = k.split("\n").length - 1, 0 !== l.body.length && g.push(l);
             }
           }
           d = this._execParser.Program(g);
@@ -14354,7 +14326,7 @@ Entry.Parser = function(c, b, f, d) {
     b = b.split("\n");
     for (var c = [], d = "", e = !1, g = 3;g < b.length;g++) {
       var h = b[g] + "\n", h = h.replace(/\t/gm, "    ");
-      Entry.TextCodingUtil.isEntryEventFuncByFullText(h) ? (h = this.entryEventParamConverter(h), 0 != d.length && c.push(d), d = "", d += h, e = !0) : (Entry.TextCodingUtil.isEntryEventFuncByFullText(h.trim()) && (h = this.entryEventParamConverter(h)), 1 != h.length || e ? 1 != h.length && " " != h.charAt(0) && e && (c.push(d), d = "", e = !1) : (c.push(d), d = ""), d += h);
+      Entry.TextCodingUtil.isEntryEventFuncByFullText(h) ? (h = this.entryEventParamConverter(h), 0 !== d.length && c.push(d), d = "", d += h, e = !0) : (Entry.TextCodingUtil.isEntryEventFuncByFullText(h.trim()) && (h = this.entryEventParamConverter(h)), 1 != h.length || e ? 1 != h.length && " " != h.charAt(0) && e && (c.push(d), d = "", e = !1) : (c.push(d), d = ""), d += h);
     }
     c.push(d);
     return c;
@@ -15779,13 +15751,13 @@ Entry.Command = {};
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
     return [];
-  }};
+  }, skipUndoStack:!0};
   c[Entry.STATIC.COMMAND_TYPES.undo] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
     return [];
-  }};
+  }, skipUndoStack:!0};
   c[Entry.STATIC.COMMAND_TYPES.redo] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
     return [];
-  }};
+  }, skipUndoStack:!0};
 })(Entry.Command);
 Entry.Commander = function(c) {
   if ("workspace" == c || "phone" == c) {
@@ -15831,8 +15803,8 @@ Entry.Commander = function(c) {
     this.editor[b] = c;
   };
   c.isPass = function(b) {
-    b = void 0 === b ? !0 : b;
     if (Entry.stateManager) {
+      b = void 0 === b ? !0 : b;
       var c = Entry.stateManager.getLastCommand();
       c && (c.isPass = b);
     }
@@ -15898,7 +15870,6 @@ Entry.Commander = function(c) {
     return [["block", b], ["pointer", c]];
   }, undo:"destroyBlock"};
   c[b.insertBlock] = {do:function(b, c, e) {
-    console.log(c);
     b = this.editor.board.findBlock(b);
     this.editor.board.insert(b, c, e);
   }, state:function(b, c) {
@@ -15918,8 +15889,9 @@ Entry.Commander = function(c) {
     return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:c, direction:"right"}], {callBack:function() {
     }});
   }, dom:["playground", "board", "&1"]};
-  c[b.separateBlock] = {do:function(b) {
-    b.view && b.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
+  c[b.separateBlock] = {do:function(b, c) {
+    c = void 0 === c ? Entry.DRAG_MODE_DRAG : c;
+    b.view && b.view._toGlobalCoordinate(c);
     b.doSeparate();
   }, state:function(b) {
     var c = [b.id], e = b.targetPointer();
@@ -15939,28 +15911,8 @@ Entry.Commander = function(c) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
   }, undo:"moveBlock"};
-  c[b.cloneBlock] = {do:function(b) {
-    b = this.editor.board.findBlock(b);
-    this.editor.board.code.createThread(b.copy());
-  }, state:function(b) {
-    "string" !== typeof b && (b = b.id);
-    return [b];
-  }, log:function(b) {
-    b = this.editor.board.findBlock(b);
-    var c = this.editor.board.code.getThreads().pop();
-    return [["block", b.pointer()], ["thread", c.stringify()]];
-  }, undo:"uncloneBlock"};
-  c[b.uncloneBlock] = {do:function(b) {
-    b = this.editor.board.code.getThreads().pop().getFirstBlock();
-    this._tempStorage = b.id;
-    b.destroy(!0, !0);
-  }, state:function(b) {
-    return [b];
-  }, log:function(b) {
-    b = this._tempStorage;
-    this._tempStorage = null;
-    return [["blockId", b]];
-  }, undo:"cloneBlock"};
+  c[b.cloneBlock] = {do:c[b.addThread].do, state:c[b.addThread].state, log:c[b.addThread].log, undo:"uncloneBlock"};
+  c[b.uncloneBlock] = {do:c[b.destroyThread].do, state:c[b.destroyThread].state, log:c[b.destroyThread].log, undo:"cloneBlock"};
   c[b.scrollBoard] = {do:function(b, c, e) {
     e || this.editor.board.scroller._scroll(b, c);
     delete this.editor.board.scroller._diffs;
@@ -21163,7 +21115,7 @@ Entry.BlockMenu = function(c, b, f, d, e) {
     if (!this._boardBlockView && null !== c) {
       var d = this.workspace, e = d.getMode(), g = Entry.Workspace, h = this._svgWidth, k = d.selectedBoard, l = c.mouseDownCoordinate, m = d = 0;
       l && (d = b.pageX - l.x, m = b.pageY - l.y);
-      !k || e !== g.MODE_BOARD && e !== g.MODE_OVERLAYBOARD ? (h = Entry.GlobalSvg, h.setView(c, e) && (h.adjust(d, m), h.addControl(b))) : k.code && (e = c.block, c = e.getThread(), e && c && (e = this.offset().top - k.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - h + (d || 0), c[0].y = c[0].y + e + (m || 0), this._boardBlockView = Entry.do("addThread", c).value.getFirstBlock().view, this._boardBlockView.onMouseDown.call(this._boardBlockView, b), this._boardBlockView.dragInstance.set({isNew:!0})));
+      !k || e !== g.MODE_BOARD && e !== g.MODE_OVERLAYBOARD ? (h = Entry.GlobalSvg, h.setView(c, e) && (h.adjust(d, m), h.addControl(b))) : k.code && (e = c.block, c = e.getThread(), e && c && (e = this.offset().top - k.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - h + (d || 0), c[0].y = c[0].y + e + (m || 0), this._boardBlockView = Entry.do("addThread", c).value.getFirstBlock().view, this._boardBlockView.onMouseDown.call(this._boardBlockView, b, !0), this._boardBlockView.dragInstance.set({isNew:!0})));
     }
   };
   c.terminateDrag = function() {
@@ -21340,12 +21292,12 @@ Entry.BlockMenu = function(c, b, f, d, e) {
       }
     }
   };
-  c.banClass = function(b) {
-    0 > this._bannedClass.indexOf(b) && (this._bannedClass.push(b), this._dAlign());
+  c.banClass = function(b, c) {
+    0 > this._bannedClass.indexOf(b) && (this._bannedClass.push(b), !0 !== c && this._dAlign());
   };
-  c.unbanClass = function(b) {
-    b = this._bannedClass.indexOf(b);
-    -1 < b && (this._bannedClass.splice(b, 1), this._dAlign());
+  c.unbanClass = function(b, c) {
+    var d = this._bannedClass.indexOf(b);
+    -1 < d && (this._bannedClass.splice(d, 1), !0 !== c && this._dAlign());
   };
   c.checkBanClass = function(b) {
     if (b) {
@@ -21387,9 +21339,9 @@ Entry.BlockMenu = function(c, b, f, d, e) {
       b.stopPropagation && b.stopPropagation();
       b.preventDefault && b.preventDefault();
       b = Entry.Utils.convertMouseEvent(b);
-      var f = e.dragInstance;
-      e._scroller.scroll(-b.pageY + f.offsetY);
-      f.set({offsetY:b.pageY});
+      var d = e.dragInstance;
+      e._scroller.scroll(-b.pageY + d.offsetY);
+      d.set({offsetY:b.pageY});
     }
     function d(b) {
       $(document).unbind(".blockMenu");
@@ -21905,20 +21857,20 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this._moveTo(0, 0, !1);
     b.appendChild(this.svgGroup);
   };
-  c._toGlobalCoordinate = function(b) {
-    b = this.getAbsoluteCoordinate(b);
-    this._moveTo(b.x, b.y, !1);
+  c._toGlobalCoordinate = function(b, c) {
+    var d = this.getAbsoluteCoordinate(b);
+    this._moveTo(d.x, d.y, !1, c);
     this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
   };
-  c._moveTo = function(b, c, d) {
-    var e = this.x, g = this.y;
+  c._moveTo = function(b, c, d, e) {
+    var g = this.x, h = this.y;
     this.display || (c = b = -99999);
-    e === b && g === c || this.set({x:b, y:c});
-    this._lazyUpdatePos();
+    g === b && h === c || this.set({x:b, y:c});
+    !0 !== e && this._lazyUpdatePos();
     this.visible && this.display && this._setPosition(d);
   };
-  c._moveBy = function(b, c, d) {
-    return this._moveTo(this.x + b, this.y + c, d);
+  c._moveBy = function(b, c, d, e) {
+    return this._moveTo(this.x + b, this.y + c, d, e);
   };
   c._addControl = function() {
     var b = this;
@@ -21943,7 +21895,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
       f = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
       var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(f.pageX - k.x, 2) + Math.pow(f.pageY - k.y, 2));
       if (g.dragMode == Entry.DRAG_MODE_DRAG || k > Entry.BlockView.DRAG_RADIUS) {
-        e && (clearTimeout(e), e = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, d), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), d = g.dragInstance, g._moveBy(f.pageX - d.offsetX, f.pageY - d.offsetY, !1), d.set({offsetX:f.pageX, 
+        e && (clearTimeout(e), e = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, d), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), d = g.dragInstance, g._moveBy(f.pageX - d.offsetX, f.pageY - d.offsetY, !1, !0), d.set({offsetX:f.pageX, 
         offsetY:f.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
       }
     }
@@ -22335,7 +22287,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     var d = this, e = d.block;
     if (!this.isInBlockMenu) {
       var c = [], g = this._board.readOnly, h = {text:Lang.Blocks.Duplication_option, enable:this.copyable && !g, callback:function() {
-        Entry.do("cloneBlock", e);
+        Entry.do("cloneBlock", e.copy());
       }}, k = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable && !g, callback:function() {
         d.block.copyToClipboard();
       }}, g = {text:Lang.Blocks.Delete_Blocks, enable:e.isDeletable() && !g, callback:function() {
@@ -22565,8 +22517,7 @@ Entry.PARAM = -1;
   };
   c.getByPointer = function(b) {
     b = b.concat();
-    b.shift();
-    b.shift();
+    b.splice(0, 2);
     for (var c = this._data[b.shift()].getBlock(b.shift());b.length;) {
       c instanceof Entry.Block || (c = c.getValueBlock());
       var d = b.shift(), e = b.shift();
@@ -25230,8 +25181,9 @@ Entry.Thread = function(c, b, f) {
   c.pointer = function(b, c) {
     var d = this.indexOf(c);
     b.unshift(d);
-    this.parent instanceof Entry.Block && b.unshift(this.parent.indexOfStatements(this));
-    return this._code === this.parent ? (1 === this._data.length && b.shift(), b.unshift(this._code.indexOf(this)), d = this._data[0], b.unshift(d.y), b.unshift(d.x), b) : this.parent.pointer(b);
+    d = this.parent;
+    d instanceof Entry.Block && b.unshift(d.indexOfStatements(this));
+    return this._code === d ? (b.unshift(this._code.indexOf(this)), d = this._data[0], b.unshift(d.y), b.unshift(d.x), b) : d.pointer(b);
   };
   c.getBlockList = function(b, c) {
     for (var d = [], e = 0;e < this._data.length;e++) {
@@ -25477,9 +25429,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     this._updatePos();
     this.getCode().changeEvent.notify();
   };
-  c.doSeparate = function() {
-    this.separate();
-  };
   c.doInsert = function(b) {
     "basic" === this.getBlockType() ? this.insert(b) : this.replace(b);
   };
@@ -25517,6 +25466,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     this._updatePos();
     this.getCode().changeEvent.notify();
   };
+  c.doSeparate = c.separate;
   c.insert = function(b) {
     var c = this.thread.cut(this);
     b instanceof Entry.Thread ? b.insertByBlock(null, c) : b.insertAfter(c);
@@ -25775,9 +25725,7 @@ Entry.Vim = function(c, b) {
   this._parser = new Entry.Parser(null, null, this.codeMirror);
   Entry.addEventListener("hwChanged", function(b) {
     Entry.hw.hwModule ? (b = Entry.hw.hwModule.name, b = b[0].toUpperCase() + b.slice(1), "ArduinoExt" == b && (b = "Arduino"), Entry.Vim.PYTHON_IMPORT_HW = "\nimport " + b + "\n", Entry.Vim.INEDITABLE_LINE_PY = 4) : (Entry.Vim.PYTHON_IMPORT_HW = "", Entry.Vim.INEDITABLE_LINE_PY = 3);
-  }.bind(this));
-  Entry.Model(this, !1);
-  window.eventset = [];
+  });
 };
 Entry.Vim.MAZE_MODE = 1;
 Entry.Vim.WORKSPACE_MODE = 2;
@@ -25816,7 +25764,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
       b.replaceSelection(c);
     }}, lint:!0, viewportMargin:10});
     var g = Entry.Utils.debounce(function() {
-      Entry.isTextMode && this.codeMirror.showHint({completeSingle:!1});
+      Entry.isTextMode && this.codeMirror.showHint({completeSingle:!1, globalScope:this._getAssistScope()});
     }.bind(this), 250);
     this.codeMirror.on("keydown", function(b, c) {
       Entry && Entry.keyPressed && Entry.keyPressed.notify(c, !0);
@@ -25847,9 +25795,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
   c.textToCode = function(b) {
     b === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : b === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     b = this.codeMirror.getValue();
-    b = this._parser.parse(b);
-    console.log("textToCode result", b);
-    return b;
+    return this._parser.parse(b);
   };
   c.codeToText = function(b, c) {
     var d;
@@ -25887,8 +25833,14 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
   c.getBlockSyntax = function(b) {
     var c = null, d = this.workspace.oldTextType;
     d === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : d === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
-    this._parser && (c = this._parser._execParser.searchSyntax(b));
+    this._parser._execParser && (c = this._parser._execParser.searchSyntax(b));
     return c;
+  };
+  c._getAssistScope = function() {
+    var b = this._parser._execParser;
+    if (b && b.getAssistScope) {
+      return b.getAssistScope();
+    }
   };
 })(Entry.Vim.prototype);
 Entry.Workspace = function(c) {
@@ -25951,17 +25903,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           }
           this.board && this.board.hide();
           this.overlayBoard && this.overlayBoard.hide();
-          g.banClass("functionInit");
           this.set({selectedBoard:this.vimBoard});
           this.vimBoard.show();
+          g.banClass("functionInit", !0);
           this.codeToText(this.board.code, b);
-          g.renderText();
           this.board.clear();
           this.oldTextType = this.textType;
           break;
         case e.MODE_BOARD:
           try {
-            this.board.show(), g.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), g.renderBlock(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide();
+            this.board.show(), g.unbanClass("functionInit", !0), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide();
           } catch (h) {
             this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), g.banClass("functionInit"), this.mode = e.MODE_VIMBOARD, this.oldTextType == d.TEXT_TYPE_JS ? (b.boardType = e.MODE_VIMBOARD, b.textType = d.TEXT_TYPE_JS, b.runType = d.MAZE_MODE, this.oldTextType = d.TEXT_TYPE_JS) : this.oldTextType == d.TEXT_TYPE_PY && (b.boardType = e.MODE_VIMBOARD, b.textType = d.TEXT_TYPE_PY, b.runType = d.WORKSPACE_MODE, this.oldTextType = 
             d.TEXT_TYPE_PY), Entry.getMainWS().setMode(b);
@@ -25972,7 +25923,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           this.oldMode == e.MODE_VIMBOARD ? this.overlayModefrom = e.MODE_VIMBOARD : this.oldMode == e.MODE_BOARD && (this.overlayModefrom = e.MODE_BOARD), this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard}), Entry.commander.setCurrentEditor("board", this.overlayBoard);
       }
       this.oldMode = this.mode;
-      Entry.isTextMode = this.mode == e.MODE_VIMBOARD ? !0 : !1;
+      Entry.isTextMode = this.mode == e.MODE_VIMBOARD;
+      g.align();
       Entry.dispatchEvent("workspaceChangeMode");
       this.changeEvent.notify(c);
       Entry.dispatchEvent("cancelBlockMenuDynamic");
