@@ -160,7 +160,8 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
     };
 
     p.BasicIf = function(block) {
-        if(block.data.statements.length == 2) {
+        var code;
+        if (block.data.statements.length == 2) {
             var statementCode1 = this.Thread(block.statements[0]);
             var statementCode2 = this.Thread(block.statements[1]);
             var syntax = block._schema.syntax.concat();
@@ -177,7 +178,7 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
                     var param = this.Block(paramBlock);
             }
 
-            var code = "if (" + param + ") {\n" +
+            code = "if (" + param + ") {\n" +
                 this.indent(statementCode1) + "}\n" +
                 "else {\n" + this.indent(statementCode2) + "}\n";
         } else {
@@ -196,7 +197,7 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
                     var param = this.Block(paramBlock);
             }
 
-            var code = "if (" + param + ") {\n" +
+            code = "if (" + param + ") {\n" +
                 this.indent(statementCode1) + "}\n";
         }
 
@@ -207,7 +208,7 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
         var statementCode = this.Thread(block.statements[0]);
         var syntax = block._schema.syntax.concat();
         var code = "while (" + syntax[1] + ") {\n" +
-            this.indent(statementCode) + "}\n"
+            this.indent(statementCode) + "}\n";
         return code;
     };
 
