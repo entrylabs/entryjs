@@ -177,12 +177,12 @@ Entry.PyHint = function(syntax) {
             }
             delete this.scope[name];
         }
-    }
+    };
 
     p.getScope = function(name) {
         if (this.scope[name]) return this.scope[name];
         else return [];
-    }
+    };
 
     p.fuzzySearch = function(arr, start, options) {
         options = options || {};
@@ -231,8 +231,8 @@ Entry.PyHint = function(syntax) {
             self.from.ch = newStart.start;
         }
 
-        cm.replaceRange(text, self.from, self.to)
-        cm.setCursor({line: self.from.line, ch: ch})
+        cm.replaceRange(text, self.from, self.to);
+        cm.setCursor({line: self.from.line, ch: ch});
         Entry.helper.renderBlock(data.syntax.key);
     };
 

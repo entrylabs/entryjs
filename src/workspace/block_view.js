@@ -633,17 +633,20 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                     this.dragMode = dragMode;
                                     board.separate(block);
                                     this.dragMode = Entry.DRAG_MODE_NONE;
-                                    Entry.do("insertBlock", closeBlock, lastBlock).isPass(fromBlockMenu);
+                                    Entry.do("insertBlock", closeBlock, lastBlock)
+                                        .isPass(fromBlockMenu);
                                     Entry.ConnectionRipple
                                         .setView(closeBlock.view)
                                         .dispose();
                                 } else {
-                                    Entry.do("insertBlock", block, closeBlock).isPass(fromBlockMenu);
+                                    Entry.do("insertBlock", block, closeBlock)
+                                        .isPass(fromBlockMenu);
                                     ripple = true;
                                 }
                                 createjs.Sound.play('entryMagneting');
                             } else {
-                                Entry.do("moveBlock", block).isPass(fromBlockMenu);
+                                Entry.do("moveBlock", block)
+                                    .isPass(fromBlockMenu);
                             }
                         }
                         break;
@@ -1230,7 +1233,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             text: Lang.Blocks.Duplication_option,
             enable: this.copyable && !isBoardReadOnly,
             callback: function(){
-                Entry.do("cloneBlock", block);
+                Entry.do("cloneBlock", block.copy());
             }
         };
 
