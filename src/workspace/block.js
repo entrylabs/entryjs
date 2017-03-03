@@ -440,14 +440,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         this.getCode().changeEvent.notify();
     };
 
-    p.doSeparate = function() {
-        var id = this.id;
-        var positionX = this.x;
-        var positionY = this.y;
-
-        this.separate();
-    };
-
     p.doInsert = function(targetBlock) {
         if (this.getBlockType() === "basic")
             this.insert(targetBlock);
@@ -492,6 +484,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         this._updatePos();
         this.getCode().changeEvent.notify();
     };
+
+    p.doSeparate = p.separate;
 
     p.insert = function(targetBlock) {
         var blocks = this.thread.cut(this);
