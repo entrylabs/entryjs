@@ -102,10 +102,22 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             }
         }.bind(this));
 
-        this.codeMirror.on("keyup", function(cm, event) {
-            if (event.key === "Backspace") {
-                dShowHint();
+        var dClear = Entry.Utils.debounce(function() {
+            var input = this.codeMirror.display && this.codeMirror.display.input ?
+                            this.codeMirror.display.input : undefined;
+            if (input && input.composing) {
+                input.poll();
+                input.composing.range.clear();
+                input.composing = null;
             }
+        }.bind(this), 250);
+
+        this.codeMirror.on("keyup", function(cm, event) {
+            //i.e composition bug
+            dClear();
+
+            if (event.key === "Backspace")
+                dShowHint();
         }.bind(this));
 
         this.doc = this.codeMirror.getDoc();
