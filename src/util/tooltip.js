@@ -15,7 +15,7 @@ Entry.Tooltip = function(data, opts) {
     this._tooltips = [];
     this._indicators = [];
 
-    if (data.length > 1)
+    if (data.length > 1 || opts.indicator)
         this.isIndicator = true;
 
     this.render();
@@ -115,34 +115,40 @@ Entry.Tooltip = function(data, opts) {
     };
 
     p._alignTooltip = function(data) {
-        var pos = data.target.offset();
-        var bound = data.target.get(0).getBoundingClientRect();
+        var rect;
+        if (data.target instanceof $)
+            rect = data.target.get(0).getBoundingClientRect();
+        else
+            rect = data.target.getBoundingClientRect();
         if (this.isIndicator) {
             data.indicator.css({
-                left: pos.left + bound.width / 2,
-                top: pos.top + bound.height / 2
+                left: rect.left + rect.width / 2,
+                top: rect.top + rect.height / 2
             });
         }
+        var pos = {top: rect.top, left: rect.left};
+        console.log(pos);
         switch(data.direction) {
             case "up":
-                pos.left += bound.width / 2;
+                pos.left += rect.width / 2;
                 pos.top -= 11;
                 break;
             case "down":
-                pos.left += bound.width / 2;
-                pos.top += bound.height;
+                pos.left += rect.width / 2;
+                pos.top += rect.height;
                 break;
             case "left":
-                pos.top += bound.height / 2;
+                pos.top += rect.height / 2;
                 pos.left -= 11;
                 break;
             case "right":
-                pos.left += bound.width;
-                pos.top += bound.height / 2;
+                pos.left += rect.width;
+                pos.top += rect.height / 2;
                 break;
             default:
                 break;
         }
+        console.log(pos);
 
         data.wrapper.css(pos);
     };
