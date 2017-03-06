@@ -81,6 +81,6 @@ Entry.STATIC = {
     RECORDABLE: {
         SUPPORT: 1,
         SKIP: 2,
-        ABANDONE: 3
+        ABANDON: 3
     },
 };

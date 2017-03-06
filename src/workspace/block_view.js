@@ -652,7 +652,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                         break;
                     case gs.RETURN:
                         var block = this.block;
-                        var originPos = this.originPos;
                         if (prevBlock) {
                             this.set({animating: false});
                             createjs.Sound.play('entryMagneting');
@@ -664,21 +663,21 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                             if (!(parent instanceof Entry.Board)) {
                                 createjs.Sound.play('entryMagneting');
                                 Entry.do("insertBlock", block, parent);
-                            } else this._moveTo(originPos.x, originPos.y, false);
+                            } else {
+                                var originPos = this.originPos;
+                                this._moveTo(originPos.x, originPos.y, false);
+                            }
                         }
                         break;
                     case gs.REMOVE:
                         createjs.Sound.play('entryDelete');
-                        if (!fromBlockMenu) {
-                            Entry.do(
-                                'destroyBlockBelow',
-                                this.block
-                            );
-                        } else {
-                            this.block.destroy(false, true);
-                        }
+                        Entry.do(
+                            'destroyBlockBelow',
+                            this.block
+                        ).isPass(fromBlockMenu);
                         break;
                 }
+
                 board.setMagnetedBlock(null);
                 if (ripple) {
                     Entry.ConnectionRipple

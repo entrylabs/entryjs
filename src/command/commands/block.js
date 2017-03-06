@@ -354,6 +354,7 @@ goog.require("Entry.STATIC");
             return [
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "recoverBlockBelow"
     };
 

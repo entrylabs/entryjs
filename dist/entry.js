@@ -11275,16 +11275,16 @@ Entry.TextCodingUtil = {};
       return b;
     }
   };
-  c.isVariableNumber = function(b, f) {
-    var c = Entry.playground.object, e = Entry.variableContainer.variables_, g;
+  c.isVariableNumber = function(b, c) {
+    var d = Entry.playground.object, e = Entry.variableContainer.variables_, g;
     for (g in e) {
       var h = e[g];
-      if ("global" == f) {
+      if ("global" == c) {
         if (null === h.object_ && h.id_ == b && Entry.Utils.isNumber(h.value_)) {
           return !0;
         }
       } else {
-        if ("local" == f && h.object_ === c.id && h.id_ == b && Entry.Utils.isNumber(h.value_)) {
+        if ("local" == c && h.object_ === d.id && h.id_ == b && Entry.Utils.isNumber(h.value_)) {
           return !0;
         }
       }
@@ -15750,7 +15750,7 @@ Entry.Loader.handleLoad = function() {
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, destroyBlockBelow:113, 
 destroyThreads:114, addThreads:115, recoverBlockBelow:116, selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, 
-variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDONE:3}};
+variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
 Entry.Command = {};
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
@@ -15975,7 +15975,7 @@ Entry.Commander = function(c) {
     return [c instanceof Entry.Thread ? c.toJSON(!1, b) : [b.toJSON()], b.targetPointer()];
   }, log:function(b) {
     return [];
-  }, undo:"recoverBlockBelow"};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"recoverBlockBelow"};
   c[b.recoverBlockBelow] = {do:function(b, c) {
     var e = this.editor.board;
     b = e.code.createThread(b);
@@ -16360,7 +16360,7 @@ Entry.Recorder = function() {
           this._recordData.push(b);
           Entry.toast.warning("Record", Lang.Command[c + ""]);
           break;
-        case Entry.STATIC.RECORDABLE.ABANDONE:
+        case Entry.STATIC.RECORDABLE.ABANDON:
           Entry.toast.alert("\uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc74c");
       }
     }
@@ -21967,11 +21967,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             break;
           case c.RETURN:
             g = this.block;
-            e = this.originPos;
-            l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (c = g.getThread().view.getParent(), c instanceof Entry.Board ? this._moveTo(e.x, e.y, !1) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, c)));
+            l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (e = g.getThread().view.getParent(), e instanceof Entry.Board ? (e = this.originPos, this._moveTo(e.x, e.y, !1)) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, e)));
             break;
           case c.REMOVE:
-            createjs.Sound.play("entryDelete"), h ? this.block.destroy(!1, !0) : Entry.do("destroyBlockBelow", this.block);
+            createjs.Sound.play("entryDelete"), Entry.do("destroyBlockBelow", this.block).isPass(h);
         }
         d.setMagnetedBlock(null);
         b && Entry.ConnectionRipple.setView(g.view).dispose();
