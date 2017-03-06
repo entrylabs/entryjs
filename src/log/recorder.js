@@ -22,7 +22,7 @@ Entry.Recorder = function() {
                 return;
             case Entry.STATIC.RECORDABLE.SKIP:
                 return;
-            case Entry.STATIC.RECORDABLE.ABANDONE:
+            case Entry.STATIC.RECORDABLE.ABANDON:
                 Entry.toast.alert("지원하지 않음");
                 return;
         }

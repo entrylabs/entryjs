@@ -15,6 +15,8 @@ Entry.ThreadView = function(thread, board) {
 
     this.svgGroup = board.svgThreadGroup.elem("g");
 
+    this.board = board;
+
     this.parent = board; // statement
 
     this._hasGuide = false;
@@ -83,6 +85,22 @@ Entry.ThreadView = function(thread, board) {
         }
         return height;
     };
+
+    p.getMagnet = function(selector) {
+        return {
+            getBoundingClientRect: function() {
+                var halfWidth = 20,
+                    coord =this.parent.requestAbsoluteCoordinate(),
+                    boardOffset = this.board.relativeOffset;
+                return {
+                    top: coord.y + boardOffset.top - halfWidth,
+                    left: coord.x + boardOffset.left - halfWidth,
+                    width: 2 * halfWidth,
+                    height: 2 * halfWidth
+                }
+            }.bind(this)
+        }
+    }
 
     p.dominate = function() {
         !this._hasGuide && this.parent.dominate(this.thread);

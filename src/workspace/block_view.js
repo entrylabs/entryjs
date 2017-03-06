@@ -633,23 +633,25 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                     this.dragMode = dragMode;
                                     board.separate(block);
                                     this.dragMode = Entry.DRAG_MODE_NONE;
-                                    Entry.do("insertBlock", closeBlock, lastBlock).isPass(fromBlockMenu);
+                                    Entry.do("insertBlock", closeBlock, lastBlock)
+                                        .isPass(fromBlockMenu);
                                     Entry.ConnectionRipple
                                         .setView(closeBlock.view)
                                         .dispose();
                                 } else {
-                                    Entry.do("insertBlock", block, closeBlock).isPass(fromBlockMenu);
+                                    Entry.do("insertBlock", block, closeBlock)
+                                        .isPass(fromBlockMenu);
                                     ripple = true;
                                 }
                                 createjs.Sound.play('entryMagneting');
                             } else {
-                                Entry.do("moveBlock", block).isPass(fromBlockMenu);
+                                Entry.do("moveBlock", block)
+                                    .isPass(fromBlockMenu);
                             }
                         }
                         break;
                     case gs.RETURN:
                         var block = this.block;
-                        var originPos = this.originPos;
                         if (prevBlock) {
                             this.set({animating: false});
                             createjs.Sound.play('entryMagneting');
@@ -661,21 +663,21 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                             if (!(parent instanceof Entry.Board)) {
                                 createjs.Sound.play('entryMagneting');
                                 Entry.do("insertBlock", block, parent);
-                            } else this._moveTo(originPos.x, originPos.y, false);
+                            } else {
+                                var originPos = this.originPos;
+                                this._moveTo(originPos.x, originPos.y, false);
+                            }
                         }
                         break;
                     case gs.REMOVE:
                         createjs.Sound.play('entryDelete');
-                        if (!fromBlockMenu) {
-                            Entry.do(
-                                'destroyBlockBelow',
-                                this.block
-                            );
-                        } else {
-                            this.block.destroy(false, true);
-                        }
+                        Entry.do(
+                            'destroyBlockBelow',
+                            this.block
+                        ).isPass(fromBlockMenu);
                         break;
                 }
+
                 board.setMagnetedBlock(null);
                 if (ripple) {
                     Entry.ConnectionRipple
@@ -1230,7 +1232,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             text: Lang.Blocks.Duplication_option,
             enable: this.copyable && !isBoardReadOnly,
             callback: function(){
-                Entry.do("cloneBlock", block);
+                Entry.do("cloneBlock", block.copy());
             }
         };
 

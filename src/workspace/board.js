@@ -1033,6 +1033,8 @@ Entry.Board.DRAG_RADIUS = 5;
             var targetObj = this.code.getByPointer(key);
             if (targetObj instanceof Entry.Block) {
                 return targetObj.getDom(query);
+            } else if (targetObj instanceof Entry.Thread) {
+                return targetObj.getDom(query);
             } else {
                 return targetObj.svgGroup;
             }

@@ -108,11 +108,12 @@ Entry.Commander = function(injectType) {
     };
 
     p.isPass = function(isPass) {
+        if (!Entry.stateManager)
+            return;
+
         isPass = isPass === undefined ? true : isPass;
-        if (Entry.stateManager) {
-            var lastCommand = Entry.stateManager.getLastCommand();
-            if (lastCommand) lastCommand.isPass = isPass;
-        }
+        var lastCommand = Entry.stateManager.getLastCommand();
+        if (lastCommand) lastCommand.isPass = isPass;
     };
 
     p.addReporter = function(reporter) {
