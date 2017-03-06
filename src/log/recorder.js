@@ -30,6 +30,6 @@ Entry.Recorder = function() {
 
     p.getData = function() {
         return this._recordData;
-    }
+    };
 
 })(Entry.Recorder.prototype);

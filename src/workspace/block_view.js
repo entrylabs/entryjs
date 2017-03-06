@@ -609,8 +609,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 gsRet === gs.DONE && this.vimBoardEvent(e, 'dragEnd', block);
             } else board.clear();
         } else {
+            var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
             if (dragMode === Entry.DRAG_MODE_DRAG) {
-                var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
                 var ripple = false;
                 var prevBlock = this.block.getPrevBlock(this.block);
                 switch (gsRet) {
@@ -684,6 +684,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                         .setView(block.view)
                         .dispose();
                 }
+            } else if (gsRet === gs.REMOVE &&  fromBlockMenu &&
+                dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
+                Entry.do(
+                    'destroyBlockBelow',
+                    this.block
+                ).isPass(true);
             }
         }
 

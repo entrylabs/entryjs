@@ -21117,9 +21117,9 @@ Entry.BlockMenu = function(c, b, f, d, e) {
   c.cloneToGlobal = function(b) {
     var c = this.dragBlock;
     if (!this._boardBlockView && null !== c) {
-      var d = this.workspace, e = d.getMode(), g = Entry.Workspace, h = this._svgWidth, k = d.selectedBoard, l = c.mouseDownCoordinate, m = d = 0;
-      l && (d = b.pageX - l.x, m = b.pageY - l.y);
-      !k || e !== g.MODE_BOARD && e !== g.MODE_OVERLAYBOARD ? (h = Entry.GlobalSvg, h.setView(c, e) && (h.adjust(d, m), h.addControl(b))) : k.code && (e = c.block, c = e.getThread(), e && c && (e = this.offset().top - k.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - h + (d || 0), c[0].y = c[0].y + e + (m || 0), this._boardBlockView = Entry.do("addThread", c).value.getFirstBlock().view, this._boardBlockView.onMouseDown.call(this._boardBlockView, b, !0), this._boardBlockView.dragInstance.set({isNew:!0})));
+      var d = Entry.GlobalSvg, e = this.workspace, g = e.getMode(), h = Entry.Workspace, k = this._svgWidth, l = e.selectedBoard, m = c.mouseDownCoordinate, q = e = 0;
+      m && (e = b.pageX - m.x, q = b.pageY - m.y);
+      !l || g !== h.MODE_BOARD && g !== h.MODE_OVERLAYBOARD ? d.setView(c, g) && (d.adjust(e, q), d.addControl(b)) : l.code && (h = c.block, c = h.getThread(), h && c && (l = this.offset().top - l.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - k + (e || 0), c[0].y = c[0].y + l + (q || 0), k = this._boardBlockView = Entry.do("addThread", c).value.getFirstBlock().view, k.onMouseDown.call(k, b), k.dragInstance.set({isNew:!0}), d.setView(k, g)));
     }
   };
   c.terminateDrag = function() {
@@ -21954,8 +21954,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     if (h === Entry.Workspace.MODE_VIMBOARD) {
       d instanceof Entry.BlockMenu ? (d.terminateDrag(), k === c.DONE && this.vimBoardEvent(b, "dragEnd", g)) : d.clear();
     } else {
-      if (e === Entry.DRAG_MODE_DRAG) {
-        h = this.dragInstance && this.dragInstance.isNew;
+      if (h = this.dragInstance && this.dragInstance.isNew, e === Entry.DRAG_MODE_DRAG) {
         b = !1;
         var l = this.block.getPrevBlock(this.block);
         switch(k) {
@@ -21974,6 +21973,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
         d.setMagnetedBlock(null);
         b && Entry.ConnectionRipple.setView(g.view).dispose();
+      } else {
+        k === c.REMOVE && h && e === Entry.DRAG_MODE_MOUSEDOWN && Entry.do("destroyBlockBelow", this.block).isPass(!0);
       }
     }
     this.destroyShadow();

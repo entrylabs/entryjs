@@ -264,7 +264,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         var blockView = this.dragBlock;
         if (this._boardBlockView || blockView === null) return;
 
-        var globalSvg = Entry.GlobalSvg;
+        var GS = Entry.GlobalSvg;
         var workspace = this.workspace;
         var workspaceMode = workspace.getMode();
         var WORKSPACE = Entry.Workspace;
@@ -289,21 +289,28 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             var code = this.code;
             var currentThread = block.getThread();
             if (block && currentThread) {
-                var distance = this.offset().top - board.offset().top - $(window).scrollTop();
+                var distance =
+                    this.offset().top -
+                    board.offset().top -
+                    $(window).scrollTop();
+
                 var datum = currentThread.toJSON(true);
                 datum[0].x = datum[0].x - svgWidth + (dx || 0);
                 datum[0].y = datum[0].y + distance + (dy || 0);
-                this._boardBlockView =
+                var newBlockView =
+                    this._boardBlockView =
                     Entry.do("addThread", datum)
-                    .value.getFirstBlock().view;
-
-                this._boardBlockView.onMouseDown.call(
-                    this._boardBlockView, e, true
+                        .value.getFirstBlock().view;
+                newBlockView.onMouseDown.call(
+                    newBlockView, e
                 );
-                this._boardBlockView.dragInstance.set({isNew:true});
+                newBlockView.dragInstance.set({isNew:true});
+                GS.setView(
+                    newBlockView,
+                    workspaceMode
+                );
             }
         } else {
-            var GS = Entry.GlobalSvg;
             if (GS.setView(blockView, workspaceMode)) {
                 GS.adjust(dx, dy);
                 GS.addControl(e);
