@@ -312,8 +312,11 @@ Entry.PARAM = -1;
             var type = pointer.shift();
             var index = pointer.shift();
             if (type > -1) {
-                var statements = block.statements[type];
-                block = statements.getBlock(index);
+                var statement = block.statements[type];
+                if (index === undefined)
+                    return statement;
+                else
+                    block = statement.getBlock(index);
             } else if (type === -1) {
                 block = block.view.getParam(index);
             }

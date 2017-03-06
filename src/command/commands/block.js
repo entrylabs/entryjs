@@ -145,11 +145,12 @@ goog.require("Entry.STATIC");
                 target: domQuery,
                 direction: "right"
             }], {
+                indicator: true,
                 callBack: function() {
                 }
             });
         },
-        dom: ['playground', 'board', '&1']
+        dom: ['playground', 'board', '&1', 'magnet']
     };
 
     c[COMMAND_TYPES.separateBlock] = {

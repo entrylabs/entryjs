@@ -11275,34 +11275,34 @@ Entry.TextCodingUtil = {};
       return b;
     }
   };
-  c.isVariableNumber = function(b, c) {
-    var d = Entry.playground.object, e = Entry.variableContainer.variables_, g;
+  c.isVariableNumber = function(b, f) {
+    var c = Entry.playground.object, e = Entry.variableContainer.variables_, g;
     for (g in e) {
       var h = e[g];
-      if ("global" == c) {
+      if ("global" == f) {
         if (null === h.object_ && h.id_ == b && Entry.Utils.isNumber(h.value_)) {
           return !0;
         }
       } else {
-        if ("local" == c && h.object_ === d.id && h.id_ == b && Entry.Utils.isNumber(h.value_)) {
+        if ("local" == f && h.object_ === c.id && h.id_ == b && Entry.Utils.isNumber(h.value_)) {
           return !0;
         }
       }
     }
     return !1;
   };
-  c.generateForStmtIndex = function(b, c) {
-    var d = Math.floor(b / 3);
-    c = ["i", "j", "k"][b % 3] + (c || "");
-    return d ? this.generateForStmtIndex(d - 1, c) : c;
+  c.generateForStmtIndex = function(b, f) {
+    var c = Math.floor(b / 3);
+    f = ["i", "j", "k"][b % 3] + (f || "");
+    return c ? this.generateForStmtIndex(c - 1, f) : f;
   };
-  c.isExpressionLiteral = function(b, c) {
+  c.isExpressionLiteral = function(b, f) {
     switch(b.type) {
       case "CallExpression":
         if ("MemberExpression" === b.callee.type) {
-          var d = b.callee.property.name;
-          if (d = c["%2"][d]) {
-            return "basic_string_field" === Entry.block[d.key].skeleton;
+          var c = b.callee.property.name;
+          if (c = f["%2"][c]) {
+            return "basic_string_field" === Entry.block[c.key].skeleton;
           }
         }
         break;
@@ -15890,9 +15890,9 @@ Entry.Commander = function(c) {
     return b;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, e) {
     e();
-    return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:c, direction:"right"}], {callBack:function() {
+    return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:c, direction:"right"}], {indicator:!0, callBack:function() {
     }});
-  }, dom:["playground", "board", "&1"]};
+  }, dom:["playground", "board", "&1", "magnet"]};
   c[b.separateBlock] = {do:function(b, c) {
     c = void 0 === c ? Entry.DRAG_MODE_DRAG : c;
     b.view && b.view._toGlobalCoordinate(c);
@@ -18692,7 +18692,9 @@ Entry.Tooltip = function(c, b) {
   this._rendered = !1;
   this._tooltips = [];
   this._indicators = [];
-  1 < c.length && (this.isIndicator = !0);
+  if (1 < c.length || b.indicator) {
+    this.isIndicator = !0;
+  }
   this.render();
   this._resizeEventFunc = Entry.Utils.debounce(function() {
     this.alignTooltips();
@@ -18710,6 +18712,7 @@ Entry.Tooltip = function(c, b) {
   };
   c._convertDoms = function() {
     this.data.map(function(b) {
+      console.log(b.target);
       b.target instanceof Array && (b.target = Entry.getDom(b.target));
       var c = $(b.target);
       c.length && (b.target = c);
@@ -18736,25 +18739,29 @@ Entry.Tooltip = function(c, b) {
     }
   };
   c._alignTooltip = function(b) {
-    var c = b.target.offset(), d = b.target.get(0).getBoundingClientRect();
-    this.isIndicator && b.indicator.css({left:c.left + d.width / 2, top:c.top + d.height / 2});
+    var c;
+    c = b.target instanceof $ ? b.target.get(0).getBoundingClientRect() : b.target.getBoundingClientRect();
+    this.isIndicator && b.indicator.css({left:c.left + c.width / 2, top:c.top + c.height / 2});
+    var d = {top:c.top, left:c.left};
+    console.log(d);
     switch(b.direction) {
       case "up":
-        c.left += d.width / 2;
-        c.top -= 11;
+        d.left += c.width / 2;
+        d.top -= 11;
         break;
       case "down":
-        c.left += d.width / 2;
-        c.top += d.height;
+        d.left += c.width / 2;
+        d.top += c.height;
         break;
       case "left":
-        c.top += d.height / 2;
-        c.left -= 11;
+        d.top += c.height / 2;
+        d.left -= 11;
         break;
       case "right":
-        c.left += d.width, c.top += d.height / 2;
+        d.left += c.width, d.top += c.height / 2;
     }
-    b.wrapper.css(c);
+    console.log(d);
+    b.wrapper.css(d);
   };
   c.renderIndicator = function(b, c) {
     var d = Entry.Dom("div", {classes:["entryTooltipIndicator"], parent:$(document.body)});
@@ -22334,6 +22341,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c.attach = function(b) {
     (b || this._board.svgBlockGroup).appendChild(this.svgGroup);
   };
+  c.getMagnet = function(b) {
+    return {getBoundingClientRect:function() {
+      var c = this.getAbsoluteCoordinate(), d = this._board.relativeOffset, e = this.magnet[b];
+      return {top:c.y + d.top + e.y - 20, left:c.x + d.left + e.x - 20, width:40, height:40};
+    }.bind(this)};
+  };
 })(Entry.BlockView.prototype);
 Entry.Code = function(c, b) {
   Entry.Model(this, !1);
@@ -22525,7 +22538,15 @@ Entry.PARAM = -1;
     for (var c = this._data[b.shift()].getBlock(b.shift());b.length;) {
       c instanceof Entry.Block || (c = c.getValueBlock());
       var d = b.shift(), e = b.shift();
-      -1 < d ? c = c.statements[d].getBlock(e) : -1 === d && (c = c.view.getParam(e));
+      if (-1 < d) {
+        c = c.statements[d];
+        if (void 0 === e) {
+          break;
+        }
+        c = c.getBlock(e);
+      } else {
+        -1 === d && (c = c.view.getParam(e));
+      }
     }
     return c;
   };
@@ -23863,7 +23884,6 @@ Entry.FieldStatement = function(c, b, f) {
   c.pointer = function(b) {
     b = b || [];
     b.unshift(this._index);
-    b.unshift(-1);
     return this.block.pointer(b);
   };
 })(Entry.FieldStatement.prototype);
@@ -24777,12 +24797,12 @@ Entry.Board.DRAG_RADIUS = 5;
     }
   };
   c.getDom = function(b) {
-    b = b.shift();
-    if ("trashcan" === b) {
+    var c = b.shift();
+    if ("trashcan" === c) {
       return this.workspace.trashcan.svgGroup;
     }
-    if (b instanceof Array) {
-      return b = this.code.getTargetByPointer(b), b instanceof Entry.Block ? b.view.svgGroup : b.svgGroup;
+    if (c instanceof Array) {
+      return c = this.code.getByPointer(c), c instanceof Entry.Block ? c.getDom(b) : c instanceof Entry.Thread ? c.getDom(b) : c.svgGroup;
     }
   };
   c.findBlock = function(b) {
@@ -25203,6 +25223,15 @@ Entry.Thread = function(c, b, f) {
     var b = this.getFirstBlock();
     return b && b.isInOrigin();
   };
+  c.getDom = function(b) {
+    if (0 < b.length) {
+      if ("magnet" === b.shift()) {
+        return this.view.getMagnet("next");
+      }
+    } else {
+      return this.view.svgGroup;
+    }
+  };
 })(Entry.Thread.prototype);
 Entry.Block = function(c, b) {
   var f = this;
@@ -25585,12 +25614,21 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   c.destroyParamsBackup = function() {
     this._backupParams = null;
   };
+  c.getDom = function(b) {
+    if (0 < b.length) {
+      if ("magnet" === b.shift()) {
+        return this.view.getMagnet("next");
+      }
+    } else {
+      return this.view.svgGroup;
+    }
+  };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(c, b) {
   Entry.Model(this, !1);
   this.thread = c;
   this.svgGroup = b.svgThreadGroup.elem("g");
-  this.parent = b;
+  this.parent = this.board = b;
   this._hasGuide = !1;
 };
 (function(c) {
@@ -25626,6 +25664,12 @@ Entry.ThreadView = function(c, b) {
       e = e.view, g = e.magnet.next ? g + e.magnet.next.y : g + e.height, e.dragMode === Entry.DRAG_MODE_DRAG && (g = 0), e = d.pop();
     }
     return g;
+  };
+  c.getMagnet = function(b) {
+    return {getBoundingClientRect:function() {
+      var b = this.parent.requestAbsoluteCoordinate(), c = this.board.relativeOffset;
+      return {top:b.y + c.top - 20, left:b.x + c.left - 20, width:40, height:40};
+    }.bind(this)};
   };
   c.dominate = function() {
     !this._hasGuide && this.parent.dominate(this.thread);

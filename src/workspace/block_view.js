@@ -1335,5 +1335,21 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             .appendChild(this.svgGroup);
     };
 
+    p.getMagnet = function(selector) {
+        return {
+            getBoundingClientRect: function() {
+                var halfWidth = 20,
+                    coord = this.getAbsoluteCoordinate(),
+                    boardOffset = this._board.relativeOffset,
+                    magnet = this.magnet[selector];
+                return {
+                    top: coord.y + boardOffset.top + magnet.y - halfWidth,
+                    left: coord.x + boardOffset.left + magnet.x - halfWidth,
+                    width: 2 * halfWidth,
+                    height: 2 * halfWidth
+                }
+            }.bind(this)
+        }
+    }
 
 })(Entry.BlockView.prototype);

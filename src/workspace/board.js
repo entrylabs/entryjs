@@ -1026,13 +1026,15 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.getDom = function(query) {
-        query = query.shift();
-        if (query === 'trashcan')
+        var key = query.shift();
+        if (key === 'trashcan')
             return this.workspace.trashcan.svgGroup;
-        else if (query instanceof Array) {
-            var targetObj = this.code.getTargetByPointer(query);
+        else if (key instanceof Array) {
+            var targetObj = this.code.getByPointer(key);
             if (targetObj instanceof Entry.Block) {
-                return targetObj.view.svgGroup;
+                return targetObj.getDom(query);
+            } else if (targetObj instanceof Entry.Thread) {
+                return targetObj.getDom(query);
             } else {
                 return targetObj.svgGroup;
             }
