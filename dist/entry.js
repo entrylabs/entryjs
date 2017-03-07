@@ -13155,6 +13155,8 @@ Entry.Workspace = function(c) {
   this.observe(this, "_handleChangeBoard", ["selectedBoard"], !1);
   this.trashcan = new Entry.FieldTrashcan;
   this.readOnly = void 0 === c.readOnly ? !1 : c.readOnly;
+  this.blockViewMouseUpEvent = new Entry.Event(this);
+  this._blockViewMouseUpEvent = null;
   var b = c.blockMenu;
   b && (this.blockMenu = new Entry.BlockMenu(b.dom, b.align, b.categoryData, b.scroll, this.readOnly), this.blockMenu.workspace = this, this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1));
   if (b = c.board) {
@@ -13270,7 +13272,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     }
   };
   c._setSelectedBlockView = function() {
-    this.set({selectedBlockView:this.board.selectedBlockView || this.blockMenu.selectedBlockView || (this.overlayBoard ? this.overlayBoard.selectedBlockView : null)});
+    var b = this.board.selectedBlockView || this.blockMenu.selectedBlockView || (this.overlayBoard ? this.overlayBoard.selectedBlockView : null);
+    this._unbindBlockViewMouseUpEvent();
+    this.set({selectedBlockView:b});
+    if (b) {
+      var c = this;
+      this._blockViewMouseUpEvent = b.mouseUpEvent.attach(this, function() {
+        c.blockViewMouseUpEvent.notify(b);
+      });
+    }
   };
   c.initOverlayBoard = function() {
     this.overlayBoard = new Entry.Board({dom:this.board.view, workspace:this, isOverlay:!0});
@@ -13418,6 +13428,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   c.detachKeyboardCapture = function() {
     Entry.keyPressed && this._keyboardEvent && (Entry.keyPressed.detach(this._keyboardEvent), delete this._keyboardEvent);
+  };
+  c._unbindBlockViewMouseUpEvent = function() {
+    this._blockViewMouseUpEvent && (this.selectedBlockView.mouseUpEvent.detach(this._blockViewMouseUpEvent), this._blockViewMouseUpEvent = null);
   };
 })(Entry.Workspace.prototype);
 Entry.BlockDriver = function() {
@@ -20022,11 +20035,10 @@ Entry.Restrictor = function() {
     if (b.skip) {
       return this.skip();
     }
-    var c = b.content.concat(), d = c.shift(), f = Entry.Command[d], g = f.dom;
-    g && (this.startEvent.notify(), g instanceof Array && (g = g.map(function(b) {
+    var c = b.content.concat(), d = c.shift(), d = Entry.Command[d], f = d.dom;
+    f && (this.startEvent.notify(), f instanceof Array && (f = f.map(function(b) {
       return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
-    })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), console.log(d, "asdfasdfafads"), f.restrict ? (console.log(d, "asdfasdfafads"), this.currentTooltip = f.restrict(b, g, this.restrictEnd.bind(this))) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:g, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this), 
-    200)));
+    })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), d.restrict ? this.currentTooltip = d.restrict(b, f, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:f, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this))));
   };
   c.end = function() {
     this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);
@@ -23258,9 +23270,9 @@ Entry.BlockMenu = function(c, b, e, d, f) {
   c.cloneToGlobal = function(b) {
     var c = this.dragBlock;
     if (!this._boardBlockView && null !== c) {
-      var d = this.workspace, f = d.getMode(), g = Entry.Workspace, h = this._svgWidth, k = d.selectedBoard, l = c.mouseDownCoordinate, m = d = 0;
-      l && (d = b.pageX - l.x, m = b.pageY - l.y);
-      !k || f !== g.MODE_BOARD && f !== g.MODE_OVERLAYBOARD ? (h = Entry.GlobalSvg, h.setView(c, f) && (h.adjust(d, m), h.addControl(b))) : k.code && (f = c.block, c = f.getThread(), f && c && (f = this.offset().top - k.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - h + (d || 0), c[0].y = c[0].y + f + (m || 0), this._boardBlockView = Entry.do("addThread", c).value.getFirstBlock().view, this._boardBlockView.onMouseDown.call(this._boardBlockView, b, !0), this._boardBlockView.dragInstance.set({isNew:!0})));
+      var d = Entry.GlobalSvg, f = this.workspace, g = f.getMode(), h = Entry.Workspace, k = this._svgWidth, l = f.selectedBoard, m = c.mouseDownCoordinate, q = f = 0;
+      m && (f = b.pageX - m.x, q = b.pageY - m.y);
+      !l || g !== h.MODE_BOARD && g !== h.MODE_OVERLAYBOARD ? d.setView(c, g) && (d.adjust(f, q), d.addControl(b)) : l.code && (h = c.block, c = h.getThread(), h && c && (l = this.offset().top - l.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - k + (f || 0), c[0].y = c[0].y + l + (q || 0), k = this._boardBlockView = Entry.do("addThread", c).value.getFirstBlock().view, k.onMouseDown.call(k, b), k.dragInstance.set({isNew:!0}), d.setView(k, g)));
     }
   };
   c.terminateDrag = function() {
@@ -23820,6 +23832,7 @@ Entry.BlockView = function(c, b, e) {
   Entry.Model(this, !1);
   this.block = c;
   this._lazyUpdatePos = Entry.Utils.debounce(c._updatePos.bind(c), 200);
+  this.mouseUpEvent = new Entry.Event(this);
   this.dAlignContent = Entry.Utils.debounce(this.alignContent, 30);
   this._board = b;
   this._observers = [];
@@ -24053,6 +24066,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
       h && h.set({dragBlock:null});
       g._changeFill(!1);
       Entry.GlobalSvg.remove();
+      g.mouseUpEvent.notify();
       delete this.mouseDownCoordinate;
       delete g.dragInstance;
     }
@@ -24097,8 +24111,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     if (h === Entry.Workspace.MODE_VIMBOARD) {
       d instanceof Entry.BlockMenu ? (d.terminateDrag(), k === c.DONE && this.vimBoardEvent(b, "dragEnd", g)) : d.clear();
     } else {
-      if (f === Entry.DRAG_MODE_DRAG) {
-        h = this.dragInstance && this.dragInstance.isNew;
+      if (h = this.dragInstance && this.dragInstance.isNew, f === Entry.DRAG_MODE_DRAG) {
         b = !1;
         var l = this.block.getPrevBlock(this.block);
         switch(k) {
@@ -24110,13 +24123,15 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             break;
           case c.RETURN:
             g = this.block;
-            l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (f = g.getThread().view.getParent(), f instanceof Entry.Board ? (f = this.originPos, this._moveTo(f.x, f.y, !1)) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, f)));
+            h ? Entry.do("destroyBlockBelow", this.block).isPass(!0) : l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (f = g.getThread().view.getParent(), f instanceof Entry.Board ? (f = this.originPos, this._moveTo(f.x, f.y, !1)) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, f)));
             break;
           case c.REMOVE:
             createjs.Sound.play("entryDelete"), Entry.do("destroyBlockBelow", this.block).isPass(h);
         }
         d.setMagnetedBlock(null);
         b && Entry.ConnectionRipple.setView(g.view).dispose();
+      } else {
+        k === c.REMOVE && h && f === Entry.DRAG_MODE_MOUSEDOWN && Entry.do("destroyBlockBelow", this.block).isPass(!0);
       }
     }
     this.destroyShadow();

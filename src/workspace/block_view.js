@@ -14,6 +14,7 @@ Entry.BlockView = function(block, board, mode) {
     this.block = block;
     this._lazyUpdatePos =
         Entry.Utils.debounce(block._updatePos.bind(block), 200);
+    this.mouseUpEvent = new Entry.Event(this);
 
     this.dAlignContent =
         Entry.Utils.debounce(this.alignContent, 30);
@@ -574,6 +575,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             if (board) board.set({dragBlock: null});
             blockView._changeFill(false);
             Entry.GlobalSvg.remove();
+            blockView.mouseUpEvent.notify();
+
             delete this.mouseDownCoordinate;
             delete blockView.dragInstance;
         }
@@ -609,8 +612,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 gsRet === gs.DONE && this.vimBoardEvent(e, 'dragEnd', block);
             } else board.clear();
         } else {
+            var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
             if (dragMode === Entry.DRAG_MODE_DRAG) {
-                var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
                 var ripple = false;
                 var prevBlock = this.block.getPrevBlock(this.block);
                 switch (gsRet) {
@@ -652,20 +655,27 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                         break;
                     case gs.RETURN:
                         var block = this.block;
-                        if (prevBlock) {
-                            this.set({animating: false});
-                            createjs.Sound.play('entryMagneting');
-                            this.bindPrev(prevBlock);
-                            block.insert(prevBlock);
+                        if (fromBlockMenu) {
+                            Entry.do(
+                                'destroyBlockBelow',
+                                this.block
+                            ).isPass(true);
                         } else {
-                            var parent = block.getThread().view.getParent();
-
-                            if (!(parent instanceof Entry.Board)) {
+                            if (prevBlock) {
+                                this.set({animating: false});
                                 createjs.Sound.play('entryMagneting');
-                                Entry.do("insertBlock", block, parent);
+                                this.bindPrev(prevBlock);
+                                block.insert(prevBlock);
                             } else {
-                                var originPos = this.originPos;
-                                this._moveTo(originPos.x, originPos.y, false);
+                                var parent = block.getThread().view.getParent();
+
+                                if (!(parent instanceof Entry.Board)) {
+                                    createjs.Sound.play('entryMagneting');
+                                    Entry.do("insertBlock", block, parent);
+                                } else {
+                                    var originPos = this.originPos;
+                                    this._moveTo(originPos.x, originPos.y, false);
+                                }
                             }
                         }
                         break;
@@ -684,6 +694,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                         .setView(block.view)
                         .dispose();
                 }
+            } else if (gsRet === gs.REMOVE && fromBlockMenu &&
+                dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
+                Entry.do(
+                    'destroyBlockBelow',
+                    this.block
+                ).isPass(true);
             }
         }
 
