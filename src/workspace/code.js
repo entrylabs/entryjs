@@ -387,4 +387,9 @@ Entry.PARAM = -1;
         }
         return true;
     };
+
+    p.destroy = function() {
+        this.clear();
+        this.destroyView();
+    };
 })(Entry.Code.prototype);

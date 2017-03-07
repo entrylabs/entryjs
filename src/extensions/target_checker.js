@@ -52,9 +52,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         return this._view;
     };
 
-    p.generateView = function() {
-
-    }
+    p.generateView = function() {};
 
     p.updateView = function() {
         if (!this._view)
@@ -121,11 +119,19 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         this.goals = _.uniq(
             blocks.filter(function(b) {return b.params[1] === 1})
                   .map(function(b) {return b.params[0] + ""})
-        )
+        );
     };
 
     p.clearExecutor = function() {
         this.script.clearExecutors();
     };
+
+    p.destroy = function() {
+        this.reset();
+        Entry.achieveEvent.clear();
+        this.script.destroy();
+        $(this._view).remove();
+    };
+
 
 })(Entry.TargetChecker.prototype);

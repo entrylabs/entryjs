@@ -314,7 +314,19 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
 Entry.Container.prototype.addExtension = function(obj) {
     this._extensionObjects.push(obj);
     this._extensionListView.append(obj.renderView());
-}
+    return obj;
+};
+
+Entry.Container.prototype.removeExtension = function(obj) {
+    if (!obj) return;
+
+    var extensions = this._extensionObjects;
+    var index = extensions.indexOf(obj);
+    if (index > -1)
+        extensions.splice(index, 1);
+
+    obj.destroy && obj.destroy();
+};
 
 /**
  * Add Clone object

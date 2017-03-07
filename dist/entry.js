@@ -4834,6 +4834,14 @@ Entry.Container.prototype.addObject = function(c, b) {
 Entry.Container.prototype.addExtension = function(c) {
   this._extensionObjects.push(c);
   this._extensionListView.append(c.renderView());
+  return c;
+};
+Entry.Container.prototype.removeExtension = function(c) {
+  if (c) {
+    var b = this._extensionObjects, f = b.indexOf(c);
+    -1 < f && b.splice(f, 1);
+    c.destroy && c.destroy();
+  }
 };
 Entry.Container.prototype.addCloneObject = function(c, b) {
   var f = c.toJSON(), d = Entry.generateHash();
@@ -11343,27 +11351,27 @@ Entry.BlockToJsParser = function(c, b) {
     return f + "\n";
   };
   c.Block = function(b) {
-    var f = b._schema.syntax.js ? b._schema.syntax.js : b._schema.syntax;
-    return f ? b = this[f[0]](b) : "";
+    var c = b._schema.syntax.js ? b._schema.syntax.js : b._schema.syntax;
+    return c ? b = this[c[0]](b) : "";
   };
   c.Program = function(b) {
     return "";
   };
   c.Scope = function(b) {
-    var f = !1, c = "", e = /(%.)/mi;
+    var c = !1, d = "", e = /(%.)/mi;
     if (b._schema.syntax.js) {
-      var g = b._schema.syntax.js.concat(), f = !0
+      var g = b._schema.syntax.js.concat(), c = !0
     } else {
       g = b._schema.syntax.concat();
     }
     g.shift();
     for (var g = g[0].split(e), h = b._schema.params, k = b.data.params, l = 0;l < g.length;l++) {
       var m = g[l];
-      0 !== m.length && "Scope" !== m && ("Judge" === m ? f = !0 : e.test(m) ? (m = m.split("%")[1], m = parseInt(m) - 1, h[m] && "Image" != h[m].type && ("Block" == h[m].type ? (m = this.Block(k[m]), c += m) : c += this[h[m].type](k[m], h[m]))) : c += m);
+      0 !== m.length && "Scope" !== m && ("Judge" === m ? c = !0 : e.test(m) ? (m = m.split("%")[1], m = parseInt(m) - 1, h[m] && "Image" != h[m].type && ("Block" == h[m].type ? (m = this.Block(k[m]), d += m) : d += this[h[m].type](k[m], h[m]))) : d += m);
     }
-    "#" == c.charAt(c.length - 1) && (f = !0, c = c.substring(0, c.length - 1), c = c.trim());
-    f || (c += "();");
-    return c = Entry.TextCodingUtil.jsAdjustSyntax(b, c);
+    "#" == d.charAt(d.length - 1) && (c = !0, d = d.substring(0, d.length - 1), d = d.trim());
+    c || (d += "();");
+    return d = Entry.TextCodingUtil.jsAdjustSyntax(b, d);
   };
   c.BasicFunction = function(b) {
     b = this.Thread(b.statements[0]);
@@ -17342,6 +17350,12 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
   c.clearExecutor = function() {
     this.script.clearExecutors();
   };
+  c.destroy = function() {
+    this.reset();
+    Entry.achieveEvent.clear();
+    this.script.destroy();
+    $(this._view).remove();
+  };
 })(Entry.TargetChecker.prototype);
 Entry.Func = function(c) {
   this.id = c ? c.id : Entry.generateHash();
@@ -21357,9 +21371,9 @@ Entry.BlockMenu = function(c, b, f, d, e) {
       b.stopPropagation && b.stopPropagation();
       b.preventDefault && b.preventDefault();
       b = Entry.Utils.convertMouseEvent(b);
-      var f = e.dragInstance;
-      e._scroller.scroll(-b.pageY + f.offsetY);
-      f.set({offsetY:b.pageY});
+      var d = e.dragInstance;
+      e._scroller.scroll(-b.pageY + d.offsetY);
+      d.set({offsetY:b.pageY});
     }
     function d(b) {
       $(document).unbind(".blockMenu");
@@ -22593,6 +22607,10 @@ Entry.PARAM = -1;
       }
     }
     return !0;
+  };
+  c.destroy = function() {
+    this.clear();
+    this.destroyView();
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(c, b) {
