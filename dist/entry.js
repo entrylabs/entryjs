@@ -18660,11 +18660,10 @@ Entry.Restrictor = function() {
     if (b.skip) {
       return this.skip();
     }
-    var c = b.content.concat(), d = c.shift(), e = Entry.Command[d], g = e.dom;
-    g && (this.startEvent.notify(), g instanceof Array && (g = g.map(function(b) {
+    var c = b.content.concat(), d = c.shift(), d = Entry.Command[d], e = d.dom;
+    e && (this.startEvent.notify(), e instanceof Array && (e = e.map(function(b) {
       return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
-    })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), console.log(d, "asdfasdfafads"), e.restrict ? (console.log(d, "asdfasdfafads"), this.currentTooltip = e.restrict(b, g, this.restrictEnd.bind(this))) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:g, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this), 
-    200)));
+    })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), d.restrict ? this.currentTooltip = d.restrict(b, e, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:e, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this))));
   };
   c.end = function() {
     this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);
@@ -21686,6 +21685,7 @@ Entry.BlockView = function(c, b, f) {
   Entry.Model(this, !1);
   this.block = c;
   this._lazyUpdatePos = Entry.Utils.debounce(c._updatePos.bind(c), 200);
+  this.mouseUpEvent = new Entry.Event(this);
   this.dAlignContent = Entry.Utils.debounce(this.alignContent, 30);
   this._board = b;
   this._observers = [];
@@ -21917,6 +21917,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
       h && h.set({dragBlock:null});
       g._changeFill(!1);
       Entry.GlobalSvg.remove();
+      g.mouseUpEvent.notify();
       delete this.mouseDownCoordinate;
       delete g.dragInstance;
     }
@@ -21973,7 +21974,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             break;
           case c.RETURN:
             g = this.block;
-            l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (e = g.getThread().view.getParent(), e instanceof Entry.Board ? (e = this.originPos, this._moveTo(e.x, e.y, !1)) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, e)));
+            h ? Entry.do("destroyBlockBelow", this.block).isPass(!0) : l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (e = g.getThread().view.getParent(), e instanceof Entry.Board ? (e = this.originPos, this._moveTo(e.x, e.y, !1)) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, e)));
             break;
           case c.REMOVE:
             createjs.Sound.play("entryDelete"), Entry.do("destroyBlockBelow", this.block).isPass(h);
@@ -25898,6 +25899,8 @@ Entry.Workspace = function(c) {
   this.observe(this, "_handleChangeBoard", ["selectedBoard"], !1);
   this.trashcan = new Entry.FieldTrashcan;
   this.readOnly = void 0 === c.readOnly ? !1 : c.readOnly;
+  this.blockViewMouseUpEvent = new Entry.Event(this);
+  this._blockViewMouseUpEvent = null;
   var b = c.blockMenu;
   b && (this.blockMenu = new Entry.BlockMenu(b.dom, b.align, b.categoryData, b.scroll, this.readOnly), this.blockMenu.workspace = this, this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1));
   if (b = c.board) {
@@ -26012,7 +26015,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     }
   };
   c._setSelectedBlockView = function() {
-    this.set({selectedBlockView:this.board.selectedBlockView || this.blockMenu.selectedBlockView || (this.overlayBoard ? this.overlayBoard.selectedBlockView : null)});
+    var b = this.board.selectedBlockView || this.blockMenu.selectedBlockView || (this.overlayBoard ? this.overlayBoard.selectedBlockView : null);
+    this._unbindBlockViewMouseUpEvent();
+    this.set({selectedBlockView:b});
+    if (b) {
+      var c = this;
+      this._blockViewMouseUpEvent = b.mouseUpEvent.attach(this, function() {
+        c.blockViewMouseUpEvent.notify(b);
+      });
+    }
   };
   c.initOverlayBoard = function() {
     this.overlayBoard = new Entry.Board({dom:this.board.view, workspace:this, isOverlay:!0});
@@ -26161,6 +26172,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   c.detachKeyboardCapture = function() {
     Entry.keyPressed && this._keyboardEvent && (Entry.keyPressed.detach(this._keyboardEvent), delete this._keyboardEvent);
+  };
+  c._unbindBlockViewMouseUpEvent = function() {
+    this._blockViewMouseUpEvent && (this.selectedBlockView.mouseUpEvent.detach(this._blockViewMouseUpEvent), this._blockViewMouseUpEvent = null);
   };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {
