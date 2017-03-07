@@ -21,6 +21,8 @@ Entry.Restrictor = function() {
         var commandType = log.shift();
         var command = Entry.Command[commandType];
 
+        //clear currently exposed tooltip
+        this.end();
 
         var domQuery = command.dom;
         if (!domQuery)

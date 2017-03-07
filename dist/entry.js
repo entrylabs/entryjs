@@ -18660,7 +18660,9 @@ Entry.Restrictor = function() {
     if (b.skip) {
       return this.skip();
     }
-    var c = b.content.concat(), d = c.shift(), d = Entry.Command[d], e = d.dom;
+    var c = b.content.concat(), d = c.shift(), d = Entry.Command[d];
+    this.end();
+    var e = d.dom;
     e && (this.startEvent.notify(), e instanceof Array && (e = e.map(function(b) {
       return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
     })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), d.restrict ? this.currentTooltip = d.restrict(b, e, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:e, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this))));
@@ -21620,6 +21622,7 @@ Entry.BlockMenuScroller.RADIUS = 7;
     this.isVisible() && (b = this._adjustValue(b) - this.vY, 0 !== b && (this.board.code.moveBy(0, -b * this.vRatio), this.updateScrollBar(b)));
   };
   c.scrollByPx = function(b) {
+    this.vRatio || this._updateRatio();
     this.scroll(b / this.vRatio);
   };
   c._adjustValue = function(b) {
