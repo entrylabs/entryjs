@@ -11320,50 +11320,50 @@ Entry.BlockToJsParser = function(c, b) {
   this._iterVariableChunk = ["i", "j", "k"];
 };
 (function(c) {
-  c.Code = function(b, c) {
-    this._parseMode = c;
+  c.Code = function(b, f) {
+    this._parseMode = f;
     if (b instanceof Entry.Block) {
       return this.Block(b);
     }
-    for (var d = "", e = b._data, g = 0;g < e.length;g++) {
-      d += this.Thread(e[g]);
+    for (var c = "", e = b._data, g = 0;g < e.length;g++) {
+      c += this.Thread(e[g]);
     }
-    return d.trim();
+    return c.trim();
   };
   c.Thread = function(b) {
     if (b instanceof Entry.Block) {
       return this.Block(b);
     }
-    var c = "";
+    var f = "";
     b = b.getBlocks();
-    for (var d = 0;d < b.length;d++) {
-      var e = b[d];
-      d != b.length - 1 ? (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? c += e + "\n" : this._parseMode == Entry.Parser.PARSE_SYNTAX && (c = e + "\n")) : (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? c += e : this._parseMode == Entry.Parser.PARSE_SYNTAX && (c = e));
+    for (var c = 0;c < b.length;c++) {
+      var e = b[c];
+      c != b.length - 1 ? (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? f += e + "\n" : this._parseMode == Entry.Parser.PARSE_SYNTAX && (f = e + "\n")) : (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? f += e : this._parseMode == Entry.Parser.PARSE_SYNTAX && (f = e));
     }
-    return c + "\n";
+    return f + "\n";
   };
   c.Block = function(b) {
-    var c = b._schema.syntax.js ? b._schema.syntax.js : b._schema.syntax;
-    return c ? b = this[c[0]](b) : "";
+    var f = b._schema.syntax.js ? b._schema.syntax.js : b._schema.syntax;
+    return f ? b = this[f[0]](b) : "";
   };
   c.Program = function(b) {
     return "";
   };
   c.Scope = function(b) {
-    var c = !1, d = "", e = /(%.)/mi;
+    var f = !1, c = "", e = /(%.)/mi;
     if (b._schema.syntax.js) {
-      var g = b._schema.syntax.js.concat(), c = !0
+      var g = b._schema.syntax.js.concat(), f = !0
     } else {
       g = b._schema.syntax.concat();
     }
     g.shift();
     for (var g = g[0].split(e), h = b._schema.params, k = b.data.params, l = 0;l < g.length;l++) {
       var m = g[l];
-      0 !== m.length && "Scope" !== m && ("Judge" === m ? c = !0 : e.test(m) ? (m = m.split("%")[1], m = parseInt(m) - 1, h[m] && "Image" != h[m].type && ("Block" == h[m].type ? (m = this.Block(k[m]), d += m) : d += this[h[m].type](k[m], h[m]))) : d += m);
+      0 !== m.length && "Scope" !== m && ("Judge" === m ? f = !0 : e.test(m) ? (m = m.split("%")[1], m = parseInt(m) - 1, h[m] && "Image" != h[m].type && ("Block" == h[m].type ? (m = this.Block(k[m]), c += m) : c += this[h[m].type](k[m], h[m]))) : c += m);
     }
-    "#" == d.charAt(d.length - 1) && (c = !0, d = d.substring(0, d.length - 1), d = d.trim());
-    c || (d += "();");
-    return d = Entry.TextCodingUtil.jsAdjustSyntax(b, d);
+    "#" == c.charAt(c.length - 1) && (f = !0, c = c.substring(0, c.length - 1), c = c.trim());
+    f || (c += "();");
+    return c = Entry.TextCodingUtil.jsAdjustSyntax(b, c);
   };
   c.BasicFunction = function(b) {
     b = this.Thread(b.statements[0]);
@@ -15893,18 +15893,23 @@ Entry.Commander = function(c) {
     return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:c, direction:"right"}], {indicator:!0, callBack:function() {
     }});
   }, dom:["playground", "board", "&1", "magnet"]};
-  c[b.separateBlock] = {do:function(b, c) {
+  c[b.separateBlock] = {do:function(b, c, e) {
+    b = this.editor.board.findBlock(b);
+    "number" === typeof e && (console.log(c, e), b.view._moveTo(c, e), c = void 0);
     c = void 0 === c ? Entry.DRAG_MODE_DRAG : c;
     b.view && b.view._toGlobalCoordinate(c);
     b.doSeparate();
   }, state:function(b) {
-    var c = [b.id], e = b.targetPointer();
+    b = this.editor.board.findBlock(b);
+    var c = [b], e = b.targetPointer();
     c.push(e);
     "basic" === b.getBlockType() && c.push(b.thread.getCount(b));
     return c;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b) {
     b = this.editor.board.findBlock(b);
-    return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
+    var c = b.pointer();
+    b.view && (b = b.view);
+    return [["block", c], ["x", b.x], ["y", b.y]];
   }, validate:!1, undo:"insertBlock", dom:["playground", "board", "&0"]};
   c[b.moveBlock] = {do:function(b, c, e) {
     void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, e)) : b._updatePos();
@@ -18681,10 +18686,11 @@ Entry.Restrictor = function() {
     var b = this._data.content.concat(), c = b.shift(), b = b.map(function(b) {
       return b[1];
     });
+    b.unshift(c);
+    c = Entry.do.apply(null, b);
     this.end();
     this.restrictEnd();
-    b.unshift(c);
-    return Entry.do.apply(null, b);
+    return c;
   };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(c, b) {
@@ -21351,9 +21357,9 @@ Entry.BlockMenu = function(c, b, f, d, e) {
       b.stopPropagation && b.stopPropagation();
       b.preventDefault && b.preventDefault();
       b = Entry.Utils.convertMouseEvent(b);
-      var d = e.dragInstance;
-      e._scroller.scroll(-b.pageY + d.offsetY);
-      d.set({offsetY:b.pageY});
+      var f = e.dragInstance;
+      e._scroller.scroll(-b.pageY + f.offsetY);
+      f.set({offsetY:b.pageY});
     }
     function d(b) {
       $(document).unbind(".blockMenu");
@@ -24810,7 +24816,7 @@ Entry.Board.DRAG_RADIUS = 5;
     }
   };
   c.findBlock = function(b) {
-    return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) : b instanceof Array ? this.code.getTargetByPointer(b) : b;
+    return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) : b instanceof Array ? this.code.getByPointer(b) : b;
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
