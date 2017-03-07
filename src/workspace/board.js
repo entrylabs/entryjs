@@ -1047,7 +1047,7 @@ Entry.Board.DRAG_RADIUS = 5;
         else if (block && block.id)
             return this.findById(block.id);
         else if (block instanceof Array)
-            return this.code.getTargetByPointer(block);
+            return this.code.getByPointer(block);
         return block;
     };
 

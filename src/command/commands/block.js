@@ -154,7 +154,14 @@ goog.require("Entry.STATIC");
     };
 
     c[COMMAND_TYPES.separateBlock] = {
-        do: function(block, dragMode) {
+        do: function(block, dragMode, y) {
+            block = this.editor.board.findBlock(block);
+            if (typeof y === "number") {
+                console.log(dragMode,y);
+                block.view._moveTo(dragMode, y);
+                dragMode = undefined;
+            }
+
             dragMode =
                 dragMode === undefined ?
                 Entry.DRAG_MODE_DRAG :
@@ -165,8 +172,9 @@ goog.require("Entry.STATIC");
             block.doSeparate();
         },
         state: function(block) {
+            block = this.editor.board.findBlock(block);
             var data = [
-                block.id
+                block
             ];
             var pointer = block.targetPointer();
             data.push(pointer);
@@ -178,9 +186,12 @@ goog.require("Entry.STATIC");
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         log: function(block) {
             block = this.editor.board.findBlock(block);
+            var blockPointer = block.pointer();
+            if (block.view)
+                block = block.view
 
             return [
-                ['block', block.pointer()],
+                ['block', blockPointer],
                 ['x', block.x], ['y', block.y]
             ];
         },

@@ -90,9 +90,10 @@ Entry.Restrictor = function() {
         var args = log.map(function(l) {
             return l[1];
         });
+        args.unshift(commandType);
+        var result = Entry.do.apply(null, args);
         this.end();
         this.restrictEnd();
-        args.unshift(commandType);
-        return Entry.do.apply(null, args);
+        return result;
     };
 })(Entry.Restrictor.prototype);

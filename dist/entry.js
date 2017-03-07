@@ -5891,18 +5891,23 @@ Entry.Commander = function(c) {
     return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:c, direction:"right"}], {indicator:!0, callBack:function() {
     }});
   }, dom:["playground", "board", "&1", "magnet"]};
-  c[b.separateBlock] = {do:function(b, c) {
+  c[b.separateBlock] = {do:function(b, c, f) {
+    b = this.editor.board.findBlock(b);
+    "number" === typeof f && (console.log(c, f), b.view._moveTo(c, f), c = void 0);
     c = void 0 === c ? Entry.DRAG_MODE_DRAG : c;
     b.view && b.view._toGlobalCoordinate(c);
     b.doSeparate();
   }, state:function(b) {
-    var c = [b.id], e = b.targetPointer();
+    b = this.editor.board.findBlock(b);
+    var c = [b], e = b.targetPointer();
     c.push(e);
     "basic" === b.getBlockType() && c.push(b.thread.getCount(b));
     return c;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b) {
     b = this.editor.board.findBlock(b);
-    return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
+    var c = b.pointer();
+    b.view && (b = b.view);
+    return [["block", c], ["x", b.x], ["y", b.y]];
   }, validate:!1, undo:"insertBlock", dom:["playground", "board", "&0"]};
   c[b.moveBlock] = {do:function(b, c, f) {
     void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, f)) : b._updatePos();
@@ -20037,10 +20042,11 @@ Entry.Restrictor = function() {
     var b = this._data.content.concat(), c = b.shift(), b = b.map(function(b) {
       return b[1];
     });
+    b.unshift(c);
+    c = Entry.do.apply(null, b);
     this.end();
     this.restrictEnd();
-    b.unshift(c);
-    return Entry.do.apply(null, b);
+    return c;
   };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(c, b) {
@@ -25390,7 +25396,7 @@ Entry.Board.DRAG_RADIUS = 5;
     }
   };
   c.findBlock = function(b) {
-    return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) : b instanceof Array ? this.code.getTargetByPointer(b) : b;
+    return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) : b instanceof Array ? this.code.getByPointer(b) : b;
   };
 })(Entry.Board.prototype);
 Entry.Code = function(c, b) {
