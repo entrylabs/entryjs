@@ -29389,7 +29389,6 @@ Entry.block = {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 의  %2 값",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -29457,7 +29456,6 @@ Entry.block = {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 의 값",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -29493,7 +29491,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 의 값을 %2 으로  %3 도 만큼 회전 %4",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -29507,8 +29504,8 @@ Entry.block = {
         }, {
             "type": "Dropdown",
             "options": [
-                ["시계방향", "CW"],
-                ["반시계방향", "CCW"]
+                [Lang.Blocks.ev3_cw, "CW"],
+                [Lang.Blocks.ev3_ccw, "CCW"]
             ],
             "value": "CW",
             "fontSize": 11
@@ -29556,7 +29553,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 의 값을 %2 으로 출력 %3",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -29604,7 +29600,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 의 값을 %2 초 동안 %3 으로 출력 %4",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -29684,7 +29679,6 @@ Entry.block = {
         "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 의 터치센서가 작동되었는가?",
         "params": [{
             "type": "Dropdown",
             "options": [
