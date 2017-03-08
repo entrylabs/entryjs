@@ -1896,7 +1896,7 @@ Entry.block = {
         "syntax": {"js": [], "py": ["Albert.set_wheels(%1, %2)"]}
     },
     "arduino_text": {
-        "color": "#00979D",
+        "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
