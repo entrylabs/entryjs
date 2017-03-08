@@ -4469,9 +4469,9 @@ Entry.block = {
         "params": [{
                 "type": "Dropdown",
                 "options": [
-                    [ "빨강", "17" ],
-                    [ "초록", "18" ],
-                    [ "파랑", "19" ]
+                    [ Lang.Blocks.CODEino_led_red, "17" ],
+                    [ Lang.Blocks.CODEino_led_green, "18" ],
+                    [ Lang.Blocks.CODEino_led_blue, "19" ]
                 ],
                 "value": "17",
                 "fontSize": 11
@@ -4526,9 +4526,9 @@ Entry.block = {
         "params": [{
                 "type": "Dropdown",
                 "options": [
-                    [ "빨강", "17" ],
-                    [ "초록", "18" ],
-                    [ "파랑", "19" ]
+                    [ Lang.Blocks.CODEino_led_red, "17" ],
+                    [ Lang.Blocks.CODEino_led_green, "18" ],
+                    [ Lang.Blocks.CODEino_led_blue, "19" ]
                 ],
                 "value": "17",
                 "fontSize": 11
