@@ -23,6 +23,8 @@ Entry.Tooltip = function(data, opts) {
     this._resizeEventFunc = Entry.Utils.debounce(function() {
         this.alignTooltips();
     }.bind(this), 200);
+
+    this.usedClasses = "up down left right edge_up edge_down edge_left edge_right";
     Entry.addEventListener('windowResized', this._resizeEventFunc);
 };
 
@@ -121,35 +123,67 @@ Entry.Tooltip = function(data, opts) {
             rect = data.target.get(0).getBoundingClientRect();
         else
             rect = data.target.getBoundingClientRect();
+        tooltipRect = data.wrapper[0].getBoundingClientRect();
+        var clientWidth = document.body.clientWidth;
+        var clientHeight = document.body.clientHeight;
         if (this.isIndicator) {
             data.indicator.css({
                 left: rect.left + rect.width / 2,
                 top: rect.top + rect.height / 2
             });
         }
+
+        var direction = data.direction;
+
+        if (!direction) {
+            var margin = rect.left - tooltipRect.width,
+                newMargin = clientWidth - rect.left - rect.width - tooltipRect.width;
+            direction = "left";
+            if (margin < newMargin) {
+                margin = newMargin;
+                direction = "right"
+            }
+            newMargin = rect.top - tooltipRect.height;
+            if (margin < newMargin) {
+                margin = newMargin;
+                direction = "up"
+            }
+            newMargin = clientHeight - rect.top - rect.height - tooltipRect.height;
+            if (margin < newMargin) {
+                margin = newMargin;
+                direction = "down"
+            }
+            data.dom.removeClass(this.usedClasses)
+                .addClass(direction);
+        }
+
         var pos = {top: rect.top, left: rect.left};
-        console.log(pos);
-        switch(data.direction) {
+        var edgeStyle;
+        switch(direction) {
+            case "down":
+                pos.top += rect.height;
             case "up":
                 pos.left += rect.width / 2;
-                pos.top -= 11;
-                break;
-            case "down":
-                pos.left += rect.width / 2;
-                pos.top += rect.height;
-                break;
-            case "left":
-                pos.top += rect.height / 2;
-                pos.left -= 11;
+                if (pos.left < tooltipRect.width / 2)
+                    edgeStyle = "edge_left";
+                if (clientWidth - pos.left < tooltipRect.width / 2)
+                    edgeStyle = "edge_right";
                 break;
             case "right":
                 pos.left += rect.width;
+            case "left":
                 pos.top += rect.height / 2;
+                if (pos.top < tooltipRect.height / 2)
+                    edgeStyle = "edge_up";
+                if (clientHeight - pos.top < tooltipRect.height / 2)
+                    edgeStyle = "edge_down";
                 break;
             default:
                 break;
         }
-        console.log(pos);
+        console.log(edgeStyle);
+        if (edgeStyle)
+            data.dom.addClass(edgeStyle);
 
         data.wrapper.css(pos);
     };

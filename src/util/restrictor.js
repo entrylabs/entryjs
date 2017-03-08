@@ -49,8 +49,7 @@ Entry.Restrictor = function() {
             this.currentTooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
-                target: domQuery,
-                direction: "down"
+                target: domQuery
             }], {
                 restrict: true,
                 dimmed: true,

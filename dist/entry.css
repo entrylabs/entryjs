@@ -2513,14 +2513,14 @@ svg .svgBlockGroup text {
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 1111;
+  z-index: 10000;
   top: 0;
   left: 0;
 }
 #globalSvg {
   position: fixed;
   overflow: visible;
-  z-index: 1111;
+  z-index: 10000;
   opacity: 0.8;
   will-change: transform;
 }
@@ -6414,6 +6414,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   -ms-transform: translate(-50%, -100%);
   -o-transform: translate(-50%, -100%);
   transform: translate(-50%, -100%);
+  margin-top: -11px;
 }
 .entryTooltip.up:before {
   background: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2225px%22%20height%3D%2211px%22%3E%3Cpath%20fill%3D%22%23FFF%22%20transform%3D%22rotate%280%29%22%20d%3D%22M0,0%20l10,10%20c2.5%201.5%202.5%201.5%205%200%20l10,-10%20Z%22/%3E%3C/svg%3E') no-repeat;
@@ -6438,6 +6439,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   margin-left: -12.5px;
 }
 .entryTooltip.left {
+  margin-left: -11px;
   -webkit-transform: translate(-100%, -50%);
   -moz-transform: translate(-100%, -50%);
   -ms-transform: translate(-100%, -50%);
@@ -6508,15 +6510,90 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryTooltipIndicator > div:nth-child(3) {
   animation-delay: 0.6s;
 }
-.entryTooltip.edge_up {
-  -webkit-transform: translate(-100%, -20%);
-  -moz-transform: translate(-100%, -20%);
-  -ms-transform: translate(-100%, -20%);
-  -o-transform: translate(-100%, -20%);
-  transform: translate(-100%, -20%);
+.entryTooltip.left.edge_up {
+  -webkit-transform: translate(-100%, -25px);
+  -moz-transform: translate(-100%, -25px);
+  -ms-transform: translate(-100%, -25px);
+  -o-transform: translate(-100%, -25px);
+  transform: translate(-100%, -25px);
 }
-.entryTooltip.edge_up:before {
-  top: 20%;
+.entryTooltip.left.edge_up:before {
+  top: 25px;
+}
+.entryTooltip.left.edge_down {
+  -webkit-transform: translate(-100%, -100%);
+  -moz-transform: translate(-100%, -100%);
+  -ms-transform: translate(-100%, -100%);
+  -o-transform: translate(-100%, -100%);
+  transform: translate(-100%, -100%);
+  margin-top: 25px;
+}
+.entryTooltip.left.edge_down:before {
+  top: 100%;
+  margin-top: -37.5px;
+}
+.entryTooltip.right.edge_up {
+  -webkit-transform: translate(0, -25px);
+  -moz-transform: translate(0, -25px);
+  -ms-transform: translate(0, -25px);
+  -o-transform: translate(0, -25px);
+  transform: translate(0, -25px);
+}
+.entryTooltip.right.edge_up:before {
+  top: 25px;
+}
+.entryTooltip.right.edge_down {
+  -webkit-transform: translate(0, -100%);
+  -moz-transform: translate(0, -100%);
+  -ms-transform: translate(0, -100%);
+  -o-transform: translate(0, -100%);
+  transform: translate(0, -100%);
+  margin-top: 25px;
+}
+.entryTooltip.right.edge_down:before {
+  top: 100%;
+  margin-top: -37.5px;
+}
+.entryTooltip.up.edge_left {
+  -webkit-transform: translate(-25px, -100%);
+  -moz-transform: translate(-25px, -100%);
+  -ms-transform: translate(-25px, -100%);
+  -o-transform: translate(-25px, -100%);
+  transform: translate(-25px, -100%);
+}
+.entryTooltip.up.edge_left:before {
+  left: 25px;
+}
+.entryTooltip.up.edge_right {
+  -webkit-transform: translate(-100%, -100%);
+  -moz-transform: translate(-100%, -100%);
+  -ms-transform: translate(-100%, -100%);
+  -o-transform: translate(-100%, -100%);
+  transform: translate(-100%, -100%);
+  margin-left: 25px;
+}
+.entryTooltip.up.edge_right:before {
+  left: 100%;
+  margin-left: -37.5px;
+}
+.entryTooltip.down.edge_left {
+  left: -25px;
+}
+.entryTooltip.down.edge_left:before {
+  left: 25px;
+}
+.entryTooltip.down.edge_right {
+  left: 0;
+  margin-left: 25px;
+  -webkit-transform: translate(-100%, 0);
+  -moz-transform: translate(-100%, 0);
+  -ms-transform: translate(-100%, 0);
+  -o-transform: translate(-100%, 0);
+  transform: translate(-100%, 0);
+}
+.entryTooltip.down.edge_right:before {
+  left: 100%;
+  margin-left: -37.5px;
 }
 
 

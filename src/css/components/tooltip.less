@@ -95,6 +95,7 @@
 
 .entryTooltip.up {
     .transform(translate(-50%,-100%));
+    margin-top: -11px;
     &:before {
         .svg-arrow("#FFF", up);
          top: 100%;
@@ -115,6 +116,7 @@
 }
 
 .entryTooltip.left {
+    margin-left: -11px;
     .transform(translate(-100%,-50%));
     &:before {
         .svg-arrow("#FFF", left);
@@ -180,9 +182,67 @@
 
 //special
 
-.entryTooltip.edge_up {
-    .transform(translate(-100%,-20%));
+.entryTooltip.left.edge_up {
+    .transform(translate(-100%,-25px));
     &:before {
-        top: 20%;
+        top: 25px;
+    }
+}
+
+.entryTooltip.left.edge_down {
+    .transform(translate(-100%,-100%));
+    margin-top: 25px;
+    &:before {
+        top: 100%;
+        margin-top: -37.5px;
+    }
+}
+
+.entryTooltip.right.edge_up {
+    .transform(translate(0,-25px));
+    &:before {
+        top: 25px;
+    }
+}
+
+.entryTooltip.right.edge_down {
+    .transform(translate(0,-100%));
+    margin-top: 25px;
+    &:before {
+        top: 100%;
+        margin-top: -37.5px;
+    }
+}
+
+.entryTooltip.up.edge_left {
+    .transform(translate(-25px,-100%));
+    &:before {
+        left: 25px;
+    }
+}
+
+.entryTooltip.up.edge_right {
+    .transform(translate(-100%,-100%));
+    margin-left: 25px;
+    &:before {
+        left: 100%;
+        margin-left: -37.5px;
+    }
+}
+
+.entryTooltip.down.edge_left {
+    left: -25px;
+    &:before {
+        left: 25px;
+    }
+}
+
+.entryTooltip.down.edge_right {
+    left: 0;
+    margin-left: 25px;
+    .transform(translate(-100%,0));
+    &:before {
+        left: 100%;
+        margin-left: -37.5px;
     }
 }

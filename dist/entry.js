@@ -20038,7 +20038,7 @@ Entry.Restrictor = function() {
     var c = b.content.concat(), d = c.shift(), d = Entry.Command[d], f = d.dom;
     f && (this.startEvent.notify(), f instanceof Array && (f = f.map(function(b) {
       return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
-    })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), d.restrict ? this.currentTooltip = d.restrict(b, f, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:f, direction:"down"}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this))));
+    })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), d.restrict ? this.currentTooltip = d.restrict(b, f, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:f}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this))));
   };
   c.end = function() {
     this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);
@@ -20074,6 +20074,7 @@ Entry.Tooltip = function(c, b) {
   this._resizeEventFunc = Entry.Utils.debounce(function() {
     this.alignTooltips();
   }.bind(this), 200);
+  this.usedClasses = "up down left right edge_up edge_down edge_left edge_right";
   Entry.addEventListener("windowResized", this._resizeEventFunc);
 };
 (function(c) {
@@ -20116,27 +20117,36 @@ Entry.Tooltip = function(c, b) {
   c._alignTooltip = function(b) {
     var c;
     c = b.target instanceof $ ? b.target.get(0).getBoundingClientRect() : b.target.getBoundingClientRect();
+    tooltipRect = b.wrapper[0].getBoundingClientRect();
+    var d = document.body.clientWidth, f = document.body.clientHeight;
     this.isIndicator && b.indicator.css({left:c.left + c.width / 2, top:c.top + c.height / 2});
-    var d = {top:c.top, left:c.left};
-    console.log(d);
-    switch(b.direction) {
-      case "up":
-        d.left += c.width / 2;
-        d.top -= 11;
-        break;
+    var g = b.direction;
+    if (!g) {
+      var h = c.left - tooltipRect.width, k = d - c.left - c.width - tooltipRect.width, g = "left";
+      h < k && (h = k, g = "right");
+      k = c.top - tooltipRect.height;
+      h < k && (h = k, g = "up");
+      k = f - c.top - c.height - tooltipRect.height;
+      h < k && (g = "down");
+      b.dom.removeClass(this.usedClasses).addClass(g);
+    }
+    var h = {top:c.top, left:c.left}, l;
+    switch(g) {
       case "down":
-        d.left += c.width / 2;
-        d.top += c.height;
-        break;
-      case "left":
-        d.top += c.height / 2;
-        d.left -= 11;
+        h.top += c.height;
+      case "up":
+        h.left += c.width / 2;
+        h.left < tooltipRect.width / 2 && (l = "edge_left");
+        d - h.left < tooltipRect.width / 2 && (l = "edge_right");
         break;
       case "right":
-        d.left += c.width, d.top += c.height / 2;
+        h.left += c.width;
+      case "left":
+        h.top += c.height / 2, h.top < tooltipRect.height / 2 && (l = "edge_up"), f - h.top < tooltipRect.height / 2 && (l = "edge_down");
     }
-    console.log(d);
-    b.wrapper.css(d);
+    console.log(l);
+    l && b.dom.addClass(l);
+    b.wrapper.css(h);
   };
   c.renderIndicator = function(b, c) {
     b = Entry.Dom("div", {classes:["entryTooltipIndicator"], parent:$(document.body)});
@@ -21746,37 +21756,37 @@ Entry.VariableContainer = function() {
   };
   c.addRef = function(b, c) {
     if (this.view_ && Entry.playground.mainWorkspace && Entry.getMainWS().getMode() === Entry.Workspace.MODE_BOARD) {
-      var d = {object:c.getCode().object, block:c};
-      c.funcBlock && (d.funcBlock = c.funcBlock, delete c.funcBlock);
-      this[b].push(d);
+      var e = {object:c.getCode().object, block:c};
+      c.funcBlock && (e.funcBlock = c.funcBlock, delete c.funcBlock);
+      this[b].push(e);
       if ("_functionRefs" == b) {
         b = c.type.substr(5);
-        for (var e = Entry.variableContainer.functions_[b].content.getBlockList(), g = 0;g < e.length;g++) {
-          c = e[g];
+        for (var f = Entry.variableContainer.functions_[b].content.getBlockList(), g = 0;g < f.length;g++) {
+          c = f[g];
           var h = c.events;
           -1 < c.type.indexOf("func_") && c.type.substr(5) == b || (h && h.viewAdd && h.viewAdd.forEach(function(b) {
-            c.getCode().object = d.object;
-            b && (c.funcBlock = d.block, b(c));
+            c.getCode().object = e.object;
+            b && (c.funcBlock = e.block, b(c));
           }), h && h.dataAdd && h.dataAdd.forEach(function(b) {
-            c.getCode().object = d.object;
-            b && (c.funcBlock = d.block, b(c));
+            c.getCode().object = e.object;
+            b && (c.funcBlock = e.block, b(c));
           }));
         }
       }
-      return d;
+      return e;
     }
   };
   c.removeRef = function(b, c) {
     if (Entry.playground.mainWorkspace && Entry.getMainWS().getMode() === Entry.Workspace.MODE_BOARD) {
-      for (var d = this[b], e = 0;e < d.length;e++) {
-        if (d[e].block == c) {
-          d.splice(e, 1);
+      for (var e = this[b], f = 0;f < e.length;f++) {
+        if (e[f].block == c) {
+          e.splice(f, 1);
           break;
         }
       }
-      if ("_functionRefs" == b && (b = c.type.substr(5), e = Entry.variableContainer.functions_[b])) {
-        for (d = e.content.getBlockList(), e = 0;e < d.length;e++) {
-          c = d[e];
+      if ("_functionRefs" == b && (b = c.type.substr(5), f = Entry.variableContainer.functions_[b])) {
+        for (e = f.content.getBlockList(), f = 0;f < e.length;f++) {
+          c = e[f];
           var g = c.events;
           -1 < c.type.indexOf("func_") && c.type.substr(5) == b || (g && g.viewDestroy && g.viewDestroy.forEach(function(b) {
             b && b(c);
@@ -22359,9 +22369,9 @@ Entry.Thread = function(c, b, e) {
     if (!(b instanceof Array)) {
       return console.error("thread must be array");
     }
-    for (var d = 0;d < b.length;d++) {
-      var e = b[d];
-      e instanceof Entry.Block || e.isDummy ? (e.setThread(this), this._data.push(e)) : this._data.push(new Entry.Block(e, this));
+    for (var e = 0;e < b.length;e++) {
+      var f = b[e];
+      f instanceof Entry.Block || f.isDummy ? (f.setThread(this), this._data.push(f)) : this._data.push(new Entry.Block(f, this));
     }
     (b = this._code.view) && this.createView(b.board, c);
   };
@@ -22374,8 +22384,8 @@ Entry.Thread = function(c, b, e) {
   };
   c.createView = function(b, c) {
     this.view || (this.view = new Entry.ThreadView(this, b));
-    this._data.getAll().forEach(function(d) {
-      d.createView(b, c);
+    this._data.getAll().forEach(function(e) {
+      e.createView(b, c);
     });
   };
   c.destroyView = function() {
@@ -22395,8 +22405,8 @@ Entry.Thread = function(c, b, e) {
   };
   c.insertByBlock = function(b, c) {
     b = b ? this._data.indexOf(b) : -1;
-    for (var d = 0;d < c.length;d++) {
-      c[d].setThread(this);
+    for (var e = 0;e < c.length;e++) {
+      c[e].setThread(this);
     }
     this._data.splice.apply(this._data, [b + 1, 0].concat(c));
     this.changeEvent.notify();
@@ -22409,10 +22419,10 @@ Entry.Thread = function(c, b, e) {
   c.clone = function(b, c) {
     b = b || this._code;
     b = new Entry.Thread([], b);
-    for (var d = this._data, e = [], g = 0, h = d.length;g < h;g++) {
-      e.push(d[g].clone(b));
+    for (var e = this._data, f = [], g = 0, h = e.length;g < h;g++) {
+      f.push(e[g].clone(b));
     }
-    b.load(e, c);
+    b.load(f, c);
     return b;
   };
   c.toJSON = function(b, c, d) {
@@ -22427,10 +22437,10 @@ Entry.Thread = function(c, b, e) {
   };
   c.destroy = function(b, c) {
     this.view && this.view.destroy(b);
-    for (var d = this._data, e = d.length - 1;0 <= e;e--) {
-      d[e].destroy(b, null, c);
+    for (var e = this._data, f = e.length - 1;0 <= f;f--) {
+      e[f].destroy(b, null, c);
     }
-    !d.length && this._code.destroyThread(this, !1);
+    !e.length && this._code.destroyThread(this, !1);
   };
   c.getBlock = function(b) {
     return this._data[b];
@@ -22482,19 +22492,19 @@ Entry.Thread = function(c, b, e) {
     return this._data.at(0);
   };
   c.hasBlockType = function(b) {
-    function c(d) {
-      if (b == d.type) {
+    function c(e) {
+      if (b == e.type) {
         return !0;
       }
-      for (var e = d.params, f = 0;f < e.length;f++) {
-        var k = e[f];
+      for (var d = e.params, f = 0;f < d.length;f++) {
+        var k = d[f];
         if (k && k.constructor == Entry.Block && c(k)) {
           return !0;
         }
       }
-      if (d = d.statements) {
-        for (e = 0;e < d.length;e++) {
-          if (d[e].hasBlockType(b)) {
+      if (e = e.statements) {
+        for (d = 0;d < e.length;d++) {
+          if (e[d].hasBlockType(b)) {
             return !0;
           }
         }
