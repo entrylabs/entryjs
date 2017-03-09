@@ -46,6 +46,7 @@ Entry.Commander = function(injectType) {
         that.report(commandType, argumentArray);
 
         var command = Entry.Command[commandType];
+        console.log('commandType', commandType);
         if (Entry.stateManager && command.skipUndoStack !== true) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
@@ -58,7 +59,9 @@ Entry.Commander = function(injectType) {
 
         return {
             value: value,
-            isPass: this.isPass.bind(this)
+            isPass: function(isPass) {
+                this.isPassByType(commandType, isPass);
+            }.bind(this)
         };
     };
 
@@ -80,7 +83,9 @@ Entry.Commander = function(injectType) {
         }
         return {
             value: Entry.Command[commandType].do.apply(this, argumentArray),
-            isPass: this.isPass.bind(this)
+            isPass: function(isPass) {
+                this.isPassByType(commandType, isPass);
+            }.bind(this)
         };
     };
 
@@ -113,6 +118,15 @@ Entry.Commander = function(injectType) {
 
         isPass = isPass === undefined ? true : isPass;
         var lastCommand = Entry.stateManager.getLastCommand();
+        if (lastCommand) lastCommand.isPass = isPass;
+    };
+
+    p.isPassByType = function(commandType, isPass) {
+        if (!Entry.stateManager)
+            return;
+
+        isPass = isPass === undefined ? true : isPass;
+        var lastCommand = Entry.stateManager.getMatchingLastCommand(commandType);
         if (lastCommand) lastCommand.isPass = isPass;
     };
 

@@ -6630,6 +6630,14 @@ Entry.StateManager.prototype.cancelLastCommand = function() {
 Entry.StateManager.prototype.getLastCommand = function() {
   return this.undoStack_[this.undoStack_.length - 1];
 };
+Entry.StateManager.prototype.getMatchingLastCommand = function(c) {
+  for (var b = this.undoStack_, f = b.length - 1;0 <= f;f--) {
+    var d = b[f];
+    if (d.message === c) {
+      return d;
+    }
+  }
+};
 Entry.StateManager.prototype.getLastRedoCommand = function() {
   return this.redoStack_[this.redoStack_.length - 1];
 };
@@ -15792,17 +15800,22 @@ Entry.Commander = function(c) {
     this.report(Entry.STATIC.COMMAND_TYPES.do);
     this.report(b, c);
     var d = Entry.Command[b];
+    console.log("commandType", b);
     Entry.stateManager && !0 !== d.skipUndoStack && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, d.undo].concat(d.state.apply(this, c)));
     d = Entry.Command[b].do.apply(this, c);
     this.doEvent.notify(b, c);
-    return {value:d, isPass:this.isPass.bind(this)};
+    return {value:d, isPass:function(c) {
+      this.isPassByType(b, c);
+    }.bind(this)};
   };
   c.undo = function() {
     var b = Array.prototype.slice.call(arguments), c = b.shift(), d = Entry.Command[c];
     this.report(Entry.STATIC.COMMAND_TYPES.undo);
     var e = Entry.Command[c];
     Entry.stateManager && !0 !== e.skipUndoStack && Entry.stateManager.addCommand.apply(Entry.stateManager, [c, this, this.do, d.undo].concat(d.state.apply(this, b)));
-    return {value:Entry.Command[c].do.apply(this, b), isPass:this.isPass.bind(this)};
+    return {value:Entry.Command[c].do.apply(this, b), isPass:function(b) {
+      this.isPassByType(c, b);
+    }.bind(this)};
   };
   c.redo = function() {
     var b = Array.prototype.slice.call(arguments), c = b.shift(), d = Entry.Command[c];
@@ -15819,6 +15832,13 @@ Entry.Commander = function(c) {
       b = void 0 === b ? !0 : b;
       var c = Entry.stateManager.getLastCommand();
       c && (c.isPass = b);
+    }
+  };
+  c.isPassByType = function(b, c) {
+    if (Entry.stateManager) {
+      c = void 0 === c ? !0 : c;
+      var d = Entry.stateManager.getMatchingLastCommand(b);
+      d && (d.isPass = c);
     }
   };
   c.addReporter = function(b) {

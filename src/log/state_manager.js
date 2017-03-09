@@ -108,6 +108,16 @@ Entry.StateManager.prototype.getLastCommand = function() {
     return this.undoStack_[this.undoStack_.length - 1];
 };
 
+Entry.StateManager.prototype.getMatchingLastCommand = function(type) {
+    var undoStack = this.undoStack_;
+    var len = undoStack.length-1;
+    for (var i=len; i>=0; i--) {
+        var command = undoStack[i];
+        if (command.message === type)
+            return command;
+    }
+};
+
 Entry.StateManager.prototype.getLastRedoCommand = function() {
     return this.redoStack_[this.redoStack_.length - 1];
 };
