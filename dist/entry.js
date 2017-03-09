@@ -11351,27 +11351,27 @@ Entry.BlockToJsParser = function(c, b) {
     return f + "\n";
   };
   c.Block = function(b) {
-    var c = b._schema.syntax.js ? b._schema.syntax.js : b._schema.syntax;
-    return c ? b = this[c[0]](b) : "";
+    var f = b._schema.syntax.js ? b._schema.syntax.js : b._schema.syntax;
+    return f ? b = this[f[0]](b) : "";
   };
   c.Program = function(b) {
     return "";
   };
   c.Scope = function(b) {
-    var c = !1, d = "", e = /(%.)/mi;
+    var f = !1, c = "", e = /(%.)/mi;
     if (b._schema.syntax.js) {
-      var g = b._schema.syntax.js.concat(), c = !0
+      var g = b._schema.syntax.js.concat(), f = !0
     } else {
       g = b._schema.syntax.concat();
     }
     g.shift();
     for (var g = g[0].split(e), h = b._schema.params, k = b.data.params, l = 0;l < g.length;l++) {
       var m = g[l];
-      0 !== m.length && "Scope" !== m && ("Judge" === m ? c = !0 : e.test(m) ? (m = m.split("%")[1], m = parseInt(m) - 1, h[m] && "Image" != h[m].type && ("Block" == h[m].type ? (m = this.Block(k[m]), d += m) : d += this[h[m].type](k[m], h[m]))) : d += m);
+      0 !== m.length && "Scope" !== m && ("Judge" === m ? f = !0 : e.test(m) ? (m = m.split("%")[1], m = parseInt(m) - 1, h[m] && "Image" != h[m].type && ("Block" == h[m].type ? (m = this.Block(k[m]), c += m) : c += this[h[m].type](k[m], h[m]))) : c += m);
     }
-    "#" == d.charAt(d.length - 1) && (c = !0, d = d.substring(0, d.length - 1), d = d.trim());
-    c || (d += "();");
-    return d = Entry.TextCodingUtil.jsAdjustSyntax(b, d);
+    "#" == c.charAt(c.length - 1) && (f = !0, c = c.substring(0, c.length - 1), c = c.trim());
+    f || (c += "();");
+    return c = Entry.TextCodingUtil.jsAdjustSyntax(b, c);
   };
   c.BasicFunction = function(b) {
     b = this.Thread(b.statements[0]);
@@ -15924,7 +15924,9 @@ Entry.Commander = function(c) {
   }, state:function(b) {
     b = this.editor.board.findBlock(b);
     return [b, b.x, b.y];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b, c, e) {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, e) {
+    e();
+  }, validate:!1, log:function(b, c, e) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
   }, undo:"moveBlock"};
@@ -18682,9 +18684,12 @@ Entry.Restrictor = function() {
     var c = b.content.concat(), d = c.shift(), d = Entry.Command[d];
     this.end();
     var e = d.dom;
-    e && (this.startEvent.notify(), e instanceof Array && (e = e.map(function(b) {
+    this.startEvent.notify();
+    e instanceof Array && (e = e.map(function(b) {
       return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
-    })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), d.restrict ? this.currentTooltip = d.restrict(b, e, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:e}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this))));
+    }));
+    b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"});
+    d.restrict ? this.currentTooltip = d.restrict(b, e, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:e}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this)));
   };
   c.end = function() {
     this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);
