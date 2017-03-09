@@ -32543,7 +32543,7 @@ Entry.block = {
             }
             if (returnVal)
                 return;
-            else if (flow === 0)
+            else if (flow == 0)
                 return Entry.STATIC.BREAK;
             else
                 this.die();
