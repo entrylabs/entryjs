@@ -143,22 +143,47 @@ goog.require("Entry.Utils");
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "insertBlock",
-        restrict: function(data, domQuery, callback) {
-            callback();
+        restrict: function(data, domQuery, callback, restrictor) {
             return new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
                 target: domQuery
             }], {
-                indicator: true,
+                dimmed: true,
+                restrict: true,
                 callBack: function() {
+                    callback();
+                    new Entry.Tooltip([{
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: restrictor.processDomQuery([
+                            'playground', 'board', '&1', 'magnet'
+                        ])
+                    }], {
+                        indicator: true,
+                        callBack: function() {
+                        }
+                    });
                 }
             });
         },
-        dom: ['playground', 'board', '&1', 'magnet']
+        dom: ['playground', 'board', '&0']
     };
 
     obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlock])
+    obj.restrict = function(data, domQuery, callback) {
+        callback();
+        return new Entry.Tooltip([{
+            title: data.tooltip.title,
+            content: data.tooltip.content,
+            target: domQuery
+        }], {
+            indicator: true,
+            callBack: function() {
+            }
+        });
+    }
+    obj.dom = ['playground', 'board', '&1', 'magnet']
     c[COMMAND_TYPES.insertBlockFromBlockMenu] = obj;
 
     c[COMMAND_TYPES.separateBlock] = {
@@ -243,11 +268,11 @@ goog.require("Entry.Utils");
             block = this.editor.board.findBlock(block);
             return [
                 ['block', block.pointer()],
-                ['x', block.x], ['y', block.y]
+                ['x', block.view.x], ['y', block.view.y]
             ];
         },
         undo: "moveBlock",
-        dom: ['playground', 'board', 'coord', '&0']
+        dom: ['playground', 'board', 'coord', '&1', '&2']
     };
 
     obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.moveBlock])

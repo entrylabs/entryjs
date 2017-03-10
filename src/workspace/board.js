@@ -1040,8 +1040,8 @@ Entry.Board.DRAG_RADIUS = 5;
                         scroller = this.scroller,
                         boardOffset = this.relativeOffset;
                     return {
-                        top: query[0][1] + boardOffset.top - halfWidth + scroller.vY,
-                        left: query[0][0] + boardOffset.left - halfWidth + scroller.hX,
+                        top: query[1] + boardOffset.top - halfWidth + scroller.vY,
+                        left: query[0] + boardOffset.left - halfWidth + scroller.hX,
                         width: 2 * halfWidth,
                         height: 2 * halfWidth
                     }

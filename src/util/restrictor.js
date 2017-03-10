@@ -26,15 +26,10 @@ Entry.Restrictor = function() {
 
         var domQuery = command.dom;
         this.startEvent.notify();
-        if (domQuery instanceof Array) {
-            domQuery = domQuery.map(function(q) {
-                if (q[0] === "&")
-                    return log[Number(q.substr(1))][1];
-                else
-                    return q;
-            });
-        }
+        if (domQuery instanceof Array)
+            domQuery = this.processDomQuery(domQuery);
 
+        console.log(domQuery);
         if (!data.tooltip)
             data.tooltip = {
                 title: "액션",
@@ -43,7 +38,7 @@ Entry.Restrictor = function() {
 
         if (command.restrict) {
             this.currentTooltip = command.restrict(
-                data, domQuery, this.restrictEnd.bind(this));
+                data, domQuery, this.restrictEnd.bind(this), this);
             return;
         } else {
             this.currentTooltip = new Entry.Tooltip([{
@@ -76,4 +71,19 @@ Entry.Restrictor = function() {
         if (this.currentTooltip)
             this.currentTooltip.alignTooltips();
     };
+
+    p.processDomQuery = function(domQuery) {
+        var log = this._data.content.concat();
+        log.shift();
+        console.log(log);
+        if (domQuery instanceof Array) {
+            domQuery = domQuery.map(function(q) {
+                if (q[0] === "&")
+                    return log[Number(q.substr(1))][1];
+                else
+                    return q;
+            });
+        }
+        return domQuery;
+    }
 })(Entry.Restrictor.prototype);

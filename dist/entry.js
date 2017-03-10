@@ -5896,12 +5896,20 @@ Entry.Commander = function(c) {
     b = [["block", b ? b.pointer() : ""], ["targetPointer", c]];
     e && b.push(["count", e ? e : null]);
     return b;
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, e) {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, e, h) {
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function() {
+      e();
+      new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:h.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
+      }});
+    }});
+  }, dom:["playground", "board", "&0"]};
+  e = Entry.cloneSimpleObject(c[b.insertBlock]);
+  e.restrict = function(b, c, e) {
     e();
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
     }});
-  }, dom:["playground", "board", "&1", "magnet"]};
-  e = Entry.cloneSimpleObject(c[b.insertBlock]);
+  };
+  e.dom = ["playground", "board", "&1", "magnet"];
   c[b.insertBlockFromBlockMenu] = e;
   c[b.separateBlock] = {do:function(b, c, e) {
     b = this.editor.board.findBlock(b);
@@ -5932,8 +5940,8 @@ Entry.Commander = function(c) {
     }});
   }, validate:!1, log:function(b, c, e) {
     b = this.editor.board.findBlock(b);
-    return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
-  }, undo:"moveBlock", dom:["playground", "board", "coord", "&0"]};
+    return [["block", b.pointer()], ["x", b.view.x], ["y", b.view.y]];
+  }, undo:"moveBlock", dom:["playground", "board", "coord", "&1", "&2"]};
   e = Entry.cloneSimpleObject(c[b.moveBlock]);
   c[b.moveBlockFromBlockMenu] = e;
   c[b.cloneBlock] = {do:c[b.addThread].do, state:c[b.addThread].state, log:c[b.addThread].log, undo:"uncloneBlock"};
@@ -20074,13 +20082,12 @@ Entry.Restrictor = function() {
     this._data = b;
     this.end();
     if (!b.skip) {
-      var c = b.content.concat(), d = c.shift(), d = Entry.Command[d], f = d.dom;
+      var c = b.content.concat().shift(), c = Entry.Command[c], d = c.dom;
       this.startEvent.notify();
-      f instanceof Array && (f = f.map(function(b) {
-        return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
-      }));
+      d instanceof Array && (d = this.processDomQuery(d));
+      console.log(d);
       b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"});
-      d.restrict ? this.currentTooltip = d.restrict(b, f, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:f}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this)));
+      c.restrict ? this.currentTooltip = c.restrict(b, d, this.restrictEnd.bind(this), this) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:d}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this)));
     }
   };
   c.end = function() {
@@ -20092,6 +20099,15 @@ Entry.Restrictor = function() {
   };
   c.align = function() {
     this.currentTooltip && this.currentTooltip.alignTooltips();
+  };
+  c.processDomQuery = function(b) {
+    var c = this._data.content.concat();
+    c.shift();
+    console.log(c);
+    b instanceof Array && (b = b.map(function(b) {
+      return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
+    }));
+    return b;
   };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(c, b) {
@@ -25454,7 +25470,7 @@ Entry.Board.DRAG_RADIUS = 5;
     if ("coord" === c) {
       return {getBoundingClientRect:function() {
         var c = this.scroller, e = this.relativeOffset;
-        return {top:b[0][1] + e.top - 20 + c.vY, left:b[0][0] + e.left - 20 + c.hX, width:40, height:40};
+        return {top:b[1] + e.top - 20 + c.vY, left:b[0] + e.left - 20 + c.hX, width:40, height:40};
       }.bind(this)};
     }
     if (c instanceof Array) {
