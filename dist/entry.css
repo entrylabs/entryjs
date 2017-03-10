@@ -6394,7 +6394,8 @@ input.entryObjectNameWorkspace:-moz-read-only {
   animation-timing-function: ease-out;
 }
 .entryTooltip {
-  position: relative;
+  position: absolute;
+  white-space: nowrap;
   padding: 25px;
   background-color: #ffffff;
   border-radius: 8px;
@@ -6427,7 +6428,11 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryTooltip.down {
   margin-top: 11px;
-  left: -50%;
+  -webkit-transform: translate(-50%, 0);
+  -moz-transform: translate(-50%, 0);
+  -ms-transform: translate(-50%, 0);
+  -o-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
 }
 .entryTooltip.down:before {
   background: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2225px%22%20height%3D%2211px%22%3E%3Cpath%20fill%3D%22%23FFF%22%20transform%3D%22rotate%28180%2012.5%205.5%29%22%20d%3D%22M0,0%20l10,10%20c2.5%201.5%202.5%201.5%205%200%20l10,-10%20Z%22/%3E%3C/svg%3E') no-repeat;

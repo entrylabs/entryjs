@@ -78,7 +78,8 @@
 }
 
 .entryTooltip {
-    position: relative;
+    position: absolute;
+    white-space: nowrap;
     padding: 25px;
     background-color: #ffffff;
     border-radius: 8px;
@@ -106,7 +107,7 @@
 
 .entryTooltip.down {
     margin-top: 11px;
-    left: -50%;
+    .transform(translate(-50%,0));
     &:before {
         .svg-arrow("#FFF", down);
          top: -@balloon-arrow-height;
