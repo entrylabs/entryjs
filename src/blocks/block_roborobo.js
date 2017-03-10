@@ -25,19 +25,27 @@ Entry.Roborobo_Roduino = {
 
 Entry.Roborobo_SchoolKit = {
     name: 'roborobo_schoolkit',
-    INSTRUCTION : {
-        DIGITAL_READ: 1,
-        DIGITAL_WRITE: 2,
-        MOTOR: 3,
-        COLOR: 4,
-        SERVO: 5
+    pinMode : {
+        INPUT:  0,
+        OUTPUT: 1,
+        ANALOG: 2,
+        PWM:    3,
+        SERVO:  4
     },
+	inputPort : {
+		ir : 7,
+		sound : 8,
+		contact : 9,
+		cds : 10
+	},
     setZero: function() {
+        Entry.hw.sendQueue.digitalPinMode = [];
         Entry.hw.sendQueue.servo = [ false, false, false, false, false ];
         for (var port = 0; port < 14; port++) {
             Entry.hw.sendQueue[port] = 0;
+			Entry.hw.sendQueue.digitalPinMode[port] = 0;
         }
-        Entry.hw.update();
+		Entry.hw.update();
     }
 };
 
@@ -396,7 +404,7 @@ Entry.block.schoolkit_set_output = function (sprite, script) {
     var operator = script.getField("OPERATOR");
     var value = operator == "on" ? 1 : 0;
     
-    //Entry.hw.instruction = Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE;
+    Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
     Entry.hw.setDigitalPortValue(pin, value);
     return script.callReturn();
 };
@@ -441,6 +449,8 @@ Blockly.Blocks.schoolkit_get_input_value = {
 
 Entry.block.schoolkit_get_input_value = function (sprite, script) {
     var signal = script.getNumberValue("VALUE");
+    Entry.hw.sendQueue.digitalPinMode[signal] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
+    Entry.hw.update();
     return Entry.hw.portData[signal - 7];
 };
 
@@ -481,7 +491,12 @@ Entry.block.schoolkit_motor = function (sprite, script) {
         value = 255;
     } else if(value < 0) {
         value = 0;
-    }    
+    }
+    
+    Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+    Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+    Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+    Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
     
     if (operator == "cw") {
         Entry.hw.setDigitalPortValue(pin, value);
@@ -522,6 +537,7 @@ Entry.block.schoolkit_set_servo_value = function (sprite, script) {
     } else if(value > 180) {
         value = 180;
     }
+    Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.SERVO;    
     Entry.hw.sendQueue.servo[pin - 2] = true;
     Entry.hw.setDigitalPortValue(pin, value);
     Entry.hw.update();
