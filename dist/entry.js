@@ -5782,17 +5782,22 @@ Entry.Commander = function(c) {
     this.report(Entry.STATIC.COMMAND_TYPES.do);
     this.report(b, c);
     var d = Entry.Command[b];
+    console.log("commandType", b);
     Entry.stateManager && !0 !== d.skipUndoStack && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, d.undo].concat(d.state.apply(this, c)));
     d = Entry.Command[b].do.apply(this, c);
     this.doEvent.notify(b, c);
-    return {value:d, isPass:this.isPass.bind(this)};
+    return {value:d, isPass:function(c) {
+      this.isPassByType(b, c);
+    }.bind(this)};
   };
   c.undo = function() {
     var b = Array.prototype.slice.call(arguments), c = b.shift(), d = Entry.Command[c];
     this.report(Entry.STATIC.COMMAND_TYPES.undo);
     var f = Entry.Command[c];
     Entry.stateManager && !0 !== f.skipUndoStack && Entry.stateManager.addCommand.apply(Entry.stateManager, [c, this, this.do, d.undo].concat(d.state.apply(this, b)));
-    return {value:Entry.Command[c].do.apply(this, b), isPass:this.isPass.bind(this)};
+    return {value:Entry.Command[c].do.apply(this, b), isPass:function(b) {
+      this.isPassByType(c, b);
+    }.bind(this)};
   };
   c.redo = function() {
     var b = Array.prototype.slice.call(arguments), c = b.shift(), d = Entry.Command[c];
@@ -5810,6 +5815,9 @@ Entry.Commander = function(c) {
       var c = Entry.stateManager.getLastCommand();
       c && (c.isPass = b);
     }
+  };
+  c.isPassByType = function(b, c) {
+    Entry.stateManager && (c = void 0 === c ? !0 : c, b = Entry.stateManager.getMatchingLastCommand(b)) && (b.isPass = c);
   };
   c.addReporter = function(b) {
     b.logEventListener = this.logEvent.attach(b, b.add);
@@ -5916,7 +5924,9 @@ Entry.Commander = function(c) {
   }, state:function(b) {
     b = this.editor.board.findBlock(b);
     return [b, b.x, b.y];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b, c, e) {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, e) {
+    e();
+  }, validate:!1, log:function(b, c, e) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
   }, undo:"moveBlock"};
@@ -9298,6 +9308,14 @@ Entry.StateManager.prototype.cancelLastCommand = function() {
 };
 Entry.StateManager.prototype.getLastCommand = function() {
   return this.undoStack_[this.undoStack_.length - 1];
+};
+Entry.StateManager.prototype.getMatchingLastCommand = function(c) {
+  for (var b = this.undoStack_, e = b.length - 1;0 <= e;e--) {
+    var d = b[e];
+    if (d.message === c) {
+      return d;
+    }
+  }
 };
 Entry.StateManager.prototype.getLastRedoCommand = function() {
   return this.redoStack_[this.redoStack_.length - 1];
@@ -20051,9 +20069,12 @@ Entry.Restrictor = function() {
     this.end();
     if (!b.skip) {
       var c = b.content.concat(), d = c.shift(), d = Entry.Command[d], f = d.dom;
-      f && (this.startEvent.notify(), f instanceof Array && (f = f.map(function(b) {
+      this.startEvent.notify();
+      f instanceof Array && (f = f.map(function(b) {
         return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
-      })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), d.restrict ? this.currentTooltip = d.restrict(b, f, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:f}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this))));
+      }));
+      b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"});
+      d.restrict ? this.currentTooltip = d.restrict(b, f, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:f}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this)));
     }
   };
   c.end = function() {

@@ -25,8 +25,6 @@ Entry.Restrictor = function() {
 
 
         var domQuery = command.dom;
-        if (!domQuery)
-            return;
         this.startEvent.notify();
         if (domQuery instanceof Array) {
             domQuery = domQuery.map(function(q) {

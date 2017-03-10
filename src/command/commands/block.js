@@ -222,6 +222,10 @@ goog.require("Entry.Utils");
             ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        restrict: function(data, domQuery, callback) {
+            callback();
+        },
+        validate: false,
         log: function(block, x, y) {
             block = this.editor.board.findBlock(block);
             return [
