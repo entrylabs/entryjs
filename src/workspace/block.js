@@ -564,6 +564,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         var pointer =  this.thread.pointer([], this);
         if (pointer.length === 4 && pointer[3] === 0) {
             pointer.pop();
+        } else {
+            if (pointer[pointer.length - 1] === 0)
+                pointer.pop();
+            else
+                pointer[pointer.length - 1] = pointer[pointer.length - 1] - 1;
         }
         return pointer;
     };

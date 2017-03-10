@@ -868,7 +868,7 @@ Entry.Board.DRAG_RADIUS = 5;
         } else {
             var targetObj;
             if (pointer instanceof Array)
-                targetObj = this.code.getTargetByPointer(pointer);
+                targetObj = this.code.getByPointer(pointer);
             else
                 targetObj = pointer;
             if (targetObj instanceof Entry.Block) {
@@ -876,6 +876,10 @@ Entry.Board.DRAG_RADIUS = 5;
                     block.view.bindPrev(targetObj);
                 block.doInsert(targetObj);
             } else if (targetObj instanceof Entry.FieldStatement) {
+                block.view.bindPrev(targetObj);
+                targetObj.insertTopBlock(block);
+            } else if (targetObj instanceof Entry.Thread) {
+                targetObj = targetObj.view.getParent();
                 block.view.bindPrev(targetObj);
                 targetObj.insertTopBlock(block);
             } else {

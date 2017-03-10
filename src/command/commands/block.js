@@ -5,6 +5,7 @@
 
 goog.require("Entry.Command");
 goog.require("Entry.STATIC");
+goog.require("Entry.Utils");
 
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
@@ -33,6 +34,11 @@ goog.require("Entry.STATIC");
         validate: false,
         dom: ['playground', 'blockMenu', '&0']
     };
+
+    var addThreadByBlockMenu =
+        Entry.cloneSimpleObject(c[COMMAND_TYPES.addThread])
+    addThreadByBlockMenu.followCmd = true;
+    c[COMMAND_TYPES.addThreadByBlockMenu] = addThreadByBlockMenu;
 
     c[COMMAND_TYPES.destroyThread] = {
         do: function(thread) {
@@ -116,8 +122,7 @@ goog.require("Entry.STATIC");
             block = this.editor.board.findBlock(block);
             var data = [ block ];
 
-            var pointer = block.targetPointer();
-            data.push(pointer);
+            data.push(block.targetPointer());
 
             if (typeof block !== "string" && block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
@@ -142,8 +147,7 @@ goog.require("Entry.STATIC");
             callback();
             return new Entry.Tooltip([{
                 content: "여기 밑에 끼워넣으셈",
-                target: domQuery,
-                direction: "right"
+                target: domQuery
             }], {
                 indicator: true,
                 callBack: function() {

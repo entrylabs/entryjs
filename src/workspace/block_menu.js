@@ -299,7 +299,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 datum[0].y = datum[0].y + distance + (dy || 0);
                 var newBlockView =
                     this._boardBlockView =
-                    Entry.do("addThread", datum)
+                    Entry.do("addThreadByBlockMenu", datum)
                         .value.getFirstBlock().view;
                 newBlockView.onMouseDown.call(
                     newBlockView, e

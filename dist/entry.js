@@ -5747,8 +5747,8 @@ Entry.Observer = function(c, b, e, d) {
   };
 })(Entry.Observer.prototype);
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, destroyBlockBelow:113, 
-destroyThreads:114, addThreads:115, recoverBlockBelow:116, selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, 
-variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
+destroyThreads:114, addThreads:115, recoverBlockBelow:116, addThreadByBlockMenu:117, selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, variableContainerSelectFilter:801, 
+variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
 Entry.Command = {};
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
@@ -5838,6 +5838,9 @@ Entry.Commander = function(c) {
     b instanceof Entry.Thread && (b = b.toJSON());
     return [["thread", b]];
   }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
+  var e = Entry.cloneSimpleObject(c[b.addThread]);
+  e.followCmd = !0;
+  c[b.addThreadByBlockMenu] = e;
   c[b.destroyThread] = {do:function(b) {
     (b instanceof Entry.Thread ? b.getFirstBlock() : this.editor.board.findBlock(b[0].id)).destroy(!0, !0);
   }, state:function(b) {
@@ -5847,8 +5850,8 @@ Entry.Commander = function(c) {
     var e;
     e = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
     return [["block", e.pointer ? e.pointer() : e], ["thread", b.toJSON ? b.toJSON() : b], ["callerName", c]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, restrict:function(b, c, f) {
-    f();
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, restrict:function(b, c, e) {
+    e();
   }, dom:["playground", "board", "&0"], undo:"addThread"};
   c[b.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
@@ -5870,30 +5873,29 @@ Entry.Commander = function(c) {
     b = this.editor.board.findBlock(b.id);
     return [["block", b], ["pointer", c]];
   }, undo:"destroyBlock"};
-  c[b.insertBlock] = {do:function(b, c, f) {
+  c[b.insertBlock] = {do:function(b, c, e) {
     b = this.editor.board.findBlock(b);
-    this.editor.board.insert(b, c, f);
+    this.editor.board.insert(b, c, e);
   }, state:function(b, c) {
     b = this.editor.board.findBlock(b);
     c = [b];
-    var e = b.targetPointer();
-    c.push(e);
+    c.push(b.targetPointer());
     "string" !== typeof b && "basic" === b.getBlockType() && c.push(b.thread.getCount(b));
     return c;
-  }, log:function(b, c, f) {
+  }, log:function(b, c, e) {
     b = this.editor.board.findBlock(b);
     c instanceof Array || (c = c.pointer());
     b = [["block", b ? b.pointer() : ""], ["targetPointer", c]];
-    f && b.push(["count", f ? f : null]);
+    e && b.push(["count", e ? e : null]);
     return b;
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, f) {
-    f();
-    return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:c, direction:"right"}], {indicator:!0, callBack:function() {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, e) {
+    e();
+    return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:c}], {indicator:!0, callBack:function() {
     }});
   }, dom:["playground", "board", "&1", "magnet"]};
-  c[b.separateBlock] = {do:function(b, c, f) {
+  c[b.separateBlock] = {do:function(b, c, e) {
     b = this.editor.board.findBlock(b);
-    "number" === typeof f && (console.log(c, f), b.view._moveTo(c, f), c = void 0);
+    "number" === typeof e && (console.log(c, e), b.view._moveTo(c, e), c = void 0);
     c = void 0 === c ? Entry.DRAG_MODE_DRAG : c;
     b.view && b.view._toGlobalCoordinate(c);
     b.doSeparate();
@@ -5909,39 +5911,39 @@ Entry.Commander = function(c) {
     b.view && (b = b.view);
     return [["block", c], ["x", b.x], ["y", b.y]];
   }, validate:!1, undo:"insertBlock", dom:["playground", "board", "&0"]};
-  c[b.moveBlock] = {do:function(b, c, f) {
-    void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, f)) : b._updatePos();
+  c[b.moveBlock] = {do:function(b, c, e) {
+    void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, e)) : b._updatePos();
   }, state:function(b) {
     b = this.editor.board.findBlock(b);
     return [b, b.x, b.y];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b, c, f) {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b, c, e) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
   }, undo:"moveBlock"};
   c[b.cloneBlock] = {do:c[b.addThread].do, state:c[b.addThread].state, log:c[b.addThread].log, undo:"uncloneBlock"};
   c[b.uncloneBlock] = {do:c[b.destroyThread].do, state:c[b.destroyThread].state, log:c[b.destroyThread].log, undo:"cloneBlock"};
-  c[b.scrollBoard] = {do:function(b, c, f) {
-    f || this.editor.board.scroller._scroll(b, c);
+  c[b.scrollBoard] = {do:function(b, c, e) {
+    e || this.editor.board.scroller._scroll(b, c);
     delete this.editor.board.scroller._diffs;
   }, state:function(b, c) {
     return [-b, -c];
   }, log:function(b, c) {
     return [["dx", b], ["dy", c]];
   }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
-  c[b.setFieldValue] = {do:function(b, c, f, g, h) {
-    c.setValue(h, !0);
-  }, state:function(b, c, f, g, h) {
-    return [b, c, f, h, g];
-  }, log:function(b, c, f, g, h) {
-    return [["pointer", f], ["newValue", h]];
+  c[b.setFieldValue] = {do:function(b, c, e, h, k) {
+    c.setValue(k, !0);
+  }, state:function(b, c, e, h, k) {
+    return [b, c, e, k, h];
+  }, log:function(b, c, e, h, k) {
+    return [["pointer", e], ["newValue", k]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
-  c[b.selectBlockMenu] = {do:function(b, c, f) {
-    var e = Entry.getMainWS().blockMenu;
-    e.selectMenu(b, c, f);
-    e.align();
-  }, state:function(b, c, f) {
-    return [Entry.getMainWS().blockMenu.lastSelector, c, f];
-  }, log:function(b, c, f) {
+  c[b.selectBlockMenu] = {do:function(b, c, e) {
+    var d = Entry.getMainWS().blockMenu;
+    d.selectMenu(b, c, e);
+    d.align();
+  }, state:function(b, c, e) {
+    return [Entry.getMainWS().blockMenu.lastSelector, c, e];
+  }, log:function(b, c, e) {
     return [["selector", b]];
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "category", "&0"], undo:"selectBlockMenu"};
   c[b.destroyThreads] = {do:function() {
@@ -20046,15 +20048,13 @@ Entry.Restrictor = function() {
 (function(c) {
   c.restrict = function(b) {
     this._data = b;
-    if (b.skip) {
-      return this.skip();
-    }
-    var c = b.content.concat(), d = c.shift(), d = Entry.Command[d];
     this.end();
-    var f = d.dom;
-    f && (this.startEvent.notify(), f instanceof Array && (f = f.map(function(b) {
-      return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
-    })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), d.restrict ? this.currentTooltip = d.restrict(b, f, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:f}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this))));
+    if (!b.skip) {
+      var c = b.content.concat(), d = c.shift(), d = Entry.Command[d], f = d.dom;
+      f && (this.startEvent.notify(), f instanceof Array && (f = f.map(function(b) {
+        return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
+      })), b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"}), d.restrict ? this.currentTooltip = d.restrict(b, f, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:f}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this))));
+    }
   };
   c.end = function() {
     this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);
@@ -20065,16 +20065,6 @@ Entry.Restrictor = function() {
   };
   c.align = function() {
     this.currentTooltip && this.currentTooltip.alignTooltips();
-  };
-  c.skip = function() {
-    var b = this._data.content.concat(), c = b.shift(), b = b.map(function(b) {
-      return b[1];
-    });
-    b.unshift(c);
-    c = Entry.do.apply(null, b);
-    this.end();
-    this.restrictEnd();
-    return c;
   };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(c, b) {
@@ -22550,11 +22540,11 @@ Entry.Thread = function(c, b, e) {
     return this._code === c ? (b.unshift(this._code.indexOf(this)), c = this._data[0], b.unshift(c.y), b.unshift(c.x), b) : c.pointer(b);
   };
   c.getBlockList = function(b, c) {
-    for (var d = [], e = 0;e < this._data.length;e++) {
-      var g = this._data[e];
-      g.constructor === Entry.Block && (d = d.concat(g.getBlockList(b, c)));
+    for (var e = [], f = 0;f < this._data.length;f++) {
+      var g = this._data[f];
+      g.constructor === Entry.Block && (e = e.concat(g.getBlockList(b, c)));
     }
-    return d;
+    return e;
   };
   c.stringify = function(b) {
     return JSON.stringify(this.toJSON(void 0, void 0, b));
@@ -22803,16 +22793,16 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             b = this.params;
             break;
           case "insert":
-            var d = c.startPos;
+            var e = c.startPos;
             c = c.endPos;
-            var e = Entry.block[this.type].params;
-            b = Array(e.length);
-            for (var g = 0;g < d;g++) {
+            var f = Entry.block[this.type].params;
+            b = Array(f.length);
+            for (var g = 0;g < e;g++) {
               b[g] = this.params[g];
             }
-            d = c - d + 1;
-            for (g = c + 1;g < e.length;g++) {
-              b[g] = this.params[g - d];
+            e = c - e + 1;
+            for (g = c + 1;g < f.length;g++) {
+              b[g] = this.params[g - e];
             }
         }
       }
@@ -22892,30 +22882,30 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     return new Entry.Block(this.toJSON(!0), b);
   };
   c.toJSON = function(b, c) {
-    var d = this._toJSON();
-    delete d.view;
-    delete d.thread;
-    delete d.events;
-    b && delete d.id;
-    d.params = d.params.map(function(d) {
-      d instanceof Entry.Block && (d = d.toJSON(b, c));
-      return d;
+    var e = this._toJSON();
+    delete e.view;
+    delete e.thread;
+    delete e.events;
+    b && delete e.id;
+    e.params = e.params.map(function(e) {
+      e instanceof Entry.Block && (e = e.toJSON(b, c));
+      return e;
     });
-    d.statements = d.statements.map(function(d) {
-      return d.toJSON(b, void 0, c);
+    e.statements = e.statements.map(function(e) {
+      return e.toJSON(b, void 0, c);
     });
-    d.x = this.x;
-    d.y = this.y;
-    d.movable = this.movable;
-    d.deletable = this.deletable;
-    d.readOnly = this.readOnly;
-    this._backupParams && (d._backupParams = this._backupParams.map(function(b) {
+    e.x = this.x;
+    e.y = this.y;
+    e.movable = this.movable;
+    e.deletable = this.deletable;
+    e.readOnly = this.readOnly;
+    this._backupParams && (e._backupParams = this._backupParams.map(function(b) {
       return b instanceof Entry.Block ? b.toJSON() : b;
     }));
     c && c instanceof Array && c.forEach(function(b) {
-      delete d[b];
+      delete e[b];
     });
-    return d;
+    return e;
   };
   c.destroy = function(b, c, d) {
     if (!d || this.isDeletable()) {
@@ -23077,7 +23067,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   c.targetPointer = function() {
     var b = this.thread.pointer([], this);
-    4 === b.length && 0 === b[3] && b.pop();
+    4 === b.length && 0 === b[3] ? b.pop() : 0 === b[b.length - 1] ? b.pop() : --b[b.length - 1];
     return b;
   };
   c.getDataByPointer = function(b) {
@@ -23086,24 +23076,24 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     return b.length ? c.getDataByPointer ? c.getDataByPointer(b) : null : c;
   };
   c.getBlockList = function(b, c) {
-    var d = [];
+    var e = [];
     if (!this._schema) {
       return [];
     }
     if (b && this._schema.isPrimitive) {
-      return d;
+      return e;
     }
-    (c || this.type) === this.type && d.push(this);
-    for (var e = this.params, g = 0;g < e.length;g++) {
-      var h = e[g];
-      h && h.constructor == Entry.Block && (d = d.concat(h.getBlockList(b, c)));
+    (c || this.type) === this.type && e.push(this);
+    for (var f = this.params, g = 0;g < f.length;g++) {
+      var h = f[g];
+      h && h.constructor == Entry.Block && (e = e.concat(h.getBlockList(b, c)));
     }
-    if (e = this.statements) {
-      for (g = 0;g < e.length;g++) {
-        h = e[g], h.constructor === Entry.Thread && (d = d.concat(h.getBlockList(b, c)));
+    if (f = this.statements) {
+      for (g = 0;g < f.length;g++) {
+        h = f[g], h.constructor === Entry.Thread && (e = e.concat(h.getBlockList(b, c)));
       }
     }
-    return d;
+    return e;
   };
   c.stringify = function(b) {
     return JSON.stringify(this.toJSON(!1, b));
@@ -23233,10 +23223,10 @@ Entry.BlockMenu = function(c, b, e, d, f) {
       return console.error("You must inject code instance");
     }
     this.codeListener && this.code.changeEvent.detach(this.codeListener);
-    var d = this;
+    var e = this;
     this.set({code:b});
     this.codeListener = this.code.changeEvent.attach(this, function() {
-      d.changeEvent.notify();
+      e.changeEvent.notify();
     });
     b.createView(this);
     c ? this.align() : this._dAlign();
@@ -23298,7 +23288,7 @@ Entry.BlockMenu = function(c, b, e, d, f) {
     if (!this._boardBlockView && null !== c) {
       var d = Entry.GlobalSvg, f = this.workspace, g = f.getMode(), h = Entry.Workspace, k = this._svgWidth, l = f.selectedBoard, m = c.mouseDownCoordinate, q = f = 0;
       m && (f = b.pageX - m.x, q = b.pageY - m.y);
-      !l || g !== h.MODE_BOARD && g !== h.MODE_OVERLAYBOARD ? d.setView(c, g) && (d.adjust(f, q), d.addControl(b)) : l.code && (h = c.block, c = h.getThread(), h && c && (l = this.offset().top - l.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - k + (f || 0), c[0].y = c[0].y + l + (q || 0), k = this._boardBlockView = Entry.do("addThread", c).value.getFirstBlock().view, k.onMouseDown.call(k, b), k.dragInstance.set({isNew:!0}), d.setView(k, g)));
+      !l || g !== h.MODE_BOARD && g !== h.MODE_OVERLAYBOARD ? d.setView(c, g) && (d.adjust(f, q), d.addControl(b)) : l.code && (h = c.block, c = h.getThread(), h && c && (l = this.offset().top - l.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - k + (f || 0), c[0].y = c[0].y + l + (q || 0), k = this._boardBlockView = Entry.do("addThreadByBlockMenu", c).value.getFirstBlock().view, k.onMouseDown.call(k, b), k.dragInstance.set({isNew:!0}), d.setView(k, g)));
     }
   };
   c.terminateDrag = function() {
@@ -25372,7 +25362,8 @@ Entry.Board.DRAG_RADIUS = 5;
   c.insert = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
     this.separate(b, d);
-    3 === c.length ? b.moveTo(c[0], c[1]) : 4 === c.length && 0 === c[3] ? (c = this.code.getThreads()[c[2]], b.thread.cut(b), c.insertToTop(b), b.getNextBlock().view.bindPrev()) : (c = c instanceof Array ? this.code.getTargetByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
+    3 === c.length ? b.moveTo(c[0], c[1]) : 4 === c.length && 0 === c[3] ? (c = this.code.getThreads()[c[2]], b.thread.cut(b), c.insertToTop(b), b.getNextBlock().view.bindPrev()) : (c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : c instanceof Entry.Thread ? (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : 
+    b.doInsert(c));
   };
   c.adjustThreadsPosition = function() {
     var b = this.code;
