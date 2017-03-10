@@ -1033,6 +1033,20 @@ Entry.Board.DRAG_RADIUS = 5;
         var key = query.shift();
         if (key === 'trashcan')
             return this.workspace.trashcan.svgGroup;
+        else if (key === 'coord')
+            return {
+                getBoundingClientRect: function() {
+                    var halfWidth = 20,
+                        scroller = this.scroller,
+                        boardOffset = this.relativeOffset;
+                    return {
+                        top: query[0][1] + boardOffset.top - halfWidth + scroller.vY,
+                        left: query[0][0] + boardOffset.left - halfWidth + scroller.hX,
+                        width: 2 * halfWidth,
+                        height: 2 * halfWidth
+                    }
+                }.bind(this)
+            }
         else if (key instanceof Array) {
             var targetObj = this.code.getByPointer(key);
             if (targetObj instanceof Entry.Block) {

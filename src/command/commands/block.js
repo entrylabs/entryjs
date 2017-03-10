@@ -9,6 +9,7 @@ goog.require("Entry.Utils");
 
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+    var obj;
 
     c[COMMAND_TYPES.addThread] = {
         do: function(thread) {
@@ -35,10 +36,9 @@ goog.require("Entry.Utils");
         dom: ['playground', 'blockMenu', '&0']
     };
 
-    var addThreadByBlockMenu =
-        Entry.cloneSimpleObject(c[COMMAND_TYPES.addThread])
-    addThreadByBlockMenu.followCmd = true;
-    c[COMMAND_TYPES.addThreadByBlockMenu] = addThreadByBlockMenu;
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.addThread])
+    obj.followCmd = true;
+    c[COMMAND_TYPES.addThreadFromBlockMenu] = obj;
 
     c[COMMAND_TYPES.destroyThread] = {
         do: function(thread) {
@@ -146,7 +146,8 @@ goog.require("Entry.Utils");
         restrict: function(data, domQuery, callback) {
             callback();
             return new Entry.Tooltip([{
-                content: "여기 밑에 끼워넣으셈",
+                title: data.tooltip.title,
+                content: data.tooltip.content,
                 target: domQuery
             }], {
                 indicator: true,
@@ -156,6 +157,9 @@ goog.require("Entry.Utils");
         },
         dom: ['playground', 'board', '&1', 'magnet']
     };
+
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlock])
+    c[COMMAND_TYPES.insertBlockFromBlockMenu] = obj;
 
     c[COMMAND_TYPES.separateBlock] = {
         do: function(block, dragMode, y) {
@@ -224,6 +228,15 @@ goog.require("Entry.Utils");
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         restrict: function(data, domQuery, callback) {
             callback();
+            return new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                indicator: true,
+                callBack: function() {
+                }
+            });
         },
         validate: false,
         log: function(block, x, y) {
@@ -233,8 +246,12 @@ goog.require("Entry.Utils");
                 ['x', block.x], ['y', block.y]
             ];
         },
-        undo: "moveBlock"
+        undo: "moveBlock",
+        dom: ['playground', 'board', 'coord', '&0']
     };
+
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.moveBlock])
+    c[COMMAND_TYPES.moveBlockFromBlockMenu] = obj;
 
     c[COMMAND_TYPES.cloneBlock] = {
         do: c[COMMAND_TYPES.addThread].do,

@@ -46,7 +46,10 @@ Entry.STATIC = {
         destroyThreads: 114,
         addThreads: 115,
         recoverBlockBelow: 116,
-        addThreadByBlockMenu: 117,
+
+        addThreadFromBlockMenu: 117,
+        insertBlockFromBlockMenu: 118,
+        moveBlockFromBlockMenu: 119,
 
         selectObject: 201,
         objectEditButtonClick: 202,

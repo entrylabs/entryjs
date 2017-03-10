@@ -5747,8 +5747,8 @@ Entry.Observer = function(c, b, e, d) {
   };
 })(Entry.Observer.prototype);
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, destroyBlockBelow:113, 
-destroyThreads:114, addThreads:115, recoverBlockBelow:116, addThreadByBlockMenu:117, selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, variableContainerSelectFilter:801, 
-variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
+destroyThreads:114, addThreads:115, recoverBlockBelow:116, addThreadFromBlockMenu:117, insertBlockFromBlockMenu:118, moveBlockFromBlockMenu:119, selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, 
+playgroundClickAddSound:703, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
 Entry.Command = {};
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
@@ -5833,7 +5833,7 @@ Entry.Commander = function(c) {
   };
 })(Entry.Commander.prototype);
 (function(c) {
-  var b = Entry.STATIC.COMMAND_TYPES;
+  var b = Entry.STATIC.COMMAND_TYPES, e;
   c[b.addThread] = {do:function(b) {
     return this.editor.board.code.createThread(b);
   }, state:function(b) {
@@ -5846,9 +5846,9 @@ Entry.Commander = function(c) {
     b instanceof Entry.Thread && (b = b.toJSON());
     return [["thread", b]];
   }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
-  var e = Entry.cloneSimpleObject(c[b.addThread]);
+  e = Entry.cloneSimpleObject(c[b.addThread]);
   e.followCmd = !0;
-  c[b.addThreadByBlockMenu] = e;
+  c[b.addThreadFromBlockMenu] = e;
   c[b.destroyThread] = {do:function(b) {
     (b instanceof Entry.Thread ? b.getFirstBlock() : this.editor.board.findBlock(b[0].id)).destroy(!0, !0);
   }, state:function(b) {
@@ -5898,9 +5898,11 @@ Entry.Commander = function(c) {
     return b;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, e) {
     e();
-    return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:c}], {indicator:!0, callBack:function() {
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
     }});
   }, dom:["playground", "board", "&1", "magnet"]};
+  e = Entry.cloneSimpleObject(c[b.insertBlock]);
+  c[b.insertBlockFromBlockMenu] = e;
   c[b.separateBlock] = {do:function(b, c, e) {
     b = this.editor.board.findBlock(b);
     "number" === typeof e && (console.log(c, e), b.view._moveTo(c, e), c = void 0);
@@ -5926,10 +5928,14 @@ Entry.Commander = function(c) {
     return [b, b.x, b.y];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, e) {
     e();
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+    }});
   }, validate:!1, log:function(b, c, e) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
-  }, undo:"moveBlock"};
+  }, undo:"moveBlock", dom:["playground", "board", "coord", "&0"]};
+  e = Entry.cloneSimpleObject(c[b.moveBlock]);
+  c[b.moveBlockFromBlockMenu] = e;
   c[b.cloneBlock] = {do:c[b.addThread].do, state:c[b.addThread].state, log:c[b.addThread].log, undo:"uncloneBlock"};
   c[b.uncloneBlock] = {do:c[b.destroyThread].do, state:c[b.destroyThread].state, log:c[b.destroyThread].log, undo:"cloneBlock"};
   c[b.scrollBoard] = {do:function(b, c, e) {
@@ -23309,7 +23315,7 @@ Entry.BlockMenu = function(c, b, e, d, f) {
     if (!this._boardBlockView && null !== c) {
       var d = Entry.GlobalSvg, f = this.workspace, g = f.getMode(), h = Entry.Workspace, k = this._svgWidth, l = f.selectedBoard, m = c.mouseDownCoordinate, q = f = 0;
       m && (f = b.pageX - m.x, q = b.pageY - m.y);
-      !l || g !== h.MODE_BOARD && g !== h.MODE_OVERLAYBOARD ? d.setView(c, g) && (d.adjust(f, q), d.addControl(b)) : l.code && (h = c.block, c = h.getThread(), h && c && (l = this.offset().top - l.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - k + (f || 0), c[0].y = c[0].y + l + (q || 0), k = this._boardBlockView = Entry.do("addThreadByBlockMenu", c).value.getFirstBlock().view, k.onMouseDown.call(k, b), k.dragInstance.set({isNew:!0}), d.setView(k, g)));
+      !l || g !== h.MODE_BOARD && g !== h.MODE_OVERLAYBOARD ? d.setView(c, g) && (d.adjust(f, q), d.addControl(b)) : l.code && (h = c.block, c = h.getThread(), h && c && (l = this.offset().top - l.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - k + (f || 0), c[0].y = c[0].y + l + (q || 0), k = this._boardBlockView = Entry.do("addThreadFromBlockMenu", c).value.getFirstBlock().view, k.onMouseDown.call(k, b), k.dragInstance.set({isNew:!0}), d.setView(k, g)));
     }
   };
   c.terminateDrag = function() {
@@ -24156,8 +24162,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
           case c.DONE:
             c = d.magnetedBlockView;
             c instanceof Entry.BlockView && (c = c.block);
-            l && !c ? Entry.do("separateBlock", g) : l || c || h ? c ? ("next" === c.view.magneting ? (k = g.getLastBlock(), this.dragMode = f, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock", c, k).isPass(h), Entry.ConnectionRipple.setView(c.view).dispose()) : (Entry.do("insertBlock", g, c).isPass(h), b = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock", g).isPass(h) : g.getThread().view.isGlobal() ? Entry.do("moveBlock", g) : Entry.do("separateBlock", 
-            g);
+            l && !c ? Entry.do("separateBlock", g) : l || c || h ? (k = h ? "FromBlockMenu" : "", c ? ("next" === c.view.magneting ? (l = g.getLastBlock(), this.dragMode = f, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock" + k, c, l).isPass(h), Entry.ConnectionRipple.setView(c.view).dispose()) : (Entry.do("insertBlock" + k, g, c).isPass(h), b = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock" + k, g).isPass(h)) : g.getThread().view.isGlobal() ? Entry.do("moveBlock", 
+            g) : Entry.do("separateBlock", g);
             break;
           case c.RETURN:
             g = this.block;
@@ -25444,6 +25450,12 @@ Entry.Board.DRAG_RADIUS = 5;
     var c = b.shift();
     if ("trashcan" === c) {
       return this.workspace.trashcan.svgGroup;
+    }
+    if ("coord" === c) {
+      return {getBoundingClientRect:function() {
+        var c = this.scroller, e = this.relativeOffset;
+        return {top:b[0][1] + e.top - 20 + c.vY, left:b[0][0] + e.left - 20 + c.hX, width:40, height:40};
+      }.bind(this)};
     }
     if (c instanceof Array) {
       return c = this.code.getByPointer(c), c instanceof Entry.Block ? c.getDom(b) : c instanceof Entry.Thread ? c.getDom(b) : c.svgGroup;
