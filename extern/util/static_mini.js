@@ -198,6 +198,10 @@ EntryStatic.getAllBlocks = function() {
             "practical_course_move_for_secs",
             "practical_course_move_for",
             "practical_course_stop_for",
+            //roborobo
+            "roborobo_move_for_secs",
+            "roborobo_move_for",
+            "roborobo_stop_for",
             "practical_course_set_servo2",
         ]
     }, {
@@ -220,6 +224,15 @@ EntryStatic.getAllBlocks = function() {
             "practical_course_sound_value_boolean",
             "practical_course_irs_value",
             "practical_course_irs_value_boolean",
+            //roborobo
+            "roborobo_touch_value",
+            "roborobo_touch_value_boolean",
+            "roborobo_light_value",
+            "roborobo_light_value_boolean",
+            "roborobo_sound_value",
+            "roborobo_sound_value_boolean",
+            "roborobo_irs_value",
+            "roborobo_irs_value_boolean"
         ]
     }, {
         category: "hw_led",
@@ -230,7 +243,13 @@ EntryStatic.getAllBlocks = function() {
             "practical_course_diode_toggle",
             "practical_course_diode_inout_toggle",
             "practical_course_diode_set_output",
-            "practical_course_diode_input_value"
+            "practical_course_diode_input_value",
+            //roborobo
+            "roborobo_diode_secs_toggle",
+            "roborobo_diode_toggle",
+            "roborobo_diode_inout_toggle",
+            "roborobo_diode_set_output",
+            "roborobo_diode_input_value"
         ]
     }, {
         category: "hw_robot",
@@ -752,7 +771,7 @@ EntryStatic.initOptions = {
 
 EntryStatic.hwCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led'];
 
-EntryStatic.hwMiniSupportList = ['neobot', 'ArduinoExt'];
+EntryStatic.hwMiniSupportList = ['neobot', 'ArduinoExt', 'roborobo_schoolkit'];
 
 EntryStatic.COMMAND_TYPES = {
     addThread: 101,
