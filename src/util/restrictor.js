@@ -15,26 +15,21 @@ Entry.Restrictor = function() {
     p.restrict = function(data) {
         this._data = data;
 
-        if (data.skip) return this.skip();
+        this.end();
+
+        if (data.skip) return;
 
         var log = data.content.concat();
         var commandType = log.shift();
         var command = Entry.Command[commandType];
 
-        //clear currently exposed tooltip
-        this.end();
 
         var domQuery = command.dom;
         this.startEvent.notify();
-        if (domQuery instanceof Array) {
-            domQuery = domQuery.map(function(q) {
-                if (q[0] === "&")
-                    return log[Number(q.substr(1))][1];
-                else
-                    return q;
-            });
-        }
+        if (domQuery instanceof Array)
+            domQuery = this.processDomQuery(domQuery);
 
+        console.log(domQuery);
         if (!data.tooltip)
             data.tooltip = {
                 title: "액션",
@@ -43,7 +38,8 @@ Entry.Restrictor = function() {
 
         if (command.restrict) {
             this.currentTooltip = command.restrict(
-                data, domQuery, this.restrictEnd.bind(this));
+                data, domQuery, this.restrictEnd.bind(this), this);
+            return;
         } else {
             this.currentTooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
@@ -75,20 +71,18 @@ Entry.Restrictor = function() {
             this.currentTooltip.alignTooltips();
     };
 
-    p.skip = function() {
-        var data = this._data;
-
-        var log = data.content.concat();
-        var commandType = log.shift();
-        var command = Entry.Command[commandType];
-
-        var args = log.map(function(l) {
-            return l[1];
-        });
-        args.unshift(commandType);
-        var result = Entry.do.apply(null, args);
-        this.end();
-        this.restrictEnd();
-        return result;
-    };
+    p.processDomQuery = function(domQuery) {
+        var log = this._data.content.concat();
+        log.shift();
+        console.log(log);
+        if (domQuery instanceof Array) {
+            domQuery = domQuery.map(function(q) {
+                if (q[0] === "&")
+                    return log[Number(q.substr(1))][1];
+                else
+                    return q;
+            });
+        }
+        return domQuery;
+    }
 })(Entry.Restrictor.prototype);

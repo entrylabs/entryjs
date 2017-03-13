@@ -5,9 +5,11 @@
 
 goog.require("Entry.Command");
 goog.require("Entry.STATIC");
+goog.require("Entry.Utils");
 
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+    var obj;
 
     c[COMMAND_TYPES.addThread] = {
         do: function(thread) {
@@ -33,6 +35,10 @@ goog.require("Entry.STATIC");
         validate: false,
         dom: ['playground', 'blockMenu', '&0']
     };
+
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.addThread])
+    obj.followCmd = true;
+    c[COMMAND_TYPES.addThreadFromBlockMenu] = obj;
 
     c[COMMAND_TYPES.destroyThread] = {
         do: function(thread) {
@@ -116,8 +122,7 @@ goog.require("Entry.STATIC");
             block = this.editor.board.findBlock(block);
             var data = [ block ];
 
-            var pointer = block.targetPointer();
-            data.push(pointer);
+            data.push(block.targetPointer());
 
             if (typeof block !== "string" && block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
@@ -138,20 +143,48 @@ goog.require("Entry.STATIC");
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "insertBlock",
-        restrict: function(data, domQuery, callback) {
-            callback();
+        restrict: function(data, domQuery, callback, restrictor) {
             return new Entry.Tooltip([{
-                content: "여기 밑에 끼워넣으셈",
-                target: domQuery,
-                direction: "right"
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
             }], {
-                indicator: true,
+                dimmed: true,
+                restrict: true,
                 callBack: function() {
+                    callback();
+                    new Entry.Tooltip([{
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: restrictor.processDomQuery([
+                            'playground', 'board', '&1', 'magnet'
+                        ])
+                    }], {
+                        indicator: true,
+                        callBack: function() {
+                        }
+                    });
                 }
             });
         },
-        dom: ['playground', 'board', '&1', 'magnet']
+        dom: ['playground', 'board', '&0']
     };
+
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlock])
+    obj.restrict = function(data, domQuery, callback) {
+        callback();
+        return new Entry.Tooltip([{
+            title: data.tooltip.title,
+            content: data.tooltip.content,
+            target: domQuery
+        }], {
+            indicator: true,
+            callBack: function() {
+            }
+        });
+    }
+    obj.dom = ['playground', 'board', '&1', 'magnet']
+    c[COMMAND_TYPES.insertBlockFromBlockMenu] = obj;
 
     c[COMMAND_TYPES.separateBlock] = {
         do: function(block, dragMode, y) {
@@ -220,17 +253,30 @@ goog.require("Entry.STATIC");
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         restrict: function(data, domQuery, callback) {
             callback();
+            return new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                indicator: true,
+                callBack: function() {
+                }
+            });
         },
         validate: false,
         log: function(block, x, y) {
             block = this.editor.board.findBlock(block);
             return [
                 ['block', block.pointer()],
-                ['x', block.x], ['y', block.y]
+                ['x', block.view.x], ['y', block.view.y]
             ];
         },
-        undo: "moveBlock"
+        undo: "moveBlock",
+        dom: ['playground', 'board', 'coord', '&1', '&2']
     };
+
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.moveBlock])
+    c[COMMAND_TYPES.moveBlockFromBlockMenu] = obj;
 
     c[COMMAND_TYPES.cloneBlock] = {
         do: c[COMMAND_TYPES.addThread].do,

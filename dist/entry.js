@@ -11082,57 +11082,57 @@ Entry.TextCodingUtil = {};
   c.isMaterialBlock = function(b) {
     return "get_canvas_input_value" == b || "get_variable" == b || "value_of_index_from_list" == b || "length_of_list" == b || "is_included_in_list" == b ? !0 : !1;
   };
-  c.jsAdjustSyntax = function(b, f) {
-    var c = "";
+  c.jsAdjustSyntax = function(b, c) {
+    var d = "";
     if ("ai_boolean_distance" == b.data.type) {
-      var e = f.split(" "), c = e[0].split("_");
-      c[1] = c[1].substring(1, c[1].length - 1);
-      c[1] = c[1].toLowerCase();
-      var c = c.join("_"), g = e[1], g = this.bTojBinaryOperatorConvertor(g), e = e[2], c = c + " " + g + " " + e;
+      var e = c.split(" "), d = e[0].split("_");
+      d[1] = d[1].substring(1, d[1].length - 1);
+      d[1] = d[1].toLowerCase();
+      var d = d.join("_"), g = e[1], g = this.bTojBinaryOperatorConvertor(g), e = e[2], d = d + " " + g + " " + e;
     } else {
-      "ai_boolean_object" == b.data.type ? (e = f.split(" "), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), c = c.join("_"), g = e[1], e = e[2], c = c + " " + g + " " + e) : "ai_distance_value" == b.data.type ? (e = f.split(" "), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), c = c.join("_")) : c = f;
+      "ai_boolean_object" == b.data.type ? (e = c.split(" "), d = e[0].split("_"), d[1] = d[1].substring(1, d[1].length - 1), d[1] = d[1].toLowerCase(), d = d.join("_"), g = e[1], e = e[2], d = d + " " + g + " " + e) : "ai_distance_value" == b.data.type ? (e = c.split(" "), d = e[0].split("_"), d[1] = d[1].substring(1, d[1].length - 1), d[1] = d[1].toLowerCase(), d = d.join("_")) : d = c;
+    }
+    return d;
+  };
+  c.bTojBinaryOperatorConvertor = function(b) {
+    var c;
+    switch(b) {
+      case "'BIGGER'":
+        c = ">";
+        break;
+      case "'BIGGER_EQUAL'":
+        c = ">=";
+        break;
+      case "'EQUAL'":
+        c = "==";
+        break;
+      case "'SMALLER'":
+        c = "<";
+        break;
+      case "'SMALLER_EQUAL'":
+        c = "<=";
     }
     return c;
   };
-  c.bTojBinaryOperatorConvertor = function(b) {
-    var f;
-    switch(b) {
-      case "'BIGGER'":
-        f = ">";
-        break;
-      case "'BIGGER_EQUAL'":
-        f = ">=";
-        break;
-      case "'EQUAL'":
-        f = "==";
-        break;
-      case "'SMALLER'":
-        f = "<";
-        break;
-      case "'SMALLER_EQUAL'":
-        f = "<=";
-    }
-    return f;
-  };
   c.jTobBinaryOperatorConvertor = function(b) {
-    var f;
+    var c;
     switch(b) {
       case ">":
-        f = "BIGGER";
+        c = "BIGGER";
         break;
       case ">=":
-        f = "BIGGER_EQUAL";
+        c = "BIGGER_EQUAL";
         break;
       case "==":
-        f = "EQUAL";
+        c = "EQUAL";
         break;
       case "<":
-        f = "SMALLER";
+        c = "SMALLER";
         break;
       case "<=":
-        f = "SMALLER_EQUAL";
+        c = "SMALLER_EQUAL";
     }
-    return f;
+    return c;
   };
   c.radarVariableConvertor = function(b) {
     return b.split("_")[1].toUpperCase();
@@ -11141,27 +11141,27 @@ Entry.TextCodingUtil = {};
     return "stone" == b ? "OBSTACLE" : "wall" == b ? b.toUpperCase() : "item" == b ? b.toUpperCase() : b;
   };
   c.canConvertTextModeForOverlayMode = function(b) {
-    var f;
-    Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD && b == Entry.Workspace.MODE_VIMBOARD && (f = Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_EDITOR]);
-    return f;
+    var c;
+    Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD && b == Entry.Workspace.MODE_VIMBOARD && (c = Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_EDITOR]);
+    return c;
   };
   c.isNamesIncludeSpace = function() {
     var b = Entry.variableContainer;
     if (b) {
-      for (var f = b.variables_ || [], c = 0;c < f.length;c++) {
-        if (/ /.test(f[c].name_)) {
+      for (var c = b.variables_ || [], d = 0;d < c.length;d++) {
+        if (/ /.test(c[d].name_)) {
           return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT];
         }
       }
-      f = b.lists_ || [];
-      for (c = 0;c < f.length;c++) {
-        if (/ /.test(f[c].name_)) {
+      c = b.lists_ || [];
+      for (d = 0;d < c.length;d++) {
+        if (/ /.test(c[d].name_)) {
           return Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT];
         }
       }
-      f = b.functions_ || {};
-      for (c in f) {
-        if (b = f[c].content._data[0]._data[0], "function_create" == b.data.type) {
+      c = b.functions_ || {};
+      for (d in c) {
+        if (b = c[d].content._data[0]._data[0], "function_create" == b.data.type) {
           if (2 == b.params.length) {
             if (b = b.params[0], "function_field_label" == b.data.type) {
               if (b = b.data.params, 2 == b.length) {
@@ -11190,8 +11190,8 @@ Entry.TextCodingUtil = {};
       return !1;
     }
   };
-  c.isNameIncludeSpace = function(b, f) {
-    return "variable" == f && / /.test(b) ? Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE] : "list" == f && / /.test(b) ? Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE] : "function" == f && / /.test(b) ? Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE] : !1;
+  c.isNameIncludeSpace = function(b, c) {
+    return "variable" == c && / /.test(b) ? Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE] : "list" == c && / /.test(b) ? Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE] : "function" == c && / /.test(b) ? Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE] : !1;
   };
   c.hasFunctionFieldLabel = function(b) {
     if (b && b.data) {
@@ -11200,54 +11200,54 @@ Entry.TextCodingUtil = {};
       }
       b = b.data.params;
       if (b[0]) {
-        var f = b[0].data.type;
-        if ("function_field_label" == f || b[0].data.params && this.hasFunctionFieldLabel(b[0])) {
+        var c = b[0].data.type;
+        if ("function_field_label" == c || b[0].data.params && this.hasFunctionFieldLabel(b[0])) {
           return !0;
         }
       }
-      return b[1] && (f = b[1].data.type, "function_field_label" == f || b[1].data.params && this.hasFunctionFieldLabel(b[1])) ? !0 : !1;
+      return b[1] && (c = b[1].data.type, "function_field_label" == c || b[1].data.params && this.hasFunctionFieldLabel(b[1])) ? !0 : !1;
     }
   };
-  c.makeExpressionStatementForEntryEvent = function(b, f) {
-    var c = {}, e = {type:"CallExpression"}, g = {};
+  c.makeExpressionStatementForEntryEvent = function(b, c) {
+    var d = {}, e = {type:"CallExpression"}, g = {};
     g.name = b;
     g.type = "Identifier";
     e.callee = g;
     arguments = [];
     g = {type:"Literal"};
-    g.value = f;
+    g.value = c;
     arguments.push(g);
     e.arguments = arguments;
-    c.expression = e;
-    c.type = "ExpressionStatement";
-    return c;
+    d.expression = e;
+    d.type = "ExpressionStatement";
+    return d;
   };
-  c.setMathParams = function(b, f) {
-    var c;
-    "pow" == b ? (c = "square", f[3] = c) : "sqrt" == b ? (c = "root", f[3] = c) : "sin" == b ? (c = "sin", f[3] = c) : "cos" == b ? (c = "cos", f[3] = c) : "tan" == b ? (c = "tan", f[3] = c) : "asin" == b ? (c = "asin_radian", f[3] = c) : "acos" == b ? (c = "acos_radian", f[3] = c) : "atan" == b ? (c = "atan_radian", f[3] = c) : "log" == b ? (c = "ln", f[3] = c) : "log10" == b ? (c = "log", f[3] = c) : "floor" == b ? (c = "floor", f[3] = c) : "ceil" == b ? (c = "ceil", f[3] = c) : "round" == b ? 
-    (c = "round", f[3] = c) : "factorial" == b ? (c = "factorial", f[3] = c) : "fabs" == b && (c = "abs", f[3] = c);
-    return c;
+  c.setMathParams = function(b, c) {
+    var d;
+    "pow" == b ? (d = "square", c[3] = d) : "sqrt" == b ? (d = "root", c[3] = d) : "sin" == b ? (d = "sin", c[3] = d) : "cos" == b ? (d = "cos", c[3] = d) : "tan" == b ? (d = "tan", c[3] = d) : "asin" == b ? (d = "asin_radian", c[3] = d) : "acos" == b ? (d = "acos_radian", c[3] = d) : "atan" == b ? (d = "atan_radian", c[3] = d) : "log" == b ? (d = "ln", c[3] = d) : "log10" == b ? (d = "log", c[3] = d) : "floor" == b ? (d = "floor", c[3] = d) : "ceil" == b ? (d = "ceil", c[3] = d) : "round" == b ? 
+    (d = "round", c[3] = d) : "factorial" == b ? (d = "factorial", c[3] = d) : "fabs" == b && (d = "abs", c[3] = d);
+    return d;
   };
   c.isMathExpression = function(b) {
     return "Entry.math_operation" == b.split("(")[0] ? !0 : !1;
   };
   c.makeMathExpression = function(b) {
-    var f = b, c = b.split("(")[1].split(",");
-    b = c[0];
-    c = c[1];
-    c = c.substring(2, c.length - 2).trim();
-    "square" == c ? (mathProperty = "pow", f = "math." + mathProperty, f = f + "(" + b + ")") : "root" == c ? (mathProperty = "sqrt", f = "math." + mathProperty, f = f + "(" + b + ")") : "sin" == c ? (mathProperty = "sin", f = "math." + mathProperty, f = f + "(" + b + ")") : "cos" == c ? (mathProperty = "cos", f = "math." + mathProperty, f = f + "(" + b + ")") : "tan" == c ? (mathProperty = "tan", f = "math." + mathProperty, f = f + "(" + b + ")") : "asin_radian" == c ? (mathProperty = "asin", f = 
-    "math." + mathProperty, f = f + "(" + b + ")") : "acos_radian" == c ? (mathProperty = "acos", f = "math." + mathProperty, f = f + "(" + b + ")") : "atan_radian" == c ? (mathProperty = "atan", f = "math." + mathProperty, f = f + "(" + b + ")") : "ln" == c ? (mathProperty = "log", f = "math." + mathProperty, f = f + "(" + b + ")") : "log" == c ? (mathProperty = "log10", f = "math." + mathProperty, f = f + "(" + b + ")") : "floor" == c ? (mathProperty = "floor", f = "math." + mathProperty, f = f + 
-    "(" + b + ")") : "ceil" == c ? (mathProperty = "ceil", f = "math." + mathProperty, f = f + "(" + b + ")") : "round" == c ? (mathProperty = "round", f = "math." + mathProperty, f = f + "(" + b + ")") : "factorial" == c ? (mathProperty = "factorial", f = "math." + mathProperty, f = f + "(" + b + ")") : "abs" == c && (mathProperty = "fabs", f = "math." + mathProperty, f = f + "(" + b + ")");
-    return f;
+    var c = b, d = b.split("(")[1].split(",");
+    b = d[0];
+    d = d[1];
+    d = d.substring(2, d.length - 2).trim();
+    "square" == d ? (mathProperty = "pow", c = "math." + mathProperty, c = c + "(" + b + ")") : "root" == d ? (mathProperty = "sqrt", c = "math." + mathProperty, c = c + "(" + b + ")") : "sin" == d ? (mathProperty = "sin", c = "math." + mathProperty, c = c + "(" + b + ")") : "cos" == d ? (mathProperty = "cos", c = "math." + mathProperty, c = c + "(" + b + ")") : "tan" == d ? (mathProperty = "tan", c = "math." + mathProperty, c = c + "(" + b + ")") : "asin_radian" == d ? (mathProperty = "asin", c = 
+    "math." + mathProperty, c = c + "(" + b + ")") : "acos_radian" == d ? (mathProperty = "acos", c = "math." + mathProperty, c = c + "(" + b + ")") : "atan_radian" == d ? (mathProperty = "atan", c = "math." + mathProperty, c = c + "(" + b + ")") : "ln" == d ? (mathProperty = "log", c = "math." + mathProperty, c = c + "(" + b + ")") : "log" == d ? (mathProperty = "log10", c = "math." + mathProperty, c = c + "(" + b + ")") : "floor" == d ? (mathProperty = "floor", c = "math." + mathProperty, c = c + 
+    "(" + b + ")") : "ceil" == d ? (mathProperty = "ceil", c = "math." + mathProperty, c = c + "(" + b + ")") : "round" == d ? (mathProperty = "round", c = "math." + mathProperty, c = c + "(" + b + ")") : "factorial" == d ? (mathProperty = "factorial", c = "math." + mathProperty, c = c + "(" + b + ")") : "abs" == d && (mathProperty = "fabs", c = "math." + mathProperty, c = c + "(" + b + ")");
+    return c;
   };
   c.generateVariablesDeclaration = function() {
-    var b = "", f = Entry.playground.object, c = Entry.variableContainer;
-    if (c) {
-      for (var c = c.variables_ || [], e = c.length - 1;0 <= e;e--) {
-        var g = c[e], h = g.name_, k = g.value_;
+    var b = "", c = Entry.playground.object, d = Entry.variableContainer;
+    if (d) {
+      for (var d = d.variables_ || [], e = d.length - 1;0 <= e;e--) {
+        var g = d[e], h = g.name_, k = g.value_;
         if (g.object_) {
-          if (g.object_ == f.id) {
+          if (g.object_ == c.id) {
             h = "self." + h;
           } else {
             continue;
@@ -11260,13 +11260,13 @@ Entry.TextCodingUtil = {};
     }
   };
   c.generateListsDeclaration = function() {
-    var b = "", f = Entry.playground.object, c = Entry.variableContainer;
-    if (c) {
-      targets = c.lists_ || [];
-      for (c = targets.length - 1;0 <= c;c--) {
-        var e = targets[c], g = e.name_, h = "", k = e.array_;
+    var b = "", c = Entry.playground.object, d = Entry.variableContainer;
+    if (d) {
+      targets = d.lists_ || [];
+      for (d = targets.length - 1;0 <= d;d--) {
+        var e = targets[d], g = e.name_, h = "", k = e.array_;
         if (e.object_) {
-          if (e.object_ == f.id) {
+          if (e.object_ == c.id) {
             g = "self." + g;
           } else {
             continue;
@@ -11280,34 +11280,34 @@ Entry.TextCodingUtil = {};
       return b;
     }
   };
-  c.isVariableNumber = function(b, f) {
-    var c = Entry.playground.object, e = Entry.variableContainer.variables_, g;
+  c.isVariableNumber = function(b, c) {
+    var d = Entry.playground.object, e = Entry.variableContainer.variables_, g;
     for (g in e) {
       var h = e[g];
-      if ("global" == f) {
+      if ("global" == c) {
         if (null === h.object_ && h.id_ == b && Entry.Utils.isNumber(h.value_)) {
           return !0;
         }
       } else {
-        if ("local" == f && h.object_ === c.id && h.id_ == b && Entry.Utils.isNumber(h.value_)) {
+        if ("local" == c && h.object_ === d.id && h.id_ == b && Entry.Utils.isNumber(h.value_)) {
           return !0;
         }
       }
     }
     return !1;
   };
-  c.generateForStmtIndex = function(b, f) {
-    var c = Math.floor(b / 3);
-    f = ["i", "j", "k"][b % 3] + (f || "");
-    return c ? this.generateForStmtIndex(c - 1, f) : f;
+  c.generateForStmtIndex = function(b, c) {
+    var d = Math.floor(b / 3);
+    c = ["i", "j", "k"][b % 3] + (c || "");
+    return d ? this.generateForStmtIndex(d - 1, c) : c;
   };
-  c.isExpressionLiteral = function(b, f) {
+  c.isExpressionLiteral = function(b, c) {
     switch(b.type) {
       case "CallExpression":
         if ("MemberExpression" === b.callee.type) {
-          var c = b.callee.property.name;
-          if (c = f["%2"][c]) {
-            return "basic_string_field" === Entry.block[c.key].skeleton;
+          var d = b.callee.property.name;
+          if (d = c["%2"][d]) {
+            return "basic_string_field" === Entry.block[d.key].skeleton;
           }
         }
         break;
@@ -11325,50 +11325,50 @@ Entry.BlockToJsParser = function(c, b) {
   this._iterVariableChunk = ["i", "j", "k"];
 };
 (function(c) {
-  c.Code = function(b, f) {
-    this._parseMode = f;
+  c.Code = function(b, c) {
+    this._parseMode = c;
     if (b instanceof Entry.Block) {
       return this.Block(b);
     }
-    for (var c = "", e = b._data, g = 0;g < e.length;g++) {
-      c += this.Thread(e[g]);
+    for (var d = "", e = b._data, g = 0;g < e.length;g++) {
+      d += this.Thread(e[g]);
     }
-    return c.trim();
+    return d.trim();
   };
   c.Thread = function(b) {
     if (b instanceof Entry.Block) {
       return this.Block(b);
     }
-    var f = "";
+    var c = "";
     b = b.getBlocks();
-    for (var c = 0;c < b.length;c++) {
-      var e = b[c];
-      c != b.length - 1 ? (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? f += e + "\n" : this._parseMode == Entry.Parser.PARSE_SYNTAX && (f = e + "\n")) : (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? f += e : this._parseMode == Entry.Parser.PARSE_SYNTAX && (f = e));
+    for (var d = 0;d < b.length;d++) {
+      var e = b[d];
+      d != b.length - 1 ? (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? c += e + "\n" : this._parseMode == Entry.Parser.PARSE_SYNTAX && (c = e + "\n")) : (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? c += e : this._parseMode == Entry.Parser.PARSE_SYNTAX && (c = e));
     }
-    return f + "\n";
+    return c + "\n";
   };
   c.Block = function(b) {
-    var f = b._schema.syntax.js ? b._schema.syntax.js : b._schema.syntax;
-    return f ? b = this[f[0]](b) : "";
+    var c = b._schema.syntax.js ? b._schema.syntax.js : b._schema.syntax;
+    return c ? b = this[c[0]](b) : "";
   };
   c.Program = function(b) {
     return "";
   };
   c.Scope = function(b) {
-    var f = !1, c = "", e = /(%.)/mi;
+    var c = !1, d = "", e = /(%.)/mi;
     if (b._schema.syntax.js) {
-      var g = b._schema.syntax.js.concat(), f = !0
+      var g = b._schema.syntax.js.concat(), c = !0
     } else {
       g = b._schema.syntax.concat();
     }
     g.shift();
     for (var g = g[0].split(e), h = b._schema.params, k = b.data.params, l = 0;l < g.length;l++) {
       var m = g[l];
-      0 !== m.length && "Scope" !== m && ("Judge" === m ? f = !0 : e.test(m) ? (m = m.split("%")[1], m = parseInt(m) - 1, h[m] && "Image" != h[m].type && ("Block" == h[m].type ? (m = this.Block(k[m]), c += m) : c += this[h[m].type](k[m], h[m]))) : c += m);
+      0 !== m.length && "Scope" !== m && ("Judge" === m ? c = !0 : e.test(m) ? (m = m.split("%")[1], m = parseInt(m) - 1, h[m] && "Image" != h[m].type && ("Block" == h[m].type ? (m = this.Block(k[m]), d += m) : d += this[h[m].type](k[m], h[m]))) : d += m);
     }
-    "#" == c.charAt(c.length - 1) && (f = !0, c = c.substring(0, c.length - 1), c = c.trim());
-    f || (c += "();");
-    return c = Entry.TextCodingUtil.jsAdjustSyntax(b, c);
+    "#" == d.charAt(d.length - 1) && (c = !0, d = d.substring(0, d.length - 1), d = d.trim());
+    c || (d += "();");
+    return d = Entry.TextCodingUtil.jsAdjustSyntax(b, d);
   };
   c.BasicFunction = function(b) {
     b = this.Thread(b.statements[0]);
@@ -15754,8 +15754,8 @@ Entry.Loader.handleLoad = function() {
   this.loaded || (this.loaded = !0, Entry.dispatchEvent("loadComplete"));
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, destroyBlockBelow:113, 
-destroyThreads:114, addThreads:115, recoverBlockBelow:116, selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, 
-variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
+destroyThreads:114, addThreads:115, recoverBlockBelow:116, addThreadFromBlockMenu:117, insertBlockFromBlockMenu:118, moveBlockFromBlockMenu:119, selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, 
+playgroundClickAddSound:703, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
 Entry.Command = {};
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
@@ -15844,172 +15844,6 @@ Entry.Commander = function(c) {
     this.logEvent.notify(d);
   };
 })(Entry.Commander.prototype);
-(function(c) {
-  var b = Entry.STATIC.COMMAND_TYPES;
-  c[b.addThread] = {do:function(b) {
-    return this.editor.board.code.createThread(b);
-  }, state:function(b) {
-    if (b.length) {
-      var c = b[0];
-      this.editor.board.findBlock(c.id) && (c.id = Entry.Utils.generateId());
-    }
-    return [b];
-  }, log:function(b) {
-    b instanceof Entry.Thread && (b = b.toJSON());
-    return [["thread", b]];
-  }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
-  c[b.destroyThread] = {do:function(b) {
-    (b instanceof Entry.Thread ? b.getFirstBlock() : this.editor.board.findBlock(b[0].id)).destroy(!0, !0);
-  }, state:function(b) {
-    b instanceof Entry.Thread || (b = this.editor.board.findBlock(b[0].id).thread);
-    return [b.toJSON()];
-  }, log:function(b, c) {
-    var e;
-    e = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
-    return [["block", e.pointer ? e.pointer() : e], ["thread", b.toJSON ? b.toJSON() : b], ["callerName", c]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, restrict:function(b, c, e) {
-    e();
-  }, dom:["playground", "board", "&0"], undo:"addThread"};
-  c[b.destroyBlock] = {do:function(b) {
-    b = this.editor.board.findBlock(b);
-    b.doDestroy(!0);
-  }, state:function(b) {
-    b = this.editor.board.findBlock(b);
-    return [b.toJSON(), b.pointer()];
-  }, log:function(b) {
-    b = this.editor.board.findBlock(b);
-    return [["block", b.pointer ? b.pointer() : b]];
-  }, undo:"recoverBlock"};
-  c[b.recoverBlock] = {do:function(b, c) {
-    var e = this.editor.board.code.createThread([b]).getFirstBlock();
-    this.editor.board.insert(e, c);
-  }, state:function(b) {
-    "string" !== typeof b && (b = b.id);
-    return [b];
-  }, log:function(b, c) {
-    b = this.editor.board.findBlock(b.id);
-    return [["block", b], ["pointer", c]];
-  }, undo:"destroyBlock"};
-  c[b.insertBlock] = {do:function(b, c, e) {
-    b = this.editor.board.findBlock(b);
-    this.editor.board.insert(b, c, e);
-  }, state:function(b, c) {
-    b = this.editor.board.findBlock(b);
-    var e = [b], g = b.targetPointer();
-    e.push(g);
-    "string" !== typeof b && "basic" === b.getBlockType() && e.push(b.thread.getCount(b));
-    return e;
-  }, log:function(b, c, e) {
-    b = this.editor.board.findBlock(b);
-    c instanceof Array || (c = c.pointer());
-    b = [["block", b ? b.pointer() : ""], ["targetPointer", c]];
-    e && b.push(["count", e ? e : null]);
-    return b;
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, e) {
-    e();
-    return new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:c, direction:"right"}], {indicator:!0, callBack:function() {
-    }});
-  }, dom:["playground", "board", "&1", "magnet"]};
-  c[b.separateBlock] = {do:function(b, c, e) {
-    b = this.editor.board.findBlock(b);
-    "number" === typeof e && (console.log(c, e), b.view._moveTo(c, e), c = void 0);
-    c = void 0 === c ? Entry.DRAG_MODE_DRAG : c;
-    b.view && b.view._toGlobalCoordinate(c);
-    b.doSeparate();
-  }, state:function(b) {
-    b = this.editor.board.findBlock(b);
-    var c = [b], e = b.targetPointer();
-    c.push(e);
-    "basic" === b.getBlockType() && c.push(b.thread.getCount(b));
-    return c;
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b) {
-    b = this.editor.board.findBlock(b);
-    var c = b.pointer();
-    b.view && (b = b.view);
-    return [["block", c], ["x", b.x], ["y", b.y]];
-  }, validate:!1, undo:"insertBlock", dom:["playground", "board", "&0"]};
-  c[b.moveBlock] = {do:function(b, c, e) {
-    void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, e)) : b._updatePos();
-  }, state:function(b) {
-    b = this.editor.board.findBlock(b);
-    return [b, b.x, b.y];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, e) {
-    e();
-  }, validate:!1, log:function(b, c, e) {
-    b = this.editor.board.findBlock(b);
-    return [["block", b.pointer()], ["x", b.x], ["y", b.y]];
-  }, undo:"moveBlock"};
-  c[b.cloneBlock] = {do:c[b.addThread].do, state:c[b.addThread].state, log:c[b.addThread].log, undo:"uncloneBlock"};
-  c[b.uncloneBlock] = {do:c[b.destroyThread].do, state:c[b.destroyThread].state, log:c[b.destroyThread].log, undo:"cloneBlock"};
-  c[b.scrollBoard] = {do:function(b, c, e) {
-    e || this.editor.board.scroller._scroll(b, c);
-    delete this.editor.board.scroller._diffs;
-  }, state:function(b, c) {
-    return [-b, -c];
-  }, log:function(b, c) {
-    return [["dx", b], ["dy", c]];
-  }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
-  c[b.setFieldValue] = {do:function(b, c, e, g, h) {
-    c.setValue(h, !0);
-  }, state:function(b, c, e, g, h) {
-    return [b, c, e, h, g];
-  }, log:function(b, c, e, g, h) {
-    return [["pointer", e], ["newValue", h]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
-  c[b.selectBlockMenu] = {do:function(b, c, e) {
-    var g = Entry.getMainWS().blockMenu;
-    g.selectMenu(b, c, e);
-    g.align();
-  }, state:function(b, c, e) {
-    return [Entry.getMainWS().blockMenu.lastSelector, c, e];
-  }, log:function(b, c, e) {
-    return [["selector", b]];
-  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "category", "&0"], undo:"selectBlockMenu"};
-  c[b.destroyThreads] = {do:function() {
-    this.editor.board.code.getThreads().filter(function(b) {
-      return b.getFirstBlock().isDeletable();
-    }).forEach(function(b) {
-      b.destroy();
-    });
-  }, state:function() {
-    return [this.editor.board.code.getThreads().filter(function(b) {
-      return b.getFirstBlock().isDeletable();
-    }).map(function(b) {
-      return b.toJSON();
-    })];
-  }, log:function() {
-    return [];
-  }, undo:"addThreads"};
-  c[b.addThreads] = {do:function(b) {
-    var c = this.editor.board.code;
-    b.forEach(function(b) {
-      c.createThread(b);
-    });
-  }, state:function() {
-    return [];
-  }, log:function() {
-    return [];
-  }, undo:"destroyThreads"};
-  c[b.destroyBlockBelow] = {do:function(b) {
-    b = this.editor.board.findBlock(b);
-    b.doDestroyBelow(!0);
-  }, state:function(b) {
-    b = this.editor.board.findBlock(b);
-    var c = b.thread;
-    return [c instanceof Entry.Thread ? c.toJSON(!1, b) : [b.toJSON()], b.targetPointer()];
-  }, log:function(b) {
-    return [];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"recoverBlockBelow"};
-  c[b.recoverBlockBelow] = {do:function(b, c) {
-    var e = this.editor.board;
-    b = e.code.createThread(b);
-    e.insert(b.getFirstBlock(), c);
-  }, state:function(b, c) {
-    return [b[0]];
-  }, log:function(b, c) {
-    return [];
-  }, undo:"destroyBlockBelow"};
-})(Entry.Command);
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.containerSelectObject] = {do:function(b) {
     Entry.container.selectObject(b);
@@ -17295,6 +17129,189 @@ Entry.Model = function(c, b) {
     return b;
   };
 })(Entry.Model);
+(function(c) {
+  var b = Entry.STATIC.COMMAND_TYPES, f;
+  c[b.addThread] = {do:function(b) {
+    return this.editor.board.code.createThread(b);
+  }, state:function(b) {
+    if (b.length) {
+      var c = b[0];
+      this.editor.board.findBlock(c.id) && (c.id = Entry.Utils.generateId());
+    }
+    return [b];
+  }, log:function(b) {
+    b instanceof Entry.Thread && (b = b.toJSON());
+    return [["thread", b]];
+  }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
+  f = Entry.cloneSimpleObject(c[b.addThread]);
+  f.followCmd = !0;
+  c[b.addThreadFromBlockMenu] = f;
+  c[b.destroyThread] = {do:function(b) {
+    (b instanceof Entry.Thread ? b.getFirstBlock() : this.editor.board.findBlock(b[0].id)).destroy(!0, !0);
+  }, state:function(b) {
+    b instanceof Entry.Thread || (b = this.editor.board.findBlock(b[0].id).thread);
+    return [b.toJSON()];
+  }, log:function(b, c) {
+    var f;
+    f = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
+    return [["block", f.pointer ? f.pointer() : f], ["thread", b.toJSON ? b.toJSON() : b], ["callerName", c]];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, restrict:function(b, c, f) {
+    f();
+  }, dom:["playground", "board", "&0"], undo:"addThread"};
+  c[b.destroyBlock] = {do:function(b) {
+    b = this.editor.board.findBlock(b);
+    b.doDestroy(!0);
+  }, state:function(b) {
+    b = this.editor.board.findBlock(b);
+    return [b.toJSON(), b.pointer()];
+  }, log:function(b) {
+    b = this.editor.board.findBlock(b);
+    return [["block", b.pointer ? b.pointer() : b]];
+  }, undo:"recoverBlock"};
+  c[b.recoverBlock] = {do:function(b, c) {
+    var f = this.editor.board.code.createThread([b]).getFirstBlock();
+    this.editor.board.insert(f, c);
+  }, state:function(b) {
+    "string" !== typeof b && (b = b.id);
+    return [b];
+  }, log:function(b, c) {
+    b = this.editor.board.findBlock(b.id);
+    return [["block", b], ["pointer", c]];
+  }, undo:"destroyBlock"};
+  c[b.insertBlock] = {do:function(b, c, f) {
+    b = this.editor.board.findBlock(b);
+    this.editor.board.insert(b, c, f);
+  }, state:function(b, c) {
+    b = this.editor.board.findBlock(b);
+    var f = [b];
+    f.push(b.targetPointer());
+    "string" !== typeof b && "basic" === b.getBlockType() && f.push(b.thread.getCount(b));
+    return f;
+  }, log:function(b, c, f) {
+    b = this.editor.board.findBlock(b);
+    c instanceof Array || (c = c.pointer());
+    b = [["block", b ? b.pointer() : ""], ["targetPointer", c]];
+    f && b.push(["count", f ? f : null]);
+    return b;
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, f, h) {
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function() {
+      f();
+      new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:h.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
+      }});
+    }});
+  }, dom:["playground", "board", "&0"]};
+  f = Entry.cloneSimpleObject(c[b.insertBlock]);
+  f.restrict = function(b, c, f) {
+    f();
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+    }});
+  };
+  f.dom = ["playground", "board", "&1", "magnet"];
+  c[b.insertBlockFromBlockMenu] = f;
+  c[b.separateBlock] = {do:function(b, c, f) {
+    b = this.editor.board.findBlock(b);
+    "number" === typeof f && (console.log(c, f), b.view._moveTo(c, f), c = void 0);
+    c = void 0 === c ? Entry.DRAG_MODE_DRAG : c;
+    b.view && b.view._toGlobalCoordinate(c);
+    b.doSeparate();
+  }, state:function(b) {
+    b = this.editor.board.findBlock(b);
+    var c = [b], f = b.targetPointer();
+    c.push(f);
+    "basic" === b.getBlockType() && c.push(b.thread.getCount(b));
+    return c;
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b) {
+    b = this.editor.board.findBlock(b);
+    var c = b.pointer();
+    b.view && (b = b.view);
+    return [["block", c], ["x", b.x], ["y", b.y]];
+  }, validate:!1, undo:"insertBlock", dom:["playground", "board", "&0"]};
+  c[b.moveBlock] = {do:function(b, c, f) {
+    void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, f)) : b._updatePos();
+  }, state:function(b) {
+    b = this.editor.board.findBlock(b);
+    return [b, b.x, b.y];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, f) {
+    f();
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+    }});
+  }, validate:!1, log:function(b, c, f) {
+    b = this.editor.board.findBlock(b);
+    return [["block", b.pointer()], ["x", b.view.x], ["y", b.view.y]];
+  }, undo:"moveBlock", dom:["playground", "board", "coord", "&1", "&2"]};
+  f = Entry.cloneSimpleObject(c[b.moveBlock]);
+  c[b.moveBlockFromBlockMenu] = f;
+  c[b.cloneBlock] = {do:c[b.addThread].do, state:c[b.addThread].state, log:c[b.addThread].log, undo:"uncloneBlock"};
+  c[b.uncloneBlock] = {do:c[b.destroyThread].do, state:c[b.destroyThread].state, log:c[b.destroyThread].log, undo:"cloneBlock"};
+  c[b.scrollBoard] = {do:function(b, c, f) {
+    f || this.editor.board.scroller._scroll(b, c);
+    delete this.editor.board.scroller._diffs;
+  }, state:function(b, c) {
+    return [-b, -c];
+  }, log:function(b, c) {
+    return [["dx", b], ["dy", c]];
+  }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
+  c[b.setFieldValue] = {do:function(b, c, f, h, k) {
+    c.setValue(k, !0);
+  }, state:function(b, c, f, h, k) {
+    return [b, c, f, k, h];
+  }, log:function(b, c, f, h, k) {
+    return [["pointer", f], ["newValue", k]];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
+  c[b.selectBlockMenu] = {do:function(b, c, f) {
+    var h = Entry.getMainWS().blockMenu;
+    h.selectMenu(b, c, f);
+    h.align();
+  }, state:function(b, c, f) {
+    return [Entry.getMainWS().blockMenu.lastSelector, c, f];
+  }, log:function(b, c, f) {
+    return [["selector", b]];
+  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "category", "&0"], undo:"selectBlockMenu"};
+  c[b.destroyThreads] = {do:function() {
+    this.editor.board.code.getThreads().filter(function(b) {
+      return b.getFirstBlock().isDeletable();
+    }).forEach(function(b) {
+      b.destroy();
+    });
+  }, state:function() {
+    return [this.editor.board.code.getThreads().filter(function(b) {
+      return b.getFirstBlock().isDeletable();
+    }).map(function(b) {
+      return b.toJSON();
+    })];
+  }, log:function() {
+    return [];
+  }, undo:"addThreads"};
+  c[b.addThreads] = {do:function(b) {
+    var c = this.editor.board.code;
+    b.forEach(function(b) {
+      c.createThread(b);
+    });
+  }, state:function() {
+    return [];
+  }, log:function() {
+    return [];
+  }, undo:"destroyThreads"};
+  c[b.destroyBlockBelow] = {do:function(b) {
+    b = this.editor.board.findBlock(b);
+    b.doDestroyBelow(!0);
+  }, state:function(b) {
+    b = this.editor.board.findBlock(b);
+    var c = b.thread;
+    return [c instanceof Entry.Thread ? c.toJSON(!1, b) : [b.toJSON()], b.targetPointer()];
+  }, log:function(b) {
+    return [];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"recoverBlockBelow"};
+  c[b.recoverBlockBelow] = {do:function(b, c) {
+    var f = this.editor.board;
+    b = f.code.createThread(b);
+    f.insert(b.getFirstBlock(), c);
+  }, state:function(b, c) {
+    return [b[0]];
+  }, log:function(b, c) {
+    return [];
+  }, undo:"destroyBlockBelow"};
+})(Entry.Command);
 Entry.TargetChecker = function(c, b) {
   this.isForEdit = b;
   this.goals = [];
@@ -18687,18 +18704,15 @@ Entry.Restrictor = function() {
 (function(c) {
   c.restrict = function(b) {
     this._data = b;
-    if (b.skip) {
-      return this.skip();
-    }
-    var c = b.content.concat(), d = c.shift(), d = Entry.Command[d];
     this.end();
-    var e = d.dom;
-    this.startEvent.notify();
-    e instanceof Array && (e = e.map(function(b) {
-      return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
-    }));
-    b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"});
-    d.restrict ? this.currentTooltip = d.restrict(b, e, this.restrictEnd.bind(this)) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:e}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this)));
+    if (!b.skip) {
+      var c = b.content.concat().shift(), c = Entry.Command[c], d = c.dom;
+      this.startEvent.notify();
+      d instanceof Array && (d = this.processDomQuery(d));
+      console.log(d);
+      b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"});
+      c.restrict ? this.currentTooltip = c.restrict(b, d, this.restrictEnd.bind(this), this) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:d}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this)));
+    }
   };
   c.end = function() {
     this.currentTooltip && (this.currentTooltip.dispose(), this.currentTooltip = null);
@@ -18710,15 +18724,14 @@ Entry.Restrictor = function() {
   c.align = function() {
     this.currentTooltip && this.currentTooltip.alignTooltips();
   };
-  c.skip = function() {
-    var b = this._data.content.concat(), c = b.shift(), b = b.map(function(b) {
-      return b[1];
-    });
-    b.unshift(c);
-    c = Entry.do.apply(null, b);
-    this.end();
-    this.restrictEnd();
-    return c;
+  c.processDomQuery = function(b) {
+    var c = this._data.content.concat();
+    c.shift();
+    console.log(c);
+    b instanceof Array && (b = b.map(function(b) {
+      return "&" === b[0] ? c[Number(b.substr(1))][1] : b;
+    }));
+    return b;
   };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(c, b) {
@@ -20160,9 +20173,9 @@ Entry.VariableContainer = function() {
     d.addClass("entryVariableSettingVisibleWrapperWorkspace");
     d.bindOnClick(function(c) {
       c = b.selectedVariable;
-      var f = b.variableSettingView.visibleCheck;
+      var d = b.variableSettingView.visibleCheck;
       c.setVisible(!c.isVisible());
-      c.isVisible() ? f.addClass("entryVariableSettingChecked") : f.removeClass("entryVariableSettingChecked");
+      c.isVisible() ? d.addClass("entryVariableSettingChecked") : d.removeClass("entryVariableSettingChecked");
     });
     c.appendChild(d);
     var e = Entry.createElement("span");
@@ -20204,14 +20217,14 @@ Entry.VariableContainer = function() {
     c.slideCheck = e;
     d.appendChild(e);
     d.bindOnClick(function(c) {
-      var f;
+      var d;
       c = b.selectedVariable;
-      var d = b.variables_, e = c.getType();
-      "variable" == e ? (f = c.toJSON(), f.variableType = "slide", f = new Entry.Variable(f), d.splice(d.indexOf(c), 0, f), 0 > f.getValue() && f.setValue(0), 100 < f.getValue() && f.setValue(100), g.removeAttribute("disabled"), k.removeAttribute("disabled")) : "slide" == e && (f = c.toJSON(), f.variableType = "variable", f = new Entry.Variable(f), d.splice(d.indexOf(c), 0, f), g.setAttribute("disabled", "disabled"), k.setAttribute("disabled", "disabled"));
-      b.createVariableView(f);
+      var f = b.variables_, e = c.getType();
+      "variable" == e ? (d = c.toJSON(), d.variableType = "slide", d = new Entry.Variable(d), f.splice(f.indexOf(c), 0, d), 0 > d.getValue() && d.setValue(0), 100 < d.getValue() && d.setValue(100), g.removeAttribute("disabled"), k.removeAttribute("disabled")) : "slide" == e && (d = c.toJSON(), d.variableType = "variable", d = new Entry.Variable(d), f.splice(f.indexOf(c), 0, d), g.setAttribute("disabled", "disabled"), k.setAttribute("disabled", "disabled"));
+      b.createVariableView(d);
       b.removeVariable(c);
-      b.updateSelectedVariable(f);
-      f.generateView();
+      b.updateSelectedVariable(d);
+      d.generateView();
     });
     d = Entry.createElement("div");
     c.minMaxWrapper = d;
@@ -20271,9 +20284,9 @@ Entry.VariableContainer = function() {
     d.addClass("entryListSettingVisibleWrapperWorkspace");
     d.bindOnClick(function(c) {
       c = b.selectedList;
-      var f = b.listSettingView.visibleCheck;
+      var d = b.listSettingView.visibleCheck;
       c.setVisible(!c.isVisible());
-      c.isVisible() ? f.addClass("entryListSettingCheckedWorkspace") : f.removeClass("entryListSettingCheckedWorkspace");
+      c.isVisible() ? d.addClass("entryListSettingCheckedWorkspace") : d.removeClass("entryListSettingCheckedWorkspace");
     });
     c.appendChild(d);
     var e = Entry.createElement("span");
@@ -21171,7 +21184,7 @@ Entry.BlockMenu = function(c, b, f, d, e) {
     if (!this._boardBlockView && null !== c) {
       var d = Entry.GlobalSvg, e = this.workspace, g = e.getMode(), h = Entry.Workspace, k = this._svgWidth, l = e.selectedBoard, m = c.mouseDownCoordinate, q = e = 0;
       m && (e = b.pageX - m.x, q = b.pageY - m.y);
-      !l || g !== h.MODE_BOARD && g !== h.MODE_OVERLAYBOARD ? d.setView(c, g) && (d.adjust(e, q), d.addControl(b)) : l.code && (h = c.block, c = h.getThread(), h && c && (l = this.offset().top - l.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - k + (e || 0), c[0].y = c[0].y + l + (q || 0), k = this._boardBlockView = Entry.do("addThread", c).value.getFirstBlock().view, k.onMouseDown.call(k, b), k.dragInstance.set({isNew:!0}), d.setView(k, g)));
+      !l || g !== h.MODE_BOARD && g !== h.MODE_OVERLAYBOARD ? d.setView(c, g) && (d.adjust(e, q), d.addControl(b)) : l.code && (h = c.block, c = h.getThread(), h && c && (l = this.offset().top - l.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - k + (e || 0), c[0].y = c[0].y + l + (q || 0), k = this._boardBlockView = Entry.do("addThreadFromBlockMenu", c).value.getFirstBlock().view, k.onMouseDown.call(k, b), k.dragInstance.set({isNew:!0}), d.setView(k, g)));
     }
   };
   c.terminateDrag = function() {
@@ -21395,9 +21408,9 @@ Entry.BlockMenu = function(c, b, f, d, e) {
       b.stopPropagation && b.stopPropagation();
       b.preventDefault && b.preventDefault();
       b = Entry.Utils.convertMouseEvent(b);
-      var f = e.dragInstance;
-      e._scroller.scroll(-b.pageY + f.offsetY);
-      f.set({offsetY:b.pageY});
+      var d = e.dragInstance;
+      e._scroller.scroll(-b.pageY + d.offsetY);
+      d.set({offsetY:b.pageY});
     }
     function d(b) {
       $(document).unbind(".blockMenu");
@@ -22016,8 +22029,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
           case c.DONE:
             c = d.magnetedBlockView;
             c instanceof Entry.BlockView && (c = c.block);
-            l && !c ? Entry.do("separateBlock", g) : l || c || h ? c ? ("next" === c.view.magneting ? (k = g.getLastBlock(), this.dragMode = e, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock", c, k).isPass(h), Entry.ConnectionRipple.setView(c.view).dispose()) : (Entry.do("insertBlock", g, c).isPass(h), b = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock", g).isPass(h) : g.getThread().view.isGlobal() ? Entry.do("moveBlock", g) : Entry.do("separateBlock", 
-            g);
+            l && !c ? Entry.do("separateBlock", g) : l || c || h ? (k = h ? "FromBlockMenu" : "", c ? ("next" === c.view.magneting ? (l = g.getLastBlock(), this.dragMode = e, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock" + k, c, l).isPass(h), Entry.ConnectionRipple.setView(c.view).dispose()) : (Entry.do("insertBlock" + k, g, c).isPass(h), b = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock" + k, g).isPass(h)) : g.getThread().view.isGlobal() ? Entry.do("moveBlock", 
+            g) : Entry.do("separateBlock", g);
             break;
           case c.RETURN:
             g = this.block;
@@ -24798,7 +24811,8 @@ Entry.Board.DRAG_RADIUS = 5;
   c.insert = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
     this.separate(b, d);
-    3 === c.length ? b.moveTo(c[0], c[1]) : 4 === c.length && 0 === c[3] ? (c = this.code.getThreads()[c[2]], b.thread.cut(b), c.insertToTop(b), b.getNextBlock().view.bindPrev()) : (c = c instanceof Array ? this.code.getTargetByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
+    3 === c.length ? b.moveTo(c[0], c[1]) : 4 === c.length && 0 === c[3] ? (c = this.code.getThreads()[c[2]], b.thread.cut(b), c.insertToTop(b), b.getNextBlock().view.bindPrev()) : (c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : c instanceof Entry.Thread ? (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : 
+    b.doInsert(c));
   };
   c.adjustThreadsPosition = function() {
     var b = this.code;
@@ -24857,6 +24871,12 @@ Entry.Board.DRAG_RADIUS = 5;
     var c = b.shift();
     if ("trashcan" === c) {
       return this.workspace.trashcan.svgGroup;
+    }
+    if ("coord" === c) {
+      return {getBoundingClientRect:function() {
+        var c = this.scroller, f = this.relativeOffset;
+        return {top:b[1] + f.top - 20 + c.vY, left:b[0] + f.left - 20 + c.hX, width:40, height:40};
+      }.bind(this)};
     }
     if (c instanceof Array) {
       return c = this.code.getByPointer(c), c instanceof Entry.Block ? c.getDom(b) : c instanceof Entry.Thread ? c.getDom(b) : c.svgGroup;
@@ -25609,7 +25629,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   c.targetPointer = function() {
     var b = this.thread.pointer([], this);
-    4 === b.length && 0 === b[3] && b.pop();
+    4 === b.length && 0 === b[3] ? b.pop() : 0 === b[b.length - 1] ? b.pop() : --b[b.length - 1];
     return b;
   };
   c.getDataByPointer = function(b) {

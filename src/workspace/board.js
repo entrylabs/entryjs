@@ -868,7 +868,7 @@ Entry.Board.DRAG_RADIUS = 5;
         } else {
             var targetObj;
             if (pointer instanceof Array)
-                targetObj = this.code.getTargetByPointer(pointer);
+                targetObj = this.code.getByPointer(pointer);
             else
                 targetObj = pointer;
             if (targetObj instanceof Entry.Block) {
@@ -876,6 +876,10 @@ Entry.Board.DRAG_RADIUS = 5;
                     block.view.bindPrev(targetObj);
                 block.doInsert(targetObj);
             } else if (targetObj instanceof Entry.FieldStatement) {
+                block.view.bindPrev(targetObj);
+                targetObj.insertTopBlock(block);
+            } else if (targetObj instanceof Entry.Thread) {
+                targetObj = targetObj.view.getParent();
                 block.view.bindPrev(targetObj);
                 targetObj.insertTopBlock(block);
             } else {
@@ -1029,6 +1033,20 @@ Entry.Board.DRAG_RADIUS = 5;
         var key = query.shift();
         if (key === 'trashcan')
             return this.workspace.trashcan.svgGroup;
+        else if (key === 'coord')
+            return {
+                getBoundingClientRect: function() {
+                    var halfWidth = 20,
+                        scroller = this.scroller,
+                        boardOffset = this.relativeOffset;
+                    return {
+                        top: query[1] + boardOffset.top - halfWidth + scroller.vY,
+                        left: query[0] + boardOffset.left - halfWidth + scroller.hX,
+                        width: 2 * halfWidth,
+                        height: 2 * halfWidth
+                    }
+                }.bind(this)
+            }
         else if (key instanceof Array) {
             var targetObj = this.code.getByPointer(key);
             if (targetObj instanceof Entry.Block) {
