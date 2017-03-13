@@ -860,12 +860,7 @@ Entry.Board.DRAG_RADIUS = 5;
 
         if (pointer.length === 3) // is global
             block.moveTo(pointer[0], pointer[1]);
-        else if (pointer.length === 4 && pointer[3] === 0) {
-            var targetThread = this.code.getThreads()[pointer[2]];
-            block.thread.cut(block);
-            targetThread.insertToTop(block);
-            block.getNextBlock().view.bindPrev();
-        } else {
+        else {
             var targetObj;
             if (pointer instanceof Array)
                 targetObj = this.code.getByPointer(pointer);

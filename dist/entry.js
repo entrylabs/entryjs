@@ -23103,7 +23103,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   c.targetPointer = function() {
     var b = this.thread.pointer([], this);
-    4 === b.length && 0 === b[3] ? b.pop() : 0 === b[b.length - 1] ? b.pop() : --b[b.length - 1];
+    4 === b.length && 0 === b[3] ? b.pop() : -1 < b[b.length - 2] && (0 === b[b.length - 1] ? b.pop() : --b[b.length - 1]);
     return b;
   };
   c.getDataByPointer = function(b) {
@@ -25403,8 +25403,7 @@ Entry.Board.DRAG_RADIUS = 5;
   c.insert = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
     this.separate(b, d);
-    3 === c.length ? b.moveTo(c[0], c[1]) : 4 === c.length && 0 === c[3] ? (c = this.code.getThreads()[c[2]], b.thread.cut(b), c.insertToTop(b), b.getNextBlock().view.bindPrev()) : (c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : c instanceof Entry.Thread ? (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : 
-    b.doInsert(c));
+    3 === c.length ? b.moveTo(c[0], c[1]) : (c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : c instanceof Entry.Thread ? (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
   };
   c.adjustThreadsPosition = function() {
     var b = this.code;
