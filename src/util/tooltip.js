@@ -210,7 +210,7 @@ Entry.Tooltip = function(data, opts) {
     };
 
 
-    p.dispose = function() {
+    p.dispose = function(e) { // click event object when call from restrict
         if (this._bg)
             this._bg.remove();
         if (this.opts.restrict) {
@@ -223,7 +223,7 @@ Entry.Tooltip = function(data, opts) {
             this._indicators.pop().remove();
             Entry.Curtain.hide();
         if (this.opts.callBack)
-            this.opts.callBack.call();
+            this.opts.callBack.call(this, e);
         Entry.removeEventListener('windowResized', this._resizeEventFunc);
     };
 

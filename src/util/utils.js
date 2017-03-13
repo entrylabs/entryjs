@@ -58,7 +58,7 @@ Entry.overridePrototype = function() {
 };
 
 // INFO: 기존에 사용하던 isNaN에는 숫자 체크의 문자가 있을수 있기때문에 regex로 체크하는 로직으로 변경
-// isNaN 문제는 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/isNaN 
+// isNaN 문제는 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/isNaN
 // 에서 확인.
 Entry.Utils.isNumber = function(num) {
     if(typeof num === 'number') {
@@ -1514,7 +1514,7 @@ Entry.Utils.restrictAction = function(exceptions, callback) {
             for (var i = 0; i < exceptions.length; i++) {
                 var exception = exceptions[i];
                 if (exception === target || $.contains(exception, target)) {
-                    callback();
+                    callback(e);
                     return;
                 }
             }

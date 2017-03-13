@@ -5643,7 +5643,7 @@ Entry.Utils.restrictAction = function(c, b) {
       for (var g = 0;g < c.length;g++) {
         var l = c[g];
         if (l === f || $.contains(l, f)) {
-          b();
+          b(d);
           return;
         }
       }
@@ -5897,8 +5897,8 @@ Entry.Commander = function(c) {
     e && b.push(["count", e ? e : null]);
     return b;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, e, h) {
-    var d = !1, f = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function() {
-      d || (d = !0, console.log("wow"), e(), f.init([{title:b.tooltip.title, content:b.tooltip.content, target:h.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
+    var d = !1, f = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !d && c && (d = !0, e(), f.init([{title:b.tooltip.title, content:b.tooltip.content, target:h.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
       }}));
     }});
     return f;
@@ -20195,7 +20195,7 @@ Entry.Tooltip = function(c, b) {
     this._indicators.push(b);
     return b;
   };
-  c.dispose = function() {
+  c.dispose = function(b) {
     this._bg && this._bg.remove();
     this.opts.restrict && (Entry.Utils.allowAction(), this.opts.dimmed && Entry.Curtain.hide());
     for (;this._tooltips.length;) {
@@ -20205,7 +20205,7 @@ Entry.Tooltip = function(c, b) {
       this._indicators.pop().remove();
     }
     Entry.Curtain.hide();
-    this.opts.callBack && this.opts.callBack.call();
+    this.opts.callBack && this.opts.callBack.call(this, b);
     Entry.removeEventListener("windowResized", this._resizeEventFunc);
   };
   c.restrictAction = function() {

@@ -152,11 +152,10 @@ goog.require("Entry.Utils");
             }], {
                 dimmed: true,
                 restrict: true,
-                callBack: function() {
-                    if (isDone)
+                callBack: function(isFromInit) {
+                    if (isDone || !isFromInit)
                         return;
                     isDone = true;
-                    console.log('wow')
                     callback();
                     tooltip.init([{
                         title: data.tooltip.title,
