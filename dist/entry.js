@@ -6583,6 +6583,7 @@ Entry.State = function(c, b, f, d) {
   this.message = c;
   this.time = Entry.getUpTime();
   this.isPass = Entry.Command[c] ? Entry.Command[c].isPass : !1;
+  this.id = Entry.generateHash();
 };
 Entry.State.prototype.generateMessage = function() {
 };
@@ -6592,12 +6593,6 @@ Entry.StateManager = function() {
   this.isIgnore = this._isRedoing = this.isRestore = !1;
   Entry.addEventListener("cancelLastCommand", function(c) {
     Entry.stateManager.cancelLastCommand();
-  });
-  Entry.addEventListener("run", function(c) {
-    Entry.stateManager.updateView();
-  });
-  Entry.addEventListener("stop", function(c) {
-    Entry.stateManager.updateView();
   });
   Entry.addEventListener("saveWorkspace", function(c) {
     Entry.stateManager.addStamp();
@@ -6613,27 +6608,24 @@ Entry.StateManager.prototype.generateView = function(c, b) {
 };
 Entry.StateManager.prototype.addCommand = function(c, b, f, d) {
   if (!this.isIgnoring()) {
-    if (this.isRestoring()) {
-      var e = new Entry.State, g = Array.prototype.slice.call(arguments);
-      Entry.State.prototype.constructor.apply(e, g);
-      this.redoStack_.push(e);
-      Entry.reporter && Entry.reporter.report(e);
-    } else {
-      e = new Entry.State, g = Array.prototype.slice.call(arguments), Entry.State.prototype.constructor.apply(e, g), this.undoStack_.push(e), this._isRedoing || (this.redoStack_ = []), Entry.reporter && Entry.reporter.report(e), this.updateView();
-    }
+    var e = new Entry.State;
+    Entry.State.prototype.constructor.apply(e, Array.prototype.slice.call(arguments));
+    this.isRestoring() ? this.redoStack_.push(e) : (this.undoStack_.push(e), this._isRedoing || (this.redoStack_ = []));
+    Entry.reporter && Entry.reporter.report(e);
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
+    return e;
   }
 };
 Entry.StateManager.prototype.cancelLastCommand = function() {
-  this.canUndo() && (this.undoStack_.pop(), this.updateView(), Entry.creationChangedEvent && Entry.creationChangedEvent.notify());
+  this.canUndo() && (this.undoStack_.pop(), Entry.creationChangedEvent && Entry.creationChangedEvent.notify());
 };
 Entry.StateManager.prototype.getLastCommand = function() {
   return this.undoStack_[this.undoStack_.length - 1];
 };
-Entry.StateManager.prototype.getMatchingLastCommand = function(c) {
+Entry.StateManager.prototype.getLastCommandById = function(c) {
   for (var b = this.undoStack_, f = b.length - 1;0 <= f;f--) {
     var d = b[f];
-    if (d.message === c) {
+    if (d.id === c) {
       return d;
     }
   }
@@ -6662,7 +6654,6 @@ Entry.StateManager.prototype.undo = function() {
         break;
       }
     }
-    this.updateView();
     this.endRestore();
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   }
@@ -6680,12 +6671,10 @@ Entry.StateManager.prototype.redo = function() {
       }
     }
     this._isRedoing = !1;
-    this.updateView();
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   }
 };
 Entry.StateManager.prototype.updateView = function() {
-  this.undoButton && this.redoButton && (this.canUndo() ? this.undoButton.addClass("active") : this.undoButton.removeClass("active"), this.canRedo() ? this.redoButton.addClass("active") : this.redoButton.removeClass("active"));
 };
 Entry.StateManager.prototype.startRestore = function() {
   this.isRestore = !0;
@@ -15799,22 +15788,22 @@ Entry.Commander = function(c) {
     c.shift();
     this.report(Entry.STATIC.COMMAND_TYPES.do);
     this.report(b, c);
-    var d = Entry.Command[b];
+    var d = Entry.Command[b], e;
     console.log("commandType", b);
-    Entry.stateManager && !0 !== d.skipUndoStack && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, d.undo].concat(d.state.apply(this, c)));
+    Entry.stateManager && !0 !== d.skipUndoStack && (e = Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, d.undo].concat(d.state.apply(this, c))));
     d = Entry.Command[b].do.apply(this, c);
     this.doEvent.notify(b, c);
-    return {value:d, isPass:function(c) {
-      this.isPassByType(b, c);
+    return {value:d, isPass:function(b) {
+      this.isPassById(e.id, b);
     }.bind(this)};
   };
   c.undo = function() {
     var b = Array.prototype.slice.call(arguments), c = b.shift(), d = Entry.Command[c];
     this.report(Entry.STATIC.COMMAND_TYPES.undo);
-    var e = Entry.Command[c];
-    Entry.stateManager && !0 !== e.skipUndoStack && Entry.stateManager.addCommand.apply(Entry.stateManager, [c, this, this.do, d.undo].concat(d.state.apply(this, b)));
+    var e = Entry.Command[c], g;
+    Entry.stateManager && !0 !== e.skipUndoStack && (g = Entry.stateManager.addCommand.apply(Entry.stateManager, [c, this, this.do, d.undo].concat(d.state.apply(this, b))));
     return {value:Entry.Command[c].do.apply(this, b), isPass:function(b) {
-      this.isPassByType(c, b);
+      this.isPassById(g.id, b);
     }.bind(this)};
   };
   c.redo = function() {
@@ -15834,10 +15823,10 @@ Entry.Commander = function(c) {
       c && (c.isPass = b);
     }
   };
-  c.isPassByType = function(b, c) {
+  c.isPassById = function(b, c) {
     if (Entry.stateManager) {
       c = void 0 === c ? !0 : c;
-      var d = Entry.stateManager.getMatchingLastCommand(b);
+      var d = Entry.stateManager.getLastCommandById(b);
       d && (d.isPass = c);
     }
   };
@@ -22181,9 +22170,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c.bumpAway = function(b, c) {
     var d = this;
     b = b || 15;
-    c ? window.setTimeout(function() {
+    if (c) {
+      var e = this.x, g = this.y;
+      window.setTimeout(function() {
+        e === d.x && g === d.y && d._moveBy(b, b, !1);
+      }, c);
+    } else {
       d._moveBy(b, b, !1);
-    }, c) : d._moveBy(b, b, !1);
+    }
   };
   c.bindPrev = function(b, c) {
     if (b) {
@@ -23292,7 +23286,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   c.replace = function(b) {
     "string" === typeof b && (b = this._createBlockByType(b));
     var c = this._valueBlock;
-    Entry.block[c.type].isPrimitive ? (c.doNotSplice = !0, c.destroy()) : "param" === this.acceptType ? (this._destroyObservers(), c.view._toGlobalCoordinate(), b.getTerminateOutputBlock().view._contents[1].replace(c)) : (this._destroyObservers(), c.view._toGlobalCoordinate(), this.separate(c), c.view.bumpAway(30, 150));
+    Entry.block[c.type].isPrimitive ? (c.doNotSplice = !0, c.destroy()) : "param" === this.acceptType ? (this._destroyObservers(), c.view._toGlobalCoordinate(), b.getTerminateOutputBlock().view._contents[1].replace(c)) : (this._destroyObservers(), c.view._toGlobalCoordinate(), Entry.do("separateBlock", c).isPass(!0), c.view.bumpAway(30, 150));
     this.updateValueBlock(b);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();

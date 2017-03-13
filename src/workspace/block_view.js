@@ -948,8 +948,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var that = this;
         distance = distance || 15;
         if (delay) {
+            var oldX = this.x,
+                oldY = this.y;
             window.setTimeout(function() {
-                that._moveBy(distance, distance, false);
+                //only when position not changed
+                if (oldX === that.x && oldY === that.y)
+                    that._moveBy(distance, distance, false);
             }, delay);
         } else that._moveBy(distance, distance, false);
     };

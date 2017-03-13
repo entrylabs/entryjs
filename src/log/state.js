@@ -35,6 +35,8 @@ Entry.State = function(type, caller, func, param) {
     this.time = Entry.getUpTime();
 
     this.isPass = Entry.Command[type] ? Entry.Command[type].isPass : false;
+
+    this.id = Entry.generateHash();
 };
 
 /**

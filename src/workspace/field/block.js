@@ -241,9 +241,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.replace = function(block) {
         if (typeof block === "string")
             block = this._createBlockByType(block);
+
         var valueBlock = this._valueBlock;
-        var valueBlockType = valueBlock.type;
-        if (Entry.block[valueBlockType].isPrimitive) {
+
+        if (Entry.block[valueBlock.type].isPrimitive) {
             valueBlock.doNotSplice = true;
             valueBlock.destroy();
         } else if (this.acceptType === "param") {
@@ -255,7 +256,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         } else {
             this._destroyObservers();
             valueBlock.view._toGlobalCoordinate();
-            this.separate(valueBlock);
+            Entry.do(
+                'separateBlock',
+                valueBlock
+            ).isPass(true);
             valueBlock.view.bumpAway(30, 150);
         }
         this.updateValueBlock(block);
