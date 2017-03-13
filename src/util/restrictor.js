@@ -50,9 +50,8 @@ Entry.Restrictor = function() {
                 dimmed: true,
                 callBack: this.restrictEnd.bind(this)
             });
+            window.setTimeout(this.align.bind(this));
         }
-
-        window.setTimeout(this.align.bind(this));
     };
 
     p.end = function() {

@@ -46,9 +46,10 @@ Entry.Commander = function(injectType) {
         that.report(commandType, argumentArray);
 
         var command = Entry.Command[commandType];
+        var state;
         console.log('commandType', commandType);
         if (Entry.stateManager && command.skipUndoStack !== true) {
-            Entry.stateManager.addCommand.apply(
+            state = Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
                 [commandType, this, this.do, command.undo]
                     .concat(command.state.apply(this, argumentArray))
@@ -60,7 +61,7 @@ Entry.Commander = function(injectType) {
         return {
             value: value,
             isPass: function(isPass) {
-                this.isPassByType(commandType, isPass);
+                this.isPassById(state.id, isPass);
             }.bind(this)
         };
     };
@@ -74,8 +75,9 @@ Entry.Commander = function(injectType) {
 
         var command = Entry.Command[commandType];
 
+        var state;
         if (Entry.stateManager && command.skipUndoStack !== true) {
-            Entry.stateManager.addCommand.apply(
+            state = Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
                 [commandType, this, this.do, commandFunc.undo]
                     .concat(commandFunc.state.apply(this, argumentArray))
@@ -84,7 +86,7 @@ Entry.Commander = function(injectType) {
         return {
             value: Entry.Command[commandType].do.apply(this, argumentArray),
             isPass: function(isPass) {
-                this.isPassByType(commandType, isPass);
+                this.isPassById(state.id, isPass);
             }.bind(this)
         };
     };
@@ -121,12 +123,12 @@ Entry.Commander = function(injectType) {
         if (lastCommand) lastCommand.isPass = isPass;
     };
 
-    p.isPassByType = function(commandType, isPass) {
+    p.isPassById = function(id, isPass) {
         if (!Entry.stateManager)
             return;
 
         isPass = isPass === undefined ? true : isPass;
-        var lastCommand = Entry.stateManager.getMatchingLastCommand(commandType);
+        var lastCommand = Entry.stateManager.getLastCommandById(id);
         if (lastCommand) lastCommand.isPass = isPass;
     };
 

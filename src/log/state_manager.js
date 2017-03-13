@@ -15,10 +15,6 @@ Entry.StateManager = function() {
     this.isIgnore = false;
     Entry.addEventListener('cancelLastCommand', function(e) {
         Entry.stateManager.cancelLastCommand();});
-    Entry.addEventListener('run', function(e) {
-        Entry.stateManager.updateView();});
-    Entry.addEventListener('stop', function(e) {
-        Entry.stateManager.updateView();});
     Entry.addEventListener('saveWorkspace', function(e) {
         Entry.stateManager.addStamp();});
     Entry.addEventListener('undo', function(e) {
@@ -32,32 +28,6 @@ Entry.StateManager = function() {
  * @param {?string} option for choose type of view.
  */
 Entry.StateManager.prototype.generateView = function (stateManagerView, option) {
-    /*
-    this.view_ = stateManagerView;
-    this.view_.addClass('entryStateManagerWorkspace')
-
-    this.undoButton = Entry.createElement('button');
-    this.undoButton.addClass('entryStateManagerButtonWorkspace');
-    this.undoButton.addClass('entryUndoButtonWorkspace');
-    this.undoButton.innerHTML = '되돌리기';
-    this.undoButton.object = this;
-    this.view_.appendChild(this.undoButton);
-    this.undoButton.bindOnClick(function(e) {
-        if (this.object.canUndo())
-            this.object.undo();
-    };
-
-    this.redoButton = Entry.createElement('button');
-    this.redoButton.addClass('entryStateManagerButtonWorkspace');
-    this.redoButton.addClass('entryRedoButtonWorkspace');
-    this.redoButton.innerHTML = '다시실행';
-    this.redoButton.object = this;
-    this.view_.appendChild(this.redoButton);
-    this.redoButton.bindOnClick(function(e) {
-        if (this.object.canRedo())
-            this.object.redo();
-    };
-    */
 };
 
 /**
@@ -70,26 +40,24 @@ Entry.StateManager.prototype.generateView = function (stateManagerView, option) 
 Entry.StateManager.prototype.addCommand = function(type, caller, func, params) {
     if (this.isIgnoring())
         return;
+    var state = new Entry.State();
+    Entry.State.prototype.constructor.apply(
+        state,
+        Array.prototype.slice.call(arguments)
+    );
+
     if (this.isRestoring()) {
-        var state = new Entry.State();
-        var argumentArray = Array.prototype.slice.call(arguments);
-        Entry.State.prototype.constructor.apply(state, argumentArray);
         this.redoStack_.push(state);
-        if (Entry.reporter)
-            Entry.reporter.report(state);
     } else {
-        var state = new Entry.State();
-        var argumentArray = Array.prototype.slice.call(arguments);
-        Entry.State.prototype.constructor.apply(state, argumentArray);
         this.undoStack_.push(state);
         if (!this._isRedoing)
             this.redoStack_ = [];
-        if (Entry.reporter)
-            Entry.reporter.report(state);
-        this.updateView();
     }
+    if (Entry.reporter)
+        Entry.reporter.report(state);
     if (Entry.creationChangedEvent)
         Entry.creationChangedEvent.notify();
+    return state;
 };
 
 /**
@@ -99,22 +67,22 @@ Entry.StateManager.prototype.cancelLastCommand = function() {
     if (!this.canUndo())
         return;
     this.undoStack_.pop();
-    this.updateView();
     if (Entry.creationChangedEvent)
         Entry.creationChangedEvent.notify();
 };
+
 
 Entry.StateManager.prototype.getLastCommand = function() {
     return this.undoStack_[this.undoStack_.length - 1];
 };
 
-Entry.StateManager.prototype.getMatchingLastCommand = function(type) {
+Entry.StateManager.prototype.getLastCommandById = function(id) {
     var undoStack = this.undoStack_;
     var len = undoStack.length-1;
     for (var i=len; i>=0; i--) {
-        var command = undoStack[i];
-        if (command.message === type)
-            return command;
+        var state = undoStack[i];
+        if (state.id === id)
+            return state;
     }
 };
 
@@ -139,11 +107,11 @@ Entry.StateManager.prototype.undo = function() {
         return;
     this.addActivity("undo");
     this.startRestore();
-    var prevIsPass = false;
     var isFirst = true;
     while (this.undoStack_.length) {
         var state = this.undoStack_.pop();
         state.func.apply(state.caller, state.params);
+
         var command = this.getLastRedoCommand();
 
         if (isFirst) {
@@ -154,7 +122,6 @@ Entry.StateManager.prototype.undo = function() {
         if (state.isPass !== true)
             break;
     }
-    this.updateView();
     this.endRestore();
     if (Entry.creationChangedEvent)
         Entry.creationChangedEvent.notify();
@@ -184,7 +151,6 @@ Entry.StateManager.prototype.redo = function() {
             break;
     }
     this._isRedoing = false;
-    this.updateView();
     if (Entry.creationChangedEvent)
         Entry.creationChangedEvent.notify();
 };
@@ -194,6 +160,7 @@ Entry.StateManager.prototype.redo = function() {
  * toggle undo and redo button active when available.
  */
 Entry.StateManager.prototype.updateView = function () {
+    return;
     if (this.undoButton && this.redoButton) {
         if (this.canUndo())
             this.undoButton.addClass('active');
@@ -204,7 +171,6 @@ Entry.StateManager.prototype.updateView = function () {
             this.redoButton.addClass('active');
         else
             this.redoButton.removeClass('active');
-
     }
 };
 
