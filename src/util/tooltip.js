@@ -6,29 +6,38 @@ goog.require("Entry.Dom");
 goog.require("Entry.Utils");
 
 Entry.Tooltip = function(data, opts) {
-    this.data = data instanceof Array ? data : [data];
-    this.opts = opts || {
-        dimmed: true,
-        restirct: false
-    };
-    this._rendered = false;
-    this._tooltips = [];
-    this._indicators = [];
-
-    if (data.length > 1 || opts.indicator)
-        this.isIndicator = true;
-
-    this.render();
-
-    this._resizeEventFunc = Entry.Utils.debounce(function() {
-        this.alignTooltips();
-    }.bind(this), 200);
-
-    this.usedClasses = "up down left right edge_up edge_down edge_left edge_right";
-    Entry.addEventListener('windowResized', this._resizeEventFunc);
+    this.init(data, opts);
 };
 
 (function(p) {
+    p.usedClasses = "up down left right edge_up edge_down edge_left edge_right";
+
+    p.init = function(data, opts) {
+        if (this._rendered)
+            this.dispose();
+
+        this.data = data instanceof Array ? data : [data];
+        this.opts = opts || this.opts || {
+            dimmed: true,
+            restirct: false
+        };
+        this._rendered = false;
+        this._tooltips = [];
+        this._indicators = [];
+
+        if (data.length > 1 || opts.indicator)
+            this.isIndicator = true;
+
+        if (opts.render !== false)
+            this.render();
+
+        this._resizeEventFunc = Entry.Utils.debounce(function() {
+            this.alignTooltips();
+        }.bind(this), 200);
+
+        Entry.addEventListener('windowResized', this._resizeEventFunc);
+    };
+
     p.render = function() {
         if (this._rendered) return;
 
@@ -208,13 +217,13 @@ Entry.Tooltip = function(data, opts) {
             Entry.Utils.allowAction();
             this.opts.dimmed && Entry.Curtain.hide();
         }
-        if (this.opts.callBack)
-            this.opts.callBack.call();
         while (this._tooltips.length)
             this._tooltips.pop().remove();
         while (this._indicators.length)
             this._indicators.pop().remove();
             Entry.Curtain.hide();
+        if (this.opts.callBack)
+            this.opts.callBack.call();
         Entry.removeEventListener('windowResized', this._resizeEventFunc);
     };
 

@@ -5897,11 +5897,11 @@ Entry.Commander = function(c) {
     e && b.push(["count", e ? e : null]);
     return b;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, e, h) {
-    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function() {
-      e();
-      new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:h.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
-      }});
+    var d = !1, f = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function() {
+      d || (d = !0, console.log("wow"), e(), f.init([{title:b.tooltip.title, content:b.tooltip.content, target:h.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
+      }}));
     }});
+    return f;
   }, dom:["playground", "board", "&0"]};
   e = Entry.cloneSimpleObject(c[b.insertBlock]);
   e.restrict = function(b, c, e) {
@@ -20095,7 +20095,6 @@ Entry.Restrictor = function() {
   };
   c.restrictEnd = function() {
     this.endEvent.notify();
-    this.currentTooltip = null;
   };
   c.align = function() {
     this.currentTooltip && this.currentTooltip.alignTooltips();
@@ -20111,22 +20110,26 @@ Entry.Restrictor = function() {
   };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(c, b) {
-  this.data = c instanceof Array ? c : [c];
-  this.opts = b || {dimmed:!0, restirct:!1};
-  this._rendered = !1;
-  this._tooltips = [];
-  this._indicators = [];
-  if (1 < c.length || b.indicator) {
-    this.isIndicator = !0;
-  }
-  this.render();
-  this._resizeEventFunc = Entry.Utils.debounce(function() {
-    this.alignTooltips();
-  }.bind(this), 200);
-  this.usedClasses = "up down left right edge_up edge_down edge_left edge_right";
-  Entry.addEventListener("windowResized", this._resizeEventFunc);
+  this.init(c, b);
 };
 (function(c) {
+  c.usedClasses = "up down left right edge_up edge_down edge_left edge_right";
+  c.init = function(b, c) {
+    this._rendered && this.dispose();
+    this.data = b instanceof Array ? b : [b];
+    this.opts = c || this.opts || {dimmed:!0, restirct:!1};
+    this._rendered = !1;
+    this._tooltips = [];
+    this._indicators = [];
+    if (1 < b.length || c.indicator) {
+      this.isIndicator = !0;
+    }
+    !1 !== c.render && this.render();
+    this._resizeEventFunc = Entry.Utils.debounce(function() {
+      this.alignTooltips();
+    }.bind(this), 200);
+    Entry.addEventListener("windowResized", this._resizeEventFunc);
+  };
   c.render = function() {
     if (!this._rendered) {
       this._convertDoms();
@@ -20206,13 +20209,14 @@ Entry.Tooltip = function(c, b) {
   c.dispose = function() {
     this._bg && this._bg.remove();
     this.opts.restrict && (Entry.Utils.allowAction(), this.opts.dimmed && Entry.Curtain.hide());
-    for (this.opts.callBack && this.opts.callBack.call();this._tooltips.length;) {
+    for (;this._tooltips.length;) {
       this._tooltips.pop().remove();
     }
     for (;this._indicators.length;) {
       this._indicators.pop().remove();
     }
     Entry.Curtain.hide();
+    this.opts.callBack && this.opts.callBack.call();
     Entry.removeEventListener("windowResized", this._resizeEventFunc);
   };
   c.restrictAction = function() {

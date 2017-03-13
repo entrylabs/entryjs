@@ -144,7 +144,8 @@ goog.require("Entry.Utils");
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "insertBlock",
         restrict: function(data, domQuery, callback, restrictor) {
-            return new Entry.Tooltip([{
+            var isDone = false;
+            var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
                 target: domQuery
@@ -152,8 +153,12 @@ goog.require("Entry.Utils");
                 dimmed: true,
                 restrict: true,
                 callBack: function() {
+                    if (isDone)
+                        return;
+                    isDone = true;
+                    console.log('wow')
                     callback();
-                    new Entry.Tooltip([{
+                    tooltip.init([{
                         title: data.tooltip.title,
                         content: data.tooltip.content,
                         target: restrictor.processDomQuery([
@@ -166,6 +171,7 @@ goog.require("Entry.Utils");
                     });
                 }
             });
+            return tooltip;
         },
         dom: ['playground', 'board', '&0']
     };

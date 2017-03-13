@@ -64,7 +64,6 @@ Entry.Restrictor = function() {
 
     p.restrictEnd = function() {
         this.endEvent.notify();
-        this.currentTooltip = null;
     };
 
     p.align = function() {
