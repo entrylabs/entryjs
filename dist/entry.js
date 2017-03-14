@@ -5902,6 +5902,20 @@ Entry.Commander = function(c) {
       }}));
     }});
     return f;
+  }, showMe:function(b) {
+    console.log(b, this.dom);
+    b.fadeOutTooltip();
+    var c = Entry.Dom($('<svg id="globalSvg" width="10" height="10"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$(document.body)}), e = Entry.getDom(b.processDomQuery(this.dom)), d = e.getBoundingClientRect(), e = $(e.cloneNode(!0));
+    e.attr({transform:"translate(8,0)"});
+    c.append(e);
+    c.css({top:d.top, left:d.left});
+    e = Entry.getDom(b.processDomQuery(["playground", "board", "&1", "magnet"])).getBoundingClientRect();
+    c.velocity({top:e.top + 20, left:e.left + 20 - 8}, {duration:1200, complete:function() {
+      setTimeout(function() {
+        c.remove();
+        b.fadeInTooltip();
+      }, 500);
+    }, easing:"ease-in-out"});
   }, dom:["playground", "board", "&0"]};
   e = Entry.cloneSimpleObject(c[b.insertBlock]);
   e.restrict = function(b, c, e) {
@@ -20097,6 +20111,12 @@ Entry.Restrictor = function() {
     }));
     return b;
   };
+  c.fadeOutTooltip = function() {
+    this.currentTooltip && this.currentTooltip.fadeOut();
+  };
+  c.fadeInTooltip = function() {
+    this.currentTooltip && this.currentTooltip.fadeIn();
+  };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(c, b) {
   this.init(c, b);
@@ -20121,6 +20141,7 @@ Entry.Tooltip = function(c, b) {
   };
   c.render = function() {
     if (!this._rendered) {
+      this.fadeIn();
       this._convertDoms();
       this.opts.dimmed && this.renderBG();
       var b = this.data[0].target;
@@ -20204,7 +20225,6 @@ Entry.Tooltip = function(c, b) {
     for (;this._indicators.length;) {
       this._indicators.pop().remove();
     }
-    Entry.Curtain.hide();
     this.opts.callBack && this.opts.callBack.call(this, b);
     Entry.removeEventListener("windowResized", this._resizeEventFunc);
   };
@@ -20213,6 +20233,12 @@ Entry.Tooltip = function(c, b) {
       return b.target;
     });
     Entry.Utils.restrictAction(b, this.dispose.bind(this));
+  };
+  c.fadeOut = function() {
+    $(document.body).addClass("hideTooltip");
+  };
+  c.fadeIn = function() {
+    $(document.body).removeClass("hideTooltip");
   };
 })(Entry.Tooltip.prototype);
 Entry.Variable = function(c) {

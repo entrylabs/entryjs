@@ -172,6 +172,42 @@ goog.require("Entry.Utils");
             });
             return tooltip;
         },
+        showMe: function(restrictor) {
+            console.log(restrictor, this.dom)
+            restrictor.fadeOutTooltip();
+            var svgDom = Entry.Dom(
+                $('<svg id="globalSvg" width="10" height="10"' +
+                  'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+                { parent: $(document.body) }
+            );
+            var svgGroup = Entry.getDom(restrictor.processDomQuery(this.dom));
+            var rect = svgGroup.getBoundingClientRect();
+            svgGroup = $(svgGroup.cloneNode(true));
+            svgGroup.attr({transform: "translate(8,0)"});
+            svgDom.append(svgGroup);
+            svgDom.css({
+                 top: rect.top, left: rect.left
+            });
+            var targetDom = Entry.getDom(restrictor.processDomQuery([
+                'playground', 'board', '&1', 'magnet'
+            ]));
+            var targetRect = targetDom.getBoundingClientRect();
+            svgDom.velocity({
+                top: targetRect.top + 20,
+                left: targetRect.left + 20 - 8
+            }, {
+                duration: 1200,
+                complete: function() {
+                    setTimeout(function() {
+                         svgDom.remove();
+                         restrictor.fadeInTooltip();
+                    }, 500);
+                },
+                easing: "ease-in-out"
+            });
+            //restrictor.fadeOut;
+            //block.animation;
+        },
         dom: ['playground', 'board', '&0']
     };
 

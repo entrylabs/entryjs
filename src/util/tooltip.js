@@ -40,6 +40,7 @@ Entry.Tooltip = function(data, opts) {
 
     p.render = function() {
         if (this._rendered) return;
+        this.fadeIn();
 
         this._convertDoms();
 
@@ -221,7 +222,6 @@ Entry.Tooltip = function(data, opts) {
             this._tooltips.pop().remove();
         while (this._indicators.length)
             this._indicators.pop().remove();
-            Entry.Curtain.hide();
         if (this.opts.callBack)
             this.opts.callBack.call(this, e);
         Entry.removeEventListener('windowResized', this._resizeEventFunc);
@@ -230,5 +230,13 @@ Entry.Tooltip = function(data, opts) {
     p.restrictAction = function() {
         var targets = this.data.map(function(d) {return d.target});
         Entry.Utils.restrictAction(targets, this.dispose.bind(this));
+    };
+
+    p.fadeOut = function() {
+        $(document.body).addClass("hideTooltip");
+    };
+
+    p.fadeIn = function() {
+        $(document.body).removeClass("hideTooltip");
     };
 })(Entry.Tooltip.prototype);
