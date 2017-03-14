@@ -10102,6 +10102,7 @@ Entry.EntryObject = function(c) {
       }}, {text:Lang.Workspace.context_duplicate, enable:!Entry.engine.isState("run"), callback:function() {
         Entry.container.addCloneObject(c);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
+        Entry.dispatchEvent("removeObject", c);
         Entry.container.removeObject(c);
       }}, {text:Lang.Workspace.copy_file, callback:function() {
         Entry.container.setCopiedObject(c);
@@ -14296,7 +14297,7 @@ Entry.Playground = function() {
       }}, {text:Lang.Workspace.context_duplicate, callback:function() {
         Entry.playground.clonePicture(b.id);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
-        Entry.playground.object.removePicture(b.id) ? (Entry.removeElement(d), Entry.dispatchEvent("removePicture"), Entry.toast.success(Lang.Workspace.shape_remove_ok, b.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
+        Entry.playground.object.removePicture(b.id) ? (Entry.removeElement(d), Entry.dispatchEvent("removePicture", b), Entry.toast.success(Lang.Workspace.shape_remove_ok, b.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
       }}, {divider:!0}, {text:Lang.Workspace.context_download, callback:function() {
         Entry.playground.downloadPicture(b.id);
       }}], "workspace-contextmenu");
@@ -14341,7 +14342,7 @@ Entry.Playground = function() {
       }}, {text:Lang.Workspace.context_duplicate, callback:function() {
         Entry.playground.addSound(b, !0);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
-        Entry.do("objectRemoveSound", Entry.playground.object.id, b) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.sound_remove_ok, b.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
+        Entry.do("objectRemoveSound", Entry.playground.object.id, b) ? (Entry.removeElement(c), Entry.dispatchEvent("removeSound", b), Entry.toast.success(Lang.Workspace.sound_remove_ok, b.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
         Entry.removeElement(c);
       }}], "workspace-contextmenu");
     });
