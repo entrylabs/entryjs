@@ -1025,6 +1025,8 @@ Entry.EntryObject = function(model) {
 
         Entry.playground.injectPicture(this);
         Entry.playground.reloadPlayground();
+
+        return true;
     };
 
     /**

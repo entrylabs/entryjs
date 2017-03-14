@@ -1437,6 +1437,7 @@ Entry.Playground = function() {
                     callback: function(){
                         if (Entry.playground.object.removePicture(picture.id)) {
                             Entry.removeElement(element);
+                            Entry.dispatchEvent('removePicture');
                             Entry.toast.success(Lang.Workspace.shape_remove_ok,
                                 picture.name +' '+Lang.Workspace.shape_remove_ok_msg);
                         } else {
