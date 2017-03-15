@@ -1,5 +1,3 @@
-
-
 Entry.coconut = {
 		PORT_MAP: {
 		leftFloorValue: 0,					
