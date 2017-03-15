@@ -669,7 +669,50 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_dronefighter_flight_controller_vibrator_on_reserve",
                 "byrobot_dronefighter_flight_controller_vibrator_delay",
                 "byrobot_dronefighter_flight_controller_vibrator_reserve",
-
+                
+                // COCONUT 
+                "coconut_move_motor",          
+				"coconut_turn_motor",          
+				"coconut_stop_motor",          
+				"coconut_move_for_secs",           	
+				"coconut_turn_for_secs",      
+				"coconut_turn_to_led",         
+				"coconut_move_outmotor",       
+				"coconut_set_led_to",          
+				"coconut_clear_led",          
+				"coconut_set_led_clear",      
+				"coconut_set_led_time",        
+				"coconut_beep",                
+				"coconut_buzzer_time",         
+				"coconut_buzzer_set_hz",       
+				"coconut_clear_buzzer",        
+				"coconut_play_buzzer",         
+				"coconut_rest_buzzer",         
+				"coconut_play_buzzer_led",     
+				"coconut_play_midi",           
+				"coconut_floor_sensor",        
+				"coconut_floor_sensing",       
+				"coconut_following_line",      
+				"coconut_front_sensor",        
+				"coconut_front_sensing",       
+				"coconut_obstruct_sensing",    
+				"coconut_avoid_mode",		   
+				"coconut_dotmatrix_set",      
+				"coconut_dotmatrix_on",       
+				"coconut_dotmatrix_off",       
+				"coconut_dotmatrix_num",       
+				"coconut_dotmatrix_small_eng", 
+				"coconut_dotmatrix_big_eng",   
+				"coconut_dotmatrix_kor",       
+				"coconut_light_sensor",        
+				"coconut_light_tmp",           
+				"coconut_ac_sensor",           
+				"coconut_outled_sensor",       
+				"coconut_outspk_sensor",       
+				"coconut_outspk_sensor_off",   
+				"coconut_outinfrared_sensor",  
+				"coconut_outcds_sensor",       
+				"coconut_servomotor_angle",                    
             ]
         }
     ]
@@ -2504,6 +2547,137 @@ EntryStatic.blockInfo = {
         "xml": "<block type='robotis_carCont_cm_calibration'><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
         "class": "robotis_carCont_cm"
     },
+	"coconut_move_forward_once": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_move_forward_once'></block>",
+        "class": "coconut_board"
+    },
+
+    "coconut_turn_once": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_turn_once'></block>",
+        "class": "coconut_board"
+    },
+    "coconut_move_forward_for_secs": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_move_forward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_move_backward_for_secs": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_move_backward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_turn_for_secs": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+	"coconut_change_both_wheels_by": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_set_both_wheels_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_both_wheels_to'><value name='LEFT'><block type='text'><field name='NAME'>30</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>30</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_change_wheel_by": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_change_wheel_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_set_wheel_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_wheel_to'><value name='VALUE'><block type='text'><field name='NAME'>30</field></block></value></block>",
+        "class": "coconut_wheel"
+    },
+	"coconut_follow_line_using": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_follow_line_using'></block>",
+        "class": "coconut_wheel"
+    },
+	"coconut_follow_line_until": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_follow_line_until'></block>",
+        "class": "coconut_wheel"
+    },
+	"coconut_set_following_speed_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_following_speed_to'><field name='SPEED'>5</field></block>",
+        "class": "coconut_wheel"
+    },
+    "coconut_stop": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_stop'></block>",
+        "class": "coconut_wheel"
+    },
+	"coconut_set_led_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_led_to'></block>",
+        "class": "coconut_led"
+    },
+    "coconut_clear_led": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_clear_led'></block>",
+        "class": "coconut_led"
+    },
+    "coconut_beep": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_beep'></block>",
+        "class": "coconut_buzzer"
+    },
+	"coconut_change_buzzer_by": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_set_buzzer_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_buzzer_to'><value name='VALUE'><block type='text'><field name='NAME'>1000</field></block></value></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_clear_buzzer": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_clear_buzzer'></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_play_note_for": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_play_note_for'><field name='OCTAVE'>4</field><value name='VALUE'><block type='text'><field name='NAME'>0.5</field></block></value></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_rest_for": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_rest_for'><value name='VALUE'><block type='text'><field name='NAME'>0.25</field></block></value></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_change_tempo_by": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_change_tempo_by'><value name='VALUE'><block type='text'><field name='NAME'>20</field></block></value></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_set_tempo_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_tempo_to'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
+        "class": "coconut_buzzer"
+    },
+    "coconut_set_port_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_port_to'></block>",
+        "class": "coconut_port"
+    },
+    "coconut_change_output_by": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_change_output_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "coconut_port"
+    },
+    "coconut_set_output_to": {
+        "isNotFor": ["coconut"],
+        "xml": "<block type='coconut_set_output_to'><value name='VALUE'><block type='text'><field name='NAME'>100</field></block></value></block>",
+        "class": "coconut_port"
+    },    
 }
 
 EntryStatic.discussCategories = [

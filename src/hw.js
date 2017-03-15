@@ -60,6 +60,7 @@ Entry.HW = function() {
         'F.1': Entry.byrobot_dronefighter_controller,
         'F.2': Entry.byrobot_dronefighter_drive,
         'F.3': Entry.byrobot_dronefighter_flight,
+        '15.1': Entry.coconut,
     };
 };
 
