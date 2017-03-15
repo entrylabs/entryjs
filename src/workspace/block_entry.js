@@ -5141,7 +5141,7 @@ Entry.block = {
                 "value": null,
                 "fontSize": 11,
                 'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                menuName: Entry.Bitbrick.sensorList
+                'menuName': Entry.Bitbrick.sensorList,
 
             }
         ],
@@ -37180,7 +37180,7 @@ Entry.block = {
 		"paramsKeyMap": {
             "DIST": 0
         },
-        "class": "coconut_board",
+        "class": "coconut_wheel",
         "isNotFor": [ "coconut" ],
 
         "func": function (sprite, script) {
@@ -37189,7 +37189,7 @@ Entry.block = {
 			//앞으로 가기
 			var dist = script.getField("DIST", script);
 			var move = parseInt(dist);
-			var arrMsg = moveMotor(move);
+			var arrMsg = Entry.coconut.moveMotor(move);
 			//var arrMsg = ["0xff","0x55","0x05","0x00","0x01","0x07","0x00","0x01"];
 
 			if (!script.isStart) {
@@ -37206,14 +37206,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -37250,7 +37243,7 @@ Entry.block = {
         "paramsKeyMap": {
             "DIST": 0
         },
-        "class": "coconut_board",
+        "class": "coconut_wheel",
         "isNotFor": [ "coconut" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
@@ -37258,7 +37251,7 @@ Entry.block = {
 		 
 			var dist = script.getField("DIST");
 			var move = parseInt(dist);
-			var arrMsg = turnMotor(move); //왼쪽, 오른쪽으로 가기
+			var arrMsg = Entry.coconut.turnMotor(move); //왼쪽, 오른쪽으로 가기
 			//var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x1a","0x00","0x02","0x3c"];
 
 			if (!script.isStart) {
@@ -37275,14 +37268,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -37307,13 +37293,13 @@ Entry.block = {
             "params": [],
             "type": "coconut_stop_motor"
         },
-        "class": "coconut_sensor",
+        "class": "coconut_wheel",
         "isNotFor": [ "coconut" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
 			var pd = Entry.hw.portData;
 			
-			var arrMsg = stopMotor(); //모터정지 
+			var arrMsg = Entry.coconut.stopMotor(); //모터정지 
 			//var arrMsg = ["0xff","0x55","0x04","0x00","0x02","0x1a","0x01"];
 
 			if (!script.isStart) {
@@ -37330,14 +37316,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -37385,7 +37364,7 @@ Entry.block = {
             "DIST": 0,
             "VALUE": 1
         },
-		"class": "coconut_board",
+		"class": "coconut_wheel",
 		"isNotFor": [ "coconut" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
@@ -37394,7 +37373,7 @@ Entry.block = {
 			var dist = script.getField("DIST", script);
 			var move = parseInt(dist);
 			var time = script.getNumberValue("VALUE");
-            var arrMsg = moveGoTime(move,time); //앞으로 1초동안 움직이기
+            var arrMsg = Entry.coconut.moveGoTime(move,time); //앞으로 1초동안 움직이기
 			//var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x1a","0x03","0x03","0x3c","0xe8","0x03"];
 			
 			var now = Date();
@@ -37414,13 +37393,7 @@ Entry.block = {
 				} else {
 					console.log(now + " : rev = waiting");
 				}
-				Entry.coconut.clearQueue(sq);
-				var timer = setTimeout(function() {
-					var pd = Entry.hw.portData;
-					console.log(now + " : rev = time");
-					Entry.coconut.removeTimeout(timer);	
-				}, 250);
-				Entry.coconut.timeouts.push(timer);
+				Entry.coconut.clearQueue(sq);				
 				return script;
 			} else {
 				delete script.isStart;
@@ -37471,12 +37444,11 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
 			var pd = Entry.hw.portData;
-
-			/*** 오른쪽 전문 후에 코코넛 먹통 ***/
+			
 			var dist = script.getField("DIST", script);
 			var move = parseInt(dist);
 			var time = script.getNumberValue("VALUE");
-            var arrMsg = moveGoTime(move,time); //왼쪽으로 1초동안 돌기
+            var arrMsg = Entry.coconut.moveGoTime(move,time); //왼쪽으로 1초동안 돌기
 			//var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x1a","0x03","0x01","0x3c","0xe8","0x03"];
 			
 			if (!script.isStart) {
@@ -37493,14 +37465,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -37552,19 +37517,17 @@ Entry.block = {
             "DIST": 0,
             "COLOR": 1
         },
-        "class": "coconut_led",
+        "class": "coconut_wheel",
         "isNotFor": [ "coconut" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
 			var pd = Entry.hw.portData;
 
-			/*** 오른쪽 전문 후에 코코넛 먹통 ***/
 			var dist1 = script.getField("DIST", script);
 			var dist2 = script.getField("COLOR", script);
 			var move = parseInt(dist1);
 			var color = parseInt(dist2);
-			var arrMsg = moveMotorColor(move,color); //왼쪽으로 회전하는 동안 빨간색 LED켜기
-			//var arrMsg = ["0xff","0x55","0x07","0x00","0x02","0x1a","0x05","0x01","0x3c","0x02"];
+			var arrMsg = Entry.coconut.moveMotorColor(move,color); //왼쪽으로 회전하는 동안 빨간색 LED켜기
 			
 			if (!script.isStart) {
 				script.isStart = true;
@@ -37581,13 +37544,6 @@ Entry.block = {
 					console.log("rev = continue" + pd.msg);
 				} else {
 					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -37637,7 +37593,7 @@ Entry.block = {
             "DIST": 0,
 			"VALUE": 1,
         },
-        "class": "coconut_led",
+        "class": "coconut_wheel",
         "isNotFor": [ "coconut" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
@@ -37646,7 +37602,7 @@ Entry.block = {
 			var dist1 = script.getField("DIST", script);
 			var move = parseInt(dist1);
 			var speed = script.getNumberValue("VALUE");
-			var arrMsg = moveExtMotor(move,speed); //외부모터 앞으로 움직이기
+			var arrMsg = Entry.coconut.moveExtMotor(move,speed); //외부모터 앞으로 움직이기
 			//var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x1a","0x07","0x03","0x3c"];
 			
 			if (!script.isStart) {
@@ -37664,13 +37620,6 @@ Entry.block = {
 					console.log("rev = continue" + pd.msg);
 				} else {
 					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -37734,7 +37683,7 @@ Entry.block = {
 			var dist2 = script.getField("COLOR", script);
 			var dir = parseInt(dist1);
 			var color = parseInt(dist2);
-			var arrMsg = rgbOn(dir,color); //왼쪽 LED 빨간색으로 켜기
+			var arrMsg = Entry.coconut.rgbOn(dir,color); //왼쪽 LED 빨간색으로 켜기
 			//var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x19","0x00","0x01","0x02"];
 			
 			if (!script.isStart) {
@@ -37798,7 +37747,7 @@ Entry.block = {
 			
 			var dist1 = script.getField("DIST", script);
 			var dir = parseInt(dist1);
-			var arrMsg = rgbOff(dir); //왼쪽LED 끄기
+			var arrMsg = Entry.coconut.rgbOff(dir); //왼쪽LED 끄기
 			//var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x19","0x01","0x01","0x00"];
 			
 			if (!script.isStart) {
@@ -37816,13 +37765,6 @@ Entry.block = {
 					console.log("rev = continue" + pd.msg);
 				} else {
 					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -37884,7 +37826,7 @@ Entry.block = {
 			var dist2 = script.getField("COLOR", script);
 			var dir = parseInt(dist1);
 			var color = parseInt(dist2);
-			var arrMsg = rgbOffColor(dir,color); //왼쪽 LED 빨간색 끄기
+			var arrMsg = Entry.coconut.rgbOffColor(dir,color); //왼쪽 LED 빨간색 끄기
 			//var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x19","0x01","0x01","0x02"];
 			
 			if (!script.isStart) {
@@ -37902,13 +37844,6 @@ Entry.block = {
 					console.log("rev = continue" + pd.msg);
 				} else {
 					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -37930,11 +37865,11 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-					[Lang.Blocks.coconut_left_led,"LEFT"],
-					[Lang.Blocks.coconut_right_led,"RIGHT"],
-					[Lang.Blocks.coconut_both_leds,"BOTH"]
+					[Lang.Blocks.coconut_left_led,"Left"],
+					[Lang.Blocks.coconut_right_led,"Right"],
+					[Lang.Blocks.coconut_both_leds,"Both"]
                 ],
-                "value": "LEFT",
+                "value": "Left",
                 "fontSize": 11
             },
             {
@@ -37983,9 +37918,8 @@ Entry.block = {
 			var dist1 = script.getField("DIST", script);
 			var dist2 = script.getField("COLOR", script);
 			var time = script.getNumberValue("VALUE");
-			var dir = parseInt(dist1);
 			var color = parseInt(dist2);
-			var arrMsg = ledOnTime(dir,color,time); //왼쪽 LED 빨간색으로 1초동안 켜기
+			var arrMsg = Entry.coconut.ledOnTime(dist1,color,time); //왼쪽 LED 빨간색으로 1초동안 켜기
 			//var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x19","0x03","0x01","0x02","0xe8","0x03"];
 			
 			if (!script.isStart) {
@@ -38003,13 +37937,6 @@ Entry.block = {
 					console.log("rev = continue" + pd.msg);
 				} else {
 					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -38040,7 +37967,7 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
 			var pd = Entry.hw.portData;
 			
-			var arrMsg = beep(); //버저 켜기
+			var arrMsg = Entry.coconut.beep(); //버저 켜기
 			//var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x06","0x01","0xf4","0x01"];
 			
 			if (!script.isStart) {
@@ -38057,14 +37984,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -38108,7 +38028,7 @@ Entry.block = {
 			var pd = Entry.hw.portData;
 			
 			var time = script.getNumberValue("VALUE");
-			var arrMsg = playBuzzerTime(time); //버저음을 1초동안 소리내기
+			var arrMsg = Entry.coconut.playBuzzerTime(time); //버저음을 1초동안 소리내기
 			//var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x06","0x01","0xe8","0x03"];
 			
 			if (!script.isStart) {
@@ -38125,14 +38045,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -38186,7 +38099,7 @@ Entry.block = {
 			
 			var hz = script.getNumberValue("HZ");
 			var time = script.getNumberValue("TIME");
-			var arrMsg = playBuzzerFreq(hz,time); //버저음 1000hz를 1초동안 소리내기
+			var arrMsg = Entry.coconut.playBuzzerFreq(hz,time); //버저음 1000hz를 1초동안 소리내기
 			//var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x2c","0x01","0xe8","0x03"];
 			
 			if (!script.isStart) {
@@ -38203,14 +38116,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -38240,7 +38146,7 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
 			var pd = Entry.hw.portData;
 
-			var arrMsg = buzzerOff();//버저 끄기
+			var arrMsg = Entry.coconut.buzzerOff();//버저 끄기
 			//var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x00","0x00","0x00","0x00"];
 			
 			if (!script.isStart) {
@@ -38257,14 +38163,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -38367,7 +38266,7 @@ Entry.block = {
 			var octave = parseInt(dist2);
 			var semi = dist3
 			var beat = parseInt(dist4);
-			var arrMsg = playNote(note, octave, semi, beat); //(도)(3)(-)음을 2분음표 박자로 연주하기
+			var arrMsg = Entry.coconut.playNote(note, octave, semi, beat); //(도)(3)(-)음을 2분음표 박자로 연주하기
 			//var arrMsg = ["0xff","0x55","0x09","0x00","0x02","0x03","0x04","0x43","0x03","0x2d","0xf4","0x01"];
 			
 			if (!script.isStart) {
@@ -38384,14 +38283,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");				
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -38442,7 +38334,7 @@ Entry.block = {
 			
 			var dist = script.getField("BEAT", script);
 			var beat = parseInt(dist);
-			var arrMsg = restBeat(dist); //2분 쉼표 동안 쉬기
+			var arrMsg = Entry.coconut.restBeat(dist); //2분 쉼표 동안 쉬기
 			//var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x01","0x00","0x00","0xf4","0x01"];
 			
 			if (!script.isStart) {
@@ -38459,14 +38351,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");				
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -38602,7 +38487,7 @@ Entry.block = {
 			var beat = parseInt(dist4);
 			var dir = parseInt(dist5);
 			var color = parseInt(dist6);
-			var arrMsg = playNoteColor(note, octave, semi, beat, dir, color);
+			var arrMsg = Entry.coconut.playNoteColor(note, octave, semi, beat, dir, color);
 			//도 4 - 음을 2분음표 박자로 연주하는 동안 왼쪽 LED 빨간색 켜기
 			//var arrMsg = ["0xff","0x55","0x0b","0x00","0x02","0x03","0x05","0x43","0x04","0x2d","0xf4","0x01","0x01","0x02"];
 			
@@ -38620,14 +38505,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -38678,7 +38556,7 @@ Entry.block = {
 			//반짝반짝 작은별 연주하기
 			var value = script.getField("VALUE");
 			var num = parseInt(value);
-			var arrMsg = playMelody(num);
+			var arrMsg = Entry.coconut.playMelody(num);
 			//var arrMsg = ["0xff","0x55","0x05","0x00","0x01","0x07","0x00","0x01"];
 			
 			if (!script.isStart) {
@@ -38695,14 +38573,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");				
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -38856,7 +38727,7 @@ Entry.block = {
 			var pd = Entry.hw.portData;
 			//선 따라가기
 
-			var arrMsg = followLine();
+			var arrMsg = Entry.coconut.followLine();
 			//var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x07","0x03","0x3c"];
 			
 			if (!script.isStart) {
@@ -38873,14 +38744,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -39062,7 +38926,7 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
 			var pd = Entry.hw.portData;
 			
-			var arrMsg = avoidMode(); //어보이드 모드
+			var arrMsg = Entry.coconut.avoidMode(); //어보이드 모드
 			//var arrMsg = ["0xff","0x55","0x04","0x00","0x02","0x05","0x03"];
 
 			if (!script.isStart) {
@@ -39079,14 +38943,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -39178,7 +39035,7 @@ Entry.block = {
 			var row = parseInt(row);
 			var col = parseInt(col);
 			var button = parseInt(button);
-			var arrMsg = ledMatrixOn(button,row, col); //도트매트릭스 켜짐 1줄 1칸
+			var arrMsg = Entry.coconut.ledMatrixOn(button,row, col); //도트매트릭스 켜짐 1줄 1칸
 			//var arrMsg = ["0xff","0x55","0x07","0x00","0x02","0x1b","0x00","0x01","0x01","0x01"];
 			
 			if (!script.isStart) {
@@ -39195,14 +39052,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -39233,7 +39083,7 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
 			var pd = Entry.hw.portData;
 			
-			var arrMsg = ledMatrixOnAll(); //도트매트릭스 모두 켜기
+			var arrMsg = Entry.coconut.ledMatrixOnAll(); //도트매트릭스 모두 켜기
 			//var arrMsg = ["0xff","0x55","0x05","0x00","0x01","0x07","0x00","0x01"];
 			
 			if (!script.isStart) {
@@ -39250,14 +39100,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -39288,7 +39131,7 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
 			var pd = Entry.hw.portData;
 			
-			var arrMsg = ledMatrixClear(); //도트매트릭스 모두 끄기
+			var arrMsg = Entry.coconut.ledMatrixClear(); //도트매트릭스 모두 끄기
 			//var arrMsg = ["0xff","0x55","0x04","0x00","0x02","0x1b","0x05"];
 			
 			if (!script.isStart) {
@@ -39305,14 +39148,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -39371,7 +39207,7 @@ Entry.block = {
 			
 			var value = script.getField("VALUE");
 			var num = parseInt(value);
-			var arrMsg = showLedMatrix(num); //도트매트릭스 숫자 1표시
+			var arrMsg = Entry.coconut.showLedMatrix(num); //도트매트릭스 숫자 1표시
 			//var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x01","0x01"];
 			
 			if (!script.isStart) {
@@ -39457,7 +39293,7 @@ Entry.block = {
 			
 			var value = script.getField("VALUE");
 			var num = parseInt(value);
-			var arrMsg = showLedMatrixSmall(num); //도트매트릭스 소문자 a표시
+			var arrMsg = Entry.coconut.showLedMatrixSmall(num); //도트매트릭스 소문자 a표시
 			//var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x02","0x00"];
 			
 			if (!script.isStart) {
@@ -39474,14 +39310,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -39550,7 +39379,7 @@ Entry.block = {
 			
 			var value = script.getField("VALUE");
 			var num = parseInt(value);
-			var arrMsg = showLedMatrixLarge(num); //도트매트릭스 대문자 A표시
+			var arrMsg = Entry.coconut.showLedMatrixLarge(num); //도트매트릭스 대문자 A표시
 			//var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x03","0x00"];
 			
 			if (!script.isStart) {
@@ -39567,14 +39396,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -39631,7 +39453,7 @@ Entry.block = {
 			
 			var value = script.getField("VALUE");
 			var num = parseInt(value);
-			var arrMsg = showLedMatrixKorean(num); //도트매트릭스 한글 가 표시
+			var arrMsg = Entry.coconut.showLedMatrixKorean(num); //도트매트릭스 한글 가 표시
 			//var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x04","0x00"];
 			
 			if (!script.isStart) {
@@ -39648,14 +39470,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -39803,7 +39618,7 @@ Entry.block = {
 			
 			var pin = script.getNumberField("PIN");
 			var time = script.getNumberValue("TIME");
-			var arrMsg = extLedOn(pin, time); //외부 LED 설정 D4 0.5초동안 켜기
+			var arrMsg = Entry.coconut.extLedOn(pin, time); //외부 LED 설정 D4 0.5초동안 켜기
 			//var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x2c","0x04","0xf4","0x01"];
 
 			if (!script.isStart) {
@@ -39820,14 +39635,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");				
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -39894,7 +39702,7 @@ Entry.block = {
 			var pin = script.getNumberField("PIN");
 			var hz = script.getNumberValue("HZ");
 			var time = script.getNumberValue("TIME");
-			var arrMsg = playSpeaker(pin, hz, time); //외부 스피커 설정 D10 100hz로 0.5초 동안 소리내기
+			var arrMsg = Entry.coconut.playSpeaker(pin, hz, time); //외부 스피커 설정 D10 100hz로 0.5초 동안 소리내기
 			//var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x29","0x10","0x64","0x00","0xf4","0x01"];
 			
 			if (!script.isStart) {
@@ -39911,14 +39719,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");				
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -39964,7 +39765,7 @@ Entry.block = {
 			var pd = Entry.hw.portData;
 			
 			var pin = script.getNumberField("PIN");
-			var arrMsg = stopSpeaker(pin); //외부스피커 D10 끄기
+			var arrMsg = Entry.coconut.stopSpeaker(pin); //외부스피커 D10 끄기
 			//var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x29","0x10","0x00","0x00","0x00","0x00"];
 			
 			if (!script.isStart) {
@@ -39981,14 +39782,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
@@ -40035,9 +39829,9 @@ Entry.block = {
 			var pin = script.getNumberField("PIN");
 			
 			if (pin == "16"){
-				return pd.extIrA2;
+				return pd.extA2;
 			}else{
-				return pd.extIrA3;
+				return pd.extA3;
 			}
 
         },
@@ -40077,9 +39871,9 @@ Entry.block = {
 			
 			var pin = script.getNumberField("PIN");
 			if(pin=="16"){
-				return pd.extCdsA2;
+				return pd.extA2;
 			}else{
-				return pd.extCdsA3;
+				return pd.extA3;
 			}
         },
 		"syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
@@ -40131,7 +39925,7 @@ Entry.block = {
 			
 			var pin = script.getNumberField("PIN");
 			var angle = script.getNumberValue("ANGLE");
-			var arrMsg = runExtServo(pin, angle); //서보모터 연결 D4 각도 90
+			var arrMsg = Entry.coconut.runExtServo(pin, angle); //서보모터 연결 D4 각도 90
 			//var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x43","0x04","0x5a"];
 			
 			if (!script.isStart) {
@@ -40148,14 +39942,7 @@ Entry.block = {
 				} else if (pd.msgStatus == "continue") {
 					console.log("rev = continue" + pd.msg);
 				} else {
-					console.log("rev = waiting");
-					var timeValue = 100;
-					var timer = setTimeout(function() {
-						var pd = Entry.hw.portData;
-						console.log("rev = time");
-						Entry.Hamster.removeTimeout(timer);	
-					}, timeValue);
-					Entry.Hamster.timeouts.push(timer);
+					console.log("rev = waiting");					
 				}
 				Entry.coconut.clearQueue(sq);
 				return script;
