@@ -37,6 +37,23 @@ goog.require("Entry.Utils");
     };
 
     obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.addThread])
+    obj.showMe = function(restrictor) {
+        if (restrictor.isTooltipFaded())
+            return;
+        restrictor.fadeOutTooltip();
+        var svgGroup = Entry.getDom(restrictor.processDomQuery(this.dom));
+        var targetDom = Entry.getDom(restrictor.processDomQuery([
+            'playground', 'board', '&1', 'magnet', 'next', 0
+        ], restrictor.requestNextData().content));
+        var targetRect = targetDom.getBoundingClientRect();
+
+        Entry.Utils.glideBlock(
+            svgGroup, targetRect.left, targetRect.top,
+            function() {
+                restrictor.fadeInTooltip();
+            }
+        )
+    };
     obj.followCmd = true;
     c[COMMAND_TYPES.addThreadFromBlockMenu] = obj;
 
@@ -173,40 +190,21 @@ goog.require("Entry.Utils");
             return tooltip;
         },
         showMe: function(restrictor) {
-            console.log(restrictor, this.dom)
+            if (restrictor.isTooltipFaded())
+                return;
             restrictor.fadeOutTooltip();
-            var svgDom = Entry.Dom(
-                $('<svg id="globalSvg" width="10" height="10"' +
-                  'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
-                { parent: $(document.body) }
-            );
             var svgGroup = Entry.getDom(restrictor.processDomQuery(this.dom));
-            var rect = svgGroup.getBoundingClientRect();
-            svgGroup = $(svgGroup.cloneNode(true));
-            svgGroup.attr({transform: "translate(8,0)"});
-            svgDom.append(svgGroup);
-            svgDom.css({
-                 top: rect.top, left: rect.left
-            });
             var targetDom = Entry.getDom(restrictor.processDomQuery([
-                'playground', 'board', '&1', 'magnet'
+                'playground', 'board', '&1', 'magnet', 'next', 0
             ]));
             var targetRect = targetDom.getBoundingClientRect();
-            svgDom.velocity({
-                top: targetRect.top + 20,
-                left: targetRect.left + 20 - 8
-            }, {
-                duration: 1200,
-                complete: function() {
-                    setTimeout(function() {
-                         svgDom.remove();
-                         restrictor.fadeInTooltip();
-                    }, 500);
-                },
-                easing: "ease-in-out"
-            });
-            //restrictor.fadeOut;
-            //block.animation;
+
+            Entry.Utils.glideBlock(
+                svgGroup, targetRect.left, targetRect.top,
+                function() {
+                    restrictor.fadeInTooltip();
+                }
+            )
         },
         dom: ['playground', 'board', '&0']
     };
@@ -274,6 +272,56 @@ goog.require("Entry.Utils");
         dom: ['playground', 'board', '&0']
     };
 
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.separateBlock])
+    obj.restrict = function(data, domQuery, callback, restrictor) {
+        var isDone = false;
+        var tooltip = new Entry.Tooltip([{
+            title: data.tooltip.title,
+            content: data.tooltip.content,
+            target: domQuery
+        }], {
+            dimmed: true,
+            restrict: true,
+            callBack: function(isFromInit) {
+                if (isDone || !isFromInit)
+                    return;
+                callback();
+                isDone = true;
+                tooltip.init([{
+                    title: data.tooltip.title,
+                    content: data.tooltip.content,
+                    target: [
+                        'playground', 'board', 'trashcan'
+                    ]
+                }], {
+                    indicator: true,
+                    callBack: function() {
+                        callback();
+                    }
+                });
+            }
+        });
+        return tooltip;
+    };
+    obj.showMe = function(restrictor) {
+        if (restrictor.isTooltipFaded())
+            return;
+        restrictor.fadeOutTooltip();
+        var svgGroup = Entry.getDom(restrictor.processDomQuery(this.dom));
+        var targetDom = Entry.getDom([
+            'playground', 'board', 'trashcan'
+        ]);
+        var targetRect = targetDom.getBoundingClientRect();
+
+        Entry.Utils.glideBlock(
+            svgGroup, targetRect.left, targetRect.top,
+            function() {
+                restrictor.fadeInTooltip();
+            }
+        )
+    };
+    c[COMMAND_TYPES.separateBlockForDestroy] = obj;
+
     c[COMMAND_TYPES.moveBlock] = {
         do: function(block, x, y) {
             if (x !== undefined) { // do from undo stack
@@ -315,6 +363,9 @@ goog.require("Entry.Utils");
         undo: "moveBlock",
         dom: ['playground', 'board', 'coord', '&1', '&2']
     };
+
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.moveBlock])
+    c[COMMAND_TYPES.moveBlockForDestroy] = obj;
 
     obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.moveBlock])
     c[COMMAND_TYPES.moveBlockFromBlockMenu] = obj;

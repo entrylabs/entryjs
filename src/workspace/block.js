@@ -663,9 +663,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (query.length > 0) {
             var key = query.shift();
             if (key === "magnet")
-                return this.view.getMagnet("next");
-        } else {
-            return this.view.svgGroup;
+                return this.view.getMagnet(query);
         }
+        return this.view.svgGroup;
     };
 })(Entry.Block.prototype);

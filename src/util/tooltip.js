@@ -22,6 +22,7 @@ Entry.Tooltip = function(data, opts) {
             restirct: false
         };
         this._rendered = false;
+        this._faded = false;
         this._tooltips = [];
         this._indicators = [];
 
@@ -234,9 +235,15 @@ Entry.Tooltip = function(data, opts) {
 
     p.fadeOut = function() {
         $(document.body).addClass("hideTooltip");
+        this._faded = true;
     };
 
     p.fadeIn = function() {
         $(document.body).removeClass("hideTooltip");
+        this._faded = false;
+    };
+
+    p.isFaded = function() {
+        return this._faded;
     };
 })(Entry.Tooltip.prototype);

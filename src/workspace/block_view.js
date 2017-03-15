@@ -616,21 +616,22 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             if (dragMode === Entry.DRAG_MODE_DRAG) {
                 var ripple = false;
                 var prevBlock = this.block.getPrevBlock(this.block);
+                var suffix = this._board.workspace.trashcan.isOver ? "ForDestroy" : "";
                 switch (gsRet) {
                     case gs.DONE:
                         var closeBlock = board.magnetedBlockView;
                         if (closeBlock instanceof Entry.BlockView)
                             closeBlock = closeBlock.block;
                         if (prevBlock && !closeBlock) {
-                            Entry.do("separateBlock", block);
+                            Entry.do("separateBlock" + suffix, block);
                         } else if (!prevBlock && !closeBlock && !fromBlockMenu) {
                             if (!block.getThread().view.isGlobal()) {
-                                Entry.do("separateBlock", block);
+                                Entry.do("separateBlock" + suffix, block);
                             } else {
-                                Entry.do("moveBlock", block);
+                                Entry.do("moveBlock" + suffix, block);
                             }
                         } else {
-                            var suffix = fromBlockMenu ? "FromBlockMenu": "";
+                            suffix = fromBlockMenu ? "FromBlockMenu": "";
                             if (closeBlock) {
                                 if (closeBlock.view.magneting === "next") {
                                     var lastBlock = block.getLastBlock();
@@ -1352,11 +1353,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             .appendChild(this.svgGroup);
     };
 
-    p.getMagnet = function(selector) {
+    p.getMagnet = function(query) {
+        var selector = query.shift() || "next";
+        var halfWidth = query.shift();
+        if (halfWidth === undefined)
+            halfWidth = 20;
         return {
             getBoundingClientRect: function() {
-                var halfWidth = 20,
-                    coord = this.getAbsoluteCoordinate(),
+                var coord = this.getAbsoluteCoordinate(),
                     boardOffset = this._board.relativeOffset,
                     magnet = this.magnet[selector];
                 return {

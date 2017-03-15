@@ -4,7 +4,8 @@ goog.provide("Entry.Restrictor");
 
 goog.require("Entry.Utils");
 
-Entry.Restrictor = function() {
+Entry.Restrictor = function(controller) {
+    this._controller = controller;
     this.startEvent = new Entry.Event(this);
     this.endEvent = new Entry.Event(this);
 
@@ -70,10 +71,10 @@ Entry.Restrictor = function() {
             this.currentTooltip.alignTooltips();
     };
 
-    p.processDomQuery = function(domQuery) {
-        var log = this._data.content.concat();
+    p.processDomQuery = function(domQuery, log) {
+        log = log || this._data.content;
+        log = log.concat();
         log.shift();
-        console.log(log);
         if (domQuery instanceof Array) {
             domQuery = domQuery.map(function(q) {
                 if (q[0] === "&")
@@ -93,5 +94,17 @@ Entry.Restrictor = function() {
     p.fadeInTooltip = function() {
         if (this.currentTooltip)
             this.currentTooltip.fadeIn();
+    };
+
+    p.isTooltipFaded = function() {
+        if (this.currentTooltip)
+            return this.currentTooltip.isFaded();
+        return false;
+    };
+
+    p.requestNextData = function() {
+        if (this._controller) {
+            return this._controller.requestNextData();
+        }
     };
 })(Entry.Restrictor.prototype);

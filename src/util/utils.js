@@ -1557,3 +1557,31 @@ Entry.Utils.allowAction = function() {
         delete this._restrictHandler;
     }
 };
+
+Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
+	var rect = svgGroup.getBoundingClientRect();
+	var svgDom = Entry.Dom(
+		$('<svg id="globalSvg" width="10" height="10"' +
+		  'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+		{ parent: $(document.body) }
+	);
+	svgGroup = $(svgGroup.cloneNode(true));
+	svgGroup.attr({transform: "translate(8,0)"});
+	svgDom.append(svgGroup);
+	svgDom.css({
+		 top: rect.top, left: rect.left
+	});
+	svgDom.velocity({
+		top: y,
+		left: x - 8
+	}, {
+		duration: 1200,
+		complete: function() {
+			setTimeout(function() {
+				 svgDom.remove();
+				 callback();
+			}, 500);
+		},
+		easing: "ease-in-out"
+	});
+};

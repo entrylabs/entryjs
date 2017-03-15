@@ -51,6 +51,9 @@ Entry.STATIC = {
         insertBlockFromBlockMenu: 118,
         moveBlockFromBlockMenu: 119,
 
+        separateBlockForDestroy: 120,
+        moveBlockForDestroy: 121,
+
         selectObject: 201,
         objectEditButtonClick: 202,
         objectAddPicture: 203,
