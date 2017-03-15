@@ -257,3 +257,7 @@ Entry.StateManager.prototype.addActivity = function (activityType) {
     if (Entry.reporter)
         Entry.reporter.report(new Entry.State(activityType));
 };
+
+Entry.StateManager.prototype.getUndoStack = function () {
+    return this.undoStack_.slice(0);
+};

@@ -47,7 +47,6 @@ Entry.Commander = function(injectType) {
 
         var command = Entry.Command[commandType];
         var state;
-        console.log('commandType', commandType);
         if (Entry.stateManager && command.skipUndoStack !== true) {
             state = Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
@@ -60,8 +59,8 @@ Entry.Commander = function(injectType) {
 
         return {
             value: value,
-            isPass: function(isPass) {
-                this.isPassById(state.id, isPass);
+            isPass: function(isPass, skipCount) {
+                this.isPassById(state.id, isPass, skipCount);
             }.bind(this)
         };
     };
@@ -123,13 +122,17 @@ Entry.Commander = function(injectType) {
         if (lastCommand) lastCommand.isPass = isPass;
     };
 
-    p.isPassById = function(id, isPass) {
+    p.isPassById = function(id, isPass, skipCount) {
         if (!Entry.stateManager)
             return;
 
         isPass = isPass === undefined ? true : isPass;
         var lastCommand = Entry.stateManager.getLastCommandById(id);
-        if (lastCommand) lastCommand.isPass = isPass;
+        if (lastCommand) {
+            lastCommand.isPass = isPass;
+            if (skipCount)
+                lastCommand.skipCount = !!skipCount;
+        }
     };
 
     p.addReporter = function(reporter) {

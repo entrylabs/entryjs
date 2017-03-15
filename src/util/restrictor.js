@@ -30,7 +30,6 @@ Entry.Restrictor = function(controller) {
         if (domQuery instanceof Array)
             domQuery = this.processDomQuery(domQuery);
 
-        console.log(domQuery);
         if (!data.tooltip)
             data.tooltip = {
                 title: "액션",

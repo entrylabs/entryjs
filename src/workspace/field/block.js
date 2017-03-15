@@ -259,7 +259,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             Entry.do(
                 'separateBlock',
                 valueBlock
-            ).isPass(true);
+            ).isPass(true, true);
             valueBlock.view.bumpAway(30, 150);
         }
         this.updateValueBlock(block);
