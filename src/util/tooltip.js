@@ -58,7 +58,6 @@ Entry.Tooltip = function(data, opts) {
 
     p._convertDoms = function() {
         this.data.map(function(d) {
-            console.log(d.target);
             if (d.target instanceof Array)
                 d.target = Entry.getDom(d.target);
             var dom = $(d.target);
@@ -190,7 +189,6 @@ Entry.Tooltip = function(data, opts) {
             default:
                 break;
         }
-        console.log(edgeStyle);
         if (edgeStyle)
             data.dom.addClass(edgeStyle);
 

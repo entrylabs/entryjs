@@ -29,7 +29,6 @@ Entry.Restrictor = function() {
         if (domQuery instanceof Array)
             domQuery = this.processDomQuery(domQuery);
 
-        console.log(domQuery);
         if (!data.tooltip)
             data.tooltip = {
                 title: "액션",
@@ -73,7 +72,6 @@ Entry.Restrictor = function() {
     p.processDomQuery = function(domQuery) {
         var log = this._data.content.concat();
         log.shift();
-        console.log(log);
         if (domQuery instanceof Array) {
             domQuery = domQuery.map(function(q) {
                 if (q[0] === "&")
