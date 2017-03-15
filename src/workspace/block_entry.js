@@ -5817,18 +5817,14 @@ Entry.block = {
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
-            //    console.log("-----temptest------")
-            //var signal = script.getField("VALUE", script);
-            var signal = script.getValue("VALUE", script);
+            var signal = script.getField("VALUE", script);
             if (signal == 1)
             {
-                //    console.log("-----temp1 selected ");
                 return Entry.hw.getAnalogPortValue("temps1");
             }
 
             if (signal == 2)
             {
-                //     console.log("-----temp2 selected ");
                 return Entry.hw.getAnalogPortValue("temps2");
             }
         }
@@ -5860,7 +5856,7 @@ Entry.block = {
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
-            var signal = script.getValue("VALUE", script);
+            var signal = script.getField("VALUE", script);
             if (signal == 1)
             {
                 return Entry.hw.getAnalogPortValue("light1");
@@ -5899,7 +5895,7 @@ Entry.block = {
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
-            var signal = script.getValue("VALUE", script);
+            var signal = script.getField("VALUE", script);
             if (signal == 1)
             {
                 return Entry.hw.getDigitalPortValue("btn1");
