@@ -5874,6 +5874,90 @@ Entry.Engine = function() {
       }
       c.setVisible(!1);
     }
+<<<<<<< HEAD
+=======
+    return [b];
+  }, log:function(b) {
+    b instanceof Entry.Thread && (b = b.toJSON());
+    return [["thread", b]];
+  }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
+  e = Entry.cloneSimpleObject(c[b.addThread]);
+  e.followCmd = !0;
+  c[b.addThreadFromBlockMenu] = e;
+  c[b.destroyThread] = {do:function(b) {
+    (b instanceof Entry.Thread ? b.getFirstBlock() : this.editor.board.findBlock(b[0].id)).destroy(!0, !0);
+  }, state:function(b) {
+    b instanceof Entry.Thread || (b = this.editor.board.findBlock(b[0].id).thread);
+    return [b.toJSON()];
+  }, log:function(b, c) {
+    var e;
+    e = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
+    return [["block", e.pointer ? e.pointer() : e], ["thread", b.toJSON ? b.toJSON() : b], ["callerName", c]];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, restrict:function(b, c, e) {
+    e();
+  }, dom:["playground", "board", "&0"], undo:"addThread"};
+  c[b.destroyBlock] = {do:function(b) {
+    b = this.editor.board.findBlock(b);
+    b.doDestroy(!0);
+  }, state:function(b) {
+    b = this.editor.board.findBlock(b);
+    return [b.toJSON(), b.pointer()];
+  }, log:function(b) {
+    b = this.editor.board.findBlock(b);
+    return [["block", b.pointer ? b.pointer() : b]];
+  }, undo:"recoverBlock"};
+  c[b.recoverBlock] = {do:function(b, c) {
+    b = this.editor.board.code.createThread([b]).getFirstBlock();
+    this.editor.board.insert(b, c);
+  }, state:function(b) {
+    "string" !== typeof b && (b = b.id);
+    return [b];
+  }, log:function(b, c) {
+    b = this.editor.board.findBlock(b.id);
+    return [["block", b], ["pointer", c]];
+  }, undo:"destroyBlock"};
+  c[b.insertBlock] = {do:function(b, c, e) {
+    b = this.editor.board.findBlock(b);
+    this.editor.board.insert(b, c, e);
+  }, state:function(b, c) {
+    b = this.editor.board.findBlock(b);
+    c = [b];
+    c.push(b.targetPointer());
+    "string" !== typeof b && "basic" === b.getBlockType() && c.push(b.thread.getCount(b));
+    return c;
+  }, log:function(b, c, e) {
+    b = this.editor.board.findBlock(b);
+    c instanceof Array || (c = c.pointer());
+    b = [["block", b ? b.pointer() : ""], ["targetPointer", c]];
+    e && b.push(["count", e ? e : null]);
+    return b;
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, e, h) {
+    var d = !1, f = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !d && c && (d = !0, e(), f.init([{title:b.tooltip.title, content:b.tooltip.content, target:h.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
+      }}));
+    }});
+    return f;
+  }, showMe:function(b) {
+    console.log(b, this.dom);
+    b.fadeOutTooltip();
+    var c = Entry.Dom($('<svg id="globalSvg" width="10" height="10"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$(document.body)}), e = Entry.getDom(b.processDomQuery(this.dom)), d = e.getBoundingClientRect(), e = $(e.cloneNode(!0));
+    e.attr({transform:"translate(8,0)"});
+    c.append(e);
+    c.css({top:d.top, left:d.left});
+    e = Entry.getDom(b.processDomQuery(["playground", "board", "&1", "magnet"])).getBoundingClientRect();
+    c.velocity({top:e.top + 20, left:e.left + 20 - 8}, {duration:1200, complete:function() {
+      setTimeout(function() {
+        c.remove();
+        b.fadeInTooltip();
+      }, 500);
+    }, easing:"ease-in-out"});
+  }, dom:["playground", "board", "&0"]};
+  e = Entry.cloneSimpleObject(c[b.insertBlock]);
+  e.restrict = function(b, c, e) {
+    e();
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+    }});
+>>>>>>> origin/new/courseware
   };
   c.clearTimer = function() {
     clearInterval(this.ticker);
@@ -18728,6 +18812,12 @@ Entry.Restrictor = function() {
     }));
     return b;
   };
+  c.fadeOutTooltip = function() {
+    this.currentTooltip && this.currentTooltip.fadeOut();
+  };
+  c.fadeInTooltip = function() {
+    this.currentTooltip && this.currentTooltip.fadeIn();
+  };
 })(Entry.Restrictor.prototype);
 Entry.Tooltip = function(c, b) {
   this.init(c, b);
@@ -18752,6 +18842,7 @@ Entry.Tooltip = function(c, b) {
   };
   c.render = function() {
     if (!this._rendered) {
+      this.fadeIn();
       this._convertDoms();
       this.opts.dimmed && this.renderBG();
       var b = this.data[0].target;
@@ -18833,7 +18924,6 @@ Entry.Tooltip = function(c, b) {
     for (;this._indicators.length;) {
       this._indicators.pop().remove();
     }
-    Entry.Curtain.hide();
     this.opts.callBack && this.opts.callBack.call(this, b);
     Entry.removeEventListener("windowResized", this._resizeEventFunc);
   };
@@ -18842,6 +18932,12 @@ Entry.Tooltip = function(c, b) {
       return b.target;
     });
     Entry.Utils.restrictAction(b, this.dispose.bind(this));
+  };
+  c.fadeOut = function() {
+    $(document.body).addClass("hideTooltip");
+  };
+  c.fadeIn = function() {
+    $(document.body).removeClass("hideTooltip");
   };
 })(Entry.Tooltip.prototype);
 Entry.Variable = function(c) {

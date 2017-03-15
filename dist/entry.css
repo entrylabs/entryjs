@@ -6314,6 +6314,11 @@ input.entryObjectNameWorkspace:-moz-read-only {
   background-color: black;
   opacity: 0.5;
   z-index: 3000;
+  -webkit-transition: opacity 0.4s ease-in-out;
+  -moz-transition: opacity 0.4s ease-in-out;
+  -o-transition: opacity 0.4s ease-in-out;
+  -ms-transition: opacity 0.4s ease-in-out;
+  transition: opacity 0.4s ease-in-out;
 }
 .entryCurtainElem.top {
   width: 100%;
@@ -6331,6 +6336,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryCurtainElem.left {
   left: 0;
+}
+.hideTooltip > .entryCurtainElem {
+  opacity: 0;
 }
 #entryConsole {
   height: 100%;
@@ -6392,6 +6400,14 @@ input.entryObjectNameWorkspace:-moz-read-only {
   animation-name: stretch;
   animation-duration: 0.5s;
   animation-timing-function: ease-out;
+  -webkit-transition: opacity 0.4s ease-in-out;
+  -moz-transition: opacity 0.4s ease-in-out;
+  -o-transition: opacity 0.4s ease-in-out;
+  -ms-transition: opacity 0.4s ease-in-out;
+  transition: opacity 0.4s ease-in-out;
+}
+.hideTooltip > .entryTooltipWrapper {
+  opacity: 0;
 }
 .entryTooltip {
   position: absolute;

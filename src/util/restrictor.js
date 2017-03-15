@@ -81,5 +81,15 @@ Entry.Restrictor = function() {
             });
         }
         return domQuery;
-    }
+    };
+
+    p.fadeOutTooltip = function() {
+        if (this.currentTooltip)
+            this.currentTooltip.fadeOut();
+    };
+
+    p.fadeInTooltip = function() {
+        if (this.currentTooltip)
+            this.currentTooltip.fadeIn();
+    };
 })(Entry.Restrictor.prototype);

@@ -36,6 +36,11 @@
     animation-name: stretch;
     animation-duration: 0.5s;
     animation-timing-function: ease-out;
+    .transition(opacity 0.4s ease-in-out);
+}
+
+.hideTooltip>.entryTooltipWrapper {
+    opacity: 0;
 }
 
 @balloon-arrow-width: 25px;
