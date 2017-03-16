@@ -16197,7 +16197,7 @@ Entry.init = function(c, b) {
   this.createDom(c, this.type);
   this.loadInterfaceState();
   this.overridePrototype();
-  this.maxCloneLimit = 302;
+  this.maxCloneLimit = 360;
   this.cloudSavable = !0;
   this.startTime = (new Date).getTime();
   document.onkeydown = function(b) {
