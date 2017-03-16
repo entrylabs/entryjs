@@ -5846,17 +5846,14 @@ Entry.Commander = function(c) {
 })(Entry.Commander.prototype);
 (function(c) {
   var b = Entry.STATIC.COMMAND_TYPES, e;
-  c[b.addThread] = {do:function(b) {
-    return this.editor.board.code.createThread(b);
-  }, state:function(b) {
-    if (b.length) {
-      var c = b[0];
-      this.editor.board.findBlock(c.id) && (c.id = Entry.Utils.generateId());
-    }
-    return [b];
-  }, log:function(b) {
+  c[b.addThread] = {do:function(b, c) {
+    return this.editor.board.code.createThread(b, c);
+  }, state:function(b, c) {
+    void 0 === c && (c = this.editor.board.code.getThreadCount());
+    return [c];
+  }, log:function(b, c) {
     b instanceof Entry.Thread && (b = b.toJSON());
-    return [["thread", b]];
+    return [["blocks", b], ["index", c]];
   }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
   e = Entry.cloneSimpleObject(c[b.addThread]);
   e.showMe = function(b) {
@@ -5871,17 +5868,16 @@ Entry.Commander = function(c) {
   e.followCmd = !0;
   c[b.addThreadFromBlockMenu] = e;
   c[b.destroyThread] = {do:function(b) {
-    (b instanceof Entry.Thread ? b.getFirstBlock() : this.editor.board.findBlock(b[0].id)).destroy(!0, !0);
+    b instanceof Entry.Thread || (b = this.editor.board.code.getThread(b));
+    b.getFirstBlock().destroy(!0, !0);
   }, state:function(b) {
-    b instanceof Entry.Thread || (b = this.editor.board.findBlock(b[0].id).thread);
-    return [b.toJSON()];
-  }, log:function(b, c) {
-    var e;
-    e = b instanceof Entry.Thread ? b.getFirstBlock() : b[0];
-    return [["block", e.pointer ? e.pointer() : e], ["thread", b.toJSON ? b.toJSON() : b], ["callerName", c]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, restrict:function(b, c, e) {
-    e();
-  }, dom:["playground", "board", "&0"], undo:"addThread"};
+    b instanceof Entry.Thread || (b = this.editor.board.code.getThread(b));
+    var c = this.editor.board.code.getThreadIndex(b);
+    return [b.toJSON(), c];
+  }, log:function(b) {
+    b instanceof Entry.Thread && (b = this.editor.board.code.getThreadIndex(b));
+    return [["index", b]];
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"addThread"};
   c[b.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
     b.doDestroy(!0);
@@ -5976,23 +5972,41 @@ Entry.Commander = function(c) {
       });
     }
   };
+  e.followCmd = !0;
   c[b.separateBlockForDestroy] = e;
   c[b.moveBlock] = {do:function(b, c, e) {
     void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, e)) : b._updatePos();
   }, state:function(b) {
     b = this.editor.board.findBlock(b);
     return [b, b.x, b.y];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, e) {
-    e();
-    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, e, h) {
+    var d = !1, f = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !d && c && (d = !0, e(), f.init([{title:b.tooltip.title, content:b.tooltip.content, target:h.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
+      }}));
     }});
+    return f;
   }, validate:!1, log:function(b, c, e) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.view.x], ["y", b.view.y]];
-  }, undo:"moveBlock", dom:["playground", "board", "coord", "&1", "&2"]};
+  }, undo:"moveBlock", dom:["playground", "board", "&0"]};
   e = Entry.cloneSimpleObject(c[b.moveBlock]);
+  e.followCmd = !0;
+  e.restrict = function(b, c, e, h) {
+    var d = !1, f = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !d && c && (d = !0, e(), f.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
+        e();
+      }}));
+    }});
+    return f;
+  };
   c[b.moveBlockForDestroy] = e;
   e = Entry.cloneSimpleObject(c[b.moveBlock]);
+  e.restrict = function(b, c, e) {
+    e();
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+    }});
+  };
+  e.dom = ["playground", "board", "coord", "&1", "&2"];
   c[b.moveBlockFromBlockMenu] = e;
   c[b.cloneBlock] = {do:c[b.addThread].do, state:c[b.addThread].state, log:c[b.addThread].log, undo:"uncloneBlock"};
   c[b.uncloneBlock] = {do:c[b.destroyThread].do, state:c[b.destroyThread].state, log:c[b.destroyThread].log, undo:"cloneBlock"};
@@ -22645,8 +22659,8 @@ Entry.Thread = function(c, b, e) {
     return this._data.indexOf(b);
   };
   c.pointer = function(b, c) {
-    c = this.indexOf(c);
-    b.unshift(c);
+    b = b || [];
+    c && b.unshift(this.indexOf(c));
     c = this.parent;
     c instanceof Entry.Block && b.unshift(c.indexOfStatements(this));
     return this._code === c ? (b.unshift(this._code.indexOf(this)), c = this._data[0], b.unshift(c.y), b.unshift(c.x), b) : c.pointer(b);
@@ -25656,6 +25670,9 @@ Entry.PARAM = -1;
   c.getThreadIndex = function(b) {
     return this._data.indexOf(b);
   };
+  c.getThreadCount = function() {
+    return this._data.length;
+  };
   c.cloneThread = function(b, c) {
     b = b.clone(this, c);
     this._data.push(b);
@@ -25670,6 +25687,9 @@ Entry.PARAM = -1;
     c = this._data;
     b = c.indexOf(b);
     0 > b || c.splice(b, 1);
+  };
+  c.getThread = function(b) {
+    return this._data[b];
   };
   c.getThreads = function() {
     return this._data.map(function(b) {

@@ -194,6 +194,10 @@ Entry.PARAM = -1;
         return this._data.indexOf(thread);
     };
 
+    p.getThreadCount = function() {
+        return this._data.length;
+    };
+
     p.cloneThread = function(thread, mode) {
         var newThread = thread.clone(this, mode);
         this._data.push(newThread);
@@ -214,6 +218,10 @@ Entry.PARAM = -1;
         // case of statement thread
         if (index < 0) return;
         data.splice(index, 1);
+    };
+
+    p.getThread = function(index) {
+        return this._data[index];
     };
 
     p.getThreads = function() {

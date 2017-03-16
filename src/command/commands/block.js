@@ -12,22 +12,20 @@ goog.require("Entry.Utils");
     var obj;
 
     c[COMMAND_TYPES.addThread] = {
-        do: function(thread) {
-            return this.editor.board.code.createThread(thread);
+        do: function(blocks, index) {
+            return this.editor.board.code.createThread(blocks, index);
         },
-        state: function(thread) {
-            if (thread.length) {
-                var block = thread[0];
-                if (this.editor.board.findBlock(block.id))
-                    block.id = Entry.Utils.generateId();
-            }
-            return [thread];
+        state: function(blocks, index) {
+            if (index === undefined)
+                index = this.editor.board.code.getThreadCount();
+            return [index];
         },
-        log: function(thread) {
-            if (thread instanceof Entry.Thread)
-                thread = thread.toJSON();
+        log: function(blocks, index) {
+            if (blocks instanceof Entry.Thread)
+                blocks = blocks.toJSON();
             return [
-                ['thread', thread]
+                ['blocks', blocks],
+                ['index', index]
             ];
         },
         undo: "destroyThread",
@@ -58,37 +56,28 @@ goog.require("Entry.Utils");
     c[COMMAND_TYPES.addThreadFromBlockMenu] = obj;
 
     c[COMMAND_TYPES.destroyThread] = {
-        do: function(thread) {
-            var block;
-            if (thread instanceof Entry.Thread)
-                block = thread.getFirstBlock();
-            else
-                block = this.editor.board.findBlock(thread[0].id);
+        do: function(thread) {// thread can be index
+            if (!(thread instanceof Entry.Thread))
+                thread = this.editor.board.code.getThread(thread);
+            var block = thread.getFirstBlock();
             block.destroy(true, true);
         },
         state: function(thread) {
             if (!(thread instanceof Entry.Thread))
-                thread = this.editor.board.findBlock(thread[0].id).thread;
-            return [thread.toJSON()];
+                thread = this.editor.board.code.getThread(thread);
+            var index = this.editor.board.code.getThreadIndex(thread);
+            return [thread.toJSON(), index];
         },
-        log: function(thread, callerName) {
-            var block;
-            if (thread instanceof Entry.Thread) {
-                block = thread.getFirstBlock();
-            } else block = thread[0];
+        log: function(threadIndex) {
+            if (threadIndex instanceof Entry.Thread)
+                threadIndex =this.editor.board.code.getThreadIndex(threadIndex);
 
             return [
-                ['block', block.pointer ?  block.pointer() : block],
-                ['thread', thread.toJSON ? thread.toJSON() : thread],
-                ['callerName', callerName]
+                ['index', threadIndex]
             ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
-        restrict: function(data, domQuery, callback) {
-            callback();
-        },
-        dom: ['playground', 'board', '&0'],
         undo: "addThread"
     };
 
@@ -320,6 +309,7 @@ goog.require("Entry.Utils");
             }
         )
     };
+    obj.followCmd = true;
     c[COMMAND_TYPES.separateBlockForDestroy] = obj;
 
     c[COMMAND_TYPES.moveBlock] = {
@@ -340,17 +330,34 @@ goog.require("Entry.Utils");
             ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        restrict: function(data, domQuery, callback) {
-            callback();
-            return new Entry.Tooltip([{
+        restrict: function(data, domQuery, callback, restrictor) {
+            var isDone = false;
+            var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
                 target: domQuery
             }], {
-                indicator: true,
-                callBack: function() {
+                dimmed: true,
+                restrict: true,
+                callBack: function(isFromInit) {
+                    if (isDone || !isFromInit)
+                        return;
+                    isDone = true;
+                    callback();
+                    tooltip.init([{
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: restrictor.processDomQuery([
+                            'playground', 'board', '&1', 'magnet'
+                        ])
+                    }], {
+                        indicator: true,
+                        callBack: function() {
+                        }
+                    });
                 }
             });
+            return tooltip;
         },
         validate: false,
         log: function(block, x, y) {
@@ -361,13 +368,57 @@ goog.require("Entry.Utils");
             ];
         },
         undo: "moveBlock",
-        dom: ['playground', 'board', 'coord', '&1', '&2']
+        dom: ['playground', 'board', '&0']
     };
 
     obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.moveBlock])
+    obj.followCmd = true;
+    obj.restrict = function(data, domQuery, callback, restrictor) {
+        var isDone = false;
+        var tooltip = new Entry.Tooltip([{
+            title: data.tooltip.title,
+            content: data.tooltip.content,
+            target: domQuery
+        }], {
+            dimmed: true,
+            restrict: true,
+            callBack: function(isFromInit) {
+                if (isDone || !isFromInit)
+                    return;
+                isDone = true;
+                callback();
+                tooltip.init([{
+                    title: data.tooltip.title,
+                    content: data.tooltip.content,
+                    target: [
+                        'playground', 'board', 'trashcan'
+                    ]
+                }], {
+                    indicator: true,
+                    callBack: function() {
+                        callback();
+                    }
+                });
+            }
+        });
+        return tooltip;
+    };
     c[COMMAND_TYPES.moveBlockForDestroy] = obj;
 
-    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.moveBlock])
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.moveBlock]);
+    obj.restrict = function(data, domQuery, callback) {
+        callback();
+        return new Entry.Tooltip([{
+            title: data.tooltip.title,
+            content: data.tooltip.content,
+            target: domQuery
+        }], {
+            indicator: true,
+            callBack: function() {
+            }
+        });
+    };
+    obj.dom = ['playground', 'board', 'coord', '&1', '&2']
     c[COMMAND_TYPES.moveBlockFromBlockMenu] = obj;
 
     c[COMMAND_TYPES.cloneBlock] = {

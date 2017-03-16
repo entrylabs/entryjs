@@ -246,8 +246,10 @@ Entry.Thread = function(thread, code, parent) {
     };
 
     p.pointer = function(pointer, block) {
-        var index = this.indexOf(block);
-        pointer.unshift(index);
+        pointer = pointer || [];
+        if (block)
+            pointer.unshift(this.indexOf(block));
+
         var parent = this.parent;
 
         if (parent instanceof Entry.Block)
