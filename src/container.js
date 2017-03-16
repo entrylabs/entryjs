@@ -403,7 +403,8 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
             if(parser && parser._onError) {
                 if(sObject && (object.id != sObject.id)) {
                     if(!Entry.scene.isSceneCloning) {
-                        try { workspace._syncTextCode(); } catch(e) {}
+                        try { workspace._syncTextCode(); }
+                        catch(e) {}
                         if(parser && !parser._onError) {
                             Entry.container.selectObject(object.id, true);
                             return
@@ -419,7 +420,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
                 }
             }
             else {
-                if(sObject && (object.id != sObject.id)) {
+                if (sObject && (object.id != sObject.id)) {
                     if(!Entry.scene.isSceneCloning) {
                         try { workspace._syncTextCode(); } catch(e) {}
                         if(parser && parser._onError) {

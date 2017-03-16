@@ -182,10 +182,6 @@ Entry.Scroller.RADIUS = 7;
             };
         x = Math.max(-bBox.width + Entry.BOARD_PADDING - bBox.x, x);
         y = Math.max(-bBox.height + Entry.BOARD_PADDING - bBox.y, y);
-        x = Math.min(
-            svgDom.width() - Entry.BOARD_PADDING - bBox.x,
-            x
-        );
         y = Math.min(
             svgDom.height() - Entry.BOARD_PADDING - bBox.y,
             y
@@ -193,9 +189,9 @@ Entry.Scroller.RADIUS = 7;
 
         this._scroll(x,y);
         if (skipCommand !== true) {
-            if (!this._diffs) {
+            if (!this._diffs)
                 this._diffs = [0,0];
-            }
+
             this._diffs[0] += x;
             this._diffs[1] += y;
 
