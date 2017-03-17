@@ -16,7 +16,7 @@ goog.require("Entry.Utils");
             return this.editor.board.code.createThread(blocks, index);
         },
         state: function(blocks, index) {
-            if (index === undefined)
+            if (index === undefined || index === null)
                 index = this.editor.board.code.getThreadCount();
             return [index];
         },
@@ -50,7 +50,7 @@ goog.require("Entry.Utils");
             function() {
                 restrictor.fadeInTooltip();
             }
-        )
+        );
     };
     obj.followCmd = true;
     c[COMMAND_TYPES.addThreadFromBlockMenu] = obj;
