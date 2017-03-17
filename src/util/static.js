@@ -46,13 +46,14 @@ Entry.STATIC = {
         destroyThreads: 114,
         addThreads: 115,
         recoverBlockBelow: 116,
-
         addThreadFromBlockMenu: 117,
         insertBlockFromBlockMenu: 118,
         moveBlockFromBlockMenu: 119,
-
         separateBlockForDestroy: 120,
         moveBlockForDestroy: 121,
+        insertBlockFromBlockMenuFollowSeparate: 122,
+        insertBlockFollowSeparate: 123,
+
 
         selectObject: 201,
         objectEditButtonClick: 202,
@@ -61,23 +62,29 @@ Entry.STATIC = {
         objectAddSound: 205,
         objectRemoveSound: 206,
 
+
         'do': 301,
         'undo': 302,
         'redo': 303,
+
 
         editPicture: 401,
         uneditPicture: 402,
         processPicture: 403,
         unprocessPicture: 404,
 
+
         toggleRun: 501,
         toggleStop: 502,
 
+
         containerSelectObject: 601,
+
 
         playgroundChangeViewMode: 701,
         playgroundClickAddPicture: 702,
         playgroundClickAddSound: 703,
+
 
         variableContainerSelectFilter: 801,
         variableContainerClickVariableAddButton: 802,

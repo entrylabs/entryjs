@@ -261,3 +261,9 @@ Entry.StateManager.prototype.addActivity = function (activityType) {
 Entry.StateManager.prototype.getUndoStack = function () {
     return this.undoStack_.slice(0);
 };
+
+Entry.StateManager.prototype.changeLastCommandType = function (type) {
+    var cmd = this.getLastCommand();
+    if (cmd) cmd.message = type;
+    return cmd;
+};
