@@ -301,6 +301,7 @@ Entry.Func.setupMenuCode = function() {
         type: "function_field_string",
         category: CATEGORY,
         x: -9999,
+        copyable: false,
         params: [
             {type: this.requestParamBlock("string")}
         ]
@@ -308,6 +309,7 @@ Entry.Func.setupMenuCode = function() {
 
     this._fieldBoolean = menuCode.createThread([{
         type: "function_field_boolean",
+        copyable: false,
         category: CATEGORY,
         x: -9999,
         params: [

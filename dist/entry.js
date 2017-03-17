@@ -17504,8 +17504,8 @@ Entry.Func.setupMenuCode = function() {
   if (c) {
     var c = c.getBlockMenu(), b = c.code;
     this._fieldLabel = b.createThread([{type:"function_field_label", category:"func", x:-9999}]).getFirstBlock();
-    this._fieldString = b.createThread([{type:"function_field_string", category:"func", x:-9999, params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock();
-    this._fieldBoolean = b.createThread([{type:"function_field_boolean", category:"func", x:-9999, params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock();
+    this._fieldString = b.createThread([{type:"function_field_string", category:"func", x:-9999, copyable:!1, params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock();
+    this._fieldBoolean = b.createThread([{type:"function_field_boolean", copyable:!1, category:"func", x:-9999, params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock();
     this.menuCode = b;
     c.align();
   }
