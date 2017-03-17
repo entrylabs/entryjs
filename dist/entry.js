@@ -11284,16 +11284,16 @@ Entry.TextCodingUtil = {};
       return b;
     }
   };
-  c.isVariableNumber = function(b, c) {
-    var d = Entry.playground.object, e = Entry.variableContainer.variables_, g;
+  c.isVariableNumber = function(b, f) {
+    var c = Entry.playground.object, e = Entry.variableContainer.variables_, g;
     for (g in e) {
       var h = e[g];
-      if ("global" == c) {
+      if ("global" == f) {
         if (null === h.object_ && h.id_ == b && Entry.Utils.isNumber(h.value_)) {
           return !0;
         }
       } else {
-        if ("local" == c && h.object_ === d.id && h.id_ == b && Entry.Utils.isNumber(h.value_)) {
+        if ("local" == f && h.object_ === c.id && h.id_ == b && Entry.Utils.isNumber(h.value_)) {
           return !0;
         }
       }
@@ -17511,30 +17511,23 @@ Entry.Func.setupMenuCode = function() {
   }
 };
 Entry.Func.refreshMenuCode = function() {
-  if (Entry.playground.mainWorkspace) {
-    this.menuCode || this.setupMenuCode();
-    var c = Entry.block[this._fieldString.params[0].type].changeEvent._listeners.length;
-    2 < c && this._fieldString.params[0].changeType(this.requestParamBlock("string"));
-    c = Entry.block[this._fieldBoolean.params[0].type].changeEvent._listeners.length;
-    2 < c && this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
-  }
+  Entry.playground.mainWorkspace && (this.menuCode || this.setupMenuCode(), this._fieldString.params[0].changeType(this.requestParamBlock("string")), this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean")));
 };
 Entry.Func.requestParamBlock = function(c) {
-  var b = Entry.generateHash(), f;
+  var b;
   switch(c) {
     case "string":
-      f = Entry.block.function_param_string;
+      b = Entry.block.function_param_string;
       break;
     case "boolean":
-      f = Entry.block.function_param_boolean;
+      b = Entry.block.function_param_boolean;
       break;
     default:
       return null;
   }
-  b = c + "Param_" + b;
-  c = Entry.Func.createParamBlock(b, f, c);
-  Entry.block[b] = c;
-  return b;
+  var f = c + "Param_" + Entry.generateHash();
+  Entry.block[f] = Entry.Func.createParamBlock(f, b, c);
+  return f;
 };
 Entry.Func.registerParamBlock = function(c) {
   -1 < c.indexOf("stringParam") ? Entry.Func.createParamBlock(c, Entry.block.function_param_string, c) : -1 < c.indexOf("booleanParam") && Entry.Func.createParamBlock(c, Entry.block.function_param_boolean, c);
@@ -17891,8 +17884,8 @@ Entry.HW = function() {
   this.connectTrial = 0;
   this.isFirstConnect = !0;
   this.requireVerion = "v1.6.1";
-  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.5_Setup.exe";
-  this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.4.dmg";
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.6_Setup.exe";
+  this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.6.dmg";
   this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
