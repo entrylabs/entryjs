@@ -25665,7 +25665,7 @@ Entry.PARAM = -1;
       return console.error("blocks must be array");
     }
     b = new Entry.Thread(b, this);
-    void 0 === c ? this._data.push(b) : this._data.insert(b, c);
+    void 0 === c || null === c ? this._data.push(b) : this._data.insert(b, c);
     this.changeEvent.notify();
     return b;
   };

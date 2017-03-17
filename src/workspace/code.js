@@ -183,7 +183,7 @@ Entry.PARAM = -1;
             return console.error("blocks must be array");
 
         var thread = new Entry.Thread(blocks, this);
-        if (index === undefined) this._data.push(thread);
+        if (index === undefined || index === null) this._data.push(thread);
         else this._data.insert(thread, index);
 
         this.changeEvent.notify();
