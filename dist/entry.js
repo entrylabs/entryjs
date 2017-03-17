@@ -11065,15 +11065,15 @@ Entry.TextCodingUtil = {};
       f[b.type] = [], g = {}, g.start = b.start, g.end = b.end, f[b.type].push(g);
     }
   };
-  c.assembleRepeatWhileTrueBlock = function(b, f) {
-    var c = "";
+  c.assembleRepeatWhileTrueBlock = function(b, c) {
+    var d = "";
     if ("repeat_while_true" == b.data.type) {
-      var c = f.split(" "), e = c.length - 1, g = c[e];
-      "until" == g ? (c.splice(1, 0, "not"), c.splice(e + 1, 1), c = c.join(" ")) : "while" == g ? (c.splice(e, 1), c = c.join(" ")) : c = f;
+      var d = c.split(" "), e = d.length - 1, g = d[e];
+      "until" == g ? (d.splice(1, 0, "not"), d.splice(e + 1, 1), d = d.join(" ")) : "while" == g ? (d.splice(e, 1), d = d.join(" ")) : d = c;
     } else {
-      c = f;
+      d = c;
     }
-    return c;
+    return d;
   };
   c.isJudgementBlock = function(b) {
     return "is_clicked" == b || "is_press_some_key" == b || "reach_something" == b || "boolean_basic_operator" == b || "boolean_and" == b || "boolean_or" == b || "boolean_not" == b ? !0 : !1;
@@ -15863,8 +15863,9 @@ Entry.Commander = function(c) {
   }, state:function() {
   }, log:function(b) {
     return [["callerName", b]];
-  }, restrict:function(b, c, e) {
-    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c, direction:"down"}], {restrict:!0, dimmed:!0});
+  }, restrict:function(b, c, e, g) {
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(b) {
+    }});
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
   c[b.toggleStop] = {do:function(b) {
     Entry.engine.toggleStop();
@@ -17450,7 +17451,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
   };
   c.registerAchievement = function(b) {
     this.isForEdit && this.watchingBlocks.push(b);
-    b.params[1] && this.goals.indexOf(0 > b.params[0]) && this.goals.push(b.params[0]);
+    b.params[1] && this.goals.indexOf(0 > b.params[0] + "") && this.goals.push(b.params[0] + "");
     this.reset();
   };
   c.reRegisterAll = function() {
@@ -18741,6 +18742,11 @@ Entry.Stage.prototype.getBoundRect = function(c) {
 };
 Entry.Stage.prototype.updateBoundRect = function(c) {
   return this._boundRect = this.canvas.canvas.getBoundingClientRect();
+};
+Entry.Stage.prototype.getDom = function(c) {
+  if ("canvas" === c.shift()) {
+    return this.canvas.canvas;
+  }
 };
 Entry.fuzzy = {};
 (function(c) {

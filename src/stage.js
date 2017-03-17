@@ -727,3 +727,9 @@ Entry.Stage.prototype.updateBoundRect = function (e) {
     return this._boundRect = this.canvas.canvas.getBoundingClientRect();
 };
 
+Entry.Stage.prototype.getDom = function(query) {
+    var key = query.shift();
+    if (key === "canvas")
+        return this.canvas.canvas;
+}
+
