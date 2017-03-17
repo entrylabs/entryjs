@@ -108,8 +108,8 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     p.registerAchievement = function(block) {
         if (this.isForEdit)
             this.watchingBlocks.push(block);
-        if (block.params[1] && this.goals.indexOf(block.params[0] < 0))
-            this.goals.push(block.params[0]);
+        if (block.params[1] && this.goals.indexOf(block.params[0] + "" < 0))
+            this.goals.push(block.params[0] + "");
         this.reset();
     };
 

@@ -6102,8 +6102,9 @@ Entry.Commander = function(c) {
   }, state:function() {
   }, log:function(b) {
     return [["callerName", b]];
-  }, restrict:function(b, c, f) {
-    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c, direction:"down"}], {restrict:!0, dimmed:!0});
+  }, restrict:function(b, c, f, g) {
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(b) {
+    }});
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
   c[b.toggleStop] = {do:function(b) {
     Entry.engine.toggleStop();
@@ -8052,7 +8053,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
   };
   c.registerAchievement = function(b) {
     this.isForEdit && this.watchingBlocks.push(b);
-    b.params[1] && this.goals.indexOf(0 > b.params[0]) && this.goals.push(b.params[0]);
+    b.params[1] && this.goals.indexOf(0 > b.params[0] + "") && this.goals.push(b.params[0] + "");
     this.reset();
   };
   c.reRegisterAll = function() {
@@ -15489,6 +15490,11 @@ Entry.Stage.prototype.getBoundRect = function(c) {
 };
 Entry.Stage.prototype.updateBoundRect = function(c) {
   return this._boundRect = this.canvas.canvas.getBoundingClientRect();
+};
+Entry.Stage.prototype.getDom = function(c) {
+  if ("canvas" === c.shift()) {
+    return this.canvas.canvas;
+  }
 };
 Entry.StampEntity = function(c, b) {
   this.parent = c;
