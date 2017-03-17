@@ -24269,7 +24269,6 @@ Entry.Scroller.RADIUS = 7;
       var e = this.board.svgBlockGroup.getBoundingClientRect(), g = this.board.svgDom, h = e.left - this.board.offset().left, k = e.top - this.board.offset().top, l = e.height;
       b = Math.max(-e.width + Entry.BOARD_PADDING - h, b);
       c = Math.max(-l + Entry.BOARD_PADDING - k, c);
-      b = Math.min(g.width() - Entry.BOARD_PADDING - h, b);
       c = Math.min(g.height() - Entry.BOARD_PADDING - k, c);
       this._scroll(b, c);
       !0 !== d && (this._diffs || (this._diffs = [0, 0]), this._diffs[0] += b, this._diffs[1] += c, this._scrollCommand("scrollBoard", this._diffs[0], this._diffs[1], !0));
