@@ -41,6 +41,14 @@
     "karma-phantomjs-launcher": "^0.2.0",
     "phantomjs": "^1.9.17",
     "mocha": "^2.5.3"
-
+  },
+  "scripts": {
+    "build:win": "build --windows --ia32"
+  },
+  "build": {
+    "appId": "MODI_Entry",
+    "files": [
+      "**/*"
+    ]
   }
 }

@@ -556,7 +556,30 @@ EntryStatic.getAllBlocks = function() {
                 "smartBoard_get_digital_value",
                 "smartBoard_toggle_led",
                 "smartBoard_toggle_pwm",
-                "smartBoard_convert_scale"
+                "smartBoard_convert_scale",
+
+                //MODI
+                "modi_microphone_value",
+                "modi_environment_value",
+                "modi_dial_value",
+                "modi_gyroscope_value",
+                "modi_button_value",
+                "modi_is_button_touch",
+                "modi_button_true",
+                "modi_button_false",
+                "modi_infrared_value",
+                "modi_ultrasonic_value",
+                "modi_set_motor_value",
+                "modi_change_motor_upper_value",
+                "modi_change_motor_bottom_value",
+                "modi_clear_led",
+                "modi_set_led_rgb",
+                "modi_set_led_color",
+                "modi_set_basic_speaker",
+                "modi_set_custom_speaker",
+                "modi_change_speaker_frequence",
+                "modi_change_speaker_volume",
+                "modi_print_display_by_value"
             ]
         }
     ]
