@@ -26038,7 +26038,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
               b.preventDefault();
               break;
             case 67:
-              q && !q.isInBlockMenu && q.block.isDeletable() && q.block.copyToClipboard();
+              q && !q.isInBlockMenu && q.block.isDeletable() && q.block.isCopyable() && q.block.copyToClipboard();
               break;
             case 88:
               !r && q && !q.isInBlockMenu && q.block.isDeletable() && function(b) {
