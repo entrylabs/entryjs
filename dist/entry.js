@@ -5798,8 +5798,9 @@ Entry.Commander = function(c) {
     Entry.stateManager && !0 !== d.skipUndoStack && (f = Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, d.undo].concat(d.state.apply(this, c))));
     d = Entry.Command[b].do.apply(this, c);
     this.doEvent.notify(b, c);
+    var g = f ? f.id : null;
     return {value:d, isPass:function(b, c) {
-      this.isPassById(f.id, b, c);
+      this.isPassById(g, b, c);
     }.bind(this)};
   };
   c.undo = function() {
@@ -5829,7 +5830,7 @@ Entry.Commander = function(c) {
     }
   };
   c.isPassById = function(b, c, d) {
-    Entry.stateManager && (c = void 0 === c ? !0 : c, b = Entry.stateManager.getLastCommandById(b)) && (b.isPass = c, d && (b.skipCount = !!d));
+    b && Entry.stateManager && (c = void 0 === c ? !0 : c, b = Entry.stateManager.getLastCommandById(b)) && (b.isPass = c, d && (b.skipCount = !!d));
   };
   c.addReporter = function(b) {
     b.logEventListener = this.logEvent.attach(b, b.add);
@@ -5849,7 +5850,9 @@ Entry.Commander = function(c) {
   c[b.addThread] = {do:function(b, c) {
     return this.editor.board.code.createThread(b, c);
   }, state:function(b, c) {
-    void 0 === c && (c = this.editor.board.code.getThreadCount());
+    if (void 0 === c || null === c) {
+      c = this.editor.board.code.getThreadCount();
+    }
     return [c];
   }, log:function(b, c) {
     b instanceof Entry.Thread && (b = b.toJSON());
@@ -6146,7 +6149,7 @@ Entry.Commander = function(c) {
     e.scale = c.scale;
     return [["objectId", b], ["picture", e]];
   }, dom:[".btn_confirm_modal"], restrict:function(b, c, f) {
-    c = new Entry.Tooltip([{content:"\uc5ec\uae30 \ubc11\uc5d0 \ub07c\uc6cc\ub123\uc73c\uc148", target:".btn_confirm_modal", direction:"right"}], {callBack:f, dimmed:!0, restrict:!0});
+    c = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:".btn_confirm_modal"}], {restrict:!0, dimmed:!0, callBack:f});
     Entry.dispatchEvent("openPictureManager", b.content[2][1]._id, c.render.bind(c));
     return c;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"objectRemovePicture"};

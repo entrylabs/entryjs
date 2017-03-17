@@ -69,14 +69,15 @@ goog.require("Entry.STATIC");
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
             var tooltip = new Entry.Tooltip([{
-                content: "여기 밑에 끼워넣으셈",
+                title: data.tooltip.title,
+                content: data.tooltip.content,
                 target: '.btn_confirm_modal',
-                direction: "right"
             }], {
-                callBack: callback,
+                restrict: true,
                 dimmed: true,
-                restrict: true
+                callBack: callback,
             });
+
             Entry.dispatchEvent(
                 'openPictureManager',
                 data.content[2][1]._id,
