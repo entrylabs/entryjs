@@ -48,6 +48,7 @@ goog.require("Entry.STATIC");
             Entry.container
                 .getObject(objectId)
                 .addPicture(picture);
+            Entry.dispatchEvent('dismissModal');
         },
         state: function(objectId, picture) {
             return [objectId, picture];

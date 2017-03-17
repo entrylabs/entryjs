@@ -34,7 +34,7 @@ goog.require("Entry.Utils");
         dom: ['playground', 'blockMenu', '&0']
     };
 
-    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.addThread])
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.addThread]);
     obj.showMe = function(restrictor) {
         if (restrictor.isTooltipFaded())
             return;

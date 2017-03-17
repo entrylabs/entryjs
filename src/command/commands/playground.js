@@ -40,7 +40,24 @@ goog.require("Entry.STATIC");
             return [];
         },
         validate: false,
-        skipUndoStack: true,
+        //skipUndoStack: true,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: "playgroundClickAddPictureCancel",
+        dom: ['playground', 'pictureAddButton']
+    };
+
+    c[COMMAND_TYPES.playgroundClickAddPictureCancel] = {
+        do: function() {
+            Entry.dispatchEvent('dismissModal');
+        },
+        state: function() {
+            return [];
+        },
+        log: function() {
+            return [];
+        },
+        validate: false,
+        //skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "",
         dom: ['playground', 'pictureAddButton']

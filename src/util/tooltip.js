@@ -49,7 +49,7 @@ Entry.Tooltip = function(data, opts) {
             this.renderBG();
 
         var datum = this.data[0].target;
-        if (typeof datum !== 'string' && datum.length) {
+        if (datum && typeof datum !== 'string' && datum.length) {
             this.opts.restrict && this.opts.dimmed && Entry.Curtain.show(datum.get(0));
             this.renderTooltips();
             this._rendered = true;
