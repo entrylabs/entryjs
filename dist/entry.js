@@ -15863,9 +15863,6 @@ Entry.Commander = function(c) {
   }, state:function() {
   }, log:function(b) {
     return [["callerName", b]];
-  }, restrict:function(b, c, e, g) {
-    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(b) {
-    }});
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
   c[b.toggleStop] = {do:function(b) {
     Entry.engine.toggleStop();

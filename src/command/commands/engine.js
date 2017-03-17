@@ -20,21 +20,6 @@ goog.require("Entry.STATIC");
                 ['callerName', callerName]
             ];
         },
-        restrict: function(data, domQuery, callback, restrictor) {
-            var isDone = false;
-            var tooltip = new Entry.Tooltip([{
-                title: data.tooltip.title,
-                content: data.tooltip.content,
-                target: domQuery
-            }], {
-                dimmed: true,
-                restrict: true,
-                callBack: function(isFromInit) {
-                    //Entry.Curtain.show(Entry.getDom(['stage', 'canvas']))
-                }
-            });
-            return tooltip;
-        },
         skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "toggleStop",
