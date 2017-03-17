@@ -15800,8 +15800,9 @@ Entry.Commander = function(c) {
     Entry.stateManager && !0 !== d.skipUndoStack && (e = Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, d.undo].concat(d.state.apply(this, c))));
     d = Entry.Command[b].do.apply(this, c);
     this.doEvent.notify(b, c);
+    var g = e ? e.id : null;
     return {value:d, isPass:function(b, c) {
-      this.isPassById(e.id, b, c);
+      this.isPassById(g, b, c);
     }.bind(this)};
   };
   c.undo = function() {
@@ -15831,7 +15832,7 @@ Entry.Commander = function(c) {
     }
   };
   c.isPassById = function(b, c, d) {
-    Entry.stateManager && (c = void 0 === c ? !0 : c, b = Entry.stateManager.getLastCommandById(b)) && (b.isPass = c, d && (b.skipCount = !!d));
+    b && Entry.stateManager && (c = void 0 === c ? !0 : c, b = Entry.stateManager.getLastCommandById(b)) && (b.isPass = c, d && (b.skipCount = !!d));
   };
   c.addReporter = function(b) {
     b.logEventListener = this.logEvent.attach(b, b.add);

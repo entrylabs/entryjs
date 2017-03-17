@@ -56,11 +56,12 @@ Entry.Commander = function(injectType) {
         }
         var value = Entry.Command[commandType].do.apply(this, argumentArray);
         this.doEvent.notify(commandType, argumentArray);
+        var id = state ? state.id : null;
 
         return {
             value: value,
             isPass: function(isPass, skipCount) {
-                this.isPassById(state.id, isPass, skipCount);
+                this.isPassById(id, isPass, skipCount);
             }.bind(this)
         };
     };
@@ -123,7 +124,7 @@ Entry.Commander = function(injectType) {
     };
 
     p.isPassById = function(id, isPass, skipCount) {
-        if (!Entry.stateManager)
+        if (!id || !Entry.stateManager)
             return;
 
         isPass = isPass === undefined ? true : isPass;
