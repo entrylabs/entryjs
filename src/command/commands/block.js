@@ -77,6 +77,9 @@ goog.require("Entry.Utils");
             ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        restrict: function(data, domQuery, callback) {
+            callback();
+        },
         validate: false,
         undo: "addThread"
     };

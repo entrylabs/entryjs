@@ -5877,7 +5877,9 @@ Entry.Commander = function(c) {
   }, log:function(b) {
     b instanceof Entry.Thread && (b = this.editor.board.code.getThreadIndex(b));
     return [["index", b]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"addThread"};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, e) {
+    e();
+  }, validate:!1, undo:"addThread"};
   c[b.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
     b.doDestroy(!0);
