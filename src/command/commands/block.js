@@ -193,12 +193,16 @@ goog.require("Entry.Utils");
                 function() {
                     restrictor.fadeInTooltip();
                 }
-            )
+            );
         },
         dom: ['playground', 'board', '&0']
     };
 
-    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlock])
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlock]);
+    obj.followCmd = true;
+    c[COMMAND_TYPES.insertBlockFollowSeparate] = obj;
+
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlock]);
     obj.restrict = function(data, domQuery, callback) {
         callback();
         return new Entry.Tooltip([{
@@ -210,9 +214,13 @@ goog.require("Entry.Utils");
             callBack: function() {
             }
         });
-    }
-    obj.dom = ['playground', 'board', '&1', 'magnet']
+    };
+    obj.dom = ['playground', 'board', '&1', 'magnet'];
     c[COMMAND_TYPES.insertBlockFromBlockMenu] = obj;
+
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlockFromBlockMenu]);
+    obj.followCmd = true;
+    c[COMMAND_TYPES.insertBlockFromBlockMenuFollowSeparate] = obj;
 
     c[COMMAND_TYPES.separateBlock] = {
         do: function(block, dragMode, y) {
@@ -292,6 +300,7 @@ goog.require("Entry.Utils");
         });
         return tooltip;
     };
+
     obj.showMe = function(restrictor) {
         if (restrictor.isTooltipFaded())
             return;

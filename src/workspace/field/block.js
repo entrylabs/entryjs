@@ -256,10 +256,22 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         } else {
             this._destroyObservers();
             valueBlock.view._toGlobalCoordinate();
+            var cmd = Entry.stateManager.getLastCommand();
+            if (cmd) {
+                if (cmd.message === Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenu)
+                    Entry.stateManager.changeLastCommandType(
+                        Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenuFollowSeparate
+                    );
+                if (cmd.message === Entry.STATIC.COMMAND_TYPES.insertBlock)
+                    Entry.stateManager.changeLastCommandType(
+                        Entry.STATIC.COMMAND_TYPES.insertBlockFollowSeparate
+                    );
+            }
+
             Entry.do(
                 'separateBlock',
                 valueBlock
-            ).isPass(true, true);
+            ).isPass(true);
             valueBlock.view.bumpAway(30, 150);
         }
         this.updateValueBlock(block);

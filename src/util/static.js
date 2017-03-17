@@ -50,6 +50,8 @@ Entry.STATIC = {
         addThreadFromBlockMenu: 117,
         insertBlockFromBlockMenu: 118,
         moveBlockFromBlockMenu: 119,
+        insertBlockFromBlockMenuFollowSeparate: 120,
+        insertBlockFollowSeparate: 121,
 
         separateBlockForDestroy: 120,
         moveBlockForDestroy: 121,
