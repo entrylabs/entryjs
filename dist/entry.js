@@ -2659,7 +2659,7 @@ Entry.block.cobl_7_segment = function(c, b) {
   Entry.hw.setDigitalPortValue("7SEG", c);
   return b.callReturn();
 };
-Entry.coconut = {PORT_MAP:{leftFloorValue:0, rightFloorValue:0, BothFloorDetection:0, leftProximityValue:0, rightProximityValue:0, BothProximityDetection:0, obstacleDetection:0, light:0, temp:0, extIrA2:0, extIrA3:0}, setZero:function() {
+Entry.coconut = {PORT_MAP:{leftFloorValue:0, rightFloorValue:0, BothFloorDetection:0, leftProximityValue:0, rightProximityValue:0, BothProximityDetection:0, obstacleDetection:0, light:0, temp:0, extA2:0, extA3:0}, setZero:function() {
   var c = Entry.coconut.PORT_MAP, b = Entry.hw.sendQueue, e;
   for (e in c) {
     b[e] = c[e];
@@ -2689,6 +2689,185 @@ Entry.coconut = {PORT_MAP:{leftFloorValue:0, rightFloorValue:0, BothFloorDetecti
   b.msgValue = c;
 }, clearQueue:function(c) {
   c.msgValue = "";
+}, move:function(c) {
+  "string" == typeof c && (c = directions[c]);
+  return runPackage(devices.Motor, 0, c, speed);
+}, speed:60, directions:{Both:0, Left:1, Right:2, Forward:3, Backward:4}, devices:{LightSensor:14, Accelerometer:18, Temperature:21, Buzzer:3, IRdistance:5, Linetracer:7, IR:9, RGBled:25, Motor:26, LedMatrix:27, Digital:30, Analog:31, PWM:32, External:40, Speaker:41, ExtIR:42, ServoMotor:43, ExLed:44, ExtCds:45}, sharps:{"-":0, "#":1, b:2}, beats:{Half:500, Quater:250, Eighth:125, Sixteenth:63, "Thirty-second":32, Whole:1000, "Dotted half":750, "Dotted quarter":375, "Dotted eighth":188, "Dotted sixteenth":95, 
+"Dotted thirty-second":48, Double:2000, Zero:0}, melodys:{"Twinkle Twinkle little star":1, "Three bears":2, "Mozart's Lullaby":3, "Do-Re-Mi":4, Butterfly:5}, colors:{Black:0, White:1, Red:2, Green:3, Blue:4, Yellow:5, Cyan:6, Magenta:7}, detectConds:{Yes:1, No:0}, sLetters:{a:0, b:1, c:2, d:3, e:4, f:5, g:6, h:7, i:8, j:9, k:10, l:11, m:12, n:13, o:14, p:15, q:16, r:17, s:18, t:19, u:20, v:21, w:22, x:23, y:24, z:25}, cLetters:{A:0, B:1, C:2, D:3, E:4, F:5, G:6, H:7, I:8, J:9, K:10, L:11, M:12, N:13, 
+O:14, P:15, Q:16, R:17, S:18, T:19, U:20, V:21, W:22, X:23, Y:24, Z:25}, kLetters:{ga:0, na:1, da:2, la:3, ma:4, ba:5, sa:6, aa:7, ja:8, cha:9, ka:10, ta:11, pa:12, ha:13}, onOffs:{On:1, Off:0}, axiss:{"X-Axis":1, "Y-Axis":2, "Z-Axis":3}, pins:{D4:4, D10:10, D11:11, D12:12, A2:16, A3:17}, outputValues:{HIGH:1, LOW:0}, moveMotor:function(c) {
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.Motor, 0, c, this.speed);
+}, moveMotorSpeed:function(c, b) {
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.Motor, 0, c, this.speed);
+}, turnMotor:function(c) {
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.Motor, 0, c, this.speed);
+}, stopMotor:function() {
+  return this.runPackage(this.devices.Motor, 1);
+}, moveTurnAngle:function(c, b) {
+}, moveGoTime:function(c, b) {
+  0 > b && (b = -b);
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.Motor, 3, c, this.speed, this.short2array(1000 * b));
+}, turnMotorTime:function(c, b) {
+  0 > b && (b = -b);
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.Motor, 3, c, this.speed, this.short2array(1000 * b));
+}, moveMotorColor:function(c, b) {
+  var e = this.devices.Motor;
+  "string" == typeof c && (c = this.directions[c]);
+  "string" == typeof b && (b = this.colors[b]);
+  return this.runPackage(e, 5, c, this.speed, b);
+}, moveMotorAngleColor:function(c, b, e) {
+  var d = this.devices.Motor;
+  "string" == typeof c && (c = this.directions[c]);
+  "string" == typeof e && (e = this.colors[e]);
+  "number" != typeof b && (b = 90);
+  return this.runPackage(d, 6, c, this.short2array(0), this.short2array(b), this.short2array(0), e);
+}, moveExtMotor:function(c, b) {
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.Motor, 7, c, b);
+}, rgbOn:function(c, b) {
+  "string" == typeof c && (c = this.directions[c]);
+  "string" == typeof b && (b = this.colors[b]);
+  return this.runPackage(this.devices.RGBled, 0, c, b);
+}, rgbOff:function(c) {
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.RGBled, 1, c, 0);
+}, rgbOffColor:function(c, b) {
+  "string" == typeof c && (c = this.directions[c]);
+  "string" == typeof b && (b = this.colors[b]);
+  return this.runPackage(this.devices.RGBled, 1, c, b);
+}, ledOnTime:function(c, b, e) {
+  "string" == typeof c && (c = this.directions[c]);
+  "string" == typeof b && (b = this.colors[b]);
+  return this.runPackage(this.devices.RGBled, 3, c, b, this.short2array("number" != typeof e ? 0 : 0 > e ? 0 : 1000 * e));
+}, beep:function() {
+  return this.buzzerControl(0, 262, 50);
+}, playBuzzerTime:function(c) {
+  "number" != typeof c && (c = 0.5);
+  0 > c && (c = 0.5);
+  return this.buzzerControl(0, 262, 1000 * c);
+}, playBuzzerFreq:function(c, b) {
+  "number" != typeof b && (b = 0.5);
+  0 > b && (b = 0.5);
+  "number" != typeof c && (c = 300);
+  0 > c && (c = 300);
+  return this.buzzerControl(0, c, 1000 * b);
+}, buzzerOff:function() {
+  return this.buzzerControl(0, 0, 0);
+}, playBuzzerNote:function(c, b, e) {
+  c = this.getNote(c);
+  "string" == typeof e && (e = this.beats[e]);
+  return this.runPackage(devices.Buzzer, 2, c.charCodeAt(0), b, this.short2array(e));
+}, playNote:function(c, b, e, d) {
+  c = this.getNote(c);
+  "string" == typeof d && (d = this.beats[d]);
+  return this.runPackage(this.devices.Buzzer, 4, c.charCodeAt(0), b, e.charCodeAt(0), this.short2array(d));
+}, getNote:function(c) {
+  return c.split("_")[1];
+}, restBeat:function(c) {
+  "string" == typeof c && (c = c.split("_", 1), c = this.beats[c]);
+  return this.buzzerControl(1, 0, c);
+}, playBuzzerColor:function(c, b, e, d) {
+  c = this.getNote(c);
+  "string" == typeof e && (e = this.beats[e]);
+  "string" == typeof d && (d = this.colors[d]);
+  return this.runPackage(this.devices.Buzzer, 3, c.charCodeAt(0), b, this.short2array(e), d);
+}, playNoteColor:function(c, b, e, d, f, g) {
+  c = this.getNote(c);
+  "string" == typeof d && (d = this.beats[d]);
+  "string" == typeof f && (f = this.directions[f]);
+  "string" == typeof g && (g = this.colors[g]);
+  return this.runPackage(this.devices.Buzzer, 5, c.charCodeAt(0), b, e.charCodeAt(0), this.short2array(d), f, g);
+}, playMelody:function(c) {
+  "string" == typeof c && (c = this.melodys[c]);
+  return this.runPackage(this.devices.Buzzer, 6, c);
+}, buzzerControl:function(c, b, e) {
+  var d = this.devices.Buzzer;
+  "string" == typeof e && (e = this.beats[e]);
+  return this.runPackage(d, c, this.short2array(b), this.short2array(e));
+}, runBlink:function() {
+  return this.runPackage(30, 13);
+}, followLine:function() {
+  return this.runPackage(this.devices.Linetracer, 3, this.speed);
+}, followLineLevel:function(c, b) {
+  "number" != typeof b && (b = 70);
+  return this.runPackage(this.devices.Linetracer, 3, c, b);
+}, setStandard:function(c, b) {
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.IRdistance, 0, c, b);
+}, avoidMode:function() {
+  return this.runPackage(this.devices.IRdistance, 3);
+}, ledMatrixOn:function(c, b, e) {
+  "string" == typeof c && (c = this.onOffs[c]);
+  "string" == typeof b && "Both" == b && (b = 0);
+  "string" == typeof e && "Both" == e && (e = 0);
+  return this.runPackage(this.devices.LedMatrix, 0, b, e, c);
+}, ledMatrixOff:function(c, b) {
+  return this.runPackage(this.devices.LedMatrix, 0, c, b, 0);
+}, ledMatrixClear:function() {
+  return this.runPackage(this.devices.LedMatrix, 5);
+}, ledMatrixOnAll:function() {
+  return this.runPackage(this.devices.LedMatrix, 6);
+}, showLedMatrix:function(c) {
+  return this.runPackage(this.devices.LedMatrix, 1, c);
+}, showLedMatrixSmall:function(c) {
+  "string" == typeof c && (c = this.sLetters[c]);
+  return this.runPackage(this.devices.LedMatrix, 2, c);
+}, showLedMatrixLarge:function(c) {
+  "string" == typeof c && (c = this.cLetters[c]);
+  return this.runPackage(this.devices.LedMatrix, 3, c);
+}, showLedMatrixKorean:function(c) {
+  "string" == typeof c && (c = this.kLetters[c]);
+  return this.runPackage(this.devices.LedMatrix, 4, c);
+}, sendMessage:function(c) {
+  return this.runPackage(this.devices.IR, this.string2array(c));
+}, extLedOn:function(c, b) {
+  "string" == typeof c && (c = this.pins[c]);
+  return this.runPackage(this.devices.ExLed, c, this.short2array(1000 * b));
+}, playSpeaker:function(c, b, e) {
+  "string" == typeof c && (c = this.pins[c]);
+  e *= 1000;
+  return this.runPackage(this.devices.Speaker, c, this.short2array(b), this.short2array(e));
+}, stopSpeaker:function(c) {
+  "string" == typeof c && (c = this.pins[c]);
+  return this.runPackage(this.devices.Speaker, c, this.short2array(0), this.short2array(0));
+}, runExtServo:function(c, b) {
+  "string" == typeof c && (c = this.pins[c]);
+  return this.runPackage(this.devices.ServoMotor, c, b);
+}, digitalWrite:function(c, b) {
+  "string" == typeof b && (b = this.outputValues[b]);
+  return this.runPackage(this.devices.Digital, c, b);
+}, analogWrite:function(c, b) {
+  "number" != typeof b ? b = 0 : 255 < b && (b = 255);
+  return this.runPackage(this.devices.Analog, c, b);
+}, readFloat:function(c, b) {
+  return parseFloat([c[b], c[b + 1], c[b + 2], c[b + 3]]);
+}, readShort:function(c, b) {
+  return parseShort([c[postion], c[postion + 1]]);
+}, readDouble:function(c, b) {
+  return readFloat(c, b);
+}, readString:function(c, b, e) {
+  c = "";
+  for (var d = 0;d < e;d++) {
+    c += String.fromCharCode(_rxBuf[d + b]);
+  }
+  return c;
+}, short2array:function(c) {
+  for (var b = {}, e = 0;2 > e;e++) {
+    var d = c & 255;
+    b[e] = d;
+    c = (c - d) / 256;
+  }
+  return [b[0], b[1]];
+}, runPackage:function() {
+  for (var c = [255, 85, 0, 0, 2], b = 0;b < arguments.length;b++) {
+    "[class Array]" == arguments[b].constructor ? c = c.concat(arguments[b]) : 2 == arguments[b].length ? c = c.concat(arguments[b]) : c.push(arguments[b]);
+  }
+  c[2] = c.length - 3;
+  return c;
 }, name:"coconut", monitorTemplate:{imgPath:"hw/coconut.png", width:256, height:256, listPorts:{temperature:{name:Lang.Blocks.coconut_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.coconut_sensor_acceleration_x, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.coconut_sensor_acceleration_y, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.coconut_sensor_acceleration_z, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", 
 pos:{x:0, y:0}}, note:{name:Lang.Hw.note, type:"output", pos:{x:0, y:0}}}, ports:{leftProximityValue:{name:Lang.Blocks.coconut_sensor_left_proximity, type:"input", pos:{x:122, y:156}}, rightProximityValue:{name:Lang.Blocks.coconut_sensor_right_proximity, type:"input", pos:{x:10, y:108}}, leftFloorValue:{name:Lang.Blocks.coconut_sensor_left_floor, type:"input", pos:{x:100, y:234}}, rightFloorValue:{name:Lang.Blocks.coconut_sensor_right_floor, type:"input", pos:{x:13, y:180}}, light:{name:Lang.Blocks.coconut_sensor_light, 
 type:"input", pos:{x:56, y:189}}}, mode:"both"}};
@@ -21769,37 +21948,37 @@ Entry.VariableContainer = function() {
   };
   c.addRef = function(b, c) {
     if (this.view_ && Entry.playground.mainWorkspace && Entry.getMainWS().getMode() === Entry.Workspace.MODE_BOARD) {
-      var d = {object:c.getCode().object, block:c};
-      c.funcBlock && (d.funcBlock = c.funcBlock, delete c.funcBlock);
-      this[b].push(d);
+      var e = {object:c.getCode().object, block:c};
+      c.funcBlock && (e.funcBlock = c.funcBlock, delete c.funcBlock);
+      this[b].push(e);
       if ("_functionRefs" == b) {
         b = c.type.substr(5);
-        for (var e = Entry.variableContainer.functions_[b].content.getBlockList(), g = 0;g < e.length;g++) {
-          c = e[g];
+        for (var f = Entry.variableContainer.functions_[b].content.getBlockList(), g = 0;g < f.length;g++) {
+          c = f[g];
           var h = c.events;
           -1 < c.type.indexOf("func_") && c.type.substr(5) == b || (h && h.viewAdd && h.viewAdd.forEach(function(b) {
-            c.getCode().object = d.object;
-            b && (c.funcBlock = d.block, b(c));
+            c.getCode().object = e.object;
+            b && (c.funcBlock = e.block, b(c));
           }), h && h.dataAdd && h.dataAdd.forEach(function(b) {
-            c.getCode().object = d.object;
-            b && (c.funcBlock = d.block, b(c));
+            c.getCode().object = e.object;
+            b && (c.funcBlock = e.block, b(c));
           }));
         }
       }
-      return d;
+      return e;
     }
   };
   c.removeRef = function(b, c) {
     if (Entry.playground.mainWorkspace && Entry.getMainWS().getMode() === Entry.Workspace.MODE_BOARD) {
-      for (var d = this[b], e = 0;e < d.length;e++) {
-        if (d[e].block == c) {
-          d.splice(e, 1);
+      for (var e = this[b], f = 0;f < e.length;f++) {
+        if (e[f].block == c) {
+          e.splice(f, 1);
           break;
         }
       }
-      if ("_functionRefs" == b && (b = c.type.substr(5), e = Entry.variableContainer.functions_[b])) {
-        for (d = e.content.getBlockList(), e = 0;e < d.length;e++) {
-          c = d[e];
+      if ("_functionRefs" == b && (b = c.type.substr(5), f = Entry.variableContainer.functions_[b])) {
+        for (e = f.content.getBlockList(), f = 0;f < e.length;f++) {
+          c = e[f];
           var g = c.events;
           -1 < c.type.indexOf("func_") && c.type.substr(5) == b || (g && g.viewDestroy && g.viewDestroy.forEach(function(b) {
             b && b(c);
@@ -22382,9 +22561,9 @@ Entry.Thread = function(c, b, e) {
     if (!(b instanceof Array)) {
       return console.error("thread must be array");
     }
-    for (var d = 0;d < b.length;d++) {
-      var e = b[d];
-      e instanceof Entry.Block || e.isDummy ? (e.setThread(this), this._data.push(e)) : this._data.push(new Entry.Block(e, this));
+    for (var e = 0;e < b.length;e++) {
+      var f = b[e];
+      f instanceof Entry.Block || f.isDummy ? (f.setThread(this), this._data.push(f)) : this._data.push(new Entry.Block(f, this));
     }
     (b = this._code.view) && this.createView(b.board, c);
   };
@@ -22397,8 +22576,8 @@ Entry.Thread = function(c, b, e) {
   };
   c.createView = function(b, c) {
     this.view || (this.view = new Entry.ThreadView(this, b));
-    this._data.getAll().forEach(function(d) {
-      d.createView(b, c);
+    this._data.getAll().forEach(function(e) {
+      e.createView(b, c);
     });
   };
   c.destroyView = function() {
@@ -22418,8 +22597,8 @@ Entry.Thread = function(c, b, e) {
   };
   c.insertByBlock = function(b, c) {
     b = b ? this._data.indexOf(b) : -1;
-    for (var d = 0;d < c.length;d++) {
-      c[d].setThread(this);
+    for (var e = 0;e < c.length;e++) {
+      c[e].setThread(this);
     }
     this._data.splice.apply(this._data, [b + 1, 0].concat(c));
     this.changeEvent.notify();
@@ -22432,10 +22611,10 @@ Entry.Thread = function(c, b, e) {
   c.clone = function(b, c) {
     b = b || this._code;
     b = new Entry.Thread([], b);
-    for (var d = this._data, e = [], g = 0, h = d.length;g < h;g++) {
-      e.push(d[g].clone(b));
+    for (var e = this._data, f = [], g = 0, h = e.length;g < h;g++) {
+      f.push(e[g].clone(b));
     }
-    b.load(e, c);
+    b.load(f, c);
     return b;
   };
   c.toJSON = function(b, c, d) {
@@ -22450,10 +22629,10 @@ Entry.Thread = function(c, b, e) {
   };
   c.destroy = function(b, c) {
     this.view && this.view.destroy(b);
-    for (var d = this._data, e = d.length - 1;0 <= e;e--) {
-      d[e].destroy(b, null, c);
+    for (var e = this._data, f = e.length - 1;0 <= f;f--) {
+      e[f].destroy(b, null, c);
     }
-    !d.length && this._code.destroyThread(this, !1);
+    !e.length && this._code.destroyThread(this, !1);
   };
   c.getBlock = function(b) {
     return this._data[b];
@@ -22505,19 +22684,19 @@ Entry.Thread = function(c, b, e) {
     return this._data.at(0);
   };
   c.hasBlockType = function(b) {
-    function c(d) {
-      if (b == d.type) {
+    function c(e) {
+      if (b == e.type) {
         return !0;
       }
-      for (var e = d.params, f = 0;f < e.length;f++) {
-        var k = e[f];
+      for (var d = e.params, f = 0;f < d.length;f++) {
+        var k = d[f];
         if (k && k.constructor == Entry.Block && c(k)) {
           return !0;
         }
       }
-      if (d = d.statements) {
-        for (e = 0;e < d.length;e++) {
-          if (d[e].hasBlockType(b)) {
+      if (e = e.statements) {
+        for (d = 0;d < e.length;d++) {
+          if (e[d].hasBlockType(b)) {
             return !0;
           }
         }
