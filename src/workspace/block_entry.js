@@ -231,10 +231,10 @@ Entry.block = {
                 "options": [
                     [Lang.Blocks.modi_enviroment_temperature,6],
                     [Lang.Blocks.modi_enviroment_humidity,7],
-                    [Lang.Blocks.modi_enviroment_illuminance,8],
+                    [Lang.Blocks.modi_enviroment_illuminance,2],
                     [Lang.Blocks.modi_enviroment_red,3],
-                    [Lang.Blocks.modi_enviroment_bule,4],
-                    [Lang.Blocks.modi_enviroment_green,5]
+                    [Lang.Blocks.modi_enviroment_bule,5],
+                    [Lang.Blocks.modi_enviroment_green,4]
                 ],
                 "fontSize": 11
             }
