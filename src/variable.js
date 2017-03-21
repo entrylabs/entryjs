@@ -482,12 +482,12 @@ Entry.Variable.prototype.updateView = function() {
             this.textView_.text = this.getName();
             this.valueView_.y = 1;
             if (this.isNumber()) {
+                var v = Number(this.getValue());
                 if (parseInt(this.getValue(),10) == this.getValue())
-                    this.valueView_.text = this.getValue();
+                    this.valueView_.text = v;
                 else
-                    this.valueView_.text = this.getValue().toFixed(1).replace('.00', '');
-            }
-            else {
+                    this.valueView_.text = v.toFixed(1).replace('.00', '');
+            } else {
                 this.valueView_.text = this.getValue();
             }
             if (this._nameWidth === null)
