@@ -5964,6 +5964,13 @@ Entry.Commander = function(c) {
     var c = b.pointer();
     b.view && (b = b.view);
     return [["block", c], ["x", b.x], ["y", b.y]];
+  }, restrict:function(b, c, e, h) {
+    var d = !1, f = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !d && c && (e(), d = !0, f.init([{title:b.tooltip.title, content:b.tooltip.content, target:h.processDomQuery(["playground", "board", "coord", "&1", "&2"])}], {indicator:!0, callBack:function() {
+        e();
+      }}));
+    }});
+    return f;
   }, validate:!1, undo:"insertBlock", dom:["playground", "board", "&0"]};
   e = Entry.cloneSimpleObject(c[b.separateBlock]);
   e.restrict = function(b, c, e, h) {
@@ -6029,12 +6036,13 @@ Entry.Commander = function(c) {
   }, log:function(b, c) {
     return [["dx", b], ["dy", c]];
   }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
-  c[b.setFieldValue] = {do:function(b, c, e, h, k) {
-    c.setValue(k, !0);
-  }, state:function(b, c, e, h, k) {
-    return [b, c, e, k, h];
-  }, log:function(b, c, e, h, k) {
-    return [["pointer", e], ["newValue", k]];
+  c[b.setFieldValue] = {do:function(b, c) {
+    this.editor.board.findBlock(b).setValue(c, !0);
+  }, state:function(b, c) {
+    c = this.editor.board.findBlock(b);
+    return [b, c._startValue || c.getValue()];
+  }, log:function(b, c) {
+    return [["pointer", b], ["value", c]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
   c[b.selectBlockMenu] = {do:function(b, c, e) {
     var d = Entry.getMainWS().blockMenu;
@@ -24685,7 +24693,7 @@ Entry.Field = function() {
     this.destroyOption();
   };
   c.command = function() {
-    this._startValue && (this._startValue === this.getValue() || this._blockView.isInBlockMenu || Entry.do("setFieldValue", this._block, this, this.pointer(), this._startValue, this.getValue()));
+    this._startValue && (this._startValue === this.getValue() || this._blockView.isInBlockMenu || Entry.do("setFieldValue", this.pointer(), this.getValue()));
     delete this._startValue;
   };
   c.destroyOption = function() {
@@ -25595,8 +25603,8 @@ Entry.Board.DRAG_RADIUS = 5;
     }
     if ("coord" === c) {
       return {getBoundingClientRect:function() {
-        var c = this.scroller, e = this.relativeOffset;
-        return {top:b[1] + e.top - 20 + c.vY, left:b[0] + e.left - 20 + c.hX, width:40, height:40};
+        var c = this.relativeOffset;
+        return {top:b[1] + c.top - 20, left:b[0] + c.left - 20, width:40, height:40};
       }.bind(this)};
     }
     if (c instanceof Array) {
