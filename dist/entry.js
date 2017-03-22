@@ -9426,16 +9426,17 @@ Entry.StateManager.prototype.removeAllPictureCommand = function() {
     return !(400 <= c.message && 500 > c.message);
   });
 };
-Entry.StateManager.prototype.undo = function() {
+Entry.StateManager.prototype.undo = function(c) {
   if (this.canUndo() && !this.isRestoring()) {
     this.addActivity("undo");
     this.startRestore();
-    for (var c = !0;this.undoStack_.length;) {
-      var b = this.undoStack_.pop();
-      b.func.apply(b.caller, b.params);
-      var e = this.getLastRedoCommand();
-      c ? (e.isPass = !1, c = !c) : e.isPass = !0;
-      if (!0 !== b.isPass) {
+    for (var b = !0;this.undoStack_.length;) {
+      var e = this.undoStack_.pop();
+      e.func.apply(e.caller, e.params);
+      var d = this.getLastRedoCommand();
+      b ? (d.isPass = !1, b = !b) : d.isPass = !0;
+      c && c--;
+      if (!c && !0 !== e.isPass) {
         break;
       }
     }

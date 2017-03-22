@@ -102,7 +102,7 @@ Entry.StateManager.prototype.removeAllPictureCommand = function () {
 /**
  * Do undo
  */
-Entry.StateManager.prototype.undo = function() {
+Entry.StateManager.prototype.undo = function(count) {
     if (!this.canUndo() || this.isRestoring())
         return;
     this.addActivity("undo");
@@ -119,7 +119,9 @@ Entry.StateManager.prototype.undo = function() {
             isFirst = !isFirst;
         } else command.isPass = true;
 
-        if (state.isPass !== true)
+        if (count) count--;
+
+        if (!count && state.isPass !== true)
             break;
     }
     this.endRestore();
