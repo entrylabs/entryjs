@@ -39004,6 +39004,7 @@ Entry.block = {
 
     "coconut_obstruct_sensing": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [],
@@ -39313,7 +39314,7 @@ Entry.block = {
     "coconut_dotmatrix_num": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "도트매트릭스 숫자 %1 표시",
+        "template": "도트매트릭스 숫자 %1 표시 %2",
         "statements": [],
         "params": [
             {
@@ -39395,7 +39396,7 @@ Entry.block = {
     "coconut_dotmatrix_small_eng": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "도트매트릭스 소문자 %1 표시",
+        "template": "도트매트릭스 소문자 %1 표시 %2",
         "statements": [],
         "params": [
             {
@@ -39487,7 +39488,7 @@ Entry.block = {
     "coconut_dotmatrix_big_eng": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "도트매트릭스 대문자 %1 표시",
+        "template": "도트매트릭스 대문자 %1 표시 %2",
         "statements": [],
         "params": [
             {
@@ -39579,7 +39580,7 @@ Entry.block = {
     "coconut_dotmatrix_kor": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "도트매트릭스 한글 %1 표시",
+        "template": "도트매트릭스 한글 %1 표시 %2",
         "statements": [],
         "params": [
             {
@@ -39658,6 +39659,7 @@ Entry.block = {
 
     "coconut_light_sensor": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -39680,6 +39682,7 @@ Entry.block = {
 
     "coconut_tmp_senser": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -39702,6 +39705,7 @@ Entry.block = {
 
     "coconut_ac_sensor": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -39830,7 +39834,7 @@ Entry.block = {
     "coconut_outspk_sensor": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "외부 스피커 설정 %1 %2 Hz로 %3초 동안 소리내기",
+        "template": "외부 스피커 설정 %1 %2 Hz로 %3초 동안 소리내기 %4",
         "statements": [],
         "params": [
             {
@@ -39920,7 +39924,7 @@ Entry.block = {
     "coconut_outspk_sensor_off": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "외부 스피커 %1 끄기",
+        "template": "외부 스피커 %1 끄기 %2",
         "statements": [],
         "params": [
             {
@@ -39988,6 +39992,7 @@ Entry.block = {
 
     "coconut_outinfrared_sensor": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -40030,6 +40035,7 @@ Entry.block = {
 
     "coconut_outcds_sensor": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -40072,7 +40078,7 @@ Entry.block = {
     "coconut_servomotor_angle": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "서보모터 연결 %1 각도 %2",
+        "template": "서보모터 연결 %1 각도 %2 %3",
         "statements": [],
         "params": [
             {
