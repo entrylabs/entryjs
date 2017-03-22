@@ -317,6 +317,19 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this.contentPos = contentPos;
         this._render();
         this._updateMagnet();
+
+        if (this.isFieldEditing())
+            this.getBoard().workspace.widgetUpdateEvent.notify();
+    };
+
+    p.isFieldEditing = function() {
+        var contents = this._contents;
+        for (var i=0; i<contents.length; i++) {
+            var content = contents[i];
+            if (!content) continue;
+            if (content.isEditing()) return true;
+        }
+        return false;
     };
 
     p._alignStatement = function(animate, index) {

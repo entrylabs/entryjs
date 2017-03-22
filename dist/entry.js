@@ -22063,6 +22063,16 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this.contentPos = b;
     this._render();
     this._updateMagnet();
+    this.isFieldEditing() && this.getBoard().workspace.widgetUpdateEvent.notify();
+  };
+  c.isFieldEditing = function() {
+    for (var b = this._contents, c = 0;c < b.length;c++) {
+      var d = b[c];
+      if (d && d.isEditing()) {
+        return !0;
+      }
+    }
+    return !1;
   };
   c._alignStatement = function(b, c) {
     var d = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = this._statements[c];
@@ -23103,6 +23113,7 @@ Entry.Field = function() {
       this.optionGroup.remove();
       delete this.optionGroup;
     }
+    this._isEditing = !1;
     this.command();
   };
   c._attachDisposeEvent = function(b) {
@@ -23183,7 +23194,7 @@ Entry.Field = function() {
   c._bindRenderOptions = function() {
     var b = this;
     $(this.svgGroup).bind("mouseup touchend", function(c) {
-      b._isEditable() && (b.destroyOption(), b._startValue = b.getValue(), b.renderOptions());
+      b._isEditable() && (b.destroyOption(), b._startValue = b.getValue(), b.renderOptions(), b._isEditing = !0);
     });
   };
   c.pointer = function(b) {
@@ -23220,6 +23231,9 @@ Entry.Field = function() {
   c._shouldReturnValue = function(b) {
     var c = this._block.getCode().object;
     return "?" === b || !c || c.constructor !== Entry.EntryObject;
+  };
+  c.isEditing = function(b) {
+    return !!this._isEditing;
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(c, b, f) {
@@ -26147,6 +26161,7 @@ Entry.Workspace = function(c) {
   this.trashcan = new Entry.FieldTrashcan;
   this.readOnly = void 0 === c.readOnly ? !1 : c.readOnly;
   this.blockViewMouseUpEvent = new Entry.Event(this);
+  this.widgetUpdateEvent = new Entry.Event(this);
   this._blockViewMouseUpEvent = null;
   var b = c.blockMenu;
   b && (this.blockMenu = new Entry.BlockMenu(b.dom, b.align, b.categoryData, b.scroll, this.readOnly), this.blockMenu.workspace = this, this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1));

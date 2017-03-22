@@ -20,6 +20,7 @@ Entry.Workspace = function(options) {
     this.readOnly = options.readOnly === undefined ? false : options.readOnly;
 
     this.blockViewMouseUpEvent = new Entry.Event(this);
+    this.widgetUpdateEvent = new Entry.Event(this);
     this._blockViewMouseUpEvent = null;
 
     var option = options.blockMenu;

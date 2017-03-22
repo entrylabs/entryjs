@@ -50,6 +50,8 @@ Entry.Field = function() {};
             delete this.optionGroup;
         }
 
+        this._isEditing = false;
+
         this.command();
     };
 
@@ -204,6 +206,7 @@ Entry.Field = function() {};
                 that.destroyOption();
                 that._startValue = that.getValue();
                 that.renderOptions();
+                that._isEditing = true;
             }
         });
     };
@@ -265,5 +268,10 @@ Entry.Field = function() {};
         return value === '?' ||
             !obj || obj.constructor !== Entry.EntryObject;
     };
+
+    p.isEditing = function(value) {
+        return !!this._isEditing;
+    };
+
 
 })(Entry.Field.prototype);
