@@ -1503,7 +1503,7 @@ Entry.Utils.getWindow = function(hashId) {
     }
 };
 
-Entry.Utils.restrictAction = function(exceptions, callback) {
+Entry.Utils.restrictAction = function(exceptions, callback, noDispose) {
     var that = this;
     exceptions = exceptions || [];
     exceptions = exceptions.map(function(e) {return e[0]});
@@ -1514,7 +1514,9 @@ Entry.Utils.restrictAction = function(exceptions, callback) {
             for (var i = 0; i < exceptions.length; i++) {
                 var exception = exceptions[i];
                 if (exception === target || $.contains(exception, target)) {
-                    callback(e);
+                    if (!noDispose) {
+                        callback(e);
+                    } else target.focus && target.focus();
                     return;
                 }
             }

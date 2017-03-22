@@ -91,6 +91,7 @@ Entry.STATIC = {
         variableContainerClickVariableAddButton: 802,
         variableContainerAddVariable: 803,
         variableContainerRemoveVariable: 804,
+        variableAddSetName: 805,
     },
 
     RECORDABLE: {

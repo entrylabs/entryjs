@@ -11065,15 +11065,15 @@ Entry.TextCodingUtil = {};
       f[b.type] = [], g = {}, g.start = b.start, g.end = b.end, f[b.type].push(g);
     }
   };
-  c.assembleRepeatWhileTrueBlock = function(b, c) {
-    var d = "";
+  c.assembleRepeatWhileTrueBlock = function(b, f) {
+    var c = "";
     if ("repeat_while_true" == b.data.type) {
-      var d = c.split(" "), e = d.length - 1, g = d[e];
-      "until" == g ? (d.splice(1, 0, "not"), d.splice(e + 1, 1), d = d.join(" ")) : "while" == g ? (d.splice(e, 1), d = d.join(" ")) : d = c;
+      var c = f.split(" "), e = c.length - 1, g = c[e];
+      "until" == g ? (c.splice(1, 0, "not"), c.splice(e + 1, 1), c = c.join(" ")) : "while" == g ? (c.splice(e, 1), c = c.join(" ")) : c = f;
     } else {
-      d = c;
+      c = f;
     }
-    return d;
+    return c;
   };
   c.isJudgementBlock = function(b) {
     return "is_clicked" == b || "is_press_some_key" == b || "reach_something" == b || "boolean_basic_operator" == b || "boolean_and" == b || "boolean_or" == b || "boolean_not" == b ? !0 : !1;
@@ -15763,7 +15763,7 @@ Entry.Loader.handleLoad = function() {
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, destroyBlockBelow:113, 
 destroyThreads:114, addThreads:115, recoverBlockBelow:116, addThreadFromBlockMenu:117, insertBlockFromBlockMenu:118, moveBlockFromBlockMenu:119, separateBlockForDestroy:120, moveBlockForDestroy:121, insertBlockFromBlockMenuFollowSeparate:122, insertBlockFollowSeparate:123, selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, 
-toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, playgroundClickAddPictureCancel:704, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
+toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, playgroundClickAddPictureCancel:704, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804, variableAddSetName:805}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
 Entry.Command = {};
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
@@ -16016,9 +16016,8 @@ Entry.Commander = function(c) {
     return [];
   }, log:function() {
     return [];
-  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerClickVariableAddButton", dom:["variableContainer", "variableAddButton"]};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerClickVariableAddButton", dom:["variableContainer", "variableAddButton"]};
   c[b.variableContainerAddVariable] = {do:function(b) {
-    console.log(b);
     Entry.variableContainer.addVariable(b);
   }, state:function(b) {
     b instanceof Entry.Variable && (b = b.toJSON());
@@ -16026,7 +16025,20 @@ Entry.Commander = function(c) {
   }, log:function(b) {
     b instanceof Entry.Variable && (b = b.toJSON());
     return [["variable", b]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"variableContainerRemoveVariable", dom:["variableContainer", "variableAddConfirmButton"]};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"variableContainerRemoveVariable", restrict:function(b, c, e) {
+    Entry.variableContainer.clickVariableAddButton(!0, !0);
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {restrict:!0, dimmed:!0, callBack:e});
+  }, dom:["variableContainer", "variableAddConfirmButton"]};
+  c[b.variableAddSetName] = {do:function(b) {
+    $(".entryVariableAddSpaceInputWorkspace").val(b);
+  }, state:function(b) {
+    return [""];
+  }, log:function(b) {
+    return [["value", b]];
+  }, restrict:function(b, c, e) {
+    Entry.variableContainer.clickVariableAddButton(!0);
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {restrict:!0, noDispose:!0, dimmed:!0, callBack:e});
+  }, followCmd:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableAddSetName", dom:["variableContainer", "variableAddInput"]};
   c[b.variableContainerRemoveVariable] = {do:function(b) {
     Entry.variableContainer.removeVariable(b);
   }, state:function(b) {
@@ -17037,31 +17049,31 @@ Entry.Utils.getWindow = function(c) {
     }
   }
 };
-Entry.Utils.restrictAction = function(c, b) {
-  var f = this;
+Entry.Utils.restrictAction = function(c, b, f) {
+  var d = this;
   c = c || [];
   c = c.map(function(b) {
     return b[0];
   });
-  var d = function(d) {
-    d = d || window.event;
-    var e = d.target || d.srcElement;
-    if (!f.isRightButton(d)) {
-      for (var k = 0;k < c.length;k++) {
-        var l = c[k];
-        if (l === e || $.contains(l, e)) {
-          b(d);
+  var e = function(e) {
+    e = e || window.event;
+    var g = e.target || e.srcElement;
+    if (!d.isRightButton(e)) {
+      for (var l = 0;l < c.length;l++) {
+        var m = c[l];
+        if (m === g || $.contains(m, g)) {
+          f ? g.focus && g.focus() : b(e);
           return;
         }
       }
     }
-    d.preventDefault || (d.returnValue = !1, d.cancelBubble = !0);
-    d.preventDefault();
-    d.stopPropagation();
+    e.preventDefault || (e.returnValue = !1, e.cancelBubble = !0);
+    e.preventDefault();
+    e.stopPropagation();
   };
-  this._restrictHandler = d;
-  var e = Entry.getDom();
-  e.addEventListener ? (e.addEventListener("click", d, !0), e.addEventListener("mousedown", d, !0), e.addEventListener("touchstart", d, !0)) : (e.attachEvent("onclick", d), e.attachEvent("onmousedown", d), e.attachEvent("ontouchstart", d));
+  this._restrictHandler = e;
+  var g = Entry.getDom();
+  g.addEventListener ? (g.addEventListener("click", e, !0), g.addEventListener("mousedown", e, !0), g.addEventListener("touchstart", e, !0)) : (g.attachEvent("onclick", e), g.attachEvent("onmousedown", e), g.attachEvent("ontouchstart", e));
 };
 Entry.Utils.allowAction = function() {
   var c = Entry.getDom();
@@ -18846,7 +18858,9 @@ Entry.Tooltip = function(c, b) {
     this._rendered && this.dispose();
     this.data = b instanceof Array ? b : [b];
     this.opts = c || this.opts || {dimmed:!0, restirct:!1};
-    this._faded = this._rendered = !1;
+    this._rendered = !1;
+    this._noDispose = !!this.opts.noDispose;
+    this._faded = !1;
     this._tooltips = [];
     this._indicators = [];
     if (1 < b.length || c.indicator) {
@@ -18949,7 +18963,7 @@ Entry.Tooltip = function(c, b) {
     var b = this.data.map(function(b) {
       return b.target;
     });
-    Entry.Utils.restrictAction(b, this.dispose.bind(this));
+    Entry.Utils.restrictAction(b, this.dispose.bind(this), this._noDispose);
   };
   c.fadeOut = function() {
     $(document.body).addClass("hideTooltip");
@@ -19743,6 +19757,7 @@ Entry.VariableContainer = function() {
     this.variables_.unshift(b);
     Entry.playground && Entry.playground.blockMenu && Entry.playground.blockMenu.deleteRendered("variable");
     Entry.playground.reloadPlayground();
+    c.view.name.value = "";
     this.updateList();
   };
   c.removeVariable = function(b) {
@@ -20056,7 +20071,13 @@ Entry.VariableContainer = function() {
     e.setAttribute("placeholder", Lang.Workspace.Variable_placeholder_name);
     e.variableContainer = this;
     e.onkeypress = function(c) {
-      13 == c.keyCode && (c = b._makeVariableData(), c = new Entry.Variable(c), Entry.do("variableContainerAddVariable", c), b.updateSelectedVariable(b.variables_[0]), c = b.variables_[0].listElement, c.editButton.addClass("entryRemove"), c.editSaveButton.removeClass("entryRemove"), c.nameField.removeAttribute("disabled"));
+      13 === c.keyCode && b._addVariable();
+    };
+    e.onfocus = function(b) {
+      this.blurred = !1;
+    };
+    e.onblur = function(b) {
+      "" === this.value || this.blurred || (console.log("blur"), Entry.do("variableAddSetName", $(".entryVariableAddSpaceInputWorkspace").val()), this.blurred = !0);
     };
     this.variableAddPanel.view.name = e;
     d.appendChild(e);
@@ -20122,17 +20143,20 @@ Entry.VariableContainer = function() {
     c.innerHTML = Lang.Buttons.save;
     c.variableContainer = this;
     c.bindOnClick(function(c) {
-      c = b._makeVariableData();
-      c = new Entry.Variable(c);
-      Entry.do("variableContainerAddVariable", c);
-      b.updateSelectedVariable(b.variables_[0]);
-      c = b.variables_[0].listElement;
-      c.editButton.addClass("entryRemove");
-      c.editSaveButton.removeClass("entryRemove");
-      c.nameField.removeAttribute("disabled");
+      b._addVariable();
     });
     d.appendChild(c);
     this.variableAddConfirmButton = c;
+  };
+  c._addVariable = function() {
+    $(".entryVariableAddSpaceInputWorkspace").blur();
+    var b = this._makeVariableData(), b = new Entry.Variable(b);
+    Entry.do("variableContainerAddVariable", b);
+    this.updateSelectedVariable(this.variables_[0]);
+    b = this.variables_[0].listElement;
+    b.editButton.addClass("entryRemove");
+    b.editSaveButton.removeClass("entryRemove");
+    b.nameField.removeAttribute("disabled");
   };
   c.generateListAddView = function() {
     var b = this, c = Entry.createElement("li");
@@ -20634,12 +20658,14 @@ Entry.VariableContainer = function() {
           return this.variableAddButton_;
         case "variableAddConfirmButton":
           return this.variableAddConfirmButton;
+        case "variableAddInput":
+          return this.variableAddPanel.view.name;
       }
     }
   };
-  c.clickVariableAddButton = function() {
-    var b = this.variableAddPanel, c = b.view.name.value.trim();
-    b.isOpen ? c && 0 !== c.length ? (b = this._makeVariableData(), b = new Entry.Variable(b), Entry.do("variableContainerAddVariable", b)) : (b.view.addClass("entryRemove"), b.isOpen = !1) : (b.view.removeClass("entryRemove"), b.view.name.focus(), b.isOpen = !0);
+  c.clickVariableAddButton = function(b, c) {
+    var d = this.variableAddPanel, e = d.view.name.value.trim();
+    d.isOpen && !b ? e && 0 !== e.length ? (d = this._makeVariableData(), d = new Entry.Variable(d), Entry.do("variableContainerAddVariable", d)) : (d.view.addClass("entryRemove"), d.isOpen = !1) : (d.view.removeClass("entryRemove"), document.activeElement === d.view.name || c || d.view.name.focus(), d.isOpen = !0);
   };
   c._makeVariableData = function() {
     var b = this.variableAddPanel, c = b.view.name.value.trim();
