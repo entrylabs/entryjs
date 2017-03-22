@@ -104,9 +104,7 @@ module.exports = function(grunt) {
 
     grunt.option('force', true);
 
-	grunt.registerTask('karma', []);
-    
-	// Default tasks.
+    // Default tasks.
     grunt.registerTask('default', [
         'closureCompiler',
         'karma',
