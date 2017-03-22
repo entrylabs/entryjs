@@ -19,7 +19,8 @@ goog.require("Entry.STATIC");
         log: function(newType, oldType) {
             oldType = oldType || 'code';
             return [
-                ['newType', newType]
+                ['newType', newType],
+                ['oldType', oldType],
             ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,

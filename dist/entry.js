@@ -15980,7 +15980,7 @@ Entry.Commander = function(c) {
   }, state:function(b, c) {
     return [c, b];
   }, log:function(b, c) {
-    return [["newType", b]];
+    return [["newType", b], ["oldType", c || "code"]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"playgroundChangeViewMode", dom:["playground", "tabViewElements", "&0"]};
   c[b.playgroundClickAddPicture] = {do:function() {
     Entry.dispatchEvent("openPictureManager");
