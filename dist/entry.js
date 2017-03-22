@@ -6641,16 +6641,17 @@ Entry.StateManager.prototype.removeAllPictureCommand = function() {
     return !(400 <= c.message && 500 > c.message);
   });
 };
-Entry.StateManager.prototype.undo = function() {
+Entry.StateManager.prototype.undo = function(c) {
   if (this.canUndo() && !this.isRestoring()) {
     this.addActivity("undo");
     this.startRestore();
-    for (var c = !0;this.undoStack_.length;) {
-      var b = this.undoStack_.pop();
-      b.func.apply(b.caller, b.params);
-      var f = this.getLastRedoCommand();
-      c ? (f.isPass = !1, c = !c) : f.isPass = !0;
-      if (!0 !== b.isPass) {
+    for (var b = !0;this.undoStack_.length;) {
+      var f = this.undoStack_.pop();
+      f.func.apply(f.caller, f.params);
+      var d = this.getLastRedoCommand();
+      b ? (d.isPass = !1, b = !b) : d.isPass = !0;
+      c && c--;
+      if (!c && !0 !== f.isPass) {
         break;
       }
     }
@@ -17366,6 +17367,10 @@ Entry.Model = function(c, b) {
     return [b, f._startValue || f.getValue()];
   }, log:function(b, c) {
     return [["pointer", b], ["value", c]];
+  }, restrict:function(b, c, f, h) {
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c, direction:"left"}], {dimmed:!0, restrict:!0, callBack:function() {
+      f();
+    }});
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
   c[b.selectBlockMenu] = {do:function(b, c, f) {
     var h = Entry.getMainWS().blockMenu;
@@ -18934,8 +18939,8 @@ Entry.Tooltip = function(c, b) {
       h < k && (h = k, g = "up");
       k = e - c.top - c.height - tooltipRect.height;
       h < k && (g = "down");
-      b.dom.removeClass(this.usedClasses).addClass(g);
     }
+    b.dom.removeClass(this.usedClasses).addClass(g);
     var h = {top:c.top, left:c.left}, l;
     switch(g) {
       case "down":

@@ -509,6 +509,22 @@ goog.require("Entry.Utils");
                 ['value', value]
             ];
         },
+        restrict: function(data, domQuery, callback, restrictor) {
+            var isDone = false;
+            var tooltip = new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery,
+                direction: "left"
+            }], {
+                dimmed: true,
+                restrict: true,
+                callBack: function() {
+                    callback();
+                }
+            });
+            return tooltip;
+        },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['playground', 'board', '&0'],
         undo: "setFieldValue"
