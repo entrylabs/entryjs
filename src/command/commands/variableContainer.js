@@ -22,7 +22,6 @@ goog.require("Entry.STATIC");
                 ['oldType', oldType],
             ];
         },
-        skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "variableContainerSelectFilter",
         dom: ['variableContainer', 'filter', '&0']
@@ -38,7 +37,6 @@ goog.require("Entry.STATIC");
         log: function() {
             return [];
         },
-        skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "variableContainerClickVariableAddButton",
         dom: ['variableContainer', 'variableAddButton']
@@ -46,7 +44,6 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.variableContainerAddVariable] = {
         do: function(variable) {
-            console.log(variable);
             Entry.variableContainer.addVariable(variable);
         },
         state: function(variable) {
@@ -64,7 +61,56 @@ goog.require("Entry.STATIC");
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
         undo: "variableContainerRemoveVariable",
+        restrict: function(data, domQuery, callback) {
+            Entry.variableContainer.clickVariableAddButton(true, true);
+            var dom = $('.entryVariableAddSpaceInputWorkspace');
+            dom.val(data.content[1][1].name);
+            var tooltip = new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                restrict: true,
+                dimmed: true,
+                callBack: callback
+            });
+            return tooltip;
+        },
         dom: ['variableContainer', 'variableAddConfirmButton']
+    };
+
+    c[COMMAND_TYPES.variableAddSetName] = {
+        do: function(value) {
+            var dom = $('.entryVariableAddSpaceInputWorkspace');
+            dom.val(value);
+        },
+        state: function(value) {
+            return [
+                ''
+            ];
+        },
+        log: function(value) {
+            return [
+                [ 'value', value ]
+            ];
+        },
+        restrict: function(data, domQuery, callback) {
+            Entry.variableContainer.clickVariableAddButton(true);
+            var tooltip = new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                restrict: true,
+                noDispose: true,
+                dimmed: true,
+                callBack: callback
+            });
+            return tooltip;
+        },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: "variableAddSetName",
+        dom: ['variableContainer', 'variableAddInput']
     };
 
     c[COMMAND_TYPES.variableContainerRemoveVariable] = {

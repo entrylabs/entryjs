@@ -861,6 +861,8 @@ Entry.Playground = function() {
         var viewMode = this.viewMode_;
         if (viewMode == 'default')
             this.changeViewMode('code');
+        else if (viewMode == 'variable')
+            this.changeViewMode('variable');
         else if ((viewMode == 'picture' || viewMode == 'text' ) && object.objectType == 'textBox')
             this.changeViewMode('text');
         else if ((viewMode == 'text' || viewMode == 'picture') && object.objectType == 'sprite')
@@ -1236,6 +1238,8 @@ Entry.Playground = function() {
         Entry.variableContainer.updateList();
         this.variableView_.removeClass('entryRemove');
         this.resizeHandle_.removeClass('entryRemove');
+        this.viewMode_ = 'variable';
+        this.selectedViewMode = 'variable';
     };
 
     p.toggleOffVariableView = function() {
