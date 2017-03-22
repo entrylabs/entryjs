@@ -22,6 +22,7 @@ Entry.Tooltip = function(data, opts) {
             restirct: false
         };
         this._rendered = false;
+        this._noDispose = !!this.opts.noDispose;
         this._faded = false;
         this._tooltips = [];
         this._indicators = [];
@@ -228,7 +229,13 @@ Entry.Tooltip = function(data, opts) {
 
     p.restrictAction = function() {
         var targets = this.data.map(function(d) {return d.target});
-        Entry.Utils.restrictAction(targets, this.dispose.bind(this));
+        if (this._noDispose && this.opts.callBack)
+            this.opts.callBack.call(this);
+        Entry.Utils.restrictAction(
+            targets,
+            this.dispose.bind(this),
+            this._noDispose
+        );
     };
 
     p.fadeOut = function() {

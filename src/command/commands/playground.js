@@ -23,7 +23,6 @@ goog.require("Entry.STATIC");
                 ['oldType', oldType],
             ];
         },
-        skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "playgroundChangeViewMode",
         dom: ['playground', 'tabViewElements', '&0']
