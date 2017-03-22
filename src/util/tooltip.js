@@ -164,9 +164,9 @@ Entry.Tooltip = function(data, opts) {
                 margin = newMargin;
                 direction = "down"
             }
-            data.dom.removeClass(this.usedClasses)
-                .addClass(direction);
         }
+        data.dom.removeClass(this.usedClasses)
+            .addClass(direction);
 
         var pos = {top: rect.top, left: rect.left};
         var edgeStyle;

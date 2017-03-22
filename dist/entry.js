@@ -6043,6 +6043,10 @@ Entry.Commander = function(c) {
     return [b, c._startValue || c.getValue()];
   }, log:function(b, c) {
     return [["pointer", b], ["value", c]];
+  }, restrict:function(b, c, e, h) {
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c, direction:"left"}], {dimmed:!0, restrict:!0, callBack:function() {
+      e();
+    }});
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
   c[b.selectBlockMenu] = {do:function(b, c, e) {
     var d = Entry.getMainWS().blockMenu;
@@ -20305,8 +20309,8 @@ Entry.Tooltip = function(c, b) {
       h < k && (h = k, g = "up");
       k = f - c.top - c.height - tooltipRect.height;
       h < k && (g = "down");
-      b.dom.removeClass(this.usedClasses).addClass(g);
     }
+    b.dom.removeClass(this.usedClasses).addClass(g);
     var h = {top:c.top, left:c.left}, l;
     switch(g) {
       case "down":
