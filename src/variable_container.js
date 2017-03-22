@@ -1497,7 +1497,6 @@ Entry.VariableContainer = function() {
 
         addSpaceInput.onblur = function (e) {
             if (this.value === '' || this.blurred) return;
-            console.log('blur');
             Entry.do(
                 'variableAddSetName',
                 $('.entryVariableAddSpaceInputWorkspace').val()

@@ -20091,7 +20091,7 @@ Entry.VariableContainer = function() {
       this.blurred = !1;
     };
     e.onblur = function(b) {
-      "" === this.value || this.blurred || (console.log("blur"), Entry.do("variableAddSetName", $(".entryVariableAddSpaceInputWorkspace").val()), this.blurred = !0);
+      "" === this.value || this.blurred || (Entry.do("variableAddSetName", $(".entryVariableAddSpaceInputWorkspace").val()), this.blurred = !0);
     };
     this.variableAddPanel.view.name = e;
     d.appendChild(e);
