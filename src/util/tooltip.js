@@ -229,6 +229,8 @@ Entry.Tooltip = function(data, opts) {
 
     p.restrictAction = function() {
         var targets = this.data.map(function(d) {return d.target});
+        if (this._noDispose && this.opts.callBack)
+            this.opts.callBack.call(this);
         Entry.Utils.restrictAction(
             targets,
             this.dispose.bind(this),

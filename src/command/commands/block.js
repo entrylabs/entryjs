@@ -267,6 +267,36 @@ goog.require("Entry.Utils");
                 ['x', block.x], ['y', block.y]
             ];
         },
+        restrict: function(data, domQuery, callback, restrictor) {
+            var isDone = false;
+            var tooltip = new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                dimmed: true,
+                restrict: true,
+                callBack: function(isFromInit) {
+                    if (isDone || !isFromInit)
+                        return;
+                    callback();
+                    isDone = true;
+                    tooltip.init([{
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: restrictor.processDomQuery([
+                            'playground', 'board', 'coord', '&1', '&2'
+                        ])
+                    }], {
+                        indicator: true,
+                        callBack: function() {
+                            callback();
+                        }
+                    });
+                }
+            });
+            return tooltip;
+        },
         validate: false,
         undo: "insertBlock",
         dom: ['playground', 'board', '&0']
@@ -303,7 +333,6 @@ goog.require("Entry.Utils");
         });
         return tooltip;
     };
-
     obj.showMe = function(restrictor) {
         if (restrictor.isTooltipFaded())
             return;
@@ -466,16 +495,18 @@ goog.require("Entry.Utils");
     };
 
     c[COMMAND_TYPES.setFieldValue] = {
-        do: function(block, field, pointer, oldValue, newValue) { //TODO
-            field.setValue(newValue, true);
+        do: function(pointer, value) {
+            var field = this.editor.board.findBlock(pointer);
+            field.setValue(value, true);
         },
-        state: function(block, field, pointer, oldValue, newValue) {
-            return [block, field, pointer, newValue, oldValue];
+        state: function(pointer, value) {
+            var field = this.editor.board.findBlock(pointer);
+            return [pointer, field._startValue || field.getValue()];
         },
-        log: function(block, field, pointer, oldValue, newValue) {
+        log: function(pointer, value) {
             return [
                 ['pointer', pointer],
-                ['newValue', newValue]
+                ['value', value]
             ];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,

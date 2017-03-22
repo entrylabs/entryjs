@@ -1032,11 +1032,10 @@ Entry.Board.DRAG_RADIUS = 5;
             return {
                 getBoundingClientRect: function() {
                     var halfWidth = 20,
-                        scroller = this.scroller,
                         boardOffset = this.relativeOffset;
                     return {
-                        top: query[1] + boardOffset.top - halfWidth + scroller.vY,
-                        left: query[0] + boardOffset.left - halfWidth + scroller.hX,
+                        top: query[1] + boardOffset.top - halfWidth,
+                        left: query[0] + boardOffset.left - halfWidth,
                         width: 2 * halfWidth,
                         height: 2 * halfWidth
                     }

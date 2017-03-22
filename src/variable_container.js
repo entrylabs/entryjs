@@ -403,7 +403,9 @@ Entry.VariableContainer = function() {
      * update list view
      */
     p.updateList = function() {
-        if (!this.listView_ || (Entry.playground && Entry.playground.getViewMode() !== 'code'))
+        var playground = Entry.playground;
+        if (!this.listView_ ||
+            (playground && playground.getViewMode() !== 'variable'))
             return;
 
         this.variableSettingView.addClass('entryRemove');

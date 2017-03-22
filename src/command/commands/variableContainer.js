@@ -22,7 +22,6 @@ goog.require("Entry.STATIC");
                 ['oldType', oldType],
             ];
         },
-        skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "variableContainerSelectFilter",
         dom: ['variableContainer', 'filter', '&0']
@@ -64,6 +63,8 @@ goog.require("Entry.STATIC");
         undo: "variableContainerRemoveVariable",
         restrict: function(data, domQuery, callback) {
             Entry.variableContainer.clickVariableAddButton(true, true);
+            var dom = $('.entryVariableAddSpaceInputWorkspace');
+            dom.val(data.content[1][1].name);
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
@@ -107,7 +108,6 @@ goog.require("Entry.STATIC");
             });
             return tooltip;
         },
-        followCmd: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "variableAddSetName",
         dom: ['variableContainer', 'variableAddInput']

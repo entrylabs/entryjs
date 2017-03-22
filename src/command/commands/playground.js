@@ -19,11 +19,9 @@ goog.require("Entry.STATIC");
         log: function(newType, oldType) {
             oldType = oldType || 'code';
             return [
-                ['newType', newType],
-                ['oldType', oldType],
+                ['newType', newType]
             ];
         },
-        skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "playgroundChangeViewMode",
         dom: ['playground', 'tabViewElements', '&0']

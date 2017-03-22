@@ -23,9 +23,7 @@ Entry.Field = function() {};
             if (this._startValue !== this.getValue() && !this._blockView.isInBlockMenu) {
                 Entry.do(
                     'setFieldValue',
-                    this._block, this,
                     this.pointer(),
-                    this._startValue,
                     this.getValue()
                 );
             }
