@@ -6167,7 +6167,14 @@ Entry.EntityObject.prototype.syncFont = function() {
   this.textObject.font = this.getFont();
   this.setLineHeight();
   Entry.stage.update();
-  this.getLineBreak() || this.setWidth(this.textObject.getMeasuredWidth());
+  if (this.getLineBreak()) {
+    if ("Nanum Gothic Coding" == this.fontType) {
+      var c = this.textObject.getMeasuredLineHeight();
+      this.textObject.y = c / 2 - this.getHeight() / 2 + 10;
+    }
+  } else {
+    this.setWidth(this.textObject.getMeasuredWidth());
+  }
   Entry.stage.updateObject();
   Entry.requestUpdate = !0;
 };
@@ -6235,7 +6242,8 @@ Entry.EntityObject.prototype.setLineBreak = function(c) {
     void 0 === c && (c = !1);
     var b = this.lineBreak;
     this.lineBreak = c;
-    b && !this.lineBreak ? (this.textObject.lineWidth = null, this.setHeight(this.textObject.getMeasuredLineHeight()), this.setText(this.getText().replace(/\n/g, ""))) : !b && this.lineBreak && (this.setFontSize(this.getFontSize() * this.getScaleX()), this.setHeight(3 * this.textObject.getMeasuredLineHeight()), this.setWidth(this.getWidth() * this.getScaleX()), this.setScaleX(1), this.setScaleY(1), this.textObject.lineWidth = this.getWidth(), this.alignTextBox());
+    b && !this.lineBreak ? (this.textObject.lineWidth = null, this.setHeight(this.textObject.getMeasuredLineHeight()), this.setText(this.getText().replace(/\n/g, ""))) : !b && this.lineBreak && (this.setFontSize(this.getFontSize() * this.getScaleX()), this.setHeight(3 * this.textObject.getMeasuredLineHeight()), this.setWidth(this.getWidth() * this.getScaleX()), this.setScaleX(1), this.setScaleY(1), this.textObject.lineWidth = this.getWidth(), this.alignTextBox(), "Nanum Gothic Coding" == this.fontType && 
+    (c = this.textObject.getMeasuredLineHeight(), this.textObject.y = c / 2 - this.getHeight() / 2 + 10));
     Entry.stage.updateObject();
   }
 };
@@ -6393,6 +6401,7 @@ Entry.EntityObject.prototype.alignTextBox = function() {
     if (this.lineBreak) {
       var b = c.getMeasuredLineHeight();
       c.y = b / 2 - this.getHeight() / 2;
+      "Nanum Gothic Coding" == this.fontType && (c.y = b / 2 - this.getHeight() / 2 + 10);
       switch(this.textAlign) {
         case Entry.TEXT_ALIGN_CENTER:
           c.x = 0;
@@ -16189,7 +16198,7 @@ Entry.init = function(c, b) {
   this.createDom(c, this.type);
   this.loadInterfaceState();
   this.overridePrototype();
-  this.maxCloneLimit = 302;
+  this.maxCloneLimit = 360;
   this.cloudSavable = !0;
   this.startTime = (new Date).getTime();
   document.onkeydown = function(b) {
@@ -17496,37 +17505,30 @@ Entry.Func.setupMenuCode = function() {
   if (c) {
     var c = c.getBlockMenu(), b = c.code;
     this._fieldLabel = b.createThread([{type:"function_field_label", category:"func", x:-9999}]).getFirstBlock();
-    this._fieldString = b.createThread([{type:"function_field_string", category:"func", x:-9999, params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock();
-    this._fieldBoolean = b.createThread([{type:"function_field_boolean", category:"func", x:-9999, params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock();
+    this._fieldString = b.createThread([{type:"function_field_string", category:"func", x:-9999, copyable:!1, params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock();
+    this._fieldBoolean = b.createThread([{type:"function_field_boolean", copyable:!1, category:"func", x:-9999, params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock();
     this.menuCode = b;
     c.align();
   }
 };
 Entry.Func.refreshMenuCode = function() {
-  if (Entry.playground.mainWorkspace) {
-    this.menuCode || this.setupMenuCode();
-    var c = Entry.block[this._fieldString.params[0].type].changeEvent._listeners.length;
-    2 < c && this._fieldString.params[0].changeType(this.requestParamBlock("string"));
-    c = Entry.block[this._fieldBoolean.params[0].type].changeEvent._listeners.length;
-    2 < c && this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
-  }
+  Entry.playground.mainWorkspace && (this.menuCode || this.setupMenuCode(), this._fieldString.params[0].changeType(this.requestParamBlock("string")), this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean")));
 };
 Entry.Func.requestParamBlock = function(c) {
-  var b = Entry.generateHash(), f;
+  var b;
   switch(c) {
     case "string":
-      f = Entry.block.function_param_string;
+      b = Entry.block.function_param_string;
       break;
     case "boolean":
-      f = Entry.block.function_param_boolean;
+      b = Entry.block.function_param_boolean;
       break;
     default:
       return null;
   }
-  b = c + "Param_" + b;
-  c = Entry.Func.createParamBlock(b, f, c);
-  Entry.block[b] = c;
-  return b;
+  var f = c + "Param_" + Entry.generateHash();
+  Entry.block[f] = Entry.Func.createParamBlock(f, b, c);
+  return f;
 };
 Entry.Func.registerParamBlock = function(c) {
   -1 < c.indexOf("stringParam") ? Entry.Func.createParamBlock(c, Entry.block.function_param_string, c) : -1 < c.indexOf("booleanParam") && Entry.Func.createParamBlock(c, Entry.block.function_param_boolean, c);
@@ -17883,8 +17885,8 @@ Entry.HW = function() {
   this.connectTrial = 0;
   this.isFirstConnect = !0;
   this.requireVerion = "v1.6.1";
-  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.5_Setup.exe";
-  this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.4.dmg";
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.6_Setup.exe";
+  this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.6.dmg";
   this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
@@ -24269,7 +24271,6 @@ Entry.Scroller.RADIUS = 7;
       var e = this.board.svgBlockGroup.getBoundingClientRect(), g = this.board.svgDom, h = e.left - this.board.offset().left, k = e.top - this.board.offset().top, l = e.height;
       b = Math.max(-e.width + Entry.BOARD_PADDING - h, b);
       c = Math.max(-l + Entry.BOARD_PADDING - k, c);
-      b = Math.min(g.width() - Entry.BOARD_PADDING - h, b);
       c = Math.min(g.height() - Entry.BOARD_PADDING - k, c);
       this._scroll(b, c);
       !0 !== d && (this._diffs || (this._diffs = [0, 0]), this._diffs[0] += b, this._diffs[1] += c, this._scrollCommand("scrollBoard", this._diffs[0], this._diffs[1], !0));
@@ -26039,7 +26040,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
               b.preventDefault();
               break;
             case 67:
-              q && !q.isInBlockMenu && q.block.isDeletable() && q.block.copyToClipboard();
+              q && !q.isInBlockMenu && q.block.isDeletable() && q.block.isCopyable() && q.block.copyToClipboard();
               break;
             case 88:
               !r && q && !q.isInBlockMenu && q.block.isDeletable() && function(b) {

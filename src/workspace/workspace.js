@@ -331,8 +331,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         return;
                     }
 
-                    var message = Entry.TextCodingUtil.isNamesIncludeSpace()
-                    if(message) {
+                    var message = Entry.TextCodingUtil.isNamesIncludeSpace();
+                    if (message) {
                         alert(message);
                         return;
                     }
@@ -345,7 +345,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     e.preventDefault();
                     break;
                 case 67:
-                    if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
+                    if (blockView && !blockView.isInBlockMenu &&
+                        blockView.block.isDeletable() && blockView.block.isCopyable()) {
                         blockView.block.copyToClipboard();
                     }
                     break;
