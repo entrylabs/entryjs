@@ -53,7 +53,7 @@ Entry.HW = function() {
         '10.1': Entry.Roborobo_Roduino,
         '10.2': Entry.Roborobo_SchoolKit,
         '12.1': Entry.EV3,
-        '99.99': Entry.MODI,
+        '16.1': Entry.MODI,
         'B.1': Entry.Codestar,
         'A.1': Entry.SmartBoard
     };
