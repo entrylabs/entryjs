@@ -9,7 +9,7 @@ goog.require("Entry.Utils");
 
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
-    var obj;
+    var obj, command;
 
     c[COMMAND_TYPES.addThread] = {
         do: function(blocks, index) {
@@ -459,22 +459,24 @@ goog.require("Entry.Utils");
             }
         });
     };
-    obj.dom = ['playground', 'board', 'coord', '&1', '&2']
+    obj.dom = ['playground', 'board', 'coord', '&1', '&2'];
     c[COMMAND_TYPES.moveBlockFromBlockMenu] = obj;
 
-    c[COMMAND_TYPES.cloneBlock] = {
-        do: c[COMMAND_TYPES.addThread].do,
-        state: c[COMMAND_TYPES.addThread].state,
-        log: c[COMMAND_TYPES.addThread].log,
-        undo: "uncloneBlock"
-    };
+    cloneCommand(
+        COMMAND_TYPES.cloneBlock,
+        COMMAND_TYPES.addThread,
+        [
+            ['undo', 'uncloneBlock']
+        ]
+    );
 
-    c[COMMAND_TYPES.uncloneBlock] = {
-        do: c[COMMAND_TYPES.destroyThread].do,
-        state: c[COMMAND_TYPES.destroyThread].state,
-        log: c[COMMAND_TYPES.destroyThread].log,
-        undo: "cloneBlock"
-    };
+    cloneCommand(
+        COMMAND_TYPES.uncloneBlock,
+        COMMAND_TYPES.destroyThread,
+        [
+            ['undo', 'cloneBlock']
+        ]
+    );
 
     c[COMMAND_TYPES.scrollBoard] = {
         do: function(dx, dy, isPass) {
@@ -638,5 +640,15 @@ goog.require("Entry.Utils");
         },
         undo: "destroyBlockBelow"
     };
+
+    function cloneCommand(newType, oldType, props) {
+        c[newType] = Entry.cloneSimpleObject(c[oldType]);
+        if (props && props instanceof Array) {
+            props.forEach(function(prop) {
+                c[newType][prop[0]] = prop[1];
+            });
+        }
+        return c[newType];
+    }
 
 })(Entry.Command);

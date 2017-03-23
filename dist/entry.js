@@ -11091,17 +11091,17 @@ Entry.TextCodingUtil = {};
   c.isMaterialBlock = function(b) {
     return "get_canvas_input_value" == b || "get_variable" == b || "value_of_index_from_list" == b || "length_of_list" == b || "is_included_in_list" == b ? !0 : !1;
   };
-  c.jsAdjustSyntax = function(b, c) {
-    var d = "";
+  c.jsAdjustSyntax = function(b, f) {
+    var c = "";
     if ("ai_boolean_distance" == b.data.type) {
-      var e = c.split(" "), d = e[0].split("_");
-      d[1] = d[1].substring(1, d[1].length - 1);
-      d[1] = d[1].toLowerCase();
-      var d = d.join("_"), g = e[1], g = this.bTojBinaryOperatorConvertor(g), e = e[2], d = d + " " + g + " " + e;
+      var e = f.split(" "), c = e[0].split("_");
+      c[1] = c[1].substring(1, c[1].length - 1);
+      c[1] = c[1].toLowerCase();
+      var c = c.join("_"), g = e[1], g = this.bTojBinaryOperatorConvertor(g), e = e[2], c = c + " " + g + " " + e;
     } else {
-      "ai_boolean_object" == b.data.type ? (e = c.split(" "), d = e[0].split("_"), d[1] = d[1].substring(1, d[1].length - 1), d[1] = d[1].toLowerCase(), d = d.join("_"), g = e[1], e = e[2], d = d + " " + g + " " + e) : "ai_distance_value" == b.data.type ? (e = c.split(" "), d = e[0].split("_"), d[1] = d[1].substring(1, d[1].length - 1), d[1] = d[1].toLowerCase(), d = d.join("_")) : d = c;
+      "ai_boolean_object" == b.data.type ? (e = f.split(" "), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), c = c.join("_"), g = e[1], e = e[2], c = c + " " + g + " " + e) : "ai_distance_value" == b.data.type ? (e = f.split(" "), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), c = c.join("_")) : c = f;
     }
-    return d;
+    return c;
   };
   c.bTojBinaryOperatorConvertor = function(b) {
     var c;
@@ -17170,8 +17170,15 @@ Entry.Model = function(c, b) {
   };
 })(Entry.Model);
 (function(c) {
-  var b = Entry.STATIC.COMMAND_TYPES, f;
-  c[b.addThread] = {do:function(b, c) {
+  function b(b, f, d) {
+    c[b] = Entry.cloneSimpleObject(c[f]);
+    d && d instanceof Array && d.forEach(function(f) {
+      c[b][f[0]] = f[1];
+    });
+    return c[b];
+  }
+  var f = Entry.STATIC.COMMAND_TYPES, d;
+  c[f.addThread] = {do:function(b, c) {
     return this.editor.board.code.createThread(b, c);
   }, state:function(b, c) {
     if (void 0 === c || null === c) {
@@ -17182,8 +17189,8 @@ Entry.Model = function(c, b) {
     b instanceof Entry.Thread && (b = b.toJSON());
     return [["blocks", b], ["index", c]];
   }, undo:"destroyThread", recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, dom:["playground", "blockMenu", "&0"]};
-  f = Entry.cloneSimpleObject(c[b.addThread]);
-  f.showMe = function(b) {
+  d = Entry.cloneSimpleObject(c[f.addThread]);
+  d.showMe = function(b) {
     if (!b.isTooltipFaded()) {
       b.fadeOutTooltip();
       var c = Entry.getDom(b.processDomQuery(this.dom)), f = Entry.getDom(b.processDomQuery(["playground", "board", "&1", "magnet", "next", 0], b.requestNextData().content)).getBoundingClientRect();
@@ -17192,9 +17199,9 @@ Entry.Model = function(c, b) {
       });
     }
   };
-  f.followCmd = !0;
-  c[b.addThreadFromBlockMenu] = f;
-  c[b.destroyThread] = {do:function(b) {
+  d.followCmd = !0;
+  c[f.addThreadFromBlockMenu] = d;
+  c[f.destroyThread] = {do:function(b) {
     b instanceof Entry.Thread || (b = this.editor.board.code.getThread(b));
     b.getFirstBlock().destroy(!0, !0);
   }, state:function(b) {
@@ -17207,7 +17214,7 @@ Entry.Model = function(c, b) {
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, f) {
     f();
   }, validate:!1, undo:"addThread"};
-  c[b.destroyBlock] = {do:function(b) {
+  c[f.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
     b.doDestroy(!0);
   }, state:function(b) {
@@ -17217,7 +17224,7 @@ Entry.Model = function(c, b) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer ? b.pointer() : b]];
   }, undo:"recoverBlock"};
-  c[b.recoverBlock] = {do:function(b, c) {
+  c[f.recoverBlock] = {do:function(b, c) {
     var f = this.editor.board.code.createThread([b]).getFirstBlock();
     this.editor.board.insert(f, c);
   }, state:function(b) {
@@ -17227,7 +17234,7 @@ Entry.Model = function(c, b) {
     b = this.editor.board.findBlock(b.id);
     return [["block", b], ["pointer", c]];
   }, undo:"destroyBlock"};
-  c[b.insertBlock] = {do:function(b, c, f) {
+  c[f.insertBlock] = {do:function(b, c, f) {
     b = this.editor.board.findBlock(b);
     this.editor.board.insert(b, c, f);
   }, state:function(b, c) {
@@ -17242,12 +17249,12 @@ Entry.Model = function(c, b) {
     b = [["block", b ? b.pointer() : ""], ["targetPointer", c]];
     f && b.push(["count", f ? f : null]);
     return b;
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, f, h) {
-    var k = !1, l = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !k && c && (k = !0, f(), l.init([{title:b.tooltip.title, content:b.tooltip.content, target:h.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, f, d) {
+    var l = !1, m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !l && c && (l = !0, f(), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
       }}));
     }});
-    return l;
+    return m;
   }, showMe:function(b) {
     if (!b.isTooltipFaded()) {
       b.fadeOutTooltip();
@@ -17257,21 +17264,21 @@ Entry.Model = function(c, b) {
       });
     }
   }, dom:["playground", "board", "&0"]};
-  f = Entry.cloneSimpleObject(c[b.insertBlock]);
-  f.followCmd = !0;
-  c[b.insertBlockFollowSeparate] = f;
-  f = Entry.cloneSimpleObject(c[b.insertBlock]);
-  f.restrict = function(b, c, f) {
+  d = Entry.cloneSimpleObject(c[f.insertBlock]);
+  d.followCmd = !0;
+  c[f.insertBlockFollowSeparate] = d;
+  d = Entry.cloneSimpleObject(c[f.insertBlock]);
+  d.restrict = function(b, c, f) {
     f();
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
     }});
   };
-  f.dom = ["playground", "board", "&1", "magnet"];
-  c[b.insertBlockFromBlockMenu] = f;
-  f = Entry.cloneSimpleObject(c[b.insertBlockFromBlockMenu]);
-  f.followCmd = !0;
-  c[b.insertBlockFromBlockMenuFollowSeparate] = f;
-  c[b.separateBlock] = {do:function(b, c, f) {
+  d.dom = ["playground", "board", "&1", "magnet"];
+  c[f.insertBlockFromBlockMenu] = d;
+  d = Entry.cloneSimpleObject(c[f.insertBlockFromBlockMenu]);
+  d.followCmd = !0;
+  c[f.insertBlockFromBlockMenuFollowSeparate] = d;
+  c[f.separateBlock] = {do:function(b, c, f) {
     b = this.editor.board.findBlock(b);
     "number" === typeof f && (console.log(c, f), b.view._moveTo(c, f), c = void 0);
     c = void 0 === c ? Entry.DRAG_MODE_DRAG : c;
@@ -17288,24 +17295,24 @@ Entry.Model = function(c, b) {
     var c = b.pointer();
     b.view && (b = b.view);
     return [["block", c], ["x", b.x], ["y", b.y]];
-  }, restrict:function(b, c, f, h) {
-    var k = !1, l = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !k && c && (f(), k = !0, l.init([{title:b.tooltip.title, content:b.tooltip.content, target:h.processDomQuery(["playground", "board", "coord", "&1", "&2"])}], {indicator:!0, callBack:function() {
+  }, restrict:function(b, c, f, d) {
+    var l = !1, m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !l && c && (f(), l = !0, m.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "coord", "&1", "&2"])}], {indicator:!0, callBack:function() {
         f();
       }}));
     }});
-    return l;
+    return m;
   }, validate:!1, undo:"insertBlock", dom:["playground", "board", "&0"]};
-  f = Entry.cloneSimpleObject(c[b.separateBlock]);
-  f.restrict = function(b, c, f, h) {
-    var k = !1, l = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !k && c && (f(), k = !0, l.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
+  d = Entry.cloneSimpleObject(c[f.separateBlock]);
+  d.restrict = function(b, c, f, d) {
+    var l = !1, m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !l && c && (f(), l = !0, m.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
         f();
       }}));
     }});
-    return l;
+    return m;
   };
-  f.showMe = function(b) {
+  d.showMe = function(b) {
     if (!b.isTooltipFaded()) {
       b.fadeOutTooltip();
       var c = Entry.getDom(b.processDomQuery(this.dom)), f = Entry.getDom(["playground", "board", "trashcan"]).getBoundingClientRect();
@@ -17314,45 +17321,45 @@ Entry.Model = function(c, b) {
       });
     }
   };
-  f.followCmd = !0;
-  c[b.separateBlockForDestroy] = f;
-  c[b.moveBlock] = {do:function(b, c, f) {
+  d.followCmd = !0;
+  c[f.separateBlockForDestroy] = d;
+  c[f.moveBlock] = {do:function(b, c, f) {
     void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, f)) : b._updatePos();
   }, state:function(b) {
     b = this.editor.board.findBlock(b);
     return [b, b.x, b.y];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, f, h) {
-    var k = !1, l = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !k && c && (k = !0, f(), l.init([{title:b.tooltip.title, content:b.tooltip.content, target:h.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, f, d) {
+    var l = !1, m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !l && c && (l = !0, f(), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
       }}));
     }});
-    return l;
+    return m;
   }, validate:!1, log:function(b, c, f) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.view.x], ["y", b.view.y]];
   }, undo:"moveBlock", dom:["playground", "board", "&0"]};
-  f = Entry.cloneSimpleObject(c[b.moveBlock]);
-  f.followCmd = !0;
-  f.restrict = function(b, c, f, h) {
-    var k = !1, l = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !k && c && (k = !0, f(), l.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
+  d = Entry.cloneSimpleObject(c[f.moveBlock]);
+  d.followCmd = !0;
+  d.restrict = function(b, c, f, d) {
+    var l = !1, m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !l && c && (l = !0, f(), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
         f();
       }}));
     }});
-    return l;
+    return m;
   };
-  c[b.moveBlockForDestroy] = f;
-  f = Entry.cloneSimpleObject(c[b.moveBlock]);
-  f.restrict = function(b, c, f) {
+  c[f.moveBlockForDestroy] = d;
+  d = Entry.cloneSimpleObject(c[f.moveBlock]);
+  d.restrict = function(b, c, f) {
     f();
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
     }});
   };
-  f.dom = ["playground", "board", "coord", "&1", "&2"];
-  c[b.moveBlockFromBlockMenu] = f;
-  c[b.cloneBlock] = {do:c[b.addThread].do, state:c[b.addThread].state, log:c[b.addThread].log, undo:"uncloneBlock"};
-  c[b.uncloneBlock] = {do:c[b.destroyThread].do, state:c[b.destroyThread].state, log:c[b.destroyThread].log, undo:"cloneBlock"};
-  c[b.scrollBoard] = {do:function(b, c, f) {
+  d.dom = ["playground", "board", "coord", "&1", "&2"];
+  c[f.moveBlockFromBlockMenu] = d;
+  b(f.cloneBlock, f.addThread, [["undo", "uncloneBlock"]]);
+  b(f.uncloneBlock, f.destroyThread, [["undo", "cloneBlock"]]);
+  c[f.scrollBoard] = {do:function(b, c, f) {
     f || this.editor.board.scroller._scroll(b, c);
     delete this.editor.board.scroller._diffs;
   }, state:function(b, c) {
@@ -17360,28 +17367,28 @@ Entry.Model = function(c, b) {
   }, log:function(b, c) {
     return [["dx", b], ["dy", c]];
   }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
-  c[b.setFieldValue] = {do:function(b, c) {
+  c[f.setFieldValue] = {do:function(b, c) {
     this.editor.board.findBlock(b).setValue(c, !0);
   }, state:function(b, c) {
     var f = this.editor.board.findBlock(b);
     return [b, f._startValue || f.getValue()];
   }, log:function(b, c) {
     return [["pointer", b], ["value", c]];
-  }, restrict:function(b, c, f, h) {
+  }, restrict:function(b, c, f, d) {
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c, direction:"left"}], {dimmed:!0, restrict:!0, callBack:function() {
       f();
     }});
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
-  c[b.selectBlockMenu] = {do:function(b, c, f) {
-    var h = Entry.getMainWS().blockMenu;
-    h.selectMenu(b, c, f);
-    h.align();
+  c[f.selectBlockMenu] = {do:function(b, c, f) {
+    var d = Entry.getMainWS().blockMenu;
+    d.selectMenu(b, c, f);
+    d.align();
   }, state:function(b, c, f) {
     return [Entry.getMainWS().blockMenu.lastSelector, c, f];
   }, log:function(b, c, f) {
     return [["selector", b]];
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "category", "&0"], undo:"selectBlockMenu"};
-  c[b.destroyThreads] = {do:function() {
+  c[f.destroyThreads] = {do:function() {
     this.editor.board.code.getThreads().filter(function(b) {
       return b.getFirstBlock().isDeletable();
     }).forEach(function(b) {
@@ -17396,7 +17403,7 @@ Entry.Model = function(c, b) {
   }, log:function() {
     return [];
   }, undo:"addThreads"};
-  c[b.addThreads] = {do:function(b) {
+  c[f.addThreads] = {do:function(b) {
     var c = this.editor.board.code;
     b.forEach(function(b) {
       c.createThread(b);
@@ -17406,7 +17413,7 @@ Entry.Model = function(c, b) {
   }, log:function() {
     return [];
   }, undo:"destroyThreads"};
-  c[b.destroyBlockBelow] = {do:function(b) {
+  c[f.destroyBlockBelow] = {do:function(b) {
     b = this.editor.board.findBlock(b);
     b.doDestroyBelow(!0);
   }, state:function(b) {
@@ -17416,7 +17423,7 @@ Entry.Model = function(c, b) {
   }, log:function(b) {
     return [];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"recoverBlockBelow"};
-  c[b.recoverBlockBelow] = {do:function(b, c) {
+  c[f.recoverBlockBelow] = {do:function(b, c) {
     var f = this.editor.board;
     b = f.code.createThread(b);
     f.insert(b.getFirstBlock(), c);
