@@ -1452,7 +1452,7 @@ Entry.block = {
             var pd = Entry.hw.portData
             return pd.leftProximity > 40 || pd.rightProximity > 40;
         },
-    "syntax": {"js": [], "py": ["Albert.hand_found()"]}
+        "syntax": {"js": [], "py": ["Albert.hand_found()"]}
     },
     "albert_is_oid_value": {
         "color": "#00979D",
@@ -2036,7 +2036,7 @@ Entry.block = {
             sq.padHeight = script.getNumberValue('HEIGHT');
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
     },
     "albert_move_to_x_y_on_board": {
         "color": "#00979D",
@@ -6944,7 +6944,7 @@ Entry.block = {
             result = Math.max(value4, result);
             return Math.round(result);
         },
-    "syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
+        "syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "cobl_read_ultrason": {
         color: "#00979D",
