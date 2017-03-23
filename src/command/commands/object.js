@@ -137,9 +137,9 @@ goog.require("Entry.STATIC");
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
             var tooltip = new Entry.Tooltip([{
-                content: "여기 밑에 끼워넣으셈",
-                target: '.btn_confirm_modal',
-                direction: "right"
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: '.btn_confirm_modal'
             }], {
                 callBack: callback,
                 dimmed: true,
