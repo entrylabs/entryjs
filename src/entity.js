@@ -870,7 +870,9 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
     if (!isForce && diffEffects.length === 0)
         return;
 
-    diffEffects = diffEffects.concat(forceEffects);
+    if(Array.isArray(forceEffects)) {
+        diffEffects = diffEffects.concat(forceEffects);
+    }
 
     (function(e, obj) {
         var f = [];

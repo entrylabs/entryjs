@@ -7763,7 +7763,7 @@ Entry.EntityObject.prototype.applyFilter = function(c, b) {
     return e;
   }(e, this.getInitialEffectValue());
   if (c || 0 !== f.length) {
-    f = f.concat(b), function(b, c) {
+    Array.isArray(b) && (f = f.concat(b)), function(b, c) {
       var e = [], d = Entry.adjustValueWithMaxMin;
       if (-1 < f.indexOf("brightness")) {
         b.brightness = b.brightness;
