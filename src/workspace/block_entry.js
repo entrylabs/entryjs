@@ -37767,7 +37767,7 @@ Entry.block = {
     "coconut_clear_led": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 LED 끄기",
+        "template": "%1 LED 끄기 %2",
         "statements": [],
         "params": [
             {
@@ -38706,6 +38706,7 @@ Entry.block = {
 
     "coconut_floor_sensor": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -38744,6 +38745,7 @@ Entry.block = {
 
     "coconut_floor_sensing": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -38883,6 +38885,7 @@ Entry.block = {
 
     "coconut_front_sensor": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -38921,6 +38924,7 @@ Entry.block = {
 
     "coconut_front_sensing": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
