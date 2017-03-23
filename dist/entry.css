@@ -6313,7 +6313,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   position: fixed;
   background-color: black;
   opacity: 0.5;
-  z-index: 3000;
+  z-index: 5001;
   -webkit-transition: opacity 0.4s ease-in-out;
   -moz-transition: opacity 0.4s ease-in-out;
   -o-transition: opacity 0.4s ease-in-out;
