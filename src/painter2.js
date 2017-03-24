@@ -31,11 +31,11 @@ p.initialize = function() {
             zoomMax: 3.0,
             zoomMin: 0.5,
             toolbarPosition: 'bottom',
-            imageSize: {width: 0, height: 0},
+            imageSize: {width: 960, height: 540},
             backgroundShapes: [
                 LC.createShape(
                     'Rectangle', {
-                        x: 0, y: 0, width: 0, height: 0,
+                        x: 0, y: 0, width: 960, height: 540,
                         strokeWidth: 0,
                         strokeColor: 'transparent'
                     }
@@ -43,7 +43,7 @@ p.initialize = function() {
             ]
         }
     );
-    this.lc.respondToSizeChange();
+    //this.lc.respondToSizeChange();
 
     bgImage.onload = function() {
         this.lc.repaintLayer("background")
@@ -126,26 +126,27 @@ p.addPicture = function(picture, isOriginal) {
         // deprecated
         image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
     }
-
+    var ratio = 1;
     var dimension = picture.dimension;
+    if (dimension.width > 950 || dimension.height > 530) {
+        ratio = Math.min(950 / dimension.width, 530 / dimension.height);
+    }
+
     var shape = LC.createShape('Image',{
         x: 480,
         y: 270,
         width: dimension.width,
         height: dimension.height,
-        image: image
+        image: image,
+        scale: ratio
     });
-    var ratio = 1;
-    var canvasHeight = this.lc.canvas.height;
-    if (dimension.height > canvasHeight) {
-        ratio = dimension.height - canvasHeight / 100;
-    }
-    //this.lc.setZoom(0.5);
     this.lc.saveShape(shape, !isOriginal);
 
     image.onload = function() {
         this.lc.setTool(this.lc.tools.SelectShape);
         this.lc.tool.setShape(this.lc, shape);
+        if (ratio != 1)
+            this.file_save(true);
     }.bind(this);
 
 };
