@@ -20105,7 +20105,9 @@ Entry.Curtain = {};
     var c = {parent:$("body"), class:"entryCurtainElem entryRemove"};
     this._doms = {top:Entry.Dom("div", c), right:Entry.Dom("div", c), bottom:Entry.Dom("div", c), left:Entry.Dom("div", c)};
     for (var b in this._doms) {
-      this._doms[b].addClass(b);
+      c = this._doms[b], c.addClass(b), c.bind("mousedown", function(b) {
+        b.stopPropagation();
+      });
     }
   };
   this.show = function(c) {

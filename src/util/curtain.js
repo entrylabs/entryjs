@@ -22,8 +22,13 @@ goog.require('Entry.Dom');
             left: Entry.Dom('div', option)
         };
 
-        for (var key in this._doms)
-            this._doms[key].addClass(key);
+        for (var key in this._doms) {
+            var dom = this._doms[key]
+            dom.addClass(key);
+            dom.bind("mousedown", function(e) {
+                e.stopPropagation();
+            })
+        }
     };
 
     this.show = function(datum) {
