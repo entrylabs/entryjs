@@ -14121,7 +14121,7 @@ Entry.Parser = function(c, b, f, d) {
           this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
           break;
         case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-          this._execParser = new Entry.BlockToPyParser(this.syntax), d.setOption("mode", {name:"python", globalVars:!0}), this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+          this._execParser = new Entry.BlockToPyParser(this.syntax), d && d.setOption("mode", {name:"python", globalVars:!0}), this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
       }
     }
   };
@@ -22337,8 +22337,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this.pathGroup.insertBefore(b, this._path);
   };
   c._getTemplate = function(b) {
-    var c = this._schema, c = c.template ? c.template : Lang.template[this.block.type], d;
-    b === Entry.BlockView.RENDER_MODE_TEXT && (b = this.getBoard().workspace) && b.vimBoard && (b = b.vimBoard.getBlockSyntax(this)) && (d = "string" === typeof b ? b : b.template);
+    var c = this._schema, c = c.template ? c.template : Lang.template[this.block.type], d, e = this.getBoard();
+    if (b === Entry.BlockView.RENDER_MODE_TEXT) {
+      var g, h = e.workspace;
+      h && h.vimBoard ? g = h.vimBoard.getBlockSyntax(this) : e.getBlockSyntax && (g = e.getBlockSyntax(this, b));
+      g && (d = "string" === typeof g ? g : g.template);
+    }
     return d || c;
   };
   c._getSchemaParams = function(b) {
@@ -23159,7 +23163,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     if (this._originBlock) {
       b = this._originBlock.type, delete this._originBlock;
     } else {
-      switch(this.acceptType) {
+      switch(this.acceptType.toLowerCase()) {
         case "boolean":
           b = "True";
           break;
@@ -24095,7 +24099,7 @@ Entry.Mutator = function() {
 })(Entry.Mutator);
 (function(c) {
 })(Entry.Mutator.prototype);
-Entry.RenderView = function(c, b, f) {
+Entry.RenderView = function(c, b, f, d) {
   this._align = b || "CENTER";
   c = "string" === typeof c ? $("#" + c) : $(c);
   if ("DIV" !== c.prop("tagName")) {
@@ -24105,6 +24109,7 @@ Entry.RenderView = function(c, b, f) {
   this.viewOnly = !0;
   this.suffix = "renderView";
   this._scale = void 0 === f ? 1 : f;
+  this._parserType = d;
   this.disableMouseEvent = this.visible = !0;
   this._svgId = "renderView_" + (new Date).getTime();
   this._generateView();
@@ -24193,6 +24198,14 @@ Entry.RenderView = function(c, b, f) {
   c._getHorizontalPadding = function() {
     var b = {LEFT:20, LEFT_MOST:0}[this._align];
     return void 0 !== b ? b : this.svgDom.width() / 2;
+  };
+  c.getBlockSyntax = function(b, c) {
+    var d = null;
+    2 === c && (this._parser || (this._parser = new Entry.Parser(null, null)), this._parser.setParser(1, this._parserType), this._parser._execParser && (d = this._parser._execParser.searchSyntax(b)));
+    return d;
+  };
+  c.setParserType = function(b) {
+    this._parserType = b;
   };
 })(Entry.RenderView.prototype);
 Entry.Scroller = function(c, b, f) {
