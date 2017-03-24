@@ -31,11 +31,11 @@ p.initialize = function() {
             zoomMax: 3.0,
             zoomMin: 0.5,
             toolbarPosition: 'bottom',
-            imageSize: {width: 960, height: 540},
+            imageSize: {width: 0, height: 0},
             backgroundShapes: [
                 LC.createShape(
                     'Rectangle', {
-                        x: 0, y: 0, width: 960, height: 540,
+                        x: 0, y: 0, width: 0, height: 0,
                         strokeWidth: 0,
                         strokeColor: 'transparent'
                     }
@@ -43,6 +43,7 @@ p.initialize = function() {
             ]
         }
     );
+    this.lc.respondToSizeChange();
 
     bgImage.onload = function() {
         this.lc.repaintLayer("background")
@@ -134,6 +135,12 @@ p.addPicture = function(picture, isOriginal) {
         height: dimension.height,
         image: image
     });
+    var ratio = 1;
+    var canvasHeight = this.lc.canvas.height;
+    if (dimension.height > canvasHeight) {
+        ratio = dimension.height - canvasHeight / 100;
+    }
+    //this.lc.setZoom(0.5);
     this.lc.saveShape(shape, !isOriginal);
 
     image.onload = function() {

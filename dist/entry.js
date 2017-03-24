@@ -8741,7 +8741,8 @@ Entry.Painter2 = function(c) {
     if (!this.lc) {
       var b = this.baseUrl, f = new Image;
       f.src = b + "/transparent-pattern.png";
-      this.lc = LC.init(this.view, {imageURLPrefix:b, zoomMax:3, zoomMin:.5, toolbarPosition:"bottom", imageSize:{width:960, height:540}, backgroundShapes:[LC.createShape("Rectangle", {x:0, y:0, width:960, height:540, strokeWidth:0, strokeColor:"transparent"})]});
+      this.lc = LC.init(this.view, {imageURLPrefix:b, zoomMax:3, zoomMin:.5, toolbarPosition:"bottom", imageSize:{width:0, height:0}, backgroundShapes:[LC.createShape("Rectangle", {x:0, y:0, width:0, height:0, strokeWidth:0, strokeColor:"transparent"})]});
+      this.lc.respondToSizeChange();
       f.onload = function() {
         this.lc.repaintLayer("background");
       }.bind(this);
