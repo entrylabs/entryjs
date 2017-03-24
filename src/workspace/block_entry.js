@@ -25007,11 +25007,12 @@ Entry.block = {
         "class": "schoolkit_set",
         "isNotFor": [ "roborobo_schoolkit" ],
         "func": function (sprite, script) {
-            var pin = script.getNumberValue("VALUE", script);
+            var pin = script.getNumberValue("VALUE");
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
-
-            Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, pin, value]);
+            
+            Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
+            Entry.hw.setDigitalPortValue(pin, value);
             return script.callReturn();
         }
     },
@@ -25041,8 +25042,9 @@ Entry.block = {
         "class": "schoolkit_value",
         "isNotFor": [ "roborobo_schoolkit" ],
         "func": function (sprite, script) {
-            var signal = script.getNumberValue("VALUE", script);
-            Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_READ, signal]);
+            var signal = script.getNumberValue("VALUE");
+            Entry.hw.sendQueue.digitalPinMode[signal] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
+            Entry.hw.update();
             return Entry.hw.portData[signal - 7];
         }
     },
@@ -25103,32 +25105,40 @@ Entry.block = {
         "class": "schoolkit_set",
         "isNotFor": [ "roborobo_schoolkit" ],
         "func": function (sprite, script) {
-            var pin = 0;
-            var operatorValue = 0;
             var mode = script.getField("MODE");
+            var pin = 0;
             var operator = script.getField("OPERATOR");
             var value = script.getNumberValue("VALUE");
-
+            // Entry.hw.sendQueue.instruction = Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR;
+            
             if(mode == "motor1") {
-                pin = 7;
+                pin = 7;        
             } else {
                 pin = 8;
             }
+            
             if(value > 255) {
                 value = 255;
             } else if(value < 0) {
                 value = 0;
             }
-
+            
+            Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+            Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+            Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+            Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+            
             if (operator == "cw") {
-                operatorValue = 1;
-                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+                Entry.hw.setDigitalPortValue(pin, value);
+                Entry.hw.setDigitalPortValue(pin - 7, 0x00);
             } else if (operator == "ccw") {
-                operatorValue = 2;
-                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+                Entry.hw.setDigitalPortValue(pin, 0x00);
+                Entry.hw.setDigitalPortValue(pin - 7, value);
             } else if(operator == "stop") {
-                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+                Entry.hw.setDigitalPortValue(pin, 0x00);
+                Entry.hw.setDigitalPortValue(pin - 7, 0x00);
             }
+            
             return script.callReturn();
         }
     },
@@ -25172,16 +25182,18 @@ Entry.block = {
         "class": "schoolkit_set",
         "isNotFor": [ "roborobo_schoolkit" ],
         "func": function (sprite, script) {
-            var pin = script.getNumberValue("PIN", script);
+            var pin = script.getNumberValue("PIN");
             var value = script.getNumberValue("VALUE");
-
+            
             if(value < 0) {
                 value = 0;
             } else if(value > 180) {
                 value = 180;
             }
-
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.SERVO, pin, value]);
+            Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.SERVO;    
+            Entry.hw.sendQueue.servo[pin - 2] = true;
+            Entry.hw.setDigitalPortValue(pin, value);
+            Entry.hw.update();
             return script.callReturn();
         }
     },
