@@ -273,5 +273,14 @@ Entry.Field = function() {};
         return !!this._isEditing;
     };
 
+    p.getDom = function(query) {
+        if (query.length) {
+            var key = query.shift();
+            if (key === "option")
+                return this.optionGroup;
+        } else {
+            return this.svgGroup;
+        }
+    };
 
 })(Entry.Field.prototype);

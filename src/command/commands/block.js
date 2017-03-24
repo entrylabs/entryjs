@@ -516,17 +516,34 @@ goog.require("Entry.Utils");
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
-                target: domQuery,
-                direction: "left"
+                direction: "left",
+                target: domQuery
             }], {
                 dimmed: true,
                 restrict: true,
-                callBack: function() {
+                callBack: function(isFromInit) {
+                    if (isDone || !isFromInit)
+                        return;
+                    isDone = true;
                     callback();
+                    callback();
+                    tooltip.init([{
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: restrictor.processDomQuery([
+                            'playground', 'board', '&0', 'option'
+                        ])
+                    }], {
+                        dimmed: true,
+                        restrict: true,
+                        callBack: function() {
+                        }
+                    });
                 }
             });
             return tooltip;
         },
+        disableMouseUpDispose: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['playground', 'board', '&0'],
         undo: "setFieldValue"

@@ -1043,9 +1043,7 @@ Entry.Board.DRAG_RADIUS = 5;
             }
         else if (key instanceof Array) {
             var targetObj = this.code.getByPointer(key);
-            if (targetObj instanceof Entry.Block) {
-                return targetObj.getDom(query);
-            } else if (targetObj instanceof Entry.Thread) {
+            if (targetObj.getDom) {
                 return targetObj.getDom(query);
             } else {
                 return targetObj.svgGroup;
