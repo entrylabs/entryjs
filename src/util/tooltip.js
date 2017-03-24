@@ -49,7 +49,7 @@ Entry.Tooltip = function(data, opts) {
         if (this.opts.dimmed)
             this.renderBG();
 
-        var datum = this.data[0].target;
+        var datum = this.data[0].targetDom;
         if (datum && typeof datum !== 'string' && datum.length) {
             this.opts.restrict && this.opts.dimmed && Entry.Curtain.show(datum.get(0));
             this.renderTooltips();
@@ -61,11 +61,12 @@ Entry.Tooltip = function(data, opts) {
 
     p._convertDoms = function() {
         this.data.map(function(d) {
+            var findedDom = d.target;
             if (d.target instanceof Array)
-                d.target = Entry.getDom(d.target);
-            var dom = $(d.target);
-            if (dom.length)
-                d.target =  dom;
+                findedDom = Entry.getDom(d.target);
+            var targetDom = $(findedDom);
+            if (targetDom.length)
+                d.targetDom = targetDom;
         });
     };
 
@@ -130,11 +131,11 @@ Entry.Tooltip = function(data, opts) {
 
     p._alignTooltip = function(data) {
         var rect;
-        if (data.target instanceof $)
-            rect = data.target.get(0).getBoundingClientRect();
+        if (data.targetDom instanceof $)
+            rect = data.targetDom.get(0).getBoundingClientRect();
         else
-            rect = data.target.getBoundingClientRect();
-        tooltipRect = data.wrapper[0].getBoundingClientRect();
+            rect = data.targetDom.getBoundingClientRect();
+        var tooltipRect = data.wrapper[0].getBoundingClientRect();
         var clientWidth = document.body.clientWidth;
         var clientHeight = document.body.clientHeight;
         if (this.isIndicator) {
@@ -228,11 +229,11 @@ Entry.Tooltip = function(data, opts) {
     };
 
     p.restrictAction = function() {
-        var targets = this.data.map(function(d) {return d.target});
+        var doms = this.data.map(function(d) {return d.targetDom});
         if (this._noDispose && this.opts.callBack)
             this.opts.callBack.call(this);
         Entry.Utils.restrictAction(
-            targets,
+            doms,
             this.dispose.bind(this),
             this._noDispose
         );
@@ -251,4 +252,5 @@ Entry.Tooltip = function(data, opts) {
     p.isFaded = function() {
         return this._faded;
     };
+
 })(Entry.Tooltip.prototype);

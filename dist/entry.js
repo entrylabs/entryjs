@@ -6052,7 +6052,7 @@ Entry.Commander = function(c) {
     return [["pointer", b], ["value", c]];
   }, restrict:function(b, c, e, d) {
     var f = !1, g = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !f && c && (f = !0, e(), g.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
+      !f && c && (f = !0, e(), e(), g.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
       }}));
     }});
     return g;
@@ -20234,6 +20234,9 @@ Entry.Restrictor = function(c) {
     }));
     return b;
   };
+  c.renderTooltip = function() {
+    this.currentTooltip && this.currentTooltip.render();
+  };
   c.fadeOutTooltip = function() {
     this.currentTooltip && this.currentTooltip.fadeOut();
   };
@@ -20277,15 +20280,16 @@ Entry.Tooltip = function(c, b) {
       this.fadeIn();
       this._convertDoms();
       this.opts.dimmed && this.renderBG();
-      var b = this.data[0].target;
+      var b = this.data[0].targetDom;
       b && "string" !== typeof b && b.length && (this.opts.restrict && this.opts.dimmed && Entry.Curtain.show(b.get(0)), this.renderTooltips(), this._rendered = !0, this.opts.restrict && this.restrictAction());
     }
   };
   c._convertDoms = function() {
     this.data.map(function(b) {
-      b.target instanceof Array && (b.target = Entry.getDom(b.target));
-      var c = $(b.target);
-      c.length && (b.target = c);
+      var c = b.target;
+      b.target instanceof Array && (c = Entry.getDom(b.target));
+      c = $(c);
+      c.length && (b.targetDom = c);
     });
   };
   c.renderBG = function() {
@@ -20310,36 +20314,35 @@ Entry.Tooltip = function(c, b) {
   };
   c._alignTooltip = function(b) {
     var c;
-    c = b.target instanceof $ ? b.target.get(0).getBoundingClientRect() : b.target.getBoundingClientRect();
-    tooltipRect = b.wrapper[0].getBoundingClientRect();
-    var d = document.body.clientWidth, f = document.body.clientHeight;
+    c = b.targetDom instanceof $ ? b.targetDom.get(0).getBoundingClientRect() : b.targetDom.getBoundingClientRect();
+    var d = b.wrapper[0].getBoundingClientRect(), f = document.body.clientWidth, g = document.body.clientHeight;
     this.isIndicator && b.indicator.css({left:c.left + c.width / 2, top:c.top + c.height / 2});
-    var g = b.direction;
-    if (!g) {
-      var h = c.left - tooltipRect.width, k = d - c.left - c.width - tooltipRect.width, g = "left";
-      h < k && (h = k, g = "right");
-      k = c.top - tooltipRect.height;
-      h < k && (h = k, g = "up");
-      k = f - c.top - c.height - tooltipRect.height;
-      h < k && (g = "down");
+    var h = b.direction;
+    if (!h) {
+      var k = c.left - d.width, l = f - c.left - c.width - d.width, h = "left";
+      k < l && (k = l, h = "right");
+      l = c.top - d.height;
+      k < l && (k = l, h = "up");
+      l = g - c.top - c.height - d.height;
+      k < l && (h = "down");
     }
-    b.dom.removeClass(this.usedClasses).addClass(g);
-    var h = {top:c.top, left:c.left}, l;
-    switch(g) {
+    b.dom.removeClass(this.usedClasses).addClass(h);
+    var k = {top:c.top, left:c.left}, m;
+    switch(h) {
       case "down":
-        h.top += c.height;
+        k.top += c.height;
       case "up":
-        h.left += c.width / 2;
-        h.left < tooltipRect.width / 2 && (l = "edge_left");
-        d - h.left < tooltipRect.width / 2 && (l = "edge_right");
+        k.left += c.width / 2;
+        k.left < d.width / 2 && (m = "edge_left");
+        f - k.left < d.width / 2 && (m = "edge_right");
         break;
       case "right":
-        h.left += c.width;
+        k.left += c.width;
       case "left":
-        h.top += c.height / 2, h.top < tooltipRect.height / 2 && (l = "edge_up"), f - h.top < tooltipRect.height / 2 && (l = "edge_down");
+        k.top += c.height / 2, k.top < d.height / 2 && (m = "edge_up"), g - k.top < d.height / 2 && (m = "edge_down");
     }
-    l && b.dom.addClass(l);
-    b.wrapper.css(h);
+    m && b.dom.addClass(m);
+    b.wrapper.css(k);
   };
   c.renderIndicator = function(b, c) {
     b = Entry.Dom("div", {classes:["entryTooltipIndicator"], parent:$(document.body)});
@@ -20361,7 +20364,7 @@ Entry.Tooltip = function(c, b) {
   };
   c.restrictAction = function() {
     var b = this.data.map(function(b) {
-      return b.target;
+      return b.targetDom;
     });
     this._noDispose && this.opts.callBack && this.opts.callBack.call(this);
     Entry.Utils.restrictAction(b, this.dispose.bind(this), this._noDispose);
@@ -24894,6 +24897,9 @@ Entry.Field = function() {
       return this.svgGroup;
     }
   };
+  c.optionDomCreated = function() {
+    this._blockView.getBoard().workspace.widgetUpdateEvent.notify();
+  };
 })(Entry.Field.prototype);
 Entry.FieldBlock = function(c, b, e, d, f) {
   Entry.Model(this, !1);
@@ -26456,6 +26462,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       })(k, g);
     }
     this._position();
+    this.optionDomCreated();
   };
   c._position = function() {
     var b = this.getAbsolutePosFromDocument();
@@ -26561,6 +26568,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
       })(h, f);
     }
     this._position();
+    this.optionDomCreated();
   };
 })(Entry.FieldDropdownDynamic.prototype);
 Entry.FieldImage = function(c, b, e) {
@@ -27015,6 +27023,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.optionGroup.focus();
     c = this.optionGroup[0];
     c.setSelectionRange(0, c.value.length, "backward");
+    this.optionDomCreated();
   };
   c.applyValue = function(b) {
     b = this.optionGroup.val();

@@ -85,6 +85,11 @@ Entry.Restrictor = function(controller) {
         return domQuery;
     };
 
+    p.renderTooltip = function() {
+        if (this.currentTooltip)
+            this.currentTooltip.render();
+    }
+
     p.fadeOutTooltip = function() {
         if (this.currentTooltip)
             this.currentTooltip.fadeOut();

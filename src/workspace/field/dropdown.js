@@ -185,6 +185,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             })(element, value);
         }
         this._position();
+
+        this.optionDomCreated();
     };
 
     p._position = function() {

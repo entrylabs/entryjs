@@ -283,4 +283,8 @@ Entry.Field = function() {};
         }
     };
 
+    p.optionDomCreated = function() {
+        this._blockView.getBoard().workspace.widgetUpdateEvent.notify();
+    };
+
 })(Entry.Field.prototype);

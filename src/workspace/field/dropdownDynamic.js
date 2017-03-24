@@ -126,6 +126,8 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
             })(element, value);
         }
         this._position();
+        
+        this.optionDomCreated();
     };
 
 })(Entry.FieldDropdownDynamic.prototype);
