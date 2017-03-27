@@ -76,13 +76,16 @@ goog.require("Entry.STATIC");
             }], {
                 restrict: true,
                 dimmed: true,
+                render: false,
                 callBack: callback,
             });
+
+            var event = Entry.getMainWS().widgetUpdateEvent;
 
             Entry.dispatchEvent(
                 'openPictureManager',
                 data.content[2][1]._id,
-                tooltip.render.bind(tooltip)
+                event.notify.bind(event)
             );
             return tooltip;
         },
@@ -143,13 +146,18 @@ goog.require("Entry.STATIC");
             }], {
                 callBack: callback,
                 dimmed: true,
-                restrict: true
+                restrict: true,
+                render: false
             });
+
+            var event = Entry.getMainWS().widgetUpdateEvent;
+
             Entry.dispatchEvent(
                 'openSoundManager',
                 data.content[2][1]._id,
-                tooltip.render.bind(tooltip)
+                event.notify.bind(event)
             );
+
             return tooltip;
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
