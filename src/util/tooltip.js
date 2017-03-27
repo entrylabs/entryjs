@@ -122,6 +122,10 @@ Entry.Tooltip = function(data, opts) {
         if (this.isIndicator)
             data.indicator = this.renderIndicator();
 
+        tooltipDom.bind("mousedown", function(e) {
+            e.stopPropagation();
+        });
+
         tooltipDom.html(data.content);
         this._tooltips.push(tooltipWrapper);
         data.wrapper = tooltipWrapper;

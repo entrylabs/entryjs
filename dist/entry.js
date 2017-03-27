@@ -18938,6 +18938,9 @@ Entry.Tooltip = function(c, b) {
     if (b.content) {
       var c = Entry.Dom("div", {classes:["entryTooltipWrapper"], parent:$(document.body)}), d = Entry.Dom("div", {classes:["entryTooltip", b.direction, b.style], parent:c});
       this.isIndicator && (b.indicator = this.renderIndicator());
+      d.bind("mousedown", function(b) {
+        b.stopPropagation();
+      });
       d.html(b.content);
       this._tooltips.push(c);
       b.wrapper = c;
