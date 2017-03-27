@@ -4029,7 +4029,7 @@ Lang.template = {
     chocopi_control_button: "%1 controller %2 is pressed",
     chocopi_motion_photogate_event: "%1 When %2 photogate %3 is %4",
     chocopi_motion_photogate_time: "time when %1 photogate %2 was %3",
-    chocopi_motion_photogate_status: "%1 photogate #%2 is blcoked",
+    chocopi_motion_photogate_status: "%1 photogate #%2 is blocked",
     chocopi_motion_value: "%1 motion %2 value",
     chocopi_led: "%1 LED #%2 RGB(%3 %4 %5)",
     chocopi_dc_motor: "%1 DC motor #%2  %3 % direction %4 ",
