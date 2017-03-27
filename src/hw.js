@@ -51,6 +51,7 @@ Entry.HW = function() {
         '10.1': Entry.Roborobo_Roduino,
         '10.2': Entry.Roborobo_SchoolKit,
         '12.1': Entry.EV3,
+        '14.1': Entry.Chocopi,
         'B.1': Entry.Codestar,
         'A.1': Entry.SmartBoard
     };
@@ -317,8 +318,11 @@ p.checkDevice = function(data) {
     if (data.company === undefined)
         return;
     var key = [Entry.Utils.convertIntToHex(data.company), '.', Entry.Utils.convertIntToHex(data.model)].join('');
-    if (key == this.selectedDevice)
-        return;
+    if (key == this.selectedDevice){
+        if (this.hwModule.dataHandler) this.hwModule.dataHandler(data)
+        return
+    }
+    
     this.selectedDevice = key;
     this.hwModule = this.hwInfo[key];
     Entry.dispatchEvent("hwChanged");

@@ -29,6 +29,18 @@ Lang.Blocks = {
     "BITBRICK_UserInput": "UserInput",
     "BITBRICK_dc_direction_ccw": "CCW",
     "BITBRICK_dc_direction_cw": "CW",
+    chocopi_touch_event_touch: "touched",
+    chocopi_touch_event_untouch: "untouched",
+    chocopi_control_event_pressed: "pressed",
+    chocopi_control_event_released: "released",
+    chocopi_joystick_X: "joystick X",
+    chocopi_joystick_Y: "joystick Y",
+    chocopi_port:"P",
+    chocopi_pot: "potentiometer",
+    chocopi_motion_photogate_event_blocked: "blocked",
+    chocopi_motion_photogate_event_unblocked: "unblocked",
+    chocopi_motion_photogate_time_blocked: "blocked",
+    chocopi_motion_photogate_time_unblocked: "unblocked",    
     "CODEino_get_sensor_number_0": "0",
     "CODEino_get_sensor_number_1": "1",
     "CODEino_get_sensor_number_2": "2",
@@ -3361,7 +3373,80 @@ Lang.Helper = {
     "neobot_set_output": "OUT1 ~ OUT3에 라이팅블록 및 전자회로를 연결했을 때 출력 전압을 설정할 수 있습니다.</br>0은 0V, 1 ~ 255는 2.4 ~ 4.96V의 전압을 나타냅니다.",
     "neobot_set_fnd": "FND로 0~99 까지의 숫자를 표시할 수 있습니다.",
     "neobot_set_fnd_off": "FND에 표시한 숫자를 끌 수 있습니다.",
-    "neobot_play_note_for": "주파수 발진 방법을 이용해 멜로디에 반음 단위의 멜로디 음을 발생시킬 수 있습니다."
+    "neobot_play_note_for": "주파수 발진 방법을 이용해 멜로디에 반음 단위의 멜로디 음을 발생시킬 수 있습니다.",
+    chocopi_sensor: `Temperature value is Celsius.<br/>
+    Relative humidity value ranges from 0 to 100%.<br/>
+    Light value ranges 0~4095 in log scale.<br/>
+    Analog value ranges from 0 to 4095.<br/>
+    <br/>Port number(P1~P8) is automatically selected internally.<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_touch_event: `
+    Touch module has #1~12 connecting pads.<br/>
+    You can attach block to process when these pads are touched or untouched.<br/><br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_touch_status: `It will be true if the pad is touched.<br/><br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_touch_value: `The value will be smaller if the capacitance of the obeject is larger.<br/>
+    If many people hold each other's hand and touch, the value will be smaller<br/>
+    'Capacitance' means how many electric particles the object can hold.<br/><br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_control_event: `You can attach blocks to process when the button is pressed or released <br/><br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_control_joystick: `Joystick X,Y and potentiometer has range of  0~4095.<br/>
+    so, around 2047 will be center value.<br/><br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_control_button: `This block will be true if the button is pressed.<br/><br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_motion_photogate_event: `Two photogates can be connected to 'Motion' module<br/>
+    A photogate is a device with light sensor facing light source in opposite side<br/>
+    You can attach blocks when an object blocks or unblocks light sensor<br/>
+    <br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_motion_photogate_time:  `Two photogates can be connected to 'Motion' module<br/>
+    A photogate is a device with light sensor facing light source in opposite side<br/>
+    This block will have the time when an object blocked or unblocked the sensor<br/>
+    It can measure time with resolution of 1/10000 sec<br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_motion_photogate_status: `Two photogates can be connected to 'Motion' module<br/>
+    A photogate is a device with light sensor facing light source in opposite side<br/>
+    This block will be <b>true if an object blocks sensor</b><br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_motion_value: `
+    'Motion" module has three infrared sensors<br/>
+    The value has range of 0~4095, the more reflection from object, the smaller the value is<br/>
+    It can be used to measure approximate distance between the sensor and an object <br/>
+    Acceleration and angular acceleration value ranges from -32768 to 32767.<br/>
+    You can measure inclination of the sensor using these values.<br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_led: `LED number start from 1 and is the connecting order from the LED module.<br/>
+    You can assign RGB values from 0 to 255<br/>
+    RGB(Red Green Blue) order<br/>
+    To watch an LED with bright light can be painful,<br/>
+    so, please use small number like 0 to 5.<br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_dc_motor: `Two DC motors can be connected to 'DC motor' module<br/> 
+    The motor will be supplied with maximum 5V.<br/>
+    Maximum value is 100 (100%), is negative value is used then it will rotate opposite direction.<br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_servo_motor: `'Servo' module can be connected to four servo motors<br/>
+    Servo motors are provided with 5V<br/>
+    You can assign 0~200 in degree unit.<br/>
+    If a contineous rotational servo motor is connected, it's speed is determined by the degree value.<br/>
+    Center value is from 90 to 100 varying by motor model.<br/>
+    <br/>Port number(P1~P8) is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
 };
 Lang.Category = {
     "entrybot_friends": "Entrybot friends",
@@ -3419,7 +3504,8 @@ Lang.Device = {
     "xbot_epor_edge": "XBOT",
     "dplay": "DPLAY",
     "nemoino": "NEMOino",
-    "ev3": "EV3"
+    "ev3": "EV3",
+    chocopi:"ChocoPi"
 };
 Lang.General = {
     "turn_on": "turn on",
@@ -3444,7 +3530,9 @@ Lang.General = {
     "note_f": "F",
     "note_g": "G",
     "note_a": "A",
-    "note_b": "B"
+    "note_b": "B",
+    clock:"clock",
+    counter_clock:"counterclock"
 };
 Lang.Fonts = {
     "batang": "KoPub Batang",
@@ -3484,7 +3572,17 @@ Lang.Hw = {
     "sub": "servo",
     "motor": "motor",
     "": "",
-    "buzzer": "buzzer"
+    "buzzer": "buzzer",
+    acceleration:'acceleration',
+    analog:'analog',
+    angular_acceleration:'angular acceleration',
+    button:'button',
+    joystick:'joystick',
+    humidity:'humidity',
+    IR:'infrared',
+    port:'port',
+    potentiometer:'potentiometer',
+    servo:'servo',    
 };
 Lang.template = {
     "albert_hand_found": "hand found?",
@@ -3576,7 +3674,7 @@ Lang.template = {
     "download_guide": "%1",
     "arduino_download_source": "%1",
     "arduino_connected": "%1",
-    "arduino_reconnect": "%1",
+    "arduino_reconnect": "%1",    
     "CODEino_get_sensor_number": "%1  ",
     "CODEino_get_named_sensor_value": "  %1  Sensor value ",
     "CODEino_get_sound_status": "Sound is  %1  ",
@@ -3921,7 +4019,21 @@ Lang.template = {
     "ai_use_item": "아이템 사용 %1",
     "ai_boolean_and": "%1 %2 %3",
     "ai_True": "%1",
-    "ai_if_else": "If %1 then %2 %3 else"
+    "ai_if_else": "If %1 then %2 %3 else",
+    chocopi_sensor: "%1 sensor %2",
+    chocopi_touch_event: "%1 When %2 touch pad%3 is %4",
+    chocopi_touch_status: "%1 touch pad%2 is touched",
+    chocopi_touch_value: "%1 touch pad%2 value",
+    chocopi_control_event: "%1 When %2 controller %3 is %4",
+    chocopi_control_joystick: "%1 controller %2 value",
+    chocopi_control_button: "%1 controller %2 is pressed",
+    chocopi_motion_photogate_event: "%1 When %2 photogate %3 is %4",
+    chocopi_motion_photogate_time: "time when %1 photogate %2 was %3",
+    chocopi_motion_photogate_status: "%1 photogate #%2 is blcoked",
+    chocopi_motion_value: "%1 motion %2 value",
+    chocopi_led: "%1 LED #%2 RGB(%3 %4 %5)",
+    chocopi_dc_motor: "%1 DC motor #%2  %3 % direction %4 ",
+    chocopi_servo_motor: "%1 set servo motor #%2 %3 degree",
 };
 
 if (typeof exports == "object")

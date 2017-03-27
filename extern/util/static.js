@@ -537,6 +537,22 @@ EntryStatic.getAllBlocks = function() {
                 'codestar_mic',
                 'codestar_temperature',
 
+                //koreasci.com chocopi
+                'chocopi_sensor',
+                'chocopi_touch_event',
+                'chocopi_touch_status',
+                'chocopi_touch_value',
+                'chocopi_control_event',
+                'chocopi_control_joystick',
+                'chocopi_control_button',
+                'chocopi_motion_photogate_event',
+                'chocopi_motion_photogate_time',
+                'chocopi_motion_photogate_status',
+                'chocopi_motion_value',
+                'chocopi_led',
+                'chocopi_dc_motor',
+                'chocopi_servo_motor', 
+
                 //jeil science smartBoard. 2016-11-03
                 //smartBoard
                 "smartBoard_get_named_sensor_value",

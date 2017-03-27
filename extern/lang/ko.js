@@ -29,6 +29,18 @@ Lang.Blocks = {
     "BITBRICK_UserInput": "사용자입력",
     "BITBRICK_dc_direction_ccw": "반시계",
     "BITBRICK_dc_direction_cw": "시계",
+    chocopi_touch_event_touch: "만질 때",
+    chocopi_touch_event_untouch: "뗄 때",
+    chocopi_control_event_pressed: "누를 때",
+    chocopi_control_event_released: "뗄 때",
+    chocopi_joystick_X: "조이스틱 좌우",
+    chocopi_joystick_Y: "조이스틱 상하",
+    chocopi_port:"포트",
+    chocopi_pot: "볼륨",    
+    chocopi_motion_photogate_event_blocked: "막았을 때",
+    chocopi_motion_photogate_event_unblocked: "열었을 때",
+    chocopi_motion_photogate_time_blocked: "막은 시간",
+    chocopi_motion_photogate_time_unblocked: "연 시간",
     "CODEino_get_sensor_number_0": "0",
     "CODEino_get_sensor_number_1": "1",
     "CODEino_get_sensor_number_2": "2",
@@ -3361,7 +3373,80 @@ Lang.Helper = {
     "neobot_set_output": "OUT1 ~ OUT3에 라이팅블록 및 전자회로를 연결했을 때 출력 전압을 설정할 수 있습니다.</br>0은 0V, 1 ~ 255는 2.4 ~ 4.96V의 전압을 나타냅니다.",
     "neobot_set_fnd": "FND로 0~99 까지의 숫자를 표시할 수 있습니다.",
     "neobot_set_fnd_off": "FND에 표시한 숫자를 끌 수 있습니다.",
-    "neobot_play_note_for": "주파수 발진 방법을 이용해 멜로디에 반음 단위의 멜로디 음을 발생시킬 수 있습니다."
+    "neobot_play_note_for": "주파수 발진 방법을 이용해 멜로디에 반음 단위의 멜로디 음을 발생시킬 수 있습니다.",
+        chocopi_sensor: `Temperature value is Celsius.<br/>
+    Relative humidity value ranges from 0 to 100%.<br/>
+    Light value ranges 0~4095 in log scale.<br/>
+    Analog value ranges from 0 to 4095.<br/>
+    <br/>Port number is automatically selected internally.<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_touch_event: `
+    Touch module has #1~12 connecting pads.<br/>
+    You can attach block to process when these pads are touched or untouched.<br/><br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_touch_status: `It will be true if the pad is touched.<br/><br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_touch_value: `The value will be smaller if the capacitance of the obeject is larger.<br/>
+    If many people hold each other's hand and touch, the value will be smaller<br/>
+    'Capacitance' means how many electric particles the object can hold.<br/><br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_control_event: `You can attach blocks to process when the button is pressed or released <br/><br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_control_joystick: `Joystick X,Y and potentiometer has range of  0~4095.<br/>
+    so, around 2047 will be center value.<br/><br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_control_button: `This block will be true if the button is pressed.<br/><br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_motion_photogate_event: `Two photogates can be connected to 'Motion' module<br/>
+    A photogate is a device with light sensor facing light source in opposite side<br/>
+    You can attach blocks when an object blocks or unblocks light sensor<br/>
+    <br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_motion_photogate_time:  `Two photogates can be connected to 'Motion' module<br/>
+    A photogate is a device with light sensor facing light source in opposite side<br/>
+    This block will have the time when an object blocked or unblocked the sensor<br/>
+    It can measure time with resolution of 1/10000 sec<br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_motion_photogate_status: `Two photogates can be connected to 'Motion' module<br/>
+    A photogate is a device with light sensor facing light source in opposite side<br/>
+    This block will be <b>true if an object blocks sensor</b><br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_motion_value: `
+    'Motion" module has three infrared sensors<br/>
+    The value has range of 0~4095, the more reflection from object, the smaller the value is<br/>
+    It can be used to measure approximate distance between the sensor and an object <br/>
+    Acceleration and angular acceleration value ranges from -32768 to 32767.<br/>
+    You can measure inclination of the sensor using these values.<br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_led: `LED number start from 1 and is the connecting order from the LED module.<br/>
+    You can assign RGB values from 0 to 255<br/>
+    RGB(Red Green Blue) order<br/>
+    To watch an LED with bright light can be painful,<br/>
+    so, please use small number like 0 to 5.<br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_dc_motor: `Two DC motors can be connected to 'DC motor' module<br/> 
+    The motor will be supplied with maximum 5V.<br/>
+    Maximum value is 100 (100%), is negative value is used then it will rotate opposite direction.<br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
+    chocopi_servo_motor: `'Servo' module can be connected to four servo motors<br/>
+    Servo motors are provided with 5V<br/>
+    You can assign 0~200 in degree unit.<br/>
+    If a contineous rotational servo motor is connected, it's speed is determined by the degree value.<br/>
+    Center value is from 90 to 100 varying by motor model.<br/>
+    <br/>Port number is automatically selected internally<br>
+    It is needed only when multiple modules with the same kind are used`,
 };
 Lang.Category = {
     "entrybot_friends": "엔트리봇 친구들",
@@ -3419,7 +3504,8 @@ Lang.Device = {
     "xbot_epor_edge": "엑스봇",
     "dplay": "디플레이",
     "nemoino": "네모이노",
-    "ev3": "EV3"
+    "ev3": "EV3",
+    "chocopi":"초코파이보드"
 };
 Lang.General = {
     "turn_on": "켜기",
@@ -3444,7 +3530,9 @@ Lang.General = {
     "note_f": "파",
     "note_g": "솔",
     "note_a": "라",
-    "note_b": "시"
+    "note_b": "시",
+    clock:"시계",
+    counter_clock:"반시계"
 };
 Lang.Fonts = {
     "batang": "바탕체",
@@ -3483,8 +3571,17 @@ Lang.Hw = {
     "right": "오른쪽",
     "sub": "서보",
     "motor": "모터",
-    "": "",
-    "buzzer": "버저"
+    "buzzer": "버저",
+    acceleration:'가속',
+    analog:'아날로그',
+    angular_acceleration:'각가속',
+    button:'버튼',
+    joystick:'조이스틱',
+    humidity:'습도',
+    IR:'적외선',
+    port:'포트',
+    potentiometer:'포텐시오미터',
+    servo:'서보',    
 };
 Lang.template = {
     "albert_hand_found": "손 찾음?",
@@ -3921,7 +4018,21 @@ Lang.template = {
     "ai_use_item": "아이템 사용 %1",
     "ai_boolean_and": "%1 %2 %3",
     "ai_True": "%1",
-    "ai_if_else": "만일 %1 이라면 %2 %3 아니면"
+    "ai_if_else": "만일 %1 이라면 %2 %3 아니면",
+    chocopi_sensor: "%1 센서 %2",
+    chocopi_touch_event: "%1 %2 터치 %3번을 %4",
+    chocopi_touch_status: "%1 터치 %2번을 만짐",
+    chocopi_touch_value: "%1 터치 %2번의 값",
+    chocopi_control_event: "%1 %2 컨트롤 %3을 %4",
+    chocopi_control_joystick: "%1 컨트롤 %2의 값",
+    chocopi_control_button: "%1 컨트롤 %2번을 누름",
+    chocopi_motion_photogate_event: "%1 %2 포토게이트 %3번을 %4",
+    chocopi_motion_photogate_time: "%1 포토게이트%2번을 %3",
+    chocopi_motion_photogate_status: "%1 포토게이트 %2번이 막힘",
+    chocopi_motion_value: "%1 모션 %2의 값",
+    chocopi_led: "%1 LED %2 RGB(%3%4%5)",
+    chocopi_dc_motor: "%1 DC모터 %2 %3% 세기 %4 방향",
+    chocopi_servo_motor: "%1 서보모터 %2번 %3도",
 };
 
 if (typeof exports == "object")
