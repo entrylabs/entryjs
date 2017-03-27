@@ -351,16 +351,24 @@ Entry.Func.requestParamBlock = function(type) {
 };
 
 Entry.Func.registerParamBlock = function(type) {
-    if (type.indexOf("stringParam") > -1) {
-        Entry.Func.createParamBlock(type, Entry.block.function_param_string, type);
-    } else if (type.indexOf("booleanParam") > -1) {
-        Entry.Func.createParamBlock(type, Entry.block.function_param_boolean, type);
-    }
+    if (!type) return;
+
+    var blockPrototype;
+    if (type.indexOf("stringParam") > -1)
+        blockPrototype = Entry.block.function_param_string;
+    else if (type.indexOf("booleanParam") > -1)
+        blockPrototype = Entry.block.function_param_boolean;
+
+    //not a function param block
+    if (!blockPrototype) return;
+
+    Entry.Func.createParamBlock(type, blockPrototype, type);
 };
 
 Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
+    originalType = /string/gi.test(originalType) ?
+        "function_param_string" : "function_param_boolean";
     var blockSchema = function () {};
-    originalType = originalType === "string" ? "function_param_string" : "function_param_boolean";
     blockSchema.prototype = blockPrototype;
     blockSchema = new blockSchema();
     blockSchema.changeEvent = new Entry.Event();
