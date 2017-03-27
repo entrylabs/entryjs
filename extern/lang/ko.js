@@ -3374,79 +3374,78 @@ Lang.Helper = {
     "neobot_set_fnd": "FND로 0~99 까지의 숫자를 표시할 수 있습니다.",
     "neobot_set_fnd_off": "FND에 표시한 숫자를 끌 수 있습니다.",
     "neobot_play_note_for": "주파수 발진 방법을 이용해 멜로디에 반음 단위의 멜로디 음을 발생시킬 수 있습니다.",
-        chocopi_sensor: `Temperature value is Celsius.<br/>
-    Relative humidity value ranges from 0 to 100%.<br/>
-    Light value ranges 0~4095 in log scale.<br/>
-    Analog value ranges from 0 to 4095.<br/>
-    <br/>Port number is automatically selected internally.<br>
-    It is needed only when multiple modules with the same kind are used`,
+    chocopi_sensor: `온도 값은 섭씨 온도입니다.<br/>
+    습도 값은 백분율로 나타낸 상대습도 값입니다.<br/>
+    빛은 로그스케일로 0~4095사이입니다.<br/>
+    아날로그 값은 0~4095사이입니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
     chocopi_touch_event: `
-    Touch module has #1~12 connecting pads.<br/>
-    You can attach block to process when these pads are touched or untouched.<br/><br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
-    chocopi_touch_status: `It will be true if the pad is touched.<br/><br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
-    chocopi_touch_value: `The value will be smaller if the capacitance of the obeject is larger.<br/>
-    If many people hold each other's hand and touch, the value will be smaller<br/>
-    'Capacitance' means how many electric particles the object can hold.<br/><br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
-    chocopi_control_event: `You can attach blocks to process when the button is pressed or released <br/><br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
-    chocopi_control_joystick: `Joystick X,Y and potentiometer has range of  0~4095.<br/>
-    so, around 2047 will be center value.<br/><br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
-    chocopi_control_button: `This block will be true if the button is pressed.<br/><br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
-    chocopi_motion_photogate_event: `Two photogates can be connected to 'Motion' module<br/>
-    A photogate is a device with light sensor facing light source in opposite side<br/>
-    You can attach blocks when an object blocks or unblocks light sensor<br/>
-    <br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
-    chocopi_motion_photogate_time:  `Two photogates can be connected to 'Motion' module<br/>
-    A photogate is a device with light sensor facing light source in opposite side<br/>
-    This block will have the time when an object blocked or unblocked the sensor<br/>
-    It can measure time with resolution of 1/10000 sec<br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
-    chocopi_motion_photogate_status: `Two photogates can be connected to 'Motion' module<br/>
-    A photogate is a device with light sensor facing light source in opposite side<br/>
-    This block will be <b>true if an object blocks sensor</b><br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
+    터치 모듈에는 1~12번의 연결 패드가 있습니다. <br/>
+    만지거나 뗄 때 처리할 엔트리 블록들을 연결합니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_touch_status: `터치 모듈의 패드를 만지면 참이됩니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_touch_value: `터치패드에 연결된 물체의 전기용량이 커지면 값이 작아집니다.<br/>
+    여러 명이 손잡고 만지면 더 작은 값이 됩니다.<br/>
+    전기용량이란 물체에 전기를 띈 입자를 얼마나 가지고 있을 수 있는 지를 말합니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_control_event: `버튼을 누르거나 뗄 때 처리할 엔트리 블록들을 연결합니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_control_joystick: `조이스틱 좌우, 상하, 볼륨의 값은 0~4095까지 입니다.<br/>
+    따라서 2047 근처가 중간이 됩니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_control_button: `버튼이 눌리면 참이 됩니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_motion_photogate_event: `포토게이트는 모션블록에 연결합니다.<br/>
+    포토게이트는 한쪽에서 나온 빛을 맞은 편의 센서가 감지하는 장치입니다.<br/>
+    빛센서를 물체로 가리거나 치우면 시작되는 엔트리 블록을 연결합니다<br/>
+    모션 모듈에는 포토게이트 2개를 연결할 수 있습니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_motion_photogate_time:  `포토게이트는 모션블록에 연결합니다.<br/>
+    포토게이트는 한쪽에서 나온 빛을 맞은 편의 센서가 감지하는 장치입니다.<br>
+    이 블록은 물체가 빛센서를 가리거나 벗어난 시간을 가집니다.<br/>
+    1/10000초까지 측정할 수 있습니다.<br/>
+    <br/>포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_motion_photogate_status: `포토게이트는 모션블록에 연결합니다.<br/>
+    포토게이트는 한쪽에서 나온 빛을 맞은 편의 센서가 감지하는 장치입니다.<br>
+    물체가 빛센서를 가리면 참</b>이됩니다.<br/>
+    <br/>포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
     chocopi_motion_value: `
-    'Motion" module has three infrared sensors<br/>
-    The value has range of 0~4095, the more reflection from object, the smaller the value is<br/>
-    It can be used to measure approximate distance between the sensor and an object <br/>
-    Acceleration and angular acceleration value ranges from -32768 to 32767.<br/>
-    You can measure inclination of the sensor using these values.<br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
-    chocopi_led: `LED number start from 1 and is the connecting order from the LED module.<br/>
-    You can assign RGB values from 0 to 255<br/>
-    RGB(Red Green Blue) order<br/>
-    To watch an LED with bright light can be painful,<br/>
-    so, please use small number like 0 to 5.<br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
-    chocopi_dc_motor: `Two DC motors can be connected to 'DC motor' module<br/> 
-    The motor will be supplied with maximum 5V.<br/>
-    Maximum value is 100 (100%), is negative value is used then it will rotate opposite direction.<br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
-    chocopi_servo_motor: `'Servo' module can be connected to four servo motors<br/>
-    Servo motors are provided with 5V<br/>
-    You can assign 0~200 in degree unit.<br/>
-    If a contineous rotational servo motor is connected, it's speed is determined by the degree value.<br/>
-    Center value is from 90 to 100 varying by motor model.<br/>
-    <br/>Port number is automatically selected internally<br>
-    It is needed only when multiple modules with the same kind are used`,
+    모션 모듈에는 3개의 적외선 센서가 있습니다.<br/>
+    0~4095사이의 값을 가질 수 있는데 물체가 빛을 많이 반사할 수록 작은 값을 가집니다. <br/>
+    거리를 대략적으로 측정할 수 있습니다. <br/>
+    가속도와 각가속도 값의 범위는 -32768~32767 까지입니다.<br/>
+    가속도를 이용해서 센서의 기울기를 측정할 수도 있습니다.<br/>
+    <br/>포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_led: `LED번호는 LED블록에 연결된 순서이고 1번부터 시작합니다.<br/>
+    RGB값은 0~255사이의 값입니다.<br/>
+    빨강(Red),녹색(Green), 파랑(Blue)순서로  입력합니다.<br/>
+    밝은 LED를 직접보면 눈이 아프니까 값을 0~5정도로 씁니다.<br/>
+    <br/>포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_dc_motor: `DC모터 모듈에는 직류전동기 두개를 연결 할 수 있습니다.<br/> 
+    직류 전동기는 최대 5V로 동작하게 됩니다.<br/>
+    값은 100이 최대(100%)이고 음수를 넣으면 반대 방향으로 회전합니다.<br/>
+    <br/>포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_servo_motor: `서보모터 모듈에는 4개의 서보모터를 연결 할 수 있습니다.<br/>
+    서보모터는 5V로 동작하게 됩니다.<br/>
+    각도는 0~200도까지 지정할 수 있습니다.<br/>
+    연속회전식 서보모터를 연결하면 각도에 따라 속도가 변하게됩니다.<br/>
+    90~100 사이가 중간값입니다.<br/>
+    <br/>포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`
 };
 Lang.Category = {
     "entrybot_friends": "엔트리봇 친구들",
