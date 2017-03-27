@@ -40,9 +40,15 @@ goog.require("Entry.Utils");
             return;
         restrictor.fadeOutTooltip();
         var svgGroup = Entry.getDom(restrictor.processDomQuery(this.dom));
-        var targetDom = Entry.getDom(restrictor.processDomQuery([
-            'playground', 'board', '&1', 'magnet', 'next', 0
-        ], restrictor.requestNextData().content));
+        var nextCmd = restrictor.requestNextData().content;
+        var cmdType = nextCmd[0];
+        var targetDomQuery;
+        if (cmdType === COMMAND_TYPES.moveBlockFromBlockMenu)
+            targetDomQuery = ['playground', 'board', 'coord', '&1', '&2'];
+        else
+            targetDomQuery = [ 'playground', 'board', '&1', 'magnet', 'next', 0 ];
+
+        var targetDom = Entry.getDom(restrictor.processDomQuery(targetDomQuery, nextCmd));
         var targetRect = targetDom.getBoundingClientRect();
 
         Entry.Utils.glideBlock(
@@ -389,7 +395,7 @@ goog.require("Entry.Utils");
                         title: data.tooltip.title,
                         content: data.tooltip.content,
                         target: restrictor.processDomQuery([
-                            'playground', 'board', '&1', 'magnet'
+                            'playground', 'board', 'coord', '&1', '&2'
                         ])
                     }], {
                         indicator: true,
