@@ -11094,17 +11094,17 @@ Entry.TextCodingUtil = {};
   c.isMaterialBlock = function(b) {
     return "get_canvas_input_value" == b || "get_variable" == b || "value_of_index_from_list" == b || "length_of_list" == b || "is_included_in_list" == b ? !0 : !1;
   };
-  c.jsAdjustSyntax = function(b, c) {
-    var d = "";
+  c.jsAdjustSyntax = function(b, f) {
+    var c = "";
     if ("ai_boolean_distance" == b.data.type) {
-      var e = c.split(" "), d = e[0].split("_");
-      d[1] = d[1].substring(1, d[1].length - 1);
-      d[1] = d[1].toLowerCase();
-      var d = d.join("_"), g = e[1], g = this.bTojBinaryOperatorConvertor(g), e = e[2], d = d + " " + g + " " + e;
+      var e = f.split(" "), c = e[0].split("_");
+      c[1] = c[1].substring(1, c[1].length - 1);
+      c[1] = c[1].toLowerCase();
+      var c = c.join("_"), g = e[1], g = this.bTojBinaryOperatorConvertor(g), e = e[2], c = c + " " + g + " " + e;
     } else {
-      "ai_boolean_object" == b.data.type ? (e = c.split(" "), d = e[0].split("_"), d[1] = d[1].substring(1, d[1].length - 1), d[1] = d[1].toLowerCase(), d = d.join("_"), g = e[1], e = e[2], d = d + " " + g + " " + e) : "ai_distance_value" == b.data.type ? (e = c.split(" "), d = e[0].split("_"), d[1] = d[1].substring(1, d[1].length - 1), d[1] = d[1].toLowerCase(), d = d.join("_")) : d = c;
+      "ai_boolean_object" == b.data.type ? (e = f.split(" "), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), c = c.join("_"), g = e[1], e = e[2], c = c + " " + g + " " + e) : "ai_distance_value" == b.data.type ? (e = f.split(" "), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), c = c.join("_")) : c = f;
     }
-    return d;
+    return c;
   };
   c.bTojBinaryOperatorConvertor = function(b) {
     var c;
@@ -15870,6 +15870,8 @@ Entry.Commander = function(c) {
   }, log:function(b) {
     return [["callerName", b]];
   }, restrict:function(b, c, e, g) {
+    e = Entry.engine;
+    e.isState("stop") || e.toggleStop();
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(b) {
     }});
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
@@ -15878,6 +15880,12 @@ Entry.Commander = function(c) {
   }, state:function() {
   }, log:function(b) {
     return [["callerName", b]];
+  }, restrict:function(b, c, e, g) {
+    g = Entry.engine;
+    g.isState("run") || g.toggleRun();
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(b) {
+      e();
+    }});
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStart", dom:["engine", "&0"]};
 })(Entry.Command);
 (function(c) {

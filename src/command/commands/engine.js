@@ -21,8 +21,11 @@ goog.require("Entry.STATIC");
             ];
         },
         restrict: function(data, domQuery, callback, restrictor) {
+            var engine = Entry.engine;
+            if (!engine.isState('stop')) engine.toggleStop();
+
             var isDone = false;
-            var tooltip = new Entry.Tooltip([{
+            return new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
                 target: domQuery
@@ -32,7 +35,6 @@ goog.require("Entry.STATIC");
                 callBack: function(isFromInit) {
                 }
             });
-            return tooltip;
         },
         skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -50,6 +52,22 @@ goog.require("Entry.STATIC");
             return [
                 ['callerName', callerName]
             ];
+        },
+        restrict: function(data, domQuery, callback, restrictor) {
+            var engine = Entry.engine;
+            if (!engine.isState('run')) engine.toggleRun();
+
+            return new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                dimmed: true,
+                restrict: true,
+                callBack: function(isFromInit) {
+                    callback();
+                }
+            });
         },
         skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
