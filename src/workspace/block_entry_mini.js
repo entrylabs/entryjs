@@ -1548,7 +1548,7 @@
             fontColor: '#fff',
             statements: [],
             isNotFor: [ 'roborobo_schoolkit' ],
-            template: '빛 감지 센서 값',
+            template: 'CDS 센서 값',
             params: [{
                 type: 'Block',
 				accept: 'string'
@@ -1571,7 +1571,7 @@
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: [ 'roborobo_schoolkit' ],
-            template: '빛 감지 센서 값 %1 %2',
+            template: 'CDS 센서 값 %1 %2',
             params: [{
                 type: 'Dropdown',
                 options: [
@@ -1784,7 +1784,7 @@
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
                 Entry.hw.update();
                 
-                var value = Entry.hw.portData[port];
+                var value = Entry.hw.portData[port - 7];
                 var isDetect = detect == value ? true : false;
                 
                 return isDetect;
@@ -1800,12 +1800,12 @@
             params: [{
                 type: 'Dropdown',
                 options: [
-                    ['OUT 1', '2'],
-                    ['OUT 2', '3'],
-                    ['OUT 3', '4'],
-                    ['OUT 4', '5']
+                    ['LED 1', '5'],
+                    ['LED 2', '4'],
+                    ['R - A', '3'],
+                    ['R - B', '2']
                 ],
-                value: '2',
+                value: '5',
                 fontsIze: 11
             }, {
                 type: 'Block',
@@ -1873,12 +1873,12 @@
             params: [{
                 type: 'Dropdown',
                 options: [
-                    ['OUT 1', '2'],
-                    ['OUT 2', '3'],
-                    ['OUT 3', '4'],
-                    ['OUT 4', '5']
+                    ['LED 1', '5'],
+                    ['LED 2', '4'],
+                    ['R - A', '3'],
+                    ['R - B', '2']
                 ],
-                value: '2',
+                value: '5',
                 fontsIze: 11
             }, {
                 type: 'Dropdown',
@@ -1924,18 +1924,18 @@
             params: [{
                 type: 'Dropdown',
                 options: [
-                    ['OUT 1', '2'],
-                    ['OUT 2', '3'],
-                    ['OUT 3', '4'],
-                    ['OUT 4', '5']
+                    ['LED 1', '5'],
+                    ['LED 2', '4'],
+                    ['R - A', '3'],
+                    ['R - B', '2']
                 ],
-                value: '2',
+                value: '5',
                 fontsIze: 11
             }, {
                 type: 'Dropdown',
                 options: [
-                    ['소리', '8'],
-                    ['빛감지', '10']
+                    ['소 리', '8'],
+                    ['CDS', '10']
                 ],
                 value: '8',
                 fontsIze: 11
@@ -1999,12 +1999,12 @@
             params: [{
                 type: 'Dropdown',
                 options: [
-                    ['OUT 1', '2'],
-                    ['OUT 2', '3'],
-                    ['OUT 3', '4'],
-                    ['OUT 4', '5']
+                    ['LED 1', '5'],
+                    ['LED 2', '4'],
+                    ['R - A', '3'],
+                    ['R - B', '2']
                 ],
-                value: '2',
+                value: '5',
                 fontsIze: 11
             }, {
                 type: 'Block',
@@ -2054,8 +2054,10 @@
             params: [{
                 type: 'Dropdown',
                 options: [
-                    ['소리', '8'],
-                    ['빛감지', '10']
+                    ['적외선', '7'],
+                    ['소 리', '8'],
+                    ['접 촉', '9'],
+                    ['CDS', '10']
                 ],
                 value: '8',
                 fontsIze: 11
@@ -2070,7 +2072,7 @@
             },
             class: 'roborobo_diode',
             func: function(sprite, script) {
-                var port = script.getNumberField('PORT');				
+                var port = script.getNumberField('PORT');
                 return Entry.hw.portData[port - 7];
             }
         }

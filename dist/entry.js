@@ -22745,10 +22745,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
     Entry.hw.update();
     return a == Entry.hw.portData[b - 7] ? !0 : !1;
-  }}, roborobo_light_value:{color:"#498DEB", skeleton:"basic_string_field", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"\ube5b \uac10\uc9c0 \uc13c\uc11c \uac12", params:[{type:"Block", accept:"string"}], events:{}, def:{params:[null], type:"roborobo_light_value"}, paramsKeyMap:{}, class:"roborobo_light", func:function(b, a) {
+  }}, roborobo_light_value:{color:"#498DEB", skeleton:"basic_string_field", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"CDS \uc13c\uc11c \uac12", params:[{type:"Block", accept:"string"}], events:{}, def:{params:[null], type:"roborobo_light_value"}, paramsKeyMap:{}, class:"roborobo_light", func:function(b, a) {
     return Entry.hw.portData[Entry.Roborobo_SchoolKit.inputPort.cds - 7];
-  }}, roborobo_light_value_boolean:{color:"#498DEB", skeleton:"basic_boolean_field", fontColor:"#fff", isNotFor:["roborobo_schoolkit"], template:"\ube5b \uac10\uc9c0 \uc13c\uc11c \uac12 %1 %2", params:[{type:"Dropdown", options:[["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], value:"LESS", fontsIze:11, noaRrow:!0}, {type:"Block", accept:"string"}], def:{params:[null, {type:"number", params:["512"]}], type:"roborobo_light_value_boolean"}, 
-  paramsKeyMap:{OPERATOR:0, RIGHTVALUE:1}, class:"roborobo_light", func:function(b, a) {
+  }}, roborobo_light_value_boolean:{color:"#498DEB", skeleton:"basic_boolean_field", fontColor:"#fff", isNotFor:["roborobo_schoolkit"], template:"CDS \uc13c\uc11c \uac12 %1 %2", params:[{type:"Dropdown", options:[["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], value:"LESS", fontsIze:11, noaRrow:!0}, {type:"Block", accept:"string"}], def:{params:[null, {type:"number", params:["512"]}], type:"roborobo_light_value_boolean"}, paramsKeyMap:{OPERATOR:0, 
+  RIGHTVALUE:1}, class:"roborobo_light", func:function(b, a) {
     var c = Entry.Roborobo_SchoolKit.inputPort.cds;
     b = a.getField("OPERATOR", a);
     a = a.getNumberValue("RIGHTVALUE", a);
@@ -22807,8 +22807,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     a = a.getNumberField("DETECT", a);
     Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
     Entry.hw.update();
-    return a == Entry.hw.portData[b] ? !0 : !1;
-  }}, roborobo_diode_secs_toggle:{color:"#FF8D10", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1\ubc88 \ud3ec\ud2b8\uc758 \ubc1c\uad11\ub2e4\uc774\uc624\ub4dc\ub97c %2\ucd08 \ub3d9\uc548 %3 %4", params:[{type:"Dropdown", options:[["OUT 1", "2"], ["OUT 2", "3"], ["OUT 3", "4"], ["OUT 4", "5"]], value:"2", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Dropdown", options:[["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]], value:"255", fontsIze:11}, 
+    return a == Entry.hw.portData[b - 7] ? !0 : !1;
+  }}, roborobo_diode_secs_toggle:{color:"#FF8D10", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1\ubc88 \ud3ec\ud2b8\uc758 \ubc1c\uad11\ub2e4\uc774\uc624\ub4dc\ub97c %2\ucd08 \ub3d9\uc548 %3 %4", params:[{type:"Dropdown", options:[["LED 1", "5"], ["LED 2", "4"], ["R - A", "3"], ["R - B", "2"]], value:"5", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Dropdown", options:[["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]], value:"255", fontsIze:11}, 
   {type:"Indicator", img:"block_icon/practical_course/diode.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["2"]}, null, null], type:"roborobo_diode_secs_toggle"}, paramsKeyMap:{PORT:0, DURATION:1, VALUE:2}, class:"roborobo_diode", func:function(b, a) {
     b = a.getNumberField("PORT");
     var c = a.getNumberValue("DURATION"), d = a.getNumberField("VALUE");
@@ -22830,15 +22830,15 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       a.timeFlag = 0;
     }, 1000 * c);
     return a;
-  }}, roborobo_diode_toggle:{color:"#FF8D10", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1\ubc88 \ud3ec\ud2b8\uc758 \ubc1c\uad11\ub2e4\uc774\uc624\ub4dc\ub97c %2 %3", params:[{type:"Dropdown", options:[["OUT 1", "2"], ["OUT 2", "3"], ["OUT 3", "4"], ["OUT 4", "5"]], value:"2", fontsIze:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]], value:"255", fontsIze:11}, {type:"Indicator", img:"block_icon/practical_course/diode.png", 
+  }}, roborobo_diode_toggle:{color:"#FF8D10", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1\ubc88 \ud3ec\ud2b8\uc758 \ubc1c\uad11\ub2e4\uc774\uc624\ub4dc\ub97c %2 %3", params:[{type:"Dropdown", options:[["LED 1", "5"], ["LED 2", "4"], ["R - A", "3"], ["R - B", "2"]], value:"5", fontsIze:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]], value:"255", fontsIze:11}, {type:"Indicator", img:"block_icon/practical_course/diode.png", 
   size:12}], events:{}, def:{params:[null, null, null], type:"roborobo_diode_toggle"}, paramsKeyMap:{PORT:0, VALUE:1}, class:"roborobo_diode", func:function(b, a) {
     b = a.getNumberField("PORT");
     var c = a.getNumberField("VALUE");
     Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.PWM;
     Entry.hw.sendQueue[b] = c;
     return a.callReturn();
-  }}, roborobo_diode_inout_toggle:{color:"#FF8D10", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1\ubc88 \ud3ec\ud2b8\uc758 \ubc1c\uad11\ub2e4\uc774\uc624\ub4dc\ub97c %2\ubc88 \ud3ec\ud2b8\uc758 %3~%4\uc758 \ubc94\uc704\ub85c \ucf1c\uae30%5", params:[{type:"Dropdown", options:[["OUT 1", "2"], ["OUT 2", "3"], ["OUT 3", "4"], ["OUT 4", "5"]], value:"2", fontsIze:11}, {type:"Dropdown", options:[["\uc18c\ub9ac", "8"], ["\ube5b\uac10\uc9c0", "10"]], value:"8", 
-  fontsIze:11}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"block_icon/practical_course/diode.png", size:12}], events:{}, def:{params:[null, null, {type:"number", params:["0"]}, {type:"number", params:["255"]}, null], type:"roborobo_diode_inout_toggle"}, paramsKeyMap:{OUTPUT:0, INPUT:1, MIN:2, MAX:3}, class:"roborobo_diode", func:function(b, a) {
+  }}, roborobo_diode_inout_toggle:{color:"#FF8D10", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1\ubc88 \ud3ec\ud2b8\uc758 \ubc1c\uad11\ub2e4\uc774\uc624\ub4dc\ub97c %2\ubc88 \ud3ec\ud2b8\uc758 %3~%4\uc758 \ubc94\uc704\ub85c \ucf1c\uae30%5", params:[{type:"Dropdown", options:[["LED 1", "5"], ["LED 2", "4"], ["R - A", "3"], ["R - B", "2"]], value:"5", fontsIze:11}, {type:"Dropdown", options:[["\uc18c \ub9ac", "8"], ["CDS", "10"]], value:"8", fontsIze:11}, 
+  {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"block_icon/practical_course/diode.png", size:12}], events:{}, def:{params:[null, null, {type:"number", params:["0"]}, {type:"number", params:["255"]}, null], type:"roborobo_diode_inout_toggle"}, paramsKeyMap:{OUTPUT:0, INPUT:1, MIN:2, MAX:3}, class:"roborobo_diode", func:function(b, a) {
     b = a.getNumberField("OUTPUT");
     var c = a.getNumberField("INPUT"), d = a.getNumberValue("MIN"), e = a.getNumberValue("MAX");
     result = (Entry.hw.portData[c - 7] / 4 - d) / (e - d) * 255 + 0;
@@ -22847,7 +22847,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.PWM;
     Entry.hw.sendQueue[b] = result;
     return a.callReturn();
-  }}, roborobo_diode_set_output:{color:"#FF8D10", skeleton:"basic", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1\ubc88 \ud3ec\ud2b8\uc758 \ubc1c\uad11\ub2e4\uc774\uc624\ub4dc\ub97c %2\uc758 \ubc1d\uae30\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["OUT 1", "2"], ["OUT 2", "3"], ["OUT 3", "4"], ["OUT 4", "5"]], value:"2", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"block_icon/practical_course/diode.png", size:12}], events:{}, def:{params:[null, 
+  }}, roborobo_diode_set_output:{color:"#FF8D10", skeleton:"basic", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1\ubc88 \ud3ec\ud2b8\uc758 \ubc1c\uad11\ub2e4\uc774\uc624\ub4dc\ub97c %2\uc758 \ubc1d\uae30\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["LED 1", "5"], ["LED 2", "4"], ["R - A", "3"], ["R - B", "2"]], value:"5", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"block_icon/practical_course/diode.png", size:12}], events:{}, def:{params:[null, 
   {type:"number", params:["255"]}, null], type:"roborobo_diode_set_output"}, paramsKeyMap:{PORT:0, VALUE:1}, class:"roborobo_diode", func:function(b, a) {
     b = a.getStringField("PORT", a);
     var c = a.getNumberValue("VALUE", a);
@@ -22855,7 +22855,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.PWM;
     Entry.hw.sendQueue[b] = c;
     return a.callReturn();
-  }}, roborobo_diode_input_value:{color:"#FF8D10", skeleton:"basic_string_field", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1 \ud3ec\ud2b8\uc758 \uac12", params:[{type:"Dropdown", options:[["\uc18c\ub9ac", "8"], ["\ube5b\uac10\uc9c0", "10"]], value:"8", fontsIze:11}], events:{}, def:{params:[null], type:"roborobo_diode_input_value"}, paramsKeyMap:{PORT:0}, class:"roborobo_diode", func:function(b, a) {
+  }}, roborobo_diode_input_value:{color:"#FF8D10", skeleton:"basic_string_field", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1 \ud3ec\ud2b8\uc758 \uac12", params:[{type:"Dropdown", options:[["\uc801\uc678\uc120", "7"], ["\uc18c \ub9ac", "8"], ["\uc811 \ucd09", "9"], ["CDS", "10"]], value:"8", fontsIze:11}], events:{}, def:{params:[null], type:"roborobo_diode_input_value"}, paramsKeyMap:{PORT:0}, class:"roborobo_diode", func:function(b, a) {
     b = a.getNumberField("PORT");
     return Entry.hw.portData[b - 7];
   }}});
