@@ -23911,13 +23911,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   };
   c.renderOptions = function() {
     Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
+    var b = this;
     this._optionVisible = !0;
     this._attachDisposeEvent();
-    var b = this.getAbsolutePosFromDocument();
-    b.x -= this.box.width / 2;
-    b.y += this.box.height / 2 + 1;
-    this.optionGroup = Entry.Dom("img", {class:"entry-widget-keyboard-input", src:Entry.mediaFilePath + "/media/keyboard_workspace.png", parent:$("body")});
-    this.optionGroup.css({left:b.x, top:b.y});
+    var c = this.getAbsolutePosFromDocument();
+    c.x -= this.box.width / 2;
+    c.y += this.box.height / 2 + 1;
+    this.optionGroup = Entry.Dom("img", {class:"entry-widget-keyboard-input", parent:$("body")});
+    this.optionGroup.on("load", function() {
+      b.optionDomCreated();
+    });
+    this.optionGroup[0].src = Entry.mediaFilePath + "/media/keyboard_workspace.png";
+    this.optionGroup.on("mousedown", function(b) {
+      b.stopPropagation();
+    });
+    this.optionGroup.css({left:c.x, top:c.y});
   };
   c.destroyOption = function() {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.disposeEvent);

@@ -94,8 +94,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
         this.optionGroup = Entry.Dom('img', {
             class:'entry-widget-keyboard-input',
-            src: Entry.mediaFilePath + '/media/keyboard_workspace.png',
             parent: $('body')
+        });
+
+        this.optionGroup.on('load', function() {
+            that.optionDomCreated();
+        });
+
+        this.optionGroup[0].src =
+            Entry.mediaFilePath + '/media/keyboard_workspace.png';
+
+        this.optionGroup.on('mousedown', function(e) {
+            e.stopPropagation();
         });
 
         this.optionGroup.css({
