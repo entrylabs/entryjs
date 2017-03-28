@@ -6473,6 +6473,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   height: 25px;
   width: 11px;
   left: 100%;
+  margin-left: -1px;
   top: 50%;
   margin-top: -12.5px;
 }
