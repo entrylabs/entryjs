@@ -126,29 +126,22 @@ p.addPicture = function(picture, isOriginal) {
         // deprecated
         image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
     }
-    var ratio = 1;
-    var dimension = picture.dimension;
-    if (dimension.width > 950 || dimension.height > 530) {
-        ratio = Math.min(950 / dimension.width, 530 / dimension.height);
-    }
 
+    var dimension = picture.dimension;
     var shape = LC.createShape('Image',{
         x: 480,
         y: 270,
         width: dimension.width,
         height: dimension.height,
         image: image,
-        scale: ratio
     });
+
     this.lc.saveShape(shape, !isOriginal);
 
     image.onload = function() {
         this.lc.setTool(this.lc.tools.SelectShape);
         this.lc.tool.setShape(this.lc, shape);
-        if (ratio != 1)
-            this.file_save(true);
     }.bind(this);
-
 };
 
 p.copy = function() {

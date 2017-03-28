@@ -8777,16 +8777,11 @@ Entry.Painter2 = function(c) {
   c.addPicture = function(b, f) {
     var c = new Image;
     c.src = b.fileurl ? b.fileurl : Entry.defaultPath + "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
-    var e = 1, g = b.dimension;
-    if (950 < g.width || 530 < g.height) {
-      e = Math.min(950 / g.width, 530 / g.height);
-    }
-    var h = LC.createShape("Image", {x:480, y:270, width:g.width, height:g.height, image:c, scale:e});
-    this.lc.saveShape(h, !f);
+    var e = b.dimension, g = LC.createShape("Image", {x:480, y:270, width:e.width, height:e.height, image:c});
+    this.lc.saveShape(g, !f);
     c.onload = function() {
       this.lc.setTool(this.lc.tools.SelectShape);
-      this.lc.tool.setShape(this.lc, h);
-      1 != e && this.file_save(!0);
+      this.lc.tool.setShape(this.lc, g);
     }.bind(this);
   };
   c.copy = function() {
