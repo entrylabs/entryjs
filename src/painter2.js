@@ -127,7 +127,7 @@ p.addPicture = function(picture, isOriginal) {
         image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
     }
 
-    var dimension = picture.dimension;
+    var dimension = picture.dimension; 
     var shape = LC.createShape('Image',{
         x: 480,
         y: 270,
