@@ -1896,7 +1896,7 @@ Entry.block = {
         "syntax": {"js": [], "py": ["Albert.set_wheels(%1, %2)"]}
     },
     "arduino_text": {
-        "color": "#00979D",
+        "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -4469,9 +4469,9 @@ Entry.block = {
         "params": [{
                 "type": "Dropdown",
                 "options": [
-                    [ "빨강", "17" ],
-                    [ "초록", "18" ],
-                    [ "파랑", "19" ]
+                    [ Lang.Blocks.CODEino_led_red, "17" ],
+                    [ Lang.Blocks.CODEino_led_green, "18" ],
+                    [ Lang.Blocks.CODEino_led_blue, "19" ]
                 ],
                 "value": "17",
                 "fontSize": 11
@@ -4526,9 +4526,9 @@ Entry.block = {
         "params": [{
                 "type": "Dropdown",
                 "options": [
-                    [ "빨강", "17" ],
-                    [ "초록", "18" ],
-                    [ "파랑", "19" ]
+                    [ Lang.Blocks.CODEino_led_red, "17" ],
+                    [ Lang.Blocks.CODEino_led_green, "18" ],
+                    [ Lang.Blocks.CODEino_led_blue, "19" ]
                 ],
                 "value": "17",
                 "fontSize": 11
@@ -5817,18 +5817,14 @@ Entry.block = {
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
-            //    console.log("-----temptest------")
-            //var signal = script.getField("VALUE", script);
-            var signal = script.getValue("VALUE", script);
+            var signal = script.getField("VALUE", script);
             if (signal == 1)
             {
-                //    console.log("-----temp1 selected ");
                 return Entry.hw.getAnalogPortValue("temps1");
             }
 
             if (signal == 2)
             {
-                //     console.log("-----temp2 selected ");
                 return Entry.hw.getAnalogPortValue("temps2");
             }
         }
@@ -5860,7 +5856,7 @@ Entry.block = {
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
-            var signal = script.getValue("VALUE", script);
+            var signal = script.getField("VALUE", script);
             if (signal == 1)
             {
                 return Entry.hw.getAnalogPortValue("light1");
@@ -5899,7 +5895,7 @@ Entry.block = {
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
-            var signal = script.getValue("VALUE", script);
+            var signal = script.getField("VALUE", script);
             if (signal == 1)
             {
                 return Entry.hw.getDigitalPortValue("btn1");
@@ -15619,19 +15615,23 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hue = effectValue + sprite.effect.hue;
+                effectName = 'hue';
             } else if (effect == "lens") {
             } else if (effect == "swriling") {
             } else if (effect == "pixel") {
             } else if (effect == "mosaic") {
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue + sprite.effect.brightness;
+                effectName = 'brightness';
             } else if (effect == "blur") {
             } else if (effect == "opacity") {
                 sprite.effect.alpha = (sprite.effect.alpha + effectValue / 100) ;
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.set_effect_volume(%1, %2)"]}
@@ -15682,19 +15682,23 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hue = effectValue;
+                effectName = 'hue';
             } else if (effect == "lens") {
             } else if (effect == "swriling") {
             } else if (effect == "pixel") {
             } else if (effect == "mosaic") {
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue;
+                effectName = 'brightness';
             } else if (effect == "blur") {
             } else if (effect == "opacity") {
                 sprite.effect.alpha = effectValue / 100;
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.set_effect(%1, %2)"]}
@@ -16136,14 +16140,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hsv = effectValue + sprite.effect.hsv;
+                effectName = 'hsv';
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue + sprite.effect.brightness;
+                effectName = 'brightness';
             } else if (effect == "transparency") {
                 sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
@@ -16229,14 +16237,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hsv = effectValue;
+                effectName = 'hsv';
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue;
+                effectName = 'brightness';
             } else if (effect == "transparency") {
                 sprite.effect.alpha = 1 - (effectValue / 100);
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
@@ -16310,14 +16322,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hue = effectValue + sprite.effect.hue;
+                effectName = 'hue';
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue + sprite.effect.brightness;
+                effectName = 'brightness';
             } else if (effect == "transparency") {
                 sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [""]}
@@ -16368,14 +16384,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hue = effectValue;
+                effectName = 'hue';
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue;
+                effectName = 'brightness';
             } else if (effect == "transparency") {
                 sprite.effect.alpha = 1 - (effectValue / 100);
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [""]}
@@ -27274,6 +27294,9 @@ Entry.block = {
     },
     "dplay_get_gas_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
+        "isNotFor": [
+            "dplay"
+        ],
         "template": "아날로그 %1 번 가스 센서값",
         "def": {
             "params": [
@@ -29389,7 +29412,6 @@ Entry.block = {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 의  %2 값",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -29457,7 +29479,6 @@ Entry.block = {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 의 값",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -29493,7 +29514,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 의 값을 %2 으로  %3 도 만큼 회전 %4",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -29507,8 +29527,8 @@ Entry.block = {
         }, {
             "type": "Dropdown",
             "options": [
-                ["시계방향", "CW"],
-                ["반시계방향", "CCW"]
+                [Lang.Blocks.ev3_cw, "CW"],
+                [Lang.Blocks.ev3_ccw, "CCW"]
             ],
             "value": "CW",
             "fontSize": 11
@@ -29556,7 +29576,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 의 값을 %2 으로 출력 %3",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -29604,7 +29623,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 의 값을 %2 초 동안 %3 으로 출력 %4",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -29684,7 +29702,6 @@ Entry.block = {
         "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 의 터치센서가 작동되었는가?",
         "params": [{
             "type": "Dropdown",
             "options": [

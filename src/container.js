@@ -183,12 +183,15 @@ Entry.Container.prototype.updateListView = function() {
 
     var fragment = document.createDocumentFragment('div');
 
-    var objs = this.getCurrentObjects();
-    for (var i in objs) {
-        var obj = objs[i];
-        !obj.view_ && obj.generateView();
-        fragment.appendChild(obj.view_);
-    }
+    var objs = this.getCurrentObjects().slice();
+
+    objs.sort(function(a, b) {
+            return a.index - b.index;
+        })
+        .forEach(function(obj) {
+            !obj.view_ && obj.generateView();
+            fragment.appendChild(obj.view_);
+        });
 
     view.appendChild(fragment);
     Entry.stage.sortZorder();
@@ -400,7 +403,8 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
             if(parser && parser._onError) {
                 if(sObject && (object.id != sObject.id)) {
                     if(!Entry.scene.isSceneCloning) {
-                        try { workspace._syncTextCode(); } catch(e) {}
+                        try { workspace._syncTextCode(); }
+                        catch(e) {}
                         if(parser && !parser._onError) {
                             Entry.container.selectObject(object.id, true);
                             return
@@ -416,7 +420,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
                 }
             }
             else {
-                if(sObject && (object.id != sObject.id)) {
+                if (sObject && (object.id != sObject.id)) {
                     if(!Entry.scene.isSceneCloning) {
                         try { workspace._syncTextCode(); } catch(e) {}
                         if(parser && parser._onError) {
@@ -933,7 +937,7 @@ Entry.Container.prototype.getCurrentObjects = function() {
     var objs = this.currentObjects_;
     if (!objs || objs.length === 0)
         this.setCurrentObjects();
-    return this.currentObjects_;
+    return this.currentObjects_ || [];
 };
 
 /**

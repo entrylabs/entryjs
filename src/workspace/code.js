@@ -303,8 +303,7 @@ Entry.PARAM = -1;
 
     p.getByPointer = function(pointer) {
         pointer = pointer.concat();
-        pointer.shift();
-        pointer.shift();
+        pointer.splice(0,2);
         var thread = this._data[pointer.shift()];
         var block = thread.getBlock(pointer.shift());
         while (pointer.length) {

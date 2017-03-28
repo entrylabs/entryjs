@@ -241,7 +241,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 var field = new Entry['Field' + param.type](param, this, paramIndex, mode || this.renderMode, i);
                 this._contents.push(field);
                 this._paramMap[paramIndex] = field;
-            } else this._contents.push(new Entry.FieldText({text: param}, this));
+            } else {
+                this._contents.push(new Entry.FieldText({text: param}, this));
+            }
         }
 
         var statements = schema.statements || [];
@@ -609,8 +611,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 gsRet === gs.DONE && this.vimBoardEvent(e, 'dragEnd', block);
             } else board.clear();
         } else {
+            var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
             if (dragMode === Entry.DRAG_MODE_DRAG) {
-                var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
                 var ripple = false;
                 var prevBlock = this.block.getPrevBlock(this.block);
                 switch (gsRet) {
@@ -633,17 +635,20 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                     this.dragMode = dragMode;
                                     board.separate(block);
                                     this.dragMode = Entry.DRAG_MODE_NONE;
-                                    Entry.do("insertBlock", closeBlock, lastBlock).isPass(fromBlockMenu);
+                                    Entry.do("insertBlock", closeBlock, lastBlock)
+                                        .isPass(fromBlockMenu);
                                     Entry.ConnectionRipple
                                         .setView(closeBlock.view)
                                         .dispose();
                                 } else {
-                                    Entry.do("insertBlock", block, closeBlock).isPass(fromBlockMenu);
+                                    Entry.do("insertBlock", block, closeBlock)
+                                        .isPass(fromBlockMenu);
                                     ripple = true;
                                 }
                                 createjs.Sound.play('entryMagneting');
                             } else {
-                                Entry.do("moveBlock", block).isPass(fromBlockMenu);
+                                Entry.do("moveBlock", block)
+                                    .isPass(fromBlockMenu);
                             }
                         }
                         break;
@@ -666,14 +671,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                         break;
                     case gs.REMOVE:
                         createjs.Sound.play('entryDelete');
-                        if (!fromBlockMenu) {
-                            Entry.do(
-                                'destroyBlockBelow',
+                        Entry.do(
+                            'destroyBlockBelow',
                                 this.block
-                            );
-                        } else {
-                            this.block.destroy(false, true);
-                        }
+                        ).isPass(fromBlockMenu);
                         break;
                 }
                 board.setMagnetedBlock(null);
@@ -682,13 +683,18 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                         .setView(block.view)
                         .dispose();
                 }
+            } else if (gsRet === gs.REMOVE && fromBlockMenu &&
+                dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
+                Entry.do(
+                    'destroyBlockBelow',
+                    this.block
+                ).isPass(true);
             }
         }
 
         this.destroyShadow();
         delete this.originPos;
         this.dominate();
-        return;
     };
 
     p._updateCloseBlock = function() {
@@ -1230,7 +1236,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             text: Lang.Blocks.Duplication_option,
             enable: this.copyable && !isBoardReadOnly,
             callback: function(){
-                Entry.do("cloneBlock", block);
+                Entry.do("cloneBlock", block.copy());
             }
         };
 
@@ -1291,16 +1297,22 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var schema = this._schema;
         var defaultTemplate = schema.template ? schema.template : Lang.template[this.block.type];
         var template;
+        var board = this.getBoard();
 
         if (renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
-            var workspace = this.getBoard().workspace;
+            var syntax;
+            var workspace = board.workspace;
             if (workspace && workspace.vimBoard) {
-                var syntax = workspace.vimBoard.getBlockSyntax(this);
-                if (syntax) {
-                    if (typeof syntax === 'string')
-                        template = syntax;
-                    else template = syntax.template;
-                }
+                syntax = workspace.vimBoard.getBlockSyntax(this);
+            } else {
+                if (board.getBlockSyntax)
+                    syntax = board.getBlockSyntax(this, renderMode);
+            }
+
+            if (syntax) {
+                if (typeof syntax === 'string')
+                    template = syntax;
+                else template = syntax.template;
             }
         }
 

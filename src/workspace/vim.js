@@ -23,7 +23,7 @@ Entry.Vim = function(dom, textType) {
         if (Entry.hw.hwModule) {
             var name = Entry.hw.hwModule.name;
             name = name[0].toUpperCase() + name.slice(1);
-            if(name == "ArduinoExt")
+            if (name == "ArduinoExt")
                 name = "Arduino";
             Entry.Vim.PYTHON_IMPORT_HW = "\nimport " + name + "\n";
             Entry.Vim.INEDITABLE_LINE_PY = 4;
@@ -31,10 +31,7 @@ Entry.Vim = function(dom, textType) {
             Entry.Vim.PYTHON_IMPORT_HW = "";
             Entry.Vim.INEDITABLE_LINE_PY = 3;
         }
-    }.bind(this));
-
-    Entry.Model(this, false);
-    window.eventset = [];
+    });
 };
 
 Entry.Vim.MAZE_MODE = 1;
@@ -86,7 +83,14 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
 
         var dShowHint =
             Entry.Utils.debounce(function(){
-                Entry.isTextMode && this.codeMirror.showHint({completeSingle: false});
+                if (Entry.isTextMode) {
+                    this.codeMirror.showHint(
+                        {
+                            completeSingle: false,
+                            globalScope: this._getAssistScope()
+                        }
+                    );
+                }
             }.bind(this), 250);
 
         this.codeMirror.on("keydown", function(cm, event) {
@@ -96,34 +100,64 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             if (event.key.length === 1) {
                 dShowHint();
             }
-        }.bind(this))
-        this.codeMirror.on("keyup", function(cm, event) {
-            if (event.key === "Backspace") {
-                dShowHint();
+        }.bind(this));
+
+        var dClear = Entry.Utils.debounce(function() {
+            var input = this.codeMirror.display && this.codeMirror.display.input ?
+                            this.codeMirror.display.input : undefined;
+            if (input && input.composing) {
+                input.poll();
+                input.composing.range.clear();
+                input.composing = null;
             }
-        }.bind(this))
+        }.bind(this), 250);
+
+        this.codeMirror.on("keyup", function(cm, event) {
+            //i.e composition bug
+            dClear();
+
+            if (event.key === "Backspace")
+                dShowHint();
+        }.bind(this));
 
         this.doc = this.codeMirror.getDoc();
 
         _self = this;
         target = this.view[0];
-        function eventDragEnd(e) {
-            var textCode = _self.getCodeToText(e.block, Entry.Parser.PARSE_BLOCK);
 
-            _self.codeMirror.display.dragFunctions.leave(e);
-            var mousedown = Entry.Utils.createMouseEvent('mousedown', e);
-            _self.codeMirror.display.scroller.dispatchEvent(mousedown);
+        function eventDragEnd(e) {
+            var block = e.block;
+
+            if (!block) return;
+
+            var codeMirror = _self.codeMirror;
+            var textCode = _self.getCodeToText(block, Entry.Parser.PARSE_BLOCK);
+
+            codeMirror.display.dragFunctions.leave(e);
+            codeMirror.display.scroller.dispatchEvent(
+                Entry.Utils.createMouseEvent('mousedown', e));
+
             var testArr = textCode.split('\n');
             var max = testArr.length - 1;
-            var lastLine = 0;
+            var statementCursorLine = _self.doc.getCursor().line;
             testArr.forEach(function (text, i) {
-                if(i != max) text += '\n';
-                _self.codeMirror.replaceSelection(text);
-                var cursor = _self.doc.getCursor();
-                lastLine = cursor.line;
+                if (i != max) text += '\n';
+                codeMirror.replaceSelection(text);
             });
-            var mouseup = Entry.Utils.createMouseEvent('mouseup', e);
-            _self.codeMirror.display.scroller.dispatchEvent(mouseup);
+
+            //set cursor for statement block
+            if (block.statements && block.statements.length) {
+                statementCursorLine++;
+                codeMirror.setCursor(statementCursorLine);
+                if (codeMirror.getLine(statementCursorLine)) {
+                    codeMirror.replaceSelection('\n');
+                    codeMirror.setCursor(statementCursorLine);
+                }
+                CodeMirror.commands.indentAuto(codeMirror);
+            }
+
+            codeMirror.display.scroller.dispatchEvent(
+                Entry.Utils.createMouseEvent('mouseup', e));
         }
 
         function eventDragOver(e) {
@@ -162,7 +196,6 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
 
         var textCode = this.codeMirror.getValue();
         var code = this._parser.parse(textCode);
-        console.log("textToCode result", code);
         return code;
     };
 
@@ -186,17 +219,17 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             this._oldParserType = this._parserType;
         }
 
-        if(Entry.playground)
+        if (Entry.playground)
             this._currentObject = Entry.playground.object;
 
         this._parser._hasDeclaration = false;
 
-        if(textType == Entry.Vim.TEXT_TYPE_PY) {
+        if (textType == Entry.Vim.TEXT_TYPE_PY) {
             if(this._currentObject) {
                 codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이선 코드";
                 var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
 
-                if(textType === Entry.Vim.TEXT_TYPE_PY) {
+                if (textType === Entry.Vim.TEXT_TYPE_PY) {
                     textCode = codeDescription
                     .concat("\n\n")
                     .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
@@ -205,7 +238,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
                     .concat(textCode);
                 }
                 this.codeMirror.setValue(textCode);
-                if(textType == Entry.Vim.TEXT_TYPE_PY)
+                if (textType == Entry.Vim.TEXT_TYPE_PY)
                     this.codeMirror.getDoc().markText(
                         {line:0, ch:0},
                         {line: Entry.Vim.INEDITABLE_LINE_PY, ch:0},
@@ -218,8 +251,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
             else {
                 this.clearText();
             }
-        }
-        else if(textType == Entry.Vim.TEXT_TYPE_JS) {
+        } else if(textType == Entry.Vim.TEXT_TYPE_JS) {
             var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
             this.codeMirror.setValue(textCode);
             var doc = this.codeMirror.getDoc();
@@ -236,17 +268,14 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         if (textType === Entry.Vim.TEXT_TYPE_JS){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
-        } else if(textType === Entry.Vim.TEXT_TYPE_PY){
+        } else if (textType === Entry.Vim.TEXT_TYPE_PY){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
 
-        if(parseType)
-            var textCode = this._parser.parse(code, parseType);
-        else
-            var textCode = this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
-
-        return textCode;
+        return parseType ?
+            this._parser.parse(code, parseType) :
+            this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
     };
 
     p.setParserAvailableCode = function(blockMenuCode, boardCode) {
@@ -259,15 +288,22 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         if (textType === Entry.Vim.TEXT_TYPE_JS){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
-        } else if(textType === Entry.Vim.TEXT_TYPE_PY){
+        } else if (textType === Entry.Vim.TEXT_TYPE_PY){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
 
-        if(this._parser)
+        if (this._parser._execParser)
             syntax = this._parser._execParser.searchSyntax(datum);
 
         return syntax;
     };
+
+    p._getAssistScope = function() {
+        var execParser = this._parser._execParser;
+        if (execParser && execParser.getAssistScope)
+            return execParser.getAssistScope();
+    };
+
 
 })(Entry.Vim.prototype);
