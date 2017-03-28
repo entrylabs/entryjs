@@ -15936,6 +15936,7 @@ Entry.Commander = function(c) {
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"objectAddPicture"};
   c[b.objectAddSound] = {do:function(b, c) {
     Entry.container.getObject(b).addSound(c);
+    Entry.dispatchEvent("dismissModal");
   }, state:function(b, c) {
     return [b, c];
   }, log:function(b, c) {

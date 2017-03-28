@@ -119,6 +119,7 @@ goog.require("Entry.STATIC");
             Entry.container
                 .getObject(objectId)
                 .addSound(sound);
+            Entry.dispatchEvent('dismissModal');
         },
         state: function(objectId, sound) {
             return [objectId, sound];
