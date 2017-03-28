@@ -17208,8 +17208,8 @@ Entry.Model = function(c, b) {
   d.showMe = function(b) {
     if (!b.isTooltipFaded()) {
       b.fadeOutTooltip();
-      var c = Entry.getDom(b.processDomQuery(this.dom)), f = Entry.getDom(b.processDomQuery(["playground", "board", "&1", "magnet", "next", 0], b.requestNextData().content)).getBoundingClientRect();
-      Entry.Utils.glideBlock(c, f.left, f.top, function() {
+      var c = Entry.getDom(b.processDomQuery(this.dom)), d = b.requestNextData().content, d = Entry.getDom(b.processDomQuery(d[0] === f.moveBlockFromBlockMenu ? ["playground", "board", "coord", "&1", "&2"] : ["playground", "board", "&1", "magnet", "next", 0], d)).getBoundingClientRect();
+      Entry.Utils.glideBlock(c, d.left, d.top, function() {
         b.fadeInTooltip();
       });
     }
@@ -17345,7 +17345,7 @@ Entry.Model = function(c, b) {
     return [b, b.x, b.y];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, f, d) {
     var l = !1, m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !l && c && (l = !0, f(), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
+      !l && c && (l = !0, f(), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "coord", "&1", "&2"])}], {indicator:!0, callBack:function() {
       }}));
     }});
     return m;
