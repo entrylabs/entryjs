@@ -317,9 +317,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this.contentPos = contentPos;
         this._render();
         this._updateMagnet();
-
-        if (this.isFieldEditing())
-            this.getBoard().workspace.widgetUpdateEvent.notify();
+        var ws = this.getBoard().workspace;
+        if (ws && (this.isFieldEditing() || ws.widgetUpdateEveryTime))
+            ws.widgetUpdateEvent.notify();
     };
 
     p.isFieldEditing = function() {

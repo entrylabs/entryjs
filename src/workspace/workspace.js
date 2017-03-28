@@ -22,6 +22,7 @@ Entry.Workspace = function(options) {
     this.blockViewMouseUpEvent = new Entry.Event(this);
     this.widgetUpdateEvent = new Entry.Event(this);
     this._blockViewMouseUpEvent = null;
+    this.widgetUpdateEveryTime = false;
 
     var option = options.blockMenu;
     if (option) {
@@ -521,5 +522,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             oldOne.mouseUpEvent.detach(this._blockViewMouseUpEvent);
             this._blockViewMouseUpEvent = null;
         }
+    };
+
+    p.setWidgetUpdateEveryTime = function(val) {
+        this.widgetUpdateEveryTime = !!val;
     };
 })(Entry.Workspace.prototype);

@@ -22099,7 +22099,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this.contentPos = b;
     this._render();
     this._updateMagnet();
-    this.isFieldEditing() && this.getBoard().workspace.widgetUpdateEvent.notify();
+    (b = this.getBoard().workspace) && (this.isFieldEditing() || b.widgetUpdateEveryTime) && b.widgetUpdateEvent.notify();
   };
   c.isFieldEditing = function() {
     for (var b = this._contents, c = 0;c < b.length;c++) {
@@ -26222,6 +26222,7 @@ Entry.Workspace = function(c) {
   this.blockViewMouseUpEvent = new Entry.Event(this);
   this.widgetUpdateEvent = new Entry.Event(this);
   this._blockViewMouseUpEvent = null;
+  this.widgetUpdateEveryTime = !1;
   var b = c.blockMenu;
   b && (this.blockMenu = new Entry.BlockMenu(b.dom, b.align, b.categoryData, b.scroll, this.readOnly), this.blockMenu.workspace = this, this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1));
   if (b = c.board) {
@@ -26496,6 +26497,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   c._unbindBlockViewMouseUpEvent = function() {
     this._blockViewMouseUpEvent && (this.selectedBlockView.mouseUpEvent.detach(this._blockViewMouseUpEvent), this._blockViewMouseUpEvent = null);
+  };
+  c.setWidgetUpdateEveryTime = function(b) {
+    this.widgetUpdateEveryTime = !!b;
   };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {
