@@ -71,7 +71,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     };
 
     p.achieveCheck = function(isSuccess, id) {
-        if (this.isFail)
+        if (this.isFail || !Entry.engine.achieveEnabled)
             return;
         if (isSuccess)
             this.achieveGoal(id);

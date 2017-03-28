@@ -5738,24 +5738,24 @@ Entry.Engine = function() {
   c.run = function() {
     this.isState("run") ? this.toggleStop() : (this.isState("stop") || this.isState("pause")) && this.toggleRun();
   };
-  c.toggleRun = function() {
-    var b = Entry.variableContainer, f = Entry.container;
+  c.toggleRun = function(b) {
+    var f = Entry.variableContainer, c = Entry.container;
     if ("pause" === this.state) {
       this.togglePause();
     } else {
       Entry.Utils.blur();
       if (Entry.playground && Entry.playground.mainWorkspace) {
-        var c = Entry.playground.mainWorkspace;
-        c.mode == Entry.Workspace.MODE_VIMBOARD && c._syncTextCode();
+        var e = Entry.playground.mainWorkspace;
+        e.mode == Entry.Workspace.MODE_VIMBOARD && e._syncTextCode();
       }
       Entry.addActivity("run");
-      "stop" == this.state && (f.mapEntity(function(b) {
+      "stop" == this.state && (c.mapEntity(function(b) {
         b.takeSnapshot();
-      }), b.mapVariable(function(b) {
+      }), f.mapVariable(function(b) {
         b.takeSnapshot();
-      }), b.mapList(function(b) {
+      }), f.mapList(function(b) {
         b.takeSnapshot();
-      }), this.projectTimer.takeSnapshot(), f.inputValue.takeSnapshot(), f.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
+      }), this.projectTimer.takeSnapshot(), c.inputValue.takeSnapshot(), c.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"), this.achieveEnabled = !!b);
       this.state = "run";
       "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
       this.runButton && (this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("run"), this.runButton.addClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.pauseButton && this.pauseButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove"), this.stopButton2 && this.stopButton2.removeClass("entryRemove"));
@@ -15865,7 +15865,7 @@ Entry.Commander = function(c) {
 (function(c) {
   var b = Entry.STATIC.COMMAND_TYPES;
   c[b.toggleRun] = {do:function(b) {
-    Entry.engine.toggleRun();
+    Entry.engine.toggleRun(!0);
   }, state:function() {
   }, log:function(b) {
     return [["callerName", b]];
@@ -17486,7 +17486,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     }
   };
   c.achieveCheck = function(b, c) {
-    this.isFail || (b ? this.achieveGoal(c) : this.fail(c));
+    !this.isFail && Entry.engine.achieveEnabled && (b ? this.achieveGoal(c) : this.fail(c));
   };
   c.achieveGoal = function(b) {
     this.isSuccess || this.isFail || 0 > this.unachievedGoals.indexOf(b) || (this.unachievedGoals.splice(this.unachievedGoals.indexOf(b), 1), 0 === this.unachievedGoals.length && (this.isSuccess = !0, Entry.achieveEvent.notify("success")), this.updateView());

@@ -473,7 +473,7 @@ Entry.Engine = function() {
     /**
      * toggle this engine state run
      */
-    p.toggleRun = function() {
+    p.toggleRun = function(enableAchieve) {
         var variableContainer = Entry.variableContainer;
         var container = Entry.container;
 
@@ -510,6 +510,7 @@ Entry.Engine = function() {
             Entry.scene.takeStartSceneSnapshot();
             this.state = 'run';
             this.fireEvent('start');
+            this.achieveEnabled = !!enableAchieve;
         }
         this.state = 'run';
         if (Entry.type == 'mobile')

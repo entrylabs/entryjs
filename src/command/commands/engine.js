@@ -11,7 +11,7 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.toggleRun] = {
         do: function(callerName) {
-            Entry.engine.toggleRun();
+            Entry.engine.toggleRun(true);
         },
         state: function() {
         },
