@@ -10,13 +10,11 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.container.setObjects(c.objects);
   Entry.FPS = c.speed ? c.speed : 60;
   createjs.Ticker.setFPS(Entry.FPS);
-  "workspace" == this.type && setTimeout(function() {
-    Entry.stateManager.endIgnore();
-  }, 500);
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
   Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
+  "workspace" == this.type && Entry.stateManager.endIgnore();
   window.parent && window.parent.childIframeLoaded && window.parent.childIframeLoaded();
   return c;
 }, clearProject:function() {
