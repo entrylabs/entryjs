@@ -9617,7 +9617,7 @@ Entry.Scene = function() {
   });
   c.disposeEvent = Entry.disposeEvent.attach(this, function(b) {
     var f = document.activeElement;
-    f && f !== b.target && $(f).hasClass("entrySceneFieldWorkspace") && f.blur();
+    b && f && f !== b.target && $(f).hasClass("entrySceneFieldWorkspace") && f.blur();
   });
 };
 Entry.Scene.prototype.generateView = function(c, b) {
@@ -17382,6 +17382,8 @@ Entry.Model = function(c, b) {
   }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
   c[f.setFieldValue] = {do:function(b, c) {
     this.editor.board.findBlock(b).setValue(c, !0);
+    var f = Entry.Field.currentEditingField;
+    f && f.destroyOption(!0);
   }, state:function(b, c) {
     var f = this.editor.board.findBlock(b);
     return [b, f._startValue || f.getValue()];
@@ -23137,17 +23139,17 @@ Entry.Field = function() {
     this._startValue && (this._startValue === this.getValue() || this._blockView.isInBlockMenu || Entry.do("setFieldValue", this.pointer(), this.getValue()));
     delete this._startValue;
   };
-  c.destroyOption = function() {
+  c.destroyOption = function(b) {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     if (this.optionGroup) {
-      var b = this.optionGroup.blur;
-      b && Entry.Utils.isFunction(b) && this.optionGroup.blur();
+      var c = this.optionGroup.blur;
+      c && Entry.Utils.isFunction(c) && this.optionGroup.blur();
       this.optionGroup.remove();
       delete this.optionGroup;
     }
     this._isEditing = !1;
-    this.command();
+    !0 !== b && this.command();
   };
   c._attachDisposeEvent = function(b) {
     var c = this;
@@ -23227,7 +23229,7 @@ Entry.Field = function() {
   c._bindRenderOptions = function() {
     var b = this;
     $(this.svgGroup).bind("mouseup touchend", function(c) {
-      b._isEditable() && (b.destroyOption(), b._startValue = b.getValue(), b.renderOptions(), b._isEditing = !0);
+      b._isEditable() && (b.destroyOption(), b._startValue = b.getValue(), b.renderOptions(), Entry.Field.currentEditingField = b, b._isEditing = !0);
     });
   };
   c.pointer = function(b) {

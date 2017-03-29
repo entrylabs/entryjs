@@ -20,7 +20,7 @@ Entry.Scene = function() {
     that.disposeEvent =
         Entry.disposeEvent.attach(this, function(e) {
             var elem = document.activeElement;
-            if (elem && elem !== e.target &&
+            if (e && elem && elem !== e.target &&
                 $(elem).hasClass('entrySceneFieldWorkspace')) {
                 elem.blur();
             }
