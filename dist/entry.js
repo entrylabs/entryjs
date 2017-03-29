@@ -5913,8 +5913,7 @@ Entry.Commander = function(c) {
     this.editor.board.insert(b, c, e);
   }, state:function(b, c) {
     b = this.editor.board.findBlock(b);
-    c = [b];
-    c.push(b.targetPointer());
+    c = [b, b.targetPointer()];
     "string" !== typeof b && "basic" === b.getBlockType() && c.push(b.thread.getCount(b));
     return c;
   }, log:function(b, c, e) {
@@ -6043,6 +6042,7 @@ Entry.Commander = function(c) {
   }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
   c[e.setFieldValue] = {do:function(b, c) {
     this.editor.board.findBlock(b).setValue(c, !0);
+    Entry.disposeEvent.notify(!0);
   }, state:function(b, c) {
     c = this.editor.board.findBlock(b);
     return [b, c._startValue || c.getValue()];
@@ -6129,7 +6129,7 @@ Entry.Commander = function(c) {
     f.isState("stop") || f.toggleStop();
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(b) {
     }});
-  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
   c[b.toggleStop] = {do:function(b) {
     Entry.engine.toggleStop();
   }, state:function() {
@@ -6141,7 +6141,7 @@ Entry.Commander = function(c) {
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(b) {
       f();
     }});
-  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStart", dom:["engine", "&0"]};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStart", dom:["engine", "&0"]};
 })(Entry.Command);
 (function(c) {
   var b = Entry.STATIC.COMMAND_TYPES;
@@ -14814,7 +14814,7 @@ Entry.Scene = function() {
   });
   c.disposeEvent = Entry.disposeEvent.attach(this, function(b) {
     var c = document.activeElement;
-    c && c !== b.target && $(c).hasClass("entrySceneFieldWorkspace") && c.blur();
+    b && c && c !== b.target && $(c).hasClass("entrySceneFieldWorkspace") && c.blur();
   });
 };
 Entry.Scene.prototype.generateView = function(c, b) {
@@ -23365,6 +23365,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   c.getDom = function(b) {
     return 0 < b.length && "magnet" === b.shift() ? this.view.getMagnet(b) : this.view.svgGroup;
   };
+  c.getParam = function(b) {
+    return this.params[b];
+  };
 })(Entry.Block.prototype);
 Entry.BlockMenu = function(c, b, e, d, f) {
   Entry.Model(this, !1);
@@ -24775,23 +24778,24 @@ Entry.Field = function() {
     this._startValue && (this._startValue === this.getValue() || this._blockView.isInBlockMenu || Entry.do("setFieldValue", this.pointer(), this.getValue()));
     delete this._startValue;
   };
-  c.destroyOption = function() {
+  c.destroyOption = function(b) {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     if (this.optionGroup) {
-      var b = this.optionGroup.blur;
-      b && Entry.Utils.isFunction(b) && this.optionGroup.blur();
+      var c = this.optionGroup.blur;
+      c && Entry.Utils.isFunction(c) && this.optionGroup.blur();
       this.optionGroup.remove();
       delete this.optionGroup;
     }
     this._isEditing = !1;
-    this.command();
+    !0 !== b && this.command();
   };
   c._attachDisposeEvent = function(b) {
     var c = this;
-    c.disposeEvent = Entry.disposeEvent.attach(c, b || function() {
-      c.destroyOption();
-    });
+    b = b || function(b) {
+      c.destroyOption(b);
+    };
+    c.disposeEvent = Entry.disposeEvent.attach(c, b);
   };
   c.align = function(b, c, d) {
     var e = this.svgGroup;
@@ -24923,7 +24927,7 @@ Entry.FieldBlock = function(c, b, e, d, f) {
   Entry.Model(this, !1);
   this._blockView = b;
   this._block = b.block;
-  this._valueBlock = null;
+  this._oldPrimitiveValue = this._valueBlock = null;
   this.box = new Entry.BoxModel;
   this.changeEvent = new Entry.Event(this);
   this._index = e;
@@ -25044,7 +25048,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     "string" === typeof b && (b = this._createBlockByType(b));
     var c = this._valueBlock;
     if (Entry.block[c.type].isPrimitive) {
-      c.doNotSplice = !0, c.destroy();
+      c.doNotSplice = !0, this._oldPrimitiveValue = c.getParam(0), c.destroy();
     } else {
       if ("param" === this.acceptType) {
         this._destroyObservers(), c.view._toGlobalCoordinate(), b.getTerminateOutputBlock().view._contents[1].replace(c);
@@ -25070,9 +25074,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   c._createBlockByType = function(b) {
     this._block.getThread();
-    var c = this._blockView.getBoard();
-    b = new Entry.Block({type:b}, this);
+    var c = this._blockView.getBoard(), d;
+    c.workspace && (d = c.workspace.selectedBlockView, d = !(!d || !d.dragInstance));
+    b = new Entry.Block({type:b, params:[d ? void 0 : this._oldPrimitiveValue]}, this);
     b.createView(c, this.renderMode);
+    delete this._oldPrimitiveValue;
     return b;
   };
   c.spliceBlock = function() {
@@ -26246,9 +26252,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   c.renderOptions = function() {
     var b = this;
-    this._attachDisposeEvent(function() {
-      b.applyValue();
-      b.destroyOption();
+    this._attachDisposeEvent(function(c) {
+      !0 !== c && b.applyValue();
+      b.destroyOption(c);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
@@ -26328,12 +26334,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   c.modValue = function(b) {
     return /&value/gm.test(b) ? b : b % 360;
   };
-  c.destroyOption = function() {
+  c.destroyOption = function(b) {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
     this._setTextValue();
-    this.command();
+    !0 !== b && this.command();
   };
   c._setTextValue = function() {
     var b = this._convert(this.getText(), this.getValue());
@@ -27028,9 +27034,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
   };
   c.renderOptions = function() {
     var b = this;
-    this._attachDisposeEvent(function() {
-      b.applyValue();
-      b.destroyOption();
+    this._attachDisposeEvent(function(c) {
+      !0 !== c && b.applyValue();
+      b.destroyOption(c);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());

@@ -88,9 +88,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var that = this;
 
         var blockView = this._block.view;
-        var func = function() {
-            that.applyValue();
-            that.destroyOption();
+        var func = function(skipCommand) {
+            skipCommand !== true && that.applyValue();
+            that.destroyOption(skipCommand);
         };
 
         this._attachDisposeEvent(func);
@@ -264,7 +264,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         return value % 360;
     };
 
-    p.destroyOption = function() {
+    p.destroyOption = function(skipCommand) {
         if (this.disposeEvent) {
             Entry.disposeEvent.detach(this.disposeEvent);
             delete this.documentDownEvent;
@@ -280,7 +280,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             delete this.svgOptionGroup;
         }
         this._setTextValue();
-        this.command();
+        skipCommand !== true && this.command();
     };
 
     p._setTextValue = function() {

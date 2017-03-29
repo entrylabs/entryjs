@@ -135,9 +135,10 @@ goog.require("Entry.Utils");
         },
         state: function(block, targetBlock) {
             block = this.editor.board.findBlock(block);
-            var data = [ block ];
-
-            data.push(block.targetPointer());
+            var data = [
+                block,
+                block.targetPointer()
+            ];
 
             if (typeof block !== "string" && block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
@@ -505,6 +506,7 @@ goog.require("Entry.Utils");
         do: function(pointer, value) {
             var field = this.editor.board.findBlock(pointer);
             field.setValue(value, true);
+            Entry.disposeEvent.notify(true);
         },
         state: function(pointer, value) {
             var field = this.editor.board.findBlock(pointer);
@@ -672,5 +674,4 @@ goog.require("Entry.Utils");
         }
         return c[newType];
     }
-
 })(Entry.Command);

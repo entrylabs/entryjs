@@ -13,6 +13,7 @@ Entry.FieldBlock = function(content, blockView, index, mode, contentIndex) {
     this._blockView = blockView;
     this._block = blockView.block;
     this._valueBlock = null;
+    this._oldPrimitiveValue = null;
 
     var box = new Entry.BoxModel();
     this.box = box;
@@ -246,13 +247,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
         if (Entry.block[valueBlock.type].isPrimitive) {
             valueBlock.doNotSplice = true;
+            this._oldPrimitiveValue = valueBlock.getParam(0);
             valueBlock.destroy();
         } else if (this.acceptType === "param") {
             this._destroyObservers();
             valueBlock.view._toGlobalCoordinate();
-            block.getTerminateOutputBlock().view._contents[1].replace(
-                valueBlock
-            );
+            block.getTerminateOutputBlock()
+                .view._contents[1]
+                .replace(valueBlock);
         } else {
             this._destroyObservers();
             valueBlock.view._toGlobalCoordinate();
@@ -291,9 +293,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p._createBlockByType = function(blockType) {
         var thread = this._block.getThread();
         var board = this._blockView.getBoard();
+        var isFromUserAction;
+        if (board.workspace) {
+            var selectedBlockView = board.workspace.selectedBlockView;
+            isFromUserAction = !!(selectedBlockView && selectedBlockView.dragInstance);
+        }
 
-        var block = new Entry.Block({type: blockType}, this);
+        var value = isFromUserAction ?
+            undefined : this._oldPrimitiveValue;
+
+        var block = new Entry.Block({
+            type: blockType,
+            params: [ value ]
+        }, this);
+
         block.createView(board, this.renderMode);
+
+        delete this._oldPrimitiveValue;
         return block;
     };
 

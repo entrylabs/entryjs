@@ -27,11 +27,11 @@ Entry.Field = function() {};
                     this.getValue()
                 );
             }
-        };
+        }
         delete this._startValue;
     };
 
-    p.destroyOption = function() {
+    p.destroyOption = function(skipCommand) {
         if (this.documentDownEvent) {
             Entry.documentMousedown.detach(this.documentDownEvent);
             delete this.documentDownEvent;
@@ -52,14 +52,14 @@ Entry.Field = function() {};
 
         this._isEditing = false;
 
-        this.command();
+        skipCommand !== true && this.command();
     };
 
     p._attachDisposeEvent = function(func) {
         var that = this;
 
-        func = func || function() {
-            that.destroyOption();
+        func = func || function(skipCommand) {
+            that.destroyOption(skipCommand);
         };
 
         that.disposeEvent =
@@ -164,11 +164,11 @@ Entry.Field = function() {};
         if (this._contents && this._contents.reference && this._contents.reference.length) {
             var ref = this._contents.reference.concat();
             var index = ref.pop();
-            var targetBlock = this._block.params[this._index]
+            var targetBlock = this._block.params[this._index];
             if (ref.length && ref[0][0] === "%")
                 targetBlock = this._block.params[parseInt(ref.shift().substr(1)) - 1];
             if (ref.length)
-                targetBlock = targetBlock.getDataByPointer(ref)
+                targetBlock = targetBlock.getDataByPointer(ref);
             targetBlock.params[index] = value;
         } else
             this._block.params[this._index] = value;

@@ -667,4 +667,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         }
         return this.view.svgGroup;
     };
+
+    p.getParam = function(index) {
+        return this.params[index];
+    };
 })(Entry.Block.prototype);

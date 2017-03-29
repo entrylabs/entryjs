@@ -36,7 +36,6 @@ goog.require("Entry.STATIC");
                 }
             });
         },
-        skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "toggleStop",
         dom: ['engine', '&0']
@@ -69,7 +68,6 @@ goog.require("Entry.STATIC");
                 }
             });
         },
-        skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "toggleStart",
         dom: ['engine', '&0']
