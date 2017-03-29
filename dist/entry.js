@@ -24911,13 +24911,7 @@ Entry.Field = function() {
     return !!this._isEditing;
   };
   c.getDom = function(b) {
-    if (b.length) {
-      if ("option" === b.shift()) {
-        return this.optionGroup;
-      }
-    } else {
-      return this.svgGroup;
-    }
+    return b.length && "option" === b.shift() ? this.optionGroup : this.svgGroup;
   };
   c.optionDomCreated = function() {
     this._blockView.getBoard().workspace.widgetUpdateEvent.notify();

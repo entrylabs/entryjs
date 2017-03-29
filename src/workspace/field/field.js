@@ -278,9 +278,10 @@ Entry.Field = function() {};
             var key = query.shift();
             if (key === "option")
                 return this.optionGroup;
-        } else {
-            return this.svgGroup;
+
         }
+
+        return this.svgGroup;
     };
 
     p.optionDomCreated = function() {
