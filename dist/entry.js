@@ -17255,8 +17255,7 @@ Entry.Model = function(c, b) {
     this.editor.board.insert(b, c, f);
   }, state:function(b, c) {
     b = this.editor.board.findBlock(b);
-    var f = [b];
-    f.push(b.targetPointer());
+    var f = [b, b.targetPointer()];
     "string" !== typeof b && "basic" === b.getBlockType() && f.push(b.thread.getCount(b));
     return f;
   }, log:function(b, c, f) {
@@ -23406,7 +23405,7 @@ Entry.FieldBlock = function(c, b, f, d, e) {
   Entry.Model(this, !1);
   this._blockView = b;
   this._block = b.block;
-  this._valueBlock = null;
+  this._oldPrimitiveValue = this._valueBlock = null;
   this.box = new Entry.BoxModel;
   this.changeEvent = new Entry.Event(this);
   this._index = f;
@@ -23527,7 +23526,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     "string" === typeof b && (b = this._createBlockByType(b));
     var c = this._valueBlock;
     if (Entry.block[c.type].isPrimitive) {
-      c.doNotSplice = !0, c.destroy();
+      c.doNotSplice = !0, this._oldPrimitiveValue = c.getParam(0), c.destroy();
     } else {
       if ("param" === this.acceptType) {
         this._destroyObservers(), c.view._toGlobalCoordinate(), b.getTerminateOutputBlock().view._contents[1].replace(c);
@@ -23553,9 +23552,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   c._createBlockByType = function(b) {
     this._block.getThread();
-    var c = this._blockView.getBoard();
-    b = new Entry.Block({type:b}, this);
+    var c = this._blockView.getBoard(), d;
+    c.workspace && (d = c.workspace.selectedBlockView, d = !(!d || !d.dragInstance));
+    b = new Entry.Block({type:b, params:[d ? void 0 : this._oldPrimitiveValue]}, this);
     b.createView(c, this.renderMode);
+    delete this._oldPrimitiveValue;
     return b;
   };
   c.spliceBlock = function() {
@@ -25943,6 +25944,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   c.getDom = function(b) {
     return 0 < b.length && "magnet" === b.shift() ? this.view.getMagnet(b) : this.view.svgGroup;
+  };
+  c.getParam = function(b) {
+    return this.params[b];
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(c, b) {

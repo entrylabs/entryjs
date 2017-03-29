@@ -135,9 +135,10 @@ goog.require("Entry.Utils");
         },
         state: function(block, targetBlock) {
             block = this.editor.board.findBlock(block);
-            var data = [ block ];
-
-            data.push(block.targetPointer());
+            var data = [
+                block,
+                block.targetPointer()
+            ];
 
             if (typeof block !== "string" && block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
