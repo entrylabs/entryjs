@@ -841,13 +841,13 @@ Entry.Board.DRAG_RADIUS = 5;
         this.code && this.code.view && this.code.view.reDraw();
     };
 
-    p.separate = function(block, count) {
+    p.separate = function(block, count, index) {
         if (typeof block === "string")
             block = this.findById(block);
         if (block.view)
             block.view._toGlobalCoordinate();
         var prevBlock = block.getPrevBlock();
-        block.separate(count);
+        block.separate(count, index);
         if (prevBlock && prevBlock.getNextBlock())
             prevBlock.getNextBlock().view.bindPrev();
     };
@@ -856,11 +856,13 @@ Entry.Board.DRAG_RADIUS = 5;
         if (typeof block === "string")
             block = this.findById(block);
 
-        this.separate(block, count);
 
-        if (pointer.length === 3) // is global
+        if (pointer.length === 3) { // for global
+            this.separate(block, count, pointer[2]);
             block.moveTo(pointer[0], pointer[1]);
+        }
         else {
+            this.separate(block, count);
             var targetObj;
             if (pointer instanceof Array)
                 targetObj = this.code.getByPointer(pointer);

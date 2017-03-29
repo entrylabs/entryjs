@@ -235,7 +235,6 @@ goog.require("Entry.Utils");
         do: function(block, dragMode, y) {
             block = this.editor.board.findBlock(block);
             if (typeof y === "number") {
-                console.log(dragMode,y);
                 block.view._moveTo(dragMode, y);
                 dragMode = undefined;
             }

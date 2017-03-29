@@ -5954,7 +5954,7 @@ Entry.Commander = function(c) {
   c[e.insertBlockFromBlockMenuFollowSeparate] = d;
   c[e.separateBlock] = {do:function(b, c, e) {
     b = this.editor.board.findBlock(b);
-    "number" === typeof e && (console.log(c, e), b.view._moveTo(c, e), c = void 0);
+    "number" === typeof e && (b.view._moveTo(c, e), c = void 0);
     c = void 0 === c ? Entry.DRAG_MODE_DRAG : c;
     b.view && b.view._toGlobalCoordinate(c);
     b.doSeparate();
@@ -22633,8 +22633,8 @@ Entry.Thread = function(c, b, e) {
       b.destroyView();
     });
   };
-  c.separate = function(b, c) {
-    this._data.has(b.id) && (b = this._data.splice(this._data.indexOf(b), c), this._code.createThread(b), this.changeEvent.notify());
+  c.separate = function(b, c, d) {
+    this._data.has(b.id) && (b = this._data.splice(this._data.indexOf(b), c), this._code.createThread(b, d), this.changeEvent.notify());
   };
   c.cut = function(b) {
     b = this._data.indexOf(b);
@@ -23242,8 +23242,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   c.copyToClipboard = function() {
     Entry.clipboard = this.copy();
   };
-  c.separate = function(b) {
-    this.thread.separate(this, b);
+  c.separate = function(b, c) {
+    this.thread.separate(this, b, c);
     this._updatePos();
     this.getCode().changeEvent.notify();
   };
@@ -25625,17 +25625,16 @@ Entry.Board.DRAG_RADIUS = 5;
   c.reDraw = function() {
     this.code && this.code.view && this.code.view.reDraw();
   };
-  c.separate = function(b, c) {
+  c.separate = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
     b.view && b.view._toGlobalCoordinate();
-    var d = b.getPrevBlock();
-    b.separate(c);
-    d && d.getNextBlock() && d.getNextBlock().view.bindPrev();
+    var e = b.getPrevBlock();
+    b.separate(c, d);
+    e && e.getNextBlock() && e.getNextBlock().view.bindPrev();
   };
   c.insert = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
-    this.separate(b, d);
-    3 === c.length ? b.moveTo(c[0], c[1]) : (c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : c instanceof Entry.Thread ? (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
+    3 === c.length ? (this.separate(b, d, c[2]), b.moveTo(c[0], c[1])) : (this.separate(b, d), c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : c instanceof Entry.Thread ? (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
   };
   c.adjustThreadsPosition = function() {
     var b = this.code;

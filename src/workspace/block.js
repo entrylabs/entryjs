@@ -479,8 +479,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
     p.copyToClipboard = function() {Entry.clipboard = this.copy();};
 
-    p.separate = function(count) {
-        this.thread.separate(this, count);
+    p.separate = function(count, index) {
+        this.thread.separate(this, count, index);
         this._updatePos();
         this.getCode().changeEvent.notify();
     };

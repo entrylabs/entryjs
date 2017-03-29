@@ -66,11 +66,11 @@ Entry.Thread = function(thread, code, parent) {
         });
     };
 
-    p.separate = function(block, count) {
+    p.separate = function(block, count, index) {
         if (!this._data.has(block.id)) return;
 
         var blocks = this._data.splice(this._data.indexOf(block), count);
-        this._code.createThread(blocks);
+        this._code.createThread(blocks, index);
         this.changeEvent.notify();
     };
 
