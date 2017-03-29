@@ -82,9 +82,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         var blockView = this._blockView;
 
-        var func = function() {
-            that.applyValue();
-            that.destroyOption();
+        var func = function(skipCommand) {
+            skipCommand !== true && that.applyValue();
+            that.destroyOption(skipCommand);
         };
 
         this._attachDisposeEvent(func);

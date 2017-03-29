@@ -27,7 +27,7 @@ Entry.Field = function() {};
                     this.getValue()
                 );
             }
-        };
+        }
         delete this._startValue;
     };
 
@@ -58,8 +58,8 @@ Entry.Field = function() {};
     p._attachDisposeEvent = function(func) {
         var that = this;
 
-        func = func || function() {
-            that.destroyOption();
+        func = func || function(skipCommand) {
+            that.destroyOption(skipCommand);
         };
 
         that.disposeEvent =
@@ -206,7 +206,6 @@ Entry.Field = function() {};
                 that.destroyOption();
                 that._startValue = that.getValue();
                 that.renderOptions();
-                Entry.Field.currentEditingField = that;
                 that._isEditing = true;
             }
         });

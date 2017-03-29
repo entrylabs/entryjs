@@ -17382,6 +17382,7 @@ Entry.Model = function(c, b) {
   }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
   c[f.setFieldValue] = {do:function(b, c) {
     this.editor.board.findBlock(b).setValue(c, !0);
+    Entry.disposeEvent.notify(!0);
   }, state:function(b, c) {
     var f = this.editor.board.findBlock(b);
     return [b, f._startValue || f.getValue()];
@@ -23151,9 +23152,10 @@ Entry.Field = function() {
   };
   c._attachDisposeEvent = function(b) {
     var c = this;
-    c.disposeEvent = Entry.disposeEvent.attach(c, b || function() {
-      c.destroyOption();
-    });
+    b = b || function(b) {
+      c.destroyOption(b);
+    };
+    c.disposeEvent = Entry.disposeEvent.attach(c, b);
   };
   c.align = function(b, c, d) {
     var e = this.svgGroup;
@@ -23227,7 +23229,7 @@ Entry.Field = function() {
   c._bindRenderOptions = function() {
     var b = this;
     $(this.svgGroup).bind("mouseup touchend", function(c) {
-      b._isEditable() && (b.destroyOption(), b._startValue = b.getValue(), b.renderOptions(), Entry.Field.currentEditingField = b, b._isEditing = !0);
+      b._isEditable() && (b.destroyOption(), b._startValue = b.getValue(), b.renderOptions(), b._isEditing = !0);
     });
   };
   c.pointer = function(b) {
@@ -23309,9 +23311,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   c.renderOptions = function() {
     var b = this;
-    this._attachDisposeEvent(function() {
-      b.applyValue();
-      b.destroyOption();
+    this._attachDisposeEvent(function(c) {
+      !0 !== c && b.applyValue();
+      b.destroyOption(c);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
@@ -23387,12 +23389,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   c.modValue = function(b) {
     return /&value/gm.test(b) ? b : b % 360;
   };
-  c.destroyOption = function() {
+  c.destroyOption = function(b) {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
     this._setTextValue();
-    this.command();
+    !0 !== b && this.command();
   };
   c._setTextValue = function() {
     var b = this._convert(this.getText(), this.getValue());
@@ -24261,9 +24263,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
   };
   c.renderOptions = function() {
     var b = this;
-    this._attachDisposeEvent(function() {
-      b.applyValue();
-      b.destroyOption();
+    this._attachDisposeEvent(function(c) {
+      !0 !== c && b.applyValue();
+      b.destroyOption(c);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
