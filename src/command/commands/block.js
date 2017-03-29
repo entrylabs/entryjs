@@ -508,7 +508,6 @@ goog.require("Entry.Utils");
             var field = this.editor.board.findBlock(pointer);
             field.setValue(value, true);
             var current = Entry.Field.currentEditingField;
-            current && current.destroyOption(true);
         },
         state: function(pointer, value) {
             var field = this.editor.board.findBlock(pointer);

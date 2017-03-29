@@ -17382,8 +17382,6 @@ Entry.Model = function(c, b) {
   }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
   c[f.setFieldValue] = {do:function(b, c) {
     this.editor.board.findBlock(b).setValue(c, !0);
-    var f = Entry.Field.currentEditingField;
-    f && f.destroyOption(!0);
   }, state:function(b, c) {
     var f = this.editor.board.findBlock(b);
     return [b, f._startValue || f.getValue()];
