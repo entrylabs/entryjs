@@ -15872,7 +15872,7 @@ Entry.Commander = function(c) {
     e.isState("stop") || e.toggleStop();
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(b) {
     }});
-  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStop", dom:["engine", "&0"]};
   c[b.toggleStop] = {do:function(b) {
     Entry.engine.toggleStop();
   }, state:function() {
@@ -15884,7 +15884,7 @@ Entry.Commander = function(c) {
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(b) {
       e();
     }});
-  }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStart", dom:["engine", "&0"]};
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"toggleStart", dom:["engine", "&0"]};
 })(Entry.Command);
 (function(c) {
   var b = Entry.STATIC.COMMAND_TYPES;
