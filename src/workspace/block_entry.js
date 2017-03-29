@@ -7056,11 +7056,48 @@ Entry.block = {
               return Entry.hw.getAnalogPortValue("tilt");
         }
     },
+    "cobl_read_color": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "8.색상센서",
+        def: {
+            type: "cobl_read_color"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+              var colorval = Entry.hw.getAnalogPortValue("color");
+              
+              if(colorval == 1)
+                  return "빨강";
+              else if(colorval == 2)
+                  return "녹색"
+              else if(colorval == 3)
+                  return "파랑"
+              else
+                  return "알수없음";
+        }
+    },
+    "cobl_read_humid": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "9.습도센서",
+        def: {
+            type: "cobl_read_humid"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+              return Entry.hw.getAnalogPortValue("humid");
+        }
+    },
     "cobl_read_temps": {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_string_field",
-        template: "8.온도센서@포트%1",
+        template: "10.온도센서@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -7083,14 +7120,17 @@ Entry.block = {
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
+            //    console.log("-----temptest------")
             var signal = script.getField("VALUE", script);
             if (signal == 1)
             {
+                //    console.log("-----temp1 selected ");
                 return Entry.hw.getAnalogPortValue("temps1");
             }
 
             if (signal == 2)
             {
+                //     console.log("-----temp2 selected ");
                 return Entry.hw.getAnalogPortValue("temps2");
             }
         }
@@ -7099,7 +7139,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_string_field",
-        template: "9.빛센서@포트%1",
+        template: "11.빛센서@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -7138,7 +7178,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_boolean_field",
-        template: "10.버튼스위치@포트%1",
+        template: "12.버튼스위치@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -7177,7 +7217,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "11.무지개LED%1%2 %3",
+        template: "13-1.무지개LED%1%2 %3",
         params: [
             {
                 type: "Dropdown",
@@ -7231,11 +7271,118 @@ Entry.block = {
             return script.callReturn();
         }
     },
+    "cobl_rgb_boardled": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "13-2.무지개LED%1R%2G%3B%4 %5",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "1",
+                "1",
+                "1"
+            ],
+            type: "cobl_rgb_boardled"
+        },
+        paramsKeyMap: {
+            LED: 0,
+            RED: 1,
+            GREEN : 2,
+            BLUE : 3
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var led = script.getNumberField("LED");
+            var r = script.getStringField("RED");
+            var g = script.getStringField("GREEN");
+            var b = script.getStringField("BLUE");
+
+            Entry.hw.setDigitalPortValue("BLED_IDX", led);
+            Entry.hw.setDigitalPortValue("BLED_R", r);
+            Entry.hw.setDigitalPortValue("BLED_G", g);
+            Entry.hw.setDigitalPortValue("BLED_B", b);
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue["BLED_IDX"];
+            delete Entry.hw.sendQueue["BLED_R"];
+            delete Entry.hw.sendQueue["BLED_G"];
+            delete Entry.hw.sendQueue["BLED_B"];
+
+            return script.callReturn();
+        }
+    },
     "cobl_servo_angle_control": {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "12.각도모터 각도%1(15~165) %2",
+        template: "14.각도모터 각도%1(15~165) %2",
         params: [
             {
                 type: "TextInput",
@@ -7272,7 +7419,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "13.멜로디%1 ,%2",
+        template: "15.멜로디%1 시간%2(초) ,%3",
         params: [
             {
                 type: "Dropdown",
@@ -7304,6 +7451,10 @@ Entry.block = {
                 fontSize: 11
             },
             {
+                type: "TextInput",
+                value: 1
+            },
+            {
                 type: "Indicator",
                 img: "block_icon/hardware_03.png",
                 size: 12
@@ -7311,21 +7462,27 @@ Entry.block = {
         ],
         def: {
             params: [
-                "Do"
+                "Do",
+                "1"
             ],
             type: "cobl_melody"
         },
         paramsKeyMap: {
-            MELODY: 0
+            MELODY: 0,
+            DURATION: 1
         },
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
             var melody = script.getStringField("MELODY");
+            var duration = script.getStringField("DURATION");
 
             Entry.hw.setDigitalPortValue("Melody", melody);
+            Entry.hw.setDigitalPortValue("Melody_DUR", duration);
+            
             Entry.hw.update();
             delete Entry.hw.sendQueue["Melody"];
+            delete Entry.hw.sendQueue["Melody_DUR"];
 
             return script.callReturn();
         }
@@ -7334,7 +7491,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "14.회전모터%1%2속도%3 %4",
+        template: "16.회전모터%1%2속도%3 %4",
         params: [
             {
                 type: "Dropdown",
@@ -7413,7 +7570,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "15.USB포트%1단계%2 %3",
+        template: "17.USB포트%1단계%2 %3",
         params: [
             {
                 type: "Dropdown",
@@ -7476,7 +7633,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "16.외부LED%1(1~64)R%2G%3B%4 %5",
+        template: "18.외부LED%1(1~64)R%2G%3B%4 %5",
         params: [
             {
                 type: "TextInput",
@@ -7579,7 +7736,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "17.숫자전광판%1(0~9999) %2",
+        template: "19.숫자전광판%1(0~9999) %2",
         params: [
             {
                 type: "TextInput",
@@ -7601,7 +7758,9 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
             var value = script.getNumberField("VALUE");
-            Entry.hw.setDigitalPortValue("7SEG", value);
+            var value_s = value.toString();
+            var value_c = value_s.substring(0,4);
+            Entry.hw.setDigitalPortValue("7SEG", value_c);
             Entry.hw.update();
             delete Entry.hw.sendQueue["7SEG"];
             return script.callReturn();
