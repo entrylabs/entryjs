@@ -21601,6 +21601,9 @@ Entry.BlockMenu = function(c, b, f, d, e) {
       c.onMouseDown.apply(c, arguments);
     });
   };
+  c.removeControl = function(b) {
+    this.svgDom.off(b);
+  };
   c.onMouseDown = function(b) {
     function c(b) {
       b.stopPropagation && b.stopPropagation();
@@ -24725,6 +24728,9 @@ Entry.Board.DRAG_RADIUS = 5;
     }), b.mouseleave(function(b) {
       d.setOpacity(0);
     }));
+  };
+  c.removeControl = function(b) {
+    this.svgDom.off(b);
   };
   c.onMouseDown = function(b) {
     function c(b) {

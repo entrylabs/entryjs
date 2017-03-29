@@ -693,6 +693,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         }
     };
 
+    p.removeControl = function(eventType) {
+        this.svgDom.off(eventType);
+    };
+
     p.onMouseDown = function(e) {
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();

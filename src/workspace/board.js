@@ -173,6 +173,10 @@ Entry.Board.DRAG_RADIUS = 5;
         }
     };
 
+    p.removeControl = function(eventType) {
+        this.svgDom.off(eventType);
+    };
+
     p.onMouseDown = function(e) {
         if (this.workspace.getMode() == Entry.Workspace.MODE_VIMBOARD)
             return;
