@@ -73,7 +73,22 @@ goog.require("Entry.STATIC");
             return [];
         },
         validate: false,
-        skipUndoStack: true,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: "playgroundClickAddSoundCancel",
+        dom: ['playground', 'soundAddButton']
+    };
+
+    c[COMMAND_TYPES.playgroundClickAddSoundCancel] = {
+        do: function() {
+            Entry.dispatchEvent('dismissModal');
+        },
+        state: function() {
+            return [];
+        },
+        log: function() {
+            return [];
+        },
+        validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "",
         dom: ['playground', 'soundAddButton']
