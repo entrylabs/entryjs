@@ -17569,7 +17569,7 @@ Entry.Func.threads = {};
 Entry.Func.registerFunction = function(c) {
   if (Entry.playground) {
     var b = Entry.playground.mainWorkspace;
-    b && (b = b.getBlockMenu().code, this._targetFuncBlock || (this._targetFuncBlock = b.createThread([{type:"func_" + c.id, category:"func", x:-9999}]), c.blockMenuBlock = this._targetFuncBlock));
+    b && (this._targetFuncBlock = b.getBlockMenu().code.createThread([{type:"func_" + c.id, category:"func", x:-9999}]), c.blockMenuBlock = this._targetFuncBlock);
   }
 };
 Entry.Func.executeFunction = function(c) {
