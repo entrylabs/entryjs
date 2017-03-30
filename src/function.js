@@ -88,7 +88,7 @@ Entry.Func.prototype.init = function(model) {
 };
 
 Entry.Func.prototype.destroy = function() {
-    this.blockMenuBlock.destroy();
+    this.blockMenuBlock && this.blockMenuBlock.destroy();
 };
 
 Entry.Func.edit = function(func) {
