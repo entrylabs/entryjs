@@ -11,57 +11,48 @@ Entry.Roborobo_Roduino = {
         MOTOR: 6,
         COLOR: 7
     },
-    setZero: function() {
-        for (var i = 0; i < 5; i++) {
-            Entry.hw.sendQueue[i] = 0;
+    setZero: function() {        
+        Entry.hw.sendQueue.colorPin = 0;
+        Entry.hw.sendQueue.analogEnable = [ 0, 0, 0, 0, 0, 0 ];
+        for (var port = 0; port < 14; port++) {
+            Entry.hw.sendQueue[port] = 0;
         }
         this.ColorPin = [ 0, 0, 0 ];
         Entry.hw.update();
-    },
-    setSendData: function(data) {
-        Entry.hw.sendQueue = data;
-        Entry.hw.update();
-        this.wait(32);
-    },
-    wait: function(ms) {
-        var start = new Date().getTime();
-        var stop = start;
-        while(stop < start + ms) {
-            stop = new Date().getTime();
-        }
     },
     ColorPin: [ 0, 0, 0 ]
 };
 
 Entry.Roborobo_SchoolKit = {
     name: 'roborobo_schoolkit',
-    INSTRUCTION : {
-        DIGITAL_READ: 1,
-        DIGITAL_WRITE: 2,
-        MOTOR: 3,
-        COLOR: 4,
-        SERVO: 5
+    pinMode : {
+        INPUT:  0,
+        OUTPUT: 1,
+        ANALOG: 2,
+        PWM:    3,
+        SERVO:  4
     },
+	inputPort : {
+		ir : 7,
+		sound : 8,
+		contact : 9,
+		cds : 10
+	},
     setZero: function() {
-        for (var i = 0; i < 5; i++) {
-            Entry.hw.sendQueue[i] = 0;
-        }
-        this.ColorPin = [ 0, 0, 0 ];
+        Entry.hw.sendQueue.initHW_Flag = true;
         Entry.hw.update();
-    },
-    setSendData: function(data) {
-        Entry.hw.sendQueue = data;
-        Entry.hw.update();
-        this.wait(32);
-    },
-    wait: function(ms) {
-        var start = new Date().getTime();
-        var stop = start;
-        while(stop < start + ms) {
-            stop = new Date().getTime();
+        
+        Entry.hw.sendQueue.digitalPinMode = [];
+        Entry.hw.sendQueue.servo = [ false, false, false, false, false ];
+        for (var port = 0; port < 14; port++) {
+            Entry.hw.sendQueue[port] = 0;
+			Entry.hw.sendQueue.digitalPinMode[port] = 0;
         }
-    },
-    ColorPin: [ 0, 0, 0 ]
+        Entry.hw.update();
+        
+        Entry.hw.sendQueue.initHW_Flag = false;
+        Entry.hw.update();
+    }
 };
 
 // Roduino
@@ -70,7 +61,7 @@ Blockly.Blocks.roduino_on_block = {
         this.setColour("#00979D");
         this.appendDummyInput().appendField(Lang.Blocks.roborobo_on);
         this.setOutput(true, 'Number');
-        this.setInputsInline(true);        
+        this.setInputsInline(true);
     }
 }
 
@@ -153,7 +144,9 @@ Blockly.Blocks.roduino_get_analog_value = {
 
 Entry.block.roduino_get_analog_value = function (sprite, script) {
     var signal = parseInt(script.getValue("VALUE", script));
-    Entry.Roduino.setSendData([Entry.Roduino.INSTRUCTION.ANALOG_READ, signal]);
+    Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.ANALOG_READ;
+    Entry.hw.sendQueue.analogEnable[signal] = 1;
+    Entry.hw.update();
     return Entry.hw.getAnalogPortValue(signal);
 };
 
@@ -174,8 +167,9 @@ Blockly.Blocks.roduino_get_digital_value = {
 
 Entry.block.roduino_get_digital_value = function (sprite, script) {
     var signal = script.getNumberValue("VALUE");
-    Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ, signal]);
-    return Entry.hw.portData[signal - 2];
+    Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ;
+    Entry.hw.sendQueue[1] = signal;
+    return Entry.hw.getDigitalPortValue(signal - 2);    
 };
 
 Blockly.Blocks.roduino_get_color = {
@@ -255,8 +249,10 @@ Entry.block.roduino_set_digital = function (sprite, script) {
     var pin = script.getNumberValue("VALUE");
     var operator = script.getField("OPERATOR");
     var value = operator == "on" ? 1 : 0;
-    
-    Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, pin, value]);
+    Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE;
+    Entry.hw.sendQueue[1] = pin;
+    Entry.hw.update();
+    Entry.hw.setDigitalPortValue(pin, value);
     return script.callReturn();
 };
 
@@ -303,7 +299,8 @@ Entry.block.roduino_motor = function (sprite, script) {
         value1 = 0;
         value2 = 0;
     }
-    Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.MOTOR, pin1, value1, pin2, value2]);
+    Entry.hw.setDigitalPortValue(pin1, value1);
+    Entry.hw.setDigitalPortValue(pin2, value2);
     return script.callReturn();
 };
 
@@ -330,10 +327,12 @@ Blockly.Blocks.roduino_set_color_pin = {
 Entry.block.roduino_set_color_pin = function (sprite, script) {
     var redPin = script.getNumberValue("RED", script);
     var greenPin = script.getNumberValue("GREEN", script);
-    var bluePin = script.getNumberValue("BLUE", script);            
+    var bluePin = script.getNumberValue("BLUE", script);
     
     Entry.Roborobo_Roduino.ColorPin = [ redPin, greenPin, bluePin ];
-    Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, redPin, greenPin, bluePin]);              
+    Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.COLOR;
+    Entry.hw.sendQueue.colorPin = redPin;
+    Entry.hw.update();
     return script.callReturn();
 };
 
@@ -411,7 +410,8 @@ Entry.block.schoolkit_set_output = function (sprite, script) {
     var operator = script.getField("OPERATOR");
     var value = operator == "on" ? 1 : 0;
     
-    Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, pin, value]);
+    Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
+    Entry.hw.sendQueue[pin] = value;
     return script.callReturn();
 };
 
@@ -455,7 +455,8 @@ Blockly.Blocks.schoolkit_get_input_value = {
 
 Entry.block.schoolkit_get_input_value = function (sprite, script) {
     var signal = script.getNumberValue("VALUE");
-    Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_READ, signal]);
+    Entry.hw.sendQueue.digitalPinMode[signal] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
+    Entry.hw.update();
     return Entry.hw.portData[signal - 7];
 };
 
@@ -480,32 +481,37 @@ Blockly.Blocks.schoolkit_motor = {
 };
 
 Entry.block.schoolkit_motor = function (sprite, script) {
-    var pin = 0;
-    var operatorValue = 0;
     var mode = script.getField("MODE");
+    var pin = 0;
     var operator = script.getField("OPERATOR");
     var value = script.getNumberValue("VALUE");
     
     if(mode == "motor1") {
-        pin = 7;
+        pin = 7;        
     } else {
         pin = 8;
     }
+    
     if(value > 255) {
         value = 255;
     } else if(value < 0) {
         value = 0;
     }
     
+    Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+    Entry.hw.sendQueue.digitalPinMode[pin - 7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+    
     if (operator == "cw") {
-        operatorValue = 1;
-        Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+        Entry.hw.sendQueue[pin] = value;
+        Entry.hw.sendQueue[pin - 7] = 0x00;
     } else if (operator == "ccw") {
-        operatorValue = 2;
-        Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+        Entry.hw.sendQueue[pin] = 0x00;
+        Entry.hw.sendQueue[pin - 7] = value;
     } else if(operator == "stop") {
-        Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+        Entry.hw.sendQueue[pin] = 0x00;
+        Entry.hw.sendQueue[pin - 7] = 0x00;
     }
+    
     return script.callReturn();
 };
 
@@ -529,12 +535,14 @@ Entry.block.schoolkit_set_servo_value = function (sprite, script) {
     var pin = script.getNumberValue("PIN");
     var value = script.getNumberValue("VALUE");
     
+    Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+
     if(value < 0) {
         value = 0;
     } else if(value > 180) {
         value = 180;
     }
-            
-    Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.SERVO, pin, value]);
+    Entry.hw.sendQueue.servo[pin - 2] = true;
+    Entry.hw.sendQueue[pin] = value;
     return script.callReturn();
 };
