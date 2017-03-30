@@ -38,14 +38,20 @@ Entry.Roborobo_SchoolKit = {
 		contact : 9,
 		cds : 10
 	},
-    setZero: function() {
+    setZero: function() {        
+        Entry.hw.sendQueue.initHW_Flag = true;
+        Entry.hw.update();
+        
         Entry.hw.sendQueue.digitalPinMode = [];
         Entry.hw.sendQueue.servo = [ false, false, false, false, false ];
         for (var port = 0; port < 14; port++) {
             Entry.hw.sendQueue[port] = 0;
 			Entry.hw.sendQueue.digitalPinMode[port] = 0;
         }
-		Entry.hw.update();
+        Entry.hw.update();
+        
+        Entry.hw.sendQueue.initHW_Flag = false;
+        Entry.hw.update();
     }
 };
 

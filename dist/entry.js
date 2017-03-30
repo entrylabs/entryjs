@@ -5050,11 +5050,15 @@ Entry.Roborobo_Roduino = {name:"roborobo_roduino", INSTRUCTION:{DIGITAL_READ:1, 
   Entry.hw.update();
 }, ColorPin:[0, 0, 0]};
 Entry.Roborobo_SchoolKit = {name:"roborobo_schoolkit", pinMode:{INPUT:0, OUTPUT:1, ANALOG:2, PWM:3, SERVO:4}, inputPort:{ir:7, sound:8, contact:9, cds:10}, setZero:function() {
+  Entry.hw.sendQueue.initHW_Flag = !0;
+  Entry.hw.update();
   Entry.hw.sendQueue.digitalPinMode = [];
   Entry.hw.sendQueue.servo = [!1, !1, !1, !1, !1];
   for (var b = 0;14 > b;b++) {
     Entry.hw.sendQueue[b] = 0, Entry.hw.sendQueue.digitalPinMode[b] = 0;
   }
+  Entry.hw.update();
+  Entry.hw.sendQueue.initHW_Flag = !1;
   Entry.hw.update();
 }};
 Blockly.Blocks.roduino_on_block = {init:function() {
