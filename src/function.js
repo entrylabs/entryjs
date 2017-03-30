@@ -56,12 +56,15 @@ Entry.Func.registerFunction = function(func) {
     if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
     var menuCode = blockMenu.code;
-    this._targetFuncBlock = menuCode.createThread([{
-        type: "func_" + func.id,
-        category: 'func',
-        x: -9999
-    }]);
-    func.blockMenuBlock = this._targetFuncBlock;
+
+    if (!this._targetFuncBlock) {
+        this._targetFuncBlock = menuCode.createThread([{
+            type: "func_" + func.id,
+            category: 'func',
+            x: -9999
+        }]);
+        func.blockMenuBlock = this._targetFuncBlock;
+    }
 };
 
 Entry.Func.executeFunction = function(threadHash) {
