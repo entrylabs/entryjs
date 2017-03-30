@@ -19753,6 +19753,7 @@ Entry.VariableContainer = function() {
     if (this.view_) {
       var d = Entry.createElement("li"), e;
       e = "entryVariableListElementWorkspace entryFunctionElementWorkspace";
+      e += " function";
       d.addClass(e);
       d.bindOnClick(function(d) {
         d.stopPropagation();
