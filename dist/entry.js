@@ -16821,12 +16821,16 @@ Entry.isEmpty = function(c) {
 };
 Entry.Utils.disableContextmenu = function(c) {
   if (c) {
-    $(c).on("contextmenu", function(b) {
-      b.stopPropagation();
-      b.preventDefault();
-      return !1;
-    });
+    $(c).on("contextmenu", this.contextPreventFunction);
   }
+};
+Entry.Utils.contextPreventFunction = function(c) {
+  c.stopPropagation();
+  c.preventDefault();
+  return !1;
+};
+Entry.Utils.enableContextmenu = function(c) {
+  c && $(c).off("contextmenu", this.contextPreventFunction);
 };
 Entry.Utils.isRightButton = function(c) {
   return 2 == c.button || c.ctrlKey;
@@ -17101,10 +17105,12 @@ Entry.Utils.restrictAction = function(c, b, f) {
   };
   this._restrictHandler = e;
   var g = Entry.getDom();
+  Entry.Utils.disableContextmenu(g);
   g.addEventListener ? (g.addEventListener("click", e, !0), g.addEventListener("mousedown", e, !0), g.addEventListener("touchstart", e, !0)) : (g.attachEvent("onclick", e), g.attachEvent("onmousedown", e), g.attachEvent("ontouchstart", e));
 };
 Entry.Utils.allowAction = function() {
   var c = Entry.getDom();
+  Entry.Utils.enableContextmenu(c);
   this._restrictHandler && (c.addEventListener ? (c.removeEventListener("click", this._restrictHandler, !0), c.removeEventListener("mousedown", this._restrictHandler, !0), c.removeEventListener("touchstart", this._restrictHandler, !0)) : (c.detachEvent("onclick", this._restrictHandler), c.detachEvent("onmousedown", this._restrictHandler), c.detachEvent("ontouchstart", this._restrictHandler)), delete this._restrictHandler);
 };
 Entry.Utils.glideBlock = function(c, b, f, d) {

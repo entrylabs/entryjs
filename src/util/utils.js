@@ -1069,11 +1069,19 @@ Entry.isEmpty = function(obj) {
 Entry.Utils.disableContextmenu = function(node) {
     if (!node) return;
 
-    $(node).on('contextmenu', function(e){
-        e.stopPropagation();
-        e.preventDefault();
-        return false;
-    });
+    $(node).on('contextmenu', this.contextPreventFunction);
+};
+
+Entry.Utils.contextPreventFunction = function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+};
+
+Entry.Utils.enableContextmenu = function(node) {
+    if (!node) return;
+
+    $(node).off('contextmenu', this.contextPreventFunction);
 };
 
 Entry.Utils.isRightButton = function(e) {
@@ -1506,7 +1514,9 @@ Entry.Utils.getWindow = function(hashId) {
 Entry.Utils.restrictAction = function(exceptions, callback, noDispose) {
     var that = this;
     exceptions = exceptions || [];
-    exceptions = exceptions.map(function(e) {return e[0]});
+    exceptions = exceptions.map(function(e) {
+        return e[0];
+    });
     var handler = function(e) {
         e = e || window.event;
         var target = e.target || e.srcElement;
@@ -1521,6 +1531,7 @@ Entry.Utils.restrictAction = function(exceptions, callback, noDispose) {
                 }
             }
         }
+
         if (!e.preventDefault) {//IE quirks
             e.returnValue = false;
             e.cancelBubble = true;
@@ -1532,6 +1543,7 @@ Entry.Utils.restrictAction = function(exceptions, callback, noDispose) {
     this._restrictHandler = handler;
 
     var entryDom = Entry.getDom();
+    Entry.Utils.disableContextmenu(entryDom);
     if (entryDom.addEventListener) {
         entryDom.addEventListener('click', handler, true);
         entryDom.addEventListener('mousedown', handler, true);
@@ -1546,6 +1558,7 @@ Entry.Utils.restrictAction = function(exceptions, callback, noDispose) {
 
 Entry.Utils.allowAction = function() {
     var entryDom = Entry.getDom();
+    Entry.Utils.enableContextmenu(entryDom);
     if (this._restrictHandler) {
         if (entryDom.addEventListener) {
             entryDom.removeEventListener("click", this._restrictHandler, true);
