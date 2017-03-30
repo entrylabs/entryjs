@@ -106,6 +106,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message) {
+        Entry.disposeEvent.notify();
         if (Entry.Utils.isNumber(mode)) this.mode = mode;
         else {
             this.mode = mode.boardType;

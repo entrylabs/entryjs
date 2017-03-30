@@ -26276,6 +26276,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   c.setMode = function(b, c) {
+    Entry.disposeEvent.notify();
     Entry.Utils.isNumber(b) ? this.mode = b : (this.mode = b.boardType, this.runType = b.runType, this.textType = b.textType);
     this.mode = Number(this.mode);
     if (this.oldMode !== this.mode) {
