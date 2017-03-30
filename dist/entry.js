@@ -85,12 +85,12 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
       Entry.playground.view_.style.left = f + .5 + "px";
       Entry.propertyPanel.resize(f);
       var e = Entry.engine.view_.getElementsByClassName("entryAddButtonWorkspace_w")[0];
-      e && (Entry.objectAddable ? (e.style.top = d + 24 + "px", e.style.width = .7 * f + "px") : e.style.display = "none");
+      e && (Entry.objectAddable ? (e.style.top = d + 25 + "px", e.style.width = .7 * f + "px") : e.style.display = "none");
       if (e = Entry.engine.view_.getElementsByClassName("entryRunButtonWorkspace_w")[0]) {
-        Entry.objectAddable ? (e.style.top = d + 24 + "px", e.style.left = .7 * f + "px", e.style.width = .3 * f + "px") : (e.style.left = "2px", e.style.top = d + 24 + "px", e.style.width = f - 4 + "px");
+        Entry.objectAddable ? (e.style.top = d + 25 + "px", e.style.left = .7 * f + "px", e.style.width = .3 * f + "px") : (e.style.left = "2px", e.style.top = d + 25 + "px", e.style.width = f - 4 + "px");
       }
       if (e = Entry.engine.view_.getElementsByClassName("entryStopButtonWorkspace_w")[0]) {
-        Entry.objectAddable ? (e.style.top = d + 24 + "px", e.style.left = .7 * f + "px", e.style.width = .3 * f + "px") : (e.style.left = "2px", e.style.top = d + 24 + "px", e.style.width = f + "px");
+        Entry.objectAddable ? (e.style.top = d + 25 + "px", e.style.left = .7 * f + "px", e.style.width = .3 * f + "px") : (e.style.left = "2px", e.style.top = d + 25 + "px", e.style.width = f + "px");
       }
       (f = c.menuWidth) ? 244 > f ? f = 244 : 400 < f && (f = 400) : f = 264;
       c.menuWidth = f;

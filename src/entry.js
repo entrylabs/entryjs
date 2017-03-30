@@ -247,8 +247,7 @@ Entry.resizeElement = function(interfaceModel) {
         var addButton = Entry.engine.view_.getElementsByClassName('entryAddButtonWorkspace_w')[0];
         if (addButton) {
             if (Entry.objectAddable) {
-                /*addButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                addButton.style.top = (canvasHeight + 24) + 'px';
+                addButton.style.top = (canvasHeight + 25) + 'px';
                 addButton.style.width = (canvasSize * 0.7) + 'px';
             } else {
                 addButton.style.display = 'none';
@@ -259,13 +258,13 @@ Entry.resizeElement = function(interfaceModel) {
         if (runButton) {
             if (Entry.objectAddable) {
                 /*runButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                runButton.style.top = (canvasHeight + 24) + 'px';
+                runButton.style.top = (canvasHeight + 25) + 'px';
                 runButton.style.left = (canvasSize * 0.7) + 'px';
                 runButton.style.width = (canvasSize * 0.3) + 'px';
             } else {
                 runButton.style.left = '2px';
                 /*runButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                runButton.style.top = (canvasHeight + 24) + 'px';
+                runButton.style.top = (canvasHeight + 25) + 'px';
                 runButton.style.width = (canvasSize - 4) + 'px';
             }
         }
@@ -274,14 +273,14 @@ Entry.resizeElement = function(interfaceModel) {
         if (stopButton) {
             if (Entry.objectAddable) {
                 /*stopButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                stopButton.style.top = (canvasHeight + 24) + 'px';
+                stopButton.style.top = (canvasHeight + 25) + 'px';
                 stopButton.style.left = (canvasSize * 0.7) + 'px';
                 stopButton.style.width = (canvasSize * 0.3) + 'px';
                 //console.log('runButton top,left = ' + runButton.style.top + ',' + runButton.style.left);
             } else {
                 stopButton.style.left = '2px';
                 /*stopButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                stopButton.style.top = (canvasHeight + 24) + 'px';
+                stopButton.style.top = (canvasHeight + 25) + 'px';
                 stopButton.style.width = (canvasSize) + 'px';
             }
         }
