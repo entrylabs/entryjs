@@ -26444,6 +26444,7 @@ Entry.block = {
             {type: 'Block',accept: 'string'},
             {type: 'Block',accept: 'string'},
             {type: 'Block',accept: 'string'},
+            {type: "Indicator", img: "block_icon/hardware_03.png", size: 12 }
         ],
         def: {params: [null, {type: 'number',params: [ 1 ]},{type: 'number',params: [ 2 ]},{type: 'number',params: [ 1 ]},{type: 'number',params: [ 1 ]}], type: 'chocopi_led'},
         paramsKeyMap: { port: 0, l:1, r:2,g:3,b:4 },
@@ -26474,6 +26475,7 @@ Entry.block = {
            {type: 'Dropdown', options: [['1', 0],['2', 1]], value: 0, fontSize: 11},
            {type: 'Block',accept: 'string'},
            {type: 'Dropdown', options: [[Lang.General.clock, 0],[Lang.General.counter_clock, 1]], value: 0, fontSize: 11},
+           {type: "Indicator", img: "block_icon/hardware_03.png", size: 12 }
         ],
         def: {params: [ null,null,{type: 'number',params: [ 31 ]} ],type: 'chocopi_dc_motor'},
         paramsKeyMap: { port: 0, id:1, power:2,direction:3 },
@@ -26502,6 +26504,7 @@ Entry.block = {
            {type: 'Dropdown', options: Entry.Chocopi.portlist, value:0},
            {type: 'Dropdown', options: [['1', 0],['2', 1],['3', 2],['4', 3]], value: 0, fontSize: 11},
            {type: 'Block',accept: 'string'},
+           {type: "Indicator", img: "block_icon/hardware_03.png", size: 12 }
         ],
         def: {params: [ null,null,{type: 'number',params: [ 90 ]} ],type: 'chocopi_servo_motor'},
         paramsKeyMap: { port: 0, id:1, angle:2 },

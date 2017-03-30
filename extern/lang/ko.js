@@ -4029,9 +4029,9 @@ Lang.template = {
     chocopi_motion_photogate_time: "%1 포토게이트%2번을 %3",
     chocopi_motion_photogate_status: "%1 포토게이트 %2번이 막힘",
     chocopi_motion_value: "%1 모션 %2의 값",
-    chocopi_led: "%1 LED %2 RGB(%3%4%5)",
-    chocopi_dc_motor: "%1 DC모터 %2 %3% 세기 %4 방향",
-    chocopi_servo_motor: "%1 서보모터 %2번 %3도",
+    chocopi_led: "%1 LED %2 RGB(%3 %4 %5) %6",
+    chocopi_dc_motor: "%1 DC모터 %2 %3% 세기 %4 방향 %5",
+    chocopi_servo_motor: "%1 서보모터 %2번 %3도 %4",
 };
 
 if (typeof exports == "object")

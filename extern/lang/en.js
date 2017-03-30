@@ -4031,9 +4031,9 @@ Lang.template = {
     chocopi_motion_photogate_time: "time when %1 photogate %2 was %3",
     chocopi_motion_photogate_status: "%1 photogate #%2 is blocked",
     chocopi_motion_value: "%1 motion %2 value",
-    chocopi_led: "%1 LED #%2 RGB(%3 %4 %5)",
-    chocopi_dc_motor: "%1 DC motor #%2  %3 % direction %4 ",
-    chocopi_servo_motor: "%1 set servo motor #%2 %3 degree",
+    chocopi_led: "%1 LED #%2 RGB(%3 %4 %5) %6",
+    chocopi_dc_motor: "%1 DC motor #%2  %3 % direction %4 %5",
+    chocopi_servo_motor: "%1 set servo motor #%2 %3 degree %4",
 };
 
 if (typeof exports == "object")
