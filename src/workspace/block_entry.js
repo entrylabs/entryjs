@@ -32602,7 +32602,7 @@ Entry.block = {
     "check_block_execution": {
         "color": "#7C7C7C",
         "skeleton": "basic_loop",
-        "template": "%1 에서 아래 블록이 %2 실행되었는가 %3",
+        "template": "%1 에서 아래 블록이 %2 %3 번 실행되었는가 %4",
         "statements": [
             {
                 "accept": "basic"
@@ -32625,6 +32625,10 @@ Entry.block = {
                 "fontSize": 11
             },
             {
+                "type": "TextInput",
+                "value": 1
+            },
+            {
                 "type": "Indicator",
                 "color": "#6B6B6B",
                 "size": 12
@@ -32645,7 +32649,7 @@ Entry.block = {
         "isNotFor": [ "checker" ],
         "func": function (sprite, script) {
             if (this.listener) {
-                if (this.isDone) {
+                if (this.remainCheck === 0) {
                     this.listener.destroy();
                     return;
                 }
@@ -32656,7 +32660,7 @@ Entry.block = {
                 accuracy = this.block.params[1],
                 statements = this.block.statements[0].getBlocks(),
                 lastBlock = null;
-            this.isDone = false;
+            this.remainCheck = Number(this.block.params[2]);
             var index = 0;
             this.listener = code.watchEvent.attach(this, function(blocks) { //dangerous
                 blocks = blocks.concat();
@@ -32676,7 +32680,8 @@ Entry.block = {
                 }
                 lastBlock = block;
                 if (index === statements.length) {
-                    this.isDone = true;
+                    this.remainCheck = this.remainCheck - 1;
+                    index = 0;
                 }
             })
             return Entry.STATIC.BREAK;
