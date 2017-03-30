@@ -301,6 +301,7 @@ Entry.Func.setupMenuCode = function() {
         type: "function_field_string",
         category: CATEGORY,
         x: -9999,
+        copyable: false,
         params: [
             {type: this.requestParamBlock("string")}
         ]
@@ -308,6 +309,7 @@ Entry.Func.setupMenuCode = function() {
 
     this._fieldBoolean = menuCode.createThread([{
         type: "function_field_boolean",
+        copyable: false,
         category: CATEGORY,
         x: -9999,
         params: [
@@ -317,25 +319,19 @@ Entry.Func.setupMenuCode = function() {
 
     this.menuCode = menuCode;
     blockMenu.align();
-}
+};
 
 Entry.Func.refreshMenuCode = function() {
-    var workspace = Entry.playground.mainWorkspace;
-    if (!workspace) return;
-    if (!this.menuCode)
-        this.setupMenuCode();
-    var stringType = this._fieldString.params[0].type;
-    var referenceCount = Entry.block[stringType].changeEvent._listeners.length;
-    if (referenceCount > 2) // check new block type is used
-        this._fieldString.params[0].changeType(this.requestParamBlock("string"));
-    var booleanType = this._fieldBoolean.params[0].type;
-    referenceCount = Entry.block[booleanType].changeEvent._listeners.length;
-    if (referenceCount > 2)
-        this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
+    if (!Entry.playground.mainWorkspace) return;
+    if (!this.menuCode) this.setupMenuCode();
+
+    this._fieldString.params[0]
+        .changeType(this.requestParamBlock("string"));
+    this._fieldBoolean.params[0]
+        .changeType(this.requestParamBlock("boolean"));
 };
 
 Entry.Func.requestParamBlock = function(type) {
-    var id = Entry.generateHash();
     var blockPrototype;
     switch (type) {
         case "string":
@@ -348,23 +344,31 @@ Entry.Func.requestParamBlock = function(type) {
             return null;
     }
 
-    var blockType = type + "Param_" + id;
-    var blockSchema = Entry.Func.createParamBlock(blockType, blockPrototype, type);
-    Entry.block[blockType] = blockSchema;
+    var blockType = type + "Param_" + Entry.generateHash();
+    Entry.block[blockType] =
+        Entry.Func.createParamBlock(blockType, blockPrototype, type);
     return blockType;
 };
 
 Entry.Func.registerParamBlock = function(type) {
-    if (type.indexOf("stringParam") > -1) {
-        Entry.Func.createParamBlock(type, Entry.block.function_param_string, type);
-    } else if (type.indexOf("booleanParam") > -1 ) {
-        Entry.Func.createParamBlock(type, Entry.block.function_param_boolean, type);
-    }
+    if (!type) return;
+
+    var blockPrototype;
+    if (type.indexOf("stringParam") > -1)
+        blockPrototype = Entry.block.function_param_string;
+    else if (type.indexOf("booleanParam") > -1)
+        blockPrototype = Entry.block.function_param_boolean;
+
+    //not a function param block
+    if (!blockPrototype) return;
+
+    Entry.Func.createParamBlock(type, blockPrototype, type);
 };
 
 Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
+    originalType = /string/gi.test(originalType) ?
+        "function_param_string" : "function_param_boolean";
     var blockSchema = function () {};
-    originalType = originalType === "string" ? "function_param_string" : "function_param_boolean";
     blockSchema.prototype = blockPrototype;
     blockSchema = new blockSchema();
     blockSchema.changeEvent = new Entry.Event();
@@ -372,7 +376,7 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
 
     Entry.block[type] = blockSchema;
     return blockSchema;
-}
+};
 
 Entry.Func.updateMenu = function() {
     var workspace = Entry.getMainWS();
@@ -446,7 +450,9 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
     this.unbindFuncChangeEvent();
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
     var defBlock = targetFunc.content.getEventMap("funcDef")[0];
+
     if (!defBlock) return;
+
     var outputBlock = defBlock.params[0];
     var booleanIndex = 0;
     var stringIndex = 0;
@@ -457,7 +463,7 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
     var blockIds = [];
     while(outputBlock) {
         var value = outputBlock.params[0];
-        switch(outputBlock.type) {
+        switch (outputBlock.type) {
             case 'function_field_label':
                 schemaTemplate = schemaTemplate + " " + value;
                 break;
