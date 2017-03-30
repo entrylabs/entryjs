@@ -14,6 +14,7 @@ goog.require("Entry.STATIC");
             Entry.engine.toggleRun(true);
         },
         state: function() {
+            return [];
         },
         log: function(callerName) {
             return [
@@ -36,6 +37,7 @@ goog.require("Entry.STATIC");
                 }
             });
         },
+        validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "toggleStop",
         dom: ['engine', '&0']
@@ -46,6 +48,7 @@ goog.require("Entry.STATIC");
             Entry.engine.toggleStop();
         },
         state: function() {
+            return [];
         },
         log: function(callerName) {
             return [
@@ -68,8 +71,9 @@ goog.require("Entry.STATIC");
                 }
             });
         },
+        validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        undo: "toggleStart",
+        undo: "toggleRun",
         dom: ['engine', '&0']
     };
 
