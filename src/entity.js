@@ -566,6 +566,10 @@ Entry.EntityObject.prototype.syncFont = function() {
     this.setLineHeight();
     Entry.stage.update();
     if (this.getLineBreak()) {
+        if (this.fontType == "Nanum Gothic Coding") {
+            var textObjectHeight = this.textObject.getMeasuredLineHeight();
+            this.textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
+        }
 
     } else {
         this.setWidth(this.textObject.getMeasuredWidth());
@@ -744,6 +748,7 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
 
     var previousState = this.lineBreak;
     this.lineBreak = lineBreak;
+
     if (previousState && !this.lineBreak) {
         this.textObject.lineWidth = null;
         this.setHeight(this.textObject.getMeasuredLineHeight());
@@ -756,6 +761,10 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
         this.setScaleY(1);
         this.textObject.lineWidth = this.getWidth();
         this.alignTextBox();
+        if (this.fontType == "Nanum Gothic Coding") {
+            var textObjectHeight = this.textObject.getMeasuredLineHeight();
+            this.textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
+        }
     }
 
     Entry.stage.updateObject();
@@ -853,13 +862,17 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 /**
  * Apply easel filter
  */
-Entry.EntityObject.prototype.applyFilter = function(isForce) {
+Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
     var effects = this.effect;
     var object = this.object;
 
     var diffEffects = isEqualEffects(effects, this.getInitialEffectValue());
     if (!isForce && diffEffects.length === 0)
         return;
+
+    if(Array.isArray(forceEffects)) {
+        diffEffects = diffEffects.concat(forceEffects);
+    }
 
     (function(e, obj) {
         var f = [];
@@ -1116,6 +1129,9 @@ Entry.EntityObject.prototype.alignTextBox = function () {
     if (this.lineBreak) {
         var textObjectHeight = textObject.getMeasuredLineHeight();
         textObject.y = textObjectHeight / 2 - this.getHeight() / 2;
+        if (this.fontType == "Nanum Gothic Coding") {
+            textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
+        }
         switch (this.textAlign) {
             case Entry.TEXT_ALIGN_CENTER:
                 textObject.x = 0;
