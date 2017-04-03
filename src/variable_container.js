@@ -1489,7 +1489,8 @@ Entry.VariableContainer = function() {
         addSpaceInput.onkeypress = function (e) {
             if (e.keyCode !== 13)
                 return;
-            that._addVariable();
+            if (this.enterKeyDisabled) this.blur();
+            else that._addVariable();
         };
 
         addSpaceInput.onfocus = function (e) {

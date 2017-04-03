@@ -44,11 +44,20 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.variableContainerAddVariable] = {
         do: function(variable) {
+            var that = c[COMMAND_TYPES.variableContainerAddVariable];
+            var hashId = that.hashId;
+            if (hashId) {
+                variable.id_ = hashId;
+                delete that.hashId;
+            }
             Entry.variableContainer.addVariable(variable);
         },
         state: function(variable) {
             if (variable instanceof Entry.Variable)
                 variable = variable.toJSON();
+            var that = c[COMMAND_TYPES.variableContainerAddVariable];
+            var hashId = that.hashId;
+            if (hashId) variable.id = hashId;
             return [variable];
         },
         log: function(variable) {
@@ -65,6 +74,9 @@ goog.require("Entry.STATIC");
             Entry.variableContainer.clickVariableAddButton(true, true);
             var dom = $('.entryVariableAddSpaceInputWorkspace');
             dom.val(data.content[1][1].name);
+
+            this.hashId = data.content[1][1].id;
+
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
@@ -74,6 +86,7 @@ goog.require("Entry.STATIC");
                 dimmed: true,
                 callBack: callback
             });
+            callback();
             return tooltip;
         },
         dom: ['variableContainer', 'variableAddConfirmButton']
@@ -82,6 +95,8 @@ goog.require("Entry.STATIC");
     c[COMMAND_TYPES.variableAddSetName] = {
         do: function(value) {
             var dom = $('.entryVariableAddSpaceInputWorkspace');
+            dom[0].blurred = true;
+            dom.blur();
             dom.val(value);
         },
         state: function(value) {
@@ -96,6 +111,8 @@ goog.require("Entry.STATIC");
         },
         restrict: function(data, domQuery, callback) {
             Entry.variableContainer.clickVariableAddButton(true);
+            var dom = $('.entryVariableAddSpaceInputWorkspace');
+            dom[0].enterKeyDisabled = true;
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,

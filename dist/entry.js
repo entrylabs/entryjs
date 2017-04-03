@@ -6168,8 +6168,10 @@ Entry.Commander = function(c) {
   }, log:function(b) {
     return [["objectId", b], ["objectIndex", Entry.container.getObjectIndex(b)]];
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["container", "objectIndex", "&1", "editButton"], undo:"selectObject"};
-  c[b.objectAddPicture] = {do:function(b, c) {
-    Entry.container.getObject(b).addPicture(c);
+  c[b.objectAddPicture] = {do:function(e, d) {
+    var f = c[b.objectAddPicture].hashId;
+    f && (d.id = f, delete c[b.objectAddSound].hashId);
+    Entry.container.getObject(e).addPicture(d);
     Entry.dispatchEvent("dismissModal");
   }, state:function(b, c) {
     return [b, c];
@@ -6184,6 +6186,7 @@ Entry.Commander = function(c) {
     e.scale = c.scale;
     return [["objectId", b], ["picture", e]];
   }, dom:[".btn_confirm_modal"], restrict:function(b, c, f) {
+    this.hashId = b.content[2][1].id;
     c = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:".btn_confirm_modal"}], {restrict:!0, dimmed:!0, render:!1, callBack:f});
     f = Entry.getMainWS().widgetUpdateEvent;
     Entry.dispatchEvent("openPictureManager", b.content[2][1]._id, f.notify.bind(f));
@@ -6196,8 +6199,10 @@ Entry.Commander = function(c) {
   }, log:function(b, c) {
     return [["objectId", b], ["pictureId", c._id]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"objectAddPicture"};
-  c[b.objectAddSound] = {do:function(b, c) {
-    Entry.container.getObject(b).addSound(c);
+  c[b.objectAddSound] = {do:function(e, d) {
+    var f = c[b.objectAddSound].hashId;
+    f && (d.id = f, delete c[b.objectAddSound].hashId);
+    Entry.container.getObject(e).addSound(d);
     Entry.dispatchEvent("dismissModal");
   }, state:function(b, c) {
     return [b, c];
@@ -6212,6 +6217,7 @@ Entry.Commander = function(c) {
     e.name = c.name;
     return [["objectId", b], ["sound", e]];
   }, dom:[".btn_confirm_modal"], restrict:function(b, c, f) {
+    this.hashId = b.content[2][1].id;
     c = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:".btn_confirm_modal"}], {callBack:f, dimmed:!0, restrict:!0, render:!1});
     f = Entry.getMainWS().widgetUpdateEvent;
     Entry.dispatchEvent("openSoundManager", b.content[2][1]._id, f.notify.bind(f));
@@ -6306,27 +6312,38 @@ Entry.Commander = function(c) {
   }, log:function() {
     return [];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerClickVariableAddButton", dom:["variableContainer", "variableAddButton"]};
-  c[b.variableContainerAddVariable] = {do:function(b) {
-    Entry.variableContainer.addVariable(b);
-  }, state:function(b) {
-    b instanceof Entry.Variable && (b = b.toJSON());
-    return [b];
+  c[b.variableContainerAddVariable] = {do:function(e) {
+    var d = c[b.variableContainerAddVariable], f = d.hashId;
+    f && (e.id_ = f, delete d.hashId);
+    Entry.variableContainer.addVariable(e);
+  }, state:function(e) {
+    e instanceof Entry.Variable && (e = e.toJSON());
+    var d = c[b.variableContainerAddVariable].hashId;
+    d && (e.id = d);
+    return [e];
   }, log:function(b) {
     b instanceof Entry.Variable && (b = b.toJSON());
     return [["variable", b]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"variableContainerRemoveVariable", restrict:function(b, c, f) {
     Entry.variableContainer.clickVariableAddButton(!0, !0);
     $(".entryVariableAddSpaceInputWorkspace").val(b.content[1][1].name);
-    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {restrict:!0, dimmed:!0, callBack:f});
+    this.hashId = b.content[1][1].id;
+    b = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {restrict:!0, dimmed:!0, callBack:f});
+    f();
+    return b;
   }, dom:["variableContainer", "variableAddConfirmButton"]};
   c[b.variableAddSetName] = {do:function(b) {
-    $(".entryVariableAddSpaceInputWorkspace").val(b);
+    var c = $(".entryVariableAddSpaceInputWorkspace");
+    c[0].blurred = !0;
+    c.blur();
+    c.val(b);
   }, state:function(b) {
     return [""];
   }, log:function(b) {
     return [["value", b]];
   }, restrict:function(b, c, f) {
     Entry.variableContainer.clickVariableAddButton(!0);
+    $(".entryVariableAddSpaceInputWorkspace")[0].enterKeyDisabled = !0;
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {restrict:!0, noDispose:!0, dimmed:!0, callBack:f});
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableAddSetName", dom:["variableContainer", "variableAddInput"]};
   c[b.variableContainerRemoveVariable] = {do:function(b) {
@@ -14225,12 +14242,12 @@ Entry.Playground = function() {
       }
     }
   };
-  c.addPicture = function(b) {
+  c.addPicture = function(b, c) {
     b = Entry.cloneSimpleObject(b);
-    delete b.id;
+    !0 !== c && delete b.id;
     delete b.view;
     b = JSON.parse(JSON.stringify(b));
-    b.id = Entry.generateHash();
+    b.id || (b.id = Entry.generateHash());
     b.name = Entry.getOrderedName(b.name, this.object.pictures);
     this.generatePictureElement(b);
     Entry.do("objectAddPicture", this.object.id, b);
@@ -14322,12 +14339,12 @@ Entry.Playground = function() {
     this.updateListViewOrder("sound");
     Entry.stage.sortZorder();
   };
-  c.addSound = function(b, c) {
+  c.addSound = function(b, c, d) {
     b = Entry.cloneSimpleObject(b);
     delete b.view;
-    delete b.id;
+    !0 !== d && delete b.id;
     b = JSON.parse(JSON.stringify(b));
-    b.id = Entry.generateHash();
+    b.id || (b.id = Entry.generateHash());
     b.name = Entry.getOrderedName(b.name, this.object.sounds);
     this.generateSoundElement(b);
     Entry.do("objectAddSound", this.object.id, b);
@@ -21514,7 +21531,7 @@ Entry.VariableContainer = function() {
     f.setAttribute("placeholder", Lang.Workspace.Variable_placeholder_name);
     f.variableContainer = this;
     f.onkeypress = function(c) {
-      13 === c.keyCode && b._addVariable();
+      13 === c.keyCode && (this.enterKeyDisabled ? this.blur() : b._addVariable());
     };
     f.onfocus = function(b) {
       this.blurred = !1;
@@ -24804,21 +24821,21 @@ Entry.Field = function() {
     this.svgGroup && $(this.svgGroup).unbind("mouseup touchend");
     this.destroyOption();
   };
-  c.command = function() {
-    this._startValue && (this._startValue === this.getValue() || this._blockView.isInBlockMenu || Entry.do("setFieldValue", this.pointer(), this.getValue()));
+  c.command = function(b) {
+    this._blockView.isInBlockMenu || !this._startValue || !b && this._startValue === this.getValue() || Entry.do("setFieldValue", this.pointer(), this.getValue());
     delete this._startValue;
   };
-  c.destroyOption = function(b) {
+  c.destroyOption = function(b, c) {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     if (this.optionGroup) {
-      var c = this.optionGroup.blur;
-      c && Entry.Utils.isFunction(c) && this.optionGroup.blur();
+      var d = this.optionGroup.blur;
+      d && Entry.Utils.isFunction(d) && this.optionGroup.blur();
       this.optionGroup.remove();
       delete this.optionGroup;
     }
     this._isEditing = !1;
-    !0 !== b && this.command();
+    !0 !== b && this.command(c);
   };
   c._attachDisposeEvent = function(b) {
     var c = this;
@@ -26728,11 +26745,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     });
     this.optionGroup.css({left:c.x, top:c.y});
   };
-  c.destroyOption = function() {
+  c.destroyOption = function(b) {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.disposeEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this._optionVisible = !1;
-    this.command();
+    this.command(b);
     this.keyPressed && (Entry.keyPressed.detach(this.keyPressed), delete this.keyPressed);
   };
   c._keyboardControl = function(b) {
@@ -26740,12 +26757,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     if (this._optionVisible) {
       b = b.keyCode;
       var c = Entry.getKeyCodeMap()[b];
-      void 0 !== c && this.applyValue(c, b);
+      void 0 !== c && this.applyValue(c, b, !0);
     }
   };
-  c.applyValue = function(b, c) {
+  c.applyValue = function(b, c, d) {
     this.setValue(String(c));
-    this.destroyOption();
+    this.destroyOption(d);
     this._setTextValue();
     this.resize();
   };

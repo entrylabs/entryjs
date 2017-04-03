@@ -34,8 +34,9 @@ Entry.EntryObject = function(model) {
         this.sounds = [];
         this.sounds = model.sprite.sounds;
         for (var i=0; i<this.sounds.length; i++) {
-            if (!this.sounds[i].id)
+            if (!this.sounds[i].id) {
                 this.sounds[i].id = Entry.generateHash();
+            }
             Entry.initSound(this.sounds[i]);
         }
 

@@ -45,6 +45,11 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.objectAddPicture] = {
         do: function(objectId, picture) {
+            var hashId = c[COMMAND_TYPES.objectAddPicture].hashId;
+            if (hashId) {
+                picture.id = hashId;
+                delete c[COMMAND_TYPES.objectAddSound].hashId;
+            }
             Entry.container
                 .getObject(objectId)
                 .addPicture(picture);
@@ -69,6 +74,8 @@ goog.require("Entry.STATIC");
         },
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
+            this.hashId = data.content[2][1].id;
+
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
@@ -116,6 +123,11 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.objectAddSound] = {
         do: function(objectId, sound) {
+            var hashId = c[COMMAND_TYPES.objectAddSound].hashId;
+            if (hashId) {
+                sound.id = hashId;
+                delete c[COMMAND_TYPES.objectAddSound].hashId;
+            }
             Entry.container
                 .getObject(objectId)
                 .addSound(sound);
@@ -140,6 +152,8 @@ goog.require("Entry.STATIC");
         },
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
+            this.hashId = data.content[2][1].id;
+
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,

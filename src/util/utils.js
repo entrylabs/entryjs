@@ -448,7 +448,7 @@ Entry.makeAutolink = function(html) {
     } else {
         return '';
     }
-}
+};
 
 /**
  * Generate random hash
