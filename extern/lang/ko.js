@@ -221,6 +221,18 @@ Lang.Blocks = {
     "byrobot_dronefighter_drone_control_quad_throttle_up"           : "위",
     "byrobot_dronefighter_drone_control_quad_throttle_down"         : "아래",
     /* BYROBOT DroneFighter End */
+    chocopi_touch_event_touch: "만질 때",
+    chocopi_touch_event_untouch: "뗄 때",
+    chocopi_control_event_pressed: "누를 때",
+    chocopi_control_event_released: "뗄 때",
+    chocopi_joystick_X: "조이스틱 좌우",
+    chocopi_joystick_Y: "조이스틱 상하",
+    chocopi_port:"포트",
+    chocopi_pot: "볼륨",    
+    chocopi_motion_photogate_event_blocked: "막았을 때",
+    chocopi_motion_photogate_event_unblocked: "열었을 때",
+    chocopi_motion_photogate_time_blocked: "막은 시간",
+    chocopi_motion_photogate_time_unblocked: "연 시간",
     "CODEino_get_sensor_number_0": "0",
     "CODEino_get_sensor_number_1": "1",
     "CODEino_get_sensor_number_2": "2",
@@ -4019,6 +4031,78 @@ Lang.Helper = {
     "byrobot_dronefighter_flight_controller_vibrator_delay"                 : "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복합니다. 이 블럭을 만났을 경우 진동이 켜져있거나 예약된 진동이 있다면 모두 삭제합니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#즉시</font> <font color='peru'>#시간지연</font>",  
     "byrobot_dronefighter_flight_controller_vibrator_reserve"               : "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복하도록 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#예약</font>",
     /* BYROBOT DroneFighter Flight End */
+    "chocopi_sensor": `온도 값은 섭씨 온도입니다.<br/>
+    습도 값은 백분율로 나타낸 상대습도 값입니다.<br/>
+    빛은 로그스케일로 0~4095사이입니다.<br/>
+    아날로그 값은 0~4095사이입니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    "chocopi_touch_event": `
+    터치 모듈에는 1~12번의 연결 패드가 있습니다. <br/>
+    만지거나 뗄 때 처리할 엔트리 블록들을 연결합니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    "chocopi_touch_status": `터치 모듈의 패드를 만지면 참이됩니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    "chocopi_touch_value": `터치패드에 연결된 물체의 전기용량이 커지면 값이 작아집니다.<br/>
+    여러 명이 손잡고 만지면 더 작은 값이 됩니다.<br/>
+    전기용량이란 물체에 전기를 띈 입자를 얼마나 가지고 있을 수 있는 지를 말합니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_control_event: `버튼을 누르거나 뗄 때 처리할 엔트리 블록들을 연결합니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_control_joystick: `조이스틱 좌우, 상하, 볼륨의 값은 0~4095까지 입니다.<br/>
+    따라서 2047 근처가 중간이 됩니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_control_button: `버튼이 눌리면 참이 됩니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_motion_photogate_event: `포토게이트는 모션블록에 연결합니다.<br/>
+    포토게이트는 한쪽에서 나온 빛을 맞은 편의 센서가 감지하는 장치입니다.<br/>
+    빛센서를 물체로 가리거나 치우면 시작되는 엔트리 블록을 연결합니다<br/>
+    모션 모듈에는 포토게이트 2개를 연결할 수 있습니다.<br/><br/>
+    포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_motion_photogate_time:  `포토게이트는 모션블록에 연결합니다.<br/>
+    포토게이트는 한쪽에서 나온 빛을 맞은 편의 센서가 감지하는 장치입니다.<br>
+    이 블록은 물체가 빛센서를 가리거나 벗어난 시간을 가집니다.<br/>
+    1/10000초까지 측정할 수 있습니다.<br/>
+    <br/>포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_motion_photogate_status: `포토게이트는 모션블록에 연결합니다.<br/>
+    포토게이트는 한쪽에서 나온 빛을 맞은 편의 센서가 감지하는 장치입니다.<br>
+    물체가 빛센서를 가리면 참</b>이됩니다.<br/>
+    <br/>포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_motion_value: `
+    모션 모듈에는 3개의 적외선 센서가 있습니다.<br/>
+    0~4095사이의 값을 가질 수 있는데 물체가 빛을 많이 반사할 수록 작은 값을 가집니다. <br/>
+    거리를 대략적으로 측정할 수 있습니다. <br/>
+    가속도와 각가속도 값의 범위는 -32768~32767 까지입니다.<br/>
+    가속도를 이용해서 센서의 기울기를 측정할 수도 있습니다.<br/>
+    <br/>포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_led: `LED번호는 LED블록에 연결된 순서이고 1번부터 시작합니다.<br/>
+    RGB값은 0~255사이의 값입니다.<br/>
+    빨강(Red),녹색(Green), 파랑(Blue)순서로  입력합니다.<br/>
+    밝은 LED를 직접보면 눈이 아프니까 값을 0~5정도로 씁니다.<br/>
+    <br/>포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_dc_motor: `DC모터 모듈에는 직류전동기 두개를 연결 할 수 있습니다.<br/> 
+    직류 전동기는 최대 5V로 동작하게 됩니다.<br/>
+    값은 100이 최대(100%)이고 음수를 넣으면 반대 방향으로 회전합니다.<br/>
+    <br/>포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`,
+    chocopi_servo_motor: `서보모터 모듈에는 4개의 서보모터를 연결 할 수 있습니다.<br/>
+    서보모터는 5V로 동작하게 됩니다.<br/>
+    각도는 0~200도까지 지정할 수 있습니다.<br/>
+    연속회전식 서보모터를 연결하면 각도에 따라 속도가 변하게됩니다.<br/>
+    90~100 사이가 중간값입니다.<br/>
+    <br/>포트번호는 맞추지 않아도 됩니다.<br/>
+    단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.`
 };
 Lang.Category = {
     "entrybot_friends": "엔트리봇 친구들",
@@ -4080,7 +4164,8 @@ Lang.Device = {
     "dplay": "디플레이",
     "nemoino": "네모이노",
     "ev3": "EV3",
-    "robotori": "로보토리"
+    "robotori": "로보토리",
+    "chocopi":"초코파이보드"
 };
 Lang.General = {
     "turn_on": "켜기",
@@ -4105,7 +4190,9 @@ Lang.General = {
     "note_f": "파",
     "note_g": "솔",
     "note_a": "라",
-    "note_b": "시"
+    "note_b": "시",
+    clock:"시계",
+    counter_clock:"반시계"
 };
 Lang.Fonts = {
     "batang": "바탕체",
@@ -4144,8 +4231,17 @@ Lang.Hw = {
     "right": "오른쪽",
     "sub": "서보",
     "motor": "모터",
-    "": "",
-    "buzzer": "버저"
+    "buzzer": "버저",
+    acceleration:'가속',
+    analog:'아날로그',
+    angular_acceleration:'각가속',
+    button:'버튼',
+    joystick:'조이스틱',
+    humidity:'습도',
+    IR:'적외선',
+    port:'포트',
+    potentiometer:'포텐시오미터',
+    servo:'서보',    
 };
 Lang.template = {
     "albert_hand_found": "손 찾음?",
@@ -4799,6 +4895,20 @@ Lang.template = {
     "coconut_change_output_by": "출력 %1 를 %2 만큼 바꾸기 %3",
     "coconut_set_output_to": "출력 %1 를 %2 (으)로 정하기 %3",
     /* coconut add end */
+    chocopi_sensor: "%1 센서 %2",
+    chocopi_touch_event: "%1 %2 터치 %3번을 %4",
+    chocopi_touch_status: "%1 터치 %2번을 만짐",
+    chocopi_touch_value: "%1 터치 %2번의 값",
+    chocopi_control_event: "%1 %2 컨트롤 %3을 %4",
+    chocopi_control_joystick: "%1 컨트롤 %2의 값",
+    chocopi_control_button: "%1 컨트롤 %2번을 누름",
+    chocopi_motion_photogate_event: "%1 %2 포토게이트 %3번을 %4",
+    chocopi_motion_photogate_time: "%1 포토게이트%2번을 %3",
+    chocopi_motion_photogate_status: "%1 포토게이트 %2번이 막힘",
+    chocopi_motion_value: "%1 모션 %2의 값",
+    chocopi_led: "%1 LED %2 RGB(%3 %4 %5) %6",
+    chocopi_dc_motor: "%1 DC모터 %2 %3% 세기 %4 방향 %5",
+    chocopi_servo_motor: "%1 서보모터 %2번 %3도 %4",
 };
 
 if (typeof exports == "object")
