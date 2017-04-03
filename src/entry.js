@@ -49,6 +49,9 @@ Entry.loadProject = function(project) {
     if (this.type == 'workspace')
         Entry.stateManager.endIgnore();
 
+    if (project.interface && Entry.options.loadInterface)
+        Entry.loadInterfaceState(project.interface)
+
     if (window.parent && window.parent.childIframeLoaded)
         window.parent.childIframeLoaded();
     return project;
@@ -88,6 +91,7 @@ Entry.exportProject = function(project) {
     project.functions = Entry.variableContainer.getFunctionJSON();
     project.scenes = Entry.scene.toJSON();
     project.speed = Entry.FPS;
+    project.interface = Entry.captureInterfaceState();
     return project;
 };
 
@@ -130,19 +134,6 @@ Entry.setBlock = function(objectType, XML) {
 
 Entry.enableArduino = function() {
     return;
-    //$.ajax('http://localhost:23518/arduino/')
-        //.done(function(data){
-            //var xmlHttp = new XMLHttpRequest();
-            //xmlHttp.open( "GET", '/xml/arduino_blocks.xml', false );
-            //xmlHttp.send('');
-            //if (!Entry.playground.menuBlocks_.sprite.getElementById("arduino")) {
-                //Entry.setBlockByText('arduino', xmlHttp.responseText);
-                //Entry.playground.currentObjectType = '';
-                //Entry.playground.setMenu(Entry.playground.object.objectType);
-            //}
-            //Entry.toast.success(Lang.Workspace.arduino_connect, Lang.Workspace.arduino_connect_success, false);
-        //}).fail(function(){
-    //});
 };
 
 /**
@@ -174,28 +165,40 @@ Entry.beforeUnload = function(e) {
     if (Entry.type == 'workspace') {
         if (localStorage && Entry.interfaceState) {
             localStorage.setItem('workspace-interface',
-                                 JSON.stringify(Entry.interfaceState));
+                                 JSON.stringify(Entry.captureInterfaceState()));
         }
         if (!Entry.stateManager.isSaved())
             return Lang.Workspace.project_changed;
     }
 };
 
+
+Entry.captureInterfaceState = function() {
+    var interfaceState = JSON.parse(JSON.stringify(Entry.interfaceState))
+    if (Entry.type == 'workspace')
+        interfaceState.object = Entry.playground.object.id;
+
+    return interfaceState;
+};
+
 /**
  * load interface state by localstorage
  */
-Entry.loadInterfaceState = function() {
+Entry.loadInterfaceState = function(interfaceState) {
     if (Entry.type == 'workspace') {
-        if (localStorage &&
+        if (interfaceState) {
+            Entry.container.selectObject(interfaceState.object, true);
+        } else if (localStorage &&
             localStorage.getItem('workspace-interface')) {
             var interfaceModel = localStorage.getItem('workspace-interface');
-            this.resizeElement(JSON.parse(interfaceModel));
+            interfaceState = JSON.parse(interfaceModel);
         } else {
-            this.resizeElement({
+            interfaceState = {
                 menuWidth: 280,
                 canvasWidth: 480
-            });
+            };
         }
+        this.resizeElement(interfaceState)
     }
 };
 
@@ -390,6 +393,5 @@ Entry.getDom = function(query) {
         return this[key].getDom(query);
     } else {
     }
-}
-
+};
 window.Entry = Entry;

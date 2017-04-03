@@ -15,6 +15,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.start();
   Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
   "workspace" == this.type && Entry.stateManager.endIgnore();
+  c.interface && Entry.options.loadInterface && Entry.loadInterfaceState(c.interface);
   window.parent && window.parent.childIframeLoaded && window.parent.childIframeLoaded();
   return c;
 }, clearProject:function() {
@@ -34,6 +35,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   c.functions = Entry.variableContainer.getFunctionJSON();
   c.scenes = Entry.scene.toJSON();
   c.speed = Entry.FPS;
+  c.interface = Entry.captureInterfaceState();
   return c;
 }, setBlockByText:function(c, b) {
   for (var f = [], d = jQuery.parseXML(b).getElementsByTagName("category"), e = 0;e < d.length;e++) {
@@ -53,18 +55,15 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
 }, beforeUnload:function(c) {
   Entry.hw.closeConnection();
   Entry.variableContainer.updateCloudVariables();
-  if ("workspace" == Entry.type && (localStorage && Entry.interfaceState && localStorage.setItem("workspace-interface", JSON.stringify(Entry.interfaceState)), !Entry.stateManager.isSaved())) {
+  if ("workspace" == Entry.type && (localStorage && Entry.interfaceState && localStorage.setItem("workspace-interface", JSON.stringify(Entry.captureInterfaceState())), !Entry.stateManager.isSaved())) {
     return Lang.Workspace.project_changed;
   }
-}, loadInterfaceState:function() {
-  if ("workspace" == Entry.type) {
-    if (localStorage && localStorage.getItem("workspace-interface")) {
-      var c = localStorage.getItem("workspace-interface");
-      this.resizeElement(JSON.parse(c));
-    } else {
-      this.resizeElement({menuWidth:280, canvasWidth:480});
-    }
-  }
+}, captureInterfaceState:function() {
+  var c = JSON.parse(JSON.stringify(Entry.interfaceState));
+  "workspace" == Entry.type && (c.object = Entry.playground.object.id);
+  return c;
+}, loadInterfaceState:function(c) {
+  "workspace" == Entry.type && (c ? Entry.container.selectObject(c.object, !0) : localStorage && localStorage.getItem("workspace-interface") ? (c = localStorage.getItem("workspace-interface"), c = JSON.parse(c)) : c = {menuWidth:280, canvasWidth:480}, this.resizeElement(c));
 }, resizeElement:function(c) {
   var b = Entry.getMainWS();
   if (b) {
@@ -11101,17 +11100,17 @@ Entry.TextCodingUtil = {};
   c.isMaterialBlock = function(b) {
     return "get_canvas_input_value" == b || "get_variable" == b || "value_of_index_from_list" == b || "length_of_list" == b || "is_included_in_list" == b ? !0 : !1;
   };
-  c.jsAdjustSyntax = function(b, f) {
-    var c = "";
+  c.jsAdjustSyntax = function(b, c) {
+    var d = "";
     if ("ai_boolean_distance" == b.data.type) {
-      var e = f.split(" "), c = e[0].split("_");
-      c[1] = c[1].substring(1, c[1].length - 1);
-      c[1] = c[1].toLowerCase();
-      var c = c.join("_"), g = e[1], g = this.bTojBinaryOperatorConvertor(g), e = e[2], c = c + " " + g + " " + e;
+      var e = c.split(" "), d = e[0].split("_");
+      d[1] = d[1].substring(1, d[1].length - 1);
+      d[1] = d[1].toLowerCase();
+      var d = d.join("_"), g = e[1], g = this.bTojBinaryOperatorConvertor(g), e = e[2], d = d + " " + g + " " + e;
     } else {
-      "ai_boolean_object" == b.data.type ? (e = f.split(" "), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), c = c.join("_"), g = e[1], e = e[2], c = c + " " + g + " " + e) : "ai_distance_value" == b.data.type ? (e = f.split(" "), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), c = c.join("_")) : c = f;
+      "ai_boolean_object" == b.data.type ? (e = c.split(" "), d = e[0].split("_"), d[1] = d[1].substring(1, d[1].length - 1), d[1] = d[1].toLowerCase(), d = d.join("_"), g = e[1], e = e[2], d = d + " " + g + " " + e) : "ai_distance_value" == b.data.type ? (e = c.split(" "), d = e[0].split("_"), d[1] = d[1].substring(1, d[1].length - 1), d[1] = d[1].toLowerCase(), d = d.join("_")) : d = c;
     }
-    return c;
+    return d;
   };
   c.bTojBinaryOperatorConvertor = function(b) {
     var c;
