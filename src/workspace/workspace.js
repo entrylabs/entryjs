@@ -106,6 +106,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message) {
+        Entry.disposeEvent.notify();
         if (Entry.Utils.isNumber(mode)) this.mode = mode;
         else {
             this.mode = mode.boardType;
@@ -355,8 +356,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         return;
                     }
 
-                    var message = Entry.TextCodingUtil.isNamesIncludeSpace()
-                    if(message) {
+                    var message = Entry.TextCodingUtil.isNamesIncludeSpace();
+                    if (message) {
                         alert(message);
                         return;
                     }
@@ -369,7 +370,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     e.preventDefault();
                     break;
                 case 67:
-                    if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
+                    if (blockView && !blockView.isInBlockMenu &&
+                        blockView.block.isDeletable() && blockView.block.isCopyable()) {
                         blockView.block.copyToClipboard();
                     }
                     break;

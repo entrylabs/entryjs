@@ -47,8 +47,8 @@ Entry.Block = function(block, thread) {
 
     events = this.events.viewAdd;
     var board = code.board;
-    if (events && (Entry.getMainWS() && Entry.isTextMode)
-        && (!board || (board && board.constructor !== Entry.BlockMenu))) {
+    if (events && (Entry.getMainWS() && Entry.isTextMode) &&
+        (!board || (board && board.constructor !== Entry.BlockMenu))) {
         events.forEach(function(fn) {
             if (Entry.Utils.isFunction(fn))
                 fn.apply(that, [that]);

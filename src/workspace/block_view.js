@@ -242,7 +242,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 var field = new Entry['Field' + param.type](param, this, paramIndex, mode || this.renderMode, i);
                 this._contents.push(field);
                 this._paramMap[paramIndex] = field;
-            } else this._contents.push(new Entry.FieldText({text: param}, this));
+            } else {
+                this._contents.push(new Entry.FieldText({text: param}, this));
+            }
         }
 
         var statements = schema.statements || [];
@@ -723,7 +725,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this.destroyShadow();
         delete this.originPos;
         this.dominate();
-        return;
     };
 
     p._updateCloseBlock = function() {
@@ -1330,16 +1331,22 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var schema = this._schema;
         var defaultTemplate = schema.template ? schema.template : Lang.template[this.block.type];
         var template;
+        var board = this.getBoard();
 
         if (renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
-            var workspace = this.getBoard().workspace;
+            var syntax;
+            var workspace = board.workspace;
             if (workspace && workspace.vimBoard) {
-                var syntax = workspace.vimBoard.getBlockSyntax(this);
-                if (syntax) {
-                    if (typeof syntax === 'string')
-                        template = syntax;
-                    else template = syntax.template;
-                }
+                syntax = workspace.vimBoard.getBlockSyntax(this);
+            } else {
+                if (board.getBlockSyntax)
+                    syntax = board.getBlockSyntax(this, renderMode);
+            }
+
+            if (syntax) {
+                if (typeof syntax === 'string')
+                    template = syntax;
+                else template = syntax.template;
             }
         }
 

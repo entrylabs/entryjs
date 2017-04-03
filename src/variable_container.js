@@ -771,6 +771,7 @@ Entry.VariableContainer = function() {
         var className = '';
         className += 'entryVariableListElementWorkspace';
         className += ' entryFunctionElementWorkspace';
+        className += ' function';
         view.addClass(className);
         view.bindOnClick(function (e) {
             e.stopPropagation();
