@@ -23194,21 +23194,21 @@ Entry.Field = function() {
     this.svgGroup && $(this.svgGroup).unbind("mouseup touchend");
     this.destroyOption();
   };
-  c.command = function() {
-    this._startValue && (this._startValue === this.getValue() || this._blockView.isInBlockMenu || Entry.do("setFieldValue", this.pointer(), this.getValue()));
+  c.command = function(b) {
+    this._blockView.isInBlockMenu || !this._startValue || !b && this._startValue === this.getValue() || Entry.do("setFieldValue", this.pointer(), this.getValue());
     delete this._startValue;
   };
-  c.destroyOption = function(b) {
+  c.destroyOption = function(b, c) {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     if (this.optionGroup) {
-      var c = this.optionGroup.blur;
-      c && Entry.Utils.isFunction(c) && this.optionGroup.blur();
+      var d = this.optionGroup.blur;
+      d && Entry.Utils.isFunction(d) && this.optionGroup.blur();
       this.optionGroup.remove();
       delete this.optionGroup;
     }
     this._isEditing = !1;
-    !0 !== b && this.command();
+    !0 !== b && this.command(c);
   };
   c._attachDisposeEvent = function(b) {
     var c = this;
@@ -23982,11 +23982,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     });
     this.optionGroup.css({left:c.x, top:c.y});
   };
-  c.destroyOption = function() {
+  c.destroyOption = function(b) {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.disposeEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this._optionVisible = !1;
-    this.command();
+    this.command(b);
     this.keyPressed && (Entry.keyPressed.detach(this.keyPressed), delete this.keyPressed);
   };
   c._keyboardControl = function(b) {
@@ -23994,12 +23994,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     if (this._optionVisible) {
       b = b.keyCode;
       var c = Entry.getKeyCodeMap()[b];
-      void 0 !== c && this.applyValue(c, b);
+      void 0 !== c && this.applyValue(c, b, !0);
     }
   };
-  c.applyValue = function(b, c) {
+  c.applyValue = function(b, c, d) {
     this.setValue(String(c));
-    this.destroyOption();
+    this.destroyOption(d);
     this._setTextValue();
     this.resize();
   };

@@ -18,20 +18,19 @@ Entry.Field = function() {};
         this.destroyOption();
     };
 
-    p.command = function() {
-        if (this._startValue) {
-            if (this._startValue !== this.getValue() && !this._blockView.isInBlockMenu) {
-                Entry.do(
-                    'setFieldValue',
-                    this.pointer(),
-                    this.getValue()
-                );
-            }
+    p.command = function(forceCommand) {
+        if (!this._blockView.isInBlockMenu && this._startValue &&
+            (forceCommand || this._startValue !== this.getValue())) {
+            Entry.do(
+                'setFieldValue',
+                this.pointer(),
+                this.getValue()
+            );
         }
         delete this._startValue;
     };
 
-    p.destroyOption = function(skipCommand) {
+    p.destroyOption = function(skipCommand, forceCommand) {
         if (this.documentDownEvent) {
             Entry.documentMousedown.detach(this.documentDownEvent);
             delete this.documentDownEvent;
@@ -52,7 +51,7 @@ Entry.Field = function() {};
 
         this._isEditing = false;
 
-        skipCommand !== true && this.command();
+        skipCommand !== true && this.command(forceCommand);
     };
 
     p._attachDisposeEvent = function(func) {
