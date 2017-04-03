@@ -2378,6 +2378,34 @@ checkFinish:function(c, b) {
       return c.callReturn();
   }
 }};
+Entry.Chocopi = {name:"chocopi", p:{}, ev:{}, blocks:[], setZero:function() {
+}, getport:function(c, b) {
+  if (!this.blocks) {
+    return -1;
+  }
+  if (this.blocks[b].id == c) {
+    return b;
+  }
+  for (var e in this.blocks) {
+    if (this.blocks[e].id == c) {
+      return e;
+    }
+  }
+  return -1;
+}, connected:!1, portlist:[[Lang.Blocks.chocopi_port + "1", 0], [Lang.Blocks.chocopi_port + "2", 1], [Lang.Blocks.chocopi_port + "3", 2], [Lang.Blocks.chocopi_port + "4", 3], [Lang.Blocks.chocopi_port + "5", 4], [Lang.Blocks.chocopi_port + "6", 5], [Lang.Blocks.chocopi_port + "7", 6], [Lang.Blocks.chocopi_port + "8", 7], ["BLE1", 8], ["BLE2", 9], ["BLE3", 10], ["BLE4", 11], ["BLE5", 12], ["BLE6", 13], ["BLE7", 14], ["BLE8", 15]], dataHandler:function(c) {
+  this.connected || (this.connected = !0, Entry.hw.sendQueue.init = !0, Entry.hw.update(), delete Entry.hw.sendQueue.init, Entry.hw.sendQueue.data = {});
+  if (c.d) {
+    for (var b in c.d) {
+      this.p[b] = c.d[b];
+    }
+  }
+  if (c.ev) {
+    for (b in c.ev) {
+      this.ev[b] = c.ev[b], Entry.engine.fireEvent(this.blocks[b].name + "14");
+    }
+  }
+  c.bl && (this.blocks = c.bl);
+}};
 Entry.Cobl = {name:"cobl", setZero:function() {
   for (var c = 0;14 > c;c++) {
     Entry.hw.sendQueue[c] = 0;
@@ -2659,6 +2687,218 @@ Entry.block.cobl_7_segment = function(c, b) {
   Entry.hw.setDigitalPortValue("7SEG", c);
   return b.callReturn();
 };
+Entry.coconut = {PORT_MAP:{leftFloorValue:0, rightFloorValue:0, BothFloorDetection:0, leftProximityValue:0, rightProximityValue:0, BothProximityDetection:0, obstacleDetection:0, light:0, temp:0, extA2:0, extA3:0}, setZero:function() {
+  var c = Entry.coconut.PORT_MAP, b = Entry.hw.sendQueue, e;
+  for (e in c) {
+    b[e] = c[e];
+  }
+  Entry.hw.update();
+  c = Entry.coconut;
+  c.lineTracerModeId = 0;
+  c.lineTracerStateId = -1;
+  c.tempo = 60;
+  c.removeAllTimeouts();
+}, lineTracerModeId:0, lineTracerStateId:-1, tempo:60, timeouts:[], removeTimeout:function(c) {
+  clearTimeout(c);
+  var b = this.timeouts;
+  c = b.indexOf(c);
+  0 <= c && b.splice(c, 1);
+}, removeAllTimeouts:function() {
+  var c = this.timeouts, b;
+  for (b in c) {
+    clearTimeout(c[b]);
+  }
+  this.timeouts = [];
+}, setLineTracerMode:function(c, b) {
+  this.lineTracerModeId = this.lineTracerModeId + 1 & 255;
+  c.lineTracerMode = b;
+  c.lineTracerModeId = this.lineTracerModeId;
+}, msgValue:0, insertQueue:function(c, b) {
+  b.msgValue = c;
+}, clearQueue:function(c) {
+  c.msgValue = "";
+}, move:function(c) {
+  "string" == typeof c && (c = directions[c]);
+  return runPackage(devices.Motor, 0, c, speed);
+}, speed:60, directions:{Both:0, Left:1, Right:2, Forward:3, Backward:4}, devices:{LightSensor:14, Accelerometer:18, Temperature:21, Buzzer:3, IRdistance:5, Linetracer:7, IR:9, RGBled:25, Motor:26, LedMatrix:27, Digital:30, Analog:31, PWM:32, External:40, Speaker:41, ExtIR:42, ServoMotor:43, ExLed:44, ExtCds:45}, sharps:{"-":0, "#":1, b:2}, beats:{Half:500, Quater:250, Eighth:125, Sixteenth:63, "Thirty-second":32, Whole:1000, "Dotted half":750, "Dotted quarter":375, "Dotted eighth":188, "Dotted sixteenth":95, 
+"Dotted thirty-second":48, Double:2000, Zero:0}, melodys:{"Twinkle Twinkle little star":1, "Three bears":2, "Mozart's Lullaby":3, "Do-Re-Mi":4, Butterfly:5}, colors:{Black:0, White:1, Red:2, Green:3, Blue:4, Yellow:5, Cyan:6, Magenta:7}, detectConds:{Yes:1, No:0}, sLetters:{a:0, b:1, c:2, d:3, e:4, f:5, g:6, h:7, i:8, j:9, k:10, l:11, m:12, n:13, o:14, p:15, q:16, r:17, s:18, t:19, u:20, v:21, w:22, x:23, y:24, z:25}, cLetters:{A:0, B:1, C:2, D:3, E:4, F:5, G:6, H:7, I:8, J:9, K:10, L:11, M:12, N:13, 
+O:14, P:15, Q:16, R:17, S:18, T:19, U:20, V:21, W:22, X:23, Y:24, Z:25}, kLetters:{ga:0, na:1, da:2, la:3, ma:4, ba:5, sa:6, aa:7, ja:8, cha:9, ka:10, ta:11, pa:12, ha:13}, onOffs:{On:1, Off:0}, axiss:{"X-Axis":1, "Y-Axis":2, "Z-Axis":3}, pins:{D4:4, D10:10, D11:11, D12:12, A2:16, A3:17}, outputValues:{HIGH:1, LOW:0}, moveMotor:function(c) {
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.Motor, 0, c, this.speed);
+}, moveMotorSpeed:function(c, b) {
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.Motor, 0, c, this.speed);
+}, turnMotor:function(c) {
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.Motor, 0, c, this.speed);
+}, stopMotor:function() {
+  return this.runPackage(this.devices.Motor, 1);
+}, moveTurnAngle:function(c, b) {
+}, moveGoTime:function(c, b) {
+  0 > b && (b = -b);
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.Motor, 3, c, this.speed, this.short2array(1000 * b));
+}, turnMotorTime:function(c, b) {
+  0 > b && (b = -b);
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.Motor, 3, c, this.speed, this.short2array(1000 * b));
+}, moveMotorColor:function(c, b) {
+  var e = this.devices.Motor;
+  "string" == typeof c && (c = this.directions[c]);
+  "string" == typeof b && (b = this.colors[b]);
+  return this.runPackage(e, 5, c, this.speed, b);
+}, moveMotorAngleColor:function(c, b, e) {
+  var d = this.devices.Motor;
+  "string" == typeof c && (c = this.directions[c]);
+  "string" == typeof e && (e = this.colors[e]);
+  "number" != typeof b && (b = 90);
+  return this.runPackage(d, 6, c, this.short2array(0), this.short2array(b), this.short2array(0), e);
+}, moveExtMotor:function(c, b) {
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.Motor, 7, c, b);
+}, rgbOn:function(c, b) {
+  "string" == typeof c && (c = this.directions[c]);
+  "string" == typeof b && (b = this.colors[b]);
+  return this.runPackage(this.devices.RGBled, 0, c, b);
+}, rgbOff:function(c) {
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.RGBled, 1, c, 0);
+}, rgbOffColor:function(c, b) {
+  "string" == typeof c && (c = this.directions[c]);
+  "string" == typeof b && (b = this.colors[b]);
+  return this.runPackage(this.devices.RGBled, 1, c, b);
+}, ledOnTime:function(c, b, e) {
+  "string" == typeof c && (c = this.directions[c]);
+  "string" == typeof b && (b = this.colors[b]);
+  return this.runPackage(this.devices.RGBled, 3, c, b, this.short2array("number" != typeof e ? 0 : 0 > e ? 0 : 1000 * e));
+}, beep:function() {
+  return this.buzzerControl(0, 262, 50);
+}, playBuzzerTime:function(c) {
+  "number" != typeof c && (c = 0.5);
+  0 > c && (c = 0.5);
+  return this.buzzerControl(0, 262, 1000 * c);
+}, playBuzzerFreq:function(c, b) {
+  "number" != typeof b && (b = 0.5);
+  0 > b && (b = 0.5);
+  "number" != typeof c && (c = 300);
+  0 > c && (c = 300);
+  return this.buzzerControl(0, c, 1000 * b);
+}, buzzerOff:function() {
+  return this.buzzerControl(0, 0, 0);
+}, playBuzzerNote:function(c, b, e) {
+  c = this.getNote(c);
+  "string" == typeof e && (e = this.beats[e]);
+  return this.runPackage(devices.Buzzer, 2, c.charCodeAt(0), b, this.short2array(e));
+}, playNote:function(c, b, e, d) {
+  c = this.getNote(c);
+  "string" == typeof d && (d = this.beats[d]);
+  return this.runPackage(this.devices.Buzzer, 4, c.charCodeAt(0), b, e.charCodeAt(0), this.short2array(d));
+}, getNote:function(c) {
+  return c.split("_")[1];
+}, restBeat:function(c) {
+  "string" == typeof c && (c = c.split("_", 1), c = this.beats[c]);
+  return this.buzzerControl(1, 0, c);
+}, playBuzzerColor:function(c, b, e, d) {
+  c = this.getNote(c);
+  "string" == typeof e && (e = this.beats[e]);
+  "string" == typeof d && (d = this.colors[d]);
+  return this.runPackage(this.devices.Buzzer, 3, c.charCodeAt(0), b, this.short2array(e), d);
+}, playNoteColor:function(c, b, e, d, f, g) {
+  c = this.getNote(c);
+  "string" == typeof d && (d = this.beats[d]);
+  "string" == typeof f && (f = this.directions[f]);
+  "string" == typeof g && (g = this.colors[g]);
+  return this.runPackage(this.devices.Buzzer, 5, c.charCodeAt(0), b, e.charCodeAt(0), this.short2array(d), f, g);
+}, playMelody:function(c) {
+  "string" == typeof c && (c = this.melodys[c]);
+  return this.runPackage(this.devices.Buzzer, 6, c);
+}, buzzerControl:function(c, b, e) {
+  var d = this.devices.Buzzer;
+  "string" == typeof e && (e = this.beats[e]);
+  return this.runPackage(d, c, this.short2array(b), this.short2array(e));
+}, runBlink:function() {
+  return this.runPackage(30, 13);
+}, followLine:function() {
+  return this.runPackage(this.devices.Linetracer, 3, this.speed);
+}, followLineLevel:function(c, b) {
+  "number" != typeof b && (b = 70);
+  return this.runPackage(this.devices.Linetracer, 3, c, b);
+}, setStandard:function(c, b) {
+  "string" == typeof c && (c = this.directions[c]);
+  return this.runPackage(this.devices.IRdistance, 0, c, b);
+}, avoidMode:function() {
+  return this.runPackage(this.devices.IRdistance, 3);
+}, ledMatrixOn:function(c, b, e) {
+  "string" == typeof c && (c = this.onOffs[c]);
+  "string" == typeof b && "Both" == b && (b = 0);
+  "string" == typeof e && "Both" == e && (e = 0);
+  return this.runPackage(this.devices.LedMatrix, 0, b, e, c);
+}, ledMatrixOff:function(c, b) {
+  return this.runPackage(this.devices.LedMatrix, 0, c, b, 0);
+}, ledMatrixClear:function() {
+  return this.runPackage(this.devices.LedMatrix, 5);
+}, ledMatrixOnAll:function() {
+  return this.runPackage(this.devices.LedMatrix, 6);
+}, showLedMatrix:function(c) {
+  return this.runPackage(this.devices.LedMatrix, 1, c);
+}, showLedMatrixSmall:function(c) {
+  "string" == typeof c && (c = this.sLetters[c]);
+  return this.runPackage(this.devices.LedMatrix, 2, c);
+}, showLedMatrixLarge:function(c) {
+  "string" == typeof c && (c = this.cLetters[c]);
+  return this.runPackage(this.devices.LedMatrix, 3, c);
+}, showLedMatrixKorean:function(c) {
+  "string" == typeof c && (c = this.kLetters[c]);
+  return this.runPackage(this.devices.LedMatrix, 4, c);
+}, sendMessage:function(c) {
+  return this.runPackage(this.devices.IR, this.string2array(c));
+}, extLedOn:function(c, b) {
+  "string" == typeof c && (c = this.pins[c]);
+  return this.runPackage(this.devices.ExLed, c, this.short2array(1000 * b));
+}, playSpeaker:function(c, b, e) {
+  "string" == typeof c && (c = this.pins[c]);
+  e *= 1000;
+  return this.runPackage(this.devices.Speaker, c, this.short2array(b), this.short2array(e));
+}, stopSpeaker:function(c) {
+  "string" == typeof c && (c = this.pins[c]);
+  return this.runPackage(this.devices.Speaker, c, this.short2array(0), this.short2array(0));
+}, runExtServo:function(c, b) {
+  "string" == typeof c && (c = this.pins[c]);
+  return this.runPackage(this.devices.ServoMotor, c, b);
+}, digitalWrite:function(c, b) {
+  "string" == typeof b && (b = this.outputValues[b]);
+  return this.runPackage(this.devices.Digital, c, b);
+}, analogWrite:function(c, b) {
+  "number" != typeof b ? b = 0 : 255 < b && (b = 255);
+  return this.runPackage(this.devices.Analog, c, b);
+}, readFloat:function(c, b) {
+  return parseFloat([c[b], c[b + 1], c[b + 2], c[b + 3]]);
+}, readShort:function(c, b) {
+  return parseShort([c[postion], c[postion + 1]]);
+}, readDouble:function(c, b) {
+  return readFloat(c, b);
+}, readString:function(c, b, e) {
+  c = "";
+  for (var d = 0;d < e;d++) {
+    c += String.fromCharCode(_rxBuf[d + b]);
+  }
+  return c;
+}, short2array:function(c) {
+  for (var b = {}, e = 0;2 > e;e++) {
+    var d = c & 255;
+    b[e] = d;
+    c = (c - d) / 256;
+  }
+  return [b[0], b[1]];
+}, runPackage:function() {
+  for (var c = [255, 85, 0, 0, 2], b = 0;b < arguments.length;b++) {
+    "[class Array]" == arguments[b].constructor ? c = c.concat(arguments[b]) : 2 == arguments[b].length ? c = c.concat(arguments[b]) : c.push(arguments[b]);
+  }
+  c[2] = c.length - 3;
+  return c;
+}, name:"coconut", monitorTemplate:{imgPath:"hw/coconut.png", width:256, height:256, listPorts:{temperature:{name:Lang.Blocks.coconut_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.coconut_sensor_acceleration_x, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.coconut_sensor_acceleration_y, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.coconut_sensor_acceleration_z, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", 
+pos:{x:0, y:0}}, note:{name:Lang.Hw.note, type:"output", pos:{x:0, y:0}}}, ports:{leftProximityValue:{name:Lang.Blocks.coconut_sensor_left_proximity, type:"input", pos:{x:122, y:156}}, rightProximityValue:{name:Lang.Blocks.coconut_sensor_right_proximity, type:"input", pos:{x:10, y:108}}, leftFloorValue:{name:Lang.Blocks.coconut_sensor_left_floor, type:"input", pos:{x:100, y:234}}, rightFloorValue:{name:Lang.Blocks.coconut_sensor_right_floor, type:"input", pos:{x:13, y:180}}, light:{name:Lang.Blocks.coconut_sensor_light, 
+type:"input", pos:{x:56, y:189}}}, mode:"both"}};
 Entry.Codestar = {name:"codestar", setZero:function() {
   Entry.hw.sendQueue.readablePorts = [];
   for (var c = 0;20 > c;c++) {
@@ -3953,35 +4193,26 @@ Entry.block.neobot_play_note_for = function(c, b) {
   return b;
 };
 Entry.Roborobo_Roduino = {name:"roborobo_roduino", INSTRUCTION:{DIGITAL_READ:1, DIGITAL_SET_MODE:2, DIGITAL_WRITE:3, ANALOG_WRITE:4, ANALOG_READ:5, MOTOR:6, COLOR:7}, setZero:function() {
-  for (var c = 0;5 > c;c++) {
+  Entry.hw.sendQueue.colorPin = 0;
+  Entry.hw.sendQueue.analogEnable = [0, 0, 0, 0, 0, 0];
+  for (var c = 0;14 > c;c++) {
     Entry.hw.sendQueue[c] = 0;
   }
   this.ColorPin = [0, 0, 0];
   Entry.hw.update();
-}, setSendData:function(c) {
-  Entry.hw.sendQueue = c;
-  Entry.hw.update();
-  this.wait(32);
-}, wait:function(c) {
-  for (var b = (new Date).getTime(), e = b;e < b + c;) {
-    e = (new Date).getTime();
-  }
 }, ColorPin:[0, 0, 0]};
-Entry.Roborobo_SchoolKit = {name:"roborobo_schoolkit", INSTRUCTION:{DIGITAL_READ:1, DIGITAL_WRITE:2, MOTOR:3, COLOR:4, SERVO:5}, setZero:function() {
-  for (var c = 0;5 > c;c++) {
-    Entry.hw.sendQueue[c] = 0;
-  }
-  this.ColorPin = [0, 0, 0];
+Entry.Roborobo_SchoolKit = {name:"roborobo_schoolkit", pinMode:{INPUT:0, OUTPUT:1, ANALOG:2, PWM:3, SERVO:4}, inputPort:{ir:7, sound:8, contact:9, cds:10}, setZero:function() {
+  Entry.hw.sendQueue.initHW_Flag = !0;
   Entry.hw.update();
-}, setSendData:function(c) {
-  Entry.hw.sendQueue = c;
-  Entry.hw.update();
-  this.wait(32);
-}, wait:function(c) {
-  for (var b = (new Date).getTime(), e = b;e < b + c;) {
-    e = (new Date).getTime();
+  Entry.hw.sendQueue.digitalPinMode = [];
+  Entry.hw.sendQueue.servo = [!1, !1, !1, !1, !1];
+  for (var c = 0;14 > c;c++) {
+    Entry.hw.sendQueue[c] = 0, Entry.hw.sendQueue.digitalPinMode[c] = 0;
   }
-}, ColorPin:[0, 0, 0]};
+  Entry.hw.update();
+  Entry.hw.sendQueue.initHW_Flag = !1;
+  Entry.hw.update();
+}};
 Blockly.Blocks.roduino_on_block = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.roborobo_on);
@@ -4030,7 +4261,9 @@ Blockly.Blocks.roduino_get_analog_value = {init:function() {
 }};
 Entry.block.roduino_get_analog_value = function(c, b) {
   c = parseInt(b.getValue("VALUE", b));
-  Entry.Roduino.setSendData([Entry.Roduino.INSTRUCTION.ANALOG_READ, c]);
+  Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.ANALOG_READ;
+  Entry.hw.sendQueue.analogEnable[c] = 1;
+  Entry.hw.update();
   return Entry.hw.getAnalogPortValue(c);
 };
 Blockly.Blocks.roduino_get_digital_value = {init:function() {
@@ -4043,8 +4276,9 @@ Blockly.Blocks.roduino_get_digital_value = {init:function() {
 }};
 Entry.block.roduino_get_digital_value = function(c, b) {
   c = b.getNumberValue("VALUE");
-  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ, c]);
-  return Entry.hw.portData[c - 2];
+  Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ;
+  Entry.hw.sendQueue[1] = c;
+  return Entry.hw.getDigitalPortValue(c - 2);
 };
 Blockly.Blocks.roduino_get_color = {init:function() {
   this.setColour("#00979D");
@@ -4083,8 +4317,11 @@ Blockly.Blocks.roduino_set_digital = {init:function() {
 }};
 Entry.block.roduino_set_digital = function(c, b) {
   c = b.getNumberValue("VALUE");
-  var e = b.getField("OPERATOR");
-  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, c, "on" == e ? 1 : 0]);
+  var e = "on" == b.getField("OPERATOR") ? 1 : 0;
+  Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE;
+  Entry.hw.sendQueue[1] = c;
+  Entry.hw.update();
+  Entry.hw.setDigitalPortValue(c, e);
   return b.callReturn();
 };
 Blockly.Blocks.roduino_motor = {init:function() {
@@ -4103,7 +4340,8 @@ Entry.block.roduino_motor = function(c, b) {
   e = b.getField("OPERATOR");
   "motor1" == c ? (c = 9, pin2 = 10) : (c = 11, pin2 = 12);
   "cw" == e ? (e = 1, value2 = 0) : "ccw" == e ? (e = 0, value2 = 1) : value2 = e = 0;
-  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.MOTOR, c, e, pin2, value2]);
+  Entry.hw.setDigitalPortValue(c, e);
+  Entry.hw.setDigitalPortValue(pin2, value2);
   return b.callReturn();
 };
 Blockly.Blocks.roduino_set_color_pin = {init:function() {
@@ -4123,7 +4361,9 @@ Entry.block.roduino_set_color_pin = function(c, b) {
   c = b.getNumberValue("RED", b);
   var e = b.getNumberValue("GREEN", b), d = b.getNumberValue("BLUE", b);
   Entry.Roborobo_Roduino.ColorPin = [c, e, d];
-  Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, c, e, d]);
+  Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.COLOR;
+  Entry.hw.sendQueue.colorPin = c;
+  Entry.hw.update();
   return b.callReturn();
 };
 Blockly.Blocks.schoolkit_on_block = {init:function() {
@@ -4167,7 +4407,8 @@ Blockly.Blocks.schoolkit_set_output = {init:function() {
 Entry.block.schoolkit_set_output = function(c, b) {
   c = b.getNumberValue("VALUE");
   var e = b.getField("OPERATOR");
-  Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, c, "on" == e ? 1 : 0]);
+  Entry.hw.sendQueue.digitalPinMode[c] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
+  Entry.hw.sendQueue[c] = "on" == e ? 1 : 0;
   return b.callReturn();
 };
 Blockly.Blocks.schoolkit_get_in_port_number = {init:function() {
@@ -4190,7 +4431,8 @@ Blockly.Blocks.schoolkit_get_input_value = {init:function() {
 }};
 Entry.block.schoolkit_get_input_value = function(c, b) {
   c = b.getNumberValue("VALUE");
-  Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_READ, c]);
+  Entry.hw.sendQueue.digitalPinMode[c] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
+  Entry.hw.update();
   return Entry.hw.portData[c - 7];
 };
 Blockly.Blocks.schoolkit_motor = {init:function() {
@@ -4203,13 +4445,13 @@ Blockly.Blocks.schoolkit_motor = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.schoolkit_motor = function(c, b) {
-  var e;
-  e = b.getField("MODE");
+  var e = b.getField("MODE");
   c = b.getField("OPERATOR");
-  var d = b.getNumberValue("VALUE");
-  e = "motor1" == e ? 7 : 8;
+  var d = b.getNumberValue("VALUE"), e = "motor1" == e ? 7 : 8;
   255 < d ? d = 255 : 0 > d && (d = 0);
-  "cw" == c ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 1, e, d]) : "ccw" == c ? Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 2, e, d]) : "stop" == c && Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, 0, e, d]);
+  Entry.hw.sendQueue.digitalPinMode[e] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+  Entry.hw.sendQueue.digitalPinMode[e - 7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+  "cw" == c ? (Entry.hw.sendQueue[e] = d, Entry.hw.sendQueue[e - 7] = 0) : "ccw" == c ? (Entry.hw.sendQueue[e] = 0, Entry.hw.sendQueue[e - 7] = d) : "stop" == c && (Entry.hw.sendQueue[e] = 0, Entry.hw.sendQueue[e - 7] = 0);
   return b.callReturn();
 };
 Blockly.Blocks.schoolkit_set_servo_value = {init:function() {
@@ -4228,8 +4470,10 @@ Blockly.Blocks.schoolkit_set_servo_value = {init:function() {
 Entry.block.schoolkit_set_servo_value = function(c, b) {
   c = b.getNumberValue("PIN");
   var e = b.getNumberValue("VALUE");
+  Entry.hw.sendQueue.digitalPinMode[c] = Entry.Roborobo_SchoolKit.pinMode.PWM;
   0 > e ? e = 0 : 180 < e && (e = 180);
-  Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.SERVO, c, e]);
+  Entry.hw.sendQueue.servo[c - 2] = !0;
+  Entry.hw.sendQueue[c] = e;
   return b.callReturn();
 };
 Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED:[67, 1], CM_SPRING_RIGHT:[69, 1, 69, 2], CM_SPRING_LEFT:[70, 1, 69, 2], CM_SWITCH:[71, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_IR_LEFT:[91, 2, 91, 4], CM_IR_RIGHT:[93, 2, 91, 4], CM_CALIBRATION_LEFT:[95, 2], CM_CALIBRATION_RIGHT:[97, 2], AUX_MOTOR_SPEED_LEFT:[152, 2], AUX_MOTOR_SPEED_RIGHT:[154, 2]}, setZero:function() {
@@ -8933,8 +9177,8 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "16.1":Entry.MODI, 
-  "B.1":Entry.Codestar, "A.1":Entry.SmartBoard, "C.1":Entry.DaduBlock, "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "14.1":Entry.Chocopi, 
+  "16.1":Entry.MODI, "B.1":Entry.Codestar, "A.1":Entry.SmartBoard, "C.1":Entry.DaduBlock, "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight, "15.1":Entry.coconut};
 };
 Entry.HW.TRIAL_LIMIT = 2;
 p = Entry.HW.prototype;
@@ -9105,8 +9349,11 @@ p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(c, b) {
-  void 0 !== c.company && (c = [Entry.Utils.convertIntToHex(c.company), ".", Entry.Utils.convertIntToHex(c.model)].join(""), c != this.selectedDevice && (Entry.Utils.isNewVersion(b, this.requireVerion) && this.popupHelper.show("newVersion", !0), this.selectedDevice = c, this.hwModule = this.hwInfo[c], Entry.dispatchEvent("hwChanged"), this.hwModule.monitorTemplate ? (b = Lang.Msgs.hw_connection_success_desc, this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : 
-  this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), c = this.hwModule.monitorTemplate, "both" == c.mode ? (c.mode = "list", this.hwMonitor.generateListView(), c.mode = "general", this.hwMonitor.generateView(), c.mode = "both") : "list" == c.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView()) : b = Lang.Msgs.hw_connection_success_desc2, Entry.toast.success(Lang.Msgs.hw_connection_success, b)));
+  if (void 0 !== c.company) {
+    var e = [Entry.Utils.convertIntToHex(c.company), ".", Entry.Utils.convertIntToHex(c.model)].join("");
+    e == this.selectedDevice ? this.hwModule.dataHandler && this.hwModule.dataHandler(c) : (Entry.Utils.isNewVersion(b, this.requireVerion) && this.popupHelper.show("newVersion", !0), this.selectedDevice = e, this.hwModule = this.hwInfo[e], Entry.dispatchEvent("hwChanged"), this.hwModule.monitorTemplate ? (c = Lang.Msgs.hw_connection_success_desc, this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", 
+    this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView()) : c = Lang.Msgs.hw_connection_success_desc2, Entry.toast.success(Lang.Msgs.hw_connection_success, c));
+  }
 };
 p.banHW = function() {
   var c = this.hwInfo, b;
