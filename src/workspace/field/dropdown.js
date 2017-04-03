@@ -287,4 +287,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         this.textElement.textContent =
             this._convert(textValue, this.getValue());
     };
+
+    p.getTextValue = function() {
+        return this.textElement.textContent;
+    };
 })(Entry.FieldDropdown.prototype);

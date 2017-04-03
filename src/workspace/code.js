@@ -240,11 +240,11 @@ Entry.PARAM = -1;
         return arr;
     };
 
-    p.toJSON = function(excludeData) {
+    p.toJSON = function(excludeData, option) {
         var threads = this.getThreads();
         var json = [];
         for (var i=0, len=threads.length; i<len; i++)
-            json.push(threads[i].toJSON(false, undefined, excludeData));
+            json.push(threads[i].toJSON(false, undefined, excludeData, option));
         return json;
     };
 

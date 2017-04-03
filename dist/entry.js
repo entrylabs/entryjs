@@ -22685,13 +22685,13 @@ Entry.Thread = function(c, b, e) {
     b.load(f, c);
     return b;
   };
-  c.toJSON = function(b, c, d) {
+  c.toJSON = function(b, c, d, f) {
     var e = [];
     void 0 === c ? c = 0 : c instanceof Entry.Block && (c = this.indexOf(c));
-    var g = this._data;
-    for (c;c < g.length;c++) {
-      var h = g[c];
-      h instanceof Entry.Block && e.push(h.toJSON(b, d));
+    var h = this._data;
+    for (c;c < h.length;c++) {
+      var k = h[c];
+      k instanceof Entry.Block && e.push(k.toJSON(b, d, f));
     }
     return e;
   };
@@ -23135,31 +23135,33 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   c.clone = function(b) {
     return new Entry.Block(this.toJSON(!0), b);
   };
-  c.toJSON = function(b, c) {
-    var d = this._toJSON();
-    delete d.view;
-    delete d.thread;
-    delete d.events;
-    b && delete d.id;
-    d.params = d.params.map(function(d) {
-      d instanceof Entry.Block && (d = d.toJSON(b, c));
-      return d;
+  c.toJSON = function(b, c, d) {
+    var e = this._toJSON();
+    delete e.view;
+    delete e.thread;
+    delete e.events;
+    d = d || {};
+    b && delete e.id;
+    for (var g = 0;g < e.params.length;g++) {
+      var h = e.params[g];
+      h instanceof Entry.Block ? h = h.toJSON(b, c, d) : d.captureDynamic && this.view.getParam(g) instanceof Entry.FieldDropdownDynamic && (h = this.view.getParam(g).getTextValue());
+      e.params[g] = h;
+    }
+    e.statements = e.statements.map(function(e) {
+      return e.toJSON(b, void 0, c, d);
     });
-    d.statements = d.statements.map(function(d) {
-      return d.toJSON(b, void 0, c);
-    });
-    d.x = this.x;
-    d.y = this.y;
-    d.movable = this.movable;
-    d.deletable = this.deletable;
-    d.readOnly = this.readOnly;
-    this._backupParams && (d._backupParams = this._backupParams.map(function(b) {
+    e.x = this.x;
+    e.y = this.y;
+    e.movable = this.movable;
+    e.deletable = this.deletable;
+    e.readOnly = this.readOnly;
+    this._backupParams && (e._backupParams = this._backupParams.map(function(b) {
       return b instanceof Entry.Block ? b.toJSON() : b;
     }));
     c && c instanceof Array && c.forEach(function(b) {
-      delete d[b];
+      delete e[b];
     });
-    return d;
+    return e;
   };
   c.destroy = function(b, c, d) {
     if (!d || this.isDeletable()) {
@@ -25878,11 +25880,11 @@ Entry.PARAM = -1;
     }
     return c;
   };
-  c.toJSON = function(b) {
-    for (var c = this.getThreads(), d = [], f = 0, g = c.length;f < g;f++) {
-      d.push(c[f].toJSON(!1, void 0, b));
+  c.toJSON = function(b, c) {
+    for (var d = this.getThreads(), e = [], g = 0, h = d.length;g < h;g++) {
+      e.push(d[g].toJSON(!1, void 0, b, c));
     }
-    return d;
+    return e;
   };
   c.countBlock = function() {
     for (var b = this.getThreads(), c = 0, d = 0;d < b.length;d++) {
@@ -26556,6 +26558,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   c._setTextValue = function() {
     var b = this.getTextByValue(this.getValue());
     this.textElement.textContent = this._convert(b, this.getValue());
+  };
+  c.getTextValue = function() {
+    return this.textElement.textContent;
   };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldDropdownDynamic = function(c, b, e) {

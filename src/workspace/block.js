@@ -273,22 +273,29 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         );
     };
 
-    p.toJSON = function(isNew, excludeData) {
+    p.toJSON = function(isNew, excludeData, option) {
         var json = this._toJSON();
         delete json.view;
         delete json.thread;
         delete json.events;
 
+        option = option || {};
+
         if (isNew) delete json.id;
 
-        json.params = json.params.map(function(p) {
+        for (var i = 0; i < json.params.length; i++) {
+            var p = json.params[i];
             if (p instanceof Entry.Block)
-                p = p.toJSON(isNew, excludeData);
-            return p;
-        });
+                p = p.toJSON(isNew, excludeData, option);
+            else if (option.captureDynamic &&
+                     this.view.getParam(i) instanceof Entry.FieldDropdownDynamic) {
+                p = this.view.getParam(i).getTextValue();
+            }
+            json.params[i] = p;
+        }
 
         json.statements = json.statements.map(
-            function(s) {return s.toJSON(isNew, undefined, excludeData);}
+            function(s) {return s.toJSON(isNew, undefined, excludeData, option);}
         );
 
         json.x = this.x;

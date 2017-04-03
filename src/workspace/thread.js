@@ -115,7 +115,7 @@ Entry.Thread = function(thread, code, parent) {
         return newThread;
     };
 
-    p.toJSON = function(isNew, index, excludeData) {
+    p.toJSON = function(isNew, index, excludeData, option) {
         var array = [];
 
         if (index === undefined) index = 0;
@@ -126,7 +126,7 @@ Entry.Thread = function(thread, code, parent) {
         for (index; index < data.length; index++) {
             var block = data[index];
             if (block instanceof Entry.Block)
-                array.push(block.toJSON(isNew, excludeData));
+                array.push(block.toJSON(isNew, excludeData, option));
         }
         return array;
     };
