@@ -15915,8 +15915,10 @@ Entry.Commander = function(c) {
   }, log:function(b) {
     return [["objectId", b], ["objectIndex", Entry.container.getObjectIndex(b)]];
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["container", "objectIndex", "&1", "editButton"], undo:"selectObject"};
-  c[b.objectAddPicture] = {do:function(b, c) {
-    Entry.container.getObject(b).addPicture(c);
+  c[b.objectAddPicture] = {do:function(f, d) {
+    var e = c[b.objectAddPicture].hashId;
+    e && (d.id = e, delete c[b.objectAddSound].hashId);
+    Entry.container.getObject(f).addPicture(d);
     Entry.dispatchEvent("dismissModal");
   }, state:function(b, c) {
     return [b, c];
@@ -15931,6 +15933,7 @@ Entry.Commander = function(c) {
     e.scale = c.scale;
     return [["objectId", b], ["picture", e]];
   }, dom:[".btn_confirm_modal"], restrict:function(b, c, e) {
+    this.hashId = b.content[2][1].id;
     c = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:".btn_confirm_modal"}], {restrict:!0, dimmed:!0, render:!1, callBack:e});
     e = Entry.getMainWS().widgetUpdateEvent;
     Entry.dispatchEvent("openPictureManager", b.content[2][1]._id, e.notify.bind(e));
@@ -15943,8 +15946,10 @@ Entry.Commander = function(c) {
   }, log:function(b, c) {
     return [["objectId", b], ["pictureId", c._id]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"objectAddPicture"};
-  c[b.objectAddSound] = {do:function(b, c) {
-    Entry.container.getObject(b).addSound(c);
+  c[b.objectAddSound] = {do:function(f, d) {
+    var e = c[b.objectAddSound].hashId;
+    e && (d.id = e, delete c[b.objectAddSound].hashId);
+    Entry.container.getObject(f).addSound(d);
     Entry.dispatchEvent("dismissModal");
   }, state:function(b, c) {
     return [b, c];
@@ -15959,6 +15964,7 @@ Entry.Commander = function(c) {
     e.name = c.name;
     return [["objectId", b], ["sound", e]];
   }, dom:[".btn_confirm_modal"], restrict:function(b, c, e) {
+    this.hashId = b.content[2][1].id;
     c = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:".btn_confirm_modal"}], {callBack:e, dimmed:!0, restrict:!0, render:!1});
     e = Entry.getMainWS().widgetUpdateEvent;
     Entry.dispatchEvent("openSoundManager", b.content[2][1]._id, e.notify.bind(e));
@@ -16053,27 +16059,38 @@ Entry.Commander = function(c) {
   }, log:function() {
     return [];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableContainerClickVariableAddButton", dom:["variableContainer", "variableAddButton"]};
-  c[b.variableContainerAddVariable] = {do:function(b) {
-    Entry.variableContainer.addVariable(b);
-  }, state:function(b) {
-    b instanceof Entry.Variable && (b = b.toJSON());
-    return [b];
+  c[b.variableContainerAddVariable] = {do:function(f) {
+    var d = c[b.variableContainerAddVariable], e = d.hashId;
+    e && (f.id_ = e, delete d.hashId);
+    Entry.variableContainer.addVariable(f);
+  }, state:function(f) {
+    f instanceof Entry.Variable && (f = f.toJSON());
+    var d = c[b.variableContainerAddVariable].hashId;
+    d && (f.id = d);
+    return [f];
   }, log:function(b) {
     b instanceof Entry.Variable && (b = b.toJSON());
     return [["variable", b]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"variableContainerRemoveVariable", restrict:function(b, c, e) {
     Entry.variableContainer.clickVariableAddButton(!0, !0);
     $(".entryVariableAddSpaceInputWorkspace").val(b.content[1][1].name);
-    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {restrict:!0, dimmed:!0, callBack:e});
+    this.hashId = b.content[1][1].id;
+    b = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {restrict:!0, dimmed:!0, callBack:e});
+    e();
+    return b;
   }, dom:["variableContainer", "variableAddConfirmButton"]};
   c[b.variableAddSetName] = {do:function(b) {
-    $(".entryVariableAddSpaceInputWorkspace").val(b);
+    var c = $(".entryVariableAddSpaceInputWorkspace");
+    c[0].blurred = !0;
+    c.blur();
+    c.val(b);
   }, state:function(b) {
     return [""];
   }, log:function(b) {
     return [["value", b]];
   }, restrict:function(b, c, e) {
     Entry.variableContainer.clickVariableAddButton(!0);
+    $(".entryVariableAddSpaceInputWorkspace")[0].enterKeyDisabled = !0;
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {restrict:!0, noDispose:!0, dimmed:!0, callBack:e});
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableAddSetName", dom:["variableContainer", "variableAddInput"]};
   c[b.variableContainerRemoveVariable] = {do:function(b) {
@@ -20156,7 +20173,7 @@ Entry.VariableContainer = function() {
     e.setAttribute("placeholder", Lang.Workspace.Variable_placeholder_name);
     e.variableContainer = this;
     e.onkeypress = function(c) {
-      13 === c.keyCode && b._addVariable();
+      13 === c.keyCode && (this.enterKeyDisabled ? this.blur() : b._addVariable());
     };
     e.onfocus = function(b) {
       this.blurred = !1;
@@ -27041,12 +27058,12 @@ Entry.Playground = function() {
       }
     }
   };
-  c.addPicture = function(b) {
-    b = Entry.cloneSimpleObject(b);
-    delete b.id;
-    delete b.view;
-    b = JSON.parse(JSON.stringify(b));
-    b.id = Entry.generateHash();
+  c.addPicture = function(b, c) {
+    var d = Entry.cloneSimpleObject(b);
+    !0 !== c && delete d.id;
+    delete d.view;
+    b = JSON.parse(JSON.stringify(d));
+    b.id || (b.id = Entry.generateHash());
     b.name = Entry.getOrderedName(b.name, this.object.pictures);
     this.generatePictureElement(b);
     Entry.do("objectAddPicture", this.object.id, b);
@@ -27138,12 +27155,12 @@ Entry.Playground = function() {
     this.updateListViewOrder("sound");
     Entry.stage.sortZorder();
   };
-  c.addSound = function(b, c) {
-    var d = Entry.cloneSimpleObject(b);
-    delete d.view;
-    delete d.id;
-    b = JSON.parse(JSON.stringify(d));
-    b.id = Entry.generateHash();
+  c.addSound = function(b, c, d) {
+    b = Entry.cloneSimpleObject(b);
+    delete b.view;
+    !0 !== d && delete b.id;
+    b = JSON.parse(JSON.stringify(b));
+    b.id || (b.id = Entry.generateHash());
     b.name = Entry.getOrderedName(b.name, this.object.sounds);
     this.generateSoundElement(b);
     Entry.do("objectAddSound", this.object.id, b);

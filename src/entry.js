@@ -155,9 +155,8 @@ Entry.initSound = function(sound) {
     } else {
         sound.path = Entry.defaultPath + '/uploads/' + sound.filename.substring(0,2)+'/'+
             sound.filename.substring(2,4)+'/'+sound.filename+sound.ext;
-        //createjs.Sound.removeSound(path);
-        //createjs.Sound.registerSound(path, sound.id, 4);
     }
+
     Entry.soundQueue.loadFile({
         id: sound.id,
         src: sound.path,
@@ -305,7 +304,7 @@ Entry.resizeElement = function(interfaceModel) {
 
         this.interfaceState = interfaceModel;
     }
-    
+
     Entry.windowResized.notify();
 };
 

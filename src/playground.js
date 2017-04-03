@@ -934,15 +934,16 @@ Entry.Playground = function() {
      * Add picture
      * @param {picture model} picture
      */
-    p.addPicture = function(picture) {
+    p.addPicture = function(picture, isNew) {
         var tempPicture = Entry.cloneSimpleObject(picture);
-        delete tempPicture.id;
+        if (isNew !== true)
+            delete tempPicture.id;
         delete tempPicture.view;
 
         picture = JSON.parse(JSON.stringify(tempPicture));
-        picture.id = Entry.generateHash();
+        if (!picture.id)
+            picture.id = Entry.generateHash();
         picture.name = Entry.getOrderedName(picture.name, this.object.pictures);
-
         this.generatePictureElement(picture);
         Entry.do(
             'objectAddPicture',
@@ -1137,13 +1138,15 @@ Entry.Playground = function() {
      * @param {sound model} sound
      * @param {boolean} NotForView if this is true, add element into object also.
      */
-    p.addSound = function(sound, NotForView) {
+    p.addSound = function(sound, NotForView, isNew) {
         var tempSound = Entry.cloneSimpleObject(sound);
         delete tempSound.view;
-        delete tempSound.id;
+        if (isNew !== true)
+            delete tempSound.id;
 
         sound = JSON.parse(JSON.stringify(tempSound));
-        sound.id = Entry.generateHash();
+        if (!sound.id)
+            sound.id = Entry.generateHash();
         sound.name = Entry.getOrderedName(sound.name, this.object.sounds);
 
         this.generateSoundElement(sound);

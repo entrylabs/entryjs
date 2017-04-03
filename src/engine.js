@@ -695,8 +695,10 @@ Entry.Engine = function() {
                 Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
             }
         } else if (Entry.engine.isState('run')) {
-            Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                      ["keyPress", keyCode]);
+            Entry.container.mapEntityIncludeCloneOnScene(
+                Entry.engine.raiseKeyEvent,
+                ["keyPress", keyCode]
+            );
         }
 
         if (Entry.engine.isState('stop')) {
