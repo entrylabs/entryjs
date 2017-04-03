@@ -26148,7 +26148,7 @@ Entry.block = {
     params: [            
         {
             "type": "Indicator",
-            "img": "block_icon/hw_chocopi.png",
+            "img": "block_icon/start_icon_hardware.png",
             "size": 17,
             "position": {
                 "x": 0,
@@ -26238,7 +26238,7 @@ Entry.block = {
         params: [            
             {
                 "type": "Indicator",
-                "img": "block_icon/hw_chocopi.png",
+                "img": "block_icon/start_icon_hardware.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -26399,7 +26399,7 @@ Entry.block = {
         params: [            
             {
                 "type": "Indicator",
-                "img": "block_icon/hw_chocopi.png",
+                "img": "block_icon/start_icon_hardware.png",
                 "size": 17,
                 "position": {
                     "x": 0,
