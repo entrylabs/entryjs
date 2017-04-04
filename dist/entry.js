@@ -20261,12 +20261,16 @@ Entry.Restrictor = function(c) {
   c.restrict = function(b) {
     this._data = b;
     this.end();
-    if (!b.skip) {
-      var c = b.content.concat().shift(), c = Entry.Command[c], d = c.dom;
-      this.startEvent.notify();
-      d instanceof Array && (d = this.processDomQuery(d));
-      b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"});
-      c.restrict ? this.currentTooltip = c.restrict(b, d, this.restrictEnd.bind(this), this) : (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:d}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this)));
+    var c = b.content.concat().shift(), c = Entry.Command[c], d = c.dom;
+    this.startEvent.notify();
+    d instanceof Array && (d = this.processDomQuery(d));
+    b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"});
+    if (c.restrict) {
+      this.currentTooltip = c.restrict(b, d, this.restrictEnd.bind(this), this);
+    } else {
+      if (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:d}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this)), b.skip) {
+        return this.end();
+      }
     }
   };
   c.end = function() {

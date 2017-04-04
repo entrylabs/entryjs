@@ -18,8 +18,6 @@ Entry.Restrictor = function(controller) {
 
         this.end();
 
-        if (data.skip) return;
-
         var log = data.content.concat();
         var commandType = log.shift();
         var command = Entry.Command[commandType];
@@ -52,6 +50,11 @@ Entry.Restrictor = function(controller) {
             });
             window.setTimeout(this.align.bind(this));
         }
+
+        if (data.skip) {
+            return this.end();
+        }
+
     };
 
     p.end = function() {
