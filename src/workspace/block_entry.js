@@ -32442,9 +32442,15 @@ Entry.block = {
     "hidden": {
         "color": "#7C7C7C",
         "skeleton": "basic",
-        "template": "         ?       %1",
+        "template": "         %1       %2",
         "statements": [],
         "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            },
             {
                 "type": "Indicator",
                 "color": "#6B6B6B",
@@ -32743,10 +32749,17 @@ Entry.block = {
     "hidden_string": {
         "color": "#7C7C7C",
         "skeleton": "basic_string_field",
-        "template": "    ?    ",
+        "template": "    %1    ",
         "fontColor": "#fff",
         "statements": [],
-        "params": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            }
+        ],
         "events": {},
         "def": {
             "params": [],
@@ -32762,10 +32775,17 @@ Entry.block = {
     "hidden_boolean": {
         "color": "#7C7C7C",
         "skeleton": "basic_boolean_field",
-        "template": "    ?    ",
+        "template": "    %1    ",
         "fontColor": "#fff",
         "statements": [],
-        "params": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            }
+        ],
         "events": {},
         "def": {
             "params": [],

@@ -19,6 +19,7 @@ Entry.FieldTextInput = function(content, blockView, index) {
 
     this.position = content.position;
     this._contents = content;
+    this._isClearBG = content.clearBG || false;
     this._index = index;
     this.value = this.getValue()  || '';
     this._CONTENT_HEIGHT = this.getContentHeight();
@@ -46,6 +47,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.textElement = this.svgGroup.elem("text", {
             x: X_PADDING/2,
             y: TEXT_Y_PADDING,
+            fill: this._contents.color || "black",
             'font-size' : '12px'
         });
 
@@ -62,8 +64,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             y: y,
             rx: 3, ry: 3,
             fill: "#fff",
-            'fill-opacity': 0.4
+            'fill-opacity': this._isClearBG ? 0 : 0.4
         });
+        if (this._isClearBG)
+            $(this._header).css({ stroke: "none" });
 
         this.svgGroup.appendChild(this.textElement);
 
