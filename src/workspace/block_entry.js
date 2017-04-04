@@ -41570,7 +41570,14 @@ Entry.block = {
         skeleton: 'basic_string_field',
         statements: [],
         params: [
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             {
                 type: 'Dropdown', options: [
                     [Lang.Hw.temp, 'temp'], [Lang.Hw.humidity, 'humi'], [Lang.Hw.light, 'light'],
@@ -41597,7 +41604,14 @@ Entry.block = {
         statements: [],
         params: [
             { type: "Indicator", img: "block_icon/start_icon_hardware.png", size: 17, position: { x: 0, y: -2 } },
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             {
                 type: 'Dropdown', options: [
                     [1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5],
@@ -41630,7 +41644,14 @@ Entry.block = {
         skeleton: 'basic_boolean_field',
         statements: [],
         params: [
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             {
                 type: 'Dropdown', options: [
                     [1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5],
@@ -41656,7 +41677,14 @@ Entry.block = {
         skeleton: 'basic_string_field',
         statements: [],
         params: [
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             {
                 type: 'Dropdown', options: [
                     [1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5],
@@ -41683,7 +41711,14 @@ Entry.block = {
         statements: [],
         params: [
             { type: "Indicator", img: "block_icon/start_icon_hardware.png", size: 17, position: { x: 0, y: -2 } },
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             { type: 'Dropdown', options: [[Lang.Hw.button + '1', 0], [Lang.Hw.button + '2', 1], [Lang.Hw.button + '3', 2], [Lang.Hw.button + '4', 3]], value: '0', fontSize: 11 },
             {
                 type: 'Dropdown', options: [
@@ -41715,7 +41750,14 @@ Entry.block = {
         skeleton: 'basic_string_field',
         statements: [],
         params: [
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             { type: 'Dropdown', options: [[Lang.Blocks.chocopi_joystick_X, 0], [Lang.Blocks.chocopi_joystick_Y, 1], [Lang.Blocks.chocopi_pot, 2]], value: 0, fontSize: 11 }
         ],
         def: { params: [null], type: 'chocopi_control_joystick' },
@@ -41736,7 +41778,14 @@ Entry.block = {
         skeleton: 'basic_boolean_field',
         statements: [],
         params: [
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             { type: 'Dropdown', options: [[Lang.Hw.button + '1', 0], [Lang.Hw.button + '2', 1], [Lang.Hw.button + '3', 2], [Lang.Hw.button + '4', 3]], value: '0', fontSize: 11 }
         ],
         def: { params: [null], type: 'chocopi_control_button' },
@@ -41758,7 +41807,14 @@ Entry.block = {
         skeleton: 'basic_string_field',
         statements: [],
         params: [
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             { type: 'Dropdown', options: [[1, 0], [2, 1]], value: '0', fontSize: 11 },
             { type: 'Dropdown', options: [[Lang.Blocks.chocopi_motion_photogate_time_unblocked, 0], [Lang.Blocks.chocopi_motion_photogate_time_blocked, 1]], value: 1, fontSize: 11 }
         ],
@@ -41782,7 +41838,14 @@ Entry.block = {
         skeleton: 'basic_string_field',
         statements: [],
         params: [
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             {
                 type: 'Dropdown', options: [
                     [Lang.Hw.IR + ' 1', 0],
@@ -41815,7 +41878,14 @@ Entry.block = {
         skeleton: 'basic_boolean_field',
         statements: [],
         params: [
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             {
                 type: 'Dropdown', options: [
                     ['1', 0], ['2', 1],
@@ -41842,7 +41912,14 @@ Entry.block = {
         statements: [],
         params: [
             { type: "Indicator", img: "block_icon/start_icon_hardware.png", size: 17, position: { x: 0, y: -2 } },
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             {
                 type: 'Dropdown', options: [
                     [1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5],
@@ -41879,7 +41956,14 @@ Entry.block = {
         skeleton: 'basic',
         statements: [],
         params: [
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             { type: 'Block', accept: 'string' },
             { type: 'Block', accept: 'string' },
             { type: 'Block', accept: 'string' },
@@ -41911,7 +41995,14 @@ Entry.block = {
         skeleton: 'basic',
         statements: [],
         params: [
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             { type: 'Dropdown', options: [['1', 0], ['2', 1]], value: 0, fontSize: 11 },
             { type: 'Block', accept: 'string' },
             { type: 'Dropdown', options: [[Lang.General.clock, 0], [Lang.General.counter_clock, 1]], value: 0, fontSize: 11 },
@@ -41940,7 +42031,14 @@ Entry.block = {
         skeleton: 'basic',
         statements: [],
         params: [
-            { type: 'Dropdown', options: Entry.Chocopi.portlist, value: 0 },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
             { type: 'Dropdown', options: [['1', 0], ['2', 1], ['3', 2], ['4', 3]], value: 0, fontSize: 11 },
             { type: 'Block', accept: 'string' },
             { type: "Indicator", img: "block_icon/hardware_03.png", size: 12 }
