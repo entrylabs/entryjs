@@ -520,6 +520,9 @@ goog.require("Entry.Utils");
         },
         restrict: function(data, domQuery, callback, restrictor) {
             var isDone = false;
+            var field = Entry.Command.editor.board.findBlock(data.content[1][1]);
+            var nextValue = data.content[2][1];
+            field.fixNextValue(nextValue);
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,

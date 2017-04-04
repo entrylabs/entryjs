@@ -24,8 +24,9 @@ Entry.Field = function() {};
             Entry.do(
                 'setFieldValue',
                 this.pointer(),
-                this.getValue()
+                this._nextValue || this.getValue()
             );
+            delete this._nextValue;
         }
         delete this._startValue;
     };
@@ -285,6 +286,10 @@ Entry.Field = function() {};
 
     p.optionDomCreated = function() {
         this._blockView.getBoard().workspace.widgetUpdateEvent.notify();
+    };
+
+    p.fixNextValue = function(value) {
+        this._nextValue = value;
     };
 
 })(Entry.Field.prototype);

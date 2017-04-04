@@ -17431,7 +17431,9 @@ Entry.Model = function(c, b) {
   }, log:function(b, c) {
     return [["pointer", b], ["value", c]];
   }, restrict:function(b, c, f, d) {
-    var l = !1, m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+    var l = !1;
+    Entry.Command.editor.board.findBlock(b.content[1][1]).fixNextValue(b.content[2][1]);
+    var m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
       !l && c && (l = !0, f(), f(), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
       }}));
     }});
@@ -23208,7 +23210,7 @@ Entry.Field = function() {
     this.destroyOption();
   };
   c.command = function(b) {
-    this._blockView.isInBlockMenu || !this._startValue || !b && this._startValue === this.getValue() || Entry.do("setFieldValue", this.pointer(), this.getValue());
+    this._blockView.isInBlockMenu || !this._startValue || !b && this._startValue === this.getValue() || (Entry.do("setFieldValue", this.pointer(), this._nextValue || this.getValue()), delete this._nextValue);
     delete this._startValue;
   };
   c.destroyOption = function(b, c) {
@@ -23348,6 +23350,9 @@ Entry.Field = function() {
   };
   c.optionDomCreated = function() {
     this._blockView.getBoard().workspace.widgetUpdateEvent.notify();
+  };
+  c.fixNextValue = function(b) {
+    this._nextValue = b;
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(c, b, f) {
