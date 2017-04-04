@@ -5931,7 +5931,7 @@ Entry.EntityObject = function(c) {
     var f = this.entity.parent.id;
     Entry.dispatchEvent("entityClick", this.entity);
     Entry.stage.isObjectClick = !0;
-    "minimize" != Entry.type && Entry.engine.isState("stop") && (this.offset = {x:-this.parent.x + this.entity.getX() - (.75 * b.stageX - 240), y:-this.parent.y - this.entity.getY() - (.75 * b.stageY - 135)}, this.cursor = "move", this.entity.initCommand(), Entry.container.selectObject(f));
+    "minimize" != Entry.type && Entry.stage.isEntitySelectable() && (this.offset = {x:-this.parent.x + this.entity.getX() - (.75 * b.stageX - 240), y:-this.parent.y - this.entity.getY() - (.75 * b.stageY - 135)}, this.cursor = "move", this.entity.initCommand(), Entry.container.selectObject(f));
   });
   this.object.on("pressup", function(b) {
     Entry.dispatchEvent("entityClickCanceled", this.entity);
@@ -5939,7 +5939,7 @@ Entry.EntityObject = function(c) {
     this.entity.checkCommand();
   });
   this.object.on("pressmove", function(b) {
-    "minimize" != Entry.type && Entry.engine.isState("stop") && !this.entity.parent.getLock() && (this.entity.doCommand(), this.entity.setX(.75 * b.stageX - 240 + this.offset.x), this.entity.setY(-(.75 * b.stageY - 135) - this.offset.y), Entry.stage.updateObject());
+    "minimize" != Entry.type && Entry.stage.isEntitySelectable() && !this.entity.parent.getLock() && (this.entity.doCommand(), this.entity.setX(.75 * b.stageX - 240 + this.offset.x), this.entity.setY(-(.75 * b.stageY - 135) - this.offset.y), Entry.stage.updateObject());
   });
 };
 Entry.EntityObject.prototype.injectModel = function(c, b) {
@@ -18464,6 +18464,7 @@ Entry.Stage = function() {
   this.dialogContainer = new createjs.Container;
   this.selectedObject = null;
   this.isObjectClick = !1;
+  this._entitySelectable = !0;
 };
 Entry.Stage.prototype.initStage = function(c) {
   this.canvas = new createjs.Stage(c.id);
@@ -18850,6 +18851,12 @@ Entry.Stage.prototype.getDom = function(c) {
   if ("canvas" === c.shift()) {
     return this.canvas.canvas;
   }
+};
+Entry.Stage.prototype.setEntitySelectable = function(c) {
+  this._entitySelectable = c;
+};
+Entry.Stage.prototype.isEntitySelectable = function() {
+  return Entry.engine.isState("stop") && this._entitySelectable;
 };
 Entry.fuzzy = {};
 (function(c) {

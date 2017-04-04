@@ -49,7 +49,7 @@ Entry.EntityObject = function(object) {
         Entry.dispatchEvent('entityClick', this.entity);
         Entry.stage.isObjectClick = true;
 
-        if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
+        if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
             this.offset = {x:-this.parent.x+this.entity.getX()-(evt.stageX*0.75 -240),
                 y:-this.parent.y-this.entity.getY()-(evt.stageY*0.75 -135)};
             this.cursor = "move";
@@ -66,7 +66,7 @@ Entry.EntityObject = function(object) {
     });
 
     this.object.on("pressmove", function(evt) {
-        if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
+        if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
             if (this.entity.parent.getLock())
                 return;
             this.entity.doCommand();

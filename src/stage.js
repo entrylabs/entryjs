@@ -23,6 +23,7 @@ Entry.Stage = function() {
     /** @type {null|Entry.EntryObject} */
     this.selectedObject = null;
     this.isObjectClick = false;
+    this._entitySelectable = true;
 };
 
 /**
@@ -731,5 +732,12 @@ Entry.Stage.prototype.getDom = function(query) {
     var key = query.shift();
     if (key === "canvas")
         return this.canvas.canvas;
-}
+};
 
+Entry.Stage.prototype.setEntitySelectable = function(value) {
+    this._entitySelectable = value;
+};
+
+Entry.Stage.prototype.isEntitySelectable = function() {
+    return Entry.engine.isState('stop') && this._entitySelectable;
+};
