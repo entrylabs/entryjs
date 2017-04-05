@@ -16282,6 +16282,10 @@ Entry.initFonts = function(c) {
   this.fonts = c;
   c || (this.fonts = []);
 };
+Entry.reloadOption = function(c) {
+  this.options = c;
+  this.parseOptions(c);
+};
 Entry.Recorder = function() {
   this._recordData = [];
   Entry.commander.addReporter(this);
