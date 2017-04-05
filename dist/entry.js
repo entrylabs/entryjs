@@ -23435,7 +23435,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     if ("wildcard" === b.type.substr(0, 8) || "wildcard" === this.type.substr(0, 8)) {
       return !0;
     }
-    if (b.type !== this.type) {
+    if (!("angle" === b.type && "text" === this.type || "text" === b.type && "angle" === this.type) && b.type !== this.type) {
       return !1;
     }
     for (var c = 0;c < this.params.length;c++) {
