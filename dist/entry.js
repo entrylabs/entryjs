@@ -16080,20 +16080,23 @@ Entry.Commander = function(c) {
     e();
     return b;
   }, dom:["variableContainer", "variableAddConfirmButton"]};
-  c[b.variableAddSetName] = {do:function(b) {
-    var c = $(".entryVariableAddSpaceInputWorkspace");
-    c[0].blurred = !0;
-    c.blur();
-    c.val(b);
+  c[b.variableAddSetName] = {do:function(f) {
+    var d = c[b.variableAddSetName], e = $(".entryVariableAddSpaceInputWorkspace");
+    e[0].blurred = !0;
+    e.blur();
+    f = d._nextValue || f;
+    e.val(f);
+    delete d._nextValue;
   }, state:function(b) {
     return [""];
-  }, log:function(b) {
-    return [["value", b]];
+  }, log:function(f) {
+    return [["value", c[b.variableAddSetName]._nextValue || f]];
   }, restrict:function(b, c, e) {
     Entry.variableContainer.clickVariableAddButton(!0);
+    this._nextValue = b.content[1][1];
     $(".entryVariableAddSpaceInputWorkspace")[0].enterKeyDisabled = !0;
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {restrict:!0, noDispose:!0, dimmed:!0, callBack:e});
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableAddSetName", dom:["variableContainer", "variableAddInput"]};
+  }, validate:!1, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableAddSetName", dom:["variableContainer", "variableAddInput"]};
   c[b.variableContainerRemoveVariable] = {do:function(b) {
     Entry.variableContainer.removeVariable(b);
   }, state:function(b) {

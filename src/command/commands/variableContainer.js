@@ -94,10 +94,13 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.variableAddSetName] = {
         do: function(value) {
+            var that = c[COMMAND_TYPES.variableAddSetName];
             var dom = $('.entryVariableAddSpaceInputWorkspace');
             dom[0].blurred = true;
             dom.blur();
+            value = that._nextValue || value;
             dom.val(value);
+            delete that._nextValue;
         },
         state: function(value) {
             return [
@@ -106,11 +109,15 @@ goog.require("Entry.STATIC");
         },
         log: function(value) {
             return [
-                [ 'value', value ]
+                [
+                    'value',
+                    c[COMMAND_TYPES.variableAddSetName]._nextValue || value
+                ]
             ];
         },
         restrict: function(data, domQuery, callback) {
             Entry.variableContainer.clickVariableAddButton(true);
+            this._nextValue = data.content[1][1];
             var dom = $('.entryVariableAddSpaceInputWorkspace');
             dom[0].enterKeyDisabled = true;
             var tooltip = new Entry.Tooltip([{
@@ -125,6 +132,7 @@ goog.require("Entry.STATIC");
             });
             return tooltip;
         },
+        validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "variableAddSetName",
         dom: ['variableContainer', 'variableAddInput']
