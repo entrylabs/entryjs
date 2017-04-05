@@ -120,13 +120,13 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
                 elem.mouseup(function(e){
                     e.stopPropagation();
                     that.applyValue(value);
-                    that.destroyOption();
+                    that.destroyOption(undefined, true);
                     that._selectBlockView();
                 });
             })(element, value);
         }
         this._position();
-        
+
         this.optionDomCreated();
     };
 

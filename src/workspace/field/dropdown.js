@@ -179,7 +179,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 elem.bind('mouseup touchend', function(e){
                     e.stopPropagation();
                     that.applyValue(value);
-                    that.destroyOption();
+                    that.destroyOption(undefined, true);
                     that._selectBlockView();
                 });
             })(element, value);
