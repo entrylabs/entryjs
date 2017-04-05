@@ -6054,13 +6054,13 @@ Entry.Commander = function(c) {
   }, log:function(b, c) {
     return [["pointer", b], ["value", c]];
   }, restrict:function(b, c, e, d) {
-    var f = !1;
-    Entry.Command.editor.board.findBlock(b.content[1][1]).fixNextValue(b.content[2][1]);
-    var g = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !f && c && (f = !0, e(), e(), g.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
+    var f = !1, g = Entry.Command.editor.board.findBlock(b.content[1][1]), h = b.content[2][1];
+    g instanceof Entry.FieldTextInput && g.fixNextValue(h);
+    var k = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !f && c && (f = !0, e(), e(), k.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
       }}));
     }});
-    return g;
+    return k;
   }, disableMouseUpDispose:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
   c[e.selectBlockMenu] = {do:function(b, c, e) {
     var d = Entry.getMainWS().blockMenu;
