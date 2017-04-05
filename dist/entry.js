@@ -22306,8 +22306,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
           case c.DONE:
             c = d.magnetedBlockView;
             c instanceof Entry.BlockView && (c = c.block);
-            l && !c ? Entry.do("separateBlock" + m, g) : l || c || h ? (m = h ? "FromBlockMenu" : "", c ? ("next" === c.view.magneting ? (k = g.getLastBlock(), this.dragMode = e, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock" + m, c, k).isPass(h), Entry.ConnectionRipple.setView(c.view).dispose()) : (c.getThread() instanceof Entry.FieldBlock && !Entry.block[c.type].isPrimitive && (m += "FollowSeparate"), Entry.do("insertBlock" + m, g, c).isPass(h), b = !0), createjs.Sound.play("entryMagneting")) : 
-            Entry.do("moveBlock" + m, g).isPass(h)) : g.getThread().view.isGlobal() ? Entry.do("moveBlock" + m, g) : Entry.do("separateBlock" + m, g);
+            l && !c ? Entry.do("separateBlock" + m, g) : l || c || h ? (m = h ? "FromBlockMenu" : "", c ? ("next" === c.view.magneting ? (k = g.getLastBlock(), this.dragMode = e, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock" + m, c, k).isPass(h), Entry.ConnectionRipple.setView(c.view).dispose()) : (c.getThread && c.getThread() instanceof Entry.FieldBlock && !Entry.block[c.type].isPrimitive && (m += "FollowSeparate"), Entry.do("insertBlock" + m, g, c).isPass(h), b = !0), 
+            createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock" + m, g).isPass(h)) : g.getThread().view.isGlobal() ? Entry.do("moveBlock" + m, g) : Entry.do("separateBlock" + m, g);
             break;
           case c.RETURN:
             g = this.block;
