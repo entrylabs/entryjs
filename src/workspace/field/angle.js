@@ -113,7 +113,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             that.applyValue(e);
 
             if (exitKeys.indexOf(keyCode) > -1)
-                that.destroyOption();
+                that.destroyOption(undefined, true);
         });
 
         var pos = this.getAbsolutePosFromDocument();
@@ -264,7 +264,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         return value % 360;
     };
 
-    p.destroyOption = function(skipCommand) {
+    p.destroyOption = function(skipCommand, forceCommand) {
         if (this.disposeEvent) {
             Entry.disposeEvent.detach(this.disposeEvent);
             delete this.documentDownEvent;
@@ -280,7 +280,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             delete this.svgOptionGroup;
         }
         this._setTextValue();
-        skipCommand !== true && this.command();
+        skipCommand !== true && this.command(forceCommand);
     };
 
     p._setTextValue = function() {

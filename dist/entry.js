@@ -11075,15 +11075,15 @@ Entry.TextCodingUtil = {};
       f[b.type] = [], g = {}, g.start = b.start, g.end = b.end, f[b.type].push(g);
     }
   };
-  c.assembleRepeatWhileTrueBlock = function(b, c) {
-    var d = "";
+  c.assembleRepeatWhileTrueBlock = function(b, f) {
+    var c = "";
     if ("repeat_while_true" == b.data.type) {
-      var d = c.split(" "), e = d.length - 1, g = d[e];
-      "until" == g ? (d.splice(1, 0, "not"), d.splice(e + 1, 1), d = d.join(" ")) : "while" == g ? (d.splice(e, 1), d = d.join(" ")) : d = c;
+      var c = f.split(" "), e = c.length - 1, g = c[e];
+      "until" == g ? (c.splice(1, 0, "not"), c.splice(e + 1, 1), c = c.join(" ")) : "while" == g ? (c.splice(e, 1), c = c.join(" ")) : c = f;
     } else {
-      d = c;
+      c = f;
     }
-    return d;
+    return c;
   };
   c.isJudgementBlock = function(b) {
     return "is_clicked" == b || "is_press_some_key" == b || "reach_something" == b || "boolean_basic_operator" == b || "boolean_and" == b || "boolean_or" == b || "boolean_not" == b ? !0 : !1;
@@ -23216,7 +23216,7 @@ Entry.Field = function() {
     this.destroyOption();
   };
   c.command = function(b) {
-    this._blockView.isInBlockMenu || !this._startValue || !b && this._startValue === this.getValue() || (Entry.do("setFieldValue", this.pointer(), this._nextValue || this.getValue()), delete this._nextValue);
+    this._blockView.isInBlockMenu || void 0 === this._startValue || !b && this._startValue === this.getValue() || (Entry.do("setFieldValue", this.pointer(), this._nextValue || this.getValue()), delete this._nextValue);
     delete this._startValue;
   };
   c.destroyOption = function(b, c) {
@@ -23401,7 +23401,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.optionGroup.on("keyup", function(c) {
       var f = c.keyCode || c.which;
       b.applyValue(c);
-      -1 < [13, 27].indexOf(f) && b.destroyOption();
+      -1 < [13, 27].indexOf(f) && b.destroyOption(void 0, !0);
     });
     var c = this.getAbsolutePosFromDocument();
     c.y -= this.box.height / 2;
@@ -23467,12 +23467,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   c.modValue = function(b) {
     return /&value/gm.test(b) ? b : b % 360;
   };
-  c.destroyOption = function(b) {
+  c.destroyOption = function(b, c) {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
     this._setTextValue();
-    !0 !== b && this.command();
+    !0 !== b && this.command(c);
   };
   c._setTextValue = function() {
     var b = this._convert(this.getText(), this.getValue());

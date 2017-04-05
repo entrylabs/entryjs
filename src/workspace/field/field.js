@@ -19,7 +19,7 @@ Entry.Field = function() {};
     };
 
     p.command = function(forceCommand) {
-        if (!this._blockView.isInBlockMenu && this._startValue &&
+        if (!this._blockView.isInBlockMenu && this._startValue !== undefined &&
             (forceCommand || this._startValue !== this.getValue())) {
             Entry.do(
                 'setFieldValue',
