@@ -11075,15 +11075,15 @@ Entry.TextCodingUtil = {};
       f[b.type] = [], g = {}, g.start = b.start, g.end = b.end, f[b.type].push(g);
     }
   };
-  c.assembleRepeatWhileTrueBlock = function(b, f) {
-    var c = "";
+  c.assembleRepeatWhileTrueBlock = function(b, c) {
+    var d = "";
     if ("repeat_while_true" == b.data.type) {
-      var c = f.split(" "), e = c.length - 1, g = c[e];
-      "until" == g ? (c.splice(1, 0, "not"), c.splice(e + 1, 1), c = c.join(" ")) : "while" == g ? (c.splice(e, 1), c = c.join(" ")) : c = f;
+      var d = c.split(" "), e = d.length - 1, g = d[e];
+      "until" == g ? (d.splice(1, 0, "not"), d.splice(e + 1, 1), d = d.join(" ")) : "while" == g ? (d.splice(e, 1), d = d.join(" ")) : d = c;
     } else {
-      c = f;
+      d = c;
     }
-    return c;
+    return d;
   };
   c.isJudgementBlock = function(b) {
     return "is_clicked" == b || "is_press_some_key" == b || "reach_something" == b || "boolean_basic_operator" == b || "boolean_and" == b || "boolean_or" == b || "boolean_not" == b ? !0 : !1;
@@ -16244,8 +16244,8 @@ Entry.stop = function() {
   "invisible" !== Entry.type && (this.FPS = null, Entry.engine.stop());
 };
 Entry.parseOptions = function(c) {
-  this.type = c.type;
-  this.hashId = c.hashId;
+  this.type = c.type || this.type;
+  this.hashId = c.hashId || this.hasId;
   c.device && (this.device = c.device);
   this.projectSaveable = c.projectsaveable;
   void 0 === this.projectSaveable && (this.projectSaveable = !0);
@@ -16275,8 +16275,8 @@ Entry.parseOptions = function(c) {
   if (this.readOnly = c.readOnly || !1) {
     this.soundEditable = a.sceneEditable = this.objectAddable = !1;
   }
-  this.isForLecture = c.isForLecture;
-  this.textCodingEnable = c.textCodingEnable;
+  c.isForLecture && (this.isForLecture = c.isForLecture);
+  c.textCodingEnable && (this.textCodingEnable = c.textCodingEnable);
 };
 Entry.initFonts = function(c) {
   this.fonts = c;
@@ -16285,7 +16285,7 @@ Entry.initFonts = function(c) {
 Entry.reloadOption = function(c) {
   this.options = c;
   this.parseOptions(c);
-  this.applyTabOption();
+  this.playground.applyTabOption();
 };
 Entry.Recorder = function() {
   this._recordData = [];

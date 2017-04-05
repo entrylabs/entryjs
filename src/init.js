@@ -369,9 +369,9 @@ Entry.stop = function() {
  */
 Entry.parseOptions = function(options) {
     /** @type {string} */
-    this.type = options.type;
+    this.type = options.type || this.type;
 
-    this.hashId = options.hashId;
+    this.hashId = options.hashId || this.hasId;
 
     if (options.device)
         this.device = options.device;
@@ -434,9 +434,10 @@ Entry.parseOptions = function(options) {
         this.soundEditable = a.sceneEditable = this.objectAddable = false;
     }
 
-    this.isForLecture = options.isForLecture;
-
-    this.textCodingEnable = options.textCodingEnable;
+    if (options.isForLecture)
+        this.isForLecture = options.isForLecture;
+    if (options.textCodingEnable)
+        this.textCodingEnable = options.textCodingEnable;
 };
 
 
@@ -448,5 +449,5 @@ Entry.initFonts = function(fonts) {
 Entry.reloadOption = function(options) {
     this.options = options;
     this.parseOptions(options);
-    this.applyTabOption();
+    this.playground.applyTabOption();
 };
