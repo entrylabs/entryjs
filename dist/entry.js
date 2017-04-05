@@ -24345,7 +24345,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.optionGroup.on("keyup", function(c) {
       var f = c.keyCode || c.which;
       b.applyValue(c);
-      -1 < [13, 27].indexOf(f) && b.destroyOption();
+      -1 < [13, 27].indexOf(f) && b.destroyOption(void 0, !0);
     });
     var c = this.getAbsolutePosFromDocument();
     c.y -= this.box.height / 2;
