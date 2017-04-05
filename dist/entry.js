@@ -15774,8 +15774,8 @@ Entry.Loader.handleLoad = function() {
   this.loaded || (this.loaded = !0, Entry.dispatchEvent("loadComplete"));
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, destroyBlockBelow:113, 
-destroyThreads:114, addThreads:115, recoverBlockBelow:116, addThreadFromBlockMenu:117, insertBlockFromBlockMenu:118, moveBlockFromBlockMenu:119, separateBlockForDestroy:120, moveBlockForDestroy:121, insertBlockFromBlockMenuFollowSeparate:122, insertBlockFollowSeparate:123, selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404, 
-toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, playgroundClickAddPictureCancel:704, playgroundClickAddSoundCancel:705, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804, variableAddSetName:805}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
+destroyThreads:114, addThreads:115, recoverBlockBelow:116, addThreadFromBlockMenu:117, insertBlockFromBlockMenu:118, moveBlockFromBlockMenu:119, separateBlockForDestroy:120, moveBlockForDestroy:121, insertBlockFromBlockMenuFollowSeparate:122, insertBlockFollowSeparate:123, separateBlockByCommand:124, selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, 
+processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, playgroundClickAddPictureCancel:704, playgroundClickAddSoundCancel:705, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804, variableAddSetName:805}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
 Entry.Command = {};
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
@@ -17492,6 +17492,7 @@ Entry.Model = function(c, b) {
   }, log:function(b, c) {
     return [];
   }, undo:"destroyBlockBelow"};
+  b(f.separateBlockByCommand, f.separateBlock);
 })(Entry.Command);
 Entry.TargetChecker = function(c, b) {
   this.isForEdit = b;
@@ -22301,8 +22302,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
           case c.DONE:
             c = d.magnetedBlockView;
             c instanceof Entry.BlockView && (c = c.block);
-            l && !c ? Entry.do("separateBlock" + m, g) : l || c || h ? (m = h ? "FromBlockMenu" : "", c ? ("next" === c.view.magneting ? (k = g.getLastBlock(), this.dragMode = e, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock" + m, c, k).isPass(h), Entry.ConnectionRipple.setView(c.view).dispose()) : (Entry.do("insertBlock" + m, g, c).isPass(h), b = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock" + m, g).isPass(h)) : g.getThread().view.isGlobal() ? Entry.do("moveBlock" + 
-            m, g) : Entry.do("separateBlock" + m, g);
+            l && !c ? Entry.do("separateBlock" + m, g) : l || c || h ? (m = h ? "FromBlockMenu" : "", c ? ("next" === c.view.magneting ? (k = g.getLastBlock(), this.dragMode = e, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock" + m, c, k).isPass(h), Entry.ConnectionRipple.setView(c.view).dispose()) : (c.getThread() instanceof Entry.FieldBlock && !Entry.block[c.type].isPrimitive && (m += "FollowSeparate"), Entry.do("insertBlock" + m, g, c).isPass(h), b = !0), createjs.Sound.play("entryMagneting")) : 
+            Entry.do("moveBlock" + m, g).isPass(h)) : g.getThread().view.isGlobal() ? Entry.do("moveBlock" + m, g) : Entry.do("separateBlock" + m, g);
             break;
           case c.RETURN:
             g = this.block;
@@ -23597,20 +23598,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   c.replace = function(b) {
     "string" === typeof b && (b = this._createBlockByType(b));
     var c = this._valueBlock;
-    if (Entry.block[c.type].isPrimitive) {
-      c.doNotSplice = !0, this._oldPrimitiveValue = c.getParam(0), c.destroy();
-    } else {
-      if ("param" === this.acceptType) {
-        this._destroyObservers(), c.view._toGlobalCoordinate(), b.getTerminateOutputBlock().view._contents[1].replace(c);
-      } else {
-        this._destroyObservers();
-        c.view._toGlobalCoordinate();
-        var d = Entry.stateManager.getLastCommand();
-        d && (d.message === Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenu && Entry.stateManager.changeLastCommandType(Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenuFollowSeparate), d.message === Entry.STATIC.COMMAND_TYPES.insertBlock && Entry.stateManager.changeLastCommandType(Entry.STATIC.COMMAND_TYPES.insertBlockFollowSeparate));
-        Entry.do("separateBlock", c).isPass(!0);
-        c.view.bumpAway(30, 150);
-      }
-    }
+    Entry.block[c.type].isPrimitive ? (c.doNotSplice = !0, this._oldPrimitiveValue = c.getParam(0), c.destroy()) : "param" === this.acceptType ? (this._destroyObservers(), c.view._toGlobalCoordinate(), b.getTerminateOutputBlock().view._contents[1].replace(c)) : (this._destroyObservers(), c.view._toGlobalCoordinate(), Entry.do("separateBlockByCommand", c).isPass(!0), c.view.bumpAway(30, 150));
     this.updateValueBlock(b);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();

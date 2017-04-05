@@ -53,6 +53,7 @@ Entry.STATIC = {
         moveBlockForDestroy: 121,
         insertBlockFromBlockMenuFollowSeparate: 122,
         insertBlockFollowSeparate: 123,
+        separateBlockByCommand: 124,
 
 
         selectObject: 201,

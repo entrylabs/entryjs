@@ -668,6 +668,11 @@ goog.require("Entry.Utils");
         undo: "destroyBlockBelow"
     };
 
+    cloneCommand(
+        COMMAND_TYPES.separateBlockByCommand,
+        COMMAND_TYPES.separateBlock
+    );
+
     function cloneCommand(newType, oldType, props) {
         c[newType] = Entry.cloneSimpleObject(c[oldType]);
         if (props && props instanceof Array) {
