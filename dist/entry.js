@@ -6337,20 +6337,23 @@ Entry.Commander = function(c) {
     f();
     return b;
   }, dom:["variableContainer", "variableAddConfirmButton"]};
-  c[b.variableAddSetName] = {do:function(b) {
-    var c = $(".entryVariableAddSpaceInputWorkspace");
-    c[0].blurred = !0;
-    c.blur();
-    c.val(b);
+  c[b.variableAddSetName] = {do:function(e) {
+    var d = c[b.variableAddSetName], f = $(".entryVariableAddSpaceInputWorkspace");
+    f[0].blurred = !0;
+    f.blur();
+    e = d._nextValue || e;
+    f.val(e);
+    delete d._nextValue;
   }, state:function(b) {
     return [""];
-  }, log:function(b) {
-    return [["value", b]];
+  }, log:function(e) {
+    return [["value", c[b.variableAddSetName]._nextValue || e]];
   }, restrict:function(b, c, f) {
     Entry.variableContainer.clickVariableAddButton(!0);
+    this._nextValue = b.content[1][1];
     $(".entryVariableAddSpaceInputWorkspace")[0].enterKeyDisabled = !0;
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {restrict:!0, noDispose:!0, dimmed:!0, callBack:f});
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableAddSetName", dom:["variableContainer", "variableAddInput"]};
+  }, validate:!1, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"variableAddSetName", dom:["variableContainer", "variableAddInput"]};
   c[b.variableContainerRemoveVariable] = {do:function(b) {
     Entry.variableContainer.removeVariable(b);
   }, state:function(b) {
@@ -23403,24 +23406,24 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     return b.length ? c.getDataByPointer ? c.getDataByPointer(b) : null : c;
   };
   c.getBlockList = function(b, c) {
-    var d = [];
+    var e = [];
     if (!this._schema) {
       return [];
     }
     if (b && this._schema.isPrimitive) {
-      return d;
+      return e;
     }
-    (c || this.type) === this.type && d.push(this);
-    for (var e = this.params, g = 0;g < e.length;g++) {
-      var h = e[g];
-      h && h.constructor == Entry.Block && (d = d.concat(h.getBlockList(b, c)));
+    (c || this.type) === this.type && e.push(this);
+    for (var f = this.params, g = 0;g < f.length;g++) {
+      var h = f[g];
+      h && h.constructor == Entry.Block && (e = e.concat(h.getBlockList(b, c)));
     }
-    if (e = this.statements) {
-      for (g = 0;g < e.length;g++) {
-        h = e[g], h.constructor === Entry.Thread && (d = d.concat(h.getBlockList(b, c)));
+    if (f = this.statements) {
+      for (g = 0;g < f.length;g++) {
+        h = f[g], h.constructor === Entry.Thread && (e = e.concat(h.getBlockList(b, c)));
       }
     }
-    return d;
+    return e;
   };
   c.stringify = function(b) {
     return JSON.stringify(this.toJSON(!1, b));
@@ -23547,10 +23550,10 @@ Entry.BlockMenu = function(c, b, e, d, f) {
       return console.error("You must inject code instance");
     }
     this.codeListener && this.code.changeEvent.detach(this.codeListener);
-    var d = this;
+    var e = this;
     this.set({code:b});
     this.codeListener = this.code.changeEvent.attach(this, function() {
-      d.changeEvent.notify();
+      e.changeEvent.notify();
     });
     b.createView(this);
     c ? this.align() : this._dAlign();
@@ -24876,7 +24879,7 @@ Entry.Field = function() {
     this.destroyOption();
   };
   c.command = function(b) {
-    this._blockView.isInBlockMenu || !this._startValue || !b && this._startValue === this.getValue() || (Entry.do("setFieldValue", this.pointer(), this._nextValue || this.getValue()), delete this._nextValue);
+    this._blockView.isInBlockMenu || void 0 === this._startValue || !b && this._startValue === this.getValue() || (Entry.do("setFieldValue", this.pointer(), this._nextValue || this.getValue()), delete this._nextValue);
     delete this._startValue;
   };
   c.destroyOption = function(b, c) {
@@ -26351,7 +26354,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.optionGroup.on("keyup", function(c) {
       var d = c.keyCode || c.which;
       b.applyValue(c);
-      -1 < [13, 27].indexOf(d) && b.destroyOption();
+      -1 < [13, 27].indexOf(d) && b.destroyOption(void 0, !0);
     });
     var c = this.getAbsolutePosFromDocument();
     c.y -= this.box.height / 2;
@@ -26421,12 +26424,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   c.modValue = function(b) {
     return /&value/gm.test(b) ? b : b % 360;
   };
-  c.destroyOption = function(b) {
+  c.destroyOption = function(b, c) {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
     this._setTextValue();
-    !0 !== b && this.command();
+    !0 !== b && this.command(c);
   };
   c._setTextValue = function() {
     var b = this._convert(this.getText(), this.getValue());
@@ -27138,7 +27141,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.optionGroup.on("keyup", function(c) {
       var d = c.keyCode || c.which;
       b.applyValue(c);
-      -1 < [13, 27].indexOf(d) && b.destroyOption();
+      -1 < [13, 27].indexOf(d) && b.destroyOption(void 0, !0);
     });
     var c = this.getAbsolutePosFromDocument();
     c.y -= this.box.height / 2;

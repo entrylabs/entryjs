@@ -110,7 +110,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             that.applyValue(e);
 
             if (exitKeys.indexOf(keyCode) > -1)
-                that.destroyOption();
+                that.destroyOption(undefined, true);
         });
 
         var pos = this.getAbsolutePosFromDocument();
