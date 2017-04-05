@@ -660,6 +660,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                         .setView(closeBlock.view)
                                         .dispose();
                                 } else {
+                                    if (closeBlock.getThread) {
+                                        var thread = closeBlock.getThread();
+                                        if (thread instanceof Entry.FieldBlock &&
+                                            !Entry.block[closeBlock.type].isPrimitive)
+                                            suffix += 'FollowSeparate';
+                                    }
                                     Entry.do(
                                         "insertBlock" + suffix, block, closeBlock)
                                         .isPass(fromBlockMenu);

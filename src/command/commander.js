@@ -46,6 +46,7 @@ Entry.Commander = function(injectType) {
         that.report(commandType, argumentArray);
 
         var command = Entry.Command[commandType];
+        //console.log('commandType', commandType);
         var state;
         if (Entry.stateManager && command.skipUndoStack !== true) {
             state = Entry.stateManager.addCommand.apply(
