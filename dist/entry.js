@@ -26566,7 +26566,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         c.bind("mouseup touchend", function(c) {
           c.stopPropagation();
           b.applyValue(d);
-          b.destroyOption();
+          b.destroyOption(void 0, !0);
           b._selectBlockView();
         });
       })(k, g);
@@ -26675,7 +26675,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         c.mouseup(function(c) {
           c.stopPropagation();
           b.applyValue(d);
-          b.destroyOption();
+          b.destroyOption(void 0, !0);
           b._selectBlockView();
         });
       })(h, f);
