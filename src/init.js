@@ -287,7 +287,7 @@ Entry.createDom = function(container, option) {
         this.propertyPanel.select("object");
         this.helper.bindWorkspace(this.playground.mainWorkspace);
     } else if (option == 'minimize') {
-        var canvas = Entry.createElement('canvas');
+       var canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace minimize';
         canvas.id = 'entryCanvas';
         canvas.width = 640;
@@ -443,5 +443,9 @@ Entry.parseOptions = function(options) {
 Entry.initFonts = function(fonts) {
     this.fonts = fonts;
     if (!fonts) this.fonts = [];
+};
 
+Entry.reloadOption = function(options) {
+    this.options = options;
+    this.parseOptions(options);
 };
