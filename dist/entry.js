@@ -9347,8 +9347,8 @@ Entry.stop = function() {
   "invisible" !== Entry.type && (this.FPS = null, Entry.engine.stop());
 };
 Entry.parseOptions = function(c) {
-  this.type = c.type;
-  this.hashId = c.hashId;
+  this.type = c.type || this.type;
+  this.hashId = c.hashId || this.hasId;
   c.device && (this.device = c.device);
   this.projectSaveable = c.projectsaveable;
   void 0 === this.projectSaveable && (this.projectSaveable = !0);
@@ -9378,8 +9378,8 @@ Entry.parseOptions = function(c) {
   if (this.readOnly = c.readOnly || !1) {
     this.soundEditable = a.sceneEditable = this.objectAddable = !1;
   }
-  this.isForLecture = c.isForLecture;
-  this.textCodingEnable = c.textCodingEnable;
+  c.isForLecture && (this.isForLecture = c.isForLecture);
+  c.textCodingEnable && (this.textCodingEnable = c.textCodingEnable);
 };
 Entry.initFonts = function(c) {
   this.fonts = c;
@@ -9388,7 +9388,7 @@ Entry.initFonts = function(c) {
 Entry.reloadOption = function(c) {
   this.options = c;
   this.parseOptions(c);
-  this.applyTabOption();
+  this.playground.applyTabOption();
 };
 Entry.Activity = function(c, b) {
   this.name = c;
