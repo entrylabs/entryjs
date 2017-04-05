@@ -448,4 +448,5 @@ Entry.initFonts = function(fonts) {
 Entry.reloadOption = function(options) {
     this.options = options;
     this.parseOptions(options);
+    this.applyTabOption();
 };

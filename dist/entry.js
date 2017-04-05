@@ -9387,6 +9387,7 @@ Entry.initFonts = function(c) {
 Entry.reloadOption = function(c) {
   this.options = c;
   this.parseOptions(c);
+  this.applyTabOption();
 };
 Entry.Activity = function(c, b) {
   this.name = c;
@@ -13826,13 +13827,14 @@ Entry.Playground = function() {
       Entry.playground.curtainView_.addClass("entryRemove");
     })) : (this.view_.addClass("entryPlaygroundWorkspace"), b = Entry.createElement("div", "entryCategoryTab"), b.addClass("entryPlaygroundTabWorkspace"), this.view_.appendChild(b), this.generateTabView(b), this.tabView_ = b, b = Entry.createElement("div", "entryCurtain"), b.addClass("entryPlaygroundCurtainWorkspace"), b.addClass("entryRemove"), c = Lang.Workspace.cannot_edit_click_to_stop.split("."), b.innerHTML = c[0] + ".<br/>" + c[1], b.addEventListener("click", function() {
       Entry.engine.toggleStop();
-    }), this.view_.appendChild(b), this.curtainView_ = b, Entry.pictureEditable && (b = Entry.createElement("div", "entryPicture"), b.addClass("entryPlaygroundPictureWorkspace"), b.addClass("entryRemove"), this.view_.appendChild(b), this.generatePictureView(b), this.pictureView_ = b), b = Entry.createElement("div", "entryText"), b.addClass("entryPlaygroundTextWorkspace"), b.addClass("entryRemove"), this.view_.appendChild(b), this.generateTextView(b), this.textView_ = b, Entry.soundEditable && (b = 
-    Entry.createElement("div", "entrySound"), b.addClass("entryPlaygroundSoundWorkspace"), b.addClass("entryRemove"), this.view_.appendChild(b), this.generateSoundView(b), this.soundView_ = b), b = Entry.createElement("div", "entryDefault"), b.addClass("entryPlaygroundDefaultWorkspace"), this.view_.appendChild(b), this.generateDefaultView(b), this.defaultView_ = b, b = Entry.createElement("div", "entryCode"), b.addClass("entryPlaygroundCodeWorkspace"), b.addClass("entryRemove"), this.view_.appendChild(b), 
-    this.generateCodeView(b), this.codeView_ = b, c = Entry.createElement("div"), c.addClass("entryPlaygroundResizeWorkspace", "entryRemove"), this.resizeHandle_ = c, this.view_.appendChild(c), this.initializeResizeHandle(c), this.codeView_ = b, Entry.addEventListener("run", function(b) {
+    }), this.view_.appendChild(b), this.curtainView_ = b, b = Entry.createElement("div", "entryPicture"), b.addClass("entryPlaygroundPictureWorkspace"), b.addClass("entryRemove"), this.view_.appendChild(b), this.generatePictureView(b), this.pictureView_ = b, b = Entry.createElement("div", "entryText"), b.addClass("entryPlaygroundTextWorkspace"), b.addClass("entryRemove"), this.view_.appendChild(b), this.generateTextView(b), this.textView_ = b, b = Entry.createElement("div", "entrySound"), b.addClass("entryPlaygroundSoundWorkspace"), 
+    b.addClass("entryRemove"), this.view_.appendChild(b), this.generateSoundView(b), this.soundView_ = b, b = Entry.createElement("div", "entryDefault"), b.addClass("entryPlaygroundDefaultWorkspace"), this.view_.appendChild(b), this.generateDefaultView(b), this.defaultView_ = b, b = Entry.createElement("div", "entryCode"), b.addClass("entryPlaygroundCodeWorkspace"), b.addClass("entryRemove"), this.view_.appendChild(b), this.generateCodeView(b), this.codeView_ = b, c = Entry.createElement("div"), 
+    c.addClass("entryPlaygroundResizeWorkspace", "entryRemove"), this.resizeHandle_ = c, this.view_.appendChild(c), this.initializeResizeHandle(c), this.codeView_ = b, Entry.addEventListener("run", function(b) {
       Entry.playground.curtainView_.removeClass("entryRemove");
     }), Entry.addEventListener("stop", function(b) {
       Entry.playground.curtainView_.addClass("entryRemove");
     }));
+    this.applyTabOption();
   };
   c.generateDefaultView = function(b) {
     return b;
@@ -13851,17 +13853,40 @@ Entry.Playground = function() {
       Entry.do("playgroundChangeViewMode", "code", c.selectedViewMode);
     });
     this._codeTab = this.tabViewElements.code = b;
-    Entry.pictureEditable && (b = Entry.createElement("li", "entryPictureTab"), b.innerHTML = Lang.Workspace.tab_picture, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(b) {
+    b = Entry.createElement("li", "entryPictureTab");
+    b.innerHTML = Lang.Workspace.tab_picture;
+    b.addClass("entryTabListItemWorkspace");
+    d.appendChild(b);
+    b.bindOnClick(function(b) {
       Entry.do("playgroundChangeViewMode", "picture", c.selectedViewMode);
-    }), this.tabViewElements.picture = b, b = Entry.createElement("li", "entryTextboxTab"), b.innerHTML = Lang.Workspace.tab_text, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(b) {
+    });
+    this.pictureTab = this.tabViewElements.picture = b;
+    b = Entry.createElement("li", "entryTextboxTab");
+    b.innerHTML = Lang.Workspace.tab_text;
+    b.addClass("entryTabListItemWorkspace");
+    d.appendChild(b);
+    b.bindOnClick(function(b) {
       Entry.do("playgroundChangeViewMode", "text", c.selectedViewMode);
-    }), this.tabViewElements.text = b, b.addClass("entryRemove"));
-    Entry.soundEditable && (b = Entry.createElement("li", "entrySoundTab"), b.innerHTML = Lang.Workspace.tab_sound, b.addClass("entryTabListItemWorkspace"), d.appendChild(b), b.bindOnClick(function(b) {
+    });
+    this.tabViewElements.text = b;
+    b.addClass("entryRemove");
+    this.textboxTab = b;
+    b = Entry.createElement("li", "entrySoundTab");
+    b.innerHTML = Lang.Workspace.tab_sound;
+    b.addClass("entryTabListItemWorkspace");
+    d.appendChild(b);
+    b.bindOnClick(function(b) {
       Entry.do("playgroundChangeViewMode", "sound", c.selectedViewMode);
-    }), this.tabViewElements.sound = b);
-    Entry.hasVariableManager && (b = Entry.createElement("li", "entryVariableTab"), b.innerHTML = Lang.Workspace.tab_attribute, b.addClass("entryTabListItemWorkspace entryVariableTabWorkspace"), d.appendChild(b), b.bindOnClick(function(b) {
+    });
+    this.soundTab = this.tabViewElements.sound = b;
+    b = Entry.createElement("li", "entryVariableTab");
+    b.innerHTML = Lang.Workspace.tab_attribute;
+    b.addClass("entryTabListItemWorkspace entryVariableTabWorkspace");
+    d.appendChild(b);
+    b.bindOnClick(function(b) {
       Entry.do("playgroundChangeViewMode", "variable", c.selectedViewMode);
-    }), this.tabViewElements.variable = b);
+    });
+    this.variableTab = this.tabViewElements.variable = b;
   };
   c.generateCodeView = function(b) {
     var c = this.createVariableView();
@@ -14693,6 +14718,15 @@ Entry.Playground = function() {
           return this._soundAddButton;
       }
     }
+  };
+  c.applyTabOption = function() {
+    this.textboxTab.addClass("entryRemove");
+    this.pictureTab.addClass("entryRemove");
+    this.soundTab.addClass("entryRemove");
+    this.variableTab.addClass("entryRemove");
+    Entry.pictureEditable && (this.pictureTab.removeClass("entryRemove"), this.textboxTab.removeClass("entryRemove"));
+    Entry.soundEditable && this.soundTab.removeClass("entryRemove");
+    Entry.hasVariableManager && this.variableTab.removeClass("entryRemove");
   };
 })(Entry.Playground.prototype);
 Entry.Popup = function() {
