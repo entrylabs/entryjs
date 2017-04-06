@@ -17439,13 +17439,13 @@ Entry.Model = function(c, b) {
   }, log:function(b, c) {
     return [["pointer", b], ["value", c]];
   }, restrict:function(b, c, f, d) {
-    var l = !1;
-    Entry.Command.editor.board.findBlock(b.content[1][1]).fixNextValue(b.content[2][1]);
-    var m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !l && c && (l = !0, f(), f(), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
+    var l = !1, m = Entry.Command.editor.board.findBlock(b.content[1][1]), q = b.content[2][1];
+    m instanceof Entry.FieldTextInput && m.fixNextValue(q);
+    var n = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !l && c && (l = !0, f(), f(), n.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
       }}));
     }});
-    return m;
+    return n;
   }, disableMouseUpDispose:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
   c[f.selectBlockMenu] = {do:function(b, c, f) {
     var d = Entry.getMainWS().blockMenu;
@@ -17553,7 +17553,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
   };
   c.registerAchievement = function(b) {
     this.isForEdit && this.watchingBlocks.push(b);
-    b.params[1] && this.goals.indexOf(0 > b.params[0] + "") && this.goals.push(b.params[0] + "");
+    b.params[1] && 0 > this.goals.indexOf(b.params[0] + "") && this.goals.push(b.params[0] + "");
     this.reset();
   };
   c.reRegisterAll = function() {
@@ -25998,7 +25998,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     if ("wildcard" === b.type.substr(0, 8) || "wildcard" === this.type.substr(0, 8)) {
       return !0;
     }
-    if (b.type !== this.type) {
+    if (!("angle" === b.type && "text" === this.type || "text" === b.type && "angle" === this.type) && b.type !== this.type) {
       return !1;
     }
     for (var c = 0;c < this.params.length;c++) {
