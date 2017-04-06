@@ -16,8 +16,8 @@ Entry.HW = function() {
     this.isFirstConnect = true;
     //this.requireVerion = 'v1.6.1';
     this.requireVerion = 'v1.6.1';
-    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.5_Setup.exe";
-    this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.4.dmg";
+    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.6_Setup.exe";
+    this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.6.dmg";
     this.hwPopupCreate();
     this.initSocket();
     this.connected = false;
@@ -347,12 +347,10 @@ p.checkDevice = function(data, version) {
     this.selectedDevice = key;
     this.hwModule = this.hwInfo[key];
     Entry.dispatchEvent("hwChanged");
-    Entry.toast.success(
-        "하드웨어 연결 성공",
-        "하드웨어 아이콘을 더블클릭하면, 센서값만 확인할 수 있습니다.",
-        false
-    );
+
+    var descMsg = '';
     if (this.hwModule.monitorTemplate) {
+        descMsg = Lang.Msgs.hw_connection_success_desc;
         if(!this.hwMonitor) {
             this.hwMonitor = new Entry.HWMonitor(this.hwModule);
         } else {
@@ -372,7 +370,13 @@ p.checkDevice = function(data, version) {
         } else {
             this.hwMonitor.generateView();
         }
+    } else {
+        descMsg = Lang.Msgs.hw_connection_success_desc2;
     }
+    Entry.toast.success(
+        Lang.Msgs.hw_connection_success,
+        descMsg
+    )
 };
 
 p.banHW = function() {
@@ -648,4 +652,3 @@ p.hwPopupCreate = function () {
         }
     });
 }
-

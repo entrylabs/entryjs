@@ -68,7 +68,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 this._execParser = new Entry.BlockToPyParser(this.syntax);
-                cm.setOption("mode", {name: "python", globalVars: true});
+                cm && cm.setOption("mode", {name: "python", globalVars: true});
                 this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
                 break;
         }

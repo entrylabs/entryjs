@@ -307,6 +307,7 @@ Entry.resizeElement = function(interfaceModel) {
 
         this.interfaceState = interfaceModel;
     }
+    
     Entry.windowResized.notify();
 };
 
