@@ -21145,6 +21145,14 @@ Entry.VariableContainer = function() {
     c && c.isClone && e.object_ && (e = Entry.findObjsByKey(c.variables, "id_", b)[0]);
     return e;
   };
+  c.getVariableByName = function(b) {
+    for (var c = 0;c < this.variables_.length;c++) {
+      var d = this.variables_[c];
+      if (d.getName() === b) {
+        return d;
+      }
+    }
+  };
   c.getList = function(b, c) {
     var e = Entry.findObjsByKey(this.lists_, "id_", b)[0];
     c && c.isClone && e.object_ && (e = Entry.findObjsByKey(c.lists, "id_", b)[0]);
@@ -23406,24 +23414,24 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     return b.length ? c.getDataByPointer ? c.getDataByPointer(b) : null : c;
   };
   c.getBlockList = function(b, c) {
-    var e = [];
+    var d = [];
     if (!this._schema) {
       return [];
     }
     if (b && this._schema.isPrimitive) {
-      return e;
+      return d;
     }
-    (c || this.type) === this.type && e.push(this);
-    for (var f = this.params, g = 0;g < f.length;g++) {
-      var h = f[g];
-      h && h.constructor == Entry.Block && (e = e.concat(h.getBlockList(b, c)));
+    (c || this.type) === this.type && d.push(this);
+    for (var e = this.params, g = 0;g < e.length;g++) {
+      var h = e[g];
+      h && h.constructor == Entry.Block && (d = d.concat(h.getBlockList(b, c)));
     }
-    if (f = this.statements) {
-      for (g = 0;g < f.length;g++) {
-        h = f[g], h.constructor === Entry.Thread && (e = e.concat(h.getBlockList(b, c)));
+    if (e = this.statements) {
+      for (g = 0;g < e.length;g++) {
+        h = e[g], h.constructor === Entry.Thread && (d = d.concat(h.getBlockList(b, c)));
       }
     }
-    return e;
+    return d;
   };
   c.stringify = function(b) {
     return JSON.stringify(this.toJSON(!1, b));
@@ -23550,10 +23558,10 @@ Entry.BlockMenu = function(c, b, e, d, f) {
       return console.error("You must inject code instance");
     }
     this.codeListener && this.code.changeEvent.detach(this.codeListener);
-    var e = this;
+    var d = this;
     this.set({code:b});
     this.codeListener = this.code.changeEvent.attach(this, function() {
-      e.changeEvent.notify();
+      d.changeEvent.notify();
     });
     b.createView(this);
     c ? this.align() : this._dAlign();
