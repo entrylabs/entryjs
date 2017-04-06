@@ -175,8 +175,11 @@ Entry.beforeUnload = function(e) {
 
 Entry.captureInterfaceState = function() {
     var interfaceState = JSON.parse(JSON.stringify(Entry.interfaceState))
-    if (Entry.type == 'workspace')
-        interfaceState.object = Entry.playground.object.id;
+    var playground = Entry.playground;
+    if (Entry.type == 'workspace' &&
+        playground && playground.object) {
+        interfaceState.object = playground.object.id;
+    }
 
     return interfaceState;
 };

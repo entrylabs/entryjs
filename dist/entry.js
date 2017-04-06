@@ -61,8 +61,8 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     return Lang.Workspace.project_changed;
   }
 }, captureInterfaceState:function() {
-  var c = JSON.parse(JSON.stringify(Entry.interfaceState));
-  "workspace" == Entry.type && (c.object = Entry.playground.object.id);
+  var c = JSON.parse(JSON.stringify(Entry.interfaceState)), b = Entry.playground;
+  "workspace" == Entry.type && b && b.object && (c.object = b.object.id);
   return c;
 }, loadInterfaceState:function(c) {
   "workspace" == Entry.type && (c ? Entry.container.selectObject(c.object, !0) : localStorage && localStorage.getItem("workspace-interface") ? (c = localStorage.getItem("workspace-interface"), c = JSON.parse(c)) : c = {menuWidth:280, canvasWidth:480}, this.resizeElement(c));
@@ -23224,11 +23224,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     delete e.events;
     d = d || {};
     b && delete e.id;
-    for (var g = 0;g < e.params.length;g++) {
-      var h = e.params[g];
-      h instanceof Entry.Block ? h = h.toJSON(b, c, d) : d.captureDynamic && this.view.getParam(g) instanceof Entry.FieldDropdownDynamic && (h = this.view.getParam(g).getTextValue());
-      e.params[g] = h;
+    for (var g = [], h = 0;h < e.params.length;h++) {
+      var k = e.params[h];
+      k instanceof Entry.Block ? k = k.toJSON(b, c, d) : d.captureDynamic && this.view.getParam(h) instanceof Entry.FieldDropdownDynamic && (k = this.view.getParam(h).getTextValue());
+      g.push(k);
     }
+    e.params = g;
     e.statements = e.statements.map(function(e) {
       return e.toJSON(b, void 0, c, d);
     });
@@ -24476,27 +24477,26 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     if (h === Entry.Workspace.MODE_VIMBOARD) {
       d instanceof Entry.BlockMenu ? (d.terminateDrag(), k === c.DONE && this.vimBoardEvent(b, "dragEnd", g)) : d.clear();
     } else {
-      if (h = this.dragInstance && this.dragInstance.isNew, f === Entry.DRAG_MODE_DRAG) {
-        b = !1;
-        var l = this.block.getPrevBlock(this.block), m = this._board.workspace.trashcan.isOver ? "ForDestroy" : "";
+      if (b = this.dragInstance && this.dragInstance.isNew, f === Entry.DRAG_MODE_DRAG) {
+        var h = !1, l = this.block.getPrevBlock(this.block), m = this._board.workspace.trashcan.isOver ? "ForDestroy" : "";
         switch(k) {
           case c.DONE:
             c = d.magnetedBlockView;
             c instanceof Entry.BlockView && (c = c.block);
-            l && !c ? Entry.do("separateBlock" + m, g) : l || c || h ? (m = h ? "FromBlockMenu" : "", c ? ("next" === c.view.magneting ? (k = g.getLastBlock(), this.dragMode = f, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock" + m, c, k).isPass(h), Entry.ConnectionRipple.setView(c.view).dispose()) : (c.getThread && c.getThread() instanceof Entry.FieldBlock && !Entry.block[c.type].isPrimitive && (m += "FollowSeparate"), Entry.do("insertBlock" + m, g, c).isPass(h), b = !0), 
-            createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock" + m, g).isPass(h)) : g.getThread().view.isGlobal() ? Entry.do("moveBlock" + m, g) : Entry.do("separateBlock" + m, g);
+            l && !c ? Entry.do("separateBlock" + m, g) : l || c || b ? (m = b ? "FromBlockMenu" : "", c ? ("next" === c.view.magneting ? (k = g.getLastBlock(), this.dragMode = f, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock" + m, c, k).isPass(b), Entry.ConnectionRipple.setView(c.view).dispose()) : (c.getThread && (f = c.getThread(), (h = c.type) && f instanceof Entry.FieldBlock && !Entry.block[h].isPrimitive && (m += "FollowSeparate")), Entry.do("insertBlock" + m, g, 
+            c).isPass(b), h = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock" + m, g).isPass(b)) : g.getThread().view.isGlobal() ? Entry.do("moveBlock" + m, g) : Entry.do("separateBlock" + m, g);
             break;
           case c.RETURN:
             g = this.block;
-            h ? Entry.do("destroyBlockBelow", this.block).isPass(!0) : l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (f = g.getThread().view.getParent(), f instanceof Entry.Board ? (f = this.originPos, this._moveTo(f.x, f.y, !1)) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, f)));
+            b ? Entry.do("destroyBlockBelow", this.block).isPass(!0) : l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (f = g.getThread().view.getParent(), f instanceof Entry.Board ? (f = this.originPos, this._moveTo(f.x, f.y, !1)) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, f)));
             break;
           case c.REMOVE:
-            createjs.Sound.play("entryDelete"), Entry.do("destroyBlockBelow", this.block).isPass(h);
+            createjs.Sound.play("entryDelete"), Entry.do("destroyBlockBelow", this.block).isPass(b);
         }
         d.setMagnetedBlock(null);
-        b && Entry.ConnectionRipple.setView(g.view).dispose();
+        h && Entry.ConnectionRipple.setView(g.view).dispose();
       } else {
-        k === c.REMOVE && h && f === Entry.DRAG_MODE_MOUSEDOWN && Entry.do("destroyBlockBelow", this.block).isPass(!0);
+        k === c.REMOVE && b && f === Entry.DRAG_MODE_MOUSEDOWN && Entry.do("destroyBlockBelow", this.block).isPass(!0);
       }
     }
     this.destroyShadow();
