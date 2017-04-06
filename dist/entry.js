@@ -8158,7 +8158,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
   };
   c.registerAchievement = function(b) {
     this.isForEdit && this.watchingBlocks.push(b);
-    b.params[1] && this.goals.indexOf(0 > b.params[0] + "") && this.goals.push(b.params[0] + "");
+    b.params[1] && 0 > this.goals.indexOf(b.params[0] + "") && this.goals.push(b.params[0] + "");
     this.reset();
   };
   c.reRegisterAll = function() {
