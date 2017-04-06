@@ -24,7 +24,7 @@ Entry.Thread = function(thread, code, parent) {
 
 (function(p) {
     p.load = function(thread, mode) {
-        if (thread === undefined)
+        if (thread === undefined || thread === null)
             thread = [];
         if (!(thread instanceof Array)) {
             return console.error("thread must be array");

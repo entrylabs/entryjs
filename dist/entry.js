@@ -25449,7 +25449,9 @@ Entry.Thread = function(c, b, f) {
 };
 (function(c) {
   c.load = function(b, c) {
-    void 0 === b && (b = []);
+    if (void 0 === b || null === b) {
+      b = [];
+    }
     if (!(b instanceof Array)) {
       return console.error("thread must be array");
     }
