@@ -19751,6 +19751,14 @@ Entry.VariableContainer = function() {
     c && c.isClone && d.object_ && (d = Entry.findObjsByKey(c.variables, "id_", b)[0]);
     return d;
   };
+  c.getVariableByName = function(b) {
+    for (var c = 0;c < this.variables_.length;c++) {
+      var d = this.variables_[c];
+      if (d.getName() === b) {
+        return d;
+      }
+    }
+  };
   c.getList = function(b, c) {
     var d = Entry.findObjsByKey(this.lists_, "id_", b)[0];
     c && c.isClone && d.object_ && (d = Entry.findObjsByKey(c.lists, "id_", b)[0]);

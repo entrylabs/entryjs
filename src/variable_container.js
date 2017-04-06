@@ -643,6 +643,14 @@ Entry.VariableContainer = function() {
         return variable;
     };
 
+    p.getVariableByName = function(variableName) {
+        for (var i = 0; i < this.variables_.length; i++) {
+            var v = this.variables_[i];
+            if (v.getName() === variableName)
+                return v;
+        }
+    };
+
     /**
      * get variable on canvas
      * @return {Entry.List}

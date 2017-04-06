@@ -32710,6 +32710,38 @@ Entry.block = {
             return Entry.STATIC.BREAK;
         }
     },
+    "check_variable_by_name": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_string_field",
+        "template": "%1 이름의 변수",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "변수"
+            ],
+            "type": "check_variable_by_name"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var variableName = this.block.params[0] + "";
+            var variable = Entry.variableContainer.getVariableByName(variableName);
+            if (variable)
+                return variable.getValue();
+            else
+                return;
+        }
+    },
     "wildcard_string": {
         "color": "#7C7C7C",
         "skeleton": "basic_string_field",
