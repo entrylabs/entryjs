@@ -219,8 +219,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         this.set({type: type});
         this.loadSchema();
-        if (this.view)
-            this.view.changeType(type);
+        if (this.view) this.view.changeType(type);
     };
 
     p.setThread = function(thread) {
@@ -283,6 +282,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         if (isNew) delete json.id;
 
+        var _params = [];
+
         for (var i = 0; i < json.params.length; i++) {
             var p = json.params[i];
             if (p instanceof Entry.Block)
@@ -291,8 +292,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                     this.view.getParam(i) instanceof Entry.FieldDropdownDynamic) {
                 p = this.view.getParam(i).getTextValue();
             }
-            json.params[i] = p;
+            _params.push(p);
         }
+
+        json.params = _params;
 
         json.statements = json.statements.map(
             function(s) {return s.toJSON(isNew, undefined, excludeData, option);}

@@ -59,8 +59,8 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     return Lang.Workspace.project_changed;
   }
 }, captureInterfaceState:function() {
-  var c = JSON.parse(JSON.stringify(Entry.interfaceState));
-  "workspace" == Entry.type && (c.object = Entry.playground.object.id);
+  var c = JSON.parse(JSON.stringify(Entry.interfaceState)), b = Entry.playground;
+  "workspace" == Entry.type && b && b.object && (c.object = b.object.id);
   return c;
 }, loadInterfaceState:function(c) {
   "workspace" == Entry.type && (c ? Entry.container.selectObject(c.object, !0) : localStorage && localStorage.getItem("workspace-interface") ? (c = localStorage.getItem("workspace-interface"), c = JSON.parse(c)) : c = {menuWidth:280, canvasWidth:480}, this.resizeElement(c));
@@ -25779,11 +25779,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     delete e.events;
     d = d || {};
     b && delete e.id;
-    for (var g = 0;g < e.params.length;g++) {
-      var h = e.params[g];
-      h instanceof Entry.Block ? h = h.toJSON(b, c, d) : d.captureDynamic && this.view.getParam(g) instanceof Entry.FieldDropdownDynamic && (h = this.view.getParam(g).getTextValue());
-      e.params[g] = h;
+    for (var g = [], h = 0;h < e.params.length;h++) {
+      var k = e.params[h];
+      k instanceof Entry.Block ? k = k.toJSON(b, c, d) : d.captureDynamic && this.view.getParam(h) instanceof Entry.FieldDropdownDynamic && (k = this.view.getParam(h).getTextValue());
+      g.push(k);
     }
+    e.params = g;
     e.statements = e.statements.map(function(e) {
       return e.toJSON(b, void 0, c, d);
     });
