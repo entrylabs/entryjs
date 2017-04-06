@@ -662,8 +662,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                 } else {
                                     if (closeBlock.getThread) {
                                         var thread = closeBlock.getThread();
-                                        if (thread instanceof Entry.FieldBlock &&
-                                            !Entry.block[closeBlock.type].isPrimitive)
+                                        var closeBlockType = closeBlock.type;
+                                        if (closeBlockType &&
+                                            thread instanceof Entry.FieldBlock &&
+                                            !Entry.block[closeBlockType].isPrimitive)
                                             suffix += 'FollowSeparate';
                                     }
                                     Entry.do(

@@ -288,7 +288,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             if (p instanceof Entry.Block)
                 p = p.toJSON(isNew, excludeData, option);
             else if (option.captureDynamic &&
-                     this.view.getParam(i) instanceof Entry.FieldDropdownDynamic) {
+                    this.view.getParam(i) instanceof Entry.FieldDropdownDynamic) {
                 p = this.view.getParam(i).getTextValue();
             }
             json.params[i] = p;

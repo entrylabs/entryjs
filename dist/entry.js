@@ -22303,27 +22303,26 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     if (h === Entry.Workspace.MODE_VIMBOARD) {
       d instanceof Entry.BlockMenu ? (d.terminateDrag(), k === c.DONE && this.vimBoardEvent(b, "dragEnd", g)) : d.clear();
     } else {
-      if (h = this.dragInstance && this.dragInstance.isNew, e === Entry.DRAG_MODE_DRAG) {
-        b = !1;
-        var l = this.block.getPrevBlock(this.block), m = this._board.workspace.trashcan.isOver ? "ForDestroy" : "";
+      if (b = this.dragInstance && this.dragInstance.isNew, e === Entry.DRAG_MODE_DRAG) {
+        var h = !1, l = this.block.getPrevBlock(this.block), m = this._board.workspace.trashcan.isOver ? "ForDestroy" : "";
         switch(k) {
           case c.DONE:
             c = d.magnetedBlockView;
             c instanceof Entry.BlockView && (c = c.block);
-            l && !c ? Entry.do("separateBlock" + m, g) : l || c || h ? (m = h ? "FromBlockMenu" : "", c ? ("next" === c.view.magneting ? (k = g.getLastBlock(), this.dragMode = e, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock" + m, c, k).isPass(h), Entry.ConnectionRipple.setView(c.view).dispose()) : (c.getThread && c.getThread() instanceof Entry.FieldBlock && !Entry.block[c.type].isPrimitive && (m += "FollowSeparate"), Entry.do("insertBlock" + m, g, c).isPass(h), b = !0), 
-            createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock" + m, g).isPass(h)) : g.getThread().view.isGlobal() ? Entry.do("moveBlock" + m, g) : Entry.do("separateBlock" + m, g);
+            l && !c ? Entry.do("separateBlock" + m, g) : l || c || b ? (m = b ? "FromBlockMenu" : "", c ? ("next" === c.view.magneting ? (k = g.getLastBlock(), this.dragMode = e, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock" + m, c, k).isPass(b), Entry.ConnectionRipple.setView(c.view).dispose()) : (c.getThread && (e = c.getThread(), (h = c.type) && e instanceof Entry.FieldBlock && !Entry.block[h].isPrimitive && (m += "FollowSeparate")), Entry.do("insertBlock" + m, g, 
+            c).isPass(b), h = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock" + m, g).isPass(b)) : g.getThread().view.isGlobal() ? Entry.do("moveBlock" + m, g) : Entry.do("separateBlock" + m, g);
             break;
           case c.RETURN:
             g = this.block;
-            h ? Entry.do("destroyBlockBelow", this.block).isPass(!0) : l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (e = g.getThread().view.getParent(), e instanceof Entry.Board ? (e = this.originPos, this._moveTo(e.x, e.y, !1)) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, e)));
+            b ? Entry.do("destroyBlockBelow", this.block).isPass(!0) : l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (e = g.getThread().view.getParent(), e instanceof Entry.Board ? (e = this.originPos, this._moveTo(e.x, e.y, !1)) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, e)));
             break;
           case c.REMOVE:
-            createjs.Sound.play("entryDelete"), Entry.do("destroyBlockBelow", this.block).isPass(h);
+            createjs.Sound.play("entryDelete"), Entry.do("destroyBlockBelow", this.block).isPass(b);
         }
         d.setMagnetedBlock(null);
-        b && Entry.ConnectionRipple.setView(g.view).dispose();
+        h && Entry.ConnectionRipple.setView(g.view).dispose();
       } else {
-        k === c.REMOVE && h && e === Entry.DRAG_MODE_MOUSEDOWN && Entry.do("destroyBlockBelow", this.block).isPass(!0);
+        k === c.REMOVE && b && e === Entry.DRAG_MODE_MOUSEDOWN && Entry.do("destroyBlockBelow", this.block).isPass(!0);
       }
     }
     this.destroyShadow();
