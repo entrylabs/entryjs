@@ -6599,7 +6599,11 @@ input.entryObjectNameWorkspace:-moz-read-only {
   margin-left: -37.5px;
 }
 .entryTooltip.down.edge_left {
-  left: -25px;
+  -webkit-transform: translate(-25px, 0);
+  -moz-transform: translate(-25px, 0);
+  -ms-transform: translate(-25px, 0);
+  -o-transform: translate(-25px, 0);
+  transform: translate(-25px, 0);
 }
 .entryTooltip.down.edge_left:before {
   left: 25px;

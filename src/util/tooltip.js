@@ -139,7 +139,7 @@ Entry.Tooltip = function(data, opts) {
             rect = data.targetDom.get(0).getBoundingClientRect();
         else
             rect = data.targetDom.getBoundingClientRect();
-        var tooltipRect = data.wrapper[0].getBoundingClientRect();
+        var tooltipRect = data.dom[0].getBoundingClientRect();
         var clientWidth = document.body.clientWidth;
         var clientHeight = document.body.clientHeight;
         if (this.isIndicator) {
@@ -148,6 +148,12 @@ Entry.Tooltip = function(data, opts) {
                 top: rect.top + rect.height / 2
             });
         }
+
+        console.log(tooltipRect)
+        if (tooltipRect.width > 450)
+            data.dom.addClass("shrink")
+        else
+            data.dom.removeClass("shrink")
 
         var direction = data.direction;
 

@@ -20428,8 +20428,10 @@ Entry.Tooltip = function(c, b) {
   c._alignTooltip = function(b) {
     var c;
     c = b.targetDom instanceof $ ? b.targetDom.get(0).getBoundingClientRect() : b.targetDom.getBoundingClientRect();
-    var d = b.wrapper[0].getBoundingClientRect(), f = document.body.clientWidth, g = document.body.clientHeight;
+    var d = b.dom[0].getBoundingClientRect(), f = document.body.clientWidth, g = document.body.clientHeight;
     this.isIndicator && b.indicator.css({left:c.left + c.width / 2, top:c.top + c.height / 2});
+    console.log(d);
+    450 < d.width ? b.dom.addClass("shrink") : b.dom.removeClass("shrink");
     var h = b.direction;
     if (!h) {
       var k = c.left - d.width, l = f - c.left - c.width - d.width, h = "left";
