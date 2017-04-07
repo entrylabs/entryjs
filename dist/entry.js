@@ -20228,7 +20228,13 @@ Entry.Curtain = {};
     var c = this._targetDom;
     if (c) {
       var b = $(window), e = b.width(), b = b.height(), d = this._doms;
-      c.get(0) && (c = c.get(0).getBoundingClientRect(), d.top.css({height:c.top}), d.right.css({top:c.top, left:c.right}), d.bottom.css({top:c.bottom, right:e - c.right}), d.left.css({top:c.top, right:e - c.right + c.width, bottom:b - c.bottom}));
+      if (c.get(0)) {
+        var c = c.get(0).getBoundingClientRect(), f = Math.round(c.top), g = Math.round(c.right);
+        d.top.css({height:f});
+        d.right.css({top:f, left:g});
+        d.bottom.css({top:c.bottom, right:e - g});
+        d.left.css({top:f, right:e - g + c.width, bottom:b - c.bottom});
+      }
     }
   };
   this.hide = function() {
@@ -22709,7 +22715,9 @@ Entry.Thread = function(c, b, e) {
 };
 (function(c) {
   c.load = function(b, c) {
-    void 0 === b && (b = []);
+    if (void 0 === b || null === b) {
+      b = [];
+    }
     if (!(b instanceof Array)) {
       return console.error("thread must be array");
     }

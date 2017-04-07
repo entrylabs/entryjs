@@ -23,11 +23,11 @@ goog.require('Entry.Dom');
         };
 
         for (var key in this._doms) {
-            var dom = this._doms[key]
+            var dom = this._doms[key];
             dom.addClass(key);
             dom.bind("mousedown", function(e) {
                 e.stopPropagation();
-            })
+            });
         }
     };
 
@@ -60,20 +60,23 @@ goog.require('Entry.Dom');
 
         var rect = dom.get(0).getBoundingClientRect();
 
+        var topPos = Math.round(rect.top);
+        var rightPos = Math.round(rect.right);
+
         doms.top.css({
-            height: rect.top
+            height: topPos
         });
         doms.right.css({
-            top: rect.top,
-            left: rect.right
+            top: topPos,
+            left: rightPos
         });
         doms.bottom.css({
             top: rect.bottom,
-            right: winWidth - rect.right
+            right: winWidth - rightPos
         });
         doms.left.css({
-            top: rect.top,
-            right: winWidth - rect.right + rect.width,
+            top: topPos,
+            right: winWidth - rightPos + rect.width,
             bottom: winHeight - rect.bottom
         });
     };
