@@ -5948,6 +5948,7 @@ Entry.Commander = function(c) {
   d = Entry.cloneSimpleObject(c[e.insertBlock]);
   d.restrict = function(b, c, e) {
     e();
+    Entry.Command.editor.board.scrollToPointer(b.content[2][1]);
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
     }});
   };
@@ -20436,7 +20437,6 @@ Entry.Tooltip = function(c, b) {
     c = b.targetDom instanceof $ ? b.targetDom.get(0).getBoundingClientRect() : b.targetDom.getBoundingClientRect();
     var d = b.dom[0].getBoundingClientRect(), f = document.body.clientWidth, g = document.body.clientHeight;
     this.isIndicator && b.indicator.css({left:c.left + c.width / 2, top:c.top + c.height / 2});
-    console.log(d);
     450 < d.width ? b.dom.addClass("shrink") : b.dom.removeClass("shrink");
     var h = b.direction;
     if (!h) {
@@ -25821,6 +25821,13 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   c.findBlock = function(b) {
     return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) : b instanceof Array ? this.code.getByPointer(b) : b;
+  };
+  c.scrollToPointer = function(b, c) {
+    b = this.code.getByPointer(b);
+    var d;
+    b instanceof Entry.Block ? d = b.view.getAbsoluteCoordinate() : b.getAbsolutePosFromBoard && (d = b.getAbsolutePosFromBoard());
+    console.log(d);
+    this._offset;
   };
 })(Entry.Board.prototype);
 Entry.Code = function(c, b) {

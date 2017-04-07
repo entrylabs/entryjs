@@ -215,6 +215,7 @@ goog.require("Entry.Utils");
     obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlock]);
     obj.restrict = function(data, domQuery, callback) {
         callback();
+        Entry.Command.editor.board.scrollToPointer(data.content[2][1]);
         return new Entry.Tooltip([{
             title: data.tooltip.title,
             content: data.tooltip.content,

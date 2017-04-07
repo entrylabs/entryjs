@@ -149,7 +149,6 @@ Entry.Tooltip = function(data, opts) {
             });
         }
 
-        console.log(tooltipRect)
         if (tooltipRect.width > 450)
             data.dom.addClass("shrink")
         else

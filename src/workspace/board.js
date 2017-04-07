@@ -1067,4 +1067,19 @@ Entry.Board.DRAG_RADIUS = 5;
         return block;
     };
 
+    p.scrollToPointer = function(pointer, query) {
+        var obj = this.code.getByPointer(pointer);
+        //var dom = obj.getDom? obj.getDom(query) : obj.svgGroup;
+        //var rect = dom.getBoundingClientRect();
+        var pos;
+        if (obj instanceof Entry.Block)
+            pos = obj.view.getAbsoluteCoordinate();
+        else if (obj.getAbsolutePosFromBoard)
+            pos = obj.getAbsolutePosFromBoard();
+
+        console.log(pos);
+
+        this._offset;
+    };
+
 })(Entry.Board.prototype);
