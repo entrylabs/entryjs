@@ -150,9 +150,9 @@ Entry.Tooltip = function(data, opts) {
         }
 
         if (tooltipRect.width > 450)
-            data.dom.addClass("shrink")
+            data.dom.addClass("shrink");
         else
-            data.dom.removeClass("shrink")
+            data.dom.removeClass("shrink");
 
         var direction = data.direction;
 
@@ -162,17 +162,17 @@ Entry.Tooltip = function(data, opts) {
             direction = "left";
             if (margin < newMargin) {
                 margin = newMargin;
-                direction = "right"
+                direction = "right";
             }
             newMargin = rect.top - tooltipRect.height;
             if (margin < newMargin) {
                 margin = newMargin;
-                direction = "up"
+                direction = "up";
             }
             newMargin = clientHeight - rect.top - rect.height - tooltipRect.height;
             if (margin < newMargin) {
                 margin = newMargin;
-                direction = "down"
+                direction = "down";
             }
         }
         data.dom.removeClass(this.usedClasses)

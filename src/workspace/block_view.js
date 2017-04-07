@@ -205,9 +205,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this.contentSvgGroup && this.contentSvgGroup.remove();
         this.statementSvgGroup && this.statementSvgGroup.remove();
 
-        this._contents.forEach(function(c) {
-            c.destroy();
-        });
         this.contentSvgGroup = this.svgGroup.elem("g", {class:'contentsGroup'});
         this._contents = [];
 

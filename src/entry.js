@@ -50,7 +50,7 @@ Entry.loadProject = function(project) {
         Entry.stateManager.endIgnore();
 
     if (project.interface && Entry.options.loadInterface)
-        Entry.loadInterfaceState(project.interface)
+        Entry.loadInterfaceState(project.interface);
 
     if (window.parent && window.parent.childIframeLoaded)
         window.parent.childIframeLoaded();
@@ -201,7 +201,7 @@ Entry.loadInterfaceState = function(interfaceState) {
                 canvasWidth: 480
             };
         }
-        this.resizeElement(interfaceState)
+        this.resizeElement(interfaceState);
     }
 };
 
