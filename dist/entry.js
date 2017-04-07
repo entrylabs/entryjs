@@ -15738,7 +15738,13 @@ Entry.Curtain = {};
     var c = this._targetDom;
     if (c) {
       var b = $(window), f = b.width(), b = b.height(), d = this._doms;
-      c.get(0) && (c = c.get(0).getBoundingClientRect(), d.top.css({height:c.top}), d.right.css({top:c.top, left:c.right}), d.bottom.css({top:c.bottom, right:f - c.right}), d.left.css({top:c.top, right:f - c.right + c.width, bottom:b - c.bottom}));
+      if (c.get(0)) {
+        var c = c.get(0).getBoundingClientRect(), e = Math.round(c.top), g = Math.round(c.right);
+        d.top.css({height:e});
+        d.right.css({top:e, left:g});
+        d.bottom.css({top:c.bottom, right:f - g});
+        d.left.css({top:e, right:f - g + c.width, bottom:b - c.bottom});
+      }
     }
   };
   this.hide = function() {
