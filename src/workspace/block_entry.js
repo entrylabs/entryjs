@@ -6,6 +6,7 @@ if (typeof exports == "object") {
     if (typeof Entry !== "object")
         var Entry = {};
     Entry.Bitbrick = {};
+    Entry.MODI = {};
     EntryStatic = {};
 }
 if (!Entry.block)
