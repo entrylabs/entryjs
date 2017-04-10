@@ -1072,9 +1072,10 @@ Entry.Board.DRAG_RADIUS = 5;
         //var dom = obj.getDom? obj.getDom(query) : obj.svgGroup;
         //var rect = dom.getBoundingClientRect();
         var pos;
-        if (obj instanceof Entry.Block)
+        if (obj instanceof Entry.Block) {
             pos = obj.view.getAbsoluteCoordinate();
-        else if (obj.getAbsolutePosFromBoard)
+            obj.view.dominate();
+        } else if (obj.getAbsolutePosFromBoard)
             pos = obj.getAbsolutePosFromBoard();
 
         var newX = 0, newY = 0;

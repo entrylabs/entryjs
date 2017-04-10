@@ -25244,7 +25244,7 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   c.scrollToPointer = function(b, c) {
     var d = this.code.getByPointer(b), e;
-    d instanceof Entry.Block ? e = d.view.getAbsoluteCoordinate() : d.getAbsolutePosFromBoard && (e = d.getAbsolutePosFromBoard());
+    d instanceof Entry.Block ? (e = d.view.getAbsoluteCoordinate(), d.view.dominate()) : d.getAbsolutePosFromBoard && (e = d.getAbsolutePosFromBoard());
     var g = d = 0;
     e.x > this._offset.width - 200 ? d = this._offset.width - 200 - e.x : 100 > e.x && (d = 100 - e.x);
     e.y > this._offset.height - 200 ? g = this._offset.height - 200 - e.y : 100 > e.y && (g = 100 - e.y);
