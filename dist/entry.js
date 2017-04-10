@@ -25832,7 +25832,7 @@ Entry.Board.DRAG_RADIUS = 5;
   c.scrollToPointer = function(b, c) {
     b = this.code.getByPointer(b);
     var d;
-    b instanceof Entry.Block ? d = b.view.getAbsoluteCoordinate() : b.getAbsolutePosFromBoard && (d = b.getAbsolutePosFromBoard());
+    b instanceof Entry.Block ? (d = b.view.getAbsoluteCoordinate(), b.view.dominate()) : b.getAbsolutePosFromBoard && (d = b.getAbsolutePosFromBoard());
     c = b = 0;
     d.x > this._offset.width - 200 ? b = this._offset.width - 200 - d.x : 100 > d.x && (b = 100 - d.x);
     d.y > this._offset.height - 200 ? c = this._offset.height - 200 - d.y : 100 > d.y && (c = 100 - d.y);
