@@ -17436,7 +17436,7 @@ Entry.Model = function(c, b) {
   };
   d.dom = ["playground", "board", "coord", "&1", "&2"];
   c[f.moveBlockFromBlockMenu] = d;
-  b(f.cloneBlock, f.addThread, [["undo", "uncloneBlock"]]);
+  b(f.cloneBlock, f.addThread, [["undo", "uncloneBlock"], ["dom", void 0]]);
   b(f.uncloneBlock, f.destroyThread, [["undo", "cloneBlock"]]);
   c[f.scrollBoard] = {do:function(b, c, f) {
     f || this.editor.board.scroller._scroll(b, c);
