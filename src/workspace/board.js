@@ -1077,7 +1077,17 @@ Entry.Board.DRAG_RADIUS = 5;
         else if (obj.getAbsolutePosFromBoard)
             pos = obj.getAbsolutePosFromBoard();
 
-        console.log(pos);
+        var newX = 0, newY = 0;
+        if (pos.x > this._offset.width - 200)
+            newX = this._offset.width - 200 - pos.x;
+        else if (pos.x < 100)
+            newX = 100 - pos.x;
+        if (pos.y > this._offset.height - 200)
+            newY = this._offset.height - 200 - pos.y;
+        else if (pos.y < 100)
+            newY = 100 - pos.y;
+
+        this.scroller.scroll(newX, newY);
 
         this._offset;
     };

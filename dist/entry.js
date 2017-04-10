@@ -5879,6 +5879,11 @@ Entry.Commander = function(c) {
     }
   };
   d.followCmd = !0;
+  d.restrict = function(b, c, e, d) {
+    d = d.requestNextData().content;
+    Entry.Command.editor.board.scrollToPointer(d[2][1]);
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:e});
+  };
   c[e.addThreadFromBlockMenu] = d;
   c[e.destroyThread] = {do:function(b) {
     b instanceof Entry.Thread || (b = this.editor.board.code.getThread(b));
@@ -5928,6 +5933,7 @@ Entry.Commander = function(c) {
     e && b.push(["count", e ? e : null]);
     return b;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, e, d) {
+    Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
     var f = !1, g = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
       !f && c && (f = !0, e(), g.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
       }}));
@@ -5948,7 +5954,6 @@ Entry.Commander = function(c) {
   d = Entry.cloneSimpleObject(c[e.insertBlock]);
   d.restrict = function(b, c, e) {
     e();
-    Entry.Command.editor.board.scrollToPointer(b.content[2][1]);
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
     }});
   };
@@ -5975,6 +5980,7 @@ Entry.Commander = function(c) {
     b.view && (b = b.view);
     return [["block", c], ["x", b.x], ["y", b.y]];
   }, restrict:function(b, c, e, d) {
+    Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
     var f = !1, g = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
       !f && c && (e(), f = !0, g.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "coord", "&1", "&2"])}], {indicator:!0, callBack:function() {
         e();
@@ -5984,6 +5990,7 @@ Entry.Commander = function(c) {
   }, validate:!1, undo:"insertBlock", dom:["playground", "board", "&0"]};
   d = Entry.cloneSimpleObject(c[e.separateBlock]);
   d.restrict = function(b, c, e, d) {
+    Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
     var f = !1, g = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
       !f && c && (e(), f = !0, g.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
         e();
@@ -6020,6 +6027,7 @@ Entry.Commander = function(c) {
   d = Entry.cloneSimpleObject(c[e.moveBlock]);
   d.followCmd = !0;
   d.restrict = function(b, c, e, d) {
+    Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
     var f = !1, g = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
       !f && c && (f = !0, e(), g.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
         e();
@@ -6055,7 +6063,9 @@ Entry.Commander = function(c) {
   }, log:function(b, c) {
     return [["pointer", b], ["value", c]];
   }, restrict:function(b, c, e, d) {
-    var f = !1, g = Entry.Command.editor.board.findBlock(b.content[1][1]), h = b.content[2][1];
+    var f = !1;
+    Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
+    var g = Entry.Command.editor.board.findBlock(b.content[1][1]), h = b.content[2][1];
     g instanceof Entry.FieldTextInput && g.fixNextValue(h);
     var k = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
       !f && c && (f = !0, e(), e(), k.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
@@ -25823,7 +25833,10 @@ Entry.Board.DRAG_RADIUS = 5;
     b = this.code.getByPointer(b);
     var d;
     b instanceof Entry.Block ? d = b.view.getAbsoluteCoordinate() : b.getAbsolutePosFromBoard && (d = b.getAbsolutePosFromBoard());
-    console.log(d);
+    c = b = 0;
+    d.x > this._offset.width - 200 ? b = this._offset.width - 200 - d.x : 100 > d.x && (b = 100 - d.x);
+    d.y > this._offset.height - 200 ? c = this._offset.height - 200 - d.y : 100 > d.y && (c = 100 - d.y);
+    this.scroller.scroll(b, c);
     this._offset;
   };
 })(Entry.Board.prototype);

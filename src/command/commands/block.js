@@ -59,6 +59,21 @@ goog.require("Entry.Utils");
         );
     };
     obj.followCmd = true;
+    obj.restrict = function(data, domQuery, callback, restrictor) {
+        var nextCmd = restrictor.requestNextData().content;
+        Entry.Command.editor.board.scrollToPointer(nextCmd[2][1]);
+        var isDone = false;
+        var tooltip = new Entry.Tooltip([{
+            title: data.tooltip.title,
+            content: data.tooltip.content,
+            target: domQuery
+        }], {
+            dimmed: true,
+            restrict: true,
+            callBack: callback
+        });
+        return tooltip;
+    };
     c[COMMAND_TYPES.addThreadFromBlockMenu] = obj;
 
     c[COMMAND_TYPES.destroyThread] = {
@@ -160,6 +175,7 @@ goog.require("Entry.Utils");
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "insertBlock",
         restrict: function(data, domQuery, callback, restrictor) {
+            Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
             var isDone = false;
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
@@ -215,7 +231,6 @@ goog.require("Entry.Utils");
     obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlock]);
     obj.restrict = function(data, domQuery, callback) {
         callback();
-        Entry.Command.editor.board.scrollToPointer(data.content[2][1]);
         return new Entry.Tooltip([{
             title: data.tooltip.title,
             content: data.tooltip.content,
@@ -275,6 +290,7 @@ goog.require("Entry.Utils");
             ];
         },
         restrict: function(data, domQuery, callback, restrictor) {
+            Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
             var isDone = false;
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
@@ -311,6 +327,7 @@ goog.require("Entry.Utils");
 
     obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.separateBlock])
     obj.restrict = function(data, domQuery, callback, restrictor) {
+        Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
         var isDone = false;
         var tooltip = new Entry.Tooltip([{
             title: data.tooltip.title,
@@ -422,6 +439,7 @@ goog.require("Entry.Utils");
     obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.moveBlock])
     obj.followCmd = true;
     obj.restrict = function(data, domQuery, callback, restrictor) {
+        Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
         var isDone = false;
         var tooltip = new Entry.Tooltip([{
             title: data.tooltip.title,
@@ -521,6 +539,7 @@ goog.require("Entry.Utils");
         },
         restrict: function(data, domQuery, callback, restrictor) {
             var isDone = false;
+            Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
             var field = Entry.Command.editor.board.findBlock(data.content[1][1]);
             var nextValue = data.content[2][1];
             if (field instanceof Entry.FieldTextInput)
