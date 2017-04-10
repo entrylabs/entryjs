@@ -594,6 +594,19 @@ EntryStatic.getAllBlocks = function() {
                 "dadublock_set_servo",
                 "dadublock_set_tone",
 
+                //dadublock_car
+                "dadublock_car_get_analog_value",
+                "dadublock_car_get_analog_value_map",
+                "dadublock_car_get_ultrasonic_value",
+                "dadublock_car_get_digital",
+                "dadublock_car_toggle_led",
+                "dadublock_car_digital_pwm",
+                "dadublock_car_set_servo",
+                "dadublock_car_set_tone",
+                "dadublock_car_motor_stop",
+                "dadublock_car_motor",
+                "dadublock_car_get_irsensor",
+
                 // BYROBOT - DroneFighter Controller
                 "byrobot_dronefighter_controller_controller_value_button",
                 "byrobot_dronefighter_controller_controller_value_joystick",

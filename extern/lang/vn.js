@@ -3327,6 +3327,7 @@ Lang.Menus = {
     "block_coding": "Block Coding",
     "python_coding": "Entry Python",
     "dadublock": "DaduBlock",
+    "dadublock_car": "DaduBlock Car",
     "blacksmith": "Blacksmith Board"
 };
 Lang.Msgs = {
@@ -4790,7 +4791,7 @@ Lang.template = {
     "dadublock_digital_pwm": "Digital %1 Pin %2 %3",
     "dadublock_set_tone": "Play tone pin %1 on note %2 octave %3 beat %4 %5",
     "dadublock_set_servo": "Set servo pin %1 angle as %2 %3",
-    "dadublock_get_digital": "Digital %1 Sensor value",
+    "dadublock_get_digital": "디지털 %1 번 센서값",
     "coconut_stop_motor": "모터 정지 ",
     "coconut_move_motor": "%1 움직이기 ",
     "coconut_turn_motor": "%1 으로 돌기 ",
@@ -4869,7 +4870,18 @@ Lang.template = {
     "chocopi_servo_motor": "%1 set servo motor #%2 %3 degree %4",
     "chocopi_touch_event": "%1 When %2 touch pad%3 is %4",
     "chocopi_touch_status": "%1 touch pad%2 is touched",
-    "chocopi_touch_value": "%1 touch pad%2 value"
+    "chocopi_touch_value": "%1 touch pad%2 value",
+    "dadublock_car_digital_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
+    "dadublock_car_get_analog_value": "아날로그 %1 번 센서값",
+    "dadublock_car_get_analog_value_map": "아날로그 %1번 센서값의 범위를 %2 ~ 3 에서 %4 ~ %5 (으)로 바꾼값  ",
+    "dadublock_car_get_digital": "디지털 %1 번 센서값",
+    "dadublock_car_get_irsensor": "적외선 %1 번 센서값",
+    "dadublock_car_get_ultrasonic_value": "울트라소닉 Trig %1번핀 Echo 2번핀 센서값",
+    "dadublock_car_motor": "모터 %1 번을 %2 (으)로 %3 %의 속도로 움직이기 %4",
+    "dadublock_car_motor_stop": "모터 %1 번 멈추기 %2",
+    "dadublock_car_set_servo": "서보모터 %1 번 핀을 %2 의 각도로 정하기 %3",
+    "dadublock_car_set_tone": "디지털 %1 번 핀 을 %2 음으로 %3의 옥타르보 %4 큼 연주하기 %5",
+    "dadublock_car_toggle_led": "디지털 %1 번 핀 %2 %3"
 };
 Lang.TextCoding = {
     "block_name": "Block Name",
