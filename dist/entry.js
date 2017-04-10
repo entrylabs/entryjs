@@ -6666,6 +6666,7 @@ Entry.StateManager.prototype.undo = function(c) {
       }
     }
     this.endRestore();
+    Entry.disposeEvent && Entry.disposeEvent.notify();
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   }
 };
@@ -24039,9 +24040,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   };
   c.applyValue = function(b, c, d) {
     this.setValue(String(c));
-    this.destroyOption(d);
     this._setTextValue();
     this.resize();
+    this.destroyOption(d);
   };
   c.resize = function() {
     var b = this.getTextWidth() + 1;
