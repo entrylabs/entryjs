@@ -218,6 +218,9 @@ Lang.Blocks = {
     "CODEino_accelerometer_X": "X",
     "CODEino_accelerometer_Y": "Y",
     "CODEino_accelerometer_Z": "Z",
+    "CODEino_led_red": "Red",
+    "CODEino_led_green": "Green",
+    "CODEino_led_blue": "Blue",
     "dplay_switch": "스위치 ",
     "dplay_light": "Cảm biến ánh sáng",
     "dplay_tilt": "Tình trạng cảm biến độ dốc là",
@@ -1317,7 +1320,9 @@ Lang.Blocks = {
     "modi_speaker_F_SOL_S_7": "SOL #7",
     "modi_speaker_F_SO_5": "TI 5",
     "modi_speaker_F_SO_6": "TI 6",
-    "modi_speaker_F_SO_7": "TI 7"
+    "modi_speaker_F_SO_7": "TI 7",
+    "ev3_ccw": "CCW",
+    "ev3_cw": "CW"
 };
 Lang.Buttons = {
     "apply": "ứng dụng",
@@ -1336,6 +1341,15 @@ Lang.Buttons = {
 Lang.ko = "한국어";
 Lang.vn = "tiếng Việt";
 Lang.Menus = {
+    "side_project": "Side project",
+    "custom_make_course_1": "Create courseware from",
+    "custom_make_course_2": "'Create lessons > Create Courseware'",
+    "custom_make_lecture_1": "Create lessons from 'open lessons'",
+    "custom_make_lecture_2": "",
+    "alert_enter_info": "Please enter your information",
+    "alert_enter_new_pwd": "Enter new password",
+    "alert_match_pwd": "Password doesn't match the confirmation",
+    "alert_check_pwd": "Please check your password",
     "no_group_contents_each_prefix": "There is no ",
     "no_group_contents_each_suffix": " in our classroom.",
     "no_group_contents_all": "There is no new content.<br>Share projects in My Classroom gallery.",
@@ -1573,9 +1587,10 @@ Lang.Menus = {
     "study_lessons": "Learn Lesson",
     "lecture_help_1": "Select the base project that the learner will start building his/her project on.",
     "lecture_help_2": "To see this help message again, click the button above.",
-    "lecture_help_3": "If 'add object' is not shown,<br>adding or deleting object is not possible.",
+    "lecture_help_3": "If 'add object' is not shown, adding or deleting object is not possible.",
     "lecture_help_4": "See PDF attachment to get help",
-    "lecture_help_5": "Select blocks needed to create project.<br>Unselected blocks will be hidden.",
+    "lecture_help_5": "Select blocks needed to create project. Unselected blocks will be hidden.",
+    "lecture_help_6": "choose between block Coding and Entry Python to organize your learning environment.",
     "only_pdf": "Only pdf file is uploadable",
     "enter_project_video": "Enter at least one project or video",
     "enter_title": "Enter title.",
@@ -1866,12 +1881,12 @@ Lang.Menus = {
     "materials_etc_all": "Other Educational Materials",
     "materials_teaching": "For Teacher Education",
     "materials_etc": "Other Resources",
-    "materials_teaching_1": "Why Code?",
+    "materials_teaching_1": "Why Coding?",
     "materials_teaching_2": "Unplugged Acitivies with Entry",
-    "materials_teaching_3": "Learn by playing in Entry Challenge Mode",
+    "materials_teaching_3": "Learn by playing in Entry Coding Missions",
     "materials_teaching_4": "Entry for Real World Problem Solving",
-    "materials_teaching_5": "Begin Interdisciplinary Coding with Entry1",
-    "materials_teaching_6": "Begin Interdisciplinary Coding with Entry2",
+    "materials_teaching_5": "Interdisciplinary Coding(Art,Math,Social)",
+    "materials_teaching_6": "Interdisciplinary Coding(Korean,Science,Music)",
     "materials_teaching_7": "Physical Computing 1 (E-Sensorboard)",
     "materials_teaching_8": "Physical Computing 2 (Hamster Robot)",
     "materials_teaching_9": "Learn to use Entry LMS effectively ",
@@ -3331,6 +3346,8 @@ Lang.Menus = {
     "blacksmith": "Blacksmith Board"
 };
 Lang.Msgs = {
+    "save_canvas_alert": "Currently saving. Try again soon.",
+    "feedback_too_many_post": "Message sending. Please try after 10 seconds.",
     "usable_object": "Usable Object",
     "shared_varaible": "Shared Variable",
     "invalid_url": "Video URL is invalid.",
@@ -3373,7 +3390,10 @@ Lang.Msgs = {
     "hw_download_text3": "Hardware Connector Program is not installed.",
     "hw_download_text4": "Please install the latest version.",
     "hw_download_btn": "Download<span class='download_icon'></span>",
-    "not_support_browser": "Your browser is not supported."
+    "not_support_browser": "Your browser is not supported.",
+    "hw_connection_success": "Hardware connection success",
+    "hw_connection_success_desc": "Double click the hardware icon to check sensor values",
+    "hw_connection_success_desc2": "Hardware connection is successful"
 };
 Lang.Users = {
     "auth_failed": "Authentication failed",
@@ -3630,6 +3650,7 @@ Lang.Workspace = {
     "confirm_load_header": "Dự án khôi phục",
     "uploading_msg": "đang tải lên",
     "upload_fail_msg": "tải lên thất bại. Vui lòng thử lại",
+    "upload_not_supported_msg": "Not supported file type.",
     "file_converting_msg": "​File converting in process",
     "file_converting_fail_msg": "​File conversion has failed",
     "fail_contact_msg": "If the problem persists,</br>contact contact_entry@entrylabs.org",
@@ -4365,8 +4386,8 @@ Lang.template = {
     "nemoino_get_digital_value": "giá trị cảm biến kỹ thuật số %1",
     "sensorBoard_get_digital_value": "giá trị cảm biến kỹ thuật số %1",
     "CODEino_get_digital_value": "giá trị cảm biến kỹ thuật số %1",
-    "CODEino_set_digital_value": "디지털 %1 핀의 %2 %3",
-    "CODEino_set_pwm_value": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
+    "CODEino_set_digital_value": "Digital %1 Pin %2 %3",
+    "CODEino_set_pwm_value": "Digital %1 Pin %2 %3",
     "ardublock_get_digital_value": "giá trị cảm biến kỹ thuật số %1",
     "arduino_toggle_led": "kỹ thuật số %1 Pin %2 %3",
     "dplay_toggle_led": "kỹ thuật số %1 Pin %2 %3",
@@ -4385,12 +4406,12 @@ Lang.template = {
     "nemoino_convert_scale": "bản đồ giá trị từ %1 %2 ~ %3 đến %4 %5",
     "sensorBoard_convert_scale": "bản đồ giá trị từ %1 %2 ~ %3 đến %4 %5",
     "CODEino_convert_scale": "bản đồ giá trị từ %1 %2 ~ %3 đến %4 %5",
-    "CODEino_set_rgb_value": "컬러 LED의 %1 색상을 %2 (으)로 정하기 %3",
-    "CODEino_set_rgb_add_value": "컬러 LED의 %1 색상에 %2 만큼 더하기 %3",
-    "CODEino_set_rgb_off": "컬러 LED 끄기 %1",
-    "CODEino_set__led_by_rgb": "컬러 LED 색상을 빨강 %1 초록 %2 파랑 %3 (으)로 정하기 %4",
-    "CODEino_rgb_set_color": "컬러 LED의 색상을 %1 (으)로 정하기 %2",
-    "CODEino_led_by_value": "컬러 LED 켜기 %1",
+    "CODEino_set_rgb_value": "Set color LED %1 by %2 %3",
+    "CODEino_set_rgb_add_value": "Add color LED %1 by %2 %3",
+    "CODEino_set_rgb_off": "Turn off LED %1",
+    "CODEino_set__led_by_rgb": "Turn on color LED, Red %1 Green %2 Blue %3 %4",
+    "CODEino_rgb_set_color": "Select %1 for color LED %2",
+    "CODEino_led_by_value": "Turn on LED %1",
     "ardublock_convert_scale": "bản đồ giá trị từ %1 %2 ~ %3 đến %4 %5",
     "joystick_get_number_sensor_value": "giá trị cảm biến Analog %1",
     "joystick_get_digital_value": "giá trị cảm biến kỹ thuật số %1",
@@ -4413,7 +4434,7 @@ Lang.template = {
     "CODEino_is_button_pressed": "vận hành %1",
     "CODEino_get_accelerometer_direction": "cảm biến gia tốc 3 trục %1",
     "CODEino_get_accelerometer_value": "cảm biến gia tốc 3 trục %1-giá trị trục",
-    "CODEino_get_analog_value": "아날로그 %1 센서의 값",
+    "CODEino_get_analog_value": "Analog %1 Sensor value",
     "bitbrick_sensor_value": "giá trị %1",
     "bitbrick_is_touch_pressed": "nhấn nút %1?",
     "bitbrick_turn_off_color_led": "tắt màu LED %1",
@@ -4881,7 +4902,13 @@ Lang.template = {
     "dadublock_car_motor_stop": "모터 %1 번 멈추기 %2",
     "dadublock_car_set_servo": "서보모터 %1 번 핀을 %2 의 각도로 정하기 %3",
     "dadublock_car_set_tone": "디지털 %1 번 핀 을 %2 음으로 %3의 옥타르보 %4 큼 연주하기 %5",
-    "dadublock_car_toggle_led": "디지털 %1 번 핀 %2 %3"
+    "dadublock_car_toggle_led": "디지털 %1 번 핀 %2 %3",
+    "ev3_get_sensor_value": "%1's value",
+    "ev3_touch_sensor": "%1's touch sensor activted?",
+    "ev3_color_sensor": "%1's %2 value",
+    "ev3_motor_power": "%1's value print as %2 %3",
+    "ev3_motor_power_on_time": "%1's value for %2seconds %3 printed %4",
+    "ev3_motor_degrees": "%1's value in %2 direction turn %3 degrees %4"
 };
 Lang.TextCoding = {
     "block_name": "Block Name",

@@ -218,6 +218,9 @@ Lang.Blocks = {
     "CODEino_accelerometer_X": "X",
     "CODEino_accelerometer_Y": "Y",
     "CODEino_accelerometer_Z": "Z",
+    "CODEino_led_red": "빨강",
+    "CODEino_led_green": "초록",
+    "CODEino_led_blue": "파랑",
     "dplay_switch": "스위치 ",
     "dplay_light": "빛센서가 ",
     "dplay_tilt": "기울기센서 상태가",
@@ -1317,7 +1320,9 @@ Lang.Blocks = {
     "modi_speaker_F_SOL_S_7": "솔#7",
     "modi_speaker_F_SO_5": "시5",
     "modi_speaker_F_SO_6": "시6",
-    "modi_speaker_F_SO_7": "시7"
+    "modi_speaker_F_SO_7": "시7",
+    "ev3_ccw": "CCW",
+    "ev3_cw": "CW"
 };
 Lang.Buttons = {
     "apply": "적용하기",
@@ -1336,6 +1341,15 @@ Lang.Buttons = {
 Lang.ko = "한국어";
 Lang.vn = "tiếng Việt";
 Lang.Menus = {
+    "side_project": "보조 프로젝트",
+    "custom_make_course_1": "'오픈 강의 만들기> 강의 모음 만들기'에서",
+    "custom_make_course_2": "나만의 강의 모음을 만들어 보세요.",
+    "custom_make_lecture_1": "'오픈 강의 만들기'에서",
+    "custom_make_lecture_2": "나만의 강의를 만들어 보세요",
+    "alert_enter_info": "수정할 정보를 입력해주세요.",
+    "alert_enter_new_pwd": "기존 비밀번호와 다른 비밀번호를 입력해주세요.",
+    "alert_match_pwd": "새로운 비밀번호와 재입력된 비밀번호가 일치하지 않습니다.",
+    "alert_check_pwd": "비밀번호를 확인해주세요.",
     "no_group_contents_each_prefix": "우리반 ",
     "no_group_contents_each_suffix": " 이(가) 없습니다.",
     "no_group_contents_all": "학급에 올라온 컨텐츠가 없습니다.<br>학급 공유하기에<br>나만의 작품을 공유해보세요!",
@@ -1571,11 +1585,12 @@ Lang.Menus = {
     "code_not_available": "유효하지 않은 코드입니다.",
     "gnb_create_lessons": "오픈 강의 만들기",
     "study_lessons": "강의 학습하기",
-    "lecture_help_1": "학습을 시작할 때, 사용할 작품을 선택해 주세요.<br>선택한 작품으로 학습자가 학습을 시작하게 됩니다.",
-    "lecture_help_2": "이도움말을 다시 보시려면<br>위 버튼을 클릭해 주세요.",
-    "lecture_help_3": "오브젝트 추가하기가 없으면<br>새로운 오브젝트를 추가하거나 삭제 할 수 없습니다.",
-    "lecture_help_4": "학습도중에 PDF자료보기를 통해<br>학습에 도움을 받을 수 있습니다.",
-    "lecture_help_5": "학습에 필요한 블록들만 선택해주세요.<br>선택하지 않은 블록은 숨겨집니다.",
+    "lecture_help_1": "학습을 시작할 때, 사용할 작품을 선택해 주세요. 선택한 작품으로 학습자가 학습을 시작하게 됩니다.",
+    "lecture_help_2": "이도움말을 다시 보시려면 위 버튼을 클릭해 주세요.",
+    "lecture_help_3": "오브젝트 추가하기가 없으면새로운 오브젝트를 추가하거나 삭제 할 수 없습니다.",
+    "lecture_help_4": "학습도중에 PDF자료보기를 통해 학습에 도움을 받을 수 있습니다.",
+    "lecture_help_5": "학습에 필요한 블록들만 선택해주세요. 선택하지 않은 블록은 숨겨집니다.",
+    "lecture_help_6": "블록코딩과 엔트리파이선 중에 선택하여 학습환경을 구성할 수 있습니다.",
     "only_pdf": ".pdf형식의 파일만 입력 가능합니다.",
     "enter_project_video": "적어도 하나의 작품이나 영상을 입력하세요.",
     "enter_title": "제목을 입력하세요.",
@@ -1868,10 +1883,10 @@ Lang.Menus = {
     "materials_etc": "기타 참고 자료",
     "materials_teaching_1": "SW교육의 필요성과 교육 방법론",
     "materials_teaching_2": "엔트리와 함께하는 언플러그드 활동",
-    "materials_teaching_3": "게임으로 배우는 엔트리 학습모드 활동",
+    "materials_teaching_3": "게임하듯 알고리즘을 배우는 엔트리 미션 해결하기",
     "materials_teaching_4": "실생활 문제해결을 위한 엔트리 프로그래밍",
-    "materials_teaching_5": "엔트리로 시작하는 교과연계sw교육1",
-    "materials_teaching_6": "엔트리로 시작하는 교과연계sw교육2",
+    "materials_teaching_5": "교과연계 SW교육1 (미술,수학,사회)",
+    "materials_teaching_6": "교과연계 SW교육2 (국어,과학,음악)",
     "materials_teaching_7": "피지컬 컴퓨팅 실습1(E센서보드)",
     "materials_teaching_8": "피지컬 컴퓨팅 실습2(햄스터)",
     "materials_teaching_9": "수업에 필요한 학급/강의 기능 알아보기",
@@ -3331,6 +3346,8 @@ Lang.Menus = {
     "blacksmith": "대장장이 보드"
 };
 Lang.Msgs = {
+    "save_canvas_alert": "저장 중입니다. 잠시후에 다시 시도해주세요.",
+    "feedback_too_many_post": "신고하신 내용이 전송되고 있습니다. 10초 뒤에 다시 시도해주세요.",
     "usable_object": "사용가능 오브젝트",
     "shared_varaible": "공유 변수",
     "invalid_url": "영상 주소를 다시 확인해 주세요.",
@@ -3373,7 +3390,10 @@ Lang.Msgs = {
     "hw_download_text3": "하드웨어 연결 프로그램이 설치되어 있지 않습니다.",
     "hw_download_text4": "최신 버전의 연결 프로그램을 설치해 주세요.",
     "hw_download_btn": "연결 프로그램 다운로드<span class='download_icon'></span>",
-    "not_support_browser": "지원하지 않는 브라우저입니다."
+    "not_support_browser": "지원하지 않는 브라우저입니다.",
+    "hw_connection_success": "하드웨어 연결 성공",
+    "hw_connection_success_desc": "하드웨어 아이콘을 더블클릭하면, 센서값만 확인할 수 있습니다.",
+    "hw_connection_success_desc2": "하드웨어와 정상적으로 연결되었습니다."
 };
 Lang.Users = {
     "auth_failed": "인증에 실패하였습니다",
@@ -3630,6 +3650,7 @@ Lang.Workspace = {
     "confirm_load_header": "작품 복구",
     "uploading_msg": "업로드 중입니다",
     "upload_fail_msg": "업로드에 실패하였습니다.</br>다시 한번 시도해주세요.",
+    "upload_not_supported_msg": "지원하지 않는 형식입니다.",
     "file_converting_msg": "파일 변환 중입니다.",
     "file_converting_fail_msg": "파일 변환에 실패하였습니다.",
     "fail_contact_msg": "문제가 계속된다면</br>contact_entry@entrylabs.org로 문의해주세요.",
@@ -4881,7 +4902,13 @@ Lang.template = {
     "dadublock_car_motor_stop": "모터 %1 번 멈추기 %2",
     "dadublock_car_set_servo": "서보모터 %1 번 핀을 %2 의 각도로 정하기 %3",
     "dadublock_car_set_tone": "디지털 %1 번 핀 을 %2 음으로 %3의 옥타르보 %4 큼 연주하기 %5",
-    "dadublock_car_toggle_led": "디지털 %1 번 핀 %2 %3"
+    "dadublock_car_toggle_led": "디지털 %1 번 핀 %2 %3",
+    "ev3_get_sensor_value": "%1 의 값",
+    "ev3_touch_sensor": "%1 의 터치센서가 작동되었는가?",
+    "ev3_color_sensor": "%1 의  %2 값",
+    "ev3_motor_power": "%1 의 값을 %2 으로 출력 %3",
+    "ev3_motor_power_on_time": "%1 의 값을 %2 초 동안 %3 으로 출력 %4",
+    "ev3_motor_degrees": "%1 의 값을 %2 으로  %3 도 만큼 회전 %4"
 };
 Lang.TextCoding = {
     "block_name": "블록명",
