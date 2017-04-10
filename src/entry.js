@@ -60,7 +60,7 @@ Entry.loadProject = function(project) {
 Entry.clearProject = function() {
     Entry.stop();
     Entry.projectId = null;
-    Entry.playground && Entry.playground.changeViewMode('code');
+    Etnry.type !== 'invisible' && Entry.playground && Entry.playground.changeViewMode('code');
     Entry.variableContainer.clear();
     Entry.container.clear();
     Entry.scene.clear();
