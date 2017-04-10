@@ -21,6 +21,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
 }, clearProject:function() {
   Entry.stop();
   Entry.projectId = null;
+  Entry.playground && Entry.playground.changeViewMode("code");
   Entry.variableContainer.clear();
   Entry.container.clear();
   Entry.scene.clear();
