@@ -5882,7 +5882,7 @@ Entry.Commander = function(c) {
   d.followCmd = !0;
   d.restrict = function(b, c, e, d) {
     d = d.requestNextData().content;
-    d[1] === Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenu ? Entry.Command.editor.board.scrollToPointer(d[2][2]) : Entry.Command.editor.board.scrollToPointer(d[2][1]);
+    d[1] === Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenu && Entry.Command.editor.board.scrollToPointer(d[2][2]);
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:e});
   };
   c[e.addThreadFromBlockMenu] = d;
