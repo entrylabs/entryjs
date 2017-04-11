@@ -15615,19 +15615,23 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hue = effectValue + sprite.effect.hue;
+                effectName = 'hue';
             } else if (effect == "lens") {
             } else if (effect == "swriling") {
             } else if (effect == "pixel") {
             } else if (effect == "mosaic") {
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue + sprite.effect.brightness;
+                effectName = 'brightness';
             } else if (effect == "blur") {
             } else if (effect == "opacity") {
                 sprite.effect.alpha = (sprite.effect.alpha + effectValue / 100) ;
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.set_effect_volume(%1, %2)"]}
@@ -15678,19 +15682,23 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hue = effectValue;
+                effectName = 'hue';
             } else if (effect == "lens") {
             } else if (effect == "swriling") {
             } else if (effect == "pixel") {
             } else if (effect == "mosaic") {
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue;
+                effectName = 'brightness';
             } else if (effect == "blur") {
             } else if (effect == "opacity") {
                 sprite.effect.alpha = effectValue / 100;
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.set_effect(%1, %2)"]}
@@ -16132,14 +16140,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hsv = effectValue + sprite.effect.hsv;
+                effectName = 'hsv';
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue + sprite.effect.brightness;
+                effectName = 'brightness';
             } else if (effect == "transparency") {
                 sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
@@ -16225,14 +16237,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hsv = effectValue;
+                effectName = 'hsv';
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue;
+                effectName = 'brightness';
             } else if (effect == "transparency") {
                 sprite.effect.alpha = 1 - (effectValue / 100);
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
@@ -16306,14 +16322,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hue = effectValue + sprite.effect.hue;
+                effectName = 'hue';
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue + sprite.effect.brightness;
+                effectName = 'brightness';
             } else if (effect == "transparency") {
                 sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [""]}
@@ -16364,14 +16384,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hue = effectValue;
+                effectName = 'hue';
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue;
+                effectName = 'brightness';
             } else if (effect == "transparency") {
                 sprite.effect.alpha = 1 - (effectValue / 100);
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [""]}

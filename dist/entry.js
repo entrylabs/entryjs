@@ -6285,36 +6285,36 @@ Entry.EntityObject.prototype.setImage = function(c) {
   });
   Entry.dispatchEvent("updateObject");
 };
-Entry.EntityObject.prototype.applyFilter = function(c) {
-  var b = this.effect, f = this.object, d = function(b, f) {
+Entry.EntityObject.prototype.applyFilter = function(c, b) {
+  var f = this.effect, d = this.object, e = function(b, f) {
     var c = [], d;
     for (d in b) {
       b[d] !== f[d] && c.push(d);
     }
     return c;
-  }(b, this.getInitialEffectValue());
-  if (c || 0 !== d.length) {
-    (function(b, f) {
-      var c = [], k = Entry.adjustValueWithMaxMin;
-      if (-1 < d.indexOf("brightness")) {
+  }(f, this.getInitialEffectValue());
+  if (c || 0 !== e.length) {
+    Array.isArray(b) && (e = e.concat(b)), function(b, f) {
+      var c = [], d = Entry.adjustValueWithMaxMin;
+      if (-1 < e.indexOf("brightness")) {
         b.brightness = b.brightness;
-        var l = new createjs.ColorMatrix;
-        l.adjustColor(k(b.brightness, -100, 100), 0, 0, 0);
-        l = new createjs.ColorMatrixFilter(l);
-        c.push(l);
+        var m = new createjs.ColorMatrix;
+        m.adjustColor(d(b.brightness, -100, 100), 0, 0, 0);
+        m = new createjs.ColorMatrixFilter(m);
+        c.push(m);
       }
-      -1 < d.indexOf("hue") && (b.hue = b.hue.mod(360), l = new createjs.ColorMatrix, l.adjustColor(0, 0, 0, b.hue), l = new createjs.ColorMatrixFilter(l), c.push(l));
-      if (-1 < d.indexOf("hsv")) {
-        var l = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], m = 10.8 * b.hsv * Math.PI / 180, q = Math.cos(m), m = Math.sin(m), n = Math.abs(b.hsv / 100);
-        1 < n && (n -= Math.floor(n));
-        0 < n && .33 >= n ? l = [1, 0, 0, 0, 0, 0, q, m, 0, 0, 0, -1 * m, q, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= n ? l = [q, 0, m, 0, 0, 0, 1, 0, 0, 0, m, 0, q, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= n && (l = [q, m, 0, 0, 0, -1 * m, q, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
-        l = (new createjs.ColorMatrix).concat(l);
-        l = new createjs.ColorMatrixFilter(l);
-        c.push(l);
+      -1 < e.indexOf("hue") && (b.hue = b.hue.mod(360), m = new createjs.ColorMatrix, m.adjustColor(0, 0, 0, b.hue), m = new createjs.ColorMatrixFilter(m), c.push(m));
+      if (-1 < e.indexOf("hsv")) {
+        var m = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], q = 10.8 * b.hsv * Math.PI / 180, n = Math.cos(q), q = Math.sin(q), r = Math.abs(b.hsv / 100);
+        1 < r && (r -= Math.floor(r));
+        0 < r && .33 >= r ? m = [1, 0, 0, 0, 0, 0, n, q, 0, 0, 0, -1 * q, n, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= r ? m = [n, 0, q, 0, 0, 0, 1, 0, 0, 0, q, 0, n, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= r && (m = [n, q, 0, 0, 0, -1 * q, n, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
+        m = (new createjs.ColorMatrix).concat(m);
+        m = new createjs.ColorMatrixFilter(m);
+        c.push(m);
       }
-      -1 < d.indexOf("alpha") && (f.alpha = b.alpha = k(b.alpha, 0, 1));
+      -1 < e.indexOf("alpha") && (f.alpha = b.alpha = d(b.alpha, 0, 1));
       f.filters = c;
-    })(b, f), f.cache(0, 0, this.getWidth(), this.getHeight()), Entry.requestUpdate = !0;
+    }(f, d), d.cache(0, 0, this.getWidth(), this.getHeight()), Entry.requestUpdate = !0;
   }
 };
 Entry.EntityObject.prototype.resetFilter = function() {
@@ -11300,10 +11300,10 @@ Entry.TextCodingUtil = {};
     }
     return !1;
   };
-  c.generateForStmtIndex = function(b, c) {
-    var d = Math.floor(b / 3);
-    c = ["i", "j", "k"][b % 3] + (c || "");
-    return d ? this.generateForStmtIndex(d - 1, c) : c;
+  c.generateForStmtIndex = function(b, f) {
+    var c = Math.floor(b / 3);
+    f = ["i", "j", "k"][b % 3] + (f || "");
+    return c ? this.generateForStmtIndex(c - 1, f) : f;
   };
   c.isExpressionLiteral = function(b, c) {
     switch(b.type) {
@@ -14120,7 +14120,7 @@ Entry.Parser = function(c, b, f, d) {
           this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
           break;
         case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-          this._execParser = new Entry.BlockToPyParser(this.syntax), d.setOption("mode", {name:"python", globalVars:!0}), this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+          this._execParser = new Entry.BlockToPyParser(this.syntax), d && d.setOption("mode", {name:"python", globalVars:!0}), this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
       }
     }
   };
@@ -17530,12 +17530,16 @@ Entry.Func.requestParamBlock = function(c) {
   return f;
 };
 Entry.Func.registerParamBlock = function(c) {
-  -1 < c.indexOf("stringParam") ? Entry.Func.createParamBlock(c, Entry.block.function_param_string, c) : -1 < c.indexOf("booleanParam") && Entry.Func.createParamBlock(c, Entry.block.function_param_boolean, c);
+  if (c) {
+    var b;
+    -1 < c.indexOf("stringParam") ? b = Entry.block.function_param_string : -1 < c.indexOf("booleanParam") && (b = Entry.block.function_param_boolean);
+    b && Entry.Func.createParamBlock(c, b, c);
+  }
 };
 Entry.Func.createParamBlock = function(c, b, f) {
+  f = /string/gi.test(f) ? "function_param_string" : "function_param_boolean";
   var d = function() {
   };
-  f = "string" === f ? "function_param_string" : "function_param_boolean";
   d.prototype = b;
   d = new d;
   d.changeEvent = new Entry.Event;
@@ -18922,15 +18926,15 @@ Entry.Variable.prototype.updateView = function() {
         null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth());
         this.valueView_.x = this._nameWidth + 14;
         this.valueView_.y = 1;
-        "slide" === this.type && this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", "") : this.valueView_.text = this.getValue();
+        this.isNumber() ? this.valueView_.text = Number(this.getValue()).toFixed(2).replace(".00", "") : this.valueView_.text = this.getValue();
         null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth());
         this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4);
         this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
       } else {
         if ("slide" == this.type) {
-          this.view_.x = this.getX(), this.view_.y = this.getY(), c = this.textView_.text, b = this.object_ ? (b = Entry.container.getObject(this.object_)) ? b.name + ":" + this.getName() : this.getName() : this.getName(), c !== b && (this.textView_.text = b, this._nameWidth = null), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", 
-          "") : this.valueView_.text = this.getValue(), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), c = this._nameWidth + this._valueWidth + 26, c = Math.max(c, 90), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, c, 33, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7), c = this._nameWidth + this._valueWidth + 26, c = Math.max(c, 
-          90), this.maxWidth = c - 20, this.slideBar_.graphics.clear().beginFill("#A0A1A1").s("#A0A1A1").ss(1).dr(10, 10, this.maxWidth, 1.5), c = this.getSlidePosition(this.maxWidth), this.valueSetter_.graphics.clear().beginFill("#1bafea").s("#A0A1A1").ss(1).dc(c, 10.5, 3);
+          this.view_.x = this.getX(), this.view_.y = this.getY(), c = this.textView_.text, b = this.object_ ? (b = Entry.container.getObject(this.object_)) ? b.name + ":" + this.getName() : this.getName() : this.getName(), c !== b && (this.textView_.text = b, this._nameWidth = null), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.valueView_.text = Number(this.getValue()).toFixed(2).replace(".00", 
+          ""), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), c = this._nameWidth + this._valueWidth + 26, c = Math.max(c, 90), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, c, 33, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7), c = this._nameWidth + this._valueWidth + 26, c = Math.max(c, 90), this.maxWidth = c - 20, this.slideBar_.graphics.clear().beginFill("#A0A1A1").s("#A0A1A1").ss(1).dr(10, 
+          10, this.maxWidth, 1.5), c = this.getSlidePosition(this.maxWidth), this.valueSetter_.graphics.clear().beginFill("#1bafea").s("#A0A1A1").ss(1).dc(c, 10.5, 3);
         } else {
           if ("list" == this.type) {
             this.view_.x = this.getX();
@@ -18961,7 +18965,7 @@ Entry.Variable.prototype.updateView = function() {
               this.view_.addChild(f);
             }
           } else {
-            "answer" == this.type ? (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.y = 1, this.isNumber() ? parseInt(this.getValue(), 10) == this.getValue() ? this.valueView_.text = this.getValue() : this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), null === this._valueWidth && (this._valueWidth = 
+            "answer" == this.type ? (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.y = 1, this.isNumber() ? (c = Number(this.getValue()), parseInt(this.getValue(), 10) == this.getValue() ? this.valueView_.text = c : this.valueView_.text = c.toFixed(1).replace(".00", "")) : this.valueView_.text = this.getValue(), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), null === this._valueWidth && (this._valueWidth = 
             this.valueView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#E457DC").ss(1, 2, 0).s("#E457DC").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7)) : (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), null === this._nameWidth && (this._nameWidth = 
             this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 
             2, 0).s("orange").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7));
@@ -21970,8 +21974,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     if (h === Entry.Workspace.MODE_VIMBOARD) {
       d instanceof Entry.BlockMenu ? (d.terminateDrag(), k === c.DONE && this.vimBoardEvent(b, "dragEnd", g)) : d.clear();
     } else {
-      if (e === Entry.DRAG_MODE_DRAG) {
-        h = this.dragInstance && this.dragInstance.isNew;
+      if (h = this.dragInstance && this.dragInstance.isNew, e === Entry.DRAG_MODE_DRAG) {
         b = !1;
         var l = this.block.getPrevBlock(this.block);
         switch(k) {
@@ -21987,10 +21990,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (c = g.getThread().view.getParent(), c instanceof Entry.Board ? this._moveTo(e.x, e.y, !1) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, c)));
             break;
           case c.REMOVE:
-            createjs.Sound.play("entryDelete"), h ? this.block.destroy(!1, !0) : Entry.do("destroyBlockBelow", this.block);
+            createjs.Sound.play("entryDelete"), Entry.do("destroyBlockBelow", this.block).isPass(h);
         }
         d.setMagnetedBlock(null);
         b && Entry.ConnectionRipple.setView(g.view).dispose();
+      } else {
+        k === c.REMOVE && h && e === Entry.DRAG_MODE_MOUSEDOWN && Entry.do("destroyBlockBelow", this.block).isPass(!0);
       }
     }
     this.destroyShadow();
@@ -22335,8 +22340,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this.pathGroup.insertBefore(b, this._path);
   };
   c._getTemplate = function(b) {
-    var c = this._schema, c = c.template ? c.template : Lang.template[this.block.type], d;
-    b === Entry.BlockView.RENDER_MODE_TEXT && (b = this.getBoard().workspace) && b.vimBoard && (b = b.vimBoard.getBlockSyntax(this)) && (d = "string" === typeof b ? b : b.template);
+    var c = this._schema, c = c.template ? c.template : Lang.template[this.block.type], d, e = this.getBoard();
+    if (b === Entry.BlockView.RENDER_MODE_TEXT) {
+      var g, h = e.workspace;
+      h && h.vimBoard ? g = h.vimBoard.getBlockSyntax(this) : e.getBlockSyntax && (g = e.getBlockSyntax(this, b));
+      g && (d = "string" === typeof g ? g : g.template);
+    }
     return d || c;
   };
   c._getSchemaParams = function(b) {
@@ -23157,7 +23166,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     if (this._originBlock) {
       b = this._originBlock.type, delete this._originBlock;
     } else {
-      switch(this.acceptType) {
+      switch(this.acceptType.toLowerCase()) {
         case "boolean":
           b = "True";
           break;
@@ -24093,7 +24102,7 @@ Entry.Mutator = function() {
 })(Entry.Mutator);
 (function(c) {
 })(Entry.Mutator.prototype);
-Entry.RenderView = function(c, b, f) {
+Entry.RenderView = function(c, b, f, d) {
   this._align = b || "CENTER";
   c = "string" === typeof c ? $("#" + c) : $(c);
   if ("DIV" !== c.prop("tagName")) {
@@ -24103,6 +24112,7 @@ Entry.RenderView = function(c, b, f) {
   this.viewOnly = !0;
   this.suffix = "renderView";
   this._scale = void 0 === f ? 1 : f;
+  this._parserType = d;
   this.disableMouseEvent = this.visible = !0;
   this._svgId = "renderView_" + (new Date).getTime();
   this._generateView();
@@ -24191,6 +24201,14 @@ Entry.RenderView = function(c, b, f) {
   c._getHorizontalPadding = function() {
     var b = {LEFT:20, LEFT_MOST:0}[this._align];
     return void 0 !== b ? b : this.svgDom.width() / 2;
+  };
+  c.getBlockSyntax = function(b, c) {
+    var d = null;
+    2 === c && (this._parser || (this._parser = new Entry.Parser(null, null)), this._parser.setParser(1, this._parserType), this._parser._execParser && (d = this._parser._execParser.searchSyntax(b)));
+    return d;
+  };
+  c.setParserType = function(b) {
+    this._parserType = b;
   };
 })(Entry.RenderView.prototype);
 Entry.Scroller = function(c, b, f) {

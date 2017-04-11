@@ -1143,7 +1143,7 @@ Lang.Blocks = {
     "rokoboard_sensor_name_4": "저항-B",
     "rokoboard_sensor_name_5": "저항-C",
     "rokoboard_sensor_name_6": "저항-D",
-    "rokoboard_string_1": "버튼을 눌렀는가?",
+    "rokoboard_string_1": "버튼을 눌렀는가?"
 };
 Lang.Buttons = {
     "apply": "적용하기",
