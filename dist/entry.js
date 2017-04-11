@@ -24501,12 +24501,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
           case c.DONE:
             c = d.magnetedBlockView;
             c instanceof Entry.BlockView && (c = c.block);
-            l && !c ? Entry.do("separateBlock" + m, g) : l || c || b ? (m = b ? "FromBlockMenu" : "", c ? ("next" === c.view.magneting ? (k = g.getLastBlock(), this.dragMode = f, d.separate(g), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock" + m, c, k).isPass(b), Entry.ConnectionRipple.setView(c.view).dispose()) : (c.getThread && (f = c.getThread(), (h = c.type) && f instanceof Entry.FieldBlock && !Entry.block[h].isPrimitive && (m += "FollowSeparate")), Entry.do("insertBlock" + m, g, 
-            c).isPass(b), h = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock" + m, g).isPass(b)) : g.getThread().view.isGlobal() ? Entry.do("moveBlock" + m, g) : Entry.do("separateBlock" + m, g);
+            l && !c ? Entry.do("separateBlock" + m, g) : l || c || b ? (m = b ? "FromBlockMenu" : "", c ? ("next" === c.view.magneting ? (g.getLastBlock(), this.dragMode = f, f = c.pointer(), f[3] = -1, Entry.do("insertBlock" + m, g, f).isPass(b), Entry.ConnectionRipple.setView(c.view).dispose(), this.dragMode = Entry.DRAG_MODE_NONE) : (c.getThread && (h = c.getThread(), (f = c.type) && h instanceof Entry.FieldBlock && !Entry.block[f].isPrimitive && (m += "FollowSeparate")), Entry.do("insertBlock" + 
+            m, g, c).isPass(b), h = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock" + m, g).isPass(b)) : g.getThread().view.isGlobal() ? Entry.do("moveBlock" + m, g) : Entry.do("separateBlock" + m, g);
             break;
           case c.RETURN:
             g = this.block;
-            b ? Entry.do("destroyBlockBelow", this.block).isPass(!0) : l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (f = g.getThread().view.getParent(), f instanceof Entry.Board ? (f = this.originPos, this._moveTo(f.x, f.y, !1)) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, f)));
+            b ? Entry.do("destroyBlockBelow", this.block).isPass(!0) : l ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(l), g.insert(l)) : (b = g.getThread().view.getParent(), b instanceof Entry.Board ? (b = this.originPos, this._moveTo(b.x, b.y, !1)) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", g, b)));
             break;
           case c.REMOVE:
             createjs.Sound.play("entryDelete"), Entry.do("destroyBlockBelow", this.block).isPass(b);
@@ -25751,12 +25751,19 @@ Entry.Board.DRAG_RADIUS = 5;
     "string" === typeof b && (b = this.findById(b));
     b.view && b.view._toGlobalCoordinate();
     var e = b.getPrevBlock();
+    if (!e && b.thread instanceof Entry.Thread && b.thread.parent instanceof Entry.Code) {
+      var g = b.thread.getBlock(b.thread.indexOf(b) + c);
+      if (g) {
+        var h = g.view.getAbsoluteCoordinate();
+      }
+    }
     b.separate(c, d);
-    e && e.getNextBlock() && e.getNextBlock().view.bindPrev();
+    e && e.getNextBlock() ? e.getNextBlock().view.bindPrev() : g && (g.view._toGlobalCoordinate(), g.moveTo(h.x, h.y));
   };
   c.insert = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
-    3 === c.length ? (this.separate(b, d, c[2]), b.moveTo(c[0], c[1])) : (this.separate(b, d), c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : c instanceof Entry.Thread ? (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
+    3 === c.length ? (this.separate(b, d, c[2]), b.moveTo(c[0], c[1])) : 4 === c.length && -1 == c[3] ? (c[3] = 0, targetBlock = this.code.getByPointer(c), this.separate(b, d, c[2]), b = b.getLastBlock(), targetBlock.view.bindPrev(b), targetBlock.doInsert(b)) : (this.separate(b, d), c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : 
+    c instanceof Entry.Thread ? (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
   };
   c.adjustThreadsPosition = function() {
     var b = this.code;
