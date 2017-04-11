@@ -670,6 +670,9 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_dronefighter_flight_controller_vibrator_delay",
                 "byrobot_dronefighter_flight_controller_vibrator_reserve",
 
+                //rokoboard Blocks
+                "rokoboard_get_sensor_value_by_name",
+                "rokoboard_is_button_pressed"
             ]
         }
     ]

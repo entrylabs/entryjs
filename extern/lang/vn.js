@@ -950,6 +950,16 @@ Lang.Blocks = {
     "la_name": "La",
     "la_sharp_name": "La#(Si♭)",
     "si_name": "Si"
+
+    //rokoboard Implementation
+    "rokoboard_sensor_name_0": "Sound",
+    "rokoboard_sensor_name_1": "Light",
+    "rokoboard_sensor_name_2": "Slider",
+    "rokoboard_sensor_name_3": "resistance-A",
+    "rokoboard_sensor_name_4": "resistance-B",
+    "rokoboard_sensor_name_5": "resistance-C",
+    "rokoboard_sensor_name_6": "resistance-D",
+    "rokoboard_string_1": "Button Pressed",
 };
 Lang.Buttons = {
     "apply": "ứng dụng",
@@ -4153,7 +4163,7 @@ Lang.template = {
     "robotori_digitalOutput": "Digital %1 PIN, Output Value %2 %3",
     "robotori_analogOutput": "Analog %1 %2 %3",
     "robotori_servo": "Servo Motor Angle %1 %2",
-    "robotori_dc_direction": "DC Motor %1 Direction %2 %3"
+    "robotori_dc_direction": "DC Motor %1 Direction %2 %3",
 };
 
 if (typeof exports == "object")
