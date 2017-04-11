@@ -145,9 +145,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
     p.applyValue = function(text, value, forceCommand) {
         this.setValue(String(value));
-        this.destroyOption(forceCommand);
         this._setTextValue();
         this.resize();
+        this.destroyOption(forceCommand);
     };
 
     p.resize = function() {

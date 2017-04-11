@@ -125,6 +125,8 @@ Entry.StateManager.prototype.undo = function(count) {
             break;
     }
     this.endRestore();
+    if (Entry.disposeEvent)
+        Entry.disposeEvent.notify();
     if (Entry.creationChangedEvent)
         Entry.creationChangedEvent.notify();
 };

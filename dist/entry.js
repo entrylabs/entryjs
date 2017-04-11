@@ -21,7 +21,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
 }, clearProject:function() {
   Entry.stop();
   Entry.projectId = null;
-  Entry.playground && Entry.playground.changeViewMode("code");
+  "invisible" !== Entry.type && Entry.playground && Entry.playground.changeViewMode("code");
   Entry.variableContainer.clear();
   Entry.container.clear();
   Entry.scene.clear();
@@ -6045,7 +6045,7 @@ Entry.Commander = function(c) {
   };
   d.dom = ["playground", "board", "coord", "&1", "&2"];
   c[e.moveBlockFromBlockMenu] = d;
-  b(e.cloneBlock, e.addThread, [["undo", "uncloneBlock"]]);
+  b(e.cloneBlock, e.addThread, [["undo", "uncloneBlock"], ["dom", void 0]]);
   b(e.uncloneBlock, e.destroyThread, [["undo", "cloneBlock"]]);
   c[e.scrollBoard] = {do:function(b, c, e) {
     e || this.editor.board.scroller._scroll(b, c);
@@ -9541,6 +9541,7 @@ Entry.StateManager.prototype.undo = function(c) {
       }
     }
     this.endRestore();
+    Entry.disposeEvent && Entry.disposeEvent.notify();
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   }
 };
@@ -26852,9 +26853,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   };
   c.applyValue = function(b, c, d) {
     this.setValue(String(c));
-    this.destroyOption(d);
     this._setTextValue();
     this.resize();
+    this.destroyOption(d);
   };
   c.resize = function() {
     var b = this.getTextWidth() + 1;

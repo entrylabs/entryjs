@@ -492,7 +492,8 @@ goog.require("Entry.Utils");
         COMMAND_TYPES.cloneBlock,
         COMMAND_TYPES.addThread,
         [
-            ['undo', 'uncloneBlock']
+            ['undo', 'uncloneBlock'],
+            ['dom', undefined]
         ]
     );
 
