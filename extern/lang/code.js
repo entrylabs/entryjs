@@ -1135,7 +1135,15 @@ Lang.Blocks = {
     "modi_speaker_F_RE_S_7": "라#7",
     "modi_speaker_F_PA_S_7": "라#7",
     "modi_speaker_F_SOL_S_7": "라#7",
-    "modi_speaker_F_RA_S_7": "라#7"
+    "modi_speaker_F_RA_S_7": "라#7",
+    "rokoboard_sensor_name_0": "소리",
+    "rokoboard_sensor_name_1": "빛",
+    "rokoboard_sensor_name_2": "슬라이더",
+    "rokoboard_sensor_name_3": "저항-A",
+    "rokoboard_sensor_name_4": "저항-B",
+    "rokoboard_sensor_name_5": "저항-C",
+    "rokoboard_sensor_name_6": "저항-D",
+    "rokoboard_string_1": "버튼을 눌렀는가?"
 };
 Lang.Buttons = {
     "apply": "적용하기",
@@ -1839,6 +1847,7 @@ Lang.Menus = {
     "Xbot": "엑스봇 엣지 USB",
     "XbotBT": "엑스봇 에뽀/엣지 블투투스",
     "robotori": "로보토리",
+    "rokoboard": "로코보드",
     "Neobot": "네오봇",
     "about": "알아보기",
     "articles": "토론하기",
@@ -3951,7 +3960,8 @@ Lang.Device = {
     "nemoino": "네모이노",
     "ev3": "EV3",
     "robotori": "로보토리",
-    "smartBoard": "스마트보드"
+    "smartBoard": "스마트보드",
+    "rokoboard": "로코보드"
 };
 Lang.General = {
     "turn_on": "켜기",

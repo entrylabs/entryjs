@@ -1135,7 +1135,15 @@ Lang.Blocks = {
     "modi_speaker_F_RE_S_7": "",
     "modi_speaker_F_PA_S_7": "",
     "modi_speaker_F_SOL_S_7": "",
-    "modi_speaker_F_RA_S_7": ""
+    "modi_speaker_F_RA_S_7": "",
+    "rokoboard_sensor_name_0": "Sound",
+    "rokoboard_sensor_name_1": "Light",
+    "rokoboard_sensor_name_2": "Slider",
+    "rokoboard_sensor_name_3": "resistance-A",
+    "rokoboard_sensor_name_4": "resistance-B",
+    "rokoboard_sensor_name_5": "resistance-C",
+    "rokoboard_sensor_name_6": "resistance-D",
+    "rokoboard_string_1": "Button Pressed",
 };
 Lang.Buttons = {
     "apply": "Apply",
