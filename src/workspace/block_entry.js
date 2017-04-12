@@ -40004,7 +40004,7 @@ Entry.block = {
     "coconut_set_led_to": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 LED를 %2으로 켜기기 %3",
+        "template": "%1 LED를 %2으로 켜기 %3",
         "statements": [],
         "params": [
             {
