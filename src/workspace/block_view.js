@@ -648,14 +648,15 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                 if (closeBlock.view.magneting === "next") {
                                     var lastBlock = block.getLastBlock();
                                     this.dragMode = dragMode;
-                                    board.separate(block);
-                                    this.dragMode = Entry.DRAG_MODE_NONE;
+                                    var targetPointer = closeBlock.pointer();
+                                    targetPointer[3] = -1;
                                     Entry.do(
-                                        "insertBlock" + suffix, closeBlock, lastBlock)
+                                        "insertBlock" + suffix, block, targetPointer)
                                         .isPass(fromBlockMenu);
                                     Entry.ConnectionRipple
                                         .setView(closeBlock.view)
                                         .dispose();
+                                    this.dragMode = Entry.DRAG_MODE_NONE;
                                 } else {
                                     if (closeBlock.getThread) {
                                         var thread = closeBlock.getThread();

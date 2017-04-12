@@ -851,21 +851,40 @@ Entry.Board.DRAG_RADIUS = 5;
         if (block.view)
             block.view._toGlobalCoordinate();
         var prevBlock = block.getPrevBlock();
+        if (!prevBlock && block.thread instanceof Entry.Thread &&
+           block.thread.parent instanceof Entry.Code) {
+            var nextBlock = block.thread.getBlock(
+                block.thread.indexOf(block) + count)
+
+            if (nextBlock)
+                var backupPos = nextBlock.view.getAbsoluteCoordinate();
+        }
+        var prevThread = block.thread;
         block.separate(count, index);
         if (prevBlock && prevBlock.getNextBlock())
             prevBlock.getNextBlock().view.bindPrev();
+        else if (nextBlock) {
+            nextBlock.view._toGlobalCoordinate();
+            nextBlock.moveTo(backupPos.x, backupPos.y);
+        }
     };
 
     p.insert = function(block, pointer, count) { // pointer can be target
         if (typeof block === "string")
             block = this.findById(block);
 
-
         if (pointer.length === 3) { // for global
             this.separate(block, count, pointer[2]);
             block.moveTo(pointer[0], pointer[1]);
-        }
-        else {
+        } else if (pointer.length === 4 && pointer[3] == -1) { // insert on top
+            pointer[3] = 0;
+            targetBlock = this.code.getByPointer(pointer);
+            this.separate(block, count, pointer[2]);
+            block = block.getLastBlock();
+
+            targetBlock.view.bindPrev(block);
+            targetBlock.doInsert(block);
+        } else {
             this.separate(block, count);
             var targetObj;
             if (pointer instanceof Array)
