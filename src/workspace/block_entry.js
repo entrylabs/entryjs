@@ -18968,26 +18968,26 @@ Entry.block = {
                 data_length = 4;
             }
 
-	    data_address = script.getNumberValue('VALUE');
+        data_address = script.getNumberValue('VALUE');
 
-	    data_default_address = data_address;
-	    data_default_length = data_length;
+        data_default_address = data_address;
+        data_default_length = data_length;
 
-	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
-		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
-		    //throw new Entry.Utils.AsyncError();
-		    return Entry.hw.sendQueue.prevResult;
-		}
-	    }
+        if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+        if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
+            //throw new Entry.Utils.AsyncError();
+            return Entry.hw.sendQueue.prevResult;
+        }
+        }
 
-	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-	    Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+        // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+        Entry.Robotis_carCont.update();
 
-	    var result = Entry.hw.portData[data_default_address];
+        var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
-	    Entry.hw.sendQueue.prevTime = new Date();
-	    Entry.hw.sendQueue.prevResult = result;
+        Entry.hw.sendQueue.prevTime = new Date();
+        Entry.hw.sendQueue.prevResult = result;
 
             return result;
         },
@@ -19054,23 +19054,23 @@ Entry.block = {
                 data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
             }
 
-	    data_default_address = data_default_address + increase * data_default_length;
+        data_default_address = data_default_address + increase * data_default_length;
 
-	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
-	    	if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
-	    	    //throw new Entry.Utils.AsyncError();
-		    return Entry.hw.sendQueue.prevResult;
-	        }
-	    }
+        if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+            if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
+                //throw new Entry.Utils.AsyncError();
+            return Entry.hw.sendQueue.prevResult;
+            }
+        }
 
-	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-	    Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+        // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+        Entry.Robotis_carCont.update();
 
-	    var result = Entry.hw.portData[data_default_address];
+        var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
-	    Entry.hw.sendQueue.prevTime = new Date();
-	    Entry.hw.sendQueue.prevResult = result;
+        Entry.hw.sendQueue.prevTime = new Date();
+        Entry.hw.sendQueue.prevResult = result;
 
             return result;
         },
@@ -19127,7 +19127,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var scope = script.executor.scope;
 
-	    // instruction / address / length / value / default length
+        // instruction / address / length / value / default length
             var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
             var data_address = 0;
             var data_length = 0;
@@ -19218,21 +19218,21 @@ Entry.block = {
                // data_length = 6 * data_default_length;
             // }
 
-	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
-		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
-		    //throw new Entry.Utils.AsyncError();
-		    return Entry.hw.sendQueue.prevResult;
-		}
-	    }
+        if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+        if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
+            //throw new Entry.Utils.AsyncError();
+            return Entry.hw.sendQueue.prevResult;
+        }
+        }
 
-	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-	    Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+        // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+        Entry.Robotis_carCont.update();
 
-	    var result = Entry.hw.portData[data_default_address];
+        var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
-	    Entry.hw.sendQueue.prevTime = new Date();
-	    Entry.hw.sendQueue.prevResult = result;
+        Entry.hw.sendQueue.prevTime = new Date();
+        Entry.hw.sendQueue.prevResult = result;
 
             return result;
         },
@@ -20195,24 +20195,24 @@ Entry.block = {
             //Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
             //// Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
             //Entry.Robotis_carCont.update();
-			//
+            //
             //return Entry.hw.portData[data_default_address];
 
-	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
-		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 300) {
-		    //throw new Entry.Utils.AsyncError();
-		    return Entry.hw.sendQueue.prevResult;
-		}
-	    }
+        if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+        if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 300) {
+            //throw new Entry.Utils.AsyncError();
+            return Entry.hw.sendQueue.prevResult;
+        }
+        }
 
-	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-	    Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+        // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+        Entry.Robotis_carCont.update();
 
-	    var result = Entry.hw.portData[data_default_address];
+        var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
-	    Entry.hw.sendQueue.prevTime = new Date();
-	    Entry.hw.sendQueue.prevResult = result;
+        Entry.hw.sendQueue.prevTime = new Date();
+        Entry.hw.sendQueue.prevResult = result;
 
             return result;
         },
@@ -31564,11 +31564,11 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_A0_Input, "A0"],
-					[Lang.Blocks.robotori_A1_Input, "A1"],
-					[Lang.Blocks.robotori_A2_Input, "A2"],
-					[Lang.Blocks.robotori_A3_Input, "A3"],
-					[Lang.Blocks.robotori_A4_Input, "A4"],
-					[Lang.Blocks.robotori_A5_Input, "A5"],
+                    [Lang.Blocks.robotori_A1_Input, "A1"],
+                    [Lang.Blocks.robotori_A2_Input, "A2"],
+                    [Lang.Blocks.robotori_A3_Input, "A3"],
+                    [Lang.Blocks.robotori_A4_Input, "A4"],
+                    [Lang.Blocks.robotori_A5_Input, "A5"],
                 ],
                 "value": "A0",
                 "fontSize": 11
@@ -31599,9 +31599,9 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_D10_Output, "D10"],
-					[Lang.Blocks.robotori_D11_Output, "D11"],
-					[Lang.Blocks.robotori_D12_Output, "D12"],
-					[Lang.Blocks.robotori_D13_Output, "D13"]
+                    [Lang.Blocks.robotori_D11_Output, "D11"],
+                    [Lang.Blocks.robotori_D12_Output, "D12"],
+                    [Lang.Blocks.robotori_D13_Output, "D13"]
                 ],
                 "value": "D10",
                 "fontSize": 11
@@ -31610,7 +31610,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_On, "ON"],
-					[Lang.Blocks.robotori_Off, "OFF"]
+                    [Lang.Blocks.robotori_Off, "OFF"]
                 ],
                 "value": "ON",
                 "fontSize": 11
@@ -31664,7 +31664,7 @@ Entry.block = {
             return script.callReturn();
         }
     },
-	"robotori_analogOutput": {
+    "robotori_analogOutput": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
@@ -31673,8 +31673,8 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_analog5, "AOUT5"],
-					[Lang.Blocks.robotori_analog6, "AOUT6"],
-					[Lang.Blocks.robotori_analog9, "AOUT9"]
+                    [Lang.Blocks.robotori_analog6, "AOUT6"],
+                    [Lang.Blocks.robotori_analog9, "AOUT9"]
                 ],
                 "value": "AOUT5",
                 "fontSize": 11
@@ -31709,23 +31709,23 @@ Entry.block = {
         "isNotFor": [ "robotori" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
-			var dev = script.getStringField("DEVICE", script);
-			var value = script.getNumberValue("VALUE", script);
+            var dev = script.getStringField("DEVICE", script);
+            var value = script.getNumberValue("VALUE", script);
 
-			if (dev == 'AOUT5')
-			{
-				sq.AOUT5 = value;
-			}
-			else if(dev == 'AOUT6')
-			{
-				sq.AOUT6 = value;
-			}
-			else if(dev == 'AOUT9')
-			{
-				sq.AOUT9 = value;
-			}
+            if (dev == 'AOUT5')
+            {
+                sq.AOUT5 = value;
+            }
+            else if(dev == 'AOUT6')
+            {
+                sq.AOUT6 = value;
+            }
+            else if(dev == 'AOUT9')
+            {
+                sq.AOUT9 = value;
+            }
 
-			return script.callReturn();
+            return script.callReturn();
         }
     },
     "robotori_servo": {
@@ -31761,9 +31761,9 @@ Entry.block = {
         "isNotFor": [ "robotori" ],
         "func": function (sprite, script) {
            var sq = Entry.hw.sendQueue;
-			sq.SERVO = script.getNumberValue("SERVO");
+            sq.SERVO = script.getNumberValue("SERVO");
 
-			return script.callReturn();
+            return script.callReturn();
         }
     },
     "robotori_dc_direction": {
@@ -31775,7 +31775,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_DC_rightmotor, "RIGHT_MOTOR"],
-					[Lang.Blocks.robotori_DC_leftmotor, "LEFT_MOTOR"]
+                    [Lang.Blocks.robotori_DC_leftmotor, "LEFT_MOTOR"]
                 ],
                 "value": "RIGHT_MOTOR",
                 "fontSize": 11
@@ -31784,8 +31784,8 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_DC_STOP, "STOP"],
-					[Lang.Blocks.robotori_DC_CW, "CW"],
-					[Lang.Blocks.robotori_DC_CCW, "CCW"]
+                    [Lang.Blocks.robotori_DC_CW, "CW"],
+                    [Lang.Blocks.robotori_DC_CCW, "CCW"]
                 ],
                 "value": "STOP",
                 "fontSize": 11
@@ -31811,36 +31811,36 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
             var dev = script.getStringField("DEVICE", script);
             var value = script.getStringField('VALUE', script);
-			if( dev == 'RIGHT_MOTOR' )
-			{
-				if( value == 'STOP' )
-				{
-					sq.RIGHT_MOTOR = 0xFF;
-				}
-				else if( value == 'CW' )
-				{
-					sq.RIGHT_MOTOR = 0x00;
-				}
-				else if( value == 'CCW' )
-				{
-					sq.RIGHT_MOTOR = 0xB4;
-				}
-			}
-			if( dev == 'LEFT_MOTOR' )
-			{
-				if( value == 'STOP' )
-				{
-					sq.LEFT_MOTOR = 0xFF;
-				}
-				else if( value == 'CW' )
-				{
-					sq.LEFT_MOTOR = 0x00;
-				}
-				else if( value == 'CCW' )
-				{
-					sq.LEFT_MOTOR = 0xB4;
-				}
-			}
+            if( dev == 'RIGHT_MOTOR' )
+            {
+                if( value == 'STOP' )
+                {
+                    sq.RIGHT_MOTOR = 0xFF;
+                }
+                else if( value == 'CW' )
+                {
+                    sq.RIGHT_MOTOR = 0x00;
+                }
+                else if( value == 'CCW' )
+                {
+                    sq.RIGHT_MOTOR = 0xB4;
+                }
+            }
+            if( dev == 'LEFT_MOTOR' )
+            {
+                if( value == 'STOP' )
+                {
+                    sq.LEFT_MOTOR = 0xFF;
+                }
+                else if( value == 'CW' )
+                {
+                    sq.LEFT_MOTOR = 0x00;
+                }
+                else if( value == 'CCW' )
+                {
+                    sq.LEFT_MOTOR = 0xB4;
+                }
+            }
             return script.callReturn();
         }
     },
