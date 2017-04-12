@@ -342,7 +342,7 @@ p.checkDevice = function(data, version) {
         return;
     var key = [Entry.Utils.convertIntToHex(data.company), '.', Entry.Utils.convertIntToHex(data.model)].join('');
     if (key == this.selectedDevice) {
-        if (this.hwModule.dataHandler) {
+        if (this.hwModule && this.hwModule.dataHandler) {
             this.hwModule.dataHandler(data);
         }
         return;
