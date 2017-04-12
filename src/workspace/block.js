@@ -639,9 +639,13 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (target.type.substr(0,8) === "wildcard" ||
             this.type.substr(0,8) === "wildcard")
             return true;
-        if (((target.type === "angle") && (this.type === "text")) ||
-            ((target.type === "text") && (this.type === "angle"))) {
-        } else if (target.type !== this.type)
+
+        var targetType = target.type;
+        var thisType = this.type;
+
+        if (((targetType === "angle") && (thisType === "text")) ||
+            ((targetType === "text") && (thisType === "angle"))) {
+        } else if (targetType !== thisType)
             return false;
         for (var i = 0; i < this.params.length; i++) {
             var param = this.params[i];

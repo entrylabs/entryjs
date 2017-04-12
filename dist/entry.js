@@ -11102,17 +11102,17 @@ Entry.TextCodingUtil = {};
   c.isMaterialBlock = function(b) {
     return "get_canvas_input_value" == b || "get_variable" == b || "value_of_index_from_list" == b || "length_of_list" == b || "is_included_in_list" == b ? !0 : !1;
   };
-  c.jsAdjustSyntax = function(b, c) {
-    var d = "";
+  c.jsAdjustSyntax = function(b, f) {
+    var c = "";
     if ("ai_boolean_distance" == b.data.type) {
-      var e = c.split(" "), d = e[0].split("_");
-      d[1] = d[1].substring(1, d[1].length - 1);
-      d[1] = d[1].toLowerCase();
-      var d = d.join("_"), g = e[1], g = this.bTojBinaryOperatorConvertor(g), e = e[2], d = d + " " + g + " " + e;
+      var e = f.split(" "), c = e[0].split("_");
+      c[1] = c[1].substring(1, c[1].length - 1);
+      c[1] = c[1].toLowerCase();
+      var c = c.join("_"), g = e[1], g = this.bTojBinaryOperatorConvertor(g), e = e[2], c = c + " " + g + " " + e;
     } else {
-      "ai_boolean_object" == b.data.type ? (e = c.split(" "), d = e[0].split("_"), d[1] = d[1].substring(1, d[1].length - 1), d[1] = d[1].toLowerCase(), d = d.join("_"), g = e[1], e = e[2], d = d + " " + g + " " + e) : "ai_distance_value" == b.data.type ? (e = c.split(" "), d = e[0].split("_"), d[1] = d[1].substring(1, d[1].length - 1), d[1] = d[1].toLowerCase(), d = d.join("_")) : d = c;
+      "ai_boolean_object" == b.data.type ? (e = f.split(" "), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), c = c.join("_"), g = e[1], e = e[2], c = c + " " + g + " " + e) : "ai_distance_value" == b.data.type ? (e = f.split(" "), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), c = c.join("_")) : c = f;
     }
-    return d;
+    return c;
   };
   c.bTojBinaryOperatorConvertor = function(b) {
     var c;
@@ -15739,13 +15739,15 @@ Entry.Curtain = {};
   this.align = function() {
     var c = this._targetDom;
     if (c) {
-      var b = $(window), f = b.width(), b = b.height(), d = this._doms;
+      var b = $(window), f = $("body")[0].getBoundingClientRect().width, d = b.width(), b = b.height();
+      d < Math.round(f) && (f = d);
+      d = this._doms;
       if (c.get(0)) {
-        var c = c.get(0).getBoundingClientRect(), e = Math.round(c.top), g = Math.round(c.right);
+        var c = c.get(0).getBoundingClientRect(), e = Math.round(c.top), g = Math.round(c.right), h = Math.round(c.bottom);
         d.top.css({height:e});
-        d.right.css({top:e, left:g});
-        d.bottom.css({top:c.bottom, right:f - g});
-        d.left.css({top:e, right:f - g + c.width, bottom:b - c.bottom});
+        d.left.css({top:e, right:f - g + c.width, bottom:b - h});
+        d.bottom.css({top:h, right:f - g});
+        d.right.css({top:e, left:d.bottom[0].getBoundingClientRect().width || g});
       }
     }
   };
@@ -26035,12 +26037,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     if ("wildcard" === b.type.substr(0, 8) || "wildcard" === this.type.substr(0, 8)) {
       return !0;
     }
-    if (!("angle" === b.type && "text" === this.type || "text" === b.type && "angle" === this.type) && b.type !== this.type) {
+    var c = b.type, d = this.type;
+    if (!("angle" === c && "text" === d || "text" === c && "angle" === d) && c !== d) {
       return !1;
     }
-    for (var c = 0;c < this.params.length;c++) {
-      var d = this.params[c];
-      if (d instanceof Entry.Block) {
+    for (c = 0;c < this.params.length;c++) {
+      if (d = this.params[c], d instanceof Entry.Block) {
         if (!d.isSameParamWith(b.params[c])) {
           return !1;
         }
