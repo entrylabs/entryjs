@@ -15739,15 +15739,17 @@ Entry.Curtain = {};
   this.align = function() {
     var c = this._targetDom;
     if (c) {
-      var b = $(window), f = $("body")[0].getBoundingClientRect().width, d = b.width(), b = b.height();
-      d < Math.round(f) && (f = d);
-      d = this._doms;
+      var b = $(window), f = $("body")[0].getBoundingClientRect(), d = f.width, f = f.height, e = b.width(), b = b.height();
+      e < Math.round(d) && (d = e);
+      b < Math.round(f) && (f = b);
+      b = this._doms;
       if (c.get(0)) {
-        var c = c.get(0).getBoundingClientRect(), e = Math.round(c.top), g = Math.round(c.right), h = Math.round(c.bottom);
-        d.top.css({height:e});
-        d.left.css({top:e, right:f - g + c.width, bottom:b - h});
-        d.bottom.css({top:h, right:f - g});
-        d.right.css({top:e, left:d.bottom[0].getBoundingClientRect().width || g});
+        var g = c.get(0).getBoundingClientRect(), c = Math.round(g.top), e = Math.round(g.right), h = Math.round(g.bottom);
+        b.top.css({height:c});
+        b.left.css({top:c, right:d - e + g.width, bottom:Math.round(f - h)});
+        f = b.left[0].getBoundingClientRect();
+        b.bottom.css({top:f.top + f.height || h, right:d - e});
+        b.right.css({top:c, left:b.bottom[0].getBoundingClientRect().width || e});
       }
     }
   };

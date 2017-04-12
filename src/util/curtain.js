@@ -51,11 +51,18 @@ goog.require('Entry.Dom');
         var dom = this._targetDom;
         if (!dom) return;
         var $win = $(window);
-        var bodyWidth = $('body')[0].getBoundingClientRect().width;
+        var bodyRect = $('body')[0].getBoundingClientRect();
+        var bodyWidth = bodyRect.width;
+        var bodyHeight = bodyRect.height;
+
         var winWidth = $win.width();
         var winHeight = $win.height();
+
         if (winWidth < Math.round(bodyWidth))
             bodyWidth = winWidth;
+
+        if (winHeight < Math.round(bodyHeight))
+            bodyHeight = winHeight;
 
         var doms = this._doms;
 
@@ -74,10 +81,12 @@ goog.require('Entry.Dom');
         doms.left.css({
             top: topPos,
             right: bodyWidth - rightPos + rect.width,
-            bottom: winHeight - bottom
+            bottom: Math.round(bodyHeight - bottom)
         });
+        var leftLect = doms.left[0].getBoundingClientRect();
+        var bottomTop = leftLect.top + leftLect.height;
         doms.bottom.css({
-            top: bottom,
+            top: bottomTop || bottom,
             right: bodyWidth - rightPos
         });
         doms.right.css({
