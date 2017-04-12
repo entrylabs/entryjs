@@ -14,7 +14,9 @@ goog.require("Entry.Extension");
 Entry.TargetChecker = function(code, isForEdit) {
     this.isForEdit = isForEdit;
     this.goals = [];
+    this.publicGoals = [];
     this.unachievedGoals = [];
+    this.remainPublicGoal = 0;
     if (this.isForEdit) {
         this.watchingBlocks = [];
         Entry.playground.mainWorkspace.blockMenu.unbanClass("checker");
@@ -33,6 +35,7 @@ Entry.TargetChecker = function(code, isForEdit) {
 
     Entry.registerAchievement = this.registerAchievement.bind(this);
     this.script = new Entry.Code(code ? code : [], this);
+    Entry.targetChecker = this;
 };
 
 Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
@@ -58,8 +61,10 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         if (!this._view)
             return;
         var len = this.goals.length;
+        var publicLen = this.publicGoals.length;
         this._view.text("목표 : " + (len - this.unachievedGoals.length) +
-                        " / " + len);
+                        " / " + len + " , 공식 목표 : " +
+                       (publicLen - this.remainPublicGoal) + " / " + publicLen);
         if (this.isSuccess)
             this._view.addClass("success");
         else
@@ -83,6 +88,8 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         if (this.isSuccess || this.isFail || this.unachievedGoals.indexOf(id) < 0)
             return;
         this.unachievedGoals.splice(this.unachievedGoals.indexOf(id), 1);
+        if (this.publicGoals.indexOf(id) > -1)
+            this.remainPublicGoal--;
         if (this.unachievedGoals.length === 0) {
             this.isSuccess = true;
             Entry.achieveEvent.notify("success");
@@ -100,16 +107,25 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
 
     p.reset = function() {
         this.unachievedGoals = this.goals.concat();
+        this.remainPublicGoal = this.publicGoals.length;
         this.isFail = false;
         this.isSuccess = false;
         this.updateView();
     };
 
+    p.checkGoal = function(goalName) {
+        return this.goals.indexOf(goalName) > -1 &&
+            this.unachievedGoals.indexOf(goalName) < 0;
+    };
+
     p.registerAchievement = function(block) {
         if (this.isForEdit)
             this.watchingBlocks.push(block);
-        if (block.params[1] && this.goals.indexOf(block.params[0] + "") < 0)
+        if (block.params[1] && this.goals.indexOf(block.params[0] + "") < 0) {
             this.goals.push(block.params[0] + "");
+            this.publicGoals.push(block.params[0] + "");
+            this.remainPublicGoal = this.publicGoals.length;
+        }
         this.reset();
     };
 
@@ -120,6 +136,11 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
             blocks.filter(function(b) {return b.params[1] === 1})
                   .map(function(b) {return b.params[0] + ""})
         );
+        this.publicGoals = _.uniq(
+            blocks.filter(function(b) {return b.params[1] === 1 && b.params[2] === 1})
+                  .map(function(b) {return b.params[0] + ""})
+        );
+        this.remainPublicGoal = this.publicGoals.length;
     };
 
     p.clearExecutor = function() {

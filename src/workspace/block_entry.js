@@ -32577,7 +32577,7 @@ Entry.block = {
     "check_lecture_goal": {
         "color": "#7C7C7C",
         "skeleton": "basic",
-        "template": "목표 %1 %2 %3",
+        "template": "목표 %1 %2 ( %3 ) %4",
         "statements": [],
         "params": [
             {
@@ -32590,6 +32590,15 @@ Entry.block = {
                     ["달성", 1],
                     ["실패", 0]
                 ],
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["공식", 1],
+                    ["비공식", 0]
+                ],
+                "value": 1,
                 "fontSize": 11
             },
             {
@@ -32608,6 +32617,7 @@ Entry.block = {
         "def": {
             "params": [
                 0,
+                1,
                 1
             ],
             "type": "check_lecture_goal"
@@ -32619,7 +32629,6 @@ Entry.block = {
         "isNotFor": [ "checker" ],
         "func": function (sprite, script) {
             Entry.achieve(this.block.params[1], this.block.params[0] + "");
-            this.die();
         }
     },
     "check_block_execution": {
@@ -32740,6 +32749,66 @@ Entry.block = {
                 return variable.getValue();
             else
                 return;
+        }
+    },
+    "show_prompt": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "%1 안내하기 %2",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": ""
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                " "
+            ],
+            "type": "show_prompt"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            Entry.toast.success("안내", this.block.params[0]);
+        }
+    },
+    "check_goal_success": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_boolean_field",
+        "template": "목표 %1 이 성공?",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": ""
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "0"
+            ],
+            "type": "check_goal_success"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var goalName = this.block.params[0] + "";
+            return Entry.targetChecker.checkGoal(goalName);
         }
     },
     "wildcard_string": {

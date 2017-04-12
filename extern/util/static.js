@@ -98,6 +98,8 @@ EntryStatic.getAllBlocks = function() {
                 "check_block_execution",
                 "check_lecture_goal",
                 "check_variable_by_name",
+                "show_prompt",
+                "check_goal_success",
                 "wildcard_string",
                 "wildcard_boolean"
             ]

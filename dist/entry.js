@@ -17528,7 +17528,9 @@ Entry.Model = function(c, b) {
 Entry.TargetChecker = function(c, b) {
   this.isForEdit = b;
   this.goals = [];
+  this.publicGoals = [];
   this.unachievedGoals = [];
+  this.remainPublicGoal = 0;
   this.isForEdit && (this.watchingBlocks = [], Entry.playground.mainWorkspace.blockMenu.unbanClass("checker"), Entry.addEventListener("run", this.reRegisterAll.bind(this)));
   this.isSuccess = this.isFail = !1;
   this.entity = this;
@@ -17538,6 +17540,7 @@ Entry.TargetChecker = function(c, b) {
   Entry.addEventListener("stop", this.reset.bind(this));
   Entry.registerAchievement = this.registerAchievement.bind(this);
   this.script = new Entry.Code(c ? c : [], this);
+  Entry.targetChecker = this;
 };
 Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
 (function(c) {
@@ -17554,8 +17557,8 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
   };
   c.updateView = function() {
     if (this._view) {
-      var b = this.goals.length;
-      this._view.text("\ubaa9\ud45c : " + (b - this.unachievedGoals.length) + " / " + b);
+      var b = this.goals.length, c = this.publicGoals.length;
+      this._view.text("\ubaa9\ud45c : " + (b - this.unachievedGoals.length) + " / " + b + " , \uacf5\uc2dd \ubaa9\ud45c : " + (c - this.remainPublicGoal) + " / " + c);
       this.isSuccess ? this._view.addClass("success") : this._view.removeClass("success");
       this.isFail ? this._view.addClass("fail") : this._view.removeClass("fail");
     }
@@ -17564,19 +17567,23 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     !this.isFail && Entry.engine.achieveEnabled && (b ? this.achieveGoal(c) : this.fail(c));
   };
   c.achieveGoal = function(b) {
-    this.isSuccess || this.isFail || 0 > this.unachievedGoals.indexOf(b) || (this.unachievedGoals.splice(this.unachievedGoals.indexOf(b), 1), 0 === this.unachievedGoals.length && (this.isSuccess = !0, Entry.achieveEvent.notify("success")), this.updateView());
+    this.isSuccess || this.isFail || 0 > this.unachievedGoals.indexOf(b) || (this.unachievedGoals.splice(this.unachievedGoals.indexOf(b), 1), -1 < this.publicGoals.indexOf(b) && this.remainPublicGoal--, 0 === this.unachievedGoals.length && (this.isSuccess = !0, Entry.achieveEvent.notify("success")), this.updateView());
   };
   c.fail = function() {
     this.isSuccess || this.isFail || (this.isFail = !0, Entry.achieveEvent.notify("fail"), this.updateView());
   };
   c.reset = function() {
     this.unachievedGoals = this.goals.concat();
+    this.remainPublicGoal = this.publicGoals.length;
     this.isSuccess = this.isFail = !1;
     this.updateView();
   };
+  c.checkGoal = function(b) {
+    return -1 < this.goals.indexOf(b) && 0 > this.unachievedGoals.indexOf(b);
+  };
   c.registerAchievement = function(b) {
     this.isForEdit && this.watchingBlocks.push(b);
-    b.params[1] && 0 > this.goals.indexOf(b.params[0] + "") && this.goals.push(b.params[0] + "");
+    b.params[1] && 0 > this.goals.indexOf(b.params[0] + "") && (this.goals.push(b.params[0] + ""), this.publicGoals.push(b.params[0] + ""), this.remainPublicGoal = this.publicGoals.length);
     this.reset();
   };
   c.reRegisterAll = function() {
@@ -17587,6 +17594,12 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     }).map(function(b) {
       return b.params[0] + "";
     }));
+    this.publicGoals = _.uniq(b.filter(function(b) {
+      return 1 === b.params[1] && 1 === b.params[2];
+    }).map(function(b) {
+      return b.params[0] + "";
+    }));
+    this.remainPublicGoal = this.publicGoals.length;
   };
   c.clearExecutor = function() {
     this.script.clearExecutors();
