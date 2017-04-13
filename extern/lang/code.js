@@ -3336,14 +3336,17 @@ Lang.Menus = {
     "ev3": "EV3",
     "roduino": "로두이노",
     "schoolkit": "스쿨키트",
-    "smartboard": "과학상자 스마트 보드",
+    "smartboard": "과학상자 코딩보드",
     "codestar": "코드스타",
     "cobl": "코블",
     "block_coding": "블록코딩",
     "python_coding": "엔트리파이선",
     "dadublock": "다두블럭",
     "dadublock_car": "다두블럭 자동차",
-    "blacksmith": "대장장이 보드"
+    "blacksmith": "대장장이 보드",
+    "modi": "모디",
+    "chocopi": "초코파이보드",
+    "coconut": "코코넛"
 };
 Lang.Msgs = {
     "save_canvas_alert": "저장 중입니다. 잠시후에 다시 시도해주세요.",
@@ -4195,7 +4198,9 @@ Lang.General = {
     "note_f": "파",
     "note_g": "솔",
     "note_a": "라",
-    "note_b": "시"
+    "note_b": "시",
+    "clock": "시계",
+    "counter_clock": "반시계"
 };
 Lang.Fonts = {
     "batang": "바탕체",
@@ -4236,7 +4241,16 @@ Lang.Hw = {
     "motor": "모터",
     "button": "버튼",
     "": "",
-    "buzzer": "버저"
+    "buzzer": "버저",
+    "IR": "적외선",
+    "acceleration": "가속",
+    "analog": "아날로그",
+    "angular_acceleration": "각가속",
+    "humidity": "습도",
+    "joystick": "조이스틱",
+    "port": "포트",
+    "potentiometer": "포텐시오미터",
+    "servo": "서보"
 };
 Lang.template = {
     "albert_hand_found": "Entry.Albert.isHandFound()",

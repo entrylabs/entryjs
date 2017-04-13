@@ -3336,14 +3336,17 @@ Lang.Menus = {
     "ev3": "EV3",
     "roduino": "Roduino",
     "schoolkit": "School Kit",
-    "smartboard": "Sciencebox Smart Board",
+    "smartboard": "Sciencebox Codingboard",
     "codestar": "Codestar",
     "cobl": "Cobl",
     "block_coding": "Block Coding",
     "python_coding": "Entry Python",
     "dadublock": "DaduBlock",
     "dadublock_car": "DaduBlock Car",
-    "blacksmith": "Blacksmith Board"
+    "blacksmith": "Blacksmith Board",
+    "modi": "MODI",
+    "chocopi": "ChocoPi",
+    "coconut": "coconut"
 };
 Lang.Msgs = {
     "save_canvas_alert": "Currently saving. Try again soon.",
@@ -4195,7 +4198,9 @@ Lang.General = {
     "note_f": "Pha",
     "note_g": "Son",
     "note_a": "La",
-    "note_b": "Si"
+    "note_b": "Si",
+    "clock": "clock",
+    "counter_clock": "counterclock"
 };
 Lang.Fonts = {
     "batang": "Batang",
@@ -4236,7 +4241,16 @@ Lang.Hw = {
     "motor": "motor",
     "button": "button",
     "": "",
-    "buzzer": "Chuông"
+    "buzzer": "Chuông",
+    "IR": "infrared",
+    "acceleration": "acceleration",
+    "analog": "analog",
+    "angular_acceleration": "angular acceleration",
+    "humidity": "humidity",
+    "joystick": "joystick",
+    "port": "port",
+    "potentiometer": "potentiometer",
+    "servo": "servo"
 };
 Lang.template = {
     "albert_hand_found": "tìm tay?",
