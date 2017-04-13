@@ -37439,7 +37439,7 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.coconut_turn_once_left,"1"],
+                    [Lang.Blocks.coconut_turn_left,"1"],
                     [Lang.Blocks.coconut_turn_right,"2"]
                 ],
                 "value": "1",
@@ -37513,7 +37513,7 @@ Entry.block = {
     "coconut_turn_to_led": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1으로 회전하는 동안 %2 LED 켜기 %3",
+        "template": "%1으로 회전하는 동안 %2 RGB 켜기 %3",
         "statements": [],
         "params": [
             {
@@ -37679,7 +37679,7 @@ Entry.block = {
     "coconut_set_led_to": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 LED를 %2으로 켜기기 %3",
+        "template": "%1 RGB를 %2으로 켜기기 %3",
         "statements": [],
         "params": [
             {
@@ -37767,7 +37767,7 @@ Entry.block = {
     "coconut_clear_led": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 LED 끄기 %2",
+        "template": "%1 RGB 끄기 %2",
         "statements": [],
         "params": [
             {
@@ -37835,7 +37835,7 @@ Entry.block = {
     "coconut_set_led_clear": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 LED %2 끄기 %3",
+        "template": "%1 RGB %2 끄기 %3",
         "statements": [],
         "params": [
             {
@@ -37921,7 +37921,7 @@ Entry.block = {
     "coconut_set_led_time": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 LED %2으로 %3 초 동안 켜기 %4",
+        "template": "%1 RGB %2으로 %3 초 동안 켜기 %4",
         "statements": [],
         "params": [
             {
@@ -38472,7 +38472,7 @@ Entry.block = {
     "coconut_play_buzzer_led": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 %2 %3 음을 %4 박자로 연주하는 동안 %5 LED %6 켜기 %7",
+        "template": "%1 %2 %3 음을 %4 박자로 연주하는 동안 %5 RGB %6 켜기 %7",
         "statements": [],
         "params": [
             {

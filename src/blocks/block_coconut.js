@@ -13,16 +13,9 @@ PORT_MAP: {
         extA3 : 0,
     },
  setZero:function() {
-  var a = Entry.coconut.PORT_MAP, b = Entry.hw.sendQueue, d;
-  for (d in a) {
-    b[d] = a[d];
-  }
+  var sq = Entry.hw.sendQueue;
+  sq.msgValue = [0xff, 0x55, 0x02, 0x00, 0x04];
   Entry.hw.update();
-  a = Entry.coconut;
-  a.lineTracerModeId = 0;
-  a.lineTracerStateId = -1;
-  a.tempo = 60;
-  a.removeAllTimeouts();
 }, lineTracerModeId:0, lineTracerStateId:-1, tempo:60, timeouts:[], removeTimeout:function(a) {
   clearTimeout(a);
   var b = this.timeouts;
@@ -39,7 +32,6 @@ PORT_MAP: {
   a.lineTracerMode = b;
   a.lineTracerModeId = this.lineTracerModeId;
 }, 
-//START : 2017.02.22 : LTW
 msgValue:0,
 insertQueue:function(msg, sq){
     sq.msgValue = msg;
@@ -749,8 +741,6 @@ monitorTemplate: {
             "accelerationX":{name: Lang.Blocks.coconut_sensor_acceleration_x, type: "input", pos: {x: 0, y: 0}},
             "accelerationY":{name: Lang.Blocks.coconut_sensor_acceleration_y, type: "input", pos: {x: 0, y: 0}},
             "accelerationZ":{name: Lang.Blocks.coconut_sensor_acceleration_z, type: "input", pos: {x: 0, y: 0}},
-            "buzzer":{name: Lang.Hw.buzzer , type: "output", pos: {x: 0, y: 0}},
-            "note":{name:  Lang.Hw.note , type: "output", pos: {x: 0, y: 0}},
         },
         ports: {
             "leftProximityValue":{name: Lang.Blocks.coconut_sensor_left_proximity, type: "input", pos: {x: 122, y: 156}},
