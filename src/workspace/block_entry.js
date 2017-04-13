@@ -39492,7 +39492,6 @@ Entry.block = {
     "coconut_move_motor": {
        "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 움직이기 %2",
         "statements": [],
         "params": [
             {
@@ -39561,7 +39560,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 으로 돌기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -39629,7 +39627,6 @@ Entry.block = {
         "fontColor": "#fff",
         "skeleton": "basic",
         "statements": [],
-        "template": "모터 정지 %1",
         "params": [
             {
                 type: "Indicator",
@@ -39682,7 +39679,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2초 동안 움직이기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -39761,13 +39757,12 @@ Entry.block = {
     "coconut_turn_for_secs": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1으로 %2초 동안 돌기 %3",
         "statements": [],
         "params": [
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.coconut_turn_once_left,"1"],
+                    [Lang.Blocks.coconut_turn_left,"1"],
                     [Lang.Blocks.coconut_turn_right,"2"]
                 ],
                 "value": "1",
@@ -39840,7 +39835,6 @@ Entry.block = {
     "coconut_turn_to_led": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1으로 회전하는 동안 %2 LED 켜기 %3",
         "statements": [],
         "params": [
             {
@@ -39923,7 +39917,6 @@ Entry.block = {
     "coconut_move_outmotor": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "외부모터 %1(으로) 움직이기 속도 %2 %3",
         "statements": [],
         "params": [
             {
@@ -40004,7 +39997,6 @@ Entry.block = {
     "coconut_set_led_to": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 LED를 %2으로 켜기 %3",
         "statements": [],
         "params": [
             {
@@ -40091,7 +40083,6 @@ Entry.block = {
     "coconut_clear_led": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 LED 끄기 %2",
         "statements": [],
         "params": [
             {
@@ -40158,7 +40149,6 @@ Entry.block = {
     "coconut_set_led_clear": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 LED %2 끄기 %3",
         "statements": [],
         "params": [
             {
@@ -40243,7 +40233,6 @@ Entry.block = {
     "coconut_set_led_time": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 LED %2으로 %3 초 동안 켜기 %4",
         "statements": [],
         "params": [
             {
@@ -40340,7 +40329,6 @@ Entry.block = {
     "coconut_beep": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "버저 켜기 %1",
         "statements": [],
         "params": [
             {
@@ -40393,7 +40381,6 @@ Entry.block = {
     "coconut_buzzer_time": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "버저음을 %1초 동안 소리내기 %2",
         "statements": [],
         "params": [
             {
@@ -40459,7 +40446,6 @@ Entry.block = {
     "coconut_buzzer_set_hz": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "버저음 %1 Hz를 %2초 동안 소리내기 %3",
         "statements": [],
         "params": [
             {
@@ -40535,7 +40521,6 @@ Entry.block = {
     "coconut_clear_buzzer": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "버저끄기 %1",
         "statements": [],
         "params": [
             {
@@ -40588,7 +40573,6 @@ Entry.block = {
     "coconut_play_buzzer": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 %2 %3 음을 %4 박자로 연주하기 %5",
         "statements": [],
         "params": [
             {
@@ -40713,7 +40697,6 @@ Entry.block = {
     "coconut_rest_buzzer": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 동안 쉬기 %2",
         "statements": [],
         "params": [
             {
@@ -40786,7 +40769,6 @@ Entry.block = {
     "coconut_play_buzzer_led": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 %2 %3 음을 %4 박자로 연주하는 동안 %5 LED %6 켜기 %7",
         "statements": [],
         "params": [
             {
@@ -40944,7 +40926,6 @@ Entry.block = {
     "coconut_play_midi": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "%1 연주하기 %2",
         "statements": [],
         "params": [
             {
@@ -41137,7 +41118,6 @@ Entry.block = {
     "coconut_following_line": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "선 따라가기 %1",
         "statements": [],
         "params": [
             {
@@ -41338,7 +41318,6 @@ Entry.block = {
     "coconut_avoid_mode": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "어보이드 모드 %1",
         "statements": [],
         "params": [
             {
@@ -41394,7 +41373,6 @@ Entry.block = {
     "coconut_dotmatrix_set": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "도트매트릭스 %1 ( %2 줄 %3 칸 ) %4",
         "statements": [],
         "params": [
             {
@@ -41508,7 +41486,6 @@ Entry.block = {
     "coconut_dotmatrix_on": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "도트매트릭스 모두 켜기 %1",
         "statements": [],
         "params": [
                 {
@@ -41562,7 +41539,6 @@ Entry.block = {
     "coconut_dotmatrix_off": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "도트매트릭스 모두 끄기 %1",
         "statements": [],
         "params": [
             {
@@ -41616,7 +41592,6 @@ Entry.block = {
     "coconut_dotmatrix_num": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "도트매트릭스 숫자 %1 표시 %2",
         "statements": [],
         "params": [
             {
@@ -41697,7 +41672,6 @@ Entry.block = {
     "coconut_dotmatrix_small_eng": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "도트매트릭스 소문자 %1 표시 %2",
         "statements": [],
         "params": [
             {
@@ -41788,7 +41762,6 @@ Entry.block = {
     "coconut_dotmatrix_big_eng": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "도트매트릭스 대문자 %1 표시 %2",
         "statements": [],
         "params": [
             {
@@ -41879,7 +41852,6 @@ Entry.block = {
     "coconut_dotmatrix_kor": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "도트매트릭스 한글 %1 표시 %2",
         "statements": [],
         "params": [
             {
@@ -42128,7 +42100,6 @@ Entry.block = {
     "coconut_outspk_sensor": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "외부 스피커 설정 %1 %2 Hz로 %3초 동안 소리내기 %4",
         "statements": [],
         "params": [
             {
@@ -42217,7 +42188,6 @@ Entry.block = {
     "coconut_outspk_sensor_off": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "외부 스피커 %1 끄기 %2",
         "statements": [],
         "params": [
             {
@@ -42369,7 +42339,6 @@ Entry.block = {
     "coconut_servomotor_angle": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "서보모터 연결 %1 각도 %2 %3",
         "statements": [],
         "params": [
             {
