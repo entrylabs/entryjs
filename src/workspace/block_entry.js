@@ -42017,7 +42017,6 @@ Entry.block = {
     "coconut_outled_sensor": {
         "color": "#00979D",
         "skeleton": "basic",
-        "template": "외부 LED 설정 %1 %2초 동안 켜기 %3",
         "statements": [],
         "params": [
             {
