@@ -7420,12 +7420,12 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "15.멜로디%1 시간%2(초) ,%3",
+        template: "15.멜로디%1 시간%2(초) %3",
         params: [
             {
                 type: "Dropdown",
                 options: [
-                ["((낮은)솔","L_So"],
+                ["(낮은)솔","L_So"],
                 ["(낮은)솔#","L_So#"],
                 ["(낮은)라","L_La"],
                 ["(낮은)라#","L_La#"],
@@ -7446,7 +7446,7 @@ Entry.block = {
                 ["(높은)도#","H_Do#"],
                 ["(높은)레","H_Re"],
                 ["(높은)레#","H_Re#"],
-                ["(높은)미#","H_Mi"],
+                ["(높은)미","H_Mi"],
                 ["(높은)파","H_Fa"]
                 ],
                 fontSize: 11
