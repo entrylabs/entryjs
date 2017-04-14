@@ -8,14 +8,31 @@ goog.provide("Entry.PyToBlockParser");
 goog.require("Entry.KeyboardCode");
 goog.require("Entry.TextCodingUtil");
 goog.require("Entry.TextCodingError");
-goog.require("Entry.Map");
 goog.require("Entry.Queue");
 
 Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
     this.blockSyntax = blockSyntax;
 
-    this._funcMap = new Entry.Map();
+    this._funcMap = {};
+
+    /*var funcParamMap = new Entry.Map();
+    this._funcParamMap = funcParamMap;
+    */
+     /*var variableMap = new Entry.Map();
+    this._variableMap = variableMap;*/
+
+
+    /*var paramQ = new Entry.Queue();
+    this._paramQ = paramQ;
+    */
+    /*var blockCountMap = new Entry.Map();
+    this._blockCountMap = blockCountMap;*/
+
+    /*this._threadCount = 0;
+    this._blockCount = 0;*/
+
+    //Entry.TextCodingUtil.init();
 };
 
 (function(p){
@@ -230,7 +247,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
 
                 if(calleeData.name && arguments.length != 0 && arguments[0].type == "Literal") {
-                    if(!this._funcMap.get(funcNameKey)) {
+                    if(!this._funcMap[funcNameKey]) {
                         var keyword = calleeData.name;
 
                         Entry.TextCodingError.error(
@@ -1695,7 +1712,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             var funcKey = funcName;
-            var type = this._funcMap.get(funcKey);
+            var type = this._funcMap[funcKey];
             if(type) {
                 result = {};
                 result.type = type;
@@ -5015,11 +5032,47 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 this._rootFuncKey = this._currentFuncKey;
         }
 
+        if(!Entry.TextCodingUtil.isEntryEventFuncName(id.name) &&
+          !this._funcMap[textFuncName]) {
+            var newFuncId = Entry.generateHash();
+            for(var funcId in Entry.variableContainer.functions_) {
+                var blockFunc = Entry.variableContainer.functions_[funcId];
+                Entry.TextCodingUtil.initQueue();
+                Entry.TextCodingUtil.gatherFuncDefParam(blockFunc.content._data[0]._data[0].data.params[0]);
+                var funcParams = [];
 
+                paramMap = {};
+                paramInfo = {};
 
+                while(param = Entry.TextCodingUtil._funcParamQ.dequeue()) {
+                    funcParams.push(param);
+                }
+                for(var p in funcParams) {
+                    var funcParam = funcParams[p];
+                    paramMap[funcParam] = p;
+                    paramInfo[textFuncParams[p]] = funcParam;
+                }
+
+                var funcNames = [];
+                while(nameToken = Entry.TextCodingUtil._funcNameQ.dequeue()) {
+                    funcNames.push(nameToken);
+                }
+                Entry.TextCodingUtil.clearQueue();
+
+                blockFuncName = funcNames.join('__').trim();
+
+                if(textFuncName == blockFuncName) {
+                    newFuncId = blockFunc.id;
+                }
+            }
+            this._funcMap[textFuncName] = "func_" + newFuncId;
+        }
 
         var bodyData = this[body.type](body);
         var funcBodyData = bodyData.data;
+
+        if (newFuncId)
+            delete this._funcMap[textFuncName];
 
 
         //First Step - Declarations
@@ -5052,9 +5105,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
 
-
-
-
         //In case of Entry Event Function
         if(Entry.TextCodingUtil.isEntryEventFuncName(id.name)) {
             //var entryEventThread = [];
@@ -5072,90 +5122,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var component = Entry.TextCodingUtil.makeExpressionStatementForEntryEvent(id.name, param);
             var entryEventBlock = this.ExpressionStatement(component);
 
-
-
-            /*if(Entry.TextCodingUtil.isEntryEventFuncTypeWithParam(block)) {
-                var ifStatement = textFuncStatements[0];
-
-                if(textFuncStatements.length > 1) {
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다1." + "\'if\'문을 확인하세요.";
-                    error.line = this._blockCount;
-                    throw error;
-                }
-                else if(!ifStatement) {
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다2." + "\'if\'문을 확인하세요.";
-                    error.line = this._blockCount;
-                    throw error;
-                }
-                else if(ifStatement.type != "_if") {
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다3." + "\'if\'문을 확인하세요.";
-                    error.line = this._blockCount;
-                    throw error;
-                }
-                else if(ifStatement.params[0].type != "boolean_basic_operator") {
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다4." + "\'if\'문을 확인하세요.";
-                    error.line = this._blockCount;
-                    throw error;
-                }
-
-
-
-                var ifStatementParams = ifStatement.params[0];
-
-                var ifStatementParamsType = ifStatementParams.params[0].params[0];
-                var ifStatementParamsValue = ifStatementParams.params[2].params[0]
-                if(ifStatementParamsType == "key") {
-                    var keyCodeValue = ifStatementParamsValue;
-                    if(typeof ifStatementParamsValue == "string")
-                        keyCodeValue = ifStatementParamsValue.toLowerCase();
-
-                    var value = Entry.KeyboardCode.keyCharToCode[keyCodeValue];
-                    block.params.push(null);
-                    block.params.push(value);
-                }
-                else if(ifStatementParamsType == "signal") {
-                    var signalValue = ifStatementParamsValue;
-
-
-                    var targetBlock = Entry.block[block.type];
-
-                    var paramsMeta = targetBlock.params;
-                    var paramsDefMeta = targetBlock.def.params;
-
-                    var value = this.ParamDropdownDynamic(signalValue, paramsMeta[1], paramsDefMeta[1]);
-                    block.params.push(null);
-                    block.params.push(value);
-                }
-                else {
-                    var error = {};
-                    error.title = "지원되지 않는 코드";
-                    error.message = "블록으로 변환될 수 없는 코드입니다5." + "\'if\'문을 확인하세요.";
-                    error.line = this._blockCount;
-                    throw error;
-                }
-
-                var ifStatementStatements = ifStatement.statements[0];
-
-                for(var t in ifStatementStatements) {
-                    var tfs = ifStatementStatements[t];
-                    var sblock = {};
-                    sblock.type = tfs.type;
-                    if(tfs.params)
-                        sblock.params = tfs.params;
-                    if(tfs.statements)
-                        sblock.statements = tfs.statements;
-
-                    this._thread.push(sblock);
-                }
-            }*/
             entryEventBlock.contents = [];
             for(var t in textFuncStatements) {
                 var tfs = textFuncStatements[t];
@@ -5258,7 +5224,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var funcKey = name;
             var funcPrefix = "func";
             var targetFuncBlockId = funcPrefix.concat('_').concat(targetFuncId);
-            this._funcMap.put(funcKey, targetFuncBlockId);
+            this._funcMap[funcKey] = targetFuncBlockId;
             //this._currentFuncType = funcKey;
 
             result = targetFuncBlockId;
@@ -5292,7 +5258,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             //var funcId = targetFuncId;
             var funcPrefix = "func";
             var targetFuncBlockId  = funcPrefix.concat('_').concat(targetFuncId);
-            this._funcMap.put(funcKey, targetFuncBlockId);
+            this._funcMap[funcKey] = targetFuncBlockId;
             //this._currentFuncType = funcKey;
             result = targetFuncBlockId;
 
@@ -5305,7 +5271,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
 
             // Func Create
-            var newFunc = new Entry.Func();
+            var newFunc = new Entry.Func({id: newFuncId});
             newFunc.generateBlock(true);
             targetFuncId = newFunc.id;
 
@@ -5381,7 +5347,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
 
-
             for(var s in textFuncStatements) {
                 var statement = textFuncStatements[s];
                 var cFuncType = 'func_' + targetFuncId;
@@ -5402,7 +5367,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var funcKey = name;
             var funcPrefix = "func";
             var targetFuncBlockId = funcPrefix.concat('_').concat(targetFuncId);
-            this._funcMap.put(funcKey, targetFuncBlockId);
+            this._funcMap[funcKey] = targetFuncBlockId;
+
             //this._currentFuncType = funcKey;
             result = targetFuncBlockId;
         }
@@ -5494,7 +5460,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.codeInit = function() {
         this.threadInit();
         this._currentObject = Entry.getMainWS().vimBoard._currentObject;
-        this._funcMap.clear();
+        this._funcMap = {};
         this._code = [];
         this._threadCount = 0;
         this._blockCount = 0;
@@ -5530,7 +5496,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(funcContents && funcContents.data) {
             var funcKey = funcContents.data.type;
-            if(funcType = this._funcMap.get(funcKey))
+            if(funcType = this._funcMap[funcKey])
                 funcContents.data.type = funcType;
         }
 
