@@ -328,7 +328,7 @@ Blockly.Blocks.modi_infrared_value = {
         this.appendDummyInput()
         .appendField("적외선")
         .appendField(new Blockly.FieldDropdownDynamic(Entry.MODI.infraredList), "name")
-        .appendField("번 센서의 거리(cm)");
+        .appendField("번 센서의 거리(%)");
         this.setOutput(true, 'Number');
         this.setInputsInline(true);
     }
@@ -340,7 +340,7 @@ Blockly.Blocks.modi_ultrasonic_value = {
         this.appendDummyInput()
         .appendField("초음파")
         .appendField(new Blockly.FieldDropdownDynamic(Entry.MODI.ultrasonicList), "name")
-        .appendField("번 센서의 거리(cm)");
+        .appendField("번 센서의 거리(%)");
         this.setOutput(true, 'Number');
         this.setInputsInline(true);
     }
