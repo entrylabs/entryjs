@@ -42004,9 +42004,9 @@ Entry.block = {
             var pd = Entry.hw.portData;
             var xyz = script.getField("XYZ");
 
-            if(xyz="1"){
+            if(xyz == "1"){
                 return pd.accelerationX;
-            }else if(xyz="2"){
+            }else if(xyz == "2"){
                 return pd.accelerationY;
             }else{
                 return pd.accelerationZ;
