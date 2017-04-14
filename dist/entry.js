@@ -15800,6 +15800,7 @@ Entry.BlockToPyParser = function(c) {
     return c = c.trim() + "\n";
   };
   c.Block = function(b, c) {
+    !b._schema && b.loadSchema();
     c = "";
     var e, f, g;
     if (e = this.searchSyntax(b)) {
@@ -15812,7 +15813,7 @@ Entry.BlockToPyParser = function(c) {
     } else {
       this.isFuncStmtParam(b) && (c += b.data.type);
     }
-    if (!f || null == f) {
+    if (!f || null === f) {
       return c;
     }
     var h = /(%.)/mi, k = /(\$.)/mi;
@@ -15971,7 +15972,7 @@ Entry.BlockToPyParser = function(c) {
   };
   c.isRegisteredFunc = function(b) {
     b = b.data.type.split("_");
-    return Entry.variableContainer.functions_[b[1]] ? !0 : !1;
+    return !!Entry.variableContainer.functions_[b[1]];
   };
   c.isFuncStmtParam = function(b) {
     if (!b || !b.data || !b.data.type) {
