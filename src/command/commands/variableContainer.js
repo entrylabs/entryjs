@@ -46,7 +46,6 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.variableContainerAddVariable] = {
         do: function(variable) {
-            console.log(variable);
             Entry.variableContainer.addVariable(variable);
         },
         state: function(variable) {

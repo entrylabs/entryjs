@@ -51,6 +51,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 this._isEntryEventExisted = false;
                 for(var index in nodes) {
+                    var blockType;
 
                     var node = nodes[index];
 
@@ -69,17 +70,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var blockDatum = Entry.block[block.type];
                         var targetSyntax = this.searchSyntax(blockDatum);
 
-                        if(targetSyntax) {
-                            var blockType = targetSyntax.blockType;
-                        }
+                        if(targetSyntax)
+                            blockType = targetSyntax.blockType;
 
                         if(blockType == "event") {
                             this._isEntryEventExisted = true;
-                        }
-                        else if(blockType == "last") {
+                        } else if(blockType == "last") {
                             this.isLastBlock = true;
-                        }
-                        else if(blockType == "variable") {
+                        } else if(blockType == "variable") {
                             if(!this._isEntryEventExisted)
                                 continue;
                         }
@@ -6033,14 +6031,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.searchSyntax = function(datum) {
         var schema;
         var appliedParams;
+        var doNotCheckParams = false;
         if(datum instanceof Entry.BlockView) {
             schema = datum.block._schema;
-            applliedParams = datum.block.data.params;
+            appliedParams = datum.block.data.params;
         } else if (datum instanceof Entry.Block) {
             schema = datum._schema;
-            applliedParams = datum.params;
+            appliedParams = datum.params;
+        } else {
+            schema = datum;
+            doNotCheckParams = true;
         }
-        else schema = datum;
 
         if(schema && schema.syntax) {
             var syntaxes = schema.syntax.py.concat();
@@ -6051,7 +6052,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     return {syntax: syntax, template: syntax};
                 if (syntax.params) {
                     for (var i = 0; i < syntax.params.length; i++) {
-                        if (syntax.params[i] && syntax.params[i] !== applliedParams[i]) {
+                        if (doNotCheckParams !== true && syntax.params[i] &&
+                            syntax.params[i] !== appliedParams[i]) {
                             isFail = true;
                             break;
                         }
