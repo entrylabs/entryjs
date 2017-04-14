@@ -1247,7 +1247,7 @@
                 var duration = script.getNumberValue('DURATION');
                 
                 if (!script.isStart) {
-                    !(Entry.hw.sendQueue.digitalPinMod) {
+                    if(!Entry.hw.sendQueue.digitalPinMod) {
                         Entry.hw.sendQueue.digitalPinMod = {};
                     }
                     if(wheel == 1) {
@@ -1376,7 +1376,7 @@
                 var speed = script.getNumberValue('SPEED');
                 var direction = script.getNumberField('DIRECTION');
                 
-                !(Entry.hw.sendQueue.digitalPinMod) {
+                if(!Entry.hw.sendQueue.digitalPinMod) {
                     Entry.hw.sendQueue.digitalPinMod = {};
                 }
 
@@ -1460,7 +1460,7 @@
                 var motor2 = 8;
                 var wheel = script.getNumberField('WHEEL');
 
-                !(Entry.hw.sendQueue.digitalPinMod) {
+                if(!Entry.hw.sendQueue.digitalPinMod) {
                     Entry.hw.sendQueue.digitalPinMod = {};
                 }
                 
@@ -1513,7 +1513,7 @@
             func: function(sprite, script) {
 				var port = Entry.Roborobo_SchoolKit.inputPort.contact;
 
-                !(Entry.hw.sendQueue.digitalPinMod) {
+                if(!Entry.hw.sendQueue.digitalPinMod) {
                     Entry.hw.sendQueue.digitalPinMod = {};
                 }
 
@@ -1549,7 +1549,7 @@
                 var port = Entry.Roborobo_SchoolKit.inputPort.contact;
                 var touch = script.getNumberField('TOUCH', script);
                 
-                !(Entry.hw.sendQueue.digitalPinMod) {
+                if(!Entry.hw.sendQueue.digitalPinMod) {
                     Entry.hw.sendQueue.digitalPinMod = {};
                 }
 
@@ -1769,7 +1769,7 @@
             func: function(sprite, script) {                
                 var port = Entry.Roborobo_SchoolKit.inputPort.ir;\
 
-                !(Entry.hw.sendQueue.digitalPinMod) {
+                if(!Entry.hw.sendQueue.digitalPinMod) {
                     Entry.hw.sendQueue.digitalPinMod = {};
                 }
 
@@ -1806,7 +1806,7 @@
                 var port = Entry.Roborobo_SchoolKit.inputPort.ir;
                 var detect = script.getNumberField('DETECT', script);
                 
-                !(Entry.hw.sendQueue.digitalPinMod) {
+                if(!Entry.hw.sendQueue.digitalPinMod) {
                     Entry.hw.sendQueue.digitalPinMod = {};
                 }
 
@@ -1871,7 +1871,7 @@
                 var duration = script.getNumberValue('DURATION');
                 var value = script.getNumberField('VALUE');                
 
-                !(Entry.hw.sendQueue.digitalPinMod) {
+                if(!Entry.hw.sendQueue.digitalPinMod) {
                     Entry.hw.sendQueue.digitalPinMod = {};
                 }
 
@@ -1942,7 +1942,7 @@
                 var port = script.getNumberField('PORT');
                 var value = script.getNumberField('VALUE');
                 
-                !(Entry.hw.sendQueue.digitalPinMod) {
+                if(!Entry.hw.sendQueue.digitalPinMod) {
                     Entry.hw.sendQueue.digitalPinMod = {};
                 }
 
@@ -2022,7 +2022,7 @@
                 if (result < nMin)
                     result = nMin;
                 
-                !(Entry.hw.sendQueue.digitalPinMod) {
+                if(!Entry.hw.sendQueue.digitalPinMod) {
                     Entry.hw.sendQueue.digitalPinMod = {};
                 }
 
@@ -2080,7 +2080,7 @@
                     value = 255;
                 }
                 
-                !(Entry.hw.sendQueue.digitalPinMod) {
+                if(!Entry.hw.sendQueue.digitalPinMod) {
                     Entry.hw.sendQueue.digitalPinMod = {};
                 }
                 
