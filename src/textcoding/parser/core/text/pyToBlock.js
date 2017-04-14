@@ -15,26 +15,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
     this.blockSyntax = blockSyntax;
 
-    var funcMap = new Entry.Map();
-    this._funcMap = funcMap;
-
-    /*var funcParamMap = new Entry.Map();
-    this._funcParamMap = funcParamMap;
-    */
-     /*var variableMap = new Entry.Map();
-    this._variableMap = variableMap;*/
-
-
-    /*var paramQ = new Entry.Queue();
-    this._paramQ = paramQ;
-    */
-    /*var blockCountMap = new Entry.Map();
-    this._blockCountMap = blockCountMap;*/
-
-    /*this._threadCount = 0;
-    this._blockCount = 0;*/
-
-    //Entry.TextCodingUtil.init();
+    this._funcMap = new Entry.Map();
 };
 
 (function(p){
