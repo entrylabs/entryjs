@@ -1767,7 +1767,7 @@
             class: 'roborobo_irs',
             //'isNotFor': ['mini'],
             func: function(sprite, script) {                
-                var port = Entry.Roborobo_SchoolKit.inputPort.ir;\
+                var port = Entry.Roborobo_SchoolKit.inputPort.ir;
 
                 if(!Entry.hw.sendQueue.digitalPinMod) {
                     Entry.hw.sendQueue.digitalPinMod = {};
@@ -2083,7 +2083,7 @@
                 if(!Entry.hw.sendQueue.digitalPinMod) {
                     Entry.hw.sendQueue.digitalPinMod = {};
                 }
-                
+
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                 Entry.hw.sendQueue[port] = value;
                 
