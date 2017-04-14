@@ -41089,24 +41089,24 @@ Entry.block = {
                 }
             }else if(dir=="1"){
                 if(det=="1"){
-                    if (pd.BothFloorDetection == 2 || pd.BothFloorDetection ==3) // 왼쪽 바닥센서가 감지
+                    if (pd.BothFloorDetection == 2) // 왼쪽 바닥센서가 감지
                         return true;
                        else
                         return false;
                 }else{
-                    if (pd.BothFloorDetection == 0 || pd.BothFloorDetection ==1) // 왼쪽 바닥센서가 감지
+                    if (pd.BothFloorDetection == 0) // 왼쪽 바닥센서가 감지
                         return true;
                        else
                         return false;
                 }
             }else if(dir == "2"){
                 if(det=="1"){
-                    if (pd.BothFloorDetection == 1 || pd.BothFloorDetection ==3) // 오른쪽 바닥센서가 감지
+                    if (pd.BothFloorDetection == 1) // 오른쪽 바닥센서가 감지
                         return true;
                        else
                         return false;
                 }else{
-                    if (pd.BothFloorDetection == 0 || pd.BothFloorDetection ==2) // 오른쪽 바닥센서가 감지
+                    if (pd.BothFloorDetection == 0) // 오른쪽 바닥센서가 감지
                         return true;
                        else
                         return false;

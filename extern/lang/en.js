@@ -4781,7 +4781,7 @@ Lang.template = {
     "coconut_tem_sensor": "temperature",
     "coconut_ac_sensor": "3-Axis Accelerometer %1 angle",
     "coconut_outled_sensor": "set external LED pin %1 for time %2 %3",
-    "coconut_outspk_sensor": "set Speaker pin %1 frequency %2 (Hz) uration %3 seconds %4",
+    "coconut_outspk_sensor": "set Speaker pin %1 frequency %2 (Hz) duration %3 seconds %4",
     "coconut_outspk_sensor_off": "stop Speaker pin %1 %2",
     "coconut_outinfrared_sensor": "external IR sensor %1",
     "coconut_outcds_sensor": "external Cds sensor %1",
