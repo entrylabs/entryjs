@@ -11484,6 +11484,7 @@ Entry.BlockToPyParser = function(c) {
     return c = c.trim() + "\n";
   };
   c.Block = function(b, c) {
+    !b._schema && b.loadSchema();
     var d = "", e, g, h;
     if (e = this.searchSyntax(b)) {
       g = e.syntax;
@@ -11495,7 +11496,7 @@ Entry.BlockToPyParser = function(c) {
     } else {
       this.isFuncStmtParam(b) && (d += b.data.type);
     }
-    if (!g || null == g) {
+    if (!g || null === g) {
       return d;
     }
     var k = /(%.)/mi, l = /(\$.)/mi;
@@ -11654,7 +11655,7 @@ Entry.BlockToPyParser = function(c) {
   };
   c.isRegisteredFunc = function(b) {
     b = b.data.type.split("_")[1];
-    return Entry.variableContainer.functions_[b] ? !0 : !1;
+    return !!Entry.variableContainer.functions_[b];
   };
   c.isFuncStmtParam = function(b) {
     if (!b || !b.data || !b.data.type) {
