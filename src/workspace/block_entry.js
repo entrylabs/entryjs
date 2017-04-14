@@ -560,7 +560,7 @@ Entry.block = {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
-        "template": "적외선 %1번 센서의 거리(cm)",
+        "template": "적외선 %1번 센서의 거리(%)",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -605,7 +605,7 @@ Entry.block = {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
-        "template": "초음파 %1번 센서의 거리(cm)",
+        "template": "초음파 %1번 센서의 거리(%)",
         "params": [
             {
                 "type": "DropdownDynamic",
