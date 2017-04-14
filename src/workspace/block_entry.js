@@ -486,8 +486,8 @@ Entry.block = {
                 "options": [
                     ["Click",2],
                     ["Double Click",3],
-                    ["Toggle",4],
-                    ["Press",5]
+                    ["Toggle",5],
+                    ["Press",4]
                 ],
                 "fontSize": 11
             }
