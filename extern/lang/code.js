@@ -4809,7 +4809,7 @@ Lang.template = {
     "dadublock_car_motor": "모터 %1 번을 %2 (으)로 %3 %의 속도로 움직이기 %4",
     "dadublock_car_motor_stop": "모터 %1 번 멈추기 %2",
     "dadublock_car_set_servo": "서보모터 %1 번 핀을 %2 의 각도로 정하기 %3",
-    "dadublock_car_set_tone": "디지털 %1 번 핀 을 %2 음으로 %3의 옥타르보 %4 큼 연주하기 %5",
+    "dadublock_car_set_tone": "디지털 %1 번 핀 을 %2 음으로 %3의 옥타브로 %4 큼 연주하기 %5",
     "dadublock_car_toggle_led": "디지털 %1 번 핀 %2 %3",
     "ev3_get_sensor_value": "%1 의 값",
     "ev3_touch_sensor": "%1 의 터치센서가 작동되었는가?",
