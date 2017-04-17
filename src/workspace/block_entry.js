@@ -32628,7 +32628,8 @@ Entry.block = {
         "class": "checker",
         "isNotFor": [ "checker" ],
         "func": function (sprite, script) {
-            Entry.achieve(this.block.params[1], this.block.params[0] + "");
+            Entry.targetChecker.achieveCheck(
+                this.block.params[1], this.block.params[0] + "");
         }
     },
     "check_block_execution": {
@@ -32780,7 +32781,9 @@ Entry.block = {
         "class": "checker",
         "isNotFor": [ "checker" ],
         "func": function (sprite, script) {
-            Entry.toast.success("안내", this.block.params[0]);
+            if (Entry.targetChecker)
+                Entry.targetChecker.showStatusMessage(
+                    this.block.params[0]);
         }
     },
     "check_goal_success": {
