@@ -2039,20 +2039,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var calleeName;
 
-
-        /*if(init.callee && init.callee.object && init.callee.property) {
-            if(init.callee.object.object && init.callee.object.object.name)
-                var objectObjectName  = init.callee.object.object.name;
-            if(init.callee.object.property && init.callee.object.property.name)
-                var objectPropertyName = init.callee.object.property.name;
-            if(init.callee.property.name)
-                var propertyName = init.callee.property.name;
-
-            if(objectObjectName && objectPropertyName && propertyName)
-                calleeName = objectObjectName.concat('.').concat(objectPropertyName).concat('.').concat(propertyName);
-        }*/
-
-
         if(calleeName == "__pythonRuntime.objects.list") {
             result.id = idData;
 
@@ -2285,34 +2271,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         .concat(rightData.callee.object.property.name).concat('.')
                         .concat(rightData.callee.property.name);
                 }
-
-                /*if(calleeName == "__pythonRuntime.objects.list") {
-                    if(leftData && leftData.object && leftData.object.name == "self") {
-                        if(leftData.property) {
-                            var calleeName;
-                            var name = leftData.property.name;
-
-                            var array = [];
-                            var arguments = rightData.arguments;
-                            for(var a in arguments) {
-                                var argument = arguments[a];
-                                var item = {};
-                                item.data = String(argument.params[0]);
-                                array.push(item);
-                            }
-
-                            if(Entry.TextCodingUtil.isLocalListExisted(name, this._currentObject)) {
-                                if(!this._funcLoop)
-                                    Entry.TextCodingUtil.updateLocalList(name, array, this._currentObject);
-                            }
-                            else {
-                                if(!this._funcLoop) {
-                                    Entry.TextCodingUtil.createLocalList(name, array, this._currentObject);
-                                }
-                            }
-                        }
-                    }
-                }*/
 
                 //left expressoin
                 if(left.name) {
@@ -5185,32 +5143,26 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var funcThread = blockFunc.content._data[0]; //The Function Thread, index 0
                     var blockFuncContents = funcThread._data; //The Function Definition Block, index 0
                     var blockFuncDef = blockFuncContents[0];
-                    //var blockFuncCts = blockFuncContents.slice();
-                    //var blockFuncCts = blockFuncContents.shift();
 
                     var tmpBlockFuncContents = [];
                     for(var i=1; i < blockFuncContents.length; i++)
                         tmpBlockFuncContents.push(blockFuncContents[i]);
 
 
-                    matchFlag = Entry.TextCodingUtil.isFuncContentsMatch(tmpBlockFuncContents, textFuncStatements, paramMap, paramInfo, this._currentFuncKey);
-
-                }
-                else {
+                    matchFlag = Entry.TextCodingUtil.isFuncContentsMatch(
+                        tmpBlockFuncContents,
+                        textFuncStatements,
+                        paramMap,
+                        paramInfo,
+                        this._currentFuncKey
+                    );
+                } else {
                     foundFlag = false;
                     matchFlag = false;
                 }
 
                 // Final Decision In Terms of Conditions
-                if(foundFlag && matchFlag) {
-                    //var funcPrefix = "func";
-                    //targetFuncId = funcPrefix.concat('_').concat(funcId);
-                    //foundFlag = true;
-                    targetFuncId = funcId;
-                    break;
-                } else if(foundFlag && !matchFlag) {
-                    //var funcPrefix = "func";
-                    //targetFuncId = funcPrefix.concat('_').concat(funcId);
+                if(foundFlag) {
                     targetFuncId = funcId;
                     break;
                 }
@@ -5218,31 +5170,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
 
-        if(foundFlag && matchFlag) {
-            var name = textFuncName;
+        if (foundFlag && matchFlag) {
             var paramCount = textFuncParams.length;
-            var funcKey = name;
-            var funcPrefix = "func";
-            var targetFuncBlockId = funcPrefix.concat('_').concat(targetFuncId);
-            this._funcMap[funcKey] = targetFuncBlockId;
-            //this._currentFuncType = funcKey;
+            var targetFuncBlockId = "func_" + targetFuncId;
+            this._funcMap[textFuncName] = targetFuncBlockId;
 
             result = targetFuncBlockId;
-        }
-        else if (foundFlag && !matchFlag) {
+        } else if (foundFlag && !matchFlag) {
             var targetFunc = Entry.variableContainer.functions_[targetFuncId];
             var thread = targetFunc.content._data[0];
             thread._data.splice(1, thread._data.length-1);
 
 
-            for(var s in textFuncStatements) {
+            for (var s in textFuncStatements) {
                 var statement = textFuncStatements[s];
-                var cFuncType = 'func_' + targetFuncId;
                 Entry.TextCodingUtil.makeFuncParamBlock(statement, paramInfo, this._blockCount);
-                /*if(statement.statements)
-                    for(var z in statement.statements) {
-                        this.convertReculsiveFuncTypeGeneral(statement.statements[z], cFuncType);
-                    }*/
                 var stmtBlock = new Entry.Block(statement, thread);
                 thread._data.push(stmtBlock);
             }
@@ -5251,20 +5193,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.variableContainer.saveFunction(targetFunc);
             Entry.variableContainer.updateList();
 
-
-            var name = textFuncName;
             var paramCount = textFuncParams.length;
-            var funcKey = name;
-            //var funcId = targetFuncId;
-            var funcPrefix = "func";
-            var targetFuncBlockId  = funcPrefix.concat('_').concat(targetFuncId);
-            this._funcMap[funcKey] = targetFuncBlockId;
-            //this._currentFuncType = funcKey;
+            var targetFuncBlockId  = "func_" + targetFuncId;
+            this._funcMap[textFuncName] = targetFuncBlockId;
             result = targetFuncBlockId;
-
-
-        }
-        else {
+        } else {
             ////////////////////////////////////////////////////////////////
             //If Not Exist, Create New Function Block
             ////////////////////////////////////////////////////////////////
@@ -5304,16 +5237,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
 
                 newFunc.description += ' ';
-            }
-            else
-            {
+            } else {
                 newFuncDefParams[0] = textFuncName;
                 newFunc.description = textFuncName + ' ';
             }
             Entry.TextCodingUtil.initQueue();
 
-            if(textFuncParams.length > 0) {
-            var paramFieldBlock = new Entry.Block({ type: "function_field_string" }, thread);
+            if (textFuncParams.length > 0) {
+                var paramFieldBlock = new Entry.Block(
+                    { type: "function_field_string" },
+                    thread
+                );
                 paramFieldBlock.data.params = [];
                 var stringParam = Entry.Func.requestParamBlock("string");
                 var param = new Entry.Block({ type: stringParam }, thread);
@@ -5328,8 +5262,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 paramInfo = {};
                 paramInfo[textFuncParams[0]] = stringParam;
 
-                for(var p = 1; p < textFuncParams.length; p++) {
-                    var paramFieldBlock = new Entry.Block({ type: "function_field_string" }, thread);
+                for (var p = 1; p < textFuncParams.length; p++) {
+                    var paramFieldBlock = new Entry.Block({
+                        type: "function_field_string" }, thread);
                     paramFieldBlock.data.params = [];
 
                     var stringParam = Entry.Func.requestParamBlock("string");
@@ -5337,9 +5272,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     paramFieldBlock.data.params.push(param);
 
                     var paramBlock = Entry.TextCodingUtil.searchFuncDefParam(newFuncDefParams[1]);
-                    if(paramBlock.data.params.length == 0)
+                    if (paramBlock.data.params.length == 0)
                         paramBlock.data.params[0] = param;
-                    else if(paramBlock.data.params.length == 1)
+                    else if (paramBlock.data.params.length == 1)
                         paramBlock.data.params[1] = paramFieldBlock;
 
                     newFunc.paramMap[stringParam] = Number(p);
@@ -5347,34 +5282,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
 
-            for(var s in textFuncStatements) {
+            Entry.Func.generateWsBlock(newFunc);
+
+            for (var s in textFuncStatements) {
                 var statement = textFuncStatements[s];
-                var cFuncType = 'func_' + targetFuncId;
-                Entry.TextCodingUtil.makeFuncParamBlock(statement, paramInfo, this._blockCount);
-                /*if(statement.statements)
-                    for(var z in statement.statements)
-                        this.convertReculsiveFuncTypeGeneral(statement.statements[z], cFuncType);*/
+                Entry.TextCodingUtil.makeFuncParamBlock(
+                    statement, paramInfo, this._blockCount);
                 var stmtBlock = new Entry.Block(statement, thread);
                 thread._data.push(stmtBlock);
             }
 
-            Entry.Func.generateWsBlock(newFunc);
             Entry.variableContainer.saveFunction(newFunc);
             Entry.variableContainer.updateList();
 
-            var name = textFuncName;
             var paramCount = textFuncParams.length;
-            var funcKey = name;
-            var funcPrefix = "func";
-            var targetFuncBlockId = funcPrefix.concat('_').concat(targetFuncId);
-            this._funcMap[funcKey] = targetFuncBlockId;
+            var targetFuncBlockId = "func_" + targetFuncId;
+            this._funcMap[textFuncName] = targetFuncBlockId;
 
-            //this._currentFuncType = funcKey;
             result = targetFuncBlockId;
         }
 
         var tFunc = Entry.variableContainer.functions_[targetFuncId];
-        if(tFunc) {
+        if (tFunc) {
             var tFuncContents = tFunc.content._data[0]._data;
             if(this._hasReculsiveFunc) {
                 if(tFuncContents) {
@@ -5386,7 +5315,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
 
-        //Entry.TextCodingUtil.clearFuncParam();
         this._funcLoop = false;
         this._hasReculsiveFunc = false;
         this._rootFuncKey = false;
@@ -5403,8 +5331,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(bodyData.data && bodyData.data.length != 0){
             result.statements = bodyData.data;
-        }
-        else {
+        } else {
             result.statements = bodyData.statements;
         }
 
