@@ -728,6 +728,7 @@ EntryStatic.getAllBlocks = function() {
                 "coconut_turn_motor",
                 "coconut_stop_motor",
                 "coconut_move_for_secs",
+                "coconut_turn_for_secs",
                 "coconut_turn_to_led",
                 "coconut_move_outmotor",
                 "coconut_set_led_to",

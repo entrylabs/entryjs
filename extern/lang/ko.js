@@ -4749,6 +4749,7 @@ Lang.template = {
     "coconut_move_motor": "%1 움직이기 %2",
     "coconut_turn_motor": "%1 으로 돌기 %2",
     "coconut_move_for_secs": "%1 %2 초동안 움직이기 %3",
+    "coconut_turn_for_secs": "%1 으로 %2 초동안 돌기 %3",
     "coconut_turn_to_led": "%1 으로 회전하는 동안 %2LED 켜기 %3",
     "coconut_move_outmotor": "외부모터 %1(으로) 움직이기 속도 %2 %3",
     "coconut_set_led_to": "%1 LED를 %2 으로 켜기 %3",
