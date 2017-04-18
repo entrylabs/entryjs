@@ -17331,8 +17331,9 @@ Entry.Model = function(c, b) {
     return b;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, f, d) {
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
+    d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
     var l = !1, m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !l && c && (l = !0, f(), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&1", "magnet"])}], {indicator:!0, callBack:function() {
+      !l && c && (l = !0, f(), c = d.processDomQuery(["playground", "board", "&1", "magnet"]), d.toolTipRender && (d.toolTipRender.titleIndex = 1, Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1]).isParamBlockType() ? d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 2), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
       }}));
     }});
     return m;
@@ -17349,7 +17350,8 @@ Entry.Model = function(c, b) {
   d.followCmd = !0;
   c[f.insertBlockFollowSeparate] = d;
   d = Entry.cloneSimpleObject(c[f.insertBlock]);
-  d.restrict = function(b, c, f) {
+  d.restrict = function(b, c, f, d) {
+    d.toolTipRender && d.toolTipRender && (Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1]).isParamBlockType() ? d.toolTipRender.contentIndex = 0 : d.toolTipRender.contentIndex = 1);
     f();
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
     }});
@@ -17388,8 +17390,10 @@ Entry.Model = function(c, b) {
   d = Entry.cloneSimpleObject(c[f.separateBlock]);
   d.restrict = function(b, c, f, d) {
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
-    var l = !1, m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !l && c && (f(), l = !0, m.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
+    var l = !1;
+    d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
+    var m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !l && c && (f(), d.toolTipRender && (d.toolTipRender.titleIndex = 1, d.toolTipRender.contentIndex = 1), l = !0, m.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
         f();
       }}));
     }});
@@ -17425,8 +17429,10 @@ Entry.Model = function(c, b) {
   d.followCmd = !0;
   d.restrict = function(b, c, f, d) {
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
-    var l = !1, m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !l && c && (l = !0, f(), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
+    var l = !1;
+    d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
+    var m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !l && c && (l = !0, f(), d.toolTipRender && (d.toolTipRender.titleIndex = 1, d.toolTipRender.contentIndex = 1), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
         f();
       }}));
     }});
@@ -17462,13 +17468,48 @@ Entry.Model = function(c, b) {
   }, restrict:function(b, c, f, d) {
     var l = !1;
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
-    var m = Entry.Command.editor.board.findBlock(b.content[1][1]), q = b.content[2][1];
-    m instanceof Entry.FieldTextInput && m.fixNextValue(q);
-    var n = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !l && c && (l = !0, f(), f(), n.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
-      }}));
+    var m = Entry.Command.editor.board.findBlock(b.content[1][1]), q = m.getFieldRawType();
+    if (d.toolTipRender) {
+      switch(q) {
+        case "textInput":
+          d.toolTipRender.contentIndex = 0;
+          break;
+        case "dropdown":
+        ;
+        case "dropdownDynamic":
+          d.toolTipRender.contentIndex = 1;
+          break;
+        case "keyboard":
+          d.toolTipRender.contentIndex = 2;
+      }
+    }
+    var n = b.content[2][1];
+    m instanceof Entry.FieldTextInput && m.fixNextValue(n);
+    var r = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      if (!l && c) {
+        l = !0;
+        f();
+        f();
+        d.toolTipRender.replaceContent(/&value&/gi, m.getTextValueByValue(n));
+        if (d.toolTipRender) {
+          switch(q) {
+            case "textInput":
+              d.toolTipRender.contentIndex = 3;
+              break;
+            case "dropdown":
+            ;
+            case "dropdownDynamic":
+              d.toolTipRender.contentIndex = 4;
+              break;
+            case "keyboard":
+              d.toolTipRender.contentIndex = 5;
+          }
+        }
+        r.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
+        }});
+      }
     }});
-    return n;
+    return r;
   }, disableMouseUpDispose:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
   c[f.selectBlockMenu] = {do:function(b, c, f) {
     var d = Entry.getMainWS().blockMenu;
@@ -18953,17 +18994,18 @@ Entry.Restrictor = function(c) {
   this.currentTooltip = null;
 };
 (function(c) {
-  c.restrict = function(b) {
+  c.restrict = function(b, c) {
     this._data = b;
+    this.toolTipRender = c;
     this.end();
-    var c = b.content.concat().shift(), c = Entry.Command[c], d = c.dom;
+    var d = b.content.concat().shift(), d = Entry.Command[d], e = d.dom;
     this.startEvent.notify();
-    d instanceof Array && (d = this.processDomQuery(d));
+    e instanceof Array && (e = this.processDomQuery(e));
     b.tooltip || (b.tooltip = {title:"\uc561\uc158", content:"\uc9c0\uc2dc \uc0ac\ud56d\uc744 \ub530\ub974\uc2dc\uc624"});
-    if (c.restrict) {
-      this.currentTooltip = c.restrict(b, d, this.restrictEnd.bind(this), this);
+    if (d.restrict) {
+      this.currentTooltip = d.restrict(b, e, this.restrictEnd.bind(this), this);
     } else {
-      if (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:d}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this)), b.skip) {
+      if (this.currentTooltip = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:e}], {restrict:!0, dimmed:!0, callBack:this.restrictEnd.bind(this)}), window.setTimeout(this.align.bind(this)), b.skip) {
         return this.end();
       }
     }
@@ -23404,6 +23446,38 @@ Entry.Field = function() {
   c.fixNextValue = function(b) {
     this._nextValue = b;
   };
+  c.getFieldRawType = function() {
+    if (this instanceof Entry.FieldTextInput) {
+      return "textInput";
+    }
+    if (this instanceof Entry.FieldDropdown) {
+      return "dropdown";
+    }
+    if (this instanceof Entry.FieldDropdownDynamic) {
+      return "dropdownDynamic";
+    }
+    if (this instanceof Entry.FieldKeyboard) {
+      return "keyboard";
+    }
+  };
+  c.getTextValueByValue = function(b) {
+    switch(this.getFieldRawType()) {
+      case "keyboard":
+        return Entry.getKeyCodeMap()[b];
+      case "dropdown":
+      ;
+      case "dropdownDynamic":
+        for (var c = this._contents.options, d = 0;d < c.length;d++) {
+          var e = c[d];
+          if (e[1] === b) {
+            return e[0];
+          }
+        }
+        break;
+      case "textInput":
+        return b;
+    }
+  };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(c, b, f) {
   this._block = b.block;
@@ -23682,6 +23756,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     b.unshift(this._index);
     b.unshift(Entry.PARAM);
     return this._block.pointer(b);
+  };
+  c.isParamBlockType = function() {
+    return !0;
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldColor = function(c, b, f) {
@@ -24318,6 +24395,9 @@ Entry.FieldStatement = function(c, b, f) {
     b = b || [];
     b.unshift(this._index);
     return this.block.pointer(b);
+  };
+  c.isParamBlockType = function() {
+    return !1;
   };
 })(Entry.FieldStatement.prototype);
 Entry.FieldText = function(c, b, f) {
@@ -26088,6 +26168,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   c.getParam = function(b) {
     return this.params[b];
+  };
+  c.isParamBlockType = function() {
+    return "basic_string_field" === this._schema.skeleton || "basic_boolean_field" === this._schema.skeleton;
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(c, b) {

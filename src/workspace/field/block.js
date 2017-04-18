@@ -332,4 +332,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return this._block.pointer(pointer);
     };
 
+    p.isParamBlockType = function() {
+        return true;
+    };
+
 })(Entry.FieldBlock.prototype);
