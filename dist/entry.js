@@ -4867,7 +4867,7 @@ Entry.Container.prototype.selectObject = function(c, b) {
   var f = this.getObject(c), d = Entry.getMainWS();
   b && f && Entry.scene.selectScene(f.scene);
   this.mapObjectOnScene(function(b) {
-    !b.view_ && b.generateView();
+    !b.view_ && b.generateView && b.generateView();
     b.view_ && b.view_.removeClass("selectedObject");
     b.isSelected_ = !1;
   });
