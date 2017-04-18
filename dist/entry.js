@@ -1333,6 +1333,7 @@ Entry.block.dplay_servo = function(c, b) {
   Entry.hw.setDigitalPortValue(9, c);
   return b.callReturn();
 };
+Entry.rokoboard = {name:"rokoboard", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5:"MIC", 21:"UserSensor", 11:"UserInput", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
   for (var c = [], b = Entry.hw.portData, e = 1;5 > e;e++) {
     var d = b[e];
@@ -3885,13 +3886,13 @@ Blockly.Blocks.modi_button_false = {init:function() {
 }};
 Blockly.Blocks.modi_infrared_value = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc801\uc678\uc120").appendField(new Blockly.FieldDropdownDynamic(Entry.MODI.infraredList), "name").appendField("\ubc88 \uc13c\uc11c\uc758 \uac70\ub9ac(cm)");
+  this.appendDummyInput().appendField("\uc801\uc678\uc120").appendField(new Blockly.FieldDropdownDynamic(Entry.MODI.infraredList), "name").appendField("\ubc88 \uc13c\uc11c\uc758 \uac70\ub9ac(%)");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
 Blockly.Blocks.modi_ultrasonic_value = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ucd08\uc74c\ud30c").appendField(new Blockly.FieldDropdownDynamic(Entry.MODI.ultrasonicList), "name").appendField("\ubc88 \uc13c\uc11c\uc758 \uac70\ub9ac(cm)");
+  this.appendDummyInput().appendField("\ucd08\uc74c\ud30c").appendField(new Blockly.FieldDropdownDynamic(Entry.MODI.ultrasonicList), "name").appendField("\ubc88 \uc13c\uc11c\uc758 \uac70\ub9ac(%)");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -9176,8 +9177,8 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "14.1":Entry.Chocopi, 
-  "16.1":Entry.MODI, "B.1":Entry.Codestar, "A.1":Entry.SmartBoard, "C.1":Entry.DaduBlock, "C.2":Entry.DaduBlock_Car, "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight, "15.1":Entry.coconut};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.3":Entry.CODEino, "1.2":Entry.SensorBoard, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.9":Entry.ArduinoExt, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "13.1":Entry.rokoboard, 
+  "14.1":Entry.Chocopi, "15.1":Entry.coconut, "16.1":Entry.MODI, "A.1":Entry.SmartBoard, "B.1":Entry.Codestar, "C.1":Entry.DaduBlock, "C.2":Entry.DaduBlock_Car, "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight};
 };
 Entry.HW.TRIAL_LIMIT = 2;
 p = Entry.HW.prototype;
