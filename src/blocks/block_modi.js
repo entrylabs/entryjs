@@ -36,7 +36,7 @@ Entry.MODI = {
     },
     microphoneList: function() {
         var list;
-        var moduleData = Entry.hw.portData["module"];
+        var moduleData = Entry.hw.portData["module"] || {};
 
         if(moduleData["mic"] === undefined){
             return [[Lang.Blocks.no_target, 'null']];
@@ -51,7 +51,7 @@ Entry.MODI = {
     },
     environmentList: function() {
         var list;
-        var moduleData = Entry.hw.portData["module"];
+        var moduleData = Entry.hw.portData["module"] || {};
 
         if(moduleData["environment"] === undefined){
             return [[Lang.Blocks.no_target, 'null']];
@@ -66,7 +66,7 @@ Entry.MODI = {
     },
     dialList: function() {
         var list;
-        var moduleData = Entry.hw.portData["module"];
+        var moduleData = Entry.hw.portData["module"] || {};
 
         if(moduleData["dial"] === undefined){
             return [[Lang.Blocks.no_target, 'null']];
@@ -81,7 +81,7 @@ Entry.MODI = {
     },
     gyroscopeList: function() {
         var list;
-        var moduleData = Entry.hw.portData["module"];
+        var moduleData = Entry.hw.portData["module"] || {};
        
         if(moduleData["gyro"] === undefined){
             return [[Lang.Blocks.no_target, 'null']];
@@ -96,7 +96,7 @@ Entry.MODI = {
     },
     buttonList: function() {
         var list;
-        var moduleData = Entry.hw.portData["module"];
+        var moduleData = Entry.hw.portData["module"] || {};
         
         if(moduleData["button"] === undefined){
             return [[Lang.Blocks.no_target, 'null']];
@@ -111,7 +111,7 @@ Entry.MODI = {
     },
     infraredList: function() {
         var list;
-        var moduleData = Entry.hw.portData["module"];
+        var moduleData = Entry.hw.portData["module"] || {};
         
         if(moduleData["ir"] === undefined){
             return [[Lang.Blocks.no_target, 'null']];
@@ -126,7 +126,7 @@ Entry.MODI = {
     },
     ultrasonicList: function() {
         var list;
-        var moduleData = Entry.hw.portData["module"];
+        var moduleData = Entry.hw.portData["module"] || {};
 
         if(moduleData["ultrasonic"] === undefined){
             return [[Lang.Blocks.no_target, 'null']];
@@ -141,7 +141,7 @@ Entry.MODI = {
     },
     motorList: function() {
         var list;
-        var moduleData = Entry.hw.portData["module"];
+        var moduleData = Entry.hw.portData["module"] || {};
  
         if(moduleData["motor"] === undefined){
             return [[Lang.Blocks.no_target, 'null']];
@@ -155,7 +155,7 @@ Entry.MODI = {
     },
     ledList: function() {
         var list;
-        var moduleData = Entry.hw.portData["module"];
+        var moduleData = Entry.hw.portData["module"] || {};
         
         if(moduleData["led"] === undefined){
             return [[Lang.Blocks.no_target, 'null']];
@@ -170,7 +170,7 @@ Entry.MODI = {
     },
     speakerList: function() {
         var list;
-        var moduleData = Entry.hw.portData["module"];
+        var moduleData = Entry.hw.portData["module"] || {};
 
         if(moduleData["speaker"] === undefined){
             return [[Lang.Blocks.no_target, 'null']];
@@ -185,7 +185,7 @@ Entry.MODI = {
     },
     displayList: function() {
         var list;
-        var moduleData = Entry.hw.portData["module"];
+        var moduleData = Entry.hw.portData["module"] || {};
 
         if(moduleData["display"] === undefined){
             return [[Lang.Blocks.no_target, 'null']];

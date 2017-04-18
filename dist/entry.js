@@ -3722,7 +3722,7 @@ Entry.MODI = {name:"modi", setZero:function() {
   Entry.hw.getModule = {id:0, property:0};
   Entry.hw.update();
 }, getModule:{id:0, property:0}, microphoneList:function() {
-  var c, b = Entry.hw.portData.module;
+  var c, b = Entry.hw.portData.module || {};
   if (void 0 === b.mic) {
     return [[Lang.Blocks.no_target, "null"]];
   }
@@ -3732,7 +3732,7 @@ Entry.MODI = {name:"modi", setZero:function() {
   }
   return c;
 }, environmentList:function() {
-  var c, b = Entry.hw.portData.module;
+  var c, b = Entry.hw.portData.module || {};
   if (void 0 === b.environment) {
     return [[Lang.Blocks.no_target, "null"]];
   }
@@ -3742,7 +3742,7 @@ Entry.MODI = {name:"modi", setZero:function() {
   }
   return c;
 }, dialList:function() {
-  var c, b = Entry.hw.portData.module;
+  var c, b = Entry.hw.portData.module || {};
   if (void 0 === b.dial) {
     return [[Lang.Blocks.no_target, "null"]];
   }
@@ -3752,7 +3752,7 @@ Entry.MODI = {name:"modi", setZero:function() {
   }
   return c;
 }, gyroscopeList:function() {
-  var c, b = Entry.hw.portData.module;
+  var c, b = Entry.hw.portData.module || {};
   if (void 0 === b.gyro) {
     return [[Lang.Blocks.no_target, "null"]];
   }
@@ -3762,7 +3762,7 @@ Entry.MODI = {name:"modi", setZero:function() {
   }
   return c;
 }, buttonList:function() {
-  var c, b = Entry.hw.portData.module;
+  var c, b = Entry.hw.portData.module || {};
   if (void 0 === b.button) {
     return [[Lang.Blocks.no_target, "null"]];
   }
@@ -3772,7 +3772,7 @@ Entry.MODI = {name:"modi", setZero:function() {
   }
   return c;
 }, infraredList:function() {
-  var c, b = Entry.hw.portData.module;
+  var c, b = Entry.hw.portData.module || {};
   if (void 0 === b.ir) {
     return [[Lang.Blocks.no_target, "null"]];
   }
@@ -3782,7 +3782,7 @@ Entry.MODI = {name:"modi", setZero:function() {
   }
   return c;
 }, ultrasonicList:function() {
-  var c, b = Entry.hw.portData.module;
+  var c, b = Entry.hw.portData.module || {};
   if (void 0 === b.ultrasonic) {
     return [[Lang.Blocks.no_target, "null"]];
   }
@@ -3792,7 +3792,7 @@ Entry.MODI = {name:"modi", setZero:function() {
   }
   return c;
 }, motorList:function() {
-  var c, b = Entry.hw.portData.module;
+  var c, b = Entry.hw.portData.module || {};
   if (void 0 === b.motor) {
     return [[Lang.Blocks.no_target, "null"]];
   }
@@ -3802,7 +3802,7 @@ Entry.MODI = {name:"modi", setZero:function() {
   }
   return c;
 }, ledList:function() {
-  var c, b = Entry.hw.portData.module;
+  var c, b = Entry.hw.portData.module || {};
   if (void 0 === b.led) {
     return [[Lang.Blocks.no_target, "null"]];
   }
@@ -3812,7 +3812,7 @@ Entry.MODI = {name:"modi", setZero:function() {
   }
   return c;
 }, speakerList:function() {
-  var c, b = Entry.hw.portData.module;
+  var c, b = Entry.hw.portData.module || {};
   if (void 0 === b.speaker) {
     return [[Lang.Blocks.no_target, "null"]];
   }
@@ -3822,7 +3822,7 @@ Entry.MODI = {name:"modi", setZero:function() {
   }
   return c;
 }, displayList:function() {
-  var c, b = Entry.hw.portData.module;
+  var c, b = Entry.hw.portData.module || {};
   if (void 0 === b.display) {
     return [[Lang.Blocks.no_target, "null"]];
   }
