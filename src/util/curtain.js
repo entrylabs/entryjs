@@ -84,7 +84,7 @@ goog.require('Entry.Dom');
             bottom: Math.round(bodyHeight - bottom)
         });
         var leftLect = doms.left[0].getBoundingClientRect();
-        var bottomTop = leftLect.top + leftLect.height;
+        var bottomTop = doms.top[0].getBoundingClientRect().height + leftLect.height;
         doms.bottom.css({
             top: bottomTop || bottom,
             right: bodyWidth - rightPos

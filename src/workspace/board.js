@@ -1107,9 +1107,7 @@ Entry.Board.DRAG_RADIUS = 5;
         else if (pos.y < 100)
             newY = 100 - pos.y;
 
-        this.scroller.scroll(newX, newY);
-
-        this._offset;
+        this.scroller.scroll(newX, newY, true);
     };
 
 })(Entry.Board.prototype);

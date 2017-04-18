@@ -15750,7 +15750,8 @@ Entry.Curtain = {};
         b.top.css({height:c});
         b.left.css({top:c, right:d - e + g.width, bottom:Math.round(f - h)});
         f = b.left[0].getBoundingClientRect();
-        b.bottom.css({top:f.top + f.height || h, right:d - e});
+        f = b.top[0].getBoundingClientRect().height + f.height;
+        b.bottom.css({top:f || h, right:d - e});
         b.right.css({top:c, left:b.bottom[0].getBoundingClientRect().width || e});
       }
     }
@@ -25377,8 +25378,7 @@ Entry.Board.DRAG_RADIUS = 5;
     var g = d = 0;
     e.x > this._offset.width - 200 ? d = this._offset.width - 200 - e.x : 100 > e.x && (d = 100 - e.x);
     e.y > this._offset.height - 200 ? g = this._offset.height - 200 - e.y : 100 > e.y && (g = 100 - e.y);
-    this.scroller.scroll(d, g);
-    this._offset;
+    this.scroller.scroll(d, g, !0);
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
