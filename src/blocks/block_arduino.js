@@ -1247,3 +1247,11 @@ Entry.block.dplay_servo = function (sprite, script) {
     Entry.hw.setDigitalPortValue(port, value);
     return script.callReturn();
 };
+
+//rokoboard start
+
+Entry.rokoboard = {
+    name: 'rokoboard',
+    setZero: Entry.Arduino.setZero,
+    monitorTemplate: Entry.Arduino.monitorTemplate
+};

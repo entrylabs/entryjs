@@ -1240,7 +1240,15 @@ Lang.Blocks = {
     "modi_speaker_F_SO_6": "시6",
     "modi_speaker_F_SO_7": "시7",
     "ev3_ccw": "반시계",
-    "ev3_cw": "시계"
+    "ev3_cw": "시계",
+    "rokoboard_sensor_name_0": "소리",
+    "rokoboard_sensor_name_1": "빛",
+    "rokoboard_sensor_name_2": "슬라이더",
+    "rokoboard_sensor_name_3": "저항-A",
+    "rokoboard_sensor_name_4": "저항-B",
+    "rokoboard_sensor_name_5": "저항-C",
+    "rokoboard_sensor_name_6": "저항-D",
+    "rokoboard_string_1": "버튼을 눌렀는가?"
 };
 Lang.Buttons = {
     "apply": "적용하기",
@@ -1954,6 +1962,7 @@ Lang.Menus = {
     "Xbot": "엑스봇 엣지 USB",
     "XbotBT": "엑스봇 에뽀/엣지 블투투스",
     "robotori": "로보토리",
+    "rokoboard": "로코보드",
     "Neobot": "네오봇",
     "about": "알아보기",
     "articles": "토론하기",
@@ -4091,7 +4100,8 @@ Lang.Device = {
     "ev3": "EV3",
     "robotori": "로보토리",
     "smartBoard": "스마트보드",
-    "chocopi": "초코파이보드"
+    "chocopi": "초코파이보드",
+    "rokoboard": "로코보드"
 };
 Lang.General = {
     "turn_on": "켜기",
@@ -4817,7 +4827,8 @@ Lang.template = {
     "ev3_color_sensor": "%1 의  %2 값",
     "ev3_motor_power": "%1 의 값을 %2 으로 출력 %3",
     "ev3_motor_power_on_time": "%1 의 값을 %2 초 동안 %3 으로 출력 %4",
-    "ev3_motor_degrees": "%1 의 값을 %2 으로  %3 도 만큼 회전 %4"
+    "ev3_motor_degrees": "%1 의 값을 %2 으로  %3 도 만큼 회전 %4",
+    "rokoboard_get_sensor_value_by_name": "%1 의 센서값"
 };
 Lang.TextCoding = {
     "block_name": "블록명",

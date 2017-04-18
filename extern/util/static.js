@@ -766,6 +766,9 @@ EntryStatic.getAllBlocks = function() {
                 "coconut_outinfrared_sensor",
                 "coconut_outcds_sensor",
                 "coconut_servomotor_angle",
+                //rokoboard Blocks
+                "rokoboard_get_sensor_value_by_name",
+                "rokoboard_is_button_pressed"
             ]
         }
     ]

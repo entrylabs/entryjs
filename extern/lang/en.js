@@ -1240,7 +1240,15 @@ Lang.Blocks = {
     "modi_speaker_F_SO_6": "TI 6",
     "modi_speaker_F_SO_7": "TI 7",
     "ev3_ccw": "CCW",
-    "ev3_cw": "CW"
+    "ev3_cw": "CW",
+    "rokoboard_sensor_name_0": "Sound",
+    "rokoboard_sensor_name_1": "Light",
+    "rokoboard_sensor_name_2": "Slider",
+    "rokoboard_sensor_name_3": "resistance-A",
+    "rokoboard_sensor_name_4": "resistance-B",
+    "rokoboard_sensor_name_5": "resistance-C",
+    "rokoboard_sensor_name_6": "resistance-D",
+    "rokoboard_string_1": "Button Pressed"
 };
 Lang.Buttons = {
     "apply": "Apply",
@@ -1954,6 +1962,7 @@ Lang.Menus = {
     "Xbot": "XBOT EDGE USB",
     "XbotBT": "XBOT EPOR and EDGE Bluetooth",
     "robotori": "robotori",
+    "rokoboard": "rokoboard",
     "Neobot": "Neo Bot",
     "about": "About",
     "articles": "Articles",
@@ -4091,7 +4100,8 @@ Lang.Device = {
     "ev3": "EV3",
     "robotori": "robotori",
     "smartBoard": "smartBoard",
-    "chocopi": "ChocoPi"
+    "chocopi": "ChocoPi",
+    "rokoboard": "rokoboard"
 };
 Lang.General = {
     "turn_on": "turn on",
@@ -4817,7 +4827,8 @@ Lang.template = {
     "ev3_color_sensor": "%1's %2 value",
     "ev3_motor_power": "%1's value print as %2 %3",
     "ev3_motor_power_on_time": "%1's value for %2seconds %3 printed %4",
-    "ev3_motor_degrees": "%1's value in %2 direction turn %3 degrees %4"
+    "ev3_motor_degrees": "%1's value in %2 direction turn %3 degrees %4",
+    "rokoboard_get_sensor_value_by_name": "%1 value"
 };
 Lang.TextCoding = {
     "block_name": "Block Name",

@@ -42911,6 +42911,73 @@ Entry.block = {
         },
         syntax: { "js": [], "py": ["Chocopi.servo(%1, %2, %3)"] }
     },
+    // rokoboard Implementation
+    "rokoboard_get_sensor_value_by_name": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.rokoboard_sensor_name_1,"1"],
+                    [Lang.Blocks.rokoboard_sensor_name_0,"0"],
+                    [Lang.Blocks.rokoboard_sensor_name_2,"2"],
+                    [Lang.Blocks.rokoboard_sensor_name_3,"3"],
+                    [Lang.Blocks.rokoboard_sensor_name_4,"4"],
+                    [Lang.Blocks.rokoboard_sensor_name_5,"5"],
+                    [Lang.Blocks.rokoboard_sensor_name_6,"6"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "rokoboard_get_sensor_value_by_name"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "rokoboard_sensor",
+        "isNotFor": [ "rokoboard" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            return (ANALOG) ? ANALOG[port] || 0 : 0;
+        }
+    },
+    "rokoboard_is_button_pressed": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.rokoboard_string_1,
+                "color": "#fff"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "rokoboard_is_button_pressed"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "rokoboard_sensor",
+        "isNotFor": [ "rokoboard" ],
+        "func": function (sprite, script) {
+            var port = 7;
+            var ANALOG = Entry.hw.portData.ANALOG;
+            return (ANALOG) ? (ANALOG[port] < 1) : false ;
+        }
+    }
 };
 
 (function() {
