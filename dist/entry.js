@@ -4831,7 +4831,7 @@ Entry.Container.prototype.addObject = function(c, b) {
 };
 Entry.Container.prototype.addExtension = function(c) {
   this._extensionObjects.push(c);
-  this._extensionListView.append(c.renderView());
+  this._extensionListView && this._extensionListView.append(c.renderView());
   return c;
 };
 Entry.Container.prototype.removeExtension = function(c) {
@@ -5753,7 +5753,7 @@ Entry.Engine = function() {
         b.takeSnapshot();
       }), f.mapList(function(b) {
         b.takeSnapshot();
-      }), this.projectTimer.takeSnapshot(), c.inputValue.takeSnapshot(), c.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"), this.achieveEnabled = !!b);
+      }), this.projectTimer.takeSnapshot(), c.inputValue.takeSnapshot(), c.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"), this.achieveEnabled = !1 !== b);
       this.state = "run";
       "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
       this.runButton && (this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("run"), this.runButton.addClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.pauseButton && this.pauseButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove"), this.stopButton2 && this.stopButton2.removeClass("entryRemove"));
@@ -15883,7 +15883,7 @@ Entry.Commander = function(c) {
 (function(c) {
   var b = Entry.STATIC.COMMAND_TYPES;
   c[b.toggleRun] = {do:function(b) {
-    Entry.engine.toggleRun(!0);
+    Entry.engine.toggleRun();
   }, state:function() {
     return [];
   }, log:function(b) {
@@ -15902,7 +15902,7 @@ Entry.Commander = function(c) {
     return [["callerName", b]];
   }, restrict:function(b, c, e, g) {
     g = Entry.engine;
-    g.isState("run") || g.toggleRun();
+    g.isState("run") || g.toggleRun(!1);
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(b) {
       e();
     }});
@@ -17576,7 +17576,6 @@ Entry.TargetChecker = function(c, b) {
   this.isSuccess = this.isFail = !1;
   this.entity = this;
   this.parent = this;
-  Entry.achieve = this.achieveCheck.bind(this);
   Entry.achieveEvent = new Entry.Event;
   Entry.addEventListener("stop", this.reset.bind(this));
   Entry.registerAchievement = this.registerAchievement.bind(this);
@@ -17594,7 +17593,14 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     this.isForEdit || this._view.addClass("entryRemove");
     return this._view;
   };
-  c.generateView = function() {
+  c.generateStatusView = function(b) {
+    this._statusView = Entry.Dom("div", {class:"entryTargetStatus"});
+    this._statusViewIndicator = Entry.Dom("div", {class:"statusIndicator", parent:this._statusView});
+    var c = Entry.Dom("div", {class:"statusMessage", parent:this._statusView});
+    this._statusViewContent = Entry.Dom("p", {parent:c});
+    b && ($(Entry.view_).addClass("iframeWithTargetStatus"), Entry.view_.append(this._statusView[0]));
+    this.updateView();
+    this.showDefaultMessage();
   };
   c.updateView = function() {
     if (this._view) {
@@ -17603,6 +17609,10 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
       this.isSuccess ? this._view.addClass("success") : this._view.removeClass("success");
       this.isFail ? this._view.addClass("fail") : this._view.removeClass("fail");
     }
+    this._statusView && (c = this.publicGoals.length, this._statusViewIndicator.text(c - this.remainPublicGoal + "/" + c));
+  };
+  c.showStatusMessage = function(b) {
+    this._statusViewContent && !this.isFail && this._statusViewContent.text(b);
   };
   c.achieveCheck = function(b, c) {
     !this.isFail && Entry.engine.achieveEnabled && (b ? this.achieveGoal(c) : this.fail(c));
@@ -17610,14 +17620,18 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
   c.achieveGoal = function(b) {
     this.isSuccess || this.isFail || 0 > this.unachievedGoals.indexOf(b) || (this.unachievedGoals.splice(this.unachievedGoals.indexOf(b), 1), -1 < this.publicGoals.indexOf(b) && this.remainPublicGoal--, 0 === this.unachievedGoals.length && (this.isSuccess = !0, Entry.achieveEvent.notify("success")), this.updateView());
   };
-  c.fail = function() {
-    this.isSuccess || this.isFail || (this.isFail = !0, Entry.achieveEvent.notify("fail"), this.updateView());
+  c.fail = function(b) {
+    this.isSuccess || this.isFail || (this.showStatusMessage(b), this.isFail = !0, Entry.achieveEvent.notify("fail"), this.updateView());
   };
   c.reset = function() {
     this.unachievedGoals = this.goals.concat();
     this.remainPublicGoal = this.publicGoals.length;
     this.isSuccess = this.isFail = !1;
     this.updateView();
+    this.showDefaultMessage();
+  };
+  c.showDefaultMessage = function() {
+    this.showStatusMessage("\ud504\ub85c\uc81d\ud2b8\ub97c \uc2e4\ud589\ud574 \ubd05\uc2dc\ub2e4.");
   };
   c.checkGoal = function(b) {
     return -1 < this.goals.indexOf(b) && 0 > this.unachievedGoals.indexOf(b);

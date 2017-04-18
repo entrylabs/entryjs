@@ -29,7 +29,6 @@ Entry.TargetChecker = function(code, isForEdit) {
     this.entity = this;
     this.parent = this;
 
-    Entry.achieve = this.achieveCheck.bind(this);
     Entry.achieveEvent = new Entry.Event();
     Entry.addEventListener("stop", this.reset.bind(this));
 
@@ -55,24 +54,57 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         return this._view;
     };
 
-    p.generateView = function() {};
+    p.generateStatusView = function(isForIframe) {
+        this._statusView = Entry.Dom('div', {
+            class: "entryTargetStatus"
+        });
+        this._statusViewIndicator = Entry.Dom('div', {
+            class: "statusIndicator",
+            parent: this._statusView
+        });
+        var statusViewContentWrapper = Entry.Dom('div', {
+            class: "statusMessage",
+            parent: this._statusView
+        });
+        this._statusViewContent = Entry.Dom('p', {
+            parent: statusViewContentWrapper
+        });
+        if (isForIframe) {
+            $(Entry.view_).addClass("iframeWithTargetStatus")
+            Entry.view_.append(this._statusView[0]);
+        }
+        this.updateView();
+        this.showDefaultMessage();
+    };
 
     p.updateView = function() {
-        if (!this._view)
-            return;
-        var len = this.goals.length;
-        var publicLen = this.publicGoals.length;
-        this._view.text("목표 : " + (len - this.unachievedGoals.length) +
-                        " / " + len + " , 공식 목표 : " +
-                       (publicLen - this.remainPublicGoal) + " / " + publicLen);
-        if (this.isSuccess)
-            this._view.addClass("success");
-        else
-            this._view.removeClass("success");
-        if (this.isFail)
-            this._view.addClass("fail");
-        else
-            this._view.removeClass("fail");
+        if (this._view) {
+            var len = this.goals.length;
+            var publicLen = this.publicGoals.length;
+            this._view.text("목표 : " + (len - this.unachievedGoals.length) +
+                            " / " + len + " , 공식 목표 : " +
+                           (publicLen - this.remainPublicGoal) + " / " + publicLen);
+            if (this.isSuccess)
+                this._view.addClass("success");
+            else
+                this._view.removeClass("success");
+            if (this.isFail)
+                this._view.addClass("fail");
+            else
+                this._view.removeClass("fail");
+        }
+        if (this._statusView) {
+            var publicLen = this.publicGoals.length;
+            this._statusViewIndicator.text(
+                (publicLen - this.remainPublicGoal) +
+                    "/" + publicLen
+            )
+        }
+    };
+
+    p.showStatusMessage = function(message) {
+        if (this._statusViewContent && !this.isFail)
+            this._statusViewContent.text(message);
     };
 
     p.achieveCheck = function(isSuccess, id) {
@@ -94,12 +126,13 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
             this.isSuccess = true;
             Entry.achieveEvent.notify("success");
         }
-        this.updateView();
+        this.updateView()
     };
 
-    p.fail = function() {
+    p.fail = function(id) {
         if (this.isSuccess || this.isFail)
             return;
+        this.showStatusMessage(id);
         this.isFail = true;
         Entry.achieveEvent.notify("fail");
         this.updateView();
@@ -111,6 +144,11 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         this.isFail = false;
         this.isSuccess = false;
         this.updateView();
+        this.showDefaultMessage();
+    };
+
+    p.showDefaultMessage = function() {
+        this.showStatusMessage("프로젝트를 실행해 봅시다.");
     };
 
     p.checkGoal = function(goalName) {

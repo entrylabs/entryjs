@@ -11,7 +11,7 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.toggleRun] = {
         do: function(callerName) {
-            Entry.engine.toggleRun(true);
+            Entry.engine.toggleRun();
         },
         state: function() {
             return [];
@@ -57,7 +57,7 @@ goog.require("Entry.STATIC");
         },
         restrict: function(data, domQuery, callback, restrictor) {
             var engine = Entry.engine;
-            if (!engine.isState('run')) engine.toggleRun();
+            if (!engine.isState('run')) engine.toggleRun(false);
 
             return new Entry.Tooltip([{
                 title: data.tooltip.title,
