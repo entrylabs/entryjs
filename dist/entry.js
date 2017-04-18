@@ -25795,6 +25795,9 @@ Entry.Thread = function(c, b, f) {
       return this.view.svgGroup;
     }
   };
+  c.isParamBlockType = function() {
+    return !1;
+  };
 })(Entry.Thread.prototype);
 Entry.Block = function(c, b) {
   var f = this;
