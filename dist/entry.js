@@ -7538,6 +7538,7 @@ Entry.Engine = function() {
         popup.window_.appendChild(Entry.engine.runButton[0]);
       }
       popup.window_.appendChild(Entry.engine.view_);
+      "workspace" === Entry.type && Entry.targetChecker && popup.window_.appendChild(Entry.targetChecker.getStatusView()[0]);
     }
     Entry.windowResized.notify();
   };
@@ -8148,8 +8149,9 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
   };
   c.generateStatusView = function(b) {
     this._statusView = Entry.Dom("div", {class:"entryTargetStatus"});
-    this._statusViewIndicator = Entry.Dom("div", {class:"statusIndicator", parent:this._statusView});
-    var c = Entry.Dom("div", {class:"statusMessage", parent:this._statusView});
+    var c = Entry.Dom("div", {class:"innerWrapper", parent:this._statusView});
+    this._statusViewIndicator = Entry.Dom("div", {class:"statusIndicator", parent:c});
+    c = Entry.Dom("div", {class:"statusMessage", parent:c});
     this._statusViewContent = Entry.Dom("p", {parent:c});
     b && ($(Entry.view_).addClass("iframeWithTargetStatus"), Entry.view_.append(this._statusView[0]));
     this.updateView();
@@ -8164,6 +8166,10 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     }
     this._statusView && (c = this.publicGoals.length, this._statusViewIndicator.text(c - this.remainPublicGoal + "/" + c));
   };
+  c.getStatusView = function() {
+    this._statusView || this.generateStatusView();
+    return this._statusView;
+  };
   c.showStatusMessage = function(b) {
     this._statusViewContent && !this.isFail && this._statusViewContent.text(b);
   };
@@ -8171,10 +8177,10 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     !this.isFail && Entry.engine.achieveEnabled && (b ? this.achieveGoal(c) : this.fail(c));
   };
   c.achieveGoal = function(b) {
-    this.isSuccess || this.isFail || 0 > this.unachievedGoals.indexOf(b) || (this.unachievedGoals.splice(this.unachievedGoals.indexOf(b), 1), -1 < this.publicGoals.indexOf(b) && this.remainPublicGoal--, 0 === this.unachievedGoals.length && (this.isSuccess = !0, Entry.achieveEvent.notify("success")), this.updateView());
+    this.isSuccess || this.isFail || 0 > this.unachievedGoals.indexOf(b) || (this.unachievedGoals.splice(this.unachievedGoals.indexOf(b), 1), -1 < this.publicGoals.indexOf(b) && this.remainPublicGoal--, 0 === this.unachievedGoals.length && (this.isSuccess = !0, Entry.achieveEvent.notify("success", b)), this.updateView());
   };
   c.fail = function(b) {
-    this.isSuccess || this.isFail || (this.showStatusMessage(b), this.isFail = !0, Entry.achieveEvent.notify("fail"), this.updateView());
+    this.isSuccess || this.isFail || (this.showStatusMessage(b), this.isFail = !0, Entry.achieveEvent.notify("fail", b), this.updateView());
   };
   c.reset = function() {
     this.unachievedGoals = this.goals.concat();
@@ -14802,13 +14808,14 @@ Entry.Popup.prototype.remove = function() {
   Entry.removeEventListener("windowResized", this.resize);
   Entry.engine.popup = null;
   Entry.windowResized.notify();
+  "workspace" === Entry.type && Entry.targetChecker && Entry.targetChecker.getStatusView().remove();
 };
 Entry.Popup.prototype.resize = function(c) {
   c = window.popup.window_;
-  var b = .9 * window.innerWidth, e = .9 * window.innerHeight - 35;
-  9 * b <= 16 * e ? e = b / 16 * 9 + 35 : (b = 16 * e / 9, e += 35);
-  c.style.width = String(b) + "px";
-  c.style.height = String(e) + "px";
+  var b = Entry.targetChecker ? 126 : 35, e = .9 * window.innerWidth, d = .9 * window.innerHeight - b;
+  9 * e <= 16 * d ? d = e / 16 * 9 + b : (e = 16 * d / 9, d += b);
+  c.style.width = String(e) + "px";
+  c.style.height = String(d) + "px";
   Entry.stage && Entry.stage.updateBoundRect();
 };
 Entry.popupHelper = function(c) {

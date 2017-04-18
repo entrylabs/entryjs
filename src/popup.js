@@ -49,6 +49,8 @@ Entry.Popup.prototype.remove = function() {
     Entry.removeEventListener('windowResized', this.resize);
     Entry.engine.popup = null;
     Entry.windowResized.notify();
+    if (Entry.type === "workspace" && Entry.targetChecker)
+        Entry.targetChecker.getStatusView().remove();
 };
 
 /**
@@ -58,16 +60,17 @@ Entry.Popup.prototype.remove = function() {
 Entry.Popup.prototype.resize = function(e) {
     var popup = window.popup;
     var popupWindow = popup.window_;
+    var bottomOffset = Entry.targetChecker ? 91 + 35 : 35;
     var maxWidth = window.innerWidth * 0.9;
-    var maxHeight = window.innerHeight * 0.9 - 35;
+    var maxHeight = window.innerHeight * 0.9 - bottomOffset;
     if (maxWidth * 9 <= maxHeight * 16) {
         maxHeight = maxWidth / 16 * 9;
-        maxHeight += 35;
+        maxHeight += bottomOffset;
         popupWindow.style.width = String(maxWidth) + 'px';
         popupWindow.style.height = String(maxHeight) + 'px';
     } else {
         maxWidth = maxHeight * 16 / 9;
-        maxHeight += 35;
+        maxHeight += bottomOffset;
         popupWindow.style.width = String(maxWidth) + 'px';
         popupWindow.style.height = String(maxHeight) + 'px';
     }

@@ -58,13 +58,17 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         this._statusView = Entry.Dom('div', {
             class: "entryTargetStatus"
         });
+        var innerWrapper = Entry.Dom('div', {
+            class: "innerWrapper",
+            parent: this._statusView
+        });
         this._statusViewIndicator = Entry.Dom('div', {
             class: "statusIndicator",
-            parent: this._statusView
+            parent: innerWrapper
         });
         var statusViewContentWrapper = Entry.Dom('div', {
             class: "statusMessage",
-            parent: this._statusView
+            parent: innerWrapper
         });
         this._statusViewContent = Entry.Dom('p', {
             parent: statusViewContentWrapper
@@ -102,6 +106,12 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         }
     };
 
+    p.getStatusView = function() {
+         if (!this._statusView)
+             this.generateStatusView();
+         return this._statusView;
+    }
+
     p.showStatusMessage = function(message) {
         if (this._statusViewContent && !this.isFail)
             this._statusViewContent.text(message);
@@ -124,7 +134,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
             this.remainPublicGoal--;
         if (this.unachievedGoals.length === 0) {
             this.isSuccess = true;
-            Entry.achieveEvent.notify("success");
+            Entry.achieveEvent.notify("success", id);
         }
         this.updateView()
     };
@@ -134,7 +144,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
             return;
         this.showStatusMessage(id);
         this.isFail = true;
-        Entry.achieveEvent.notify("fail");
+        Entry.achieveEvent.notify("fail", id);
         this.updateView();
     };
 

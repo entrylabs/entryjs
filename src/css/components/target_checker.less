@@ -1,14 +1,30 @@
 .entryTargetStatus {
     font-family: NanumGothic;
     height: 54px;
-    border-radius: 3px;
     width: 100%;
-    background-color: #f4f4f4;
-}
-
-.iframeWithTargetStatus .entryTargetStatus {
     position: absolute;
     bottom: 0;
+}
+
+.entryTargetStatus .innerWrapper {
+    width: auto;
+    position: absolute;
+    background-color: #f4f4f4;
+    border-radius: 3px;
+    height: 54px;
+}
+
+.entryPopupWindow .entryTargetStatus {
+    height: 91px;
+}
+
+.iframeWithTargetStatus .innerWrapper {
+    width: 100%;
+}
+
+.entryPopupWindow .innerWrapper {
+    left: 16px;
+    right: 16px;
 }
 
 .iframeWithTargetStatus #entryCanvasWrapper {
@@ -47,4 +63,9 @@
     display: table-cell;
     vertical-align: middle;
     padding-right: 81px;
+}
+
+.entryPopupWindow .entryEngine_w {
+    height: auto !important;
+    bottom: 91px;
 }

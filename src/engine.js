@@ -752,6 +752,8 @@ Entry.Engine = function() {
                 popup.window_.appendChild(Entry.engine.runButton[0]);
             }
             popup.window_.appendChild(Entry.engine.view_);
+            if (Entry.type === "workspace" && Entry.targetChecker)
+                popup.window_.appendChild(Entry.targetChecker.getStatusView()[0]);
         } else {
             this.popup.remove();
             this.popup = null;
