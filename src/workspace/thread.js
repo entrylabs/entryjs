@@ -296,4 +296,8 @@ Entry.Thread = function(thread, code, parent) {
         }
     };
 
+    p.isParamBlockType = function() {
+        return false;
+    };
+
 })(Entry.Thread.prototype);

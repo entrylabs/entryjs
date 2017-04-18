@@ -687,4 +687,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     p.getParam = function(index) {
         return this.params[index];
     };
+
+    p.isParamBlockType = function() {
+        return this._schema.skeleton === 'basic_string_field' || this._schema.skeleton === 'basic_boolean_field';
+    };
+
 })(Entry.Block.prototype);

@@ -292,4 +292,33 @@ Entry.Field = function() {};
         this._nextValue = value;
     };
 
+    p.getFieldRawType = function() {
+        if (this instanceof Entry.FieldTextInput)
+            return 'textInput';
+        else if (this instanceof Entry.FieldDropdown)
+            return 'dropdown';
+        else if (this instanceof Entry.FieldDropdownDynamic)
+            return 'dropdownDynamic';
+        else if (this instanceof Entry.FieldKeyboard)
+            return 'keyboard';
+    };
+
+    p.getTextValueByValue = function(value) {
+        switch (this.getFieldRawType()) {
+            case 'keyboard':
+                return Entry.getKeyCodeMap()[value];
+            case 'dropdown':
+            case 'dropdownDynamic':
+                var options = this._contents.options;
+                for (var i=0; i<options.length; i++) {
+                    var o = options[i];
+                    if (o[1] === value)
+                        return o[0];
+                }
+                break;
+            case 'textInput':
+                return value;
+        }
+    };
+
 })(Entry.Field.prototype);

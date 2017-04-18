@@ -177,6 +177,10 @@ goog.require("Entry.Utils");
         undo: "insertBlock",
         restrict: function(data, domQuery, callback, restrictor) {
             Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
+            if (restrictor.toolTipRender) {
+                restrictor.toolTipRender.titleIndex = 0;
+                restrictor.toolTipRender.contentIndex = 0;
+            }
             var isDone = false;
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
@@ -190,12 +194,26 @@ goog.require("Entry.Utils");
                         return;
                     isDone = true;
                     callback();
+
+                    var processedDomQuery = restrictor.processDomQuery([
+                            'playground', 'board', '&1', 'magnet'
+                        ]);
+
+                    if (restrictor.toolTipRender) {
+                        restrictor.toolTipRender.titleIndex = 1;
+                        var target = Entry.Command.editor
+                            .board.code.getTargetByPointer(data.content[2][1]);
+
+                        if (target.isParamBlockType()) {
+                            restrictor.toolTipRender.contentIndex = 1;
+                        } else {
+                            restrictor.toolTipRender.contentIndex = 2;
+                        }
+                    }
                     tooltip.init([{
                         title: data.tooltip.title,
                         content: data.tooltip.content,
-                        target: restrictor.processDomQuery([
-                            'playground', 'board', '&1', 'magnet'
-                        ])
+                        target: processedDomQuery
                     }], {
                         indicator: true,
                         callBack: function() {
@@ -230,7 +248,19 @@ goog.require("Entry.Utils");
     c[COMMAND_TYPES.insertBlockFollowSeparate] = obj;
 
     obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlock]);
-    obj.restrict = function(data, domQuery, callback) {
+    obj.restrict = function(data, domQuery, callback, restrictor) {
+        if (restrictor.toolTipRender) {
+            if (restrictor.toolTipRender) {
+                var target = Entry.Command.editor
+                    .board.code.getByPointer(data.content[2][1]);
+
+                if (!target || target.isParamBlockType()) {
+                    restrictor.toolTipRender.contentIndex = 0;
+                } else {
+                    restrictor.toolTipRender.contentIndex = 1;
+                }
+            }
+        }
         callback();
         return new Entry.Tooltip([{
             title: data.tooltip.title,
@@ -330,6 +360,10 @@ goog.require("Entry.Utils");
     obj.restrict = function(data, domQuery, callback, restrictor) {
         Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
         var isDone = false;
+        if (restrictor.toolTipRender) {
+            restrictor.toolTipRender.titleIndex = 0;
+            restrictor.toolTipRender.contentIndex = 0;
+        }
         var tooltip = new Entry.Tooltip([{
             title: data.tooltip.title,
             content: data.tooltip.content,
@@ -341,6 +375,10 @@ goog.require("Entry.Utils");
                 if (isDone || !isFromInit)
                     return;
                 callback();
+                if (restrictor.toolTipRender) {
+                    restrictor.toolTipRender.titleIndex = 1;
+                    restrictor.toolTipRender.contentIndex = 1;
+                }
                 isDone = true;
                 tooltip.init([{
                     title: data.tooltip.title,
@@ -373,7 +411,7 @@ goog.require("Entry.Utils");
             function() {
                 restrictor.fadeInTooltip();
             }
-        )
+        );
     };
     obj.followCmd = true;
     c[COMMAND_TYPES.separateBlockForDestroy] = obj;
@@ -442,6 +480,10 @@ goog.require("Entry.Utils");
     obj.restrict = function(data, domQuery, callback, restrictor) {
         Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
         var isDone = false;
+        if (restrictor.toolTipRender) {
+            restrictor.toolTipRender.titleIndex = 0;
+            restrictor.toolTipRender.contentIndex = 0;
+        }
         var tooltip = new Entry.Tooltip([{
             title: data.tooltip.title,
             content: data.tooltip.content,
@@ -454,6 +496,10 @@ goog.require("Entry.Utils");
                     return;
                 isDone = true;
                 callback();
+                if (restrictor.toolTipRender) {
+                    restrictor.toolTipRender.titleIndex = 1;
+                    restrictor.toolTipRender.contentIndex = 1;
+                }
                 tooltip.init([{
                     title: data.tooltip.title,
                     content: data.tooltip.content,
@@ -541,11 +587,32 @@ goog.require("Entry.Utils");
         },
         restrict: function(data, domQuery, callback, restrictor) {
             var isDone = false;
+            var tooltipData = data.tooltip;
+
             Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
+
             var field = Entry.Command.editor.board.findBlock(data.content[1][1]);
+            var fieldType = field.getFieldRawType();
+
+            if (restrictor.toolTipRender) {
+                switch (fieldType) {
+                    case 'textInput':
+                        restrictor.toolTipRender.contentIndex = 0;
+                        break;
+                    case 'dropdown':
+                    case 'dropdownDynamic':
+                        restrictor.toolTipRender.contentIndex = 1;
+                        break;
+                    case 'keyboard':
+                        restrictor.toolTipRender.contentIndex = 2;
+                        break;
+                }
+            }
+
             var nextValue = data.content[2][1];
             if (field instanceof Entry.FieldTextInput)
                 field.fixNextValue(nextValue);
+
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
@@ -560,6 +627,26 @@ goog.require("Entry.Utils");
                     isDone = true;
                     callback();
                     callback();
+                    restrictor.toolTipRender.replaceContent(
+                        /&value&/gi, field.getTextValueByValue(nextValue)
+                    );
+
+                    if (restrictor.toolTipRender) {
+                        switch (fieldType) {
+                            case 'textInput':
+                                restrictor.toolTipRender.contentIndex = 3;
+                                break;
+                            case 'dropdown':
+                            case 'dropdownDynamic':
+                                restrictor.toolTipRender.contentIndex = 4;
+                                break;
+                            case 'keyboard':
+                                restrictor.toolTipRender.contentIndex = 5;
+                                break;
+                        }
+                    }
+
+
                     tooltip.init([{
                         title: data.tooltip.title,
                         content: data.tooltip.content,
