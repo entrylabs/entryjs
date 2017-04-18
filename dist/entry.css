@@ -6360,6 +6360,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   color: #bdd1ff;
 }
 .entryTargetStatus {
+  font-family: NanumGothic;
   height: 54px;
   border-radius: 3px;
   width: 100%;
@@ -6374,6 +6375,35 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .iframeWithTargetStatus .entryEngine {
   bottom: 54px;
+}
+.entryTargetStatus .statusIndicator {
+  display: inline-block;
+  width: 43px;
+  height: 41px;
+  text-align: center;
+  line-height: 41px;
+  font-size: 14px;
+  color: #FFF;
+  background-image: url("../images/status_dialog.png");
+  margin-left: 14px;
+  margin-top: 6px;
+}
+.entryTargetStatus .statusMessage {
+  font-size: 14px;
+  color: #3b3b3b;
+  left: 71px;
+  top: 0;
+  bottom: 0;
+  right: 10px;
+  display: table;
+  position: absolute;
+  width: 100%;
+  height: 54px;
+}
+.statusMessage p {
+  display: table-cell;
+  vertical-align: middle;
+  padding-right: 81px;
 }
 #textCodingExampleView {
   position: absolute;

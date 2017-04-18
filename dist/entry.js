@@ -8149,9 +8149,11 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
   c.generateStatusView = function(b) {
     this._statusView = Entry.Dom("div", {class:"entryTargetStatus"});
     this._statusViewIndicator = Entry.Dom("div", {class:"statusIndicator", parent:this._statusView});
-    this._statusViewContent = Entry.Dom("div", {class:"statusMessage", parent:this._statusView});
+    var c = Entry.Dom("div", {class:"statusMessage", parent:this._statusView});
+    this._statusViewContent = Entry.Dom("p", {parent:c});
     b && ($(Entry.view_).addClass("iframeWithTargetStatus"), Entry.view_.append(this._statusView[0]));
     this.updateView();
+    this.showDefaultMessage();
   };
   c.updateView = function() {
     if (this._view) {
@@ -8160,11 +8162,10 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
       this.isSuccess ? this._view.addClass("success") : this._view.removeClass("success");
       this.isFail ? this._view.addClass("fail") : this._view.removeClass("fail");
     }
-    console.log(this.publicGoals.length);
-    this._statusView && (c = this.publicGoals.length, this._statusViewIndicator.text(c - this.remainPublicGoal + " / " + c));
+    this._statusView && (c = this.publicGoals.length, this._statusViewIndicator.text(c - this.remainPublicGoal + "/" + c));
   };
   c.showStatusMessage = function(b) {
-    this._statusViewContent.text(b);
+    this._statusViewContent && !this.isFail && this._statusViewContent.text(b);
   };
   c.achieveCheck = function(b, c) {
     !this.isFail && Entry.engine.achieveEnabled && (b ? this.achieveGoal(c) : this.fail(c));
@@ -8172,14 +8173,18 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
   c.achieveGoal = function(b) {
     this.isSuccess || this.isFail || 0 > this.unachievedGoals.indexOf(b) || (this.unachievedGoals.splice(this.unachievedGoals.indexOf(b), 1), -1 < this.publicGoals.indexOf(b) && this.remainPublicGoal--, 0 === this.unachievedGoals.length && (this.isSuccess = !0, Entry.achieveEvent.notify("success")), this.updateView());
   };
-  c.fail = function() {
-    this.isSuccess || this.isFail || (this.isFail = !0, Entry.achieveEvent.notify("fail"), this.updateView());
+  c.fail = function(b) {
+    this.isSuccess || this.isFail || (this.showStatusMessage(b), this.isFail = !0, Entry.achieveEvent.notify("fail"), this.updateView());
   };
   c.reset = function() {
     this.unachievedGoals = this.goals.concat();
     this.remainPublicGoal = this.publicGoals.length;
     this.isSuccess = this.isFail = !1;
     this.updateView();
+    this.showDefaultMessage();
+  };
+  c.showDefaultMessage = function() {
+    this.showStatusMessage("\ud504\ub85c\uc81d\ud2b8\ub97c \uc2e4\ud589\ud574 \ubd05\uc2dc\ub2e4.");
   };
   c.checkGoal = function(b) {
     return -1 < this.goals.indexOf(b) && 0 > this.unachievedGoals.indexOf(b);

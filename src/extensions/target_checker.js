@@ -62,15 +62,19 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
             class: "statusIndicator",
             parent: this._statusView
         });
-        this._statusViewContent = Entry.Dom('div', {
+        var statusViewContentWrapper = Entry.Dom('div', {
             class: "statusMessage",
             parent: this._statusView
+        });
+        this._statusViewContent = Entry.Dom('p', {
+            parent: statusViewContentWrapper
         });
         if (isForIframe) {
             $(Entry.view_).addClass("iframeWithTargetStatus")
             Entry.view_.append(this._statusView[0]);
         }
         this.updateView();
+        this.showDefaultMessage();
     };
 
     p.updateView = function() {
@@ -89,18 +93,18 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
             else
                 this._view.removeClass("fail");
         }
-        console.log(this.publicGoals.length)
         if (this._statusView) {
             var publicLen = this.publicGoals.length;
             this._statusViewIndicator.text(
                 (publicLen - this.remainPublicGoal) +
-                    " / " + publicLen
+                    "/" + publicLen
             )
         }
     };
 
     p.showStatusMessage = function(message) {
-        this._statusViewContent.text(message);
+        if (this._statusViewContent && !this.isFail)
+            this._statusViewContent.text(message);
     };
 
     p.achieveCheck = function(isSuccess, id) {
@@ -125,9 +129,10 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         this.updateView()
     };
 
-    p.fail = function() {
+    p.fail = function(id) {
         if (this.isSuccess || this.isFail)
             return;
+        this.showStatusMessage(id);
         this.isFail = true;
         Entry.achieveEvent.notify("fail");
         this.updateView();
@@ -139,6 +144,11 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         this.isFail = false;
         this.isSuccess = false;
         this.updateView();
+        this.showDefaultMessage();
+    };
+
+    p.showDefaultMessage = function() {
+        this.showStatusMessage("프로젝트를 실행해 봅시다.");
     };
 
     p.checkGoal = function(goalName) {
