@@ -99,7 +99,7 @@ Entry.Engine = function() {
                                          'entryMaximizeButtonWorkspace_w');
             this.view_.appendChild(this.maximizeButton);
             this.maximizeButton.bindOnClick(function(e) {
-                Entry.engine.toggleFullscreen();
+                Entry.engine.toggleFullScreen();
                 this.blur();
             });
 
@@ -194,7 +194,7 @@ Entry.Engine = function() {
             this.maximizeButton.addClass('entryMaximizeButtonMinimize');
             this.view_.appendChild(this.maximizeButton);
             this.maximizeButton.bindOnClick(function(e) {
-                Entry.engine.toggleFullscreen();
+                Entry.engine.toggleFullScreen();
             });
 
             this.coordinateButton = Entry.createElement('button');
@@ -739,7 +739,7 @@ Entry.Engine = function() {
     /**
      * Toggle full screen of canvas
      */
-    p.toggleFullscreen = function() {
+    p.toggleFullScreen = function() {
         if (!this.popup) {
             this.popup = new Entry.Popup();
             if (Entry.type != 'workspace') {

@@ -5533,7 +5533,7 @@ Entry.Engine = function() {
   c.generateView = function(b, f) {
     if (f && "workspace" != f) {
       "minimize" == f ? (this.view_ = b, this.view_.addClass("entryEngine"), this.view_.addClass("entryEngineMinimize"), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonMinimize"), this.maximizeButton.addClass("entryMaximizeButtonMinimize"), this.view_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(b) {
-        Entry.engine.toggleFullscreen();
+        Entry.engine.toggleFullScreen();
       }), this.coordinateButton = Entry.createElement("button"), this.coordinateButton.addClass("entryEngineButtonMinimize"), this.coordinateButton.addClass("entryCoordinateButtonMinimize"), this.view_.appendChild(this.coordinateButton), this.coordinateButton.bindOnClick(function(b) {
         this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
         Entry.stage.toggleCoordinator();
@@ -5579,7 +5579,7 @@ Entry.Engine = function() {
       this.maximizeButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryMaximizeButtonWorkspace_w");
       this.view_.appendChild(this.maximizeButton);
       this.maximizeButton.bindOnClick(function(b) {
-        Entry.engine.toggleFullscreen();
+        Entry.engine.toggleFullScreen();
         this.blur();
       });
       var e = Entry.createElement("button");
@@ -5831,7 +5831,7 @@ Entry.Engine = function() {
   c.hideMouseView = function() {
     this.mouseView.addClass("entryRemove");
   };
-  c.toggleFullscreen = function() {
+  c.toggleFullScreen = function() {
     if (this.popup) {
       this.popup.remove(), this.popup = null;
     } else {
