@@ -252,9 +252,9 @@ goog.require("Entry.Utils");
         if (restrictor.toolTipRender) {
             if (restrictor.toolTipRender) {
                 var target = Entry.Command.editor
-                    .board.code.getTargetByPointer(data.content[2][1]);
+                    .board.code.getByPointer(data.content[2][1]);
 
-                if (target.isParamBlockType()) {
+                if (!target || target.isParamBlockType()) {
                     restrictor.toolTipRender.contentIndex = 0;
                 } else {
                     restrictor.toolTipRender.contentIndex = 1;

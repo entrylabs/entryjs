@@ -17351,7 +17351,10 @@ Entry.Model = function(c, b) {
   c[f.insertBlockFollowSeparate] = d;
   d = Entry.cloneSimpleObject(c[f.insertBlock]);
   d.restrict = function(b, c, f, d) {
-    d.toolTipRender && d.toolTipRender && (Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1]).isParamBlockType() ? d.toolTipRender.contentIndex = 0 : d.toolTipRender.contentIndex = 1);
+    if (d.toolTipRender && d.toolTipRender) {
+      var l = Entry.Command.editor.board.code.getByPointer(b.content[2][1]);
+      !l || l.isParamBlockType() ? d.toolTipRender.contentIndex = 0 : d.toolTipRender.contentIndex = 1;
+    }
     f();
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
     }});
