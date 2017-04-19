@@ -23544,44 +23544,45 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
       !0 !== c && b.applyValue();
       b.destroyOption(c);
     });
-    this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
-    this.optionGroup.val(this.value);
-    this.optionGroup.on("mousedown touchstart", function(b) {
+    this.htmlOptionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
+    this.htmlOptionGroup.val(this.value);
+    this.htmlOptionGroup.on("mousedown touchstart", function(b) {
       b.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(c) {
+    this.htmlOptionGroup.on("keyup", function(c) {
       var f = c.keyCode || c.which;
       b.applyValue(c);
       -1 < [13, 27].indexOf(f) && b.destroyOption(void 0, !0);
     });
     var c = this.getAbsolutePosFromDocument();
     c.y -= this.box.height / 2;
-    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:c.x, top:c.y, width:b.box.width});
-    this.svgOptionGroup = this.appendSvgOptionGroup();
-    this.svgOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
-    $(this.svgOptionGroup).on("mousedown touchstart", function(c) {
+    this.htmlOptionGroup.css({height:this._CONTENT_HEIGHT, left:c.x, top:c.y, width:b.box.width});
+    this.optionGroup = this.appendSvgOptionGroup();
+    this.optionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
+    $(this.optionGroup).on("mousedown touchstart", function(c) {
       c.stopPropagation();
       b._updateByCoord(c);
     });
-    this._dividerGroup = this.svgOptionGroup.elem("g");
+    this._dividerGroup = this.optionGroup.elem("g");
     for (c = 0;360 > c;c += 15) {
       this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === c % 45 ? 10 : 5), y2:0, transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
     }
     c = this.getAbsolutePosFromBoard();
     c.x += this.box.width / 2;
     c.y = c.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + c.x + "," + c.y + ")"});
-    $(this.svgOptionGroup).bind("mousemove touchmove", this._updateByCoord.bind(this));
-    $(this.svgOptionGroup).bind("mouseup touchend", this.destroyOption.bind(this));
+    this.optionGroup.attr({class:"entry-field-angle", transform:"translate(" + c.x + "," + c.y + ")"});
+    $(this.optionGroup).bind("mousemove touchmove", this._updateByCoord.bind(this));
+    $(this.optionGroup).bind("mouseup touchend", this.destroyOption.bind(this));
     this.updateGraph();
-    this.optionGroup.focus();
-    this.optionGroup.select();
+    this.htmlOptionGroup.focus();
+    this.htmlOptionGroup.select();
+    this.optionDomCreated();
   };
   c._updateByCoord = function(b) {
     b.originalEvent && b.originalEvent.touches && (b = b.originalEvent.touches[0]);
     b = [b.clientX, b.clientY];
     var c = this.getAbsolutePosFromDocument();
-    this.optionGroup.val(this.modValue(function(b, c) {
+    this.htmlOptionGroup.val(this.modValue(function(b, c) {
       var f = c[0] - b[0], h = c[1] - b[1] - 49 - 1, k = Math.atan(-h / f), k = Entry.toDegrees(k), k = 90 - k;
       0 > f ? k += 180 : 0 < h && (k += 360);
       return 15 * Math.round(k / 15);
@@ -23591,20 +23592,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   c.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
     var b = Entry.toRadian(this.getValue()), c = 49 * Math.sin(b), d = -49 * Math.cos(b), b = b > Math.PI ? 1 : 0;
-    this._fillPath = this.svgOptionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", c).replace("%Y", d).replace("%LARGE", b), class:"entry-angle-fill-area"});
-    this.svgOptionGroup.appendChild(this._dividerGroup);
+    this._fillPath = this.optionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", c).replace("%Y", d).replace("%LARGE", b), class:"entry-angle-fill-area"});
+    this.optionGroup.appendChild(this._dividerGroup);
     this._indicator && this._indicator.remove();
-    this._indicator = this.svgOptionGroup.elem("line", {x1:0, y1:0, x2:c, y2:d});
+    this._indicator = this.optionGroup.elem("line", {x1:0, y1:0, x2:c, y2:d});
     this._indicator.attr({class:"entry-angle-indicator"});
   };
   c.applyValue = function() {
-    var b = this.optionGroup.val();
-    Entry.Utils.isNumber(b) && "" !== b && (b = this.modValue(b), this.setValue(b), this.updateGraph(), this.textElement.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(b), this.resize());
+    var b = this.htmlOptionGroup.val();
+    Entry.Utils.isNumber(b) && "" !== b && (b = this.modValue(b), this.setValue(b), this.updateGraph(), this.textElement.textContent = this.getValue(), this.htmlOptionGroup && this.htmlOptionGroup.val(b), this.resize());
   };
   c.resize = function() {
     var b = this.getTextWidth();
     this._header.attr({width:b});
-    this.optionGroup && this.optionGroup.css({width:b});
+    this.htmlOptionGroup && this.htmlOptionGroup.css({width:b});
     this.box.set({width:b});
     this._block.view.dAlignContent();
   };
@@ -23620,8 +23621,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   c.destroyOption = function(b, c) {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
+    this.htmlOptionGroup && (this.htmlOptionGroup.remove(), delete this.htmlOptionGroup);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
-    this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
     this._setTextValue();
     !0 !== b && this.command(c);
   };
