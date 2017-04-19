@@ -6311,7 +6311,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryCurtainElem {
   position: fixed;
-  background-color: 3b3b3b;
+  background-color: #3b3b3b;
   opacity: 0.7;
   z-index: 5001;
   -webkit-transition: opacity 0.4s ease-in-out;
