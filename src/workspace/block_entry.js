@@ -41980,10 +41980,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-
-                    ["X축","1"],
-                    ["Y축","2"],
-                    ["Z축","3"]
+                    [Lang.Blocks.coconut_x_axis,"1"],
+                    [Lang.Blocks.coconut_y_axis,"2"],
+                    [Lang.Blocks.coconut_z_axis,"3"]
                 ],
                 "value": "1",
                 "fontSize": 11
