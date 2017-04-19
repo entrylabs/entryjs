@@ -1094,8 +1094,11 @@ Entry.Board.DRAG_RADIUS = 5;
         if (obj instanceof Entry.Block) {
             pos = obj.view.getAbsoluteCoordinate();
             obj.view.dominate();
+        } else if (obj instanceof Entry.Thread) {
+            pos = obj.view.requestAbsoluteCoordinate();
         } else if (obj.getAbsolutePosFromBoard)
             pos = obj.getAbsolutePosFromBoard();
+
 
         var newX = 0, newY = 0;
         if (pos.x > this._offset.width - 200)
