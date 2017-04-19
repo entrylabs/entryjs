@@ -2770,6 +2770,7 @@ EntryStatic.getQuestionCategoryData = function() {
     return {
         category: 'dummy',
         blocks: [
+            'hidden_event',
             'hidden',
             'hidden_string',
             'hidden_boolean'

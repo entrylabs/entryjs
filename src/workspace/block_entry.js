@@ -32471,6 +32471,38 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {}
     },
+    "hidden_event": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_event",
+        "template": "         %1       ",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "hidden_event"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {}
+    },
     "check_object_property": {
         "color": "#7C7C7C",
         "skeleton": "basic",
