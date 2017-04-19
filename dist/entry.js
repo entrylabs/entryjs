@@ -17472,50 +17472,58 @@ Entry.Model = function(c, b) {
   }, log:function(b, c) {
     return [["pointer", b], ["value", c]];
   }, restrict:function(b, c, f, d) {
-    var l = !1;
+    var l = !1, m = b.tooltip.isDefault;
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
-    var m = Entry.Command.editor.board.findBlock(b.content[1][1]), q = m.getFieldRawType();
+    var q = Entry.Command.editor.board.findBlock(b.content[1][1]), n = q.getFieldRawType();
     if (d.toolTipRender) {
-      switch(q) {
-        case "textInput":
-          d.toolTipRender.contentIndex = 0;
-          break;
-        case "dropdown":
-        ;
-        case "dropdownDynamic":
-          d.toolTipRender.contentIndex = 1;
-          break;
-        case "keyboard":
-          d.toolTipRender.contentIndex = 2;
+      if (m) {
+        switch(n) {
+          case "textInput":
+            d.toolTipRender.contentIndex = 0;
+            break;
+          case "dropdown":
+          ;
+          case "dropdownDynamic":
+            d.toolTipRender.contentIndex = 1;
+            break;
+          case "keyboard":
+            d.toolTipRender.contentIndex = 2;
+        }
+      } else {
+        d.toolTipRender.contentIndex = 0;
       }
     }
-    var n = b.content[2][1];
-    m instanceof Entry.FieldTextInput && m.fixNextValue(n);
-    var r = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+    var r = b.content[2][1];
+    q instanceof Entry.FieldTextInput && q.fixNextValue(r);
+    var v = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
       if (!l && c) {
         l = !0;
         f();
         f();
-        d.toolTipRender.replaceContent(/&value&/gi, m.getTextValueByValue(n));
+        d.toolTipRender.replaceContent(/&value&/gi, q.getTextValueByValue(r));
         if (d.toolTipRender) {
-          switch(q) {
-            case "textInput":
-              d.toolTipRender.contentIndex = 3;
-              break;
-            case "dropdown":
-            ;
-            case "dropdownDynamic":
-              d.toolTipRender.contentIndex = 4;
-              break;
-            case "keyboard":
-              d.toolTipRender.contentIndex = 5;
+          if (m) {
+            switch(n) {
+              case "textInput":
+                d.toolTipRender.contentIndex = 3;
+                break;
+              case "dropdown":
+              ;
+              case "dropdownDynamic":
+                d.toolTipRender.contentIndex = 4;
+                break;
+              case "keyboard":
+                d.toolTipRender.contentIndex = 5;
+            }
+          } else {
+            d.toolTipRender.titleIndex = 1, d.toolTipRender.contentIndex = 1;
           }
         }
-        r.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
+        v.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
         }});
       }
     }});
-    return r;
+    return v;
   }, disableMouseUpDispose:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
   c[f.selectBlockMenu] = {do:function(b, c, f) {
     var d = Entry.getMainWS().blockMenu;

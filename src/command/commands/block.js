@@ -588,6 +588,7 @@ goog.require("Entry.Utils");
         restrict: function(data, domQuery, callback, restrictor) {
             var isDone = false;
             var tooltipData = data.tooltip;
+            var isDefault = tooltipData.isDefault;
 
             Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
 
@@ -595,17 +596,21 @@ goog.require("Entry.Utils");
             var fieldType = field.getFieldRawType();
 
             if (restrictor.toolTipRender) {
-                switch (fieldType) {
-                    case 'textInput':
-                        restrictor.toolTipRender.contentIndex = 0;
-                        break;
-                    case 'dropdown':
-                    case 'dropdownDynamic':
-                        restrictor.toolTipRender.contentIndex = 1;
-                        break;
-                    case 'keyboard':
-                        restrictor.toolTipRender.contentIndex = 2;
-                        break;
+                if (!isDefault) {
+                    restrictor.toolTipRender.contentIndex = 0;
+                } else {
+                    switch (fieldType) {
+                        case 'textInput':
+                            restrictor.toolTipRender.contentIndex = 0;
+                            break;
+                        case 'dropdown':
+                        case 'dropdownDynamic':
+                            restrictor.toolTipRender.contentIndex = 1;
+                            break;
+                        case 'keyboard':
+                            restrictor.toolTipRender.contentIndex = 2;
+                            break;
+                    }
                 }
             }
 
@@ -632,17 +637,22 @@ goog.require("Entry.Utils");
                     );
 
                     if (restrictor.toolTipRender) {
-                        switch (fieldType) {
-                            case 'textInput':
-                                restrictor.toolTipRender.contentIndex = 3;
-                                break;
-                            case 'dropdown':
-                            case 'dropdownDynamic':
-                                restrictor.toolTipRender.contentIndex = 4;
-                                break;
-                            case 'keyboard':
-                                restrictor.toolTipRender.contentIndex = 5;
-                                break;
+                        if (!isDefault) {
+                            restrictor.toolTipRender.titleIndex = 1;
+                            restrictor.toolTipRender.contentIndex = 1;
+                        } else {
+                            switch (fieldType) {
+                                case 'textInput':
+                                    restrictor.toolTipRender.contentIndex = 3;
+                                    break;
+                                case 'dropdown':
+                                case 'dropdownDynamic':
+                                    restrictor.toolTipRender.contentIndex = 4;
+                                    break;
+                                case 'keyboard':
+                                    restrictor.toolTipRender.contentIndex = 5;
+                                    break;
+                            }
                         }
                     }
 
