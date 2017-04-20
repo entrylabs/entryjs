@@ -25112,7 +25112,7 @@ Entry.block = {
             // Entry.hw.sendQueue.instruction = Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR;
             
             if(mode == "motor1") {
-                pin = 7;        
+                pin = 7;
             } else {
                 pin = 8;
             }

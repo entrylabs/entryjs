@@ -5050,15 +5050,11 @@ Entry.Roborobo_Roduino = {name:"roborobo_roduino", INSTRUCTION:{DIGITAL_READ:1, 
   Entry.hw.update();
 }, ColorPin:[0, 0, 0]};
 Entry.Roborobo_SchoolKit = {name:"roborobo_schoolkit", pinMode:{INPUT:0, OUTPUT:1, ANALOG:2, PWM:3, SERVO:4}, inputPort:{ir:7, sound:8, contact:9, cds:10}, setZero:function() {
-  Entry.hw.sendQueue.initHW_Flag = !0;
-  Entry.hw.update();
   Entry.hw.sendQueue.digitalPinMode = [];
   Entry.hw.sendQueue.servo = [!1, !1, !1, !1, !1];
   for (var b = 0;14 > b;b++) {
     Entry.hw.sendQueue[b] = 0, Entry.hw.sendQueue.digitalPinMode[b] = 0;
   }
-  Entry.hw.update();
-  Entry.hw.sendQueue.initHW_Flag = !1;
   Entry.hw.update();
 }};
 Blockly.Blocks.roduino_on_block = {init:function() {
@@ -22707,16 +22703,17 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       if (1 == a.timeFlag) {
         return a;
       }
-      1 == a.wheelMode ? (Entry.hw.sendQueue[7] = 0, Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[8] = 0, Entry.hw.sendQueue[1] = 0) : 2 == a.wheelMode ? (Entry.hw.sendQueue[8] = 0, Entry.hw.sendQueue[1] = 0) : 3 == a.wheelMode && (Entry.hw.sendQueue[7] = 0, Entry.hw.sendQueue[0] = 0);
+      Entry.hw.sendQueue[0] = 0;
+      Entry.hw.sendQueue[1] = 0;
       delete a.timeFlag;
       delete a.isStart;
       delete a.wheelMode;
       Entry.engine.isContinue = !1;
       return a.callReturn();
     }
-    1 == b ? (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[7] = c, Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[8] = c, Entry.hw.sendQueue[1] = 0) : 2 == d && (Entry.hw.sendQueue[0] = c, Entry.hw.sendQueue[7] = 
-    0, Entry.hw.sendQueue[1] = c, Entry.hw.sendQueue[8] = 0)) : 2 == b ? (Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[8] = c, Entry.hw.sendQueue[1] = 0) : 2 == d && (Entry.hw.sendQueue[1] = c, Entry.hw.sendQueue[8] = 0)) : 3 == b && (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, 
-    1 == d ? (Entry.hw.sendQueue[7] = c, Entry.hw.sendQueue[0] = 0) : 2 == d && (Entry.hw.sendQueue[0] = c, Entry.hw.sendQueue[7] = 0));
+    1 == b ? (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[0] = c, Entry.hw.sendQueue[1] = c) : 2 == d && (Entry.hw.sendQueue[0] = -c, Entry.hw.sendQueue[1] = -c)) : 2 == b ? (Entry.hw.sendQueue.digitalPinMode[8] = 
+    Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[1] = c) : 2 == d && (Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[1] = -c)) : 3 == b && (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[0] = c, Entry.hw.sendQueue[1] = 0) : 2 == d && (Entry.hw.sendQueue[0] = 
+    -c, Entry.hw.sendQueue[1] = 0));
     a.wheelMode = b;
     a.isStart = !0;
     a.timeFlag = 1;
@@ -22728,15 +22725,15 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   img:"block_icon/practical_course/dcmotor.png", size:12}], events:{}, def:{params:[null, null, {type:"roborobo_motor_speed"}, null], type:"roborobo_move_for"}, paramsKeyMap:{WHEEL:0, DIRECTION:1, SPEED:2}, class:"roborobo_motor", func:function(b, a) {
     b = a.getNumberField("WHEEL");
     var c = a.getNumberValue("SPEED"), d = a.getNumberField("DIRECTION");
-    1 == b ? (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[7] = c, Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[8] = c, Entry.hw.sendQueue[1] = 0) : 2 == d && (Entry.hw.sendQueue[0] = c, Entry.hw.sendQueue[7] = 
-    0, Entry.hw.sendQueue[1] = c, Entry.hw.sendQueue[8] = 0)) : 2 == b ? (Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[8] = c, Entry.hw.sendQueue[1] = 0) : 2 == d && (Entry.hw.sendQueue[1] = c, Entry.hw.sendQueue[8] = 0)) : 3 == b && (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, 
-    1 == d ? (Entry.hw.sendQueue[7] = c, Entry.hw.sendQueue[0] = 0) : 2 == d && (Entry.hw.sendQueue[0] = c, Entry.hw.sendQueue[7] = 0));
+    1 == b ? (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[0] = c, Entry.hw.sendQueue[1] = c) : 2 == d && (Entry.hw.sendQueue[0] = -c, Entry.hw.sendQueue[1] = -c)) : 2 == b ? (Entry.hw.sendQueue.digitalPinMode[8] = 
+    Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[1] = c) : 2 == d && (Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[1] = -c)) : 3 == b && (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[0] = c, Entry.hw.sendQueue[1] = 0) : 2 == d && (Entry.hw.sendQueue[0] = 
+    -c, Entry.hw.sendQueue[1] = 0));
     return a.callReturn();
   }}, roborobo_stop_for:{color:"#00B200", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1\ubaa8\ud130\ub97c \uc815\uc9c0 %2", params:[{type:"Dropdown", options:[["\uc591\ucabd", "1"], ["\uc624\ub978\ucabd", "2"], ["\uc67c\ucabd", "3"]], value:"1", fontsIze:11}, {type:"Indicator", img:"block_icon/practical_course/dcmotor.png", size:12}], events:{}, def:{params:[null, null], type:"roborobo_stop_for"}, paramsKeyMap:{WHEEL:0}, class:"roborobo_motor", func:function(b, 
   a) {
     b = a.getNumberField("WHEEL");
-    1 == b ? (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue[7] = 0, Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[8] = 0, Entry.hw.sendQueue[1] = 0) : 2 == b ? (Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, 
-    Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue[8] = 0, Entry.hw.sendQueue[1] = 0) : 3 == b && (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue[7] = 0, Entry.hw.sendQueue[0] = 0);
+    1 == b ? (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[1] = 0) : 2 == b ? (Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = 
+    Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue[1] = 0) : 3 == b && (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue[0] = 0);
     return a.callReturn();
   }}, roborobo_touch_value:{color:"#2AB4D3", skeleton:"basic_string_field", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"\uc811\ucd09 \uc13c\uc11c \uac12", params:[{type:"Block", accept:"string"}], events:{}, def:{params:[null], type:"roborobo_touch_value"}, paramsKeyMap:{}, class:"roborobo_touch", func:function(b, a) {
     b = Entry.Roborobo_SchoolKit.inputPort.contact;
