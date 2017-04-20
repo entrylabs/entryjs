@@ -11,17 +11,20 @@ goog.require("Entry.Extension");
 /**
  * @constructor
  */
-Entry.TargetChecker = function(code, isForEdit) {
+Entry.TargetChecker = function(code, isForEdit, type) {
     this.isForEdit = isForEdit;
     this.goals = [];
     this.publicGoals = [];
     this.unachievedGoals = [];
     this.remainPublicGoal = 0;
+    this.lastMessage = "";
     if (this.isForEdit) {
         this.watchingBlocks = [];
         Entry.playground.mainWorkspace.blockMenu.unbanClass("checker");
         Entry.addEventListener("run", this.reRegisterAll.bind(this));
     }
+
+    this.type = type || "mission";
 
     this.isFail = false;
     this.isSuccess = false;
@@ -83,11 +86,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
 
     p.updateView = function() {
         if (this._view) {
-            var len = this.goals.length;
-            var publicLen = this.publicGoals.length;
-            this._view.text("목표 : " + (len - this.unachievedGoals.length) +
-                            " / " + len + " , 공식 목표 : " +
-                           (publicLen - this.remainPublicGoal) + " / " + publicLen);
+            this.renderViewMessage();
             if (this.isSuccess)
                 this._view.addClass("success");
             else
@@ -98,11 +97,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
                 this._view.removeClass("fail");
         }
         if (this._statusView) {
-            var publicLen = this.publicGoals.length;
-            this._statusViewIndicator.text(
-                (publicLen - this.remainPublicGoal) +
-                    "/" + publicLen
-            )
+            this.renderIndicatorMessage();
         }
     };
 
@@ -113,8 +108,12 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     }
 
     p.showStatusMessage = function(message) {
+        this.lastMessage = message;
+        this.lastIndicatorMessage = null;
+        this.renderIndicatorMessage();
         if (this._statusViewContent && !this.isFail)
             this._statusViewContent.text(message);
+        this.renderViewMessage();
     };
 
     p.achieveCheck = function(isSuccess, id) {
@@ -132,8 +131,9 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         this.unachievedGoals.splice(this.unachievedGoals.indexOf(id), 1);
         if (this.publicGoals.indexOf(id) > -1)
             this.remainPublicGoal--;
-        if (this.unachievedGoals.length === 0) {
+        if (this.remainPublicGoal === 0) {
             this.isSuccess = true;
+            this.showSuccessMessage();
             Entry.achieveEvent.notify("success", id);
         }
         this.updateView()
@@ -158,7 +158,34 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     };
 
     p.showDefaultMessage = function() {
-        this.showStatusMessage("프로젝트를 실행해 봅시다.");
+        switch(this.type) {
+            case "mission":
+                this.showStatusMessage("작품을 실행 해봅시다.");
+                break;
+            case "mission_intro":
+                this.showStatusMessage("작품을 실행하며 미션을 파악해 봅시다.");
+                this.renderIndicatorMessage("미션");
+                break;
+            case "guide_intro":
+                this.showStatusMessage("작품을 실행하며 무엇을 만들지 알아 봅시다.");
+                this.renderIndicatorMessage("안내");
+                break;
+        }
+    };
+
+    p.showSuccessMessage = function() {
+        switch(this.type) {
+            case "mission":
+                break;
+            case "mission_intro":
+                this.showStatusMessage("이제 작품을 만들며 미션을 해결해 봅시다.");
+                this.renderIndicatorMessage("미션");
+                break;
+            case "guide_intro":
+                this.showStatusMessage("이제 학습을 시작해 봅시다.");
+                this.renderIndicatorMessage("안내");
+                break;
+        }
     };
 
     p.checkGoal = function(goalName) {
@@ -171,7 +198,8 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
             this.watchingBlocks.push(block);
         if (block.params[1] && this.goals.indexOf(block.params[0] + "") < 0) {
             this.goals.push(block.params[0] + "");
-            this.publicGoals.push(block.params[0] + "");
+            if (block.params[2])
+                this.publicGoals.push(block.params[0] + "");
             this.remainPublicGoal = this.publicGoals.length;
         }
         this.reset();
@@ -202,5 +230,28 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         $(this._view).remove();
     };
 
+    p.renderViewMessage = function() {
+        var len = this.goals.length;
+        var publicLen = this.publicGoals.length;
+        if (this._view)
+            this._view.html("목표 : " + (len - this.unachievedGoals.length) +
+                            " / " + len + " , 공식 목표 : " +
+                           (publicLen - this.remainPublicGoal) + " / " + publicLen + "<br>" +
+                           this.lastMessage);
+    };
+
+    p.renderIndicatorMessage = function(message) {
+        if (!this._statusViewIndicator)
+            return;
+        if (message)
+            this.lastIndicatorMessage = message;
+
+        var publicLen = this.publicGoals.length;
+        this._statusViewIndicator.text(
+            this.lastIndicatorMessage ||
+                Math.min(publicLen - this.remainPublicGoal + 1, publicLen) +
+                "/" + publicLen
+        )
+    }
 
 })(Entry.TargetChecker.prototype);
