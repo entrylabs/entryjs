@@ -22160,7 +22160,7 @@ Entry.BlockView = function(c, b, f) {
   this.block = c;
   this._lazyUpdatePos = Entry.Utils.debounce(c._updatePos.bind(c), 200);
   this.mouseUpEvent = new Entry.Event(this);
-  this.dAlignContent = Entry.Utils.debounce(this.alignContent, 30);
+  this.dAlignContent = this.alignContent;
   this._board = b;
   this._observers = [];
   this.set(c);
