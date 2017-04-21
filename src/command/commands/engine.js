@@ -57,6 +57,8 @@ goog.require("Entry.STATIC");
         },
         restrict: function(data, domQuery, callback, restrictor) {
             var engine = Entry.engine;
+            if (Entry.engine.popup)
+                Entry.engine.closeFullScreen();
             if (!engine.isState('run')) engine.toggleRun(false);
 
             return new Entry.Tooltip([{
