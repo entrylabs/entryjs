@@ -15896,6 +15896,7 @@ Entry.Commander = function(c) {
     return [["callerName", b]];
   }, restrict:function(b, c, e, g) {
     g = Entry.engine;
+    Entry.engine.popup && Entry.engine.closeFullScreen();
     g.isState("run") || g.toggleRun(!1);
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(b) {
       e();
