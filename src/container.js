@@ -885,6 +885,7 @@ Entry.Container.prototype.setInputValue = function(inputValue) {
     else
         this.inputValue.setValue(inputValue);
     Entry.stage.hideInputField();
+    Entry.dispatchEvent("answerSubmitted");
     if (Entry.console)
         Entry.console.stopInput(inputValue);
     this.inputValue.complete = true;

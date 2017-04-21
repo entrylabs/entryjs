@@ -32699,6 +32699,46 @@ Entry.block = {
             this.executor.entity = obj.entity;
         }
     },
+    "is_answer_submited": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "대답을 입력 받을때 까지 기다리기 %1",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "is_answer_submited"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            if (this.isSubmitted) {
+                Entry.removeEventListener("answerSubmitted", checkFunc);
+                return;
+            }
+            else if (this.isSubmitted === false)
+                return Entry.STATIC.BREAK;
+            var checkFunc = function() {
+                that.isSubmitted = true;
+            }
+            this.isSubmitted = false;
+            var that = this;
+            Entry.addEventListener("answerSubmitted", checkFunc);
+            return Entry.STATIC.BREAK;
+        }
+    },
     "check_block_execution": {
         "color": "#7C7C7C",
         "skeleton": "basic_loop",

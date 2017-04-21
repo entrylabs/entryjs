@@ -5154,7 +5154,7 @@ Entry.Container.prototype.getInputValue = function() {
   return this.inputValue.getValue();
 };
 Entry.Container.prototype.setInputValue = function(c) {
-  this.inputValue.complete || (c ? this.inputValue.setValue(c) : this.inputValue.setValue(0), Entry.stage.hideInputField(), Entry.console && Entry.console.stopInput(c), this.inputValue.complete = !0);
+  this.inputValue.complete || (c ? this.inputValue.setValue(c) : this.inputValue.setValue(0), Entry.stage.hideInputField(), Entry.dispatchEvent("answerSubmitted"), Entry.console && Entry.console.stopInput(c), this.inputValue.complete = !0);
 };
 Entry.Container.prototype.resetSceneDuringRun = function() {
   this.mapEntityOnScene(function(c) {
