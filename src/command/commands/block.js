@@ -181,6 +181,7 @@ goog.require("Entry.Utils");
                 restrictor.toolTipRender.titleIndex = 0;
                 restrictor.toolTipRender.contentIndex = 0;
             }
+            var isDefault = data.tooltip.isDefault;
             var isDone = false;
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
@@ -195,21 +196,27 @@ goog.require("Entry.Utils");
                     isDone = true;
                     callback();
 
+                    restrictor.toolTipRender.titleIndex = 1;
+
+                    if (restrictor.toolTipRender) {
+                        if (!isDefault) {
+                            restrictor.toolTipRender.contentIndex = 1;
+                        } else {
+                            var target = Entry.Command.editor
+                                .board.code.getTargetByPointer(data.content[2][1]);
+
+                            if (target.isParamBlockType()) {
+                                restrictor.toolTipRender.contentIndex = 2;
+                            } else {
+                                restrictor.toolTipRender.contentIndex = 1;
+                            }
+                        }
+                    }
+
                     var processedDomQuery = restrictor.processDomQuery([
                             'playground', 'board', '&1', 'magnet'
                         ]);
 
-                    if (restrictor.toolTipRender) {
-                        restrictor.toolTipRender.titleIndex = 1;
-                        var target = Entry.Command.editor
-                            .board.code.getTargetByPointer(data.content[2][1]);
-
-                        if (target.isParamBlockType()) {
-                            restrictor.toolTipRender.contentIndex = 1;
-                        } else {
-                            restrictor.toolTipRender.contentIndex = 2;
-                        }
-                    }
                     tooltip.init([{
                         title: data.tooltip.title,
                         content: data.tooltip.content,
@@ -255,9 +262,9 @@ goog.require("Entry.Utils");
                     .board.code.getByPointer(data.content[2][1]);
 
                 if (!target || target.isParamBlockType()) {
-                    restrictor.toolTipRender.contentIndex = 0;
-                } else {
                     restrictor.toolTipRender.contentIndex = 1;
+                } else {
+                    restrictor.toolTipRender.contentIndex = 0;
                 }
             }
         }
@@ -587,8 +594,7 @@ goog.require("Entry.Utils");
         },
         restrict: function(data, domQuery, callback, restrictor) {
             var isDone = false;
-            var tooltipData = data.tooltip;
-            var isDefault = tooltipData.isDefault;
+            var isDefault = data.tooltip.isDefault;
 
             Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
 
