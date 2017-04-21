@@ -97,6 +97,7 @@ EntryStatic.getAllBlocks = function() {
                 "check_object_property",
                 "check_block_execution",
                 "switch_scope",
+                "is_answer_submited",
                 "check_lecture_goal",
                 "check_variable_by_name",
                 "show_prompt",
