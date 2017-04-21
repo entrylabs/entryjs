@@ -5831,21 +5831,8 @@ Entry.Engine = function() {
   c.hideMouseView = function() {
     this.mouseView.addClass("entryRemove");
   };
-  c.toggleFullScreen = function() {
-    if (this.popup) {
-      this.popup.remove(), this.popup = null;
-    } else {
-      this.popup = new Entry.Popup;
-      if ("workspace" != Entry.type) {
-        var b = $(document);
-        $(this.popup.body_).css("top", b.scrollTop());
-        $("body").css("overflow", "hidden");
-        popup.window_.appendChild(Entry.stage.canvas.canvas);
-        popup.window_.appendChild(Entry.engine.runButton[0]);
-      }
-      popup.window_.appendChild(Entry.engine.view_);
-      "workspace" === Entry.type && Entry.targetChecker && popup.window_.appendChild(Entry.targetChecker.getStatusView()[0]);
-    }
+  c.toggleFullScreen = function(b) {
+    this.popup ? (this.popup.remove(), this.popup = null) : (this.popup = new Entry.Popup(b), "workspace" != Entry.type && (b = $(document), $(this.popup.body_).css("top", b.scrollTop()), $("body").css("overflow", "hidden"), popup.window_.appendChild(Entry.stage.canvas.canvas), popup.window_.appendChild(Entry.engine.runButton[0])), popup.window_.appendChild(Entry.engine.view_), "workspace" === Entry.type && Entry.targetChecker && popup.window_.appendChild(Entry.targetChecker.getStatusView()[0]));
     Entry.windowResized.notify();
   };
   c.closeFullScreen = function() {
@@ -9403,12 +9390,13 @@ p.resize = function() {
   b.width = w + "px";
   b.height = 9 * w / 16 + "px";
 };
-Entry.Popup = function() {
+Entry.Popup = function(c) {
   Entry.assert(!window.popup, "Popup exist");
   this.body_ = Entry.createElement("div");
   this.body_.addClass("entryPopup");
-  this.body_.bindOnClick(function(c) {
-    c.target == this && this.popup.remove();
+  c && this.body_.addClass(c);
+  this.body_.bindOnClick(function(b) {
+    b.target == this && this.popup.remove();
   });
   this.body_.popup = this;
   document.body.appendChild(this.body_);
@@ -9441,6 +9429,9 @@ Entry.Popup.prototype.resize = function(c) {
   c.style.width = String(f) + "px";
   c.style.height = String(d + b) + "px";
   Entry.stage && Entry.stage.updateBoundRect();
+};
+Entry.Popup.prototype.removeMouseDispose = function(c) {
+  this.body_.unBindOnClick();
 };
 Entry.popupHelper = function(c) {
   this.popupList = {};
@@ -16539,6 +16530,9 @@ Entry.createElement = function(c, b) {
       c.stopImmediatePropagation();
       b.call(this, c);
     });
+  };
+  f.unBindOnClick = function(b) {
+    $(this).off("click tab");
   };
   return f;
 };

@@ -437,6 +437,9 @@ Entry.createElement = function(type, elementId) {
             func.call(this, e);
         });
     };
+    element.unBindOnClick = function(func) {
+        $(this).off('click tab');
+    };
     return element;
 };
 

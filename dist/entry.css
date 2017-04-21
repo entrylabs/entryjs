@@ -5407,6 +5407,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
   -ms-flex: 1;
   flex: 1;
 }
+.entryPopup.buttonsHidden .entryEngineButtonWorkspace_w {
+  display: none;
+}
 .propertyPanel {
   z-index: 10;
   position: absolute;

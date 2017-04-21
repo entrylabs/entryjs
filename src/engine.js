@@ -739,9 +739,9 @@ Entry.Engine = function() {
     /**
      * Toggle full screen of canvas
      */
-    p.toggleFullScreen = function() {
+    p.toggleFullScreen = function(popupClassName) {
         if (!this.popup) {
-            this.popup = new Entry.Popup();
+            this.popup = new Entry.Popup(popupClassName);
             if (Entry.type != 'workspace') {
                 var $doc = $(document);
                 var body = $(this.popup.body_);

@@ -7,11 +7,13 @@
  * Constructor of popup
  * @constructor
  */
-Entry.Popup = function() {
+Entry.Popup = function(className) {
     Entry.assert(!window.popup, 'Popup exist');
 
     this.body_ = Entry.createElement('div');
     this.body_.addClass('entryPopup');
+    if (className)
+        this.body_.addClass(className);
     this.body_.bindOnClick(function(e) {
         if (e.target==this){
             this.popup.remove();
@@ -76,4 +78,8 @@ Entry.Popup.prototype.resize = function(e) {
     }
 
     Entry.stage && Entry.stage.updateBoundRect();
+};
+
+Entry.Popup.prototype.removeMouseDispose = function(e) {
+    this.body_.unBindOnClick();
 };
