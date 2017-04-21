@@ -96,6 +96,7 @@ EntryStatic.getAllBlocks = function() {
                 "start_neighbor_scene",
                 "check_object_property",
                 "check_block_execution",
+                "switch_scope",
                 "check_lecture_goal",
                 "check_variable_by_name",
                 "show_prompt",
