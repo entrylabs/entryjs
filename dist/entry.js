@@ -5936,11 +5936,11 @@ Entry.Commander = function(c) {
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, e, d) {
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
     d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
-    var f = !1, g = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !f && c && (f = !0, e(), c = d.processDomQuery(["playground", "board", "&1", "magnet"]), d.toolTipRender && (d.toolTipRender.titleIndex = 1, Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1]).isParamBlockType() ? d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 2), g.init([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+    var f = b.tooltip.isDefault, g = !1, h = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !g && c && (g = !0, e(), d.toolTipRender.titleIndex = 1, d.toolTipRender && (f ? Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1]).isParamBlockType() ? d.toolTipRender.contentIndex = 2 : d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 1), c = d.processDomQuery(["playground", "board", "&1", "magnet"]), h.init([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
       }}));
     }});
-    return g;
+    return h;
   }, showMe:function(b) {
     if (!b.isTooltipFaded()) {
       b.fadeOutTooltip();
@@ -5957,7 +5957,7 @@ Entry.Commander = function(c) {
   d.restrict = function(b, c, e, d) {
     if (d.toolTipRender && d.toolTipRender) {
       var f = Entry.Command.editor.board.code.getByPointer(b.content[2][1]);
-      !f || f.isParamBlockType() ? d.toolTipRender.contentIndex = 0 : d.toolTipRender.contentIndex = 1;
+      !f || f.isParamBlockType() ? d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 0;
     }
     e();
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
