@@ -26705,6 +26705,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     c = this.getAbsolutePosFromDocument();
     c.y += this.box.height / 2 + 1;
     this.optionGroup.css({left:c.x, top:c.y});
+    this.optionDomCreated();
   };
   c.applyValue = function(b) {
     this.value != b && (this.setValue(b), this._header ? this._header.attr({fill:b}) : this.textElement && (this.textElement.textContent = this._convert(this.getValue(), this.getValue())));
