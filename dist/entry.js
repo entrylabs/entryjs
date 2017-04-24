@@ -6257,7 +6257,6 @@ Entry.Commander = function(c) {
     e.scale = c.scale;
     return [["objectId", b], ["picture", e]];
   }, dom:[".btn_confirm_modal"], restrict:function(b, c, f) {
-    Entry.Curtain && Entry.Curtain.setVisible(!0);
     this.hashId = b.content[2][1].id;
     c = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:".btn_confirm_modal"}], {restrict:!0, dimmed:!0, render:!1, callBack:f});
     f = Entry.getMainWS().widgetUpdateEvent;
@@ -6289,7 +6288,6 @@ Entry.Commander = function(c) {
     e.name = c.name;
     return [["objectId", b], ["sound", e]];
   }, dom:[".btn_confirm_modal"], restrict:function(b, c, f) {
-    Entry.Curtain && Entry.Curtain.setVisible(!0);
     this.hashId = b.content[2][1].id;
     c = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:".btn_confirm_modal"}], {callBack:f, dimmed:!0, restrict:!0, render:!1});
     f = Entry.getMainWS().widgetUpdateEvent;
