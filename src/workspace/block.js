@@ -75,6 +75,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         thread: null,
         movable: null,
         deletable: Entry.Block.DELETABLE_TRUE,
+        emphasized: false,
         readOnly: null,
         copyable: true,
         events: {},
@@ -306,6 +307,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         json.movable = this.movable;
         json.deletable = this.deletable;
+        json.emphasized = this.emphasized;
         json.readOnly = this.readOnly;
         if (this._backupParams) {
             json._backupParams = this._backupParams.map(function(p) {
