@@ -76,7 +76,6 @@ goog.require("Entry.STATIC");
         },
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
-            Entry.Curtain && Entry.Curtain.setVisible(true);
             this.hashId = data.content[2][1].id;
 
 
@@ -156,7 +155,6 @@ goog.require("Entry.STATIC");
         },
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
-            Entry.Curtain && Entry.Curtain.setVisible(true);
             this.hashId = data.content[2][1].id;
 
             var tooltip = new Entry.Tooltip([{
