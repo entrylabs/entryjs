@@ -23248,7 +23248,7 @@ Entry.Block.DELETABLE_TRUE = 1;
 Entry.Block.DELETABLE_FALSE = 2;
 Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 (function(c) {
-  c.schema = {id:null, x:0, y:0, type:null, params:[], statements:[], view:null, thread:null, movable:null, deletable:Entry.Block.DELETABLE_TRUE, readOnly:null, copyable:!0, events:{}, extensions:[]};
+  c.schema = {id:null, x:0, y:0, type:null, params:[], statements:[], view:null, thread:null, movable:null, deletable:Entry.Block.DELETABLE_TRUE, emphasized:!1, readOnly:null, copyable:!0, events:{}, extensions:[]};
   c.load = function(b) {
     b.id || (b.id = Entry.Utils.generateId());
     this.set(b);
@@ -23377,6 +23377,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     e.y = this.y;
     e.movable = this.movable;
     e.deletable = this.deletable;
+    e.emphasized = this.emphasized;
     e.readOnly = this.readOnly;
     this._backupParams && (e._backupParams = this._backupParams.map(function(b) {
       return b instanceof Entry.Block ? b.toJSON() : b;
@@ -24412,7 +24413,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
       d._mouseEnable && d._changeFill(!1);
     }));
     var g = this._schema.color;
-    this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN && (g = Entry.Utils.colorLighten(g));
+    if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this.block.emphasized) {
+      g = Entry.Utils.colorLighten(g);
+    }
     this._fillColor = g;
     e = {d:e, fill:g, class:"blockPath"};
     if (this.magnet.next || this._skeleton.nextShadow) {
@@ -24819,7 +24822,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   };
   c._updateColor = function() {
     var b = this._schema.color;
-    this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN && (b = Entry.Utils.colorLighten(b));
+    console.log(this.block.emphasized);
+    if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this.block.emphasized) {
+      b = Entry.Utils.colorLighten(b);
+    }
     this._fillColor = b;
     this._path.attr({fill:b});
     this._updateContents();

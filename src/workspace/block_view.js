@@ -163,7 +163,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
 
         var fillColor = this._schema.color;
-        if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
+        if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
+           this.block.emphasized)
             fillColor = Entry.Utils.colorLighten(fillColor);
         this._fillColor = fillColor;
         var pathStyle = {
@@ -1038,7 +1039,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._updateColor = function() {
         var fillColor = this._schema.color;
-        if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
+        console.log(this.block.emphasized)
+        if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
+           this.block.emphasized)
             fillColor = Entry.Utils.colorLighten(fillColor);
         this._fillColor = fillColor;
         this._path.attr({fill:fillColor});
