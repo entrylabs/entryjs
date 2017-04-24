@@ -107,4 +107,8 @@ goog.require('Entry.Dom');
     this.isVisible = function() {
         return this._visible;
     };
+
+    this.setVisible = function(value) {
+        this._visible = value;
+    };
 }.bind(Entry.Curtain))();
