@@ -391,11 +391,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._toLocalCoordinate = function(parentSvgGroup) {
+        this.disableMouseEvent = false;
         this._moveTo(0, 0, false);
         parentSvgGroup.appendChild(this.svgGroup);
     };
 
     p._toGlobalCoordinate = function(dragMode, doNotUpdatePos) {
+        this.disableMouseEvent = false;
         var pos = this.getAbsoluteCoordinate(dragMode);
         this._moveTo(pos.x, pos.y, false, doNotUpdatePos);
         this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
