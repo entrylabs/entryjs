@@ -2427,6 +2427,8 @@ Entry.VariableContainer = function() {
         this.lists_.map(function(v) {v.remove()});
         this.lists_ = [];
 
+        Entry.engine && Entry.engine.projectTimer && Entry.engine.projectTimer.remove();
+
         this.messages_ = [];
 
         for (var key in this.functions_) {

@@ -20931,6 +20931,7 @@ Entry.VariableContainer = function() {
       b.remove();
     });
     this.lists_ = [];
+    Entry.engine && Entry.engine.projectTimer && Entry.engine.projectTimer.remove();
     this.messages_ = [];
     for (var b in this.functions_) {
       this.functions_[b].destroy(), delete this.functions_[b];
