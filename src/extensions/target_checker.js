@@ -78,7 +78,7 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
         });
         if (isForIframe) {
             $(Entry.view_).addClass("iframeWithTargetStatus")
-            Entry.view_.append(this._statusView[0]);
+            Entry.view_.appendChild(this._statusView[0]);
         }
         this.updateView();
         this.showDefaultMessage();
