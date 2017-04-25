@@ -7421,7 +7421,7 @@ Entry.EntryObject = function(c) {
     this.clonedEntities = [];
   };
   c._rightClick = function(b) {
-    if (this._isContextMenuEnabled) {
+    if (this.isContextMenuEnabled()) {
       var f = this, c = [{text:Lang.Workspace.context_rename, callback:function(b) {
         b.stopPropagation();
         f.setLock(!1);
@@ -7445,6 +7445,9 @@ Entry.EntryObject = function(c) {
   };
   c.disableContextMenu = function() {
     this._isContextMenuEnabled = !1;
+  };
+  c.isContextMenuEnabled = function() {
+    return this._isContextMenuEnabled && Entry.objectEditable;
   };
   c.toggleEditObject = function() {
     var b = this.isEditing;

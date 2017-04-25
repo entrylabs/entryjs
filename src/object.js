@@ -1521,7 +1521,7 @@ Entry.EntryObject = function(model) {
     };
 
     p._rightClick = function(e) {
-        if (!this._isContextMenuEnabled)
+        if (!this.isContextMenuEnabled())
             return;
 
         var object = this;
@@ -1581,6 +1581,10 @@ Entry.EntryObject = function(model) {
 
     p.disableContextMenu = function() {
         this._isContextMenuEnabled = false;
+    };
+
+    p.isContextMenuEnabled = function() {
+        return this._isContextMenuEnabled && Entry.objectEditable;
     };
 
     p.toggleEditObject = function() {
