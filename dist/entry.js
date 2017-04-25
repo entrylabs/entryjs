@@ -18870,7 +18870,8 @@ Entry.Stage.prototype.updateHandle = function() {
   this.editEntity = !1;
 };
 Entry.Stage.prototype.startEdit = function() {
-  this.selectedObject.entity.initCommand();
+  var c = this.selectedObject;
+  c && c.entity.initCommand();
 };
 Entry.Stage.prototype.endEdit = function() {
   this.selectedObject.entity.checkCommand();

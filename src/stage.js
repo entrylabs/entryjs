@@ -494,7 +494,8 @@ Entry.Stage.prototype.updateHandle = function() {
 };
 
 Entry.Stage.prototype.startEdit = function () {
-    this.selectedObject.entity.initCommand();
+    var obj = this.selectedObject;
+    obj && obj.entity.initCommand();
 };
 
 Entry.Stage.prototype.endEdit = function () {
