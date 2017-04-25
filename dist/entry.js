@@ -20932,6 +20932,7 @@ Entry.VariableContainer = function() {
     });
     this.lists_ = [];
     Entry.engine && Entry.engine.projectTimer && Entry.engine.projectTimer.remove();
+    Entry.container && Entry.container.inputValue && Entry.container.inputValue.remove && Entry.container.inputValue.remove();
     this.messages_ = [];
     for (var b in this.functions_) {
       this.functions_[b].destroy(), delete this.functions_[b];
