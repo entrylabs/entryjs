@@ -128,6 +128,8 @@ Entry.Engine = function() {
                 Entry.dispatchEvent('openSpriteManager');
                 this.blur();
             });
+            if (!Entry.objectAddable)
+                this.addButton.addClass('entryRemove');
             this.view_.appendChild(this.addButton);
 
             this.runButton = Entry.createElement('button');
@@ -890,6 +892,20 @@ Entry.Engine = function() {
         if (Entry.keyPressed && this._keyboardEvent) {
             Entry.keyPressed.detach(this._keyboardEvent);
             delete this._keyboardEvent;
+        }
+    };
+
+    p.applyOption = function() {
+        var SMALL = 'small';
+
+        if (Entry.objectAddable) {
+            this.runButton.addClass(SMALL);
+            this.stopButton.addClass(SMALL);
+            this.addButton.removeClass('entryRemove');
+        } else {
+            this.runButton.removeClass(SMALL);
+            this.stopButton.removeClass(SMALL);
+            this.addButton.addClass('entryRemove');
         }
     };
 })(Entry.Engine.prototype);

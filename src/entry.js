@@ -255,8 +255,6 @@ Entry.resizeElement = function(interfaceModel) {
             if (Entry.objectAddable) {
                 addButton.style.top = (canvasHeight + 25) + 'px';
                 addButton.style.width = (canvasSize * 0.7) + 'px';
-            } else {
-                addButton.style.display = 'none';
             }
         }
 
