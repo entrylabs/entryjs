@@ -16311,6 +16311,7 @@ Entry.reloadOption = function(c) {
   this.options = c;
   this.parseOptions(c);
   this.playground.applyTabOption();
+  this.variableContainer.applyOption();
   this.engine.applyOption();
 };
 Entry.Recorder = function() {
@@ -16544,8 +16545,7 @@ Entry.createElement = function(c, b) {
   };
   f.bindOnClick = function(b) {
     $(this).on("click tab", function(c) {
-      c.stopImmediatePropagation();
-      b.call(this, c);
+      f.disabled || (c.stopImmediatePropagation(), b.call(this, c));
     });
   };
   f.unBindOnClick = function(b) {
@@ -19589,6 +19589,7 @@ Entry.VariableContainer = function() {
   this._variableRefs = [];
   this._messageRefs = [];
   this._functionRefs = [];
+  this._filterTabs = {};
   Entry.addEventListener("workspaceChangeMode", this.updateList.bind(this));
 };
 (function(c) {
@@ -19667,10 +19668,11 @@ Entry.VariableContainer = function() {
     var d = Entry.createElement("td");
     d.addClass("entryVariableSelectButtonWorkspace", b);
     d.innerHTML = Lang.Workspace[b];
-    c ? d.bindOnClick(function(c) {
+    d.bindOnClick(function(c) {
       Entry.do("variableContainerSelectFilter", b, this.viewMode_);
-    }) : d.addClass("disable");
-    return d;
+    });
+    !1 === c && (d.addClass("disable"), d.disabled = !0);
+    return this._filterTabs[b] = d;
   };
   c.selectFilter = function(b) {
     for (var c = this.view_.getElementsByTagName("td"), d = 0;d < c.length;d++) {
@@ -20958,6 +20960,15 @@ Entry.VariableContainer = function() {
     c = this.checkAllVariableName(c, "variables_") ? Entry.getOrderedName(c, this.variables_, "name_") : c;
     b = b.info;
     return {name:c, isCloud:b.isCloud, object:b.object, variableType:"variable"};
+  };
+  c.applyOption = function() {
+    function b(b, c) {
+      c ? (b.removeClass("disable"), b.disabled = !1) : (b.addClass("disable"), b.disabled = !0);
+    }
+    b(this._filterTabs.variable, Entry.variableEnable);
+    b(this._filterTabs.message, Entry.messageEnable);
+    b(this._filterTabs.list, Entry.listEnable);
+    b(this._filterTabs.func, Entry.functionEnable);
   };
 })(Entry.VariableContainer.prototype);
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {

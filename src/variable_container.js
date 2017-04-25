@@ -152,12 +152,14 @@ Entry.VariableContainer = function() {
         if (isEnable)
             view.bindOnClick(function(e) {
                 Entry.do(
-                    'variableContainerSelectFilter',
                     type, this.viewMode_
-                );
             });
         else
             view.addClass('disable');
+            view.disabled = true;
+        }
+
+        this._filterTabs[type] = view;
         return view;
     };
 
@@ -2497,5 +2499,22 @@ Entry.VariableContainer = function() {
             object: info.object,
             variableType: 'variable'
         };
+    };
+
+    p.applyOption = function() {
+        process(this._filterTabs.variable, Entry.variableEnable);
+        process(this._filterTabs.message, Entry.messageEnable);
+        process(this._filterTabs.list, Entry.listEnable);
+        process(this._filterTabs.func, Entry.functionEnable);
+
+        function process(view, value) {
+            if (value) {
+                view.removeClass('disable');
+                view.disabled = false;
+            } else {
+                view.addClass('disable');
+                view.disabled = true;
+            }
+        }
     };
 })(Entry.VariableContainer.prototype);

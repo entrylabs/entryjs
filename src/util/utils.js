@@ -433,6 +433,7 @@ Entry.createElement = function(type, elementId) {
     };
     element.bindOnClick = function(func) {
         $(this).on('click tab', function(e) {
+            if (element.disabled) return;
             e.stopImmediatePropagation();
             func.call(this, e);
         });
