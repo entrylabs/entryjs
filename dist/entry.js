@@ -17482,8 +17482,10 @@ Entry.Model = function(c, b) {
     return [["dx", b], ["dy", c]];
   }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
   c[f.setFieldValue] = {do:function(b, c) {
-    this.editor.board.findBlock(b).setValue(c, !0);
+    var f = this.editor.board.findBlock(b);
+    f.setValue(c, !0);
     Entry.disposeEvent.notify(!0);
+    f._blockView.disableMouseEvent = !1;
   }, state:function(b, c) {
     var f = this.editor.board.findBlock(b);
     return [b, f._startValue || f.getValue()];
@@ -17492,10 +17494,12 @@ Entry.Model = function(c, b) {
   }, restrict:function(b, c, f, d) {
     var l = !1, m = b.tooltip.isDefault;
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
-    var q = Entry.Command.editor.board.findBlock(b.content[1][1]), n = q.getFieldRawType();
+    var q = Entry.Command.editor.board.findBlock(b.content[1][1]), n = q._blockView;
+    n.disableMouseEvent = !0;
+    var r = q.getFieldRawType();
     if (d.toolTipRender) {
       if (m) {
-        switch(n) {
+        switch(r) {
           case "textInput":
             d.toolTipRender.contentIndex = 0;
             break;
@@ -17511,17 +17515,17 @@ Entry.Model = function(c, b) {
         d.toolTipRender.contentIndex = 0;
       }
     }
-    var r = b.content[2][1];
-    q instanceof Entry.FieldTextInput && q.fixNextValue(r);
-    var v = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+    var v = b.content[2][1];
+    q instanceof Entry.FieldTextInput && q.fixNextValue(v);
+    var y = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
       if (!l && c) {
         l = !0;
         f();
         f();
-        d.toolTipRender.replaceContent(/&value&/gi, q.getTextValueByValue(r));
+        d.toolTipRender.replaceContent(/&value&/gi, q.getTextValueByValue(v));
         if (d.toolTipRender) {
           if (m) {
-            switch(n) {
+            switch(r) {
               case "textInput":
                 d.toolTipRender.contentIndex = 3;
                 break;
@@ -17537,11 +17541,12 @@ Entry.Model = function(c, b) {
             d.toolTipRender.titleIndex = 1, d.toolTipRender.contentIndex = 1;
           }
         }
-        v.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
+        y.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
+          n.disableMouseEvent = !1;
         }});
       }
     }});
-    return v;
+    return y;
   }, disableMouseUpDispose:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
   c[f.selectBlockMenu] = {do:function(b, c, f) {
     var d = Entry.getMainWS().blockMenu;
@@ -22197,6 +22202,7 @@ Entry.BlockView = function(c, b, f) {
   this.block = c;
   this._lazyUpdatePos = Entry.Utils.debounce(c._updatePos.bind(c), 200);
   this.mouseUpEvent = new Entry.Event(this);
+  this.disableMouseEvent = !1;
   this.dAlignContent = this.alignContent;
   this._board = b;
   this._observers = [];
@@ -22455,7 +22461,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         l = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
         this.mouseDownCoordinate = {x:l.pageX, y:l.pageY};
         var m = $(document);
-        m.bind("mousemove.block touchmove.block", f);
+        this.disableMouseEvent || m.bind("mousemove.block touchmove.block", f);
         m.bind("mouseup.block touchend.block", d);
         this.dragInstance = new Entry.DragInstance({startX:l.pageX, startY:l.pageY, offsetX:l.pageX, offsetY:l.pageY, height:0, mode:!0});
         h.set({dragBlock:this});

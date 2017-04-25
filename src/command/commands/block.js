@@ -581,6 +581,7 @@ goog.require("Entry.Utils");
             var field = this.editor.board.findBlock(pointer);
             field.setValue(value, true);
             Entry.disposeEvent.notify(true);
+            field._blockView.disableMouseEvent = false;
         },
         state: function(pointer, value) {
             var field = this.editor.board.findBlock(pointer);
@@ -599,6 +600,8 @@ goog.require("Entry.Utils");
             Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
 
             var field = Entry.Command.editor.board.findBlock(data.content[1][1]);
+            var blockView = field._blockView;
+            blockView.disableMouseEvent = true;
             var fieldType = field.getFieldRawType();
 
             if (restrictor.toolTipRender) {
@@ -673,6 +676,7 @@ goog.require("Entry.Utils");
                         dimmed: true,
                         restrict: true,
                         callBack: function() {
+                            blockView.disableMouseEvent = false;
                         }
                     });
                 }

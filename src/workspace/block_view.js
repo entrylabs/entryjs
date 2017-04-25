@@ -15,6 +15,7 @@ Entry.BlockView = function(block, board, mode) {
     this._lazyUpdatePos =
         Entry.Utils.debounce(block._updatePos.bind(block), 200);
     this.mouseUpEvent = new Entry.Event(this);
+    this.disableMouseEvent = false;
 
     //this.dAlignContent =
         //Entry.Utils.debounce(this.alignContent, 30);
@@ -477,7 +478,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 x: mouseEvent.pageX, y: mouseEvent.pageY
             };
             var doc = $(document);
-            doc.bind('mousemove.block touchmove.block', onMouseMove);
+            if (!this.disableMouseEvent)
+                doc.bind('mousemove.block touchmove.block', onMouseMove);
             doc.bind('mouseup.block touchend.block', onMouseUp);
             this.dragInstance = new Entry.DragInstance({
                 startX: mouseEvent.pageX,
