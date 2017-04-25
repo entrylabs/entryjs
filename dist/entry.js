@@ -6722,6 +6722,14 @@ Entry.StateManager.prototype.changeLastCommandType = function(c) {
   b && (b.message = c);
   return b;
 };
+Entry.StateManager.prototype.clear = function() {
+  for (;this.undoStack_.length;) {
+    this.undoStack_.pop();
+  }
+  for (;this.redoStack_.length;) {
+    this.redoStack_.pop();
+  }
+};
 Entry.EntryObject = function(c) {
   var b = this;
   if (c) {

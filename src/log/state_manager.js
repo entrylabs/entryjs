@@ -271,3 +271,10 @@ Entry.StateManager.prototype.changeLastCommandType = function (type) {
     if (cmd) cmd.message = type;
     return cmd;
 };
+
+Entry.StateManager.prototype.clear = function () {
+    while (this.undoStack_.length)
+        this.undoStack_.pop();
+    while (this.redoStack_.length)
+        this.redoStack_.pop();
+};
