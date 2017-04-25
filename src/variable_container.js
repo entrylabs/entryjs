@@ -2429,6 +2429,8 @@ Entry.VariableContainer = function() {
 
         Entry.engine && Entry.engine.projectTimer && Entry.engine.projectTimer.remove();
 
+        Entry.container && Entry.container.inputValue && Entry.container.inputValue.remove();
+
         this.messages_ = [];
 
         for (var key in this.functions_) {
