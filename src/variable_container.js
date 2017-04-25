@@ -32,6 +32,7 @@ Entry.VariableContainer = function() {
     this._variableRefs = [];
     this._messageRefs = [];
     this._functionRefs = [];
+    this._filterTabs = {};
     Entry.addEventListener('workspaceChangeMode', this.updateList.bind(this));
 };
 
@@ -149,12 +150,14 @@ Entry.VariableContainer = function() {
         var view = Entry.createElement('td');
         view.addClass('entryVariableSelectButtonWorkspace', type);
         view.innerHTML = Lang.Workspace[type];
-        if (isEnable)
-            view.bindOnClick(function(e) {
-                Entry.do(
-                    type, this.viewMode_
-            });
-        else
+        view.bindOnClick(function(e) {
+            Entry.do(
+                'variableContainerSelectFilter',
+                type, this.viewMode_
+            );
+        });
+
+        if (isEnable === false) {
             view.addClass('disable');
             view.disabled = true;
         }
