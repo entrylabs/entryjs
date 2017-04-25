@@ -16050,7 +16050,10 @@ Entry.Commander = function(c) {
     return [];
   }, log:function() {
     return [];
-  }, validate:!1, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"playgroundClickAddPictureCancel", dom:["playground", "pictureAddButton"]};
+  }, validate:!1, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, e, g) {
+    Entry.dispatchEvent("dismissModal");
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {restrict:!0, dimmed:!0, callBack:e});
+  }, undo:"playgroundClickAddPictureCancel", dom:["playground", "pictureAddButton"]};
   c[b.playgroundClickAddPictureCancel] = {do:function() {
     Entry.dispatchEvent("dismissModal");
   }, state:function() {
@@ -16064,7 +16067,10 @@ Entry.Commander = function(c) {
     return [];
   }, log:function() {
     return [];
-  }, validate:!1, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"playgroundClickAddSoundCancel", dom:["playground", "soundAddButton"]};
+  }, validate:!1, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, e, g) {
+    Entry.dispatchEvent("dismissModal");
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {restrict:!0, dimmed:!0, callBack:e});
+  }, undo:"playgroundClickAddSoundCancel", dom:["playground", "soundAddButton"]};
   c[b.playgroundClickAddSoundCancel] = {do:function() {
     Entry.dispatchEvent("dismissModal");
   }, state:function() {

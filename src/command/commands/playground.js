@@ -41,6 +41,19 @@ goog.require("Entry.STATIC");
         validate: false,
         //skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        restrict: function(data, domQuery, callback, restrictor) {
+            Entry.dispatchEvent('dismissModal');
+            var tooltip = new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                restrict: true,
+                dimmed: true,
+                callBack: callback
+            });
+            return tooltip;
+        },
         undo: "playgroundClickAddPictureCancel",
         dom: ['playground', 'pictureAddButton']
     };
@@ -74,6 +87,19 @@ goog.require("Entry.STATIC");
         },
         validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        restrict: function(data, domQuery, callback, restrictor) {
+            Entry.dispatchEvent('dismissModal');
+            var tooltip = new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                restrict: true,
+                dimmed: true,
+                callBack: callback
+            });
+            return tooltip;
+        },
         undo: "playgroundClickAddSoundCancel",
         dom: ['playground', 'soundAddButton']
     };
