@@ -26553,38 +26553,38 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
       !0 !== c && b.applyValue();
       b.destroyOption(c);
     });
-    this.htmlOptionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
-    this.htmlOptionGroup.val(this.value);
-    this.htmlOptionGroup.on("mousedown touchstart", function(b) {
+    this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
+    this.optionGroup.val(this.value);
+    this.optionGroup.on("mousedown touchstart", function(b) {
       b.stopPropagation();
     });
-    this.htmlOptionGroup.on("keyup", function(c) {
+    this.optionGroup.on("keyup", function(c) {
       var d = c.keyCode || c.which;
       b.applyValue(c);
       -1 < [13, 27].indexOf(d) && b.destroyOption(void 0, !0);
     });
     var c = this.getAbsolutePosFromDocument();
     c.y -= this.box.height / 2;
-    this.htmlOptionGroup.css({height:this._CONTENT_HEIGHT, left:c.x, top:c.y, width:b.box.width});
-    this.optionGroup = this.appendSvgOptionGroup();
-    this.optionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
-    $(this.optionGroup).on("mousedown touchstart", function(c) {
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:c.x, top:c.y, width:b.box.width});
+    this.angleOptionGroup = this.appendSvgOptionGroup();
+    this.angleOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
+    $(this.angleOptionGroup).on("mousedown touchstart", function(c) {
       c.stopPropagation();
       b._updateByCoord(c);
     });
-    this._dividerGroup = this.optionGroup.elem("g");
+    this._dividerGroup = this.angleOptionGroup.elem("g");
     for (c = 0;360 > c;c += 15) {
       this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === c % 45 ? 10 : 5), y2:0, transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
     }
     c = this.getAbsolutePosFromBoard();
     c.x += this.box.width / 2;
     c.y = c.y + this.box.height / 2 + 49 + 1;
-    this.optionGroup.attr({class:"entry-field-angle", transform:"translate(" + c.x + "," + c.y + ")"});
-    $(this.optionGroup).bind("mousemove touchmove", this._updateByCoord.bind(this));
-    $(this.optionGroup).bind("mouseup touchend", this.destroyOption.bind(this));
+    this.angleOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + c.x + "," + c.y + ")"});
+    $(this.angleOptionGroup).bind("mousemove touchmove", this._updateByCoord.bind(this));
+    $(this.angleOptionGroup).bind("mouseup touchend", this.destroyOption.bind(this));
     this.updateGraph();
-    this.htmlOptionGroup.focus();
-    this.htmlOptionGroup.select();
+    this.optionGroup.focus();
+    this.optionGroup.select();
     this.optionDomCreated();
   };
   c._updateByCoord = function(b) {
@@ -26605,20 +26605,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   c.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
     var b = Entry.toRadian(this.getValue()), c = 49 * Math.sin(b), d = -49 * Math.cos(b), b = b > Math.PI ? 1 : 0;
-    this._fillPath = this.optionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", c).replace("%Y", d).replace("%LARGE", b), class:"entry-angle-fill-area"});
-    this.optionGroup.appendChild(this._dividerGroup);
+    this._fillPath = this.angleOptionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", c).replace("%Y", d).replace("%LARGE", b), class:"entry-angle-fill-area"});
+    this.angleOptionGroup.appendChild(this._dividerGroup);
     this._indicator && this._indicator.remove();
-    this._indicator = this.optionGroup.elem("line", {x1:0, y1:0, x2:c, y2:d});
+    this._indicator = this.angleOptionGroup.elem("line", {x1:0, y1:0, x2:c, y2:d});
     this._indicator.attr({class:"entry-angle-indicator"});
   };
   c.applyValue = function() {
-    var b = this.htmlOptionGroup.val();
-    Entry.Utils.isNumber(b) && "" !== b && (b = this.modValue(b), this.setValue(b), this.updateGraph(), this.textElement.textContent = this.getValue(), this.htmlOptionGroup && this.htmlOptionGroup.val(b), this.resize());
+    var b = this.optionGroup.val();
+    Entry.Utils.isNumber(b) && "" !== b && (b = this.modValue(b), this.setValue(b), this.updateGraph(), this.textElement.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(b), this.resize());
   };
   c.resize = function() {
     var b = this.getTextWidth();
     this._header.attr({width:b});
-    this.htmlOptionGroup && this.htmlOptionGroup.css({width:b});
+    this.optionGroup && this.optionGroup.css({width:b});
     this.box.set({width:b});
     this._block.view.dAlignContent();
   };
@@ -26634,8 +26634,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   c.destroyOption = function(b, c) {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
-    this.htmlOptionGroup && (this.htmlOptionGroup.remove(), delete this.htmlOptionGroup);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    this.angleOptionGroup && (this.angleOptionGroup.remove(), delete this.angleOptionGroup);
     this._setTextValue();
     !0 !== b && this.command(c);
   };

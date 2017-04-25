@@ -96,18 +96,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         this._attachDisposeEvent(func);
 
         //html option
-        this.htmlOptionGroup = Entry.Dom('input', {
+        this.optionGroup = Entry.Dom('input', {
             class:'entry-widget-input-field',
             parent: $('body')
         });
 
-        this.htmlOptionGroup.val(this.value);
+        this.optionGroup.val(this.value);
 
-        this.htmlOptionGroup.on('mousedown touchstart', function(e) {
+        this.optionGroup.on('mousedown touchstart', function(e) {
             e.stopPropagation();
         });
 
-        this.htmlOptionGroup.on('keyup', function(e){
+        this.optionGroup.on('keyup', function(e){
             var exitKeys = [13, 27];
             var keyCode = e.keyCode || e.which;
             that.applyValue(e);
@@ -118,7 +118,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
         var pos = this.getAbsolutePosFromDocument();
         pos.y -= this.box.height/2;
-        this.htmlOptionGroup.css({
+        this.optionGroup.css({
             height: this._CONTENT_HEIGHT,
             left:pos.x,
             top:pos.y,
@@ -126,18 +126,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         });
 
         //svg option dom
-        this.optionGroup = this.appendSvgOptionGroup();
-        var circle = this.optionGroup.elem('circle', {
+        this.angleOptionGroup = this.appendSvgOptionGroup();
+        var circle = this.angleOptionGroup.elem('circle', {
             x:0, y:0, r:RADIUS,
             class:'entry-field-angle-circle'
         });
 
-        $(this.optionGroup).on('mousedown touchstart', function(e) {
+        $(this.angleOptionGroup).on('mousedown touchstart', function(e) {
             e.stopPropagation();
             that._updateByCoord(e);
         });
 
-        this._dividerGroup = this.optionGroup.elem('g');
+        this._dividerGroup = this.angleOptionGroup.elem('g');
         for (var a = 0; a < 360; a += 15) {
             this._dividerGroup.elem('line', {
                 x1:RADIUS, y1:0,
@@ -151,19 +151,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         pos.x = pos.x + this.box.width/2;
         pos.y = pos.y + this.box.height/2 + RADIUS + 1;
 
-        this.optionGroup.attr({
+        this.angleOptionGroup.attr({
             class: 'entry-field-angle',
             transform: "translate(" + pos.x + "," + pos.y + ")"
         });
 
-        $(this.optionGroup).bind('mousemove touchmove',
+        $(this.angleOptionGroup).bind('mousemove touchmove',
             this._updateByCoord.bind(this));
 
-        $(this.optionGroup).bind('mouseup touchend',
+        $(this.angleOptionGroup).bind('mouseup touchend',
             this.destroyOption.bind(this));
         this.updateGraph();
-        this.htmlOptionGroup.focus();
-        this.htmlOptionGroup.select();
+        this.optionGroup.focus();
+        this.optionGroup.select();
         this.optionDomCreated();
     };
 
@@ -203,7 +203,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var largeFlag = (angleRadians > Math.PI) ? 1 : 0;
 
 
-        this._fillPath = this.optionGroup.elem('path', {
+        this._fillPath = this.angleOptionGroup.elem('path', {
             d: FILL_PATH.
                 replace('%X', x).
                 replace('%Y', y).
@@ -211,12 +211,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             class: 'entry-angle-fill-area'
         });
 
-        this.optionGroup.appendChild(this._dividerGroup);
+        this.angleOptionGroup.appendChild(this._dividerGroup);
 
         if (this._indicator) this._indicator.remove();
 
         this._indicator =
-            this.optionGroup.elem('line', {
+            this.angleOptionGroup.elem('line', {
                 x1: 0, y1: 0, x2: x, y2: y
             });
 
@@ -224,13 +224,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     };
 
     p.applyValue = function() {
-        var value = this.htmlOptionGroup.val();
+        var value = this.optionGroup.val();
         if (!Entry.Utils.isNumber(value) || value === '') return;
         value = this.modValue(value);
         this.setValue(value);
         this.updateGraph();
         this.textElement.textContent = this.getValue();
-        if (this.htmlOptionGroup) this.htmlOptionGroup.val(value);
+        if (this.optionGroup) this.optionGroup.val(value);
         this.resize();
     };
 
@@ -238,8 +238,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var width = this.getTextWidth();
 
         this._header.attr({width: width});
-        if (this.htmlOptionGroup)
-            this.htmlOptionGroup.css({width: width});
+        if (this.optionGroup)
+            this.optionGroup.css({width: width});
 
         this.box.set({width: width});
         this._block.view.dAlignContent();
@@ -271,14 +271,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             delete this.documentDownEvent;
         }
 
-        if (this.htmlOptionGroup) {
-            this.htmlOptionGroup.remove();
-            delete this.htmlOptionGroup;
-        }
-
         if (this.optionGroup) {
             this.optionGroup.remove();
             delete this.optionGroup;
+        }
+
+        if (this.angleOptionGroup) {
+            this.angleOptionGroup.remove();
+            delete this.angleOptionGroup;
         }
         this._setTextValue();
         skipCommand !== true && this.command(forceCommand);
