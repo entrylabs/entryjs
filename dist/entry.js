@@ -15890,10 +15890,11 @@ Entry.Commander = function(c) {
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.containerSelectObject] = {do:function(b) {
     Entry.container.selectObject(b);
-  }, state:function() {
+  }, state:function(b) {
+    return [Entry.playground.object.id, b];
   }, log:function(b) {
     return [["objectId", b], ["objectIndex", Entry.container.getObjectIndex(b)]];
-  }, skipUndoStack:!0, undo:"", recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["container", "objectIndex", "&1"]};
+  }, undo:"containerSelectObject", recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["container", "objectIndex", "&1"]};
 })(Entry.Command);
 (function(c) {
   var b = Entry.STATIC.COMMAND_TYPES;
