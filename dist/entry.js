@@ -22397,10 +22397,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this.svgGroup.attr("transform", "translate(" + this.x + "," + this.y + ")");
   };
   c._toLocalCoordinate = function(b) {
+    this.disableMouseEvent = !1;
     this._moveTo(0, 0, !1);
     b.appendChild(this.svgGroup);
   };
   c._toGlobalCoordinate = function(b, c) {
+    this.disableMouseEvent = !1;
     var d = this.getAbsoluteCoordinate(b);
     this._moveTo(d.x, d.y, !1, c);
     this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
