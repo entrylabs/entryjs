@@ -87,7 +87,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
       Entry.playground.view_.style.left = e + .5 + "px";
       Entry.propertyPanel.resize(e);
       var f = Entry.engine.view_.getElementsByClassName("entryAddButtonWorkspace_w")[0];
-      f && (Entry.objectAddable ? (f.style.top = d + 25 + "px", f.style.width = .7 * e + "px") : f.style.display = "none");
+      f && Entry.objectAddable && (f.style.top = d + 25 + "px", f.style.width = .7 * e + "px");
       if (f = Entry.engine.view_.getElementsByClassName("entryRunButtonWorkspace_w")[0]) {
         Entry.objectAddable ? (f.style.top = d + 25 + "px", f.style.left = .7 * e + "px", f.style.width = .3 * e + "px") : (f.style.left = "2px", f.style.top = d + 25 + "px", f.style.width = e - 4 + "px");
       }
@@ -7347,6 +7347,7 @@ Entry.Engine = function() {
         Entry.dispatchEvent("openSpriteManager");
         this.blur();
       });
+      Entry.objectAddable || this.addButton.addClass("entryRemove");
       this.view_.appendChild(this.addButton);
       this.runButton = Entry.createElement("button");
       this.runButton.addClass("entryEngineButtonWorkspace_w");
@@ -7652,6 +7653,9 @@ Entry.Engine = function() {
   };
   c.detachKeyboardCapture = function() {
     Entry.keyPressed && this._keyboardEvent && (Entry.keyPressed.detach(this._keyboardEvent), delete this._keyboardEvent);
+  };
+  c.applyOption = function() {
+    Entry.objectAddable ? (this.runButton.addClass("small"), this.stopButton.addClass("small"), this.addButton.removeClass("entryRemove")) : (this.runButton.removeClass("small"), this.stopButton.removeClass("small"), this.addButton.addClass("entryRemove"));
   };
 })(Entry.Engine.prototype);
 Entry.EntityObject = function(c) {
@@ -9506,6 +9510,7 @@ Entry.reloadOption = function(c) {
   this.options = c;
   this.parseOptions(c);
   this.playground.applyTabOption();
+  this.engine.applyOption();
 };
 Entry.Activity = function(c, b) {
   this.name = c;

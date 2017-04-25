@@ -450,4 +450,5 @@ Entry.reloadOption = function(options) {
     this.options = options;
     this.parseOptions(options);
     this.playground.applyTabOption();
+    this.engine.applyOption();
 };
