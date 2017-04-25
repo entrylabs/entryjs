@@ -2025,6 +2025,9 @@ svg .svgBlockGroup text {
   z-index: 100;
   cursor: pointer;
 }
+.hidePlayBtn .entryRunButtonBigMinimize {
+  display: none;
+}
 @media screen and (max-width: 500px) {
   .entryRunButtonBigMinimize {
     width: 80px;
