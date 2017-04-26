@@ -23689,7 +23689,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     b.originalEvent && b.originalEvent.touches && (b = b.originalEvent.touches[0]);
     b = [b.clientX, b.clientY];
     var c = this.getAbsolutePosFromDocument();
-    this.htmlOptionGroup.val(this.modValue(function(b, c) {
+    this.optionGroup.val(this.modValue(function(b, c) {
       var f = c[0] - b[0], h = c[1] - b[1] - 49 - 1, k = Math.atan(-h / f), k = Entry.toDegrees(k), k = 90 - k;
       0 > f ? k += 180 : 0 < h && (k += 360);
       return 15 * Math.round(k / 15);
