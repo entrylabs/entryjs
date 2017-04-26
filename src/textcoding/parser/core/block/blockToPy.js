@@ -98,6 +98,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.Block = function(block, template) {
+        !block._schema && block.loadSchema();
+
         var result = "";
         var syntaxObj, syntax, textParams;
 
@@ -122,25 +124,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             result += block.data.type;
         }
 
-        /*if(block && block.data) {
-            var btype = block.data.type;
-            var prefix = btype.split('_')[0]
-            if(prefix == "stringParam" || prefix == "booleanParam")
-                return result;
-        }
-        if(template) syntax = template;
-        if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
-            if(!syntax || syntax == null || syntax == "def when_start():") {
-                var error = {};
-                var message = Lang.TextCoding[Entry.TextCodingError.ALERT_LEGACY_NO_SUPPORT];
-                var block_name = this.Block(block, Lang.template[block.data.type]);
-                var alert_message = message + '\n' + Lang.TextCoding[block_name] + ':' + block_name;
-
-                alert(alert_message);
-            }
-        }*/
-
-        if(!syntax || syntax == null)
+        if(!syntax || syntax === null)
             return result;
 
 
@@ -426,12 +410,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var tokens = block.data.type.split('_');
         var prefix = tokens[0];
         var funcId = tokens[1];
-        var funcBlock = Entry.variableContainer.functions_[funcId];
-
-        if(funcBlock)
-            return true;
-        else
-            return false;
+        return !!Entry.variableContainer.functions_[funcId];
     };
 
     p.isFuncStmtParam = function(block) {

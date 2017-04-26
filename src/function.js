@@ -35,7 +35,7 @@ Entry.Func = function(func) {
 
     Entry.generateFunctionSchema(this.id);
 
-    if (func) {
+    if (func && func.content) {
         var blockMap = this.content._blockMap;
         for (var key in blockMap) {
             Entry.Func.registerParamBlock(blockMap[key].type);
