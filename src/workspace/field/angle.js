@@ -179,7 +179,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             absolutePos.y + that.box.height/2 + 1
         ];
 
-        that.htmlOptionGroup.val(that.modValue(
+        that.optionGroup.val(that.modValue(
             compute(zeroPos, mousePos)));
         function compute(zeroPos, mousePos) {
             var dx = mousePos[0] - zeroPos[0];
