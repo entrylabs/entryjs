@@ -32,6 +32,8 @@ Entry.Field = function() {};
     };
 
     p.destroyOption = function(skipCommand, forceCommand) {
+        Entry.Utils.blur();
+
         if (this.documentDownEvent) {
             Entry.documentMousedown.detach(this.documentDownEvent);
             delete this.documentDownEvent;
@@ -43,9 +45,6 @@ Entry.Field = function() {};
         }
 
         if (this.optionGroup) {
-            var blur = this.optionGroup.blur;
-            if (blur && Entry.Utils.isFunction(blur))
-                this.optionGroup.blur();
             this.optionGroup.remove();
             delete this.optionGroup;
         }

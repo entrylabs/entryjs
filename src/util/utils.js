@@ -1551,11 +1551,13 @@ Entry.Utils.restrictAction = function(exceptions, callback, noDispose) {
     if (entryDom.addEventListener) {
         entryDom.addEventListener('click', handler, true);
         entryDom.addEventListener('mousedown', handler, true);
+        entryDom.addEventListener('mouseup', handler, true);
         entryDom.addEventListener('touchstart', handler, true);
     }
     else {
         entryDom.attachEvent('onclick', handler);
         entryDom.attachEvent('onmousedown', handler);
+        entryDom.attachEvent('onmouseup', handler);
         entryDom.attachEvent('ontouchstart', handler);
     }
 };
@@ -1567,10 +1569,12 @@ Entry.Utils.allowAction = function() {
         if (entryDom.addEventListener) {
             entryDom.removeEventListener("click", this._restrictHandler, true);
             entryDom.removeEventListener("mousedown", this._restrictHandler, true);
+            entryDom.removeEventListener("mouseup", this._restrictHandler, true);
             entryDom.removeEventListener("touchstart", this._restrictHandler, true);
         } else {
             entryDom.detachEvent('onclick', this._restrictHandler);
             entryDom.detachEvent('onmousedown', this._restrictHandler);
+            entryDom.detachEvent('onmouseup', this._restrictHandler);
             entryDom.detachEvent('ontouchstart', this._restrictHandler);
         }
         delete this._restrictHandler;

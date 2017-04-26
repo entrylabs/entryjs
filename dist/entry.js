@@ -17208,12 +17208,13 @@ Entry.Utils.restrictAction = function(c, b, f) {
   this._restrictHandler = e;
   var g = Entry.getDom();
   Entry.Utils.disableContextmenu(g);
-  g.addEventListener ? (g.addEventListener("click", e, !0), g.addEventListener("mousedown", e, !0), g.addEventListener("touchstart", e, !0)) : (g.attachEvent("onclick", e), g.attachEvent("onmousedown", e), g.attachEvent("ontouchstart", e));
+  g.addEventListener ? (g.addEventListener("click", e, !0), g.addEventListener("mousedown", e, !0), g.addEventListener("mouseup", e, !0), g.addEventListener("touchstart", e, !0)) : (g.attachEvent("onclick", e), g.attachEvent("onmousedown", e), g.attachEvent("onmouseup", e), g.attachEvent("ontouchstart", e));
 };
 Entry.Utils.allowAction = function() {
   var c = Entry.getDom();
   Entry.Utils.enableContextmenu(c);
-  this._restrictHandler && (c.addEventListener ? (c.removeEventListener("click", this._restrictHandler, !0), c.removeEventListener("mousedown", this._restrictHandler, !0), c.removeEventListener("touchstart", this._restrictHandler, !0)) : (c.detachEvent("onclick", this._restrictHandler), c.detachEvent("onmousedown", this._restrictHandler), c.detachEvent("ontouchstart", this._restrictHandler)), delete this._restrictHandler);
+  this._restrictHandler && (c.addEventListener ? (c.removeEventListener("click", this._restrictHandler, !0), c.removeEventListener("mousedown", this._restrictHandler, !0), c.removeEventListener("mouseup", this._restrictHandler, !0), c.removeEventListener("touchstart", this._restrictHandler, !0)) : (c.detachEvent("onclick", this._restrictHandler), c.detachEvent("onmousedown", this._restrictHandler), c.detachEvent("onmouseup", this._restrictHandler), c.detachEvent("ontouchstart", this._restrictHandler)), 
+  delete this._restrictHandler);
 };
 Entry.Utils.glideBlock = function(c, b, f, d) {
   var e = c.getBoundingClientRect(), g = Entry.Dom($('<svg id="globalSvg" width="10" height="10"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$(document.body)});
@@ -23446,14 +23447,10 @@ Entry.Field = function() {
     delete this._startValue;
   };
   c.destroyOption = function(b, c) {
+    Entry.Utils.blur();
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
-    if (this.optionGroup) {
-      var d = this.optionGroup.blur;
-      d && Entry.Utils.isFunction(d) && this.optionGroup.blur();
-      this.optionGroup.remove();
-      delete this.optionGroup;
-    }
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this._isEditing = !1;
     !0 !== b && this.command(c);
   };
