@@ -15994,7 +15994,7 @@ Entry.Commander = function(c) {
     this.hashId = b.content[2][1].id;
     c = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:".btn_confirm_modal"}], {restrict:!0, dimmed:!0, render:!1, callBack:e});
     e = Entry.getMainWS().widgetUpdateEvent;
-    Entry.dispatchEvent("openPictureManager", b.content[2][1]._id, e.notify.bind(e));
+    b.skip || Entry.dispatchEvent("openPictureManager", b.content[2][1]._id, e.notify.bind(e));
     return c;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"objectRemovePicture"};
   c[b.objectRemovePicture] = {do:function(b, c) {
@@ -16025,7 +16025,7 @@ Entry.Commander = function(c) {
     this.hashId = b.content[2][1].id;
     c = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:".btn_confirm_modal"}], {callBack:e, dimmed:!0, restrict:!0, render:!1});
     e = Entry.getMainWS().widgetUpdateEvent;
-    Entry.dispatchEvent("openSoundManager", b.content[2][1]._id, e.notify.bind(e));
+    b.skip || Entry.dispatchEvent("openSoundManager", b.content[2][1]._id, e.notify.bind(e));
     return c;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"objectRemoveSound"};
   c[b.objectRemoveSound] = {do:function(b, c) {

@@ -78,7 +78,6 @@ goog.require("Entry.STATIC");
         restrict: function(data, domQuery, callback) {
             this.hashId = data.content[2][1].id;
 
-
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
@@ -92,11 +91,14 @@ goog.require("Entry.STATIC");
 
             var event = Entry.getMainWS().widgetUpdateEvent;
 
-            Entry.dispatchEvent(
-                'openPictureManager',
-                data.content[2][1]._id,
-                event.notify.bind(event)
-            );
+            if (!data.skip) {
+                Entry.dispatchEvent(
+                    'openPictureManager',
+                    data.content[2][1]._id,
+                    event.notify.bind(event)
+                );
+            }
+
             return tooltip;
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -170,12 +172,13 @@ goog.require("Entry.STATIC");
 
             var event = Entry.getMainWS().widgetUpdateEvent;
 
-            Entry.dispatchEvent(
-                'openSoundManager',
-                data.content[2][1]._id,
-                event.notify.bind(event)
-            );
-
+            if (!data.skip) {
+                Entry.dispatchEvent(
+                    'openSoundManager',
+                    data.content[2][1]._id,
+                    event.notify.bind(event)
+                );
+            }
             return tooltip;
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
