@@ -11138,44 +11138,44 @@ Entry.TextCodingUtil = {};
     return c;
   };
   c.bTojBinaryOperatorConvertor = function(b) {
-    var c;
+    var f;
     switch(b) {
       case "'BIGGER'":
-        c = ">";
+        f = ">";
         break;
       case "'BIGGER_EQUAL'":
-        c = ">=";
+        f = ">=";
         break;
       case "'EQUAL'":
-        c = "==";
+        f = "==";
         break;
       case "'SMALLER'":
-        c = "<";
+        f = "<";
         break;
       case "'SMALLER_EQUAL'":
-        c = "<=";
+        f = "<=";
     }
-    return c;
+    return f;
   };
   c.jTobBinaryOperatorConvertor = function(b) {
-    var c;
+    var f;
     switch(b) {
       case ">":
-        c = "BIGGER";
+        f = "BIGGER";
         break;
       case ">=":
-        c = "BIGGER_EQUAL";
+        f = "BIGGER_EQUAL";
         break;
       case "==":
-        c = "EQUAL";
+        f = "EQUAL";
         break;
       case "<":
-        c = "SMALLER";
+        f = "SMALLER";
         break;
       case "<=":
-        c = "SMALLER_EQUAL";
+        f = "SMALLER_EQUAL";
     }
-    return c;
+    return f;
   };
   c.radarVariableConvertor = function(b) {
     return b.split("_")[1].toUpperCase();
@@ -11184,27 +11184,27 @@ Entry.TextCodingUtil = {};
     return "stone" == b ? "OBSTACLE" : "wall" == b ? b.toUpperCase() : "item" == b ? b.toUpperCase() : b;
   };
   c.canConvertTextModeForOverlayMode = function(b) {
-    var c;
-    Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD && b == Entry.Workspace.MODE_VIMBOARD && (c = Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_EDITOR]);
-    return c;
+    var f;
+    Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD && b == Entry.Workspace.MODE_VIMBOARD && (f = Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_EDITOR]);
+    return f;
   };
   c.isNamesIncludeSpace = function() {
     var b = Entry.variableContainer;
     if (b) {
-      for (var c = b.variables_ || [], d = 0;d < c.length;d++) {
-        if (/ /.test(c[d].name_)) {
+      for (var f = b.variables_ || [], c = 0;c < f.length;c++) {
+        if (/ /.test(f[c].name_)) {
           return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT];
         }
       }
-      c = b.lists_ || [];
-      for (d = 0;d < c.length;d++) {
-        if (/ /.test(c[d].name_)) {
+      f = b.lists_ || [];
+      for (c = 0;c < f.length;c++) {
+        if (/ /.test(f[c].name_)) {
           return Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT];
         }
       }
-      c = b.functions_ || {};
-      for (d in c) {
-        if (b = c[d].content._data[0]._data[0], "function_create" == b.data.type) {
+      f = b.functions_ || {};
+      for (c in f) {
+        if (b = f[c].content._data[0]._data[0], "function_create" == b.data.type) {
           if (2 == b.params.length) {
             if (b = b.params[0], "function_field_label" == b.data.type) {
               if (b = b.data.params, 2 == b.length) {
@@ -11344,13 +11344,13 @@ Entry.TextCodingUtil = {};
     c = ["i", "j", "k"][b % 3] + (c || "");
     return d ? this.generateForStmtIndex(d - 1, c) : c;
   };
-  c.isExpressionLiteral = function(b, f) {
+  c.isExpressionLiteral = function(b, c) {
     switch(b.type) {
       case "CallExpression":
         if ("MemberExpression" === b.callee.type) {
-          var c = b.callee.property.name;
-          if (c = f["%2"][c]) {
-            return "basic_string_field" === Entry.block[c.key].skeleton;
+          var d = b.callee.property.name;
+          if (d = c["%2"][d]) {
+            return "basic_string_field" === Entry.block[d.key].skeleton;
           }
         }
         break;
@@ -11368,50 +11368,50 @@ Entry.BlockToJsParser = function(c, b) {
   this._iterVariableChunk = ["i", "j", "k"];
 };
 (function(c) {
-  c.Code = function(b, f) {
-    this._parseMode = f;
+  c.Code = function(b, c) {
+    this._parseMode = c;
     if (b instanceof Entry.Block) {
       return this.Block(b);
     }
-    for (var c = "", e = b._data, g = 0;g < e.length;g++) {
-      c += this.Thread(e[g]);
+    for (var d = "", e = b._data, g = 0;g < e.length;g++) {
+      d += this.Thread(e[g]);
     }
-    return c.trim();
+    return d.trim();
   };
   c.Thread = function(b) {
     if (b instanceof Entry.Block) {
       return this.Block(b);
     }
-    var f = "";
+    var c = "";
     b = b.getBlocks();
-    for (var c = 0;c < b.length;c++) {
-      var e = b[c];
-      c != b.length - 1 ? (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? f += e + "\n" : this._parseMode == Entry.Parser.PARSE_SYNTAX && (f = e + "\n")) : (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? f += e : this._parseMode == Entry.Parser.PARSE_SYNTAX && (f = e));
+    for (var d = 0;d < b.length;d++) {
+      var e = b[d];
+      d != b.length - 1 ? (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? c += e + "\n" : this._parseMode == Entry.Parser.PARSE_SYNTAX && (c = e + "\n")) : (e = this.Block(e), this._parseMode == Entry.Parser.PARSE_GENERAL ? c += e : this._parseMode == Entry.Parser.PARSE_SYNTAX && (c = e));
     }
-    return f + "\n";
+    return c + "\n";
   };
   c.Block = function(b) {
-    var f = b._schema.syntax.js ? b._schema.syntax.js : b._schema.syntax;
-    return f ? b = this[f[0]](b) : "";
+    var c = b._schema.syntax.js ? b._schema.syntax.js : b._schema.syntax;
+    return c ? b = this[c[0]](b) : "";
   };
   c.Program = function(b) {
     return "";
   };
   c.Scope = function(b) {
-    var f = !1, c = "", e = /(%.)/mi;
+    var c = !1, d = "", e = /(%.)/mi;
     if (b._schema.syntax.js) {
-      var g = b._schema.syntax.js.concat(), f = !0
+      var g = b._schema.syntax.js.concat(), c = !0
     } else {
       g = b._schema.syntax.concat();
     }
     g.shift();
     for (var g = g[0].split(e), h = b._schema.params, k = b.data.params, l = 0;l < g.length;l++) {
       var m = g[l];
-      0 !== m.length && "Scope" !== m && ("Judge" === m ? f = !0 : e.test(m) ? (m = m.split("%")[1], m = parseInt(m) - 1, h[m] && "Image" != h[m].type && ("Block" == h[m].type ? (m = this.Block(k[m]), c += m) : c += this[h[m].type](k[m], h[m]))) : c += m);
+      0 !== m.length && "Scope" !== m && ("Judge" === m ? c = !0 : e.test(m) ? (m = m.split("%")[1], m = parseInt(m) - 1, h[m] && "Image" != h[m].type && ("Block" == h[m].type ? (m = this.Block(k[m]), d += m) : d += this[h[m].type](k[m], h[m]))) : d += m);
     }
-    "#" == c.charAt(c.length - 1) && (f = !0, c = c.substring(0, c.length - 1), c = c.trim());
-    f || (c += "();");
-    return c = Entry.TextCodingUtil.jsAdjustSyntax(b, c);
+    "#" == d.charAt(d.length - 1) && (c = !0, d = d.substring(0, d.length - 1), d = d.trim());
+    c || (d += "();");
+    return d = Entry.TextCodingUtil.jsAdjustSyntax(b, d);
   };
   c.BasicFunction = function(b) {
     b = this.Thread(b.statements[0]);
@@ -17444,7 +17444,7 @@ Entry.Model = function(c, b) {
       }}));
     }});
     return m;
-  }, validate:!1, undo:"insertBlock", dom:["playground", "board", "&0"]};
+  }, undo:"insertBlock", dom:["playground", "board", "&0"]};
   d = Entry.cloneSimpleObject(c[f.separateBlock]);
   d.restrict = function(b, c, f, d) {
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
@@ -17551,7 +17551,7 @@ Entry.Model = function(c, b) {
     }
     var v = b.content[2][1];
     q instanceof Entry.FieldTextInput && q.fixNextValue(v);
-    var y = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+    var x = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
       if (!l && c) {
         l = !0;
         f();
@@ -17575,12 +17575,12 @@ Entry.Model = function(c, b) {
             d.toolTipRender.titleIndex = 1, d.toolTipRender.contentIndex = 1;
           }
         }
-        y.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
+        x.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
           n.disableMouseEvent = !1;
         }});
       }
     }});
-    return y;
+    return x;
   }, disableMouseUpDispose:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
   c[f.selectBlockMenu] = {do:function(b, c, f) {
     var d = Entry.getMainWS().blockMenu;
@@ -21898,9 +21898,9 @@ Entry.BlockMenu = function(c, b, f, d, e) {
       b.stopPropagation && b.stopPropagation();
       b.preventDefault && b.preventDefault();
       b = Entry.Utils.convertMouseEvent(b);
-      var f = e.dragInstance;
-      e._scroller.scroll(-b.pageY + f.offsetY);
-      f.set({offsetY:b.pageY});
+      var d = e.dragInstance;
+      e._scroller.scroll(-b.pageY + d.offsetY);
+      d.set({offsetY:b.pageY});
     }
     function d(b) {
       $(document).unbind(".blockMenu");

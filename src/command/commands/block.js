@@ -320,7 +320,7 @@ goog.require("Entry.Utils");
             block = this.editor.board.findBlock(block);
             var blockPointer = block.pointer();
             if (block.view)
-                block = block.view
+                block = block.view;
 
             return [
                 ['block', blockPointer],
@@ -358,7 +358,6 @@ goog.require("Entry.Utils");
             });
             return tooltip;
         },
-        validate: false,
         undo: "insertBlock",
         dom: ['playground', 'board', '&0']
     };
