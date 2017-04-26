@@ -1972,7 +1972,7 @@
             skeleton: 'basic',
             statements: [],
             isNotFor: [ 'roborobo_schoolkit' ],
-            template: '%1번 포트의 발광다이오드를 %2의 밝기로 정하기 %3',
+            template: '%1번 포트의 발광다이오드를 %2의 밝기로 켜기 %3',
             params: [{
                 type: 'Dropdown',
                 options: [
@@ -2019,38 +2019,6 @@
                 Entry.hw.sendQueue[port] = value;
                 
                 return script.callReturn();
-            }
-        },
-        roborobo_diode_input_value: {
-            color: '#FF8D10',
-            skeleton: 'basic_string_field',
-            fontColor: '#fff',
-            statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
-            template: '%1 포트의 값',
-            params: [{
-                type: 'Dropdown',
-                options: [
-                    ['적외선', '7'],
-                    ['소 리', '8'],
-                    ['접 촉', '9'],
-                    ['CDS', '10']
-                ],
-                value: '8',
-                fontsIze: 11
-            }],
-            events: {},
-            def: {
-                params: [null],
-                type: 'roborobo_diode_input_value'
-            },
-            paramsKeyMap: {
-                PORT: 0
-            },
-            class: 'roborobo_diode',
-            func: function(sprite, script) {
-                var port = script.getNumberField('PORT');
-                return Entry.hw.portData[port - 7];
             }
         }
     };
