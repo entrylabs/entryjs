@@ -330,6 +330,10 @@ goog.require("Entry.Utils");
         restrict: function(data, domQuery, callback, restrictor) {
             Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
             var isDone = false;
+            if (restrictor.toolTipRender) {
+                restrictor.toolTipRender.titleIndex = 0;
+                restrictor.toolTipRender.contentIndex = 0;
+            }
             var tooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
@@ -340,6 +344,10 @@ goog.require("Entry.Utils");
                 callBack: function(isFromInit) {
                     if (isDone || !isFromInit)
                         return;
+                    if (restrictor.toolTipRender) {
+                        restrictor.toolTipRender.titleIndex = 1;
+                        restrictor.toolTipRender.contentIndex = 1;
+                    }
                     callback();
                     isDone = true;
                     tooltip.init([{
