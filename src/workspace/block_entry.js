@@ -6,6 +6,7 @@ if (typeof exports == "object") {
     if (typeof Entry !== "object")
         var Entry = {};
     Entry.Bitbrick = {};
+    Entry.MODI = {};
     EntryStatic = {};
 }
 if (!Entry.block)
@@ -181,6 +182,1272 @@ if (Entry && Entry.block) {
 }
 
 Entry.block = {
+    "modi_microphone_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "마이크 %1번의 볼륨",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.microphoneList
+            }
+        ],
+        "def": {
+            "params": [ null ],
+            "type": "modi_microphone_value"
+        },
+        "paramsKeyMap": {
+            "name": 0
+        },
+        "class": "microphone",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            var key = script.getStringField("name");
+
+            var pd = JSON.parse(Entry.hw.portData.module["mic"][key]);
+            var moduleID = pd.id;
+
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+            if(!pd.value[2]){ 
+                pd.value[2] = 0;
+                
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: 2, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                }*/
+            }
+            
+            return pd.value[2];
+        }
+    },
+    "modi_environment_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "환경센서 %1번의 %2",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.environmentList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.modi_enviroment_temperature,6],
+                    [Lang.Blocks.modi_enviroment_humidity,7],
+                    [Lang.Blocks.modi_enviroment_illuminance,2],
+                    [Lang.Blocks.modi_enviroment_red,3],
+                    [Lang.Blocks.modi_enviroment_bule,5],
+                    [Lang.Blocks.modi_enviroment_green,4]
+                ],
+                "fontSize": 11
+            }
+        ],
+        "def": {
+            "params": [ 
+                null,
+                6
+            ],
+            "type": "modi_environment_value"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1
+        },
+        "class": "environment",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            var key = script.getStringField("name");
+            var property = script.getNumberField("property");
+
+            var pd = JSON.parse(Entry.hw.portData.module["environment"][key]);
+            var moduleID = pd.id;
+
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+            if(!pd.value[property]){
+                pd.value[property] = 0;
+                
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Entry.MODI.getModule.property != property || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                    Entry.MODI.getModule.property = property;
+                }*/
+            }
+
+            return pd.value[property];
+        }
+    },
+    "modi_dial_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "다이얼 %1번의 각도",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.dialList
+            }
+        ],
+        "def": {
+            "params": [ 
+                null
+            ],
+            "type": "modi_dial_value"
+        },
+        "paramsKeyMap": {
+            "name": 0
+        },
+        "class": "dial",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            var key = script.getStringField("name");
+            
+            var pd = JSON.parse(Entry.hw.portData.module["dial"][key]);
+            var moduleID = pd.id;
+            
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+            
+            if(!pd.value[2]){
+                pd.value[2] = 0;
+                
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: 2, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                }*/
+            }
+
+            var moduleID = JSON.parse(Entry.hw.portData.module["dial"][key]).id;
+
+            return pd.value[2];
+        }
+    },
+    "modi_gyroscope_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "자이로센서 %1번의 %2",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.gyroscopeList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Roll",2],
+                    ["Pitch",3],
+                    ["Yaw",4],
+                    [Lang.Blocks.modi_gyroscope_xAcceleratior,8],
+                    [Lang.Blocks.modi_gyroscope_yAcceleratior,9],
+                    [Lang.Blocks.modi_gyroscope_zAcceleratior,10]
+                ],
+                "fontSize": 11
+            }
+        ],
+        "def": {
+            "params": [ 
+                null,
+                2
+            ],
+            "type": "modi_gyroscope_value"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1
+        },
+        "class": "gyroscope",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            var key = script.getStringField("name");
+            var property = script.getNumberField("property");
+
+            var pd = JSON.parse(Entry.hw.portData.module["gyro"][key]);
+            var moduleID = pd.id;
+            
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+            
+
+            if(!pd.value[property]){
+                pd.value[property] = 0;
+                
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Entry.MODI.getModule.property != property || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                    Entry.MODI.getModule.property = property;
+                }*/
+            }
+
+            return pd.value[property];
+        }
+    },
+    "modi_button_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "버튼 %1번의 %2",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.buttonList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Click",2],
+                    ["Double Click",3],
+                    ["Toggle",5],
+                    ["Press",4]
+                ],
+                "fontSize": 11
+            }
+        ],
+        "def": {
+            "params": [ 
+                null,
+                2
+            ],
+            "type": "modi_button_value"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1
+        },
+        "class": "button",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+
+            if(!Entry.hw.sendQueue.moduleValue || !Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name");
+            var property = script.getNumberField("property");
+            var moduleID = JSON.parse(Entry.hw.portData.module["button"][key]).id;
+            var pd = JSON.parse(Entry.hw.portData.module["button"][key]);
+            
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+            if(!pd.value[property]){
+                pd.value[property] = 0;
+
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Entry.MODI.getModule.property != property || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                    Entry.MODI.getModule.property = property;
+                }*/
+                return 0;
+            }
+
+            return pd.value[property];
+        }
+    },
+    "modi_is_button_touch": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "template": "버튼 %1번의 %2 했는가?",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.buttonList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Click",2],
+                    ["Double Click",3],
+                    ["Toggle",5],
+                    ["Press",4]
+                ],
+                "fontSize": 11
+            }
+        ],
+        "def": {
+            "params": [ 
+                null,
+                2
+            ],
+            "type": "modi_is_button_touch"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1
+        },
+        "class": "button",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            var key = script.getStringField("name");
+            var property = script.getNumberField("property");
+
+            var pd = JSON.parse(Entry.hw.portData.module["button"][key]);
+            var moduleID = pd.id;
+            
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+            
+
+            if(!pd.value[property]){
+                pd.value[property] = 0;
+                
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Entry.MODI.getModule.property != property || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                    Entry.MODI.getModule.property = property;
+                }*/
+            }
+            
+            var doButton = false;
+
+            if(pd.value[property] == 100){
+                doButton = true;
+            }
+            else{
+                doButton = false;
+            }
+            return doButton;
+        }
+    },
+    "modi_button_true": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "눌림",
+        "def": {
+            "params": [ null ],
+            "type": "modi_button_true"
+        },
+        "class": "button",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            return 100;
+        }
+    },
+    "modi_button_false": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "안눌림",
+        "def": {
+            "params": [ null ],
+            "type": "modi_button_false"
+        },
+        "class": "button",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            return 0;
+        }
+    },
+    "modi_infrared_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "적외선 %1번 센서의 거리(%)",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.infraredList
+            }
+        ],
+        "def": {
+            "params": [ null ],
+            "type": "modi_infrared_value"
+        },
+        "paramsKeyMap": {
+            "name": 0
+        },
+        "class": "infrared",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            var key = script.getStringField("name");
+
+            var pd = JSON.parse(Entry.hw.portData.module["ir"][key]);
+            var moduleID = pd.id;
+
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+            
+            if(!pd.value[2]){
+                pd.value[2] = 0;
+                
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: 2, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                }*/
+            }
+            
+            return pd.value[2];
+        }
+    },
+    "modi_ultrasonic_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "초음파 %1번 센서의 거리(%)",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.ultrasonicList
+            }
+        ],
+        "def": {
+            "params": [ null ],
+            "type": "modi_ultrasonic_value"
+        },
+        "paramsKeyMap": {
+            "name": 0
+        },
+        "class": "ultrasonic",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            var key = script.getStringField("name");
+
+            var pd = JSON.parse(Entry.hw.portData.module["ultrasonic"][key]);
+            var moduleID = pd.id;
+
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+            
+            if(!pd.value[2]){
+                pd.value[2] = 0;
+                
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: 2, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                }*/
+            }
+            
+            return pd.value[2];
+        }
+    },
+    "modi_set_motor_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "template": "모터 %1번 %2의 상단값은 %3 하단값은 %4 (으)로 정하기 %5",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.motorList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.modi_motor_angle,"MOTOR_ANGLE"],
+                    [Lang.Blocks.modi_motor_speed,"MOTOR_SPEED"],
+                    [Lang.Blocks.modi_motor_torque,"MOTOR_TORQUE"]
+                ],
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                "MOTOR_ANGLE",
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_set_motor_value"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1,
+            "upper": 2,
+            "bottom": 3
+        },
+        "class": "motor",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+            var key = script.getStringField("name"),
+                property = script.getStringField("property"),
+                upper = script.getNumberValue("upper") * 10,
+                bottom = script.getNumberValue("bottom") * 10;
+            var moduleID = JSON.parse(Entry.hw.portData.module["motor"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["motor"][key] = JSON.stringify({module: property, id: moduleID, value1: upper, value2: bottom});
+
+            return script.callReturn();
+        }
+    },
+    "modi_change_motor_upper_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "모터 %1번 %2의 상단값을 %3만큼 바꾸기 %4",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.motorList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.modi_motor_angle,"MOTOR_ANGLE"],
+                    [Lang.Blocks.modi_motor_speed,"MOTOR_SPEED"],
+                    [Lang.Blocks.modi_motor_torque,"MOTOR_TORQUE"]
+                ],
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                "MOTOR_ANGLE",
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_change_motor_upper_value"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1,
+            "value": 2
+        },
+        "class": "motor",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name"),
+                value = script.getNumberValue("value"),
+                property = script.getStringField("property");
+
+            var pd = JSON.parse(Entry.hw.portData.module["motor"][key]);
+            var uValue = 0,
+                bValue = 0;
+            var moduleID = pd.id;
+
+            switch(property){
+                case "MOTOR_ANGLE":
+                    uValue = 4;
+                    bValue = 12;
+                    break;
+                case "MOTOR_SPEED":
+                    uValue = 3;
+                    bValue = 11;
+                    break;
+                case "MOTOR_TORQUE":
+                    uValue = 2;
+                    bValue = 10;
+                    break;
+            }
+
+            if(!pd.value[uValue]){
+                pd.value[uValue] = 0;
+                
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                }*/
+            }
+            if(!pd.value[bValue]){
+                pd.value[bValue] = 0;
+            }
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            var upper = (value*10) + (pd.value[uValue]*10),
+                bottom = (pd.value[bValue]*10);
+
+            if(upper > 1000 || (upper < 0 && property == MOTOR_ANGLE))
+                upper = 1000;
+            
+            sq["motor"][key] = JSON.stringify({module: property, id: moduleID, value1: upper, value2: bottom});
+
+            return script.callReturn();
+        }
+    },
+    "modi_change_motor_bottom_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "모터 %1번 %2의 하단값을 %3만큼 바꾸기 %4",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.motorList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.modi_motor_angle,"MOTOR_ANGLE"],
+                    [Lang.Blocks.modi_motor_speed,"MOTOR_SPEED"],
+                    [Lang.Blocks.modi_motor_torque,"MOTOR_TORQUE"]
+                ],
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                "MOTOR_ANGLE",
+                {
+                    "type": "text",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_change_motor_bottom_value"
+        },
+        "class": "motor",
+        "isNotFor": [ "modi" ],
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1,
+            "value": 2
+        },
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name"),
+                value = script.getNumberValue("value"),
+                property = script.getStringField("property");
+            
+            var pd = JSON.parse(Entry.hw.portData.module["motor"][key]);
+            var uValue = 0,
+                bValue = 0;
+            var moduleID = pd.id;
+
+            if(!pd.value[uValue]){
+                pd.value[uValue] = 0;
+                
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                }*/
+            }
+            if(!pd.value[bValue]){
+                pd.value[bValue] = 0;
+            }
+            
+            switch(property){
+                case "MOTOR_ANGLE":
+                    uValue = 4;
+                    bValue = 12;
+                    break;
+                case "MOTOR_SPEED":
+                    uValue = 3;
+                    bValue = 11;
+                    break;
+                case "MOTOR_TORQUE":
+                    uValue = 2;
+                    bValue = 10;
+                    break;
+            }
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            var upper = (pd.value[uValue]*10),
+                bottom = (value*10) + (pd.value[bValue]*10);
+
+            if(bottom > 1000 || (bottom < 0 && property == MOTOR_ANGLE))
+                bottom = 1000;
+            
+            sq["motor"][key] = JSON.stringify({module: property, id: moduleID, value1: upper, value2: bottom});
+
+            return script.callReturn();
+        }
+    },
+    "modi_clear_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "LED %1번의 색 끄기 %2",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.ledList
+            }, 
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [ 
+                null
+            ],
+            "type": "modi_clear_led"
+        },
+        "paramsKeyMap": {
+            "name": 0
+        },
+        "class": "led",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name");
+            var moduleID = JSON.parse(Entry.hw.portData.module["led"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["led"][key] = JSON.stringify({module: "LED_RGB", id: moduleID, value1: 0, value2: 0, value3: 0});
+
+            return script.callReturn();
+        }
+    },
+    "modi_set_led_rgb": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "LED %1번 R %2 G %3 B %4  %5",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.ledList
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "255" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "255" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "255" ]
+                }
+            ],
+            "type": "modi_set_led_rgb"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "rValue": 1,
+            "gValue": 2,
+            "bValue": 3
+        },
+        "class": "led",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+            var key = script.getStringField("name");
+                red = script.getNumberValue("rValue"),
+                green = script.getNumberValue("gValue"),
+                blue = script.getNumberValue("bValue");
+            var moduleID = JSON.parse(Entry.hw.portData.module["led"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["led"][key] = JSON.stringify({module: "LED_RGB", id: moduleID, value1: red, value2: green, value3: blue});
+
+            return script.callReturn();
+        }
+    },
+    "modi_set_led_color": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "LED %1번 색 %2로 정하기 %3",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.ledList
+            },
+            {
+                "type": "Color"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [ null ],
+            "type": "modi_set_led_color"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "color": 1
+        },
+        "class": "led",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+            var key = script.getStringField("name");
+                color = script.getStringField("color");
+
+            color = color.substring(1,7);
+            var bigint = parseInt(color, 16);
+            var red = (bigint >> 16) & 255,
+                green = (bigint >> 8) & 255,
+                blue = bigint & 255;
+            var moduleID = JSON.parse(Entry.hw.portData.module["led"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["led"][key] = JSON.stringify({module: "LED_RGB", id: moduleID, value1: red, value2: green, value3: blue});
+
+            return script.callReturn();
+        }
+    },
+    "modi_set_basic_speaker": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "스피커 %1번을 %2음으로 크기는 %3(으)로 정하기 %4",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.speakerList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.modi_speaker_F_DO_5,"F_DO_5"],
+                    [Lang.Blocks.modi_speaker_F_RE_5,"F_RE_5"],
+                    [Lang.Blocks.modi_speaker_F_MI_5,"F_MI_5"],
+                    [Lang.Blocks.modi_speaker_F_PA_5,"F_PA_5"],
+                    [Lang.Blocks.modi_speaker_F_SOL_5,"F_SOL_5"],
+                    [Lang.Blocks.modi_speaker_F_RA_5,"F_RA_5"],
+                    [Lang.Blocks.modi_speaker_F_SO_5,"F_SO_5"],
+                    [Lang.Blocks.modi_speaker_F_DO_S_5,"F_DO_S_5"],
+                    [Lang.Blocks.modi_speaker_F_RE_S_5,"F_RE_S_5"],
+                    [Lang.Blocks.modi_speaker_F_PA_S_5,"F_PA_S_5"],
+                    [Lang.Blocks.modi_speaker_F_SOL_S_5,"F_SOL_S_5"],
+                    [Lang.Blocks.modi_speaker_F_RA_S_5,"F_RA_S_5"],
+                    [Lang.Blocks.modi_speaker_F_DO_6,"F_DO_6"],
+                    [Lang.Blocks.modi_speaker_F_RE_6,"F_RE_6"],
+                    [Lang.Blocks.modi_speaker_F_MI_6,"F_MI_6"],
+                    [Lang.Blocks.modi_speaker_F_PA_6,"F_PA_6"],
+                    [Lang.Blocks.modi_speaker_F_SOL_6,"F_SOL_6"],
+                    [Lang.Blocks.modi_speaker_F_RA_6,"F_RA_6"],
+                    [Lang.Blocks.modi_speaker_F_SO_6,"F_SO_6"],
+                    [Lang.Blocks.modi_speaker_F_DO_S_6,"F_DO_S_6"],
+                    [Lang.Blocks.modi_speaker_F_RE_S_6,"F_RE_S_6"],
+                    [Lang.Blocks.modi_speaker_F_PA_S_6,"F_PA_S_6"],
+                    [Lang.Blocks.modi_speaker_F_SOL_S_6,"F_SOL_S_6"],
+                    [Lang.Blocks.modi_speaker_F_RA_S_6,"F_RA_S_6"],
+                    [Lang.Blocks.modi_speaker_F_DO_7,"F_DO_7"],
+                    [Lang.Blocks.modi_speaker_F_RE_7,"F_RE_7"],
+                    [Lang.Blocks.modi_speaker_F_MI_7,"F_MI_7"],
+                    [Lang.Blocks.modi_speaker_F_PA_7,"F_PA_7"],
+                    [Lang.Blocks.modi_speaker_F_SOL_7,"F_SOL_7"],
+                    [Lang.Blocks.modi_speaker_F_RA_7,"F_RA_7"],
+                    [Lang.Blocks.modi_speaker_F_SO_7,"F_SO_7"],
+                    [Lang.Blocks.modi_speaker_F_DO_S_7,"F_DO_S_7"],
+                    [Lang.Blocks.modi_speaker_F_RE_S_7,"F_RE_S_7"],
+                    [Lang.Blocks.modi_speaker_F_PA_S_7,"F_PA_S_7"],
+                    [Lang.Blocks.modi_speaker_F_SOL_S_7,"F_SOL_S_7"],
+                    [Lang.Blocks.modi_speaker_F_RA_S_7,"F_RA_S_7"]
+                ],
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                "F_DO_5",
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_set_basic_speaker"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "frequence": 1,
+            "volume": 2
+        },
+        "class": "speaker",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+            var key = script.getStringField("name"),
+                frequence = script.getStringField("frequence"),
+                volume = script.getNumberValue("volume",script) * 10;
+            var moduleID = JSON.parse(Entry.hw.portData.module["speaker"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["speaker"][key] = JSON.stringify({module: "SPEAKER_BUZZER", id: moduleID, value1: frequence, value2: volume});
+
+            return script.callReturn();
+        }
+    },
+    "modi_set_custom_speaker": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "스피커 %1번의 진동수는 %2 크기는 %3(으)로 정하기 %4",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.speakerList
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_set_custom_speaker"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "frequence": 1,
+            "volume": 2
+        },
+        "class": "speaker",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+            var key = script.getStringField("name"),
+                frequence = script.getNumberValue("frequence") * 10,
+                volume = script.getNumberValue("volume",script) * 10;
+            var moduleID = JSON.parse(Entry.hw.portData.module["speaker"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["speaker"][key] = JSON.stringify({module: "SPEAKER_BUZZER", id: moduleID, value1: frequence, value2: volume});
+
+            return script.callReturn();
+        }
+    },
+    "modi_change_speaker_frequence": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "스피커 %1번의 진동수를 %2만큼 바꾸기 %3",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.speakerList
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_change_speaker_frequence"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "value": 1
+        },
+        "class": "speaker",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name"),
+                value = script.getNumberValue("value");
+
+            var pd = JSON.parse(Entry.hw.portData.module["speaker"][key]);
+            var moduleID = pd.id;
+
+            if(!pd.value[2]){
+                pd.value[2] = 0;
+            }
+            if(!pd.value[3]){
+                pd.value[3] = 0;
+            }
+
+            var frequence = (value*10) + (pd.value[3]*10),
+                volume = pd.value[2] * 10;
+            if(frequence > 1000 || frequence < 0)
+                frequence = 1000;
+            
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["speaker"][key] = JSON.stringify({module: "SPEAKER_BUZZER", id: moduleID, value1: frequence, value2: volume});
+            
+            return script.callReturn();
+        }
+    },
+    "modi_change_speaker_volume": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "스피커 %1번의 크기를 %2만큼 바꾸기 %3",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.speakerList
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_change_speaker_volume"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "value": 1
+        },
+        "class": "speaker",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name"),
+                value = script.getNumberValue("value");
+
+            var pd = JSON.parse(Entry.hw.portData.module["speaker"][key]);
+            var moduleID = pd.id;
+            
+            if(!pd.value[2]){
+                pd.value[2] = 0;
+            }
+            if(!pd.value[3]){
+                pd.value[3] = 0;
+            }
+            
+            var frequence = (pd.value[3]*10),
+                volume = (value*10) + (pd.value[2]*10);
+            if(volume > 1000 || volume < 0)
+                frequence = 1000;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["speaker"][key] = JSON.stringify({module: "SPEAKER_BUZZER", id: moduleID, value1: frequence, value2: volume});
+            
+            return script.callReturn();
+        }
+    },
+    "modi_print_display_by_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "디스플레이 %1번의 화면에 %2 보이기 %3",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.displayList
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_print_display_by_value"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "text": 1
+        },
+        "class": "display",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name"),
+                text = script.getStringValue("text");
+
+            if(text.length > 8){
+                return script.callReturn();
+            }
+
+            var moduleID = JSON.parse(Entry.hw.portData.module["display"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["display"][key] = JSON.stringify({module: "DISPLAY_TEXT", id: moduleID, value1: text});
+            return script.callReturn();
+        }
+    },
     "albert_hand_found": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -198,7 +1465,7 @@ Entry.block = {
             var pd = Entry.hw.portData
             return pd.leftProximity > 40 || pd.rightProximity > 40;
         },
-    "syntax": {"js": [], "py": ["Albert.hand_found()"]}
+	"syntax": {"js": [], "py": ["Albert.hand_found()"]}
     },
     "albert_is_oid_value": {
         "color": "#00979D",
@@ -782,7 +2049,7 @@ Entry.block = {
             sq.padHeight = script.getNumberValue('HEIGHT');
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
+	"syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
     },
     "albert_move_to_x_y_on_board": {
         "color": "#00979D",
@@ -5141,7 +6408,7 @@ Entry.block = {
                 "value": null,
                 "fontSize": 11,
                 'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                menuName: Entry.Bitbrick.sensorList
+                'menuName': Entry.Bitbrick.sensorList,
 
             }
         ],
@@ -5690,7 +6957,7 @@ Entry.block = {
             result = Math.max(value4, result);
             return Math.round(result);
         },
-    "syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
+	"syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "cobl_read_ultrason": {
         color: "#00979D",
@@ -5790,11 +7057,48 @@ Entry.block = {
               return Entry.hw.getAnalogPortValue("tilt");
         }
     },
+    "cobl_read_color": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "8.색상센서",
+        def: {
+            type: "cobl_read_color"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+              var colorval = Entry.hw.getAnalogPortValue("color");
+              
+              if(colorval == 1)
+                  return "빨강";
+              else if(colorval == 2)
+                  return "녹색"
+              else if(colorval == 3)
+                  return "파랑"
+              else
+                  return "알수없음";
+        }
+    },
+    "cobl_read_humid": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "9.습도센서",
+        def: {
+            type: "cobl_read_humid"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+              return Entry.hw.getAnalogPortValue("humid");
+        }
+    },
     "cobl_read_temps": {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_string_field",
-        template: "8.온도센서@포트%1",
+        template: "10.온도센서@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -5817,14 +7121,17 @@ Entry.block = {
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
+            //    console.log("-----temptest------")
             var signal = script.getField("VALUE", script);
             if (signal == 1)
             {
+                //    console.log("-----temp1 selected ");
                 return Entry.hw.getAnalogPortValue("temps1");
             }
 
             if (signal == 2)
             {
+                //     console.log("-----temp2 selected ");
                 return Entry.hw.getAnalogPortValue("temps2");
             }
         }
@@ -5833,7 +7140,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_string_field",
-        template: "9.빛센서@포트%1",
+        template: "11.빛센서@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -5872,7 +7179,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_boolean_field",
-        template: "10.버튼스위치@포트%1",
+        template: "12.버튼스위치@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -5911,7 +7218,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "11.무지개LED%1%2 %3",
+        template: "13-1.무지개LED%1%2 %3",
         params: [
             {
                 type: "Dropdown",
@@ -5965,11 +7272,118 @@ Entry.block = {
             return script.callReturn();
         }
     },
+    "cobl_rgb_boardled": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "13-2.무지개LED%1R%2G%3B%4 %5",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "1",
+                "1",
+                "1"
+            ],
+            type: "cobl_rgb_boardled"
+        },
+        paramsKeyMap: {
+            LED: 0,
+            RED: 1,
+            GREEN : 2,
+            BLUE : 3
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var led = script.getNumberField("LED");
+            var r = script.getStringField("RED");
+            var g = script.getStringField("GREEN");
+            var b = script.getStringField("BLUE");
+
+            Entry.hw.setDigitalPortValue("BLED_IDX", led);
+            Entry.hw.setDigitalPortValue("BLED_R", r);
+            Entry.hw.setDigitalPortValue("BLED_G", g);
+            Entry.hw.setDigitalPortValue("BLED_B", b);
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue["BLED_IDX"];
+            delete Entry.hw.sendQueue["BLED_R"];
+            delete Entry.hw.sendQueue["BLED_G"];
+            delete Entry.hw.sendQueue["BLED_B"];
+
+            return script.callReturn();
+        }
+    },
     "cobl_servo_angle_control": {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "12.각도모터 각도%1(15~165) %2",
+        template: "14.각도모터 각도%1(15~165) %2",
         params: [
             {
                 type: "TextInput",
@@ -6006,12 +7420,12 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "13.멜로디%1 ,%2",
+        template: "15.멜로디%1 시간%2(초) %3",
         params: [
             {
                 type: "Dropdown",
                 options: [
-                ["((낮은)솔","L_So"],
+                ["(낮은)솔","L_So"],
                 ["(낮은)솔#","L_So#"],
                 ["(낮은)라","L_La"],
                 ["(낮은)라#","L_La#"],
@@ -6032,10 +7446,14 @@ Entry.block = {
                 ["(높은)도#","H_Do#"],
                 ["(높은)레","H_Re"],
                 ["(높은)레#","H_Re#"],
-                ["(높은)미#","H_Mi"],
+                ["(높은)미","H_Mi"],
                 ["(높은)파","H_Fa"]
                 ],
                 fontSize: 11
+            },
+            {
+                type: "TextInput",
+                value: 1
             },
             {
                 type: "Indicator",
@@ -6045,21 +7463,27 @@ Entry.block = {
         ],
         def: {
             params: [
-                "Do"
+                "Do",
+                "1"
             ],
             type: "cobl_melody"
         },
         paramsKeyMap: {
-            MELODY: 0
+            MELODY: 0,
+            DURATION: 1
         },
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
             var melody = script.getStringField("MELODY");
+            var duration = script.getStringField("DURATION");
 
             Entry.hw.setDigitalPortValue("Melody", melody);
+            Entry.hw.setDigitalPortValue("Melody_DUR", duration);
+            
             Entry.hw.update();
             delete Entry.hw.sendQueue["Melody"];
+            delete Entry.hw.sendQueue["Melody_DUR"];
 
             return script.callReturn();
         }
@@ -6068,7 +7492,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "14.회전모터%1%2속도%3 %4",
+        template: "16.회전모터%1%2속도%3 %4",
         params: [
             {
                 type: "Dropdown",
@@ -6147,7 +7571,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "15.USB포트%1단계%2 %3",
+        template: "17.USB포트%1단계%2 %3",
         params: [
             {
                 type: "Dropdown",
@@ -6210,7 +7634,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "16.외부LED%1(1~64)R%2G%3B%4 %5",
+        template: "18.외부LED%1(1~64)R%2G%3B%4 %5",
         params: [
             {
                 type: "TextInput",
@@ -6313,7 +7737,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "17.숫자전광판%1(0~9999) %2",
+        template: "19.숫자전광판%1(0~9999) %2",
         params: [
             {
                 type: "TextInput",
@@ -6335,7 +7759,9 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
             var value = script.getNumberField("VALUE");
-            Entry.hw.setDigitalPortValue("7SEG", value);
+            var value_s = value.toString();
+            var value_c = value_s.substring(0,4);
+            Entry.hw.setDigitalPortValue("7SEG", value_c);
             Entry.hw.update();
             delete Entry.hw.sendQueue["7SEG"];
             return script.callReturn();
@@ -18966,26 +20392,26 @@ Entry.block = {
                 data_length = 4;
             }
 
-	    data_address = script.getNumberValue('VALUE');
+        data_address = script.getNumberValue('VALUE');
 
-	    data_default_address = data_address;
-	    data_default_length = data_length;
+        data_default_address = data_address;
+        data_default_length = data_length;
 
-	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
-		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
-		    //throw new Entry.Utils.AsyncError();
-		    return Entry.hw.sendQueue.prevResult;
-		}
-	    }
+        if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+        if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
+            //throw new Entry.Utils.AsyncError();
+            return Entry.hw.sendQueue.prevResult;
+        }
+        }
 
-	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-	    Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+        // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+        Entry.Robotis_carCont.update();
 
-	    var result = Entry.hw.portData[data_default_address];
+        var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
-	    Entry.hw.sendQueue.prevTime = new Date();
-	    Entry.hw.sendQueue.prevResult = result;
+        Entry.hw.sendQueue.prevTime = new Date();
+        Entry.hw.sendQueue.prevResult = result;
 
             return result;
         },
@@ -19052,23 +20478,23 @@ Entry.block = {
                 data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
             }
 
-	    data_default_address = data_default_address + increase * data_default_length;
+        data_default_address = data_default_address + increase * data_default_length;
 
-	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
-	    	if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
-	    	    //throw new Entry.Utils.AsyncError();
-		    return Entry.hw.sendQueue.prevResult;
-	        }
-	    }
+        if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+            if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
+                //throw new Entry.Utils.AsyncError();
+            return Entry.hw.sendQueue.prevResult;
+            }
+        }
 
-	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-	    Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+        // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+        Entry.Robotis_carCont.update();
 
-	    var result = Entry.hw.portData[data_default_address];
+        var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
-	    Entry.hw.sendQueue.prevTime = new Date();
-	    Entry.hw.sendQueue.prevResult = result;
+        Entry.hw.sendQueue.prevTime = new Date();
+        Entry.hw.sendQueue.prevResult = result;
 
             return result;
         },
@@ -19125,7 +20551,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var scope = script.executor.scope;
 
-	    // instruction / address / length / value / default length
+        // instruction / address / length / value / default length
             var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
             var data_address = 0;
             var data_length = 0;
@@ -19216,21 +20642,21 @@ Entry.block = {
                // data_length = 6 * data_default_length;
             // }
 
-	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
-		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
-		    //throw new Entry.Utils.AsyncError();
-		    return Entry.hw.sendQueue.prevResult;
-		}
-	    }
+        if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+        if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
+            //throw new Entry.Utils.AsyncError();
+            return Entry.hw.sendQueue.prevResult;
+        }
+        }
 
-	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-	    Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+        // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+        Entry.Robotis_carCont.update();
 
-	    var result = Entry.hw.portData[data_default_address];
+        var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
-	    Entry.hw.sendQueue.prevTime = new Date();
-	    Entry.hw.sendQueue.prevResult = result;
+        Entry.hw.sendQueue.prevTime = new Date();
+        Entry.hw.sendQueue.prevResult = result;
 
             return result;
         },
@@ -20193,24 +21619,24 @@ Entry.block = {
             //Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
             //// Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
             //Entry.Robotis_carCont.update();
-			//
+            //
             //return Entry.hw.portData[data_default_address];
 
-	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
-		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 300) {
-		    //throw new Entry.Utils.AsyncError();
-		    return Entry.hw.sendQueue.prevResult;
-		}
-	    }
+        if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+        if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 300) {
+            //throw new Entry.Utils.AsyncError();
+            return Entry.hw.sendQueue.prevResult;
+        }
+        }
 
-	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-	    Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+        // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+        Entry.Robotis_carCont.update();
 
-	    var result = Entry.hw.portData[data_default_address];
+        var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
-	    Entry.hw.sendQueue.prevTime = new Date();
-	    Entry.hw.sendQueue.prevResult = result;
+        Entry.hw.sendQueue.prevTime = new Date();
+        Entry.hw.sendQueue.prevResult = result;
 
             return result;
         },
@@ -30314,8 +31740,9 @@ Entry.block = {
             var pin = script.getNumberValue("VALUE", script);
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
-
-            Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, pin, value]);
+            
+            Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
+            Entry.hw.sendQueue[pin] = value;
             return script.callReturn();
         }
     },
@@ -30346,7 +31773,6 @@ Entry.block = {
         "isNotFor": [ "roborobo_schoolkit" ],
         "func": function (sprite, script) {
             var signal = script.getNumberValue("VALUE", script);
-            Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_READ, signal]);
             return Entry.hw.portData[signal - 7];
         }
     },
@@ -30407,31 +31833,35 @@ Entry.block = {
         "class": "schoolkit_set",
         "isNotFor": [ "roborobo_schoolkit" ],
         "func": function (sprite, script) {
-            var pin = 0;
-            var operatorValue = 0;
             var mode = script.getField("MODE");
+            var pin = 0;
             var operator = script.getField("OPERATOR");
             var value = script.getNumberValue("VALUE");
-
+            
             if(mode == "motor1") {
-                pin = 7;
+                pin = 7;        
             } else {
                 pin = 8;
             }
+            
             if(value > 255) {
                 value = 255;
             } else if(value < 0) {
                 value = 0;
             }
-
+            
+            Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+            Entry.hw.sendQueue.digitalPinMode[pin - 7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+            
             if (operator == "cw") {
-                operatorValue = 1;
-                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+                Entry.hw.sendQueue[pin] = value;
+                Entry.hw.sendQueue[pin - 7] = 0x00;
             } else if (operator == "ccw") {
-                operatorValue = 2;
-                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+                Entry.hw.sendQueue[pin] = 0x00;
+                Entry.hw.sendQueue[pin - 7] = value;
             } else if(operator == "stop") {
-                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+                Entry.hw.sendQueue[pin] = 0x00;
+                Entry.hw.sendQueue[pin - 7] = 0x00;
             }
             return script.callReturn();
         }
@@ -30478,14 +31908,16 @@ Entry.block = {
         "func": function (sprite, script) {
             var pin = script.getNumberValue("PIN", script);
             var value = script.getNumberValue("VALUE");
+            
+            Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
 
             if(value < 0) {
                 value = 0;
             } else if(value > 180) {
                 value = 180;
             }
-
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.SERVO, pin, value]);
+            Entry.hw.sendQueue.servo[pin - 2] = true;
+            Entry.hw.sendQueue[pin] = value;
             return script.callReturn();
         }
     },
@@ -31562,11 +32994,11 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_A0_Input, "A0"],
-					[Lang.Blocks.robotori_A1_Input, "A1"],
-					[Lang.Blocks.robotori_A2_Input, "A2"],
-					[Lang.Blocks.robotori_A3_Input, "A3"],
-					[Lang.Blocks.robotori_A4_Input, "A4"],
-					[Lang.Blocks.robotori_A5_Input, "A5"],
+                    [Lang.Blocks.robotori_A1_Input, "A1"],
+                    [Lang.Blocks.robotori_A2_Input, "A2"],
+                    [Lang.Blocks.robotori_A3_Input, "A3"],
+                    [Lang.Blocks.robotori_A4_Input, "A4"],
+                    [Lang.Blocks.robotori_A5_Input, "A5"],
                 ],
                 "value": "A0",
                 "fontSize": 11
@@ -31597,9 +33029,9 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_D10_Output, "D10"],
-					[Lang.Blocks.robotori_D11_Output, "D11"],
-					[Lang.Blocks.robotori_D12_Output, "D12"],
-					[Lang.Blocks.robotori_D13_Output, "D13"]
+                    [Lang.Blocks.robotori_D11_Output, "D11"],
+                    [Lang.Blocks.robotori_D12_Output, "D12"],
+                    [Lang.Blocks.robotori_D13_Output, "D13"]
                 ],
                 "value": "D10",
                 "fontSize": 11
@@ -31608,7 +33040,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_On, "ON"],
-					[Lang.Blocks.robotori_Off, "OFF"]
+                    [Lang.Blocks.robotori_Off, "OFF"]
                 ],
                 "value": "ON",
                 "fontSize": 11
@@ -31662,7 +33094,7 @@ Entry.block = {
             return script.callReturn();
         }
     },
-	"robotori_analogOutput": {
+    "robotori_analogOutput": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
@@ -31671,8 +33103,8 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_analog5, "AOUT5"],
-					[Lang.Blocks.robotori_analog6, "AOUT6"],
-					[Lang.Blocks.robotori_analog9, "AOUT9"]
+                    [Lang.Blocks.robotori_analog6, "AOUT6"],
+                    [Lang.Blocks.robotori_analog9, "AOUT9"]
                 ],
                 "value": "AOUT5",
                 "fontSize": 11
@@ -31707,23 +33139,23 @@ Entry.block = {
         "isNotFor": [ "robotori" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
-			var dev = script.getStringField("DEVICE", script);
-			var value = script.getNumberValue("VALUE", script);
+            var dev = script.getStringField("DEVICE", script);
+            var value = script.getNumberValue("VALUE", script);
 
-			if (dev == 'AOUT5')
-			{
-				sq.AOUT5 = value;
-			}
-			else if(dev == 'AOUT6')
-			{
-				sq.AOUT6 = value;
-			}
-			else if(dev == 'AOUT9')
-			{
-				sq.AOUT9 = value;
-			}
+            if (dev == 'AOUT5')
+            {
+                sq.AOUT5 = value;
+            }
+            else if(dev == 'AOUT6')
+            {
+                sq.AOUT6 = value;
+            }
+            else if(dev == 'AOUT9')
+            {
+                sq.AOUT9 = value;
+            }
 
-			return script.callReturn();
+            return script.callReturn();
         }
     },
     "robotori_servo": {
@@ -31759,9 +33191,9 @@ Entry.block = {
         "isNotFor": [ "robotori" ],
         "func": function (sprite, script) {
            var sq = Entry.hw.sendQueue;
-			sq.SERVO = script.getNumberValue("SERVO");
+            sq.SERVO = script.getNumberValue("SERVO");
 
-			return script.callReturn();
+            return script.callReturn();
         }
     },
     "robotori_dc_direction": {
@@ -31773,7 +33205,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_DC_rightmotor, "RIGHT_MOTOR"],
-					[Lang.Blocks.robotori_DC_leftmotor, "LEFT_MOTOR"]
+                    [Lang.Blocks.robotori_DC_leftmotor, "LEFT_MOTOR"]
                 ],
                 "value": "RIGHT_MOTOR",
                 "fontSize": 11
@@ -31782,8 +33214,8 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_DC_STOP, "STOP"],
-					[Lang.Blocks.robotori_DC_CW, "CW"],
-					[Lang.Blocks.robotori_DC_CCW, "CCW"]
+                    [Lang.Blocks.robotori_DC_CW, "CW"],
+                    [Lang.Blocks.robotori_DC_CCW, "CCW"]
                 ],
                 "value": "STOP",
                 "fontSize": 11
@@ -31809,36 +33241,36 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
             var dev = script.getStringField("DEVICE", script);
             var value = script.getStringField('VALUE', script);
-			if( dev == 'RIGHT_MOTOR' )
-			{
-				if( value == 'STOP' )
-				{
-					sq.RIGHT_MOTOR = 0xFF;
-				}
-				else if( value == 'CW' )
-				{
-					sq.RIGHT_MOTOR = 0x00;
-				}
-				else if( value == 'CCW' )
-				{
-					sq.RIGHT_MOTOR = 0xB4;
-				}
-			}
-			if( dev == 'LEFT_MOTOR' )
-			{
-				if( value == 'STOP' )
-				{
-					sq.LEFT_MOTOR = 0xFF;
-				}
-				else if( value == 'CW' )
-				{
-					sq.LEFT_MOTOR = 0x00;
-				}
-				else if( value == 'CCW' )
-				{
-					sq.LEFT_MOTOR = 0xB4;
-				}
-			}
+            if( dev == 'RIGHT_MOTOR' )
+            {
+                if( value == 'STOP' )
+                {
+                    sq.RIGHT_MOTOR = 0xFF;
+                }
+                else if( value == 'CW' )
+                {
+                    sq.RIGHT_MOTOR = 0x00;
+                }
+                else if( value == 'CCW' )
+                {
+                    sq.RIGHT_MOTOR = 0xB4;
+                }
+            }
+            if( dev == 'LEFT_MOTOR' )
+            {
+                if( value == 'STOP' )
+                {
+                    sq.LEFT_MOTOR = 0xFF;
+                }
+                else if( value == 'CW' )
+                {
+                    sq.LEFT_MOTOR = 0x00;
+                }
+                else if( value == 'CCW' )
+                {
+                    sq.LEFT_MOTOR = 0xB4;
+                }
+            }
             return script.callReturn();
         }
     },
@@ -32435,6 +33867,889 @@ Entry.block = {
                 Entry.engine.isContinue = false;
                 return script.callReturn();
             }
+        },
+    },
+    "dadublock_car_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "dadublock_car_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "dadublock_car_get",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            return (ANALOG) ? ANALOG[port] || 0 : 0;
+        },
+    },
+    "dadublock_car_get_analog_value_map": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "dadublock_car_get_analog_value_map"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE2": 1,
+            "VALUE3": 2,
+            "VALUE4": 3,
+            "VALUE5": 4
+        },
+        "class": "dadublock_car_get",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            var value2 = script.getNumberValue("VALUE2", script);
+            var value3 = script.getNumberValue("VALUE3", script);
+            var value4 = script.getNumberValue("VALUE4", script);
+            var value5 = script.getNumberValue("VALUE5", script);
+
+            var result = ANALOG[port] || 0;
+            if (value2 > value3) {
+                var swap = value2;
+                value2 = value3;
+                value3 = swap;
+            }
+            if (value4 > value5) {
+                var swap = value4;
+                value4 = value5;
+                value5 = swap;
+            }
+            result -= value2;
+            result = result * ((value5 - value4) / (value3 - value2));
+            result += value4;
+            result = Math.min(value5, result);
+            result = Math.max(value4, result);
+
+            return result
+        },
+    },
+    "dadublock_car_get_ultrasonic_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ '2', '3' ],
+            "type": "dadublock_car_get_ultrasonic_value"
+        },
+        "paramsKeyMap": {
+            "PORT1": 0,
+            "PORT2": 1,
+        },
+        "class": "dadublock_car_get",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT1", script);
+            var port2 = script.getField("PORT2", script);
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            delete Entry.hw.sendQueue['SET'][port1];
+            delete Entry.hw.sendQueue['SET'][port2];
+
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.ULTRASONIC] = {
+                port: [port1, port2],
+                time: new Date().getTime()
+            };
+            return Entry.hw.portData.ULTRASONIC || 0;
+        },
+    },
+
+    "dadublock_car_get_digital": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "dadublock_car_get_digital"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "dadublock_car_get",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            //var port = script.getNumberValue("PORT", script);
+            var port = script.getField("PORT", script);
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
+            return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+        },
+    },
+    "dadublock_car_toggle_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["켜기","on"],
+                    ["끄기","off"]
+                ],
+                "value": "on",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null, null ],
+            "type": "dadublock_car_toggle_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "dadublock_car_set",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            //var port = script.getNumberValue("PORT");
+            var port = script.getField("PORT");
+            var value = script.getField("VALUE");
+             if(value == "on") {
+                value = 255;
+            } else {
+                value = 0;
+            }
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.DaduBlock.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+    },
+    "dadublock_car_digital_pwm": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "5",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "dadublock_car_digital_pwm"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "dadublock_car_set",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            //var port = script.getNumberValue("PORT");
+            var port = script.getField("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.DaduBlock.sensorTypes.PWM,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
+    },
+    "dadublock_car_set_servo": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "2",
+                "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [ null ,null ],
+            "type": "dadublock_car_set_servo"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "dadublock_car_set",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            //var port = script.getNumberValue("PORT", script);
+            var port = script.getField("PORT", script);
+            var value = script.getNumberValue("VALUE", script);
+            value = Math.min(180, value);
+            value = Math.max(0, value);
+
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: Entry.DaduBlock.sensorTypes.SERVO_PIN,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Arduino.servomotorWrite(%1, %2)"]}
+    },
+    "dadublock_car_set_tone": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "2",
+                "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["무음", "0"],
+                ["도", "1"],
+                ["도#(레♭)", "2"],
+                ["레", "3"],
+                ["레#(미♭)", "4"],
+                ["미", "5"],
+                ["파", "6"],
+                ["파#(솔♭)", "7"],
+                ["솔", "8"],
+                ["솔#(라♭)", "9"],
+                ["라", "10"],
+                ["라#(시♭)", "11"],
+                ["시", "12"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["1", "0"],
+                ["2", "1"],
+                ["3", "2"],
+                ["4", "3"],
+                ["5", "4"],
+                ["6", "5"]
+            ],
+            "value": "3",
+            "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                null,
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "dadublock_car_set_tone"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "NOTE": 1,
+            "OCTAVE": 2,
+            "DURATION": 3
+        },
+        "class": "dadublock_car_set",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            //var port = script.getNumberValue("PORT", script);
+            var port = script.getField("PORT", script);
+
+            if (!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+                var duration = script.getNumberValue("DURATION", script);
+
+                if(duration < 0) {
+                    duration = 0;
+                }
+
+                if(note === 0 || duration === 0) {
+                    sq['SET'][port] = {
+                        type: Entry.DaduBlock.sensorTypes.TONE,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+
+                var octave = script.getNumberField("OCTAVE", script);
+                var value = Entry.DaduBlock.toneMap[note][octave];
+
+                duration = duration * 1000;
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                if(!sq['SET']) {
+                    sq['SET'] = {};
+                }
+
+                sq['SET'][port] = {
+                    type: Entry.DaduBlock.sensorTypes.TONE,
+                    data: {
+                        value: value,
+                        duration: duration
+                    },
+                    time: new Date().getTime()
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, duration + 32);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                sq['SET'][port] = {
+                    type: Entry.DaduBlock.sensorTypes.TONE,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+    },
+    "dadublock_car_motor_stop": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["~5,~6", "1"],
+                    ["~9,~10", "2"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+            ],
+            "type": "dadublock_car_motor_stop"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "dadublock_car_motor",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT");
+            if(port == 1) //~5,~6번을 선택했을때
+            {
+
+                if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][5] = {
+                    type: Entry.DaduBlock.sensorTypes.PWM,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][6] = {
+                    type: Entry.DaduBlock.sensorTypes.PWM,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                return script.callReturn();
+
+            }
+            else if(port == 2) //~9,~10번을 선택했을때
+            {   
+
+                if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][9] = {
+                    type: Entry.DaduBlock.sensorTypes.PWM,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][10] = {
+                    type: Entry.DaduBlock.sensorTypes.PWM,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                return script.callReturn();
+            }    
+            
+
+        },
+    },
+    "dadublock_car_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["~5,~6", "1"],
+                    ["~9,~10", "2"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["정방향", "1"],
+                    ["역방향", "2"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                {
+                    "type": "text",
+                    "params": [ "50" ] // %로 바꿈 0~100% 모터 속도
+                },
+                null
+            ],
+            "type": "dadublock_car_motor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "DIRECTION": 1,
+            "VALUE": 2
+        },
+        "class": "dadublock_car_motor",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT");
+            var direction = script.getField("DIRECTION");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 100);
+            value = value * 1.5; //최대값을 150으로 제한
+            if(port == 1) //~5,~6번을 선택했을때
+            {
+                if(direction == 1)
+                {
+                    if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][5] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: value,
+                        time: new Date().getTime()
+                    };
+
+                    if(!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][6] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+                else if(direction == 2)
+                {
+                    if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][5] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+
+                    if(!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][6] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: value,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+            }
+            else if(port == 2) //~9,~10번을 선택했을때
+            {   
+
+                if(direction == 1)
+                {
+                    if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][9] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: value,
+                        time: new Date().getTime()
+                    };
+
+                    if(!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][10] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+                else if(direction == 2)
+                {
+                    if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][9] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+
+                    if(!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][10] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: value,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+
+            }    
+            
+
+        },
+    },
+    "dadublock_car_get_irsensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "dadublock_car_get_irsensor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "dadublock_car_motor",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            //var port = script.getNumberValue("PORT", script);
+            var port = script.getField("PORT", script);
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
+            return (DIGITAL) ? DIGITAL[port] || 0 : 0;
         },
     },
     "hidden": {
@@ -37173,6 +39488,3494 @@ Entry.block = {
             }
         ],
         "func": function (sprite, script) {},
+    },
+    "coconut_move_motor": {
+       "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_move_forward,"3"],
+                    [Lang.Blocks.coconut_move_backward,"4"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "coconut_move_motor"
+        },
+        "paramsKeyMap": {
+            "DIST": 0
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            //앞으로 가기
+            var dist = script.getField("DIST", script);
+            var move = parseInt(dist);
+            var arrMsg = Entry.coconut.moveMotor(move);
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x01","0x07","0x00","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "coconut_turn_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_turn_left,"1"],
+                    [Lang.Blocks.coconut_turn_right,"2"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "coconut_turn_motor"
+        },
+        "paramsKeyMap": {
+            "DIST": 0
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+         
+            var dist = script.getField("DIST");
+            var move = parseInt(dist);
+            var arrMsg = Entry.coconut.turnMotor(move); //왼쪽, 오른쪽으로 가기
+            //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x1a","0x00","0x02","0x3c"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "coconut_stop_motor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }    
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_stop_motor"
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var arrMsg = Entry.coconut.stopMotor(); //모터정지 
+            //var arrMsg = ["0xff","0x55","0x04","0x00","0x02","0x1a","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    }, 
+    "coconut_move_for_secs": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_move_forward,"3"],
+                    [Lang.Blocks.coconut_move_backward,"4"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                }
+            ],
+            "type": "coconut_move_for_secs"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "VALUE": 1
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var dist = script.getField("DIST", script);
+            var move = parseInt(dist);
+            var time = script.getNumberValue("VALUE");
+            var arrMsg = Entry.coconut.moveGoTime(move,time); //앞으로 1초동안 움직이기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x1a","0x03","0x03","0x3c","0xe8","0x03"];
+            
+            var now = Date();
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);                
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log(now + " : rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log(now + " : rev = continue" + pd.msg);
+                } else {
+                    console.log(now + " : rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);                
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log(now + " : rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_turn_for_secs": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_turn_left,"1"],
+                    [Lang.Blocks.coconut_turn_right,"2"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                }
+            ],
+            "type": "coconut_turn_for_secs"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "VALUE": 1
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var dist = script.getField("DIST", script);
+            var move = parseInt(dist);
+            var time = script.getNumberValue("VALUE");
+            var arrMsg = Entry.coconut.moveGoTime(move,time); //왼쪽으로 1초동안 돌기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x1a","0x03","0x01","0x3c","0xe8","0x03"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "coconut_turn_to_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_turn_left,"1"],
+                    [Lang.Blocks.coconut_turn_right,"2"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_color_red,"2"],
+                    [Lang.Blocks.coconut_color_yellow,"5"],
+                    [Lang.Blocks.coconut_color_green,"3"],
+                    [Lang.Blocks.coconut_color_cyan,"6"],
+                    [Lang.Blocks.coconut_color_blue,"4"],
+                    [Lang.Blocks.coconut_color_magenta,"7"],
+                    [Lang.Blocks.coconut_color_white,"1"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null],
+            "type": "coconut_turn_to_led"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "COLOR": 1
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist1 = script.getField("DIST", script);
+            var dist2 = script.getField("COLOR", script);
+            var move = parseInt(dist1);
+            var color = parseInt(dist2);
+            var arrMsg = Entry.coconut.moveMotorColor(move,color); //왼쪽으로 회전하는 동안 빨간색 LED켜기
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_move_outmotor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_move_forward,"3"],
+                    [Lang.Blocks.coconut_move_backward,"4"],
+                    [Lang.Blocks.coconut_turn_left,"1"],
+                    [Lang.Blocks.coconut_turn_right,"2"],
+                ],
+                "value": "3",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ 
+                null,
+                {
+                    "type":"text",
+                    "params":["60"]
+                }
+            ],
+            "type": "coconut_move_outmotor"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "VALUE": 1,
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var dist1 = script.getField("DIST", script);
+            var move = parseInt(dist1);
+            var speed = script.getNumberValue("VALUE");
+            var arrMsg = Entry.coconut.moveExtMotor(move,speed); //외부모터 앞으로 움직이기
+            //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x1a","0x07","0x03","0x3c"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_set_led_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_left_led,"1"],
+                    [Lang.Blocks.coconut_right_led,"2"],
+                    [Lang.Blocks.coconut_both_leds,"0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_color_red,"2"],
+                    [Lang.Blocks.coconut_color_yellow,"5"],
+                    [Lang.Blocks.coconut_color_green,"3"],
+                    [Lang.Blocks.coconut_color_cyan,"6"],
+                    [Lang.Blocks.coconut_color_blue,"4"],
+                    [Lang.Blocks.coconut_color_magenta,"7"],
+                    [Lang.Blocks.coconut_color_white,"1"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null],
+            "type": "coconut_set_led_to"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "COLOR": 1
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+ 
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var now = new Date();
+            var dist1 = script.getField("DIST", script);
+            var dist2 = script.getField("COLOR", script);
+            var dir = parseInt(dist1);
+            var color = parseInt(dist2);
+            var arrMsg = Entry.coconut.rgbOn(dir,color); //왼쪽 LED 빨간색으로 켜기
+            //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x19","0x00","0x01","0x02"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log(now + " : rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log(now + " : rev = continue" + pd.msg);
+                } else {
+                    console.log(now + " : rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_clear_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_left_led,"1"],
+                    [Lang.Blocks.coconut_right_led,"2"],
+                    [Lang.Blocks.coconut_both_leds,"0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "coconut_clear_led"
+        },
+        "paramsKeyMap": {
+            "DIST": 0
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var dist1 = script.getField("DIST", script);
+            var dir = parseInt(dist1);
+            var arrMsg = Entry.coconut.rgbOff(dir); //왼쪽LED 끄기
+            //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x19","0x01","0x01","0x00"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+    },
+    "coconut_set_led_clear": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_left_led,"1"],
+                    [Lang.Blocks.coconut_right_led,"2"],
+                    [Lang.Blocks.coconut_both_leds,"0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_color_red,"2"],
+                    [Lang.Blocks.coconut_color_yellow,"5"],
+                    [Lang.Blocks.coconut_color_green,"3"],
+                    [Lang.Blocks.coconut_color_cyan,"6"],
+                    [Lang.Blocks.coconut_color_blue,"4"],
+                    [Lang.Blocks.coconut_color_magenta,"7"],
+                    [Lang.Blocks.coconut_color_white,"1"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null],
+            "type": "coconut_set_led_clear"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "COLOR": 1
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var dist1 = script.getField("DIST", script);
+            var dist2 = script.getField("COLOR", script);
+            var dir = parseInt(dist1);
+            var color = parseInt(dist2);
+            var arrMsg = Entry.coconut.rgbOffColor(dir,color); //왼쪽 LED 빨간색 끄기
+            //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x19","0x01","0x01","0x02"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_set_led_time": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_left_led,"Left"],
+                    [Lang.Blocks.coconut_right_led,"Right"],
+                    [Lang.Blocks.coconut_both_leds,"Both"]
+                ],
+                "value": "Left",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_color_red,"2"],
+                    [Lang.Blocks.coconut_color_yellow,"5"],
+                    [Lang.Blocks.coconut_color_green,"3"],
+                    [Lang.Blocks.coconut_color_cyan,"6"],
+                    [Lang.Blocks.coconut_color_blue,"4"],
+                    [Lang.Blocks.coconut_color_magenta,"7"],
+                    [Lang.Blocks.coconut_color_white,"1"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                {
+                    "type": "text",
+                    "params": [ "0.6" ]
+                }
+            ],
+            "type": "coconut_set_led_time"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "COLOR": 1,
+            "VALUE": 2
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist1 = script.getField("DIST", script);
+            var dist2 = script.getField("COLOR", script);
+            var time = script.getNumberValue("VALUE");
+            var color = parseInt(dist2);
+            var arrMsg = Entry.coconut.ledOnTime(dist1,color,time); //왼쪽 LED 빨간색으로 1초동안 켜기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x19","0x03","0x01","0x02","0xe8","0x03"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_beep": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_beep"
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var arrMsg = Entry.coconut.beep(); //버저 켜기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x06","0x01","0xf4","0x01"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_buzzer_time": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0.6" ]
+                }
+            ],
+            "type": "coconut_buzzer_time"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var time = script.getNumberValue("VALUE");
+            var arrMsg = Entry.coconut.playBuzzerTime(time); //버저음을 1초동안 소리내기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x06","0x01","0xe8","0x03"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_buzzer_set_hz": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+                        {
+                "type": "Block",
+                "acce기t": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "300" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0.6" ]
+                }
+            ],
+            "type": "coconut_buzzer_set_hz"
+        },
+        "paramsKeyMap": {
+            "HZ": 0,
+            "TIME": 1
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var hz = script.getNumberValue("HZ");
+            var time = script.getNumberValue("TIME");
+            var arrMsg = Entry.coconut.playBuzzerFreq(hz,time); //버저음 1000hz를 1초동안 소리내기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x2c","0x01","0xe8","0x03"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_clear_buzzer": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_clear_buzzer"
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var arrMsg = Entry.coconut.buzzerOff();//버저 끄기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x00","0x00","0x00","0x00"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_play_buzzer": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_note_c,"NOTE_C"],
+                    [Lang.Blocks.coconut_note_d,"NOTE_D"],
+                    [Lang.Blocks.coconut_note_e,"NOTE_E"],
+                    [Lang.Blocks.coconut_note_f,"NOTE_F"],
+                    [Lang.Blocks.coconut_note_g,"NOTE_G"],
+                    [Lang.Blocks.coconut_note_a,"NOTE_A"],
+                    [Lang.Blocks.coconut_note_b,"NOTE_B"]
+                ],
+                "value": "NOTE_C",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "-", "-" ],
+                    [ "#", "#" ],
+                    [ "b", "b" ],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_play_buzzer_hn,"500"],
+                    [Lang.Blocks.coconut_play_buzzer_qn,"250"],
+                    [Lang.Blocks.coconut_play_buzzer_en,"125"],
+                    [Lang.Blocks.coconut_play_buzzer_sn,"63"],
+                    [Lang.Blocks.coconut_play_buzzer_tn,"32"],
+                    [Lang.Blocks.coconut_play_buzzer_wn,"1000"],
+                    [Lang.Blocks.coconut_play_buzzer_dhn,"750"],
+                    [Lang.Blocks.coconut_play_buzzer_dqn,"375"],
+                    [Lang.Blocks.coconut_play_buzzer_den,"188"],
+                    [Lang.Blocks.coconut_play_buzzer_dsn,"95"],
+                    [Lang.Blocks.coconut_play_buzzer_dtn,"48"]
+                ],
+                "value": "500",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                "4",
+                "-",
+                null
+            ],
+            "type": "coconut_play_buzzer"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0,
+            "OCTAVE": 1,
+            "SEMI" : 2,
+            "BEAT": 3
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var dist1 = script.getField("NOTE", script);
+            var dist2 = script.getField("OCTAVE", script);
+            var dist3 = script.getField("SEMI", script);
+            var dist4 = script.getField("BEAT", script);
+            var note = dist1;
+            var octave = parseInt(dist2);
+            var semi = dist3
+            var beat = parseInt(dist4);
+            var arrMsg = Entry.coconut.playNote(note, octave, semi, beat); //(도)(3)(-)음을 2분음표 박자로 연주하기
+            //var arrMsg = ["0xff","0x55","0x09","0x00","0x02","0x03","0x04","0x43","0x03","0x2d","0xf4","0x01"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_rest_buzzer": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_rest_buzzer_hr,"500"],
+                    [Lang.Blocks.coconut_rest_buzzer_qr,"250"],
+                    [Lang.Blocks.coconut_rest_buzzer_er,"175"],
+                    [Lang.Blocks.coconut_rest_buzzer_sr,"63"],
+                    [Lang.Blocks.coconut_rest_buzzer_tr,"32"],
+                    [Lang.Blocks.coconut_rest_buzzer_wr,"1000"]
+                ],
+                "value": "500",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "coconut_rest_buzzer"
+        },
+        "paramsKeyMap": {
+            "BEAT": 0
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var dist = script.getField("BEAT", script);
+            var beat = parseInt(dist);
+            var arrMsg = Entry.coconut.restBeat(dist); //2분 쉼표 동안 쉬기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x01","0x00","0x00","0xf4","0x01"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_play_buzzer_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALBERT_note_c,"NOTE_C"],
+                    [Lang.Blocks.ALBERT_note_d,"NOTE_D"],
+                    [Lang.Blocks.ALBERT_note_e,"NOTE_E"],
+                    [Lang.Blocks.ALBERT_note_f,"NOTE_F"],
+                    [Lang.Blocks.ALBERT_note_g,"NOTE_G"],
+                    [Lang.Blocks.ALBERT_note_a,"NOTE_A"],
+                    [Lang.Blocks.ALBERT_note_b,"NOTE_B"]
+                ],
+                "value": "NOTE_C",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "-", "-" ],
+                    [ "#", "#" ],
+                    [ "b", "b" ],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_play_buzzer_hn,"500"],
+                    [Lang.Blocks.coconut_play_buzzer_qn,"250"],
+                    [Lang.Blocks.coconut_play_buzzer_en,"125"],
+                    [Lang.Blocks.coconut_play_buzzer_sn,"63"],
+                    [Lang.Blocks.coconut_play_buzzer_tn,"32"],
+                    [Lang.Blocks.coconut_play_buzzer_wn,"1000"],
+                    [Lang.Blocks.coconut_play_buzzer_dhn,"750"],
+                    [Lang.Blocks.coconut_play_buzzer_dqn,"375"],
+                    [Lang.Blocks.coconut_play_buzzer_den,"188"],
+                    [Lang.Blocks.coconut_play_buzzer_dsn,"95"],
+                    [Lang.Blocks.coconut_play_buzzer_dtn,"48"]
+                ],
+                "value": "500",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_left_led,"1"],
+                    [Lang.Blocks.coconut_right_led,"2"],
+                    [Lang.Blocks.coconut_both_leds,"0"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_color_red,"2"],
+                    [Lang.Blocks.coconut_color_yellow,"5"],
+                    [Lang.Blocks.coconut_color_green,"3"],
+                    [Lang.Blocks.coconut_color_cyan,"6"],
+                    [Lang.Blocks.coconut_color_blue,"4"],
+                    [Lang.Blocks.coconut_color_magenta,"7"],
+                    [Lang.Blocks.coconut_color_white,"1"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                "4",
+                "-",
+                null,
+                null,
+                null
+            ],
+            "type": "coconut_play_buzzer_led"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0,
+            "OCTAVE": 1,
+            "SEMI" : 2,
+            "BEAT": 3,
+            "DIR" : 4,
+            "COLOR" : 5
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var dist1 = script.getField("NOTE", script);
+            var dist2 = script.getField("OCTAVE", script);
+            var dist3 = script.getField("SEMI", script);
+            var dist4 = script.getField("BEAT", script);
+            var dist5 = script.getField("DIR", script);
+            var dist6 = script.getField("COLOR", script);
+            var note = dist1
+            var octave = parseInt(dist2);
+            var semi = dist3;
+            var beat = parseInt(dist4);
+            var dir = parseInt(dist5);
+            var color = parseInt(dist6);
+            var arrMsg = Entry.coconut.playNoteColor(note, octave, semi, beat, dir, color);
+            //도 4 - 음을 2분음표 박자로 연주하는 동안 왼쪽 LED 빨간색 켜기
+            //var arrMsg = ["0xff","0x55","0x0b","0x00","0x02","0x03","0x05","0x43","0x04","0x2d","0xf4","0x01","0x01","0x02"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_play_midi": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_play_midi_1,"1"],
+                    [Lang.Blocks.coconut_play_midi_2,"2"],
+                    [Lang.Blocks.coconut_play_midi_3,"3"],
+                    [Lang.Blocks.coconut_play_midi_4,"4"],
+                    [Lang.Blocks.coconut_play_midi_5,"5"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+            ],
+            "type": "coconut_play_midi"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            //반짝반짝 작은별 연주하기
+            var value = script.getField("VALUE");
+            var num = parseInt(value);
+            var arrMsg = Entry.coconut.playMelody(num);
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x01","0x07","0x00","0x01"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                sq.msgValue = "";
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_floor_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_sensor_left_floor, "1"],
+                    [Lang.Blocks.coconut_sensor_right_floor, "2"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "coconut_floor_sensor"
+        },
+        "paramsKeyMap": {
+            "DIR": 0
+        },
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var dir = script.getField("DIR");
+            if(dir == "1"){
+                return pd.leftFloorValue;
+            }else{
+                return pd.rightFloorValue;
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_floor_sensing": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_sensor_left_floor, "1"],
+                    [Lang.Blocks.coconut_sensor_right_floor, "2"],
+                    [Lang.Blocks.coconut_sensor_both_floor, "0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_floor_sensing_on,"1"],
+                    [Lang.Blocks.coconut_floor_sensing_off,"0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null,null],
+            "type": "coconut_floor_sensing"
+        },
+        "paramsKeyMap": {
+            "DIR": 0,
+            "DET": 1
+        },
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var dir = script.getField("DIR");
+            var det = script.getField("DET");
+            if(dir=="0"){
+                if(det=="1"){
+                     if (pd.BothFloorDetection == 3) //모든 바닥센서가 감지됐나
+                        return true;
+                       else
+                        return false;
+                }else{
+                     if (pd.BothFloorDetection == 0) //모든 바닥센서가 미감지됐나
+                        return true;
+                       else
+                        return false;
+                }
+            }else if(dir=="1"){
+                if(det=="1"){
+                    if (pd.BothFloorDetection == 2) // 왼쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }else{
+                    if (pd.BothFloorDetection == 0) // 왼쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }
+            }else if(dir == "2"){
+                if(det=="1"){
+                    if (pd.BothFloorDetection == 1) // 오른쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }else{
+                    if (pd.BothFloorDetection == 0) // 오른쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }
+            }                        
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_following_line": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_following_line"
+        },
+        "paramsKeyMap": {},
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            //선 따라가기
+
+            var arrMsg = Entry.coconut.followLine();
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x07","0x03","0x3c"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_front_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_sensor_left_proximity, "1"],
+                    [Lang.Blocks.coconut_sensor_right_proximity, "2"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "coconut_front_sensor"
+        },
+        "paramsKeyMap": {
+            "DIR": 0
+        },
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var dir = script.getField("DIR");
+            if(dir == "1"){
+                return pd.leftProximityValue;
+            }else{
+                return pd.rightProximityValue;
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_front_sensing": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_sensor_left_proximity, "1"],
+                    [Lang.Blocks.coconut_sensor_right_proximity, "2"],
+                    [Lang.Blocks.coconut_sensor_both_proximity, "0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_floor_sensing_on,"1"],
+                    [Lang.Blocks.coconut_floor_sensing_off,"0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null,null],
+            "type": "coconut_front_sensing"
+        },
+        "paramsKeyMap": {
+            "DIR": 0,
+            "DET": 1
+        },
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var dir = script.getField("DIR");
+            var det = script.getField("DET");
+            if(dir=="0"){
+                if(det=="1"){
+                     if (pd.BothProximityDetection == 3) //모든 바닥센서가 감지됐나
+                        return true;
+                       else
+                        return false;
+                }else{
+                     if (pd.BothProximityDetection == 0) //모든 바닥센서가 미감지됐나
+                        return true;
+                       else
+                        return false;
+                }
+            }else if(dir=="1"){
+                if(det=="1"){
+                    if (pd.BothProximityDetection == 2 || pd.BothProximityDetection ==3) // 왼쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }else{
+                    if (pd.BothProximityDetection == 0 || pd.BothProximityDetection ==1) // 왼쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }
+            }else if(dir == "2"){
+                if(det=="1"){
+                    if (pd.BothProximityDetection == 1 || pd.BothProximityDetection ==3) // 오른쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }else{
+                    if (pd.BothProximityDetection == 0 || pd.BothProximityDetection ==2) // 오른쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_obstruct_sensing": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_obstruct_sensing"
+        },
+        "paramsKeyMap": {},
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            if (pd.BothProximityDetection > 0)
+            {
+                return true;
+            }
+            return false;
+
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },    
+    "coconut_avoid_mode": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_avoid_mode"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var arrMsg = Entry.coconut.avoidMode(); //어보이드 모드
+            //var arrMsg = ["0xff","0x55","0x04","0x00","0x02","0x05","0x03"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_set": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+
+                    [Lang.Blocks.coconut_dotmatrix_set_on,"1"],
+                    [Lang.Blocks.coconut_dotmatrix_set_off,"0"]
+
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_dotmatrix_row_0,"0"],
+                    [Lang.Blocks.coconut_dotmatrix_row_1,"1"],
+                    [Lang.Blocks.coconut_dotmatrix_row_2,"2"],
+                    [Lang.Blocks.coconut_dotmatrix_row_3,"3"],
+                    [Lang.Blocks.coconut_dotmatrix_row_4,"4"],
+                    [Lang.Blocks.coconut_dotmatrix_row_5,"5"],
+                    [Lang.Blocks.coconut_dotmatrix_row_6,"6"],
+                    [Lang.Blocks.coconut_dotmatrix_row_7,"7"],
+                    [Lang.Blocks.coconut_dotmatrix_row_8,"8"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_dotmatrix_col_0,"0"],
+                    [Lang.Blocks.coconut_dotmatrix_col_1,"1"],
+                    [Lang.Blocks.coconut_dotmatrix_col_2,"2"],
+                    [Lang.Blocks.coconut_dotmatrix_col_3,"3"],
+                    [Lang.Blocks.coconut_dotmatrix_col_4,"4"],
+                    [Lang.Blocks.coconut_dotmatrix_col_5,"5"],
+                    [Lang.Blocks.coconut_dotmatrix_col_6,"6"],
+                    [Lang.Blocks.coconut_dotmatrix_col_7,"7"],
+                    [Lang.Blocks.coconut_dotmatrix_col_8,"8"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                null
+            ],
+            "type": "coconut_dotmatrix_set"
+        },
+        "paramsKeyMap": {
+            "BUTTON" :0,
+            "ROW": 1,
+            "COL": 2,
+            
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var row = script.getField("ROW");
+            var col = script.getField("COL");
+            var button = script.getField("BUTTON");
+            var row = parseInt(row);
+            var col = parseInt(col);
+            var button = parseInt(button);
+            var arrMsg = Entry.coconut.ledMatrixOn(button,row, col); //도트매트릭스 켜짐 1줄 1칸
+            //var arrMsg = ["0xff","0x55","0x07","0x00","0x02","0x1b","0x00","0x01","0x01","0x01"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_on": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+                {
+                    type: "Indicator",
+                    img: "block_icon/hardware_03.png",
+                    size: 12
+                }
+            ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_dotmatrix_on"
+        },
+        "paramsKeyMap": {},
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var arrMsg = Entry.coconut.ledMatrixOnAll(); //도트매트릭스 모두 켜기
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x01","0x07","0x00","0x01"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_off": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_dotmatrix_off"
+        },
+        "paramsKeyMap": {},
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var arrMsg = Entry.coconut.ledMatrixClear(); //도트매트릭스 모두 끄기
+            //var arrMsg = ["0xff","0x55","0x04","0x00","0x02","0x1b","0x05"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_num": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["0","0"],
+                    ["1","1"],
+                    ["2","2"],
+                    ["3","3"],
+                    ["4","4"],
+                    ["5","5"],
+                    ["6","6"],
+                    ["7","7"],
+                    ["8","8"],
+                    ["9","9"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ 
+                null,
+                {
+                    "type":"text",
+                    "params":["1"]
+                }
+            ],
+            "type": "coconut_dotmatrix_num"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var value = script.getField("VALUE");
+            var num = parseInt(value);
+            var arrMsg = Entry.coconut.showLedMatrix(num); //도트매트릭스 숫자 1표시
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x01","0x01"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_small_eng": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["a","0"],
+                    ["b","1"],
+                    ["c","2"],
+                    ["d","3"],
+                    ["e","4"],
+                    ["f","5"],
+                    ["g","6"],
+                    ["h","7"],
+                    ["i","8"],
+                    ["j","9"],
+                    ["k","10"],
+                    ["l","11"],
+                    ["m","12"],
+                    ["n","13"],
+                    ["o","14"],
+                    ["p","15"],
+                    ["q","16"],
+                    ["r","17"],
+                    ["s","18"],
+                    ["t","19"],
+                    ["u","20"],
+                    ["v","21"],
+                    ["w","22"],
+                    ["x","23"],
+                    ["y","24"],
+                    ["z","25"]
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "coconut_dotmatrix_small_eng"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var value = script.getField("VALUE");
+            var num = parseInt(value);
+            var arrMsg = Entry.coconut.showLedMatrixSmall(num); //도트매트릭스 소문자 a표시
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x02","0x00"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_big_eng": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["A","0"],
+                    ["B","1"],
+                    ["C","2"],
+                    ["D","3"],
+                    ["E","4"],
+                    ["F","5"],
+                    ["G","6"],
+                    ["H","7"],
+                    ["I","8"],
+                    ["J","9"],
+                    ["K","10"],
+                    ["L","11"],
+                    ["M","12"],
+                    ["N","13"],
+                    ["O","14"],
+                    ["P","15"],
+                    ["Q","16"],
+                    ["R","17"],
+                    ["S","18"],
+                    ["T","19"],
+                    ["U","20"],
+                    ["V","21"],
+                    ["W","22"],
+                    ["X","23"],
+                    ["Y","24"],
+                    ["Z","25"]
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "coconut_dotmatrix_big_eng"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var value = script.getField("VALUE");
+            var num = parseInt(value);
+            var arrMsg = Entry.coconut.showLedMatrixLarge(num); //도트매트릭스 대문자 A표시
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x03","0x00"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_kor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["가","0"],
+                    ["나","1"],
+                    ["다","2"],
+                    ["라","3"],
+                    ["마","4"],
+                    ["바","5"],
+                    ["사","6"],
+                    ["아","7"],
+                    ["자","8"],
+                    ["차","9"],
+                    ["카","10"],
+                    ["타","11"],
+                    ["파","12"],
+                    ["하","13"]
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "coconut_dotmatrix_kor"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var value = script.getField("VALUE");
+            var num = parseInt(value);
+            var arrMsg = Entry.coconut.showLedMatrixKorean(num); //도트매트릭스 한글 가 표시
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x04","0x00"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_light_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_light_sensor"
+        },
+        "paramsKeyMap": {},
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;    
+            return pd.light;
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_tmp_senser": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_light_tmp"
+        },
+        "paramsKeyMap": {},
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            return pd.temp;   
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_ac_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_x_axis,"1"],
+                    [Lang.Blocks.coconut_y_axis,"2"],
+                    [Lang.Blocks.coconut_z_axis,"3"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+        ],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "coconut_ac_sensor"
+        },
+        "paramsKeyMap": {
+            "XYZ": 0
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var xyz = script.getField("XYZ");
+
+            if(xyz == "1"){
+                return pd.accelerationX;
+            }else if(xyz == "2"){
+                return pd.accelerationY;
+            }else{
+                return pd.accelerationZ;
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_outled_sensor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["D4",4],
+                    ["D10",10],
+                    ["D11",11],
+                    ["D12",12],
+                    ["A2",16],
+                    ["A3",17]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+            {
+                "type": "number",
+                "params": [ "1" ]
+            }
+            ],
+            "type": "coconut_outled_sensor"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+            "TIME": 1
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var pin = script.getNumberField("PIN");
+            var time = script.getNumberValue("TIME");
+            var arrMsg = Entry.coconut.extLedOn(pin, time); //외부 LED 설정 D4 0.5초동안 켜기
+            //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x2c","0x04","0xf4","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_outspk_sensor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["D10","10"],
+                    ["D11","11"],
+                ],
+                "value": "10",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+            {
+                "type": "number",
+                "params": [ "100" ]
+            },        
+            {
+                "type": "number",
+                "params": [ "0.5" ]
+            }
+            ],
+            "type": "coconut_outspk_sensor"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+            "HZ": 1,
+            "TIME": 2
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var pin = script.getNumberField("PIN");
+            var hz = script.getNumberValue("HZ");
+            var time = script.getNumberValue("TIME");
+            var arrMsg = Entry.coconut.playSpeaker(pin, hz, time); //외부 스피커 설정 D10 100hz로 0.5초 동안 소리내기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x29","0x10","0x64","0x00","0xf4","0x01"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_outspk_sensor_off": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["D10","10"],
+                    ["D11","11"]
+                ],
+                "value": "10",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "coconut_outspk_sensor_off"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var pin = script.getNumberField("PIN");
+            var arrMsg = Entry.coconut.stopSpeaker(pin); //외부스피커 D10 끄기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x29","0x10","0x00","0x00","0x00","0x00"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_outinfrared_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["A2","16"],
+                    ["A3","17"]
+                ],
+                "value": "16",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "coconut_outinfrared_sensor"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var pin = script.getNumberField("PIN");
+            
+            if (pin == "16"){
+                return pd.extA2;
+            }else{
+                return pd.extA3;
+            }
+
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_outcds_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["A2","16"],
+                    ["A3","17"]
+                ],
+                "value": "16",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "coconut_outcds_sensor"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var pin = script.getNumberField("PIN");
+            if(pin=="16"){
+                return pd.extA2;
+            }else{
+                return pd.extA3;
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+
+    "coconut_servomotor_angle": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["D4","4"],
+                    ["D10","10"],
+                    ["D11","11"],
+                    ["D12","12"],
+                    ["A2","16"],
+                    ["A3","17"]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "String"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ 
+                null, 
+                {
+                    "type":"text",
+                    "params": ["0"]
+                }
+            ],
+            "type": "coconut_servomotor_angle"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+            "ANGLE": 1
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            
+            var pin = script.getNumberField("PIN");
+            var angle = script.getNumberValue("ANGLE");
+            var arrMsg = Entry.coconut.runExtServo(pin, angle); //서보모터 연결 D4 각도 90
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x43","0x04","0x5a"];
+            
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");                    
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    chocopi_sensor: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            {
+                type: 'Dropdown', options: [
+                    [Lang.Hw.temp, 'temp'], [Lang.Hw.humidity, 'humi'], [Lang.Hw.light, 'light'],
+                    [Lang.Hw.analog + '1', '0'], [Lang.Hw.analog + '2', '1'], [Lang.Hw.analog + '3', '2']],
+                value: 'temp', fontSize: 11
+            }
+        ],
+        def: { params: [], type: 'chocopi_sensor' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_sensor',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(8, (script.getField('port')))
+            var name = script.getField('sensor')
+            if (port == -1) return 0
+            return Entry.Chocopi.p[port][name];
+        },
+        syntax: { js: [], py: ["Chocopi.sensor(%1, %2)"] }
+    },
+    chocopi_touch_event: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_event',
+        statements: [],
+        params: [
+            { type: "Indicator", img: "block_icon/start_icon_hardware.png", size: 17, position: { x: 0, y: -2 } },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            {
+                type: 'Dropdown', options: [
+                    [1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5],
+                    [7, 6], [8, 7], [9, 8], [10, 9], [11, 10], [12, 11]
+                ], value: 0, fontSize: 11
+            },
+            { type: 'Dropdown', options: [[Lang.Blocks.chocopi_touch_event_touch, 1], [Lang.Blocks.chocopi_touch_event_untouch, 0]], value: 1, fontSize: 11 }
+        ],
+        def: { params: [], type: 'chocopi_touch_event' },
+        paramsKeyMap: { port: 1, id: 2, status: 3 },
+        class: 'chocopi_touch',
+        isNotFor: ['chocopi'],
+        event: 'touch14',
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(9, (script.getField('port')))
+            if (port == -1) return this.die()
+            var id = script.getField('id')
+            var status = script.getField('status')
+            var ev = Entry.Chocopi.ev[port]
+            if (((ev.id >> (id)) & 1) != 1 || (((Entry.Chocopi.p[port].ts >> (id)) & 1) != status)) {
+                return this.die()
+            }
+            return script.callReturn()
+        },
+        syntax: { "js": [], "py": ["def on_chocopi_touch(%2, %3, %4 ):"] }
+    },
+    chocopi_touch_status: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_boolean_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            {
+                type: 'Dropdown', options: [
+                    [1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5],
+                    [7, 6], [8, 7], [9, 8], [10, 9], [11, 10], [12, 11]
+                ], value: 0, fontSize: 11
+            }
+        ],
+        def: { params: [], type: 'chocopi_touch_status' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_touch',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(9, (script.getField('port')))
+            var sensor = script.getField('sensor')
+            if (port == -1) return false
+            return ((Entry.Chocopi.p[port].ts & (1 << sensor)) > 0);
+        },
+        syntax: { js: [], py: ["Chocopi.touchStatus(%1, %2)"] }
+    },
+    chocopi_touch_value: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            {
+                type: 'Dropdown', options: [
+                    [1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5],
+                    [7, 6], [8, 7], [9, 8], [10, 9], [11, 10], [12, 11]
+                ], value: 0, fontSize: 11
+            }
+        ],
+        def: { params: [], type: 'chocopi_touch_value' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_touch',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(9, (script.getField('port')))
+            if (port == -1) return false
+            var sensor = script.getField('sensor')
+            return Entry.Chocopi.p[port].tv[sensor]
+        },
+        syntax: { "js": [], "py": ["Chocopi.touchValue(%1, %2)"] }
+    },
+    chocopi_control_event: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_event',
+        statements: [],
+        params: [
+            { type: "Indicator", img: "block_icon/start_icon_hardware.png", size: 17, position: { x: 0, y: -2 } },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            { type: 'Dropdown', options: [[Lang.Hw.button + '1', 0], [Lang.Hw.button + '2', 1], [Lang.Hw.button + '3', 2], [Lang.Hw.button + '4', 3]], value: '0', fontSize: 11 },
+            {
+                type: 'Dropdown', options: [
+                    [Lang.Blocks.chocopi_control_event_pressed, 1], [Lang.Blocks.chocopi_control_event_released, 0]
+                ], value: 1, fontSize: 11
+            }
+        ],
+        def: { params: [], type: 'chocopi_control_event' },
+        paramsKeyMap: { port: 1, id: 2, status: 3 },
+        class: 'chocopi_control',
+        isNotFor: ['chocopi'],
+        event: 'control14',
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(10, (script.getField('port')))
+            if (port == -1) return this.die()
+            var id = script.getField('id')
+            var status = script.getField('status')
+            var ev = Entry.Chocopi.ev[port]
+            if (((ev.id >> (4 - id)) & 1) != 1 || (ev.btn[id] != status)) {
+                return this.die()
+            }
+            return script.callReturn()
+        },
+        syntax: { "js": [], "py": ["def on_chocopi_control_button(%2, %3, %4 ):"] }
+    },
+    chocopi_control_joystick: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            { type: 'Dropdown', options: [[Lang.Blocks.chocopi_joystick_X, 0], [Lang.Blocks.chocopi_joystick_Y, 1], [Lang.Blocks.chocopi_pot, 2]], value: 0, fontSize: 11 }
+        ],
+        def: { params: [null], type: 'chocopi_control_joystick' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_control',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(10, (script.getField('port')))
+            if (port == -1) return false
+            var sensor = script.getField('sensor')
+            return Entry.Chocopi.p[port].xyp[sensor]
+        },
+        syntax: { "js": [], "py": ["Chocopi.joystick(%1, %2)"] }
+    },
+    chocopi_control_button: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_boolean_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            { type: 'Dropdown', options: [[Lang.Hw.button + '1', 0], [Lang.Hw.button + '2', 1], [Lang.Hw.button + '3', 2], [Lang.Hw.button + '4', 3]], value: '0', fontSize: 11 }
+        ],
+        def: { params: [null], type: 'chocopi_control_button' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_control',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(10, (script.getField('port')))
+            if (port == -1) return false
+            var sensor = script.getField('sensor')
+            if (!Entry.Chocopi.ev[port]) return 0
+            return Entry.Chocopi.ev[port].btn[sensor]
+        },
+        syntax: { "js": [], "py": ["Chocopi.button(%1, %2)"] }
+    },
+    chocopi_motion_photogate_time: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            { type: 'Dropdown', options: [[1, 0], [2, 1]], value: '0', fontSize: 11 },
+            { type: 'Dropdown', options: [[Lang.Blocks.chocopi_motion_photogate_time_unblocked, 0], [Lang.Blocks.chocopi_motion_photogate_time_blocked, 1]], value: 1, fontSize: 11 }
+        ],
+        def: { params: [null], type: 'chocopi_motion_photogate_time' },
+        paramsKeyMap: { port: 0, sensor: 1, action: 2 },
+        class: 'chocopi_motion',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(11, (script.getField('port')))
+            if (port == -1) return 0
+            var sensor = script.getField('sensor')
+            var action = script.getField('action')
+            if (!Entry.Chocopi.ev[port]) return 0
+            return Entry.Chocopi.ev[port].time[sensor][action]
+        },
+        syntax: { "js": [], "py": ["Chocopi.photogateTime(%1, %2, %3)"] }
+    },
+    chocopi_motion_value: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            {
+                type: 'Dropdown', options: [
+                    [Lang.Hw.IR + ' 1', 0],
+                    [Lang.Hw.IR + ' 2', 1],
+                    [Lang.Hw.IR + ' 3', 2],
+                    [Lang.Hw.acceleration + 'X', 3],
+                    [Lang.Hw.acceleration + 'Y', 4],
+                    [Lang.Hw.acceleration + 'Z', 5],
+                    [Lang.Hw.angular_acceleration + 'U', 6],
+                    [Lang.Hw.angular_acceleration + 'V', 7],
+                    [Lang.Hw.angular_acceleration + 'W', 8],
+                ], value: '0', fontSize: 11
+            },
+        ],
+        def: { params: [null], type: 'chocopi_motion_value' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_motion',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(11, (script.getField('port')))
+            if (port == -1) return 0
+            var sensor = script.getField('sensor')
+            return Entry.Chocopi.p[port].s[sensor]
+        },
+        syntax: { "js": [], "py": ["Chocopi.motionValue(%1, %2)"] }
+    },
+    chocopi_motion_photogate_status: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_boolean_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            {
+                type: 'Dropdown', options: [
+                    ['1', 0], ['2', 1],
+                ], value: 0, fontSize: 11
+            },
+        ],
+        def: { params: [null], type: 'chocopi_motion_photogate_status' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_motion',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(11, (script.getField('port')))
+            if (port == -1) return 0
+            var sensor = script.getField('sensor')
+            if (!Entry.Chocopi.ev[port]) return 0
+            return Entry.Chocopi.ev[port].pg[sensor]
+        },
+        syntax: { "js": [], "py": ["Chocopi.motionPhotogateStatus(%1, %2)"] }
+    },
+    chocopi_motion_photogate_event: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_event',
+        statements: [],
+        params: [
+            { type: "Indicator", img: "block_icon/start_icon_hardware.png", size: 17, position: { x: 0, y: -2 } },
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            {
+                type: 'Dropdown', options: [
+                    [1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5],
+                    [7, 6], [8, 7], [9, 8], [10, 9], [11, 10], [12, 11]
+                ], value: 0, fontSize: 11
+            },
+            {
+                type: 'Dropdown', options: [
+                    [Lang.Blocks.chocopi_motion_photogate_event_unblocked, 0], [Lang.Blocks.chocopi_motion_photogate_event_blocked, 1]
+                ], value: 1, fontSize: 11
+            }
+        ],
+        def: { params: [], type: 'chocopi_motion_photogate_event' },
+        paramsKeyMap: { port: 1, id: 2, status: 3 },
+        class: 'chocopi_motion',
+        isNotFor: ['chocopi'],
+        event: 'motion14',
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(11, (script.getField('port')))
+            if (port == -1) return this.die()
+            var id = script.getField('id')
+            var status = script.getField('status')
+            if (Entry.Chocopi.ev[port].pg[id] != status) {
+                return this.die()
+            }
+
+            return script.callReturn()
+        },
+        syntax: { "js": [], "py": ["def on_chocopi_photogate(%2, %3, %4 ):"] }
+    },
+    chocopi_led: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            { type: 'Block', accept: 'string' },
+            { type: 'Block', accept: 'string' },
+            { type: 'Block', accept: 'string' },
+            { type: 'Block', accept: 'string' },
+            { type: "Indicator", img: "block_icon/hardware_03.png", size: 12 }
+        ],
+        def: { params: [null, { type: 'number', params: [1] }, { type: 'number', params: [2] }, { type: 'number', params: [1] }, { type: 'number', params: [1] }], type: 'chocopi_led' },
+        paramsKeyMap: { port: 0, l: 1, r: 2, g: 3, b: 4 },
+        class: 'chocopi_output',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(12, (script.getField('port')))
+            if (port == -1) return script.callReturn()
+            var l = script.getNumberValue('l')
+            var r = script.getNumberValue('r')
+            var g = script.getNumberValue('g')
+            var b = script.getNumberValue('b')
+            console.log([l, r, g, b])
+            Entry.hw.sendQueue.data[port] = [l, r, g, b]
+            Entry.hw.update()
+            delete Entry.hw.sendQueue.data[port]
+            return script.callReturn()
+        },
+        syntax: { "js": [], "py": ["Chocopi.LED(%1, %2, %3, %4, %5)"] }
+    },
+    chocopi_dc_motor: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            { type: 'Dropdown', options: [['1', 0], ['2', 1]], value: 0, fontSize: 11 },
+            { type: 'Block', accept: 'string' },
+            { type: 'Dropdown', options: [[Lang.General.clock, 0], [Lang.General.counter_clock, 1]], value: 0, fontSize: 11 },
+            { type: "Indicator", img: "block_icon/hardware_03.png", size: 12 }
+        ],
+        def: { params: [null, null, { type: 'number', params: [31] }], type: 'chocopi_dc_motor' },
+        paramsKeyMap: { port: 0, id: 1, power: 2, direction: 3 },
+        class: 'chocopi_output',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(14, (script.getField('port')))
+            if (port == -1) return script.callReturn()
+            var id = script.getField('id')
+            var s = script.getNumberValue('power')
+            var d = script.getField('direction')
+            Entry.hw.sendQueue.data[port] = [id, s, d]
+            Entry.hw.update()
+            delete Entry.hw.sendQueue.data[port]
+            return script.callReturn()
+        },
+        syntax: { "js": [], "py": ["Chocopi.DCmotor(%1, %2, %3, %4)"] }
+    },
+    chocopi_servo_motor: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown', 
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
+                ], value: 0 
+            },
+            { type: 'Dropdown', options: [['1', 0], ['2', 1], ['3', 2], ['4', 3]], value: 0, fontSize: 11 },
+            { type: 'Block', accept: 'string' },
+            { type: "Indicator", img: "block_icon/hardware_03.png", size: 12 }
+        ],
+        def: { params: [null, null, { type: 'number', params: [90] }], type: 'chocopi_servo_motor' },
+        paramsKeyMap: { port: 0, id: 1, angle: 2 },
+        class: 'chocopi_output',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(15, (script.getField('port')))
+            if (port == -1) return script.callReturn()
+            var id = script.getField('id')
+            var a = script.getNumberValue('angle')
+            Entry.hw.sendQueue.data[port] = [id, a]
+            Entry.hw.update()
+            delete Entry.hw.sendQueue.data[port]
+            return script.callReturn()
+        },
+        syntax: { "js": [], "py": ["Chocopi.servo(%1, %2, %3)"] }
+    },
+    // rokoboard Implementation
+    "rokoboard_get_sensor_value_by_name": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.rokoboard_sensor_name_1,"1"],
+                    [Lang.Blocks.rokoboard_sensor_name_0,"0"],
+                    [Lang.Blocks.rokoboard_sensor_name_2,"2"],
+                    [Lang.Blocks.rokoboard_sensor_name_3,"3"],
+                    [Lang.Blocks.rokoboard_sensor_name_4,"4"],
+                    [Lang.Blocks.rokoboard_sensor_name_5,"5"],
+                    [Lang.Blocks.rokoboard_sensor_name_6,"6"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "rokoboard_get_sensor_value_by_name"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "rokoboard_sensor",
+        "isNotFor": [ "rokoboard" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            return (ANALOG) ? ANALOG[port] || 0 : 0;
+        }
+    },
+    "rokoboard_is_button_pressed": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.rokoboard_string_1,
+                "color": "#fff"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "rokoboard_is_button_pressed"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "rokoboard_sensor",
+        "isNotFor": [ "rokoboard" ],
+        "func": function (sprite, script) {
+            var port = 7;
+            var ANALOG = Entry.hw.portData.ANALOG;
+            return (ANALOG) ? (ANALOG[port] < 1) : false ;
+        }
     }
 };
 
