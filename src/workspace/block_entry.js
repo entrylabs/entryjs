@@ -34925,8 +34925,8 @@ Entry.block = {
         "class": "checker",
         "isNotFor": [ "checker" ],
         "func": function (sprite, script) {
-            Entry.achieve(this.block.params[1], this.block.params[0] + "");
-            this.die();
+            Entry.targetChecker.achieveCheck(
+                this.block.params[1], this.block.params[0] + "");
         }
     },
     "switch_scope": {
