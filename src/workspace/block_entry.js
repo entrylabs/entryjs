@@ -35050,7 +35050,7 @@ Entry.block = {
         "isNotFor": [ "checker" ],
         "func": function (sprite, script) {
             if (this.listener) {
-                if (this.isDone) {
+                if (this.remainCheck === 0) {
                     this.listener.destroy();
                     return;
                 }
@@ -35061,14 +35061,14 @@ Entry.block = {
                 accuracy = this.block.params[1],
                 statements = this.block.statements[0].getBlocks(),
                 lastBlock = null;
-            this.isDone = false;
+            this.remainCheck = Number(this.block.params[2]);
             var index = 0;
             this.listener = code.watchEvent.attach(this, function(blocks) { //dangerous
                 blocks = blocks.concat();
-                var block;
+                var block, isFirst = true;
                 while (blocks.length && index < statements.length) {
                     block = blocks.shift();
-                    if (block === lastBlock)
+                    if (isFirst && block === lastBlock)
                         continue;
                     if (accuracy === 0 && statements[index].type === block.type) {
                         index++;
@@ -35077,10 +35077,13 @@ Entry.block = {
                     } else {
                         index = 0;
                     }
+                    isFirst = false;
                 }
                 lastBlock = block;
-                if (index === statements.length)
-                    this.isDone = true;
+                if (index === statements.length) {
+                    this.remainCheck = this.remainCheck - 1;
+                    index = 0;
+                }
             })
             return Entry.STATIC.BREAK;
         }
