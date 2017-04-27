@@ -23,6 +23,8 @@ Entry.Popup = function(className) {
     document.body.appendChild(this.body_);
     this.window_ = Entry.createElement('div');
     this.window_.addClass('entryPopupWindow');
+    if (Entry.targetChecker)
+        this.window_.addClass('targetCheckerPopup');
     if (Entry.device === 'tablet')
         this.window_.addClass('tablet');
     this.window_.bindOnClick(function() {
