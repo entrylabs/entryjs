@@ -34884,7 +34884,7 @@ Entry.block = {
     "check_lecture_goal": {
         "color": "#7C7C7C",
         "skeleton": "basic",
-        "template": "목표 %1 %2 %3",
+        "template": "목표 %1 %2 ( %3 ) %4",
         "statements": [],
         "params": [
             {
