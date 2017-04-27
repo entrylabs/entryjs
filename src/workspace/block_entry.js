@@ -22854,7 +22854,7 @@ Entry.block = {
                                    return script;
                                }*/
 
-                message = script.getValue("VALUE", script);
+            message = String(script.getValue("VALUE", script));
 
             if (!message)
                 throw new Error('message can not be empty');
