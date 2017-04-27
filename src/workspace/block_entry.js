@@ -34900,6 +34900,15 @@ Entry.block = {
                 "fontSize": 11
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    ["공식", 1],
+                    ["비공식", 0]
+                ],
+                "value": 1,
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "color": "#6B6B6B",
                 "size": 12
@@ -34915,6 +34924,7 @@ Entry.block = {
         "def": {
             "params": [
                 0,
+                1,
                 1
             ],
             "type": "check_lecture_goal"
@@ -35028,6 +35038,10 @@ Entry.block = {
                 ],
                 "value": "16",
                 "fontSize": 11
+            },
+            {
+                "type": "TextInput",
+                "value": 1
             },
             {
                 "type": "Indicator",
