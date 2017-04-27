@@ -34929,10 +34929,10 @@ Entry.block = {
             this.die();
         }
     },
-"switch_scope": {
+    "switch_scope": {
         "color": "#7C7C7C",
         "skeleton": "basic",
-        "template": "%1 ì˜¤ë¸Œì íŠ¸ ê¸°ì¤€ìœ¼ë¡œ ì‹¤í–‰í•˜ê¸° %2",
+        "template": "%1 오브젝트 기준으로 실행하기 %2",
         "statements": [],
         "params": [
             {
@@ -34967,7 +34967,7 @@ Entry.block = {
     "is_answer_submited": {
         "color": "#7C7C7C",
         "skeleton": "basic",
-        "template": "ëŒ€ë‹µì„ ìž…ë ¥ ë°›ì„ë•Œ ê¹Œì§€ ê¸°ë‹¤ë¦¬ê¸° %1",
+        "template": "대답을 입력 받을때 까지 기다리기 %1",
         "statements": [],
         "params": [
             {
@@ -35085,10 +35085,10 @@ Entry.block = {
             return Entry.STATIC.BREAK;
         }
     },
-"check_variable_by_name": {
+    "check_variable_by_name": {
         "color": "#7C7C7C",
         "skeleton": "basic_string_field",
-        "template": "%1 ì´ë¦„ì˜ ë³€ìˆ˜",
+        "template": "%1 이름의 변수",
         "statements": [],
         "params": [
             {
@@ -35099,7 +35099,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                "ë³€ìˆ˜"
+                "변수"
             ],
             "type": "check_variable_by_name"
         },
@@ -35120,7 +35120,7 @@ Entry.block = {
     "show_prompt": {
         "color": "#7C7C7C",
         "skeleton": "basic",
-        "template": "%1 ì•ˆë‚´í•˜ê¸° %2",
+        "template": "%1 안내하기 %2",
         "statements": [],
         "params": [
             {
@@ -35154,7 +35154,7 @@ Entry.block = {
     "check_goal_success": {
         "color": "#7C7C7C",
         "skeleton": "basic_boolean_field",
-        "template": "ëª©í‘œ %1 ì´ ì„±ê³µ?",
+        "template": "목표 %1 이 성공?",
         "statements": [],
         "params": [
             {
