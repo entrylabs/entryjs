@@ -168,7 +168,7 @@ Entry.initialize_ = function() {
      */
     this.variableContainer = new Entry.VariableContainer();
 
-    this.commander = new Entry.Commander(this.type);
+    this.commander = new Entry.Commander(this.type, this.doNotSkipAny);
 
     /**
      * Initialize scenes.
@@ -422,6 +422,10 @@ Entry.parseOptions = function(options) {
     if (this.listEnable === undefined)
         this.listEnable = true;
 
+    this.doCommandAll = options.doCommandAll;
+    if (this.doCommandAll === undefined)
+        this.doCommandAll = false;
+
     this.hasVariableManager = options.hasvariablemanager;
     if (!(this.variableEnable || this.messageEnable ||
           this.listEnable || this.functionEnable))
@@ -452,4 +456,5 @@ Entry.reloadOption = function(options) {
     this.playground.applyTabOption();
     this.variableContainer.applyOption();
     this.engine.applyOption();
+    this.commander.applyOption();
 };

@@ -31,6 +31,8 @@ Entry.Commander = function(injectType) {
 
     this.doEvent = new Entry.Event(this);
     this.logEvent = new Entry.Event(this);
+
+    this.doCommandAll = Entry.doCommandAll;
 };
 
 (function(p) {
@@ -48,7 +50,10 @@ Entry.Commander = function(injectType) {
         var command = Entry.Command[commandType];
         //console.log('commandType', commandType);
         var state;
-        if (Entry.stateManager && command.skipUndoStack !== true) {
+        var isSkip = command.skipUndoStack === true ||
+            (!this.doCommandAll && commandType > 500);
+
+        if (Entry.stateManager && !isSkip) {
             state = Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
                 [commandType, this, this.do, command.undo]
@@ -155,6 +160,10 @@ Entry.Commander = function(injectType) {
         else data = argumentsArray;
         data.unshift(commandType);
         this.logEvent.notify(data);
+    };
+
+    p.applyOption = function() {
+        this.doCommandAll = Entry.doCommandAll;
     };
 })(Entry.Commander.prototype);
 
