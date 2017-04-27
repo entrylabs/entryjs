@@ -11683,6 +11683,8 @@ Entry.block = {
             switch(script.getField("TARGET", script)) {
                 case 'all':
                     Entry.container.mapObject(function(obj) {
+                        if(!obj.objectType)
+                            return;
                         obj.script.clearExecutors();
                     }, null);
                     return this.die();
