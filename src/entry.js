@@ -49,6 +49,30 @@ Entry.loadProject = function(project) {
     if (Object.keys(Entry.container.inputValue).length === 0)
         Entry.variableContainer.generateAnswer();
     Entry.start();
+    if (this.options.programmingMode) {
+
+        var mode = this.options.programmingMode;
+        if (Entry.Utils.isNumber(mode)) {
+            var pMode = mode;
+            mode = {};
+
+            this.mode = mode;
+            if (pMode == 0) {
+                mode.boardType = Entry.Workspace.MODE_BOARD;
+                mode.textType = -1;
+            } else if (pMode == 1) { // Python in Text Coding
+                mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+                mode.textType = Entry.Vim.TEXT_TYPE_PY;
+                mode.runType = Entry.Vim.WORKSPACE_MODE;
+            } else if (pMode == 2) { // Javascript in Text Coding
+                mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+                mode.textType = Entry.Vim.TEXT_TYPE_JS;
+                mode.runType = Entry.Vim.MAZE_MODE;
+            }
+            Entry.getMainWS().setMode(mode);
+        }
+    }
+
     Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
     if (window.parent && window.parent.childIframeLoaded)
         window.parent.childIframeLoaded();
@@ -307,7 +331,7 @@ Entry.resizeElement = function(interfaceModel) {
 
         this.interfaceState = interfaceModel;
     }
-    
+
     Entry.windowResized.notify();
 };
 

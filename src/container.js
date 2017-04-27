@@ -185,13 +185,19 @@ Entry.Container.prototype.updateListView = function() {
 
     var objs = this.getCurrentObjects().slice();
 
-    objs.sort(function(a, b) {
+    var ret = objs.filter(function(o) {
+        return o.index !== undefined;
+    });
+
+    if (ret.length === objs.length)
+        objs = objs.sort(function(a, b) {
             return a.index - b.index;
-        })
-        .forEach(function(obj) {
-            !obj.view_ && obj.generateView();
-            fragment.appendChild(obj.view_);
         });
+
+    objs.forEach(function(obj) {
+        !obj.view_ && obj.generateView();
+        fragment.appendChild(obj.view_);
+    });
 
     view.appendChild(fragment);
     Entry.stage.sortZorder();
