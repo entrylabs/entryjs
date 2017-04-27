@@ -368,7 +368,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                             parent.insertTopBlock(nextBlock);
                         } else if (parent.constructor === Entry.FieldStatement) {
                             nextBlock.replace(parent._valueBlock);
-                        } else nextBlock.view._toGlobalCoordinate();
+                        } else nextBlock.view && nextBlock.view._toGlobalCoordinate();
                     }
                 } else nextBlock.view && nextBlock.view.bindPrev(prevBlock, true);
             }
