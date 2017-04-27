@@ -1239,8 +1239,8 @@
             },
             class: 'roborobo_motor',
             func: function(sprite, script) {
-                var motor1 = 7; // 0
-                var motor2 = 8; // 1
+                var motor1 = 0;
+                var motor2 = 1;
                 var wheel = script.getNumberField('WHEEL');
                 var speed = script.getNumberValue('SPEED');
                 var direction = script.getNumberField('DIRECTION');
@@ -1258,25 +1258,21 @@
                         
                         if(direction == 1) {
                             Entry.hw.sendQueue[motor1] = speed;
-                            Entry.hw.sendQueue[motor1 - 7] = 0x00;
                             Entry.hw.sendQueue[motor2] = speed;
-                            Entry.hw.sendQueue[motor2 - 7] = 0x00;
                         } else if(direction == 2) {
-                            Entry.hw.sendQueue[motor1 - 7] = speed;
-                            Entry.hw.sendQueue[motor1] = 0x00;
-                            Entry.hw.sendQueue[motor2 - 7] = speed;
-                            Entry.hw.sendQueue[motor2] = 0x00;
+                            Entry.hw.sendQueue[motor1] = -speed;
+                            Entry.hw.sendQueue[motor2] = -speed;
                         }
                     } else if(wheel == 2) {
                         Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                         Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                         
                         if(direction == 1) {
+                            Entry.hw.sendQueue[motor1] = 0x00;
                             Entry.hw.sendQueue[motor2] = speed;
-                            Entry.hw.sendQueue[motor2 - 7] = 0x00;
                         } else if(direction == 2) {
-                            Entry.hw.sendQueue[motor2 - 7] = speed;
-                            Entry.hw.sendQueue[motor2] = 0x00;
+                            Entry.hw.sendQueue[motor1] = 0x00;
+                            Entry.hw.sendQueue[motor2] = -speed;
                         }
                         
                     } else if(wheel == 3) {
@@ -1285,10 +1281,10 @@
                         
                         if(direction == 1) {
                             Entry.hw.sendQueue[motor1] = speed;
-                            Entry.hw.sendQueue[motor1 - 7] = 0x00;
+                            Entry.hw.sendQueue[motor2] = 0x00;
                         } else if(direction == 2) {
-                            Entry.hw.sendQueue[motor1 - 7] = speed;
-                            Entry.hw.sendQueue[motor1] = 0x00;
+                            Entry.hw.sendQueue[motor1] = -speed;
+                            Entry.hw.sendQueue[motor2] = 0x00;
                         }
                     }
 
@@ -1301,19 +1297,9 @@
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
-                } else {                    
-                    if(script.wheelMode == 1) {
-                        Entry.hw.sendQueue[motor1] = 0x00;
-                        Entry.hw.sendQueue[motor1 - 7] = 0x00;
-                        Entry.hw.sendQueue[motor2] = 0x00;
-                        Entry.hw.sendQueue[motor2 - 7] = 0x00;
-                    } else if(script.wheelMode == 2) {
-                        Entry.hw.sendQueue[motor2] = 0x00;
-                        Entry.hw.sendQueue[motor2 - 7] = 0x00;
-                    } else if(script.wheelMode == 3) {
-                        Entry.hw.sendQueue[motor1] = 0x00;
-                        Entry.hw.sendQueue[motor1 - 7] = 0x00;
-                    }
+                } else {
+                    Entry.hw.sendQueue[motor1] = 0x00;
+                    Entry.hw.sendQueue[motor2] = 0x00;
                     
                     delete script.timeFlag;
                     delete script.isStart;
@@ -1370,8 +1356,8 @@
             class: 'roborobo_motor',
             //'isNotFor': ['mini'],
             func: function(sprite, script) {
-                var motor1 = 7;
-                var motor2 = 8;
+                var motor1 = 0;
+                var motor2 = 1;
                 var wheel = script.getNumberField('WHEEL');
                 var speed = script.getNumberValue('SPEED');
                 var direction = script.getNumberField('DIRECTION');
@@ -1388,37 +1374,32 @@
                     
                     if(direction == 1) {
                         Entry.hw.sendQueue[motor1] = speed;
-                        Entry.hw.sendQueue[motor1 - 7] = 0x00;
                         Entry.hw.sendQueue[motor2] = speed;
-                        Entry.hw.sendQueue[motor2 - 7] = 0x00;
                     } else if(direction == 2) {
-                        Entry.hw.sendQueue[motor1 - 7] = speed;
-                        Entry.hw.sendQueue[motor1] = 0x00;
-                        Entry.hw.sendQueue[motor2 - 7] = speed;
-                        Entry.hw.sendQueue[motor2] = 0x00;
+                        Entry.hw.sendQueue[motor1] = -speed;
+                        Entry.hw.sendQueue[motor2] = -speed;
                     }
                 } else if(wheel == 2) {
                     Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     
                     if(direction == 1) {
+                        Entry.hw.sendQueue[motor1] = 0x00;
                         Entry.hw.sendQueue[motor2] = speed;
-                        Entry.hw.sendQueue[motor2 - 7] = 0x00;
                     } else if(direction == 2) {
-                        Entry.hw.sendQueue[motor2 - 7] = speed;
-                        Entry.hw.sendQueue[motor2] = 0x00;
-                    }
-                    
+                        Entry.hw.sendQueue[motor1] = 0x00;
+                        Entry.hw.sendQueue[motor2] = -speed;
+                    }                    
                 } else if(wheel == 3) {
                     Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     
                     if(direction == 1) {
                         Entry.hw.sendQueue[motor1] = speed;
-                        Entry.hw.sendQueue[motor1 - 7] = 0x00;
+                        Entry.hw.sendQueue[motor2] = 0x00;
                     } else if(direction == 2) {
-                        Entry.hw.sendQueue[motor1 - 7] = speed;
-                        Entry.hw.sendQueue[motor1] = 0x00;
+                        Entry.hw.sendQueue[motor1] = -speed;
+                        Entry.hw.sendQueue[motor2] = 0x00;
                     }
                 }
 
@@ -1456,8 +1437,8 @@
             },
             class: 'roborobo_motor',
             func: function(sprite, script) {
-                var motor1 = 7;
-                var motor2 = 8;
+                var motor1 = 0;
+                var motor2 = 1;
                 var wheel = script.getNumberField('WHEEL');
 
                 if(!Entry.hw.sendQueue.digitalPinMode) {
@@ -1471,21 +1452,17 @@
                     Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     
                     Entry.hw.sendQueue[motor1] = 0x00;
-                    Entry.hw.sendQueue[motor1 - 7] = 0x00;
-                    Entry.hw.sendQueue[motor2] = 0x00;                    
-                    Entry.hw.sendQueue[motor2 - 7] = 0x00;
+                    Entry.hw.sendQueue[motor2] = 0x00;
                 } else if(wheel == 2) {
                     Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     
                     Entry.hw.sendQueue[motor2] = 0x00;
-                    Entry.hw.sendQueue[motor2 - 7] = 0x00;
                 } else if(wheel == 3) {
                     Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     
                     Entry.hw.sendQueue[motor1] = 0x00;
-                    Entry.hw.sendQueue[motor1 - 7] = 0x00;
                 }
                 
                 return script.callReturn();
@@ -2037,7 +2014,7 @@
             skeleton: 'basic',
             statements: [],
             isNotFor: [ 'roborobo_schoolkit' ],
-            template: '%1번 포트의 발광다이오드를 %2의 밝기로 정하기 %3',
+            template: '%1번 포트의 발광다이오드를 %2의 밝기로 켜기 %3',
             params: [{
                 type: 'Dropdown',
                 options: [
@@ -2088,38 +2065,6 @@
                 Entry.hw.sendQueue[port] = value;
                 
                 return script.callReturn();
-            }
-        },
-        roborobo_diode_input_value: {
-            color: '#FF8D10',
-            skeleton: 'basic_string_field',
-            fontColor: '#fff',
-            statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
-            template: '%1 포트의 값',
-            params: [{
-                type: 'Dropdown',
-                options: [
-                    ['적외선', '7'],
-                    ['소 리', '8'],
-                    ['접 촉', '9'],
-                    ['CDS', '10']
-                ],
-                value: '8',
-                fontsIze: 11
-            }],
-            events: {},
-            def: {
-                params: [null],
-                type: 'roborobo_diode_input_value'
-            },
-            paramsKeyMap: {
-                PORT: 0
-            },
-            class: 'roborobo_diode',
-            func: function(sprite, script) {
-                var port = script.getNumberField('PORT');
-                return Entry.hw.portData[port - 7];
             }
         }
     };
