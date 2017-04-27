@@ -19847,7 +19847,7 @@ Entry.VariableContainer = function() {
   };
   c.updateList = function() {
     var b = Entry.playground;
-    if (this.listView_ && (!b || "variable" === b.getViewMode())) {
+    if (this.listView_ && (!b || "variable" === b.getViewMode() || "code" === b.getViewMode())) {
       this.variableSettingView.addClass("entryRemove");
       this.listSettingView.addClass("entryRemove");
       var c = this._isPythonMode();
