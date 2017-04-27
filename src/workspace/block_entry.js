@@ -214,16 +214,16 @@ Entry.block = {
                 Entry.MODI.initSend();
             }
 
-            if(!pd.value[2]){ 
+            if(!pd.value[2]){
                 pd.value[2] = 0;
-                
+
                 // send GETPROPERTY
                 /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
                     Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: 2, id: moduleID});
                     Entry.MODI.getModule.id = moduleID;
                 }*/
             }
-            
+
             return pd.value[2];
         }
     },
@@ -253,7 +253,7 @@ Entry.block = {
             }
         ],
         "def": {
-            "params": [ 
+            "params": [
                 null,
                 6
             ],
@@ -278,7 +278,7 @@ Entry.block = {
 
             if(!pd.value[property]){
                 pd.value[property] = 0;
-                
+
                 // send GETPROPERTY
                 /*if(Entry.MODI.getModule.id != moduleID || Entry.MODI.getModule.property != property || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
                     Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
@@ -304,7 +304,7 @@ Entry.block = {
             }
         ],
         "def": {
-            "params": [ 
+            "params": [
                 null
             ],
             "type": "modi_dial_value"
@@ -316,17 +316,17 @@ Entry.block = {
         "isNotFor": [ "modi" ],
         "func": function(sprite, script) {
             var key = script.getStringField("name");
-            
+
             var pd = JSON.parse(Entry.hw.portData.module["dial"][key]);
             var moduleID = pd.id;
-            
+
             if(!Entry.hw.sendQueue["getProperty"]){
                 Entry.MODI.initSend();
             }
-            
+
             if(!pd.value[2]){
                 pd.value[2] = 0;
-                
+
                 // send GETPROPERTY
                 /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
                     Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: 2, id: moduleID});
@@ -365,7 +365,7 @@ Entry.block = {
             }
         ],
         "def": {
-            "params": [ 
+            "params": [
                 null,
                 2
             ],
@@ -383,15 +383,15 @@ Entry.block = {
 
             var pd = JSON.parse(Entry.hw.portData.module["gyro"][key]);
             var moduleID = pd.id;
-            
+
             if(!Entry.hw.sendQueue["getProperty"]){
                 Entry.MODI.initSend();
             }
-            
+
 
             if(!pd.value[property]){
                 pd.value[property] = 0;
-                
+
                 // send GETPROPERTY
                 /*if(Entry.MODI.getModule.id != moduleID || Entry.MODI.getModule.property != property || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
                     Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
@@ -427,7 +427,7 @@ Entry.block = {
             }
         ],
         "def": {
-            "params": [ 
+            "params": [
                 null,
                 2
             ],
@@ -449,7 +449,7 @@ Entry.block = {
             var property = script.getNumberField("property");
             var moduleID = JSON.parse(Entry.hw.portData.module["button"][key]).id;
             var pd = JSON.parse(Entry.hw.portData.module["button"][key]);
-            
+
             if(!Entry.hw.sendQueue["getProperty"]){
                 Entry.MODI.initSend();
             }
@@ -493,7 +493,7 @@ Entry.block = {
             }
         ],
         "def": {
-            "params": [ 
+            "params": [
                 null,
                 2
             ],
@@ -511,15 +511,15 @@ Entry.block = {
 
             var pd = JSON.parse(Entry.hw.portData.module["button"][key]);
             var moduleID = pd.id;
-            
+
             if(!Entry.hw.sendQueue["getProperty"]){
                 Entry.MODI.initSend();
             }
-            
+
 
             if(!pd.value[property]){
                 pd.value[property] = 0;
-                
+
                 // send GETPROPERTY
                 /*if(Entry.MODI.getModule.id != moduleID || Entry.MODI.getModule.property != property || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
                     Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
@@ -527,7 +527,7 @@ Entry.block = {
                     Entry.MODI.getModule.property = property;
                 }*/
             }
-            
+
             var doButton = false;
 
             if(pd.value[property] == 100){
@@ -600,17 +600,17 @@ Entry.block = {
             if(!Entry.hw.sendQueue["getProperty"]){
                 Entry.MODI.initSend();
             }
-            
+
             if(!pd.value[2]){
                 pd.value[2] = 0;
-                
+
                 // send GETPROPERTY
                 /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
                     Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: 2, id: moduleID});
                     Entry.MODI.getModule.id = moduleID;
                 }*/
             }
-            
+
             return pd.value[2];
         }
     },
@@ -645,17 +645,17 @@ Entry.block = {
             if(!Entry.hw.sendQueue["getProperty"]){
                 Entry.MODI.initSend();
             }
-            
+
             if(!pd.value[2]){
                 pd.value[2] = 0;
-                
+
                 // send GETPROPERTY
                 /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
                     Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: 2, id: moduleID});
                     Entry.MODI.getModule.id = moduleID;
                 }*/
             }
-            
+
             return pd.value[2];
         }
     },
@@ -812,7 +812,7 @@ Entry.block = {
 
             if(!pd.value[uValue]){
                 pd.value[uValue] = 0;
-                
+
                 // send GETPROPERTY
                 /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
                     Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
@@ -829,7 +829,7 @@ Entry.block = {
 
             if(upper > 1000 || (upper < 0 && property == MOTOR_ANGLE))
                 upper = 1000;
-            
+
             sq["motor"][key] = JSON.stringify({module: property, id: moduleID, value1: upper, value2: bottom});
 
             return script.callReturn();
@@ -892,7 +892,7 @@ Entry.block = {
             var key = script.getStringField("name"),
                 value = script.getNumberValue("value"),
                 property = script.getStringField("property");
-            
+
             var pd = JSON.parse(Entry.hw.portData.module["motor"][key]);
             var uValue = 0,
                 bValue = 0;
@@ -900,7 +900,7 @@ Entry.block = {
 
             if(!pd.value[uValue]){
                 pd.value[uValue] = 0;
-                
+
                 // send GETPROPERTY
                 /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
                     Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
@@ -910,7 +910,7 @@ Entry.block = {
             if(!pd.value[bValue]){
                 pd.value[bValue] = 0;
             }
-            
+
             switch(property){
                 case "MOTOR_ANGLE":
                     uValue = 4;
@@ -932,7 +932,7 @@ Entry.block = {
 
             if(bottom > 1000 || (bottom < 0 && property == MOTOR_ANGLE))
                 bottom = 1000;
-            
+
             sq["motor"][key] = JSON.stringify({module: property, id: moduleID, value1: upper, value2: bottom});
 
             return script.callReturn();
@@ -948,7 +948,7 @@ Entry.block = {
                 "value": null,
                 "fontSize": 11,
                 menuName: Entry.MODI.ledList
-            }, 
+            },
             {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
@@ -956,7 +956,7 @@ Entry.block = {
             }
         ],
         "def": {
-            "params": [ 
+            "params": [
                 null
             ],
             "type": "modi_clear_led"
@@ -1318,10 +1318,10 @@ Entry.block = {
                 volume = pd.value[2] * 10;
             if(frequence > 1000 || frequence < 0)
                 frequence = 1000;
-            
+
             var sq = Entry.hw.sendQueue.moduleValue;
             sq["speaker"][key] = JSON.stringify({module: "SPEAKER_BUZZER", id: moduleID, value1: frequence, value2: volume});
-            
+
             return script.callReturn();
         }
     },
@@ -1372,14 +1372,14 @@ Entry.block = {
 
             var pd = JSON.parse(Entry.hw.portData.module["speaker"][key]);
             var moduleID = pd.id;
-            
+
             if(!pd.value[2]){
                 pd.value[2] = 0;
             }
             if(!pd.value[3]){
                 pd.value[3] = 0;
             }
-            
+
             var frequence = (pd.value[3]*10),
                 volume = (value*10) + (pd.value[2]*10);
             if(volume > 1000 || volume < 0)
@@ -1387,7 +1387,7 @@ Entry.block = {
 
             var sq = Entry.hw.sendQueue.moduleValue;
             sq["speaker"][key] = JSON.stringify({module: "SPEAKER_BUZZER", id: moduleID, value1: frequence, value2: volume});
-            
+
             return script.callReturn();
         }
     },
@@ -7069,7 +7069,7 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
               var colorval = Entry.hw.getAnalogPortValue("color");
-              
+
               if(colorval == 1)
                   return "빨강";
               else if(colorval == 2)
@@ -7480,7 +7480,7 @@ Entry.block = {
 
             Entry.hw.setDigitalPortValue("Melody", melody);
             Entry.hw.setDigitalPortValue("Melody_DUR", duration);
-            
+
             Entry.hw.update();
             delete Entry.hw.sendQueue["Melody"];
             delete Entry.hw.sendQueue["Melody_DUR"];
@@ -31740,7 +31740,7 @@ Entry.block = {
             var pin = script.getNumberValue("VALUE", script);
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
-            
+
             Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
             Entry.hw.sendQueue[pin] = value;
             return script.callReturn();
@@ -31837,22 +31837,22 @@ Entry.block = {
             var pin = 0;
             var operator = script.getField("OPERATOR");
             var value = script.getNumberValue("VALUE");
-            
+
             if(mode == "motor1") {
-                pin = 7;        
+                pin = 7;
             } else {
                 pin = 8;
             }
-            
+
             if(value > 255) {
                 value = 255;
             } else if(value < 0) {
                 value = 0;
             }
-            
+
             Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
             Entry.hw.sendQueue.digitalPinMode[pin - 7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-            
+
             if (operator == "cw") {
                 Entry.hw.sendQueue[pin] = value;
                 Entry.hw.sendQueue[pin - 7] = 0x00;
@@ -31908,7 +31908,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var pin = script.getNumberValue("PIN", script);
             var value = script.getNumberValue("VALUE");
-            
+
             Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
 
             if(value < 0) {
@@ -34521,7 +34521,7 @@ Entry.block = {
 
             }
             else if(port == 2) //~9,~10번을 선택했을때
-            {   
+            {
 
                 if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
@@ -34541,8 +34541,8 @@ Entry.block = {
                     time: new Date().getTime()
                 };
                 return script.callReturn();
-            }    
-            
+            }
+
 
         },
     },
@@ -34653,7 +34653,7 @@ Entry.block = {
                 }
             }
             else if(port == 2) //~9,~10번을 선택했을때
-            {   
+            {
 
                 if(direction == 1)
                 {
@@ -34698,8 +34698,8 @@ Entry.block = {
                     return script.callReturn();
                 }
 
-            }    
-            
+            }
+
 
         },
     },
@@ -34929,6 +34929,81 @@ Entry.block = {
             this.die();
         }
     },
+"switch_scope": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "%1 ì˜¤ë¸Œì íŠ¸ ê¸°ì¤€ìœ¼ë¡œ ì‹¤í–‰í•˜ê¸° %2",
+        "statements": [],
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "menuName": "sprites",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "switch_scope"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var obj = Entry.container.getObject(this.block.params[0]);
+            this.executor.entity = obj.entity;
+        }
+    },
+    "is_answer_submited": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "ëŒ€ë‹µì„ ìž…ë ¥ ë°›ì„ë•Œ ê¹Œì§€ ê¸°ë‹¤ë¦¬ê¸° %1",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "is_answer_submited"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            if (this.isSubmitted) {
+                Entry.removeEventListener("answerSubmitted", checkFunc);
+                return;
+            }
+            else if (this.isSubmitted === false)
+                return Entry.STATIC.BREAK;
+            var checkFunc = function() {
+                that.isSubmitted = true;
+            }
+            this.isSubmitted = false;
+            var that = this;
+            Entry.addEventListener("answerSubmitted", checkFunc);
+            return Entry.STATIC.BREAK;
+        }
+    },
     "check_block_execution": {
         "color": "#7C7C7C",
         "skeleton": "basic_loop",
@@ -35008,6 +35083,100 @@ Entry.block = {
                     this.isDone = true;
             })
             return Entry.STATIC.BREAK;
+        }
+    },
+"check_variable_by_name": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_string_field",
+        "template": "%1 ì´ë¦„ì˜ ë³€ìˆ˜",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "ë³€ìˆ˜"
+            ],
+            "type": "check_variable_by_name"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var variableName = this.block.params[0] + "";
+            var variable = Entry.variableContainer.getVariableByName(variableName);
+            if (variable)
+                return variable.getValue();
+            else
+                return;
+        }
+    },
+    "show_prompt": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "%1 ì•ˆë‚´í•˜ê¸° %2",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": ""
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                " "
+            ],
+            "type": "show_prompt"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            if (Entry.targetChecker)
+                Entry.targetChecker.showStatusMessage(
+                    this.block.params[0]);
+        }
+    },
+    "check_goal_success": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_boolean_field",
+        "template": "ëª©í‘œ %1 ì´ ì„±ê³µ?",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": ""
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "0"
+            ],
+            "type": "check_goal_success"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var goalName = this.block.params[0] + "";
+            return Entry.targetChecker.checkGoal(goalName);
         }
     },
     "wildcard_string": {
@@ -39543,7 +39712,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -39589,7 +39758,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-         
+
             var dist = script.getField("DIST");
             var move = parseInt(dist);
             var arrMsg = Entry.coconut.turnMotor(move); //왼쪽, 오른쪽으로 가기
@@ -39609,7 +39778,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -39632,7 +39801,7 @@ Entry.block = {
                 type: "Indicator",
                 img: "block_icon/hardware_03.png",
                 size: 12
-            }    
+            }
         ],
         "events": {},
         "def": {
@@ -39644,8 +39813,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
-            var arrMsg = Entry.coconut.stopMotor(); //모터정지 
+
+            var arrMsg = Entry.coconut.stopMotor(); //모터정지
             //var arrMsg = ["0xff","0x55","0x04","0x00","0x02","0x1a","0x01"];
 
             if (!script.isStart) {
@@ -39662,7 +39831,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -39674,7 +39843,7 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
-    }, 
+    },
     "coconut_move_for_secs": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -39719,19 +39888,19 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var dist = script.getField("DIST", script);
             var move = parseInt(dist);
             var time = script.getNumberValue("VALUE");
             var arrMsg = Entry.coconut.moveGoTime(move,time); //앞으로 1초동안 움직이기
             //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x1a","0x03","0x03","0x3c","0xe8","0x03"];
-            
+
             var now = Date();
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
                 pd.msgStatus = "start";
-                Entry.coconut.insertQueue(arrMsg, sq);                
+                Entry.coconut.insertQueue(arrMsg, sq);
                 return script;
             } else if (script.timeFlag == 1) {
                 if (pd.msgStatus == "end")
@@ -39743,7 +39912,7 @@ Entry.block = {
                 } else {
                     console.log(now + " : rev = waiting");
                 }
-                Entry.coconut.clearQueue(sq);                
+                Entry.coconut.clearQueue(sq);
                 return script;
             } else {
                 delete script.isStart;
@@ -39798,13 +39967,13 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var dist = script.getField("DIST", script);
             var move = parseInt(dist);
             var time = script.getNumberValue("VALUE");
             var arrMsg = Entry.coconut.moveGoTime(move,time); //왼쪽으로 1초동안 돌기
             //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x1a","0x03","0x01","0x3c","0xe8","0x03"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -39819,7 +39988,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -39886,7 +40055,7 @@ Entry.block = {
             var move = parseInt(dist1);
             var color = parseInt(dist2);
             var arrMsg = Entry.coconut.moveMotorColor(move,color); //왼쪽으로 회전하는 동안 빨간색 LED켜기
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -39942,7 +40111,7 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ 
+            "params": [
                 null,
                 {
                     "type":"text",
@@ -39960,13 +40129,13 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var dist1 = script.getField("DIST", script);
             var move = parseInt(dist1);
             var speed = script.getNumberValue("VALUE");
             var arrMsg = Entry.coconut.moveExtMotor(move,speed); //외부모터 앞으로 움직이기
             //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x1a","0x07","0x03","0x3c"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40040,7 +40209,7 @@ Entry.block = {
         },
         "class": "coconut_led",
         "isNotFor": [ "coconut" ],
- 
+
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
@@ -40051,7 +40220,7 @@ Entry.block = {
             var color = parseInt(dist2);
             var arrMsg = Entry.coconut.rgbOn(dir,color); //왼쪽 LED 빨간색으로 켜기
             //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x19","0x00","0x01","0x02"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40114,12 +40283,12 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var dist1 = script.getField("DIST", script);
             var dir = parseInt(dist1);
             var arrMsg = Entry.coconut.rgbOff(dir); //왼쪽LED 끄기
             //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x19","0x01","0x01","0x00"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40195,14 +40364,14 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var dist1 = script.getField("DIST", script);
             var dist2 = script.getField("COLOR", script);
             var dir = parseInt(dist1);
             var color = parseInt(dist2);
             var arrMsg = Entry.coconut.rgbOffColor(dir,color); //왼쪽 LED 빨간색 끄기
             //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x19","0x01","0x01","0x02"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40298,7 +40467,7 @@ Entry.block = {
             var color = parseInt(dist2);
             var arrMsg = Entry.coconut.ledOnTime(dist1,color,time); //왼쪽 LED 빨간색으로 1초동안 켜기
             //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x19","0x03","0x01","0x02","0xe8","0x03"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40347,10 +40516,10 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var arrMsg = Entry.coconut.beep(); //버저 켜기
             //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x06","0x01","0xf4","0x01"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40365,7 +40534,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -40411,11 +40580,11 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var time = script.getNumberValue("VALUE");
             var arrMsg = Entry.coconut.playBuzzerTime(time); //버저음을 1초동안 소리내기
             //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x06","0x01","0xe8","0x03"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40430,7 +40599,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -40485,12 +40654,12 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var hz = script.getNumberValue("HZ");
             var time = script.getNumberValue("TIME");
             var arrMsg = Entry.coconut.playBuzzerFreq(hz,time); //버저음 1000hz를 1초동안 소리내기
             //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x2c","0x01","0xe8","0x03"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40505,7 +40674,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -40542,7 +40711,7 @@ Entry.block = {
 
             var arrMsg = Entry.coconut.buzzerOff();//버저 끄기
             //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x00","0x00","0x00","0x00"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40557,7 +40726,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -40655,7 +40824,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var dist1 = script.getField("NOTE", script);
             var dist2 = script.getField("OCTAVE", script);
             var dist3 = script.getField("SEMI", script);
@@ -40666,7 +40835,7 @@ Entry.block = {
             var beat = parseInt(dist4);
             var arrMsg = Entry.coconut.playNote(note, octave, semi, beat); //(도)(3)(-)음을 2분음표 박자로 연주하기
             //var arrMsg = ["0xff","0x55","0x09","0x00","0x02","0x03","0x04","0x43","0x03","0x2d","0xf4","0x01"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40681,7 +40850,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -40733,12 +40902,12 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var dist = script.getField("BEAT", script);
             var beat = parseInt(dist);
             var arrMsg = Entry.coconut.restBeat(dist); //2분 쉼표 동안 쉬기
             //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x01","0x00","0x00","0xf4","0x01"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40753,7 +40922,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -40879,7 +41048,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var dist1 = script.getField("NOTE", script);
             var dist2 = script.getField("OCTAVE", script);
             var dist3 = script.getField("SEMI", script);
@@ -40895,7 +41064,7 @@ Entry.block = {
             var arrMsg = Entry.coconut.playNoteColor(note, octave, semi, beat, dir, color);
             //도 4 - 음을 2분음표 박자로 연주하는 동안 왼쪽 LED 빨간색 켜기
             //var arrMsg = ["0xff","0x55","0x0b","0x00","0x02","0x03","0x05","0x43","0x04","0x2d","0xf4","0x01","0x01","0x02"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40910,7 +41079,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -40966,7 +41135,7 @@ Entry.block = {
             var num = parseInt(value);
             var arrMsg = Entry.coconut.playMelody(num);
             //var arrMsg = ["0xff","0x55","0x05","0x00","0x01","0x07","0x00","0x01"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -40981,7 +41150,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -41111,7 +41280,7 @@ Entry.block = {
                        else
                         return false;
                 }
-            }                        
+            }
         },
         "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
     },
@@ -41141,7 +41310,7 @@ Entry.block = {
 
             var arrMsg = Entry.coconut.followLine();
             //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x07","0x03","0x3c"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -41156,7 +41325,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -41314,7 +41483,7 @@ Entry.block = {
 
         },
         "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
-    },    
+    },
     "coconut_avoid_mode": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -41339,7 +41508,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var arrMsg = Entry.coconut.avoidMode(); //어보이드 모드
             //var arrMsg = ["0xff","0x55","0x04","0x00","0x02","0x05","0x03"];
 
@@ -41357,7 +41526,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -41439,14 +41608,14 @@ Entry.block = {
             "BUTTON" :0,
             "ROW": 1,
             "COL": 2,
-            
+
         },
         "class": "coconut_led",
         "isNotFor": [ "coconut" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var row = script.getField("ROW");
             var col = script.getField("COL");
             var button = script.getField("BUTTON");
@@ -41455,7 +41624,7 @@ Entry.block = {
             var button = parseInt(button);
             var arrMsg = Entry.coconut.ledMatrixOn(button,row, col); //도트매트릭스 켜짐 1줄 1칸
             //var arrMsg = ["0xff","0x55","0x07","0x00","0x02","0x1b","0x00","0x01","0x01","0x01"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -41470,7 +41639,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -41505,10 +41674,10 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var arrMsg = Entry.coconut.ledMatrixOnAll(); //도트매트릭스 모두 켜기
             //var arrMsg = ["0xff","0x55","0x05","0x00","0x01","0x07","0x00","0x01"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -41523,7 +41692,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -41558,10 +41727,10 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var arrMsg = Entry.coconut.ledMatrixClear(); //도트매트릭스 모두 끄기
             //var arrMsg = ["0xff","0x55","0x04","0x00","0x02","0x1b","0x05"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -41576,7 +41745,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -41619,7 +41788,7 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ 
+            "params": [
                 null,
                 {
                     "type":"text",
@@ -41636,12 +41805,12 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var value = script.getField("VALUE");
             var num = parseInt(value);
             var arrMsg = Entry.coconut.showLedMatrix(num); //도트매트릭스 숫자 1표시
             //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x01","0x01"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -41656,7 +41825,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -41726,12 +41895,12 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var value = script.getField("VALUE");
             var num = parseInt(value);
             var arrMsg = Entry.coconut.showLedMatrixSmall(num); //도트매트릭스 소문자 a표시
             //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x02","0x00"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -41746,7 +41915,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -41816,12 +41985,12 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var value = script.getField("VALUE");
             var num = parseInt(value);
             var arrMsg = Entry.coconut.showLedMatrixLarge(num); //도트매트릭스 대문자 A표시
             //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x03","0x00"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -41836,7 +42005,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -41894,12 +42063,12 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var value = script.getField("VALUE");
             var num = parseInt(value);
             var arrMsg = Entry.coconut.showLedMatrixKorean(num); //도트매트릭스 한글 가 표시
             //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x04","0x00"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -41914,7 +42083,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -41944,7 +42113,7 @@ Entry.block = {
         "isNotFor": [ "coconut" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
-            var pd = Entry.hw.portData;    
+            var pd = Entry.hw.portData;
             return pd.light;
         },
         "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
@@ -41967,7 +42136,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            return pd.temp;   
+            return pd.temp;
         },
         "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
     },
@@ -42062,7 +42231,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var pin = script.getNumberField("PIN");
             var time = script.getNumberValue("TIME");
             var arrMsg = Entry.coconut.extLedOn(pin, time); //외부 LED 설정 D4 0.5초동안 켜기
@@ -42082,7 +42251,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -42131,7 +42300,7 @@ Entry.block = {
             {
                 "type": "number",
                 "params": [ "100" ]
-            },        
+            },
             {
                 "type": "number",
                 "params": [ "0.5" ]
@@ -42149,13 +42318,13 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var pin = script.getNumberField("PIN");
             var hz = script.getNumberValue("HZ");
             var time = script.getNumberValue("TIME");
             var arrMsg = Entry.coconut.playSpeaker(pin, hz, time); //외부 스피커 설정 D10 100hz로 0.5초 동안 소리내기
             //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x29","0x10","0x64","0x00","0xf4","0x01"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -42170,7 +42339,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -42218,11 +42387,11 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var pin = script.getNumberField("PIN");
             var arrMsg = Entry.coconut.stopSpeaker(pin); //외부스피커 D10 끄기
             //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x29","0x10","0x00","0x00","0x00","0x00"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -42237,7 +42406,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -42282,7 +42451,7 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
             var pin = script.getNumberField("PIN");
-            
+
             if (pin == "16"){
                 return pd.extA2;
             }else{
@@ -42323,7 +42492,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var pin = script.getNumberField("PIN");
             if(pin=="16"){
                 return pd.extA2;
@@ -42364,8 +42533,8 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ 
-                null, 
+            "params": [
+                null,
                 {
                     "type":"text",
                     "params": ["0"]
@@ -42382,12 +42551,12 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
-            
+
             var pin = script.getNumberField("PIN");
             var angle = script.getNumberValue("ANGLE");
             var arrMsg = Entry.coconut.runExtServo(pin, angle); //서보모터 연결 D4 각도 90
             //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x43","0x04","0x5a"];
-            
+
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -42402,7 +42571,7 @@ Entry.block = {
                 } else if (pd.msgStatus == "continue") {
                     console.log("rev = continue" + pd.msg);
                 } else {
-                    console.log("rev = waiting");                    
+                    console.log("rev = waiting");
                 }
                 Entry.coconut.clearQueue(sq);
                 return script;
@@ -42422,12 +42591,12 @@ Entry.block = {
         statements: [],
         params: [
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             {
                 type: 'Dropdown', options: [
@@ -42456,12 +42625,12 @@ Entry.block = {
         params: [
             { type: "Indicator", img: "block_icon/start_icon_hardware.png", size: 17, position: { x: 0, y: -2 } },
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             {
                 type: 'Dropdown', options: [
@@ -42496,12 +42665,12 @@ Entry.block = {
         statements: [],
         params: [
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             {
                 type: 'Dropdown', options: [
@@ -42529,12 +42698,12 @@ Entry.block = {
         statements: [],
         params: [
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             {
                 type: 'Dropdown', options: [
@@ -42563,12 +42732,12 @@ Entry.block = {
         params: [
             { type: "Indicator", img: "block_icon/start_icon_hardware.png", size: 17, position: { x: 0, y: -2 } },
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             { type: 'Dropdown', options: [[Lang.Hw.button + '1', 0], [Lang.Hw.button + '2', 1], [Lang.Hw.button + '3', 2], [Lang.Hw.button + '4', 3]], value: '0', fontSize: 11 },
             {
@@ -42602,12 +42771,12 @@ Entry.block = {
         statements: [],
         params: [
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             { type: 'Dropdown', options: [[Lang.Blocks.chocopi_joystick_X, 0], [Lang.Blocks.chocopi_joystick_Y, 1], [Lang.Blocks.chocopi_pot, 2]], value: 0, fontSize: 11 }
         ],
@@ -42630,12 +42799,12 @@ Entry.block = {
         statements: [],
         params: [
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             { type: 'Dropdown', options: [[Lang.Hw.button + '1', 0], [Lang.Hw.button + '2', 1], [Lang.Hw.button + '3', 2], [Lang.Hw.button + '4', 3]], value: '0', fontSize: 11 }
         ],
@@ -42659,12 +42828,12 @@ Entry.block = {
         statements: [],
         params: [
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             { type: 'Dropdown', options: [[1, 0], [2, 1]], value: '0', fontSize: 11 },
             { type: 'Dropdown', options: [[Lang.Blocks.chocopi_motion_photogate_time_unblocked, 0], [Lang.Blocks.chocopi_motion_photogate_time_blocked, 1]], value: 1, fontSize: 11 }
@@ -42690,12 +42859,12 @@ Entry.block = {
         statements: [],
         params: [
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             {
                 type: 'Dropdown', options: [
@@ -42730,12 +42899,12 @@ Entry.block = {
         statements: [],
         params: [
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             {
                 type: 'Dropdown', options: [
@@ -42764,12 +42933,12 @@ Entry.block = {
         params: [
             { type: "Indicator", img: "block_icon/start_icon_hardware.png", size: 17, position: { x: 0, y: -2 } },
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             {
                 type: 'Dropdown', options: [
@@ -42808,12 +42977,12 @@ Entry.block = {
         statements: [],
         params: [
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             { type: 'Block', accept: 'string' },
             { type: 'Block', accept: 'string' },
@@ -42847,12 +43016,12 @@ Entry.block = {
         statements: [],
         params: [
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             { type: 'Dropdown', options: [['1', 0], ['2', 1]], value: 0, fontSize: 11 },
             { type: 'Block', accept: 'string' },
@@ -42883,12 +43052,12 @@ Entry.block = {
         statements: [],
         params: [
             {
-                type: 'Dropdown', 
+                type: 'Dropdown',
                 options:  [
                     [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
                     [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
-                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15], 
-                ], value: 0 
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
             },
             { type: 'Dropdown', options: [['1', 0], ['2', 1], ['3', 2], ['4', 3]], value: 0, fontSize: 11 },
             { type: 'Block', accept: 'string' },
