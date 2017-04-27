@@ -35007,7 +35007,7 @@ Entry.block = {
     "check_block_execution": {
         "color": "#7C7C7C",
         "skeleton": "basic_loop",
-        "template": "%1 에서 아래 블록이 %2 실행되었는가 %3",
+        "template": "%1 에서 아래 블록이 %2 %3 번 실행되었는가 %4",
         "statements": [
             {
                 "accept": "basic"
