@@ -277,7 +277,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
             this.cursor = 'pointer';
-            this.offsetY = isNaN(this.offsetY) || (this.offsetY < 0) ? evt.rawY/2 : this.offsetY;
+            this.offsetY = !Entry.Utils.isNumber(this.offsetY) || (this.offsetY < 0) ? evt.rawY/2 : this.offsetY;
         });
         this.scrollButton_.on("pressmove", function(evt) {
             // if(Entry.type != 'workspace') return;
@@ -343,10 +343,10 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = this.textView_.getMeasuredWidth();
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
+            // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
             if (this.isNumber())
-                this.valueView_.text = this.getValue().toFixed(2).replace('.00', '');
-            else
-                this.valueView_.text = this.getValue();
+                this.valueView_.text = Number(this.getValue()).toFixed(2).replace('.00', '');
+            else this.valueView_.text = this.getValue();
 
             if (this._valueWidth === null)
                 this._valueWidth = this.valueView_.getMeasuredWidth();
@@ -378,11 +378,10 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = this.textView_.getMeasuredWidth();
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
-            if (this.isNumber()) {
-                this.valueView_.text = this.getValue().toFixed(2).replace('.00', '');
-            } else {
-                this.valueView_.text = this.getValue();
-            }
+            this.valueView_.text =
+                Number(this.getValue())
+                .toFixed(2)
+                .replace('.00', '');
 
             if (this._valueWidth === null)
                 this._valueWidth = this.valueView_.getMeasuredWidth();
@@ -481,12 +480,12 @@ Entry.Variable.prototype.updateView = function() {
             this.textView_.text = this.getName();
             this.valueView_.y = 1;
             if (this.isNumber()) {
+                var v = Number(this.getValue());
                 if (parseInt(this.getValue(),10) == this.getValue())
-                    this.valueView_.text = this.getValue();
+                    this.valueView_.text = v;
                 else
-                    this.valueView_.text = this.getValue().toFixed(1).replace('.00', '');
-            }
-            else {
+                    this.valueView_.text = v.toFixed(1).replace('.00', '');
+            } else {
                 this.valueView_.text = this.getValue();
             }
             if (this._nameWidth === null)
@@ -568,7 +567,8 @@ Entry.Variable.prototype.getId = function() {
  * @return {number}
  */
 Entry.Variable.prototype.getValue = function() {
-    if (this.isNumber())
+    // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
+    if (this.type === 'slide' && this.isNumber())
         return Number(this.value_);
     else
         return this.value_;
@@ -579,10 +579,7 @@ Entry.Variable.prototype.getValue = function() {
  * @return {boolean}
  */
 Entry.Variable.prototype.isNumber = function() {
-    if (isNaN(this.value_))
-        return false;
-    else
-        return true;
+    return Entry.Utils.isNumber(this.value_);
 };
 
 /**

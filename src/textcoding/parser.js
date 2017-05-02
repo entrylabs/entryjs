@@ -16,7 +16,7 @@ goog.require("Entry.PyToBlockParser");
 goog.require("Entry.TextCodingUtil");
 goog.require("Entry.TextCodingError");
 goog.require("Entry.PyHint");
-goog.require("Entry.Console")
+goog.require("Entry.Console");
 
 
 Entry.Parser = function(mode, type, cm, syntax) {
@@ -24,7 +24,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this.syntax = {}; //for maze
     this.codeMirror = cm;
 
-    this._lang = syntax || "blockPy";
+    this._lang = syntax;
     this._type = type;
     this.availableCode = [];
     this._syntax_cache = {};
@@ -38,122 +38,38 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     this._onError = false;
     this._onRunError = false;
-    /*Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
-    Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
-    Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP = "basic_double_loop";*/
-
-    /*this.syntax.js = this.mappingSyntaxJs(mode);
-    this.syntax.py = this.mappingSyntaxPy(mode);*/
 
     this._console = new Entry.Console();
-
-    switch (this._lang) {
-        case "js":
-            this._execParser = new Entry.JsToBlockParser(this.syntax);
-
-            var syntax = this.syntax;
-            var assistScope = {};
-
-            for(var key in syntax.Scope ) {
-                assistScope[key + '();\n'] = syntax.Scope[key];
-            }
-
-            if('BasicIf' in syntax) {
-                assistScope['front'] = 'BasicIf';
-            }
-            break;
-        case "py":
-            this._execParser = new Entry.PyToBlockParser(this.syntax);
-
-            var syntax = this.syntax;
-            var assistScope = {};
-
-            for(var key in syntax.Scope ) {
-                assistScope[key + '();\n'] = syntax.Scope[key];
-            }
-
-            if('BasicIf' in syntax) {
-                assistScope['front'] = 'BasicIf';
-            }
-            break;
-
-        case "blockJs":
-            this._execParser = new Entry.BlockToJsParser(this.syntax, this);
-            var syntax = this.syntax;
-            break;
-
-        case "blockPy":
-            this._execParser = new Entry.BlockToPyParser(this.syntax);
-            var syntax = this.syntax;
-            break;
-    }
 };
 
 (function(p) {
     p.setParser = function(mode, type, cm) {
         if (this._mode === mode && this._type === type)
             return;
+
         this._mode = mode;
         this._type = type;
         this._cm = cm;
-
-        /*if (mode === Entry.Vim.MAZE_MODE) {
-            this._stageId = Number(Ntry.configManager.getConfig('stageId'));
-            var configCode = NtryData.config[this._stageId].availableCode;
-            var playerCode = NtryData.player[this._stageId].code;
-            this.setAvailableCode(configCode, playerCode);
-        }*/
 
         this.syntax = this.mappingSyntax(mode);
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-                this._execParser = new Entry.JsToBlockParser(this.syntax);
-
+                this._execParser = new Entry.JsToBlockParser(this.syntax, this);
                 this._execParserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
-
                 break;
-
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 this._execParser = new Entry.PyToBlockParser(this.syntax);
-
                 this._execParserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
-
                 break;
-
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 this._execParser = new Entry.BlockToJsParser(this.syntax, this);
-
-                var syntax = this.syntax;
-                var assistScope = {};
-
-                for(var key in syntax.Scope) {
-                    assistScope[key + '();\n'] = syntax.Scope[key];
-                }
-
-                //if('BasicIf' in syntax) {
-                    //assistScope['front'] = 'BasicIf';
-                //}
-
-                cm.on("keydown", function (cm, event) {
-                    var keyCode = event.keyCode;
-                    if ((keyCode >= 65 && keyCode <= 95) ||
-                        keyCode == 167 || (!event.shiftKey && keyCode == 190)) {
-                        CodeMirror.showHint(cm, null, {
-                            completeSingle: false, globalScope:assistScope
-                        });
-                    }
-                });
-
                 this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
                 break;
-
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 this._execParser = new Entry.BlockToPyParser(this.syntax);
-                cm.setOption("mode", {name: "python", globalVars: true});
-                //cm.markText({line: 0, ch: 0}, {line: 3, ch: 0}, {readOnly: true});
+                cm && cm.setOption("mode", {name: "python", globalVars: true});
                 this._execParserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-
                 break;
         }
     };
@@ -165,8 +81,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
-                    //var astTree = acorn.parse(code);
-                    //var threads = code.split('\n\n');
                     var threads = [];
                     threads.push(code);
                     var astArray = [];
@@ -175,7 +89,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         var thread = threads[index];
                         thread = thread.trim();
                         var ast = acorn.parse(thread);
-                        //if(ast.type == "Program" && ast.body.length != 0)
                         astArray.push(ast);
                     }
 
@@ -188,10 +101,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 from: {line: error.loc.line - 1, ch: 0},
                                 to: {line: error.loc.line - 1, ch: error.loc.column}
                             }
-                            /*annotation = {
-                                from: {line: error.loc.line - 1, ch: error.loc.column - 2},
-                                to: {line: error.loc.line - 1, ch: error.loc.column + 1}
-                            }*/
                             error.message = "문법(Syntax) 오류입니다.";
                             error.type = 1;
                         } else {
@@ -208,17 +117,19 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             clearOnEnter: true
                         });
 
+                        var errorTitle;
                         if(error.title)
-                            var errorTitle = error.title;
+                            errorTitle = error.title;
                         else
-                            var errorTitle = '문법 오류';
+                            errorTitle = '문법 오류';
 
+                        var errorMsg;
                         if(error.type == 2 && error.message)
-                            var errorMsg = error.message;
+                            errorMsg = error.message;
                         else if(error.type == 2 && !error.message)
-                            var errorMsg = '자바스크립트 코드를 확인해주세요.';
+                            errorMsg = '자바스크립트 코드를 확인해주세요.';
                         else  if(error.type == 1)
-                            var errorMsg = '자바스크립트 문법을 확인해주세요.';
+                            errorMsg = '자바스크립트 문법을 확인해주세요.';
 
                         Entry.toast.alert(errorTitle, errorMsg);
 
@@ -245,7 +156,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var ast;
                     for(var index = 0; index < threads.length; index++) {
                         var thread = threads[index];
-                        if(thread.length == 0)
+                        if(thread.length === 0)
                             continue;
                         thread = thread.replace(/\t/gm, '    ');
                         ast = pyAstGenerator.generate(thread);
@@ -253,26 +164,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             continue;
                         this._pyThreadCount = threadCount++;
                         this._pyBlockCount[threadCount] = thread.split("\n").length-1;
-                        if(ast.body.length != 0)
+                        if (ast.body.length !== 0)
                             astArray.push(ast);
                     }
                     result = this._execParser.Program(astArray);
                     this._onError = false;
-                    //this._execParser._variableMap.clear();
                     break;
                 } catch(error) {
                     this._onError = true;
                     result = [];
-                    /*var ws = Entry.getMainWS();
-                    if(ws){
-                        this._onError = true;
-                        var sObject = ws.vimBoard._currentObject;
-                        var sScene = ws.vimBoard._currentScene;
-                        Entry.container.selectObject(sObject.id, sScene);
-
-                        var board = ws.board;
-                        if(board) board.code.clear();
-                    }*/
 
                     if (this.codeMirror) {
                         var line;
@@ -281,15 +181,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var annotation = {
                                 from: {line: err.from.line-1, ch: err.from.ch},
                                 to: {line: err.to.line-1, ch: err.to.ch}
-                            }
+                            };
                             error.type = "syntax";
                         } else {
                             var err = this.findConvError(error);
                             var annotation = {
                                 from: {line: err.from.line-1, ch: err.from.ch},
                                 to: {line: err.to.line-1, ch: err.to.ch}
-                            }
-                            error.type = "converting"
+                            };
+                            error.type = "converting";
                         }
 
                         var option = {
@@ -323,28 +223,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 var textCode = this._execParser.Code(code, parseMode);
-                /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
-                if(Array.isArray(textArr)) {
-                    result = textArr.reduce(function (prev, current, index) {
-                        var temp = '';
-                        if(index === 1) {
-                            prev = prev + '\n';
-                        }
-                        if(current.indexOf('function') > -1) {
-                            temp = current + prev;
-                        } else {
-                            temp = prev + current;
-                        }
-                        return temp + '\n';
-                    });
-                } else {
-                    result = '';
-                }*/
-
                 result = textCode;
-
                 break;
-
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 Entry.getMainWS().blockMenu.renderText();
                 result = "";
@@ -454,8 +334,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 if(mode === Entry.Vim.WORKSPACE_MODE) {
                     var key = type;
                     var pySyntax = null;
@@ -486,7 +365,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         tokens = tokens.split('(');
 
                         if(tokens[1] && tokens[1].indexOf('%') > -1) {
-                            if(tokens[0].length != 0)
+                            if(tokens[0].length !== 0)
                                 tokens = tokens[0];
                             else
                                 tokens = tokens.join('(');
@@ -562,7 +441,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     p.findSyntaxError = function(error, threadCount) {
         var err = {};
         err.from = {};
-        err.to = {}
+        err.to = {};
 
         var errorLine = error.loc.line;
         var errorColumn = error.loc.column;
@@ -570,19 +449,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var errorRaisedAt = error.raisedAt;
         var errorMessage = error.message;
 
-
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
         var currentThreadCount = 0;
         var currentLineCount = 0;
 
-        for(var key in this._pyBlockCount) {
+        for (var key in this._pyBlockCount) {
             var count = parseInt(this._pyBlockCount[key]);
             currentLineCount += count;
         }
 
         var targetLine = errorLine + currentLineCount + 3;
-        if(targetLine > contentsArr.length)
+        if (targetLine > contentsArr.length)
             targetLine = contentsArr.length;
         var targetText = contentsArr[targetLine-1];
 
@@ -592,13 +470,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
         err.to.ch = targetText.length;
 
         return err;
-
     };
 
     p.findConvError = function(error) {
         var err = {};
         err.from = {};
-        err.to = {}
+        err.to = {};
 
         var errorLine = error.line-1;
         var contents = this.codeMirror.getValue();
@@ -608,11 +485,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var currentText;
         var targetLine;
 
-        for(var i = 3; i < contentsArr.length; i++) {
+        for (var i = 3; i < contentsArr.length; i++) {
             currentText = contentsArr[i];
 
             var length = currentText.trim().length;
-            if(length == 0)
+            if(length === 0)
                 emptyLineCount++;
 
 
@@ -646,15 +523,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
             textLine = textLine.replace(/\t/gm, '    ');
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {
                 textLine = this.entryEventParamConverter(textLine);
-                if(optText.length != 0) {
+                if(optText.length !== 0) {
                     threads.push(optText);
                 }
 
                 optText = "";
                 optText += textLine;
                 onEntryEvent = true;
-            }
-            else {
+            } else {
                 if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim()))
                     textLine = this.entryEventParamConverter(textLine);
                 if(textLine.length == 1 && !onEntryEvent) { //empty line
@@ -683,8 +559,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
         param = param.replace(/\"/g, "");
 
         if(param) {
-            if(isNaN(param))
-                if(!isNaN(param.charAt(0)))
+            if(!Entry.Utils.isNumber(param))
+                if(Entry.Utils.isNumber(param.charAt(0)))
                     param = 'num' + param;
                 else
                     param = param.replace(/ /g, "_space_");
@@ -701,16 +577,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.makeSyntaxErrorDisplay = function(subject, keyword, message, line) {
-        var contents;
-        if(keyword)
-            var kw = "\'" + keyword + "\' ";
-        else
-            var kw = '';
+        var kw;
+        if(keyword) kw = "\'" + keyword + "\' ";
+        else kw = '';
 
-        contents = '[' + subject + ']' + ' ' + kw + ' : ' +
+        return '[' + subject + ']' + ' ' + kw + ' : ' +
                     message + ' ' + '(line ' + line + ')';
-
-        return contents;
     };
 
     p.initDeclaration = function() {

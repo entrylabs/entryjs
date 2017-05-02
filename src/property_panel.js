@@ -44,6 +44,9 @@ Entry.PropertyPanel = function() {
     };
 
     p.addMode = function(mode, contentObj) {
+        if (this.modes[mode])
+            this.removeMode(mode);
+
         var contentDom = contentObj.getView();
         // will be removed after apply new Dom class
         contentDom = Entry.Dom(contentDom, {
@@ -101,6 +104,8 @@ Entry.PropertyPanel = function() {
     }
 
     p.resize = function(canvasSize) {
+        var selected = this.selected;
+        if (!selected) return;
         var canvasHeight = canvasSize*9/16;
         this._view.css({
             width: canvasSize + 'px',
@@ -113,7 +118,6 @@ Entry.PropertyPanel = function() {
 
         Entry.dispatchEvent('windowResized');
 
-        var selected = this.selected;
         var obj = this.modes[selected].obj;
         if (selected == 'hw') {
             if (this.modes.hw.obj.listPorts)
@@ -125,9 +129,6 @@ Entry.PropertyPanel = function() {
     };
 
     p.select = function(modeName) {
-        if (this.selected === modeName)
-            return;
-
         for (var key in this.modes) {
             var mode = this.modes[key];
             mode.tabDom.removeClass("selected");

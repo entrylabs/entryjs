@@ -115,13 +115,18 @@ Entry.Thread = function(thread, code, parent) {
         return newThread;
     };
 
-    p.toJSON = function(isNew, start, excludeData) {
+    p.toJSON = function(isNew, index, excludeData) {
         var array = [];
-        start = start === undefined ? 0 : start;
-        for (var i = start; i < this._data.length; i++) {
-            var block = this._data[i];
+
+        if (index === undefined) index = 0;
+        else if (index instanceof Entry.Block)
+            index = this.indexOf(index);
+
+        var data = this._data;
+        for (index; index < data.length; index++) {
+            var block = data[index];
             if (block instanceof Entry.Block)
-                array.push(this._data[i].toJSON(isNew, excludeData));
+                array.push(block.toJSON(isNew, excludeData));
         }
         return array;
     };
@@ -243,17 +248,19 @@ Entry.Thread = function(thread, code, parent) {
     p.pointer = function(pointer, block) {
         var index = this.indexOf(block);
         pointer.unshift(index);
-        if (this.parent instanceof Entry.Block)
-            pointer.unshift(this.parent.indexOfStatements(this));
-        if (this._code === this.parent) {
-            this._data.length === 1 && pointer.shift();
+        var parent = this.parent;
+
+        if (parent instanceof Entry.Block)
+            pointer.unshift(parent.indexOfStatements(this));
+
+        if (this._code === parent) {
             pointer.unshift(this._code.indexOf(this));
             var topBlock = this._data[0];
             pointer.unshift(topBlock.y);
             pointer.unshift(topBlock.x);
             return pointer;
         }
-        return this.parent.pointer(pointer);
+        return parent.pointer(pointer);
     };
 
     p.getBlockList = function(excludePrimitive, type) {

@@ -43,14 +43,15 @@ p.initialize = function() {
             ]
         }
     );
+    //this.lc.respondToSizeChange();
 
     bgImage.onload = function() {
         this.lc.repaintLayer("background")
     }.bind(this);
 
     var watchFunc = function(e) {
-        if ((e.shape && !e.opts && e.shape.isPass) ||
-            e.opts && e.opts.isPass) {
+        if (e && ((e.shape && !e.opts && e.shape.isPass) ||
+            e.opts && e.opts.isPass)) {
             Entry.do("processPicture", e, this.lc)
         } else {
             Entry.do("editPicture", e, this.lc)
@@ -59,6 +60,7 @@ p.initialize = function() {
     }.bind(this)
 
     this.lc.on("clear", watchFunc);
+    this.lc.on("remove", watchFunc);
     this.lc.on("shapeEdit", watchFunc);
     this.lc.on("shapeSave", watchFunc);
 
@@ -110,6 +112,9 @@ p.changePicture = function(picture) {
     this.file.mode = 'edit';
 
     this.addPicture(picture, true);
+    // INFO: picture 변경시마다 undoStack 리셋
+    this.lc.undoStack = [];
+    Entry.stateManager.removeAllPictureCommand();
 };
 
 p.addPicture = function(picture, isOriginal) {
@@ -122,21 +127,21 @@ p.addPicture = function(picture, isOriginal) {
         image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
     }
 
-    var dimension = picture.dimension;
+    var dimension = picture.dimension; 
     var shape = LC.createShape('Image',{
         x: 480,
         y: 270,
         width: dimension.width,
         height: dimension.height,
-        image: image
+        image: image,
     });
+
     this.lc.saveShape(shape, !isOriginal);
 
     image.onload = function() {
         this.lc.setTool(this.lc.tools.SelectShape);
         this.lc.tool.setShape(this.lc, shape);
     }.bind(this);
-
 };
 
 p.copy = function() {

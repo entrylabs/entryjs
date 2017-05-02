@@ -140,7 +140,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             blockType = this._originBlock.type;
             delete this._originBlock;
         } else {
-            switch (this.acceptType) {
+            switch (this.acceptType.toLowerCase()) {
                 case "boolean":
                     blockType = "True";
                     break;
@@ -305,6 +305,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.getThread = function() {return this;};
 
     p.pointer = function(pointer) {
+        pointer = pointer || [];
         pointer.unshift(this._index);
         pointer.unshift(Entry.PARAM);
         return this._block.pointer(pointer);

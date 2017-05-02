@@ -252,7 +252,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 return option[0];
         }
         //no match found
-        if (value === "?") return value;
+        //check should return value as it is
+        if (this._shouldReturnValue(value)) return value;
         return Lang.Blocks.no_target;
     };
 

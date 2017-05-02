@@ -160,6 +160,8 @@ Entry.Stage.prototype.render = function() {
  * redraw canvas
  */
 Entry.Stage.prototype.update = function() {
+    if (Entry.type === "invisible")
+        return;
     if (!Entry.requestUpdate) {
         Entry.requestUpdate = false;
         return;
@@ -187,7 +189,7 @@ Entry.Stage.prototype.loadObject = function(object) {
     var scenes = Entry.scene.scenes_;
     var objContainer = this.getObjectContainerByScene(object.scene);
     objContainer.addChild(entity);
-    this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -337,6 +339,8 @@ Entry.Stage.prototype.initHandle = function() {
  * object -> handle
  */
 Entry.Stage.prototype.updateObject = function() {
+    if (Entry.type === "invisible")
+        return;
     Entry.requestUpdate = true;
     this.handle.setDraggable(true);
     if (this.editEntity)
@@ -616,7 +620,8 @@ Entry.Stage.prototype.initObjectContainers = function() {
         this.objectContainers.push(obj);
         this.selectedObjectContainer = obj;
     }
-    this.canvas.addChild(this.selectedObjectContainer);
+    if (Entry.type !== "invisible")
+        this.canvas.addChild(this.selectedObjectContainer);
     this.selectObjectContainer(Entry.scene.selectedScene);
 };
 
@@ -669,7 +674,7 @@ Entry.Stage.prototype.createObjectContainer = function(scene) {
 Entry.Stage.prototype.removeObjectContainer = function(scene) {
     var containers = this.objectContainers;
     var objContainer = this.getObjectContainerByScene(scene);
-    this.canvas.removeChild(objContainer);
+    this.canvas && this.canvas.removeChild(objContainer);
     containers.splice(this.objectContainers.indexOf(objContainer),1);
 };
 

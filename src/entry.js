@@ -36,11 +36,11 @@ Entry.loadProject = function(project) {
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     createjs.Ticker.setFPS(Entry.FPS);
+
     if (this.type == 'workspace') {
         setTimeout(function() {
             Entry.stateManager.endIgnore();
         }, 500);
-
     }
 
     if (!Entry.engine.projectTimer)
@@ -49,9 +49,43 @@ Entry.loadProject = function(project) {
     if (Object.keys(Entry.container.inputValue).length === 0)
         Entry.variableContainer.generateAnswer();
     Entry.start();
+    if (this.options.programmingMode) {
+
+        var mode = this.options.programmingMode;
+        if (Entry.Utils.isNumber(mode)) {
+            var pMode = mode;
+            mode = {};
+
+            this.mode = mode;
+            if (pMode == 0) {
+                mode.boardType = Entry.Workspace.MODE_BOARD;
+                mode.textType = -1;
+            } else if (pMode == 1) { // Python in Text Coding
+                mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+                mode.textType = Entry.Vim.TEXT_TYPE_PY;
+                mode.runType = Entry.Vim.WORKSPACE_MODE;
+            } else if (pMode == 2) { // Javascript in Text Coding
+                mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+                mode.textType = Entry.Vim.TEXT_TYPE_JS;
+                mode.runType = Entry.Vim.MAZE_MODE;
+            }
+            Entry.getMainWS().setMode(mode);
+        }
+    }
+
     Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
+    if (window.parent && window.parent.childIframeLoaded)
+        window.parent.childIframeLoaded();
     return project;
 };
+
+Entry.clearProject = function() {
+    Entry.stop();
+    Entry.projectId = null;
+    Entry.variableContainer.clear();
+    Entry.container.clear();
+    Entry.scene.clear();
+}
 
 /**
  * Export project
@@ -196,6 +230,13 @@ Entry.loadInterfaceState = function() {
  * @param {!json} interfaceModel
  */
 Entry.resizeElement = function(interfaceModel) {
+    var mainWorkspace = Entry.getMainWS();
+    if (!mainWorkspace)
+        return;
+
+    if (!interfaceModel)
+        interfaceModel = this.interfaceState;
+
     if (Entry.type == 'workspace') {
         var interfaceState = this.interfaceState;
         if (!interfaceModel.canvasWidth && interfaceState.canvasWidth)
@@ -278,15 +319,19 @@ Entry.resizeElement = function(interfaceModel) {
             menuWidth = 400;
         interfaceModel.menuWidth = menuWidth;
 
-        $('.blockMenuContainer').css({width: (menuWidth - 64) + 'px'});
-        $('.blockMenuContainer>svg').css({width: (menuWidth - 64) + 'px'});
-        Entry.playground.mainWorkspace.blockMenu.setWidth();
+        var blockMenu = mainWorkspace.blockMenu;
+        var adjust = blockMenu.hasCategory() ? -64 : 0;
+
+        $('.blockMenuContainer').css({width: (menuWidth + adjust) + 'px'});
+        $('.blockMenuContainer>svg').css({width: (menuWidth + adjust) + 'px'});
+        blockMenu.setWidth();
         $('.entryWorkspaceBoard').css({left: (menuWidth) + 'px'});
         Entry.playground.resizeHandle_.style.left = (menuWidth) + 'px';
         Entry.playground.variableViewWrapper_.style.width = menuWidth + 'px';
 
         this.interfaceState = interfaceModel;
     }
+
     Entry.windowResized.notify();
 };
 
@@ -362,5 +407,16 @@ Entry.getMainWS = function() {
         ret = Entry.playground.mainWorkspace
     return ret;
 };
+
+Entry.getDom = function(query) {
+    if (!query) return this.view_;
+
+    query = JSON.parse(JSON.stringify(query));
+    if (query.length > 1) {
+        var key = query.shift();
+        return this[key].getDom(query);
+    } else {
+    }
+}
 
 window.Entry = Entry;

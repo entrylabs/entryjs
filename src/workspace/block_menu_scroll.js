@@ -87,6 +87,10 @@ Entry.BlockMenuScroller.RADIUS = 7;
         this.updateScrollBar(dy);
     };
 
+    p.scrollByPx = function(px) {
+        this.scroll(px/this.vRatio);
+    };
+
     //adjust value by dy for min/max value
     p._adjustValue = function(dy) {
         var domHeight = this.board.svgDom.height();
