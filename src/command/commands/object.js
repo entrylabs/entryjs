@@ -48,7 +48,6 @@ goog.require("Entry.STATIC");
             var hashId = c[COMMAND_TYPES.objectAddPicture].hashId;
             if (hashId) {
                 picture.id = hashId;
-                console.log(picture.id);
                 delete c[COMMAND_TYPES.objectAddPicture].hashId;
             }
             Entry.container

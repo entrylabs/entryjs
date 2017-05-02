@@ -16520,7 +16520,7 @@ Entry.Commander = function(c) {
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["container", "objectIndex", "&1", "editButton"], undo:"selectObject"};
   c[b.objectAddPicture] = {do:function(f, d) {
     var e = c[b.objectAddPicture].hashId;
-    e && (d.id = e, console.log(d.id), delete c[b.objectAddPicture].hashId);
+    e && (d.id = e, delete c[b.objectAddPicture].hashId);
     Entry.container.getObject(f).addPicture(d);
     Entry.playground.injectPicture();
     Entry.playground.selectPicture(d);
