@@ -933,8 +933,9 @@ Entry.Playground = function() {
      */
     p.addPicture = function(picture, isNew) {
         var tempPicture = Entry.cloneSimpleObject(picture);
-        if (isNew !== true)
+        if (isNew === true) {
             delete tempPicture.id;
+        }
         delete tempPicture.view;
 
         picture = JSON.parse(JSON.stringify(tempPicture));
@@ -1138,7 +1139,7 @@ Entry.Playground = function() {
     p.addSound = function(sound, NotForView, isNew) {
         var tempSound = Entry.cloneSimpleObject(sound);
         delete tempSound.view;
-        if (isNew !== true)
+        if (isNew === true)
             delete tempSound.id;
 
         sound = JSON.parse(JSON.stringify(tempSound));

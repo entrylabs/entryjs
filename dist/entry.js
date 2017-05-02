@@ -16520,7 +16520,7 @@ Entry.Commander = function(c) {
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["container", "objectIndex", "&1", "editButton"], undo:"selectObject"};
   c[b.objectAddPicture] = {do:function(f, d) {
     var e = c[b.objectAddPicture].hashId;
-    e && (d.id = e, delete c[b.objectAddPicture].hashId);
+    e && (d.id = e, console.log(d.id), delete c[b.objectAddPicture].hashId);
     Entry.container.getObject(f).addPicture(d);
     Entry.playground.injectPicture();
     Entry.playground.selectPicture(d);
@@ -27953,7 +27953,7 @@ Entry.Playground = function() {
   };
   c.addPicture = function(b, c) {
     var d = Entry.cloneSimpleObject(b);
-    !0 !== c && delete d.id;
+    !0 === c && delete d.id;
     delete d.view;
     b = JSON.parse(JSON.stringify(d));
     b.id || (b.id = Entry.generateHash());
@@ -28051,7 +28051,7 @@ Entry.Playground = function() {
   c.addSound = function(b, c, d) {
     b = Entry.cloneSimpleObject(b);
     delete b.view;
-    !0 !== d && delete b.id;
+    !0 === d && delete b.id;
     b = JSON.parse(JSON.stringify(b));
     b.id || (b.id = Entry.generateHash());
     b.name = Entry.getOrderedName(b.name, this.object.sounds);
