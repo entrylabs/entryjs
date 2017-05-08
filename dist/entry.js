@@ -4127,6 +4127,7 @@ Entry.block.neobot_play_note_for = function(c, b) {
 Entry.Roborobo_Roduino = {name:"roborobo_roduino", INSTRUCTION:{DIGITAL_READ:1, DIGITAL_SET_MODE:2, DIGITAL_WRITE:3, ANALOG_WRITE:4, ANALOG_READ:5, MOTOR:6, COLOR:7}, setZero:function() {
   Entry.hw.sendQueue.colorPin = 0;
   Entry.hw.sendQueue.analogEnable = [0, 0, 0, 0, 0, 0];
+
   for (var c = 0;14 > c;c++) {
     Entry.hw.sendQueue[c] = 0;
   }
@@ -4138,6 +4139,7 @@ Entry.Roborobo_SchoolKit = {name:"roborobo_schoolkit", pinMode:{INPUT:0, OUTPUT:
   Entry.hw.update();
   Entry.hw.sendQueue.digitalPinMode = [];
   Entry.hw.sendQueue.servo = [!1, !1, !1, !1, !1];
+
   for (var c = 0;14 > c;c++) {
     Entry.hw.sendQueue[c] = 0, Entry.hw.sendQueue.digitalPinMode[c] = 0;
   }
@@ -4191,6 +4193,7 @@ Blockly.Blocks.roduino_get_analog_value = {init:function() {
   this.setInputsInline(!0);
   this.setOutput(!0, "Number");
 }};
+
 Entry.block.roduino_get_analog_value = function(c, b) {
   var f = parseInt(b.getValue("VALUE", b));
   Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.ANALOG_READ;
@@ -4206,6 +4209,7 @@ Blockly.Blocks.roduino_get_digital_value = {init:function() {
   this.setInputsInline(!0);
   this.setOutput(!0, "Number");
 }};
+
 Entry.block.roduino_get_digital_value = function(c, b) {
   var f = b.getNumberValue("VALUE");
   Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ;
@@ -4245,6 +4249,7 @@ Blockly.Blocks.roduino_set_digital = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
+
 Entry.block.roduino_set_digital = function(c, b) {
   var f = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 1 : 0;
   Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE;
@@ -4261,6 +4266,7 @@ Blockly.Blocks.roduino_motor = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
+
 Entry.block.roduino_motor = function(c, b) {
   var f = pin2 = 0, d = value2 = 0, f = b.getField("MODE"), d = b.getField("OPERATOR");
   "motor1" == f ? (f = 9, pin2 = 10) : (f = 11, pin2 = 12);
@@ -4282,6 +4288,7 @@ Blockly.Blocks.roduino_set_color_pin = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
+
 Entry.block.roduino_set_color_pin = function(c, b) {
   var f = b.getNumberValue("RED", b), d = b.getNumberValue("GREEN", b), e = b.getNumberValue("BLUE", b);
   Entry.Roborobo_Roduino.ColorPin = [f, d, e];
@@ -4328,6 +4335,7 @@ Blockly.Blocks.schoolkit_set_output = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
+
 Entry.block.schoolkit_set_output = function(c, b) {
   var f = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 1 : 0;
   Entry.hw.sendQueue.digitalPinMode[f] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
@@ -4352,6 +4360,7 @@ Blockly.Blocks.schoolkit_get_input_value = {init:function() {
   this.setInputsInline(!0);
   this.setOutput(!0, "Boolean");
 }};
+
 Entry.block.schoolkit_get_input_value = function(c, b) {
   var f = b.getNumberValue("VALUE");
   Entry.hw.sendQueue.digitalPinMode[f] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
@@ -4367,6 +4376,7 @@ Blockly.Blocks.schoolkit_motor = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
+
 Entry.block.schoolkit_motor = function(c, b) {
   var f = b.getField("MODE"), d = 0, e = b.getField("OPERATOR"), g = b.getNumberValue("VALUE"), d = "motor1" == f ? 7 : 8;
   255 < g ? g = 255 : 0 > g && (g = 0);
@@ -4388,6 +4398,7 @@ Blockly.Blocks.schoolkit_set_servo_value = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
+
 Entry.block.schoolkit_set_servo_value = function(c, b) {
   var f = b.getNumberValue("PIN"), d = b.getNumberValue("VALUE");
   Entry.hw.sendQueue.digitalPinMode[f] = Entry.Roborobo_SchoolKit.pinMode.PWM;
