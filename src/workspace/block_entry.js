@@ -31449,7 +31449,7 @@ Entry.block = {
             var pin = script.getNumberValue("VALUE", script);
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
-            
+
             Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE;
             Entry.hw.sendQueue[1] = pin;
             Entry.hw.setDigitalPortValue(pin, value);
@@ -31527,9 +31527,8 @@ Entry.block = {
                 value1 = 0;
                 value2 = 0;
             }
-            
             Entry.hw.setDigitalPortValue(pin1, value1);
-            Entry.hw.setDigitalPortValue(pin2, value2);            
+            Entry.hw.setDigitalPortValue(pin2, value2);
             return script.callReturn();
         }
     },
@@ -31849,7 +31848,7 @@ Entry.block = {
             var value = script.getNumberValue("VALUE");
             
             if(mode == "motor1") {
-                pin = 0;
+                pin = 0;        
             } else {
                 pin = 1;
             }
