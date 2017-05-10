@@ -1552,7 +1552,7 @@ Entry.Playground = function() {
                 {
                     text: Lang.Workspace.context_duplicate,
                     callback: function(){
-                        Entry.playground.addSound(sound, true);
+                        Entry.playground.addSound(sound, true, true);
                     }
                 },
                 {

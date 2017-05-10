@@ -28268,7 +28268,7 @@ Entry.Playground = function() {
       Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
         k.focus();
       }}, {text:Lang.Workspace.context_duplicate, callback:function() {
-        Entry.playground.addSound(b, !0);
+        Entry.playground.addSound(b, !0, !0);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
         Entry.do("objectRemoveSound", Entry.playground.object.id, b) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.sound_remove_ok, b.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
         Entry.removeElement(c);
