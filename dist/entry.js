@@ -17397,6 +17397,7 @@ Entry.setCloneBrush = function(c, b) {
   f.beginStroke("rgba(" + f.rgb.r + "," + f.rgb.g + "," + f.rgb.b + "," + f.opacity / 100 + ")");
   var d = new createjs.Shape(f);
   Entry.stage.selectedObjectContainer.addChild(d);
+  f.stop = b.stop;
   c.brush && (c.brush = null);
   c.brush = f;
   c.shape && (c.shape = null);
