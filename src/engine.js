@@ -99,7 +99,7 @@ Entry.Engine = function() {
                                          'entryMaximizeButtonWorkspace_w');
             this.view_.appendChild(this.maximizeButton);
             this.maximizeButton.bindOnClick(function(e) {
-                Entry.engine.toggleFullscreen();
+                Entry.engine.toggleFullScreen();
                 this.blur();
             });
 
@@ -128,6 +128,8 @@ Entry.Engine = function() {
                 Entry.dispatchEvent('openSpriteManager');
                 this.blur();
             });
+            if (!Entry.objectAddable)
+                this.addButton.addClass('entryRemove');
             this.view_.appendChild(this.addButton);
 
             this.runButton = Entry.createElement('button');
@@ -194,7 +196,7 @@ Entry.Engine = function() {
             this.maximizeButton.addClass('entryMaximizeButtonMinimize');
             this.view_.appendChild(this.maximizeButton);
             this.maximizeButton.bindOnClick(function(e) {
-                Entry.engine.toggleFullscreen();
+                Entry.engine.toggleFullScreen();
             });
 
             this.coordinateButton = Entry.createElement('button');
@@ -473,7 +475,7 @@ Entry.Engine = function() {
     /**
      * toggle this engine state run
      */
-    p.toggleRun = function() {
+    p.toggleRun = function(disableAchieve) {
         var variableContainer = Entry.variableContainer;
         var container = Entry.container;
 
@@ -510,6 +512,7 @@ Entry.Engine = function() {
             Entry.scene.takeStartSceneSnapshot();
             this.state = 'run';
             this.fireEvent('start');
+            this.achieveEnabled = !(disableAchieve === false);
         }
         this.state = 'run';
         if (Entry.type == 'mobile')
@@ -694,8 +697,10 @@ Entry.Engine = function() {
                 Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
             }
         } else if (Entry.engine.isState('run')) {
-            Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                      ["keyPress", keyCode]);
+            Entry.container.mapEntityIncludeCloneOnScene(
+                Entry.engine.raiseKeyEvent,
+                ["keyPress", keyCode]
+            );
         }
 
         if (Entry.engine.isState('stop')) {
@@ -736,9 +741,9 @@ Entry.Engine = function() {
     /**
      * Toggle full screen of canvas
      */
-    p.toggleFullscreen = function() {
+    p.toggleFullScreen = function(popupClassName) {
         if (!this.popup) {
-            this.popup = new Entry.Popup();
+            this.popup = new Entry.Popup(popupClassName);
             if (Entry.type != 'workspace') {
                 var $doc = $(document);
                 var body = $(this.popup.body_);
@@ -749,6 +754,8 @@ Entry.Engine = function() {
                 popup.window_.appendChild(Entry.engine.runButton[0]);
             }
             popup.window_.appendChild(Entry.engine.view_);
+            if (Entry.type === "workspace" && Entry.targetChecker)
+                popup.window_.appendChild(Entry.targetChecker.getStatusView()[0]);
         } else {
             this.popup.remove();
             this.popup = null;
@@ -885,6 +892,20 @@ Entry.Engine = function() {
         if (Entry.keyPressed && this._keyboardEvent) {
             Entry.keyPressed.detach(this._keyboardEvent);
             delete this._keyboardEvent;
+        }
+    };
+
+    p.applyOption = function() {
+        var SMALL = 'small';
+
+        if (Entry.objectAddable) {
+            this.runButton.addClass(SMALL);
+            this.stopButton.addClass(SMALL);
+            this.addButton.removeClass('entryRemove');
+        } else {
+            this.runButton.removeClass(SMALL);
+            this.stopButton.removeClass(SMALL);
+            this.addButton.addClass('entryRemove');
         }
     };
 })(Entry.Engine.prototype);

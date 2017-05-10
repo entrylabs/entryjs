@@ -58,7 +58,7 @@ Entry.overridePrototype = function() {
 };
 
 // INFO: 기존에 사용하던 isNaN에는 숫자 체크의 문자가 있을수 있기때문에 regex로 체크하는 로직으로 변경
-// isNaN 문제는 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/isNaN 
+// isNaN 문제는 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/isNaN
 // 에서 확인.
 Entry.Utils.isNumber = function(num) {
     if(typeof num === 'number') {
@@ -433,9 +433,13 @@ Entry.createElement = function(type, elementId) {
     };
     element.bindOnClick = function(func) {
         $(this).on('click tab', function(e) {
+            if (element.disabled) return;
             e.stopImmediatePropagation();
             func.call(this, e);
         });
+    };
+    element.unBindOnClick = function(func) {
+        $(this).off('click tab');
     };
     return element;
 };
@@ -448,7 +452,7 @@ Entry.makeAutolink = function(html) {
     } else {
         return '';
     }
-}
+};
 
 /**
  * Generate random hash
@@ -1069,11 +1073,19 @@ Entry.isEmpty = function(obj) {
 Entry.Utils.disableContextmenu = function(node) {
     if (!node) return;
 
-    $(node).on('contextmenu', function(e){
-        e.stopPropagation();
-        e.preventDefault();
-        return false;
-    });
+    $(node).on('contextmenu', this.contextPreventFunction);
+};
+
+Entry.Utils.contextPreventFunction = function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+};
+
+Entry.Utils.enableContextmenu = function(node) {
+    if (!node) return;
+
+    $(node).off('contextmenu', this.contextPreventFunction);
 };
 
 Entry.Utils.isRightButton = function(e) {
@@ -1503,10 +1515,12 @@ Entry.Utils.getWindow = function(hashId) {
     }
 };
 
-Entry.Utils.restrictAction = function(exceptions, callback) {
+Entry.Utils.restrictAction = function(exceptions, callback, noDispose) {
     var that = this;
     exceptions = exceptions || [];
-    exceptions = exceptions.map(function(e) {return e[0]});
+    exceptions = exceptions.map(function(e) {
+        return e[0];
+    });
     var handler = function(e) {
         e = e || window.event;
         var target = e.target || e.srcElement;
@@ -1514,11 +1528,14 @@ Entry.Utils.restrictAction = function(exceptions, callback) {
             for (var i = 0; i < exceptions.length; i++) {
                 var exception = exceptions[i];
                 if (exception === target || $.contains(exception, target)) {
-                    callback();
+                    if (!noDispose) {
+                        callback(e);
+                    } else target.focus && target.focus();
                     return;
                 }
             }
         }
+
         if (!e.preventDefault) {//IE quirks
             e.returnValue = false;
             e.cancelBubble = true;
@@ -1530,30 +1547,64 @@ Entry.Utils.restrictAction = function(exceptions, callback) {
     this._restrictHandler = handler;
 
     var entryDom = Entry.getDom();
+    Entry.Utils.disableContextmenu(entryDom);
     if (entryDom.addEventListener) {
         entryDom.addEventListener('click', handler, true);
         entryDom.addEventListener('mousedown', handler, true);
+        entryDom.addEventListener('mouseup', handler, true);
         entryDom.addEventListener('touchstart', handler, true);
     }
     else {
         entryDom.attachEvent('onclick', handler);
         entryDom.attachEvent('onmousedown', handler);
+        entryDom.attachEvent('onmouseup', handler);
         entryDom.attachEvent('ontouchstart', handler);
     }
 };
 
 Entry.Utils.allowAction = function() {
     var entryDom = Entry.getDom();
+    Entry.Utils.enableContextmenu(entryDom);
     if (this._restrictHandler) {
         if (entryDom.addEventListener) {
             entryDom.removeEventListener("click", this._restrictHandler, true);
             entryDom.removeEventListener("mousedown", this._restrictHandler, true);
+            entryDom.removeEventListener("mouseup", this._restrictHandler, true);
             entryDom.removeEventListener("touchstart", this._restrictHandler, true);
         } else {
             entryDom.detachEvent('onclick', this._restrictHandler);
             entryDom.detachEvent('onmousedown', this._restrictHandler);
+            entryDom.detachEvent('onmouseup', this._restrictHandler);
             entryDom.detachEvent('ontouchstart', this._restrictHandler);
         }
         delete this._restrictHandler;
     }
+};
+
+Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
+    var rect = svgGroup.getBoundingClientRect();
+    var svgDom = Entry.Dom(
+        $('<svg id="globalSvg" width="10" height="10"' +
+          'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+        { parent: $(document.body) }
+    );
+    svgGroup = $(svgGroup.cloneNode(true));
+    svgGroup.attr({transform: "translate(8,0)"});
+    svgDom.append(svgGroup);
+    svgDom.css({
+        top: rect.top, left: rect.left
+    });
+    svgDom.velocity({
+        top: y,
+        left: x - 8
+    }, {
+        duration: 1200,
+        complete: function() {
+            setTimeout(function() {
+                svgDom.remove();
+                callback();
+            }, 500);
+        },
+        easing: "ease-in-out"
+    });
 };

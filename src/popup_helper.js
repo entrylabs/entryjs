@@ -14,7 +14,7 @@ Entry.popupHelper = function(reset) {
     if(reset) {
         window.popupHelper = null;
     }
-    Entry.assert(!window.popupHelper, 'Popup exist');    
+    Entry.assert(!window.popupHelper, 'Popup exist');
 
     var ignoreCloseType = ['confirm', 'spinner'];
     var spanArea = ['entryPopupHelperTopSpan', 'entryPopupHelperBottomSpan', 'entryPopupHelperLeftSpan', 'entryPopupHelperRightSpan'];
@@ -87,7 +87,7 @@ Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
 
     titleButton_.bindOnClick((function () {
         if(popupObject.closeEvent) {
-            popupObject.closeEvent(this);   
+            popupObject.closeEvent(this);
         } else {
             this.hide();
         }
@@ -98,6 +98,7 @@ Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
     var popupWrapper_ = Entry.Dom('div', {
         class: 'entryPopupHelperWrapper'
     });
+
     popupWrapper_.append(titleButton_);
 
     if(popupObject.title) {
@@ -112,7 +113,7 @@ Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
     content_.append(popupWrapper_);
     content_.popupWrapper_ = popupWrapper_;
     content_.prop('type', popupObject.type);
-    
+
     if(typeof popupObject.setPopupLayout === 'function') {
         popupObject.setPopupLayout(content_);
     }
@@ -134,7 +135,7 @@ Entry.popupHelper.prototype.setPopup = function(popupObject) {
  */
 Entry.popupHelper.prototype.remove = function(key) {
     if(this.window_.children().length > 0) {
-        this.window_.children().remove();   
+        this.window_.children().remove();
     }
     // 지워지면 안되는 요소인데 지워지고 있었음. 이유는? 잠시동안만 유지.
     // this.window_.remove();
@@ -151,7 +152,7 @@ Entry.popupHelper.prototype.remove = function(key) {
  * @param {event} e
  */
 Entry.popupHelper.prototype.resize = function(e) {
-    
+
 };
 
 Entry.popupHelper.prototype.show = function(key, isNext) {
@@ -162,11 +163,11 @@ Entry.popupHelper.prototype.show = function(key, isNext) {
         that.body_.removeClass('hiddenPopup');
     }
     if(!isNext) {
-        this.window_.children().detach();   
+        this.window_.children().detach();
         showContent(key);
     } else {
         if(this.window_.children().length > 0) {
-            this.nextPopupList.push(key)  
+            this.nextPopupList.push(key)
         } else {
             this.window_.children().detach();
             showContent(key);
@@ -183,4 +184,8 @@ Entry.popupHelper.prototype.hide = function() {
     if(this.nextPopupList.length > 0) {
         this.show(this.nextPopupList.shift());
     }
+};
+
+Entry.popupHelper.prototype.addClass = function(className) {
+    className && this.body_.addClass(className);
 };

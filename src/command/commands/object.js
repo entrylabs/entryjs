@@ -45,9 +45,17 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.objectAddPicture] = {
         do: function(objectId, picture) {
+            var hashId = c[COMMAND_TYPES.objectAddPicture].hashId;
+            if (hashId) {
+                picture.id = hashId;
+                delete c[COMMAND_TYPES.objectAddPicture].hashId;
+            }
             Entry.container
                 .getObject(objectId)
                 .addPicture(picture);
+            Entry.playground.injectPicture();
+            Entry.playground.selectPicture(picture);
+            Entry.dispatchEvent('dismissModal');
         },
         state: function(objectId, picture) {
             return [objectId, picture];
@@ -68,20 +76,29 @@ goog.require("Entry.STATIC");
         },
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
+            this.hashId = data.content[2][1].id;
+
             var tooltip = new Entry.Tooltip([{
-                content: "여기 밑에 끼워넣으셈",
+                title: data.tooltip.title,
+                content: data.tooltip.content,
                 target: '.btn_confirm_modal',
-                direction: "right"
             }], {
-                callBack: callback,
+                restrict: true,
                 dimmed: true,
-                restrict: true
+                render: false,
+                callBack: callback,
             });
-            Entry.dispatchEvent(
-                'openPictureManager',
-                data.content[2][1]._id,
-                tooltip.render.bind(tooltip)
-            );
+
+            var event = Entry.getMainWS().widgetUpdateEvent;
+
+            if (!data.skip) {
+                Entry.dispatchEvent(
+                    'openPictureManager',
+                    data.content[2][1]._id,
+                    event.notify.bind(event)
+                );
+            }
+
             return tooltip;
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -111,9 +128,15 @@ goog.require("Entry.STATIC");
 
     c[COMMAND_TYPES.objectAddSound] = {
         do: function(objectId, sound) {
+            var hashId = c[COMMAND_TYPES.objectAddSound].hashId;
+            if (hashId) {
+                sound.id = hashId;
+                delete c[COMMAND_TYPES.objectAddSound].hashId;
+            }
             Entry.container
                 .getObject(objectId)
                 .addSound(sound);
+            Entry.dispatchEvent('dismissModal');
         },
         state: function(objectId, sound) {
             return [objectId, sound];
@@ -134,20 +157,28 @@ goog.require("Entry.STATIC");
         },
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
+            this.hashId = data.content[2][1].id;
+
             var tooltip = new Entry.Tooltip([{
-                content: "여기 밑에 끼워넣으셈",
-                target: '.btn_confirm_modal',
-                direction: "right"
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: '.btn_confirm_modal'
             }], {
                 callBack: callback,
                 dimmed: true,
-                restrict: true
+                restrict: true,
+                render: false
             });
-            Entry.dispatchEvent(
-                'openSoundManager',
-                data.content[2][1]._id,
-                tooltip.render.bind(tooltip)
-            );
+
+            var event = Entry.getMainWS().widgetUpdateEvent;
+
+            if (!data.skip) {
+                Entry.dispatchEvent(
+                    'openSoundManager',
+                    data.content[2][1]._id,
+                    event.notify.bind(event)
+                );
+            }
             return tooltip;
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,

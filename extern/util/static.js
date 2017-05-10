@@ -97,7 +97,12 @@ EntryStatic.getAllBlocks = function() {
                 "start_neighbor_scene",
                 "check_object_property",
                 "check_block_execution",
+                "switch_scope",
+                "is_answer_submited",
                 "check_lecture_goal",
+                "check_variable_by_name",
+                "show_prompt",
+                "check_goal_success",
                 "wildcard_string",
                 "wildcard_boolean"
             ]
@@ -2997,6 +3002,7 @@ EntryStatic.getQuestionCategoryData = function() {
     return {
         category: 'dummy',
         blocks: [
+            'hidden_event',
             'hidden',
             'hidden_string',
             'hidden_boolean'

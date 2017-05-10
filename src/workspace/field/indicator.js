@@ -52,7 +52,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
                 x: this._position ? this._size * -1 : 0,
                 y: this._size * -1,
                 width: this._size * 2,
-                height: this._size * 2
+                height: this._size * 2,
+                style: this._block.emphasized ? "opacity: 0.5" : ""
             });
         }
 

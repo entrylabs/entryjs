@@ -2025,6 +2025,9 @@ svg .svgBlockGroup text {
   z-index: 100;
   cursor: pointer;
 }
+.hidePlayBtn .entryRunButtonBigMinimize {
+  display: none;
+}
 @media screen and (max-width: 500px) {
   .entryRunButtonBigMinimize {
     width: 80px;
@@ -2275,7 +2278,7 @@ svg .svgBlockGroup text {
   top: 289px;
   left: 0px;
   width: 236px;
-  height: 38px;
+  height: 37px;
   font-size: 12pt;
   background-color: #fff;
   color: #666666;
@@ -2296,7 +2299,7 @@ svg .svgBlockGroup text {
   top: 289px;
   left: 272px;
   width: 156px;
-  height: 38px;
+  height: 37px;
   font-size: 12pt;
   border-left: 1px solid #ccc;
   border-top: 1px solid #ccc;
@@ -2346,7 +2349,7 @@ svg .svgBlockGroup text {
   top: 289px;
   left: 272px;
   width: 156px;
-  height: 38px;
+  height: 37px;
   font-size: 12pt;
   border-top: 1px solid #ccc;
   border-left: 1px solid #ccc;
@@ -2513,14 +2516,14 @@ svg .svgBlockGroup text {
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 1111;
+  z-index: 10000;
   top: 0;
   left: 0;
 }
 #globalSvg {
   position: fixed;
   overflow: visible;
-  z-index: 1111;
+  z-index: 10000;
   opacity: 0.8;
   will-change: transform;
 }
@@ -5407,6 +5410,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
   -ms-flex: 1;
   flex: 1;
 }
+.entryPopup.buttonsHidden .entryEngineButtonWorkspace_w {
+  display: none;
+}
 .propertyPanel {
   z-index: 10;
   position: absolute;
@@ -6301,7 +6307,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   background-color: white;
   border-bottom: 0.5px solid #5096f5;
   cursor: pointer;
-  padding: 15px;
+  padding: 5px;
 }
 .targetChecker.success {
   background-color: #5cb85c;
@@ -6311,9 +6317,14 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryCurtainElem {
   position: fixed;
-  background-color: black;
-  opacity: 0.5;
-  z-index: 3000;
+  background-color: #3b3b3b;
+  opacity: 0.7;
+  z-index: 5001;
+  -webkit-transition: opacity 0.4s ease-in-out;
+  -moz-transition: opacity 0.4s ease-in-out;
+  -o-transition: opacity 0.4s ease-in-out;
+  -ms-transition: opacity 0.4s ease-in-out;
+  transition: opacity 0.4s ease-in-out;
 }
 .entryCurtainElem.top {
   width: 100%;
@@ -6331,6 +6342,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryCurtainElem.left {
   left: 0;
+}
+.hideTooltip > .entryCurtainElem {
+  opacity: 0;
 }
 #entryConsole {
   height: 100%;
@@ -6350,6 +6364,69 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 #entryConsole .ask span {
   color: #bdd1ff;
+}
+.entryTargetStatus {
+  font-family: NanumGothic;
+  height: 54px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+.entryTargetStatus .innerWrapper {
+  width: auto;
+  position: absolute;
+  background-color: #f4f4f4;
+  border-radius: 3px;
+  height: 54px;
+}
+.entryPopupWindow .entryTargetStatus {
+  height: 91px;
+}
+.iframeWithTargetStatus .innerWrapper {
+  width: 100%;
+}
+.entryPopupWindow .innerWrapper {
+  left: 16px;
+  right: 16px;
+}
+.iframeWithTargetStatus #entryCanvasWrapper {
+  bottom: 89px;
+}
+.iframeWithTargetStatus .entryEngine {
+  bottom: 54px;
+}
+.entryTargetStatus .statusIndicator {
+  display: inline-block;
+  width: 43px;
+  height: 41px;
+  text-align: center;
+  line-height: 41px;
+  font-size: 14px;
+  color: #FFF;
+  background-image: url("../images/status_dialog.png");
+  margin-left: 14px;
+  margin-top: 6px;
+}
+.entryTargetStatus .statusMessage {
+  font-size: 14px;
+  color: #3b3b3b;
+  left: 71px;
+  top: 0;
+  bottom: 0;
+  right: 10px;
+  display: table;
+  position: absolute;
+  width: 100%;
+  height: 54px;
+}
+.statusMessage p {
+  display: table-cell;
+  vertical-align: middle;
+  padding-right: 81px;
+}
+.targetCheckerPopup .entryEngine_w {
+  height: auto !important;
+  bottom: 91px;
 }
 #textCodingExampleView {
   position: absolute;
@@ -6392,9 +6469,18 @@ input.entryObjectNameWorkspace:-moz-read-only {
   animation-name: stretch;
   animation-duration: 0.5s;
   animation-timing-function: ease-out;
+  -webkit-transition: opacity 0.4s ease-in-out;
+  -moz-transition: opacity 0.4s ease-in-out;
+  -o-transition: opacity 0.4s ease-in-out;
+  -ms-transition: opacity 0.4s ease-in-out;
+  transition: opacity 0.4s ease-in-out;
+}
+.hideTooltip > .entryTooltipWrapper {
+  opacity: 0;
 }
 .entryTooltip {
-  position: relative;
+  position: absolute;
+  white-space: nowrap;
   padding: 25px;
   background-color: #ffffff;
   border-radius: 8px;
@@ -6414,6 +6500,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   -ms-transform: translate(-50%, -100%);
   -o-transform: translate(-50%, -100%);
   transform: translate(-50%, -100%);
+  margin-top: -11px;
 }
 .entryTooltip.up:before {
   background: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2225px%22%20height%3D%2211px%22%3E%3Cpath%20fill%3D%22%23FFF%22%20transform%3D%22rotate%280%29%22%20d%3D%22M0,0%20l10,10%20c2.5%201.5%202.5%201.5%205%200%20l10,-10%20Z%22/%3E%3C/svg%3E') no-repeat;
@@ -6426,7 +6513,11 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryTooltip.down {
   margin-top: 11px;
-  left: -50%;
+  -webkit-transform: translate(-50%, 0);
+  -moz-transform: translate(-50%, 0);
+  -ms-transform: translate(-50%, 0);
+  -o-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
 }
 .entryTooltip.down:before {
   background: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2225px%22%20height%3D%2211px%22%3E%3Cpath%20fill%3D%22%23FFF%22%20transform%3D%22rotate%28180%2012.5%205.5%29%22%20d%3D%22M0,0%20l10,10%20c2.5%201.5%202.5%201.5%205%200%20l10,-10%20Z%22/%3E%3C/svg%3E') no-repeat;
@@ -6438,6 +6529,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   margin-left: -12.5px;
 }
 .entryTooltip.left {
+  margin-left: -11px;
   -webkit-transform: translate(-100%, -50%);
   -moz-transform: translate(-100%, -50%);
   -ms-transform: translate(-100%, -50%);
@@ -6450,6 +6542,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   height: 25px;
   width: 11px;
   left: 100%;
+  margin-left: -1px;
   top: 50%;
   margin-top: -12.5px;
 }
@@ -6508,15 +6601,94 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryTooltipIndicator > div:nth-child(3) {
   animation-delay: 0.6s;
 }
-.entryTooltip.edge_up {
-  -webkit-transform: translate(-100%, -20%);
-  -moz-transform: translate(-100%, -20%);
-  -ms-transform: translate(-100%, -20%);
-  -o-transform: translate(-100%, -20%);
-  transform: translate(-100%, -20%);
+.entryTooltip.left.edge_up {
+  -webkit-transform: translate(-100%, -25px);
+  -moz-transform: translate(-100%, -25px);
+  -ms-transform: translate(-100%, -25px);
+  -o-transform: translate(-100%, -25px);
+  transform: translate(-100%, -25px);
 }
-.entryTooltip.edge_up:before {
-  top: 20%;
+.entryTooltip.left.edge_up:before {
+  top: 25px;
+}
+.entryTooltip.left.edge_down {
+  -webkit-transform: translate(-100%, -100%);
+  -moz-transform: translate(-100%, -100%);
+  -ms-transform: translate(-100%, -100%);
+  -o-transform: translate(-100%, -100%);
+  transform: translate(-100%, -100%);
+  margin-top: 25px;
+}
+.entryTooltip.left.edge_down:before {
+  top: 100%;
+  margin-top: -37.5px;
+}
+.entryTooltip.right.edge_up {
+  -webkit-transform: translate(0, -25px);
+  -moz-transform: translate(0, -25px);
+  -ms-transform: translate(0, -25px);
+  -o-transform: translate(0, -25px);
+  transform: translate(0, -25px);
+}
+.entryTooltip.right.edge_up:before {
+  top: 25px;
+}
+.entryTooltip.right.edge_down {
+  -webkit-transform: translate(0, -100%);
+  -moz-transform: translate(0, -100%);
+  -ms-transform: translate(0, -100%);
+  -o-transform: translate(0, -100%);
+  transform: translate(0, -100%);
+  margin-top: 25px;
+}
+.entryTooltip.right.edge_down:before {
+  top: 100%;
+  margin-top: -37.5px;
+}
+.entryTooltip.up.edge_left {
+  -webkit-transform: translate(-25px, -100%);
+  -moz-transform: translate(-25px, -100%);
+  -ms-transform: translate(-25px, -100%);
+  -o-transform: translate(-25px, -100%);
+  transform: translate(-25px, -100%);
+}
+.entryTooltip.up.edge_left:before {
+  left: 25px;
+}
+.entryTooltip.up.edge_right {
+  -webkit-transform: translate(-100%, -100%);
+  -moz-transform: translate(-100%, -100%);
+  -ms-transform: translate(-100%, -100%);
+  -o-transform: translate(-100%, -100%);
+  transform: translate(-100%, -100%);
+  margin-left: 25px;
+}
+.entryTooltip.up.edge_right:before {
+  left: 100%;
+  margin-left: -37.5px;
+}
+.entryTooltip.down.edge_left {
+  -webkit-transform: translate(-25px, 0);
+  -moz-transform: translate(-25px, 0);
+  -ms-transform: translate(-25px, 0);
+  -o-transform: translate(-25px, 0);
+  transform: translate(-25px, 0);
+}
+.entryTooltip.down.edge_left:before {
+  left: 25px;
+}
+.entryTooltip.down.edge_right {
+  left: 0;
+  margin-left: 25px;
+  -webkit-transform: translate(-100%, 0);
+  -moz-transform: translate(-100%, 0);
+  -ms-transform: translate(-100%, 0);
+  -o-transform: translate(-100%, 0);
+  transform: translate(-100%, 0);
+}
+.entryTooltip.down.edge_right:before {
+  left: 100%;
+  margin-left: -37.5px;
 }
 
 

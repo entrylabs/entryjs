@@ -22,8 +22,13 @@ goog.require('Entry.Dom');
             left: Entry.Dom('div', option)
         };
 
-        for (var key in this._doms)
-            this._doms[key].addClass(key);
+        for (var key in this._doms) {
+            var dom = this._doms[key];
+            dom.addClass(key);
+            dom.bind("mousedown", function(e) {
+                e.stopPropagation();
+            });
+        }
     };
 
     this.show = function(datum) {
@@ -46,8 +51,19 @@ goog.require('Entry.Dom');
         var dom = this._targetDom;
         if (!dom) return;
         var $win = $(window);
+        var bodyRect = $('body')[0].getBoundingClientRect();
+        var bodyWidth = bodyRect.width;
+        var bodyHeight = bodyRect.height;
+
         var winWidth = $win.width();
         var winHeight = $win.height();
+
+        if (winWidth < Math.round(bodyWidth))
+            bodyWidth = winWidth;
+
+        if (winHeight < Math.round(bodyHeight))
+            bodyHeight = winHeight;
+
         var doms = this._doms;
 
         if (!dom.get(0))
@@ -55,21 +71,27 @@ goog.require('Entry.Dom');
 
         var rect = dom.get(0).getBoundingClientRect();
 
+        var topPos = Math.round(rect.top);
+        var rightPos = Math.round(rect.right);
+        var bottom = Math.round(rect.bottom);
+
         doms.top.css({
-            height: rect.top
-        });
-        doms.right.css({
-            top: rect.top,
-            left: rect.right
-        });
-        doms.bottom.css({
-            top: rect.bottom,
-            right: winWidth - rect.right
+            height: topPos
         });
         doms.left.css({
-            top: rect.top,
-            right: winWidth - rect.right + rect.width,
-            bottom: winHeight - rect.bottom
+            top: topPos,
+            right: bodyWidth - rightPos + rect.width,
+            bottom: Math.round(bodyHeight - bottom)
+        });
+        var leftLect = doms.left[0].getBoundingClientRect();
+        var bottomTop = doms.top[0].getBoundingClientRect().height + leftLect.height;
+        doms.bottom.css({
+            top: bottomTop || bottom,
+            right: bodyWidth - rightPos
+        });
+        doms.right.css({
+            top: topPos,
+            left: doms.bottom[0].getBoundingClientRect().width || rightPos
         });
     };
 
@@ -84,5 +106,9 @@ goog.require('Entry.Dom');
 
     this.isVisible = function() {
         return this._visible;
+    };
+
+    this.setVisible = function(value) {
+        this._visible = value;
     };
 }.bind(Entry.Curtain))();

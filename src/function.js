@@ -56,6 +56,7 @@ Entry.Func.registerFunction = function(func) {
     if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
     var menuCode = blockMenu.code;
+
     this._targetFuncBlock = menuCode.createThread([{
         type: "func_" + func.id,
         category: 'func',
@@ -88,7 +89,7 @@ Entry.Func.prototype.init = function(model) {
 };
 
 Entry.Func.prototype.destroy = function() {
-    this.blockMenuBlock.destroy();
+    this.blockMenuBlock && this.blockMenuBlock.destroy();
 };
 
 Entry.Func.edit = function(func) {
