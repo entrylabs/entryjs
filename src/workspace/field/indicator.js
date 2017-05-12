@@ -57,7 +57,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 
             if(this._block.emphasized) {
                 this._imgUrl = this._imgUrl.replace('.png', '_un.png');
-                console.log(this._imgUrl);
             }
         }
 
