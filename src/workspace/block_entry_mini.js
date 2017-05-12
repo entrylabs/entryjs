@@ -1247,9 +1247,6 @@
                 var duration = script.getNumberValue('DURATION');
                 
                 if (!script.isStart) {
-                    if(!Entry.hw.sendQueue.digitalPinMode) {
-                        Entry.hw.sendQueue.digitalPinMode = {};
-                    }
                     if(wheel == 1) {
                         Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                         Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
@@ -1362,10 +1359,6 @@
                 var speed = script.getNumberValue('SPEED');
                 var direction = script.getNumberField('DIRECTION');
                 
-                if(!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = {};
-                }
-
                 if(wheel == 1) {
                     Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
@@ -1440,10 +1433,6 @@
                 var motor1 = 0;
                 var motor2 = 1;
                 var wheel = script.getNumberField('WHEEL');
-
-                if(!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = {};
-                }
                 
                 if(wheel == 1) {
                     Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
@@ -1477,7 +1466,7 @@
             template: '접촉 센서 값',
             params: [{
                 type: 'Block',
-				accept: 'string'
+                accept: 'string'
             }],
             events: {},
             def: {
@@ -1488,12 +1477,7 @@
             },
             class: 'roborobo_touch',
             func: function(sprite, script) {
-				var port = Entry.Roborobo_SchoolKit.inputPort.contact;
-
-                if(!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = {};
-                }
-
+                var port = Entry.Roborobo_SchoolKit.inputPort.contact;
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
                 Entry.hw.update();
                 return Entry.hw.portData[port - 7];
@@ -1526,10 +1510,6 @@
                 var port = Entry.Roborobo_SchoolKit.inputPort.contact;
                 var touch = script.getNumberField('TOUCH', script);
                 
-                if(!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = {};
-                }
-
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
                 Entry.hw.update();
                 
@@ -1548,7 +1528,7 @@
             template: 'CDS 센서 값',
             params: [{
                 type: 'Block',
-				accept: 'string'
+                accept: 'string'
             }],
             events: {},
             def: {
@@ -1599,16 +1579,16 @@
             class: 'roborobo_light',
             func: function(sprite, script) {
                 var port = Entry.Roborobo_SchoolKit.inputPort.cds;
-                var operator = script.getField('OPERATOR', script);				
+                var operator = script.getField('OPERATOR', script);             
                 var rightValue = script.getNumberValue('RIGHTVALUE', script);
-				var leftValue = Entry.hw.portData[port - 7];
-				var isCheck = false;
-				
-				if(rightValue < 0) {
-					rightValue = 0;
-				} else if(rightValue > 1023) {
-					rightValue = 1023;
-				}
+                var leftValue = Entry.hw.portData[port - 7];
+                var isCheck = false;
+                
+                if(rightValue < 0) {
+                    rightValue = 0;
+                } else if(rightValue > 1023) {
+                    rightValue = 1023;
+                }
                 
                 switch (operator) {
                     case 'EQUAL':
@@ -1626,7 +1606,7 @@
                     case 'LESS_OR_EQUAL':
                         isCheck = Number(leftValue) <= Number(rightValue);
                         break;
-                }				
+                }               
 
                 return isCheck;
             }
@@ -1640,7 +1620,7 @@
             template: '소리 센서에 감지되는 소리 값',
             params: [{
                 type: 'Block',
-				accept: 'string'
+                accept: 'string'
             }],
             events: {},
             def: {
@@ -1696,12 +1676,12 @@
                 var leftValue = Entry.hw.portData[port - 7];
                 var isCheck = false;
                 
-				if(rightValue < 0) {
-					rightValue = 0;
-				} else if(rightValue > 1023) {
-					rightValue = 1023;
-				}
-				
+                if(rightValue < 0) {
+                    rightValue = 0;
+                } else if(rightValue > 1023) {
+                    rightValue = 1023;
+                }
+                
                 switch (operator) {
                     case 'EQUAL':
                         isCheck = leftValue == rightValue;
@@ -1732,7 +1712,7 @@
             template: '적외선 센서 값',
             params: [{
                 type: 'Block',
-				accept: 'string'
+                accept: 'string'
             }],
             events: {},
             def: {
@@ -1745,11 +1725,6 @@
             //'isNotFor': ['mini'],
             func: function(sprite, script) {                
                 var port = Entry.Roborobo_SchoolKit.inputPort.ir;
-
-                if(!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = {};
-                }
-
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
                 Entry.hw.update();
                 return Entry.hw.portData[port - 7];
@@ -1783,10 +1758,6 @@
                 var port = Entry.Roborobo_SchoolKit.inputPort.ir;
                 var detect = script.getNumberField('DETECT', script);
                 
-                if(!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = {};
-                }
-
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
                 Entry.hw.update();
                 
@@ -1847,11 +1818,6 @@
                 var port = script.getNumberField('PORT');
                 var duration = script.getNumberValue('DURATION');
                 var value = script.getNumberField('VALUE');                
-
-                if(!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = {};
-                }
-
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                 
                 if (!script.isStart) {
@@ -1919,10 +1885,6 @@
                 var port = script.getNumberField('PORT');
                 var value = script.getNumberField('VALUE');
                 
-                if(!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = {};
-                }
-
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                 Entry.hw.sendQueue[port] = value;
 
@@ -1990,8 +1952,8 @@
                 var oMax = script.getNumberValue('MAX');
                 var nMin = 0;
                 var nMax = 255;
-				
-				var x = Entry.hw.portData[inputPort - 7] / 4;                
+                
+                var x = Entry.hw.portData[inputPort - 7] / 4;                
                 var percent = (x - oMin) / (oMax - oMin);
                 result = percent * (nMax - nMin) + nMin;
                 if (result > nMax)
@@ -1999,11 +1961,7 @@
                 if (result < nMin)
                     result = nMin;
                 
-                if(!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = {};
-                }
-
-				Entry.hw.sendQueue.digitalPinMode[outputPort] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+                Entry.hw.sendQueue.digitalPinMode[outputPort] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                 Entry.hw.sendQueue[outputPort] = result;
 
                 return script.callReturn();
@@ -2057,10 +2015,6 @@
                     value = 255;
                 }
                 
-                if(!Entry.hw.sendQueue.digitalPinMode) {
-                    Entry.hw.sendQueue.digitalPinMode = {};
-                }
-
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                 Entry.hw.sendQueue[port] = value;
                 
