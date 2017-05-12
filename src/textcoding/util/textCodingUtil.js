@@ -1663,7 +1663,16 @@ Entry.TextCodingUtil = {};
             blockType == "arduino_ext_get_ultrasonic_value" ||
             blockType == "arduino_ext_get_digital" ||
             blockType == "arduino_ext_tone_list" ||
-            blockType == "arduino_ext_octave_list") {
+            blockType == "arduino_ext_octave_list" ||
+
+            blockType == "ardublock_get_analog_value" ||
+            blockType == "ardublock_get_analog_value_map" ||
+            blockType == "ardublock_get_ultrasonic_value" ||
+            blockType == "ardublock_get_digital" ||
+            blockType == "ardublock_tone_list" ||
+            blockType == "ardublock_octave_list" ||
+            blockType == "ardublock_set_left_motor" ||
+            blockType == "ardublock_set_right_motor" ) {
 
             return true;
         }

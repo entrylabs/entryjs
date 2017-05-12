@@ -864,7 +864,14 @@ Entry.SmartBoard = {name:"smartBoard", setZero:function() {
 " RELAY ", type:"output", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " SM3 \uac01\ub3c4 ", type:"output", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " SM2 \uac01\ub3c4 ", type:"output", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + "SM1 \uac01\ub3c4 ", type:"output", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " \ube68\uac04 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " \ub178\ub780 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 14:{name:Lang.Hw.port_en + " \ucd08\ub85d " + 
 Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 15:{name:Lang.Hw.port_en + " \ud30c\ub780 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " 1\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " 2\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " 3\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " 4\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
-Entry.ardublock = {name:"ardublock", setZero:Entry.Arduino.setZero};
+Entry.ardublock = {name:"ardublock", setZero:function() {
+  Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(c) {
+    Entry.hw.sendQueue.SET[c].data = 0;
+    Entry.hw.sendQueue.SET[c].time = (new Date).getTime();
+  }) : Entry.hw.sendQueue = {GET:{}, SET:{}};
+  Entry.hw.update();
+}, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8, MOTOR_LEFT:9, MOTOR_RIGHT:10}, toneTable:{0:0, C:1, CS:2, D:3, DS:4, E:5, F:6, FS:7, G:8, GS:9, A:10, AS:11, B:12}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 
+7:[46, 92, 185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, directionTable:{Forward:0, Backward:1}, highList:["high", "1", "on"], lowList:["low", "0", "off"], BlockState:{}};
 Entry.dplay = {name:"dplay", vel_value:255, Left_value:255, Right_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(c) {
   clearTimeout(c);
   var b = this.timeouts;
@@ -12902,7 +12909,8 @@ Entry.TextCodingUtil = {};
     return "set_variable" == b ? !0 : !1;
   };
   c.isHWParamBlock = function(b) {
-    return "hamster_hand_found" == b || "hamster_value" == b || "arduino_get_port_number" == b || "arduino_get_number_sensor_value" == b || "arduino_get_digital_value" == b || "arduino_convert_scale" == b || "arduino_ext_get_analog_value" == b || "arduino_ext_get_analog_value_map" == b || "arduino_ext_get_ultrasonic_value" == b || "arduino_ext_get_digital" == b || "arduino_ext_tone_list" == b || "arduino_ext_octave_list" == b ? !0 : !1;
+    return "hamster_hand_found" == b || "hamster_value" == b || "arduino_get_port_number" == b || "arduino_get_number_sensor_value" == b || "arduino_get_digital_value" == b || "arduino_convert_scale" == b || "arduino_ext_get_analog_value" == b || "arduino_ext_get_analog_value_map" == b || "arduino_ext_get_ultrasonic_value" == b || "arduino_ext_get_digital" == b || "arduino_ext_tone_list" == b || "arduino_ext_octave_list" == b || "ardublock_get_analog_value" == b || "ardublock_get_analog_value_map" == 
+    b || "ardublock_get_ultrasonic_value" == b || "ardublock_get_digital" == b || "ardublock_tone_list" == b || "ardublock_octave_list" == b || "ardublock_set_left_motor" == b || "ardublock_set_right_motor" == b ? !0 : !1;
   };
   c.isMaterialBlock = function(b) {
     return "get_canvas_input_value" == b || "get_variable" == b || "value_of_index_from_list" == b || "length_of_list" == b || "is_included_in_list" == b ? !0 : !1;
@@ -15507,7 +15515,17 @@ Entry.PyHint = function(c) {
   this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
   CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
   c = function(b) {
-    Entry.hw.hwModule ? (b = Entry.hw.hwModule.name, b = b[0].toUpperCase() + b.slice(1), "ArduinoExt" === b && (b = "Arduino"), this.addScope(b), this.lastHW = b) : (this.removeScope(this.lastHW), this.lastHW = null);
+    if (Entry.hw.hwModule) {
+      b = Entry.hw.hwModule.name;
+      b = b[0].toUpperCase() + b.slice(1);
+      if ("ArduinoExt" === b || "ardublock" === b) {
+        b = "Arduino";
+      }
+      this.addScope(b);
+      this.lastHW = b;
+    } else {
+      this.removeScope(this.lastHW), this.lastHW = null;
+    }
   }.bind(this);
   Entry.addEventListener("hwChanged", c);
   Entry.hw.hwModule && c();
@@ -27018,7 +27036,17 @@ Entry.Vim = function(c, b) {
   this.createDom(c);
   this._parser = new Entry.Parser(null, null, this.codeMirror);
   Entry.addEventListener("hwChanged", function(b) {
-    Entry.hw.hwModule ? (b = Entry.hw.hwModule.name, b = b[0].toUpperCase() + b.slice(1), "ArduinoExt" == b && (b = "Arduino"), Entry.Vim.PYTHON_IMPORT_HW = "\nimport " + b + "\n", Entry.Vim.INEDITABLE_LINE_PY = 4) : (Entry.Vim.PYTHON_IMPORT_HW = "", Entry.Vim.INEDITABLE_LINE_PY = 3);
+    if (Entry.hw.hwModule) {
+      b = Entry.hw.hwModule.name;
+      b = b[0].toUpperCase() + b.slice(1);
+      if ("ArduinoExt" == b || "ardublock" === b) {
+        b = "Arduino";
+      }
+      Entry.Vim.PYTHON_IMPORT_HW = "\nimport " + b + "\n";
+      Entry.Vim.INEDITABLE_LINE_PY = 4;
+    } else {
+      Entry.Vim.PYTHON_IMPORT_HW = "", Entry.Vim.INEDITABLE_LINE_PY = 3;
+    }
   });
 };
 Entry.Vim.MAZE_MODE = 1;
