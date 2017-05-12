@@ -166,8 +166,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         var fillColor = this._schema.color;
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
-           this.block.emphasized)
-            fillColor = Entry.Utils.colorLighten(fillColor);
+           this.block.emphasized) {
+            fillColor = Entry.Utils.getEmphasizeColor(fillColor);
+        }
+
         this._fillColor = fillColor;
         var pathStyle = {
             d: path,
@@ -1044,10 +1046,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._updateColor = function() {
         var fillColor = this._schema.color;
-        console.log(this.block.emphasized)
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
-           this.block.emphasized)
-            fillColor = Entry.Utils.colorLighten(fillColor);
+           this.block.emphasized) {
+            fillColor = Entry.Utils.getEmphasizeColor(fillColor);
+        }
         this._fillColor = fillColor;
         this._path.attr({fill:fillColor});
         this._updateContents();

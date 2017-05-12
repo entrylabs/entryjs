@@ -45,7 +45,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
         if (this.svgGroup) this.svgGroup.remove();
 
         this.svgGroup = this._blockView.contentSvgGroup.elem("g");
-
         if (this._imgUrl) {
             this._imgElement = this.svgGroup.elem("image", {
                 href: Entry.mediaFilePath + this._imgUrl,
@@ -53,8 +52,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
                 y: this._size * -1,
                 width: this._size * 2,
                 height: this._size * 2,
-                style: this._block.emphasized ? "opacity: 0.5" : ""
+                // style: this._block.emphasized ? "opacity: 0.5" : ""
             });
+
+            if(this._block.emphasized) {
+                this._imgUrl = this._imgUrl.replace('.png', '_un.png');
+                console.log(this._imgUrl);
+            }
         }
 
         var path = "m %s,-%s a %s,%s 0 1,1 -0.1,0 z"
