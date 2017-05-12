@@ -1478,7 +1478,7 @@
             template: '접촉 센서 값',
             params: [{
                 type: 'Block',
-				accept: 'string'
+                accept: 'string'
             }],
             events: {},
             def: {
@@ -1535,7 +1535,7 @@
             template: 'CDS 센서 값',
             params: [{
                 type: 'Block',
-				accept: 'string'
+                accept: 'string'
             }],
             events: {},
             def: {
@@ -1586,16 +1586,16 @@
             class: 'roborobo_light',
             func: function(sprite, script) {
                 var port = Entry.Roborobo_SchoolKit.inputPort.cds;
-                var operator = script.getField('OPERATOR', script);				
+                var operator = script.getField('OPERATOR', script);             
                 var rightValue = script.getNumberValue('RIGHTVALUE', script);
-				var leftValue = Entry.hw.portData[port - 7];
-				var isCheck = false;
-				
-				if(rightValue < 0) {
-					rightValue = 0;
-				} else if(rightValue > 1023) {
-					rightValue = 1023;
-				}
+                var leftValue = Entry.hw.portData[port - 7];
+                var isCheck = false;
+                
+                if(rightValue < 0) {
+                    rightValue = 0;
+                } else if(rightValue > 1023) {
+                    rightValue = 1023;
+                }
                 
                 switch (operator) {
                     case 'EQUAL':
@@ -1613,7 +1613,7 @@
                     case 'LESS_OR_EQUAL':
                         isCheck = Number(leftValue) <= Number(rightValue);
                         break;
-                }				
+                }               
 
                 return isCheck;
             }
@@ -1627,7 +1627,7 @@
             template: '소리 센서에 감지되는 소리 값',
             params: [{
                 type: 'Block',
-				accept: 'string'
+                accept: 'string'
             }],
             events: {},
             def: {
@@ -1683,12 +1683,12 @@
                 var leftValue = Entry.hw.portData[port - 7];
                 var isCheck = false;
                 
-				if(rightValue < 0) {
-					rightValue = 0;
-				} else if(rightValue > 1023) {
-					rightValue = 1023;
-				}
-				
+                if(rightValue < 0) {
+                    rightValue = 0;
+                } else if(rightValue > 1023) {
+                    rightValue = 1023;
+                }
+                
                 switch (operator) {
                     case 'EQUAL':
                         isCheck = leftValue == rightValue;
@@ -1719,7 +1719,7 @@
             template: '적외선 센서 값',
             params: [{
                 type: 'Block',
-				accept: 'string'
+                accept: 'string'
             }],
             events: {},
             def: {
@@ -1963,8 +1963,8 @@
                 var oMax = script.getNumberValue('MAX');
                 var nMin = 0;
                 var nMax = 255;
-				
-				var x = Entry.hw.portData[inputPort - 7] / 4;                
+                
+                var x = Entry.hw.portData[inputPort - 7] / 4;                
                 var percent = (x - oMin) / (oMax - oMin);
                 result = percent * (nMax - nMin) + nMin;
                 if (result > nMax)
