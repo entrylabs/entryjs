@@ -22699,6 +22699,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   {type:"Block", accept:"string"}, {type:"Indicator", img:"block_icon/practical_course/dcmotor.png", size:12}], events:{}, def:{params:[null, null, {type:"roborobo_motor_speed"}, {type:"number", params:["2"]}, null], type:"roborobo_move_for_secs"}, paramsKeyMap:{WHEEL:0, DIRECTION:1, SPEED:2, DURATION:3}, class:"roborobo_motor", func:function(b, a) {
     b = a.getNumberField("WHEEL");
     var c = a.getNumberValue("SPEED"), d = a.getNumberField("DIRECTION"), e = a.getNumberValue("DURATION");
+    Entry.hw.sendQueue.digitalPinMode || (Entry.hw.sendQueue.digitalPinMode = {});
     if (a.isStart) {
       if (1 == a.timeFlag) {
         return a;
@@ -22725,6 +22726,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   img:"block_icon/practical_course/dcmotor.png", size:12}], events:{}, def:{params:[null, null, {type:"roborobo_motor_speed"}, null], type:"roborobo_move_for"}, paramsKeyMap:{WHEEL:0, DIRECTION:1, SPEED:2}, class:"roborobo_motor", func:function(b, a) {
     b = a.getNumberField("WHEEL");
     var c = a.getNumberValue("SPEED"), d = a.getNumberField("DIRECTION");
+    Entry.hw.sendQueue.digitalPinMode || (Entry.hw.sendQueue.digitalPinMode = {});
     1 == b ? (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[0] = c, Entry.hw.sendQueue[1] = c) : 2 == d && (Entry.hw.sendQueue[0] = -c, Entry.hw.sendQueue[1] = -c)) : 2 == b ? (Entry.hw.sendQueue.digitalPinMode[8] = 
     Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[1] = c) : 2 == d && (Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[1] = -c)) : 3 == b && (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[0] = c, Entry.hw.sendQueue[1] = 0) : 2 == d && (Entry.hw.sendQueue[0] = 
     -c, Entry.hw.sendQueue[1] = 0));
@@ -22732,20 +22734,16 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   }}, roborobo_stop_for:{color:"#00B200", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1\ubaa8\ud130\ub97c \uc815\uc9c0 %2", params:[{type:"Dropdown", options:[["\uc591\ucabd", "1"], ["\uc624\ub978\ucabd", "2"], ["\uc67c\ucabd", "3"]], value:"1", fontsIze:11}, {type:"Indicator", img:"block_icon/practical_course/dcmotor.png", size:12}], events:{}, def:{params:[null, null], type:"roborobo_stop_for"}, paramsKeyMap:{WHEEL:0}, class:"roborobo_motor", func:function(b, 
   a) {
     b = a.getNumberField("WHEEL");
+    Entry.hw.sendQueue.digitalPinMode || (Entry.hw.sendQueue.digitalPinMode = {});
     1 == b ? (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[1] = 0) : 2 == b ? (Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = 
     Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue[1] = 0) : 3 == b && (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue[0] = 0);
     return a.callReturn();
   }}, roborobo_touch_value:{color:"#2AB4D3", skeleton:"basic_string_field", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"\uc811\ucd09 \uc13c\uc11c \uac12", params:[{type:"Block", accept:"string"}], events:{}, def:{params:[null], type:"roborobo_touch_value"}, paramsKeyMap:{}, class:"roborobo_touch", func:function(b, a) {
     b = Entry.Roborobo_SchoolKit.inputPort.contact;
-    Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
-    Entry.hw.update();
-    return Entry.hw.portData[b - 7];
+    return void 0 == Entry.hw.portData[b - 7] ? 0 : Entry.hw.portData[b - 7];
   }}, roborobo_touch_value_boolean:{color:"#2AB4D3", skeleton:"basic_boolean_field", fontColor:"#fff", isNotFor:["roborobo_schoolkit"], template:"\uc811\ucd09 \uc13c\uc11c\uac00 %1", params:[{type:"Dropdown", options:[["\uc811\ucd09 \ub418\uba74", "1"], ["\uc811\ucd09 \uc548\ub418\uba74", "0"]], value:"1", fontsIze:11}], def:{params:[null], type:"roborobo_touch_value_boolean"}, paramsKeyMap:{TOUCH:0}, class:"roborobo_touch", func:function(b, a) {
     b = Entry.Roborobo_SchoolKit.inputPort.contact;
-    a = a.getNumberField("TOUCH", a);
-    Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
-    Entry.hw.update();
-    return a == Entry.hw.portData[b - 7] ? !0 : !1;
+    return a.getNumberField("TOUCH", a) == (void 0 == Entry.hw.portData[b - 7] ? 0 : Entry.hw.portData[b - 7]) ? !0 : !1;
   }}, roborobo_light_value:{color:"#498DEB", skeleton:"basic_string_field", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"CDS \uc13c\uc11c \uac12", params:[{type:"Block", accept:"string"}], events:{}, def:{params:[null], type:"roborobo_light_value"}, paramsKeyMap:{}, class:"roborobo_light", func:function(b, a) {
     return Entry.hw.portData[Entry.Roborobo_SchoolKit.inputPort.cds - 7];
   }}, roborobo_light_value_boolean:{color:"#498DEB", skeleton:"basic_boolean_field", fontColor:"#fff", isNotFor:["roborobo_schoolkit"], template:"CDS \uc13c\uc11c \uac12 %1 %2", params:[{type:"Dropdown", options:[["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], value:"LESS", fontsIze:11, noaRrow:!0}, {type:"Block", accept:"string"}], def:{params:[null, {type:"number", params:["512"]}], type:"roborobo_light_value_boolean"}, paramsKeyMap:{OPERATOR:0, 
@@ -22800,19 +22798,15 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     return d;
   }}, roborobo_irs_value:{color:"#C4065C", skeleton:"basic_string_field", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"\uc801\uc678\uc120 \uc13c\uc11c \uac12", params:[{type:"Block", accept:"string"}], events:{}, def:{params:[null], type:"roborobo_irs_value"}, paramsKeyMap:{}, class:"roborobo_irs", func:function(b, a) {
     b = Entry.Roborobo_SchoolKit.inputPort.ir;
-    Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
-    Entry.hw.update();
-    return Entry.hw.portData[b - 7];
+    return void 0 == Entry.hw.portData[b - 7] ? 0 : Entry.hw.portData[b - 7];
   }}, roborobo_irs_value_boolean:{color:"#C4065C", skeleton:"basic_boolean_field", fontColor:"#fff", isNotFor:["roborobo_schoolkit"], template:"\uc801\uc678\uc120 \uc13c\uc11c\uac00 %1", params:[{type:"Dropdown", options:[["\uac10\uc9c0 \ub418\uba74", "1"], ["\uac10\uc9c0 \uc548\ub418\uba74", "0"]], value:"1", fontsIze:11}], def:{params:[null], type:"roborobo_irs_value_boolean"}, paramsKeyMap:{DETECT:0}, class:"roborobo_irs", func:function(b, a) {
     b = Entry.Roborobo_SchoolKit.inputPort.ir;
-    a = a.getNumberField("DETECT", a);
-    Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
-    Entry.hw.update();
-    return a == Entry.hw.portData[b - 7] ? !0 : !1;
+    return a.getNumberField("DETECT", a) == (void 0 == Entry.hw.portData[b - 7] ? 0 : Entry.hw.portData[b - 7]) ? !0 : !1;
   }}, roborobo_diode_secs_toggle:{color:"#FF8D10", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1\ubc88 \ud3ec\ud2b8\uc758 \ubc1c\uad11\ub2e4\uc774\uc624\ub4dc\ub97c %2\ucd08 \ub3d9\uc548 %3 %4", params:[{type:"Dropdown", options:[["LED 1", "5"], ["LED 2", "4"], ["R - A", "3"], ["R - B", "2"]], value:"5", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Dropdown", options:[["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]], value:"255", fontsIze:11}, 
   {type:"Indicator", img:"block_icon/practical_course/diode.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["2"]}, null, null], type:"roborobo_diode_secs_toggle"}, paramsKeyMap:{PORT:0, DURATION:1, VALUE:2}, class:"roborobo_diode", func:function(b, a) {
     b = a.getNumberField("PORT");
     var c = a.getNumberValue("DURATION"), d = a.getNumberField("VALUE");
+    Entry.hw.sendQueue.digitalPinMode || (Entry.hw.sendQueue.digitalPinMode = {});
     Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.PWM;
     if (a.isStart) {
       if (1 == a.timeFlag) {
@@ -22835,6 +22829,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   size:12}], events:{}, def:{params:[null, null, null], type:"roborobo_diode_toggle"}, paramsKeyMap:{PORT:0, VALUE:1}, class:"roborobo_diode", func:function(b, a) {
     b = a.getNumberField("PORT");
     var c = a.getNumberField("VALUE");
+    Entry.hw.sendQueue.digitalPinMode || (Entry.hw.sendQueue.digitalPinMode = {});
     Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.PWM;
     Entry.hw.sendQueue[b] = c;
     return a.callReturn();
@@ -22845,6 +22840,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     result = (Entry.hw.portData[c - 7] / 4 - d) / (e - d) * 255 + 0;
     255 < result && (result = 255);
     0 > result && (result = 0);
+    Entry.hw.sendQueue.digitalPinMode || (Entry.hw.sendQueue.digitalPinMode = {});
     Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.PWM;
     Entry.hw.sendQueue[b] = result;
     return a.callReturn();
@@ -22853,6 +22849,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     b = a.getStringField("PORT", a);
     var c = a.getNumberValue("VALUE", a);
     0 > c ? c = 0 : 255 < c && (c = 255);
+    Entry.hw.sendQueue.digitalPinMode || (Entry.hw.sendQueue.digitalPinMode = {});
     Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.PWM;
     Entry.hw.sendQueue[b] = c;
     return a.callReturn();
