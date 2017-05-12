@@ -10952,8 +10952,7 @@ Entry.block = {
             if (action == 'START') {
                 if (!timer.isInit) {
                     engine.startProjectTimer();
-                }
-                else if (timer.isInit && timer.isPaused) {
+                } else if (timer.isInit && timer.isPaused) {
                     if (timer.pauseStart)
                         timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
                     delete timer.pauseStart;
@@ -10969,7 +10968,7 @@ Entry.block = {
                     timer.setValue(0);
                     timer.start = (new Date()).getTime();
                     timer.pausedTime = 0;
-                    delete timer.pauseStart;
+                    if (!timer.isPaused) delete timer.pauseStart;
                 }
 
             }
