@@ -88,6 +88,8 @@ Entry.BlockMenuScroller.RADIUS = 7;
     };
 
     p.scrollByPx = function(px) {
+        if (!this.vRatio)
+            this._updateRatio();
         this.scroll(px/this.vRatio);
     };
 

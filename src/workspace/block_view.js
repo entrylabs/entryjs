@@ -14,9 +14,12 @@ Entry.BlockView = function(block, board, mode) {
     this.block = block;
     this._lazyUpdatePos =
         Entry.Utils.debounce(block._updatePos.bind(block), 200);
+    this.mouseUpEvent = new Entry.Event(this);
+    this.disableMouseEvent = false;
 
-    this.dAlignContent =
-        Entry.Utils.debounce(this.alignContent, 30);
+    //this.dAlignContent =
+        //Entry.Utils.debounce(this.alignContent, 30);
+    this.dAlignContent = this.alignContent;
     this._board = board;
     this._observers = [];
     this.set(block);
@@ -162,7 +165,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
 
         var fillColor = this._schema.color;
-        if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
+        if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
+           this.block.emphasized)
             fillColor = Entry.Utils.colorLighten(fillColor);
         this._fillColor = fillColor;
         var pathStyle = {
@@ -204,9 +208,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this.contentSvgGroup && this.contentSvgGroup.remove();
         this.statementSvgGroup && this.statementSvgGroup.remove();
 
-        this._contents.forEach(function(c) {
-            c.destroy();
-        });
         this.contentSvgGroup = this.svgGroup.elem("g", {class:'contentsGroup'});
         this._contents = [];
 
@@ -318,6 +319,19 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this.contentPos = contentPos;
         this._render();
         this._updateMagnet();
+        var ws = this.getBoard().workspace;
+        if (ws && (this.isFieldEditing() || ws.widgetUpdateEveryTime))
+            ws.widgetUpdateEvent.notify();
+    };
+
+    p.isFieldEditing = function() {
+        var contents = this._contents;
+        for (var i=0; i<contents.length; i++) {
+            var content = contents[i];
+            if (!content) continue;
+            if (content.isEditing()) return true;
+        }
+        return false;
     };
 
     p._alignStatement = function(animate, index) {
@@ -377,11 +391,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._toLocalCoordinate = function(parentSvgGroup) {
+        this.disableMouseEvent = false;
         this._moveTo(0, 0, false);
         parentSvgGroup.appendChild(this.svgGroup);
     };
 
     p._toGlobalCoordinate = function(dragMode, doNotUpdatePos) {
+        this.disableMouseEvent = false;
         var pos = this.getAbsoluteCoordinate(dragMode);
         this._moveTo(pos.x, pos.y, false, doNotUpdatePos);
         this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
@@ -464,7 +480,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 x: mouseEvent.pageX, y: mouseEvent.pageY
             };
             var doc = $(document);
-            doc.bind('mousemove.block touchmove.block', onMouseMove);
+            if (!this.disableMouseEvent)
+                doc.bind('mousemove.block touchmove.block', onMouseMove);
             doc.bind('mouseup.block touchend.block', onMouseUp);
             this.dragInstance = new Entry.DragInstance({
                 startX: mouseEvent.pageX,
@@ -576,6 +593,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             if (board) board.set({dragBlock: null});
             blockView._changeFill(false);
             Entry.GlobalSvg.remove();
+            blockView.mouseUpEvent.notify();
+
             delete this.mouseDownCoordinate;
             delete blockView.dragInstance;
         }
@@ -615,68 +634,91 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             if (dragMode === Entry.DRAG_MODE_DRAG) {
                 var ripple = false;
                 var prevBlock = this.block.getPrevBlock(this.block);
+                var suffix = this._board.workspace.trashcan.isOver ? "ForDestroy" : "";
                 switch (gsRet) {
                     case gs.DONE:
                         var closeBlock = board.magnetedBlockView;
                         if (closeBlock instanceof Entry.BlockView)
                             closeBlock = closeBlock.block;
                         if (prevBlock && !closeBlock) {
-                            Entry.do("separateBlock", block);
+                            Entry.do("separateBlock" + suffix, block);
                         } else if (!prevBlock && !closeBlock && !fromBlockMenu) {
                             if (!block.getThread().view.isGlobal()) {
-                                Entry.do("separateBlock", block);
+                                Entry.do("separateBlock" + suffix, block);
                             } else {
-                                Entry.do("moveBlock", block);
+                                Entry.do("moveBlock" + suffix, block);
                             }
                         } else {
+                            suffix = fromBlockMenu ? "FromBlockMenu": "";
                             if (closeBlock) {
                                 if (closeBlock.view.magneting === "next") {
                                     var lastBlock = block.getLastBlock();
                                     this.dragMode = dragMode;
-                                    board.separate(block);
-                                    this.dragMode = Entry.DRAG_MODE_NONE;
-                                    Entry.do("insertBlock", closeBlock, lastBlock)
+                                    var targetPointer = closeBlock.pointer();
+                                    targetPointer[3] = -1;
+                                    Entry.do(
+                                        "insertBlock" + suffix, block, targetPointer)
                                         .isPass(fromBlockMenu);
                                     Entry.ConnectionRipple
                                         .setView(closeBlock.view)
                                         .dispose();
+                                    this.dragMode = Entry.DRAG_MODE_NONE;
                                 } else {
-                                    Entry.do("insertBlock", block, closeBlock)
+                                    if (closeBlock.getThread) {
+                                        var thread = closeBlock.getThread();
+                                        var closeBlockType = closeBlock.type;
+                                        if (closeBlockType &&
+                                            thread instanceof Entry.FieldBlock &&
+                                            !Entry.block[closeBlockType].isPrimitive)
+                                            suffix += 'FollowSeparate';
+                                    }
+                                    Entry.do(
+                                        "insertBlock" + suffix, block, closeBlock)
                                         .isPass(fromBlockMenu);
                                     ripple = true;
                                 }
                                 createjs.Sound.play('entryMagneting');
                             } else {
-                                Entry.do("moveBlock", block)
+                                Entry.do("moveBlock" + suffix, block)
                                     .isPass(fromBlockMenu);
                             }
                         }
                         break;
                     case gs.RETURN:
                         var block = this.block;
-                        var originPos = this.originPos;
-                        if (prevBlock) {
-                            this.set({animating: false});
-                            createjs.Sound.play('entryMagneting');
-                            this.bindPrev(prevBlock);
-                            block.insert(prevBlock);
+                        if (fromBlockMenu) {
+                            Entry.do(
+                                'destroyBlockBelow',
+                                this.block
+                            ).isPass(true);
                         } else {
-                            var parent = block.getThread().view.getParent();
-
-                            if (!(parent instanceof Entry.Board)) {
+                            if (prevBlock) {
+                                this.set({animating: false});
                                 createjs.Sound.play('entryMagneting');
-                                Entry.do("insertBlock", block, parent);
-                            } else this._moveTo(originPos.x, originPos.y, false);
+                                this.bindPrev(prevBlock);
+                                block.insert(prevBlock);
+                            } else {
+                                var parent = block.getThread().view.getParent();
+
+                                if (!(parent instanceof Entry.Board)) {
+                                    createjs.Sound.play('entryMagneting');
+                                    Entry.do("insertBlock", block, parent);
+                                } else {
+                                    var originPos = this.originPos;
+                                    this._moveTo(originPos.x, originPos.y, false);
+                                }
+                            }
                         }
                         break;
                     case gs.REMOVE:
                         createjs.Sound.play('entryDelete');
                         Entry.do(
                             'destroyBlockBelow',
-                                this.block
+                            this.block
                         ).isPass(fromBlockMenu);
                         break;
                 }
+
                 board.setMagnetedBlock(null);
                 if (ripple) {
                     Entry.ConnectionRipple
@@ -936,8 +978,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var that = this;
         distance = distance || 15;
         if (delay) {
+            var oldX = this.x,
+                oldY = this.y;
             window.setTimeout(function() {
-                that._moveBy(distance, distance, false);
+                //only when position not changed
+                if (oldX === that.x && oldY === that.y)
+                    that._moveBy(distance, distance, false);
             }, delay);
         } else that._moveBy(distance, distance, false);
     };
@@ -998,7 +1044,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._updateColor = function() {
         var fillColor = this._schema.color;
-        if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
+        console.log(this.block.emphasized)
+        if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
+           this.block.emphasized)
             fillColor = Entry.Utils.colorLighten(fillColor);
         this._fillColor = fillColor;
         this._path.attr({fill:fillColor});
@@ -1339,5 +1387,24 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             .appendChild(this.svgGroup);
     };
 
+    p.getMagnet = function(query) {
+        var selector = query.shift() || "next";
+        var halfWidth = query.shift();
+        if (halfWidth === undefined)
+            halfWidth = 20;
+        return {
+            getBoundingClientRect: function() {
+                var coord = this.getAbsoluteCoordinate(),
+                    boardOffset = this._board.relativeOffset,
+                    magnet = this.magnet[selector];
+                return {
+                    top: coord.y + boardOffset.top + magnet.y - halfWidth,
+                    left: coord.x + boardOffset.left + magnet.x - halfWidth,
+                    width: 2 * halfWidth,
+                    height: 2 * halfWidth
+                }
+            }.bind(this)
+        }
+    }
 
 })(Entry.BlockView.prototype);

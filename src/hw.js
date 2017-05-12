@@ -16,8 +16,8 @@ Entry.HW = function() {
     this.isFirstConnect = true;
     //this.requireVerion = 'v1.6.1';
     this.requireVerion = 'v1.6.1';
-    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.6_Setup.exe";
-    this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.6.dmg";
+    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.7_Setup.exe";
+    this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.7.dmg";
     this.hwPopupCreate();
     this.initSocket();
     this.connected = false;
@@ -33,14 +33,14 @@ Entry.HW = function() {
 
     this.hwInfo = {
         '1.1': Entry.Arduino,
-        '1.9': Entry.ArduinoExt,
-        '1.2': Entry.SensorBoard,
         '1.3': Entry.CODEino,
+        '1.2': Entry.SensorBoard,
         '1.4': Entry.joystick,
         '1.5': Entry.dplay,
         '1.6': Entry.nemoino,
         '1.7': Entry.Xbot,
         '1.8': Entry.ardublock,
+        '1.9': Entry.ArduinoExt,
         '1.A': Entry.Cobl,
         '2.4': Entry.Hamster,
         '2.5': Entry.Albert,
@@ -53,9 +53,14 @@ Entry.HW = function() {
         '10.1': Entry.Roborobo_Roduino,
         '10.2': Entry.Roborobo_SchoolKit,
         '12.1': Entry.EV3,
-        'B.1': Entry.Codestar,
+        '13.1': Entry.rokoboard,
+        '14.1': Entry.Chocopi,
+        '15.1': Entry.coconut,
+        '16.1': Entry.MODI,
         'A.1': Entry.SmartBoard,
+        'B.1': Entry.Codestar,
         'C.1': Entry.DaduBlock,
+        'C.2': Entry.DaduBlock_Car,
         'D.1': Entry.robotori,
         'F.1': Entry.byrobot_dronefighter_controller,
         'F.2': Entry.byrobot_dronefighter_drive,
@@ -337,8 +342,12 @@ p.checkDevice = function(data, version) {
     if (data.company === undefined)
         return;
     var key = [Entry.Utils.convertIntToHex(data.company), '.', Entry.Utils.convertIntToHex(data.model)].join('');
-    if (key == this.selectedDevice)
+    if (key == this.selectedDevice) {
+        if (this.hwModule && this.hwModule.dataHandler) {
+            this.hwModule.dataHandler(data);
+        }
         return;
+    }
 
     if(Entry.Utils.isNewVersion(version, this.requireVerion)) {
         this.popupHelper.show('newVersion', true);

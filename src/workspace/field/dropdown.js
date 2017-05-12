@@ -179,12 +179,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 elem.bind('mouseup touchend', function(e){
                     e.stopPropagation();
                     that.applyValue(value);
-                    that.destroyOption();
+                    that.destroyOption(undefined, true);
                     that._selectBlockView();
                 });
             })(element, value);
         }
         this._position();
+
+        this.optionDomCreated();
     };
 
     p._position = function() {
@@ -284,5 +286,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var textValue = this.getTextByValue(this.getValue());
         this.textElement.textContent =
             this._convert(textValue, this.getValue());
+    };
+
+    p.getTextValue = function() {
+        return this.textElement.textContent;
     };
 })(Entry.FieldDropdown.prototype);

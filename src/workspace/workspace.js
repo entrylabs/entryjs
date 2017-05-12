@@ -19,6 +19,11 @@ Entry.Workspace = function(options) {
 
     this.readOnly = options.readOnly === undefined ? false : options.readOnly;
 
+    this.blockViewMouseUpEvent = new Entry.Event(this);
+    this.widgetUpdateEvent = new Entry.Event(this);
+    this._blockViewMouseUpEvent = null;
+    this.widgetUpdateEveryTime = false;
+
     var option = options.blockMenu;
     if (option) {
         this.blockMenu = new Entry.BlockMenu(
@@ -29,7 +34,12 @@ Entry.Workspace = function(options) {
             this.readOnly
         );
         this.blockMenu.workspace = this;
-        this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
+        this.blockMenu.observe(
+            this,
+            "_setSelectedBlockView",
+            ["selectedBlockView"],
+            false
+        );
     }
 
     option = options.board;
@@ -37,7 +47,12 @@ Entry.Workspace = function(options) {
         option.workspace = this;
         option.readOnly = this.readOnly;
         this.board = new Entry.Board(option);
-        this.board.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
+        this.board.observe(
+            this,
+            "_setSelectedBlockView",
+            ["selectedBlockView"],
+            false)
+        ;
         this.set({selectedBoard:this.board});
     }
 
@@ -91,6 +106,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message) {
+        Entry.disposeEvent.notify();
         if (Entry.Utils.isNumber(mode)) this.mode = mode;
         else {
             this.mode = mode.boardType;
@@ -250,7 +266,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var blockView = this.board[view] ||
             this.blockMenu[view] ||
             (this.overlayBoard ? this.overlayBoard[view] : null);
+        this._unbindBlockViewMouseUpEvent();
         this.set({selectedBlockView:blockView});
+        if (blockView) {
+            var that = this;
+            this._blockViewMouseUpEvent =
+                blockView.mouseUpEvent.attach(
+                    this, function() {
+                        that.blockViewMouseUpEvent.notify(blockView);
+                    });
+        }
     };
 
     p.initOverlayBoard = function() {
@@ -491,5 +516,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             Entry.keyPressed.detach(this._keyboardEvent);
             delete this._keyboardEvent;
         }
+    };
+
+    p._unbindBlockViewMouseUpEvent = function() {
+        if (this._blockViewMouseUpEvent) {
+            var oldOne = this.selectedBlockView;
+            oldOne.mouseUpEvent.detach(this._blockViewMouseUpEvent);
+            this._blockViewMouseUpEvent = null;
+        }
+    };
+
+    p.setWidgetUpdateEveryTime = function(val) {
+        this.widgetUpdateEveryTime = !!val;
     };
 })(Entry.Workspace.prototype);
