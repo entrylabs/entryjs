@@ -1148,7 +1148,7 @@
             }
         },
         
-        // roborobo
+        // roborobo_mini
         roborobo_motor_speed: {
             color: '#00B200',
             skeleton: 'basic_string_field',
