@@ -71,15 +71,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             var blockType = targetSyntax.blockType;
                         }
 
-                        if(blockType == "event") {
+                        if (blockType == "event") {
                             this._isEntryEventExisted = true;
-                        }
-                        else if(blockType == "last") {
+                        } else if (blockType == "last") {
                             this.isLastBlock = true;
-                        }
-                        else if(blockType == "variable") {
-                            if(!this._isEntryEventExisted)
-                                continue;
+                        } else if (blockType == "variable") {
+                            if(!this._isEntryEventExisted) continue;
                         }
 
                         if(Entry.TextCodingUtil.isEntryEventFuncByType(block.type)) {
@@ -131,7 +128,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(expression.type) {
             var expressionData = this[expression.type](expression);
-
 
             if(expressionData.type && expressionData.params) {
                 result.type = expressionData.type;
@@ -3120,13 +3116,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.Literal = function(component, paramMeta, paramDefMeta, textParam) {
         var result;
+
         var value = component.value;
-        if(value && typeof value === 'string')
+        if (Entry.Utils.isNumber(value))
+            value = component.raw || value;
+
+        if (value && typeof value === 'string')
             value = value.replace(/\t/gm, '    ');
 
-        if(!paramMeta) {
-            var paramMeta = { type: "Block" };
-            if(!paramDefMeta) {
+        if (!paramMeta) {
+            paramMeta = { type: "Block" };
+            if (!paramDefMeta) {
                 if(typeof value == "number")
                     var paramDefMeta = { type: "number" };
                 else
@@ -3145,12 +3145,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
 
-        if(value == true || value == false || value)
-        {
+        if (value == true || value == false || value) {
             var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta, textParam);
             result = params;
-        }
-        else if(component.left && component.operator && component.right) {//If 'Literal' doesn't have value
+        } else if(component.left && component.operator && component.right) {//If 'Literal' doesn't have value
             var params = [];
             var leftParam = this[component.left.type](component.left);
             params.push(leftParam);
@@ -3161,7 +3159,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             result = params;
         }
-
 
         return result;
     };
