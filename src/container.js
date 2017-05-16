@@ -185,13 +185,19 @@ Entry.Container.prototype.updateListView = function() {
 
     var objs = this.getCurrentObjects().slice();
 
-    objs.sort(function(a, b) {
+    var ret = objs.filter(function(o) {
+        return o.index !== undefined;
+    });
+
+    if (ret.length === objs.length)
+        objs = objs.sort(function(a, b) {
             return a.index - b.index;
-        })
-        .forEach(function(obj) {
-            !obj.view_ && obj.generateView();
-            fragment.appendChild(obj.view_);
         });
+
+    objs.forEach(function(obj) {
+        !obj.view_ && obj.generateView();
+        fragment.appendChild(obj.view_);
+    });
 
     view.appendChild(fragment);
     Entry.stage.sortZorder();
@@ -313,8 +319,21 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
 
 Entry.Container.prototype.addExtension = function(obj) {
     this._extensionObjects.push(obj);
-    this._extensionListView.append(obj.renderView());
-}
+    if (this._extensionListView)
+        this._extensionListView.append(obj.renderView());
+    return obj;
+};
+
+Entry.Container.prototype.removeExtension = function(obj) {
+    if (!obj) return;
+
+    var extensions = this._extensionObjects;
+    var index = extensions.indexOf(obj);
+    if (index > -1)
+        extensions.splice(index, 1);
+
+    obj.destroy && obj.destroy();
+};
 
 /**
  * Add Clone object
@@ -388,7 +407,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     }
 
     this.mapObjectOnScene(function(object) {
-        !object.view_ && object.generateView();
+        !object.view_ && object.generateView && object.generateView();
         object.view_ && object.view_.removeClass('selectedObject');
         object.isSelected_ = false;
     });
@@ -872,6 +891,7 @@ Entry.Container.prototype.setInputValue = function(inputValue) {
     else
         this.inputValue.setValue(inputValue);
     Entry.stage.hideInputField();
+    Entry.dispatchEvent("answerSubmitted");
     if (Entry.console)
         Entry.console.stopInput(inputValue);
     this.inputValue.complete = true;
@@ -1038,6 +1058,7 @@ Entry.Container.prototype.clear = function() {
     this.objects_.map(function(o) {o.destroy()});
     this.objects_ = [];
     // INFO : clear 시도할때 _extensionObjects 초기화
+    this._extensionObjects.map(function(o) {o.destroy()});
     this._extensionObjects = [];
     // TODO: clear 때 this._extensionListView 도 비워 줘야 하는지 확인 필요.
     Entry.playground.flushPlayground();

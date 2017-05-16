@@ -28,14 +28,16 @@ Entry.EntryObject = function(model) {
         this.script = new Entry.Code(script, this);
 
         /** @type {Array.<picture object>} */
-        this.pictures = model.sprite.pictures;
+        this.pictures =
+            JSON.parse(JSON.stringify(model.sprite.pictures || []));
 
         /** @type {Array.<sound object>} */
-        this.sounds = [];
-        this.sounds = model.sprite.sounds;
+        this.sounds =
+            JSON.parse(JSON.stringify(model.sprite.sounds || []));
         for (var i=0; i<this.sounds.length; i++) {
-            if (!this.sounds[i].id)
+            if (!this.sounds[i].id) {
                 this.sounds[i].id = Entry.generateHash();
+            }
             Entry.initSound(this.sounds[i]);
         }
 
@@ -1522,7 +1524,7 @@ Entry.EntryObject = function(model) {
     };
 
     p._rightClick = function(e) {
-        if (!this._isContextMenuEnabled)
+        if (!this.isContextMenuEnabled())
             return;
 
         var object = this;
@@ -1583,6 +1585,10 @@ Entry.EntryObject = function(model) {
 
     p.disableContextMenu = function() {
         this._isContextMenuEnabled = false;
+    };
+
+    p.isContextMenuEnabled = function() {
+        return this._isContextMenuEnabled && Entry.objectEditable;
     };
 
     p.toggleEditObject = function() {

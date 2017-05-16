@@ -1468,12 +1468,7 @@ Entry.TextCodingUtil = {};
     };
 
     tu.makeFuncParamBlock = function(targetBlock, paramInfo, blockCount) {
-        /*if(targetBlock.type == cFuncKey) {
-            targetBlock.type = cFuncType;
-        }*/
         var tParams = targetBlock.params;
-
-
 
         for(var i in tParams) {
             var param = tParams[i];
@@ -1485,8 +1480,7 @@ Entry.TextCodingUtil = {};
 
             if(param.type && param.params && param.params.length != 0) {
                 this.makeFuncParamBlock(param, paramInfo, blockCount);
-            }
-            else if(param.type && param.params && param.params.length == 0) {
+            } else if(param.type && param.params && param.params.length == 0) {
                 var paramKey = param.type;
                 var paramBlockType = paramInfo[paramKey];
                 if(paramBlockType) {
@@ -1495,8 +1489,7 @@ Entry.TextCodingUtil = {};
                     paramBlock.params = [];
                     targetBlock.params[i] = paramBlock;
                 }
-            }
-            else if(param.name) {
+            } else if(param.name) {
                 var paramKey = param.name;
                 var paramBlockType = paramInfo[paramKey];
                 if(paramBlockType) {
@@ -1504,8 +1497,7 @@ Entry.TextCodingUtil = {};
                     paramBlock.type = paramBlockType;
                     paramBlock.params = [];
                     targetBlock.params[i] = paramBlock;
-                }
-                else if(param.type != "get_variable" ) {
+                } else if(param.type != "get_variable" ) {
                     var keyword = param.name;
                     Entry.TextCodingError.error(
                         Entry.TextCodingError.TITLE_CONVERTING,
@@ -1514,8 +1506,7 @@ Entry.TextCodingUtil = {};
                         blockCount,
                         Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
                 }
-            }
-            else if(param.object && param.property) { //self.xx
+            } else if(param.object && param.property) { //self.xx
                 var keyword = param.object.name + '.' + param.property.name;
                 Entry.TextCodingError.error(
                     Entry.TextCodingError.TITLE_CONVERTING,
@@ -1524,7 +1515,6 @@ Entry.TextCodingUtil = {};
                     blockCount,
                     Entry.TextCodingError.SUBJECT_CONV_VARIABLE);
             }
-
         }
 
         var stmts = targetBlock.statements;

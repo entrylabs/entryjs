@@ -37,19 +37,45 @@ Entry.loadProject = function(project) {
     Entry.FPS = project.speed ? project.speed : 60;
     createjs.Ticker.setFPS(Entry.FPS);
 
-    if (this.type == 'workspace') {
-        setTimeout(function() {
-            Entry.stateManager.endIgnore();
-        }, 500);
-    }
-
     if (!Entry.engine.projectTimer)
         Entry.variableContainer.generateTimer();
 
     if (Object.keys(Entry.container.inputValue).length === 0)
         Entry.variableContainer.generateAnswer();
     Entry.start();
+    if (this.options.programmingMode) {
+
+        var mode = this.options.programmingMode;
+        if (Entry.Utils.isNumber(mode)) {
+            var pMode = mode;
+            mode = {};
+
+            this.mode = mode;
+            if (pMode == 0) {
+                mode.boardType = Entry.Workspace.MODE_BOARD;
+                mode.textType = -1;
+            } else if (pMode == 1) { // Python in Text Coding
+                mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+                mode.textType = Entry.Vim.TEXT_TYPE_PY;
+                mode.runType = Entry.Vim.WORKSPACE_MODE;
+            } else if (pMode == 2) { // Javascript in Text Coding
+                mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+                mode.textType = Entry.Vim.TEXT_TYPE_JS;
+                mode.runType = Entry.Vim.MAZE_MODE;
+            }
+            Entry.getMainWS().setMode(mode);
+        }
+    }
+
     Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
+
+
+    if (this.type == 'workspace')
+        Entry.stateManager.endIgnore();
+
+    if (project.interface && Entry.options.loadInterface)
+        Entry.loadInterfaceState(project.interface);
+
     if (window.parent && window.parent.childIframeLoaded)
         window.parent.childIframeLoaded();
     return project;
@@ -58,10 +84,11 @@ Entry.loadProject = function(project) {
 Entry.clearProject = function() {
     Entry.stop();
     Entry.projectId = null;
+    Entry.type !== 'invisible' && Entry.playground && Entry.playground.changeViewMode('code');
     Entry.variableContainer.clear();
     Entry.container.clear();
     Entry.scene.clear();
-}
+};
 
 /**
  * Export project
@@ -89,6 +116,7 @@ Entry.exportProject = function(project) {
     project.functions = Entry.variableContainer.getFunctionJSON();
     project.scenes = Entry.scene.toJSON();
     project.speed = Entry.FPS;
+    project.interface = Entry.captureInterfaceState();
     return project;
 };
 
@@ -131,19 +159,6 @@ Entry.setBlock = function(objectType, XML) {
 
 Entry.enableArduino = function() {
     return;
-    //$.ajax('http://localhost:23518/arduino/')
-        //.done(function(data){
-            //var xmlHttp = new XMLHttpRequest();
-            //xmlHttp.open( "GET", '/xml/arduino_blocks.xml', false );
-            //xmlHttp.send('');
-            //if (!Entry.playground.menuBlocks_.sprite.getElementById("arduino")) {
-                //Entry.setBlockByText('arduino', xmlHttp.responseText);
-                //Entry.playground.currentObjectType = '';
-                //Entry.playground.setMenu(Entry.playground.object.objectType);
-            //}
-            //Entry.toast.success(Lang.Workspace.arduino_connect, Lang.Workspace.arduino_connect_success, false);
-        //}).fail(function(){
-    //});
 };
 
 /**
@@ -156,9 +171,8 @@ Entry.initSound = function(sound) {
     } else {
         sound.path = Entry.defaultPath + '/uploads/' + sound.filename.substring(0,2)+'/'+
             sound.filename.substring(2,4)+'/'+sound.filename+sound.ext;
-        //createjs.Sound.removeSound(path);
-        //createjs.Sound.registerSound(path, sound.id, 4);
     }
+
     Entry.soundQueue.loadFile({
         id: sound.id,
         src: sound.path,
@@ -176,28 +190,43 @@ Entry.beforeUnload = function(e) {
     if (Entry.type == 'workspace') {
         if (localStorage && Entry.interfaceState) {
             localStorage.setItem('workspace-interface',
-                                 JSON.stringify(Entry.interfaceState));
+                                 JSON.stringify(Entry.captureInterfaceState()));
         }
         if (!Entry.stateManager.isSaved())
             return Lang.Workspace.project_changed;
     }
 };
 
+
+Entry.captureInterfaceState = function() {
+    var interfaceState = JSON.parse(JSON.stringify(Entry.interfaceState))
+    var playground = Entry.playground;
+    if (Entry.type == 'workspace' &&
+        playground && playground.object) {
+        interfaceState.object = playground.object.id;
+    }
+
+    return interfaceState;
+};
+
 /**
  * load interface state by localstorage
  */
-Entry.loadInterfaceState = function() {
+Entry.loadInterfaceState = function(interfaceState) {
     if (Entry.type == 'workspace') {
-        if (localStorage &&
+        if (interfaceState) {
+            Entry.container.selectObject(interfaceState.object, true);
+        } else if (localStorage &&
             localStorage.getItem('workspace-interface')) {
             var interfaceModel = localStorage.getItem('workspace-interface');
-            this.resizeElement(JSON.parse(interfaceModel));
+            interfaceState = JSON.parse(interfaceModel);
         } else {
-            this.resizeElement({
+            interfaceState = {
                 menuWidth: 280,
                 canvasWidth: 480
-            });
+            };
         }
+        this.resizeElement(interfaceState);
     }
 };
 
@@ -248,11 +277,8 @@ Entry.resizeElement = function(interfaceModel) {
         var addButton = Entry.engine.view_.getElementsByClassName('entryAddButtonWorkspace_w')[0];
         if (addButton) {
             if (Entry.objectAddable) {
-                /*addButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                addButton.style.top = (canvasHeight + 24) + 'px';
+                addButton.style.top = (canvasHeight + 25) + 'px';
                 addButton.style.width = (canvasSize * 0.7) + 'px';
-            } else {
-                addButton.style.display = 'none';
             }
         }
 
@@ -260,13 +286,13 @@ Entry.resizeElement = function(interfaceModel) {
         if (runButton) {
             if (Entry.objectAddable) {
                 /*runButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                runButton.style.top = (canvasHeight + 24) + 'px';
+                runButton.style.top = (canvasHeight + 25) + 'px';
                 runButton.style.left = (canvasSize * 0.7) + 'px';
                 runButton.style.width = (canvasSize * 0.3) + 'px';
             } else {
                 runButton.style.left = '2px';
                 /*runButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                runButton.style.top = (canvasHeight + 24) + 'px';
+                runButton.style.top = (canvasHeight + 25) + 'px';
                 runButton.style.width = (canvasSize - 4) + 'px';
             }
         }
@@ -275,14 +301,14 @@ Entry.resizeElement = function(interfaceModel) {
         if (stopButton) {
             if (Entry.objectAddable) {
                 /*stopButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                stopButton.style.top = (canvasHeight + 24) + 'px';
+                stopButton.style.top = (canvasHeight + 25) + 'px';
                 stopButton.style.left = (canvasSize * 0.7) + 'px';
                 stopButton.style.width = (canvasSize * 0.3) + 'px';
                 //console.log('runButton top,left = ' + runButton.style.top + ',' + runButton.style.left);
             } else {
                 stopButton.style.left = '2px';
                 /*stopButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                stopButton.style.top = (canvasHeight + 24) + 'px';
+                stopButton.style.top = (canvasHeight + 25) + 'px';
                 stopButton.style.width = (canvasSize) + 'px';
             }
         }
@@ -307,7 +333,7 @@ Entry.resizeElement = function(interfaceModel) {
 
         this.interfaceState = interfaceModel;
     }
-    
+
     Entry.windowResized.notify();
 };
 
@@ -393,6 +419,5 @@ Entry.getDom = function(query) {
         return this[key].getDom(query);
     } else {
     }
-}
-
+};
 window.Entry = Entry;

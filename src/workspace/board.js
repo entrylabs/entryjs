@@ -173,6 +173,10 @@ Entry.Board.DRAG_RADIUS = 5;
         }
     };
 
+    p.removeControl = function(eventType) {
+        this.svgDom.off(eventType);
+    };
+
     p.onMouseDown = function(e) {
         if (this.workspace.getMode() == Entry.Workspace.MODE_VIMBOARD)
             return;
@@ -841,34 +845,50 @@ Entry.Board.DRAG_RADIUS = 5;
         this.code && this.code.view && this.code.view.reDraw();
     };
 
-    p.separate = function(block, count) {
+    p.separate = function(block, count, index) {
         if (typeof block === "string")
             block = this.findById(block);
         if (block.view)
             block.view._toGlobalCoordinate();
         var prevBlock = block.getPrevBlock();
-        block.separate(count);
+        if (!prevBlock && block.thread instanceof Entry.Thread &&
+           block.thread.parent instanceof Entry.Code) {
+            var nextBlock = block.thread.getBlock(
+                block.thread.indexOf(block) + count)
+
+            if (nextBlock)
+                var backupPos = nextBlock.view.getAbsoluteCoordinate();
+        }
+        var prevThread = block.thread;
+        block.separate(count, index);
         if (prevBlock && prevBlock.getNextBlock())
             prevBlock.getNextBlock().view.bindPrev();
+        else if (nextBlock) {
+            nextBlock.view._toGlobalCoordinate();
+            nextBlock.moveTo(backupPos.x, backupPos.y);
+        }
     };
 
     p.insert = function(block, pointer, count) { // pointer can be target
         if (typeof block === "string")
             block = this.findById(block);
 
-        this.separate(block, count);
-
-        if (pointer.length === 3) // is global
+        if (pointer.length === 3) { // for global
+            this.separate(block, count, pointer[2]);
             block.moveTo(pointer[0], pointer[1]);
-        else if (pointer.length === 4 && pointer[3] === 0) {
-            var targetThread = this.code.getThreads()[pointer[2]];
-            block.thread.cut(block);
-            targetThread.insertToTop(block);
-            block.getNextBlock().view.bindPrev();
+        } else if (pointer.length === 4 && pointer[3] == -1) { // insert on top
+            pointer[3] = 0;
+            targetBlock = this.code.getByPointer(pointer);
+            this.separate(block, count, pointer[2]);
+            block = block.getLastBlock();
+
+            targetBlock.view.bindPrev(block);
+            targetBlock.doInsert(block);
         } else {
+            this.separate(block, count);
             var targetObj;
             if (pointer instanceof Array)
-                targetObj = this.code.getTargetByPointer(pointer);
+                targetObj = this.code.getByPointer(pointer);
             else
                 targetObj = pointer;
             if (targetObj instanceof Entry.Block) {
@@ -876,6 +896,10 @@ Entry.Board.DRAG_RADIUS = 5;
                     block.view.bindPrev(targetObj);
                 block.doInsert(targetObj);
             } else if (targetObj instanceof Entry.FieldStatement) {
+                block.view.bindPrev(targetObj);
+                targetObj.insertTopBlock(block);
+            } else if (targetObj instanceof Entry.Thread) {
+                targetObj = targetObj.view.getParent();
                 block.view.bindPrev(targetObj);
                 targetObj.insertTopBlock(block);
             } else {
@@ -1026,13 +1050,27 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.getDom = function(query) {
-        query = query.shift();
-        if (query === 'trashcan')
+        query = query.concat();
+        var key = query.shift();
+        if (key === 'trashcan')
             return this.workspace.trashcan.svgGroup;
-        else if (query instanceof Array) {
-            var targetObj = this.code.getTargetByPointer(query);
-            if (targetObj instanceof Entry.Block) {
-                return targetObj.view.svgGroup;
+        else if (key === 'coord')
+            return {
+                getBoundingClientRect: function() {
+                    var halfWidth = 20,
+                        boardOffset = this.relativeOffset;
+                    return {
+                        top: query[1] + boardOffset.top - halfWidth,
+                        left: query[0] + boardOffset.left - halfWidth,
+                        width: 2 * halfWidth,
+                        height: 2 * halfWidth
+                    };
+                }.bind(this)
+            }
+        else if (key instanceof Array) {
+            var targetObj = this.code.getByPointer(key);
+            if (targetObj.getDom) {
+                return targetObj.getDom(query);
             } else {
                 return targetObj.svgGroup;
             }
@@ -1045,8 +1083,40 @@ Entry.Board.DRAG_RADIUS = 5;
         else if (block && block.id)
             return this.findById(block.id);
         else if (block instanceof Array)
-            return this.code.getTargetByPointer(block);
+            return this.code.getByPointer(block);
         return block;
+    };
+
+    p.scrollToPointer = function(pointer, query) {
+        var obj = this.code.getByPointer(pointer);
+        var pos;
+        if (obj instanceof Entry.Block) {
+            pos = obj.view.getAbsoluteCoordinate();
+            obj.view.dominate();
+        } else if (obj instanceof Entry.Thread) {
+            pos = obj.view.requestAbsoluteCoordinate();
+        } else if (obj.getAbsolutePosFromBoard)
+            pos = obj.getAbsolutePosFromBoard();
+
+
+        var newX = 0,
+            newY = 0,
+            offset = this._offset,
+            width = offset.width,
+            height = offset.height;
+
+        if (pos.x > width - 200)
+            newX = width - 200 - pos.x;
+        else if (pos.x < 100)
+            newX = 100 - pos.x;
+
+        if (pos.y > height - 200)
+            newY = height - 200 - pos.y;
+        else if (pos.y < 100)
+            newY = 100 - pos.y;
+
+        this.scroller.scroll(newX, newY, true);
+        return [newX, newY];
     };
 
 })(Entry.Board.prototype);

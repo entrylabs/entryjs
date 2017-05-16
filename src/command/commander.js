@@ -31,6 +31,8 @@ Entry.Commander = function(injectType) {
 
     this.doEvent = new Entry.Event(this);
     this.logEvent = new Entry.Event(this);
+
+    this.doCommandAll = Entry.doCommandAll;
 };
 
 (function(p) {
@@ -46,8 +48,13 @@ Entry.Commander = function(injectType) {
         that.report(commandType, argumentArray);
 
         var command = Entry.Command[commandType];
-        if (Entry.stateManager && command.skipUndoStack !== true) {
-            Entry.stateManager.addCommand.apply(
+        //console.log('commandType', commandType);
+        var state;
+        var isSkip = command.skipUndoStack === true ||
+            (!this.doCommandAll && commandType > 500);
+
+        if (Entry.stateManager && !isSkip) {
+            state = Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
                 [commandType, this, this.do, command.undo]
                     .concat(command.state.apply(this, argumentArray))
@@ -55,10 +62,13 @@ Entry.Commander = function(injectType) {
         }
         var value = Entry.Command[commandType].do.apply(this, argumentArray);
         this.doEvent.notify(commandType, argumentArray);
+        var id = state ? state.id : null;
 
         return {
             value: value,
-            isPass: this.isPass.bind(this)
+            isPass: function(isPass, skipCount) {
+                this.isPassById(id, isPass, skipCount);
+            }.bind(this)
         };
     };
 
@@ -71,8 +81,9 @@ Entry.Commander = function(injectType) {
 
         var command = Entry.Command[commandType];
 
+        var state;
         if (Entry.stateManager && command.skipUndoStack !== true) {
-            Entry.stateManager.addCommand.apply(
+            state = Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
                 [commandType, this, this.do, commandFunc.undo]
                     .concat(commandFunc.state.apply(this, argumentArray))
@@ -80,7 +91,9 @@ Entry.Commander = function(injectType) {
         }
         return {
             value: Entry.Command[commandType].do.apply(this, argumentArray),
-            isPass: this.isPass.bind(this)
+            isPass: function(isPass) {
+                this.isPassById(state.id, isPass);
+            }.bind(this)
         };
     };
 
@@ -116,6 +129,19 @@ Entry.Commander = function(injectType) {
         if (lastCommand) lastCommand.isPass = isPass;
     };
 
+    p.isPassById = function(id, isPass, skipCount) {
+        if (!id || !Entry.stateManager)
+            return;
+
+        isPass = isPass === undefined ? true : isPass;
+        var lastCommand = Entry.stateManager.getLastCommandById(id);
+        if (lastCommand) {
+            lastCommand.isPass = isPass;
+            if (skipCount)
+                lastCommand.skipCount = !!skipCount;
+        }
+    };
+
     p.addReporter = function(reporter) {
         reporter.logEventListener = this.logEvent.attach(reporter, reporter.add);
     };
@@ -134,6 +160,10 @@ Entry.Commander = function(injectType) {
         else data = argumentsArray;
         data.unshift(commandType);
         this.logEvent.notify(data);
+    };
+
+    p.applyOption = function() {
+        this.doCommandAll = Entry.doCommandAll;
     };
 })(Entry.Commander.prototype);
 

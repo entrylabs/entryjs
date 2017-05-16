@@ -13,7 +13,11 @@ goog.require("Entry.STATIC");
         do: function(objectId) {
             Entry.container.selectObject(objectId);
         },
-        state: function() {
+        state: function(objectId) {
+            return [
+                Entry.playground.object.id,
+                objectId
+            ];
         },
         log: function(objectId) {
             return [
@@ -21,8 +25,7 @@ goog.require("Entry.STATIC");
                 ['objectIndex', Entry.container.getObjectIndex(objectId)],
             ];
         },
-        skipUndoStack: true,
-        undo: "",
+        undo: "containerSelectObject",
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['container', 'objectIndex', '&1']
     };

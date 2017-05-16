@@ -19,7 +19,13 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     this._contents = content;
     this._index = index;
-    this._arrowColor = content.arrowColor;
+
+    var arrowColor = content.arrowColor;
+    if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+        arrowColor = blockView._fillColor;
+    }
+
+    this._arrowColor = arrowColor;
 
     var menuName = this._contents.menuName;
 
@@ -120,12 +126,14 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
                 elem.mouseup(function(e){
                     e.stopPropagation();
                     that.applyValue(value);
-                    that.destroyOption();
+                    that.destroyOption(undefined, true);
                     that._selectBlockView();
                 });
             })(element, value);
         }
         this._position();
+
+        this.optionDomCreated();
     };
 
 })(Entry.FieldDropdownDynamic.prototype);

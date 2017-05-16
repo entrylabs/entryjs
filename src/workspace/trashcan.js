@@ -66,7 +66,7 @@ Entry.FieldTrashcan = function(board) {
                         'destroyThread',
                         this.dragBlock.block.thread,
                         'trashcan'
-                    ).isPass(true);
+                    ).isPass(true, true);
                     createjs.Sound.play('entryDelete');
                 }
             }
