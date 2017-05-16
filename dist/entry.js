@@ -6493,8 +6493,18 @@ Entry.Commander = function(c) {
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
     d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
     var f = b.tooltip.isDefault, g = !1, h = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !g && c && (g = !0, e(), d.toolTipRender.titleIndex = 1, d.toolTipRender && (f ? Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1]).isParamBlockType() ? d.toolTipRender.contentIndex = 2 : d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 1), c = d.processDomQuery(["playground", "board", "&1", "magnet"]), h.init([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
-      }}));
+      if (!g && c) {
+        g = !0;
+        e();
+        c = Entry.Command.editor.board.scrollToPointer(b.content[2][1]);
+        var k = Entry.getMainWS().selectedBlockView;
+        k && c && k.moveBy(-c[0], -c[1]);
+        d.toolTipRender.titleIndex = 1;
+        d.toolTipRender && (f ? (c = Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1])) && c.isParamBlockType() ? d.toolTipRender.contentIndex = 2 : d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 1);
+        c = d.processDomQuery(["playground", "board", "&1", "magnet"]);
+        h.init([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+        }});
+      }
     }});
     return h;
   }, showMe:function(b) {
@@ -10327,9 +10337,8 @@ Entry.EntryObject = function(c) {
     this.objectType = c.objectType;
     this.objectType || (this.objectType = "sprite");
     this.script = new Entry.Code(c.script ? c.script : [], this);
-    this.pictures = c.sprite.pictures;
-    this.sounds = [];
-    this.sounds = c.sprite.sounds;
+    this.pictures = JSON.parse(JSON.stringify(c.sprite.pictures || []));
+    this.sounds = JSON.parse(JSON.stringify(c.sprite.sounds || []));
     for (var e = 0;e < this.sounds.length;e++) {
       this.sounds[e].id || (this.sounds[e].id = Entry.generateHash()), Entry.initSound(this.sounds[e]);
     }
@@ -25174,6 +25183,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c._moveBy = function(b, c, d, f) {
     return this._moveTo(this.x + b, this.y + c, d, f);
   };
+  c.moveBy = c._moveBy;
   c._addControl = function() {
     var b = this;
     this._mouseEnable = !0;
@@ -26617,6 +26627,7 @@ Entry.Board.DRAG_RADIUS = 5;
     }
   };
   c.getDom = function(b) {
+    b = b.concat();
     var c = b.shift();
     if ("trashcan" === c) {
       return this.workspace.trashcan.svgGroup;
@@ -26639,9 +26650,11 @@ Entry.Board.DRAG_RADIUS = 5;
     var d;
     b instanceof Entry.Block ? (d = b.view.getAbsoluteCoordinate(), b.view.dominate()) : b instanceof Entry.Thread ? d = b.view.requestAbsoluteCoordinate() : b.getAbsolutePosFromBoard && (d = b.getAbsolutePosFromBoard());
     c = b = 0;
-    d.x > this._offset.width - 200 ? b = this._offset.width - 200 - d.x : 100 > d.x && (b = 100 - d.x);
-    d.y > this._offset.height - 200 ? c = this._offset.height - 200 - d.y : 100 > d.y && (c = 100 - d.y);
+    var e = this._offset, g = e.width, e = e.height;
+    d.x > g - 200 ? b = g - 200 - d.x : 100 > d.x && (b = 100 - d.x);
+    d.y > e - 200 ? c = e - 200 - d.y : 100 > d.y && (c = 100 - d.y);
     this.scroller.scroll(b, c, !0);
+    return [b, c];
   };
 })(Entry.Board.prototype);
 Entry.Code = function(c, b) {
