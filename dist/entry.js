@@ -25207,53 +25207,60 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c.onMouseDown = function(b) {
     function e(b) {
       b.stopPropagation();
-      var e = h.workspace.getMode(), d;
-      e === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
-      d = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-      var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(d.pageX - k.x, 2) + Math.pow(d.pageY - k.y, 2));
-      if (g.dragMode == Entry.DRAG_MODE_DRAG || k > Entry.BlockView.DRAG_RADIUS) {
-        f && (clearTimeout(f), f = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, e), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), e = g.dragInstance, g._moveBy(d.pageX - e.offsetX, d.pageY - e.offsetY, !1, !0), e.set({offsetX:d.pageX, 
-        offsetY:d.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
-      }
+      $(document).off(".block", e);
+      n.dominate();
     }
     function d(b) {
-      f && (clearTimeout(f), f = null);
-      $(document).unbind(".block");
-      g.terminateDrag(b);
-      h && h.set({dragBlock:null});
-      g._changeFill(!1);
+      b.stopPropagation();
+      var e = k.workspace.getMode(), d;
+      e === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
+      d = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+      var f = h.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
+      if (h.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) {
+        g && (clearTimeout(g), g = null), h.movable && (h.isInBlockMenu ? k.cloneToGlobal(b) : (b = !1, h.dragMode != Entry.DRAG_MODE_DRAG && (h._toGlobalCoordinate(void 0, !0), h.dragMode = Entry.DRAG_MODE_DRAG, h.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(h, e), n.dominate(), b = !0), this.animating && this.set({animating:!1}), 0 === h.dragInstance.height && h.dragInstance.set({height:-1 + h.height}), e = h.dragInstance, h._moveBy(d.pageX - e.offsetX, d.pageY - e.offsetY, !1, 
+        !0), e.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), h.originPos || (h.originPos = {x:h.x, y:h.y}), b && k.generateCodeMagnetMap(), h._updateCloseBlock()));
+      }
+    }
+    function f(b) {
+      g && (clearTimeout(g), g = null);
+      $(document).unbind(".block", f);
+      $(document).unbind(".block", d);
+      h.terminateDrag(b);
+      k && k.set({dragBlock:null});
+      h._changeFill(!1);
       Entry.GlobalSvg.remove();
-      g.mouseUpEvent.notify();
+      h.mouseUpEvent.notify();
       delete this.mouseDownCoordinate;
-      delete g.dragInstance;
+      delete h.dragInstance;
     }
     b.stopPropagation && b.stopPropagation();
     b.preventDefault && b.preventDefault();
-    var f = null, g = this;
+    var g = null, h = this;
     this._changeFill(!1);
-    var h = this.getBoard();
+    var k = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify(b);
-    if (!this.readOnly && !h.viewOnly) {
-      h.setSelectedBlock(this);
-      this.dominate();
+    if (!this.readOnly && !k.viewOnly) {
+      k.setSelectedBlock(this);
       if ((0 === b.button || b.originalEvent && b.originalEvent.touches) && !this._board.readOnly) {
-        var k = b.type, l;
-        l = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-        this.mouseDownCoordinate = {x:l.pageX, y:l.pageY};
-        var m = $(document);
-        this.disableMouseEvent || m.bind("mousemove.block touchmove.block", e);
-        m.bind("mouseup.block touchend.block", d);
-        this.dragInstance = new Entry.DragInstance({startX:l.pageX, startY:l.pageY, offsetX:l.pageX, offsetY:l.pageY, height:0, mode:!0});
-        h.set({dragBlock:this});
+        var l = b.type, m;
+        m = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+        this.mouseDownCoordinate = {x:m.pageX, y:m.pageY};
+        var q = $(document);
+        this.disableMouseEvent || q.bind("mousemove.block touchmove.block", d);
+        q.bind("mouseup.block touchend.block", f);
+        q.on("click.block", e);
+        this.dragInstance = new Entry.DragInstance({startX:m.pageX, startY:m.pageY, offsetX:m.pageX, offsetY:m.pageY, height:0, mode:!0});
+        k.set({dragBlock:this});
         this.addDragging();
         this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
-        "touchstart" === k && (f = setTimeout(function() {
-          f && (f = null, d(), g._rightClick(b));
+        "touchstart" === l && (g = setTimeout(function() {
+          g && (g = null, f(), h._rightClick(b));
         }, 1000));
       } else {
         Entry.Utils.isRightButton(b) && this._rightClick(b);
       }
-      h.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (vimBoard = $(".entryVimBoard>.CodeMirror")[0], document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
+      k.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (vimBoard = $(".entryVimBoard>.CodeMirror")[0], document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
+      var n = this;
     }
   };
   c.vimBoardEvent = function(b, c, d) {
@@ -25292,7 +25299,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     }
     this.destroyShadow();
     delete this.originPos;
-    this.dominate();
   };
   c._updateCloseBlock = function() {
     var b = this.getBoard(), c;
