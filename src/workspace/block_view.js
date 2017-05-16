@@ -430,6 +430,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         );
     };
 
+    p.moveBy = p._moveBy;
+
     p._addControl = function() {
         var that = this;
         this._mouseEnable = true;
