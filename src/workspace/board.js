@@ -1050,6 +1050,7 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.getDom = function(query) {
+        query = query.concat();
         var key = query.shift();
         if (key === 'trashcan')
             return this.workspace.trashcan.svgGroup;
@@ -1063,7 +1064,7 @@ Entry.Board.DRAG_RADIUS = 5;
                         left: query[0] + boardOffset.left - halfWidth,
                         width: 2 * halfWidth,
                         height: 2 * halfWidth
-                    }
+                    };
                 }.bind(this)
             }
         else if (key instanceof Array) {
@@ -1088,8 +1089,6 @@ Entry.Board.DRAG_RADIUS = 5;
 
     p.scrollToPointer = function(pointer, query) {
         var obj = this.code.getByPointer(pointer);
-        //var dom = obj.getDom? obj.getDom(query) : obj.svgGroup;
-        //var rect = dom.getBoundingClientRect();
         var pos;
         if (obj instanceof Entry.Block) {
             pos = obj.view.getAbsoluteCoordinate();
@@ -1100,17 +1099,24 @@ Entry.Board.DRAG_RADIUS = 5;
             pos = obj.getAbsolutePosFromBoard();
 
 
-        var newX = 0, newY = 0;
-        if (pos.x > this._offset.width - 200)
-            newX = this._offset.width - 200 - pos.x;
+        var newX = 0,
+            newY = 0,
+            offset = this._offset,
+            width = offset.width,
+            height = offset.height;
+
+        if (pos.x > width - 200)
+            newX = width - 200 - pos.x;
         else if (pos.x < 100)
             newX = 100 - pos.x;
-        if (pos.y > this._offset.height - 200)
-            newY = this._offset.height - 200 - pos.y;
+
+        if (pos.y > height - 200)
+            newY = height - 200 - pos.y;
         else if (pos.y < 100)
             newY = 100 - pos.y;
 
         this.scroller.scroll(newX, newY, true);
+        return [newX, newY];
     };
 
 })(Entry.Board.prototype);

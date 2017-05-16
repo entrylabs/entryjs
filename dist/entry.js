@@ -11159,11 +11159,11 @@ Entry.TextCodingUtil = {};
     }
     return c;
   };
-  c.isLocalType = function(b, f) {
-    if ("variables" == f) {
-      var c = Entry.variableContainer.variables_, e;
-      for (e in c) {
-        var g = c[e];
+  c.isLocalType = function(b, c) {
+    if ("variables" == c) {
+      var d = Entry.variableContainer.variables_, e;
+      for (e in d) {
+        var g = d[e];
         if (g.id_ == b) {
           if (g.object_) {
             return !0;
@@ -11172,9 +11172,9 @@ Entry.TextCodingUtil = {};
         }
       }
     } else {
-      if ("lists" == f) {
-        for (e in c = Entry.variableContainer.lists_, c) {
-          if (g = c[e], g.id_ == b) {
+      if ("lists" == c) {
+        for (e in d = Entry.variableContainer.lists_, d) {
+          if (g = d[e], g.id_ == b) {
             if (g.object_) {
               return !0;
             }
@@ -17939,8 +17939,18 @@ Entry.Model = function(c, b) {
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
     d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
     var l = b.tooltip.isDefault, m = !1, q = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !m && c && (m = !0, f(), d.toolTipRender.titleIndex = 1, d.toolTipRender && (l ? Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1]).isParamBlockType() ? d.toolTipRender.contentIndex = 2 : d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 1), c = d.processDomQuery(["playground", "board", "&1", "magnet"]), q.init([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
-      }}));
+      if (!m && c) {
+        m = !0;
+        f();
+        c = Entry.Command.editor.board.scrollToPointer(b.content[2][1]);
+        var g = Entry.getMainWS().selectedBlockView;
+        g && c && g.moveBy(-c[0], -c[1]);
+        d.toolTipRender.titleIndex = 1;
+        d.toolTipRender && (l ? (c = Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1])) && c.isParamBlockType() ? d.toolTipRender.contentIndex = 2 : d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 1);
+        c = d.processDomQuery(["playground", "board", "&1", "magnet"]);
+        q.init([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+        }});
+      }
     }});
     return q;
   }, showMe:function(b) {
@@ -23000,6 +23010,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c._moveBy = function(b, c, d, e) {
     return this._moveTo(this.x + b, this.y + c, d, e);
   };
+  c.moveBy = c._moveBy;
   c._addControl = function() {
     var b = this;
     this._mouseEnable = !0;
@@ -26023,6 +26034,7 @@ Entry.Board.DRAG_RADIUS = 5;
     }
   };
   c.getDom = function(b) {
+    b = b.concat();
     var c = b.shift();
     if ("trashcan" === c) {
       return this.workspace.trashcan.svgGroup;
@@ -26043,10 +26055,11 @@ Entry.Board.DRAG_RADIUS = 5;
   c.scrollToPointer = function(b, c) {
     var d = this.code.getByPointer(b), e;
     d instanceof Entry.Block ? (e = d.view.getAbsoluteCoordinate(), d.view.dominate()) : d instanceof Entry.Thread ? e = d.view.requestAbsoluteCoordinate() : d.getAbsolutePosFromBoard && (e = d.getAbsolutePosFromBoard());
-    var g = d = 0;
-    e.x > this._offset.width - 200 ? d = this._offset.width - 200 - e.x : 100 > e.x && (d = 100 - e.x);
-    e.y > this._offset.height - 200 ? g = this._offset.height - 200 - e.y : 100 > e.y && (g = 100 - e.y);
+    var g = d = 0, h = this._offset, k = h.width, h = h.height;
+    e.x > k - 200 ? d = k - 200 - e.x : 100 > e.x && (d = 100 - e.x);
+    e.y > h - 200 ? g = h - 200 - e.y : 100 > e.y && (g = 100 - e.y);
     this.scroller.scroll(d, g, !0);
+    return [d, g];
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
