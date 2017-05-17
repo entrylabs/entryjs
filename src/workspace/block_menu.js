@@ -630,6 +630,23 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         });
     };
 
+    p.banCategory = function(categoryName) {
+        var categoryElem;
+        if(categoryName in this._categoryElems) {
+            categoryElem = this._categoryElems[categoryName];
+            categoryElem.addClass('entryRemoveCategory');            
+        }
+        this.selectMenu(this.firstSelector, true);
+    }
+
+    p.unbanCategory = function(categoryName) {
+        var categoryElem;
+        if(categoryName in this._categoryElems) {
+            categoryElem = this._categoryElems[categoryName];
+            categoryElem.removeClass('entryRemoveCategory');
+        }
+    }
+
     p.banClass = function(className, doNotAlign) {
         var index = this._bannedClass.indexOf(className);
         if (index < 0) {
@@ -845,15 +862,29 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         for (var i=0; i<data.length; i++)
             this._generateCategoryElement(data[i].category);
+        // var that = this;
+        // for (var i=0; i<data.length; i++) {
+        //     if(i === 0) {
+        //         that.firstSelector = data[i].category;
+        //     }
+        //     var name = data[i].category;
+        //     var visible = data[i].visible;
+        //     this._generateCategoryElement(name, visible);
+        // }
     };
 
-    p._generateCategoryElement = function(name) {
+    p._generateCategoryElement = function(name, visible) {
         var that = this;
         var element = Entry.Dom('li', {
             id: 'entryCategory' + name,
-            class: 'entryCategoryElementWorkspace entryRemove',
+            classes: ['entryCategoryElementWorkspace', 'entryRemove'],
+            // classes: ['entryCategoryElementWorkspace'],
             parent: this._categoryCol
         });
+
+        if(visible === false) {
+            element.addClass('entryRemoveCategory');
+        }
 
         (function(elem, name){
             elem.text(Lang.Blocks[name.toUpperCase()]);

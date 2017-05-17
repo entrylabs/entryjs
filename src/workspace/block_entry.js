@@ -43216,7 +43216,7 @@ Entry.block = {
             var ANALOG = Entry.hw.portData.ANALOG;
             return (ANALOG) ? (ANALOG[port] < 1) : false ;
         }
-    }
+    },    
 };
 
 (function() {
