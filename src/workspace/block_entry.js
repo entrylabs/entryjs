@@ -31751,6 +31751,10 @@ Entry.block = {
             var pin = script.getNumberValue("VALUE", script);
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
+            
+            if(!Entry.hw.sendQueue.digitalPinMode) {
+                Entry.hw.sendQueue.digitalPinMode = {};
+            }
 
             Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
             Entry.hw.sendQueue[pin] = value;
@@ -31859,6 +31863,10 @@ Entry.block = {
                 value = 255;
             } else if(value < 0) {
                 value = 0;
+            }
+            
+            if(!Entry.hw.sendQueue.digitalPinMode) {
+                Entry.hw.sendQueue.digitalPinMode = {};
             }
 
             Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
