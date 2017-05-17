@@ -17936,23 +17936,15 @@ Entry.Model = function(c, b) {
     f && b.push(["count", f ? f : null]);
     return b;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, f, d) {
-    Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
+    var l = Entry.Command.editor.board, m = l.code.getByPointer(b.content[1][1]), q;
+    l.scrollToPointer(b.content[1][1]);
     d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
-    var l = b.tooltip.isDefault, m = !1, q = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      if (!m && c) {
-        m = !0;
-        f();
-        c = Entry.Command.editor.board.scrollToPointer(b.content[2][1]);
-        var g = Entry.getMainWS().selectedBlockView;
-        g && c && g.moveBy(-c[0], -c[1]);
-        d.toolTipRender.titleIndex = 1;
-        d.toolTipRender && (l ? (c = Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1])) && c.isParamBlockType() ? d.toolTipRender.contentIndex = 2 : d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 1);
-        c = d.processDomQuery(["playground", "board", "&1", "magnet"]);
-        q.init([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
-        }});
-      }
+    var n = b.tooltip.isDefault, r = !1, v = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !r && c && (r = !0, f(), c = l.scrollToPointer(b.content[2][1]), m && (q = m.view), q && (q = q.getSvgRoot().blockView, c && q.moveBy(-c[0], -c[1])), d.toolTipRender.titleIndex = 1, d.toolTipRender && (n ? (c = Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1])) && c.isParamBlockType() ? d.toolTipRender.contentIndex = 2 : d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 1), c = d.processDomQuery(["playground", "board", "&1", "magnet"]), v.init([{title:b.tooltip.title, 
+      content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+      }}));
     }});
-    return q;
+    return v;
   }, showMe:function(b) {
     if (!b.isTooltipFaded()) {
       b.fadeOutTooltip();
