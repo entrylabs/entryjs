@@ -205,7 +205,7 @@ goog.require("Entry.Utils");
                         blockView = block.view;
                     if (blockView) {
                         blockView = blockView.getSvgRoot().blockView;
-                        if (ret) blockView.moveBy(-ret[0], -ret[1]);
+                        if (blockView && ret) blockView.moveBy(-ret[0], -ret[1]);
                     }
 
                     restrictor.toolTipRender.titleIndex = 1;
