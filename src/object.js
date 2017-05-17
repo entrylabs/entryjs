@@ -28,11 +28,12 @@ Entry.EntryObject = function(model) {
         this.script = new Entry.Code(script, this);
 
         /** @type {Array.<picture object>} */
-        this.pictures = model.sprite.pictures;
+        this.pictures =
+            JSON.parse(JSON.stringify(model.sprite.pictures || []));
 
         /** @type {Array.<sound object>} */
-        this.sounds = [];
-        this.sounds = model.sprite.sounds;
+        this.sounds =
+            JSON.parse(JSON.stringify(model.sprite.sounds || []));
         for (var i=0; i<this.sounds.length; i++) {
             if (!this.sounds[i].id) {
                 this.sounds[i].id = Entry.generateHash();
@@ -1026,6 +1027,8 @@ Entry.EntryObject = function(model) {
 
         Entry.playground.injectPicture(this);
         Entry.playground.reloadPlayground();
+
+        return true;
     };
 
     /**
@@ -1547,6 +1550,7 @@ Entry.EntryObject = function(model) {
             {
                 text: Lang.Workspace.context_remove,
                 callback: function(){
+                    Entry.dispatchEvent('removeObject', object);
                     Entry.container.removeObject(object);
                 }
             },

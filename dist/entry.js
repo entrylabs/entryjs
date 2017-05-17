@@ -5453,6 +5453,11 @@ Entry.Utils.colorLighten = function(c, b) {
   c.l = Math.min(1, Math.max(0, c.l));
   return Entry.Utils.hslToHex(c);
 };
+Entry.Utils._EmphasizeColorMap = {"#3BBD70":"#5BC982", "#498DEB":"#62A5F4", "#A751E3":"#C08FF7", "#EC4466":"#F46487", "#FF9E20":"#FFB05A", "#A4D01D":"#C4DD31", "#00979D":"#09BAB5", "#FFD974":"#FCDA90", "#E457DC":"#F279F2", "#CC7337":"#DD884E", "#AEB8FF":"#C0CBFF", "#FFCA36":"#F2C670"};
+Entry.Utils.getEmphasizeColor = function(c) {
+  var b = c.toUpperCase();
+  return Entry.Utils._EmphasizeColorMap[b] || c;
+};
 Entry.Utils.bound01 = function(c, b) {
   var e = c;
   "string" == typeof e && -1 != e.indexOf(".") && 1 === parseFloat(e) && (c = "100%");
@@ -6493,8 +6498,18 @@ Entry.Commander = function(c) {
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
     d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
     var f = b.tooltip.isDefault, g = !1, h = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !g && c && (g = !0, e(), d.toolTipRender.titleIndex = 1, d.toolTipRender && (f ? Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1]).isParamBlockType() ? d.toolTipRender.contentIndex = 2 : d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 1), c = d.processDomQuery(["playground", "board", "&1", "magnet"]), h.init([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
-      }}));
+      if (!g && c) {
+        g = !0;
+        e();
+        c = Entry.Command.editor.board.scrollToPointer(b.content[2][1]);
+        var k = Entry.getMainWS().selectedBlockView;
+        k && c && k.moveBy(-c[0], -c[1]);
+        d.toolTipRender.titleIndex = 1;
+        d.toolTipRender && (f ? (c = Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1])) && c.isParamBlockType() ? d.toolTipRender.contentIndex = 2 : d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 1);
+        c = d.processDomQuery(["playground", "board", "&1", "magnet"]);
+        h.init([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+        }});
+      }
     }});
     return h;
   }, showMe:function(b) {
@@ -10327,9 +10342,8 @@ Entry.EntryObject = function(c) {
     this.objectType = c.objectType;
     this.objectType || (this.objectType = "sprite");
     this.script = new Entry.Code(c.script ? c.script : [], this);
-    this.pictures = c.sprite.pictures;
-    this.sounds = [];
-    this.sounds = c.sprite.sounds;
+    this.pictures = JSON.parse(JSON.stringify(c.sprite.pictures || []));
+    this.sounds = JSON.parse(JSON.stringify(c.sprite.sounds || []));
     for (var e = 0;e < this.sounds.length;e++) {
       this.sounds[e].id || (this.sounds[e].id = Entry.generateHash()), Entry.initSound(this.sounds[e]);
     }
@@ -10774,6 +10788,7 @@ Entry.EntryObject = function(c) {
     b === this.selectedPicture && Entry.playground.selectPicture(this.pictures[0]);
     Entry.playground.injectPicture(this);
     Entry.playground.reloadPlayground();
+    return !0;
   };
   c.getPicture = function(b) {
     if (!b) {
@@ -11020,6 +11035,7 @@ Entry.EntryObject = function(c) {
       }}, {text:Lang.Workspace.context_duplicate, enable:!Entry.engine.isState("run"), callback:function() {
         Entry.container.addCloneObject(c);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
+        Entry.dispatchEvent("removeObject", c);
         Entry.container.removeObject(c);
       }}, {text:Lang.Workspace.copy_file, callback:function() {
         Entry.container.setCopiedObject(c);
@@ -15261,7 +15277,7 @@ Entry.Playground = function() {
       }}, {text:Lang.Workspace.context_duplicate, callback:function() {
         Entry.playground.clonePicture(b.id);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
-        Entry.playground.object.removePicture(b.id) ? (Entry.removeElement(d), Entry.toast.success(Lang.Workspace.shape_remove_ok, b.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
+        Entry.playground.object.removePicture(b.id) ? (Entry.removeElement(d), Entry.dispatchEvent("removePicture", b), Entry.toast.success(Lang.Workspace.shape_remove_ok, b.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
       }}, {divider:!0}, {text:Lang.Workspace.context_download, callback:function() {
         Entry.playground.downloadPicture(b.id);
       }}], "workspace-contextmenu");
@@ -15304,9 +15320,9 @@ Entry.Playground = function() {
       Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
         k.focus();
       }}, {text:Lang.Workspace.context_duplicate, callback:function() {
-        Entry.playground.addSound(b, !0);
+        Entry.playground.addSound(b, !0, !0);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
-        Entry.do("objectRemoveSound", Entry.playground.object.id, b) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.sound_remove_ok, b.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
+        Entry.do("objectRemoveSound", Entry.playground.object.id, b) ? (Entry.removeElement(c), Entry.dispatchEvent("removeSound", b), Entry.toast.success(Lang.Workspace.sound_remove_ok, b.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
         Entry.removeElement(c);
       }}], "workspace-contextmenu");
     });
@@ -25045,7 +25061,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     }));
     var g = this._schema.color;
     if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this.block.emphasized) {
-      g = Entry.Utils.colorLighten(g);
+      g = Entry.Utils.getEmphasizeColor(g);
     }
     this._fillColor = g;
     f = {d:f, fill:g, class:"blockPath"};
@@ -25174,6 +25190,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c._moveBy = function(b, c, d, f) {
     return this._moveTo(this.x + b, this.y + c, d, f);
   };
+  c.moveBy = c._moveBy;
   c._addControl = function() {
     var b = this;
     this._mouseEnable = !0;
@@ -25192,53 +25209,60 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c.onMouseDown = function(b) {
     function e(b) {
       b.stopPropagation();
-      var e = h.workspace.getMode(), d;
-      e === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
-      d = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-      var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(d.pageX - k.x, 2) + Math.pow(d.pageY - k.y, 2));
-      if (g.dragMode == Entry.DRAG_MODE_DRAG || k > Entry.BlockView.DRAG_RADIUS) {
-        f && (clearTimeout(f), f = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, e), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), e = g.dragInstance, g._moveBy(d.pageX - e.offsetX, d.pageY - e.offsetY, !1, !0), e.set({offsetX:d.pageX, 
-        offsetY:d.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
-      }
+      $(document).off(".block", e);
+      n.dominate();
     }
     function d(b) {
-      f && (clearTimeout(f), f = null);
-      $(document).unbind(".block");
-      g.terminateDrag(b);
-      h && h.set({dragBlock:null});
-      g._changeFill(!1);
+      b.stopPropagation();
+      var e = k.workspace.getMode(), d;
+      e === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
+      d = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+      var f = h.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
+      if (h.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) {
+        g && (clearTimeout(g), g = null), h.movable && (h.isInBlockMenu ? k.cloneToGlobal(b) : (b = !1, h.dragMode != Entry.DRAG_MODE_DRAG && (h._toGlobalCoordinate(void 0, !0), h.dragMode = Entry.DRAG_MODE_DRAG, h.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(h, e), n.dominate(), b = !0), this.animating && this.set({animating:!1}), 0 === h.dragInstance.height && h.dragInstance.set({height:-1 + h.height}), e = h.dragInstance, h._moveBy(d.pageX - e.offsetX, d.pageY - e.offsetY, !1, 
+        !0), e.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), h.originPos || (h.originPos = {x:h.x, y:h.y}), b && k.generateCodeMagnetMap(), h._updateCloseBlock()));
+      }
+    }
+    function f(b) {
+      g && (clearTimeout(g), g = null);
+      $(document).unbind(".block", f);
+      $(document).unbind(".block", d);
+      h.terminateDrag(b);
+      k && k.set({dragBlock:null});
+      h._changeFill(!1);
       Entry.GlobalSvg.remove();
-      g.mouseUpEvent.notify();
+      h.mouseUpEvent.notify();
       delete this.mouseDownCoordinate;
-      delete g.dragInstance;
+      delete h.dragInstance;
     }
     b.stopPropagation && b.stopPropagation();
     b.preventDefault && b.preventDefault();
-    var f = null, g = this;
+    var g = null, h = this;
     this._changeFill(!1);
-    var h = this.getBoard();
+    var k = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify(b);
-    if (!this.readOnly && !h.viewOnly) {
-      h.setSelectedBlock(this);
-      this.dominate();
+    if (!this.readOnly && !k.viewOnly) {
+      k.setSelectedBlock(this);
       if ((0 === b.button || b.originalEvent && b.originalEvent.touches) && !this._board.readOnly) {
-        var k = b.type, l;
-        l = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-        this.mouseDownCoordinate = {x:l.pageX, y:l.pageY};
-        var m = $(document);
-        this.disableMouseEvent || m.bind("mousemove.block touchmove.block", e);
-        m.bind("mouseup.block touchend.block", d);
-        this.dragInstance = new Entry.DragInstance({startX:l.pageX, startY:l.pageY, offsetX:l.pageX, offsetY:l.pageY, height:0, mode:!0});
-        h.set({dragBlock:this});
+        var l = b.type, m;
+        m = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+        this.mouseDownCoordinate = {x:m.pageX, y:m.pageY};
+        var q = $(document);
+        this.disableMouseEvent || q.bind("mousemove.block touchmove.block", d);
+        q.bind("mouseup.block touchend.block", f);
+        q.on("click.block", e);
+        this.dragInstance = new Entry.DragInstance({startX:m.pageX, startY:m.pageY, offsetX:m.pageX, offsetY:m.pageY, height:0, mode:!0});
+        k.set({dragBlock:this});
         this.addDragging();
         this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
-        "touchstart" === k && (f = setTimeout(function() {
-          f && (f = null, d(), g._rightClick(b));
+        "touchstart" === l && (g = setTimeout(function() {
+          g && (g = null, f(), h._rightClick(b));
         }, 1000));
       } else {
         Entry.Utils.isRightButton(b) && this._rightClick(b);
       }
-      h.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (vimBoard = $(".entryVimBoard>.CodeMirror")[0], document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
+      k.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (vimBoard = $(".entryVimBoard>.CodeMirror")[0], document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
+      var n = this;
     }
   };
   c.vimBoardEvent = function(b, c, d) {
@@ -25277,7 +25301,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     }
     this.destroyShadow();
     delete this.originPos;
-    this.dominate();
   };
   c._updateCloseBlock = function() {
     var b = this.getBoard(), c;
@@ -25455,9 +25478,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   };
   c._updateColor = function() {
     var b = this._schema.color;
-    console.log(this.block.emphasized);
     if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this.block.emphasized) {
-      b = Entry.Utils.colorLighten(b);
+      b = Entry.Utils.getEmphasizeColor(b);
     }
     this._fillColor = b;
     this._path.attr({fill:b});
@@ -25877,7 +25899,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     var e = this.svgGroup;
     this._position && (this._position.x && (b = this._position.x), this._position.y && (c = this._position.y));
     var g = this._valueBlock;
-    g && g && g.view && (c = -0.5 * g.view.height);
+    g && g.view && (c = -0.5 * g.view.height);
     g = "translate(" + b + "," + c + ")";
     void 0 === d || d ? e.animate({transform:g}, 300, mina.easeinout) : e.attr({transform:g});
     this.box.set({x:b, y:c});
@@ -26611,6 +26633,7 @@ Entry.Board.DRAG_RADIUS = 5;
     }
   };
   c.getDom = function(b) {
+    b = b.concat();
     var c = b.shift();
     if ("trashcan" === c) {
       return this.workspace.trashcan.svgGroup;
@@ -26633,9 +26656,11 @@ Entry.Board.DRAG_RADIUS = 5;
     var d;
     b instanceof Entry.Block ? (d = b.view.getAbsoluteCoordinate(), b.view.dominate()) : b instanceof Entry.Thread ? d = b.view.requestAbsoluteCoordinate() : b.getAbsolutePosFromBoard && (d = b.getAbsolutePosFromBoard());
     c = b = 0;
-    d.x > this._offset.width - 200 ? b = this._offset.width - 200 - d.x : 100 > d.x && (b = 100 - d.x);
-    d.y > this._offset.height - 200 ? c = this._offset.height - 200 - d.y : 100 > d.y && (c = 100 - d.y);
+    var e = this._offset, g = e.width, e = e.height;
+    d.x > g - 200 ? b = g - 200 - d.x : 100 > d.x && (b = 100 - d.x);
+    d.y > e - 200 ? c = e - 200 - d.y : 100 > d.y && (c = 100 - d.y);
     this.scroller.scroll(b, c, !0);
+    return [b, c];
   };
 })(Entry.Board.prototype);
 Entry.Code = function(c, b) {
@@ -27351,7 +27376,11 @@ Entry.FieldDropdown = function(c, b, e) {
   this.svgGroup = null;
   this._contents = c;
   this._noArrow = c.noArrow;
-  this._arrowColor = c.arrowColor;
+  var d = c.arrowColor;
+  if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+    d = b._fillColor;
+  }
+  this._arrowColor = d;
   this._index = e;
   this.setValue(this.getValue());
   this._CONTENT_HEIGHT = this.getContentHeight(c.dropdownHeight);
@@ -27469,7 +27498,11 @@ Entry.FieldDropdownDynamic = function(c, b, e) {
   this.svgGroup = null;
   this._contents = c;
   this._index = e;
-  this._arrowColor = c.arrowColor;
+  e = c.arrowColor;
+  if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+    e = b._fillColor;
+  }
+  this._arrowColor = e;
   e = this._contents.menuName;
   Entry.Utils.isFunction(e) ? this._menuGenerator = e : this._menuName = e;
   this._CONTENT_HEIGHT = this.getContentHeight(c.dropdownHeight);
@@ -27564,7 +27597,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
   c.renderStart = function() {
     this.svgGroup && this.svgGroup.remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
-    this._imgUrl && (this._imgElement = this.svgGroup.elem("image", {href:Entry.mediaFilePath + this._imgUrl, x:this._position ? -1 * this._size : 0, y:-1 * this._size, width:2 * this._size, height:2 * this._size, style:this._block.emphasized ? "opacity: 0.5" : ""}));
+    this._imgUrl && (this._imgElement = this.svgGroup.elem("image", {href:Entry.mediaFilePath + this._imgUrl, x:this._position ? -1 * this._size : 0, y:-1 * this._size, width:2 * this._size, height:2 * this._size}), this._block.emphasized && (this._imgUrl = this._imgUrl.replace(".png", "_un.png")));
     var b = "m %s,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
     this._path = this.svgGroup.elem("path", {d:b, x:this._position ? -1 * this._size : 0, y:-1 * this._size, stroke:"none", fill:this._color ? this._color : "none"});
     this.box.set({width:this._size * this._boxMultiplier + (this._position ? -this._size : 0), height:this._size * this._boxMultiplier});
@@ -27719,7 +27752,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     var e = this.svgGroup;
     this._position && (this._position.x && (b = this._position.x), this._position.y && (c = this._position.y));
     var g = this._valueBlock;
-    g && (c = -0.5 * g.view.height);
+    g && g.view && (c = -0.5 * g.view.height);
     g = "translate(" + b + "," + c + ")";
     void 0 === d || d ? e.animate({transform:g}, 300, mina.easeinout) : e.attr({transform:g});
     this.box.set({x:b, y:c});

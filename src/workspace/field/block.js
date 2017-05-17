@@ -93,9 +93,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
         var block = this._valueBlock;
 
-        if (block && (block && block.view)) {
+        if (block && block.view)
             y = block.view.height * -0.5;
-        }
+
         var transform = "translate(" + x + "," + y + ")";
 
         if (animate)
