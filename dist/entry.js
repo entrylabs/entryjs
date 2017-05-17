@@ -7293,9 +7293,8 @@ Entry.EntryObject = function(c) {
     this.objectType = c.objectType;
     this.objectType || (this.objectType = "sprite");
     this.script = new Entry.Code(c.script ? c.script : [], this);
-    this.pictures = c.sprite.pictures;
-    this.sounds = [];
-    this.sounds = c.sprite.sounds;
+    this.pictures = JSON.parse(JSON.stringify(c.sprite.pictures || []));
+    this.sounds = JSON.parse(JSON.stringify(c.sprite.sounds || []));
     for (var f = 0;f < this.sounds.length;f++) {
       this.sounds[f].id || (this.sounds[f].id = Entry.generateHash()), Entry.initSound(this.sounds[f]);
     }
@@ -17009,6 +17008,11 @@ Entry.Utils.colorLighten = function(c, b) {
   f.l = Math.min(1, Math.max(0, f.l));
   return Entry.Utils.hslToHex(f);
 };
+Entry.Utils._EmphasizeColorMap = {"#3BBD70":"#5BC982", "#498DEB":"#62A5F4", "#A751E3":"#C08FF7", "#EC4466":"#F46487", "#FF9E20":"#FFB05A", "#A4D01D":"#C4DD31", "#00979D":"#09BAB5", "#FFD974":"#FCDA90", "#E457DC":"#F279F2", "#CC7337":"#DD884E", "#AEB8FF":"#C0CBFF", "#FFCA36":"#F2C670"};
+Entry.Utils.getEmphasizeColor = function(c) {
+  var b = c.toUpperCase();
+  return Entry.Utils._EmphasizeColorMap[b] || c;
+};
 Entry.Utils.bound01 = function(c, b) {
   var f = c;
   "string" == typeof f && -1 != f.indexOf(".") && 1 === parseFloat(f) && (c = "100%");
@@ -22873,7 +22877,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     }));
     var h = this._schema.color;
     if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this.block.emphasized) {
-      h = Entry.Utils.colorLighten(h);
+      h = Entry.Utils.getEmphasizeColor(h);
     }
     this._fillColor = h;
     g = {d:g, fill:h, class:"blockPath"};
@@ -23284,9 +23288,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   };
   c._updateColor = function() {
     var b = this._schema.color;
-    console.log(this.block.emphasized);
     if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this.block.emphasized) {
-      b = Entry.Utils.colorLighten(b);
+      b = Entry.Utils.getEmphasizeColor(b);
     }
     this._fillColor = b;
     this._path.attr({fill:b});
@@ -24537,7 +24540,11 @@ Entry.FieldDropdown = function(c, b, f) {
   this.svgGroup = null;
   this._contents = c;
   this._noArrow = c.noArrow;
-  this._arrowColor = c.arrowColor;
+  var d = c.arrowColor;
+  if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+    d = b._fillColor;
+  }
+  this._arrowColor = d;
   this._index = f;
   this.setValue(this.getValue());
   this._CONTENT_HEIGHT = this.getContentHeight(c.dropdownHeight);
@@ -24655,7 +24662,11 @@ Entry.FieldDropdownDynamic = function(c, b, f) {
   this.svgGroup = null;
   this._contents = c;
   this._index = f;
-  this._arrowColor = c.arrowColor;
+  f = c.arrowColor;
+  if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+    f = b._fillColor;
+  }
+  this._arrowColor = f;
   f = this._contents.menuName;
   Entry.Utils.isFunction(f) ? this._menuGenerator = f : this._menuName = f;
   this._CONTENT_HEIGHT = this.getContentHeight(c.dropdownHeight);
@@ -24750,7 +24761,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
   c.renderStart = function() {
     this.svgGroup && this.svgGroup.remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
-    this._imgUrl && (this._imgElement = this.svgGroup.elem("image", {href:Entry.mediaFilePath + this._imgUrl, x:this._position ? -1 * this._size : 0, y:-1 * this._size, width:2 * this._size, height:2 * this._size, style:this._block.emphasized ? "opacity: 0.5" : ""}));
+    this._imgUrl && (this._imgElement = this.svgGroup.elem("image", {href:Entry.mediaFilePath + this._imgUrl, x:this._position ? -1 * this._size : 0, y:-1 * this._size, width:2 * this._size, height:2 * this._size}), this._block.emphasized && (this._imgUrl = this._imgUrl.replace(".png", "_un.png")));
     var b = "m %s,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
     this._path = this.svgGroup.elem("path", {d:b, x:this._position ? -1 * this._size : 0, y:-1 * this._size, stroke:"none", fill:this._color ? this._color : "none"});
     this.box.set({width:this._size * this._boxMultiplier + (this._position ? -this._size : 0), height:this._size * this._boxMultiplier});
