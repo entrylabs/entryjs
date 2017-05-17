@@ -7739,6 +7739,7 @@ Entry.EntryObject = function(c) {
     b === this.selectedPicture && Entry.playground.selectPicture(this.pictures[0]);
     Entry.playground.injectPicture(this);
     Entry.playground.reloadPlayground();
+    return !0;
   };
   c.getPicture = function(b) {
     if (!b) {
@@ -7983,6 +7984,7 @@ Entry.EntryObject = function(c) {
       }}, {text:Lang.Workspace.context_duplicate, enable:!Entry.engine.isState("run"), callback:function() {
         Entry.container.addCloneObject(f);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
+        Entry.dispatchEvent("removeObject", f);
         Entry.container.removeObject(f);
       }}, {text:Lang.Workspace.copy_file, callback:function() {
         Entry.container.setCopiedObject(f);
@@ -11158,11 +11160,11 @@ Entry.TextCodingUtil = {};
     }
     return c;
   };
-  c.isLocalType = function(b, c) {
-    if ("variables" == c) {
-      var d = Entry.variableContainer.variables_, e;
-      for (e in d) {
-        var g = d[e];
+  c.isLocalType = function(b, f) {
+    if ("variables" == f) {
+      var c = Entry.variableContainer.variables_, e;
+      for (e in c) {
+        var g = c[e];
         if (g.id_ == b) {
           if (g.object_) {
             return !0;
@@ -11171,9 +11173,9 @@ Entry.TextCodingUtil = {};
         }
       }
     } else {
-      if ("lists" == c) {
-        for (e in d = Entry.variableContainer.lists_, d) {
-          if (g = d[e], g.id_ == b) {
+      if ("lists" == f) {
+        for (e in c = Entry.variableContainer.lists_, c) {
+          if (g = c[e], g.id_ == b) {
             if (g.object_) {
               return !0;
             }
@@ -23025,53 +23027,60 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c.onMouseDown = function(b) {
     function f(b) {
       b.stopPropagation();
-      var d = h.workspace.getMode(), f;
-      d === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
-      f = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-      var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(f.pageX - k.x, 2) + Math.pow(f.pageY - k.y, 2));
-      if (g.dragMode == Entry.DRAG_MODE_DRAG || k > Entry.BlockView.DRAG_RADIUS) {
-        e && (clearTimeout(e), e = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, d), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), d = g.dragInstance, g._moveBy(f.pageX - d.offsetX, f.pageY - d.offsetY, !1, !0), d.set({offsetX:f.pageX, 
-        offsetY:f.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
-      }
+      $(document).off(".block", f);
+      n.dominate();
     }
     function d(b) {
-      e && (clearTimeout(e), e = null);
-      $(document).unbind(".block");
-      g.terminateDrag(b);
-      h && h.set({dragBlock:null});
-      g._changeFill(!1);
+      b.stopPropagation();
+      var d = k.workspace.getMode(), f;
+      d === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
+      f = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+      var e = h.mouseDownCoordinate, e = Math.sqrt(Math.pow(f.pageX - e.x, 2) + Math.pow(f.pageY - e.y, 2));
+      if (h.dragMode == Entry.DRAG_MODE_DRAG || e > Entry.BlockView.DRAG_RADIUS) {
+        g && (clearTimeout(g), g = null), h.movable && (h.isInBlockMenu ? k.cloneToGlobal(b) : (b = !1, h.dragMode != Entry.DRAG_MODE_DRAG && (h._toGlobalCoordinate(void 0, !0), h.dragMode = Entry.DRAG_MODE_DRAG, h.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(h, d), n.dominate(), b = !0), this.animating && this.set({animating:!1}), 0 === h.dragInstance.height && h.dragInstance.set({height:-1 + h.height}), d = h.dragInstance, h._moveBy(f.pageX - d.offsetX, f.pageY - d.offsetY, !1, 
+        !0), d.set({offsetX:f.pageX, offsetY:f.pageY}), Entry.GlobalSvg.position(), h.originPos || (h.originPos = {x:h.x, y:h.y}), b && k.generateCodeMagnetMap(), h._updateCloseBlock()));
+      }
+    }
+    function e(b) {
+      g && (clearTimeout(g), g = null);
+      $(document).unbind(".block", e);
+      $(document).unbind(".block", d);
+      h.terminateDrag(b);
+      k && k.set({dragBlock:null});
+      h._changeFill(!1);
       Entry.GlobalSvg.remove();
-      g.mouseUpEvent.notify();
+      h.mouseUpEvent.notify();
       delete this.mouseDownCoordinate;
-      delete g.dragInstance;
+      delete h.dragInstance;
     }
     b.stopPropagation && b.stopPropagation();
     b.preventDefault && b.preventDefault();
-    var e = null, g = this;
+    var g = null, h = this;
     this._changeFill(!1);
-    var h = this.getBoard();
+    var k = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify(b);
-    if (!this.readOnly && !h.viewOnly) {
-      h.setSelectedBlock(this);
-      this.dominate();
+    if (!this.readOnly && !k.viewOnly) {
+      k.setSelectedBlock(this);
       if ((0 === b.button || b.originalEvent && b.originalEvent.touches) && !this._board.readOnly) {
-        var k = b.type, l;
-        l = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-        this.mouseDownCoordinate = {x:l.pageX, y:l.pageY};
-        var m = $(document);
-        this.disableMouseEvent || m.bind("mousemove.block touchmove.block", f);
-        m.bind("mouseup.block touchend.block", d);
-        this.dragInstance = new Entry.DragInstance({startX:l.pageX, startY:l.pageY, offsetX:l.pageX, offsetY:l.pageY, height:0, mode:!0});
-        h.set({dragBlock:this});
+        var l = b.type, m;
+        m = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+        this.mouseDownCoordinate = {x:m.pageX, y:m.pageY};
+        var q = $(document);
+        this.disableMouseEvent || q.bind("mousemove.block touchmove.block", d);
+        q.bind("mouseup.block touchend.block", e);
+        q.on("click.block", f);
+        this.dragInstance = new Entry.DragInstance({startX:m.pageX, startY:m.pageY, offsetX:m.pageX, offsetY:m.pageY, height:0, mode:!0});
+        k.set({dragBlock:this});
         this.addDragging();
         this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
-        "touchstart" === k && (e = setTimeout(function() {
-          e && (e = null, d(), g._rightClick(b));
+        "touchstart" === l && (g = setTimeout(function() {
+          g && (g = null, e(), h._rightClick(b));
         }, 1E3));
       } else {
         Entry.Utils.isRightButton(b) && this._rightClick(b);
       }
-      h.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (vimBoard = $(".entryVimBoard>.CodeMirror")[0], document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
+      k.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (vimBoard = $(".entryVimBoard>.CodeMirror")[0], document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
+      var n = this;
     }
   };
   c.vimBoardEvent = function(b, c, d) {
@@ -23110,7 +23119,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     }
     this.destroyShadow();
     delete this.originPos;
-    this.dominate();
   };
   c._updateCloseBlock = function() {
     var b = this.getBoard(), c;
@@ -28241,7 +28249,7 @@ Entry.Playground = function() {
       }}, {text:Lang.Workspace.context_duplicate, callback:function() {
         Entry.playground.clonePicture(b.id);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
-        Entry.playground.object.removePicture(b.id) ? (Entry.removeElement(d), Entry.toast.success(Lang.Workspace.shape_remove_ok, b.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
+        Entry.playground.object.removePicture(b.id) ? (Entry.removeElement(d), Entry.dispatchEvent("removePicture", b), Entry.toast.success(Lang.Workspace.shape_remove_ok, b.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
       }}, {divider:!0}, {text:Lang.Workspace.context_download, callback:function() {
         Entry.playground.downloadPicture(b.id);
       }}], "workspace-contextmenu");
@@ -28286,7 +28294,7 @@ Entry.Playground = function() {
       }}, {text:Lang.Workspace.context_duplicate, callback:function() {
         Entry.playground.addSound(b, !0, !0);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
-        Entry.do("objectRemoveSound", Entry.playground.object.id, b) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.sound_remove_ok, b.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
+        Entry.do("objectRemoveSound", Entry.playground.object.id, b) ? (Entry.removeElement(c), Entry.dispatchEvent("removeSound", b), Entry.toast.success(Lang.Workspace.sound_remove_ok, b.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
         Entry.removeElement(c);
       }}], "workspace-contextmenu");
     });

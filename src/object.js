@@ -1027,6 +1027,8 @@ Entry.EntryObject = function(model) {
 
         Entry.playground.injectPicture(this);
         Entry.playground.reloadPlayground();
+
+        return true;
     };
 
     /**
@@ -1548,6 +1550,7 @@ Entry.EntryObject = function(model) {
             {
                 text: Lang.Workspace.context_remove,
                 callback: function(){
+                    Entry.dispatchEvent('removeObject', object);
                     Entry.container.removeObject(object);
                 }
             },
