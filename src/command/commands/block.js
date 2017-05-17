@@ -176,7 +176,10 @@ goog.require("Entry.Utils");
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "insertBlock",
         restrict: function(data, domQuery, callback, restrictor) {
-            Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
+            var board = Entry.Command.editor.board;
+            var block = board.code.getByPointer(data.content[1][1]);
+            var blockView;
+            board.scrollToPointer(data.content[1][1]);
 
             if (restrictor.toolTipRender) {
                 restrictor.toolTipRender.titleIndex = 0;
@@ -197,11 +200,13 @@ goog.require("Entry.Utils");
                     isDone = true;
                     callback();
 
-                    var ret = Entry.Command.editor.board
-                        .scrollToPointer(data.content[2][1]);
-                    var blockView = Entry.getMainWS().selectedBlockView;
-                    if (blockView && ret)
-                        blockView.moveBy(-ret[0], -ret[1]);
+                    var ret = board.scrollToPointer(data.content[2][1]);
+                    if (block)
+                        blockView = block.view;
+                    if (blockView) {
+                        blockView = blockView.getSvgRoot().blockView;
+                        if (blockView && ret) blockView.moveBy(-ret[0], -ret[1]);
+                    }
 
                     restrictor.toolTipRender.titleIndex = 1;
 
