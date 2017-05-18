@@ -26532,37 +26532,38 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     this.loadSchema();
   };
   c.changeSchema = function(b, c) {
-    var d = [];
+    var d = document.activeElement, e = [];
     if (c) {
       if (c.isRestore) {
-        d = this._backupParams || [], delete this._backupParams;
+        e = this._backupParams || [], delete this._backupParams;
       } else {
         switch(c.type) {
           case "noChange":
-            d = this.params;
+            e = this.params;
             break;
           case "cut":
             this.params.splice(c.pos);
-            d = this.params;
+            e = this.params;
             break;
           case "insert":
-            for (var e = c.startPos, g = c.endPos, h = Entry.block[this.type].params, d = Array(h.length), k = 0;k < e;k++) {
-              d[k] = this.params[k];
+            for (var g = c.startPos, h = c.endPos, k = Entry.block[this.type].params, e = Array(k.length), l = 0;l < g;l++) {
+              e[l] = this.params[l];
             }
-            e = g - e + 1;
-            for (k = g + 1;k < h.length;k++) {
-              d[k] = this.params[k - e];
+            g = h - g + 1;
+            for (l = h + 1;l < k.length;l++) {
+              e[l] = this.params[l - g];
             }
           ;
         }
       }
     }
-    d.forEach(function(b) {
+    e.forEach(function(b) {
       b instanceof Entry.Block && b.destroyView();
     });
-    this.set({params:d});
+    this.set({params:e});
     this.loadSchema();
     this.view && this.view.changeType();
+    d && d.focus();
   };
   c.getSchema = function() {
     this._schema || this.loadSchema();

@@ -91,6 +91,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.changeSchema = function(diff, changeData) {
+        var elem = document.activeElement;
+
         var params = [];
 
         if (changeData) {
@@ -132,10 +134,13 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             }
         });
 
+
         this.set({params: params});
 
         this.loadSchema();
         this.view && this.view.changeType();
+
+        if (elem) elem.focus();
     };
 
     p.getSchema = function() { // for lazy loading
