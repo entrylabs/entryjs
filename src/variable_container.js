@@ -2292,6 +2292,9 @@ Entry.VariableContainer = function() {
         cloudLists = cloudLists.map(function(v) {
             return v.toJSON();});
 
+        if (!cloudVariables.length && !cloudLists.length)
+            return;
+
         $.ajax({
             url: "/api/project/variable/" + Entry.projectId,
             type: "PUT",
