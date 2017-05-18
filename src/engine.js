@@ -593,6 +593,8 @@ Entry.Engine = function() {
         this.state = 'stop';
         Entry.dispatchEvent('stop');
         Entry.stage.hideInputField();
+        if (Entry.variableContainer)
+            Entry.variableContainer.updateCloudVariables();
         (function(w) {
             w && w.getMode() === Entry.Workspace.MODE_VIMBOARD && w.codeToText();
         })(Entry.getMainWS());
