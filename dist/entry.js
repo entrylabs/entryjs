@@ -6348,6 +6348,7 @@ Entry.Engine = function() {
     this.state = "stop";
     Entry.dispatchEvent("stop");
     Entry.stage.hideInputField();
+    Entry.variableContainer && Entry.variableContainer.updateCloudVariables();
     (function(b) {
       b && b.getMode() === Entry.Workspace.MODE_VIMBOARD && b.codeToText();
     })(Entry.getMainWS());
@@ -20057,7 +20058,6 @@ Entry.Variable.prototype.isNumber = function() {
 };
 Entry.Variable.prototype.setValue = function(c) {
   "slide" != this.type ? this.value_ = c : (c = Number(c), this.value_ = c < this.minValue_ ? this.minValue_ : c > this.maxValue_ ? this.maxValue_ : c);
-  this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this._valueWidth = null;
   this.updateView();
   Entry.requestUpdateTwice = !0;
@@ -21470,7 +21470,7 @@ Entry.VariableContainer = function() {
       }), c = c.map(function(b) {
         return b.toJSON();
       });
-      $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:b, lists:c}}).done(function() {
+      (b.length || c.length) && $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:b, lists:c}}).done(function() {
       });
     }
   };
