@@ -54,8 +54,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
                 height: this._size * 2,
                 // style: this._block.emphasized ? "opacity: 0.5" : ""
             });
-
-            if(this._block.emphasized) {
+            
+            if(this._block.emphasized && this._imgUrl.lastIndexOf('_un.png') === -1) {
                 this._imgUrl = this._imgUrl.replace('.png', '_un.png');
             }
         }
