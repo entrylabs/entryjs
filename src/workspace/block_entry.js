@@ -28599,505 +28599,6 @@ Entry.block = {
         "syntax": {"js": [], "py": ["SensorBoard.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     // ardublock Added 2016-06-01
-/*    
-    "ardublock_analog_list": {
-        "color": "#00979D",
-        "skeleton": "basic_string_field",
-        "statements": [],
-        "template": "%1",
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "A0", "0" ],
-                    [ "A1", "1" ],
-                    [ "A2", "2" ],
-                    [ "A3", "3" ],
-                    [ "A4", "4" ],
-                    [ "A5", "5" ]
-                ],
-                "value": "0",
-                "fontSize": 11
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [ null ]
-        },
-        "paramsKeyMap": {
-            "PORT": 0
-        },
-        "func": function (sprite, script) {
-            return script.getField("PORT");
-        },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "%1",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [ "A0", "0" ],
-                            [ "A1", "1" ],
-                            [ "A2", "2" ],
-                            [ "A3", "3" ],
-                            [ "A4", "4" ],
-                            [ "A5", "5" ]
-                        ],
-                        "value": "0",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringKey,
-                        codeMap:"Entry.CodeMap.Arduino.arduino_ext_analog_list[0]"
-                    }
-                ],
-                keyOption: "ardublock_analog_list"
-            }
-        ]}
-    },    
-    // Analog port read
-    "ardublock_get_number_sensor_value": {
-        "color": "#00979D",
-        "fontColor": "#fff",
-        "skeleton": "basic_string_field",
-        "statements": [],
-        "params": [
-            {
-                "type": "Block",
-                "accept": "string"
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [
-                {
-                    "type": "ardublock_analog_list"
-                }
-            ],
-            "type": "ardublock_get_number_sensor_value"
-        },
-        "paramsKeyMap": {
-            "PORT": 0
-        },
-        "class": "arduino_value",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
-            var port = script.getValue("PORT", script);
-            var ANALOG = Entry.hw.portData.ANALOG;
-            if (port[0] === "A")
-                port = port.substring(1)
-            return ANALOG ? ANALOG[port] || 0 : 0;
-        },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.analogRead(%1)",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-    },
-    "ardublock_get_digital_value": {
-        "color": "#00979D",
-        "fontColor": "#fff",
-        "skeleton": "basic_boolean_field",
-        "params": [{
-            "type": "Block",
-            "accept": "string"
-        }],
-        "events": {},
-        "def": {
-            "params": [
-                {
-                    "type": "arduino_get_port_number"
-                }
-            ],
-            "type": "ardublock_get_digital_value"
-        },
-        "paramsKeyMap": {
-            "PORT": 0
-        },
-        "class": "arduino_value",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
-            var port = script.getNumberValue("PORT", script);
-            var DIGITAL = Entry.hw.portData.DIGITAL;
-            if(!Entry.hw.sendQueue['GET']) {
-                Entry.hw.sendQueue['GET'] = {};
-            }
-            Entry.hw.sendQueue['GET'][Entry.ardublock.sensorTypes.DIGITAL] = {
-                port: port,
-                time: new Date().getTime()
-            };
-            return (DIGITAL) ? DIGITAL[port] || 0 : 0;
-        },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.digitalRead(%1)",
-                keyOption: "ext",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-    },
-    
-    
-    "ardublock_toggle_led": {
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-            {
-                "type": "Block",
-                "accept": "string"
-            },
-            {
-                "type": "Block",
-                "accept": "string"
-            },
-            {
-                "type": "Indicator",
-                "img": "block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [
-                {
-                    "type": "arduino_get_port_number"
-                },
-                {
-                    "type": "arduino_get_digital_toggle",
-                    "params": [ "on" ],
-                },
-                null
-            ],
-            "type": "ardublock_toggle_led"
-        },
-        "paramsKeyMap": {
-            "PORT": 0,
-            "VALUE": 1
-        },
-        "class": "arduino_set",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
-            var port = script.getNumberValue("PORT");
-            var value = script.getValue("VALUE");
-
-            if(typeof value === 'string') {
-                value = value.toLowerCase();
-            }
-            if(Entry.ardublock.highList.indexOf(value) > -1) {
-                value = 255;
-            } else if(Entry.ardublock.lowList.indexOf(value) > -1) {
-                value = 0;
-            } else {
-                throw new Error();
-            }
-            if(!Entry.hw.sendQueue['SET']) {
-                Entry.hw.sendQueue['SET'] = {};
-            }
-            Entry.hw.sendQueue['SET'][port] = {
-                type: Entry.ardublock.sensorTypes.DIGITAL,
-                data: value,
-                time: new Date().getTime()
-            };
-            return script.callReturn();
-        },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.digitalWrite(%1, %2)",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-
-    },
-
-    "ardublock_toggle_pwm": {
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-            {
-                "type": "Block",
-                "accept": "string"
-            },
-            {
-                "type": "Block",
-                "accept": "string"
-            },
-            {
-                "type": "Indicator",
-                "img": "block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [
-                {
-                    "type": "arduino_get_pwm_port_number"
-                },
-                {
-                    "type": "text",
-                    "params": [ "255" ]
-                },
-                null
-            ],
-            "type": "ardublock_toggle_pwm"
-        },
-        "paramsKeyMap": {
-            "PORT": 0,
-            "VALUE": 1
-        },
-        "class": "arduino_set",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
-            var port = script.getNumberValue("PORT");
-            var value = script.getNumberValue("VALUE");
-            value = Math.round(value);
-            value = Math.max(value, 0);
-            value = Math.min(value, 255);
-            if(!Entry.hw.sendQueue['SET']) {
-                Entry.hw.sendQueue['SET'] = {};
-            }
-            Entry.hw.sendQueue['SET'][port] = {
-                type: Entry.ardublock.sensorTypes.PWM,
-                data: value,
-                time: new Date().getTime()
-            };
-            return script.callReturn();
-        },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.analogWrite(%1, %2)",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-    },
-
-
-    "ardublock_convert_scale": {
-        "color": "#00979D",
-        "fontColor": "#fff",
-        "skeleton": "basic_string_field",
-        "statements": [],
-        "params": [
-            {
-                "type": "Block",
-                "accept": "string"
-            },
-            {
-                "type": "Block",
-                "accept": "string"
-            },
-            {
-                "type": "Block",
-                "accept": "string"
-            },
-            {
-                "type": "Block",
-                "accept": "string"
-            },
-            {
-                "type": "Block",
-                "accept": "string"
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [
-                {
-                    "type": "ardublock_get_number_sensor_value",
-                    "params": [
-                        {
-                            "type": "ardublock_analog_list"
-                        }
-                    ]
-                },
-                {
-                    "type": "number",
-                    "params": [ "0" ]
-                },
-                {
-                    "type": "number",
-                    "params": [ "1023" ]
-                },
-                {
-                    "type": "number",
-                    "params": [ "0" ]
-                },
-                {
-                    "type": "number",
-                    "params": [ "100" ]
-                }
-            ],
-            "type": "ardublock_convert_scale"
-        },
-        "paramsKeyMap": {
-            "PORT": 0,
-            "VALUE2": 1,
-            "VALUE3": 2,
-            "VALUE4": 3,
-            "VALUE5": 4
-        },
-        "class": "arduino_value",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
-            var result = script.getValue("PORT", script);
-            var ANALOG = Entry.hw.portData.ANALOG;
-            var value2 = script.getNumberValue("VALUE2", script);
-            var value3 = script.getNumberValue("VALUE3", script);
-            var value4 = script.getNumberValue("VALUE4", script);
-            var value5 = script.getNumberValue("VALUE5", script);
-
-            if (value2 > value3) {
-                var swap = value2;
-                value2 = value3;
-                value3 = swap;
-            }
-            if (value4 > value5) {
-                var swap = value4;
-                value4 = value5;
-                value5 = swap;
-            }
-            result -= value2;
-            result = result * ((value5 - value4) / (value3 - value2));
-            result += value4;
-            result = Math.min(value5, result);
-            result = Math.max(value4, result);
-
-            return result
-        },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.map(%1, %2, %3, %4, %5)",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-    },
-
-
-    "ardublock_get_ultrasonic_value": {
-        "color": "#00979D",
-        "fontColor": "#fff",
-        "skeleton": "basic_string_field",
-        "statements": [],
-        "params": [
-            {
-                "type": "Block",
-                "accept": "string"
-            },
-            {
-                "type": "Block",
-                "accept": "string"
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [{
-                type: 'arduino_get_port_number',
-                params: [ '2' ],
-            }, {
-                type: 'arduino_get_port_number',
-                params: [ '4' ],
-            }],
-            "type": "ardublock_get_ultrasonic_value"
-        },
-        "paramsKeyMap": {
-            "PORT1": 0,
-            "PORT2": 1,
-        },
-        "class": "ardublockSensor",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
-            var port1 = script.getNumberValue("PORT1", script);
-            var port2 = script.getNumberValue("PORT2", script);
-
-            if(!Entry.hw.sendQueue['SET']) {
-                Entry.hw.sendQueue['SET'] = {};
-            }
-            delete Entry.hw.sendQueue['SET'][port1];
-            delete Entry.hw.sendQueue['SET'][port2];
-
-            if(!Entry.hw.sendQueue['GET']) {
-                Entry.hw.sendQueue['GET'] = {};
-            }
-            Entry.hw.sendQueue['GET'][Entry.ardublock.sensorTypes.ULTRASONIC] = {
-                port: [port1, port2],
-                time: new Date().getTime()
-            };
-            return Entry.hw.portData.ULTRASONIC || 0;
-        },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.ultrasonicRead(%1, %2)",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string",
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string",
-                    }
-                ]
-            }
-
-        ]}
-    },    
-*/
 
     "ardublock_analog_list": {
         "color": "#00979D",
@@ -29129,31 +28630,10 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("PORT");
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "%1",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [ "A0", "0" ],
-                            [ "A1", "1" ],
-                            [ "A2", "2" ],
-                            [ "A3", "3" ],
-                            [ "A4", "4" ],
-                            [ "A5", "5" ]
-                        ],
-                        "value": "0",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringKey,
-                        codeMap:"Entry.CodeMap.Arduino.arduino_ext_analog_list[0]"
-                    }
-                ],
-                keyOption: "ardublock_analog_list"
-            }
-        ]}
+    "syntax": {"js": [], "py": []}
     },
+
+
     "ardublock_get_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -29186,19 +28666,9 @@ Entry.block = {
                 port = port.substring(1)
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.analogRead(%1)",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
+    "syntax": {"js": [], "py": []}
     },
+
     "ardublock_get_analog_value_map": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -29291,35 +28761,9 @@ Entry.block = {
 
             return result
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.map(%1, %2, %3, %4, %5)",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
+    "syntax": {"js": [], "py": []}
     },
+
     "ardublock_get_ultrasonic_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -29371,24 +28815,9 @@ Entry.block = {
             };
             return Entry.hw.portData.ULTRASONIC || 0;
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.ultrasonicRead(%1, %2)",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string",
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string",
-                    }
-                ]
-            }
-
-        ]}
+    "syntax": {"js": [], "py": []}
     },
+
     "ardublock_get_digital": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -29423,20 +28852,9 @@ Entry.block = {
             };
             return (DIGITAL) ? DIGITAL[port] || 0 : 0;
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.digitalRead(%1)", 
-                keyOption: "ext",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
+    "syntax": {"js": [], "py": []}
     },
+
     "ardublock_toggle_led": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -29500,22 +28918,9 @@ Entry.block = {
             };
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.digitalWrite(%1, %2)",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
+    "syntax": {"js": [], "py": []}
     },
+
     "ardublock_digital_pwm": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -29571,22 +28976,9 @@ Entry.block = {
             };
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.analogWrite(%1, %2)",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
+    "syntax": {"js": [], "py": []}
     },
+
     "ardublock_tone_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -29624,36 +29016,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("NOTE");
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "%1",
-                textParams: [
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.silent, "0"],
-                            [Lang.Blocks.do_name, "C"],
-                            [Lang.Blocks.do_sharp_name, "CS"],
-                            [Lang.Blocks.re_name, "D"],
-                            [Lang.Blocks.re_sharp_name, "DS"],
-                            [Lang.Blocks.mi_name, "E"],
-                            [Lang.Blocks.fa_name, "F"],
-                            [Lang.Blocks.fa_sharp_name, "FS"],
-                            [Lang.Blocks.sol_name, "G"],
-                            [Lang.Blocks.sol_sharp_name, "GS"],
-                            [Lang.Blocks.la_name, "A"],
-                            [Lang.Blocks.la_sharp_name, "AS"],
-                            [Lang.Blocks.si_name, "B"]
-                        ],
-                        "value": "C",
-                        "fontSize": 11,
-                        converter: Entry.block.converters.returnStringValueUpperCase
-                    }
-                ],
-                keyOption: "ardublock_tone_list"
-            }
-        ]}
+    "syntax": {"js": [], "py": []}
     },
+
     "ardublock_tone_value": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -29680,13 +29045,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getNumberValue("NOTE");
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "%1",
-                keyOption: "ardublock_tone_value"
-            }
-        ]}
+    "syntax": {"js": [], "py": []}
     },
+
     "ardublock_octave_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -29717,13 +29078,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("OCTAVE");
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "%1",
-                keyOption: "ardublock_octave_list"
-            }
-        ]}
+    "syntax": {"js": [], "py": []}
     },
+
     "ardublock_set_tone": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -29852,30 +29209,9 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.tone(%1, %2, %3, %4)",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
+    "syntax": {"js": [], "py": []}
     },
+
     "ardublock_set_servo": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -29925,22 +29261,9 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.servomotorWrite(%1, %2)",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-    },    
+    "syntax": {"js": [], "py": []}
+    },
+    
     "ardublock_motor_direction_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -29967,25 +29290,9 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("MOTOR_DIRECTION");
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "%1",
-                textParams: [
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [Lang.Blocks.ardublock_motor_forward, "0"],
-                            [Lang.Blocks.ardublock_motor_backward, "1"]
-                        ],
-                        "value": "0",
-                        "fontSize": 11
-                        // converter: Entry.block.converters.returnStringValueUpperCase
-                    }
-                ],                
-                keyOption: "ardublock_motor_direction_list"
-            }
-        ]}
+    "syntax": {"js": [], "py": []}
     },
+
     "ardublock_set_left_motor": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -30059,22 +29366,9 @@ Entry.block = {
             
             return script.callReturn();            
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.Motor(%1, %2)",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-    },    
+    "syntax": {"js": [], "py": []}
+    },
+   
     "ardublock_set_right_motor": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -30147,22 +29441,9 @@ Entry.block = {
             
             return script.callReturn();            
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.Motor(%1, %2)",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-    },        
+    "syntax": {"js": [], "py": []}
+    },
+       
     "ardublock_get_left_cds_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -30196,19 +29477,9 @@ Entry.block = {
                 port = port.substring(1)
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.analogRead(%1)",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-    },    
+    "syntax": {"js": [], "py": []}
+    },
+   
     "ardublock_get_right_cds_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -30242,19 +29513,9 @@ Entry.block = {
                 port = port.substring(1)
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.analogRead(%1)",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-    },        
+    "syntax": {"js": [], "py": []}
+    },
+        
     "ardublock_toggle_left_led": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -30319,22 +29580,9 @@ Entry.block = {
             };
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.digitalWrite(%1, %2)",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-    },    
+    "syntax": {"js": [], "py": []}
+    },
+
     "ardublock_toggle_right_led": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -30399,22 +29647,9 @@ Entry.block = {
             };
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.digitalWrite(%1, %2)",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    },
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-    },        
+    "syntax": {"js": [], "py": []}
+    },
+       
    "ardublock_get_sound_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -30448,19 +29683,9 @@ Entry.block = {
                 port = port.substring(1)
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
-        "syntax": {"js": [], "py": [
-            {
-                syntax: "Arduino.analogRead(%1)",
-                blockType: "param",
-                textParams: [
-                    {
-                        "type": "Block",
-                        "accept": "string"
-                    }
-                ]
-            }
-        ]}
-    },           
+    "syntax": {"js": [], "py": []}
+    },
+         
 
     // ardublock Added 2016-06-01
     "joystick_get_number_sensor_value": {

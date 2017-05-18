@@ -12909,8 +12909,7 @@ Entry.TextCodingUtil = {};
     return "set_variable" == b ? !0 : !1;
   };
   c.isHWParamBlock = function(b) {
-    return "hamster_hand_found" == b || "hamster_value" == b || "arduino_get_port_number" == b || "arduino_get_number_sensor_value" == b || "arduino_get_digital_value" == b || "arduino_convert_scale" == b || "arduino_ext_get_analog_value" == b || "arduino_ext_get_analog_value_map" == b || "arduino_ext_get_ultrasonic_value" == b || "arduino_ext_get_digital" == b || "arduino_ext_tone_list" == b || "arduino_ext_octave_list" == b || "ardublock_get_analog_value" == b || "ardublock_get_analog_value_map" == 
-    b || "ardublock_get_ultrasonic_value" == b || "ardublock_get_digital" == b || "ardublock_tone_list" == b || "ardublock_octave_list" == b || "ardublock_set_left_motor" == b || "ardublock_set_right_motor" == b ? !0 : !1;
+    return "hamster_hand_found" == b || "hamster_value" == b || "arduino_get_port_number" == b || "arduino_get_number_sensor_value" == b || "arduino_get_digital_value" == b || "arduino_convert_scale" == b || "arduino_ext_get_analog_value" == b || "arduino_ext_get_analog_value_map" == b || "arduino_ext_get_ultrasonic_value" == b || "arduino_ext_get_digital" == b || "arduino_ext_tone_list" == b || "arduino_ext_octave_list" == b ? !0 : !1;
   };
   c.isMaterialBlock = function(b) {
     return "get_canvas_input_value" == b || "get_variable" == b || "value_of_index_from_list" == b || "length_of_list" == b || "is_included_in_list" == b ? !0 : !1;
