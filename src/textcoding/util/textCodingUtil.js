@@ -1643,7 +1643,7 @@ Entry.TextCodingUtil = {};
 
         return false;
     };
-
+  
     tu.isVariableDeclarationBlock = function(blockType) {
          if(blockType == "set_variable")
             return true;

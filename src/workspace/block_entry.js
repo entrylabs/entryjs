@@ -29663,7 +29663,7 @@ Entry.block = {
         ],
         "events": {}, 
         "def": {
-            "params": [
+            "params": [  
                 {
                     "type": "arduino_ext_analog_list",
                     "params": [ "2" ]
