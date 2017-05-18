@@ -1631,7 +1631,7 @@ Entry.TextCodingUtil = {};
             blockType == "distance_something" ||
             blockType == "get_sound_duration" ||
             blockType == "length_of_string" ||
-            blockType == "combine_something" ||
+            blockType == "combine_something" || 
             blockType == "char_at" ||
             blockType == "substring" ||
             blockType == "index_of_string" ||

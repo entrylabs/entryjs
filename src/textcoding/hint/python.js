@@ -1,6 +1,6 @@
 /*
  *
- */
+ */ 
 "use strict";  
 
 goog.provide("Entry.PyHint");
