@@ -200,7 +200,8 @@ EntryStatic.getAllBlocks = function() {
             "practical_course_stop_for",
             //roborobo
             "roborobo_move_for_secs",
-            "roborobo_move_for",
+            "roborobo_move_for", 
+            "roborobo_turn_for",
             "roborobo_stop_for",
             "practical_course_set_servo2",
         ]
