@@ -789,7 +789,7 @@ EntryStatic.getAllBlocks = function() {
                 "coconut_servomotor_angle",
                 //rokoboard Blocks
                 "rokoboard_get_sensor_value_by_name",
-                "rokoboard_is_button_pressed"
+                "rokoboard_is_button_pressed",
                  //Altino Blocks added
                 "altino_analogValue",
                 "altino_rear_wheel",
