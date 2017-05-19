@@ -469,7 +469,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (this.readOnly || board.viewOnly) return;
 
         board.setSelectedBlock(this);
-        
+
         //left mousedown
         if ((e.button === 0 ||
             (e.originalEvent && e.originalEvent.touches)) &&
@@ -487,7 +487,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             if (!this.disableMouseEvent)
                 doc.bind('mousemove.block touchmove.block', onMouseMove);
             doc.bind('mouseup.block touchend.block', onMouseUp);
-            doc.on('click.block', onMouseClick);
             this.dragInstance = new Entry.DragInstance({
                 startX: mouseEvent.pageX,
                 startY: mouseEvent.pageY,
@@ -523,12 +522,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
 
         var that = this;
-
-        function onMouseClick(e) {
-            e.stopPropagation();
-            $(document).off('.block', onMouseClick);
-            that.dominate();
-        }
 
         function onMouseMove(e) {
             e.stopPropagation();

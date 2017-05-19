@@ -6348,6 +6348,7 @@ Entry.Engine = function() {
     this.state = "stop";
     Entry.dispatchEvent("stop");
     Entry.stage.hideInputField();
+    Entry.variableContainer && Entry.variableContainer.updateCloudVariables();
     (function(b) {
       b && b.getMode() === Entry.Workspace.MODE_VIMBOARD && b.codeToText();
     })(Entry.getMainWS());
@@ -20057,7 +20058,6 @@ Entry.Variable.prototype.isNumber = function() {
 };
 Entry.Variable.prototype.setValue = function(c) {
   "slide" != this.type ? this.value_ = c : (c = Number(c), this.value_ = c < this.minValue_ ? this.minValue_ : c > this.maxValue_ ? this.maxValue_ : c);
-  this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this._valueWidth = null;
   this.updateView();
   Entry.requestUpdateTwice = !0;
@@ -21470,7 +21470,7 @@ Entry.VariableContainer = function() {
       }), c = c.map(function(b) {
         return b.toJSON();
       });
-      $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:b, lists:c}}).done(function() {
+      (b.length || c.length) && $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:b, lists:c}}).done(function() {
       });
     }
   };
@@ -23027,60 +23027,54 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c.onMouseDown = function(b) {
     function f(b) {
       b.stopPropagation();
-      $(document).off(".block", f);
-      n.dominate();
-    }
-    function d(b) {
-      b.stopPropagation();
-      var d = k.workspace.getMode(), f;
+      var d = h.workspace.getMode(), f;
       d === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
       f = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-      var e = h.mouseDownCoordinate, e = Math.sqrt(Math.pow(f.pageX - e.x, 2) + Math.pow(f.pageY - e.y, 2));
-      if (h.dragMode == Entry.DRAG_MODE_DRAG || e > Entry.BlockView.DRAG_RADIUS) {
-        g && (clearTimeout(g), g = null), h.movable && (h.isInBlockMenu ? k.cloneToGlobal(b) : (b = !1, h.dragMode != Entry.DRAG_MODE_DRAG && (h._toGlobalCoordinate(void 0, !0), h.dragMode = Entry.DRAG_MODE_DRAG, h.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(h, d), n.dominate(), b = !0), this.animating && this.set({animating:!1}), 0 === h.dragInstance.height && h.dragInstance.set({height:-1 + h.height}), d = h.dragInstance, h._moveBy(f.pageX - d.offsetX, f.pageY - d.offsetY, !1, 
-        !0), d.set({offsetX:f.pageX, offsetY:f.pageY}), Entry.GlobalSvg.position(), h.originPos || (h.originPos = {x:h.x, y:h.y}), b && k.generateCodeMagnetMap(), h._updateCloseBlock()));
+      var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(f.pageX - k.x, 2) + Math.pow(f.pageY - k.y, 2));
+      if (g.dragMode == Entry.DRAG_MODE_DRAG || k > Entry.BlockView.DRAG_RADIUS) {
+        e && (clearTimeout(e), e = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, d), q.dominate(), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), d = g.dragInstance, g._moveBy(f.pageX - d.offsetX, f.pageY - d.offsetY, !1, 
+        !0), d.set({offsetX:f.pageX, offsetY:f.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
       }
     }
-    function e(b) {
-      g && (clearTimeout(g), g = null);
-      $(document).unbind(".block", e);
+    function d(b) {
+      e && (clearTimeout(e), e = null);
       $(document).unbind(".block", d);
-      h.terminateDrag(b);
-      k && k.set({dragBlock:null});
-      h._changeFill(!1);
+      $(document).unbind(".block", f);
+      g.terminateDrag(b);
+      h && h.set({dragBlock:null});
+      g._changeFill(!1);
       Entry.GlobalSvg.remove();
-      h.mouseUpEvent.notify();
+      g.mouseUpEvent.notify();
       delete this.mouseDownCoordinate;
-      delete h.dragInstance;
+      delete g.dragInstance;
     }
     b.stopPropagation && b.stopPropagation();
     b.preventDefault && b.preventDefault();
-    var g = null, h = this;
+    var e = null, g = this;
     this._changeFill(!1);
-    var k = this.getBoard();
+    var h = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify(b);
-    if (!this.readOnly && !k.viewOnly) {
-      k.setSelectedBlock(this);
+    if (!this.readOnly && !h.viewOnly) {
+      h.setSelectedBlock(this);
       if ((0 === b.button || b.originalEvent && b.originalEvent.touches) && !this._board.readOnly) {
-        var l = b.type, m;
-        m = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-        this.mouseDownCoordinate = {x:m.pageX, y:m.pageY};
-        var q = $(document);
-        this.disableMouseEvent || q.bind("mousemove.block touchmove.block", d);
-        q.bind("mouseup.block touchend.block", e);
-        q.on("click.block", f);
-        this.dragInstance = new Entry.DragInstance({startX:m.pageX, startY:m.pageY, offsetX:m.pageX, offsetY:m.pageY, height:0, mode:!0});
-        k.set({dragBlock:this});
+        var k = b.type, l;
+        l = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+        this.mouseDownCoordinate = {x:l.pageX, y:l.pageY};
+        var m = $(document);
+        this.disableMouseEvent || m.bind("mousemove.block touchmove.block", f);
+        m.bind("mouseup.block touchend.block", d);
+        this.dragInstance = new Entry.DragInstance({startX:l.pageX, startY:l.pageY, offsetX:l.pageX, offsetY:l.pageY, height:0, mode:!0});
+        h.set({dragBlock:this});
         this.addDragging();
         this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
-        "touchstart" === l && (g = setTimeout(function() {
-          g && (g = null, e(), h._rightClick(b));
+        "touchstart" === k && (e = setTimeout(function() {
+          e && (e = null, d(), g._rightClick(b));
         }, 1E3));
       } else {
         Entry.Utils.isRightButton(b) && this._rightClick(b);
       }
-      k.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (vimBoard = $(".entryVimBoard>.CodeMirror")[0], document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
-      var n = this;
+      h.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (vimBoard = $(".entryVimBoard>.CodeMirror")[0], document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
+      var q = this;
     }
   };
   c.vimBoardEvent = function(b, c, d) {
@@ -25975,21 +25969,18 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   c.separate = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
+    var e, g;
     b.view && b.view._toGlobalCoordinate();
-    var e = b.getPrevBlock();
-    if (!e && b.thread instanceof Entry.Thread && b.thread.parent instanceof Entry.Code) {
-      var g = b.thread.getBlock(b.thread.indexOf(b) + c);
-      if (g) {
-        var h = g.view.getAbsoluteCoordinate()
-      }
-    }
+    var h = b.getPrevBlock();
+    !h && b.thread instanceof Entry.Thread && b.thread.parent instanceof Entry.Code && (e = b.thread.getBlock(b.thread.indexOf(b) + c)) && (g = e.view.getAbsoluteCoordinate());
     b.separate(c, d);
-    e && e.getNextBlock() ? e.getNextBlock().view.bindPrev() : g && (g.view._toGlobalCoordinate(), g.moveTo(h.x, h.y));
+    h && h.getNextBlock() ? h.getNextBlock().view.bindPrev() : e && (e.view._toGlobalCoordinate(), e.moveTo(g.x, g.y));
   };
   c.insert = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
-    3 === c.length ? (this.separate(b, d, c[2]), b.moveTo(c[0], c[1])) : 4 === c.length && -1 == c[3] ? (c[3] = 0, targetBlock = this.code.getByPointer(c), this.separate(b, d, c[2]), b = b.getLastBlock(), targetBlock.view.bindPrev(b), targetBlock.doInsert(b)) : (this.separate(b, d), c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : 
-    c instanceof Entry.Thread ? (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
+    var e;
+    3 === c.length ? (this.separate(b, d, c[2]), b.moveTo(c[0], c[1])) : 4 === c.length && -1 == c[3] ? (c[3] = 0, e = this.code.getByPointer(c), this.separate(b, d, c[2]), b = b.getLastBlock(), e.view.bindPrev(b), e.doInsert(b)) : (this.separate(b, d), c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : c instanceof Entry.Thread ? 
+    (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
   };
   c.adjustThreadsPosition = function() {
     var b = this.code;
@@ -26061,7 +26052,7 @@ Entry.Board.DRAG_RADIUS = 5;
     }
   };
   c.findBlock = function(b) {
-    return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) : b instanceof Array ? this.code.getByPointer(b) : b;
+    return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) || b : b instanceof Array ? this.code.getByPointer(b) : b;
   };
   c.scrollToPointer = function(b, c) {
     var d = this.code.getByPointer(b), e;
