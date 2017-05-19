@@ -790,6 +790,14 @@ EntryStatic.getAllBlocks = function() {
                 //rokoboard Blocks
                 "rokoboard_get_sensor_value_by_name",
                 "rokoboard_is_button_pressed"
+                 //Altino Blocks added
+                "altino_analogValue",
+                "altino_rear_wheel",
+                "altino_steering",
+                "altino_sound",
+                "altino_light",
+                "altino_dot_display",
+                "altino_dot_display_line",
             ]
         }
     ]

@@ -33,8 +33,8 @@ Entry.HW = function() {
 
     this.hwInfo = {
         '1.1': Entry.Arduino,
-        '1.3': Entry.CODEino,
         '1.2': Entry.SensorBoard,
+        '1.3': Entry.CODEino,
         '1.4': Entry.joystick,
         '1.5': Entry.dplay,
         '1.6': Entry.nemoino,
@@ -50,13 +50,6 @@ Entry.HW = function() {
         '7.1': Entry.Robotis_carCont,
         '7.2': Entry.Robotis_openCM70,
         '8.1': Entry.Arduino,
-        '10.1': Entry.Roborobo_Roduino,
-        '10.2': Entry.Roborobo_SchoolKit,
-        '12.1': Entry.EV3,
-        '13.1': Entry.rokoboard,
-        '14.1': Entry.Chocopi,
-        '15.1': Entry.coconut,
-        '16.1': Entry.MODI,
         'A.1': Entry.SmartBoard,
         'B.1': Entry.Codestar,
         'C.1': Entry.DaduBlock,
@@ -65,6 +58,14 @@ Entry.HW = function() {
         'F.1': Entry.byrobot_dronefighter_controller,
         'F.2': Entry.byrobot_dronefighter_drive,
         'F.3': Entry.byrobot_dronefighter_flight,
+        '10.1': Entry.Roborobo_Roduino,
+        '10.2': Entry.Roborobo_SchoolKit,
+        '12.1': Entry.EV3,
+        '13.1': Entry.rokoboard,
+        '14.1': Entry.Chocopi,
+        '15.1': Entry.coconut,
+        '16.1': Entry.MODI,
+        '18.1': Entry.Altino,
     };
 };
 
