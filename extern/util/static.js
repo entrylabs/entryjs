@@ -670,6 +670,15 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_dronefighter_flight_controller_vibrator_delay",
                 "byrobot_dronefighter_flight_controller_vibrator_reserve",
 
+                 //Altino Blocks added
+                "altino_analogValue",
+                "altino_rear_wheel",
+                "altino_steering",
+                "altino_sound",
+                "altino_light",
+                "altino_dot_display",
+                "altino_dot_display_line",
+
             ]
         }
     ]
