@@ -25969,21 +25969,18 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   c.separate = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
+    var e, g;
     b.view && b.view._toGlobalCoordinate();
-    var e = b.getPrevBlock();
-    if (!e && b.thread instanceof Entry.Thread && b.thread.parent instanceof Entry.Code) {
-      var g = b.thread.getBlock(b.thread.indexOf(b) + c);
-      if (g) {
-        var h = g.view.getAbsoluteCoordinate()
-      }
-    }
+    var h = b.getPrevBlock();
+    !h && b.thread instanceof Entry.Thread && b.thread.parent instanceof Entry.Code && (e = b.thread.getBlock(b.thread.indexOf(b) + c)) && (g = e.view.getAbsoluteCoordinate());
     b.separate(c, d);
-    e && e.getNextBlock() ? e.getNextBlock().view.bindPrev() : g && (g.view._toGlobalCoordinate(), g.moveTo(h.x, h.y));
+    h && h.getNextBlock() ? h.getNextBlock().view.bindPrev() : e && (e.view._toGlobalCoordinate(), e.moveTo(g.x, g.y));
   };
   c.insert = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
-    3 === c.length ? (this.separate(b, d, c[2]), b.moveTo(c[0], c[1])) : 4 === c.length && -1 == c[3] ? (c[3] = 0, targetBlock = this.code.getByPointer(c), this.separate(b, d, c[2]), b = b.getLastBlock(), targetBlock.view.bindPrev(b), targetBlock.doInsert(b)) : (this.separate(b, d), c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : 
-    c instanceof Entry.Thread ? (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
+    var e;
+    3 === c.length ? (this.separate(b, d, c[2]), b.moveTo(c[0], c[1])) : 4 === c.length && -1 == c[3] ? (c[3] = 0, e = this.code.getByPointer(c), this.separate(b, d, c[2]), b = b.getLastBlock(), e.view.bindPrev(b), e.doInsert(b)) : (this.separate(b, d), c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : c instanceof Entry.Thread ? 
+    (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
   };
   c.adjustThreadsPosition = function() {
     var b = this.code;
@@ -26055,7 +26052,7 @@ Entry.Board.DRAG_RADIUS = 5;
     }
   };
   c.findBlock = function(b) {
-    return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) : b instanceof Array ? this.code.getByPointer(b) : b;
+    return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) || b : b instanceof Array ? this.code.getByPointer(b) : b;
   };
   c.scrollToPointer = function(b, c) {
     var d = this.code.getByPointer(b), e;
