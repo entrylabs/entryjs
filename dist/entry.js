@@ -24009,7 +24009,7 @@ Entry.Field = function() {
     delete this._startValue;
   };
   c.destroyOption = function(b, c) {
-    Entry.Utils.blur();
+    this.isEditing() && Entry.Utils.blur();
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);

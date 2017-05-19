@@ -32,7 +32,7 @@ Entry.Field = function() {};
     };
 
     p.destroyOption = function(skipCommand, forceCommand) {
-        Entry.Utils.blur();
+        this.isEditing() && Entry.Utils.blur();
 
         if (this.documentDownEvent) {
             Entry.documentMousedown.detach(this.documentDownEvent);
