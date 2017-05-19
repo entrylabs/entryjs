@@ -24015,7 +24015,7 @@ Entry.Field = function() {
     delete this._startValue;
   };
   c.destroyOption = function(b, c) {
-    Entry.Utils.blur();
+    this.isEditing() && Entry.Utils.blur();
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
@@ -26532,38 +26532,37 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     this.loadSchema();
   };
   c.changeSchema = function(b, c) {
-    var d = document.activeElement, e = [];
+    var d = [];
     if (c) {
       if (c.isRestore) {
-        e = this._backupParams || [], delete this._backupParams;
+        d = this._backupParams || [], delete this._backupParams;
       } else {
         switch(c.type) {
           case "noChange":
-            e = this.params;
+            d = this.params;
             break;
           case "cut":
             this.params.splice(c.pos);
-            e = this.params;
+            d = this.params;
             break;
           case "insert":
-            for (var g = c.startPos, h = c.endPos, k = Entry.block[this.type].params, e = Array(k.length), l = 0;l < g;l++) {
-              e[l] = this.params[l];
+            for (var e = c.startPos, g = c.endPos, h = Entry.block[this.type].params, d = Array(h.length), k = 0;k < e;k++) {
+              d[k] = this.params[k];
             }
-            g = h - g + 1;
-            for (l = h + 1;l < k.length;l++) {
-              e[l] = this.params[l - g];
+            e = g - e + 1;
+            for (k = g + 1;k < h.length;k++) {
+              d[k] = this.params[k - e];
             }
           ;
         }
       }
     }
-    e.forEach(function(b) {
+    d.forEach(function(b) {
       b instanceof Entry.Block && b.destroyView();
     });
-    this.set({params:e});
+    this.set({params:d});
     this.loadSchema();
     this.view && this.view.changeType();
-    d && d.focus();
   };
   c.getSchema = function() {
     this._schema || this.loadSchema();
