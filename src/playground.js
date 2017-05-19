@@ -1027,7 +1027,9 @@ Entry.Playground = function() {
             objectId_ = Entry.container.selectPicture(picture.id, picture.objectId);
         }
 
-        if( this.object.id === objectId_) {
+        if(this.object.id === objectId_) {
+            if (!picture.objectId)
+                picture.objectId = this.object.id;
             Entry.dispatchEvent('pictureSelected', picture);
         }
     };

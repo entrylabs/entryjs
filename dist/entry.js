@@ -9347,7 +9347,7 @@ Entry.Painter2 = function(c) {
     this.isShow = !1;
   };
   c.changePicture = function(b) {
-    this.file && this.file.id === b.id || (this.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && this.file_save(!0), this.file.modified = !1, this.lc.clear(!1), this.file.id = b.id ? b.id : Entry.generateHash(), this.file.name = b.name, this.file.mode = "edit", this.addPicture(b, !0), this.lc.undoStack = [], Entry.stateManager.removeAllPictureCommand());
+    this.file && this.file.id === b.id || (this.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && this.file_save(!0), this.file.modified = !1, this.lc.clear(!1), this.file.id = b.id ? b.id : Entry.generateHash(), this.file.name = b.name, this.file.mode = "edit", this.file.objectId = b.objectId, this.addPicture(b, !0), this.lc.undoStack = [], Entry.stateManager.removeAllPictureCommand());
   };
   c.addPicture = function(b, f) {
     var c = new Image;
@@ -28009,7 +28009,7 @@ Entry.Playground = function() {
     }
     var h;
     b && b.id && (h = Entry.container.selectPicture(b.id, b.objectId));
-    this.object.id === h && Entry.dispatchEvent("pictureSelected", b);
+    this.object.id === h && (b.objectId || (b.objectId = this.object.id), Entry.dispatchEvent("pictureSelected", b));
   };
   c.movePicture = function(b, c) {
     this.object.pictures.splice(c, 0, this.object.pictures.splice(b, 1)[0]);

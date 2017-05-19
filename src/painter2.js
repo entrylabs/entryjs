@@ -110,6 +110,7 @@ p.changePicture = function(picture) {
         this.file.id = Entry.generateHash();
     this.file.name = picture.name;
     this.file.mode = 'edit';
+    this.file.objectId = picture.objectId;
 
     this.addPicture(picture, true);
     // INFO: picture 변경시마다 undoStack 리셋
@@ -127,7 +128,7 @@ p.addPicture = function(picture, isOriginal) {
         image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
     }
 
-    var dimension = picture.dimension; 
+    var dimension = picture.dimension;
     var shape = LC.createShape('Image',{
         x: 480,
         y: 270,
@@ -183,7 +184,7 @@ p.updateEditMenu = function() {
 };
 
 p.file_save = function() {
-    this.lc.trigger("dispose")
+    this.lc.trigger("dispose");
     var dataURL = this.lc.getImage().toDataURL();
     this.file_ = JSON.parse(JSON.stringify(this.file));
     Entry.dispatchEvent('saveCanvasImage',
