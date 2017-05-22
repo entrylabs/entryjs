@@ -311,9 +311,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (ctrlKey) {
             switch (keyCode) {
                 case 86:  //paste
-                    if (!isBoardReadOnly &&board && board instanceof Entry.Board && Entry.clipboard)
+                    if (!isBoardReadOnly &&board && board instanceof Entry.Board && Entry.clipboard) {
                         Entry.do('addThread', Entry.clipboard).value
                             .getFirstBlock().copyToClipboard();
+                    }
                     break;
                 case 219: //setMode(block) for textcoding
                     if (!object) {

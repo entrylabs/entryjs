@@ -166,8 +166,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         var fillColor = this._schema.color;
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
-           this.block.emphasized)
-            fillColor = Entry.Utils.colorLighten(fillColor);
+           this.block.emphasized) {
+            fillColor = Entry.Utils.getEmphasizeColor(fillColor);
+        }
+
         this._fillColor = fillColor;
         var pathStyle = {
             d: path,
@@ -428,6 +430,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         );
     };
 
+    p.moveBy = p._moveBy;
+
     p._addControl = function() {
         var that = this;
         this._mouseEnable = true;
@@ -465,7 +469,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (this.readOnly || board.viewOnly) return;
 
         board.setSelectedBlock(this);
-        this.dominate();
+
         //left mousedown
         if ((e.button === 0 ||
             (e.originalEvent && e.originalEvent.touches)) &&
@@ -516,6 +520,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         }
 
+
+        var that = this;
+
         function onMouseMove(e) {
             e.stopPropagation();
             var workspaceMode = board.workspace.getMode();
@@ -545,6 +552,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                         blockView.dragMode = Entry.DRAG_MODE_DRAG;
                         blockView.block.getThread().changeEvent.notify();
                         Entry.GlobalSvg.setView(blockView, workspaceMode);
+                        // Move가 발생하면 dominate 실행
+                        that.dominate();
                         isFirst = true;
                     }
 
@@ -588,7 +597,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 clearTimeout(longPressTimer);
                 longPressTimer = null;
             }
-            $(document).unbind('.block');
+            $(document).unbind('.block', onMouseUp);
+            $(document).unbind('.block', onMouseMove);
             blockView.terminateDrag(e);
             if (board) board.set({dragBlock: null});
             blockView._changeFill(false);
@@ -736,7 +746,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this.destroyShadow();
         delete this.originPos;
-        this.dominate();
     };
 
     p._updateCloseBlock = function() {
@@ -1044,10 +1053,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._updateColor = function() {
         var fillColor = this._schema.color;
-        console.log(this.block.emphasized)
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
-           this.block.emphasized)
-            fillColor = Entry.Utils.colorLighten(fillColor);
+           this.block.emphasized) {
+            fillColor = Entry.Utils.getEmphasizeColor(fillColor);
+        }
         this._fillColor = fillColor;
         this._path.attr({fill:fillColor});
         this._updateContents();

@@ -1442,6 +1442,7 @@ Entry.Playground = function() {
                     callback: function(){
                         if (Entry.playground.object.removePicture(picture.id)) {
                             Entry.removeElement(element);
+                            Entry.dispatchEvent('removePicture', picture);
                             Entry.toast.success(Lang.Workspace.shape_remove_ok,
                                 picture.name +' '+Lang.Workspace.shape_remove_ok_msg);
                         } else {
@@ -1566,6 +1567,7 @@ Entry.Playground = function() {
                             );
                         if (result) {
                             Entry.removeElement(element);
+                            Entry.dispatchEvent('removeSound', sound);
                             Entry.toast.success(Lang.Workspace.sound_remove_ok,
                                 sound.name +' '+Lang.Workspace.sound_remove_ok_msg);
                         } else {
