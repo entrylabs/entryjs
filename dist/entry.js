@@ -24883,7 +24883,7 @@ Entry.BlockMenu = function(c, b, e, d, f) {
       this._categoryCol = Entry.Dom("ul", {class:"entryCategoryListWorkspace"});
       this.view.prepend(this._categoryCol);
       for (var c = 0;c < b.length;c++) {
-        this._generateCategoryElement(b[c].category);
+        0 === c && (this.firstSelector = b[c].category), this._generateCategoryElement(b[c].category, b[c].visible);
       }
     }
   };

@@ -860,17 +860,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         });
         this.view.prepend(this._categoryCol);
 
-        for (var i=0; i<data.length; i++)
-            this._generateCategoryElement(data[i].category);
-        // var that = this;
-        // for (var i=0; i<data.length; i++) {
-        //     if(i === 0) {
-        //         that.firstSelector = data[i].category;
-        //     }
-        //     var name = data[i].category;
-        //     var visible = data[i].visible;
-        //     this._generateCategoryElement(name, visible);
-        // }
+        for (var i=0; i < data.length; i++) {
+            if(i === 0) {
+                this.firstSelector = data[i].category;
+            }
+            var visible = data[i].visible;
+            this._generateCategoryElement(data[i].category, visible);
+        }
     };
 
     p._generateCategoryElement = function(name, visible) {
