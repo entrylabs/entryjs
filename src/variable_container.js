@@ -234,8 +234,10 @@ Entry.VariableContainer = function() {
     };
 
     p.getMessage = function(messageId) {
-        return this.messages_.filter(function(m) {return m.id === messageId})[0]
-    }
+        return this.messages_.filter(function(m) {
+            return m.id === messageId;
+        })[0];
+    };
 
     /**
      * @param {object} message
@@ -334,7 +336,8 @@ Entry.VariableContainer = function() {
                 }
                 var caller = this.caller;
                 var block = caller.funcBlock || caller.block;
-                block.view.getBoard().activateBlock(block);
+                var blockView = block.view;
+                blockView && blockView.getBoard().activateBlock(block);
                 Entry.playground.toggleOnVariableView();
                 Entry.playground.changeViewMode('variable');
             });
@@ -386,9 +389,10 @@ Entry.VariableContainer = function() {
                     that.select(null);
                     that.select(func);
                 }
-                var block = this.caller.block;
                 Entry.playground.toggleOnVariableView();
-                block.view.getBoard().activateBlock(block);
+                var block = this.caller.block;
+                var blockView = block.view;
+                blockView && blockView.getBoard().activateBlock(block);
                 Entry.playground.changeViewMode('variable');
             });
             listView.appendChild(element);

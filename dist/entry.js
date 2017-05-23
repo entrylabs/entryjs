@@ -20364,7 +20364,8 @@ Entry.VariableContainer = function() {
         Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), c.select(null));
         b = this.caller;
         b = b.funcBlock || b.block;
-        b.view.getBoard().activateBlock(b);
+        var d = b.view;
+        d && d.getBoard().activateBlock(b);
         Entry.playground.toggleOnVariableView();
         Entry.playground.changeViewMode("variable");
       });
@@ -20395,7 +20396,8 @@ Entry.VariableContainer = function() {
         Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), c.select(null), c.select(b));
         d = this.caller.block;
         Entry.playground.toggleOnVariableView();
-        d.view.getBoard().activateBlock(d);
+        var e = d.view;
+        e && e.getBoard().activateBlock(d);
         Entry.playground.changeViewMode("variable");
       });
       d.appendChild(k);
