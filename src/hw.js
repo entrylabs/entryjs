@@ -186,7 +186,7 @@ p.openHardwareProgram = function() {
             hw.initSocket();
         }, 1000);
     }
-}
+};
 
 p.initHardware = function(socket) {
     this.socket = socket;
@@ -196,14 +196,14 @@ p.initHardware = function(socket) {
     if (Entry.playground && Entry.playground.object) {
         Entry.playground.setMenu(Entry.playground.object.objectType);
     }
-}
+};
 
 p.disconnectHardware = function() {
-    Entry.propertyPanel.removeMode("hw");
+    Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
     this.selectedDevice = undefined;
     this.hwModule = undefined;
     Entry.dispatchEvent("hwChanged");
-}
+};
 
 p.disconnectedSocket = function() {
     this.tlsSocketIo.close();
@@ -211,7 +211,7 @@ p.disconnectedSocket = function() {
         this.socketIo.close();
     }
 
-    Entry.propertyPanel.removeMode("hw");
+    Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
     this.socket = undefined;
     this.connectTrial = 0;
     this.connected = false;
@@ -296,7 +296,7 @@ p.update = function() {
 
 p.updatePortData = function(data) {
     this.portData = data;
-    if (this.hwMonitor && Entry.propertyPanel.selected == 'hw') {
+    if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected == 'hw') {
         this.hwMonitor.update();
     }
 };
@@ -358,7 +358,7 @@ p.checkDevice = function(data, version) {
     Entry.dispatchEvent("hwChanged");
 
     var descMsg = '';
-    if (this.hwModule.monitorTemplate) {
+    if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
         descMsg = Lang.Msgs.hw_connection_success_desc;
         if(!this.hwMonitor) {
             this.hwMonitor = new Entry.HWMonitor(this.hwModule);
