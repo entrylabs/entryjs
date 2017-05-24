@@ -37249,7 +37249,7 @@ Entry.block = {
                 sq.steering =192;
             }
             else if(direction == "Left15"){
-                sq.steering =124;
+                sq.steering =224;
             }
             else if(direction == "Left20"){
                 sq.steering =255;
@@ -37257,10 +37257,10 @@ Entry.block = {
             else if(direction == "Right5"){
                 sq.steering =32;
             }
-            else if(direction == "Right15"){
+            else if(direction == "Right10"){
                 sq.steering =64;
             }
-            else if(direction == "Right20"){
+            else if(direction == "Right15"){
                 sq.steering =96;
             }
             else if(direction == "Right20"){
@@ -37695,6 +37695,7 @@ Entry.block = {
         "isNotFor": [ "altino" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            sq.ascii=0;
             sq.dot1 = script.getNumberValue('VALUE1');
             sq.dot2 = script.getNumberValue('VALUE2');
             sq.dot3 = script.getNumberValue('VALUE3');
