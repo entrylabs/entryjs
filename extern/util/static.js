@@ -506,11 +506,27 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_lcd",
                 //end of XBOT Blocks added
                 // ardublock Added 2016-06-01
-                "ardublock_get_number_sensor_value",
-                "ardublock_get_digital_value",
+                //"ardublock_get_number_sensor_value",
+                //"ardublock_get_digital_value",
+                //"ardublock_toggle_led",
+                //"ardublock_toggle_pwm",
+                //"ardublock_convert_scale",
+                //"ardublock_get_ultrasonic_value",
+                "ardublock_get_analog_value",
+                "ardublock_get_analog_value_map",
+                "ardublock_get_ultrasonic_value",
+                "ardublock_get_digital",
                 "ardublock_toggle_led",
-                "ardublock_toggle_pwm",
-                "ardublock_convert_scale",
+                "ardublock_digital_pwm",
+                "ardublock_set_servo",
+                "ardublock_set_tone",
+                "ardublock_set_left_motor",
+                "ardublock_set_right_motor",
+                "ardublock_get_left_cds_analog_value",
+                "ardublock_get_right_cds_analog_value",
+                "ardublock_toggle_left_led",
+                "ardublock_toggle_right_led",
+                "ardublock_get_sound_analog_value",
                 // ardublock Added 2016-06-01
 
                 "ev3_get_sensor_value",
@@ -773,7 +789,15 @@ EntryStatic.getAllBlocks = function() {
                 "coconut_servomotor_angle",
                 //rokoboard Blocks
                 "rokoboard_get_sensor_value_by_name",
-                "rokoboard_is_button_pressed"
+                "rokoboard_is_button_pressed",
+                 //Altino Blocks added
+                "altino_analogValue",
+                "altino_rear_wheel",
+                "altino_steering",
+                "altino_sound",
+                "altino_light",
+                "altino_dot_display",
+                "altino_dot_display_line",
             ]
         }
     ]
