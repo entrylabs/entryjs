@@ -16782,7 +16782,7 @@ Entry.initialize_ = function() {
   this.stage = new Entry.Stage;
   Entry.engine && Entry.engine.projectTimer && Entry.engine.clearTimer();
   this.engine = new Entry.Engine;
-  this.propertyPanel = new Entry.PropertyPanel;
+  "minimize" !== this.type && (this.propertyPanel = new Entry.PropertyPanel);
   this.container = new Entry.Container;
   this.helper = new Entry.Helper;
   this.youtube = new Entry.Youtube;
@@ -18983,14 +18983,14 @@ p.initHardware = function(c) {
   Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
 };
 p.disconnectHardware = function() {
-  Entry.propertyPanel.removeMode("hw");
+  Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
   this.hwModule = this.selectedDevice = void 0;
   Entry.dispatchEvent("hwChanged");
 };
 p.disconnectedSocket = function() {
   this.tlsSocketIo.close();
   this.socketIo && this.socketIo.close();
-  Entry.propertyPanel.removeMode("hw");
+  Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
   this.socket = void 0;
   this.connectTrial = 0;
   this.connected = !1;
@@ -19040,7 +19040,7 @@ p.update = function() {
 };
 p.updatePortData = function(c) {
   this.portData = c;
-  this.hwMonitor && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
+  this.hwMonitor && Entry.propertyPanel && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
 };
 p.closeConnection = function() {
   this.socket && this.socket.close();
@@ -19068,7 +19068,7 @@ p.checkDevice = function(c, b) {
       this.hwModule = this.hwInfo[f];
       Entry.dispatchEvent("hwChanged");
       f = "";
-      if (this.hwModule.monitorTemplate) {
+      if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
         f = Lang.Msgs.hw_connection_success_desc;
         this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule);
         Entry.propertyPanel.addMode("hw", this.hwMonitor);
@@ -20395,8 +20395,8 @@ Entry.VariableContainer = function() {
       k.caller = h;
       k.bindOnClick(function(d) {
         Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), c.select(null), c.select(b));
-        d = this.caller.block;
         Entry.playground.toggleOnVariableView();
+        d = this.caller.block;
         var e = d.view;
         e && e.getBoard().activateBlock(d);
         Entry.playground.changeViewMode("variable");
@@ -28362,8 +28362,8 @@ Entry.Playground = function() {
     return this.viewMode_;
   };
   c.updateHW = function() {
-    var b = Entry.playground.mainWorkspace.blockMenu;
-    if (b) {
+    var b = Entry.playground.mainWorkspace;
+    if (b && (b = b.blockMenu)) {
       var c = Entry.hw;
       c && c.connected ? (b.banClass("arduinoDisconnected", !0), c.banHW(), c.hwModule ? (b.banClass("arduinoConnect", !0), b.unbanClass("arduinoConnected", !0), b.unbanClass(c.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoConnect", !0))) : (b.banClass("arduinoConnected", !0), b.banClass("arduinoConnect", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
       b.reDraw();

@@ -1707,9 +1707,11 @@ Entry.Playground = function() {
 
     p.updateHW = function() {
         var self = Entry.playground;
-        var blockMenu = self.mainWorkspace.blockMenu;
-        if (!blockMenu) return;
 
+        var WS = self.mainWorkspace;
+        if (!WS) return;
+        var blockMenu = WS.blockMenu;
+        if (!blockMenu) return;
 
         var hw = Entry.hw;
         if (hw && hw.connected) {
