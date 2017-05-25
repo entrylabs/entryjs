@@ -11999,6 +11999,11 @@ Entry.block = {
         func: function(entity) {
             if (!this.initiated) {
                 this.initiated = true;
+				Entry.callStackLength++;
+				if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
+                    Entry.toast.alert("에러", "함수가 너무 많이 재귀호출됨");
+					throw new Error();
+				}
 
                 var func = Entry.variableContainer.getFunction(
                     this.block.type.substr(5, 9)
