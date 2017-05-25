@@ -307,8 +307,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var blockView = this.selectedBlockView;
         var board = this.selectedBoard;
         var isBoardReadOnly = board.readOnly;
+        var checkKeyCodes;
 
         if (ctrlKey) {
+            checkKeyCodes = [219, 221];
+
+            if (checkKeyCodes.indexOf(keyCode) > -1) {
+                if (!checkObjectAndAlert(object))
+                    return;
+            }
+
             switch (keyCode) {
                 case 86:  //paste
                     if (!isBoardReadOnly &&board && board instanceof Entry.Board && Entry.clipboard) {
@@ -317,14 +325,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     }
                     break;
                 case 219: //setMode(block) for textcoding
-                    if (!object) {
-                        if (isVimMode) {
-                            var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                            alert(message);
-                            return;
-                        }
-                    }
-
                     var oldMode = Entry.getMainWS().oldMode;
                     if(oldMode == Entry.Workspace.MODE_OVERLAYBOARD)
                         return;
@@ -342,14 +342,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     e.preventDefault();
                     break;
                 case 221: //setMode(python) for textcoding
-                    if (!object) {
-                        if (this.oldMode === Entry.Workspace.MODE_BOARD) {
-                            var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                            alert(message);
-                            return;
-                        }
-                    }
-
                     var message;
                     message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
                     if(message) {
@@ -387,10 +379,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
             }
         } else if (altKey) {
-            if (!object) {
-                var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                alert(message);
-                return;
+            checkKeyCodes = [49, 50, 51, 52, 219, 221];
+
+            if (checkKeyCodes.indexOf(keyCode) > -1) {
+                if (!checkObjectAndAlert(object))
+                    return;
             }
 
             switch (keyCode) {
@@ -456,6 +449,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         setTimeout(function() {
             Entry.disposeEvent && Entry.disposeEvent.notify(e);
         }, 0);
+
+        function checkObjectAndAlert(object, message) {
+            if (!object) {
+                message = message || "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                alert(message);
+                return false;
+            }
+            return true;
+        }
     };
 
     p._handleChangeBoard = function() {
