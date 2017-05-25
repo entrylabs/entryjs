@@ -6348,6 +6348,7 @@ Entry.Engine = function() {
     this.state = "stop";
     Entry.dispatchEvent("stop");
     Entry.stage.hideInputField();
+    Entry.variableContainer && Entry.variableContainer.updateCloudVariables();
     (function(b) {
       b && b.getMode() === Entry.Workspace.MODE_VIMBOARD && b.codeToText();
     })(Entry.getMainWS());
@@ -7293,9 +7294,8 @@ Entry.EntryObject = function(c) {
     this.objectType = c.objectType;
     this.objectType || (this.objectType = "sprite");
     this.script = new Entry.Code(c.script ? c.script : [], this);
-    this.pictures = c.sprite.pictures;
-    this.sounds = [];
-    this.sounds = c.sprite.sounds;
+    this.pictures = JSON.parse(JSON.stringify(c.sprite.pictures || []));
+    this.sounds = JSON.parse(JSON.stringify(c.sprite.sounds || []));
     for (var f = 0;f < this.sounds.length;f++) {
       this.sounds[f].id || (this.sounds[f].id = Entry.generateHash()), Entry.initSound(this.sounds[f]);
     }
@@ -7740,6 +7740,7 @@ Entry.EntryObject = function(c) {
     b === this.selectedPicture && Entry.playground.selectPicture(this.pictures[0]);
     Entry.playground.injectPicture(this);
     Entry.playground.reloadPlayground();
+    return !0;
   };
   c.getPicture = function(b) {
     if (!b) {
@@ -7984,6 +7985,7 @@ Entry.EntryObject = function(c) {
       }}, {text:Lang.Workspace.context_duplicate, enable:!Entry.engine.isState("run"), callback:function() {
         Entry.container.addCloneObject(f);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
+        Entry.dispatchEvent("removeObject", f);
         Entry.container.removeObject(f);
       }}, {text:Lang.Workspace.copy_file, callback:function() {
         Entry.container.setCopiedObject(f);
@@ -13645,6 +13647,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.Literal = function(b, c, d, e) {
     var g, h = b.value;
+    Entry.Utils.isNumber(h) && (h = b.raw || h);
     h && "string" === typeof h && (h = h.replace(/\t/gm, "    "));
     c || (c = {type:"Block"}, d || (d = "number" == typeof h ? {type:"number"} : {type:"text"}));
     if ("Indicator" == c.type) {
@@ -16778,7 +16781,7 @@ Entry.initialize_ = function() {
   this.stage = new Entry.Stage;
   Entry.engine && Entry.engine.projectTimer && Entry.engine.clearTimer();
   this.engine = new Entry.Engine;
-  this.propertyPanel = new Entry.PropertyPanel;
+  "minimize" !== this.type && (this.propertyPanel = new Entry.PropertyPanel);
   this.container = new Entry.Container;
   this.helper = new Entry.Helper;
   this.youtube = new Entry.Youtube;
@@ -17006,6 +17009,11 @@ Entry.Utils.colorLighten = function(c, b) {
   f.l += b / 100;
   f.l = Math.min(1, Math.max(0, f.l));
   return Entry.Utils.hslToHex(f);
+};
+Entry.Utils._EmphasizeColorMap = {"#3BBD70":"#5BC982", "#498DEB":"#62A5F4", "#A751E3":"#C08FF7", "#EC4466":"#F46487", "#FF9E20":"#FFB05A", "#A4D01D":"#C4DD31", "#00979D":"#09BAB5", "#FFD974":"#FCDA90", "#E457DC":"#F279F2", "#CC7337":"#DD884E", "#AEB8FF":"#C0CBFF", "#FFCA36":"#F2C670"};
+Entry.Utils.getEmphasizeColor = function(c) {
+  var b = c.toUpperCase();
+  return Entry.Utils._EmphasizeColorMap[b] || c;
 };
 Entry.Utils.bound01 = function(c, b) {
   var f = c;
@@ -17395,6 +17403,7 @@ Entry.setCloneBrush = function(c, b) {
   f.beginStroke("rgba(" + f.rgb.r + "," + f.rgb.g + "," + f.rgb.b + "," + f.opacity / 100 + ")");
   var d = new createjs.Shape(f);
   Entry.stage.selectedObjectContainer.addChild(d);
+  f.stop = b.stop;
   c.brush && (c.brush = null);
   c.brush = f;
   c.shape && (c.shape = null);
@@ -17934,13 +17943,15 @@ Entry.Model = function(c, b) {
     f && b.push(["count", f ? f : null]);
     return b;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, f, d) {
-    Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
+    var l = Entry.Command.editor.board, m = l.code.getByPointer(b.content[1][1]), q;
+    l.scrollToPointer(b.content[1][1]);
     d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
-    var l = b.tooltip.isDefault, m = !1, q = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !m && c && (m = !0, f(), d.toolTipRender.titleIndex = 1, d.toolTipRender && (l ? Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1]).isParamBlockType() ? d.toolTipRender.contentIndex = 2 : d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 1), c = d.processDomQuery(["playground", "board", "&1", "magnet"]), q.init([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+    var n = b.tooltip.isDefault, r = !1, v = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
+      !r && c && (r = !0, f(), c = l.scrollToPointer(b.content[2][1]), m && (q = m.view), q && (q = q.getSvgRoot().blockView) && c && q.moveBy(-c[0], -c[1]), d.toolTipRender.titleIndex = 1, d.toolTipRender && (n ? (c = Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1])) && c.isParamBlockType() ? d.toolTipRender.contentIndex = 2 : d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 1), c = d.processDomQuery(["playground", "board", "&1", "magnet"]), v.init([{title:b.tooltip.title, 
+      content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
       }}));
     }});
-    return q;
+    return v;
   }, showMe:function(b) {
     if (!b.isTooltipFaded()) {
       b.fadeOutTooltip();
@@ -18863,8 +18874,8 @@ Entry.HW = function() {
   this.connectTrial = 0;
   this.isFirstConnect = !0;
   this.requireVerion = "v1.6.1";
-  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.7_Setup.exe";
-  this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.7.dmg";
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.8_Setup.exe";
+  this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.8.dmg";
   this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
@@ -18971,14 +18982,14 @@ p.initHardware = function(c) {
   Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
 };
 p.disconnectHardware = function() {
-  Entry.propertyPanel.removeMode("hw");
+  Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
   this.hwModule = this.selectedDevice = void 0;
   Entry.dispatchEvent("hwChanged");
 };
 p.disconnectedSocket = function() {
   this.tlsSocketIo.close();
   this.socketIo && this.socketIo.close();
-  Entry.propertyPanel.removeMode("hw");
+  Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
   this.socket = void 0;
   this.connectTrial = 0;
   this.connected = !1;
@@ -19028,7 +19039,7 @@ p.update = function() {
 };
 p.updatePortData = function(c) {
   this.portData = c;
-  this.hwMonitor && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
+  this.hwMonitor && Entry.propertyPanel && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
 };
 p.closeConnection = function() {
   this.socket && this.socket.close();
@@ -19056,7 +19067,7 @@ p.checkDevice = function(c, b) {
       this.hwModule = this.hwInfo[f];
       Entry.dispatchEvent("hwChanged");
       f = "";
-      if (this.hwModule.monitorTemplate) {
+      if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
         f = Lang.Msgs.hw_connection_success_desc;
         this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule);
         Entry.propertyPanel.addMode("hw", this.hwMonitor);
@@ -20047,7 +20058,6 @@ Entry.Variable.prototype.isNumber = function() {
 };
 Entry.Variable.prototype.setValue = function(c) {
   "slide" != this.type ? this.value_ = c : (c = Number(c), this.value_ = c < this.minValue_ ? this.minValue_ : c > this.maxValue_ ? this.maxValue_ : c);
-  this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this._valueWidth = null;
   this.updateView();
   Entry.requestUpdateTwice = !0;
@@ -20354,7 +20364,8 @@ Entry.VariableContainer = function() {
         Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), c.select(null));
         b = this.caller;
         b = b.funcBlock || b.block;
-        b.view.getBoard().activateBlock(b);
+        var d = b.view;
+        d && d.getBoard().activateBlock(b);
         Entry.playground.toggleOnVariableView();
         Entry.playground.changeViewMode("variable");
       });
@@ -20383,9 +20394,10 @@ Entry.VariableContainer = function() {
       k.caller = h;
       k.bindOnClick(function(d) {
         Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), c.select(null), c.select(b));
-        d = this.caller.block;
         Entry.playground.toggleOnVariableView();
-        d.view.getBoard().activateBlock(d);
+        d = this.caller.block;
+        var e = d.view;
+        e && e.getBoard().activateBlock(d);
         Entry.playground.changeViewMode("variable");
       });
       d.appendChild(k);
@@ -21460,7 +21472,7 @@ Entry.VariableContainer = function() {
       }), c = c.map(function(b) {
         return b.toJSON();
       });
-      $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:b, lists:c}}).done(function() {
+      (b.length || c.length) && $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:b, lists:c}}).done(function() {
       });
     }
   };
@@ -22869,7 +22881,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     }));
     var h = this._schema.color;
     if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this.block.emphasized) {
-      h = Entry.Utils.colorLighten(h);
+      h = Entry.Utils.getEmphasizeColor(h);
     }
     this._fillColor = h;
     g = {d:g, fill:h, class:"blockPath"};
@@ -22998,6 +23010,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c._moveBy = function(b, c, d, e) {
     return this._moveTo(this.x + b, this.y + c, d, e);
   };
+  c.moveBy = c._moveBy;
   c._addControl = function() {
     var b = this;
     this._mouseEnable = !0;
@@ -23021,13 +23034,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
       f = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
       var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(f.pageX - k.x, 2) + Math.pow(f.pageY - k.y, 2));
       if (g.dragMode == Entry.DRAG_MODE_DRAG || k > Entry.BlockView.DRAG_RADIUS) {
-        e && (clearTimeout(e), e = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, d), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), d = g.dragInstance, g._moveBy(f.pageX - d.offsetX, f.pageY - d.offsetY, !1, !0), d.set({offsetX:f.pageX, 
-        offsetY:f.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
+        e && (clearTimeout(e), e = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, d), q.dominate(), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), d = g.dragInstance, g._moveBy(f.pageX - d.offsetX, f.pageY - d.offsetY, !1, 
+        !0), d.set({offsetX:f.pageX, offsetY:f.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
       }
     }
     function d(b) {
       e && (clearTimeout(e), e = null);
-      $(document).unbind(".block");
+      $(document).unbind(".block", d);
+      $(document).unbind(".block", f);
       g.terminateDrag(b);
       h && h.set({dragBlock:null});
       g._changeFill(!1);
@@ -23044,7 +23058,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     Entry.documentMousedown && Entry.documentMousedown.notify(b);
     if (!this.readOnly && !h.viewOnly) {
       h.setSelectedBlock(this);
-      this.dominate();
       if ((0 === b.button || b.originalEvent && b.originalEvent.touches) && !this._board.readOnly) {
         var k = b.type, l;
         l = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
@@ -23063,6 +23076,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         Entry.Utils.isRightButton(b) && this._rightClick(b);
       }
       h.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (vimBoard = $(".entryVimBoard>.CodeMirror")[0], document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
+      var q = this;
     }
   };
   c.vimBoardEvent = function(b, c, d) {
@@ -23101,7 +23115,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     }
     this.destroyShadow();
     delete this.originPos;
-    this.dominate();
   };
   c._updateCloseBlock = function() {
     var b = this.getBoard(), c;
@@ -23279,9 +23292,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   };
   c._updateColor = function() {
     var b = this._schema.color;
-    console.log(this.block.emphasized);
     if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this.block.emphasized) {
-      b = Entry.Utils.colorLighten(b);
+      b = Entry.Utils.getEmphasizeColor(b);
     }
     this._fillColor = b;
     this._path.attr({fill:b});
@@ -23999,7 +24011,7 @@ Entry.Field = function() {
     delete this._startValue;
   };
   c.destroyOption = function(b, c) {
-    Entry.Utils.blur();
+    this.isEditing() && Entry.Utils.blur();
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
@@ -24532,7 +24544,11 @@ Entry.FieldDropdown = function(c, b, f) {
   this.svgGroup = null;
   this._contents = c;
   this._noArrow = c.noArrow;
-  this._arrowColor = c.arrowColor;
+  var d = c.arrowColor;
+  if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+    d = b._fillColor;
+  }
+  this._arrowColor = d;
   this._index = f;
   this.setValue(this.getValue());
   this._CONTENT_HEIGHT = this.getContentHeight(c.dropdownHeight);
@@ -24650,7 +24666,11 @@ Entry.FieldDropdownDynamic = function(c, b, f) {
   this.svgGroup = null;
   this._contents = c;
   this._index = f;
-  this._arrowColor = c.arrowColor;
+  f = c.arrowColor;
+  if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+    f = b._fillColor;
+  }
+  this._arrowColor = f;
   f = this._contents.menuName;
   Entry.Utils.isFunction(f) ? this._menuGenerator = f : this._menuName = f;
   this._CONTENT_HEIGHT = this.getContentHeight(c.dropdownHeight);
@@ -24745,7 +24765,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
   c.renderStart = function() {
     this.svgGroup && this.svgGroup.remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
-    this._imgUrl && (this._imgElement = this.svgGroup.elem("image", {href:Entry.mediaFilePath + this._imgUrl, x:this._position ? -1 * this._size : 0, y:-1 * this._size, width:2 * this._size, height:2 * this._size, style:this._block.emphasized ? "opacity: 0.5" : ""}));
+    this._imgUrl && (this._imgElement = this.svgGroup.elem("image", {href:Entry.mediaFilePath + this._imgUrl, x:this._position ? -1 * this._size : 0, y:-1 * this._size, width:2 * this._size, height:2 * this._size}), this._block.emphasized && -1 === this._imgUrl.lastIndexOf("_un.png") && (this._imgUrl = this._imgUrl.replace(".png", "_un.png")));
     var b = "m %s,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
     this._path = this.svgGroup.elem("path", {d:b, x:this._position ? -1 * this._size : 0, y:-1 * this._size, stroke:"none", fill:this._color ? this._color : "none"});
     this.box.set({width:this._size * this._boxMultiplier + (this._position ? -this._size : 0), height:this._size * this._boxMultiplier});
@@ -25951,21 +25971,18 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   c.separate = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
+    var e, g;
     b.view && b.view._toGlobalCoordinate();
-    var e = b.getPrevBlock();
-    if (!e && b.thread instanceof Entry.Thread && b.thread.parent instanceof Entry.Code) {
-      var g = b.thread.getBlock(b.thread.indexOf(b) + c);
-      if (g) {
-        var h = g.view.getAbsoluteCoordinate()
-      }
-    }
+    var h = b.getPrevBlock();
+    !h && b.thread instanceof Entry.Thread && b.thread.parent instanceof Entry.Code && (e = b.thread.getBlock(b.thread.indexOf(b) + c)) && (g = e.view.getAbsoluteCoordinate());
     b.separate(c, d);
-    e && e.getNextBlock() ? e.getNextBlock().view.bindPrev() : g && (g.view._toGlobalCoordinate(), g.moveTo(h.x, h.y));
+    h && h.getNextBlock() ? h.getNextBlock().view.bindPrev() : e && (e.view._toGlobalCoordinate(), e.moveTo(g.x, g.y));
   };
   c.insert = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
-    3 === c.length ? (this.separate(b, d, c[2]), b.moveTo(c[0], c[1])) : 4 === c.length && -1 == c[3] ? (c[3] = 0, targetBlock = this.code.getByPointer(c), this.separate(b, d, c[2]), b = b.getLastBlock(), targetBlock.view.bindPrev(b), targetBlock.doInsert(b)) : (this.separate(b, d), c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : 
-    c instanceof Entry.Thread ? (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
+    var e;
+    3 === c.length ? (this.separate(b, d, c[2]), b.moveTo(c[0], c[1])) : 4 === c.length && -1 == c[3] ? (c[3] = 0, e = this.code.getByPointer(c), this.separate(b, d, c[2]), b = b.getLastBlock(), e.view.bindPrev(b), e.doInsert(b)) : (this.separate(b, d), c = c instanceof Array ? this.code.getByPointer(c) : c, c instanceof Entry.Block ? ("basic" === b.getBlockType() && b.view.bindPrev(c), b.doInsert(c)) : c instanceof Entry.FieldStatement ? (b.view.bindPrev(c), c.insertTopBlock(b)) : c instanceof Entry.Thread ? 
+    (c = c.view.getParent(), b.view.bindPrev(c), c.insertTopBlock(b)) : b.doInsert(c));
   };
   c.adjustThreadsPosition = function() {
     var b = this.code;
@@ -26021,6 +26038,7 @@ Entry.Board.DRAG_RADIUS = 5;
     }
   };
   c.getDom = function(b) {
+    b = b.concat();
     var c = b.shift();
     if ("trashcan" === c) {
       return this.workspace.trashcan.svgGroup;
@@ -26036,15 +26054,16 @@ Entry.Board.DRAG_RADIUS = 5;
     }
   };
   c.findBlock = function(b) {
-    return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) : b instanceof Array ? this.code.getByPointer(b) : b;
+    return "string" === typeof b ? this.findById(b) : b && b.id ? this.findById(b.id) || b : b instanceof Array ? this.code.getByPointer(b) : b;
   };
   c.scrollToPointer = function(b, c) {
     var d = this.code.getByPointer(b), e;
     d instanceof Entry.Block ? (e = d.view.getAbsoluteCoordinate(), d.view.dominate()) : d instanceof Entry.Thread ? e = d.view.requestAbsoluteCoordinate() : d.getAbsolutePosFromBoard && (e = d.getAbsolutePosFromBoard());
-    var g = d = 0;
-    e.x > this._offset.width - 200 ? d = this._offset.width - 200 - e.x : 100 > e.x && (d = 100 - e.x);
-    e.y > this._offset.height - 200 ? g = this._offset.height - 200 - e.y : 100 > e.y && (g = 100 - e.y);
+    var g = d = 0, h = this._offset, k = h.width, h = h.height;
+    e.x > k - 200 ? d = k - 200 - e.x : 100 > e.x && (d = 100 - e.x);
+    e.y > h - 200 ? g = h - 200 - e.y : 100 > e.y && (g = 100 - e.y);
     this.scroller.scroll(d, g, !0);
+    return [d, g];
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
@@ -28223,7 +28242,7 @@ Entry.Playground = function() {
       }}, {text:Lang.Workspace.context_duplicate, callback:function() {
         Entry.playground.clonePicture(b.id);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
-        Entry.playground.object.removePicture(b.id) ? (Entry.removeElement(d), Entry.toast.success(Lang.Workspace.shape_remove_ok, b.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
+        Entry.playground.object.removePicture(b.id) ? (Entry.removeElement(d), Entry.dispatchEvent("removePicture", b), Entry.toast.success(Lang.Workspace.shape_remove_ok, b.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
       }}, {divider:!0}, {text:Lang.Workspace.context_download, callback:function() {
         Entry.playground.downloadPicture(b.id);
       }}], "workspace-contextmenu");
@@ -28268,7 +28287,7 @@ Entry.Playground = function() {
       }}, {text:Lang.Workspace.context_duplicate, callback:function() {
         Entry.playground.addSound(b, !0, !0);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
-        Entry.do("objectRemoveSound", Entry.playground.object.id, b) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.sound_remove_ok, b.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
+        Entry.do("objectRemoveSound", Entry.playground.object.id, b) ? (Entry.removeElement(c), Entry.dispatchEvent("removeSound", b), Entry.toast.success(Lang.Workspace.sound_remove_ok, b.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
         Entry.removeElement(c);
       }}], "workspace-contextmenu");
     });
@@ -28342,8 +28361,8 @@ Entry.Playground = function() {
     return this.viewMode_;
   };
   c.updateHW = function() {
-    var b = Entry.playground.mainWorkspace.blockMenu;
-    if (b) {
+    var b = Entry.playground.mainWorkspace;
+    if (b && (b = b.blockMenu)) {
       var c = Entry.hw;
       c && c.connected ? (b.banClass("arduinoDisconnected", !0), c.banHW(), c.hwModule ? (b.banClass("arduinoConnect", !0), b.unbanClass("arduinoConnected", !0), b.unbanClass(c.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoConnect", !0))) : (b.banClass("arduinoConnected", !0), b.banClass("arduinoConnect", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
       b.reDraw();

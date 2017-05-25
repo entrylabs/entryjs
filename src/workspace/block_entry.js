@@ -10952,8 +10952,7 @@ Entry.block = {
             if (action == 'START') {
                 if (!timer.isInit) {
                     engine.startProjectTimer();
-                }
-                else if (timer.isInit && timer.isPaused) {
+                } else if (timer.isInit && timer.isPaused) {
                     if (timer.pauseStart)
                         timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
                     delete timer.pauseStart;
@@ -10969,7 +10968,7 @@ Entry.block = {
                     timer.setValue(0);
                     timer.start = (new Date()).getTime();
                     timer.pausedTime = 0;
-                    delete timer.pauseStart;
+                    if (!timer.isPaused) delete timer.pauseStart;
                 }
 
             }
@@ -34757,9 +34756,15 @@ Entry.block = {
     "hidden": {
         "color": "#7C7C7C",
         "skeleton": "basic",
-        "template": "         ?       %1",
+        "template": "         %1       %2",
         "statements": [],
         "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            },
             {
                 "type": "Indicator",
                 "color": "#6B6B6B",
@@ -34772,6 +34777,38 @@ Entry.block = {
                 null
             ],
             "type": "hidden"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {}
+    },
+    "hidden_event": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_event",
+        "template": "         %1       ",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "hidden_event"
         },
         "paramsKeyMap": {
             "VALUE": 0
@@ -35237,10 +35274,17 @@ Entry.block = {
     "hidden_string": {
         "color": "#7C7C7C",
         "skeleton": "basic_string_field",
-        "template": "    ?    ",
+        "template": "    %1    ",
         "fontColor": "#fff",
         "statements": [],
-        "params": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            }
+        ],
         "events": {},
         "def": {
             "params": [],
@@ -35256,10 +35300,17 @@ Entry.block = {
     "hidden_boolean": {
         "color": "#7C7C7C",
         "skeleton": "basic_boolean_field",
-        "template": "    ?    ",
+        "template": "    %1    ",
         "fontColor": "#fff",
         "statements": [],
-        "params": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            }
+        ],
         "events": {},
         "def": {
             "params": [],

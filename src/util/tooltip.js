@@ -37,7 +37,10 @@ Entry.Tooltip = function(data, opts) {
             this.alignTooltips();
         }.bind(this), 200);
 
-        Entry.addEventListener('windowResized', this._resizeEventFunc);
+        Entry.addEventListener(
+            'windowResized',
+            this._resizeEventFunc
+        );
     };
 
     p.render = function() {

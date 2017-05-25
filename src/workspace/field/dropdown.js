@@ -19,7 +19,13 @@ Entry.FieldDropdown = function(content, blockView, index) {
 
     this._contents = content;
     this._noArrow = content.noArrow;
-    this._arrowColor = content.arrowColor;
+
+    var arrowColor = content.arrowColor;
+    if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+        arrowColor = blockView._fillColor;
+    }
+
+    this._arrowColor = arrowColor;
     this._index = index;
     this.setValue(this.getValue());
 

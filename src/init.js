@@ -143,7 +143,9 @@ Entry.initialize_ = function() {
      * Initialize PropertyPanel.
      * @type {!object}
      */
-    this.propertyPanel = new Entry.PropertyPanel();
+
+    if (this.type !== "minimize")
+        this.propertyPanel = new Entry.PropertyPanel();
 
     /**
      * Initialize container for objects.

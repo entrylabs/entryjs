@@ -132,10 +132,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             }
         });
 
+
         this.set({params: params});
 
         this.loadSchema();
         this.view && this.view.changeType();
+
     };
 
     p.getSchema = function() { // for lazy loading
