@@ -12787,32 +12787,30 @@ Entry.PyToBlockParser = function(c) {
         var d = b[c].body;
         this._isEntryEventExisted = !1;
         for (c in d) {
-          var e = d[c], g = this[e.type](e);
+          var e, g = d[c], h = this[g.type](g);
           this.isLastBlock && Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, void 0, this._blockCount);
-          if (g && g.type) {
-            var h = this.searchSyntax(Entry.block[g.type]);
-            if (h) {
-              var k = h.blockType
-            }
-            if ("event" == k) {
+          if (h && h.type) {
+            var k = this.searchSyntax(Entry.block[h.type]);
+            k && (e = k.blockType);
+            if ("event" == e) {
               this._isEntryEventExisted = !0;
             } else {
-              if ("last" == k) {
+              if ("last" == e) {
                 this.isLastBlock = !0;
               } else {
-                if ("variable" == k && !this._isEntryEventExisted) {
+                if ("variable" == e && !this._isEntryEventExisted) {
                   continue;
                 }
               }
             }
-            if (Entry.TextCodingUtil.isEntryEventFuncByType(g.type)) {
-              if (this._thread.push(g), g.contents) {
-                for (var l in g.contents) {
-                  this.extractContents(g.contents[l], this._thread);
+            if (Entry.TextCodingUtil.isEntryEventFuncByType(h.type)) {
+              if (this._thread.push(h), h.contents) {
+                for (var l in h.contents) {
+                  this.extractContents(h.contents[l], this._thread);
                 }
               }
             } else {
-              this._thread.push(g);
+              this._thread.push(h);
             }
           }
         }
@@ -14662,26 +14660,26 @@ Entry.PyToBlockParser = function(c) {
     return b;
   };
   c.searchSyntax = function(b) {
-    var c;
-    b instanceof Entry.BlockView ? (c = b.block._schema, applliedParams = b.block.data.params) : b instanceof Entry.Block ? (c = b._schema, applliedParams = b.params) : c = b;
+    var c, d, e = !1;
+    b instanceof Entry.BlockView ? (c = b.block._schema, d = b.block.data.params) : b instanceof Entry.Block ? (c = b._schema, d = b.params) : (c = b, e = !0);
     if (c && c.syntax) {
       for (b = c.syntax.py.concat();b.length;) {
         c = !1;
-        var d = b.shift();
-        if ("string" === typeof d) {
-          return {syntax:d, template:d};
+        var g = b.shift();
+        if ("string" === typeof g) {
+          return {syntax:g, template:g};
         }
-        if (d.params) {
-          for (var e = 0;e < d.params.length;e++) {
-            if (d.params[e] && d.params[e] !== applliedParams[e]) {
+        if (g.params) {
+          for (var h = 0;h < g.params.length;h++) {
+            if (!0 !== e && g.params[h] && g.params[h] !== d[h]) {
               c = !0;
               break;
             }
           }
         }
-        d.template || (d.template = d.syntax);
+        g.template || (g.template = g.syntax);
         if (!c) {
-          return d;
+          return g;
         }
       }
     }
