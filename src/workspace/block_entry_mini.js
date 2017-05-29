@@ -1117,7 +1117,7 @@
                 if (!script.isStart) {
                     var note = script.getNumberField('NOTE', script);
                     var octave = script.getNumberField('OCTAVE', script);
-                    var duration = script.getNumberField(DURATION, script);
+                    var duration = script.getNumberField('DURATION', script);
                     var value = (note > 0) ? note + (12 * octave) : 0;
 
                     script.isStart = true;
