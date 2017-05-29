@@ -141,7 +141,7 @@ Entry.PARAM = -1;
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
             if (!executor.isEnd())
-                executedBlocks = executedBlocks.concat(executor.execute());
+                executedBlocks = executedBlocks.concat(executor.execute(true));
             else {
                 executors.splice(i--, 1);
                 if (executors.length === 0)

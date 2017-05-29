@@ -11998,6 +11998,14 @@ Entry.block = {
         func: function(entity) {
             if (!this.initiated) {
                 this.initiated = true;
+				Entry.callStackLength++;
+				if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
+					Entry.toast.alert(
+						Lang.Workspace.RecursiveCallWarningTitle,
+						Lang.Workspace.RecursiveCallWarningContent
+					);
+					throw new Error();
+				}
 
                 var func = Entry.variableContainer.getFunction(
                     this.block.type.substr(5, 9)
