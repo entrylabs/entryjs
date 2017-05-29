@@ -848,16 +848,17 @@ Entry.Board.DRAG_RADIUS = 5;
     p.separate = function(block, count, index) {
         if (typeof block === "string")
             block = this.findById(block);
+        var nextBlock, backupPos;
         if (block.view)
             block.view._toGlobalCoordinate();
         var prevBlock = block.getPrevBlock();
         if (!prevBlock && block.thread instanceof Entry.Thread &&
            block.thread.parent instanceof Entry.Code) {
-            var nextBlock = block.thread.getBlock(
+            nextBlock = block.thread.getBlock(
                 block.thread.indexOf(block) + count)
 
             if (nextBlock)
-                var backupPos = nextBlock.view.getAbsoluteCoordinate();
+                backupPos = nextBlock.view.getAbsoluteCoordinate();
         }
         var prevThread = block.thread;
         block.separate(count, index);
@@ -872,6 +873,8 @@ Entry.Board.DRAG_RADIUS = 5;
     p.insert = function(block, pointer, count) { // pointer can be target
         if (typeof block === "string")
             block = this.findById(block);
+
+        var targetBlock;
 
         if (pointer.length === 3) { // for global
             this.separate(block, count, pointer[2]);
@@ -1066,7 +1069,7 @@ Entry.Board.DRAG_RADIUS = 5;
                         height: 2 * halfWidth
                     };
                 }.bind(this)
-            }
+            };
         else if (key instanceof Array) {
             var targetObj = this.code.getByPointer(key);
             if (targetObj.getDom) {
@@ -1081,7 +1084,7 @@ Entry.Board.DRAG_RADIUS = 5;
         if (typeof block === 'string')
             return this.findById(block);
         else if (block && block.id)
-            return this.findById(block.id);
+            return this.findById(block.id) || block;
         else if (block instanceof Array)
             return this.code.getByPointer(block);
         return block;

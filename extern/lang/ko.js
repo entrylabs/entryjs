@@ -3444,7 +3444,8 @@ Lang.Menus = {
     "course_show_list": "목록",
     "modi": "모디",
     "chocopi": "초코파이보드",
-    "coconut": "코코넛"
+    "coconut": "코코넛",
+    "practical_course": "교과용 만들기"
 };
 Lang.Msgs = {
     "save_canvas_alert": "저장 중입니다. 잠시후에 다시 시도해주세요.",
@@ -3784,7 +3785,9 @@ Lang.Workspace = {
     "select_mode_popup_lable1": "기본형",
     "select_mode_popup_lable2": "실과형",
     "select_mode_popup_desc1": "엔트리의 모든 기능을 이용하여<br/>자유롭게 작품을 만듭니다.",
-    "select_mode_popup_desc2": "실과 교과서에 등장하는 기능만을<br/>이용하여 작품을 만듭니다."
+    "select_mode_popup_desc2": "실과 교과서에 등장하는 기능만을<br/>이용하여 작품을 만듭니다.",
+    "practical_course_notice": "안내",
+    "practical_course_desc": "교과용 만들기 환경은 실과 교과서를<br />학습할 때 필요한 블록만을 제공하는 환경입니다.<br />기본 만들기 환경으로 전환하기 위해서는<br />상단 메뉴를 통해 기본형을 선택해주세요."
 };
 Lang.code = "코드보기";
 Lang.EntryStatic = {

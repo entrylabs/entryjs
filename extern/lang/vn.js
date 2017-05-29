@@ -3444,7 +3444,8 @@ Lang.Menus = {
     "course_show_list": "List",
     "modi": "MODI",
     "chocopi": "ChocoPi",
-    "coconut": "coconut"
+    "coconut": "coconut",
+    "practical_course": "Textbook"
 };
 Lang.Msgs = {
     "save_canvas_alert": "Currently saving. Try again soon.",
@@ -3784,7 +3785,9 @@ Lang.Workspace = {
     "select_mode_popup_lable1": "Standard",
     "select_mode_popup_lable2": "Textbook(Practical Course)",
     "select_mode_popup_desc1": "Create projects with<br/>unlimited Entry features",
-    "select_mode_popup_desc2": "Create projects using<br/>'Practical Course' features"
+    "select_mode_popup_desc2": "Create projects using<br/>'Practical Course' features",
+    "practical_course_notice": "Notice",
+    "practical_course_desc": "Practical course mode provides only<br />the necessary block when learning textbook.<br />If you want to switch the mode,<br />choose default type through the top menu."
 };
 Lang.code = "view code";
 Lang.EntryStatic = {

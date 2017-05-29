@@ -1,7 +1,7 @@
 'use strict';
 
-goog.provide("Entry.Vim");
-
+goog.provide("Entry.Vim");   
+  
 goog.require("Entry.TextCodingUtil");
 
 Entry.Vim = function(dom, textType) {
