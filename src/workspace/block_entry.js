@@ -12001,7 +12001,10 @@ Entry.block = {
                 this.initiated = true;
 				Entry.callStackLength++;
 				if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
-                    Entry.toast.alert("에러", "함수가 너무 많이 재귀호출되었습니다.");
+					Entry.toast.alert(
+						Lang.Workspace.RecursiveCallWarningTitle,
+						Lang.Workspace.RecursiveCallWarningContent
+					);
 					throw new Error();
 				}
 
