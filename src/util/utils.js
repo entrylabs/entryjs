@@ -973,6 +973,8 @@ Entry.setCloneBrush = function (sprite, parentBrush) {
     var shape = new createjs.Shape(brush);
     Entry.stage.selectedObjectContainer.addChild(shape);
 
+    brush.stop = parentBrush.stop;
+
     if (sprite.brush)
         sprite.brush = null;
     sprite.brush = brush;
@@ -980,6 +982,7 @@ Entry.setCloneBrush = function (sprite, parentBrush) {
     if (sprite.shape)
         sprite.shape = null;
     sprite.shape = shape;
+
 };
 
 Entry.isFloat = function (num) {

@@ -5603,12 +5603,13 @@ Entry.setCloneBrush = function(c, b) {
   e.opacity = b.opacity;
   e.setStrokeStyle(e.thickness);
   e.beginStroke("rgba(" + e.rgb.r + "," + e.rgb.g + "," + e.rgb.b + "," + e.opacity / 100 + ")");
-  b = new createjs.Shape(e);
-  Entry.stage.selectedObjectContainer.addChild(b);
+  var d = new createjs.Shape(e);
+  Entry.stage.selectedObjectContainer.addChild(d);
+  e.stop = b.stop;
   c.brush && (c.brush = null);
   c.brush = e;
   c.shape && (c.shape = null);
-  c.shape = b;
+  c.shape = d;
 };
 Entry.isFloat = function(c) {
   return /\d+\.{1}\d+$/.test(c);
@@ -9403,14 +9404,14 @@ p.initHardware = function(c) {
   Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
 };
 p.disconnectHardware = function() {
-  Entry.propertyPanel.removeMode("hw");
+  Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
   this.hwModule = this.selectedDevice = void 0;
   Entry.dispatchEvent("hwChanged");
 };
 p.disconnectedSocket = function() {
   this.tlsSocketIo.close();
   this.socketIo && this.socketIo.close();
-  Entry.propertyPanel.removeMode("hw");
+  Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
   this.socket = void 0;
   this.connectTrial = 0;
   this.connected = !1;
@@ -9460,7 +9461,7 @@ p.update = function() {
 };
 p.updatePortData = function(c) {
   this.portData = c;
-  this.hwMonitor && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
+  this.hwMonitor && Entry.propertyPanel && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
 };
 p.closeConnection = function() {
   this.socket && this.socket.close();
@@ -9480,7 +9481,7 @@ p.setZero = function() {
 p.checkDevice = function(c, b) {
   if (void 0 !== c.company) {
     var e = [Entry.Utils.convertIntToHex(c.company), ".", Entry.Utils.convertIntToHex(c.model)].join("");
-    e == this.selectedDevice ? this.hwModule && this.hwModule.dataHandler && this.hwModule.dataHandler(c) : (Entry.Utils.isNewVersion(b, this.requireVerion) && this.popupHelper.show("newVersion", !0), this.selectedDevice = e, this.hwModule = this.hwInfo[e], Entry.dispatchEvent("hwChanged"), this.hwModule.monitorTemplate ? (c = Lang.Msgs.hw_connection_success_desc, this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), 
+    e == this.selectedDevice ? this.hwModule && this.hwModule.dataHandler && this.hwModule.dataHandler(c) : (Entry.Utils.isNewVersion(b, this.requireVerion) && this.popupHelper.show("newVersion", !0), this.selectedDevice = e, this.hwModule = this.hwInfo[e], Entry.dispatchEvent("hwChanged"), Entry.propertyPanel && this.hwModule.monitorTemplate ? (c = Lang.Msgs.hw_connection_success_desc, this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), 
     Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView()) : c = Lang.Msgs.hw_connection_success_desc2, Entry.toast.success(Lang.Msgs.hw_connection_success, c));
   }
 };
@@ -9730,7 +9731,7 @@ Entry.initialize_ = function() {
   this.stage = new Entry.Stage;
   Entry.engine && Entry.engine.projectTimer && Entry.engine.clearTimer();
   this.engine = new Entry.Engine;
-  this.propertyPanel = new Entry.PropertyPanel;
+  "minimize" !== this.type && (this.propertyPanel = new Entry.PropertyPanel);
   this.container = new Entry.Container;
   this.helper = new Entry.Helper;
   this.youtube = new Entry.Youtube;
@@ -15147,8 +15148,8 @@ Entry.Playground = function() {
     return this.viewMode_;
   };
   c.updateHW = function() {
-    var b = Entry.playground.mainWorkspace.blockMenu;
-    if (b) {
+    var b = Entry.playground.mainWorkspace;
+    if (b && (b = b.blockMenu)) {
       var c = Entry.hw;
       c && c.connected ? (b.banClass("arduinoDisconnected", !0), c.banHW(), c.hwModule ? (b.banClass("arduinoConnect", !0), b.unbanClass("arduinoConnected", !0), b.unbanClass(c.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoConnect", !0))) : (b.banClass("arduinoConnected", !0), b.banClass("arduinoConnect", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
       b.reDraw();
@@ -17288,32 +17289,30 @@ Entry.PyToBlockParser = function(c) {
         var d = b[c].body;
         this._isEntryEventExisted = !1;
         for (c in d) {
-          var f = d[c], g = this[f.type](f);
+          var f, g = d[c], h = this[g.type](g);
           this.isLastBlock && Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, void 0, this._blockCount);
-          if (g && g.type) {
-            var h = this.searchSyntax(Entry.block[g.type]);
-            if (h) {
-              var k = h.blockType;
-            }
-            if ("event" == k) {
+          if (h && h.type) {
+            var k = this.searchSyntax(Entry.block[h.type]);
+            k && (f = k.blockType);
+            if ("event" == f) {
               this._isEntryEventExisted = !0;
             } else {
-              if ("last" == k) {
+              if ("last" == f) {
                 this.isLastBlock = !0;
               } else {
-                if ("variable" == k && !this._isEntryEventExisted) {
+                if ("variable" == f && !this._isEntryEventExisted) {
                   continue;
                 }
               }
             }
-            if (Entry.TextCodingUtil.isEntryEventFuncByType(g.type)) {
-              if (this._thread.push(g), g.contents) {
-                for (var l in g.contents) {
-                  this.extractContents(g.contents[l], this._thread);
+            if (Entry.TextCodingUtil.isEntryEventFuncByType(h.type)) {
+              if (this._thread.push(h), h.contents) {
+                for (var l in h.contents) {
+                  this.extractContents(h.contents[l], this._thread);
                 }
               }
             } else {
-              this._thread.push(g);
+              this._thread.push(h);
             }
           }
         }
@@ -18131,6 +18130,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.Literal = function(b, c, d, f) {
     var e, h = b.value;
+    Entry.Utils.isNumber(h) && (h = b.raw || h);
     h && "string" === typeof h && (h = h.replace(/\t/gm, "    "));
     c || (c = {type:"Block"}, d || (d = "number" == typeof h ? {type:"number"} : {type:"text"}));
     if ("Indicator" == c.type) {
@@ -19142,26 +19142,26 @@ Entry.PyToBlockParser = function(c) {
     return b;
   };
   c.searchSyntax = function(b) {
-    var c;
-    b instanceof Entry.BlockView ? (c = b.block._schema, applliedParams = b.block.data.params) : b instanceof Entry.Block ? (c = b._schema, applliedParams = b.params) : c = b;
+    var c, d, f = !1;
+    b instanceof Entry.BlockView ? (c = b.block._schema, d = b.block.data.params) : b instanceof Entry.Block ? (c = b._schema, d = b.params) : (c = b, f = !0);
     if (c && c.syntax) {
       for (b = c.syntax.py.concat();b.length;) {
         c = !1;
-        var d = b.shift();
-        if ("string" === typeof d) {
-          return {syntax:d, template:d};
+        var g = b.shift();
+        if ("string" === typeof g) {
+          return {syntax:g, template:g};
         }
-        if (d.params) {
-          for (var f = 0;f < d.params.length;f++) {
-            if (d.params[f] && d.params[f] !== applliedParams[f]) {
+        if (g.params) {
+          for (var h = 0;h < g.params.length;h++) {
+            if (!0 !== f && g.params[h] && g.params[h] !== d[h]) {
               c = !0;
               break;
             }
           }
         }
-        d.template || (d.template = d.syntax);
+        g.template || (g.template = g.syntax);
         if (!c) {
-          return d;
+          return g;
         }
       }
     }
@@ -21517,7 +21517,8 @@ Entry.VariableContainer = function() {
         Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), c.select(null));
         b = this.caller;
         b = b.funcBlock || b.block;
-        b.view.getBoard().activateBlock(b);
+        var e = b.view;
+        e && e.getBoard().activateBlock(b);
         Entry.playground.toggleOnVariableView();
         Entry.playground.changeViewMode("variable");
       });
@@ -21546,9 +21547,10 @@ Entry.VariableContainer = function() {
       k.caller = h;
       k.bindOnClick(function(e) {
         Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), c.select(null), c.select(b));
-        e = this.caller.block;
         Entry.playground.toggleOnVariableView();
-        e.view.getBoard().activateBlock(e);
+        e = this.caller.block;
+        var d = e.view;
+        d && d.getBoard().activateBlock(e);
         Entry.playground.changeViewMode("variable");
       });
       d.appendChild(k);
@@ -26902,7 +26904,7 @@ Entry.PARAM = -1;
   c.tick = function() {
     for (var b = this.executors, c = [], d = 0;d < b.length;d++) {
       var f = b[d];
-      f.isEnd() ? (b.splice(d--, 1), 0 === b.length && this.executeEndEvent.notify()) : c = c.concat(f.execute());
+      f.isEnd() ? (b.splice(d--, 1), 0 === b.length && this.executeEndEvent.notify()) : c = c.concat(f.execute(!0));
     }
     this.watchEvent.notify(c);
   };
@@ -27136,18 +27138,21 @@ Entry.Executor = function(c, b) {
   this._callStack = [];
   this.register = {};
 };
+Entry.Executor.MAXIMUM_CALLSTACK = 100;
 (function(c) {
-  c.execute = function() {
+  c.execute = function(b) {
     if (!this.isEnd()) {
-      for (var b = [];;) {
-        var c = null;
-        b.push(this.scope.block);
+      var c = [];
+      b && (Entry.callStackLength = 0);
+      for (;;) {
+        b = null;
+        c.push(this.scope.block);
         try {
           var d = this.scope.block.getSchema();
-          d && (c = d.func.call(this.scope, this.entity, this.scope));
+          d && (b = d.func.call(this.scope, this.entity, this.scope));
         } catch (g) {
           if ("AsyncError" === g.name) {
-            c = Entry.STATIC.BREAK;
+            b = Entry.STATIC.BREAK;
           } else {
             var f = !1;
             "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec" != g.message && (f = !0);
@@ -27157,10 +27162,10 @@ Entry.Executor = function(c, b) {
         if (this.isEnd()) {
           break;
         }
-        if (void 0 === c || null === c || c === Entry.STATIC.PASS) {
+        if (void 0 === b || null === b || b === Entry.STATIC.PASS) {
           if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
             if (this._callStack.length) {
-              if (c = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== c.isLooped) {
+              if (b = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== b.isLooped) {
                 break;
               }
             } else {
@@ -27168,12 +27173,12 @@ Entry.Executor = function(c, b) {
             }
           }
         } else {
-          if (c !== Entry.STATIC.CONTINUE && (c === Entry.STATIC.BREAK || this.scope === c)) {
+          if (b !== Entry.STATIC.CONTINUE && (b === Entry.STATIC.BREAK || this.scope === b)) {
             break;
           }
         }
       }
-      return b;
+      return c;
     }
   };
   c.stepInto = function(b) {
