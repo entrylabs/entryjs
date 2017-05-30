@@ -15451,12 +15451,14 @@ Entry.Scene.prototype.generateElement = function(c) {
     f.appendChild(g);
   }
   Entry.Utils.disableContextmenu(e);
-  Entry.ContextMenu.onContextmenu($(e), function(b) {
-    var e = [{text:Lang.Workspace.duplicate_scene, enable:Entry.engine.isState("stop") && !this.isMax(), callback:function() {
-      Entry.scene.cloneScene(c);
-    }}];
-    Entry.ContextMenu.show(e, "workspace-contextmenu", b);
-  }.bind(this));
+  if (Entry.sceneEditable) {
+    Entry.ContextMenu.onContextmenu($(e), function(b) {
+      var e = [{text:Lang.Workspace.duplicate_scene, enable:Entry.engine.isState("stop") && !this.isMax(), callback:function() {
+        Entry.scene.cloneScene(c);
+      }}];
+      Entry.ContextMenu.show(e, "workspace-contextmenu", b);
+    }.bind(this));
+  }
   return c.view = e;
 };
 Entry.Scene.prototype.updateView = function() {
@@ -24258,7 +24260,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       Entry.engine.isContinue = !1;
       return b.callReturn();
     }
-    var e = b.getNumberField("NOTE", b), d = b.getNumberField("OCTAVE", b), f = b.getNumberField(DURATION, b), e = 0 < e ? e + 12 * d : 0;
+    var e = b.getNumberField("NOTE", b), d = b.getNumberField("OCTAVE", b), f = b.getNumberField("DURATION", b), e = 0 < e ? e + 12 * d : 0;
     b.isStart = !0;
     b.timeFlag = 1;
     b.soundFlag = 1;
