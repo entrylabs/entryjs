@@ -10952,8 +10952,7 @@ Entry.block = {
             if (action == 'START') {
                 if (!timer.isInit) {
                     engine.startProjectTimer();
-                }
-                else if (timer.isInit && timer.isPaused) {
+                } else if (timer.isInit && timer.isPaused) {
                     if (timer.pauseStart)
                         timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
                     delete timer.pauseStart;
@@ -10969,7 +10968,7 @@ Entry.block = {
                     timer.setValue(0);
                     timer.start = (new Date()).getTime();
                     timer.pausedTime = 0;
-                    delete timer.pauseStart;
+                    if (!timer.isPaused) delete timer.pauseStart;
                 }
 
             }
@@ -11999,6 +11998,14 @@ Entry.block = {
         func: function(entity) {
             if (!this.initiated) {
                 this.initiated = true;
+				Entry.callStackLength++;
+				if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
+					Entry.toast.alert(
+						Lang.Workspace.RecursiveCallWarningTitle,
+						Lang.Workspace.RecursiveCallWarningContent
+					);
+					throw new Error();
+				}
 
                 var func = Entry.variableContainer.getFunction(
                     this.block.type.substr(5, 9)
@@ -30051,109 +30058,1027 @@ Entry.block = {
         "syntax": {"js": [], "py": ["SensorBoard.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     // ardublock Added 2016-06-01
-    "ardublock_get_number_sensor_value": {
-        "parent": "arduino_get_number_sensor_value",
-        "isNotFor": [
-            "ardublock"
-        ],
-        "def": {
-            "params": [
-                {
-                    "type": "arduino_get_sensor_number"
-                }
+    "ardublock_analog_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["A0", "0"],
+                ["A1", "1"],
+                ["A2", "2"],
+                ["A3", "3"],
+                ["A4", "4"],
+                ["A5", "5"]
             ],
-            "type": "ardublock_get_number_sensor_value"
+            "value": "0",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null]
         },
-        "class": "arduino_value"
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function(sprite, script) {
+            return script.getField("PORT");
+        },
+        "syntax": { "js": [], "py": [] }
     },
-    "ardublock_get_digital_value": {
-        "parent": "arduino_get_digital_value",
-        "isNotFor": [
-            "ardublock"
-        ],
+    "ardublock_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
         "def": {
-            "params": [
+            "params": [{
+                "type": "arduino_ext_analog_list"
+            }],
+            "type": "ardublock_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ardublockGet",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_get_analog_value_map": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [{
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "ardublock_get_analog_value",
+                    "params": [{
+                        "type": "arduino_ext_analog_list"
+                    }]
+                },
                 {
-                    "type": "arduino_get_port_number"
+                    "type": "number",
+                    "params": ["0"]
+                },
+                {
+                    "type": "number",
+                    "params": ["1023"]
+                },
+                {
+                    "type": "number",
+                    "params": ["0"]
+                },
+                {
+                    "type": "number",
+                    "params": ["100"]
                 }
             ],
-            "type": "ardublock_get_digital_value"
+            "type": "ardublock_get_analog_value_map"
         },
-        "class": "arduino_value",
-        "syntax": {"js": [], "py": []}
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE2": 1,
+            "VALUE3": 2,
+            "VALUE4": 3,
+            "VALUE5": 4
+        },
+        "class": "ardublockGet",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var result = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            var value2 = script.getNumberValue("VALUE2", script);
+            var value3 = script.getNumberValue("VALUE3", script);
+            var value4 = script.getNumberValue("VALUE4", script);
+            var value5 = script.getNumberValue("VALUE5", script);
+
+            if (value2 > value3) {
+                var swap = value2;
+                value2 = value3;
+                value3 = swap;
+            }
+            if (value4 > value5) {
+                var swap = value4;
+                value4 = value5;
+                value5 = swap;
+            }
+            result -= value2;
+            result = result * ((value5 - value4) / (value3 - value2));
+            result += value4;
+            result = Math.min(value5, result);
+            result = Math.max(value4, result);
+
+            return result
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_get_ultrasonic_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [{
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [{
+                type: 'arduino_get_port_number',
+                params: ['13'],
+            }, {
+                type: 'arduino_get_port_number',
+                params: ['12'],
+            }],
+            "type": "ardublock_get_ultrasonic_value"
+        },
+        "paramsKeyMap": {
+            "PORT1": 0,
+            "PORT2": 1,
+        },
+        "class": "ardublockGet",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var port1 = script.getNumberValue("PORT1", script);
+            var port2 = script.getNumberValue("PORT2", script);
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            delete Entry.hw.sendQueue['SET'][port1];
+            delete Entry.hw.sendQueue['SET'][port2];
+
+            if (!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.ardublock.sensorTypes.ULTRASONIC] = {
+                port: [port1, port2],
+                time: new Date().getTime()
+            };
+            return Entry.hw.portData.ULTRASONIC || 0;
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_get_digital": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                "type": "arduino_get_port_number"
+            }],
+            "type": "ardublock_get_digital"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ardublockGet",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var port = script.getNumberValue("PORT", script);
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+            if (!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.ardublock.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
+            return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+        },
+        "syntax": { "js": [], "py": [] }
     },
     "ardublock_toggle_led": {
-        "parent": "arduino_toggle_led",
-        "isNotFor": [
-            "ardublock"
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
         ],
+        "events": {},
         "def": {
-            "params": [
-                {
+            "params": [{
                     "type": "arduino_get_port_number"
                 },
-                null,
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": ["on"],
+                },
                 null
             ],
             "type": "ardublock_toggle_led"
         },
-        "class": "arduino_set"
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ardublock",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getValue("VALUE");
+
+            if (typeof value === 'string') {
+                value = value.toLowerCase();
+            }
+            if (Entry.ardublock.highList.indexOf(value) > -1) {
+                value = 255;
+            } else if (Entry.ardublock.lowList.indexOf(value) > -1) {
+                value = 0;
+            } else {
+                throw new Error();
+            }
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.ardublock.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
     },
-    "ardublock_toggle_pwm": {
-        "parent": "arduino_toggle_pwm",
-        "isNotFor": [
-            "ardublock"
+    "ardublock_digital_pwm": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
         ],
+        "events": {},
         "def": {
-            "params": [
-                {
+            "params": [{
                     "type": "arduino_get_pwm_port_number"
                 },
                 {
-                    "type": "arduino_text",
-                    "params": [ "255" ]
+                    "type": "text",
+                    "params": ["255"]
                 },
                 null
             ],
-            "type": "ardublock_toggle_pwm"
+            "type": "ardublock_digital_pwm"
         },
-        "class": "arduino_set"
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ardublock",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.ardublock.sensorTypes.PWM,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
     },
-    "ardublock_convert_scale": {
-        "parent": "arduino_convert_scale",
-        "isNotFor": [
-            "ardublock"
-        ],
-        "def": {
-            "params": [
-                {
-                    "type": "arduino_get_number_sensor_value",
-                    "params": [
-                        {
-                            "type": "arduino_get_sensor_number"
-                        }
-                    ]
-                },
-                {
-                    "type": "number",
-                    "params": [ "0" ]
-                },
-                {
-                    "type": "number",
-                    "params": [ "1023" ]
-                },
-                {
-                    "type": "number",
-                    "params": [ "0" ]
-                },
-                {
-                    "type": "number",
-                    "params": [ "100" ]
-                }
+    "ardublock_tone_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.silent, "0"],
+                [Lang.Blocks.do_name, "C"],
+                [Lang.Blocks.do_sharp_name, "CS"],
+                [Lang.Blocks.re_name, "D"],
+                [Lang.Blocks.re_sharp_name, "DS"],
+                [Lang.Blocks.mi_name, "E"],
+                [Lang.Blocks.fa_name, "F"],
+                [Lang.Blocks.fa_sharp_name, "FS"],
+                [Lang.Blocks.sol_name, "G"],
+                [Lang.Blocks.sol_sharp_name, "GS"],
+                [Lang.Blocks.la_name, "A"],
+                [Lang.Blocks.la_sharp_name, "AS"],
+                [Lang.Blocks.si_name, "B"]
             ],
-            "type": "ardublock_convert_scale"
+            "value": "C",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null]
         },
-        "class": "arduino"
+        "paramsKeyMap": {
+            "NOTE": 0
+        },
+        "func": function(sprite, script) {
+            return script.getField("NOTE");
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_tone_value": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                "type": "ardublock_tone_list"
+            }],
+            "type": "ardublock_tone_value"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0
+        },
+        "func": function(sprite, script) {
+            return script.getNumberValue("NOTE");
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_octave_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"],
+                ["4", "4"],
+                ["5", "5"],
+                ["6", "6"]
+            ],
+            "value": "3",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null]
+        },
+        "paramsKeyMap": {
+            "OCTAVE": 0
+        },
+        "func": function(sprite, script) {
+            return script.getField("OCTAVE");
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_set_tone": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number",
+                    "value": 4,
+                    "params": ["11"]
+                },
+                {
+                    "type": "ardublock_tone_list"
+                },
+                {
+                    "type": "ardublock_octave_list"
+                },
+                {
+                    "type": "text",
+                    "params": ["1"]
+                },
+                null
+            ],
+            "type": "ardublock_set_tone"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "NOTE": 1,
+            "OCTAVE": 2,
+            "DURATION": 3
+        },
+        "class": "ardublock",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getNumberValue("PORT", script);
+
+            if (!script.isStart) {
+                var note = script.getValue("NOTE", script);
+                if (!Entry.Utils.isNumber(note))
+                    note = Entry.ardublock.toneTable[note];
+
+                if (note < 0) {
+                    note = 0;
+                } else if (note > 12) {
+                    note = 12;
+                }
+
+                var duration = script.getNumberValue("DURATION", script);
+
+                if (duration < 0) {
+                    duration = 0;
+                }
+
+                if (!sq['SET']) {
+                    sq['SET'] = {};
+                }
+
+                if (duration === 0) {
+                    sq['SET'][port] = {
+                        type: Entry.ardublock.sensorTypes.TONE,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+
+                var octave = script.getNumberValue("OCTAVE", script) - 1;
+                if (octave < 0) {
+                    octave = 0;
+                } else if (octave > 5) {
+                    octave = 5;
+                }
+
+                var value = 0;
+
+                if (note != 0) {
+                    value = Entry.ardublock.toneMap[note][octave];
+                }
+
+                duration = duration * 1000;
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                sq['SET'][port] = {
+                    type: Entry.ardublock.sensorTypes.TONE,
+                    data: {
+                        value: value,
+                        duration: duration
+                    },
+                    time: new Date().getTime()
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, duration + 32);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                sq['SET'][port] = {
+                    type: Entry.ardublock.sensorTypes.TONE,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_set_servo": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number",
+                    "params": ["10"]
+                },
+                null
+            ],
+            "type": "ardublock_set_servo"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ardublock",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getNumberValue("PORT", script);
+            var value = script.getNumberValue("VALUE", script);
+            value = Math.min(180, value);
+            value = Math.max(0, value);
+
+            if (!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: Entry.ardublock.sensorTypes.SERVO_PIN,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_motor_direction_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.ardublock_motor_forward, "0"],
+                [Lang.Blocks.ardublock_motor_backward, "1"]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null]
+        },
+        "paramsKeyMap": {
+            "MOTOR_DIRECTION": 0
+        },
+        "func": function(sprite, script) {
+            return script.getField("MOTOR_DIRECTION");
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_set_left_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "ardublock_motor_direction_list"
+                },
+                {
+                    "type": "text",
+                    "params": ["100"]
+                },
+                null
+            ],
+            "type": "ardublock_set_left_motor"
+        },
+        "paramsKeyMap": {
+            "MOTOR_DIRECTION": 0,
+            "MOTOR_SPEED": 1
+        },
+        "class": "ardublock",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            // var sq = Entry.hw.sendQueue;
+            var direction = script.getValue("MOTOR_DIRECTION", script);
+            if (!Entry.Utils.isNumber(direction))
+                direction = Entry.ardublock.directionTable[direction];
+
+            if (direction < 0) {
+                direction = 0;
+            } else if (direction > 1) {
+                direction = 1;
+            }
+
+            var speed = script.getNumberValue("MOTOR_SPEED", script) - 1;
+            if (speed < 0) {
+                speed = 0;
+            } else if (speed > 254) {
+                speed = 254;
+            }
+
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+
+            Entry.hw.sendQueue['SET'][0] = {
+                type: Entry.ardublock.sensorTypes.MOTOR_LEFT,
+                data: {
+                    direction: direction,
+                    speed: speed
+                },
+                time: new Date().getTime()
+            };
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, 10);
+
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_set_right_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "ardublock_motor_direction_list"
+                },
+                {
+                    "type": "text",
+                    "params": ["100"]
+                },
+                null
+            ],
+            "type": "ardublock_set_right_motor"
+        },
+        "paramsKeyMap": {
+            "MOTOR_DIRECTION": 0,
+            "MOTOR_SPEED": 1
+        },
+        "class": "ardublock",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            // var sq = Entry.hw.sendQueue;
+            var direction = script.getValue("MOTOR_DIRECTION", script);
+            if (!Entry.Utils.isNumber(direction))
+                direction = Entry.ardublock.directionTable[direction];
+
+            if (direction < 0) {
+                direction = 0;
+            } else if (direction > 1) {
+                direction = 1;
+            }
+
+            var speed = script.getNumberValue("MOTOR_SPEED", script) - 1;
+            if (speed < 0) {
+                speed = 0;
+            } else if (speed > 254) {
+                speed = 254;
+            }
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+
+            Entry.hw.sendQueue['SET'][1] = {
+                type: Entry.ardublock.sensorTypes.MOTOR_RIGHT,
+                data: {
+                    direction: direction,
+                    speed: speed
+                },
+                time: new Date().getTime()
+            };
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, 10);
+
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_get_left_cds_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                "type": "arduino_ext_analog_list",
+                "params": ["0"]
+            }],
+            "type": "ardublock_get_left_cds_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ardublockGet",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_get_right_cds_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                "type": "arduino_ext_analog_list",
+                "params": ["1"]
+            }],
+            "type": "ardublock_get_right_cds_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ardublockGet",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_toggle_left_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number",
+                    "params": ["3"]
+                },
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": ["on"],
+                },
+                null
+            ],
+            "type": "ardublock_toggle_left_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ardublock",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getValue("VALUE");
+
+            if (typeof value === 'string') {
+                value = value.toLowerCase();
+            }
+            if (Entry.ardublock.highList.indexOf(value) > -1) {
+                value = 255;
+            } else if (Entry.ardublock.lowList.indexOf(value) > -1) {
+                value = 0;
+            } else {
+                throw new Error();
+            }
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.ardublock.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_toggle_right_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number",
+                    "params": ["9"]
+                },
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": ["on"],
+                },
+                null
+            ],
+            "type": "ardublock_toggle_right_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ardublock",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getValue("VALUE");
+
+            if (typeof value === 'string') {
+                value = value.toLowerCase();
+            }
+            if (Entry.ardublock.highList.indexOf(value) > -1) {
+                value = 255;
+            } else if (Entry.ardublock.lowList.indexOf(value) > -1) {
+                value = 0;
+            } else {
+                throw new Error();
+            }
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.ardublock.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "ardublock_get_sound_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                "type": "arduino_ext_analog_list",
+                "params": ["2"]
+            }],
+            "type": "ardublock_get_sound_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ardublockGet",
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": { "js": [], "py": [] }
     },
     // ardublock Added 2016-06-01
     "joystick_get_number_sensor_value": {
@@ -31302,7 +32227,9 @@ Entry.block = {
         "isNotFor": [ "roborobo_roduino" ],
         "func": function (sprite, script) {
             var signal = parseInt(script.getValue("VALUE", script));
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.ANALOG_READ, signal]);
+            Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.ANALOG_READ;
+            Entry.hw.sendQueue.analogEnable[signal] = 1;
+            Entry.hw.update();
             return Entry.hw.getAnalogPortValue(signal);
         }
     },
@@ -31333,8 +32260,10 @@ Entry.block = {
         "isNotFor": [ "roborobo_roduino" ],
         "func": function (sprite, script) {
             var signal = script.getNumberValue("VALUE", script);
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ, signal]);
-            return Entry.hw.portData[signal - 2];
+            Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ;
+            Entry.hw.sendQueue[1] = signal;            
+            Entry.hw.update();
+            return Entry.hw.getDigitalPortValue(signal - 2);
         }
     },
     "roduino_get_color": {
@@ -31448,7 +32377,9 @@ Entry.block = {
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
 
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, pin, value]);
+            Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE;
+            Entry.hw.sendQueue[1] = pin;
+            Entry.hw.setDigitalPortValue(pin, value);
             return script.callReturn();
         }
     },
@@ -31523,7 +32454,8 @@ Entry.block = {
                 value1 = 0;
                 value2 = 0;
             }
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.MOTOR, pin1, value1, pin2, value2]);
+            Entry.hw.setDigitalPortValue(pin1, value1);
+            Entry.hw.setDigitalPortValue(pin2, value2);
             return script.callReturn();
         }
     },
@@ -31582,7 +32514,9 @@ Entry.block = {
             var bluePin = script.getNumberValue("BLUE", script);
 
             Entry.Roborobo_Roduino.ColorPin = [ redPin, greenPin, bluePin ];
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, redPin, greenPin, bluePin]);
+            Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.COLOR;
+            Entry.hw.sendQueue.colorPin = redPin;
+            Entry.hw.update();
             return script.callReturn();
         }
     },
@@ -31742,6 +32676,10 @@ Entry.block = {
             var pin = script.getNumberValue("VALUE", script);
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
+            
+            if(!Entry.hw.sendQueue.digitalPinMode) {
+                Entry.hw.sendQueue.digitalPinMode = {};
+            }
 
             Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
             Entry.hw.sendQueue[pin] = value;
@@ -31841,9 +32779,9 @@ Entry.block = {
             var value = script.getNumberValue("VALUE");
 
             if(mode == "motor1") {
-                pin = 7;
+                pin = 0;        
             } else {
-                pin = 8;
+                pin = 1;
             }
 
             if(value > 255) {
@@ -31851,19 +32789,19 @@ Entry.block = {
             } else if(value < 0) {
                 value = 0;
             }
+            
+            if(!Entry.hw.sendQueue.digitalPinMode) {
+                Entry.hw.sendQueue.digitalPinMode = {};
+            }
 
             Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-            Entry.hw.sendQueue.digitalPinMode[pin - 7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-
+            Entry.hw.sendQueue.digitalPinMode[pin + 7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
             if (operator == "cw") {
                 Entry.hw.sendQueue[pin] = value;
-                Entry.hw.sendQueue[pin - 7] = 0x00;
             } else if (operator == "ccw") {
-                Entry.hw.sendQueue[pin] = 0x00;
-                Entry.hw.sendQueue[pin - 7] = value;
+                Entry.hw.sendQueue[pin] = -value;
             } else if(operator == "stop") {
                 Entry.hw.sendQueue[pin] = 0x00;
-                Entry.hw.sendQueue[pin - 7] = 0x00;
             }
             return script.callReturn();
         }
@@ -32666,10 +33604,10 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [ "정지 시키기", "0"],
-                    [ "매우 느린 속도로 돌리기", "160"],
-                    [ "느린 속도로 돌리기", "185" ],
-                    [ "보통 속도로 돌리기", "210" ],
-                    [ "빠른 속도로 돌리기", "235" ],
+                    [ "매우 느린 속도로 돌리기", "70"],
+                    [ "느린 속도로 돌리기", "115" ],
+                    [ "보통 속도로 돌리기", "160" ],
+                    [ "빠른 속도로 돌리기", "205" ],
                     [ "매우 빠른 속도로 돌리기", "255"]
                 ],
                 "value": "210",
@@ -43216,7 +44154,549 @@ Entry.block = {
             var ANALOG = Entry.hw.portData.ANALOG;
             return (ANALOG) ? (ANALOG[port] < 1) : false ;
         }
-    }
+    },
+    //Altino start
+    "altino_analogValue": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.ALTINO_CDS, "cds"],
+                [Lang.Blocks.ALTINO_IR1, "ir1"],
+                [Lang.Blocks.ALTINO_IR2, "ir2"],
+                [Lang.Blocks.ALTINO_IR3, "ir3"],
+                [Lang.Blocks.ALTINO_IR4, "ir4"],
+                [Lang.Blocks.ALTINO_IR5, "ir5"],
+                [Lang.Blocks.ALTINO_IR6, "ir6"],
+                [Lang.Blocks.ALTINO_TOR1, "tor1"],
+                [Lang.Blocks.ALTINO_TOR2, "tor2"],
+                [Lang.Blocks.ALTINO_TEM, "tem"],
+                [Lang.Blocks.ALTINO_ACCX, "accx"],
+                [Lang.Blocks.ALTINO_ACCY, "accy"],
+                [Lang.Blocks.ALTINO_ACCZ, "accz"],
+                [Lang.Blocks.ALTINO_MAGX, "magx"],
+                [Lang.Blocks.ALTINO_MAGY, "magy"],
+                [Lang.Blocks.ALTINO_MAGZ, "magz"],
+                [Lang.Blocks.ALTINO_GYROX, "gyrox"],
+                [Lang.Blocks.ALTINO_GYROY, "gyroy"],
+                [Lang.Blocks.ALTINO_GYROZ, "gyroz"],
+                [Lang.Blocks.ALTINO_STVAR, "stvar"],
+                [Lang.Blocks.ALTINO_STTOR, "sttor"],
+                [Lang.Blocks.ALTINO_BAT, "bat"],
+                [Lang.Blocks.ALTINO_REMOTE, "remote"],
+            ],
+            "value": "cds",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "altino_analogValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "altino_sensor",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            return pd[dev];
+        },
+        "syntax": { "js": [], "py": ["Altino.analog_value(%1)"] }
+    },
+    "altino_steering": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALTINO_Steering_Angle_Center, "Center"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Left5, "Left5"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Left10, "Left10"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Left15, "Left15"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Left20, "Left20"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Right5, "Right5"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Right10, "Right10"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Right15, "Right15"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Right20, "Right20"],
+                ],
+                "value": "Center",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null],
+            "type": "altino_steering"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0
+        },
+        "class": "altino_motor",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var direction = script.getField("DIRECTION", script);
+
+            if (direction == "Center") {
+                sq.steering = 2;
+            } else if (direction == "Left5") {
+                sq.steering = 160;
+            } else if (direction == "Left10") {
+                sq.steering = 192;
+            } else if (direction == "Left15") {
+                sq.steering = 224;
+            } else if (direction == "Left20") {
+                sq.steering = 255;
+            } else if (direction == "Right5") {
+                sq.steering = 32;
+            } else if (direction == "Right10") {
+                sq.steering = 64;
+            } else if (direction == "Right15") {
+                sq.steering = 96;
+            } else if (direction == "Right20") {
+                sq.steering = 127;
+            }
+
+
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": ["Altino.steering(%1,%2)"] }
+    },
+    "altino_rear_wheel": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "text",
+                    "params": ["300"]
+                },
+                {
+                    "type": "text",
+                    "params": ["300"]
+                },
+                null
+            ],
+            "type": "altino_rear_wheel"
+        },
+        "paramsKeyMap": {
+            "rightWheel": 0,
+            "leftWheel": 1
+        },
+        "class": "altino_motor",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+
+            sq.rightWheel = script.getNumberValue('rightWheel');
+            sq.leftWheel = script.getNumberValue('leftWheel');
+
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": ["Altino.rear_wheel(%1, %2)"] }
+    },
+    "altino_sound": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["5", "5"],
+                    ["6", "6"],
+                    ["7", "7"]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALTINO_h, "NOT"],
+                    [Lang.Blocks.ALTINO_c, "C"],
+                    [Lang.Blocks.ALTINO_c2, "C#"],
+                    [Lang.Blocks.ALTINO_d, "D"],
+                    [Lang.Blocks.ALTINO_d2, "D#"],
+                    [Lang.Blocks.ALTINO_e, "E"],
+                    [Lang.Blocks.ALTINO_f, "F"],
+                    [Lang.Blocks.ALTINO_f2, "F#"],
+                    [Lang.Blocks.ALTINO_g, "G"],
+                    [Lang.Blocks.ALTINO_g2, "G#"],
+                    [Lang.Blocks.ALTINO_a, "A"],
+                    [Lang.Blocks.ALTINO_a2, "A#"],
+                    [Lang.Blocks.ALTINO_b, "B"]
+                ],
+                "value": "NOT",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "altino_sound"
+        },
+        "paramsKeyMap": {
+            "OCTAVE": 0,
+            "NOTE": 1
+        },
+        "class": "altino_display",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var octave = script.getStringField("OCTAVE", script);
+            var note = script.getStringField("NOTE", script);
+            var octave_int = octave + note;
+
+            if (note == "NOT") sq.note = 0;
+            else if (octave_int == "2C") sq.note = 13;
+            else if (octave_int == "2C#") sq.note = 14;
+            else if (octave_int == "2D") sq.note = 15;
+            else if (octave_int == "2D#") sq.note = 16;
+            else if (octave_int == "2E") sq.note = 17;
+            else if (octave_int == "2F") sq.note = 18;
+            else if (octave_int == "2F#") sq.note = 19;
+            else if (octave_int == "2G") sq.note = 20;
+            else if (octave_int == "2G#") sq.note = 21;
+            else if (octave_int == "2A") sq.note = 22;
+            else if (octave_int == "2A#") sq.note = 23;
+            else if (octave_int == "2B") sq.note = 24;
+            else if (octave_int == "3C") sq.note = 25;
+            else if (octave_int == "3C#") sq.note = 26;
+            else if (octave_int == "3D") sq.note = 27;
+            else if (octave_int == "3D#") sq.note = 28;
+            else if (octave_int == "3E") sq.note = 29;
+            else if (octave_int == "3F") sq.note = 30;
+            else if (octave_int == "3F#") sq.note = 31;
+            else if (octave_int == "3G") sq.note = 32;
+            else if (octave_int == "3G#") sq.note = 33;
+            else if (octave_int == "3A") sq.note = 34;
+            else if (octave_int == "3A#") sq.note = 35;
+            else if (octave_int == "3B") sq.note = 36;
+            else if (octave_int == "4C") sq.note = 37;
+            else if (octave_int == "4C#") sq.note = 38;
+            else if (octave_int == "4D") sq.note = 39;
+            else if (octave_int == "4D#") sq.note = 40;
+            else if (octave_int == "4E") sq.note = 41;
+            else if (octave_int == "4F") sq.note = 42;
+            else if (octave_int == "4F#") sq.note = 43;
+            else if (octave_int == "4G") sq.note = 44;
+            else if (octave_int == "4G#") sq.note = 45;
+            else if (octave_int == "4A") sq.note = 46;
+            else if (octave_int == "4A#") sq.note = 47;
+            else if (octave_int == "4B") sq.note = 48;
+            else if (octave_int == "5C") sq.note = 49;
+            else if (octave_int == "5C#") sq.note = 50;
+            else if (octave_int == "5D") sq.note = 51;
+            else if (octave_int == "5D#") sq.note = 52;
+            else if (octave_int == "5E") sq.note = 53;
+            else if (octave_int == "5F") sq.note = 54;
+            else if (octave_int == "5F#") sq.note = 55;
+            else if (octave_int == "5G") sq.note = 56;
+            else if (octave_int == "5G#") sq.note = 57;
+            else if (octave_int == "5A") sq.note = 58;
+            else if (octave_int == "5A#") sq.note = 59;
+            else if (octave_int == "5B") sq.note = 60;
+            else if (octave_int == "6C") sq.note = 61;
+            else if (octave_int == "6C#") sq.note = 62;
+            else if (octave_int == "6D") sq.note = 63;
+            else if (octave_int == "6D#") sq.note = 64;
+            else if (octave_int == "6E") sq.note = 65;
+            else if (octave_int == "6F") sq.note = 66;
+            else if (octave_int == "6F#") sq.note = 67;
+            else if (octave_int == "6G") sq.note = 68;
+            else if (octave_int == "6G#") sq.note = 69;
+            else if (octave_int == "6A") sq.note = 70;
+            else if (octave_int == "6A#") sq.note = 71;
+            else if (octave_int == "6B") sq.note = 72;
+            else if (octave_int == "7C") sq.note = 73;
+            else if (octave_int == "7C#") sq.note = 74;
+            else if (octave_int == "7D") sq.note = 75;
+            else if (octave_int == "7D#") sq.note = 76;
+            else if (octave_int == "7E") sq.note = 77;
+            else if (octave_int == "7F") sq.note = 78;
+            else if (octave_int == "7F#") sq.note = 79;
+            else if (octave_int == "7G") sq.note = 80;
+            else if (octave_int == "7G#") sq.note = 81;
+            else if (octave_int == "7A") sq.note = 82;
+            else if (octave_int == "7A#") sq.note = 83;
+            else if (octave_int == "7B") sq.note = 84;
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": ["Altino.sound(%1, %2)"] }
+    },
+    "altino_light": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALTINO_Led_Forward_Light, "2"],
+                    [Lang.Blocks.ALTINO_Led_Reverse_Light, "3"],
+                    [Lang.Blocks.ALTINO_Led_Brake_Light, "4"],
+                    [Lang.Blocks.ALTINO_Led_Turn_Left_Light, "5"],
+                    [Lang.Blocks.ALTINO_Led_Turn_Right_Light, "6"],
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALTINO_h2, "255"],
+                    [Lang.Blocks.ALTINO_h, "0"]
+                ],
+                "value": "255",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "altino_light"
+        },
+        "paramsKeyMap": {
+            "SELECT": 0,
+            "ONOFF": 1
+        },
+        "class": "altino_display",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var select = script.getStringField("SELECT", script);
+            var onoff = script.getStringField("ONOFF", script);
+
+            if (select == "2" && onoff == "255") {
+                sq.led = sq.led | 0x03;
+            } else if (select == "2" && onoff == "0") {
+                sq.led = sq.led & 0xFC;
+            }
+
+            if (select == "3" && onoff == "255") {
+                sq.led = sq.led | 0x0C;
+            } else if (select == "3" && onoff == "0") {
+                sq.led = sq.led & 0xF3;
+            }
+
+            if (select == "4" && onoff == "255") {
+                sq.led2 = sq.led2 | 0xC1;
+            } else if (select == "4" && onoff == "0") {
+                sq.led2 = sq.led2 & 0x3F;
+            }
+
+            if (select == "5" && onoff == "255") {
+                sq.led = sq.led | 0xA0;
+            } else if (select == "5" && onoff == "0") {
+                sq.led = sq.led & 0x5F;
+            }
+
+            if (select == "6" && onoff == "255") {
+                sq.led = sq.led | 0x50;
+            } else if (select == "6" && onoff == "0") {
+                sq.led = sq.led & 0xAF;
+            }
+
+            //sq.led = 0xff;
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": ["Altino.light(%1, %2)"] }
+    },
+    "altino_dot_display": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "text",
+                    "params": ["A"]
+                },
+                null
+            ],
+            "type": "altino_dot_display"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "altino_display",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var str = script.getStringValue('VALUE');
+            sq.ascii = str.charCodeAt(0);
+
+            return script.callReturn();
+
+        },
+        "syntax": {
+            "js": [],
+            "py": [{
+                syntax: "Altino.dot_display(%1)",
+                textParams: [{
+                    "type": "Block",
+                    "accept": "string"
+                }]
+            }]
+        }
+    },
+    "altino_dot_display_line": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                null
+            ],
+            "type": "altino_dot_display_line"
+        },
+        "paramsKeyMap": {
+            "VALUE1": 0,
+            "VALUE2": 1,
+            "VALUE3": 2,
+            "VALUE4": 3,
+            "VALUE5": 4,
+            "VALUE6": 5,
+            "VALUE7": 6,
+            "VALUE8": 7
+        },
+        "class": "altino_display",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            sq.ascii=0;
+            sq.dot1 = script.getNumberValue('VALUE1');
+            sq.dot2 = script.getNumberValue('VALUE2');
+            sq.dot3 = script.getNumberValue('VALUE3');
+            sq.dot4 = script.getNumberValue('VALUE4');
+            sq.dot5 = script.getNumberValue('VALUE5');
+            sq.dot6 = script.getNumberValue('VALUE6');
+            sq.dot7 = script.getNumberValue('VALUE7');
+            sq.dot8 = script.getNumberValue('VALUE8');
+
+            return script.callReturn();
+        }
+    },
+    //Altino end
+
 };
 
 (function() {

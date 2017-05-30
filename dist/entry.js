@@ -815,6 +815,25 @@ Entry.block.albert_set_tempo_to = function(c, b) {
   1 > Entry.Albert.tempo && (Entry.Albert.tempo = 1);
   return b.callReturn();
 };
+Entry.Altino = {PORT_MAP:{rightWheel:0, leftWheel:0, steering:0, ascii:0, led:0, led2:0, note:0, dot1:0, dot2:0, dot3:0, dot4:0, dot5:0, dot6:0, dot7:0, dot8:0}, setZero:function() {
+  var c = Entry.Altino.PORT_MAP, b = Entry.hw.sendQueue, f;
+  for (f in c) {
+    b[f] = c[f];
+  }
+  Entry.hw.update();
+  Entry.Altino.removeAllTimeouts();
+}, timeouts:[], removeTimeout:function(c) {
+  clearTimeout(c);
+  var b = this.timeouts;
+  c = b.indexOf(c);
+  0 <= c && b.splice(c, 1);
+}, removeAllTimeouts:function() {
+  var c = this.timeouts, b;
+  for (b in c) {
+    clearTimeout(c[b]);
+  }
+  this.timeouts = [];
+}, name:"altino"};
 Entry.Arduino = {name:"arduino", setZero:function() {
   Entry.hw.sendQueue.readablePorts = [];
   for (var c = 0;20 > c;c++) {
@@ -845,7 +864,14 @@ Entry.SmartBoard = {name:"smartBoard", setZero:function() {
 " RELAY ", type:"output", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " SM3 \uac01\ub3c4 ", type:"output", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " SM2 \uac01\ub3c4 ", type:"output", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + "SM1 \uac01\ub3c4 ", type:"output", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " \ube68\uac04 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " \ub178\ub780 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 14:{name:Lang.Hw.port_en + " \ucd08\ub85d " + 
 Lang.Hw.button, type:"input", pos:{x:0, y:0}}, 15:{name:Lang.Hw.port_en + " \ud30c\ub780 " + Lang.Hw.button, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " 1\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " 2\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " 3\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " 4\ubc88 " + Lang.Hw.sensor, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
-Entry.ardublock = {name:"ardublock", setZero:Entry.Arduino.setZero};
+Entry.ardublock = {name:"ardublock", setZero:function() {
+  Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(c) {
+    Entry.hw.sendQueue.SET[c].data = 0;
+    Entry.hw.sendQueue.SET[c].time = (new Date).getTime();
+  }) : Entry.hw.sendQueue = {GET:{}, SET:{}};
+  Entry.hw.update();
+}, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8, MOTOR_LEFT:9, MOTOR_RIGHT:10}, toneTable:{0:0, C:1, CS:2, D:3, DS:4, E:5, F:6, FS:7, G:8, GS:9, A:10, AS:11, B:12}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 
+7:[46, 92, 185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, directionTable:{Forward:0, Backward:1}, highList:["high", "1", "on"], lowList:["low", "0", "off"], BlockState:{}};
 Entry.dplay = {name:"dplay", vel_value:255, Left_value:255, Right_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(c) {
   clearTimeout(c);
   var b = this.timeouts;
@@ -6348,7 +6374,6 @@ Entry.Engine = function() {
     this.state = "stop";
     Entry.dispatchEvent("stop");
     Entry.stage.hideInputField();
-    Entry.variableContainer && Entry.variableContainer.updateCloudVariables();
     (function(b) {
       b && b.getMode() === Entry.Workspace.MODE_VIMBOARD && b.codeToText();
     })(Entry.getMainWS());
@@ -11126,46 +11151,46 @@ Entry.TextCodingUtil = {};
     }
     return c;
   };
-  c.getDynamicIdByNumber = function(b, f) {
-    var c = b;
+  c.getDynamicIdByNumber = function(b, c) {
+    var d = b;
     if (Entry.getMainWS() && Entry.getMainWS().vimBoard) {
-      c = Entry.getMainWS().vimBoard;
+      d = Entry.getMainWS().vimBoard;
     } else {
-      return c;
+      return d;
     }
-    var e = c._currentObject;
+    var e = d._currentObject;
     if ("number" == typeof b) {
-      if (c = "None", "pictures" == f.menuName) {
+      if (d = "None", "pictures" == c.menuName) {
         if (0 < b) {
           var g = Entry.container.getAllObjects(), h;
           for (h in g) {
             var k = g[h];
             if (k.id == e.id && (k = k.pictures[b - 1])) {
-              c = k.name;
+              d = k.name;
               break;
             }
           }
         }
       } else {
-        if ("sounds" == f.menuName && 0 < b) {
+        if ("sounds" == c.menuName && 0 < b) {
           for (h in g = Entry.container.getAllObjects(), g) {
             if (k = g[h], k.id == e.id && (k = k.sounds[b - 1])) {
-              c = k.name;
+              d = k.name;
               break;
             }
           }
         }
       }
     } else {
-      c = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(b, f.menuName);
+      d = Entry.TextCodingUtil.dropdownDynamicNameToIdConvertor(b, c.menuName);
     }
-    return c;
+    return d;
   };
-  c.isLocalType = function(b, f) {
-    if ("variables" == f) {
-      var c = Entry.variableContainer.variables_, e;
-      for (e in c) {
-        var g = c[e];
+  c.isLocalType = function(b, c) {
+    if ("variables" == c) {
+      var d = Entry.variableContainer.variables_, e;
+      for (e in d) {
+        var g = d[e];
         if (g.id_ == b) {
           if (g.object_) {
             return !0;
@@ -11174,9 +11199,9 @@ Entry.TextCodingUtil = {};
         }
       }
     } else {
-      if ("lists" == f) {
-        for (e in c = Entry.variableContainer.lists_, c) {
-          if (g = c[e], g.id_ == b) {
+      if ("lists" == c) {
+        for (e in d = Entry.variableContainer.lists_, d) {
+          if (g = d[e], g.id_ == b) {
             if (g.object_) {
               return !0;
             }
@@ -12787,32 +12812,30 @@ Entry.PyToBlockParser = function(c) {
         var d = b[c].body;
         this._isEntryEventExisted = !1;
         for (c in d) {
-          var e = d[c], g = this[e.type](e);
+          var e, g = d[c], h = this[g.type](g);
           this.isLastBlock && Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, void 0, this._blockCount);
-          if (g && g.type) {
-            var h = this.searchSyntax(Entry.block[g.type]);
-            if (h) {
-              var k = h.blockType
-            }
-            if ("event" == k) {
+          if (h && h.type) {
+            var k = this.searchSyntax(Entry.block[h.type]);
+            k && (e = k.blockType);
+            if ("event" == e) {
               this._isEntryEventExisted = !0;
             } else {
-              if ("last" == k) {
+              if ("last" == e) {
                 this.isLastBlock = !0;
               } else {
-                if ("variable" == k && !this._isEntryEventExisted) {
+                if ("variable" == e && !this._isEntryEventExisted) {
                   continue;
                 }
               }
             }
-            if (Entry.TextCodingUtil.isEntryEventFuncByType(g.type)) {
-              if (this._thread.push(g), g.contents) {
-                for (var l in g.contents) {
-                  this.extractContents(g.contents[l], this._thread);
+            if (Entry.TextCodingUtil.isEntryEventFuncByType(h.type)) {
+              if (this._thread.push(h), h.contents) {
+                for (var l in h.contents) {
+                  this.extractContents(h.contents[l], this._thread);
                 }
               }
             } else {
-              this._thread.push(g);
+              this._thread.push(h);
             }
           }
         }
@@ -13649,6 +13672,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.Literal = function(b, c, d, e) {
     var g, h = b.value;
+    Entry.Utils.isNumber(h) && (h = b.raw || h);
     h && "string" === typeof h && (h = h.replace(/\t/gm, "    "));
     c || (c = {type:"Block"}, d || (d = "number" == typeof h ? {type:"number"} : {type:"text"}));
     if ("Indicator" == c.type) {
@@ -14661,26 +14685,26 @@ Entry.PyToBlockParser = function(c) {
     return b;
   };
   c.searchSyntax = function(b) {
-    var c;
-    b instanceof Entry.BlockView ? (c = b.block._schema, applliedParams = b.block.data.params) : b instanceof Entry.Block ? (c = b._schema, applliedParams = b.params) : c = b;
+    var c, d, e = !1;
+    b instanceof Entry.BlockView ? (c = b.block._schema, d = b.block.data.params) : b instanceof Entry.Block ? (c = b._schema, d = b.params) : (c = b, e = !0);
     if (c && c.syntax) {
       for (b = c.syntax.py.concat();b.length;) {
         c = !1;
-        var d = b.shift();
-        if ("string" === typeof d) {
-          return {syntax:d, template:d};
+        var g = b.shift();
+        if ("string" === typeof g) {
+          return {syntax:g, template:g};
         }
-        if (d.params) {
-          for (var e = 0;e < d.params.length;e++) {
-            if (d.params[e] && d.params[e] !== applliedParams[e]) {
+        if (g.params) {
+          for (var h = 0;h < g.params.length;h++) {
+            if (!0 !== e && g.params[h] && g.params[h] !== d[h]) {
               c = !0;
               break;
             }
           }
         }
-        d.template || (d.template = d.syntax);
+        g.template || (g.template = g.syntax);
         if (!c) {
-          return d;
+          return g;
         }
       }
     }
@@ -16782,7 +16806,7 @@ Entry.initialize_ = function() {
   this.stage = new Entry.Stage;
   Entry.engine && Entry.engine.projectTimer && Entry.engine.clearTimer();
   this.engine = new Entry.Engine;
-  this.propertyPanel = new Entry.PropertyPanel;
+  "minimize" !== this.type && (this.propertyPanel = new Entry.PropertyPanel);
   this.container = new Entry.Container;
   this.helper = new Entry.Helper;
   this.youtube = new Entry.Youtube;
@@ -17404,6 +17428,7 @@ Entry.setCloneBrush = function(c, b) {
   f.beginStroke("rgba(" + f.rgb.r + "," + f.rgb.g + "," + f.rgb.b + "," + f.opacity / 100 + ")");
   var d = new createjs.Shape(f);
   Entry.stage.selectedObjectContainer.addChild(d);
+  f.stop = b.stop;
   c.brush && (c.brush = null);
   c.brush = f;
   c.shape && (c.shape = null);
@@ -18874,8 +18899,8 @@ Entry.HW = function() {
   this.connectTrial = 0;
   this.isFirstConnect = !0;
   this.requireVerion = "v1.6.1";
-  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.7_Setup.exe";
-  this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.7.dmg";
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.9_Setup.exe";
+  this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.9.dmg";
   this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
@@ -18885,8 +18910,8 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.3":Entry.CODEino, "1.2":Entry.SensorBoard, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.9":Entry.ArduinoExt, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "13.1":Entry.rokoboard, 
-  "14.1":Entry.Chocopi, "15.1":Entry.coconut, "16.1":Entry.MODI, "A.1":Entry.SmartBoard, "B.1":Entry.Codestar, "C.1":Entry.DaduBlock, "C.2":Entry.DaduBlock_Car, "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.9":Entry.ArduinoExt, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "A.1":Entry.SmartBoard, "B.1":Entry.Codestar, "C.1":Entry.DaduBlock, "C.2":Entry.DaduBlock_Car, 
+  "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "13.1":Entry.rokoboard, "14.1":Entry.Chocopi, "15.1":Entry.coconut, "16.1":Entry.MODI, "18.1":Entry.Altino};
 };
 Entry.HW.TRIAL_LIMIT = 2;
 p = Entry.HW.prototype;
@@ -18982,14 +19007,14 @@ p.initHardware = function(c) {
   Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
 };
 p.disconnectHardware = function() {
-  Entry.propertyPanel.removeMode("hw");
+  Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
   this.hwModule = this.selectedDevice = void 0;
   Entry.dispatchEvent("hwChanged");
 };
 p.disconnectedSocket = function() {
   this.tlsSocketIo.close();
   this.socketIo && this.socketIo.close();
-  Entry.propertyPanel.removeMode("hw");
+  Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
   this.socket = void 0;
   this.connectTrial = 0;
   this.connected = !1;
@@ -19039,7 +19064,7 @@ p.update = function() {
 };
 p.updatePortData = function(c) {
   this.portData = c;
-  this.hwMonitor && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
+  this.hwMonitor && Entry.propertyPanel && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
 };
 p.closeConnection = function() {
   this.socket && this.socket.close();
@@ -19067,7 +19092,7 @@ p.checkDevice = function(c, b) {
       this.hwModule = this.hwInfo[f];
       Entry.dispatchEvent("hwChanged");
       f = "";
-      if (this.hwModule.monitorTemplate) {
+      if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
         f = Lang.Msgs.hw_connection_success_desc;
         this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule);
         Entry.propertyPanel.addMode("hw", this.hwMonitor);
@@ -20364,7 +20389,8 @@ Entry.VariableContainer = function() {
         Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), c.select(null));
         b = this.caller;
         b = b.funcBlock || b.block;
-        b.view.getBoard().activateBlock(b);
+        var d = b.view;
+        d && d.getBoard().activateBlock(b);
         Entry.playground.toggleOnVariableView();
         Entry.playground.changeViewMode("variable");
       });
@@ -20393,9 +20419,10 @@ Entry.VariableContainer = function() {
       k.caller = h;
       k.bindOnClick(function(d) {
         Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), c.select(null), c.select(b));
-        d = this.caller.block;
         Entry.playground.toggleOnVariableView();
-        d.view.getBoard().activateBlock(d);
+        d = this.caller.block;
+        var e = d.view;
+        e && e.getBoard().activateBlock(d);
         Entry.playground.changeViewMode("variable");
       });
       d.appendChild(k);
@@ -23562,7 +23589,7 @@ Entry.PARAM = -1;
   c.tick = function() {
     for (var b = this.executors, c = [], d = 0;d < b.length;d++) {
       var e = b[d];
-      e.isEnd() ? (b.splice(d--, 1), 0 === b.length && this.executeEndEvent.notify()) : c = c.concat(e.execute());
+      e.isEnd() ? (b.splice(d--, 1), 0 === b.length && this.executeEndEvent.notify()) : c = c.concat(e.execute(!0));
     }
     this.watchEvent.notify(c);
   };
@@ -23794,18 +23821,21 @@ Entry.Executor = function(c, b) {
   this._callStack = [];
   this.register = {};
 };
+Entry.Executor.MAXIMUM_CALLSTACK = 100;
 (function(c) {
-  c.execute = function() {
+  c.execute = function(b) {
     if (!this.isEnd()) {
-      for (var b = [];;) {
-        var c = null;
-        b.push(this.scope.block);
+      var c = [];
+      b && (Entry.callStackLength = 0);
+      for (;;) {
+        b = null;
+        c.push(this.scope.block);
         try {
           var d = this.scope.block.getSchema();
-          d && (c = d.func.call(this.scope, this.entity, this.scope));
+          d && (b = d.func.call(this.scope, this.entity, this.scope));
         } catch (g) {
           if ("AsyncError" === g.name) {
-            c = Entry.STATIC.BREAK;
+            b = Entry.STATIC.BREAK;
           } else {
             var e = !1;
             "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec" != g.message && (e = !0);
@@ -23815,10 +23845,10 @@ Entry.Executor = function(c, b) {
         if (this.isEnd()) {
           break;
         }
-        if (void 0 === c || null === c || c === Entry.STATIC.PASS) {
+        if (void 0 === b || null === b || b === Entry.STATIC.PASS) {
           if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
             if (this._callStack.length) {
-              if (c = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== c.isLooped) {
+              if (b = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== b.isLooped) {
                 break;
               }
             } else {
@@ -23826,12 +23856,12 @@ Entry.Executor = function(c, b) {
             }
           }
         } else {
-          if (c !== Entry.STATIC.CONTINUE && (c === Entry.STATIC.BREAK || this.scope === c)) {
+          if (b !== Entry.STATIC.CONTINUE && (b === Entry.STATIC.BREAK || this.scope === b)) {
             break;
           }
         }
       }
-      return b;
+      return c;
     }
   };
   c.stepInto = function(b) {
@@ -24009,7 +24039,7 @@ Entry.Field = function() {
     delete this._startValue;
   };
   c.destroyOption = function(b, c) {
-    Entry.Utils.blur();
+    this.isEditing() && Entry.Utils.blur();
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
@@ -27299,78 +27329,77 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.overlayBoard.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1);
   };
   c._keyboardControl = function(b, c) {
+    function d(b, c) {
+      return b ? !0 : (alert(c || "\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694."), !1);
+    }
     if (!Entry.Loader || Entry.Loader.isLoaded()) {
-      var d = b.keyCode || b.which, e = b.ctrlKey, g = b.shiftKey, h = b.altKey, k = Entry.playground, l = k && k.object ? k.object : void 0;
+      var e = b.keyCode || b.which, g = b.ctrlKey, h = b.shiftKey, k = b.altKey, l = Entry.playground, m = l && l.object ? l.object : void 0;
       if (!Entry.Utils.isInInput(b) || c) {
-        var m = this._isVimMode(), q = this.selectedBlockView, n = this.selectedBoard, r = n.readOnly;
-        if (e) {
-          switch(d) {
+        var q = this._isVimMode(), n = this.selectedBlockView, r = this.selectedBoard, v = r.readOnly;
+        if (g) {
+          g = [219, 221];
+          if (-1 < g.indexOf(e) && !d(m)) {
+            return;
+          }
+          switch(e) {
             case 86:
-              !r && n && n instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
+              !v && r && r instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
               break;
             case 219:
-              if (!l && m) {
-                alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
-                return;
-              }
               if (Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
                 return;
               }
-              if (d = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-                alert(d);
+              if (e = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+                alert(e);
                 return;
               }
               this.dSetMode({boardType:Entry.Workspace.MODE_BOARD, textType:-1});
               b.preventDefault();
               break;
             case 221:
-              if (!l && this.oldMode === Entry.Workspace.MODE_BOARD) {
-                alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+              if (e = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
+                alert(e);
                 return;
               }
-              if (d = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
-                alert(d);
-                return;
-              }
-              if (d = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-                alert(d);
+              if (e = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+                alert(e);
                 return;
               }
               this.dSetMode({boardType:Entry.Workspace.MODE_VIMBOARD, textType:Entry.Vim.TEXT_TYPE_PY, runType:Entry.Vim.WORKSPACE_MODE});
               b.preventDefault();
               break;
             case 67:
-              q && !q.isInBlockMenu && q.block.isDeletable() && q.block.isCopyable() && q.block.copyToClipboard();
+              n && !n.isInBlockMenu && n.block.isDeletable() && n.block.isCopyable() && n.block.copyToClipboard();
               break;
             case 88:
-              !r && q && !q.isInBlockMenu && q.block.isDeletable() && function(b) {
+              !v && n && !n.isInBlockMenu && n.block.isDeletable() && function(b) {
                 b.copyToClipboard();
                 b.destroy(!0, !0);
-                q.getBoard().setSelectedBlock(null);
-              }(q.block);
+                n.getBoard().setSelectedBlock(null);
+              }(n.block);
           }
         } else {
-          if (h) {
-            if (!l) {
-              alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694.");
+          if (k) {
+            g = [49, 50, 51, 52, 219, 221];
+            if (-1 < g.indexOf(e) && !d(m)) {
               return;
             }
-            switch(d) {
+            switch(e) {
               case 49:
-                k.changeViewMode("code");
+                l.changeViewMode("code");
                 b.preventDefault();
                 break;
               case 50:
-                k.changeViewMode("picture");
+                l.changeViewMode("picture");
                 b.preventDefault();
                 break;
               case 51:
-                k.changeViewMode("sound");
+                l.changeViewMode("sound");
                 b.preventDefault();
                 break;
               case 52:
-                k.toggleOnVariableView();
-                k.changeViewMode("variable");
+                l.toggleOnVariableView();
+                l.changeViewMode("variable");
                 b.preventDefault();
                 break;
               case 219:
@@ -27380,20 +27409,20 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 Entry.container && (b.preventDefault(), Entry.container.selectNeighborObject("next"));
             }
           } else {
-            if (g) {
-              switch(d) {
+            if (h) {
+              switch(e) {
                 case 9:
-                  m && (CodeMirror.commands.indentLess(this.vimBoard.codeMirror), b.preventDefault());
+                  q && (CodeMirror.commands.indentLess(this.vimBoard.codeMirror), b.preventDefault());
               }
             } else {
-              switch(d) {
+              switch(e) {
                 case 9:
-                  m && (CodeMirror.commands.indentMore(this.vimBoard.codeMirror), b.preventDefault());
+                  q && (CodeMirror.commands.indentMore(this.vimBoard.codeMirror), b.preventDefault());
                   break;
                 case 8:
                 ;
                 case 46:
-                  !r && q && !q.isInBlockMenu && q.block.isDeletable() && (Entry.do("destroyBlock", q.block), this.board.set({selectedBlockView:null}), b.preventDefault());
+                  !v && n && !n.isInBlockMenu && n.block.isDeletable() && (Entry.do("destroyBlock", n.block), this.board.set({selectedBlockView:null}), b.preventDefault());
               }
             }
           }
@@ -28359,8 +28388,8 @@ Entry.Playground = function() {
     return this.viewMode_;
   };
   c.updateHW = function() {
-    var b = Entry.playground.mainWorkspace.blockMenu;
-    if (b) {
+    var b = Entry.playground.mainWorkspace;
+    if (b && (b = b.blockMenu)) {
       var c = Entry.hw;
       c && c.connected ? (b.banClass("arduinoDisconnected", !0), c.banHW(), c.hwModule ? (b.banClass("arduinoConnect", !0), b.unbanClass("arduinoConnected", !0), b.unbanClass(c.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoConnect", !0))) : (b.banClass("arduinoConnected", !0), b.banClass("arduinoConnect", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
       b.reDraw();

@@ -49,6 +49,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 this._isEntryEventExisted = false;
                 for(var index in nodes) {
+                    var blockType;
 
                     var node = nodes[index];
 
@@ -67,17 +68,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var blockDatum = Entry.block[block.type];
                         var targetSyntax = this.searchSyntax(blockDatum);
 
-                        if(targetSyntax) {
-                            var blockType = targetSyntax.blockType;
-                        }
+                        if(targetSyntax)
+                            blockType = targetSyntax.blockType;
 
-                        if(blockType == "event") {
+                        if (blockType == "event") {
                             this._isEntryEventExisted = true;
-                        }
-                        else if(blockType == "last") {
+                        } else if(blockType == "last") {
                             this.isLastBlock = true;
-                        }
-                        else if(blockType == "variable") {
+                        } else if(blockType == "variable") {
                             if(!this._isEntryEventExisted)
                                 continue;
                         }
@@ -131,7 +129,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(expression.type) {
             var expressionData = this[expression.type](expression);
-
 
             if(expressionData.type && expressionData.params) {
                 result.type = expressionData.type;
@@ -3120,13 +3117,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.Literal = function(component, paramMeta, paramDefMeta, textParam) {
         var result;
+
         var value = component.value;
-        if(value && typeof value === 'string')
+        if (Entry.Utils.isNumber(value))
+            value = component.raw || value;
+
+        if (value && typeof value === 'string')
             value = value.replace(/\t/gm, '    ');
 
-        if(!paramMeta) {
-            var paramMeta = { type: "Block" };
-            if(!paramDefMeta) {
+        if (!paramMeta) {
+            paramMeta = { type: "Block" };
+            if (!paramDefMeta) {
                 if(typeof value == "number")
                     var paramDefMeta = { type: "number" };
                 else
@@ -3145,12 +3146,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
 
-        if(value == true || value == false || value)
-        {
+        if (value == true || value == false || value) {
             var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta, textParam);
             result = params;
-        }
-        else if(component.left && component.operator && component.right) {//If 'Literal' doesn't have value
+        } else if(component.left && component.operator && component.right) {//If 'Literal' doesn't have value
             var params = [];
             var leftParam = this[component.left.type](component.left);
             params.push(leftParam);
@@ -3161,7 +3160,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             result = params;
         }
-
 
         return result;
     };
@@ -5907,14 +5905,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.searchSyntax = function(datum) {
         var schema;
         var appliedParams;
+        var doNotCheckParams = false;
         if(datum instanceof Entry.BlockView) {
             schema = datum.block._schema;
-            applliedParams = datum.block.data.params;
+            appliedParams = datum.block.data.params;
         } else if (datum instanceof Entry.Block) {
             schema = datum._schema;
-            applliedParams = datum.params;
+            appliedParams = datum.params;
+        } else {
+            schema = datum;
+            doNotCheckParams = true;
         }
-        else schema = datum;
 
         if(schema && schema.syntax) {
             var syntaxes = schema.syntax.py.concat();
@@ -5925,7 +5926,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     return {syntax: syntax, template: syntax};
                 if (syntax.params) {
                     for (var i = 0; i < syntax.params.length; i++) {
-                        if (syntax.params[i] && syntax.params[i] !== applliedParams[i]) {
+                        if (doNotCheckParams !== true && syntax.params[i] &&
+                            syntax.params[i] !== appliedParams[i]) {
                             isFail = true;
                             break;
                         }

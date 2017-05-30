@@ -1621,7 +1621,7 @@ Entry.TextCodingUtil = {};
             blockType == "distance_something" ||
             blockType == "get_sound_duration" ||
             blockType == "length_of_string" ||
-            blockType == "combine_something" ||
+            blockType == "combine_something" || 
             blockType == "char_at" ||
             blockType == "substring" ||
             blockType == "index_of_string" ||
@@ -1633,7 +1633,7 @@ Entry.TextCodingUtil = {};
 
         return false;
     };
-
+  
     tu.isVariableDeclarationBlock = function(blockType) {
          if(blockType == "set_variable")
             return true;
@@ -1653,7 +1653,7 @@ Entry.TextCodingUtil = {};
             blockType == "arduino_ext_get_ultrasonic_value" ||
             blockType == "arduino_ext_get_digital" ||
             blockType == "arduino_ext_tone_list" ||
-            blockType == "arduino_ext_octave_list") {
+            blockType == "arduino_ext_octave_list" ) {
 
             return true;
         }
