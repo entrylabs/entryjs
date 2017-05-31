@@ -52,12 +52,12 @@ p.initialize = function() {
     var watchFunc = function(e) {
         if (e && ((e.shape && !e.opts && e.shape.isPass) ||
             e.opts && e.opts.isPass)) {
-            Entry.do("processPicture", e, this.lc)
+            Entry.do("processPicture", e, this.lc);
         } else {
-            Entry.do("editPicture", e, this.lc)
+            Entry.do("editPicture", e, this.lc);
         }
         this.file.modified = true;
-    }.bind(this)
+    }.bind(this);
 
     this.lc.on("clear", watchFunc);
     this.lc.on("remove", watchFunc);
@@ -104,10 +104,7 @@ p.changePicture = function(picture) {
     this.file.modified = false;
     this.lc.clear(false);
 
-    if (picture.id)
-        this.file.id = picture.id;
-    else
-        this.file.id = Entry.generateHash();
+    this.file.id = picture.id || Entry.generateHash();
     this.file.name = picture.name;
     this.file.mode = 'edit';
     this.file.objectId = picture.objectId;
@@ -205,6 +202,8 @@ p.newPicture = function() {
     };
 
     newPicture.id = Entry.generateHash();
+    if (this.file && this.file.objectId)
+        newPicture.objectId = this.file.objectId;
     Entry.playground.addPicture(newPicture, true);
 };
 

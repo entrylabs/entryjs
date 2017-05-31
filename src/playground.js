@@ -933,19 +933,20 @@ Entry.Playground = function() {
      */
     p.addPicture = function(picture, isNew) {
         var tempPicture = Entry.cloneSimpleObject(picture);
-        if (isNew === true) {
-            delete tempPicture.id;
-        }
+
+        if (isNew === true) delete tempPicture.id;
         delete tempPicture.view;
 
         picture = JSON.parse(JSON.stringify(tempPicture));
-        if (!picture.id)
-            picture.id = Entry.generateHash();
+        if (!picture.id) picture.id = Entry.generateHash();
+
         picture.name = Entry.getOrderedName(picture.name, this.object.pictures);
+
         this.generatePictureElement(picture);
+
         Entry.do(
             'objectAddPicture',
-            this.object.id,
+            picture.objectId || this.object.id,
             picture
         );
         this.injectPicture();
@@ -1016,18 +1017,17 @@ Entry.Playground = function() {
         var pictures = this.object.pictures;
         for (var i = 0, len=pictures.length; i<len; i++) {
             var target = pictures[i];
+            var view = target.view;
             if (target.id === picture.id)
-                target.view.addClass('entryPictureSelected');
-            else
-                target.view.removeClass('entryPictureSelected');
+                view.addClass('entryPictureSelected');
+            else view.removeClass('entryPictureSelected');
         }
 
         var objectId_;
-        if(picture && picture.id) {
+        if (picture && picture.id)
             objectId_ = Entry.container.selectPicture(picture.id, picture.objectId);
-        }
 
-        if(this.object.id === objectId_) {
+        if (this.object.id === objectId_) {
             if (!picture.objectId)
                 picture.objectId = this.object.id;
             Entry.dispatchEvent('pictureSelected', picture);
