@@ -4914,6 +4914,7 @@ Entry.block = {
         "skeleton": "basic_button",
         "color": "#eee",
         "isNotFor": ["arduinoDisconnected"],
+        "template": '%1',
         "params": [
             {
                 "type": "Text",
