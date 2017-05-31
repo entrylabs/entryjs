@@ -4910,6 +4910,26 @@ Entry.block = {
             ]
         }
     },
+    "robot_reconnect": {
+        "skeleton": "basic_button",
+        "color": "#eee",
+        "isNotFor": ["arduinoDisconnected"],
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.ROBOT_reconnect,
+                "color": "#333",
+                "align": "center"
+            }
+        ],
+        "events": {
+            "mousedown": [
+                function() {
+                    Entry.hw.retryConnect();
+                }
+            ]
+        }
+    },
     "arduino_open": {
         "skeleton": "basic_button",
         "color": "#eee",
