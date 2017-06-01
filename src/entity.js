@@ -1095,6 +1095,20 @@ Entry.EntityObject.prototype.removeBrush = function () {
     this.shape = null;
 };
 
+/*
+ * erase brush
+ */
+Entry.EntityObject.prototype.eraseBrush = function () {
+    var brush = this.brush;
+    if (brush) {
+        var stroke = brush._stroke.style;
+        var style = brush._strokeStyle.width;
+        brush.clear().setStrokeStyle(style).beginStroke(stroke);
+        brush.moveTo(this.getX(), this.getY()*-1);
+        Entry.requestUpdate = true;
+    }
+};
+
 Entry.EntityObject.prototype.updateBG = function () {
     if (!this.bgObject)
         return;

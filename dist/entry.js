@@ -6955,6 +6955,15 @@ Entry.EntityObject.prototype.removeBrush = function() {
   Entry.stage.selectedObjectContainer.removeChild(this.shape);
   this.shape = this.brush = null;
 };
+Entry.EntityObject.prototype.eraseBrush = function() {
+  var c = this.brush;
+  if (c) {
+    var b = c._stroke.style, f = c._strokeStyle.width;
+    c.clear().setStrokeStyle(f).beginStroke(b);
+    c.moveTo(this.getX(), -1 * this.getY());
+    Entry.requestUpdate = !0;
+  }
+};
 Entry.EntityObject.prototype.updateBG = function() {
   if (this.bgObject) {
     this.bgObject.graphics.clear();
@@ -11088,58 +11097,58 @@ Entry.TextCodingUtil = {};
     }
     return b;
   };
-  c.dropdownDynamicIdToNameConvertor = function(b, f) {
-    var c;
-    if ("variables" == f) {
+  c.dropdownDynamicIdToNameConvertor = function(b, c) {
+    var d;
+    if ("variables" == c) {
       var e = Entry.variableContainer.variables_, g;
       for (g in e) {
         var h = e[g];
         if (h.id_ == b) {
-          c = h.object_ ? "self." + h.name_ : h.name_;
+          d = h.object_ ? "self." + h.name_ : h.name_;
           break;
         }
       }
     } else {
-      if ("lists" == f) {
+      if ("lists" == c) {
         for (g in h = Entry.variableContainer.lists_, h) {
           if (e = h[g], e.id_ == b) {
-            c = e.object_ ? "self." + e.name_ : e.name_;
+            d = e.object_ ? "self." + e.name_ : e.name_;
             break;
           }
         }
       } else {
-        if ("messages" == f) {
+        if ("messages" == c) {
           for (g in h = Entry.variableContainer.messages_, h) {
             if (e = h[g], e.id == b) {
-              c = e.name;
+              d = e.name;
               break;
             }
           }
         } else {
-          if ("pictures" == f) {
+          if ("pictures" == c) {
             for (e in g = Entry.container.getAllObjects(), g) {
               var k = g[e], k = k.pictures;
               for (h in k) {
                 var l = k[h];
                 if (l.id == b) {
-                  return c = l.name;
+                  return d = l.name;
                 }
               }
             }
           } else {
-            if ("sounds" == f) {
+            if ("sounds" == c) {
               for (e in g = Entry.container.getAllObjects(), g) {
                 for (h in k = g[e], k = k.sounds, k) {
                   if (l = k[h], l.id == b) {
-                    return c = l.name;
+                    return d = l.name;
                   }
                 }
               }
             } else {
-              if ("scenes" == f) {
+              if ("scenes" == c) {
                 for (k in e = Entry.scene.getScenes(), e) {
                   if (h = e[k], h.id == b) {
-                    c = h.name;
+                    d = h.name;
                     break;
                   }
                 }
@@ -11149,7 +11158,7 @@ Entry.TextCodingUtil = {};
         }
       }
     }
-    return c;
+    return d;
   };
   c.getDynamicIdByNumber = function(b, c) {
     var d = b;
@@ -19690,8 +19699,8 @@ Entry.fuzzy = {};
       null != l && (d[d.length] = {string:l.rendered, score:l.score, index:k, original:h});
       return d;
     }, []).sort(function(b, c) {
-      var f = c.score - b.score;
-      return f ? f : b.index - c.index;
+      var d = c.score - b.score;
+      return d ? d : b.index - c.index;
     });
   };
 })(Entry.Utils);

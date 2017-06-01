@@ -8167,16 +8167,10 @@ Entry.block = {
         "class": "brush_clear",
         "isNotFor": [ "textBox" ],
         "func": function (sprite, script) {
-            var brush = sprite.brush;
-            if (brush) {
-                var stroke = brush._stroke.style;
-                var style = brush._strokeStyle.width;
-                brush.clear().setStrokeStyle(style).beginStroke(stroke);
-                brush.moveTo(sprite.getX(), sprite.getY()*-1);
-            }
+            sprite.eraseBrush && sprite.eraseBrush();
 
             var stampEntities = sprite.parent.getStampEntities();
-            stampEntities.map(function (entity) {
+            stampEntities.forEach(function (entity) {
                 entity.removeClone();
             });
             stampEntities = null;
@@ -32261,7 +32255,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var signal = script.getNumberValue("VALUE", script);
             Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ;
-            Entry.hw.sendQueue[1] = signal;            
+            Entry.hw.sendQueue[1] = signal;
             Entry.hw.update();
             return Entry.hw.getDigitalPortValue(signal - 2);
         }
@@ -32676,7 +32670,7 @@ Entry.block = {
             var pin = script.getNumberValue("VALUE", script);
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
-            
+
             if(!Entry.hw.sendQueue.digitalPinMode) {
                 Entry.hw.sendQueue.digitalPinMode = {};
             }
@@ -32779,7 +32773,7 @@ Entry.block = {
             var value = script.getNumberValue("VALUE");
 
             if(mode == "motor1") {
-                pin = 0;        
+                pin = 0;
             } else {
                 pin = 1;
             }
@@ -32789,7 +32783,7 @@ Entry.block = {
             } else if(value < 0) {
                 value = 0;
             }
-            
+
             if(!Entry.hw.sendQueue.digitalPinMode) {
                 Entry.hw.sendQueue.digitalPinMode = {};
             }
