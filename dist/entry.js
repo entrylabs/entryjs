@@ -5722,7 +5722,7 @@ Entry.Container.prototype.takeSequenceSnapshot = function() {
 Entry.Container.prototype.loadSequenceSnapshot = function() {
   for (var c = this.objects_.length, b = Array(c), f = 0;f < c;f++) {
     var d = this.objects_[f];
-    b[d.index || f] = d;
+    b[void 0 !== d.index ? d.index : f] = d;
     delete d.index;
   }
   this.objects_ = b;
