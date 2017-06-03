@@ -93,7 +93,13 @@
     text-align: center;
 }
 
-.entryVariableAddWorkspace:hover {
+.entryVariableAddWorkspace.disable {
+    color: #bdbdbd;
+    cursor: default;
+    pointer-events:none;
+}
+
+.entryVariableAddWorkspace:not(.disable):hover {
     background-color: #d3d3d3;
     color: #333;
 }
@@ -110,6 +116,9 @@
     width: 55%;
     border: 1px solid transparent;
     padding-left: 5px;
+    -webkit-text-fill-color: black;
+    -webkit-opacity:1;
+    color: black;
 }
 .selected .entryVariableListElementNameWorkspace {
     background-color: #d3d3d3;
@@ -459,6 +468,11 @@
     height: 50px;
 }
 
+.entryVariableContainerTextMode {
+    .notForTextMode {
+        display: none;
+    }
+}
 
 .entryListSettingWorkspace {
     width: 100%;

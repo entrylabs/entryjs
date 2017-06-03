@@ -28,34 +28,48 @@ Entry.Commander = function(injectType) {
     this._tempStorage = null;
 
     Entry.Command.editor = this.editor;
-};
 
+    this.doEvent = new Entry.Event(this);
+    this.logEvent = new Entry.Event(this);
+
+    this.doCommandAll = Entry.doCommandAll;
+};
 
 (function(p) {
     p.do = function(commandType) {
+        if (typeof commandType === "string")
+            commandType = Entry.STATIC.COMMAND_TYPES[commandType];
         var that = this;
         var argumentArray = Array.prototype.slice.call(arguments);
         argumentArray.shift();
+
+        //intentionally delay reporting
+        that.report(Entry.STATIC.COMMAND_TYPES.do);
+        that.report(commandType, argumentArray);
+
         var command = Entry.Command[commandType];
-        if (Entry.stateManager) {
-            Entry.stateManager.addCommand.apply(
+        //console.log('commandType', commandType);
+        var state;
+        var isSkip = command.skipUndoStack === true ||
+            (!this.doCommandAll && commandType > 500);
+
+        if (Entry.stateManager && !isSkip) {
+            state = Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
                 [commandType, this, this.do, command.undo]
                     .concat(command.state.apply(this, argumentArray))
             );
         }
         var value = Entry.Command[commandType].do.apply(this, argumentArray);
-
-        //intentionally delay reporting
-        setTimeout(function() {
-            that.report('do');
-            that.report(commandType, argumentArray);
-        }, 0);
+        this.doEvent.notify(commandType, argumentArray);
+        var id = state ? state.id : null;
 
         return {
             value: value,
-            isPass: this.isPass.bind(this)
-        }
+            isPass: function(isPass, skipCount) {
+                this.isPassById(id, isPass, skipCount);
+            }.bind(this)
+        };
     };
 
     p.undo = function() {
@@ -63,10 +77,13 @@ Entry.Commander = function(injectType) {
         var commandType = argumentArray.shift();
         var commandFunc = Entry.Command[commandType];
 
-        this.report('undo');
+        this.report(Entry.STATIC.COMMAND_TYPES.undo);
 
-        if (Entry.stateManager) {
-            Entry.stateManager.addCommand.apply(
+        var command = Entry.Command[commandType];
+
+        var state;
+        if (Entry.stateManager && command.skipUndoStack !== true) {
+            state = Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
                 [commandType, this, this.do, commandFunc.undo]
                     .concat(commandFunc.state.apply(this, argumentArray))
@@ -74,8 +91,10 @@ Entry.Commander = function(injectType) {
         }
         return {
             value: Entry.Command[commandType].do.apply(this, argumentArray),
-            isPass: this.isPass.bind(this)
-        }
+            isPass: function(isPass) {
+                this.isPassById(state.id, isPass);
+            }.bind(this)
+        };
     };
 
     p.redo = function() {
@@ -83,9 +102,11 @@ Entry.Commander = function(injectType) {
         var commandType = argumentArray.shift();
         var commandFunc = Entry.Command[commandType];
 
-        that.report('redo');
+        this.report(Entry.STATIC.COMMAND_TYPES.redo);
 
-        if (Entry.stateManager) {
+        var command = Entry.Command[commandType];
+
+        if (Entry.stateManager && command.skipUndoStack !== true) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
                 [commandType, this, this.undo, commandType]
@@ -100,35 +121,49 @@ Entry.Commander = function(injectType) {
     };
 
     p.isPass = function(isPass) {
+        if (!Entry.stateManager)
+            return;
+
         isPass = isPass === undefined ? true : isPass;
-        if (Entry.stateManager) {
-            var lastCommand = Entry.stateManager.getLastCommand();
-            if (lastCommand) lastCommand.isPass = isPass;
+        var lastCommand = Entry.stateManager.getLastCommand();
+        if (lastCommand) lastCommand.isPass = isPass;
+    };
+
+    p.isPassById = function(id, isPass, skipCount) {
+        if (!id || !Entry.stateManager)
+            return;
+
+        isPass = isPass === undefined ? true : isPass;
+        var lastCommand = Entry.stateManager.getLastCommandById(id);
+        if (lastCommand) {
+            lastCommand.isPass = isPass;
+            if (skipCount)
+                lastCommand.skipCount = !!skipCount;
         }
     };
 
     p.addReporter = function(reporter) {
-        this.reporters.push(reporter);
+        reporter.logEventListener = this.logEvent.attach(reporter, reporter.add);
     };
 
     p.removeReporter = function(reporter) {
-        var index = this.reporters.indexOf(reporter);
-        if (index > -1) this.reporters.splice(index, 1);
+        if (reporter.logEventListener)
+            this.logEvent.detatch(reporter.logEventListener);
+        delete reporter.logEventListener;
     };
 
     p.report = function(commandType, argumentsArray) {
-        var reporters = this.reporters;
-        if (reporters.length === 0) return;
-
         var data;
 
         if (commandType && Entry.Command[commandType] && Entry.Command[commandType].log)
-            data = Entry.Command[commandType].log.apply(this, argumentsArray)
+            data = Entry.Command[commandType].log.apply(this, argumentsArray);
         else data = argumentsArray;
-        reporters.forEach(function(reporter) {
-            reporter.add(data);
-        });
+        data.unshift(commandType);
+        this.logEvent.notify(data);
     };
 
-})(Entry.Commander.prototype)
+    p.applyOption = function() {
+        this.doCommandAll = Entry.doCommandAll;
+    };
+})(Entry.Commander.prototype);
 

@@ -44,6 +44,8 @@ Entry.PropertyPanel = function() {
     };
 
     p.addMode = function(mode, contentObj) {
+        if (this.modes[mode])
+            this.removeMode(mode);
 
         var contentDom = contentObj.getView();
         // will be removed after apply new Dom class
@@ -60,6 +62,9 @@ Entry.PropertyPanel = function() {
             that.select(mode);
         });
 
+        if(mode == "console")
+            contentObj.codeMirror.refresh();
+
         if (this.modes[mode]) {
             this.modes[mode].tabDom.remove();
             this.modes[mode].contentDom.remove();
@@ -68,7 +73,6 @@ Entry.PropertyPanel = function() {
                 $('.propertyTabhw').unbind('dblclick');
             }
         }
-
 
         this.modes[mode] = {
             obj: contentObj,
@@ -81,9 +85,27 @@ Entry.PropertyPanel = function() {
                 Entry.dispatchEvent('hwModeChange');
             }));
         }
-     };
+    };
+
+    p.removeMode = function(mode) {
+        if (this.modes[mode]) {
+            this.modes[mode].tabDom.remove();
+            this.modes[mode].contentDom.remove();
+            if(mode == 'hw'){
+                $(this.modes).removeClass('.propertyTabhw');
+                $('.propertyTabhw').unbind('dblclick');
+            }
+        }
+
+        var keys = Object.keys(this.modes);
+        if(keys && keys.length > 0) {
+            this.select(keys[0]);
+        }
+    }
 
     p.resize = function(canvasSize) {
+        var selected = this.selected;
+        if (!selected) return;
         var canvasHeight = canvasSize*9/16;
         this._view.css({
             width: canvasSize + 'px',
@@ -96,14 +118,13 @@ Entry.PropertyPanel = function() {
 
         Entry.dispatchEvent('windowResized');
 
-        var selected = this.selected;
-        var modeResize  = this.modes[selected].obj.resize;
+        var obj = this.modes[selected].obj;
         if (selected == 'hw') {
             if (this.modes.hw.obj.listPorts)
-                this.modes[selected].obj.resizeList();
-            else this.modes[selected].obj.resize();
+                obj.resizeList();
+            else obj.resize && obj.resize();
         } else {
-            this.modes[selected].obj.resize();
+            obj.resize && obj.resize();
         }
     };
 
@@ -112,9 +133,12 @@ Entry.PropertyPanel = function() {
             var mode = this.modes[key];
             mode.tabDom.removeClass("selected");
             mode.contentDom.addClass("entryRemove");
+            $(mode.contentDom).detach();
             mode.obj.visible = false;
         }
+
         var selected = this.modes[modeName];
+        $(this._contentView).append(selected.contentDom);
         selected.tabDom.addClass("selected");
         selected.contentDom.removeClass("entryRemove");
         if(selected.obj.resize)
@@ -127,6 +151,7 @@ Entry.PropertyPanel = function() {
         var that = this;
         splitter.bind('mousedown touchstart', function(e) {
             that._cover.removeClass('entryRemove');
+            that._cover._isVisible = true;
             Entry.container.disableSort();
             Entry.container.splitterEnable = true;
             if (Entry.documentMousemove) {
@@ -145,8 +170,11 @@ Entry.PropertyPanel = function() {
             if (listener) {
                 Entry.container.splitterEnable = false;
                 Entry.documentMousemove.detach(listener);
-                that._cover.addClass('entryRemove');
                 delete Entry.container.resizeEvent;
+            }
+            if (that._cover._isVisible) {
+                that._cover._isVisible = false;
+                that._cover.addClass('entryRemove');
             }
             Entry.container.enableSort();
         });

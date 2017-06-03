@@ -18,16 +18,40 @@ Entry.Block = function(block, thread) {
     Entry.Model(this, false);
     this._schema = null;
 
+    if (block._backupParams)
+        this._backupParams = block._backupParams;
+
     this.setThread(thread);
     this.load(block);
 
+    var category = block.category;
+    if (category) {
+        this.category = category;
+        if (Entry.block[this.type])
+            Entry.block[this.type].isFor =
+                ['category_' + category];
+    }
+
     var code = this.getCode();
+
+    if (block.display !== undefined)
+        this.display = block.display;
 
     code.registerBlock(this);
     var events = this.events.dataAdd;
     if (events && code.object) {
         events.forEach(function(fn) {
             if (Entry.Utils.isFunction(fn)) fn(that);
+        });
+    }
+
+    events = this.events.viewAdd;
+    var board = code.board;
+    if (events && (Entry.getMainWS() && Entry.isTextMode) &&
+        (!board || (board && board.constructor !== Entry.BlockMenu))) {
+        events.forEach(function(fn) {
+            if (Entry.Utils.isFunction(fn))
+                fn.apply(that, [that]);
         });
     }
 };
@@ -51,9 +75,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         thread: null,
         movable: null,
         deletable: Entry.Block.DELETABLE_TRUE,
+        emphasized: false,
         readOnly: null,
         copyable: true,
-        events: {}
+        events: {},
+        extensions: []
     };
 
     p.load = function(block) {
@@ -64,9 +90,54 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         this.loadSchema();
     };
 
-    p.changeSchema = function(diff) {
-        this.set({params: []});
+    p.changeSchema = function(diff, changeData) {
+        var params = [];
+
+        if (changeData) {
+            if (changeData.isRestore) {
+                params = this._backupParams || [];
+                delete this._backupParams;
+            } else {
+                var changeType = changeData.type;
+
+                switch (changeData.type){
+                    case 'noChange':
+                        params = this.params;
+                        break;
+                    case 'cut':
+                        var pos = changeData.pos;
+                        this.params.splice(pos);
+                        params = this.params;
+                        break;
+                    case 'insert':
+                        var startPos = changeData.startPos;
+                        var endPos = changeData.endPos;
+                        var schemaParams = Entry.block[this.type].params;
+                        params = new Array(schemaParams.length);
+
+                        for (var i=0; i<startPos; i++)
+                            params[i] = this.params[i];
+
+                        var adjust = endPos - startPos + 1;
+                        for (i=endPos+1; i<schemaParams.length; i++)
+                            params[i] = this.params[i-adjust];
+                        break;
+                }
+            }
+        }
+
+        params.forEach(function(p) {
+            if (p instanceof Entry.Block) {
+                p.destroyView();
+            }
+        });
+
+
+        this.set({params: params});
+
         this.loadSchema();
+        this.view && this.view.changeType();
+
     };
 
     p.getSchema = function() { // for lazy loading
@@ -84,6 +155,16 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (!this._schemaChangeEvent && this._schema.changeEvent)
             this._schemaChangeEvent = this._schema.changeEvent.attach(
                 this, this.changeSchema);
+
+        if (!this._paramsBackupEvent && this._schema.paramsBackupEvent) {
+            this._paramsBackupEvent = this._schema.paramsBackupEvent.attach(
+                this, this.paramsBackup);
+
+        }
+
+        if (!this._destroyParamsBackupEvent && this._schema.destroyParamsBackupEvent)
+            this._destroyParamsBackupEvent = this._schema.destroyParamsBackupEvent.attach(
+                this, this.destroyParamsBackup);
 
         var events = this._schema.events;
         if (events) {
@@ -105,13 +186,16 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         var params = this._schema.params;
         for (var i = 0; params && i < params.length; i++) {
-            var value = (thisParams[i] === undefined || thisParams[i] === null ) ?
-                    params[i].value : thisParams[i];
+            var value = (thisParams[i] === undefined || thisParams[i] === null) ?
+                params[i].value : thisParams[i];
 
             var paramInjected = thisParams[i] || i<thisParams.length;
 
-            if (value && (params[i].type === 'Output' || params[i].type === 'Block'))
+            if (value && (params[i].type === 'Output' || params[i].type === 'Block')) {
+                if (typeof value !== "object")
+                    value = {type: "number", params: [value]};
                 value = new Entry.Block(value, this.thread);
+            }
 
             if (paramInjected) thisParams.splice(i, 1, value);
             else thisParams.push(value);
@@ -131,10 +215,14 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     p.changeType = function(type) {
         if (this._schemaChangeEvent)
             this._schemaChangeEvent.destroy();
+        if (this._backupEvent)
+            this._backupEvent.destroy();
+        if (this._destroyBackupEvent)
+            this._destroyBackupEvent.destroy();
+
         this.set({type: type});
         this.loadSchema();
-        if (this.view)
-            this.view.changeType(type);
+        if (this.view) this.view.changeType(type);
     };
 
     p.setThread = function(thread) {
@@ -165,6 +253,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.createView = function(board, mode) {
+        board = board || this.getCode().view.board;
         if (!this.view) {
             this.set({view: new Entry.BlockView(
                 this,
@@ -175,6 +264,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         }
     };
 
+    p.destroyView = function() {
+        this.view && this.view.destroy();
+    };
+
     p.clone = function(thread) {
         return new Entry.Block(
             this.toJSON(true),
@@ -182,22 +275,33 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         );
     };
 
-    p.toJSON = function(isNew) {
+    p.toJSON = function(isNew, excludeData, option) {
         var json = this._toJSON();
         delete json.view;
         delete json.thread;
         delete json.events;
 
+        option = option || {};
+
         if (isNew) delete json.id;
 
-        json.params = json.params.map(function(p) {
+        var _params = [];
+
+        for (var i = 0; i < json.params.length; i++) {
+            var p = json.params[i];
             if (p instanceof Entry.Block)
-                p = p.toJSON(isNew);
-            return p;
-        });
+                p = p.toJSON(isNew, excludeData, option);
+            else if (option.captureDynamic &&
+                    this.view.getParam(i) instanceof Entry.FieldDropdownDynamic) {
+                p = this.view.getParam(i).getTextValue();
+            }
+            _params.push(p);
+        }
+
+        json.params = _params;
 
         json.statements = json.statements.map(
-            function(s) {return s.toJSON(isNew);}
+            function(s) {return s.toJSON(isNew, undefined, excludeData, option);}
         );
 
         json.x = this.x;
@@ -205,18 +309,35 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         json.movable = this.movable;
         json.deletable = this.deletable;
+        json.emphasized = this.emphasized;
         json.readOnly = this.readOnly;
+        if (this._backupParams) {
+            json._backupParams = this._backupParams.map(function(p) {
+                if (p instanceof Entry.Block)
+                    return p.toJSON();
+                else return p;
+            });
+        }
+
+        if (excludeData && excludeData instanceof Array) {
+            excludeData.forEach(function(i) { delete json[i]; });
+        }
+
         return json;
     };
 
-    p.destroy = function(animate, next) {
+    p.destroy = function(animate, next, isNotForce) {
+        if (isNotForce && !this.isDeletable())
+            return;
+
         var that = this;
         var params = this.params;
         if (params) {
             for (var i=0; i<params.length; i++) {
                 var param = params[i];
                 if (param instanceof Entry.Block) {
-                    param.doNotSplice = true;
+                    param.doNotSplice =
+                        !(param.thread instanceof Entry.FieldOutput);
                     param.destroy(animate);
                 }
             }
@@ -232,35 +353,57 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         var prevBlock = this.getPrevBlock();
         var nextBlock = this.getNextBlock();
+        var code = this.getCode();
 
-        this.getCode().unregisterBlock(this);
+        code.unregisterBlock(this);
         var thread = this.getThread();
-        if (this._schema.event)
+        if (this._schema && this._schema.event)
             thread.unregisterEvent(this, this._schema.event);
         if (nextBlock) {
             if (next) nextBlock.destroy(animate, next);
             else {
                 if (!prevBlock) {
-                    var parent = this.getThread().view.getParent();
-                    if (parent.constructor === Entry.FieldStatement) {
-                        nextBlock.view.bindPrev(parent);
-                        parent.insertTopBlock(nextBlock);
-                    } else if (parent.constructor === Entry.FieldStatement) {
-                        nextBlock.replace(parent._valueBlock);
-                    } else nextBlock.view._toGlobalCoordinate();
-                } else nextBlock.view.bindPrev(prevBlock);
+                    if (thread.view) {
+                        var parent = thread.view.getParent();
+                        if (parent.constructor === Entry.FieldStatement) {
+                            nextBlock.view && nextBlock.view.bindPrev(parent);
+                            parent.insertTopBlock(nextBlock);
+                        } else if (parent.constructor === Entry.FieldStatement) {
+                            nextBlock.replace(parent._valueBlock);
+                        } else nextBlock.view && nextBlock.view._toGlobalCoordinate();
+                    }
+                } else nextBlock.view && nextBlock.view.bindPrev(prevBlock, true);
             }
         }
-        if (!this.doNotSplice && thread.spliceBlock) thread.spliceBlock(this);
+
+        var notSpliced = this.doNotSplice;
+        if (!this.doNotSplice && thread.spliceBlock)
+            thread.spliceBlock(this);
         else delete this.doNotSplice;
+
         if (this.view) this.view.destroy(animate);
         if (this._schemaChangeEvent)
             this._schemaChangeEvent.destroy();
+        if (this._paramsBackupEvent)
+            this._paramsBackupEvent.destroy();
+        if (this._destroyParamsBackupEvent)
+            this._destroyParamsBackupEvent.destroy();
 
         var events = this.events.dataDestroy;
-        if (events && this.getCode().object) {
+        if (events && code.object) {
             events.forEach(function(fn) {
-                if (Entry.Utils.isFunction(fn)) fn(that);
+                if (Entry.Utils.isFunction(fn))
+                    fn.apply(that, [that, notSpliced]);
+            });
+        }
+
+        events = this.events.viewDestroy;
+        var board = this.getCode().board;
+        if (events && (Entry.getMainWS() && Entry.isTextMode) &&
+            (!board || (board && board.constructor !== Entry.BlockMenu))) {
+            events.forEach(function(fn) {
+                if (Entry.Utils.isFunction(fn))
+                    fn.apply(that, [that, notSpliced]);
             });
         }
     };
@@ -287,7 +430,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.isDeletable = function() {
-        return this.deletable === Entry.Block.DELETABLE_TRUE;
+        return this.deletable === Entry.Block.DELETABLE_TRUE ||
+            this.deletable === true;
     };
 
     p.isReadOnly = function() {return this.readOnly;};
@@ -310,14 +454,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         this.getCode().changeEvent.notify();
     };
 
-    p.doSeparate = function() {
-        var id = this.id;
-        var positionX = this.x;
-        var positionY = this.y;
-
-        this.separate();
-    };
-
     p.doInsert = function(targetBlock) {
         if (this.getBlockType() === "basic")
             this.insert(targetBlock);
@@ -326,26 +462,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.doDestroy = function(animate) {
-        var id = this.id;
-        var positionX = this.x;
-        var positionY = this.y;
-
         this.destroy(animate);
         this.getCode().changeEvent.notify();
         return this;
     };
 
     p.doDestroyBelow = function(animate) {
-        var id = this.id;
-        var positionX = this.x;
-        var positionY = this.y;
-
-        console.log(
-            "destroyBelow",
-            id,
-            positionX,
-            positionY
-        );
         this.destroy(animate, true);
         this.getCode().changeEvent.notify();
         return this;
@@ -358,8 +480,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             var index = thread.getBlocks().indexOf(this);
             var json = thread.toJSON(true, index);
             for (var i=0; i<json.length; i++) cloned.push(json[i]);
-        } else
-            cloned.push(this.toJSON(true));
+        } else cloned.push(this.toJSON(true));
 
         var pos = this.view.getAbsoluteCoordinate();
         var block = cloned[0];
@@ -372,11 +493,13 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
     p.copyToClipboard = function() {Entry.clipboard = this.copy();};
 
-    p.separate = function(count) {
-        this.thread.separate(this, count);
+    p.separate = function(count, index) {
+        this.thread.separate(this, count, index);
         this._updatePos();
         this.getCode().changeEvent.notify();
     };
+
+    p.doSeparate = p.separate;
 
     p.insert = function(targetBlock) {
         var blocks = this.thread.cut(this);
@@ -448,20 +571,37 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.pointer = function(pointer) {
-        if (!pointer)
-            pointer = [];
-        return this.thread.pointer(pointer, this);
+        return this.thread.pointer(pointer || [], this);
     };
 
     p.targetPointer = function() {
         var pointer =  this.thread.pointer([], this);
-        if (pointer.length === 4 && pointer[3] === 0)
+        if (pointer.length === 4 && pointer[3] === 0) {
             pointer.pop();
+        } else if (pointer[pointer.length - 2] > -1){
+            if (pointer[pointer.length - 1] === 0)
+                pointer.pop();
+            else
+                pointer[pointer.length - 1] = pointer[pointer.length - 1] - 1;
+        }
         return pointer;
     };
 
-    p.getBlockList = function(excludePrimitive) {
+    p.getDataByPointer = function(pointer) {
+        pointer = pointer.concat();
+        var data = this.params[pointer.shift()];
+        if (pointer.length)
+            if (data.getDataByPointer)
+                return data.getDataByPointer(pointer);
+            else
+                return null;
+        else
+            return data;
+    };
+
+    p.getBlockList = function(excludePrimitive, type) {
         var blocks = [];
+        var currentType = type || this.type;
 
         if (!this._schema)
             return [];
@@ -469,27 +609,91 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (excludePrimitive && this._schema.isPrimitive)
             return blocks;
 
-        blocks.push(this);
+        currentType === this.type && blocks.push(this);
 
         var params = this.params;
         for (var k = 0; k < params.length; k++) {
             var param = params[k];
             if (param && param.constructor == Entry.Block) {
-                blocks = blocks.concat(param.getBlockList(excludePrimitive));
+                blocks = blocks.concat(param.getBlockList(excludePrimitive, type));
             }
         }
 
         var statements = this.statements;
         if (statements) {
             for (var j = 0; j < statements.length; j++) {
-                blocks = blocks.concat(statements[j].getBlockList(excludePrimitive));
+                var statement = statements[j];
+                if (statement.constructor !== Entry.Thread)
+                    continue;
+                blocks = blocks.concat(statement.getBlockList(excludePrimitive, type));
             }
         }
         return blocks;
     };
 
-    p.stringify = function() {
-        return JSON.stringify(this.toJSON());
+    p.stringify = function(excludeData) {
+        return JSON.stringify(this.toJSON(false, excludeData));
+    };
+
+    p.isInOrigin = function() {
+        return this.x === 0 && this.y === 0;
+    };
+
+    p.isSameParamWith = function(target) {
+        if (target.type.substr(0,8) === "wildcard" ||
+            this.type.substr(0,8) === "wildcard")
+            return true;
+
+        var targetType = target.type;
+        var thisType = this.type;
+
+        if (((targetType === "angle") && (thisType === "text")) ||
+            ((targetType === "text") && (thisType === "angle"))) {
+        } else if (targetType !== thisType)
+            return false;
+        for (var i = 0; i < this.params.length; i++) {
+            var param = this.params[i];
+            if (param instanceof Entry.Block) {
+                if (!param.isSameParamWith(target.params[i]))
+                    return false;
+            } else {
+                var l = this.params[i], r = target.params[i];
+                l = typeof l === "number" ? l + "" : l;
+                r = typeof r === "number" ? r + "" : r;
+                if (l !== r)
+                    return false;
+            }
+        }
+        return true;
+    };
+
+    p.paramsBackup = function() {
+        //do not backup params for blockMenu block
+        if (this.view && this.view.isInBlockMenu)
+            return;
+
+        this._backupParams = this.params.slice();
+    };
+
+    p.destroyParamsBackup = function() {
+        this._backupParams = null;
+    };
+
+    p.getDom = function(query) {
+        if (query.length > 0) {
+            var key = query.shift();
+            if (key === "magnet")
+                return this.view.getMagnet(query);
+        }
+        return this.view.svgGroup;
+    };
+
+    p.getParam = function(index) {
+        return this.params[index];
+    };
+
+    p.isParamBlockType = function() {
+        return this._schema.skeleton === 'basic_string_field' || this._schema.skeleton === 'basic_boolean_field';
     };
 
 })(Entry.Block.prototype);

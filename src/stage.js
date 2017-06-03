@@ -23,6 +23,7 @@ Entry.Stage = function() {
     /** @type {null|Entry.EntryObject} */
     this.selectedObject = null;
     this.isObjectClick = false;
+    this._entitySelectable = true;
 };
 
 /**
@@ -92,6 +93,10 @@ Entry.Stage.prototype.initStage = function(canvas) {
         Entry.stage.updateBoundRect();
     });
 
+    $(window).scroll(function() {
+        Entry.stage.updateBoundRect();
+    });
+
     var moveFunc = function(e){
         e.preventDefault();
         var roundRect = Entry.stage.getBoundRect();
@@ -107,7 +112,9 @@ Entry.Stage.prototype.initStage = function(canvas) {
             x = ((e.pageX - roundRect.left - document.body.scrollLeft) / roundRect.width - 0.5) * 480;
             y = ((e.pageY - roundRect.top - document.body.scrollTop) / roundRect.height - 0.5) * -270;
         }
-        Entry.stage.mouseCoordinate = {x: x.toFixed(1), y: y.toFixed(1)};
+        Entry.stage.mouseCoordinate = {
+            x: x.toFixed(1), y: y.toFixed(1)
+        };
         Entry.dispatchEvent('stageMouseMove');
     };
     canvas.onmousemove = moveFunc;
@@ -138,7 +145,6 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     this.initWall();
 
-
     this.render();
 };
 
@@ -155,6 +161,8 @@ Entry.Stage.prototype.render = function() {
  * redraw canvas
  */
 Entry.Stage.prototype.update = function() {
+    if (Entry.type === "invisible")
+        return;
     if (!Entry.requestUpdate) {
         Entry.requestUpdate = false;
         return;
@@ -182,7 +190,7 @@ Entry.Stage.prototype.loadObject = function(object) {
     var scenes = Entry.scene.scenes_;
     var objContainer = this.getObjectContainerByScene(object.scene);
     objContainer.addChild(entity);
-    this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -196,6 +204,7 @@ Entry.Stage.prototype.loadEntity = function(entity) {
     objContainer.addChild(entity.object);
     this.sortZorder();
     //this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -207,6 +216,7 @@ Entry.Stage.prototype.unloadEntity = function(entity) {
     var objContainer = Entry.stage.getObjectContainerByScene(scene);
     objContainer.removeChild(entity.object);
    //this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -272,6 +282,7 @@ Entry.Stage.prototype.sortZorder = function() {
         }
         container.setChildIndex(entity.object, index++);
     }
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -329,6 +340,8 @@ Entry.Stage.prototype.initHandle = function() {
  * object -> handle
  */
 Entry.Stage.prototype.updateObject = function() {
+    if (Entry.type === "invisible")
+        return;
     Entry.requestUpdate = true;
     this.handle.setDraggable(true);
     if (this.editEntity)
@@ -481,7 +494,8 @@ Entry.Stage.prototype.updateHandle = function() {
 };
 
 Entry.Stage.prototype.startEdit = function () {
-    this.selectedObject.entity.initCommand();
+    var obj = this.selectedObject;
+    obj && obj.entity.initCommand();
 };
 
 Entry.Stage.prototype.endEdit = function () {
@@ -608,7 +622,8 @@ Entry.Stage.prototype.initObjectContainers = function() {
         this.objectContainers.push(obj);
         this.selectedObjectContainer = obj;
     }
-    this.canvas.addChild(this.selectedObjectContainer);
+    if (Entry.type !== "invisible")
+        this.canvas.addChild(this.selectedObjectContainer);
     this.selectObjectContainer(Entry.scene.selectedScene);
 };
 
@@ -661,7 +676,7 @@ Entry.Stage.prototype.createObjectContainer = function(scene) {
 Entry.Stage.prototype.removeObjectContainer = function(scene) {
     var containers = this.objectContainers;
     var objContainer = this.getObjectContainerByScene(scene);
-    this.canvas.removeChild(objContainer);
+    this.canvas && this.canvas.removeChild(objContainer);
     containers.splice(this.objectContainers.indexOf(objContainer),1);
 };
 
@@ -706,11 +721,24 @@ Entry.Stage.prototype.moveSprite = function (e) {
 
 Entry.Stage.prototype.getBoundRect = function (e) {
     if (!this._boundRect)
-        this.updateBoundRect();
+        return this.updateBoundRect();
     return this._boundRect;
 };
 
 Entry.Stage.prototype.updateBoundRect = function (e) {
-    this._boundRect = this.canvas.canvas.getBoundingClientRect();
+    return this._boundRect = this.canvas.canvas.getBoundingClientRect();
 };
 
+Entry.Stage.prototype.getDom = function(query) {
+    var key = query.shift();
+    if (key === "canvas")
+        return this.canvas.canvas;
+};
+
+Entry.Stage.prototype.setEntitySelectable = function(value) {
+    this._entitySelectable = value;
+};
+
+Entry.Stage.prototype.isEntitySelectable = function() {
+    return Entry.engine.isState('stop') && this._entitySelectable;
+};

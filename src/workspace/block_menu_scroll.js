@@ -31,8 +31,10 @@ Entry.BlockMenuScroller = function(board) {
     this.setOpacity(0);
     this._addControl();
 
+    this._domHeight = 0;
+    this._dResizeScrollBar = Entry.Utils.debounce(this.resizeScrollBar, 50);
     if (Entry.windowResized)
-        Entry.windowResized.attach(this, this.resizeScrollBar);
+        Entry.windowResized.attach(this, this._dResizeScrollBar);
 };
 
 Entry.BlockMenuScroller.RADIUS = 7;
@@ -48,15 +50,19 @@ Entry.BlockMenuScroller.RADIUS = 7;
         this.vScrollbar = this.svgGroup.elem('rect', {
             rx: 4, ry:4
         });
-
-        this.resizeScrollBar();
     };
 
     p.resizeScrollBar = function() {
         this._updateRatio();
+
+        var dom = this.board.blockMenuContainer;
+        var newHeight = dom.height();
+        if (newHeight !== this._domHeight) {
+            this._domHeight = newHeight;
+            return this.board.align();
+        }
         if (!this._visible || this.vRatio === 0) return;
         var that = this;
-        var dom = this.board.blockMenuContainer;
 
         this.vScrollbar.attr({
             width: 9,
@@ -79,6 +85,12 @@ Entry.BlockMenuScroller.RADIUS = 7;
 
         this.board.code.moveBy(0, -dy * this.vRatio);
         this.updateScrollBar(dy);
+    };
+
+    p.scrollByPx = function(px) {
+        if (!this.vRatio)
+            this._updateRatio();
+        this.scroll(px/this.vRatio);
     };
 
     //adjust value by dy for min/max value
@@ -113,17 +125,11 @@ Entry.BlockMenuScroller.RADIUS = 7;
 
     p._updateRatio = function() {
         var board = this.board,
-            bRect = board.svgBlockGroup.getBoundingClientRect(),
+            bRect = board.svgBlockGroup.getBBox(),
             svgDom = board.svgDom,
-            realHeight = board.blockMenuContainer.height(),
-            offset = board.offset(),
-            bBox = {
-                x: bRect.left - offset.left,
-                y: bRect.top - offset.top,
-                height: bRect.height
-            };
+            realHeight = board.blockMenuContainer.height();
 
-        var vRatio = (bBox.height + bBox.y + 10)/realHeight;
+        var vRatio = (bRect.height + 20)/realHeight;
         this.vRatio = vRatio;
         if (vRatio <= 1)
             this.setVisible(false);
@@ -136,7 +142,7 @@ Entry.BlockMenuScroller.RADIUS = 7;
         this.vScrollbar.attr({
             y: this.vY
         });
-        this.resizeScrollBar();
+        this._dResizeScrollBar();
     };
 
 

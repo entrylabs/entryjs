@@ -113,6 +113,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('development', [
+        'watch',
         'closureCompiler:targetName',
         'karma',
         'concurrent'

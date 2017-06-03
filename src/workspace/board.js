@@ -17,6 +17,7 @@ goog.require("Entry.SVG");
  */
 Entry.Board = function(option) {
     Entry.Model(this, false);
+    this.readOnly = option.readOnly === undefined ? false : option.readOnly;
     this.changeEvent = new Entry.Event(this);
 
     this.createView(option);
@@ -41,6 +42,8 @@ Entry.Board.OPTION_PASTE = 0;
 Entry.Board.OPTION_ALIGN = 1;
 Entry.Board.OPTION_CLEAR = 2;
 Entry.Board.OPTION_DOWNLOAD = 3;
+
+Entry.Board.DRAG_RADIUS = 5;
 
 (function(p) {
     p.schema = {
@@ -101,22 +104,26 @@ Entry.Board.OPTION_DOWNLOAD = 3;
 
         Entry.Utils.addFilters(this.svg, this.suffix);
         var returnVal = Entry.Utils.addBlockPattern(this.svg, this.suffix);
-        this.patternRect = returnVal.rect;
         this.pattern = returnVal.pattern;
     };
 
-    p.changeCode = function(code) {
+    p.changeCode = function(code, shouldNotCreateView, cb) {
         if (this.code && this.codeListener)
             this.code.changeEvent.detach(this.codeListener);
 
         this.set({code: code});
 
         var that = this;
-        if (code) {
+        if (code && !shouldNotCreateView) {
             this.codeListener = this.code.changeEvent.attach(
                 this, function() {that.changeEvent.notify();}
             );
+            this.svgBlockGroup.remove();
+            this.svgThreadGroup.remove();
             code.createView(this);
+            if (code.isAllThreadsInOrigin())
+                this.alignThreads();
+            cb && cb();
         }
         this.scroller.resizeScrollBar();
     };
@@ -131,12 +138,10 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     };
 
     p.setMagnetedBlock = function(block, magnetType) {
-        if (this.magnetedBlockView) {
-            if (this.magnetedBlockView === block)
-                return;
-            else
-                this.magnetedBlockView.set({magneting: false});
-        }
+        if (this.magnetedBlockView === block)
+            return;
+
+        this.magnetedBlockView && this.magnetedBlockView.set({magneting: false});
         this.set({magnetedBlockView: block});
         if (block) {
             block.set({magneting: magnetType});
@@ -144,13 +149,9 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         }
     };
 
-    p.getCode = function() {
-        return this.code;
-    };
+    p.getCode = function() { return this.code; };
 
-    p.findById = function(id) {
-        return this.code.findById(id);
-    };
+    p.findById = function(id) { return this.code.findById(id); };
 
     p._addControl = function() {
         var dom = this.svgDom;
@@ -172,6 +173,10 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         }
     };
 
+    p.removeControl = function(eventType) {
+        this.svgDom.off(eventType);
+    };
+
     p.onMouseDown = function(e) {
         if (this.workspace.getMode() == Entry.Workspace.MODE_VIMBOARD)
             return;
@@ -179,14 +184,19 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
-        var mouseEvent;
+        var board = this;
+        var longPressTimer = null;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
-            if (e.originalEvent && e.originalEvent.touches)
-                 mouseEvent = e.originalEvent.touches[0];
-            else mouseEvent = e;
+            var eventType = e.type;
+            var mouseEvent = Entry.Utils.convertMouseEvent(e);
             if (Entry.documentMousedown)
                 Entry.documentMousedown.notify(mouseEvent);
             var doc = $(document);
+
+            this.mouseDownCoordinate = {
+                x: mouseEvent.pageX, y: mouseEvent.pageY
+            };
+
             doc.bind('mousemove.entryBoard', onMouseMove);
             doc.bind('mouseup.entryBoard', onMouseUp);
             doc.bind('touchmove.entryBoard', onMouseMove);
@@ -197,33 +207,33 @@ Entry.Board.OPTION_DOWNLOAD = 3;
                 offsetX: mouseEvent.pageX,
                 offsetY: mouseEvent.pageY
             });
-        } else if (Entry.Utils.isRightButton(e)) {
-            if (!this.visible) return;
-            var that = this;
 
-            var options = [];
-
-        this._contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
-        this._contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable =
-            this.code.getThreads().length !== 0;
-
-            for (var i=0; i<this._contextOptions.length; i++) {
-                if (this._contextOptions[i].activated)
-                    options.push(this._contextOptions[i].option);
+            if (eventType === 'touchstart') {
+                longPressTimer = setTimeout(function() {
+                    if (longPressTimer) {
+                        longPressTimer = null;
+                        onMouseUp();
+                        board._rightClick(e);
+                    }
+                }, 1000);
             }
+        } else if (Entry.Utils.isRightButton(e)) this._rightClick(e);
 
-            Entry.ContextMenu.show(options);
-        }
-
-        var board = this;
         function onMouseMove(e) {
-            var mouseEvent;
             if (e.stopPropagation) e.stopPropagation();
             if (e.preventDefault) e.preventDefault();
 
-            if (e.originalEvent && e.originalEvent.touches)
-                mouseEvent = e.originalEvent.touches[0];
-            else mouseEvent = e;
+            var mouseEvent = Entry.Utils.convertMouseEvent(e);
+
+            var mouseDownCoordinate = board.mouseDownCoordinate;
+            var diff = Math.sqrt(Math.pow(mouseEvent.pageX - mouseDownCoordinate.x, 2) +
+                            Math.pow(mouseEvent.pageY - mouseDownCoordinate.y, 2));
+            if (diff < Entry.Board.DRAG_RADIUS) return;
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+
 
             var dragInstance = board.dragInstance;
             board.scroller.scroll(
@@ -237,7 +247,12 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         }
 
         function onMouseUp(e) {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
             $(document).unbind('.entryBoard');
+            delete board.mouseDownCoordinate;
             delete board.dragInstance;
         }
     };
@@ -267,18 +282,6 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         this.set({selectedBlockView:blockView});
     };
 
-    p._keyboardControl = function(event) {
-        var selected = this.selectedBlockView;
-        if (!selected) return;
-
-        if (event.keyCode == 46) {
-            if (selected.block) {
-                Entry.do("destroyBlock", selected.block);
-                this.set({selectedBlockView:null});
-            }
-        }
-    };
-
     p.hide = function() {
         this.wrapper.addClass('entryRemove');
         this.visible = false;
@@ -289,7 +292,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         this.visible = true;
     };
 
-    p.alignThreads = function() {
+    p.alignThreads = function(reDraw) {
         var domHeight = this.svgDom.height();
         var threads = this.code.getThreads();
 
@@ -300,9 +303,12 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         var left = 50;
 
         for (var i =0; i < threads.length; i++) {
-            var block = threads[i].getFirstBlock();
+            var thread = threads[i];
+            var block = thread.getFirstBlock();
             if (!block) continue;
+            reDraw && thread.view.reDraw();
             var blockView = block.view;
+            if (!blockView.movable) continue;
             var bBox = blockView.svgGroup.getBBox();
             var top = acculmulatedTop + verticalGap;
             if (top > limitTopPosition) {
@@ -312,7 +318,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
             }
             columWidth = Math.max(columWidth, bBox.width);
             top = acculmulatedTop + verticalGap;
-            blockView._moveTo(left, top, false);
+            blockView._moveTo(left - bBox.x, top, false);
             acculmulatedTop = acculmulatedTop + bBox.height + verticalGap;
         }
         this.scroller.resizeScrollBar();
@@ -374,18 +380,31 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     };
 
     p.cancelEdit = function() {
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_BOARD;
         this.workspace.setMode(Entry.Workspace.MODE_BOARD, "cancelEdit");
     };
 
     p.save = function() {
-        this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_BOARD;
+        this.workspace.setMode(mode, "save");
     };
 
     p.generateCodeMagnetMap = function() {
         var code = this.code;
-        if (!code || !this.dragBlock) return;
+        var dragBlock = this.dragBlock;
+        if (!(code && dragBlock)) return;
 
-        for (var targetType in this.dragBlock.magnet) {
+        //reset magnetMap
+        this._magnetMap = {};
+
+        for (var targetType in dragBlock.magnet) {
+            if (targetType === 'next' &&
+                dragBlock.block.getLastBlock().view.magnet.next === undefined) {
+                    continue;
+            }
+
             var metaData = this._getCodeBlocks(code, targetType);
             metaData.sort(function(a, b) {return a.point - b.point;});
 
@@ -429,8 +448,6 @@ Entry.Board.OPTION_DOWNLOAD = 3;
                 func = this._getPreviousMagnets;
                 break;
             case "string":
-                func = this._getFieldMagnets;
-                break;
             case "boolean":
                 func = this._getFieldMagnets;
                 break;
@@ -789,13 +806,8 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         this.code.dominate(block.thread);
     };
 
-    p.setPatternRectFill = function(color) {
-        this.patternRect.attr({
-            fill:color
-        });
-        this.pattern.attr({
-            style: ""
-        });
+    p.enablePattern = function() {
+        this.pattern.removeAttribute('style');
     };
 
     p.disablePattern = function() {
@@ -830,36 +842,56 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     };
 
     p.reDraw = function() {
-        this.code.view.reDraw();
+        this.code && this.code.view && this.code.view.reDraw();
     };
 
-    p.separate = function(block, count) {
+    p.separate = function(block, count, index) {
         if (typeof block === "string")
             block = this.findById(block);
+        var nextBlock, backupPos;
         if (block.view)
             block.view._toGlobalCoordinate();
         var prevBlock = block.getPrevBlock();
-        block.separate(count);
+        if (!prevBlock && block.thread instanceof Entry.Thread &&
+           block.thread.parent instanceof Entry.Code) {
+            nextBlock = block.thread.getBlock(
+                block.thread.indexOf(block) + count)
+
+            if (nextBlock)
+                backupPos = nextBlock.view.getAbsoluteCoordinate();
+        }
+        var prevThread = block.thread;
+        block.separate(count, index);
         if (prevBlock && prevBlock.getNextBlock())
             prevBlock.getNextBlock().view.bindPrev();
+        else if (nextBlock) {
+            nextBlock.view._toGlobalCoordinate();
+            nextBlock.moveTo(backupPos.x, backupPos.y);
+        }
     };
 
     p.insert = function(block, pointer, count) { // pointer can be target
         if (typeof block === "string")
             block = this.findById(block);
-        this.separate(block, count);
-        if (pointer.length === 3) // is global
+
+        var targetBlock;
+
+        if (pointer.length === 3) { // for global
+            this.separate(block, count, pointer[2]);
             block.moveTo(pointer[0], pointer[1]);
-        else if (pointer.length === 4 && pointer[3] === 0) {
-            var targetThread = this.code.getThreads()[pointer[2]];
-            block.thread.cut(block);
-            targetThread.insertToTop(block);
-            block.getNextBlock().view.bindPrev();
-        }
-        else {
+        } else if (pointer.length === 4 && pointer[3] == -1) { // insert on top
+            pointer[3] = 0;
+            targetBlock = this.code.getByPointer(pointer);
+            this.separate(block, count, pointer[2]);
+            block = block.getLastBlock();
+
+            targetBlock.view.bindPrev(block);
+            targetBlock.doInsert(block);
+        } else {
+            this.separate(block, count);
             var targetObj;
             if (pointer instanceof Array)
-                targetObj = this.code.getTargetByPointer(pointer);
+                targetObj = this.code.getByPointer(pointer);
             else
                 targetObj = pointer;
             if (targetObj instanceof Entry.Block) {
@@ -867,6 +899,10 @@ Entry.Board.OPTION_DOWNLOAD = 3;
                     block.view.bindPrev(targetObj);
                 block.doInsert(targetObj);
             } else if (targetObj instanceof Entry.FieldStatement) {
+                block.view.bindPrev(targetObj);
+                targetObj.insertTopBlock(block);
+            } else if (targetObj instanceof Entry.Thread) {
+                targetObj = targetObj.view.getParent();
                 block.view.bindPrev(targetObj);
                 targetObj.insertTopBlock(block);
             } else {
@@ -878,6 +914,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     p.adjustThreadsPosition = function() {
         var code = this.code;
         if (!code) return;
+        if (!code.view) return;
 
         var threads = code.getThreads();
         if (!threads || threads.length === 0) return;
@@ -892,7 +929,8 @@ Entry.Board.OPTION_DOWNLOAD = 3;
             var pos = block.getAbsoluteCoordinate();
 
             this.scroller.scroll(
-                50 - pos.x, 30 - pos.y
+                50 - pos.x, 30 - pos.y,
+                true
             );
         }
     };
@@ -904,8 +942,8 @@ Entry.Board.OPTION_DOWNLOAD = 3;
                 activated: true,
                 option: {
                     text: Lang.Blocks.Paste_blocks,
-                    enable: !!Entry.clipboard,
-                    callback: function(){
+                    enable: !!Entry.clipboard && !this.readOnly,
+                    callback: function() {
                         Entry.do('addThread', Entry.clipboard).value
                             .getFirstBlock().copyToClipboard();
                     }
@@ -915,6 +953,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
                 activated: true,
                 option: {
                     text: Lang.Blocks.tidy_up_block,
+                    enable: !this.readOnly,
                     callback: function(){
                         that.alignThreads();
                     }
@@ -924,21 +963,37 @@ Entry.Board.OPTION_DOWNLOAD = 3;
                 activated: true,
                 option: {
                     text: Lang.Blocks.Clear_all_blocks,
-                    callback: function(){
-                        that.code.clear();
+                    enable: !this.readOnly,
+                    callback: function() {
+                        Entry.do('destroyThreads');
                     }
                 }
             },
             {
-                activated: Entry.type === 'workspace' && Entry.Utils.isChrome(),
+                activated: Entry.type === 'workspace' && Entry.Utils.isChrome() && !Entry.isMobile(),
                 option: {
                     text: Lang.Menus.save_as_image_all,
-                    enable: true,
+                    enable: !this.readOnly,
                     callback: function(){
-                        that.code.getThreads().forEach(function(t) {
+                        var threads = that.code.getThreads();
+                        var images = [];
+                        threads.forEach(function(t,i) {
                             var topBlock = t.getFirstBlock();
                             if (!topBlock) return;
-                            topBlock.view.downloadAsImage();
+                            console.log('threads.length=',threads.length);
+                            if (threads.length > 1 && Entry.isOffline) {
+                                topBlock.view.getDataUrl().then(function(data) {
+                                    images.push(data);
+                                    if (images.length == threads.length) {
+                                        Entry.dispatchEvent(
+                                            'saveBlockImages',
+                                            { images: images }
+                                        );
+                                    }
+                                });
+                            } else {
+                                topBlock.view.downloadAsImage(++i);
+                            }
                         });
                     }
                 }
@@ -959,12 +1014,9 @@ Entry.Board.OPTION_DOWNLOAD = 3;
             Entry.documentMousedown.attach(this, this.setSelectedBlock);
             Entry.documentMousedown.attach(this, this._removeActivated);
         }
-        if (Entry.keyPressed)
-            Entry.keyPressed.attach(this, this._keyboardControl);
-
         if (Entry.windowResized) {
-            var dUpdateOffset = _.debounce(this.updateOffset, 200);
-            Entry.windowResized.attach(this, dUpdateOffset);
+            Entry.windowResized
+                .attach(this, _.debounce(this.updateOffset, 200));
         }
     };
 
@@ -976,7 +1028,98 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         return this._offset;
     };
 
+    p._rightClick = function(e) {
+        var disposeEvent = Entry.disposeEvent;
+        disposeEvent && disposeEvent.notify(e);
+        if (!this.visible) return;
+        var that = this;
 
+        var options = [];
+        var contextOptions = this._contextOptions;
+
+        contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
+        contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable =
+            this.code.getThreads().length !== 0;
+
+        for (var i=0; i<this._contextOptions.length; i++) {
+            if (contextOptions[i].activated)
+                options.push(contextOptions[i].option);
+        }
+
+        e = Entry.Utils.convertMouseEvent(e);
+        Entry.ContextMenu.show(options, null,
+            { x: e.clientX, y: e.clientY }
+        );
+    };
+
+    p.getDom = function(query) {
+        query = query.concat();
+        var key = query.shift();
+        if (key === 'trashcan')
+            return this.workspace.trashcan.svgGroup;
+        else if (key === 'coord')
+            return {
+                getBoundingClientRect: function() {
+                    var halfWidth = 20,
+                        boardOffset = this.relativeOffset;
+                    return {
+                        top: query[1] + boardOffset.top - halfWidth,
+                        left: query[0] + boardOffset.left - halfWidth,
+                        width: 2 * halfWidth,
+                        height: 2 * halfWidth
+                    };
+                }.bind(this)
+            };
+        else if (key instanceof Array) {
+            var targetObj = this.code.getByPointer(key);
+            if (targetObj.getDom) {
+                return targetObj.getDom(query);
+            } else {
+                return targetObj.svgGroup;
+            }
+        }
+    };
+
+    p.findBlock = function(block) {
+        if (typeof block === 'string')
+            return this.findById(block);
+        else if (block && block.id)
+            return this.findById(block.id) || block;
+        else if (block instanceof Array)
+            return this.code.getByPointer(block);
+        return block;
+    };
+
+    p.scrollToPointer = function(pointer, query) {
+        var obj = this.code.getByPointer(pointer);
+        var pos;
+        if (obj instanceof Entry.Block) {
+            pos = obj.view.getAbsoluteCoordinate();
+            obj.view.dominate();
+        } else if (obj instanceof Entry.Thread) {
+            pos = obj.view.requestAbsoluteCoordinate();
+        } else if (obj.getAbsolutePosFromBoard)
+            pos = obj.getAbsolutePosFromBoard();
+
+
+        var newX = 0,
+            newY = 0,
+            offset = this._offset,
+            width = offset.width,
+            height = offset.height;
+
+        if (pos.x > width - 200)
+            newX = width - 200 - pos.x;
+        else if (pos.x < 100)
+            newX = 100 - pos.x;
+
+        if (pos.y > height - 200)
+            newY = height - 200 - pos.y;
+        else if (pos.y < 100)
+            newY = 100 - pos.y;
+
+        this.scroller.scroll(newX, newY, true);
+        return [newX, newY];
+    };
 
 })(Entry.Board.prototype);
-

@@ -133,6 +133,10 @@
     cursor: pointer;
 }
 
+.hidePlayBtn .entryRunButtonBigMinimize {
+    display: none;
+}
+
 @media screen and (max-width: 500px) {
     .entryRunButtonBigMinimize {
         width: 80px; height: 80px;
@@ -289,7 +293,7 @@
     margin-top: 5px;
     margin-left: 10px;
     .backgroundImage("speed_edit.png");
-}
+} 
 
 .entryPopupWindow > div > .entrySpeedButtonWorkspace {
     display: none;
@@ -410,7 +414,7 @@
     top: 289px;
     left: 0px;
     width: 236px;
-    height: 38px;
+    height: 37px;
     font-size: 12pt;
     background-color: #fff;
     color: #666666;
@@ -433,7 +437,7 @@
     top: 289px;
     left: 272px;
     width: 156px;
-    height: 38px;
+    height: 37px;
     font-size: 12pt;
     border-left: 1px solid #ccc;
     border-top: 1px solid #ccc;
@@ -489,7 +493,7 @@
     top: 289px;
     left: 272px;
     width: 156px;
-    height: 38px;
+    height: 37px;
     font-size: 12pt;
     border-top: 1px solid #ccc;
     border-left: 1px solid #ccc;
@@ -560,7 +564,8 @@
     background: url("@{image_url}pause_btn.png");
     background-repeat: no-repeat;
     color: transparent;
-    width: 90px;
+    width: auto;
+    padding-left: 20px;
     left: 103px;
     color: @bora;
     background-position: center left;
@@ -608,3 +613,38 @@
     color: #6c5af2;
     font-size: 9pt;
 }
+
+.tablet {
+    .entrySpeedButtonWorkspace {
+        width: 27px;
+        height: 19px;
+        margin-top: 2px;
+        .backgroundImage("speed_edit_big.png");
+    }
+
+    .entryCoordinateButtonWorkspace_w {
+        .backgroundImage("layers_icon_grid_nor_big.png");
+    }
+
+    .entryMaximizeButtonWorkspace_w {
+        .backgroundImage("layers_icon_fullmode01_nor_1_big.png");
+    }
+
+}
+
+.entryPopupWindow.tablet {
+    .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w {
+        bottom: 5px;
+        background-image : url("@{image_url}grid_big.png") !important;
+    }
+
+    .entryEngineWorkspace_w > .entryMaximizeButtonWorkspace_w {
+        right: 0;
+        bottom: 5px;
+        background-image: url("@{image_url}zoom_out_btn_big.png");
+    }
+    
+}
+
+
+

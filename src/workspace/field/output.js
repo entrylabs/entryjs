@@ -32,7 +32,7 @@ Entry.FieldOutput = function(content, blockView, index, mode, contentIndex) {
 
     this._position = content.position;
 
-    this.box.observe(blockView, "alignContent", ["width", "height"]);
+    this.box.observe(blockView, "dAlignContent", ["width", "height"]);
     this.observe(this, "_updateBG", ["magneting"], false);
 
     this.renderStart(blockView.getBoard(), mode);
@@ -46,7 +46,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     };
 
     p.renderStart = function(board, mode) {
-        this.svgGroup = this._blockView.contentSvgGroup.elem("g");
+        if (!this.svgGroup)
+            this.svgGroup =
+                this._blockView.contentSvgGroup.elem("g");
+
         this.view = this;
         this._nextGroup = this.svgGroup;
         this.box.set({
@@ -60,7 +63,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
             block.setThread(this);
             block.createView(board, mode);
         }
+
         this._updateValueBlock(block);
+        this._valueBlock && this._valueBlock.view._startContentRender(this.renderMode);
 
         if (this._blockView.getBoard().constructor == Entry.BlockMenu &&
             this._valueBlock)
@@ -79,9 +84,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
         var block = this._valueBlock;
 
-        if (block) {
+        if (block && block.view)
             y = block.view.height * -0.5;
-        }
+
         var transform = "translate(" + x + "," + y + ")";
 
         if (animate)
@@ -102,7 +107,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     p.calcWH = function() {
         var block = this._valueBlock;
 
-        if (block) {
+        if (block && block.view) {
             var blockView = block.view;
             this.box.set({
                 width: blockView.width,
@@ -118,7 +123,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
     p.calcHeight = p.calcWH;
 
-    p.destroy = function() {};
+    p.destroy = function() {
+        this._valueBlock && this._valueBlock.destroyView();
+    };
 
     p._inspectBlock = function() {
     };
@@ -136,8 +143,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         }
     };
 
+    p.spliceBlock = function() {
+        this._updateValueBlock();
+    };
+
     p._updateValueBlock = function(block) {
-        if (!(block instanceof Entry.Block)) block = undefined;
+        if (!(block instanceof Entry.Block))
+            block = undefined;
+
+        if (block && block === this._valueBlock) {
+            this.calcWH();
+            return;
+        }
+
         if (this._sizeObserver) this._sizeObserver.destroy();
         if (this._posObserver) this._posObserver.destroy();
 
@@ -150,10 +168,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         } else {
             this.calcWH();
         }
-        this._blockView.alignContent();
-        var board = this._blockView.getBoard();// performance issue
-        if (board.constructor === Entry.Board)
-            board.generateCodeMagnetMap();
+        this._blockView.dAlignContent();
     };
 
     p.getPrevBlock = function(block) {
@@ -238,12 +253,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     };
 
     p.getThread = function() {
-         return this;
+        return this;
     };
 
     p.getValueBlock = function() {return this._valueBlock;};
 
     p.pointer = function(pointer) {
+        pointer = pointer || [];
         pointer.unshift(this._index);
         pointer.unshift(Entry.PARAM);
         return this._block.pointer(pointer);

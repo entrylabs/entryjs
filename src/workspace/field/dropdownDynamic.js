@@ -19,7 +19,13 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     this._contents = content;
     this._index = index;
-    this._arrowColor = content.arrowColor;
+
+    var arrowColor = content.arrowColor;
+    if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+        arrowColor = blockView._fillColor;
+    }
+
+    this._arrowColor = arrowColor;
 
     var menuName = this._contents.menuName;
 
@@ -27,14 +33,17 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
         this._menuGenerator = menuName;
     else this._menuName = menuName;
 
-    this._CONTENT_HEIGHT =
-        content.dropdownHeight || blockView.getSkeleton().dropdownHeight || 16;
+    this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
 
-    this._FONT_SIZE =
-        content.fontSize || blockView.getSkeleton().fontSize || 12;
+    this._FONT_SIZE = this.getFontSize(content.fontSize);
 
     this._ROUND = content.roundValue || 3;
     this.renderStart(blockView);
+    if (blockView && blockView.getBoard() && blockView.getBoard().workspace
+        && blockView.getBoard().workspace.changeEvent) {
+        blockView.getBoard().workspace.changeEvent.attach(
+            this, this._updateValue);
+    }
 };
 
 Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
@@ -48,17 +57,15 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         if (Entry.container) {
             if (this._menuName)
                 options = Entry.container.getDropdownList(this._menuName, object);
-            else
-                options = this._menuGenerator();
+            else options = this._menuGenerator();
         }
-
 
         this._contents.options = options;
         var value = this.getValue();
-        if (!value || value == 'null')
+        if (this._blockView.isInBlockMenu || !value || value == 'null')
             value = (options.length !== 0 ? options[0][1] : null);
 
-
+        this._updateOptions();
         this.setValue(value);
     };
 
@@ -91,7 +98,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         for (var i=0; i<options.length; i++) {
             var option = options[i];
-            var text = option[0];
+            var text = option[0] = this._convert(option[0], option[1]);
             var value = option[1];
             var element = Entry.Dom('li', {
                 class: 'rect',
@@ -119,12 +126,14 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
                 elem.mouseup(function(e){
                     e.stopPropagation();
                     that.applyValue(value);
-                    that.destroyOption();
+                    that.destroyOption(undefined, true);
                     that._selectBlockView();
                 });
             })(element, value);
         }
         this._position();
+
+        this.optionDomCreated();
     };
 
 })(Entry.FieldDropdownDynamic.prototype);

@@ -13,8 +13,8 @@ goog.provide('Entry.SVG');
  * @param {string} tag or html to construct dom element.
  * @param {?object} options include id, classes, parent etc.
  */
-Entry.SVG = function (id) {
-    var element = document.getElementById(id);
+Entry.SVG = function (id , svgDom) {
+    var element = svgDom ? svgDom : document.getElementById(id);
     return Entry.SVG.createElement(element);
 };
 
@@ -39,9 +39,6 @@ Entry.SVG.createElement = function (tag, options) {
         }
     }
 
-    if (this instanceof SVGElement)
-        this.appendChild(el);
-
     //add util functions
     el.elem = Entry.SVG.createElement;
     el.attr = Entry.SVG.attr;
@@ -50,6 +47,12 @@ Entry.SVG.createElement = function (tag, options) {
     el.hasClass = Entry.SVG.hasClass;
     el.remove = Entry.SVG.remove;
     el.removeAttr = Entry.SVG.removeAttr;
+
+    if (tag === "text")
+       el.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space","preserve");
+
+    if (this instanceof SVGElement)
+        this.appendChild(el);
 
     return el;
 };
@@ -78,7 +81,8 @@ Entry.SVG.addClass = function(className) {
     var classAttr = this.getAttribute('class');
     for (var i = 0; i < arguments.length; i++) {
         var className = arguments[i];
-        if (!this.hasClass(className)) classAttr += " " + className;
+        if (!this.hasClass(className))
+            classAttr += " " + className;
     }
 
     this.setAttribute('class', classAttr);

@@ -15,7 +15,11 @@ Entry.ThreadView = function(thread, board) {
 
     this.svgGroup = board.svgThreadGroup.elem("g");
 
+    this.board = board;
+
     this.parent = board; // statement
+
+    this._hasGuide = false;
 };
 
 (function(p) {
@@ -82,8 +86,24 @@ Entry.ThreadView = function(thread, board) {
         return height;
     };
 
+    p.getMagnet = function(selector) {
+        return {
+            getBoundingClientRect: function() {
+                var halfWidth = 20,
+                    coord =this.parent.requestAbsoluteCoordinate(),
+                    boardOffset = this.board.relativeOffset;
+                return {
+                    top: coord.y + boardOffset.top - halfWidth,
+                    left: coord.x + boardOffset.left - halfWidth,
+                    width: 2 * halfWidth,
+                    height: 2 * halfWidth
+                }
+            }.bind(this)
+        }
+    }
+
     p.dominate = function() {
-        this.parent.dominate(this.thread);
+        !this._hasGuide && this.parent.dominate(this.thread);
     };
 
     p.isGlobal = function() {
@@ -93,12 +113,19 @@ Entry.ThreadView = function(thread, board) {
     p.reDraw = function() {
         var blocks = this.thread._data;
 
-        for (var i=blocks.length-1; i>=0; i--)
-            blocks[i].view.reDraw();
+        for (var i=blocks.length-1; i>=0; i--) {
+            var b = blocks[i];
+            if (b.view) b.view.reDraw();
+            else b.createView(this.thread._code.view.board);
+        }
     };
 
     p.setZIndex = function(zIndex) {
-         this.set({zIndex: zIndex});
-    }
+        this.set({zIndex: zIndex});
+    };
+
+    p.setHasGuide = function(bool) {
+        this._hasGuide = bool;
+    };
 
 })(Entry.ThreadView.prototype);

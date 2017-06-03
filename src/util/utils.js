@@ -10,8 +10,67 @@ Entry.overridePrototype = function() {
     Number.prototype.mod = function(n) {
             return ((this%n)+n)%n;
     };
+
+    //polyfill
+    if (!String.prototype.repeat) {
+      String.prototype.repeat = function(count) {
+        'use strict';
+        if (this == null) {
+          throw new TypeError('can\'t convert ' + this + ' to object');
+        }
+        var str = '' + this;
+        count = +count;
+        if (count != count) {
+          count = 0;
+        }
+        if (count < 0) {
+          throw new RangeError('repeat count must be non-negative');
+        }
+        if (count == Infinity) {
+          throw new RangeError('repeat count must be less than infinity');
+        }
+        count = Math.floor(count);
+        if (str.length == 0 || count == 0) {
+          return '';
+        }
+        // Ensuring count is a 31-bit integer allows us to heavily optimize the
+        // main part. But anyway, most current (August 2014) browsers can't handle
+        // strings 1 << 28 chars or longer, so:
+        if (str.length * count >= 1 << 28) {
+          throw new RangeError('repeat count must not overflow maximum string size');
+        }
+        var rpt = '';
+        for (;;) {
+          if ((count & 1) == 1) {
+            rpt += str;
+          }
+          count >>>= 1;
+          if (count == 0) {
+            break;
+          }
+          str += str;
+        }
+        // Could we try:
+        // return Array(count + 1).join(this);
+        return rpt;
+      }
+    }
 };
 
+// INFO: 기존에 사용하던 isNaN에는 숫자 체크의 문자가 있을수 있기때문에 regex로 체크하는 로직으로 변경
+// isNaN 문제는 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/isNaN
+// 에서 확인.
+Entry.Utils.isNumber = function(num) {
+    if(typeof num === 'number') {
+        return true;
+    }
+    var reg = /^-?\d+\.?\d*$/;
+    if(typeof num === 'string' && reg.test(num)) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 Entry.Utils.generateId = function() {
     return ("0000"+(Math.random()*Math.pow(36,4)<<0).toString(36)).substr(-4);
@@ -75,6 +134,26 @@ Entry.Utils.colorLighten = function(color, amount) {
     hsl.l += amount / 100;
     hsl.l = clamp01(hsl.l);
     return Entry.Utils.hslToHex(hsl);
+};
+
+Entry.Utils._EmphasizeColorMap = {
+    "#3BBD70": "#5BC982",
+    "#498DEB": "#62A5F4",
+    "#A751E3": "#C08FF7",
+    "#EC4466": "#F46487",
+    "#FF9E20": "#FFB05A",
+    "#A4D01D": "#C4DD31",
+    "#00979D": "#09BAB5",
+    "#FFD974": "#FCDA90",
+    "#E457DC": "#F279F2",
+    "#CC7337": "#DD884E",
+    "#AEB8FF": "#C0CBFF",
+    "#FFCA36": "#F2C670",
+};
+
+Entry.Utils.getEmphasizeColor = function(color) {
+    var colorKey = color.toUpperCase();
+    return Entry.Utils._EmphasizeColorMap[colorKey] || color;
 };
 
 // Take input from [0, n] and return it as [0, 1]
@@ -221,7 +300,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('mousedown') > -1) {
         if (Entry.documentMousedown) {
             doc.off('mousedown');
-            Entry.documentMousedown.clear()
+            Entry.documentMousedown.clear();
         }
         Entry.documentMousedown = new Entry.Event(window);
         doc.on('mousedown', (function(e) {
@@ -232,7 +311,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('mousemove') > -1) {
         if (Entry.documentMousemove) {
             doc.off('touchmove mousemove');
-            Entry.documentMousemove.clear()
+            Entry.documentMousemove.clear();
         }
 
         Entry.mouseCoordinate = {};
@@ -249,7 +328,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('keydown') > -1) {
         if (Entry.keyPressed)  {
             doc.off('keydown');
-            Entry.keyPressed.clear()
+            Entry.keyPressed.clear();
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
@@ -264,7 +343,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('keyup') > -1) {
         if (Entry.keyUpped) {
             doc.off('keyup');
-            Entry.keyUpped.clear()
+            Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
         doc.on('keyup', (function(e) {
@@ -276,7 +355,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     }
 
     if (options.indexOf('dispose') > -1) {
-        if (Entry.disposeEvent) Entry.disposeEvent.clear()
+        if (Entry.disposeEvent) Entry.disposeEvent.clear();
         Entry.disposeEvent = new Entry.Event(window);
         if (Entry.documentMousedown)
             Entry.documentMousedown.attach(this, function(e) {
@@ -341,7 +420,11 @@ Entry.parseTexttoXML = function(xmlText) {
  * @return {!Element}
  */
 Entry.createElement = function(type, elementId) {
-    var element = document.createElement(type);
+    var element;
+    if (type instanceof HTMLElement)
+        element = type;
+    else
+        var element = document.createElement(type);
     if (elementId)
         element.id = elementId;
 
@@ -349,25 +432,34 @@ Entry.createElement = function(type, elementId) {
         return this.className.match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
     };
     element.addClass = function(className) {
+        var current = this.className;
         for (var i = 0; i < arguments.length; i++) {
             var className = arguments[i];
-            if (!this.hasClass(className)) this.className += " " + className;
+            if (!this.hasClass(className))
+                current += " " + className;
         }
+        this.className = current;
     };
     element.removeClass = function(className) {
+        var current = this.className;
         for (var i = 0; i < arguments.length; i++) {
             var className = arguments[i];
             if (this.hasClass(className)) {
                 var reg = new RegExp('(\\s|^)'+className+'(\\s|$)');
-                this.className=this.className.replace(reg,' ');
+                current = current.replace(reg,' ');
             }
         }
+        this.className = current;
     };
     element.bindOnClick = function(func) {
         $(this).on('click tab', function(e) {
+            if (element.disabled) return;
             e.stopImmediatePropagation();
             func.call(this, e);
         });
+    };
+    element.unBindOnClick = function(func) {
+        $(this).off('click tab');
     };
     return element;
 };
@@ -380,7 +472,7 @@ Entry.makeAutolink = function(html) {
     } else {
         return '';
     }
-}
+};
 
 /**
  * Generate random hash
@@ -415,10 +507,12 @@ Entry.addEventListener = function(eventName, fn) {
 Entry.dispatchEvent = function(eventName, params) {
     if (!this.events_)
         this.events_ = {};
-    if (!this.events_[eventName])
-        return;
-    for (var index = 0, l = this.events_[eventName].length; index < l; index++) {
-        this.events_[eventName][index].call(window, params);
+
+    var events = this.events_[eventName];
+    if (!events) return;
+
+    for (var index = 0, l = events.length; index < l; index++) {
+        events[index].apply(window, Array.prototype.slice.call(arguments).splice(1));
     }
 };
 
@@ -455,7 +549,7 @@ Entry.removeAllEventListener = function(eventName) {
  * @param {!number} b
  */
 Entry.addTwoNumber = function(a, b) {
-  if (isNaN(a) || isNaN(b)) {
+  if (!Entry.Utils.isNumber(a) || !Entry.Utils.isNumber(b)) {
     return a+b;
   }
   a += ''; b+= '';
@@ -583,9 +677,9 @@ Entry.getElementsByClassName = function(cl) {
  * @return {Boolean||Number} arr
  */
 Entry.parseNumber = function(value) {
-    if (typeof value == "string" && !isNaN(Number(value)))
+    if (typeof value == "string" && Entry.Utils.isNumber(value))
         return Number(value);
-    else if (typeof value == "number" && !isNaN(Number(value)))
+    else if (typeof value == "number" && Entry.Utils.isNumber(value))
         return value;
     return false;
 };
@@ -717,13 +811,16 @@ Entry.nodeListToArray = function(nl) {
 };
 
 Entry.computeInputWidth = function(value){
-    var tmp = document.createElement("span");
-    tmp.className = "tmp-element";
-    tmp.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    document.body.appendChild(tmp);
-    var theWidth = tmp.offsetWidth;
-    document.body.removeChild(tmp);
-    return Number(theWidth + 10) + 'px';
+    var elem = document.getElementById('entryInputForComputeWidth');
+    if (!elem) {
+        elem = document.createElement("span");
+        elem.setAttribute('id', 'entryInputForComputeWidth');
+        elem.className = "elem-element";
+        document.body.appendChild(elem);
+    }
+
+    elem.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return Number(elem.offsetWidth + 10) + 'px';
 };
 
 Entry.isArrowOrBackspace = function(keyCode){
@@ -762,7 +859,7 @@ Entry.factorial = function(n){
 };
 
 Entry.getListRealIndex = function(index, list){
-    if (isNaN(index)) {
+    if (!Entry.Utils.isNumber(index)) {
         switch(index) {
             case 'FIRST':
                 index = 1;
@@ -876,6 +973,8 @@ Entry.setCloneBrush = function (sprite, parentBrush) {
     var shape = new createjs.Shape(brush);
     Entry.stage.selectedObjectContainer.addChild(shape);
 
+    brush.stop = parentBrush.stop;
+
     if (sprite.brush)
         sprite.brush = null;
     sprite.brush = brush;
@@ -883,10 +982,11 @@ Entry.setCloneBrush = function (sprite, parentBrush) {
     if (sprite.shape)
         sprite.shape = null;
     sprite.shape = shape;
+
 };
 
 Entry.isFloat = function (num) {
-    return /\d+\.{1}\d+/.test(num);
+    return /\d+\.{1}\d+$/.test(num);
 };
 
 Entry.getStringIndex = function(str) {
@@ -900,7 +1000,7 @@ Entry.getStringIndex = function(str) {
     var len = str.length;
     for (var i=len-1; i>0; --i) {
         var ch = str.charAt(i);
-        if (!isNaN(ch)) {
+        if (Entry.Utils.isNumber(ch)) {
             num.unshift(ch);
             idx = i;
         } else {
@@ -965,7 +1065,7 @@ Entry.getMaxFloatPoint = function(numbers) {
 };
 
 Entry.convertToRoundedDecimals = function (value, decimals) {
-    if (isNaN(value) || !this.isFloat(value))
+    if (!Entry.Utils.isNumber(value) || !this.isFloat(value))
         return value;
     else
         return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
@@ -996,11 +1096,19 @@ Entry.isEmpty = function(obj) {
 Entry.Utils.disableContextmenu = function(node) {
     if (!node) return;
 
-    $(node).on('contextmenu', function(e){
-        e.stopPropagation();
-        e.preventDefault();
-        return false;
-    });
+    $(node).on('contextmenu', this.contextPreventFunction);
+};
+
+Entry.Utils.contextPreventFunction = function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+};
+
+Entry.Utils.enableContextmenu = function(node) {
+    if (!node) return;
+
+    $(node).off('contextmenu', this.contextPreventFunction);
 };
 
 Entry.Utils.isRightButton = function(e) {
@@ -1031,7 +1139,7 @@ Entry.Utils.isFunction = function(fn) {
 };
 
 Entry.Utils.addFilters = function (boardSvgDom, suffix) {
-        var defs = boardSvgDom.elem('defs');
+    var defs = boardSvgDom.elem('defs');
 
     //trashcan filter
     var trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter_' + suffix});
@@ -1068,31 +1176,19 @@ Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
         style: "display: none"
     });
 
-    var group = pattern.elem('g');
-
-    //this rect should be controlled by the board
-    //according to the target block
-    var elem = group.elem("rect", {
-        x: 0, y: 0,
-        width: 125,
-        height: 33
-    });
-
     var imagePath = Entry.mediaFilePath + 'block_pattern_(order).png';
+    var order = '(order)';
     for (var i=1; i<5; i++) {
-        group.elem("image", {
+        pattern.elem("image", {
             class: 'pattern' + i,
-            href: imagePath.replace('(order)', i),
+            href: imagePath.replace(order, i),
             x: 0, y: 0,
             width: 125,
             height: 33
         });
     }
 
-    return {
-        pattern: pattern,
-        rect: elem
-    }
+    return { pattern: pattern };
 };
 
 Entry.Utils.COLLISION = {
@@ -1139,9 +1235,10 @@ Entry.Utils.xmlToJsonData = function(xml) {
     return result;
 };
 
-Entry.Utils.stopProjectWithToast = function(scope, message, isHide) {
+Entry.Utils.stopProjectWithToast = function(scope, message, isHide, error) {
     var block = scope.block;
     message = message || '런타임 에러 발생';
+
     if (Entry.toast && !isHide)
         Entry.toast.alert(
             Lang.Msgs.warn,
@@ -1166,6 +1263,7 @@ Entry.Utils.stopProjectWithToast = function(scope, message, isHide) {
             block.view.getBoard().activateBlock(block);
         }
     }
+
     throw new Error(message);
 };
 
@@ -1183,55 +1281,60 @@ Entry.Utils.isChrome = function() {
 
 Entry.Utils.waitForWebfonts = function(fonts, callback) {
     var loadedFonts = 0;
-    for(var i = 0, l = fonts.length; i < l; ++i) {
-        (function(font) {
-            var node = document.createElement('span');
-            // Characters that vary significantly among different fonts
-            node.innerHTML = 'giItT1WQy@!-/#';
-            // Visible - so we can measure it - but not on the screen
-            node.style.position      = 'absolute';
-            node.style.left          = '-10000px';
-            node.style.top           = '-10000px';
-            // Large font size makes even subtle changes obvious
-            node.style.fontSize      = '300px';
-            // Reset any font properties
-            node.style.fontFamily    = 'sans-serif';
-            node.style.fontVariant   = 'normal';
-            node.style.fontStyle     = 'normal';
-            node.style.fontWeight    = 'normal';
-            node.style.letterSpacing = '0';
-            document.body.appendChild(node);
+    if (fonts && fonts.length) {
+        for(var i = 0, l = fonts.length; i < l; ++i) {
+            (function(font) {
+                var node = document.createElement('span');
+                // Characters that vary significantly among different fonts
+                node.innerHTML = 'giItT1WQy@!-/#';
+                // Visible - so we can measure it - but not on the screen
+                node.style.position      = 'absolute';
+                node.style.left          = '-10000px';
+                node.style.top           = '-10000px';
+                // Large font size makes even subtle changes obvious
+                node.style.fontSize      = '300px';
+                // Reset any font properties
+                node.style.fontFamily    = 'sans-serif';
+                node.style.fontVariant   = 'normal';
+                node.style.fontStyle     = 'normal';
+                node.style.fontWeight    = 'normal';
+                node.style.letterSpacing = '0';
+                document.body.appendChild(node);
 
-            // Remember width with no applied web font
-            var width = node.offsetWidth;
+                // Remember width with no applied web font
+                var width = node.offsetWidth;
 
-            node.style.fontFamily = font;
+                node.style.fontFamily = font;
 
-            var interval;
-            function checkFont() {
-                // Compare current width with original width
-                if(node && node.offsetWidth != width) {
-                    ++loadedFonts;
-                    node.parentNode.removeChild(node);
-                    node = null;
-                }
-
-                // If all fonts have been loaded
-                if(loadedFonts >= fonts.length) {
-                    if(interval) {
-                        clearInterval(interval);
+                var interval;
+                function checkFont() {
+                    // Compare current width with original width
+                    if(node && node.offsetWidth != width) {
+                        ++loadedFonts;
+                        node.parentNode.removeChild(node);
+                        node = null;
                     }
-                    if(loadedFonts == fonts.length) {
-                        callback();
-                        return true;
-                    }
-                }
-            };
 
-            if(!checkFont()) {
-                interval = setInterval(checkFont, 50);
-            }
-        })(fonts[i]);
+                    // If all fonts have been loaded
+                    if(loadedFonts >= fonts.length) {
+                        if(interval) {
+                            clearInterval(interval);
+                        }
+                        if(loadedFonts == fonts.length) {
+                            callback();
+                            return true;
+                        }
+                    }
+                };
+
+                if(!checkFont()) {
+                    interval = setInterval(checkFont, 50);
+                }
+            })(fonts[i]);
+        }
+    } else {
+        callback && callback();
+        return true;
     }
 };
 window.requestAnimFrame = (function(){
@@ -1243,3 +1346,288 @@ window.requestAnimFrame = (function(){
           };
 })();
 
+Entry.isMobile = function() {
+    if (Entry.device)
+        return Entry.device === 'tablet';
+
+    var platform = window.platform;
+    var ret = platform &&
+           platform.type &&
+           (platform.type === 'tablet' ||
+               platform.type === 'mobile');
+
+    if (ret) {
+        Entry.device = 'tablet';
+        return true;
+    } else {
+        Entry.device = 'desktop';
+        return false;
+    }
+}
+
+Entry.Utils.convertMouseEvent = function(e) {
+    if (e.originalEvent && e.originalEvent.touches)
+        return e.originalEvent.touches[0];
+    else return e;
+}
+
+Entry.Utils.convertIntToHex = function(num) {
+    return (num).toString(16).toUpperCase();
+}
+
+Entry.Utils.hasSpecialCharacter = function(str) {
+    var reg = /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g;
+    return reg.test(str);
+}
+
+Entry.Utils.debounce = function(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+        return timeout;
+    };
+}
+
+Entry.Utils.isNewVersion = function(old_version, new_version) {
+    try {
+        old_version = old_version.replace('v', '');
+        new_version = new_version.replace('v', '');
+        var arrOld = old_version.split('.');
+        var arrNew = new_version.split('.');
+        var count = (arrOld.length < arrNew.length) ? arrOld.length : arrNew.length;
+        var isNew = false;
+        var isSame = true;
+        for(var i = 0; i < count; i++) {
+            if(Number(arrOld[i]) < Number(arrNew[i])) {
+                isNew = true;
+                isSame = false;
+            } else if(Number(arrOld[i]) > Number(arrNew[i])) {
+                isSame = false;
+            }
+        }
+
+        if(isSame && (arrOld.length < arrNew.length)) {
+            isNew = true;
+        }
+
+        return isNew;
+    } catch(e) {
+        return false;
+    }
+}
+
+Entry.Utils.getBlockCategory = (function() {
+    var map = {};
+    var allBlocks;
+    return function(blockType) {
+        if (!blockType) return;
+
+        if (map[blockType])
+            return map[blockType];
+
+        if (!allBlocks)
+            allBlocks = EntryStatic.getAllBlocks();
+
+        for (var i=0; i<allBlocks.length; i++) {
+            var data = allBlocks[i];
+            var category = data.category;
+            if (data.blocks.indexOf(blockType) > -1) {
+                map[blockType] = category;
+                return category;
+            }
+        }
+    }
+})();
+
+Entry.Utils.getUniqObjectsBlocks = function(objects) {
+    objects = objects || Entry.container.objects_;
+    var ret = [];
+
+    objects.forEach(function(o) {
+        var script = o.script;
+        if (!(script instanceof Entry.Code))
+            script = new Entry.Code(script);
+        var blocks = script.getBlockList();
+        blocks.forEach(function(b) {
+            if (ret.indexOf(b.type) < 0)
+                ret.push(b.type);
+        });
+    });
+
+    return ret;
+};
+
+Entry.Utils.getObjectsBlocks = function(objects) {
+    objects = objects || Entry.container.objects_;
+    var ret = [];
+
+    objects.forEach(function(o) {
+        var script = o.script;
+        if (!(script instanceof Entry.Code))
+            script = new Entry.Code(script);
+        var blocks = script.getBlockList(true);
+        blocks.forEach(function(b) {
+            ret.push(b.type);
+        });
+    });
+
+    return ret;
+};
+
+Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
+    if (!blockArr) return;
+    var that = this;
+
+    var data = EntryStatic.getAllBlocks();
+    var categoryIndexMap = {};
+    for (var i=0; i<data.length; i++) {
+        var datum = data[i];
+        datum.blocks = [];
+        categoryIndexMap[datum.category] = i;
+    }
+
+    blockArr.forEach(function(b) {
+        var category = that.getBlockCategory(b);
+        var index = categoryIndexMap[category];
+        if (index === undefined) return;
+        data[index].blocks.push(b);
+    });
+
+    var allBlocksInfo = EntryStatic.getAllBlocks();
+    for (var i=0; i<allBlocksInfo.length; i++) {
+        var info = allBlocksInfo[i];
+        var category = info.category;
+        var blocks = info.blocks;
+        if (category === 'func') {
+            allBlocksInfo.splice(i, 1);
+            continue;
+        }
+        var selectedBlocks = data[i].blocks;
+        var sorted = [];
+
+        blocks.forEach(function(b) {
+            if (selectedBlocks.indexOf(b) > -1)
+                sorted.push(b);
+        });
+
+        data[i].blocks = sorted;
+    }
+
+    return data;
+};
+
+Entry.Utils.blur = function() {
+    var elem = document.activeElement;
+    elem && elem.blur && elem.blur();
+};
+
+Entry.Utils.getWindow = function(hashId) {
+    if (!hashId) return;
+    for (var i=0; i<window.frames.length; i++) {
+        var frame = window.frames[i];
+        if (frame.Entry && frame.Entry.hashId === hashId)
+            return frame;
+    }
+};
+
+Entry.Utils.restrictAction = function(exceptions, callback, noDispose) {
+    var that = this;
+    exceptions = exceptions || [];
+    exceptions = exceptions.map(function(e) {
+        return e[0];
+    });
+    var handler = function(e) {
+        e = e || window.event;
+        var target = e.target || e.srcElement;
+        if (!that.isRightButton(e)) {
+            for (var i = 0; i < exceptions.length; i++) {
+                var exception = exceptions[i];
+                if (exception === target || $.contains(exception, target)) {
+                    if (!noDispose) {
+                        callback(e);
+                    } else target.focus && target.focus();
+                    return;
+                }
+            }
+        }
+
+        if (!e.preventDefault) {//IE quirks
+            e.returnValue = false;
+            e.cancelBubble = true;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+    this._restrictHandler = handler;
+
+    var entryDom = Entry.getDom();
+    Entry.Utils.disableContextmenu(entryDom);
+    if (entryDom.addEventListener) {
+        entryDom.addEventListener('click', handler, true);
+        entryDom.addEventListener('mousedown', handler, true);
+        entryDom.addEventListener('mouseup', handler, true);
+        entryDom.addEventListener('touchstart', handler, true);
+    }
+    else {
+        entryDom.attachEvent('onclick', handler);
+        entryDom.attachEvent('onmousedown', handler);
+        entryDom.attachEvent('onmouseup', handler);
+        entryDom.attachEvent('ontouchstart', handler);
+    }
+};
+
+Entry.Utils.allowAction = function() {
+    var entryDom = Entry.getDom();
+    Entry.Utils.enableContextmenu(entryDom);
+    if (this._restrictHandler) {
+        if (entryDom.addEventListener) {
+            entryDom.removeEventListener("click", this._restrictHandler, true);
+            entryDom.removeEventListener("mousedown", this._restrictHandler, true);
+            entryDom.removeEventListener("mouseup", this._restrictHandler, true);
+            entryDom.removeEventListener("touchstart", this._restrictHandler, true);
+        } else {
+            entryDom.detachEvent('onclick', this._restrictHandler);
+            entryDom.detachEvent('onmousedown', this._restrictHandler);
+            entryDom.detachEvent('onmouseup', this._restrictHandler);
+            entryDom.detachEvent('ontouchstart', this._restrictHandler);
+        }
+        delete this._restrictHandler;
+    }
+};
+
+Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
+    var rect = svgGroup.getBoundingClientRect();
+    var svgDom = Entry.Dom(
+        $('<svg id="globalSvg" width="10" height="10"' +
+          'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+        { parent: $(document.body) }
+    );
+    svgGroup = $(svgGroup.cloneNode(true));
+    svgGroup.attr({transform: "translate(8,0)"});
+    svgDom.append(svgGroup);
+    svgDom.css({
+        top: rect.top, left: rect.left
+    });
+    svgDom.velocity({
+        top: y,
+        left: x - 8
+    }, {
+        duration: 1200,
+        complete: function() {
+            setTimeout(function() {
+                svgDom.remove();
+                callback();
+            }, 500);
+        },
+        easing: "ease-in-out"
+    });
+};

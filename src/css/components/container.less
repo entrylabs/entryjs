@@ -31,6 +31,15 @@
     background-color: #363C46;
 }
 
+.entryContainerExtensions {
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    background-color: #363C46;
+    list-style-type: none;
+}
+
 .entryContainerListWorkspace {
     position: relative;
     margin: 0px;
@@ -264,6 +273,7 @@
     top: 20px;
     cursor: col-resize;
     .backgroundImage("entry_scroll.png");
+    z-index: 1000;
 }
 
 .selectedObject .entryObjectSelectedImgWorkspace {
@@ -285,7 +295,7 @@
     color: #000000;
     top: 12px;
     left: 28px;
-    width: 150px;
+    width: auto;
 }
 
 .selectedObject>.entryObjectWrapperWorkspace>.entryObjectCoordinateWorkspace{
@@ -396,7 +406,6 @@
 
 .collapsed .rotationMethodWrapper {
     float: left;
-    top: 39px;
 }
 
 .entryObjectRotateMethodLabelWorkspace {
@@ -455,6 +464,14 @@
 
 .propertyTabhelper.selected {
     .backgroundImage("property/helper_on.png");
+}
+
+.propertyTabhint {
+    .backgroundImage("property/hint_off.png"); 
+}
+
+.propertyTabhint.selected {
+    .backgroundImage("property/hint_on.png");
 }
 
 .propertyTabContainer {
@@ -559,3 +576,14 @@
     z-index: 1000;
     background: gray;
 }
+
+.tablet {
+    .entryContainerListElementWorkspace.selectedObject {
+        height: 128px;
+    }
+
+    .collapsed .selectedObject {
+        height: 159px;
+    }
+}
+

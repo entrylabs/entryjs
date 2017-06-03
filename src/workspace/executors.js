@@ -12,14 +12,23 @@ Entry.Executor = function(block, entity) {
     this.register = {};
 };
 
+Entry.Executor.MAXIMUM_CALLSTACK = 100;
+
 (function(p) {
-    p.execute = function() {
+    p.execute = function(isFromOrigin) {
         if (this.isEnd())
             return;
+
+        var executedBlocks = [];
+        if (isFromOrigin)
+            Entry.callStackLength = 0;
         while (true) {
             var returnVal = null;
+            executedBlocks.push(this.scope.block);
             try {
-                returnVal = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
+                var schema = this.scope.block.getSchema();
+                if (schema)
+                    returnVal = schema.func.call(this.scope, this.entity, this.scope);
             } catch(e) {
                 if(e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;
@@ -29,11 +38,12 @@ Entry.Executor = function(block, entity) {
                     if(e.message != errorMsg) {
                         isToastHide = true;
                     }
-                    Entry.Utils.stopProjectWithToast(this.scope, errorMsg, isToastHide);
+                    Entry.Utils.stopProjectWithToast(this.scope, errorMsg, isToastHide, e);
                 }
             }
+
             //executor can be ended after block function call
-            if (this.isEnd()) return;
+            if (this.isEnd()) return executedBlocks;
 
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
@@ -52,6 +62,7 @@ Entry.Executor = function(block, entity) {
                 break;
             }
         }
+        return executedBlocks;
     };
 
     p.stepInto = function(thread) {

@@ -540,9 +540,9 @@ Blockly.Block.prototype.getHeightWidth = function() {
 Blockly.Block.prototype.onDblClick_ = function(e) {
   if (Entry.Func.isEdit)
     return;
-  
+
    var funcs = Entry.variableContainer.functions_;
-   if(funcs && funcs.length !== 0) 
+   if(funcs && funcs.length !== 0)
       Entry.Func.edit(funcs[this.hashId]);
 };
 
@@ -897,7 +897,6 @@ Blockly.Block.prototype.onMouseMove_ = function(e) {
   if (this.stalkerBlock) {
     this.stalkerBlock.isDrag = true;
     this.stalkerBlock.g = true;
-    Blockly.mainWorkspace.blockMenu.scrollbar_.svgGroup_.setAttribute('opacity', '0');
   }
   this.isEditing = true;
   if (e.type == 'mousemove' && e.clientX <= 1 && e.clientY == 0 &&

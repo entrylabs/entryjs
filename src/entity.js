@@ -49,7 +49,7 @@ Entry.EntityObject = function(object) {
         Entry.dispatchEvent('entityClick', this.entity);
         Entry.stage.isObjectClick = true;
 
-        if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
+        if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
             this.offset = {x:-this.parent.x+this.entity.getX()-(evt.stageX*0.75 -240),
                 y:-this.parent.y-this.entity.getY()-(evt.stageY*0.75 -135)};
             this.cursor = "move";
@@ -66,7 +66,7 @@ Entry.EntityObject = function(object) {
     });
 
     this.object.on("pressmove", function(evt) {
-        if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
+        if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
             if (this.entity.parent.getLock())
                 return;
             this.entity.doCommand();
@@ -566,6 +566,10 @@ Entry.EntityObject.prototype.syncFont = function() {
     this.setLineHeight();
     Entry.stage.update();
     if (this.getLineBreak()) {
+        if (this.fontType == "Nanum Gothic Coding") {
+            var textObjectHeight = this.textObject.getMeasuredLineHeight();
+            this.textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
+        }
 
     } else {
         this.setWidth(this.textObject.getMeasuredWidth());
@@ -744,6 +748,7 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
 
     var previousState = this.lineBreak;
     this.lineBreak = lineBreak;
+
     if (previousState && !this.lineBreak) {
         this.textObject.lineWidth = null;
         this.setHeight(this.textObject.getMeasuredLineHeight());
@@ -756,6 +761,10 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
         this.setScaleY(1);
         this.textObject.lineWidth = this.getWidth();
         this.alignTextBox();
+        if (this.fontType == "Nanum Gothic Coding") {
+            var textObjectHeight = this.textObject.getMeasuredLineHeight();
+            this.textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
+        }
     }
 
     Entry.stage.updateObject();
@@ -798,6 +807,7 @@ Entry.EntityObject.prototype.getVisible = function() {
  * @param {?picture model} pictureModel
  */
 Entry.EntityObject.prototype.setImage = function(pictureModel) {
+    var that = this;
     delete pictureModel._id;
     Entry.assert(this.type == 'sprite', "Set image is only for sprite object");
     if (!pictureModel.id)
@@ -819,7 +829,10 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     this.setRegX(this.width/2 + absoluteRegX);
     this.setRegY(this.height/2 + absoluteRegY);
 
-    var image = Entry.container.getCachedPicture(pictureModel.id);
+    //pictureId can be duplicated by copy/paste
+    //add entityId in order to differentiate copied pictures
+    var cacheId = pictureModel.id + this.id;
+    var image = Entry.container.getCachedPicture(cacheId);
     if (!image) {
         image = new Image();
         if (pictureModel.fileurl) {
@@ -829,15 +842,13 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
             image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                 fileName.substring(2, 4) + '/image/' + fileName + '.png';
         }
-        image = image;
-        var thisPointer = this;
+        this.object.image = image;
+        this.object.cache(0,0,this.getWidth(),this.getHeight());
         image.onload = function(e) {
-            Entry.container.cachePicture(pictureModel.id, image);
+            Entry.container.cachePicture(cacheId, image);
             Entry.image = image;
-            thisPointer.object.image = image;
-            thisPointer.object.cache(0,0,thisPointer.getWidth(),thisPointer.getHeight());
-            //Entry.dispatchEvent('updateObject');
-            thisPointer = null;
+            that.object.image = image;
+            that.object.cache(0,0,that.getWidth(),that.getHeight());
             Entry.requestUpdate = true;
         };
     } else {
@@ -851,78 +862,91 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 /**
  * Apply easel filter
  */
-Entry.EntityObject.prototype.applyFilter = function() {
+Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
     var effects = this.effect;
     var object = this.object;
 
-    if (isEqualEffects(effects, this.getInitialEffectValue()))
+    var diffEffects = isEqualEffects(effects, this.getInitialEffectValue());
+    if (!isForce && diffEffects.length === 0)
         return;
+
+    if(Array.isArray(forceEffects)) {
+        diffEffects = diffEffects.concat(forceEffects);
+    }
 
     (function(e, obj) {
         var f = [];
         var adjust = Entry.adjustValueWithMaxMin;
 
-        e.brightness = e.brightness;
-        var cmBrightness = new createjs.ColorMatrix();
-        cmBrightness.adjustColor(adjust(e.brightness, -100, 100), 0, 0, 0);
-        var brightnessFilter = new createjs.ColorMatrixFilter(cmBrightness);
-        f.push(brightnessFilter);
-
-        e.hue = e.hue.mod(360);
-        var cmHue = new createjs.ColorMatrix();
-        cmHue.adjustColor(0, 0, 0, e.hue);
-        var hueFilter = new createjs.ColorMatrixFilter(cmHue);
-        f.push(hueFilter);
-
-        var matrixValue = [
-            1, 0, 0, 0, 0,
-            0, 1, 0, 0, 0,
-            0, 0, 1, 0, 0,
-            0, 0, 0, 1, 0,
-            0, 0, 0, 0, 1
-        ];
-
-        var degrees = e.hsv*3.6;
-        var r = (degrees*3) * Math.PI / 180;
-        var cosVal = Math.cos(r);
-        var sinVal = Math.sin(r);
-
-        var v = Math.abs(e.hsv/100);
-        if (v>1) {
-            v = v-Math.floor(v);
+        if(diffEffects.indexOf('brightness') > -1) {
+            e.brightness = e.brightness;
+            var cmBrightness = new createjs.ColorMatrix();
+            cmBrightness.adjustColor(adjust(e.brightness, -100, 100), 0, 0, 0);
+            var brightnessFilter = new createjs.ColorMatrixFilter(cmBrightness);
+            f.push(brightnessFilter);
         }
 
-        if (v > 0 && v <= 0.33) {
+        if(diffEffects.indexOf('hue') > -1) {
+            e.hue = e.hue.mod(360);
+            var cmHue = new createjs.ColorMatrix();
+            cmHue.adjustColor(0, 0, 0, e.hue);
+            var hueFilter = new createjs.ColorMatrixFilter(cmHue);
+            f.push(hueFilter);
+        }
+
+        if(diffEffects.indexOf('hsv') > -1) {
             var matrixValue = [
                 1, 0, 0, 0, 0,
-                0, cosVal, sinVal, 0, 0,
-                0, -1*sinVal, cosVal, 0, 0,
-                0, 0, 0, 1, 0,
-                0, 0, 0, 0, 1
-            ];
-        } else if (v <= 0.66) {
-            var matrixValue = [
-                cosVal, 0, sinVal, 0, 0,
                 0, 1, 0, 0, 0,
-                sinVal, 0, cosVal, 0, 0,
-                0, 0, 0, 1, 0,
-                0, 0, 0, 0, 1
-            ];
-        } else if (v <= 0.99) {
-            var matrixValue = [
-                cosVal, sinVal, 0, 0, 0,
-                -1*sinVal, cosVal, 0, 0, 0,
                 0, 0, 1, 0, 0,
                 0, 0, 0, 1, 0,
                 0, 0, 0, 0, 1
             ];
+
+            var degrees = e.hsv*3.6;
+            var r = (degrees*3) * Math.PI / 180;
+            var cosVal = Math.cos(r);
+            var sinVal = Math.sin(r);
+
+            var v = Math.abs(e.hsv/100);
+            if (v>1) {
+                v = v-Math.floor(v);
+            }
+
+            if (v > 0 && v <= 0.33) {
+                var matrixValue = [
+                    1, 0, 0, 0, 0,
+                    0, cosVal, sinVal, 0, 0,
+                    0, -1*sinVal, cosVal, 0, 0,
+                    0, 0, 0, 1, 0,
+                    0, 0, 0, 0, 1
+                ];
+            } else if (v <= 0.66) {
+                var matrixValue = [
+                    cosVal, 0, sinVal, 0, 0,
+                    0, 1, 0, 0, 0,
+                    sinVal, 0, cosVal, 0, 0,
+                    0, 0, 0, 1, 0,
+                    0, 0, 0, 0, 1
+                ];
+            } else if (v <= 0.99) {
+                var matrixValue = [
+                    cosVal, sinVal, 0, 0, 0,
+                    -1*sinVal, cosVal, 0, 0, 0,
+                    0, 0, 1, 0, 0,
+                    0, 0, 0, 1, 0,
+                    0, 0, 0, 0, 1
+                ];
+            }
+
+            var calcMatrix = new createjs.ColorMatrix().concat(matrixValue);
+            var colorFilter = new createjs.ColorMatrixFilter(calcMatrix);
+            f.push(colorFilter);
         }
 
-        var calcMatrix = new createjs.ColorMatrix().concat(matrixValue);
-        var colorFilter = new createjs.ColorMatrixFilter(calcMatrix);
-        f.push(colorFilter);
-
-        obj.alpha = e.alpha = adjust(e.alpha, 0, 1);
+        if(diffEffects.indexOf('alpha') > -1) {
+            obj.alpha = e.alpha = adjust(e.alpha, 0, 1);
+        }
 
         obj.filters = f;
 
@@ -930,13 +954,14 @@ Entry.EntityObject.prototype.applyFilter = function() {
 
     object.cache(0,0,this.getWidth(),this.getHeight());
 
-
     function isEqualEffects(effectsA, effectsB) {
+        var diffEffects = [];
         for (var key in effectsA) {
-            if (effectsA[key] !== effectsB[key])
-                return false;
+            if (effectsA[key] !== effectsB[key]) {
+                diffEffects.push(key);
+            }
         }
-        return true;
+        return diffEffects;
     }
     Entry.requestUpdate = true;
 };
@@ -1104,6 +1129,9 @@ Entry.EntityObject.prototype.alignTextBox = function () {
     if (this.lineBreak) {
         var textObjectHeight = textObject.getMeasuredLineHeight();
         textObject.y = textObjectHeight / 2 - this.getHeight() / 2;
+        if (this.fontType == "Nanum Gothic Coding") {
+            textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
+        }
         switch (this.textAlign) {
             case Entry.TEXT_ALIGN_CENTER:
                 textObject.x = 0;

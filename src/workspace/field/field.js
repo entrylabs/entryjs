@@ -14,26 +14,26 @@ Entry.Field = function() {};
     p.TEXT_LIMIT_LENGTH = 20;
 
     p.destroy = function() {
-        $(this.svgGroup).unbind('mouseup touchend');
+        this.svgGroup && $(this.svgGroup).unbind('mouseup touchend');
         this.destroyOption();
     };
 
-    p.command = function() {
-        if (this._startValue) {
-            if (this._startValue !== this.getValue() && !this._blockView.isInBlockMenu) {
-                Entry.do(
-                    'setFieldValue',
-                    this._block, this,
-                    this.pointer(),
-                    this._startValue,
-                    this.getValue()
-                );
-            }
-        };
+    p.command = function(forceCommand) {
+        if (!this._blockView.isInBlockMenu && this._startValue !== undefined &&
+            (forceCommand || this._startValue !== this.getValue())) {
+            Entry.do(
+                'setFieldValue',
+                this.pointer(),
+                this._nextValue || this.getValue()
+            );
+            delete this._nextValue;
+        }
         delete this._startValue;
     };
 
-    p.destroyOption = function() {
+    p.destroyOption = function(skipCommand, forceCommand) {
+        this.isEditing() && Entry.Utils.blur();
+
         if (this.documentDownEvent) {
             Entry.documentMousedown.detach(this.documentDownEvent);
             delete this.documentDownEvent;
@@ -49,14 +49,16 @@ Entry.Field = function() {};
             delete this.optionGroup;
         }
 
-        this.command();
+        this._isEditing = false;
+
+        skipCommand !== true && this.command(forceCommand);
     };
 
     p._attachDisposeEvent = function(func) {
         var that = this;
 
-        func = func || function() {
-            that.destroyOption();
+        func = func || function(skipCommand) {
+            that.destroyOption(skipCommand);
         };
 
         that.disposeEvent =
@@ -111,7 +113,8 @@ Entry.Field = function() {};
 
         return {
             x: absPos.x + this.box.x + contentPos.x + offset.left,
-            y: absPos.y + this.box.y + contentPos.y + offset.top
+            y: absPos.y + this.box.y + contentPos.y
+                + offset.top - $(window).scrollTop()
         };
     };
 
@@ -128,7 +131,7 @@ Entry.Field = function() {};
     };
 
     p.truncate = function() {
-        var value = String(this.getValue());
+        var value = String(this._convert(this.getValue()));
         var limit = this.TEXT_LIMIT_LENGTH;
         var ret = value.substring(0, limit);
         if (value.length > limit)
@@ -141,17 +144,38 @@ Entry.Field = function() {};
     };
 
     p.getValue = function() {
-        return this._block.params[this._index];
+        var data = this._block.params[this._index];
+        if (this._contents && this._contents.reference && this._contents.reference.length) {
+            var reference = this._contents.reference.concat();
+            if (reference[0][0] === "%")
+                data = this._block.params[parseInt(reference.shift().substr(1)) - 1];
+            if (!data)
+                return data;
+            return data.getDataByPointer(reference);
+        }
+        else
+            return data;
     };
 
     p.setValue = function(value, reDraw) {
         if (this.value == value) return;
         this.value = value;
-        this._block.params[this._index] = value;
+        if (this._contents && this._contents.reference && this._contents.reference.length) {
+            var ref = this._contents.reference.concat();
+            var index = ref.pop();
+            var targetBlock = this._block.params[this._index];
+            if (ref.length && ref[0][0] === "%")
+                targetBlock = this._block.params[parseInt(ref.shift().substr(1)) - 1];
+            if (ref.length)
+                targetBlock = targetBlock.getDataByPointer(ref);
+            targetBlock.params[index] = value;
+        } else
+            this._block.params[this._index] = value;
         if (reDraw) this._blockView.reDraw();
     };
 
     p._isEditable = function() {
+        if (Entry.ContextMenu.visible || this._blockView.getBoard().readOnly) return false;
         var dragMode = this._block.view.dragMode;
         if (dragMode == Entry.DRAG_MODE_DRAG) return false;
         var blockView = this._block.view;
@@ -181,6 +205,7 @@ Entry.Field = function() {};
                 that.destroyOption();
                 that._startValue = that.getValue();
                 that.renderOptions();
+                that._isEditing = true;
             }
         });
     };
@@ -192,6 +217,107 @@ Entry.Field = function() {};
         return this._block.pointer(pointer);
     };
 
+    p.getFontSize = function(size) {
+        size =
+            size || this._blockView.getSkeleton().fontSize || 12;
+        return size;
+    };
 
+    p.getContentHeight = function() {
+        return Entry.isMobile() ? 22 : 16;
+    };
+
+    p._getRenderMode = function() {
+        var mode = this._blockView.renderMode;
+        return mode !== undefined ?
+            mode : Entry.BlockView.RENDER_MODE_BLOCK;
+    };
+
+    p._convert = function(key, value) {
+        value = value !== undefined ? value : this.getValue();
+        var reg = /&value/gm;
+        if (reg.test(value))
+            return value.replace(reg, '');
+        else if (this._contents.converter) {
+            return this._contents.converter(key, value);
+        } else return key;
+    };
+
+    p._updateOptions = function() {
+        var block = Entry.block[this._blockView.type];
+        if (!block) return;
+
+        var syntaxes = block.syntax;
+
+        for (var key in syntaxes) {
+            var syntax = syntaxes[key];
+            if (!syntax) continue;
+            if (syntax.length === 0) continue;
+
+            var textParams = syntax[0].textParams;
+            if (!textParams)
+                continue;
+
+            textParams[this._index].options = this._contents.options;
+        }
+    };
+
+    p._shouldReturnValue = function(value) {
+        var obj = this._block.getCode().object;
+        return value === '?' ||
+            !obj || obj.constructor !== Entry.EntryObject;
+    };
+
+    p.isEditing = function(value) {
+        return !!this._isEditing;
+    };
+
+    p.getDom = function(query) {
+        if (query.length) {
+            var key = query.shift();
+            if (key === "option")
+                return this.optionGroup;
+
+        }
+
+        return this.svgGroup;
+    };
+
+    p.optionDomCreated = function() {
+        this._blockView.getBoard().workspace.widgetUpdateEvent.notify();
+    };
+
+    p.fixNextValue = function(value) {
+        this._nextValue = value;
+    };
+
+    p.getFieldRawType = function() {
+        if (this instanceof Entry.FieldTextInput)
+            return 'textInput';
+        else if (this instanceof Entry.FieldDropdown)
+            return 'dropdown';
+        else if (this instanceof Entry.FieldDropdownDynamic)
+            return 'dropdownDynamic';
+        else if (this instanceof Entry.FieldKeyboard)
+            return 'keyboard';
+    };
+
+    p.getTextValueByValue = function(value) {
+        switch (this.getFieldRawType()) {
+            case 'keyboard':
+                return Entry.getKeyCodeMap()[value];
+            case 'dropdown':
+            case 'dropdownDynamic':
+                var options = this._contents.options;
+                for (var i=0; i<options.length; i++) {
+                    var o = options[i];
+                    if (o[1] === value)
+                        return o[0];
+                }
+                break;
+            case 'textInput':
+                return value;
+        }
+    };
 
 })(Entry.Field.prototype);
