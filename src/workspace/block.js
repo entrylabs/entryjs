@@ -550,6 +550,15 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         }
     };
 
+    p.getOutputBlockCount = function(count) {
+        count = count || 0;
+        var outputBlock = this.getOutputBlock();
+        if (outputBlock)
+            return outputBlock.getOutputBlockCount(count + 1);
+        else
+            return count;
+    };
+
     p.getBlockType = function() {
         if (!this.view)
             return null;
@@ -559,7 +568,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             return "basic";
         else if (magnet.boolean || magnet.string)
             return "field";
-        else if (magnet.output)
+        else if (magnet.output || magnet.param)
             return "output";
         else
             return null;

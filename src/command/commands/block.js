@@ -158,6 +158,8 @@ goog.require("Entry.Utils");
 
             if (typeof block !== "string" && block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
+            else if (typeof block !== "string" && block.getBlockType() === "output")
+                data.push(block.getOutputBlockCount());
             return data;
         },
         log: function(block, targetBlock, count) {
