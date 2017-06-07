@@ -6489,15 +6489,21 @@ Entry.Commander = function(c) {
   }, validate:!1, undo:"addThread"};
   c[e.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
-    b.doDestroy(!0);
+    b.destroy(!0);
   }, state:function(b) {
+    var c = !1;
     b = this.editor.board.findBlock(b);
-    return [b.toJSON(), b.pointer()];
+    var e = b.targetPointer();
+    3 === e.length && (1 === b.thread.getCount() ? c = !0 : e.push(-1));
+    return [b.toJSON(), e, c];
   }, log:function(b) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer ? b.pointer() : b]];
   }, undo:"recoverBlock"};
-  c[e.recoverBlock] = {do:function(b, c) {
+  c[e.recoverBlock] = {do:function(b, c, e) {
+    if (e) {
+      return this.editor.board.code.createThread([b], c[2]);
+    }
     b = this.editor.board.code.createThread([b]).getFirstBlock();
     this.editor.board.insert(b, c);
   }, state:function(b) {
@@ -23703,6 +23709,9 @@ Entry.Thread = function(c, b, e) {
   c.isParamBlockType = function() {
     return !1;
   };
+  c.isGlobal = function() {
+    return this._code === this.parent;
+  };
 })(Entry.Thread.prototype);
 Entry.skeleton = function() {
 };
@@ -25228,13 +25237,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c.onMouseDown = function(b) {
     function e(b) {
       b.stopPropagation();
-      var d = h.workspace.getMode(), e;
-      d === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
-      e = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-      var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(e.pageX - k.x, 2) + Math.pow(e.pageY - k.y, 2));
+      var e = h.workspace.getMode(), d;
+      e === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
+      d = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+      var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(d.pageX - k.x, 2) + Math.pow(d.pageY - k.y, 2));
       if (g.dragMode == Entry.DRAG_MODE_DRAG || k > Entry.BlockView.DRAG_RADIUS) {
-        f && (clearTimeout(f), f = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, d), q.dominate(), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), d = g.dragInstance, g._moveBy(e.pageX - d.offsetX, e.pageY - d.offsetY, !1, 
-        !0), d.set({offsetX:e.pageX, offsetY:e.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
+        f && (clearTimeout(f), f = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, e), q.dominate(), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), e = g.dragInstance, g._moveBy(d.pageX - e.offsetX, d.pageY - e.offsetY, !1, 
+        !0), e.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
       }
     }
     function d(b) {
