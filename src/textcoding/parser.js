@@ -43,6 +43,39 @@ Entry.Parser = function(mode, type, cm, syntax) {
 };
 
 (function(p) {
+    var SYNTAX_MAP = {
+        "Hamster.LINE_TRACER_MODE_OFF": '0',
+        "Hamster.LINE_TRACER_MODE_BLACK_LEFT_SENSOR": '1',
+        "Hamster.LINE_TRACER_MODE_BLACK_RIGHT_SENSOR": '2',
+        "Hamster.LINE_TRACER_MODE_BLACK_BOTH_SENSORS": '3',
+        "Hamster.LINE_TRACER_MODE_BLACK_TURN_LEFT": '4',
+        "Hamster.LINE_TRACER_MODE_BLACK_TURN_RIGHT": '5',
+        "Hamster.LINE_TRACER_MODE_BLACK_MOVE_FORWARD": '6',
+        "Hamster.LINE_TRACER_MODE_BLACK_UTURN": '7',
+        "Hamster.LINE_TRACER_MODE_WHITE_LEFT_SENSOR": '8',
+        "Hamster.LINE_TRACER_MODE_WHITE_RIGHT_SENSOR": '9',
+        "Hamster.LINE_TRACER_MODE_WHITE_BOTH_SENSORS": '10',
+        "Hamster.LINE_TRACER_MODE_WHITE_TURN_LEFT": '11',
+        "Hamster.LINE_TRACER_MODE_WHITE_TURN_RIGHT": '12',
+        "Hamster.LINE_TRACER_MODE_WHITE_MOVE_FORWARD": '13',
+        "Hamster.LINE_TRACER_MODE_WHITE_UTURN": '14',
+
+        "Hamster.LED_OFF": '0',
+        "Hamster.LED_BLUE": '1',
+        "Hamster.LED_GREEN": '2',
+        "Hamster.LED_CYAN": '3',
+        "Hamster.LED_RED": '4',
+        "Hamster.LED_MAGENTA": '5',
+        "Hamster.LED_YELLOW": '6',
+        "Hamster.LED_WHITE": '7',
+
+        "Hamster.IO_MODE_ANALOG_INPUT": '0',
+        "Hamster.IO_MODE_DIGITAL_INPUT": '1',
+        "Hamster.IO_MODE_SERVO_OUTPUT": '8',
+        "Hamster.IO_MODE_PWM_OUTPUT": '9',
+        "Hamster.IO_MODE_DIGITAL_OUTPUT": '10'
+    };
+
     p.setParser = function(mode, type, cm) {
         if (this._mode === mode && this._type === type)
             return;
@@ -296,6 +329,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.mappingSyntax = function(mode) {
+        var that = this;
         if (this._syntax_cache[mode])
             return this._syntax_cache[mode];
 
@@ -348,12 +382,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     pySyntax.map(function(s) {
                         var result, tokens;
                         if (typeof s === "string") {
-                            var bs = {};
-                            result = bs;
+                            result = {};
                             tokens = s;
-                            bs.key = key;
-                            bs.syntax = s;
-                            bs.template = s;
+                            result.key = key;
+                            result.syntax = s;
+                            result.template = s;
                         } else {
                             result = s;
                             tokens = s.syntax;
@@ -384,7 +417,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         var newTokens = [];
                         newTokens.push(tokens.shift());
                         var restToken = tokens.join('.');
-                        if(restToken != '')
+                        if(restToken !== '')
                             newTokens.push(restToken);
                         tokens = newTokens;
 
@@ -393,6 +426,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var syntaxKey = tokens[i];
                             if (i === tokens.length - 1) {
                                 syntaxPointer[syntaxKey] = result;
+                                var anotherKey = that._getAnotherSyntaxKey(syntaxKey);
+                                if (anotherKey)
+                                    syntaxPointer[anotherKey] = result;
                                 break;
                             }
                             if (!syntaxPointer[syntaxKey]) syntaxPointer[syntaxKey] = {};
@@ -594,5 +630,17 @@ Entry.Parser = function(mode, type, cm, syntax) {
     p.removeDeclaration = function() {
         this.py_variableDeclaration = null;
         this.py_listDeclaration = null;
+    };
+
+    p._getAnotherSyntaxKey = function(syntax) {
+        var replaced = false;
+        for (var key in SYNTAX_MAP) {
+            if (syntax.indexOf(key) > -1) {
+                replaced = true;
+                syntax = syntax.replace(new RegExp(key, "gm"), SYNTAX_MAP[key]);
+            }
+        }
+
+        if (replaced) return syntax;
     };
 })(Entry.Parser.prototype);
