@@ -6511,10 +6511,10 @@ Entry.Commander = function(c) {
   c[e.insertBlock] = {do:function(b, c, e) {
     b = this.editor.board.findBlock(b);
     this.editor.board.insert(b, c, e);
-  }, state:function(b, c) {
+  }, state:function(b, c, e) {
     b = this.editor.board.findBlock(b);
     c = [b, b.targetPointer()];
-    "string" !== typeof b && "basic" === b.getBlockType() ? c.push(b.thread.getCount(b)) : "string" !== typeof b && "output" === b.getBlockType() && c.push(b.getOutputBlockCount());
+    "string" !== typeof b && "basic" === b.getBlockType() ? c.push(b.thread.getCount(b)) : "string" !== typeof b && "output" === b.getBlockType() && c.push(e || b.getOutputBlockCount() + 1);
     return c;
   }, log:function(b, c, e) {
     b = this.editor.board.findBlock(b);
@@ -24181,6 +24181,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   c.getLastBlock = function() {
     return this.thread.getLastBlock();
   };
+  c.getPrevOutputBlock = function() {
+    return this.thread instanceof Entry.FieldOutput ? this.thread._block : null;
+  };
   c.getOutputBlock = function() {
     for (var b = this._schema.params, c = 0;b && c < b.length;c++) {
       if ("Output" === b[c].type) {
@@ -25234,13 +25237,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c.onMouseDown = function(b) {
     function e(b) {
       b.stopPropagation();
-      var d = h.workspace.getMode(), e;
-      d === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
-      e = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-      var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(e.pageX - k.x, 2) + Math.pow(e.pageY - k.y, 2));
+      var e = h.workspace.getMode(), d;
+      e === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
+      d = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+      var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(d.pageX - k.x, 2) + Math.pow(d.pageY - k.y, 2));
       if (g.dragMode == Entry.DRAG_MODE_DRAG || k > Entry.BlockView.DRAG_RADIUS) {
-        f && (clearTimeout(f), f = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, d), q.dominate(), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), d = g.dragInstance, g._moveBy(e.pageX - d.offsetX, e.pageY - d.offsetY, !1, 
-        !0), d.set({offsetX:e.pageX, offsetY:e.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
+        f && (clearTimeout(f), f = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, e), q.dominate(), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), e = g.dragInstance, g._moveBy(d.pageX - e.offsetX, d.pageY - e.offsetY, !1, 
+        !0), e.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
       }
     }
     function d(b) {
@@ -26581,12 +26584,18 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   c.separate = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
-    var e, g;
     b.view && b.view._toGlobalCoordinate();
-    var h = b.getPrevBlock();
-    !h && b.thread instanceof Entry.Thread && b.thread.parent instanceof Entry.Code && (e = b.thread.getBlock(b.thread.indexOf(b) + c)) && (g = e.view.getAbsoluteCoordinate());
-    b.separate(c, d);
-    h && h.getNextBlock() ? h.getNextBlock().view.bindPrev() : e && (e.view._toGlobalCoordinate(), e.moveTo(g.x, g.y));
+    if ("output" === b.getBlockType()) {
+      if (c) {
+        for (var e = b.getPrevOutputBlock(), g = b, h = 0;h < c;h++) {
+          g = g.getOutputBlock();
+        }
+        b.separate(c, d);
+        e && g && (g.separate(), g.doInsert(e.view._contents[1]));
+      }
+    } else {
+      h = b.getPrevBlock(), !h && b.thread instanceof Entry.Thread && b.thread.parent instanceof Entry.Code && (e = b.thread.getBlock(b.thread.indexOf(b) + c)) && (g = e.view.getAbsoluteCoordinate()), b.separate(c, d), h && h.getNextBlock() ? h.getNextBlock().view.bindPrev() : e && (e.view._toGlobalCoordinate(), e.moveTo(g.x, g.y));
+    }
   };
   c.insert = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
@@ -27820,6 +27829,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   };
   c.separate = function(b) {
     this.getCode().createThread([b]);
+    this._updateValueBlock(null);
     this.changeEvent.notify();
   };
   c.getCode = function() {

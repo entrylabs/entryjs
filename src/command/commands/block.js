@@ -149,7 +149,7 @@ goog.require("Entry.Utils");
             block = this.editor.board.findBlock(block);
             this.editor.board.insert(block, targetBlock, count);
         },
-        state: function(block, targetBlock) {
+        state: function(block, targetBlock, count) {
             block = this.editor.board.findBlock(block);
             var data = [
                 block,
@@ -159,7 +159,7 @@ goog.require("Entry.Utils");
             if (typeof block !== "string" && block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
             else if (typeof block !== "string" && block.getBlockType() === "output")
-                data.push(block.getOutputBlockCount());
+                data.push(count || block.getOutputBlockCount() + 1);
             return data;
         },
         log: function(block, targetBlock, count) {

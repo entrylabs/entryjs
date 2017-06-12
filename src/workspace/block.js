@@ -530,6 +530,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return this.thread.getLastBlock();
     };
 
+    p.getPrevOutputBlock = function() {
+        if (this.thread instanceof Entry.FieldOutput)
+            return this.thread._block;
+        return null;
+    };
+
     p.getOutputBlock = function() {
         var params = this._schema.params;
         for (var i = 0; params && i < params.length; i++) {
