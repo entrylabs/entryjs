@@ -44697,6 +44697,45 @@ Entry.block = {
         }
     },
     //Altino end
+    "register_score": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "%1를 %2로 정하기 %3",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "score"
+            },
+            {
+                "type": "TextInput",
+                "value": "1"
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {
+        },
+        "def": {
+            "params": [
+                'score',
+                1
+            ],
+            "type": "register_score"
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var obj = {};
+            obj[this.block.params[0]] = this.block.params[1];
+            if (typeof entrylms !== 'undefined')
+                entrylms.emit('registerScore', obj);
+            return script.callReturn();
+        }
+    },
 
 };
 

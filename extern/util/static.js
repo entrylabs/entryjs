@@ -104,7 +104,8 @@ EntryStatic.getAllBlocks = function() {
                 "show_prompt",
                 "check_goal_success",
                 "wildcard_string",
-                "wildcard_boolean"
+                "wildcard_boolean",
+                "register_score"
             ]
         },
         {
@@ -581,7 +582,7 @@ EntryStatic.getAllBlocks = function() {
                 'chocopi_motion_value',
                 'chocopi_led',
                 'chocopi_dc_motor',
-                'chocopi_servo_motor', 
+                'chocopi_servo_motor',
 
                 //jeil science smartBoard. 2016-11-03
                 //smartBoard
@@ -744,7 +745,7 @@ EntryStatic.getAllBlocks = function() {
                 "modi_change_speaker_volume",
                 "modi_print_display_by_value",
 
-                // COCONUT 
+                // COCONUT
                 "coconut_move_motor",
                 "coconut_turn_motor",
                 "coconut_stop_motor",
@@ -2762,7 +2763,7 @@ EntryStatic.blockInfo = {
         "isNotFor": ["coconut"],
         "xml": "<block type='coconut_set_output_to'><value name='VALUE'><block type='text'><field name='NAME'>100</field></block></value></block>",
         "class": "coconut_port"
-    },    
+    },
 }
 
 EntryStatic.discussCategories = [
