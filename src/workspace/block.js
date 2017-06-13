@@ -530,6 +530,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return this.thread.getLastBlock();
     };
 
+    p.getPrevOutputBlock = function() {
+        if (this.thread instanceof Entry.FieldOutput)
+            return this.thread._block;
+        return null;
+    };
+
     p.getOutputBlock = function() {
         var params = this._schema.params;
         for (var i = 0; params && i < params.length; i++) {
@@ -550,6 +556,15 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         }
     };
 
+    p.getOutputBlockCount = function(count) {
+        count = count || 0;
+        var outputBlock = this.getOutputBlock();
+        if (outputBlock)
+            return outputBlock.getOutputBlockCount(count + 1);
+        else
+            return count;
+    };
+
     p.getBlockType = function() {
         if (!this.view)
             return null;
@@ -559,7 +574,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             return "basic";
         else if (magnet.boolean || magnet.string)
             return "field";
-        else if (magnet.output)
+        else if (magnet.output || magnet.param)
             return "output";
         else
             return null;
