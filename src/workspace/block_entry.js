@@ -12021,6 +12021,7 @@ Entry.block = {
                 this.funcCode.removeExecutor(this.funcExecutor);
                 return Entry.STATIC.BREAK;
             }
+			Entry.callStackLength--;
         },
         "syntax": {"js": [], "py": [""]}
     },
@@ -32261,7 +32262,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var signal = script.getNumberValue("VALUE", script);
             Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ;
-            Entry.hw.sendQueue[1] = signal;            
+            Entry.hw.sendQueue[1] = signal;
             Entry.hw.update();
             return Entry.hw.getDigitalPortValue(signal - 2);
         }
@@ -32676,7 +32677,7 @@ Entry.block = {
             var pin = script.getNumberValue("VALUE", script);
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
-            
+
             if(!Entry.hw.sendQueue.digitalPinMode) {
                 Entry.hw.sendQueue.digitalPinMode = {};
             }
@@ -32779,7 +32780,7 @@ Entry.block = {
             var value = script.getNumberValue("VALUE");
 
             if(mode == "motor1") {
-                pin = 0;        
+                pin = 0;
             } else {
                 pin = 1;
             }
@@ -32789,7 +32790,7 @@ Entry.block = {
             } else if(value < 0) {
                 value = 0;
             }
-            
+
             if(!Entry.hw.sendQueue.digitalPinMode) {
                 Entry.hw.sendQueue.digitalPinMode = {};
             }

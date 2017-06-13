@@ -18395,8 +18395,8 @@ Entry.PyToBlockParser = function(c) {
     return c;
   };
   c.Literal = function(b, c, d, f) {
-    var e, h = b.value;
-    Entry.Utils.isNumber(h) && (h = b.raw || h);
+    var e, h = b.value, k = b.raw;
+    k && Entry.isFloat(k) && (h = 0 > Number(h) ? "-" + k : b.raw);
     h && "string" === typeof h && (h = h.replace(/\t/gm, "    "));
     c || (c = {type:"Block"}, d || (d = "number" == typeof h ? {type:"number"} : {type:"text"}));
     if ("Indicator" == c.type) {
