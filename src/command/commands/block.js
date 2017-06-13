@@ -109,11 +109,19 @@ goog.require("Entry.Utils");
     c[COMMAND_TYPES.destroyBlock] = {
         do: function(block) {
             block = this.editor.board.findBlock(block);
-            block.doDestroy(true);
+            block.destroy(true);
         },
         state: function(block) {
+            var isThread = false;
             block = this.editor.board.findBlock(block);
-            return [block.toJSON(), block.pointer()];
+            var pointer = block.targetPointer();
+            if (pointer.length === 3) { // 첫번째 블록 삭제
+                if (block.thread.getCount() === 1) // 단일 블록 쓰레드 삭제
+                    isThread = true;
+                else
+                    pointer.push(-1) // targetPointer 결과값 보정
+            }
+            return [block.toJSON(), pointer, isThread];
         },
         log: function(block) {
             block = this.editor.board.findBlock(block);
@@ -125,9 +133,13 @@ goog.require("Entry.Utils");
     };
 
     c[COMMAND_TYPES.recoverBlock] = {
-        do: function(blockModel, pointer) {
-            var block = this.editor.board.code.createThread([blockModel]).getFirstBlock();
-            this.editor.board.insert(block, pointer);
+        do: function(blockModel, pointer, isThread) {
+            if (isThread) {
+                return this.editor.board.code.createThread([blockModel], pointer[2]);
+            } else {
+                var block = this.editor.board.code.createThread([blockModel]).getFirstBlock();
+                this.editor.board.insert(block, pointer);
+            }
         },
         state: function(block) {
             if (typeof block !== "string")
