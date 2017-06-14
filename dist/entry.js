@@ -9148,7 +9148,7 @@ Entry.Func.generateWsBlock = function(c, b) {
           k = k + " " + q;
           break;
         case "function_field_boolean":
-          Entry.Mutator.mutate(q.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (f ? f : "")});
+          Entry.Mutator.mutate(q.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (f + 1)});
           e[q.type] = !1;
           l[q.type] = f + g;
           f++;
@@ -9157,7 +9157,7 @@ Entry.Func.generateWsBlock = function(c, b) {
           m.push(d.id);
           break;
         case "function_field_string":
-          Entry.Mutator.mutate(q.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (g ? g : "")}), e[q.type] = !1, l[q.type] = f + g, g++, k += " %" + (f + g), h.push({type:"Block", accept:"string"}), m.push(d.id);
+          Entry.Mutator.mutate(q.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (g + 1)}), e[q.type] = !1, l[q.type] = f + g, g++, k += " %" + (f + g), h.push({type:"Block", accept:"string"}), m.push(d.id);
       }
       d = d.getOutputBlock();
     }
