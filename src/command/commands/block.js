@@ -115,13 +115,16 @@ goog.require("Entry.Utils");
             var isThread = false;
             block = this.editor.board.findBlock(block);
             var pointer = block.targetPointer();
+            var blockJSON = block.toJSON();
             if (pointer.length === 3) { // 첫번째 블록 삭제
                 if (block.thread.getCount() === 1) // 단일 블록 쓰레드 삭제
                     isThread = true;
                 else
                     pointer.push(-1) // targetPointer 결과값 보정
             }
-            return [block.toJSON(), pointer, isThread];
+            if (block.getBlockType() === "output")
+                blockJSON.params[1] = undefined;
+            return [blockJSON, pointer, isThread];
         },
         log: function(block) {
             block = this.editor.board.findBlock(block);

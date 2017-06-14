@@ -6494,9 +6494,10 @@ Entry.Commander = function(c) {
   }, state:function(b) {
     var c = !1;
     b = this.editor.board.findBlock(b);
-    var e = b.targetPointer();
+    var e = b.targetPointer(), d = b.toJSON();
     3 === e.length && (1 === b.thread.getCount() ? c = !0 : e.push(-1));
-    return [b.toJSON(), e, c];
+    "output" === b.getBlockType() && (d.params[1] = void 0);
+    return [d, e, c];
   }, log:function(b) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer ? b.pointer() : b]];
@@ -24064,37 +24065,47 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   c.destroy = function(b, c, d) {
     if (!d || this.isDeletable()) {
-      var e = this, g = this.params;
-      if (g) {
-        for (d = 0;d < g.length;d++) {
-          var h = g[d];
+      if ("output" === this.getBlockType() && !c) {
+        d = this.getPrevOutputBlock();
+        var e = this.getOutputBlock();
+        this.separate(1);
+        e && (e.separate(), e.doInsert(d.view._contents[1]));
+      }
+      var g = this;
+      if (e = this.params) {
+        for (d = 0;d < e.length;d++) {
+          var h = e[d];
           h instanceof Entry.Block && (h.doNotSplice = !(h.thread instanceof Entry.FieldOutput), h.destroy(b));
         }
       }
-      if (g = this.statements) {
-        for (d = 0;d < g.length;d++) {
-          g[d].destroy(b);
+      if (e = this.statements) {
+        for (d = 0;d < e.length;d++) {
+          e[d].destroy(b);
         }
       }
-      var k = this.getPrevBlock(), g = this.getNextBlock();
       d = this.getCode();
       d.unregisterBlock(this);
-      h = this.getThread();
-      this._schema && this._schema.event && h.unregisterEvent(this, this._schema.event);
-      g && (c ? g.destroy(b, c) : k ? g.view && g.view.bindPrev(k, !0) : h.view && (c = h.view.getParent(), c.constructor === Entry.FieldStatement ? (g.view && g.view.bindPrev(c), c.insertTopBlock(g)) : c.constructor === Entry.FieldStatement ? g.replace(c._valueBlock) : g.view && g.view._toGlobalCoordinate()));
+      e = this.getThread();
+      this._schema && this._schema.event && e.unregisterEvent(this, this._schema.event);
+      if ("basic" === this.getBlockType()) {
+        var k = this.getPrevBlock();
+        if (h = this.getNextBlock()) {
+          c ? h.destroy(b, c) : k ? h.view && h.view.bindPrev(k, !0) : e.view && (c = e.view.getParent(), c.constructor === Entry.FieldStatement ? (h.view && h.view.bindPrev(c), c.insertTopBlock(h)) : c.constructor === Entry.FieldStatement ? h.replace(c._valueBlock) : h.view && h.view._toGlobalCoordinate());
+        }
+      }
       var l = this.doNotSplice;
-      !this.doNotSplice && h.spliceBlock ? h.spliceBlock(this) : delete this.doNotSplice;
+      !this.doNotSplice && e.spliceBlock ? e.spliceBlock(this) : delete this.doNotSplice;
       this.view && this.view.destroy(b);
       this._schemaChangeEvent && this._schemaChangeEvent.destroy();
       this._paramsBackupEvent && this._paramsBackupEvent.destroy();
       this._destroyParamsBackupEvent && this._destroyParamsBackupEvent.destroy();
       (b = this.events.dataDestroy) && d.object && b.forEach(function(b) {
-        Entry.Utils.isFunction(b) && b.apply(e, [e, l]);
+        Entry.Utils.isFunction(b) && b.apply(g, [g, l]);
       });
       b = this.events.viewDestroy;
       c = this.getCode().board;
       b && Entry.getMainWS() && Entry.isTextMode && (!c || c && c.constructor !== Entry.BlockMenu) && b.forEach(function(b) {
-        Entry.Utils.isFunction(b) && b.apply(e, [e, l]);
+        Entry.Utils.isFunction(b) && b.apply(g, [g, l]);
       });
     }
   };
