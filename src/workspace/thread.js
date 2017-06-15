@@ -300,4 +300,8 @@ Entry.Thread = function(thread, code, parent) {
         return false;
     };
 
+    p.isGlobal = function() {
+         return this._code === this.parent;
+    };
+
 })(Entry.Thread.prototype);

@@ -471,7 +471,7 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
             case 'function_field_boolean':
                 Entry.Mutator.mutate(value.type, {
                     template: Lang.Blocks.FUNCTION_logical_variable +
-                        " " + (booleanIndex ? booleanIndex : "")
+                        " " + (booleanIndex + 1)
                 });
                 hashMap[value.type] = false;
                 paramMap[value.type] = booleanIndex + stringIndex;
@@ -486,7 +486,7 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
             case 'function_field_string':
                 Entry.Mutator.mutate(value.type, {
                     template: Lang.Blocks.FUNCTION_character_variable +
-                        " " + (stringIndex ? stringIndex : "")
+                        " " + (stringIndex + 1)
                 });
                 hashMap[value.type] = false;
                 paramMap[value.type] = booleanIndex + stringIndex;

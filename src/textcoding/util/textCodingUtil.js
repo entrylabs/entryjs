@@ -1621,7 +1621,7 @@ Entry.TextCodingUtil = {};
             blockType == "distance_something" ||
             blockType == "get_sound_duration" ||
             blockType == "length_of_string" ||
-            blockType == "combine_something" || 
+            blockType == "combine_something" ||
             blockType == "char_at" ||
             blockType == "substring" ||
             blockType == "index_of_string" ||
@@ -1633,7 +1633,7 @@ Entry.TextCodingUtil = {};
 
         return false;
     };
-  
+
     tu.isVariableDeclarationBlock = function(blockType) {
          if(blockType == "set_variable")
             return true;
@@ -2239,5 +2239,12 @@ Entry.TextCodingUtil = {};
                 return true;
         }
         return false;
+    };
+
+    tu.isNameInEntryData = function(name, object) {
+        return this.isGlobalVariableExisted(name)
+        || this.isLocalVariableExisted(name, object)
+        || this.isGlobalListExisted(name)
+        || this.isLocalListExisted(name);
     };
 })(Entry.TextCodingUtil);

@@ -8167,16 +8167,10 @@ Entry.block = {
         "class": "brush_clear",
         "isNotFor": [ "textBox" ],
         "func": function (sprite, script) {
-            var brush = sprite.brush;
-            if (brush) {
-                var stroke = brush._stroke.style;
-                var style = brush._strokeStyle.width;
-                brush.clear().setStrokeStyle(style).beginStroke(stroke);
-                brush.moveTo(sprite.getX(), sprite.getY()*-1);
-            }
+            sprite.eraseBrush && sprite.eraseBrush();
 
             var stampEntities = sprite.parent.getStampEntities();
-            stampEntities.map(function (entity) {
+            stampEntities.forEach(function (entity) {
                 entity.removeClone();
             });
             stampEntities = null;
@@ -44698,6 +44692,45 @@ Entry.block = {
         }
     },
     //Altino end
+    "register_score": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "%1를 %2로 정하기 %3",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "score"
+            },
+            {
+                "type": "TextInput",
+                "value": "1"
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {
+        },
+        "def": {
+            "params": [
+                'score',
+                1
+            ],
+            "type": "register_score"
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var obj = {};
+            obj[this.block.params[0]] = this.block.params[1];
+            if (typeof entrylms !== 'undefined')
+                entrylms.emit('registerScore', obj);
+            return script.callReturn();
+        }
+    },
 
 };
 
