@@ -3119,8 +3119,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var result;
 
         var value = component.value;
-        if (Entry.Utils.isNumber(value))
-            value = component.raw || value;
+        var rawValue = component.raw;
+
+        if (rawValue && Entry.isFloat(rawValue)) {
+            if (Number(value) < 0) {
+                value = '-' + rawValue;
+            } else value = component.raw;
+        }
 
         if (value && typeof value === 'string')
             value = value.replace(/\t/gm, '    ');
@@ -3144,7 +3149,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result = param;
             return result;
         }
-
 
         if (value == true || value == false || value) {
             var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta, textParam);
