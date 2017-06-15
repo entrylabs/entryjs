@@ -26896,7 +26896,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       return null;
     }
     var b = Entry.skeleton[this._schema.skeleton];
-    if (!b.magnet) {
+    if (!b.magnets) {
       return null;
     }
     b = b.magnets(this.view);
