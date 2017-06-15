@@ -12015,6 +12015,7 @@ Entry.block = {
                 this.funcCode.removeExecutor(this.funcExecutor);
                 return Entry.STATIC.BREAK;
             }
+			Entry.callStackLength--;
         },
         "syntax": {"js": [], "py": [""]}
     },
