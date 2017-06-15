@@ -22128,7 +22128,6 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
 Entry.BlockMenu = function(c, b, f, d, e) {
   Entry.Model(this, !1);
   this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
-  this._dAlign = Entry.Utils.debounce(this.align, 100);
   this._dAlign = this.align;
   this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
   this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
@@ -22150,6 +22149,7 @@ Entry.BlockMenu = function(c, b, f, d, e) {
   }
   this.view = c;
   this.visible = !0;
+  this.hwCodeOutdated = !1;
   this._svgId = "blockMenu" + (new Date).getTime();
   this._clearCategory();
   this._categoryData = f;
@@ -22620,8 +22620,8 @@ Entry.BlockMenu = function(c, b, f, d, e) {
     return this._offset;
   };
   c._generateHwCode = function(b) {
-    if (this._categoryData) {
-      var c = this.code, d = c.getThreadsByCategory("arduino");
+    var c = this.code, d = c.getThreadsByCategory("arduino");
+    if (this._categoryData && this.shouldGenerateHwCode(d)) {
       d.forEach(function(b) {
         b.destroy();
       });
@@ -22656,6 +22656,7 @@ Entry.BlockMenu = function(c, b, f, d, e) {
           c.createThread(d);
           delete d[0].x;
         });
+        this.hwCodeOutdated = !1;
       }
     }
   };
@@ -22731,6 +22732,9 @@ Entry.BlockMenu = function(c, b, f, d, e) {
       var c = this.code.getBlockList(!1, b)[0].view;
       this.getSvgDomByType(b).getBoundingClientRect().bottom > $(window).height() - 10 && this._scroller.scrollByPx(c.y - 20);
     }
+  };
+  c.shouldGenerateHwCode = function(b) {
+    return this.hwCodeOutdated || 0 === b.length;
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(c) {
@@ -28409,6 +28413,7 @@ Entry.Playground = function() {
     if (b && (b = b.blockMenu)) {
       var c = Entry.hw;
       c && c.connected ? (b.banClass("arduinoDisconnected", !0), c.banHW(), c.hwModule ? (b.banClass("arduinoConnect", !0), b.unbanClass("arduinoConnected", !0), b.unbanClass(c.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoConnect", !0))) : (b.banClass("arduinoConnected", !0), b.banClass("arduinoConnect", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
+      b.hwCodeOutdated = !0;
       b.reDraw();
     }
   };

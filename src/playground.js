@@ -1736,6 +1736,8 @@ Entry.Playground = function() {
 
             Entry.hw.banHW();
         }
+
+        blockMenu.hwCodeOutdated = true;
         blockMenu.reDraw();
     };
 
