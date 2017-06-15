@@ -26895,7 +26895,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     if (!this.view) {
       return null;
     }
-    var b = Entry.skeleton[this._schema.skeleton].magnets(this.view);
+    var b = Entry.skeleton[this._schema.skeleton];
+    if (!b.magnet) {
+      return null;
+    }
+    b = b.magnets(this.view);
     return b.next || b.previous ? "basic" : b.boolean || b.string ? "field" : b.output || b.param ? "output" : null;
   };
   c.indexOfStatements = function(b) {

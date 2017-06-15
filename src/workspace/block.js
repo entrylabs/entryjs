@@ -580,7 +580,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     p.getBlockType = function() {
         if (!this.view)
             return null;
-        var skeleton = Entry.skeleton[this._schema.skeleton]
+        var skeleton = Entry.skeleton[this._schema.skeleton];
+        if (!skeleton.magnet)
+            return null;
+
         var magnet = skeleton.magnets(this.view);
         if (magnet.next || magnet.previous)
             return "basic";
