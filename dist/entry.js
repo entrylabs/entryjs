@@ -1025,8 +1025,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(c, b) {
-  var f = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(f, "on" == d ? 255 : 0);
+  var f = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(f, d);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1230,8 +1230,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(c, b) {
   var f = b.getField("PORT"), d = 7;
   "7" == f ? d = 7 : "8" == f ? d = 8 : "9" == f ? d = 9 : "10" == f && (d = 10);
-  f = b.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(d, "on" == f ? 255 : 0);
+  f = "on" == b.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(d, f);
   return b.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -4353,9 +4353,9 @@ Blockly.Blocks.schoolkit_set_output = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.schoolkit_set_output = function(c, b) {
-  var f = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
+  var f = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 1 : 0;
   Entry.hw.sendQueue.digitalPinMode[f] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
-  Entry.hw.sendQueue[f] = "on" == d ? 1 : 0;
+  Entry.hw.sendQueue[f] = d;
   return b.callReturn();
 };
 Blockly.Blocks.schoolkit_get_in_port_number = {init:function() {
@@ -6955,6 +6955,15 @@ Entry.EntityObject.prototype.removeBrush = function() {
   Entry.stage.selectedObjectContainer.removeChild(this.shape);
   this.shape = this.brush = null;
 };
+Entry.EntityObject.prototype.eraseBrush = function() {
+  var c = this.brush;
+  if (c) {
+    var b = c._stroke.style, f = c._strokeStyle.width;
+    c.clear().setStrokeStyle(f).beginStroke(b);
+    c.moveTo(this.getX(), -1 * this.getY());
+    Entry.requestUpdate = !0;
+  }
+};
 Entry.EntityObject.prototype.updateBG = function() {
   if (this.bgObject) {
     this.bgObject.graphics.clear();
@@ -7351,13 +7360,12 @@ Entry.EntryObject = function(c) {
         Entry.Loader.addQueue();
         c.onload = function(c) {
           Entry.container.cachePicture(f.id + b.entity.id, this);
-          Entry.requestUpdate = !0;
           Entry.Loader.removeQueue();
         };
         c.onerror = function(b) {
           Entry.Loader.removeQueue();
         };
-      })(this.pictures[f]);
+      })(this.pictures[f]), Entry.requestUpdate = !0;
     }
   }
   this._isContextMenuEnabled = !0;
@@ -9372,7 +9380,7 @@ Entry.Painter2 = function(c) {
     this.isShow = !1;
   };
   c.changePicture = function(b) {
-    this.file && this.file.id === b.id || (this.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && this.file_save(!0), this.file.modified = !1, this.lc.clear(!1), this.file.id = b.id ? b.id : Entry.generateHash(), this.file.name = b.name, this.file.mode = "edit", this.addPicture(b, !0), this.lc.undoStack = [], Entry.stateManager.removeAllPictureCommand());
+    this.file && this.file.id === b.id || (this.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && this.file_save(!0), this.file.modified = !1, this.lc.clear(!1), this.file.id = b.id || Entry.generateHash(), this.file.name = b.name, this.file.mode = "edit", this.file.objectId = b.objectId, this.addPicture(b, !0), this.lc.undoStack = [], Entry.stateManager.removeAllPictureCommand());
   };
   c.addPicture = function(b, f) {
     var c = new Image;
@@ -9417,6 +9425,7 @@ Entry.Painter2 = function(c) {
   c.newPicture = function() {
     var b = {dimension:{height:1, width:1}, fileurl:Entry.mediaFilePath + "_1x1.png", name:Lang.Workspace.new_picture};
     b.id = Entry.generateHash();
+    this.file && this.file.objectId && (b.objectId = this.file.objectId);
     Entry.playground.addPicture(b, !0);
   };
   c._keyboardPressControl = function(b) {
@@ -11088,58 +11097,58 @@ Entry.TextCodingUtil = {};
     }
     return b;
   };
-  c.dropdownDynamicIdToNameConvertor = function(b, f) {
-    var c;
-    if ("variables" == f) {
+  c.dropdownDynamicIdToNameConvertor = function(b, c) {
+    var d;
+    if ("variables" == c) {
       var e = Entry.variableContainer.variables_, g;
       for (g in e) {
         var h = e[g];
         if (h.id_ == b) {
-          c = h.object_ ? "self." + h.name_ : h.name_;
+          d = h.object_ ? "self." + h.name_ : h.name_;
           break;
         }
       }
     } else {
-      if ("lists" == f) {
+      if ("lists" == c) {
         for (g in h = Entry.variableContainer.lists_, h) {
           if (e = h[g], e.id_ == b) {
-            c = e.object_ ? "self." + e.name_ : e.name_;
+            d = e.object_ ? "self." + e.name_ : e.name_;
             break;
           }
         }
       } else {
-        if ("messages" == f) {
+        if ("messages" == c) {
           for (g in h = Entry.variableContainer.messages_, h) {
             if (e = h[g], e.id == b) {
-              c = e.name;
+              d = e.name;
               break;
             }
           }
         } else {
-          if ("pictures" == f) {
+          if ("pictures" == c) {
             for (e in g = Entry.container.getAllObjects(), g) {
               var k = g[e], k = k.pictures;
               for (h in k) {
                 var l = k[h];
                 if (l.id == b) {
-                  return c = l.name;
+                  return d = l.name;
                 }
               }
             }
           } else {
-            if ("sounds" == f) {
+            if ("sounds" == c) {
               for (e in g = Entry.container.getAllObjects(), g) {
                 for (h in k = g[e], k = k.sounds, k) {
                   if (l = k[h], l.id == b) {
-                    return c = l.name;
+                    return d = l.name;
                   }
                 }
               }
             } else {
-              if ("scenes" == f) {
+              if ("scenes" == c) {
                 for (k in e = Entry.scene.getScenes(), e) {
                   if (h = e[k], h.id == b) {
-                    c = h.name;
+                    d = h.name;
                     break;
                   }
                 }
@@ -11149,7 +11158,7 @@ Entry.TextCodingUtil = {};
         }
       }
     }
-    return c;
+    return d;
   };
   c.getDynamicIdByNumber = function(b, c) {
     var d = b;
@@ -13360,14 +13369,13 @@ Entry.PyToBlockParser = function(c) {
         }
         k && l && m && (q = k.concat(".").concat(l).concat(".").concat(m));
       }
-      "__pythonRuntime.objects.list" == q ? (m = e.name, l = [], Entry.TextCodingUtil.isGlobalListExisted(m) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalList(m, l) : this._funcLoop || Entry.TextCodingUtil.createGlobalList(m, l)) : (m = e.name, h = 0, !h && 0 != h || -1 != m.search("__filbert") || (Entry.TextCodingUtil.isGlobalVariableExisted(m) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(m, h) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(m, 0) : Entry.TextCodingUtil.createGlobalVariable(m, 
-      h)));
+      "__pythonRuntime.objects.list" == q ? (m = e.name, l = [], Entry.TextCodingUtil.isGlobalListExisted(m) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalList(m, l) : this._funcLoop || Entry.TextCodingUtil.createGlobalList(m, l)) : (m = e.name, (h = 0, 0 == h) && -1 == m.search("__filbert") && (Entry.TextCodingUtil.isGlobalVariableExisted(m) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(m, h) : (this._funcLoop && (h = 0), Entry.TextCodingUtil.createGlobalVariable(m, h))));
       l = this[e.type](e);
       k = this[g.type](g);
       if ("Identifier" == g.type || "MemberExpression" == g.type) {
         k.property && "__pythonRuntime.ops.subscriptIndex" == k.property.callee ? k.object && k.object.object ? "self" != k.object.object.name ? (m = k.object.object.name, Entry.TextCodingUtil.isGlobalListExisted(m) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, m, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)) : k.object.property && (m = k.object.property.name, Entry.TextCodingUtil.isLocalListExisted(k.object.property.name, 
-        this._currentObject) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, m, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)) : k.object && (m = k.object.name, "get_variable" == k.object.type && (Entry.TextCodingUtil.isGlobalListExisted(m) || Entry.TextCodingUtil.isGlobalVariableExisted(m) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, m, this._blockCount, 
-        Entry.TextCodingError.SUBJECT_CONV_LIST))) : k.object ? "self" != k.object.name ? (h = k.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : k.property.name && (m = k.property.name, Entry.TextCodingUtil.isLocalVariableExisted(m, this._currentObject) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, 
+        this._currentObject) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, m, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_LIST)) : k.object && (m = k.object.name, "get_variable" != k.object.type || Entry.TextCodingUtil.isGlobalListExisted(m) || Entry.TextCodingUtil.isGlobalVariableExisted(m) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_LIST, m, this._blockCount, 
+        Entry.TextCodingError.SUBJECT_CONV_LIST)) : k.object ? "self" != k.object.name ? (h = k.object.name, Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_OBJECT, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_OBJECT)) : k.property.name && (m = k.property.name, Entry.TextCodingUtil.isLocalVariableExisted(m, this._currentObject) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, 
         m, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)) : (m = k.name, Entry.TextCodingUtil.isGlobalVariableExisted(m) || (h = m, this.isFuncParam(m) || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_NO_VARIABLE, h, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_VARIABLE)));
       }
       var q;
@@ -13388,7 +13396,7 @@ Entry.PyToBlockParser = function(c) {
         m = e.name;
         "Literal" == g.type ? h = g.value : "Identifier" == g.type ? h = g.name : "UnaryExpression" == g.type ? (h = k.params[0], "string" != typeof h && "number" != typeof h && (h = 0)) : h = 0;
         Entry.Utils.isNumber(h) && (h = parseFloat(h));
-        !h && 0 != h || -1 != m.search("__filbert") || (Entry.TextCodingUtil.isGlobalVariableExisted(m) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(m, h) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(m, 0) : Entry.TextCodingUtil.createGlobalVariable(m, h));
+        !h && 0 != h || -1 != m.search("__filbert") || (Entry.TextCodingUtil.isGlobalVariableExisted(m) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(m, h) : (this._funcLoop && (h = 0), Entry.TextCodingUtil.createGlobalVariable(m, h)));
         c.id = l;
         c.init = k;
         if ("Literal" == g.type) {
@@ -13540,7 +13548,7 @@ Entry.PyToBlockParser = function(c) {
               g = "number" == m.type || "text" == m.type ? m.params[0] : 0;
               Entry.Utils.isNumber(g) && (g = parseFloat(g));
               if (g || 0 == g) {
-                Entry.TextCodingUtil.isLocalVariableExisted(t, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateLocalVariable(t, g, this._currentObject) : this._funcLoop ? Entry.TextCodingUtil.createLocalVariable(t, 0, this._currentObject) : Entry.TextCodingUtil.createLocalVariable(t, g, this._currentObject);
+                Entry.TextCodingUtil.isLocalVariableExisted(t, this._currentObject) ? this._funcLoop || Entry.TextCodingUtil.updateLocalVariable(t, g, this._currentObject) : (this._funcLoop && (g = 0), Entry.TextCodingUtil.createLocalVariable(t, g, this._currentObject));
               }
               t = this.ParamDropdownDynamic(t, l[0], x[0]);
               e.push(t);
@@ -13559,7 +13567,7 @@ Entry.PyToBlockParser = function(c) {
           } else {
             t = k.name;
             if ((g = "number" == m.type || "text" == m.type ? m.params[0] : 0) || 0 == g) {
-              Entry.TextCodingUtil.isGlobalVariableExisted(t) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(t, g) : this._funcLoop ? Entry.TextCodingUtil.createGlobalVariable(t, 0) : Entry.TextCodingUtil.createGlobalVariable(t, g);
+              Entry.TextCodingUtil.isGlobalVariableExisted(t) ? this._funcLoop || Entry.TextCodingUtil.updateGlobalVariable(t, g) : (this._funcLoop && (g = 0), Entry.TextCodingUtil.createGlobalVariable(t, g));
             }
             t = this.ParamDropdownDynamic(t, l[0], x[0]);
             e.push(t);
@@ -17935,17 +17943,23 @@ Entry.Model = function(c, b) {
   }, validate:!1, undo:"addThread"};
   c[f.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
-    b.doDestroy(!0);
+    b.destroy(!0);
   }, state:function(b) {
+    var c = !1;
     b = this.editor.board.findBlock(b);
-    return [b.toJSON(), b.pointer()];
+    var f = b.targetPointer();
+    3 === f.length && (1 === b.thread.getCount() ? c = !0 : f.push(-1));
+    return [b.toJSON(), f, c];
   }, log:function(b) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer ? b.pointer() : b]];
   }, undo:"recoverBlock"};
-  c[f.recoverBlock] = {do:function(b, c) {
-    var f = this.editor.board.code.createThread([b]).getFirstBlock();
-    this.editor.board.insert(f, c);
+  c[f.recoverBlock] = {do:function(b, c, f) {
+    if (f) {
+      return this.editor.board.code.createThread([b], c[2]);
+    }
+    b = this.editor.board.code.createThread([b]).getFirstBlock();
+    this.editor.board.insert(b, c);
   }, state:function(b) {
     "string" !== typeof b && (b = b.id);
     return [b];
@@ -26518,6 +26532,9 @@ Entry.Thread = function(c, b, f) {
   c.isParamBlockType = function() {
     return !1;
   };
+  c.isGlobal = function() {
+    return this._code === this.parent;
+  };
 })(Entry.Thread.prototype);
 Entry.Block = function(c, b) {
   var f = this;
@@ -28003,7 +28020,7 @@ Entry.Playground = function() {
     b.id || (b.id = Entry.generateHash());
     b.name = Entry.getOrderedName(b.name, this.object.pictures);
     this.generatePictureElement(b);
-    Entry.do("objectAddPicture", this.object.id, b);
+    Entry.do("objectAddPicture", b.objectId || this.object.id, b);
     this.injectPicture();
     this.selectPicture(b);
   };
@@ -28033,12 +28050,12 @@ Entry.Playground = function() {
   };
   c.selectPicture = function(b) {
     for (var c = this.object.pictures, d = 0, e = c.length;d < e;d++) {
-      var g = c[d];
-      g.id === b.id ? g.view.addClass("entryPictureSelected") : g.view.removeClass("entryPictureSelected");
+      var g = c[d], h = g.view;
+      g.id === b.id ? h.addClass("entryPictureSelected") : h.removeClass("entryPictureSelected");
     }
-    var h;
-    b && b.id && (h = Entry.container.selectPicture(b.id, b.objectId));
-    this.object.id === h && Entry.dispatchEvent("pictureSelected", b);
+    var k;
+    b && b.id && (k = Entry.container.selectPicture(b.id, b.objectId));
+    this.object.id === k && (b.objectId || (b.objectId = this.object.id), Entry.dispatchEvent("pictureSelected", b));
   };
   c.movePicture = function(b, c) {
     this.object.pictures.splice(c, 0, this.object.pictures.splice(b, 1)[0]);
