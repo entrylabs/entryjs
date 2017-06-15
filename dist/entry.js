@@ -6955,6 +6955,15 @@ Entry.EntityObject.prototype.removeBrush = function() {
   Entry.stage.selectedObjectContainer.removeChild(this.shape);
   this.shape = this.brush = null;
 };
+Entry.EntityObject.prototype.eraseBrush = function() {
+  var c = this.brush;
+  if (c) {
+    var b = c._stroke.style, f = c._strokeStyle.width;
+    c.clear().setStrokeStyle(f).beginStroke(b);
+    c.moveTo(this.getX(), -1 * this.getY());
+    Entry.requestUpdate = !0;
+  }
+};
 Entry.EntityObject.prototype.updateBG = function() {
   if (this.bgObject) {
     this.bgObject.graphics.clear();
@@ -19695,8 +19704,8 @@ Entry.fuzzy = {};
       null != l && (d[d.length] = {string:l.rendered, score:l.score, index:k, original:h});
       return d;
     }, []).sort(function(b, c) {
-      var d = c.score - b.score;
-      return d ? d : b.index - c.index;
+      var f = c.score - b.score;
+      return f ? f : b.index - c.index;
     });
   };
 })(Entry.Utils);
