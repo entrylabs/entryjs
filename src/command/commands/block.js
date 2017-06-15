@@ -115,13 +115,16 @@ goog.require("Entry.Utils");
             var isThread = false;
             block = this.editor.board.findBlock(block);
             var pointer = block.targetPointer();
+            var blockJSON = block.toJSON();
             if (pointer.length === 3) { // 첫번째 블록 삭제
                 if (block.thread.getCount() === 1) // 단일 블록 쓰레드 삭제
                     isThread = true;
                 else
                     pointer.push(-1) // targetPointer 결과값 보정
             }
-            return [block.toJSON(), pointer, isThread];
+            if (block.getBlockType() === "output")
+                blockJSON.params[1] = undefined;
+            return [blockJSON, pointer, isThread];
         },
         log: function(block) {
             block = this.editor.board.findBlock(block);
@@ -161,7 +164,7 @@ goog.require("Entry.Utils");
             block = this.editor.board.findBlock(block);
             this.editor.board.insert(block, targetBlock, count);
         },
-        state: function(block, targetBlock) {
+        state: function(block, targetBlock, count) {
             block = this.editor.board.findBlock(block);
             var data = [
                 block,
@@ -170,6 +173,8 @@ goog.require("Entry.Utils");
 
             if (typeof block !== "string" && block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
+            else if (typeof block !== "string" && block.getBlockType() === "output")
+                data.push(count || block.getOutputBlockCount() + 1);
             return data;
         },
         log: function(block, targetBlock, count) {

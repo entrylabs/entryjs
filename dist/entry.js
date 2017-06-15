@@ -17952,9 +17952,10 @@ Entry.Model = function(c, b) {
   }, state:function(b) {
     var c = !1;
     b = this.editor.board.findBlock(b);
-    var f = b.targetPointer();
+    var f = b.targetPointer(), d = b.toJSON();
     3 === f.length && (1 === b.thread.getCount() ? c = !0 : f.push(-1));
-    return [b.toJSON(), f, c];
+    "output" === b.getBlockType() && (d.params[1] = void 0);
+    return [d, f, c];
   }, log:function(b) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer ? b.pointer() : b]];
@@ -17975,11 +17976,11 @@ Entry.Model = function(c, b) {
   c[f.insertBlock] = {do:function(b, c, f) {
     b = this.editor.board.findBlock(b);
     this.editor.board.insert(b, c, f);
-  }, state:function(b, c) {
+  }, state:function(b, c, f) {
     b = this.editor.board.findBlock(b);
-    var f = [b, b.targetPointer()];
-    "string" !== typeof b && "basic" === b.getBlockType() && f.push(b.thread.getCount(b));
-    return f;
+    c = [b, b.targetPointer()];
+    "string" !== typeof b && "basic" === b.getBlockType() ? c.push(b.thread.getCount(b)) : "string" !== typeof b && "output" === b.getBlockType() && c.push(f || b.getOutputBlockCount() + 1);
+    return c;
   }, log:function(b, c, f) {
     b = this.editor.board.findBlock(b);
     c instanceof Array || (c = c.pointer());
@@ -25020,6 +25021,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   };
   c.separate = function(b) {
     this.getCode().createThread([b]);
+    this._updateValueBlock(null);
     this.changeEvent.notify();
   };
   c.getCode = function() {
@@ -26022,12 +26024,18 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   c.separate = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
-    var e, g;
     b.view && b.view._toGlobalCoordinate();
-    var h = b.getPrevBlock();
-    !h && b.thread instanceof Entry.Thread && b.thread.parent instanceof Entry.Code && (e = b.thread.getBlock(b.thread.indexOf(b) + c)) && (g = e.view.getAbsoluteCoordinate());
-    b.separate(c, d);
-    h && h.getNextBlock() ? h.getNextBlock().view.bindPrev() : e && (e.view._toGlobalCoordinate(), e.moveTo(g.x, g.y));
+    if ("output" === b.getBlockType()) {
+      if (c) {
+        for (var e = b.getPrevOutputBlock(), g = b, h = 0;h < c;h++) {
+          g = g.getOutputBlock();
+        }
+        b.separate(c, d);
+        e && g && (g.separate(), g.doInsert(e.view._contents[1]));
+      }
+    } else {
+      h = b.getPrevBlock(), !h && b.thread instanceof Entry.Thread && b.thread.parent instanceof Entry.Code && (e = b.thread.getBlock(b.thread.indexOf(b) + c)) && (g = e.view.getAbsoluteCoordinate()), b.separate(c, d), h && h.getNextBlock() ? h.getNextBlock().view.bindPrev() : e && (e.view._toGlobalCoordinate(), e.moveTo(g.x, g.y));
+    }
   };
   c.insert = function(b, c, d) {
     "string" === typeof b && (b = this.findById(b));
@@ -26710,37 +26718,47 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   c.destroy = function(b, c, d) {
     if (!d || this.isDeletable()) {
-      var e = this, g = this.params;
-      if (g) {
-        for (d = 0;d < g.length;d++) {
-          var h = g[d];
+      if ("output" === this.getBlockType() && !c) {
+        d = this.getPrevOutputBlock();
+        var e = this.getOutputBlock();
+        this.separate(1);
+        e && (e.separate(), e.doInsert(d.view._contents[1]));
+      }
+      var g = this;
+      if (e = this.params) {
+        for (d = 0;d < e.length;d++) {
+          var h = e[d];
           h instanceof Entry.Block && (h.doNotSplice = !(h.thread instanceof Entry.FieldOutput), h.destroy(b));
         }
       }
-      if (g = this.statements) {
-        for (d = 0;d < g.length;d++) {
-          g[d].destroy(b);
+      if (e = this.statements) {
+        for (d = 0;d < e.length;d++) {
+          e[d].destroy(b);
         }
       }
-      var k = this.getPrevBlock(), g = this.getNextBlock();
       d = this.getCode();
       d.unregisterBlock(this);
-      h = this.getThread();
-      this._schema && this._schema.event && h.unregisterEvent(this, this._schema.event);
-      g && (c ? g.destroy(b, c) : k ? g.view && g.view.bindPrev(k, !0) : h.view && (c = h.view.getParent(), c.constructor === Entry.FieldStatement ? (g.view && g.view.bindPrev(c), c.insertTopBlock(g)) : c.constructor === Entry.FieldStatement ? g.replace(c._valueBlock) : g.view && g.view._toGlobalCoordinate()));
+      e = this.getThread();
+      this._schema && this._schema.event && e.unregisterEvent(this, this._schema.event);
+      if ("basic" === this.getBlockType()) {
+        var k = this.getPrevBlock();
+        if (h = this.getNextBlock()) {
+          c ? h.destroy(b, c) : k ? h.view && h.view.bindPrev(k, !0) : e.view && (c = e.view.getParent(), c.constructor === Entry.FieldStatement ? (h.view && h.view.bindPrev(c), c.insertTopBlock(h)) : c.constructor === Entry.FieldStatement ? h.replace(c._valueBlock) : h.view && h.view._toGlobalCoordinate());
+        }
+      }
       var l = this.doNotSplice;
-      !this.doNotSplice && h.spliceBlock ? h.spliceBlock(this) : delete this.doNotSplice;
+      !this.doNotSplice && e.spliceBlock ? e.spliceBlock(this) : delete this.doNotSplice;
       this.view && this.view.destroy(b);
       this._schemaChangeEvent && this._schemaChangeEvent.destroy();
       this._paramsBackupEvent && this._paramsBackupEvent.destroy();
       this._destroyParamsBackupEvent && this._destroyParamsBackupEvent.destroy();
       (b = this.events.dataDestroy) && d.object && b.forEach(function(b) {
-        Entry.Utils.isFunction(b) && b.apply(e, [e, l]);
+        Entry.Utils.isFunction(b) && b.apply(g, [g, l]);
       });
       b = this.events.viewDestroy;
       c = this.getCode().board;
       b && Entry.getMainWS() && Entry.isTextMode && (!c || c && c.constructor !== Entry.BlockMenu) && b.forEach(function(b) {
-        Entry.Utils.isFunction(b) && b.apply(e, [e, l]);
+        Entry.Utils.isFunction(b) && b.apply(g, [g, l]);
       });
     }
   };
@@ -26836,6 +26854,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   c.getLastBlock = function() {
     return this.thread.getLastBlock();
   };
+  c.getPrevOutputBlock = function() {
+    return this.thread instanceof Entry.FieldOutput ? this.thread._block : null;
+  };
   c.getOutputBlock = function() {
     for (var b = this._schema.params, c = 0;b && c < b.length;c++) {
       if ("Output" === b[c].type) {
@@ -26853,12 +26874,17 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       b = c;
     }
   };
+  c.getOutputBlockCount = function(b) {
+    b = b || 0;
+    var c = this.getOutputBlock();
+    return c ? c.getOutputBlockCount(b + 1) : b;
+  };
   c.getBlockType = function() {
     if (!this.view) {
       return null;
     }
     var b = Entry.skeleton[this._schema.skeleton].magnets(this.view);
-    return b.next || b.previous ? "basic" : b.boolean || b.string ? "field" : b.output ? "output" : null;
+    return b.next || b.previous ? "basic" : b.boolean || b.string ? "field" : b.output || b.param ? "output" : null;
   };
   c.indexOfStatements = function(b) {
     return this.statements.indexOf(b);
