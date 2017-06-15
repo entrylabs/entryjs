@@ -826,10 +826,12 @@ Entry.Engine = function() {
 
     p.startProjectTimer = function() {
         var timer = this.projectTimer;
-        if (!timer)
-            return;
+
+        if (!timer) return;
+
         timer.start = (new Date()).getTime();
         timer.isInit = true;
+        timer.isPaused = false;
         timer.pausedTime = 0;
         timer.tick = setInterval(function (e) {
             Entry.engine.updateProjectTimer();
@@ -847,6 +849,25 @@ Entry.Engine = function() {
         clearInterval(timer.tick);
     };
 
+    p.resetTimer = function() {
+        var timer = this.projectTimer;
+        if (!timer.isInit) return;
+        var isPaused = timer.isPaused;
+
+        delete timer.pauseStart;
+
+        this.updateProjectTimer(0);
+        timer.pausedTime = 0;
+
+        timer.isPaused = isPaused;
+
+        if (!isPaused) return;
+
+        clearInterval(timer.tick);
+        timer.isInit = false;
+        delete timer.start;
+    };
+
     p.updateProjectTimer = function(value) {
         var engine = Entry.engine;
         var timer = engine.projectTimer;
@@ -854,7 +875,7 @@ Entry.Engine = function() {
         var current = (new Date()).getTime();
         if (typeof value == 'undefined') {
             if (!timer.isPaused && !engine.isState('pause'))
-                timer.setValue(((current - timer.start - timer.pausedTime)/1000));
+                timer.setValue(((current - (timer.start || current) - timer.pausedTime)/1000));
         } else {
             timer.setValue(value);
             timer.pausedTime = 0;
