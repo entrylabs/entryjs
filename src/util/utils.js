@@ -1260,7 +1260,8 @@ Entry.Utils.stopProjectWithToast = function(scope, message, isHide, error) {
 
         if(block) {
             Entry.container.selectObject(block.getCode().object.id, true);
-            block.view.getBoard().activateBlock(block);
+            var view = block.view;
+            view && view.getBoard().activateBlock(block);
         }
     }
 
