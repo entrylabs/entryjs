@@ -798,13 +798,18 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             });
         } else svgGroup.remove();
 
-        this._contents.forEach(function(c) {
-            c.destroy();
-        });
 
-        this._statements.forEach(function(s) {
-            s.destroy();
-        });
+        if (this._contents) {
+            this._contents.forEach(function(c) {
+                c.destroy();
+            });
+        }
+
+        if (this._statements) {
+            this._statements.forEach(function(s) {
+                s.destroy();
+            });
+        }
 
         var block = this.block;
         var events = block.events.viewDestroy;
