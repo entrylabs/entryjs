@@ -861,7 +861,7 @@ Entry.Container.prototype.loadSequenceSnapshot = function() {
     var arr = new Array(length);
     for (var i = 0; i<length; i++) {
         var object = this.objects_[i];
-        var _index = object.index || i;
+        var _index = object.index !== undefined ? object.index : i;
         arr[_index] = object;
         delete object.index;
     }
