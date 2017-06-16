@@ -22,71 +22,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.Program = function(astArr) {
         try {
-            this.codeInit();
-            for(var index in astArr) {
-                if (astArr[index].type != 'Program') return;
-                this.threadInit();
-                //this.isLastBlock = false;
-                this._threadCount++;
-                //this._thread = [];
-                var nodes = astArr[index].body;
-
-                this._isEntryEventExisted = false;
-                for(var index in nodes) {
-                    var blockType;
-
-                    var node = nodes[index];
-
-                    var block = this[node.type](node);
-
-                    if (this.isLastBlock) {
-                        var keyword;
-                        Entry.TextCodingError.error(
-                            Entry.TextCodingError.TITLE_CONVERTING,
-                            Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
-                            keyword,
-                            this._blockCount);
-                    }
-
-                    if (block && block.type) {
-                        var blockDatum = Entry.block[block.type];
-                        var targetSyntax = this.searchSyntax(blockDatum);
-
-                        if (targetSyntax)
-                            blockType = targetSyntax.blockType;
-
-                        if (blockType == "event") {
-                            this._isEntryEventExisted = true;
-                        } else if (blockType == "last") {
-                            this.isLastBlock = true;
-                        } else if (blockType == "variable") {
-                            if (!this._isEntryEventExisted)
-                                continue;
-                        }
-
-                        if (this.util.isEntryEventFuncByType(block.type)) {
-                            this._thread.push(block);
-                            if (block.contents) {
-                                for(var b in block.contents) {
-                                    var content = block.contents[b];
-                                    this.extractContents(content, this._thread);
-                                }
-                            }
-                            continue;
-                        }
-
-                        this._thread.push(block);
-                    }
-
-                }
-
-
-                if (this._thread.length != 0)
-                    this._code.push(this._thread);
-            }
-
-
-            return this._code;
+            return this.processProgram(astArr);
         } catch(error) {
             var err = {};
             err.title = error.title;
@@ -96,8 +32,71 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
     };
 
-    p.ExpressionStatement = function(component) {
+    p.processProgram = function(astArr) {
+        this.codeInit();
+        for(var index in astArr) {
+            if (astArr[index].type != 'Program') return;
+            this.threadInit();
+            //this.isLastBlock = false;
+            this._threadCount++;
+            //this._thread = [];
+            var nodes = astArr[index].body;
 
+            this._isEntryEventExisted = false;
+            for(var index in nodes) {
+                var blockType;
+
+                var node = nodes[index];
+
+                var block = this[node.type](node);
+
+                if (this.isLastBlock) {
+                    var keyword;
+                    Entry.TextCodingError.error(
+                        Entry.TextCodingError.TITLE_CONVERTING,
+                        Entry.TextCodingError.MESSAGE_CONV_DEFAULT,
+                        keyword,
+                        this._blockCount);
+                }
+
+                if (block && block.type) {
+                    var blockDatum = Entry.block[block.type];
+                    var targetSyntax = this.searchSyntax(blockDatum);
+
+                    if (targetSyntax)
+                        blockType = targetSyntax.blockType;
+
+                    if (blockType == "event") {
+                        this._isEntryEventExisted = true;
+                    } else if (blockType == "last") {
+                        this.isLastBlock = true;
+                    } else if (blockType == "variable") {
+                        if (!this._isEntryEventExisted)
+                            continue;
+                    }
+
+                    if (this.util.isEntryEventFuncByType(block.type)) {
+                        this._thread.push(block);
+                        if (block.contents) {
+                            for(var b in block.contents) {
+                                var content = block.contents[b];
+                                this.extractContents(content, this._thread);
+                            }
+                        }
+                        continue;
+                    }
+                    this._thread.push(block);
+                }
+            }
+
+            if (this._thread.length != 0)
+                this._code.push(this._thread);
+        }
+
+        return this._code;
+    }
+
+    p.ExpressionStatement = function(component) {
         var result = {};
         var structure = {};
 
@@ -139,8 +138,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 this._blockCount,
                 Entry.TextCodingError.SUBJECT_CONV_GENERAL);
         }
-
-
         return result;
     };
 
@@ -409,6 +406,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         arguments.splice(1, 0, argumentData);
 
                     result.operator = "PLUS";
+
+                }
+                else if (callee.property.name == "minus") {
+                    var syntax = String("(%1 %2 %3)#calc_basic");
+                    var blockSyntax = this.getBlockSyntax(syntax);
+                    if (blockSyntax)
+                        type = blockSyntax.key;
+                    argumentData = {raw:"MINUS", type:"Literal", value:"MINUS"};
+
+                    if (arguments.length == 2)
+                        arguments.splice(1, 0, argumentData);
+
+                    result.operator = "MINUS";
 
                 }
                 else if (callee.property.name == "multiply") {
@@ -1215,6 +1225,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params = combineParams;
 
                     }*/
+                }
+                else if (callee.property.name == "minus") {
                 }
                 else if (callee.property.name == "len") {
                     if (syntax == String("len")) {
@@ -2106,47 +2118,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if (init.type == "Literal") {
                 var syntax = String("%1 = %2");
-                var blockSyntax = this.getBlockSyntax(syntax);
-                var type;
-                if (blockSyntax)
-                    type = blockSyntax.key;
-                structure.type = type;
             }
             else {
                 if (initData.params && initData.params[0] && initData.params[0].name &&
                     idData.name == initData.params[0].name &&
-                    initData.operator == "PLUS" || initData.operator == "MINUS") {
+                    initData.operator == "PLUS") {
                     var syntax = String("%1 += %2");
-                    var blockSyntax = this.getBlockSyntax(syntax);
-                    var type;
-                    if (blockSyntax)
-                        type = blockSyntax.key;
-
-                    structure.type = type;
                 } //for combine something type
                 else if (initData.type == "combine_something" && initData.params && initData.params[1] && initData.params[1].name &&
                     idData.name == initData.params[1].name &&
-                    initData.operator == "PLUS" || initData.operator == "MINUS") {
-
+                    initData.operator == "PLUS") {
                     var syntax = String("%1 += %2");
-                    var blockSyntax = this.getBlockSyntax(syntax);
-                    var type;
-                    if (blockSyntax)
-                        type = blockSyntax.key;
-
-                    structure.type = type;
                 }
                 else {
                     var syntax = String("%1 = %2");
-                    var blockSyntax = this.getBlockSyntax(syntax);
-                    var type;
-                    if (blockSyntax)
-                        type = blockSyntax.key;
-
-                    structure.type = type;
                 }
-
             }
+            var blockSyntax = this.getBlockSyntax(syntax);
+            var type;
+            if (blockSyntax)
+                type = blockSyntax.key;
+
+            structure.type = type;
 
             var block = Entry.block[type];
             var paramsMeta = block.params;
@@ -2280,7 +2273,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     structure.type = type;
                 }
-                else if (leftEx && rightEx && leftEx == rightEx) {
+                else if (leftEx && rightEx && leftEx == rightEx && rightData.callee == "__pythonRuntime.ops.add") {
                     var syntax = String("%1 += %2");
                     var blockSyntax = this.getBlockSyntax(syntax);
                     var type;
