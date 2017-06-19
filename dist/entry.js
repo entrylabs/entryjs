@@ -5276,6 +5276,8 @@ Entry.Container = function() {
       b.script && b.script.destroyView();
     });
   }.bind(this));
+  Entry.addEventListener("run", this.disableSort.bind(this));
+  Entry.addEventListener("stop", this.enableSort.bind(this));
 };
 Entry.Container.prototype.generateView = function(c, b) {
   var f = this;
@@ -5323,15 +5325,14 @@ Entry.Container.prototype.generateView = function(c, b) {
   this.enableSort();
 };
 Entry.Container.prototype.enableSort = function() {
-  $ && $(this.listView_).sortable({start:function(c, b) {
+  $(this.listView_).sortable({start:function(c, b) {
     b.item.data("start_pos", b.item.index());
   }, stop:function(c, b) {
-    var f = b.item.data("start_pos"), d = b.item.index();
-    Entry.container.moveElement(f, d);
+    Entry.container.moveElement(b.item.data("start_pos"), b.item.index());
   }, axis:"y", cancel:"input.selectedEditingObject"});
 };
 Entry.Container.prototype.disableSort = function() {
-  $ && $(this.listView_).sortable("destroy");
+  $(this.listView_).sortable("destroy");
 };
 Entry.Container.prototype.updateListView = function() {
   if (this.listView_) {
@@ -10193,21 +10194,22 @@ Entry.PropertyPanel = function() {
   c.initializeSplitter = function(b) {
     var f = this;
     b.bind("mousedown touchstart", function(b) {
+      var g = Entry.container;
       f._cover.removeClass("entryRemove");
       f._cover._isVisible = !0;
-      Entry.container.disableSort();
-      Entry.container.splitterEnable = !0;
-      Entry.documentMousemove && (Entry.container.resizeEvent = Entry.documentMousemove.attach(this, function(b) {
-        Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:b.clientX || b.x});
+      g.splitterEnable = !0;
+      Entry.documentMousemove && (g.resizeEvent = Entry.documentMousemove.attach(this, function(b) {
+        g.splitterEnable && Entry.resizeElement({canvasWidth:b.clientX || b.x});
       }));
+      $(document).bind("mouseup.container:splitter touchend.container:splitter", c);
     });
-    $(document).bind("mouseup touchend", function(b) {
-      if (b = Entry.container.resizeEvent) {
-        Entry.container.splitterEnable = !1, Entry.documentMousemove.detach(b), delete Entry.container.resizeEvent;
-      }
+    var c = function(b) {
+      b = Entry.container;
+      var c = b.resizeEvent;
+      c && (b.splitterEnable = !1, Entry.documentMousemove.detach(c), delete b.resizeEvent);
       f._cover._isVisible && (f._cover._isVisible = !1, f._cover.addClass("entryRemove"));
-      Entry.container.enableSort();
-    });
+      $(document).unbind(".container:splitter");
+    };
   };
 })(Entry.PropertyPanel.prototype);
 Entry.Reporter = function(c) {
@@ -11207,11 +11209,11 @@ Entry.TextCodingUtil = {};
     }
     return c;
   };
-  c.isLocalType = function(b, f) {
-    if ("variables" == f) {
-      var c = Entry.variableContainer.variables_, e;
-      for (e in c) {
-        var g = c[e];
+  c.isLocalType = function(b, c) {
+    if ("variables" == c) {
+      var d = Entry.variableContainer.variables_, e;
+      for (e in d) {
+        var g = d[e];
         if (g.id_ == b) {
           if (g.object_) {
             return !0;
@@ -11220,9 +11222,9 @@ Entry.TextCodingUtil = {};
         }
       }
     } else {
-      if ("lists" == f) {
-        for (e in c = Entry.variableContainer.lists_, c) {
-          if (g = c[e], g.id_ == b) {
+      if ("lists" == c) {
+        for (e in d = Entry.variableContainer.lists_, d) {
+          if (g = d[e], g.id_ == b) {
             if (g.object_) {
               return !0;
             }
