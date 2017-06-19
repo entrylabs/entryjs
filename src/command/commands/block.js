@@ -613,7 +613,6 @@ goog.require("Entry.Utils");
     };
 
     c[COMMAND_TYPES.setFieldValue] = {
-        do: function(pointer, value) {
         do: function(pointer, value, code) {
             var field;
             if (code) field = code.getByPointer(pointer);
