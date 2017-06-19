@@ -11207,11 +11207,11 @@ Entry.TextCodingUtil = {};
     }
     return c;
   };
-  c.isLocalType = function(b, f) {
-    if ("variables" == f) {
-      var c = Entry.variableContainer.variables_, e;
-      for (e in c) {
-        var g = c[e];
+  c.isLocalType = function(b, c) {
+    if ("variables" == c) {
+      var d = Entry.variableContainer.variables_, e;
+      for (e in d) {
+        var g = d[e];
         if (g.id_ == b) {
           if (g.object_) {
             return !0;
@@ -11220,9 +11220,9 @@ Entry.TextCodingUtil = {};
         }
       }
     } else {
-      if ("lists" == f) {
-        for (e in c = Entry.variableContainer.lists_, c) {
-          if (g = c[e], g.id_ == b) {
+      if ("lists" == c) {
+        for (e in d = Entry.variableContainer.lists_, d) {
+          if (g = d[e], g.id_ == b) {
             if (g.object_) {
               return !0;
             }
@@ -18134,14 +18134,14 @@ Entry.Model = function(c, b) {
   }, log:function(b, c) {
     return [["dx", b], ["dy", c]];
   }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
-  c[f.setFieldValue] = {do:function(b, c) {
-    var f = this.editor.board.findBlock(b);
-    f.setValue(c, !0);
+  c[f.setFieldValue] = {do:function(b, c, f) {
+    b = f ? f.getByPointer(b) : this.editor.board.findBlock(b);
+    b.setValue(c, !0);
     Entry.disposeEvent.notify(!0);
-    f._blockView.disableMouseEvent = !1;
-  }, state:function(b, c) {
-    var f = this.editor.board.findBlock(b);
-    return [b, f._startValue || f.getValue()];
+    b._blockView.disableMouseEvent = !1;
+  }, state:function(b, c, f) {
+    c = f ? f.getByPointer(b) : this.editor.board.findBlock(b);
+    return [b, c._startValue || c.getValue()];
   }, log:function(b, c) {
     return [["pointer", b], ["value", c]];
   }, restrict:function(b, c, f, d) {
@@ -24071,7 +24071,7 @@ Entry.Field = function() {
     this.destroyOption();
   };
   c.command = function(b) {
-    this._blockView.isInBlockMenu || void 0 === this._startValue || !b && this._startValue === this.getValue() || (Entry.do("setFieldValue", this.pointer(), this._nextValue || this.getValue()), delete this._nextValue);
+    this._blockView.isInBlockMenu || void 0 === this._startValue || !b && this._startValue === this.getValue() || (Entry.do("setFieldValue", this.pointer(), this._nextValue || this.getValue(), this._code), delete this._nextValue, delete this._code);
     delete this._startValue;
   };
   c.destroyOption = function(b, c) {
@@ -24161,7 +24161,7 @@ Entry.Field = function() {
   c._bindRenderOptions = function() {
     var b = this;
     $(this.svgGroup).bind("mouseup touchend", function(c) {
-      b._isEditable() && (b.destroyOption(), b._startValue = b.getValue(), b.renderOptions(), b._isEditing = !0);
+      b._isEditable() && (b._code = b.getCode(), b.destroyOption(), b._startValue = b.getValue(), b.renderOptions(), b._isEditing = !0);
     });
   };
   c.pointer = function(b) {
@@ -24242,6 +24242,14 @@ Entry.Field = function() {
       case "textInput":
         return b;
     }
+  };
+  c.getBoard = function() {
+    var b = this._blockView;
+    return b && b.getBoard();
+  };
+  c.getCode = function() {
+    var b = this.getBoard();
+    return b && b.code;
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(c, b, f) {
