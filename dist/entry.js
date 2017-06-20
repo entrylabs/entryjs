@@ -7088,6 +7088,8 @@ Entry.Container = function() {
       b.script && b.script.destroyView();
     });
   }.bind(this));
+  Entry.addEventListener("run", this.disableSort.bind(this));
+  Entry.addEventListener("stop", this.enableSort.bind(this));
 };
 Entry.Container.prototype.generateView = function(c, b) {
   var e = this;
@@ -7136,16 +7138,14 @@ Entry.Container.prototype.generateView = function(c, b) {
   this.enableSort();
 };
 Entry.Container.prototype.enableSort = function() {
-  $ && $(this.listView_).sortable({start:function(c, b) {
+  $(this.listView_).sortable({start:function(c, b) {
     b.item.data("start_pos", b.item.index());
   }, stop:function(c, b) {
-    c = b.item.data("start_pos");
-    b = b.item.index();
-    Entry.container.moveElement(c, b);
+    Entry.container.moveElement(b.item.data("start_pos"), b.item.index());
   }, axis:"y", cancel:"input.selectedEditingObject"});
 };
 Entry.Container.prototype.disableSort = function() {
-  $ && $(this.listView_).sortable("destroy");
+  $(this.listView_).sortable("destroy");
 };
 Entry.Container.prototype.updateListView = function() {
   if (this.listView_) {
@@ -9989,21 +9989,22 @@ Entry.PropertyPanel = function() {
   c.initializeSplitter = function(b) {
     var c = this;
     b.bind("mousedown touchstart", function(b) {
+      var e = Entry.container;
       c._cover.removeClass("entryRemove");
       c._cover._isVisible = !0;
-      Entry.container.disableSort();
-      Entry.container.splitterEnable = !0;
-      Entry.documentMousemove && (Entry.container.resizeEvent = Entry.documentMousemove.attach(this, function(b) {
-        Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:b.clientX || b.x});
+      e.splitterEnable = !0;
+      Entry.documentMousemove && (e.resizeEvent = Entry.documentMousemove.attach(this, function(b) {
+        e.splitterEnable && Entry.resizeElement({canvasWidth:b.clientX || b.x});
       }));
+      $(document).bind("mouseup.container:splitter touchend.container:splitter", d);
     });
-    $(document).bind("mouseup touchend", function(b) {
-      if (b = Entry.container.resizeEvent) {
-        Entry.container.splitterEnable = !1, Entry.documentMousemove.detach(b), delete Entry.container.resizeEvent;
-      }
+    var d = function(b) {
+      b = Entry.container;
+      var e = b.resizeEvent;
+      e && (b.splitterEnable = !1, Entry.documentMousemove.detach(e), delete b.resizeEvent);
       c._cover._isVisible && (c._cover._isVisible = !1, c._cover.addClass("entryRemove"));
-      Entry.container.enableSort();
-    });
+      $(document).unbind(".container:splitter");
+    };
   };
 })(Entry.PropertyPanel.prototype);
 Entry.init = function(c, b) {

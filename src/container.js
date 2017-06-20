@@ -47,6 +47,9 @@ Entry.Container = function() {
             });
         }
     }.bind(this));
+
+    Entry.addEventListener('run', this.disableSort.bind(this));
+    Entry.addEventListener('stop', this.enableSort.bind(this));
 };
 
 /**
@@ -145,28 +148,28 @@ Entry.Container.prototype.generateView = function(containerView, option) {
  * enable sort.
  */
 Entry.Container.prototype.enableSort = function() {
-    if ($)
-        $(this.listView_).sortable({
-            start: function(event, ui) {
-                ui.item.data('start_pos', ui.item.index());
-            },
-            stop: function(event, ui){
-                var start = ui.item.data('start_pos');
-                var end = ui.item.index();
-                Entry.container.moveElement(start, end);
-            },
-            axis: 'y',
-            cancel: 'input.selectedEditingObject'
-        });
+    var view = this.listView_;
+    $(view).sortable({
+        start: function(event, ui) {
+            ui.item.data('start_pos', ui.item.index());
+        },
+        stop: function(event, ui){
+            Entry.container.moveElement(
+                ui.item.data('start_pos'),
+                ui.item.index()
+            );
+        },
+        axis: 'y',
+        cancel: 'input.selectedEditingObject'
+    });
 };
 
 /**
  * disable sort.
  */
 Entry.Container.prototype.disableSort = function() {
-    if ($) {
-        $(this.listView_).sortable('destroy');
-    }
+    var view = this.listView_;
+    $(view).sortable('destroy');
 };
 
 /**
