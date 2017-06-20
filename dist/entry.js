@@ -17578,49 +17578,52 @@ Entry.PyToBlockParser = function(c) {
   c.util = Entry.TextCodingUtil;
   c.Program = function(b) {
     try {
-      this.codeInit();
-      for (var c in b) {
-        if ("Program" != b[c].type) {
-          return;
-        }
-        this.threadInit();
-        this._threadCount++;
-        var d = b[c].body;
-        this._isEntryEventExisted = !1;
-        for (c in d) {
-          var f, g = d[c], h = this[g.type](g);
-          this.isLastBlock && Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, void 0, this._blockCount);
-          if (h && h.type) {
-            var k = this.searchSyntax(Entry.block[h.type]);
-            k && (f = k.blockType);
-            if ("event" == f) {
-              this._isEntryEventExisted = !0;
+      return this.processProgram(b);
+    } catch (e) {
+      throw b = {}, b.title = e.title, b.message = e.message, b.line = e.line, b;
+    }
+  };
+  c.processProgram = function(b) {
+    this.codeInit();
+    for (var c in b) {
+      if ("Program" != b[c].type) {
+        return;
+      }
+      this.threadInit();
+      this._threadCount++;
+      var d = b[c].body;
+      this._isEntryEventExisted = !1;
+      for (c in d) {
+        var f, g = d[c], g = this[g.type](g);
+        this.isLastBlock && Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, void 0, this._blockCount);
+        if (g && g.type) {
+          var h = this.searchSyntax(Entry.block[g.type]);
+          h && (f = h.blockType);
+          if ("event" == f) {
+            this._isEntryEventExisted = !0;
+          } else {
+            if ("last" == f) {
+              this.isLastBlock = !0;
             } else {
-              if ("last" == f) {
-                this.isLastBlock = !0;
-              } else {
-                if ("variable" == f && !this._isEntryEventExisted) {
-                  continue;
-                }
+              if ("variable" == f && !this._isEntryEventExisted) {
+                continue;
               }
-            }
-            if (this.util.isEntryEventFuncByType(h.type)) {
-              if (this._thread.push(h), h.contents) {
-                for (var l in h.contents) {
-                  this.extractContents(h.contents[l], this._thread);
-                }
-              }
-            } else {
-              this._thread.push(h);
             }
           }
+          if (this.util.isEntryEventFuncByType(g.type)) {
+            if (this._thread.push(g), g.contents) {
+              for (var k in g.contents) {
+                this.extractContents(g.contents[k], this._thread);
+              }
+            }
+          } else {
+            this._thread.push(g);
+          }
         }
-        0 != this._thread.length && this._code.push(this._thread);
       }
-      return this._code;
-    } catch (m) {
-      throw b = {}, b.title = m.title, b.message = m.message, b.line = m.line, b;
+      0 != this._thread.length && this._code.push(this._thread);
     }
+    return this._code;
   };
   c.ExpressionStatement = function(b) {
     var c = {};
@@ -17728,97 +17731,107 @@ Entry.PyToBlockParser = function(c) {
             2 == arguments.length && arguments.splice(1, 0, x);
             c.operator = "PLUS";
           } else {
-            if ("multiply" == g.property.name) {
+            if ("minus" == g.property.name) {
               r = "(%1 %2 %3)#calc_basic";
               if (u = this.getBlockSyntax(r)) {
                 f = u.key;
               }
-              x = {raw:"MULTI", type:"Literal", value:"MULTI"};
+              x = {raw:"MINUS", type:"Literal", value:"MINUS"};
               2 == arguments.length && arguments.splice(1, 0, x);
-              c.operator = "MULTI";
+              c.operator = "MINUS";
             } else {
-              if ("in" == g.property.name) {
-                if (r = "%4 in %2", u = this.getBlockSyntax(r)) {
+              if ("multiply" == g.property.name) {
+                r = "(%1 %2 %3)#calc_basic";
+                if (u = this.getBlockSyntax(r)) {
                   f = u.key;
                 }
+                x = {raw:"MULTI", type:"Literal", value:"MULTI"};
+                2 == arguments.length && arguments.splice(1, 0, x);
+                c.operator = "MULTI";
               } else {
-                if ("len" == g.property.name) {
-                  r = "len";
-                  if (b.arguments && b.arguments[0]) {
-                    if (q = b.arguments[0], "Literal" == q.type) {
-                      r = "len#length_of_string";
-                    } else {
-                      if ("Identifier" == q.type) {
-                        if (this.isFuncParam(q.name) || this.util.isGlobalVariableExisted(q.name) || this.util.isLocalVariableExisted(q.name, this._currentObject)) {
-                          r = "len#length_of_string";
-                        }
-                      } else {
-                        if ("MemberExpression" == q.type) {
-                          if (this.util.isGlobalListExisted(q.object.name) || this.util.isLocalListExisted(q.object.name) || this.util.isGlobalVariableExisted(q.property.name) || this.util.isLocalVariableExisted(q.property.name, this._currentObject)) {
-                            r = "len#length_of_string";
-                          }
-                        } else {
-                          r = "len#length_of_string";
-                        }
-                      }
-                    }
-                  }
-                  if (u = this.getBlockSyntax(r)) {
+                if ("in" == g.property.name) {
+                  if (r = "%4 in %2", u = this.getBlockSyntax(r)) {
                     f = u.key;
                   }
                 } else {
-                  if ("append" == g.property.name) {
-                    if (r = "%2.append", u = this.getBlockSyntax(r)) {
+                  if ("len" == g.property.name) {
+                    r = "len";
+                    if (b.arguments && b.arguments[0]) {
+                      if (q = b.arguments[0], "Literal" == q.type) {
+                        r = "len#length_of_string";
+                      } else {
+                        if ("Identifier" == q.type) {
+                          if (this.isFuncParam(q.name) || this.util.isGlobalVariableExisted(q.name) || this.util.isLocalVariableExisted(q.name, this._currentObject)) {
+                            r = "len#length_of_string";
+                          }
+                        } else {
+                          if ("MemberExpression" == q.type) {
+                            if (this.util.isGlobalListExisted(q.object.name) || this.util.isLocalListExisted(q.object.name) || this.util.isGlobalVariableExisted(q.property.name) || this.util.isLocalVariableExisted(q.property.name, this._currentObject)) {
+                              r = "len#length_of_string";
+                            }
+                          } else {
+                            r = "len#length_of_string";
+                          }
+                        }
+                      }
+                    }
+                    if (u = this.getBlockSyntax(r)) {
                       f = u.key;
                     }
                   } else {
-                    if ("insert" == g.property.name) {
-                      if (r = "%2.insert", u = this.getBlockSyntax(r)) {
+                    if ("append" == g.property.name) {
+                      if (r = "%2.append", u = this.getBlockSyntax(r)) {
                         f = u.key;
                       }
                     } else {
-                      if ("pop" == g.property.name) {
-                        if (r = "%2.pop", u = this.getBlockSyntax(r)) {
+                      if ("insert" == g.property.name) {
+                        if (r = "%2.insert", u = this.getBlockSyntax(r)) {
                           f = u.key;
                         }
                       } else {
-                        if ("subscriptIndex" == g.property.name) {
-                          if (b.arguments && b.arguments[0]) {
-                            if (q = b.arguments[0], this.util.isExpressionLiteral(q, this.blockSyntax)) {
-                              if (r = "%2[%4]#char_at", u = this.getBlockSyntax(r)) {
-                                f = u.key;
-                              }
-                            } else {
-                              "" != q.type && (r = "%2[%4]", u = this.getBlockSyntax(r)) && (f = u.key);
-                            }
+                        if ("pop" == g.property.name) {
+                          if (r = "%2.pop", u = this.getBlockSyntax(r)) {
+                            f = u.key;
                           }
                         } else {
-                          if ("_pySlice" == g.property.name) {
-                            if (r = "%2[%4:%6]", u = this.getBlockSyntax(r)) {
-                              f = u.key;
-                            }
-                          } else {
-                            if ("find" == g.property.name) {
-                              if (r = "%2.find", u = this.getBlockSyntax(r)) {
-                                f = u.key;
-                              }
-                            } else {
-                              if ("replace" == g.property.name) {
-                                if (r = "%2.replace", u = this.getBlockSyntax(r)) {
+                          if ("subscriptIndex" == g.property.name) {
+                            if (b.arguments && b.arguments[0]) {
+                              if (q = b.arguments[0], this.util.isExpressionLiteral(q, this.blockSyntax)) {
+                                if (r = "%2[%4]#char_at", u = this.getBlockSyntax(r)) {
                                   f = u.key;
                                 }
                               } else {
-                                if ("upper" == g.property.name) {
-                                  if (r = "%2.upper", u = this.getBlockSyntax(r)) {
+                                "" != q.type && (r = "%2[%4]", u = this.getBlockSyntax(r)) && (f = u.key);
+                              }
+                            }
+                          } else {
+                            if ("_pySlice" == g.property.name) {
+                              if (r = "%2[%4:%6]", u = this.getBlockSyntax(r)) {
+                                f = u.key;
+                              }
+                            } else {
+                              if ("find" == g.property.name) {
+                                if (r = "%2.find", u = this.getBlockSyntax(r)) {
+                                  f = u.key;
+                                }
+                              } else {
+                                if ("replace" == g.property.name) {
+                                  if (r = "%2.replace", u = this.getBlockSyntax(r)) {
                                     f = u.key;
                                   }
                                 } else {
-                                  if ("lower" == g.property.name) {
-                                    if (r = "%2.lower", u = this.getBlockSyntax(r)) {
+                                  if ("upper" == g.property.name) {
+                                    if (r = "%2.upper", u = this.getBlockSyntax(r)) {
                                       f = u.key;
                                     }
                                   } else {
-                                    "randint" == g.property.name && (b.arguments && b.arguments[0] && (q = b.arguments[0], "Literal" == q.type && (x = q.value, Entry.Utils.isNumber(x) && 0 !== x % 1 && (r = "random.uniform(%2, %4)", u = this.getBlockSyntax(r)))) && (f = u.key), b.arguments && b.arguments[1] && (q = b.arguments[1], "Literal" == q.type && (x = q.value, Entry.Utils.isNumber(x) && 0 !== x % 1 && (r = "random.uniform(%2, %4)", u = this.getBlockSyntax(r)))) && (f = u.key));
+                                    if ("lower" == g.property.name) {
+                                      if (r = "%2.lower", u = this.getBlockSyntax(r)) {
+                                        f = u.key;
+                                      }
+                                    } else {
+                                      "randint" == g.property.name && (b.arguments && b.arguments[0] && (q = b.arguments[0], "Literal" == q.type && (x = q.value, Entry.Utils.isNumber(x) && 0 !== x % 1 && (r = "random.uniform(%2, %4)", u = this.getBlockSyntax(r)))) && (f = u.key), b.arguments && b.arguments[1] && (q = b.arguments[1], "Literal" == q.type && (x = q.value, Entry.Utils.isNumber(x) && 0 !== x % 1 && (r = "random.uniform(%2, %4)", u = this.getBlockSyntax(r)))) && (f = u.key));
+                                    }
                                   }
                                 }
                               }
@@ -17983,16 +17996,16 @@ Entry.PyToBlockParser = function(c) {
               }
             }
           } else {
-            "len" == g.property.name ? "len" == r && (C = d[1], C = this.ParamDropdownDynamic(C.name, x[1], A[1]), d[1] = C) : "in" == g.property.name ? (C = d[1], C = this.ParamDropdownDynamic(C.name, x[1], A[1]), d[1] = C) : "pop" == g.property.name ? d[0].type ? "number" == d[0].type || "text" == d[0].type ? Entry.Utils.isNumber(d[0].params[0]) && (d[0].params[0] += 1) : "get_variable" == d[0].type ? (v = {type:"calc_basic"}, t = [], t[0] = d[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, 
-            v.params = t, d[0] = v) : "calc_basic" == d[0].type ? d[0].params && "MINUS" == d[0].params[1] && d[0].params[2] && d[0].params[2].params && "1" == d[0].params[2].params[0] ? d[0] = d[0].params[0] : (v = {type:"calc_basic"}, t = [], t[0] = d[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[0] = v) : (v = {type:"calc_basic"}, t = [], t[0] = d[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[0] = v) : this.isFuncParam(d[0].name) ? (v = {type:"calc_basic"}, 
-            t = [], t[0] = d[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[0] = v) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, v, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT) : "insert" == g.property.name ? d[2].type ? "number" == d[2].type || "text" == d[2].type ? Entry.Utils.isNumber(d[2].params && d[2].params[0]) && (d[2].params[0] += 1) : "get_variable" == d[2].type ? (v = {type:"calc_basic"}, 
-            t = [], t[0] = d[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[2] = v) : "calc_basic" == d[2].type ? d[2].params && "MINUS" == d[2].params[1] && d[2].params[2] && d[2].params[2].params && "1" == d[2].params[2].params[0] ? d[2] = d[2].params[0] : (v = {type:"calc_basic"}, t = [], t[0] = d[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[2] = v) : (v = {type:"calc_basic"}, t = [], t[0] = d[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, 
-            v.params = t, d[2] = v) : this.isFuncParam(d[2].name) ? (v = {type:"calc_basic"}, t = [], t[0] = d[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[2] = v) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, v, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT) : "subscriptIndex" == g.property.name ? d[3].type ? "number" == d[3].type || "text" == d[3].type ? Entry.Utils.isNumber(d[3].params[0]) && 
-            (d[3].params[0] += 1) : "get_variable" == d[3].type ? (v = {type:"calc_basic"}, t = [], t[0] = d[3], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[3] = v) : "calc_basic" == d[3].type && (d[3].params && "MINUS" == d[3].params[1] && d[3].params[2] && d[3].params[2].params && "1" == d[3].params[2].params[0] ? d[3] = d[3].params[0] : (v = {type:"calc_basic"}, t = [], t[0] = d[3], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[3] = v)) : this.isFuncParam(d[3].name) ? 
-            (v = {type:"calc_basic"}, t = [], t[0] = d[3], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[3] = v) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, v, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT) : "_pySlice" == g.property.name ? g.object && (t = this[g.object.type](g.object), B = [], B[1] = t, d[1].type ? "number" == d[1].type || "text" == d[1].type ? Entry.Utils.isNumber(d[1].params[0]) && 
-            (d[1].params[0] += 1) : "get_variable" == d[1].type ? (v = {type:"calc_basic"}, t = [], t[0] = d[1], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[1] = v) : "calc_basic" == d[1].type && (d[1].params && "MINUS" == d[1].params[1] && d[1].params[2] && d[1].params[2].params && "1" == d[1].params[2].params[0] ? d[1] = d[1].params[0] : (v = {type:"calc_basic"}, t = [], t[0] = d[1], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[1] = v)) : this.isFuncParam(d[1].name) ? 
-            (v = {type:"calc_basic"}, t = [], t[0] = d[1], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[1] = v) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, v, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT), B[3] = d[1], B[5] = d[3], d = B) : "find" == g.property.name ? g.object && (t = this[g.object.type](g.object), B = [], B[1] = t, B[3] = d[1], d = B) : "replace" == g.property.name ? g.object && 
-            (t = this[g.object.type](g.object), B = [], B[1] = t, B[3] = d[1], B[5] = d[3], d = B) : "upper" == g.property.name ? g.object && (t = this[g.object.type](g.object), B = [], B[1] = t, B[3] = d[1], d = B) : "lower" == g.property.name && g.object && (t = this[g.object.type](g.object), B = [], B[1] = t, B[3] = d[1], d = B);
+            "minus" != g.property.name && ("len" == g.property.name ? "len" == r && (C = d[1], C = this.ParamDropdownDynamic(C.name, x[1], A[1]), d[1] = C) : "in" == g.property.name ? (C = d[1], C = this.ParamDropdownDynamic(C.name, x[1], A[1]), d[1] = C) : "pop" == g.property.name ? d[0].type ? "number" == d[0].type || "text" == d[0].type ? Entry.Utils.isNumber(d[0].params[0]) && (d[0].params[0] += 1) : "get_variable" == d[0].type ? (v = {type:"calc_basic"}, t = [], t[0] = d[0], t[1] = "PLUS", t[2] = 
+            {type:"number", params:[1]}, v.params = t, d[0] = v) : "calc_basic" == d[0].type ? d[0].params && "MINUS" == d[0].params[1] && d[0].params[2] && d[0].params[2].params && "1" == d[0].params[2].params[0] ? d[0] = d[0].params[0] : (v = {type:"calc_basic"}, t = [], t[0] = d[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[0] = v) : (v = {type:"calc_basic"}, t = [], t[0] = d[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[0] = v) : this.isFuncParam(d[0].name) ? 
+            (v = {type:"calc_basic"}, t = [], t[0] = d[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[0] = v) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, v, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT) : "insert" == g.property.name ? d[2].type ? "number" == d[2].type || "text" == d[2].type ? Entry.Utils.isNumber(d[2].params && d[2].params[0]) && (d[2].params[0] += 1) : "get_variable" == 
+            d[2].type ? (v = {type:"calc_basic"}, t = [], t[0] = d[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[2] = v) : "calc_basic" == d[2].type ? d[2].params && "MINUS" == d[2].params[1] && d[2].params[2] && d[2].params[2].params && "1" == d[2].params[2].params[0] ? d[2] = d[2].params[0] : (v = {type:"calc_basic"}, t = [], t[0] = d[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[2] = v) : (v = {type:"calc_basic"}, t = [], t[0] = d[2], t[1] = "PLUS", 
+            t[2] = {type:"number", params:[1]}, v.params = t, d[2] = v) : this.isFuncParam(d[2].name) ? (v = {type:"calc_basic"}, t = [], t[0] = d[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[2] = v) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, v, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT) : "subscriptIndex" == g.property.name ? d[3].type ? "number" == d[3].type || "text" == d[3].type ? 
+            Entry.Utils.isNumber(d[3].params[0]) && (d[3].params[0] += 1) : "get_variable" == d[3].type ? (v = {type:"calc_basic"}, t = [], t[0] = d[3], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[3] = v) : "calc_basic" == d[3].type && (d[3].params && "MINUS" == d[3].params[1] && d[3].params[2] && d[3].params[2].params && "1" == d[3].params[2].params[0] ? d[3] = d[3].params[0] : (v = {type:"calc_basic"}, t = [], t[0] = d[3], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, 
+            v.params = t, d[3] = v)) : this.isFuncParam(d[3].name) ? (v = {type:"calc_basic"}, t = [], t[0] = d[3], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[3] = v) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, v, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT) : "_pySlice" == g.property.name ? g.object && (t = this[g.object.type](g.object), B = [], B[1] = t, d[1].type ? "number" == d[1].type || 
+            "text" == d[1].type ? Entry.Utils.isNumber(d[1].params[0]) && (d[1].params[0] += 1) : "get_variable" == d[1].type ? (v = {type:"calc_basic"}, t = [], t[0] = d[1], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[1] = v) : "calc_basic" == d[1].type && (d[1].params && "MINUS" == d[1].params[1] && d[1].params[2] && d[1].params[2].params && "1" == d[1].params[2].params[0] ? d[1] = d[1].params[0] : (v = {type:"calc_basic"}, t = [], t[0] = d[1], t[1] = "PLUS", t[2] = {type:"number", 
+            params:[1]}, v.params = t, d[1] = v)) : this.isFuncParam(d[1].name) ? (v = {type:"calc_basic"}, t = [], t[0] = d[1], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, v.params = t, d[1] = v) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, v, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT), B[3] = d[1], B[5] = d[3], d = B) : "find" == g.property.name ? g.object && (t = this[g.object.type](g.object), B = [], 
+            B[1] = t, B[3] = d[1], d = B) : "replace" == g.property.name ? g.object && (t = this[g.object.type](g.object), B = [], B[1] = t, B[3] = d[1], B[5] = d[3], d = B) : "upper" == g.property.name ? g.object && (t = this[g.object.type](g.object), B = [], B[1] = t, B[3] = d[1], d = B) : "lower" == g.property.name && g.object && (t = this[g.object.type](g.object), B = [], B[1] = t, B[3] = d[1], d = B));
           }
         }
       }
@@ -18159,10 +18172,25 @@ Entry.PyToBlockParser = function(c) {
         }
         this.util.isGlobalListExisted(q) ? this._funcLoop || this.util.updateGlobalList(q, m) : this._funcLoop || this.util.createGlobalList(q, m);
       } else {
-        q = g.name, "Literal" == h.type ? k = h.value : "Identifier" == h.type ? k = h.name : "UnaryExpression" == h.type ? (k = l.params[0], "string" != typeof k && "number" != typeof k && (k = 0)) : k = 0, Entry.Utils.isNumber(k) && (k = parseFloat(k)), !k && 0 != k || -1 != q.search("__filbert") || (this.util.isGlobalVariableExisted(q) ? this._funcLoop || this.util.updateGlobalVariable(q, k) : this._funcLoop ? this.util.createGlobalVariable(q, 0) : this.util.createGlobalVariable(q, k)), c.id = 
-        m, c.init = l, "Literal" == h.type ? d = this.getBlockSyntax("%1 = %2") : (d = l.params && l.params[0] && l.params[0].name && m.name == l.params[0].name && "PLUS" == l.operator || "MINUS" == l.operator ? "%1 += %2" : "combine_something" == l.type && l.params && l.params[1] && l.params[1].name && m.name == l.params[1].name && "PLUS" == l.operator || "MINUS" == l.operator ? "%1 += %2" : "%1 = %2", d = this.getBlockSyntax(d)), d && (f = d.key), d = f, g = Entry.block[f], f = g.params, g = g.def.params, 
-        m.name && (r = this.ParamDropdownDynamic(m.name, f[0], g[0])), f = [], "Literal" == h.type ? (m.params && m.params[0] ? f.push(m.params[0]) : f.push(r), l.params[0] = l.params[0], f.push(l)) : l.params && l.params[0] && m.name == l.params[0].name && "PLUS" == l.operator || "MINUS" == l.operator ? (m.params && m.params[0] ? f.push(m.params[0]) : f.push(r), "MINUS" == l.operator && 0 != l.params[2].params[0] && (l.params[2].params[0] = "-" + l.params[2].params[0]), f.push(l.params[2])) : "combine_something" == 
-        l.type && l.params && l.params[1] && m.name == l.params[1].name && "PLUS" == l.operator || "MINUS" == l.operator ? (m.params && m.params[0] ? f.push(m.params[0]) : f.push(r), "MINUS" == l.operator && 0 != l.params[3].params[0] && (l.params[3].params[0] = "-" + l.params[3].params[0]), f.push(l.params[3])) : (m.params && m.params[0] ? f.push(m.params[0]) : f.push(r), f.push(l)), c.type = d, c.params = f;
+        q = g.name;
+        "Literal" == h.type ? k = h.value : "Identifier" == h.type ? k = h.name : "UnaryExpression" == h.type ? (k = l.params[0], "string" != typeof k && "number" != typeof k && (k = 0)) : k = 0;
+        Entry.Utils.isNumber(k) && (k = parseFloat(k));
+        !k && 0 != k || -1 != q.search("__filbert") || (this.util.isGlobalVariableExisted(q) ? this._funcLoop || this.util.updateGlobalVariable(q, k) : this._funcLoop ? this.util.createGlobalVariable(q, 0) : this.util.createGlobalVariable(q, k));
+        c.id = m;
+        c.init = l;
+        if (d = this.getBlockSyntax("Literal" == h.type ? "%1 = %2" : l.params && l.params[0] && l.params[0].name && m.name == l.params[0].name && "PLUS" == l.operator ? "%1 += %2" : "combine_something" == l.type && l.params && l.params[1] && l.params[1].name && m.name == l.params[1].name && "PLUS" == l.operator ? "%1 += %2" : "%1 = %2")) {
+          f = d.key;
+        }
+        d = f;
+        g = Entry.block[f];
+        f = g.params;
+        g = g.def.params;
+        m.name && (r = this.ParamDropdownDynamic(m.name, f[0], g[0]));
+        f = [];
+        "Literal" == h.type ? (m.params && m.params[0] ? f.push(m.params[0]) : f.push(r), l.params[0] = l.params[0], f.push(l)) : l.params && l.params[0] && m.name == l.params[0].name && "PLUS" == l.operator || "MINUS" == l.operator ? (m.params && m.params[0] ? f.push(m.params[0]) : f.push(r), "MINUS" == l.operator && 0 != l.params[2].params[0] && (l.params[2].params[0] = "-" + l.params[2].params[0]), f.push(l.params[2])) : "combine_something" == l.type && l.params && l.params[1] && m.name == l.params[1].name && 
+        "PLUS" == l.operator || "MINUS" == l.operator ? (m.params && m.params[0] ? f.push(m.params[0]) : f.push(r), "MINUS" == l.operator && 0 != l.params[3].params[0] && (l.params[3].params[0] = "-" + l.params[3].params[0]), f.push(l.params[3])) : (m.params && m.params[0] ? f.push(m.params[0]) : f.push(r), f.push(l));
+        c.type = d;
+        c.params = f;
       }
       return c;
     }
@@ -18197,7 +18225,7 @@ Entry.PyToBlockParser = function(c) {
         if (k && k.property && "__pythonRuntime.ops.subscriptIndex" == k.property.callee) {
           var u = "%1[%2] = %3", h = this.getBlockSyntax(u), y;
         } else {
-          u = n && r && n == r ? "%1 += %2" : "%1 = %2", h = this.getBlockSyntax(u);
+          u = n && r && n == r && "__pythonRuntime.ops.add" == m.callee ? "%1 += %2" : "%1 = %2", h = this.getBlockSyntax(u);
         }
         h && (y = h.key);
         d.type = y;
@@ -25235,8 +25263,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     return !1;
   };
   c._alignStatement = function(b, c) {
-    var d = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = this._statements[c];
-    e && (c = d[c]) && e.align(c.x, c.y, b);
+    var e = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], f = this._statements[c];
+    f && (c = e[c]) && f.align(c.x, c.y, b);
   };
   c._render = function() {
     this._renderPath();
@@ -25291,13 +25319,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c.onMouseDown = function(b) {
     function e(b) {
       b.stopPropagation();
-      var d = h.workspace.getMode(), e;
-      d === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
-      e = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-      var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(e.pageX - k.x, 2) + Math.pow(e.pageY - k.y, 2));
+      var e = h.workspace.getMode(), d;
+      e === Entry.Workspace.MODE_VIMBOARD && c.vimBoardEvent(b, "dragOver");
+      d = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+      var k = g.mouseDownCoordinate, k = Math.sqrt(Math.pow(d.pageX - k.x, 2) + Math.pow(d.pageY - k.y, 2));
       if (g.dragMode == Entry.DRAG_MODE_DRAG || k > Entry.BlockView.DRAG_RADIUS) {
-        f && (clearTimeout(f), f = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, d), q.dominate(), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), d = g.dragInstance, g._moveBy(e.pageX - d.offsetX, e.pageY - d.offsetY, !1, 
-        !0), d.set({offsetX:e.pageX, offsetY:e.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
+        f && (clearTimeout(f), f = null), g.movable && (g.isInBlockMenu ? h.cloneToGlobal(b) : (b = !1, g.dragMode != Entry.DRAG_MODE_DRAG && (g._toGlobalCoordinate(void 0, !0), g.dragMode = Entry.DRAG_MODE_DRAG, g.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(g, e), q.dominate(), b = !0), this.animating && this.set({animating:!1}), 0 === g.dragInstance.height && g.dragInstance.set({height:-1 + g.height}), e = g.dragInstance, g._moveBy(d.pageX - e.offsetX, d.pageY - e.offsetY, !1, 
+        !0), e.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), g.originPos || (g.originPos = {x:g.x, y:g.y}), b && h.generateCodeMagnetMap(), g._updateCloseBlock()));
       }
     }
     function d(b) {
