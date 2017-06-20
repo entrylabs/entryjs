@@ -6664,13 +6664,13 @@ Entry.Commander = function(c) {
   }, log:function(b, c) {
     return [["dx", b], ["dy", c]];
   }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
-  c[e.setFieldValue] = {do:function(b, c) {
-    b = this.editor.board.findBlock(b);
+  c[e.setFieldValue] = {do:function(b, c, e) {
+    b = e ? e.getByPointer(b) : this.editor.board.findBlock(b);
     b.setValue(c, !0);
     Entry.disposeEvent.notify(!0);
     b._blockView.disableMouseEvent = !1;
-  }, state:function(b, c) {
-    c = this.editor.board.findBlock(b);
+  }, state:function(b, c, e) {
+    c = e ? e.getByPointer(b) : this.editor.board.findBlock(b);
     return [b, c._startValue || c.getValue()];
   }, log:function(b, c) {
     return [["pointer", b], ["value", c]];
@@ -25792,7 +25792,7 @@ Entry.Field = function() {
     this.destroyOption();
   };
   c.command = function(b) {
-    this._blockView.isInBlockMenu || void 0 === this._startValue || !b && this._startValue === this.getValue() || (Entry.do("setFieldValue", this.pointer(), this._nextValue || this.getValue()), delete this._nextValue);
+    this._blockView.isInBlockMenu || void 0 === this._startValue || !b && this._startValue === this.getValue() || (Entry.do("setFieldValue", this.pointer(), this._nextValue || this.getValue(), this._code), delete this._nextValue, delete this._code);
     delete this._startValue;
   };
   c.destroyOption = function(b, c) {
@@ -25882,7 +25882,7 @@ Entry.Field = function() {
   c._bindRenderOptions = function() {
     var b = this;
     $(this.svgGroup).bind("mouseup touchend", function(c) {
-      b._isEditable() && (b.destroyOption(), b._startValue = b.getValue(), b.renderOptions(), b._isEditing = !0);
+      b._isEditable() && (b._code = b.getCode(), b.destroyOption(), b._startValue = b.getValue(), b.renderOptions(), b._isEditing = !0);
     });
   };
   c.pointer = function(b) {
@@ -25962,6 +25962,14 @@ Entry.Field = function() {
       case "textInput":
         return b;
     }
+  };
+  c.getBoard = function() {
+    var b = this._blockView;
+    return b && b.getBoard();
+  };
+  c.getCode = function() {
+    var b = this.getBoard();
+    return b && b.code;
   };
 })(Entry.Field.prototype);
 Entry.FieldBlock = function(c, b, e, d, f) {

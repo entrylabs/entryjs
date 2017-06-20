@@ -613,14 +613,19 @@ goog.require("Entry.Utils");
     };
 
     c[COMMAND_TYPES.setFieldValue] = {
-        do: function(pointer, value) {
-            var field = this.editor.board.findBlock(pointer);
+        do: function(pointer, value, code) {
+            var field;
+            if (code) field = code.getByPointer(pointer);
+            else field = this.editor.board.findBlock(pointer);
+
             field.setValue(value, true);
             Entry.disposeEvent.notify(true);
             field._blockView.disableMouseEvent = false;
         },
-        state: function(pointer, value) {
-            var field = this.editor.board.findBlock(pointer);
+        state: function(pointer, value, code) {
+            var field;
+            if (code) field = code.getByPointer(pointer);
+            else field = this.editor.board.findBlock(pointer);
             return [pointer, field._startValue || field.getValue()];
         },
         log: function(pointer, value) {
