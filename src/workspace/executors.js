@@ -10,6 +10,7 @@ Entry.Executor = function(block, entity) {
     this.entity = entity;
     this._callStack = [];
     this.register = {};
+    this.parentExecutor = null;
 };
 
 Entry.Executor.MAXIMUM_CALLSTACK = 100;

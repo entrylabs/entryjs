@@ -11699,7 +11699,8 @@ Entry.block = {
                     for (var i = 0 ; i < executors.length; i++) {
                         var currentExecutor = executors[i];
                         if (currentExecutor !== executor &&
-                            currentExecutor.entity.id === spriteId) {
+                            currentExecutor.entity.id === spriteId &&
+                           currentExecutor !== this.executor.parentExecutor) {
                             code.removeExecutor(currentExecutor);
                             --i;
                         }
@@ -12010,6 +12011,7 @@ Entry.block = {
                 this.funcExecutor.register.params = this.getParams();
                 var paramMap = {};
                 this.funcExecutor.register.paramMap = func.paramMap;
+                this.funcExecutor.parentExecutor = this.executor;
             }
             this.funcExecutor.execute();
             if (!this.funcExecutor.isEnd()) {
