@@ -27074,6 +27074,7 @@ Entry.Executor = function(c, b) {
   this.entity = b;
   this._callStack = [];
   this.register = {};
+  this.parentExecutor = null;
 };
 Entry.Executor.MAXIMUM_CALLSTACK = 100;
 (function(c) {
