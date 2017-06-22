@@ -1465,7 +1465,7 @@ Entry.block = {
             var pd = Entry.hw.portData
             return pd.leftProximity > 40 || pd.rightProximity > 40;
         },
-	"syntax": {"js": [], "py": ["Albert.hand_found()"]}
+    "syntax": {"js": [], "py": ["Albert.hand_found()"]}
     },
     "albert_is_oid_value": {
         "color": "#00979D",
@@ -2049,7 +2049,7 @@ Entry.block = {
             sq.padHeight = script.getNumberValue('HEIGHT');
             return script.callReturn();
         },
-	"syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
+    "syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
     },
     "albert_move_to_x_y_on_board": {
         "color": "#00979D",
@@ -6957,7 +6957,7 @@ Entry.block = {
             result = Math.max(value4, result);
             return Math.round(result);
         },
-	"syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
+    "syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "cobl_read_ultrason": {
         color: "#00979D",
@@ -8167,16 +8167,10 @@ Entry.block = {
         "class": "brush_clear",
         "isNotFor": [ "textBox" ],
         "func": function (sprite, script) {
-            var brush = sprite.brush;
-            if (brush) {
-                var stroke = brush._stroke.style;
-                var style = brush._strokeStyle.width;
-                brush.clear().setStrokeStyle(style).beginStroke(stroke);
-                brush.moveTo(sprite.getX(), sprite.getY()*-1);
-            }
+            sprite.eraseBrush && sprite.eraseBrush();
 
             var stampEntities = sprite.parent.getStampEntities();
-            stampEntities.map(function (entity) {
+            stampEntities.forEach(function (entity) {
                 entity.removeClone();
             });
             stampEntities = null;
@@ -10945,33 +10939,34 @@ Entry.block = {
         "class": "calc_timer",
         "isNotFor": [],
         "func": function (sprite, script) {
-            var action = script.getField('ACTION');
             var engine = Entry.engine;
             var timer = engine.projectTimer;
+            var isPaused = timer.isPaused;
+            var isInit = timer.isInit;
+            var currentTime = new Date().getTime();
 
-            if (action == 'START') {
-                if (!timer.isInit) {
-                    engine.startProjectTimer();
-                } else if (timer.isInit && timer.isPaused) {
-                    if (timer.pauseStart)
-                        timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
-                    delete timer.pauseStart;
-                    timer.isPaused = false;
-                }
-            } else if (action == 'STOP') {
-                if (timer.isInit && !timer.isPaused) {
-                    timer.isPaused = true;
-                    timer.pauseStart = (new Date()).getTime();
-                }
-            } else if (action == 'RESET') {
-                if (timer.isInit) {
-                    timer.setValue(0);
-                    timer.start = (new Date()).getTime();
-                    timer.pausedTime = 0;
-                    if (!timer.isPaused) delete timer.pauseStart;
-                }
-
+            switch (script.getField('ACTION')) {
+                case 'START':
+                    if (!isInit) {
+                        engine.startProjectTimer();
+                    } else if (isInit && isPaused) {
+                        if (timer.pauseStart)
+                            timer.pausedTime += currentTime - timer.pauseStart;
+                        delete timer.pauseStart;
+                        timer.isPaused = false;
+                    }
+                break;
+                case 'STOP':
+                    if (isInit && !isPaused) {
+                        timer.isPaused = true;
+                        timer.pauseStart = currentTime;
+                    }
+                break;
+                case 'RESET':
+                    engine.resetTimer();
+                break;
             }
+
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
@@ -11704,7 +11699,8 @@ Entry.block = {
                     for (var i = 0 ; i < executors.length; i++) {
                         var currentExecutor = executors[i];
                         if (currentExecutor !== executor &&
-                            currentExecutor.entity.id === spriteId) {
+                            currentExecutor.entity.id === spriteId &&
+                           currentExecutor !== this.executor.parentExecutor) {
                             code.removeExecutor(currentExecutor);
                             --i;
                         }
@@ -11998,14 +11994,14 @@ Entry.block = {
         func: function(entity) {
             if (!this.initiated) {
                 this.initiated = true;
-				Entry.callStackLength++;
-				if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
-					Entry.toast.alert(
-						Lang.Workspace.RecursiveCallWarningTitle,
-						Lang.Workspace.RecursiveCallWarningContent
-					);
-					throw new Error();
-				}
+                Entry.callStackLength++;
+                if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
+                    Entry.toast.alert(
+                        Lang.Workspace.RecursiveCallWarningTitle,
+                        Lang.Workspace.RecursiveCallWarningContent
+                    );
+                    throw new Error();
+                }
 
                 var func = Entry.variableContainer.getFunction(
                     this.block.type.substr(5, 9)
@@ -12015,12 +12011,14 @@ Entry.block = {
                 this.funcExecutor.register.params = this.getParams();
                 var paramMap = {};
                 this.funcExecutor.register.paramMap = func.paramMap;
+                this.funcExecutor.parentExecutor = this.executor;
             }
             this.funcExecutor.execute();
             if (!this.funcExecutor.isEnd()) {
                 this.funcCode.removeExecutor(this.funcExecutor);
                 return Entry.STATIC.BREAK;
             }
+            Entry.callStackLength--;
         },
         "syntax": {"js": [], "py": [""]}
     },
@@ -32261,7 +32259,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var signal = script.getNumberValue("VALUE", script);
             Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ;
-            Entry.hw.sendQueue[1] = signal;            
+            Entry.hw.sendQueue[1] = signal;
             Entry.hw.update();
             return Entry.hw.getDigitalPortValue(signal - 2);
         }
@@ -32676,7 +32674,7 @@ Entry.block = {
             var pin = script.getNumberValue("VALUE", script);
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
-            
+
             if(!Entry.hw.sendQueue.digitalPinMode) {
                 Entry.hw.sendQueue.digitalPinMode = {};
             }
@@ -32779,7 +32777,7 @@ Entry.block = {
             var value = script.getNumberValue("VALUE");
 
             if(mode == "motor1") {
-                pin = 0;        
+                pin = 0;
             } else {
                 pin = 1;
             }
@@ -32789,7 +32787,7 @@ Entry.block = {
             } else if(value < 0) {
                 value = 0;
             }
-            
+
             if(!Entry.hw.sendQueue.digitalPinMode) {
                 Entry.hw.sendQueue.digitalPinMode = {};
             }
@@ -44696,6 +44694,45 @@ Entry.block = {
         }
     },
     //Altino end
+    "register_score": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "%1를 %2로 정하기 %3",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "score"
+            },
+            {
+                "type": "TextInput",
+                "value": "1"
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {
+        },
+        "def": {
+            "params": [
+                'score',
+                1
+            ],
+            "type": "register_score"
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var obj = {};
+            obj[this.block.params[0]] = this.block.params[1];
+            if (typeof entrylms !== 'undefined')
+                entrylms.emit('registerScore', obj);
+            return script.callReturn();
+        }
+    },
 
 };
 

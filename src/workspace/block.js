@@ -330,6 +330,15 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (isNotForce && !this.isDeletable())
             return;
 
+        if (this.getBlockType() === "output" && !next) {
+            var prevOutputBlock = this.getPrevOutputBlock();
+            var nextOutputBlock = this.getOutputBlock();
+            this.separate(1);
+            if (nextOutputBlock) {
+                nextOutputBlock.separate();
+                nextOutputBlock.doInsert(prevOutputBlock.view._contents[1]);
+            }
+        }
         var that = this;
         var params = this.params;
         if (params) {
@@ -351,28 +360,31 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             }
         }
 
-        var prevBlock = this.getPrevBlock();
-        var nextBlock = this.getNextBlock();
         var code = this.getCode();
 
         code.unregisterBlock(this);
         var thread = this.getThread();
         if (this._schema && this._schema.event)
             thread.unregisterEvent(this, this._schema.event);
-        if (nextBlock) {
-            if (next) nextBlock.destroy(animate, next);
-            else {
-                if (!prevBlock) {
-                    if (thread.view) {
-                        var parent = thread.view.getParent();
-                        if (parent.constructor === Entry.FieldStatement) {
-                            nextBlock.view && nextBlock.view.bindPrev(parent);
-                            parent.insertTopBlock(nextBlock);
-                        } else if (parent.constructor === Entry.FieldStatement) {
-                            nextBlock.replace(parent._valueBlock);
-                        } else nextBlock.view && nextBlock.view._toGlobalCoordinate();
-                    }
-                } else nextBlock.view && nextBlock.view.bindPrev(prevBlock, true);
+
+        if (this.getBlockType() === "basic") {
+            var prevBlock = this.getPrevBlock();
+            var nextBlock = this.getNextBlock();
+            if (nextBlock) {
+                if (next) nextBlock.destroy(animate, next);
+                else {
+                    if (!prevBlock) {
+                        if (thread.view) {
+                            var parent = thread.view.getParent();
+                            if (parent.constructor === Entry.FieldStatement) {
+                                nextBlock.view && nextBlock.view.bindPrev(parent);
+                                parent.insertTopBlock(nextBlock);
+                            } else if (parent.constructor === Entry.FieldStatement) {
+                                nextBlock.replace(parent._valueBlock);
+                            } else nextBlock.view && nextBlock.view._toGlobalCoordinate();
+                        }
+                    } else nextBlock.view && nextBlock.view.bindPrev(prevBlock, true);
+                }
             }
         }
 
@@ -530,6 +542,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return this.thread.getLastBlock();
     };
 
+    p.getPrevOutputBlock = function() {
+        if (this.thread instanceof Entry.FieldOutput)
+            return this.thread._block;
+        return null;
+    };
+
     p.getOutputBlock = function() {
         var params = this._schema.params;
         for (var i = 0; params && i < params.length; i++) {
@@ -550,16 +568,28 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         }
     };
 
+    p.getOutputBlockCount = function(count) {
+        count = count || 0;
+        var outputBlock = this.getOutputBlock();
+        if (outputBlock)
+            return outputBlock.getOutputBlockCount(count + 1);
+        else
+            return count;
+    };
+
     p.getBlockType = function() {
         if (!this.view)
             return null;
-        var skeleton = Entry.skeleton[this._schema.skeleton]
+        var skeleton = Entry.skeleton[this._schema.skeleton];
+
+        if (!skeleton.magnets) return null;
+
         var magnet = skeleton.magnets(this.view);
         if (magnet.next || magnet.previous)
             return "basic";
         else if (magnet.boolean || magnet.string)
             return "field";
-        else if (magnet.output)
+        else if (magnet.output || magnet.param)
             return "output";
         else
             return null;

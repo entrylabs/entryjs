@@ -150,34 +150,39 @@ Entry.PropertyPanel = function() {
     p.initializeSplitter = function(splitter) {
         var that = this;
         splitter.bind('mousedown touchstart', function(e) {
+            var container = Entry.container;
             that._cover.removeClass('entryRemove');
             that._cover._isVisible = true;
-            Entry.container.disableSort();
-            Entry.container.splitterEnable = true;
+            container.splitterEnable = true;
             if (Entry.documentMousemove) {
-                Entry.container.resizeEvent = Entry.documentMousemove.attach(this, function(e) {
-                    if (Entry.container.splitterEnable) {
+                container.resizeEvent = Entry.documentMousemove.attach(this, function(e) {
+                    if (container.splitterEnable) {
                         Entry.resizeElement({
                             canvasWidth: e.clientX || e.x
                         });
                     }
                 });
             }
+            $(document).bind(
+                'mouseup.container:splitter touchend.container:splitter',
+                func
+            );
         });
 
-        $(document).bind('mouseup touchend', function(e) {
-            var listener = Entry.container.resizeEvent
+        var func = function(e) {
+            var container = Entry.container;
+            var listener = container.resizeEvent;
             if (listener) {
-                Entry.container.splitterEnable = false;
+                container.splitterEnable = false;
                 Entry.documentMousemove.detach(listener);
-                delete Entry.container.resizeEvent;
+                delete container.resizeEvent;
             }
             if (that._cover._isVisible) {
                 that._cover._isVisible = false;
                 that._cover.addClass('entryRemove');
             }
-            Entry.container.enableSort();
-        });
+            $(document).unbind('.container:splitter');
+        };
     };
 
 })(Entry.PropertyPanel.prototype);

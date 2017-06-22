@@ -24,9 +24,11 @@ Entry.Field = function() {};
             Entry.do(
                 'setFieldValue',
                 this.pointer(),
-                this._nextValue || this.getValue()
+                this._nextValue || this.getValue(),
+                this._code
             );
             delete this._nextValue;
+            delete this._code;
         }
         delete this._startValue;
     };
@@ -60,7 +62,6 @@ Entry.Field = function() {};
         func = func || function(skipCommand) {
             that.destroyOption(skipCommand);
         };
-
         that.disposeEvent =
             Entry.disposeEvent.attach(that, func);
     };
@@ -202,6 +203,7 @@ Entry.Field = function() {};
 
         $(this.svgGroup).bind('mouseup touchend', function(e){
             if (that._isEditable()) {
+                that._code = that.getCode();
                 that.destroyOption();
                 that._startValue = that.getValue();
                 that.renderOptions();
@@ -318,6 +320,16 @@ Entry.Field = function() {};
             case 'textInput':
                 return value;
         }
+    };
+
+    p.getBoard = function() {
+        var view = this._blockView;
+        return view && view.getBoard();
+    };
+
+    p.getCode = function() {
+        var board = this.getBoard();
+        return board && board.code;
     };
 
 })(Entry.Field.prototype);

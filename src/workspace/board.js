@@ -848,25 +848,39 @@ Entry.Board.DRAG_RADIUS = 5;
     p.separate = function(block, count, index) {
         if (typeof block === "string")
             block = this.findById(block);
-        var nextBlock, backupPos;
         if (block.view)
             block.view._toGlobalCoordinate();
-        var prevBlock = block.getPrevBlock();
-        if (!prevBlock && block.thread instanceof Entry.Thread &&
-           block.thread.parent instanceof Entry.Code) {
-            nextBlock = block.thread.getBlock(
-                block.thread.indexOf(block) + count)
+        if (block.getBlockType() === "output") {
+            if (!count) return;
+            var prevOutputBlock = block.getPrevOutputBlock();
+            var nextOutputBlock = block;
+            for (var i = 0; i < count; i++)
+                nextOutputBlock = nextOutputBlock.getOutputBlock();
 
-            if (nextBlock)
-                backupPos = nextBlock.view.getAbsoluteCoordinate();
-        }
-        var prevThread = block.thread;
-        block.separate(count, index);
-        if (prevBlock && prevBlock.getNextBlock())
-            prevBlock.getNextBlock().view.bindPrev();
-        else if (nextBlock) {
-            nextBlock.view._toGlobalCoordinate();
-            nextBlock.moveTo(backupPos.x, backupPos.y);
+            block.separate(count, index);
+            if (prevOutputBlock && nextOutputBlock) {
+                nextOutputBlock.separate();
+                nextOutputBlock.doInsert(prevOutputBlock.view._contents[1]);
+            }
+        } else {
+            var nextBlock, backupPos;
+            var prevBlock = block.getPrevBlock();
+            if (!prevBlock && block.thread instanceof Entry.Thread &&
+               block.thread.parent instanceof Entry.Code) {
+                nextBlock = block.thread.getBlock(
+                    block.thread.indexOf(block) + count)
+
+                if (nextBlock)
+                    backupPos = nextBlock.view.getAbsoluteCoordinate();
+            }
+            var prevThread = block.thread;
+            block.separate(count, index);
+            if (prevBlock && prevBlock.getNextBlock())
+                prevBlock.getNextBlock().view.bindPrev();
+            else if (nextBlock) {
+                nextBlock.view._toGlobalCoordinate();
+                nextBlock.moveTo(backupPos.x, backupPos.y);
+            }
         }
     };
 
