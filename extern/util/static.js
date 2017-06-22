@@ -301,6 +301,18 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_ext_digital_pwm",
                 "arduino_ext_set_servo",
                 "arduino_ext_set_tone",
+                //blacksmith
+                "blacksmith_get_analog_value",
+                "blacksmith_get_analog_mapping",
+                "blacksmith_get_digital_bluetooth",
+                "blacksmith_get_digital_ultrasonic",
+                "blacksmith_get_digital_toggle",
+                "blacksmith_set_digital_toggle",
+                "blacksmith_set_digital_pwm",
+                "blacksmith_set_digital_servo",
+                "blacksmith_set_digital_buzzer",
+                "blacksmith_set_digital_lcd",
+                "blacksmith_set_digital_bluetooth",
                 //joystick
                 "joystick_get_number_sensor_value",
                 "joystick_get_digital_value",
