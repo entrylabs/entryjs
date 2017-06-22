@@ -42,6 +42,7 @@ Entry.HW = function() {
         '1.8': Entry.ardublock,
         '1.9': Entry.ArduinoExt,
         '1.A': Entry.Cobl,
+        '1.B': Entry.Blacksmith,
         '2.4': Entry.Hamster,
         '2.5': Entry.Albert,
         '3.1': Entry.Bitbrick,

@@ -1613,6 +1613,302 @@ Entry.block.bitbrick_convert_scale = function(c, b) {
   e = Math.max(c, e);
   return Math.round(e);
 };
+Entry.Blacksmith = {name:"blacksmith", setZero:function() {
+  Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(c) {
+    Entry.hw.sendQueue.SET[c].data = 0;
+    Entry.hw.sendQueue.SET[c].time = (new Date).getTime();
+  }) : Entry.hw.sendQueue = {GET:{}, SET:{}};
+  Entry.hw.update();
+}, toByte:function(c) {
+  switch(c) {
+    case " ":
+      c = 32;
+      break;
+    case "!":
+      c = 33;
+      break;
+    case '"':
+      c = 34;
+      break;
+    case "#":
+      c = 35;
+      break;
+    case "$":
+      c = 36;
+      break;
+    case "%":
+      c = 37;
+      break;
+    case "&":
+      c = 38;
+      break;
+    case "'":
+      c = 39;
+      break;
+    case "(":
+      c = 40;
+      break;
+    case ")":
+      c = 41;
+      break;
+    case "*":
+      c = 42;
+      break;
+    case "+":
+      c = 43;
+      break;
+    case ",":
+      c = 44;
+      break;
+    case "-":
+      c = 45;
+      break;
+    case ".":
+      c = 46;
+      break;
+    case "/":
+      c = 47;
+      break;
+    case "0":
+      c = 48;
+      break;
+    case "1":
+      c = 49;
+      break;
+    case "2":
+      c = 50;
+      break;
+    case "3":
+      c = 51;
+      break;
+    case "4":
+      c = 52;
+      break;
+    case "5":
+      c = 53;
+      break;
+    case "6":
+      c = 54;
+      break;
+    case "7":
+      c = 55;
+      break;
+    case "8":
+      c = 56;
+      break;
+    case "9":
+      c = 57;
+      break;
+    case ":":
+      c = 58;
+      break;
+    case ";":
+      c = 59;
+      break;
+    case "<":
+      c = 60;
+      break;
+    case "=":
+      c = 61;
+      break;
+    case ">":
+      c = 62;
+      break;
+    case "?":
+      c = 63;
+      break;
+    case "@":
+      c = 64;
+      break;
+    case "A":
+      c = 65;
+      break;
+    case "B":
+      c = 66;
+      break;
+    case "C":
+      c = 67;
+      break;
+    case "D":
+      c = 68;
+      break;
+    case "E":
+      c = 69;
+      break;
+    case "F":
+      c = 70;
+      break;
+    case "G":
+      c = 71;
+      break;
+    case "H":
+      c = 72;
+      break;
+    case "I":
+      c = 73;
+      break;
+    case "J":
+      c = 74;
+      break;
+    case "K":
+      c = 75;
+      break;
+    case "L":
+      c = 76;
+      break;
+    case "M":
+      c = 77;
+      break;
+    case "N":
+      c = 78;
+      break;
+    case "O":
+      c = 79;
+      break;
+    case "P":
+      c = 80;
+      break;
+    case "Q":
+      c = 81;
+      break;
+    case "R":
+      c = 82;
+      break;
+    case "S":
+      c = 83;
+      break;
+    case "T":
+      c = 84;
+      break;
+    case "U":
+      c = 85;
+      break;
+    case "V":
+      c = 86;
+      break;
+    case "W":
+      c = 87;
+      break;
+    case "X":
+      c = 88;
+      break;
+    case "Y":
+      c = 89;
+      break;
+    case "Z":
+      c = 90;
+      break;
+    case "[":
+      c = 91;
+      break;
+    case "\\":
+      c = 92;
+      break;
+    case "]":
+      c = 93;
+      break;
+    case "^":
+      c = 94;
+      break;
+    case "_":
+      c = 95;
+      break;
+    case "`":
+      c = 96;
+      break;
+    case "a":
+      c = 97;
+      break;
+    case "b":
+      c = 98;
+      break;
+    case "c":
+      c = 99;
+      break;
+    case "d":
+      c = 100;
+      break;
+    case "e":
+      c = 101;
+      break;
+    case "f":
+      c = 102;
+      break;
+    case "g":
+      c = 103;
+      break;
+    case "h":
+      c = 104;
+      break;
+    case "i":
+      c = 105;
+      break;
+    case "j":
+      c = 106;
+      break;
+    case "k":
+      c = 107;
+      break;
+    case "l":
+      c = 108;
+      break;
+    case "m":
+      c = 109;
+      break;
+    case "n":
+      c = 110;
+      break;
+    case "o":
+      c = 111;
+      break;
+    case "p":
+      c = 112;
+      break;
+    case "q":
+      c = 113;
+      break;
+    case "r":
+      c = 114;
+      break;
+    case "s":
+      c = 115;
+      break;
+    case "t":
+      c = 116;
+      break;
+    case "u":
+      c = 117;
+      break;
+    case "v":
+      c = 118;
+      break;
+    case "w":
+      c = 119;
+      break;
+    case "x":
+      c = 120;
+      break;
+    case "y":
+      c = 121;
+      break;
+    case "z":
+      c = 122;
+      break;
+    case "{":
+      c = 123;
+      break;
+    case "|":
+      c = 124;
+      break;
+    case "}":
+      c = 125;
+      break;
+    case "~":
+      c = 126;
+  }
+  return c;
+}, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8, BLUETOOTH:9, LCD:10}, toneTable:{0:0, C:1, CS:2, D:3, DS:4, E:5, F:6, FS:7, G:8, GS:9, A:10, AS:11, B:12}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 
+185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, highList:["high", "1", "on"], lowList:["low", "0", "off"], BlockState:{}};
 Entry.byrobot_dronefighter_controller = {name:"byrobot_dronefighter_controller", setZero:function() {
   for (var c = 0; 1 > c; c++) {
     this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(17, 255, 0), this.transferCommand(17, 129, 0);
@@ -9645,8 +9941,8 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.9":Entry.ArduinoExt, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "A.1":Entry.SmartBoard, "B.1":Entry.Codestar, "C.1":Entry.DaduBlock, "C.2":Entry.DaduBlock_Car, 
-  "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "13.1":Entry.rokoboard, "14.1":Entry.Chocopi, "15.1":Entry.coconut, "16.1":Entry.MODI, "18.1":Entry.Altino};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.9":Entry.ArduinoExt, "1.A":Entry.Cobl, "1.B":Entry.Blacksmith, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "A.1":Entry.SmartBoard, "B.1":Entry.Codestar, "C.1":Entry.DaduBlock, 
+  "C.2":Entry.DaduBlock_Car, "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "13.1":Entry.rokoboard, "14.1":Entry.Chocopi, "15.1":Entry.coconut, "16.1":Entry.MODI, "18.1":Entry.Altino};
 };
 Entry.HW.TRIAL_LIMIT = 2;
 p = Entry.HW.prototype;
