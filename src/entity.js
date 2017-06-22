@@ -49,7 +49,7 @@ Entry.EntityObject = function(object) {
         Entry.dispatchEvent('entityClick', this.entity);
         Entry.stage.isObjectClick = true;
 
-        if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
+        if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
             this.offset = {x:-this.parent.x+this.entity.getX()-(evt.stageX*0.75 -240),
                 y:-this.parent.y-this.entity.getY()-(evt.stageY*0.75 -135)};
             this.cursor = "move";
@@ -66,7 +66,7 @@ Entry.EntityObject = function(object) {
     });
 
     this.object.on("pressmove", function(evt) {
-        if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
+        if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
             if (this.entity.parent.getLock())
                 return;
             this.entity.doCommand();
@@ -1093,6 +1093,20 @@ Entry.EntityObject.prototype.removeBrush = function () {
     Entry.stage.selectedObjectContainer.removeChild(this.shape);
     this.brush = null;
     this.shape = null;
+};
+
+/*
+ * erase brush
+ */
+Entry.EntityObject.prototype.eraseBrush = function () {
+    var brush = this.brush;
+    if (brush) {
+        var stroke = brush._stroke.style;
+        var style = brush._strokeStyle.width;
+        brush.clear().setStrokeStyle(style).beginStroke(stroke);
+        brush.moveTo(this.getX(), this.getY()*-1);
+        Entry.requestUpdate = true;
+    }
 };
 
 Entry.EntityObject.prototype.updateBG = function () {

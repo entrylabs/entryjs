@@ -4,7 +4,8 @@ goog.provide("Entry.Restrictor");
 
 goog.require("Entry.Utils");
 
-Entry.Restrictor = function() {
+Entry.Restrictor = function(controller) {
+    this._controller = controller;
     this.startEvent = new Entry.Event(this);
     this.endEvent = new Entry.Event(this);
 
@@ -12,10 +13,11 @@ Entry.Restrictor = function() {
 };
 
 (function(p) {
-    p.restrict = function(data) {
+    p.restrict = function(data, toolTipRender) {
         this._data = data;
+        this.toolTipRender = toolTipRender;
 
-        if (data.skip) return this.skip();
+        this.end();
 
         var log = data.content.concat();
         var commandType = log.shift();
@@ -23,17 +25,9 @@ Entry.Restrictor = function() {
 
 
         var domQuery = command.dom;
-        if (!domQuery)
-            return;
         this.startEvent.notify();
-        if (domQuery instanceof Array) {
-            domQuery = domQuery.map(function(q) {
-                if (q[0] === "&")
-                    return log[Number(q.substr(1))][1];
-                else
-                    return q;
-            });
-        }
+        if (domQuery instanceof Array)
+            domQuery = this.processDomQuery(domQuery);
 
         if (!data.tooltip)
             data.tooltip = {
@@ -41,26 +35,27 @@ Entry.Restrictor = function() {
                 content: "지시 사항을 따르시오"
             };
 
-            console.log(commandType, "asdfasdfafads")
         if (command.restrict) {
-            console.log(commandType, "asdfasdfafads")
             this.currentTooltip = command.restrict(
-                data, domQuery, this.restrictEnd.bind(this));
+                data, domQuery, this.restrictEnd.bind(this), this);
             return;
         } else {
             this.currentTooltip = new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
-                target: domQuery,
-                direction: "down"
+                target: domQuery
             }], {
                 restrict: true,
                 dimmed: true,
                 callBack: this.restrictEnd.bind(this)
             });
+            window.setTimeout(this.align.bind(this));
         }
 
-        window.setTimeout(this.align.bind(this), 200);
+        if (data.skip) {
+            return this.end();
+        }
+
     };
 
     p.end = function() {
@@ -72,7 +67,6 @@ Entry.Restrictor = function() {
 
     p.restrictEnd = function() {
         this.endEvent.notify();
-        this.currentTooltip = null;
     };
 
     p.align = function() {
@@ -80,19 +74,45 @@ Entry.Restrictor = function() {
             this.currentTooltip.alignTooltips();
     };
 
-    p.skip = function() {
-        var data = this._data;
+    p.processDomQuery = function(domQuery, log) {
+        log = log || this._data.content;
+        log = log.concat();
+        log.shift();
+        if (domQuery instanceof Array) {
+            domQuery = domQuery.map(function(q) {
+                if (q[0] === "&")
+                    return log[Number(q.substr(1))][1];
+                else
+                    return q;
+            });
+        }
+        return domQuery;
+    };
 
-        var log = data.content.concat();
-        var commandType = log.shift();
-        var command = Entry.Command[commandType];
+    p.renderTooltip = function() {
+        if (this.currentTooltip)
+            this.currentTooltip.render();
+    }
 
-        var args = log.map(function(l) {
-            return l[1];
-        });
-        this.end();
-        this.restrictEnd();
-        args.unshift(commandType);
-        return Entry.do.apply(null, args);
+    p.fadeOutTooltip = function() {
+        if (this.currentTooltip)
+            this.currentTooltip.fadeOut();
+    };
+
+    p.fadeInTooltip = function() {
+        if (this.currentTooltip)
+            this.currentTooltip.fadeIn();
+    };
+
+    p.isTooltipFaded = function() {
+        if (this.currentTooltip)
+            return this.currentTooltip.isFaded();
+        return false;
+    };
+
+    p.requestNextData = function() {
+        if (this._controller) {
+            return this._controller.requestNextData();
+        }
     };
 })(Entry.Restrictor.prototype);

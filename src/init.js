@@ -143,7 +143,9 @@ Entry.initialize_ = function() {
      * Initialize PropertyPanel.
      * @type {!object}
      */
-    this.propertyPanel = new Entry.PropertyPanel();
+
+    if (this.type !== "minimize")
+        this.propertyPanel = new Entry.PropertyPanel();
 
     /**
      * Initialize container for objects.
@@ -168,7 +170,7 @@ Entry.initialize_ = function() {
      */
     this.variableContainer = new Entry.VariableContainer();
 
-    this.commander = new Entry.Commander(this.type);
+    this.commander = new Entry.Commander(this.type, this.doNotSkipAny);
 
     /**
      * Initialize scenes.
@@ -287,7 +289,7 @@ Entry.createDom = function(container, option) {
         this.propertyPanel.select("object");
         this.helper.bindWorkspace(this.playground.mainWorkspace);
     } else if (option == 'minimize') {
-        var canvas = Entry.createElement('canvas');
+       var canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace minimize';
         canvas.id = 'entryCanvas';
         canvas.width = 640;
@@ -369,9 +371,9 @@ Entry.stop = function() {
  */
 Entry.parseOptions = function(options) {
     /** @type {string} */
-    this.type = options.type;
+    this.type = options.type || this.type;
 
-    this.hashId = options.hashId;
+    this.hashId = options.hashId || this.hasId;
 
     if (options.device)
         this.device = options.device;
@@ -422,6 +424,10 @@ Entry.parseOptions = function(options) {
     if (this.listEnable === undefined)
         this.listEnable = true;
 
+    this.doCommandAll = options.doCommandAll;
+    if (this.doCommandAll === undefined)
+        this.doCommandAll = false;
+
     this.hasVariableManager = options.hasvariablemanager;
     if (!(this.variableEnable || this.messageEnable ||
           this.listEnable || this.functionEnable))
@@ -434,14 +440,23 @@ Entry.parseOptions = function(options) {
         this.soundEditable = a.sceneEditable = this.objectAddable = false;
     }
 
-    this.isForLecture = options.isForLecture;
-
-    this.textCodingEnable = options.textCodingEnable;
+    if (options.isForLecture)
+        this.isForLecture = options.isForLecture;
+    if (options.textCodingEnable)
+        this.textCodingEnable = options.textCodingEnable;
 };
 
 
 Entry.initFonts = function(fonts) {
     this.fonts = fonts;
     if (!fonts) this.fonts = [];
+};
 
+Entry.reloadOption = function(options) {
+    this.options = options;
+    this.parseOptions(options);
+    this.playground.applyTabOption();
+    this.variableContainer.applyOption();
+    this.engine.applyOption();
+    this.commander.applyOption();
 };

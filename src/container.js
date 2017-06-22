@@ -47,6 +47,9 @@ Entry.Container = function() {
             });
         }
     }.bind(this));
+
+    Entry.addEventListener('run', this.disableSort.bind(this));
+    Entry.addEventListener('stop', this.enableSort.bind(this));
 };
 
 /**
@@ -145,28 +148,28 @@ Entry.Container.prototype.generateView = function(containerView, option) {
  * enable sort.
  */
 Entry.Container.prototype.enableSort = function() {
-    if ($)
-        $(this.listView_).sortable({
-            start: function(event, ui) {
-                ui.item.data('start_pos', ui.item.index());
-            },
-            stop: function(event, ui){
-                var start = ui.item.data('start_pos');
-                var end = ui.item.index();
-                Entry.container.moveElement(start, end);
-            },
-            axis: 'y',
-            cancel: 'input.selectedEditingObject'
-        });
+    var view = this.listView_;
+    $(view).sortable({
+        start: function(event, ui) {
+            ui.item.data('start_pos', ui.item.index());
+        },
+        stop: function(event, ui){
+            Entry.container.moveElement(
+                ui.item.data('start_pos'),
+                ui.item.index()
+            );
+        },
+        axis: 'y',
+        cancel: 'input.selectedEditingObject'
+    });
 };
 
 /**
  * disable sort.
  */
 Entry.Container.prototype.disableSort = function() {
-    if ($) {
-        $(this.listView_).sortable('destroy');
-    }
+    var view = this.listView_;
+    $(view).sortable('destroy');
 };
 
 /**
@@ -185,13 +188,19 @@ Entry.Container.prototype.updateListView = function() {
 
     var objs = this.getCurrentObjects().slice();
 
-    objs.sort(function(a, b) {
+    var ret = objs.filter(function(o) {
+        return o.index !== undefined;
+    });
+
+    if (ret.length === objs.length)
+        objs = objs.sort(function(a, b) {
             return a.index - b.index;
-        })
-        .forEach(function(obj) {
-            !obj.view_ && obj.generateView();
-            fragment.appendChild(obj.view_);
         });
+
+    objs.forEach(function(obj) {
+        !obj.view_ && obj.generateView();
+        fragment.appendChild(obj.view_);
+    });
 
     view.appendChild(fragment);
     Entry.stage.sortZorder();
@@ -313,8 +322,21 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
 
 Entry.Container.prototype.addExtension = function(obj) {
     this._extensionObjects.push(obj);
-    this._extensionListView.append(obj.renderView());
-}
+    if (this._extensionListView)
+        this._extensionListView.append(obj.renderView());
+    return obj;
+};
+
+Entry.Container.prototype.removeExtension = function(obj) {
+    if (!obj) return;
+
+    var extensions = this._extensionObjects;
+    var index = extensions.indexOf(obj);
+    if (index > -1)
+        extensions.splice(index, 1);
+
+    obj.destroy && obj.destroy();
+};
 
 /**
  * Add Clone object
@@ -388,7 +410,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     }
 
     this.mapObjectOnScene(function(object) {
-        !object.view_ && object.generateView();
+        !object.view_ && object.generateView && object.generateView();
         object.view_ && object.view_.removeClass('selectedObject');
         object.isSelected_ = false;
     });
@@ -842,7 +864,7 @@ Entry.Container.prototype.loadSequenceSnapshot = function() {
     var arr = new Array(length);
     for (var i = 0; i<length; i++) {
         var object = this.objects_[i];
-        var _index = object.index || i;
+        var _index = object.index !== undefined ? object.index : i;
         arr[_index] = object;
         delete object.index;
     }
@@ -872,6 +894,7 @@ Entry.Container.prototype.setInputValue = function(inputValue) {
     else
         this.inputValue.setValue(inputValue);
     Entry.stage.hideInputField();
+    Entry.dispatchEvent("answerSubmitted");
     if (Entry.console)
         Entry.console.stopInput(inputValue);
     this.inputValue.complete = true;
@@ -1038,6 +1061,7 @@ Entry.Container.prototype.clear = function() {
     this.objects_.map(function(o) {o.destroy()});
     this.objects_ = [];
     // INFO : clear 시도할때 _extensionObjects 초기화
+    this._extensionObjects.map(function(o) {o.destroy()});
     this._extensionObjects = [];
     // TODO: clear 때 this._extensionListView 도 비워 줘야 하는지 확인 필요.
     Entry.playground.flushPlayground();

@@ -163,7 +163,7 @@ Entry.HWMonitor = function(hwModule) {
             delete listPort[item]
         }
         return listPort;
-    }
+    };
 
     p.generateListView = function() {
         this._portMapList = {
@@ -343,8 +343,8 @@ Entry.HWMonitor = function(hwModule) {
 
     p.resize = function() {
         if(this.hwView) {
-            this.hwView.attr({ 
-                "transform" : "scale(" + this.scale + ")" 
+            this.hwView.attr({
+                "transform" : "scale(" + this.scale + ")"
             });
         }
 

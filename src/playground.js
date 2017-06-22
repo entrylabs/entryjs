@@ -64,14 +64,12 @@ Entry.Playground = function() {
             this.view_.appendChild(curtainView);
             this.curtainView_ = curtainView;
 
-            if (Entry.pictureEditable) {
-                var pictureView = Entry.createElement('div', 'entryPicture');
-                pictureView.addClass('entryPlaygroundPictureWorkspace');
-                pictureView.addClass('entryRemove');
-                this.view_.appendChild(pictureView);
-                this.generatePictureView(pictureView);
-                this.pictureView_ = pictureView;
-            }
+            var pictureView = Entry.createElement('div', 'entryPicture');
+            pictureView.addClass('entryPlaygroundPictureWorkspace');
+            pictureView.addClass('entryRemove');
+            this.view_.appendChild(pictureView);
+            this.generatePictureView(pictureView);
+            this.pictureView_ = pictureView;
 
             var textView = Entry.createElement('div', 'entryText');
             textView.addClass('entryPlaygroundTextWorkspace');
@@ -80,14 +78,12 @@ Entry.Playground = function() {
             this.generateTextView(textView);
             this.textView_ = textView;
 
-            if (Entry.soundEditable) {
-                var soundView = Entry.createElement('div', 'entrySound');
-                soundView.addClass('entryPlaygroundSoundWorkspace');
-                soundView.addClass('entryRemove');
-                this.view_.appendChild(soundView);
-                this.generateSoundView(soundView);
-                this.soundView_ = soundView;
-            }
+            var soundView = Entry.createElement('div', 'entrySound');
+            soundView.addClass('entryPlaygroundSoundWorkspace');
+            soundView.addClass('entryRemove');
+            this.view_.appendChild(soundView);
+            this.generateSoundView(soundView);
+            this.soundView_ = soundView;
 
             var defaultView = Entry.createElement('div', 'entryDefault');
             defaultView.addClass('entryPlaygroundDefaultWorkspace');
@@ -180,6 +176,8 @@ Entry.Playground = function() {
             Entry.addEventListener('stop', function(e) {
                 Entry.playground.curtainView_.addClass('entryRemove');});
         }
+
+        this.applyTabOption();
     };
 
     /**
@@ -219,65 +217,64 @@ Entry.Playground = function() {
         this.tabViewElements.code = codeTab;
         this._codeTab = codeTab;
 
-        if (Entry.pictureEditable) {
-            var pictureTab = Entry.createElement('li', 'entryPictureTab');
-            pictureTab.innerHTML = Lang.Workspace.tab_picture;
-            pictureTab.addClass('entryTabListItemWorkspace');
-            tabList.appendChild(pictureTab);
-            pictureTab.bindOnClick(function(e) {
-                Entry.do(
-                    'playgroundChangeViewMode',
-                    'picture',
-                    that.selectedViewMode
-                );
-            });
-            this.tabViewElements.picture = pictureTab;
+        var pictureTab = Entry.createElement('li', 'entryPictureTab');
+        pictureTab.innerHTML = Lang.Workspace.tab_picture;
+        pictureTab.addClass('entryTabListItemWorkspace');
+        tabList.appendChild(pictureTab);
+        pictureTab.bindOnClick(function(e) {
+            Entry.do(
+                'playgroundChangeViewMode',
+                'picture',
+                that.selectedViewMode
+            );
+        });
+        this.tabViewElements.picture = pictureTab;
+        this.pictureTab = pictureTab;
 
-            var textboxTab = Entry.createElement('li', 'entryTextboxTab');
-            textboxTab.innerHTML = Lang.Workspace.tab_text;
-            textboxTab.addClass('entryTabListItemWorkspace');
-            tabList.appendChild(textboxTab);
-            textboxTab.bindOnClick(function(e) {
-                Entry.do(
-                    'playgroundChangeViewMode',
-                    'text',
-                    that.selectedViewMode
-                );
-            });
-            this.tabViewElements.text = textboxTab;
-            textboxTab.addClass('entryRemove');
-        }
+        var textboxTab = Entry.createElement('li', 'entryTextboxTab');
+        textboxTab.innerHTML = Lang.Workspace.tab_text;
+        textboxTab.addClass('entryTabListItemWorkspace');
+        tabList.appendChild(textboxTab);
+        textboxTab.bindOnClick(function(e) {
+            Entry.do(
+                'playgroundChangeViewMode',
+                'text',
+                that.selectedViewMode
+            );
+        });
+        this.tabViewElements.text = textboxTab;
+        textboxTab.addClass('entryRemove');
+        this.textboxTab = textboxTab;
 
-        if (Entry.soundEditable) {
-            var soundTab = Entry.createElement('li', 'entrySoundTab');
-            soundTab.innerHTML = Lang.Workspace.tab_sound;
-            soundTab.addClass('entryTabListItemWorkspace');
-            tabList.appendChild(soundTab);
-            soundTab.bindOnClick(function(e) {
-                Entry.do(
-                    'playgroundChangeViewMode',
-                    'sound',
-                    that.selectedViewMode
-                );
-            });
-            this.tabViewElements.sound = soundTab;
-        }
+        var soundTab = Entry.createElement('li', 'entrySoundTab');
+        soundTab.innerHTML = Lang.Workspace.tab_sound;
+        soundTab.addClass('entryTabListItemWorkspace');
+        tabList.appendChild(soundTab);
+        soundTab.bindOnClick(function(e) {
+            Entry.do(
+                'playgroundChangeViewMode',
+                'sound',
+                that.selectedViewMode
+            );
+        });
+        this.tabViewElements.sound = soundTab;
+        this.soundTab = soundTab;
 
-        if (Entry.hasVariableManager) {
-            var variableTab = Entry.createElement('li', 'entryVariableTab');
-            variableTab.innerHTML = Lang.Workspace.tab_attribute;
-            variableTab.addClass('entryTabListItemWorkspace entryVariableTabWorkspace');
-            tabList.appendChild(variableTab);
-            variableTab.bindOnClick(function(e) {
-                Entry.do(
-                    'playgroundChangeViewMode',
-                    'variable',
-                    that.selectedViewMode
-                );
-            });
-            this.tabViewElements.variable = variableTab;
-        }
+        var variableTab = Entry.createElement('li', 'entryVariableTab');
+        variableTab.innerHTML = Lang.Workspace.tab_attribute;
+        variableTab.addClass('entryTabListItemWorkspace entryVariableTabWorkspace');
+        tabList.appendChild(variableTab);
+        variableTab.bindOnClick(function(e) {
+            Entry.do(
+                'playgroundChangeViewMode',
+                'variable',
+                that.selectedViewMode
+            );
+        });
+        this.tabViewElements.variable = variableTab;
+        this.variableTab = variableTab;
     };
+
     /**
      * Inject Blockly and generate code view
      * @param {!Element} codeView
@@ -861,6 +858,8 @@ Entry.Playground = function() {
         var viewMode = this.viewMode_;
         if (viewMode == 'default')
             this.changeViewMode('code');
+        else if (viewMode == 'variable')
+            this.changeViewMode('variable');
         else if ((viewMode == 'picture' || viewMode == 'text' ) && object.objectType == 'textBox')
             this.changeViewMode('text');
         else if ((viewMode == 'text' || viewMode == 'picture') && object.objectType == 'sprite')
@@ -932,19 +931,22 @@ Entry.Playground = function() {
      * Add picture
      * @param {picture model} picture
      */
-    p.addPicture = function(picture) {
+    p.addPicture = function(picture, isNew) {
         var tempPicture = Entry.cloneSimpleObject(picture);
-        delete tempPicture.id;
+
+        if (isNew === true) delete tempPicture.id;
         delete tempPicture.view;
 
         picture = JSON.parse(JSON.stringify(tempPicture));
-        picture.id = Entry.generateHash();
+        if (!picture.id) picture.id = Entry.generateHash();
+
         picture.name = Entry.getOrderedName(picture.name, this.object.pictures);
 
         this.generatePictureElement(picture);
+
         Entry.do(
             'objectAddPicture',
-            this.object.id,
+            picture.objectId || this.object.id,
             picture
         );
         this.injectPicture();
@@ -1015,18 +1017,19 @@ Entry.Playground = function() {
         var pictures = this.object.pictures;
         for (var i = 0, len=pictures.length; i<len; i++) {
             var target = pictures[i];
+            var view = target.view;
             if (target.id === picture.id)
-                target.view.addClass('entryPictureSelected');
-            else
-                target.view.removeClass('entryPictureSelected');
+                view.addClass('entryPictureSelected');
+            else view.removeClass('entryPictureSelected');
         }
 
         var objectId_;
-        if(picture && picture.id) {
+        if (picture && picture.id)
             objectId_ = Entry.container.selectPicture(picture.id, picture.objectId);
-        }
 
-        if( this.object.id === objectId_) {
+        if (this.object.id === objectId_) {
+            if (!picture.objectId)
+                picture.objectId = this.object.id;
             Entry.dispatchEvent('pictureSelected', picture);
         }
     };
@@ -1135,13 +1138,15 @@ Entry.Playground = function() {
      * @param {sound model} sound
      * @param {boolean} NotForView if this is true, add element into object also.
      */
-    p.addSound = function(sound, NotForView) {
+    p.addSound = function(sound, NotForView, isNew) {
         var tempSound = Entry.cloneSimpleObject(sound);
         delete tempSound.view;
-        delete tempSound.id;
+        if (isNew === true)
+            delete tempSound.id;
 
         sound = JSON.parse(JSON.stringify(tempSound));
-        sound.id = Entry.generateHash();
+        if (!sound.id)
+            sound.id = Entry.generateHash();
         sound.name = Entry.getOrderedName(sound.name, this.object.sounds);
 
         this.generateSoundElement(sound);
@@ -1236,6 +1241,8 @@ Entry.Playground = function() {
         Entry.variableContainer.updateList();
         this.variableView_.removeClass('entryRemove');
         this.resizeHandle_.removeClass('entryRemove');
+        this.viewMode_ = 'variable';
+        this.selectedViewMode = 'variable';
     };
 
     p.toggleOffVariableView = function() {
@@ -1437,6 +1444,7 @@ Entry.Playground = function() {
                     callback: function(){
                         if (Entry.playground.object.removePicture(picture.id)) {
                             Entry.removeElement(element);
+                            Entry.dispatchEvent('removePicture', picture);
                             Entry.toast.success(Lang.Workspace.shape_remove_ok,
                                 picture.name +' '+Lang.Workspace.shape_remove_ok_msg);
                         } else {
@@ -1547,7 +1555,7 @@ Entry.Playground = function() {
                 {
                     text: Lang.Workspace.context_duplicate,
                     callback: function(){
-                        Entry.playground.addSound(sound, true);
+                        Entry.playground.addSound(sound, true, true);
                     }
                 },
                 {
@@ -1561,6 +1569,7 @@ Entry.Playground = function() {
                             );
                         if (result) {
                             Entry.removeElement(element);
+                            Entry.dispatchEvent('removeSound', sound);
                             Entry.toast.success(Lang.Workspace.sound_remove_ok,
                                 sound.name +' '+Lang.Workspace.sound_remove_ok_msg);
                         } else {
@@ -1700,9 +1709,11 @@ Entry.Playground = function() {
 
     p.updateHW = function() {
         var self = Entry.playground;
-        var blockMenu = self.mainWorkspace.blockMenu;
-        if (!blockMenu) return;
 
+        var WS = self.mainWorkspace;
+        if (!WS) return;
+        var blockMenu = WS.blockMenu;
+        if (!blockMenu) return;
 
         var hw = Entry.hw;
         if (hw && hw.connected) {
@@ -1725,6 +1736,8 @@ Entry.Playground = function() {
 
             Entry.hw.banHW();
         }
+
+        blockMenu.hwCodeOutdated = true;
         blockMenu.reDraw();
     };
 
@@ -1792,6 +1805,21 @@ Entry.Playground = function() {
             }
         } else {
         }
+    };
+
+    p.applyTabOption = function() {
+        this.textboxTab.addClass("entryRemove");
+        this.pictureTab.addClass("entryRemove");
+        this.soundTab.addClass("entryRemove");
+        this.variableTab.addClass("entryRemove");
+        if (Entry.pictureEditable) {
+            this.pictureTab.removeClass("entryRemove");
+            this.textboxTab.removeClass("entryRemove");
+        }
+        if (Entry.soundEditable)
+            this.soundTab.removeClass("entryRemove");
+        if (Entry.hasVariableManager)
+            this.variableTab.removeClass("entryRemove");
     };
 
 })(Entry.Playground.prototype);

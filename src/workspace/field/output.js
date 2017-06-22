@@ -84,9 +84,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
         var block = this._valueBlock;
 
-        if (block) {
+        if (block && block.view)
             y = block.view.height * -0.5;
-        }
+
         var transform = "translate(" + x + "," + y + ")";
 
         if (animate)
@@ -199,6 +199,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
     p.separate = function(block) {
         this.getCode().createThread([block]);
+        this._updateValueBlock(null);
         this.changeEvent.notify();
     };
 

@@ -24,7 +24,7 @@ Entry.Thread = function(thread, code, parent) {
 
 (function(p) {
     p.load = function(thread, mode) {
-        if (thread === undefined)
+        if (thread === undefined || thread === null)
             thread = [];
         if (!(thread instanceof Array)) {
             return console.error("thread must be array");
@@ -66,11 +66,11 @@ Entry.Thread = function(thread, code, parent) {
         });
     };
 
-    p.separate = function(block, count) {
+    p.separate = function(block, count, index) {
         if (!this._data.has(block.id)) return;
 
         var blocks = this._data.splice(this._data.indexOf(block), count);
-        this._code.createThread(blocks);
+        this._code.createThread(blocks, index);
         this.changeEvent.notify();
     };
 
@@ -115,7 +115,7 @@ Entry.Thread = function(thread, code, parent) {
         return newThread;
     };
 
-    p.toJSON = function(isNew, index, excludeData) {
+    p.toJSON = function(isNew, index, excludeData, option) {
         var array = [];
 
         if (index === undefined) index = 0;
@@ -126,7 +126,7 @@ Entry.Thread = function(thread, code, parent) {
         for (index; index < data.length; index++) {
             var block = data[index];
             if (block instanceof Entry.Block)
-                array.push(block.toJSON(isNew, excludeData));
+                array.push(block.toJSON(isNew, excludeData, option));
         }
         return array;
     };
@@ -246,8 +246,10 @@ Entry.Thread = function(thread, code, parent) {
     };
 
     p.pointer = function(pointer, block) {
-        var index = this.indexOf(block);
-        pointer.unshift(index);
+        pointer = pointer || [];
+        if (block)
+            pointer.unshift(this.indexOf(block));
+
         var parent = this.parent;
 
         if (parent instanceof Entry.Block)
@@ -282,6 +284,24 @@ Entry.Thread = function(thread, code, parent) {
     p.isInOrigin = function() {
         var block = this.getFirstBlock();
         return block && block.isInOrigin();
+    };
+
+    p.getDom = function(query) {
+        if (query.length > 0) {
+            var key = query.shift();
+            if (key === "magnet")
+                return this.view.getMagnet("next");
+        } else {
+            return this.view.svgGroup;
+        }
+    };
+
+    p.isParamBlockType = function() {
+        return false;
+    };
+
+    p.isGlobal = function() {
+         return this._code === this.parent;
     };
 
 })(Entry.Thread.prototype);

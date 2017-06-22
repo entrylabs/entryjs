@@ -14,24 +14,30 @@ goog.require("Entry.STATIC");
             Entry.engine.toggleRun();
         },
         state: function() {
+            return [];
         },
         log: function(callerName) {
             return [
                 ['callerName', callerName]
             ];
         },
-        restrict: function (data, domQuery, callback) {
-             return new Entry.Tooltip([{
+        restrict: function(data, domQuery, callback, restrictor) {
+            var engine = Entry.engine;
+            if (!engine.isState('stop')) engine.toggleStop();
+
+            var isDone = false;
+            return new Entry.Tooltip([{
                 title: data.tooltip.title,
                 content: data.tooltip.content,
-                target: domQuery,
-                direction: "down"
+                target: domQuery
             }], {
-                restrict: true,
                 dimmed: true,
+                restrict: true,
+                callBack: function(isFromInit) {
+                }
             });
         },
-        skipUndoStack: true,
+        validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: "toggleStop",
         dom: ['engine', '&0']
@@ -42,15 +48,34 @@ goog.require("Entry.STATIC");
             Entry.engine.toggleStop();
         },
         state: function() {
+            return [];
         },
         log: function(callerName) {
             return [
                 ['callerName', callerName]
             ];
         },
-        skipUndoStack: true,
+        restrict: function(data, domQuery, callback, restrictor) {
+            var engine = Entry.engine;
+            if (Entry.engine.popup)
+                Entry.engine.closeFullScreen();
+            if (!engine.isState('run')) engine.toggleRun(false);
+
+            return new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                dimmed: true,
+                restrict: true,
+                callBack: function(isFromInit) {
+                    callback();
+                }
+            });
+        },
+        validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        undo: "toggleStart",
+        undo: "toggleRun",
         dom: ['engine', '&0']
     };
 
