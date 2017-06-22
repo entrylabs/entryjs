@@ -382,7 +382,6 @@ EntryStatic.getAllBlocks = function() {
                 "cobl_melody",
                 "cobl_dcmotor",
                 "cobl_extention_port",
-                "cobl_external_RainBowled",
                 "cobl_external_led",
                 "cobl_7_segment",
                 "hamster_hand_found",
