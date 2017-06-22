@@ -5352,7 +5352,7 @@ Entry.block = {
                 Entry.hw.sendQueue['SET'] = {};
             }
             Entry.hw.sendQueue['SET'][port] = {
-                type: Entry.Blacksmith.sensorTypes.SERVO_PIN,
+                type: Entry.Blacksmith.sensorTypes.SERVO,
                 data: value,
                 time: new Date().getTime()
             };
