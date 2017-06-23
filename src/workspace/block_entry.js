@@ -8594,7 +8594,7 @@ Entry.block = {
             return script.callReturn();
         }
     },
-	"cobl_external_RainBowled": {
+    "cobl_external_RainBowled": {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
@@ -8644,54 +8644,54 @@ Entry.block = {
             var value = script.getStringField("OPERATOR");
             
             Entry.hw.setDigitalPortValue("ELED_IDX", led);
-			
-			if(value == 'OFF') {
-				Entry.hw.setDigitalPortValue("ELED_R", 0);
-				Entry.hw.setDigitalPortValue("ELED_G", 0);
-				Entry.hw.setDigitalPortValue("ELED_B", 0);
-			}
-			else if(value == 'Red') {
-				Entry.hw.setDigitalPortValue("ELED_R", 80);
-				Entry.hw.setDigitalPortValue("ELED_G", 0);
-				Entry.hw.setDigitalPortValue("ELED_B", 0);
-			}
-			else if(value == 'Orange') {
-				Entry.hw.setDigitalPortValue("ELED_R", 80);
-				Entry.hw.setDigitalPortValue("ELED_G", 20);
-				Entry.hw.setDigitalPortValue("ELED_B", 0);
-			}
-			else if(value == 'Yellow') {
-				Entry.hw.setDigitalPortValue("ELED_R", 80);
-				Entry.hw.setDigitalPortValue("ELED_G", 80);
-				Entry.hw.setDigitalPortValue("ELED_B", 0);
-			}
-			else if(value == 'Green') {
-				Entry.hw.setDigitalPortValue("ELED_R", 0);
-				Entry.hw.setDigitalPortValue("ELED_G", 80);
-				Entry.hw.setDigitalPortValue("ELED_B", 0);
-			}
-			else if(value == 'Blue') {
-				Entry.hw.setDigitalPortValue("ELED_R", 0);
-				Entry.hw.setDigitalPortValue("ELED_G", 0);
-				Entry.hw.setDigitalPortValue("ELED_B", 80);
-			}
-			else if(value == 'Dark Blue') {
-				Entry.hw.setDigitalPortValue("ELED_R", 0);
-				Entry.hw.setDigitalPortValue("ELED_G", 50);
-				Entry.hw.setDigitalPortValue("ELED_B", 80);
-			}
-			else if(value == 'Purple') {
-				Entry.hw.setDigitalPortValue("ELED_R", 80);
-				Entry.hw.setDigitalPortValue("ELED_G", 0);
-				Entry.hw.setDigitalPortValue("ELED_B", 80);
-			}
-			else if(value == 'White') {
-				Entry.hw.setDigitalPortValue("ELED_R", 80);
-				Entry.hw.setDigitalPortValue("ELED_G", 80);
-				Entry.hw.setDigitalPortValue("ELED_B", 80);
-			}
-			
-				
+            
+            if(value == 'OFF') {
+                Entry.hw.setDigitalPortValue("ELED_R", 0);
+                Entry.hw.setDigitalPortValue("ELED_G", 0);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Red') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 0);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Orange') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 20);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Yellow') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Green') {
+                Entry.hw.setDigitalPortValue("ELED_R", 0);
+                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Blue') {
+                Entry.hw.setDigitalPortValue("ELED_R", 0);
+                Entry.hw.setDigitalPortValue("ELED_G", 0);
+                Entry.hw.setDigitalPortValue("ELED_B", 80);
+            }
+            else if(value == 'Dark Blue') {
+                Entry.hw.setDigitalPortValue("ELED_R", 0);
+                Entry.hw.setDigitalPortValue("ELED_G", 50);
+                Entry.hw.setDigitalPortValue("ELED_B", 80);
+            }
+            else if(value == 'Purple') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 0);
+                Entry.hw.setDigitalPortValue("ELED_B", 80);
+            }
+            else if(value == 'White') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 80);
+            }
+            
+                
             Entry.hw.update();
 
             delete Entry.hw.sendQueue["ELED_IDX"];
