@@ -24309,8 +24309,19 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     var e = b.getNumberValue("SPEED"), d = b.getNumberField("DIRECTION");
     Entry.hw.sendQueue.digitalPinMode || (Entry.hw.sendQueue.digitalPinMode = {});
     1 == c ? (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[0] = e, Entry.hw.sendQueue[1] = e) : 2 == d && (Entry.hw.sendQueue[0] = -e, Entry.hw.sendQueue[1] = -e)) : 2 == c ? (Entry.hw.sendQueue.digitalPinMode[8] = 
-    Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[1] = e) : 2 == d && (Entry.hw.sendQueue[0] = 0, Entry.hw.sendQueue[1] = -e)) : 3 == c && (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? (Entry.hw.sendQueue[0] = e, Entry.hw.sendQueue[1] = 0) : 2 == d && (Entry.hw.sendQueue[0] = 
-    -e, Entry.hw.sendQueue[1] = 0));
+    Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? Entry.hw.sendQueue[1] = e : 2 == d && (Entry.hw.sendQueue[1] = -e)) : 3 == c && (Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM, Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM, 1 == d ? Entry.hw.sendQueue[0] = e : 2 == d && (Entry.hw.sendQueue[0] = -e));
+    return b.callReturn();
+  }}, roborobo_turn_for:{color:"#00B200", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"\uc624\ub978\ucabd \ubaa8\ud130\ub97c %1 %2, \uc67c\ucabd \ubaa8\ud130\ub97c %3 %4\uc758 \uc18d\ub3c4\ub85c \uacc4\uc18d \ud68c\uc804 %5", params:[{type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "2"]], value:"1", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "2"]], 
+  value:"1", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"block_icon/practical_course/dcmotor.png", size:12}], events:{}, def:{params:[null, {type:"roborobo_motor_speed"}, null, {type:"roborobo_motor_speed"}, null], type:"roborobo_turn_for"}, paramsKeyMap:{RDIR:0, RSPEED:1, LDIR:2, LSPEED:3}, class:"roborobo_motor", func:function(c, b) {
+    c = b.getNumberField("RDIR");
+    var e = b.getNumberValue("RSPEED"), d = b.getNumberField("LDIR"), f = b.getNumberValue("LSPEED");
+    Entry.hw.sendQueue.digitalPinMode || (Entry.hw.sendQueue.digitalPinMode = {});
+    Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+    Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+    Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+    Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+    Entry.hw.sendQueue[0] = 1 == d ? f : -f;
+    Entry.hw.sendQueue[1] = 1 == c ? e : -e;
     return b.callReturn();
   }}, roborobo_stop_for:{color:"#00B200", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1\ubaa8\ud130\ub97c \uc815\uc9c0 %2", params:[{type:"Dropdown", options:[["\uc591\ucabd", "1"], ["\uc624\ub978\ucabd", "2"], ["\uc67c\ucabd", "3"]], value:"1", fontsIze:11}, {type:"Indicator", img:"block_icon/practical_course/dcmotor.png", size:12}], events:{}, def:{params:[null, null], type:"roborobo_stop_for"}, paramsKeyMap:{WHEEL:0}, class:"roborobo_motor", func:function(c, 
   b) {

@@ -1385,10 +1385,10 @@
                     Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     
                     if(direction == 1) {
-                        Entry.hw.sendQueue[motor1] = 0x00;
+                        //Entry.hw.sendQueue[motor1] = 0x00;
                         Entry.hw.sendQueue[motor2] = speed;
                     } else if(direction == 2) {
-                        Entry.hw.sendQueue[motor1] = 0x00;
+                        //Entry.hw.sendQueue[motor1] = 0x00;
                         Entry.hw.sendQueue[motor2] = -speed;
                     }                    
                 } else if(wheel == 3) {
@@ -1397,11 +1397,91 @@
                     
                     if(direction == 1) {
                         Entry.hw.sendQueue[motor1] = speed;
-                        Entry.hw.sendQueue[motor2] = 0x00;
+                        //Entry.hw.sendQueue[motor2] = 0x00;
                     } else if(direction == 2) {
                         Entry.hw.sendQueue[motor1] = -speed;
-                        Entry.hw.sendQueue[motor2] = 0x00;
+                        //Entry.hw.sendQueue[motor2] = 0x00;
                     }
+                }
+
+                return script.callReturn();
+            }
+        },
+        roborobo_turn_for: {
+            color: '#00B200',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: [ 'roborobo_schoolkit' ],
+            template: '오른쪽 모터를 %1 %2, 왼쪽 모터를 %3 %4의 속도로 계속 회전 %5',
+            params: [{
+                type: 'Dropdown',
+                options: [
+                    ['앞으로', '1'],
+                    ['뒤로', '2']
+                ],
+                value: '1',
+                fontsIze: 11
+            }, {
+                type: 'Block',
+                accept: 'string'
+            }, {
+                type: 'Dropdown',
+                options: [
+                    ['앞으로', '1'],
+                    ['뒤로', '2']
+                ],
+                value: '1',
+                fontsIze: 11
+            }, {
+                type: 'Block',
+                accept: 'string'
+            }, {
+                type: 'Indicator',
+                img: 'block_icon/practical_course/dcmotor.png',
+                size: 12
+            }],
+            events: {},
+            def: {
+                params: [null, {type: 'roborobo_motor_speed'}, null, {type: 'roborobo_motor_speed'}, null],
+                type: 'roborobo_turn_for'
+            },
+            paramsKeyMap: {
+                'RDIR': 0,
+                'RSPEED': 1,
+                'LDIR': 2,
+                'LSPEED': 3
+            },
+            class: 'roborobo_motor',
+            //'isNotFor': ['mini'],
+            func: function(sprite, script) {
+                var motor1 = 0;
+                var motor2 = 1;
+                
+                var rightDir = script.getNumberField('RDIR');
+                var rightSpeed = script.getNumberValue('RSPEED');
+                var leftDir = script.getNumberField('LDIR');
+                var leftSpeed = script.getNumberValue('LSPEED');
+                
+                if(!Entry.hw.sendQueue.digitalPinMode) {
+                    Entry.hw.sendQueue.digitalPinMode = {};
+                }
+                
+                Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+                Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+                Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+                Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+                
+                if(leftDir == 1) {
+                    Entry.hw.sendQueue[motor1] = leftSpeed;
+                } else {
+                    Entry.hw.sendQueue[motor1] = -leftSpeed;
+                }
+                
+                if(rightDir == 1) {
+                    Entry.hw.sendQueue[motor2] = rightSpeed;
+                } else {
+                    Entry.hw.sendQueue[motor2] = -rightSpeed;
                 }
 
                 return script.callReturn();
