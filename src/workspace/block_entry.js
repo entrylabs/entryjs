@@ -8594,11 +8594,117 @@ Entry.block = {
             return script.callReturn();
         }
     },
+	"cobl_external_RainBowled": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "18-1.외부LED%1 (1~64)%2 %3",
+        params: [
+            {
+                type: "TextInput",
+                value: 0,
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["OFF","OFF"],
+                  ["빨강","Red"],
+                  ["주황","Orange"],
+                  ["노랑","Yellow"],
+                  ["초록","Green"],
+                  ["파랑","Blue"],
+                  ["남색","Dark Blue"],
+                  ["보라","Purple"],
+                  ["흰색","White"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "OFF"
+            ],
+            type: "cobl_external_RainBowled"
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            OPERATOR: 1
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var led = script.getStringField("PORT");
+            var value = script.getStringField("OPERATOR");
+            
+            Entry.hw.setDigitalPortValue("ELED_IDX", led);
+			
+			if(value == 'OFF') {
+				Entry.hw.setDigitalPortValue("ELED_R", 0);
+				Entry.hw.setDigitalPortValue("ELED_G", 0);
+				Entry.hw.setDigitalPortValue("ELED_B", 0);
+			}
+			else if(value == 'Red') {
+				Entry.hw.setDigitalPortValue("ELED_R", 80);
+				Entry.hw.setDigitalPortValue("ELED_G", 0);
+				Entry.hw.setDigitalPortValue("ELED_B", 0);
+			}
+			else if(value == 'Orange') {
+				Entry.hw.setDigitalPortValue("ELED_R", 80);
+				Entry.hw.setDigitalPortValue("ELED_G", 20);
+				Entry.hw.setDigitalPortValue("ELED_B", 0);
+			}
+			else if(value == 'Yellow') {
+				Entry.hw.setDigitalPortValue("ELED_R", 80);
+				Entry.hw.setDigitalPortValue("ELED_G", 80);
+				Entry.hw.setDigitalPortValue("ELED_B", 0);
+			}
+			else if(value == 'Green') {
+				Entry.hw.setDigitalPortValue("ELED_R", 0);
+				Entry.hw.setDigitalPortValue("ELED_G", 80);
+				Entry.hw.setDigitalPortValue("ELED_B", 0);
+			}
+			else if(value == 'Blue') {
+				Entry.hw.setDigitalPortValue("ELED_R", 0);
+				Entry.hw.setDigitalPortValue("ELED_G", 0);
+				Entry.hw.setDigitalPortValue("ELED_B", 80);
+			}
+			else if(value == 'Dark Blue') {
+				Entry.hw.setDigitalPortValue("ELED_R", 0);
+				Entry.hw.setDigitalPortValue("ELED_G", 50);
+				Entry.hw.setDigitalPortValue("ELED_B", 80);
+			}
+			else if(value == 'Purple') {
+				Entry.hw.setDigitalPortValue("ELED_R", 80);
+				Entry.hw.setDigitalPortValue("ELED_G", 0);
+				Entry.hw.setDigitalPortValue("ELED_B", 80);
+			}
+			else if(value == 'White') {
+				Entry.hw.setDigitalPortValue("ELED_R", 80);
+				Entry.hw.setDigitalPortValue("ELED_G", 80);
+				Entry.hw.setDigitalPortValue("ELED_B", 80);
+			}
+			
+				
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue["ELED_IDX"];
+            delete Entry.hw.sendQueue["ELED_R"];
+            delete Entry.hw.sendQueue["ELED_G"];
+            delete Entry.hw.sendQueue["ELED_B"];
+        }
+    },
     "cobl_external_led": {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "18.외부LED%1(1~64)R%2G%3B%4 %5",
+        template: "18-2.외부LED%1(1~64)R%2G%3B%4 %5",
         params: [
             {
                 type: "TextInput",
