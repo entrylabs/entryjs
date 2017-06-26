@@ -41,6 +41,7 @@ Entry.HW = function() {
         '1.7': Entry.Xbot,
         '1.8': Entry.ardublock,
         '1.9': Entry.ArduinoExt,
+        '1.10': Entry.ArduinoNano,
         '1.A': Entry.Cobl,
         '1.B': Entry.Blacksmith,
         '2.4': Entry.Hamster,

@@ -4687,6 +4687,200 @@ Entry.block = {
             }
         ]}
     },
+    "arduino_nano_analog_list": {
+        "parent": "arduino_ext_analog_list",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ],
+                    [ "A4", "4" ],
+                    [ "A5", "5" ],
+                    [ "A6", "6" ],
+                    [ "A7", "7" ],
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%1",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "A0", "0" ],
+                            [ "A1", "1" ],
+                            [ "A2", "2" ],
+                            [ "A3", "3" ],
+                            [ "A4", "4" ],
+                            [ "A5", "5" ],
+                            [ "A6", "6" ],
+                            [ "A7", "7" ],
+                        ],
+                        "value": "0",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringKey,
+                        codeMap:"Entry.CodeMap.Arduino.arduino_nano_analog_list[0]"
+                    }
+                ],
+                keyOption: "arduino_nano_analog_list"
+            }
+        ]}
+    },
+    "arduino_nano_get_analog_value": {
+        "parent": "arduino_ext_get_analog_value",
+        "template": Lang.template.arduino_ext_get_analog_value,
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_nano_analog_list"
+                }
+            ],
+            "type": "arduino_nano_get_analog_value"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_get_analog_value_map": {
+        "parent": "arduino_ext_get_analog_value_map",
+        "template": Lang.template.arduino_ext_get_analog_value_map,
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_nano_get_analog_value",
+                    "params": [
+                        {
+                            "type": "arduino_nano_analog_list"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "arduino_nano_get_analog_value_map"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_get_ultrasonic_value": {
+        "template": Lang.template.arduino_ext_get_ultrasonic_value,
+        "parent": "arduino_ext_get_ultrasonic_value",
+        "def": {
+            "params": [{
+                type: 'arduino_get_port_number',
+                params: [ '2' ],
+            }, {
+                type: 'arduino_get_port_number',
+                params: [ '4' ],
+            }],
+            "type": "arduino_nano_get_ultrasonic_value"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_get_digital": {
+        "template": Lang.template.arduino_ext_get_digital,
+        "parent": "arduino_ext_get_digital",        
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "arduino_nano_get_digital"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_toggle_led": {
+        "template": Lang.template.arduino_ext_toggle_led,
+        "parent": "arduino_ext_toggle_led",        
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": [ "on" ],
+                },
+                null
+            ],
+            "type": "arduino_nano_toggle_led"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_digital_pwm": {
+        "template": Lang.template.arduino_ext_digital_pwm,
+        "parent": "arduino_ext_digital_pwm",
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "arduino_nano_digital_pwm"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_set_tone": {
+        "template": Lang.template.arduino_ext_set_tone,
+        "parent": "arduino_ext_set_tone",
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number",
+                    "value": 4
+                },
+                {
+                    "type": "arduino_ext_tone_list"
+                },
+                {
+                    "type": "arduino_ext_octave_list"
+                },
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "arduino_nano_set_tone"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_set_servo": {
+        "template": Lang.template.arduino_ext_set_servo,
+        "parent": "arduino_ext_set_servo",        
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number"
+                },
+                null
+            ],
+            "type": "arduino_nano_set_servo"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
     "blacksmith_list_analog_basic": {
         "color": "#00979D",
         "skeleton": "basic_string_field",

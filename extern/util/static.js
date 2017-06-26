@@ -301,6 +301,15 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_ext_digital_pwm",
                 "arduino_ext_set_servo",
                 "arduino_ext_set_tone",
+                //arduinoNano
+                "arduino_nano_get_analog_value",
+                "arduino_nano_get_analog_value_map",
+                "arduino_nano_get_ultrasonic_value",
+                "arduino_nano_get_digital",
+                "arduino_nano_toggle_led",
+                "arduino_nano_digital_pwm",
+                "arduino_nano_set_servo",
+                "arduino_nano_set_tone",
                 //blacksmith
                 "blacksmith_get_analog_value",
                 "blacksmith_get_analog_mapping",
