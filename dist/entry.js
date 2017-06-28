@@ -16818,7 +16818,7 @@ Entry.init = function(c, b) {
   Entry.addEventListener("showBlockHelper", function(b) {
     Entry.propertyPanel.select("helper");
   });
-  createjs.Sound.registerPlugins([createjs.WebAudioPlugin, HTMLAudioPlugin]);
+  createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
   Entry.soundQueue = new createjs.LoadQueue;
   Entry.soundQueue.installPlugin(createjs.Sound);
   Entry.loadAudio_([Entry.mediaFilePath + "sounds/click.mp3", Entry.mediaFilePath + "sounds/click.wav", Entry.mediaFilePath + "sounds/click.ogg"], "entryMagneting");

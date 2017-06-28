@@ -69,7 +69,7 @@ Entry.init = function(container, options) {
         Entry.propertyPanel.select("helper");
     });
 
-    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, HTMLAudioPlugin]);
+    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
 
     Entry.soundQueue = new createjs.LoadQueue();
     Entry.soundQueue.installPlugin(createjs.Sound);
