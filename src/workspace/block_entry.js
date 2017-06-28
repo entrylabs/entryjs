@@ -5052,23 +5052,21 @@ Entry.block = {
         "class": "blacksmithGet",
         "isNotFor": [ "blacksmith" ],
         "func": function (sprite, script) {
-            var port1 = 2;
-            var port2 = 3;
+            var port = 2;
 
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
-            delete Entry.hw.sendQueue['SET'][port1];
-            delete Entry.hw.sendQueue['SET'][port2];
+            delete Entry.hw.sendQueue['SET'][port];
             if(!Entry.hw.sendQueue['GET']) {
                 Entry.hw.sendQueue['GET'] = {};
             }
-            Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.BLUETOOTH] = {
-                port: [port1, port2],
+            Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.rxBLUETOOTH] = {
+                port: port,
                 time: new Date().getTime()
             };
 
-            return Entry.hw.portData.BLUETOOTH || 0;            
+            return Entry.hw.portData.rxBLUETOOTH || 0;            
         },
         "syntax": {"js": [], "py": ["blacksmith.get_digital_bluetooth()"]}
     },
@@ -5521,7 +5519,7 @@ Entry.block = {
                 },
                 {
                     "type": "text",
-                    "params": [ "MyEntry!!" ]
+                    "params": [ "My Entry!!" ]
                 },
                 null
             ],
@@ -5533,7 +5531,7 @@ Entry.block = {
         },
         "class": "blacksmithSet",
         "isNotFor": [ "blacksmith" ],
-        "func": function (sprite, script) {            
+        "func": function (sprite, script) {
             var line = script.getNumberValue("LINE");
             var string = script.getValue("STRING");
             var text = [];
@@ -5618,7 +5616,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": [ "MyEntry!!" ]
+                    "params": [ "My Entry!!" ]
                 },
                 null
             ],
@@ -5653,7 +5651,7 @@ Entry.block = {
                 timeValue = 60/fps*50;
 
                 Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.Blacksmith.sensorTypes.BLUETOOTH,
+                    type: Entry.Blacksmith.sensorTypes.txBLUETOOTH,
                     data: {
                         text0 : text[0],
                         text1 : text[1],
