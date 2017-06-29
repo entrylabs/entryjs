@@ -1894,8 +1894,8 @@ Entry.Blacksmith = {name:"blacksmith", setZero:function() {
       c = 126;
   }
   return c;
-}, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8, BLUETOOTH:9, LCD:10}, toneTable:{0:0, C:1, CS:2, D:3, DS:4, E:5, F:6, FS:7, G:8, GS:9, A:10, AS:11, B:12}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 
-185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, highList:["high", "1", "on"], lowList:["low", "0", "off"], BlockState:{}};
+}, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8, rxBLUETOOTH:9, LCD:10, txBLUETOOTH:11}, toneTable:{0:0, C:1, CS:2, D:3, DS:4, E:5, F:6, FS:7, G:8, GS:9, A:10, AS:11, B:12}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 
+5588], 7:[46, 92, 185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, highList:["high", "1", "on"], lowList:["low", "0", "off"], BlockState:{}};
 Entry.byrobot_dronefighter_controller = {name:"byrobot_dronefighter_controller", setZero:function() {
   for (var c = 0;1 > c;c++) {
     this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(17, 255, 0), this.transferCommand(17, 129, 0);
@@ -10080,7 +10080,7 @@ p.checkDevice = function(c, b) {
 p.banHW = function() {
   var c = this.hwInfo, b;
   for (b in c) {
-    console.log(c[b].name), Entry.playground.mainWorkspace.blockMenu.banClass(c[b].name, !0);
+    Entry.playground.mainWorkspace.blockMenu.banClass(c[b].name, !0);
   }
 };
 p.executeHardware = function() {
@@ -24995,7 +24995,7 @@ Entry.BlockMenu = function(c, b, e, d, f) {
     }
   };
   c.banClass = function(b, c) {
-    0 > this._bannedClass.indexOf(b) && (console.log("ban!!! : " + b), this._bannedClass.push(b), !0 !== c && this._dAlign());
+    0 > this._bannedClass.indexOf(b) && (this._bannedClass.push(b), !0 !== c && this._dAlign());
   };
   c.unbanClass = function(b, c) {
     b = this._bannedClass.indexOf(b);

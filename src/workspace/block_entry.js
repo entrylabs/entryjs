@@ -5246,23 +5246,21 @@ Entry.block = {
         "class": "blacksmithGet",
         "isNotFor": [ "blacksmith" ],
         "func": function (sprite, script) {
-            var port1 = 2;
-            var port2 = 3;
+            var port = 2;
 
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
-            delete Entry.hw.sendQueue['SET'][port1];
-            delete Entry.hw.sendQueue['SET'][port2];
+            delete Entry.hw.sendQueue['SET'][port];
             if(!Entry.hw.sendQueue['GET']) {
                 Entry.hw.sendQueue['GET'] = {};
             }
-            Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.BLUETOOTH] = {
-                port: [port1, port2],
+            Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.rxBLUETOOTH] = {
+                port: port,
                 time: new Date().getTime()
             };
 
-            return Entry.hw.portData.BLUETOOTH || 0;            
+            return Entry.hw.portData.rxBLUETOOTH || 0;            
         },
         "syntax": {"js": [], "py": ["blacksmith.get_digital_bluetooth()"]}
     },
@@ -5715,7 +5713,7 @@ Entry.block = {
                 },
                 {
                     "type": "text",
-                    "params": [ "MyEntry!!" ]
+                    "params": [ "My Entry!!" ]
                 },
                 null
             ],
@@ -5732,40 +5730,61 @@ Entry.block = {
             var string = script.getValue("STRING");
             var text = [];
 
-            if(typeof string === 'string') {
-                for (var i = 0; i < string.length; i++) {  
-                    text[i] = Entry.Blacksmith.toByte(string[i]);
+            if(!script.isStart) {
+                if(typeof string === 'string') {
+                    for (var i = 0; i < string.length; i++) {  
+                        text[i] = Entry.Blacksmith.toByte(string[i]);
+                    }
                 }
+                else {
+                    text[0] = string;
+                }
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                timeValue = 60/fps*50;
+
+                Entry.hw.sendQueue['SET'][line] = {
+                    type: Entry.Blacksmith.sensorTypes.LCD,
+                    data: {
+                        text0 : text[0],
+                        text1 : text[1],
+                        text2 : text[2],
+                        text3 : text[3],
+                        text4 : text[4],
+                        text5 : text[5],
+                        text6 : text[6],
+                        text7 : text[7],
+                        text8 : text[8],
+                        text9 : text[9],
+                        text10 : text[10],
+                        text11 : text[11],
+                        text12 : text[12],
+                        text13 : text[13],
+                        text14 : text[14],
+                        text15 : text[15]
+                    },
+                    time: new Date().getTime()                
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            }
+            else if(script.timeFlag == 1) {
+                return script;
             }
             else {
-                text[0] = string;
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
             }
-            if(!Entry.hw.sendQueue['SET']) {
-                Entry.hw.sendQueue['SET'] = {};
-            }
-            Entry.hw.sendQueue['SET'][line] = {
-                type: Entry.Blacksmith.sensorTypes.LCD,
-                data: {
-                    text0 : text[0],
-                    text1 : text[1],
-                    text2 : text[2],
-                    text3 : text[3],
-                    text4 : text[4],
-                    text5 : text[5],
-                    text6 : text[6],
-                    text7 : text[7],
-                    text8 : text[8],
-                    text9 : text[9],
-                    text10 : text[10],
-                    text11 : text[11],
-                    text12 : text[12],
-                    text13 : text[13],
-                    text14 : text[14],
-                    text15 : text[15]
-                },
-                time: new Date().getTime()
-            };
-            return script.callReturn();
         },
         "syntax": {"js": [], "py": ["blacksmith.set_digital_lcd(%1, %2)"]}
     },
@@ -5791,7 +5810,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": [ "MyEntry!!" ]
+                    "params": [ "My Entry!!" ]
                 },
                 null
             ],
@@ -5803,45 +5822,65 @@ Entry.block = {
         "class": "blacksmithSet",
         "isNotFor": [ "blacksmith" ],
         "func": function (sprite, script) {
-            var string = script.getValue("STRING");            
-            var port = 3;
-            var text = [];
+            if(!script.isStart) {
+                var string = script.getValue("STRING");            
+                var port = 3;
+                var text = [];
 
-            if(typeof string === 'string') {
-                for (var i = 0; i < string.length; i++) {  
-                    text[i] = Entry.Blacksmith.toByte(string[i]);
+                if(typeof string === 'string') {
+                    for (var i = 0; i < string.length; i++) {  
+                        text[i] = Entry.Blacksmith.toByte(string[i]);
+                    }
                 }
+                else {
+                    text[0] = string;
+                }
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                timeValue = 60/fps*50;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.Blacksmith.sensorTypes.txBLUETOOTH,
+                    data: {
+                        text0 : text[0],
+                        text1 : text[1],
+                        text2 : text[2],
+                        text3 : text[3],
+                        text4 : text[4],
+                        text5 : text[5],
+                        text6 : text[6],
+                        text7 : text[7],
+                        text8 : text[8],
+                        text9 : text[9],
+                        text10 : text[10],
+                        text11 : text[11],
+                        text12 : text[12],
+                        text13 : text[13],
+                        text14 : text[14],
+                        text15 : text[15]
+                    },
+                    time: new Date().getTime()
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            }
+            else if(script.timeFlag == 1) {
+                return script;
             }
             else {
-                text[0] = string;
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
             }
-            if(!Entry.hw.sendQueue['SET']) {
-                Entry.hw.sendQueue['SET'] = {};
-            }
-            Entry.hw.sendQueue['SET'][port] = {
-                type: Entry.Blacksmith.sensorTypes.BLUETOOTH,
-                data: {
-                    text0 : text[0],
-                    text1 : text[1],
-                    text2 : text[2],
-                    text3 : text[3],
-                    text4 : text[4],
-                    text5 : text[5],
-                    text6 : text[6],
-                    text7 : text[7],
-                    text8 : text[8],
-                    text9 : text[9],
-                    text10 : text[10],
-                    text11 : text[11],
-                    text12 : text[12],
-                    text13 : text[13],
-                    text14 : text[14],
-                    text15 : text[15]
-                },
-                time: new Date().getTime()
-            };
-
-            return script.callReturn();
         },
         "syntax": {"js": [], "py": ["blacksmith.set_digital_bluetooth(%1)"]}
     },

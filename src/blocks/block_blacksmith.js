@@ -128,8 +128,9 @@ Entry.Blacksmith = {
         PULSEIN: 6,
         ULTRASONIC: 7,
         TIMER: 8,
-        BLUETOOTH: 9,
-        LCD: 10
+        rxBLUETOOTH: 9,
+        LCD: 10,
+        txBLUETOOTH: 11
     },
     toneTable: {
         "0": 0,
