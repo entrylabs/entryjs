@@ -479,6 +479,25 @@ Entry.Curtain = {};
     this._visible = b;
   };
 }).call(Entry.Curtain);
+Entry.Loader = {queueCount:0, totalCount:0, loaded:!1};
+Entry.Loader.addQueue = function(b) {
+  this.queueCount || Entry.dispatchEvent("loadStart");
+  this.queueCount++;
+  this.totalCount++;
+};
+Entry.Loader.removeQueue = function(b) {
+  this.queueCount--;
+  this.queueCount || (this.totalCount = 0, this.handleLoad());
+};
+Entry.Loader.getLoadedPercent = function() {
+  return 0 === this.totalCount ? 1 : this.queueCount / this.totalCount;
+};
+Entry.Loader.isLoaded = function() {
+  return !this.queueCount && !this.totalCount;
+};
+Entry.Loader.handleLoad = function() {
+  this.loaded || (this.loaded = !0, Entry.dispatchEvent("loadComplete"));
+};
 Entry.Utils = {};
 Entry.overridePrototype = function() {
   Number.prototype.mod = function(b) {
@@ -1400,25 +1419,6 @@ Entry.fuzzy = {};
     });
   };
 })(Entry.Utils);
-Entry.Loader = {queueCount:0, totalCount:0, loaded:!1};
-Entry.Loader.addQueue = function(b) {
-  this.queueCount || Entry.dispatchEvent("loadStart");
-  this.queueCount++;
-  this.totalCount++;
-};
-Entry.Loader.removeQueue = function(b) {
-  this.queueCount--;
-  this.queueCount || (this.totalCount = 0, this.handleLoad());
-};
-Entry.Loader.getLoadedPercent = function() {
-  return 0 === this.totalCount ? 1 : this.queueCount / this.totalCount;
-};
-Entry.Loader.isLoaded = function() {
-  return !this.queueCount && !this.totalCount;
-};
-Entry.Loader.handleLoad = function() {
-  this.loaded || (this.loaded = !0, Entry.dispatchEvent("loadComplete"));
-};
 Entry.Restrictor = function(b) {
   this._controller = b;
   this.startEvent = new Entry.Event(this);
