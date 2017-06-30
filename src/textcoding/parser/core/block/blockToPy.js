@@ -185,7 +185,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
 
                         if(textParam && textParam.paramType == "integer") {
-                            if(Entry.Utils.isNumber(param) && param % 1 !== 0)
+                            if(Entry.Utils.isNumber(param) && Entry.isFloat(param))
                                 result = result.replace("randint", "uniform");
                         }
 
@@ -231,12 +231,11 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var appliedParams;
         if(datum instanceof Entry.BlockView) {
             schema = datum.block._schema;
-            applliedParams = datum.block.data.params;
+            appliedParams = datum.block.data.params;
         } else if (datum instanceof Entry.Block) {
             schema = datum._schema;
-            applliedParams = datum.params;
-        }
-        else schema = datum;
+            appliedParams = datum.params;
+        } else schema = datum;
 
         if(schema && schema.syntax) {
             var syntaxes = schema.syntax.py.concat();
@@ -245,9 +244,11 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 var syntax = syntaxes.shift();
                 if (typeof syntax === "string")
                     return {syntax: syntax, template: syntax};
+
                 if (syntax.params) {
                     for (var i = 0; i < syntax.params.length; i++) {
-                        if (syntax.params[i] && syntax.params[i] !== applliedParams[i]) {
+                        if (syntax.params[i] &&
+                            syntax.params[i] !== appliedParams[i]) {
                             isFail = true;
                             break;
                         }
