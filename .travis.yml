@@ -12,6 +12,7 @@ install:
 script:
 - ./node_modules/grunt-cli/bin/grunt build
 - ls -al
+- ls -al dist
 deploy:
   provider: releases
   api_key:
