@@ -20,7 +20,7 @@ install:
 - npm install
 script:
 - ./node_modules/grunt-cli/bin/grunt build
-after_success:
+# after_success:
 #- echo "Send Deploy File"
 #- export RELEASE_PKG_FILE=$(ls dist/**/*.dmg)
 #- curl --ftp-create-dirs -T ${RELEASE_PKG_FILE} -u ${FTP_USER}:${FTP_PASSWORD} ftp://play04.play-entry.com/build/Entry/osx/${TRAVIS_BUILD_NUMBER}/
