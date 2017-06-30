@@ -6,6 +6,8 @@ env:
   global:
     - GH_REF: github.com/kimorkim/entryjs.git
     - GH_REPO: 'https://github.com/kimorkim/entryjs.git'
+    - secure: >-
+        nA4wNQyLGVCImbv9L6++RaLdkNwcltdpKkpSPukuFnBcy3g4r9aF2iKxKgLYZG5OGLwMq9kyfInGwR27q3BRETsC8dDbZA4UCYlm/KKyT3rZ5o0by6zTPdLHgRLDYpaju9WpODx1sTBPS1nVcxCwcIWhB0xZS/zotFldQrtgmfzYC0yp1P5biaHV1vU7j67MwJ5AXMsYxkeqo5clsUzeL4VvZM0yRQteirI9RsqBr5b+zx2wz1HXjrom++W63/wbVheMadYahIQeKwzJ9v3i1I8wVEAYmY/vF13HBfEgCCRJ6Ja0Xa4EqrUWHogFwJAkishIdk0l7VfLIa0xf2KktjRKDqAqsfdEWP+M1dVknClcDGUNL2prv/1tovGRA7rKEDLOP3B1PRRvQPfJBTzf8wEJ5+VMjLXVOMKF29sdHpaU/elk/UGFereQwUKtkfaeDmoi3mhPCtz0/RlGl3MGopH8mfN3x7JxryDLEYSYiaVirHL1zRiF1U5HvKPM4u38pDUbuZ7BMhTJBWqY3QjvhNK4w0Uof2q2/ujoRW1d1xb8e+8ft9QE/rF4ZeUyyKE2fdS3AQdc6NQ/78cQf3Hyamy9U/0OGKmxKLEHm9nrT1PQEwnurSj9rhLzsZ47AAi1qvSkKj1di4nBAAFryRyJHBEZUHQGBgdekMW6uqCfGtQ=
 cache:
   directories:
   - node_modules
@@ -14,12 +16,13 @@ branches:
   only:
     - master
 before_script:
+  - chmod +x ./scripts/build.sh
   - chmod +x ./scripts/deploy.sh
 install:
 - npm prune
 - npm install
 script:
-- ./node_modules/grunt-cli/bin/grunt build
+- ./scripts/build.sh
 - ./scripts/deploy.sh
 # deploy:
 #   provider: releases
