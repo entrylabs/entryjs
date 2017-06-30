@@ -8,7 +8,7 @@ Entry.Bitbrick = {
         4: "potentiometer",
         5: "MIC",
         21: "UserSensor",
-        11: "USER INPUT",
+        11: "UserInput",
         20: "LED",
         19: "SERVO",
         18: "DC"
@@ -85,6 +85,7 @@ Entry.Bitbrick = {
   dcMaxValue: 100,
   dcMinValue: -100,
   monitorTemplate: {
+        keys: ['value'],
         imgPath: "hw/bitbrick.png",
         width: 400,
         height: 400,

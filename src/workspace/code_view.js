@@ -14,15 +14,14 @@ Entry.CodeView = function(code, board) {
     this.code = code;
     this.set({board: board});
 
-
-    this.svgThreadGroup = board.svgGroup.group();
+    this.svgThreadGroup = board.svgGroup.elem("g");
     this.svgThreadGroup.attr({
         class: 'svgThreadGroup'
     });
 
     this.svgThreadGroup.board = board;
 
-    this.svgBlockGroup = board.svgGroup.group();
+    this.svgBlockGroup = board.svgGroup.elem("g");
     this.svgBlockGroup.attr({
         class: 'svgBlockGroup'
     });
@@ -30,10 +29,9 @@ Entry.CodeView = function(code, board) {
 
     board.bindCodeView(this);
 
-    this.code.map(function(thread) {
+    this.code._data.getAll().forEach(function(thread) {
         thread.createView(board);
     });
-
     code.observe(this, "_setBoard", ['board']);
 };
 
@@ -46,6 +44,20 @@ Entry.CodeView = function(code, board) {
 
     p._setBoard = function() {
         this.set({board:this.code.board});
+    };
+
+    p.reDraw = function() {
+        this.code.map(function(thread) {
+            if (thread.view)
+                thread.view.reDraw();
+            else thread.createView(this.board);
+        }.bind(this));
+    };
+
+    p.destroy = function() {
+        this.code.map(function(thread) {
+            thread.destroyView();
+        });
     };
 
 })(Entry.CodeView.prototype);

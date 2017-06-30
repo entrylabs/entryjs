@@ -7,9 +7,16 @@ Entry.ActivityReporter = function() {
 };
 
 (function(p) {
-    p.add = function(activity) {
-        if (!(activity instanceof Entry.Activity))
-            return console.error("Activity must be an instanceof Entry.MazeActivity");
+    p.add = function(data) {
+        if (!data || data.length === 0) return;
+        var activity;
+        if (data instanceof Entry.Activity)
+            activity = data;
+        else {
+            var type = data.shift();
+            activity = new Entry.Activity(type, data);
+        }
+
         this._activities.push(activity);
     };
 
@@ -20,4 +27,6 @@ Entry.ActivityReporter = function() {
     p.get = function() {
         return this._activities;
     };
+
+    p.report = function() { };
 })(Entry.ActivityReporter.prototype);

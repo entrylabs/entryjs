@@ -293,7 +293,7 @@ Blockly.BlockMenu.prototype.unbanClass = function(className) {
 Blockly.BlockMenu.prototype.checkBanClass = function(blockInfo) {
     var isNotFor = blockInfo.isNotFor;
     for (var i in this.bannedClass) {
-        if (isNotFor.indexOf(this.bannedClass[i]) > -1)
+        if (isNotFor && isNotFor.indexOf(this.bannedClass[i]) > -1)
             return true;
     }
     return false;

@@ -3,18 +3,27 @@
 goog.provide('Entry.ContextMenu');
 
 (function(ctx) {
+    ctx.visible = false;
+    ctx._hideEvent = null;
+
     ctx.createDom = function() {
+
         this.dom = Entry.Dom('ul', {
             id: 'entry-contextmenu',
             parent: $('body')
         });
+
+        this.dom.bind('mousedown touchstart', function(e) {
+            e.stopPropagation();
+        });
+
         Entry.Utils.disableContextmenu(this.dom);
-        Entry.documentMousedown.attach(
-            this, function(){this.hide();}
-        );
     };
 
-    ctx.show = function(options, className) {
+    ctx.show = function(options, className, coordinate) {
+        this._hideEvent = Entry.documentMousedown.attach(
+            this, function(){this.hide();}
+        );
         if (!this.dom) this.createDom();
         if (options.length === 0) return;
         var that = this;
@@ -32,26 +41,31 @@ goog.provide('Entry.ContextMenu');
             var text = option.text;
             var enable = option.enable !== false;
 
-            var elem = Entry.Dom('li', {
-                class: enable ? 'menuAble' : 'menuDisable',
-                parent: parent
-            });
+            var elem = Entry.Dom('li', { parent: parent });
 
-            elem.text(text);
+            if (option.divider) className = 'divider';
+            else {
+                className = enable ? 'menuAble' : 'menuDisable';
+                var span = Entry.Dom('span', { parent: elem });
 
-            if (enable && option.callback) {
-                (function(elem, cb) {
-                    elem.mousedown(function(e){
-                        e.preventDefault();
-                        that.hide();
-                        cb(e);
-                    });
-                })(elem, option.callback);
+                span.text(text);
+
+                if (enable && option.callback) {
+                    (function(elem, cb) {
+                        elem.mousedown(function(e){
+                            e.preventDefault();
+                            that.hide();
+                            cb(e);
+                        });
+                    })(elem, option.callback);
+                }
             }
+            elem.addClass(className);
         }
 
         parent.removeClass('entryRemove');
-        this.position(Entry.mouseCoordinate);
+        this.visible = true;
+        this.position(coordinate || Entry.mouseCoordinate);
     };
 
     ctx.position = function(pos) {
@@ -80,13 +94,62 @@ goog.provide('Entry.ContextMenu');
     };
 
     ctx.hide = function() {
+        this.visible = false;
         this.dom.empty();
         this.dom.addClass('entryRemove');
         if (this._className) {
             this.dom.removeClass(this._className);
             delete this._className;
         }
+        if (this._hideEvent) {
+            Entry.documentMousedown.detach(this._hideEvent);
+            this._hideEvent = null;
+        }
     };
+
+    ctx.onContextmenu = function(target, callback) {
+        target.on('touchstart mousemove mouseup contextmenu', function (e) {
+            switch(e.type) {
+                case 'touchstart':
+                    var startEvent = Entry.Utils.convertMouseEvent(e);
+                    this.coordi = {
+                        x: startEvent.clientX,
+                        y: startEvent.clientY,
+                    }
+
+                    this.longTouchEvent = setTimeout((function() {
+                        callback(this.coordi);
+                        this.longTouchEvent = undefined;
+                    }).bind(this), 900);
+                    break;
+                case 'mousemove':
+                    if(!this.coordi) return;
+                    var diff = Math.sqrt(Math.pow(e.pageX - this.coordi.x, 2) +
+                            Math.pow(e.pageY - this.coordi.y, 2));
+                    if (diff > 5 && this.longTouchEvent) {
+                        clearTimeout(this.longTouchEvent);
+                        this.longTouchEvent = undefined;
+                    }
+                    break;
+                case 'mouseup':
+                    // e.stopPropagation();
+                    if (this.longTouchEvent) {
+                        clearTimeout(this.longTouchEvent);
+                        this.longTouchEvent = null;
+                    }
+                    break;
+                case 'contextmenu':
+                    clearTimeout(this.longTouchEvent);
+                    this.longTouchEvent = undefined;
+                    if(e.type === 'contextmenu') {
+                        // e.stopPropagation();
+                        // e.preventDefault();
+                        callback(this.coordi);
+                    }
+                    break;
+            }
+        });
+    }
 
 
 })(Entry.ContextMenu);

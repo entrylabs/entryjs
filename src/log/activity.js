@@ -17,3 +17,4 @@ Entry.Activity = function(name, data) {
     }
     this.data = arr;
 };
+

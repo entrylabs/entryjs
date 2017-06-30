@@ -146,7 +146,10 @@ Entry.Collection = function(data) {
     };
 
     p.map = function(fn, param) {
-        for (var i=0, len=this.length; i<len; i++) fn(this[i], param);
+        var array = [];
+        for (var i=0, len=this.length; i<len; i++)
+            array.push(fn(this[i], param));
+        return array;
     };
 
     p.moveFromTo = function(from, to) {

@@ -1,0 +1,54 @@
+#entry-contextmenu {
+    position: fixed;
+    background-color: white;
+    display: inline-block;
+    list-style: none;
+    padding: 4px 0;
+    border-color: #ccc #666 #666 #ccc;
+    border-style: solid;
+    border-width: 1px;
+    outline: none;
+    font-size: 13px;
+    z-index: 1100;
+    span {
+        width: 100%;
+        height: 100%;
+        display: inline-block;
+    }
+    .menuAble {
+        cursor: pointer;
+        padding: 3px 20px;
+    }
+    .menuAble:hover {
+        color: white;
+        background-color: #57e;
+    }
+    .menuDisable {
+        color: #ccc;
+        padding: 3px 20px;
+    }
+    .divider {
+        padding: 0;
+        height: 1px;
+        background-color: #ccc;
+    }
+}
+
+#entry-contextmenu.workspace-contextmenu {
+    font-size: 14px;
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    min-width: 160px;
+    border-radius: 4px;
+    color: #262626;
+    .menuAble {
+        padding: 3px 20px;
+    }
+    .menuAble:hover {
+        color: white;
+        background-color: #57e;
+    }
+    .menuDisable {
+        color: #ccc;
+        padding: 3px 20px;
+    }
+}

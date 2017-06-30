@@ -39,42 +39,241 @@ Entry.Arduino = {
     }
 };
 
+Entry.ArduinoExt = {
+    name: 'ArduinoExt',
+    setZero: function () {
+        if(!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue = {
+                GET: {},
+                SET: {},
+            }
+        } else {
+            var keySet = Object.keys(Entry.hw.sendQueue.SET);
+            keySet.forEach(function (key) {
+                Entry.hw.sendQueue.SET[key].data = 0;
+                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+            });
+        }
+        Entry.hw.update();
+    },
+    sensorTypes: {
+        ALIVE: 0,
+        DIGITAL: 1,
+        ANALOG: 2,
+        PWM: 3,
+        SERVO_PIN: 4,
+        TONE: 5,
+        PULSEIN: 6,
+        ULTRASONIC: 7,
+        TIMER: 8
+    },
+    toneTable: {
+        "0": 0,
+        "C": 1,
+        "CS": 2,
+        "D": 3,
+        "DS": 4,
+        "E": 5,
+        "F": 6,
+        "FS": 7,
+        "G": 8,
+        "GS": 9,
+        "A": 10,
+        "AS": 11,
+        "B": 12,
+    },
+    toneMap: {
+        "1": [33, 65, 131, 262, 523, 1046, 2093, 4186],
+        "2": [35, 69, 139, 277, 554, 1109, 2217, 4435],
+        "3": [37, 73, 147, 294, 587, 1175, 2349, 4699],
+        "4": [39, 78, 156, 311, 622, 1245, 2849, 4978],
+        "5": [41, 82, 165, 330, 659, 1319, 2637, 5274],
+        "6": [44, 87, 175, 349, 698, 1397, 2794, 5588],
+        "7": [46, 92, 185, 370, 740, 1480, 2960, 5920],
+        "8": [49, 98, 196, 392, 784, 1568, 3136, 6272],
+        "9": [52, 104, 208, 415, 831, 1661, 3322, 6645],
+        "10": [55, 110, 220, 440, 880, 1760, 3520, 7040],
+        "11": [58, 117, 233, 466, 932, 1865, 3729, 7459],
+        "12": [62, 123, 247, 494, 988, 1976, 3951, 7902]
+    },
+    highList: [
+        'high', '1', 'on'
+    ],
+    lowList: [
+        'low', '0', 'off'
+    ],
+    BlockState: {
+    }
+}
+
+Entry.SmartBoard = {
+    name: 'smartBoard',
+    setZero: function() {
+        Entry.hw.sendQueue.readablePorts = [];
+        for (var port = 0; port < 20; port++) {
+            if(port != 9 || port != 10 || port != 11 ) {
+                Entry.hw.sendQueue[port] = 0;
+                Entry.hw.sendQueue.readablePorts.push(port);
+            }
+        }
+        Entry.hw.update();
+    },
+    monitorTemplate: {
+        listPorts: {
+            "2":{name: Lang.Hw.port_en + " GS2 ", type: "output", pos: {x: 0, y: 0}},
+            "3":{name: Lang.Hw.port_en + " GS1 ", type: "output", pos: {x : 0, y: 0}},
+            "4":{name: Lang.Hw.port_en + " MT1 회전 방향 ", type: "output", pos: {x: 0, y: 0}},
+            "5":{name: Lang.Hw.port_en + " MT1 PWM ", type: "output", pos: {x: 0, y: 0}},
+            "6":{name: Lang.Hw.port_en + " MT2 PWM ", type: "output", pos: {x: 0, y: 0}},
+            "7":{name: Lang.Hw.port_en + " MT2 회전 방향 ", type: "output", pos: {x: 0, y: 0}},
+            "8":{name: Lang.Hw.port_en + " RELAY ", type: "output", pos: {x: 0, y: 0}},
+            "9":{name: Lang.Hw.port_en + " SM3 각도 ", type: "output", pos: {x: 0, y: 0}},
+            "10":{name: Lang.Hw.port_en + " SM2 각도 ", type: "output", pos: {x: 0, y: 0}},
+            "11":{name: Lang.Hw.port_en + "SM1 각도 ", type: "output", pos: {x: 0, y: 0}},
+            "12":{name: Lang.Hw.port_en + " 빨간 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
+            "13":{name: Lang.Hw.port_en + " 노란 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
+            "14":{name: Lang.Hw.port_en + " 초록 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
+            "15":{name: Lang.Hw.port_en + " 파란 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
+            "a2":{name: Lang.Hw.port_en + " 1번 " + Lang.Hw.sensor, type: "input", pos: {x: 0, y: 0}},
+            "a3":{name: Lang.Hw.port_en + " 2번 " + Lang.Hw.sensor, type: "input", pos: {x: 0, y: 0}},
+            "a4":{name: Lang.Hw.port_en + " 3번 " + Lang.Hw.sensor, type: "input", pos: {x: 0, y: 0}},
+            "a5":{name: Lang.Hw.port_en + " 4번 " + Lang.Hw.sensor, type: "input", pos: {x: 0, y: 0}}
+        },
+        mode : 'both'
+    }
+};
+
 Entry.SensorBoard = {
     name: 'sensorBoard',
+    setZero: Entry.Arduino.setZero
+};
+
+
+Entry.ardublock = {
+    name: 'ardublock',
+    setZero: function () {
+        if(!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue = {
+                GET: {},
+                SET: {},
+            }
+        } else {
+            var keySet = Object.keys(Entry.hw.sendQueue.SET);
+            keySet.forEach(function (key) {
+                Entry.hw.sendQueue.SET[key].data = 0;
+                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+            });
+        }
+        Entry.hw.update();
+    },
+    sensorTypes: {
+        ALIVE: 0,
+        DIGITAL: 1,
+        ANALOG: 2,
+        PWM: 3,
+        SERVO_PIN: 4,
+        TONE: 5,
+        PULSEIN: 6,
+        ULTRASONIC: 7,
+        TIMER: 8,
+        MOTOR_LEFT: 9,
+        MOTOR_RIGHT: 10
+    },
+    toneTable: {
+        "0": 0,
+        "C": 1,
+        "CS": 2,
+        "D": 3,
+        "DS": 4,
+        "E": 5,
+        "F": 6,
+        "FS": 7,
+        "G": 8,
+        "GS": 9,
+        "A": 10,
+        "AS": 11,
+        "B": 12,
+    },
+    toneMap: {
+        "1": [33, 65, 131, 262, 523, 1046, 2093, 4186],
+        "2": [35, 69, 139, 277, 554, 1109, 2217, 4435],
+        "3": [37, 73, 147, 294, 587, 1175, 2349, 4699],
+        "4": [39, 78, 156, 311, 622, 1245, 2849, 4978],
+        "5": [41, 82, 165, 330, 659, 1319, 2637, 5274],
+        "6": [44, 87, 175, 349, 698, 1397, 2794, 5588],
+        "7": [46, 92, 185, 370, 740, 1480, 2960, 5920],
+        "8": [49, 98, 196, 392, 784, 1568, 3136, 6272],
+        "9": [52, 104, 208, 415, 831, 1661, 3322, 6645],
+        "10": [55, 110, 220, 440, 880, 1760, 3520, 7040],
+        "11": [58, 117, 233, 466, 932, 1865, 3729, 7459],
+        "12": [62, 123, 247, 494, 988, 1976, 3951, 7902]
+    },
+    directionTable: {
+        "Forward": 0,
+        "Backward": 1
+    },    
+    highList: [
+        'high', '1', 'on'
+    ],
+    lowList: [
+        'low', '0', 'off'
+    ],
+    BlockState: {
+    }
+}
+
+
+
+
+Entry.dplay = {
+    name: 'dplay',
+    vel_value : 255,
+    Left_value : 255,
+    Right_value : 255,
     setZero: Entry.Arduino.setZero,
+    timeouts: [],
+    removeTimeout: function(id) {
+        clearTimeout(id);
+        var timeouts = this.timeouts;
+        var index = timeouts.indexOf(id);
+        if(index >= 0) {
+        timeouts.splice(index, 1);
+        }
+    },
+    removeAllTimeouts: function() {
+        var timeouts = this.timeouts;
+        for(var i in timeouts) {
+            clearTimeout(timeouts[i]);
+        }
+        this.timeouts = [];
+    },
     monitorTemplate: {
-        imgPath: "hw/sensorBoard.png",
-        width: 400,
-        height: 400,
+        imgPath: "hw/dplay.png",
+        width: 500,
+        height: 600,
         listPorts: {
             "2":{name: Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
             "3":{name: Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
             "4":{name: Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
             "5":{name: Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a3":{name: Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a4":{name: Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a5":{name: Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
             "6":{name: Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
             "7":{name: Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "8":{name: Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "9":{name: Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "10":{name: Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "11":{name: Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
             "12":{name: Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "13":{name: Lang.Hw.port_en + " 13 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
+            "13":{name: Lang.Hw.port_en + " 13 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a0":{name: Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a1":{name: Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a2":{name: Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a3":{name: Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a4":{name: Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a5":{name: Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
         },
-        ports : {
-            "0":{name: Lang.Hw.light + " " + Lang.Hw.sensor + "2", type: "input",pos: {x : 116, y: 330}},
-            "slider":{ name: Lang.Blocks.CODEino_sensor_name_2 , type: "input",pos: {x : 230, y: 47}},
-            "1":{name: Lang.Hw.temp, type: "input",pos: {x : 310, y: 332}},
-            "8":{name: Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, type: "input",pos: {x : 273, y: 205}},
-            "9":{name: Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type: "input",pos: {x : 112, y: 155}},
-            "10":{name: Lang.Hw.up_ko + Lang.Hw.switch_ + Lang.Hw.up_en, type: "input",pos: {x : 188, y: 83}},
-            "11":{name: Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type: "input",pos: {x : 196, y: 281}}
-      },
-      mode : 'both'
-    }
-};
+        mode : 'both'
 
-Entry.dplay = {
-    name: 'dplay',
-    setZero: Entry.Arduino.setZero
+    } 
 };
 
 Entry.nemoino = {
@@ -82,11 +281,76 @@ Entry.nemoino = {
     setZero: Entry.Arduino.setZero
 };
 
+Entry.joystick = {
+    name: 'joystick',
+    setZero: Entry.Arduino.setZero
+};
+/*
 Entry.CODEino = {
     name: 'CODEino',
     setZero: Entry.Arduino.setZero,
     monitorTemplate: Entry.Arduino.monitorTemplate
 
+};
+*/
+Entry.CODEino = {
+    name: 'CODEino',
+    getSensorKey: function () {
+        return "xxxxxxxx".replace(/[xy]/g, function(f) {
+            var e = Math.random() * 16 | 0, d = f == "x" ? e : (e & 0 * 3 | 0 * 8);
+            return d.toString(16)
+        }).toUpperCase()
+    },
+    getSensorTime: function (type) {
+        return new Date().getTime() + type;
+    },
+    monitorTemplate: Entry.Arduino.monitorTemplate,
+    setZero: function () {
+        if(!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue = {
+                SET: {
+                    '0': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '1': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '2': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '3': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '4': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '5': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '6': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '7': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '8': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '9': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '10': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '11': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '12': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 },
+                    '13': { type: Entry.CODEino.sensorTypes.DIGITAL, data: 0 }
+                },
+                TIME: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.DIGITAL),
+                KEY: Entry.CODEino.getSensorKey()
+            }
+        } else {
+            var keySet = Object.keys(Entry.hw.sendQueue.SET);
+            keySet.forEach(function (key) {
+                Entry.hw.sendQueue.SET[key].data = 0;
+                Entry.hw.sendQueue.TIME = Entry.CODEino.getSensorTime(Entry.hw.sendQueue.SET[key].type);
+                Entry.hw.sendQueue.KEY = Entry.CODEino.getSensorKey();
+            });
+        }
+        Entry.hw.update();
+    },
+    sensorTypes: {
+        ALIVE: 0,
+        DIGITAL: 1,
+        ANALOG: 2,
+        PWM: 3,
+        RGBLED_PIN: 4,
+        TONE: 5,
+        PULSEIN: 6,
+        ULTRASONIC: 7,
+        TIMER: 8,
+        ADDCOLOR: 9
+    },
+    BlockState: {
+    }
 };
 
 Blockly.Blocks.arduino_text = {
@@ -484,6 +748,117 @@ Entry.block.sensorBoard_led = function (sprite, script) {
     return script.callReturn();
 };
 
+Entry.block.arduino_download_connector = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "연결 프로그램 다운로드",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download connector');
+            }
+        ]
+    }
+};
+
+Entry.block.download_guide = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "연결 안내 다운로드",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download guide');
+            }
+        ]
+    }
+};
+
+Entry.block.arduino_download_source = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "엔트리 아두이노 소스",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download source');
+            }
+        ]
+    }
+};
+
+Entry.block.arduino_connected = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "연결 됨",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download source');
+            }
+        ]
+    }
+};
+
+
+Entry.block.arduino_reconnect = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "다시 연결하기",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download source');
+            }
+        ]
+    }
+};
+
 
 Blockly.Blocks.CODEino_get_sensor_number = {
   init: function() {
@@ -684,4 +1059,271 @@ Entry.block.CODEino_get_accelerometer_value = function (sprite, script) {
     result = Math.min(value5, result);
     result = Math.max(value4, result);
     return Math.round(result);
+};
+
+Blockly.Blocks.dplay_select_led = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.ARDUINO_num_pin_1);
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['7',"7"],
+          ['8',"8"],
+          ['9',"9"],
+          ['10',"10"]
+          ]), "PORT")
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_num_pin_1);
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.ARDUINO_on,"on"],
+          [Lang.Blocks.ARDUINO_off,"off"]
+          ]), "OPERATOR")
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.dplay_select_led = function (sprite, script) {
+    var port1 = script.getField("PORT");
+    var port = 7;
+    if (port1 == "7") port = 7;
+    else if (port1 == "8") port = 8;
+    else if (port1 == "9") port = 9;
+    else if (port1 == "10") port = 10;
+    var operator = script.getField("OPERATOR");
+    var value = operator == "on" ? 255 : 0;
+    Entry.hw.setDigitalPortValue(port, value);
+    return script.callReturn();
+};
+
+Blockly.Blocks.dplay_get_switch_status = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField("디지털 ");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['2',"2"],
+          ['4',"4"]
+          ]), "PORT")
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_num_pin_2)
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.dplay_string_5,"ON"],
+          [Lang.Blocks.dplay_string_6,"OFF"]
+          ]), "STATUS")
+        .appendField(' ');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Boolean');
+  }
+};
+
+Entry.block.dplay_get_switch_status = function (sprite, script) {
+    var port1 = script.getField("PORT");
+    var port = 2;
+    if (port1 == "2") port = 2;
+    else if (port1 == "4") port = 4;
+    var value1 = script.getField("STATUS");
+    if (value1 == "OFF") return Entry.hw.getDigitalPortValue(port) == 1 ? 1 : 0;
+    else return Entry.hw.getDigitalPortValue(port) == 0 ? 1 : 0;
+};
+
+Blockly.Blocks.dplay_get_light_status = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_light)
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.dplay_string_3,"BRIGHT"],
+          [Lang.Blocks.dplay_string_4,"DARK"]
+          ]), "STATUS")
+        .appendField(' ');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Boolean');
+  }
+};
+
+Entry.block.dplay_get_light_status = function (sprite, script) {
+    var value1 = script.getField("STATUS", script);
+    var value2 = 1;
+    if (value1 == "DARK") return Entry.hw.getAnalogPortValue(value2) > 800 ? 1 : 0;
+    else return Entry.hw.getAnalogPortValue(value2) < 800 ? 1 : 0;
+};
+
+Blockly.Blocks.dplay_get_value = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_num_pin_3);
+    this.appendValueInput("VALUE")
+        .setCheck(["Number", "String", null]);
+    this.appendDummyInput()
+        .appendField("번 ");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['가변저항',"ADJU"],
+          ['빛센서',"LIGHT"],
+          ['온도센서',"TEMP"],
+          ['조이스틱 X',"JOYS"],
+          ['조이스틱 Y',"JOYS"],
+          ['적외선',"INFR"]
+          ]), "OPERATOR")
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_num_pin_5)
+    this.setInputsInline(true);
+    this.setOutput(true, 'Number');
+  }
+};
+
+Entry.block.dplay_get_value = function (sprite, script) {
+    var signal = script.getValue("VALUE", script);
+    return Entry.hw.getAnalogPortValue(signal[1]);
+};
+
+Blockly.Blocks.dplay_get_tilt = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_tilt)
+        .appendField(new Blockly.FieldDropdown([
+          ['왼쪽 기울임',"LEFT"],
+          ['오른쪽 기울임',"LIGHT"]
+          ]), "STATUS")
+        .appendField(' ');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Boolean');
+  }
+};
+
+Entry.block.dplay_get_tilt = function (sprite, script) {
+    var value1 = script.getField("STATUS", script);
+    var value2 = 12;
+    if (value1 == "LIGHT") return Entry.hw.getDigitalPortValue(value2) == 1 ? 1 : 0;
+    else return Entry.hw.getDigitalPortValue(value2) == 0 ? 1 : 0;
+};
+
+Blockly.Blocks.dplay_DCmotor = {
+    init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['왼쪽',"3"],
+          ['오른쪽',"6"]
+          ]), "PORT");
+    this.appendDummyInput()
+        .appendField(' DC모터 상태를');
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['정방향',"FRONT"],
+          ['역방향',"REAR"],
+          ['정지',"OFF"]
+          ]), "OPERATOR")
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.dplay_DCmotor = function (sprite, script) {
+    var port1 = script.getField("PORT");
+    var port2 = 0;
+    if (port1 == "3") port2 = 5;
+    else if (port1 == "6") port2 = 11;
+    var operator = script.getField("OPERATOR");
+    var value1 = 0;
+    var value2 = 0;
+    if (operator == "FRONT") {
+        value1 = 255;
+        value2 = 0;
+    }
+    else if (operator == "REAR") {
+        value1 = 0;
+        value2 = 255;
+    }
+    else if (operator == "OFF") {
+        value1 = 0;
+        value2 = 0;
+    }
+    Entry.hw.setDigitalPortValue(port1, value1);
+    Entry.hw.setDigitalPortValue(port2, value2);
+    return script.callReturn();
+};
+
+Blockly.Blocks.dplay_buzzer = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField('부저를 ');
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['도',"1"],
+          ['레',"2"],
+          ['미',"3"]
+          ]), "PORT");
+    this.appendDummyInput()
+        .appendField('로');
+    this.appendValueInput("VALUE")
+        .setCheck(["Number", "String", null]);
+    this.appendDummyInput()
+        .appendField('박자로 연주하기');
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.dplay_buzzer = function (sprite, script) {
+    var port1 = script.getField("PORT");
+    var port = 2;
+    if (port1 == "1") port = 2;
+    else if (port1 == "2") port = 4;
+    else if (port1 == "3") port = 7;
+    var value = script.getNumberValue("VALUE");
+    value = Math.round(value);
+    value = Math.max(value, 0);
+    value = Math.min(value, 100);
+    Entry.hw.setDigitalPortValue(port, value);
+    return script.callReturn();
+};
+
+Blockly.Blocks.dplay_servo = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField('서보모터 각도를');
+    this.appendValueInput("VALUE")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+        .appendField('로 이동');
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.dplay_servo = function (sprite, script) {
+    var port = 9;
+    var value = script.getNumberValue("VALUE");
+    value = Math.round(value);
+    value = Math.max(value, 0);
+    value = Math.min(value, 180);
+    Entry.hw.setDigitalPortValue(port, value);
+    return script.callReturn();
+};
+
+//rokoboard start
+
+Entry.rokoboard = {
+    name: 'rokoboard',
+    setZero: Entry.Arduino.setZero,
+    monitorTemplate: Entry.Arduino.monitorTemplate
 };

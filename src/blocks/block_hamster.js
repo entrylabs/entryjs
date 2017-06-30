@@ -54,30 +54,32 @@ Entry.Hamster = {
 		sq.lineTracerModeId = this.lineTracerModeId;
 	},
 	name: 'hamster',
-	monitorTemplate: {
+    monitorTemplate: {
         imgPath: "hw/hamster.png",
         width: 256,
         height: 256,
         listPorts:{
             "temperature":{name: Lang.Blocks.HAMSTER_sensor_temperature, type: "input", pos: {x: 0, y: 0}},
-            "accelerationX":{name: Lang.Blocks.HAMSTER_sensor_accelerationX, type: "input", pos: {x: 0, y: 0}},
-            "accelerationY":{name: Lang.Blocks.HAMSTER_sensor_accelerationY, type: "input", pos: {x: 0, y: 0}},
-            "accelerationZ":{name: Lang.Blocks.HAMSTER_sensor_accelerationZ, type: "input", pos: {x: 0, y: 0}},
+            "inputA":{name: Lang.Blocks.HAMSTER_sensor_input_a, type: "input", pos: {x: 0, y: 0}},
+            "inputB":{name: Lang.Blocks.HAMSTER_sensor_input_b, type: "input", pos: {x: 0, y: 0}},
+            "accelerationX":{name: Lang.Blocks.HAMSTER_sensor_acceleration_x, type: "input", pos: {x: 0, y: 0}},
+            "accelerationY":{name: Lang.Blocks.HAMSTER_sensor_acceleration_y, type: "input", pos: {x: 0, y: 0}},
+            "accelerationZ":{name: Lang.Blocks.HAMSTER_sensor_acceleration_z, type: "input", pos: {x: 0, y: 0}},
             "buzzer":{name: Lang.Hw.buzzer , type: "output", pos: {x: 0, y: 0}},
-            "note":{name:  Lang.Hw.buzzer + "2", type: "output", pos: {x: 0, y: 0}},
+            "note":{name:  Lang.Hw.note , type: "output", pos: {x: 0, y: 0}},
             "outputA":{name: Lang.Hw.output + "A", type: "output", pos: {x: 0, y: 0}},
             "outputB":{name: Lang.Hw.output + "B", type: "output", pos: {x: 0, y: 0}}
         },
         ports: {
-            "leftProximity":{name: Lang.Blocks.HAMSTER_sensor_leftProximity, type: "input", pos: {x: 122, y: 156}},
-            "rightProximity":{name: Lang.Blocks.HAMSTER_sensor_rightProximity, type: "input", pos: {x : 10, y: 108}},
-            "leftFloor":{name: Lang.Blocks.HAMSTER_sensor_leftFloor, type: "input", pos: {x: 100, y: 234}},
-            "rightFloor":{name: Lang.Blocks.HAMSTER_sensor_rightFloor, type: "input", pos: {x: 13, y: 180}},
-            "lightsensor":{name: Lang.Hw.light + Lang.Hw.sensor, type: "input", pos: {x: 56, y: 189}},
+            "leftProximity":{name: Lang.Blocks.HAMSTER_sensor_left_proximity, type: "input", pos: {x: 122, y: 156}},
+            "rightProximity":{name: Lang.Blocks.HAMSTER_sensor_right_proximity, type: "input", pos: {x : 10, y: 108}},
+            "leftFloor":{name: Lang.Blocks.HAMSTER_sensor_left_floor, type: "input", pos: {x: 100, y: 234}},
+            "rightFloor":{name: Lang.Blocks.HAMSTER_sensor_right_floor, type: "input", pos: {x: 13, y: 180}},
+            "light":{name: Lang.Blocks.HAMSTER_sensor_light, type: "input", pos: {x: 56, y: 189}},
             "leftWheel":{name: Lang.Hw.leftWheel, type: "output", pos: {x: 209, y: 115}},
-            "rightWheel":{name: Lang.Hw.rightWheel, type: "output", pos: {x: 98, y: 30}},           
-            "leftLed":{name: Lang.Hw.left + " " + Lang.Hw.led, type: "output", pos: {x: 87, y: 210}},
-            "rightLed":{name: Lang.Hw.right + " " + Lang.Hw.led , type: "output", pos: {x: 24, y: 168}},
+            "rightWheel":{name: Lang.Hw.rightWheel, type: "output", pos: {x: 98, y: 30}},
+            "leftLed":{name: Lang.Hw.left + " " + Lang.Hw.led_en, type: "output", pos: {x: 87, y: 210}},
+            "rightLed":{name: Lang.Hw.right + " " + Lang.Hw.led_en , type: "output", pos: {x: 24, y: 168}},
         },
       mode : 'both'
     }
@@ -105,18 +107,18 @@ Blockly.Blocks.hamster_value = {
 		this.appendDummyInput()
 		.appendField('')
 		.appendField(new Blockly.FieldDropdown([
-			[Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"],
-			[Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"],
-			[Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"],
-			[Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"],
-			[Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"],
-			[Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"],
-			[Lang.Blocks.HAMSTER_sensor_accelerationZ, "accelerationZ"],
+			[Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+			[Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+			[Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+			[Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+			[Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+			[Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+			[Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
 			[Lang.Blocks.HAMSTER_sensor_light, "light"],
 			[Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
-			[Lang.Blocks.HAMSTER_sensor_signalStrength, "signalStrength"],
-			[Lang.Blocks.HAMSTER_sensor_inputA, "inputA"],
-			[Lang.Blocks.HAMSTER_sensor_inputB, "inputB"]
+			[Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+			[Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+			[Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
 		]), "DEVICE");
 		this.setInputsInline(true);
 		this.setOutput(true, 'Number');
@@ -216,8 +218,8 @@ Blockly.Blocks.hamster_turn_once = {
 		this.appendDummyInput()
 		.appendField(Lang.Blocks.HAMSTER_turn_once_1)
 		.appendField(new Blockly.FieldDropdown([
-			[Lang.General.left,"LEFT"],
-			[Lang.General.right,"RIGHT"]
+			[Lang.Blocks.HAMSTER_turn_once_left,"LEFT"],
+			[Lang.Blocks.HAMSTER_turn_once_right,"RIGHT"]
 		]), "DIRECTION")
 		.appendField(Lang.Blocks.HAMSTER_turn_once_2)
 		.appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
@@ -452,8 +454,8 @@ Blockly.Blocks.hamster_turn_for_secs = {
 		this.appendDummyInput()
 		.appendField(Lang.Blocks.HAMSTER_turn_for_secs_1)
 		.appendField(new Blockly.FieldDropdown([
-			[Lang.General.left,"LEFT"],
-			[Lang.General.right,"RIGHT"]
+			[Lang.Blocks.HAMSTER_turn_left,"LEFT"],
+			[Lang.Blocks.HAMSTER_turn_right,"RIGHT"]
 		]), "DIRECTION")
 		.appendField(Lang.Blocks.HAMSTER_turn_for_secs_2)
 		this.appendValueInput("VALUE")
@@ -564,9 +566,9 @@ Blockly.Blocks.hamster_change_wheel_by = {
 		this.appendDummyInput()
 		.appendField(Lang.Blocks.HAMSTER_change_wheel_by_1)
 		.appendField(new Blockly.FieldDropdown([
-			[Lang.General.left,"LEFT"],
-			[Lang.General.right,"RIGHT"],
-			[Lang.General.both,"BOTH"]
+			[Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+			[Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+			[Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
 		]), "DIRECTION")
 		.appendField(Lang.Blocks.HAMSTER_change_wheel_by_2);
 		this.appendValueInput("VALUE")
@@ -602,9 +604,9 @@ Blockly.Blocks.hamster_set_wheel_to = {
 		this.appendDummyInput()
 		.appendField(Lang.Blocks.HAMSTER_set_wheel_to_1)
 		.appendField(new Blockly.FieldDropdown([
-			[Lang.General.left,"LEFT"],
-			[Lang.General.right,"RIGHT"],
-			[Lang.General.both,"BOTH"]
+			[Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+			[Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+			[Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
 		]), "DIRECTION")
 		.appendField(Lang.Blocks.HAMSTER_set_wheel_to_2);
 		this.appendValueInput("VALUE")
@@ -641,13 +643,13 @@ Blockly.Blocks.hamster_follow_line_using = {
 		.appendField(Lang.Blocks.HAMSTER_follow_line_using_1)
 		.appendField(new Blockly.FieldDropdown([
 			[Lang.Blocks.HAMSTER_color_black,"BLACK"],
-			[Lang.General.white,"WHITE"]
+			[Lang.Blocks.HAMSTER_color_white,"WHITE"]
 		]), "COLOR")
 		.appendField(Lang.Blocks.HAMSTER_follow_line_using_2)
 		.appendField(new Blockly.FieldDropdown([
-			[Lang.General.left,"LEFT"],
-			[Lang.General.right,"RIGHT"],
-			[Lang.General.both,"BOTH"]
+			[Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+			[Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
+			[Lang.Blocks.HAMSTER_both_floor_sensors,"BOTH"]
 		]), "DIRECTION")
 		.appendField(Lang.Blocks.HAMSTER_follow_line_using_3)
 		.appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
@@ -680,14 +682,14 @@ Blockly.Blocks.hamster_follow_line_until = {
 		.appendField(Lang.Blocks.HAMSTER_follow_line_until_1)
 		.appendField(new Blockly.FieldDropdown([
 			[Lang.Blocks.HAMSTER_color_black,"BLACK"],
-			[Lang.General.white,"WHITE"]
+			[Lang.Blocks.HAMSTER_color_white,"WHITE"]
 		]), "COLOR")
 		.appendField(Lang.Blocks.HAMSTER_follow_line_until_2)
 		.appendField(new Blockly.FieldDropdown([
-			[Lang.General.left,"LEFT"],
-			[Lang.General.right,"RIGHT"],
-			[Lang.Blocks.HAMSTER_front,"FRONT"],
-			[Lang.Blocks.HAMSTER_rear,"REAR"]
+			[Lang.Blocks.HAMSTER_left_intersection,"LEFT"],
+			[Lang.Blocks.HAMSTER_right_intersection,"RIGHT"],
+			[Lang.Blocks.HAMSTER_front_intersection,"FRONT"],
+			[Lang.Blocks.HAMSTER_rear_intersection,"REAR"]
 		]), "DIRECTION")
 		.appendField(Lang.Blocks.HAMSTER_follow_line_until_3)
 		.appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
@@ -786,9 +788,9 @@ Blockly.Blocks.hamster_set_led_to = {
 		this.appendDummyInput()
 		.appendField(Lang.Blocks.HAMSTER_set_led_to_1)
 		.appendField(new Blockly.FieldDropdown([
-			[Lang.General.left,"LEFT"],
-			[Lang.General.right,"RIGHT"],
-			[Lang.General.both,"BOTH"]
+			[Lang.Blocks.HAMSTER_left_led,"LEFT"],
+			[Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+			[Lang.Blocks.HAMSTER_both_leds,"BOTH"]
 		]), "DIRECTION")
 		.appendField(Lang.Blocks.HAMSTER_set_led_to_2)
 		.appendField(new Blockly.FieldDropdown([
@@ -798,7 +800,7 @@ Blockly.Blocks.hamster_set_led_to = {
 			[Lang.Blocks.HAMSTER_color_cyan,"3"],
 			[Lang.General.blue,"1"],
 			[Lang.Blocks.HAMSTER_color_magenta,"5"],
-			[Lang.General.white,"7"]
+			[Lang.Blocks.HAMSTER_color_white,"7"]
 		]), "COLOR")
 		.appendField(Lang.Blocks.HAMSTER_set_led_to_3)
 		.appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
@@ -829,9 +831,9 @@ Blockly.Blocks.hamster_clear_led = {
 		this.appendDummyInput()
 		.appendField(Lang.Blocks.HAMSTER_clear_led_1)
 		.appendField(new Blockly.FieldDropdown([
-			[Lang.General.left,"LEFT"],
-			[Lang.General.right,"RIGHT"],
-			[Lang.General.both,"BOTH"]
+			[Lang.Blocks.HAMSTER_left_led,"LEFT"],
+			[Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+			[Lang.Blocks.HAMSTER_both_leds,"BOTH"]
 		]), "DIRECTION")
 		.appendField(Lang.Blocks.HAMSTER_clear_led_2)
 		.appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
@@ -1130,7 +1132,7 @@ Blockly.Blocks.hamster_set_port_to = {
 		.appendField(new Blockly.FieldDropdown([
 			[Lang.Blocks.HAMSTER_port_a, "A"],
 			[Lang.Blocks.HAMSTER_port_b, "B"],
-			[Lang.Blocks.HAMSTER_port_ab, "AB"]
+			[Lang.Blocks.HAMSTER_port_a_b, "AB"]
 		]), "PORT")
 		.appendField(Lang.Blocks.HAMSTER_set_port_to_2)
 		.appendField(new Blockly.FieldDropdown([
@@ -1171,7 +1173,7 @@ Blockly.Blocks.hamster_change_output_by = {
 		.appendField(new Blockly.FieldDropdown([
 			[Lang.Blocks.HAMSTER_port_a, "A"],
 			[Lang.Blocks.HAMSTER_port_b, "B"],
-			[Lang.Blocks.HAMSTER_port_ab, "AB"]
+			[Lang.Blocks.HAMSTER_port_a_b, "AB"]
 		]), "PORT")
 		.appendField(Lang.Blocks.HAMSTER_change_output_by_2);
 		this.appendValueInput("VALUE").setCheck(["Number", "String"]);
@@ -1207,7 +1209,7 @@ Blockly.Blocks.hamster_set_output_to = {
 		.appendField(new Blockly.FieldDropdown([
 			[Lang.Blocks.HAMSTER_port_a, "A"],
 			[Lang.Blocks.HAMSTER_port_b, "B"],
-			[Lang.Blocks.HAMSTER_port_ab, "AB"]
+			[Lang.Blocks.HAMSTER_port_a_b, "AB"]
 		]), "PORT")
 		.appendField(Lang.Blocks.HAMSTER_set_output_to_2);
 		this.appendValueInput("VALUE").setCheck(["Number", "String"]);

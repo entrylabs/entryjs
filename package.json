@@ -3,7 +3,7 @@
   "title": "EntryJS",
   "description": "JavaScript library for visual programming",
   "version": "0.1.0",
-  "main": "dist/jquery.js",
+  "main": "dist/entry.js",
   "homepage": "http://play-entry.com",
   "author": {
     "name": "Entry Korea corp and other contributors"
@@ -39,6 +39,7 @@
     "karma-chrome-launcher": "^0.2.0",
     "karma-mocha": "^0.2.0",
     "karma-phantomjs-launcher": "^0.2.0",
-    "phantomjs": "^1.9.17"
+    "phantomjs": "^1.9.17",
+    "mocha": "^2.5.3"
   }
 }

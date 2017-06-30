@@ -1,4 +1,4 @@
-/**
+/*
  * @fileoverview Func object for entry function.
  */
 'use strict';
@@ -10,23 +10,59 @@ goog.require("Entry.Utils");
  * @param {variable model} variable
  * @constructor
  */
-Entry.Func = function() {
-    this.id = Entry.generateHash();
-    this.content = Blockly.Xml.textToDom(Entry.Func.CREATE_BLOCK);
+Entry.Func = function(func) {
+    this.id = func ? func.id : Entry.generateHash();
+    var content;
+    //inspect empty content
+    if (func && func.content && func.content.length > 4)
+        content = func.content;
+    this.content = content ? new Entry.Code(content) : new Entry.Code([
+        [
+            {
+                type: "function_create",
+                copyable: false,
+                deletable: false,
+                x: 40, y: 40
+            }
+        ]
+    ]);
     this.block = null;
-    this.stringHash = {};
-    this.booleanHash = {};
+    this.blockMenuBlock = null;
+    this._backupContent = null;
+    this.hashMap = {};
+
+    this.paramMap = {};
+
+    Entry.generateFunctionSchema(this.id);
+
+    if (func && func.content) {
+        var blockMap = this.content._blockMap;
+        for (var key in blockMap) {
+            Entry.Func.registerParamBlock(blockMap[key].type);
+        }
+        Entry.Func.generateWsBlock(this);
+    }
+
+    Entry.Func.registerFunction(this);
+
+    Entry.Func.updateMenu();
 };
 
 Entry.Func.threads = {};
 
-Entry.Func.registerFunction = function(functionHash, entity) {
-    var threadHash = Entry.generateHash();
-    var func = Entry.variableContainer.getFunction(functionHash);
-    var script = new Entry.Script(entity);
-    script.init(func.content.childNodes[0]);
-    this.threads[threadHash] = script;
-    return threadHash;
+Entry.Func.registerFunction = function(func) {
+    if (!Entry.playground) return;
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
+    var blockMenu = workspace.getBlockMenu();
+    var menuCode = blockMenu.code;
+
+    this._targetFuncBlock = menuCode.createThread([{
+        type: "func_" + func.id,
+        category: 'func',
+        x: -9999
+    }]);
+    func.blockMenuBlock = this._targetFuncBlock;
 };
 
 Entry.Func.executeFunction = function(threadHash) {
@@ -52,138 +88,91 @@ Entry.Func.prototype.init = function(model) {
     this.block = Blockly.Xml.textToDom(xmlText).childNodes[0];
 };
 
-Entry.Func.CREATE_BTN =
-    '<xml><btn text="Lang.Workspace.create_function" ' +
-    'onclick="Entry.variableContainer.createFunction()"></btn></xml>';
-
-Entry.Func.createBtn = Entry.nodeListToArray(
-    Blockly.Xml.textToDom(Entry.Func.CREATE_BTN).childNodes);
-
-Entry.Func.FIELD_BLOCK =
-    '<xml><block type="function_field_label"></block>' +
-    '<block type="function_field_string"><value name="PARAM">' +
-    '<block type="function_param_string"><mutation hashid="#1"/></block></value></block>' +
-    '<block type="function_field_boolean"><value name="PARAM">' +
-    '<block type="function_param_boolean"><mutation hashid="#2"/></block></value></block>' +
-    '</xml>';
-
-Entry.Func.fieldBlocks = Entry.nodeListToArray(
-    Blockly.Xml.textToDom(Entry.Func.FIELD_BLOCK).childNodes);
-
-Entry.Func.CREATE_BLOCK =
-    '<xml><block type="function_create" deletable="false" x="28" y="28">' +
-    '</block></xml>';
-
-Entry.Func.edit = function(func) {
-    this.srcFName = "";
-    var fieldElement = $(func.content.innerHTML).find('field');
-
-    for(var i = 0; i < fieldElement.length; i++)
-        if($(fieldElement[i]).attr('name') === "NAME") {
-            this.srcFName+=$(fieldElement[i]).text();
-            this.srcFName+=' ';
-        }
-    this.srcFName = this.srcFName.trim();
-    
-    this.cancelEdit(); 
-    if (this.workspace)
-        this.workspace.visible = true;
-    this.initEditView();
-    this.targetFunc = func;
-    this.workspace.clear();
-    Blockly.Xml.domToWorkspace(this.workspace, func.content);
-    this.updateMenu();
-    this.position_();
+Entry.Func.prototype.destroy = function() {
+    this.blockMenuBlock && this.blockMenuBlock.destroy();
 };
 
-Entry.Func.initEditView = function() {
-    this.parentView = Entry.playground.blocklyView_;
-    if (!this.svg) {
-        this.svg = Blockly.createSvgElement('svg', {
-            'xmlns': 'http://www.w3.org/2000/svg',
-            'xmlns:html': 'http://www.w3.org/1999/xhtml',
-            'xmlns:xlink': 'http://www.w3.org/1999/xlink',
-            'version': '1.1',
-            'class': 'blocklySvg entryFunctionEdit'
-        });
-        this.workspace = new Blockly.Workspace();
-        this.workspace.visible = true;
-        var func = this;
+Entry.Func.edit = function(func) {
+    //same as currently editing func
+    //no change needed
+    //if (this.targetFunc === func)
+        //return;
 
-        this.generateButtons();
+    this.unbindFuncChangeEvent();
+    this.unbindWorkspaceStateChangeEvent();
 
-        this.svg.appendChild(this.workspace.createDom());
-        this.workspace.scrollbar = new Blockly.ScrollbarPair(
-            this.workspace);
-        var scrollbar = this.workspace.scrollbar;
-        scrollbar.resize();
+    this.cancelEdit();
 
-        this.workspace.addTrashcan();
+    Entry.Func.isEdit = true;
+    this.targetFunc = func;
+    this.initEditView(func.content);
+    this.bindFuncChangeEvent();
+    this.updateMenu();
+    setTimeout(function() {
+        var schema = Entry.block["func_" + func.id];
+        if (schema && schema.paramsBackupEvent)
+            schema.paramsBackupEvent.notify();
 
-        Blockly.bindEvent_(window, 'resize', scrollbar, scrollbar.resize);
-        document.addEventListener("blocklyWorkspaceChange", this.syncFunc, false);
+        this._backupContent = func.content.stringify();
+    }.bind(this), 0);
+};
 
-        var workspace = this.workspace;
-        Blockly.bindEvent_(this.svg, 'mousedown', null, function(e) {
-            workspace.dragMode = true;
-            workspace.startDragMouseX = e.clientX;
-            workspace.startDragMouseY = e.clientY;
-            workspace.startDragMetrics = workspace.getMetrics();
-            workspace.startScrollX = workspace.scrollX;
-            workspace.startScrollY = workspace.scrollY;
-        });
-        Blockly.bindEvent_(this.svg, 'mousemove', null, function(e) {
-            var hScroll = scrollbar.hScroll;
-            var vScroll = scrollbar.hScroll;
-            hScroll.svgGroup_.setAttribute('opacity', '1');
-            vScroll.svgGroup_.setAttribute('opacity', '1');
-            if (workspace.dragMode) {
-              Blockly.removeAllRanges();
-              var dx = e.clientX - workspace.startDragMouseX;
-              var dy = e.clientY - workspace.startDragMouseY;
-              var metrics = workspace.startDragMetrics;
-              var x = workspace.startScrollX + dx;
-              var y = workspace.startScrollY + dy;
-              x = Math.min(x, -metrics.contentLeft);
-              y = Math.min(y, -metrics.contentTop);
-              x = Math.max(x, metrics.viewWidth - metrics.contentLeft -
-                           metrics.contentWidth);
-              y = Math.max(y, metrics.viewHeight - metrics.contentTop -
-                           metrics.contentHeight);
-
-              // Move the scrollbars and the page will scroll automatically.
-              scrollbar.set(-x - metrics.contentLeft,
-                                      -y - metrics.contentTop);
+Entry.Func.initEditView = function(content) {
+    if (!this.menuCode)
+        this.setupMenuCode();
+    var workspace = Entry.getMainWS();
+    workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
+    workspace.changeOverlayBoardCode(content);
+    this._workspaceStateEvent =
+        workspace.changeEvent.attach(this, function(message) {
+            this.endEdit(message || 'cancelEdit');
+            if (workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+                workspace.blockMenu.banClass('functionInit');
             }
         });
-        Blockly.bindEvent_(this.svg, 'mouseup', null, function(e) {
-            workspace.dragMode = false;
-        });
+    content.board.alignThreads();
+};
+
+Entry.Func.endEdit = function(message) {
+    this.unbindFuncChangeEvent();
+    this.unbindWorkspaceStateChangeEvent();
+    var targetFuncId = this.targetFunc.id;
+
+    if (this.targetFunc && this.targetFunc.content)
+        this.targetFunc.content.destroyView();
+
+    switch (message) {
+        case "save":
+            this.save();
+            break;
+        case "cancelEdit":
+            this.cancelEdit();
+            break;
     }
 
-    Blockly.mainWorkspace.blockMenu.targetWorkspace = this.workspace;
+    this._backupContent = null;
 
-    this.doWhenInit();
-    this.parentView.appendChild(this.svg);
+    delete this.targetFunc;
+    var blockSchema = Entry.block["func_" + targetFuncId];
+    if (blockSchema && blockSchema.destroyParamsBackupEvent)
+        blockSchema.destroyParamsBackupEvent.notify();
+    this.updateMenu();
+    Entry.Func.isEdit = false;
 };
 
 Entry.Func.save = function() {
-    var dstFName = "";
-    this.targetFunc.content = Blockly.Xml.workspaceToDom(this.workspace);
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
-    var fieldElement = $(this.targetFunc.content.innerHTML).find('field');
 
-    for(var i = 0; i < fieldElement.length; i++)
-        if($(fieldElement[i]).attr('name') === "NAME") {
-            
-            dstFName+=$(fieldElement[i]).text();
-            dstFName+=' ';
-        }
-    dstFName = dstFName.trim();
-    this.syncFuncName(dstFName);
-
-    this.cancelEdit();
+    var ws = Entry.getMainWS();
+    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) {
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+        mode.textType = Entry.Vim.TEXT_TYPE_PY;
+        mode.runType = Entry.Vim.WORKSPACE_MODE;
+        Entry.getMainWS().setMode(mode);
+        Entry.variableContainer.functionAddButton_.addClass('disable');
+    }
 };
 
 Entry.Func.syncFuncName = function(dstFName) {
@@ -193,7 +182,7 @@ Entry.Func.syncFuncName = function(dstFName) {
     var name ="";
     var blocks = [];
     blocks =  Blockly.mainWorkspace.getAllBlocks();
-    for(var i = 0; i < blocks.length; i++) { 
+    for(var i = 0; i < blocks.length; i++) {
         var block = blocks[i];
         if(block.type === "function_general") {
             var iList = [];
@@ -201,23 +190,21 @@ Entry.Func.syncFuncName = function(dstFName) {
             for(var j=0; j < iList.length; j++) {
                 var input = iList[j];
                 if(input.fieldRow.length > 0 && (input.fieldRow[0] instanceof Blockly.FieldLabel) && (input.fieldRow[0].text_ != undefined)) {
-                    name+=input.fieldRow[0].text_;
-                    name+=" ";
+                    name += input.fieldRow[0].text_;
+                    name += " ";
                 }
             }
             name = name.trim();
             if(name === this.srcFName && (this.srcFName.split(' ').length == dstFNameTokens.length)) {
                 for(var k=0; k < iList.length; k++) {
-                    var input = iList[k];             
+                    var input = iList[k];
                     if(input.fieldRow.length > 0 && (input.fieldRow[0] instanceof Blockly.FieldLabel) && (input.fieldRow[0].text_ != undefined)) {
                         if(dstFNameTokens[index] === undefined) {
                             iList.splice(k,1);
                             break;
-                        }
-                        else {
+                        } else {
                            input.fieldRow[0].text_ = dstFNameTokens[index];
                         }
-
                         index++;
                     }
                 }
@@ -226,26 +213,37 @@ Entry.Func.syncFuncName = function(dstFName) {
             index = 0;
         }
     }
+
     var updatedDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace)
     Blockly.mainWorkspace.clear();
     Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, updatedDom);
-}; 
+};
 
 Entry.Func.cancelEdit = function() {
-    if (!this.svg || !this.targetFunc)
-        return;
-    this.workspace.visible = false;
-    this.parentView.removeChild(this.svg);
-    Entry.Func.isEdit = false;
-    Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace;
+    if (!this.targetFunc) return;
+
     if (!this.targetFunc.block) {
+        this._targetFuncBlock.destroy();
         delete Entry.variableContainer.functions_[this.targetFunc.id];
         delete Entry.variableContainer.selected;
+    } else {
+        if (this._backupContent) {
+            this.targetFunc.content.load(this._backupContent);
+            Entry.generateFunctionSchema(this.targetFunc.id);
+            Entry.Func.generateWsBlock(this.targetFunc, true);
+        }
     }
-    delete this.targetFunc;
-    this.updateMenu();
-    this.doWhenCancel();
     Entry.variableContainer.updateList();
+
+    var ws = Entry.getMainWS();
+    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) {
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+        mode.textType = Entry.Vim.TEXT_TYPE_PY;
+        mode.runType = Entry.Vim.WORKSPACE_MODE;
+        Entry.getMainWS().setMode(mode);
+        Entry.variableContainer.functionAddButton_.addClass('disable');
+    }
 };
 
 Entry.Func.getMenuXml = function() {
@@ -288,80 +286,112 @@ Entry.Func.syncFunc = function() {
     }
 };
 
-Entry.Func.updateMenu = function() {
-    if (Entry.playground.selectedMenu == 'func') {
-        Entry.playground.blockMenu.hide();
-        Entry.playground.blockMenu.show(Entry.Func.getMenuXml());
-        if (!Blockly.WidgetDiv.field_ && Entry.Func.targetFunc) {
-            var target = Entry.Func.targetFunc;
-            var xml = Blockly.Xml.workspaceToDom(Entry.Func.workspace);
-            var generals = xml.getElementsByClassName("function_general");
-            var hash = target.id;
-            var block;
-            generals = Entry.nodeListToArray(generals);
-            var currentGenerals = [];
-            var otherGenerals = {};
+Entry.Func.setupMenuCode = function() {
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
+    var blockMenu = workspace.getBlockMenu();
+    var menuCode = blockMenu.code;
+    var CATEGORY = 'func';
+    this._fieldLabel = menuCode.createThread([{
+        type: "function_field_label",
+        category: CATEGORY,
+        x: -9999
+    }]).getFirstBlock();
 
-            generals.map(function(b) {
-                var functionHash = b.getElementsByTagName("mutation")[0]
-                            .getAttribute('hashid');
-                if (functionHash == hash) currentGenerals.push(b);
-                else {
-                    if (!otherGenerals[functionHash])
-                        otherGenerals[functionHash] = [];
-                    otherGenerals[functionHash].push(b);
-                }
-            });
-            currentGenerals.map(function(b) {
-                block = Entry.Func.generateWsBlock(xml,
-                    Blockly.Xml.workspaceToDom(Entry.Func.workspace),
-                    hash).block;
-                var remainBlocks = [];
-                var flag = false;
-                while (b.firstChild) {
-                    var child = b.firstChild;
-                    var xmlTag = child.tagName;
-                    if (flag || xmlTag == 'NEXT') {
-                        flag = true;
-                        remainBlocks.push(child);
-                    }
-                    b.removeChild(child);
-                }
-                while (block.firstChild)
-                    b.appendChild(block.firstChild);
-                while(remainBlocks.length)
-                    b.appendChild(remainBlocks.shift());
-            });
+    this._fieldString = menuCode.createThread([{
+        type: "function_field_string",
+        category: CATEGORY,
+        x: -9999,
+        copyable: false,
+        params: [
+            {type: this.requestParamBlock("string")}
+        ]
+    }]).getFirstBlock();
 
-            for (var hashKey in otherGenerals) {
-                var otherBlocks = otherGenerals[hashKey];
-                var funcContent = Entry.variableContainer.getFunction(hashKey).content;
-                otherBlocks.map(function(b) {
-                    block = Entry.Func.generateWsBlock(xml,
-                        funcContent,
-                        hashKey).block;
-                    var remainBlocks = [];
-                    var flag = false;
-                    while (b.firstChild) {
-                        var child = b.firstChild;
-                        var xmlTag = child.tagName;
-                        if (flag || xmlTag == 'NEXT') {
-                            flag = true;
-                            remainBlocks.push(child);
-                        }
-                        b.removeChild(child);
-                    }
-                    while (block.firstChild)
-                        b.appendChild(block.firstChild);
-                    while(remainBlocks.length)
-                        b.appendChild(remainBlocks.shift());
-                });
-            }
+    this._fieldBoolean = menuCode.createThread([{
+        type: "function_field_boolean",
+        copyable: false,
+        category: CATEGORY,
+        x: -9999,
+        params: [
+            {type: this.requestParamBlock("boolean")}
+        ]
+    }]).getFirstBlock();
 
-            Entry.Func.workspace.clear();
-            Blockly.Xml.domToWorkspace(Entry.Func.workspace, xml);
-        }
+    this.menuCode = menuCode;
+    blockMenu.align();
+};
+
+Entry.Func.refreshMenuCode = function() {
+    if (!Entry.playground.mainWorkspace) return;
+    if (!this.menuCode) this.setupMenuCode();
+
+    this._fieldString.params[0]
+        .changeType(this.requestParamBlock("string"));
+    this._fieldBoolean.params[0]
+        .changeType(this.requestParamBlock("boolean"));
+};
+
+Entry.Func.requestParamBlock = function(type) {
+    var blockPrototype;
+    switch (type) {
+        case "string":
+            blockPrototype = Entry.block.function_param_string;
+            break;
+        case "boolean":
+            blockPrototype = Entry.block.function_param_boolean;
+            break;
+        default:
+            return null;
     }
+
+    var blockType = type + "Param_" + Entry.generateHash();
+    Entry.block[blockType] =
+        Entry.Func.createParamBlock(blockType, blockPrototype, type);
+    return blockType;
+};
+
+Entry.Func.registerParamBlock = function(type) {
+    if (!type) return;
+
+    var blockPrototype;
+    if (type.indexOf("stringParam") > -1)
+        blockPrototype = Entry.block.function_param_string;
+    else if (type.indexOf("booleanParam") > -1)
+        blockPrototype = Entry.block.function_param_boolean;
+
+    //not a function param block
+    if (!blockPrototype) return;
+
+    Entry.Func.createParamBlock(type, blockPrototype, type);
+};
+
+Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
+    originalType = /string/gi.test(originalType) ?
+        "function_param_string" : "function_param_boolean";
+    var blockSchema = function () {};
+    blockSchema.prototype = blockPrototype;
+    blockSchema = new blockSchema();
+    blockSchema.changeEvent = new Entry.Event();
+    blockSchema.template = Lang.template[originalType];
+
+    Entry.block[type] = blockSchema;
+    return blockSchema;
+};
+
+Entry.Func.updateMenu = function() {
+    var workspace = Entry.getMainWS();
+    if (!workspace) return;
+    var blockMenu = workspace.getBlockMenu();
+    if (this.targetFunc) {
+        !this.menuCode && this.setupMenuCode();
+        blockMenu.banClass("functionInit", true);
+        blockMenu.unbanClass("functionEdit", true);
+    } else {
+        !workspace.isVimMode() && blockMenu.unbanClass("functionInit", true);
+        blockMenu.banClass("functionEdit", true);
+    }
+    blockMenu.lastSelector === 'func' && blockMenu.align();
 };
 
 Entry.Func.prototype.edit = function() {
@@ -375,236 +405,201 @@ Entry.Func.prototype.edit = function() {
     }
 };
 
-Entry.Func.generateBlock = function(func, content, id) {
-    var topBlocks = Entry.nodeListToArray(content.childNodes);
-    var createBlock;
-    for (var i in topBlocks)
-        if (topBlocks[i].getAttribute('type') == 'function_create')
-            createBlock = topBlocks[i];
-    var script = new Entry.Script();
-    script.init(createBlock);
-    var field = script;
-    if (field.values)
-        field = script.values.FIELD;
-    var mutationXml = '<mutation hashid="' + id + '">';
-    var fieldXml = '';
-    var description = '';
-    var stringCount = 0;
-    var booleanCount = 0;
-    func.stringHash = {};
-    func.booleanHash = {};
-    while(true) {
-        var type = field.type;
-        switch (type) {
-            case 'function_field_label':
-                mutationXml += '<field type="label" content="' +
-                    field.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-                description += field.fields.NAME;
-                break;
-            case 'function_field_boolean':
-                var hash = field.values.PARAM.hashId;
-                mutationXml += '<field type="boolean" hashid="' + hash +
-                               '"></field>';
-                fieldXml += '<value name="' + hash + '"><block type="True">' +
-                    '</block></value>';
-                func.booleanHash[hash] = booleanCount;
-                booleanCount++;
-                description += '논리값' + booleanCount;
-                break;
-            case 'function_field_string':
-                var hash = field.values.PARAM.hashId;
-                mutationXml += '<field type="string" hashid="' + hash +
-                               '"></field>';
-                fieldXml += '<value name="' + hash + '"><block type="text">' +
-                    '<field name="NAME">10</field></block></value>';
-                func.stringHash[hash] = stringCount;
-                stringCount++;
-                description += '문자값' + stringCount;
-                break;
+Entry.Func.generateBlock = function(func) {
+    var blockSchema = Entry.block["func_" + func.id];
+    var block = {
+        template: blockSchema.template,
+        params: blockSchema.params
+    };
+
+    var reg = /(%\d)/mi;
+    var templateParams = blockSchema.template.split(reg);
+    var description = "";
+    var booleanIndex = 0;
+    var stringIndex = 0;
+    for (var i in templateParams) {
+        var templateChunk = templateParams[i];
+        if (reg.test(templateChunk)) {
+            var paramIndex = Number(templateChunk.split('%')[1]) - 1;
+            var param = blockSchema.params[paramIndex];
+            if (param.type === "Indicator") {
+            } else if (param.accept === "boolean") {
+                description +=
+                    Lang.template.function_param_boolean +
+                    (booleanIndex ? booleanIndex : "");
+                booleanIndex++;
+            } else {
+                description += Lang.template.function_param_string +
+                    (stringIndex ? stringIndex : "");
+                stringIndex++;
+            }
+        } else {
+            description += templateChunk
         }
-        if (field.values && field.values.NEXT) field = field.values.NEXT;
-        else break;
-        description += ' ';
     }
-    mutationXml += '</mutation>';
-    var blockText = '<xml><block type="function_general">' + mutationXml +
-        fieldXml + '</block></xml>';
-    var block = Blockly.Xml.textToDom(blockText).childNodes[0];
-    if (!description) description = "함수";
+
     return {block: block, description: description};
 };
 
 Entry.Func.prototype.generateBlock = function(toSave) {
-    var generatedInfo = Entry.Func.generateBlock(this, this.content, this.id);
+    var generatedInfo = Entry.Func.generateBlock(this);
     this.block = generatedInfo.block;
     this.description = generatedInfo.description;
 };
 
-/**
- * Update view when window resizing
- * @private
- */
-Entry.Func.prototype.syncViewSize_ = function() {
-  var rect = this.parentView.getBoundingClientRect();
-  this.svg.style.width = rect.width;
-  this.svg.style.height = rect.height;
-};
+Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
+    this.unbindFuncChangeEvent();
+    targetFunc = targetFunc ? targetFunc : this.targetFunc;
+    var defBlock = targetFunc.content.getEventMap("funcDef")[0];
 
-Entry.Func.generateButtons = function() {
-    var func = this;
-    var btnWrapper = Blockly.createSvgElement('g', {}, this.svg);
-    this.btnWrapper = btnWrapper;
-    var saveText = Blockly.createSvgElement('text', {
-      'x': '27',
-      'y': '33',
-      'class': 'entryFunctionButtonText'
-      }, btnWrapper);
-    var saveTextNode = document.createTextNode(Lang.Buttons.save);
-    saveText.appendChild(saveTextNode);
+    if (!defBlock) return;
 
-    var cancelText = Blockly.createSvgElement('text', {
-      'x': '102.5',
-      'y': '33',
-      'class': 'entryFunctionButtonText'
-      }, btnWrapper);
-    var cancelTextNode = document.createTextNode(Lang.Buttons.cancel);
-    cancelText.appendChild(cancelTextNode);
-    var saveButton = Blockly.createSvgElement('circle', {
-        'cx': '27.5',
-        'cy': '27.5',
-        'r': '27.5',
-        'class': 'entryFunctionButton'
-    }, btnWrapper);
-    var cancelButton = Blockly.createSvgElement('circle', {
-        'cx': '102.5',
-        'cy': '27.5',
-        'r': '27.5',
-        'class': 'entryFunctionButton'
-    }, btnWrapper);
-
-    saveButton.onclick = function(e) { func.save(); };
-    saveText.onclick = function(e) { func.save(); };
-
-    cancelButton.onclick = function(e) { func.cancelEdit(); };
-    cancelText.onclick = function(e) { func.cancelEdit(); };
-};
-
-Entry.Func.position_ = function() {
-    var metrics = this.workspace.getMetrics();
-    if (!metrics || !this.workspace.visible) {
-      // There are no metrics available (workspace is probably not visible).
-        return;
-    }
-    var wrapper = this.btnWrapper;
-    wrapper.setAttribute('transform', 'translate(30, 501)');
-
-    if (Blockly.RTL) {
-        //I didn't code here anything
-        this.left_ = this.MARGIN_SIDE_;
-    } else {
-        wrapper.left_ = metrics.viewWidth/2 + metrics.absoluteLeft - 60;
-    }
-    wrapper.top_ = metrics.viewHeight + metrics.absoluteTop - 200;
-    wrapper.setAttribute('transform',
-        'translate(' + wrapper.left_ + ',' + wrapper.top_ + ')');
-};
-
-Entry.Func.positionBlock_ = function(block) {
-    var metrics = this.workspace.getMetrics();
-    if (!metrics || !this.workspace.visible)
-        return;
-
-    var originRoot = block.getSvgRoot();
-    var originXY = Blockly.getSvgXY_(originRoot);
-
-    var hw = block.getHeightWidth();
-    var targetX = metrics.viewWidth/2 - 80;
-    var targetY = metrics.viewHeight/2 - 50;
-    block.moveBy(targetX-originXY.x, targetY-originXY.y);
-};
-
-Entry.Func.doWhenInit = function() {
-    var svg = this.svg;
-    svg.appendChild(Blockly.fieldKeydownDom);
-    svg.appendChild(Blockly.fieldDropdownDom);
-    svg.appendChild(Blockly.contextMenu);
-    Blockly.bindEvent_(window, 'resize', this, this.position_);
-    Blockly.bindEvent_(svg, 'mousedown', null, Blockly.onMouseDown_);
-    Blockly.bindEvent_(svg, 'contextmenu', null, Blockly.onContextMenu_);
-};
-
-Entry.Func.doWhenCancel = function() {
-    Blockly.clipboard_ = null;
-    var svg = Blockly.svg;
-    svg.appendChild(Blockly.fieldKeydownDom);
-    svg.appendChild(Blockly.fieldDropdownDom);
-    svg.appendChild(Blockly.contextMenu);
-    Blockly.unbindEvent_(window, 'resize', this, this.position_);
-    Blockly.unbindEvent_(svg, 'mousedown', null, Blockly.onMouseDown_);
-    Blockly.unbindEvent_(svg, 'contextmenu', null, Blockly.onContextMenu_);
-};
-
-Entry.Func.generateWsBlock = function(func, content, id) {
-    var topBlocks = content.childNodes;
-    var createBlock;
-    for (var i in topBlocks) {
-        if (topBlocks[i].getAttribute('type') == 'function_create') {
-            createBlock = topBlocks[i];
-            break;
-        }
-    }
-    var script = new Entry.Script();
-    script.init(createBlock);
-    var field = script;
-    if (field.values)
-        field = script.values.FIELD;
-    var mutationXml = '<mutation hashid="' + id + '">';
-    var fieldXml = '';
-    var description = '';
-    var stringCount = 0;
-    var booleanCount = 0;
-    func.stringHash = {};
-    func.booleanHash = {};
-    while(true) {
-        switch (field.type) {
+    var outputBlock = defBlock.params[0];
+    var booleanIndex = 0;
+    var stringIndex = 0;
+    var schemaParams = [];
+    var schemaTemplate = "";
+    var hashMap = targetFunc.hashMap;
+    var paramMap = targetFunc.paramMap;
+    var blockIds = [];
+    while(outputBlock) {
+        var value = outputBlock.params[0];
+        switch (outputBlock.type) {
             case 'function_field_label':
-                mutationXml += '<field type="label" content="' +
-                    field.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-                description += field.fields.NAME;
+                schemaTemplate = schemaTemplate + " " + value;
                 break;
             case 'function_field_boolean':
-                var hash = field.values.PARAM.hashId;
-                mutationXml += '<field type="boolean" hashid="' + hash +
-                               '"></field>';
-                fieldXml += '<value name="' + hash + '"><block type="function_param_boolean">' +
-                    '<mutation hashid="'+ hash +'"></mutation></block></value>';
-                func.booleanHash[hash] = booleanCount;
-                booleanCount++;
-                description += '논리값' + booleanCount;
+                Entry.Mutator.mutate(value.type, {
+                    template: Lang.Blocks.FUNCTION_logical_variable +
+                        " " + (booleanIndex + 1)
+                });
+                hashMap[value.type] = false;
+                paramMap[value.type] = booleanIndex + stringIndex;
+                booleanIndex++;
+                schemaParams.push({
+                    type: "Block",
+                    accept: "boolean"
+                });
+                schemaTemplate += " %" + (booleanIndex + stringIndex);
+                blockIds.push(outputBlock.id);
                 break;
             case 'function_field_string':
-                var hash = field.values.PARAM.hashId;
-                mutationXml += '<field type="string" hashid="' + hash +
-                               '"></field>';
-                fieldXml += '<value name="' + hash + '"><block type="function_param_string">' +
-                    '<mutation hashid="'+ hash +'"></mutation></block></value>';
-                func.stringHash[hash] = stringCount;
-                stringCount++;
-                description += '문자값' + stringCount;
+                Entry.Mutator.mutate(value.type, {
+                    template: Lang.Blocks.FUNCTION_character_variable +
+                        " " + (stringIndex + 1)
+                });
+                hashMap[value.type] = false;
+                paramMap[value.type] = booleanIndex + stringIndex;
+                stringIndex++;
+                schemaTemplate += " %" + (booleanIndex + stringIndex);
+                schemaParams.push({
+                    type: "Block",
+                    accept: "string"
+                });
+                blockIds.push(outputBlock.id);
                 break;
         }
-        if (field.values && field.values.NEXT)
-            field = field.values.NEXT;
-        else break;
-        description += ' ';
+        outputBlock = outputBlock.getOutputBlock();
     }
-    mutationXml += '</mutation>';
-    var blockText = '<xml><block type="function_general">' +
-        mutationXml + fieldXml + '</block></xml>';
-    if (!description) description = "함수";
-    return {
-        block: Blockly.Xml.textToDom(blockText).childNodes[0],
-        description: description
-    };
+
+    booleanIndex++;
+    schemaTemplate += " %" + (booleanIndex + stringIndex);
+    schemaParams.push({
+        "type": "Indicator",
+        "img": "block_icon/function_03.png",
+        "size": 12
+    });
+
+    var funcName = "func_" + targetFunc.id;
+    var originSchema = Entry.block[funcName];
+
+    var block = Entry.block[funcName];
+    var originParams = block.params.slice();
+    originParams.pop();
+    var newParams = schemaParams.slice();
+    newParams.pop();
+    var originParamsLength = originParams.length;
+    var newParamsLength = newParams.length;
+
+    var changeData = {};
+
+    if (newParamsLength > originParamsLength) {
+        var outputBlockIds = targetFunc.outputBlockIds;
+        if (outputBlockIds) {
+            var startPos = 0;
+            while(outputBlockIds[startPos] === blockIds[startPos])
+                startPos++;
+
+            var endPos = 0;
+            while(outputBlockIds[outputBlockIds.length - endPos -1] === blockIds[blockIds.length - endPos - 1])
+                endPos++;
+
+            endPos = blockIds.length - endPos -1;
+            changeData = {
+                type: 'insert',
+                startPos: startPos,
+                endPos: endPos
+            };
+        }
+    } else if (newParamsLength < originParamsLength) {
+        changeData = {
+            type: 'cut',
+            pos: newParamsLength
+        };
+    } else
+        changeData = { type: 'noChange' };
+
+    changeData.isRestore = isRestore;
+
+    targetFunc.outputBlockIds = blockIds;
+
+    Entry.Mutator.mutate(
+        funcName,
+        {
+            params: schemaParams,
+            template: schemaTemplate,
+        },
+        changeData
+    );
+
+    for (var key in hashMap) {
+        var state = hashMap[key];
+        if (state) {
+            var text;
+            if (key.indexOf("string") > -1)
+                text = Lang.Blocks.FUNCTION_character_variable;
+            else
+                text = Lang.Blocks.FUNCTION_logical_variable;
+            Entry.Mutator.mutate(key, {
+                template: text
+            });
+        } else {
+            hashMap[key] = true;
+        }
+    }
+
+    this.bindFuncChangeEvent(targetFunc);
+};
+
+Entry.Func.bindFuncChangeEvent = function(targetFunc) {
+    targetFunc = targetFunc ? targetFunc : this.targetFunc;
+    if (!this._funcChangeEvent && targetFunc.content.getEventMap("funcDef")[0].view)
+        this._funcChangeEvent = targetFunc.content
+            .getEventMap("funcDef")[0].view._contents[1]
+            .changeEvent.attach(this, this.generateWsBlock);
+};
+
+Entry.Func.unbindFuncChangeEvent = function() {
+    if (!this._funcChangeEvent)
+        return;
+    this._funcChangeEvent.destroy();
+    delete this._funcChangeEvent;
+};
+
+Entry.Func.unbindWorkspaceStateChangeEvent = function() {
+    if (!this._workspaceStateEvent)
+        return;
+    this._workspaceStateEvent.destroy();
+    delete this._workspaceStateEvent;
 };
 

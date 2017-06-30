@@ -10,8 +10,67 @@ Entry.overridePrototype = function() {
     Number.prototype.mod = function(n) {
             return ((this%n)+n)%n;
     };
+
+    //polyfill
+    if (!String.prototype.repeat) {
+      String.prototype.repeat = function(count) {
+        'use strict';
+        if (this == null) {
+          throw new TypeError('can\'t convert ' + this + ' to object');
+        }
+        var str = '' + this;
+        count = +count;
+        if (count != count) {
+          count = 0;
+        }
+        if (count < 0) {
+          throw new RangeError('repeat count must be non-negative');
+        }
+        if (count == Infinity) {
+          throw new RangeError('repeat count must be less than infinity');
+        }
+        count = Math.floor(count);
+        if (str.length == 0 || count == 0) {
+          return '';
+        }
+        // Ensuring count is a 31-bit integer allows us to heavily optimize the
+        // main part. But anyway, most current (August 2014) browsers can't handle
+        // strings 1 << 28 chars or longer, so:
+        if (str.length * count >= 1 << 28) {
+          throw new RangeError('repeat count must not overflow maximum string size');
+        }
+        var rpt = '';
+        for (;;) {
+          if ((count & 1) == 1) {
+            rpt += str;
+          }
+          count >>>= 1;
+          if (count == 0) {
+            break;
+          }
+          str += str;
+        }
+        // Could we try:
+        // return Array(count + 1).join(this);
+        return rpt;
+      }
+    }
 };
 
+// INFO: 기존에 사용하던 isNaN에는 숫자 체크의 문자가 있을수 있기때문에 regex로 체크하는 로직으로 변경
+// isNaN 문제는 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/isNaN
+// 에서 확인.
+Entry.Utils.isNumber = function(num) {
+    if(typeof num === 'number') {
+        return true;
+    }
+    var reg = /^-?\d+\.?\d*$/;
+    if(typeof num === 'string' && reg.test(num)) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 Entry.Utils.generateId = function() {
     return ("0000"+(Math.random()*Math.pow(36,4)<<0).toString(36)).substr(-4);
@@ -53,45 +112,227 @@ Entry.Utils.colorDarken = function(color, factor) {
     }
 
     factor = factor === undefined ? 0.7 : factor;
-    r = Math.floor(r * factor).toString(16);
-    g = Math.floor(g * factor).toString(16);
-    b = Math.floor(b * factor).toString(16);
+    r = inspect(Math.floor(r * factor).toString(16));
+    g = inspect(Math.floor(g * factor).toString(16));
+    b = inspect(Math.floor(b * factor).toString(16));
+
+    function inspect(val) {
+        if (val.length != 2) val = '0' + val;
+        return val;
+    }
 
     return '#' + r + g + b;
 };
 
-Entry.Utils.bindGlobalEvent = function(options) {
-    if (options === undefined)
-        options = ['resize', 'mousedown', 'mousemove', 'keydown', 'keyup'];
+Entry.Utils.colorLighten = function(color, amount) {
+    function clamp01(val) {
+        return Math.min(1, Math.max(0, val));
+    }
 
-    if (!Entry.windowReszied && options.indexOf('resize') > -1) {
+    amount = (amount === 0) ? 0 : (amount || 20);
+    var hsl = Entry.Utils.hexToHsl(color);
+    hsl.l += amount / 100;
+    hsl.l = clamp01(hsl.l);
+    return Entry.Utils.hslToHex(hsl);
+};
+
+Entry.Utils._EmphasizeColorMap = {
+    "#3BBD70": "#5BC982",
+    "#498DEB": "#62A5F4",
+    "#A751E3": "#C08FF7",
+    "#EC4466": "#F46487",
+    "#FF9E20": "#FFB05A",
+    "#A4D01D": "#C4DD31",
+    "#00979D": "#09BAB5",
+    "#FFD974": "#FCDA90",
+    "#E457DC": "#F279F2",
+    "#CC7337": "#DD884E",
+    "#AEB8FF": "#C0CBFF",
+    "#FFCA36": "#F2C670",
+};
+
+Entry.Utils.getEmphasizeColor = function(color) {
+    var colorKey = color.toUpperCase();
+    return Entry.Utils._EmphasizeColorMap[colorKey] || color;
+};
+
+// Take input from [0, n] and return it as [0, 1]
+Entry.Utils.bound01 = function(n, max) {
+    function isOnePointZero(n) {
+        return typeof n == "string" && n.indexOf('.') != -1 && parseFloat(n) === 1;
+    }
+
+    function isPercentage(n) {
+        return typeof n === "string" && n.indexOf('%') != -1;
+    }
+
+    if (isOnePointZero(n)) { n = "100%"; }
+
+    var processPercent = isPercentage(n);
+    n = Math.min(max, Math.max(0, parseFloat(n)));
+
+    // Automatically convert percentage into number
+    if (processPercent) {
+        n = parseInt(n * max, 10) / 100;
+    }
+
+    // Handle floating point rounding errors
+    if ((Math.abs(n - max) < 0.000001)) {
+        return 1;
+    }
+
+    // Convert into [0, 1] range if it isn't already
+    return (n % max) / parseFloat(max);
+};
+
+// `rgbToHsl`
+// Converts an RGB color value to HSL.
+// *Assumes:* r, g, and b are contained in [0, 255] or [0, 1]
+// *Returns:* { h, s, l } in [0,1]
+Entry.Utils.hexToHsl = function(color) {
+    var r, g, b;
+    if (color.length === 7) {
+        r = parseInt(color.substr(1, 2), 16);
+        g = parseInt(color.substr(3, 2), 16);
+        b = parseInt(color.substr(5, 2), 16);
+    } else {
+        r = parseInt(color.substr(1, 2), 16);
+        g = parseInt(color.substr(2, 2), 16);
+        b = parseInt(color.substr(3, 2), 16);
+    }
+
+    r = Entry.Utils.bound01(r, 255);
+    g = Entry.Utils.bound01(g, 255);
+    b = Entry.Utils.bound01(b, 255);
+
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
+
+    if(max == min) {
+        h = s = 0; // achromatic
+    }
+    else {
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+
+        h /= 6;
+    }
+
+    var hsl = { h: h, s: s, l: l };
+    return { h: hsl.h * 360, s: hsl.s, l: hsl.l};
+};
+
+// `hslToRgb`
+// Converts an HSL color value to RGB.
+// *Assumes:* h is contained in [0, 1] or [0, 360] and s and l are contained [0, 1] or [0, 100]
+// *Returns:* { r, g, b } in the set [0, 255]
+Entry.Utils.hslToHex = function(color) {
+    var r, g, b;
+
+    var h = Entry.Utils.bound01(color.h, 360);
+    var s = Entry.Utils.bound01(color.s, 1);
+    var l = Entry.Utils.bound01(color.l, 1);
+
+    function hue2rgb(p, q, t) {
+        if(t < 0) t += 1;
+        if(t > 1) t -= 1;
+        if(t < 1/6) return p + (q - p) * 6 * t;
+        if(t < 1/2) return q;
+        if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+    }
+
+    function pad2(c) {
+        return c.length == 1 ? '0' + c : '' + c;
+    }
+
+    if(s === 0) {
+        r = g = b = l; // achromatic
+    }
+    else {
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+
+    var rgb = { r: r * 255, g: g * 255, b: b * 255 };
+
+    var hex = [
+        pad2(Math.round(rgb.r).toString(16)),
+        pad2(Math.round(rgb.g).toString(16)),
+        pad2(Math.round(rgb.b).toString(16))
+    ];
+
+    return '#' + hex.join('');
+};
+
+
+Entry.Utils.bindGlobalEvent = function(options) {
+    var doc = $(document);
+    if (options === undefined)
+        options = [
+            'resize',
+            'mousedown',
+            'mousemove',
+            'keydown',
+            'keyup',
+            'dispose'
+        ];
+
+    if (options.indexOf('resize') > -1) {
+        if (Entry.windowReszied) {
+            $(window).off('resize');
+            Entry.windowReszied.clear()
+        }
         Entry.windowResized = new Entry.Event(window);
         $(window).on('resize', (function(e) {
             Entry.windowResized.notify(e);
         }));
     }
 
-    if (!Entry.documentMousedown && options.indexOf('mousedown') > -1) {
+    if (options.indexOf('mousedown') > -1) {
+        if (Entry.documentMousedown) {
+            doc.off('mousedown');
+            Entry.documentMousedown.clear();
+        }
         Entry.documentMousedown = new Entry.Event(window);
-        $(document).on('mousedown', (function(e) {
+        doc.on('mousedown', (function(e) {
             Entry.documentMousedown.notify(e);
         }));
     }
 
-    if (!Entry.documentMousemove && options.indexOf('mousemove') > -1) {
+    if (options.indexOf('mousemove') > -1) {
+        if (Entry.documentMousemove) {
+            doc.off('touchmove mousemove');
+            Entry.documentMousemove.clear();
+        }
+
         Entry.mouseCoordinate = {};
         Entry.documentMousemove = new Entry.Event(window);
-        $(document).on('mousemove', (function(e) {
+        doc.on('touchmove mousemove', (function(e) {
+            if (e.originalEvent && e.originalEvent.touches)
+                e = e.originalEvent.touches[0];
             Entry.documentMousemove.notify(e);
             Entry.mouseCoordinate.x = e.clientX;
             Entry.mouseCoordinate.y = e.clientY;
         }));
     }
 
-    if (!Entry.keyPressed && options.indexOf('keydown') > -1) {
+    if (options.indexOf('keydown') > -1) {
+        if (Entry.keyPressed)  {
+            doc.off('keydown');
+            Entry.keyPressed.clear();
+        }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        $(document).on('keydown', (function(e) {
+        doc.on('keydown', (function(e) {
             var keyCode = e.keyCode;
             if (Entry.pressedKeys.indexOf(keyCode) < 0)
                 Entry.pressedKeys.push(keyCode);
@@ -99,19 +340,34 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }));
     }
 
-    if (!Entry.keyUpped && options.indexOf('keyup') > -1) {
+    if (options.indexOf('keyup') > -1) {
+        if (Entry.keyUpped) {
+            doc.off('keyup');
+            Entry.keyUpped.clear();
+        }
         Entry.keyUpped = new Entry.Event(window);
-        $(document).on('keyup', (function(e) {
+        doc.on('keyup', (function(e) {
             var keyCode = e.keyCode;
             var index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) Entry.pressedKeys.splice(index,1);
             Entry.keyUpped.notify(e);
         }));
     }
+
+    if (options.indexOf('dispose') > -1) {
+        if (Entry.disposeEvent) Entry.disposeEvent.clear();
+        Entry.disposeEvent = new Entry.Event(window);
+        if (Entry.documentMousedown)
+            Entry.documentMousedown.attach(this, function(e) {
+                Entry.disposeEvent.notify(e);
+            });
+    }
 };
 
 Entry.Utils.makeActivityReporter = function() {
     Entry.activityReporter = new Entry.ActivityReporter();
+    if (Entry.commander)
+        Entry.commander.addReporter(Entry.activityReporter);
     return Entry.activityReporter;
 };
 
@@ -164,7 +420,11 @@ Entry.parseTexttoXML = function(xmlText) {
  * @return {!Element}
  */
 Entry.createElement = function(type, elementId) {
-    var element = document.createElement(type);
+    var element;
+    if (type instanceof HTMLElement)
+        element = type;
+    else
+        var element = document.createElement(type);
     if (elementId)
         element.id = elementId;
 
@@ -172,27 +432,34 @@ Entry.createElement = function(type, elementId) {
         return this.className.match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
     };
     element.addClass = function(className) {
+        var current = this.className;
         for (var i = 0; i < arguments.length; i++) {
             var className = arguments[i];
-            if (!this.hasClass(className)) this.className += " " + className;
+            if (!this.hasClass(className))
+                current += " " + className;
         }
+        this.className = current;
     };
     element.removeClass = function(className) {
+        var current = this.className;
         for (var i = 0; i < arguments.length; i++) {
             var className = arguments[i];
             if (this.hasClass(className)) {
                 var reg = new RegExp('(\\s|^)'+className+'(\\s|$)');
-                this.className=this.className.replace(reg,' ');
+                current = current.replace(reg,' ');
             }
         }
+        this.className = current;
     };
     element.bindOnClick = function(func) {
-        $(this).on('click touchstart', function(e) {
+        $(this).on('click tab', function(e) {
+            if (element.disabled) return;
             e.stopImmediatePropagation();
-            if (e.handled) return;
-            e.handled = true;
             func.call(this, e);
         });
+    };
+    element.unBindOnClick = function(func) {
+        $(this).off('click tab');
     };
     return element;
 };
@@ -205,7 +472,7 @@ Entry.makeAutolink = function(html) {
     } else {
         return '';
     }
-}
+};
 
 /**
  * Generate random hash
@@ -240,10 +507,12 @@ Entry.addEventListener = function(eventName, fn) {
 Entry.dispatchEvent = function(eventName, params) {
     if (!this.events_)
         this.events_ = {};
-    if (!this.events_[eventName])
-        return;
-    for (var index = 0, l = this.events_[eventName].length; index < l; index++) {
-        this.events_[eventName][index].call(window, params);
+
+    var events = this.events_[eventName];
+    if (!events) return;
+
+    for (var index = 0, l = events.length; index < l; index++) {
+        events[index].apply(window, Array.prototype.slice.call(arguments).splice(1));
     }
 };
 
@@ -280,7 +549,7 @@ Entry.removeAllEventListener = function(eventName) {
  * @param {!number} b
  */
 Entry.addTwoNumber = function(a, b) {
-  if (isNaN(a) || isNaN(b)) {
+  if (!Entry.Utils.isNumber(a) || !Entry.Utils.isNumber(b)) {
     return a+b;
   }
   a += ''; b+= '';
@@ -408,9 +677,9 @@ Entry.getElementsByClassName = function(cl) {
  * @return {Boolean||Number} arr
  */
 Entry.parseNumber = function(value) {
-    if (typeof value == "string" && !isNaN(Number(value)))
+    if (typeof value == "string" && Entry.Utils.isNumber(value))
         return Number(value);
-    else if (typeof value == "number" && !isNaN(Number(value)))
+    else if (typeof value == "number" && Entry.Utils.isNumber(value))
         return value;
     return false;
 };
@@ -542,13 +811,16 @@ Entry.nodeListToArray = function(nl) {
 };
 
 Entry.computeInputWidth = function(value){
-    var tmp = document.createElement("span");
-    tmp.className = "tmp-element";
-    tmp.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    document.body.appendChild(tmp);
-    var theWidth = tmp.offsetWidth;
-    document.body.removeChild(tmp);
-    return Number(theWidth + 10) + 'px';
+    var elem = document.getElementById('entryInputForComputeWidth');
+    if (!elem) {
+        elem = document.createElement("span");
+        elem.setAttribute('id', 'entryInputForComputeWidth');
+        elem.className = "elem-element";
+        document.body.appendChild(elem);
+    }
+
+    elem.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return Number(elem.offsetWidth + 10) + 'px';
 };
 
 Entry.isArrowOrBackspace = function(keyCode){
@@ -587,7 +859,7 @@ Entry.factorial = function(n){
 };
 
 Entry.getListRealIndex = function(index, list){
-    if (isNaN(index)) {
+    if (!Entry.Utils.isNumber(index)) {
         switch(index) {
             case 'FIRST':
                 index = 1;
@@ -701,6 +973,8 @@ Entry.setCloneBrush = function (sprite, parentBrush) {
     var shape = new createjs.Shape(brush);
     Entry.stage.selectedObjectContainer.addChild(shape);
 
+    brush.stop = parentBrush.stop;
+
     if (sprite.brush)
         sprite.brush = null;
     sprite.brush = brush;
@@ -708,10 +982,11 @@ Entry.setCloneBrush = function (sprite, parentBrush) {
     if (sprite.shape)
         sprite.shape = null;
     sprite.shape = shape;
+
 };
 
 Entry.isFloat = function (num) {
-    return /\d+\.{1}\d+/.test(num);
+    return /\d+\.{1}\d+$/.test(num);
 };
 
 Entry.getStringIndex = function(str) {
@@ -725,7 +1000,7 @@ Entry.getStringIndex = function(str) {
     var len = str.length;
     for (var i=len-1; i>0; --i) {
         var ch = str.charAt(i);
-        if (!isNaN(ch)) {
+        if (Entry.Utils.isNumber(ch)) {
             num.unshift(ch);
             idx = i;
         } else {
@@ -790,7 +1065,7 @@ Entry.getMaxFloatPoint = function(numbers) {
 };
 
 Entry.convertToRoundedDecimals = function (value, decimals) {
-    if (isNaN(value) || !this.isFloat(value))
+    if (!Entry.Utils.isNumber(value) || !this.isFloat(value))
         return value;
     else
         return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
@@ -821,15 +1096,99 @@ Entry.isEmpty = function(obj) {
 Entry.Utils.disableContextmenu = function(node) {
     if (!node) return;
 
-    $(node).on('contextmenu', function(e){
-        e.stopPropagation();
-        e.preventDefault();
-        return false;
-    });
+    $(node).on('contextmenu', this.contextPreventFunction);
+};
+
+Entry.Utils.contextPreventFunction = function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+};
+
+Entry.Utils.enableContextmenu = function(node) {
+    if (!node) return;
+
+    $(node).off('contextmenu', this.contextPreventFunction);
 };
 
 Entry.Utils.isRightButton = function(e) {
     return e.button == 2 || e.ctrlKey;
+};
+
+Entry.Utils.isTouchEvent = function(e) {
+    return e.type.toLowerCase() !== 'mousedown';
+};
+
+Entry.Utils.inherit = function(parent, child) {
+    function F() {}
+    F.prototype = parent.prototype;
+    child.prototype = new F();
+    return child;
+};
+
+Entry.bindAnimationCallbackOnce = function($elem, func) {
+    $elem.one("webkitAnimationEnd animationendo animationend", func);
+};
+
+Entry.Utils.isInInput = function(e) {
+    return e.target.type == 'textarea' || e.target.type == 'text';
+};
+
+Entry.Utils.isFunction = function(fn) {
+    return typeof fn === 'function';
+};
+
+Entry.Utils.addFilters = function (boardSvgDom, suffix) {
+    var defs = boardSvgDom.elem('defs');
+
+    //trashcan filter
+    var trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter_' + suffix});
+    trashCanFilter.elem('feGaussianBlur', {'in': 'SourceAlpha', 'stdDeviation': 2, 'result': 'blur'});
+    trashCanFilter.elem('feOffset', {'in': 'blur', 'dx': 1, 'dy': 1, 'result': 'offsetBlur'});
+    var feMerge = trashCanFilter.elem('feMerge');
+    feMerge.elem('feMergeNode', {'in': 'offsetBlur'});
+    feMerge.elem('feMergeNode', {'in': 'SourceGraphic'}, feMerge);
+
+
+    var blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter_' + suffix, 'height': '200%'});
+    blockFilter.elem('feOffset', {result: 'offOut', in: 'SourceGraphic', dx: 0, dy:1});
+    blockFilter.elem('feColorMatrix', {
+        result: 'matrixOut', in: 'offOut', type: 'matrix', values: '0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0'
+    });
+    blockFilter.elem('feBlend', {in: 'SourceGraphic', in1:'offOut', mode: 'normal'});
+
+    var blockHighlightFilter = defs.elem('filter', {'id': 'entryBlockHighlightFilter_' + suffix});
+    blockHighlightFilter.elem('feOffset', {result: 'offOut', in:"SourceGraphic", dx:0, dy:0});
+    blockHighlightFilter.elem('feColorMatrix', {
+        result: 'matrixOut', in:"offOut", type: 'matrix', values: '1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0'
+    });
+};
+
+Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
+    var pattern = boardSvgDom.elem('pattern', {
+        id: 'blockHoverPattern_' + suffix,
+        class: 'blockHoverPattern',
+        patternUnits: "userSpaceOnUse",
+        patternTransform: "translate(12, 0)",
+        x: 0, y: 0,
+        width: 125,
+        height: 33,
+        style: "display: none"
+    });
+
+    var imagePath = Entry.mediaFilePath + 'block_pattern_(order).png';
+    var order = '(order)';
+    for (var i=1; i<5; i++) {
+        pattern.elem("image", {
+            class: 'pattern' + i,
+            href: imagePath.replace(order, i),
+            x: 0, y: 0,
+            width: 125,
+            height: 33
+        });
+    }
+
+    return { pattern: pattern };
 };
 
 Entry.Utils.COLLISION = {
@@ -838,4 +1197,438 @@ Entry.Utils.COLLISION = {
     RIGHT: 2,
     LEFT: 3,
     DOWN: 4
+};
+
+Entry.Utils.createMouseEvent = function(type, event) {
+    var e = document.createEvent('MouseEvent');
+    e.initMouseEvent(
+        type,true,true,window,0,0,0,
+        event.clientX, event.clientY,
+        false,false,false,false,0,null
+    );
+    return e;
+};
+
+Entry.Utils.xmlToJsonData = function(xml) {
+    xml = $.parseXML(xml);
+    var result = [];
+    var categories = xml.childNodes[0].childNodes;
+    for (var i in categories) {
+        var category = categories[i];
+        if (!category.tagName)
+            continue;
+        var data = {
+            category: category.getAttribute("id"),
+            blocks: []
+        };
+        var blocks = category.childNodes;
+        for (var i in blocks) {
+            var block = blocks[i];
+            if (!block.tagName) continue;
+
+            var type = block.getAttribute('type')
+            if (!type) continue;
+            data.blocks.push(type);
+        }
+        result.push(data);
+    }
+    return result;
+};
+
+Entry.Utils.stopProjectWithToast = function(scope, message, isHide, error) {
+    var block = scope.block;
+    message = message || '런타임 에러 발생';
+
+    if (Entry.toast && !isHide)
+        Entry.toast.alert(
+            Lang.Msgs.warn,
+            Lang.Workspace.check_runtime_error,
+            true
+        );
+
+    if (Entry.engine)
+        Entry.engine.toggleStop();
+
+    if (Entry.type === 'workspace') {
+        if(scope.block && 'funcBlock' in scope.block) {
+            block = scope.block.funcBlock;
+        } else if(scope.funcExecutor){
+            block = scope.funcExecutor.scope.block;
+            var funcName = scope.type.replace('func_', '');
+            Entry.Func.edit(Entry.variableContainer.functions_[funcName]);
+        }
+
+        if(block) {
+            Entry.container.selectObject(block.getCode().object.id, true);
+            var view = block.view;
+            view && view.getBoard().activateBlock(block);
+        }
+    }
+
+    throw new Error(message);
+};
+
+Entry.Utils.AsyncError = function (message) {
+    this.name = "AsyncError";
+    this.message = message || "비동기 호출 대기";
+};
+
+Entry.Utils.AsyncError.prototype = new Error();
+Entry.Utils.AsyncError.prototype.constructor  = Entry.Utils.AsyncError;
+
+Entry.Utils.isChrome = function() {
+    return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
+};
+
+Entry.Utils.waitForWebfonts = function(fonts, callback) {
+    var loadedFonts = 0;
+    if (fonts && fonts.length) {
+        for(var i = 0, l = fonts.length; i < l; ++i) {
+            (function(font) {
+                var node = document.createElement('span');
+                // Characters that vary significantly among different fonts
+                node.innerHTML = 'giItT1WQy@!-/#';
+                // Visible - so we can measure it - but not on the screen
+                node.style.position      = 'absolute';
+                node.style.left          = '-10000px';
+                node.style.top           = '-10000px';
+                // Large font size makes even subtle changes obvious
+                node.style.fontSize      = '300px';
+                // Reset any font properties
+                node.style.fontFamily    = 'sans-serif';
+                node.style.fontVariant   = 'normal';
+                node.style.fontStyle     = 'normal';
+                node.style.fontWeight    = 'normal';
+                node.style.letterSpacing = '0';
+                document.body.appendChild(node);
+
+                // Remember width with no applied web font
+                var width = node.offsetWidth;
+
+                node.style.fontFamily = font;
+
+                var interval;
+                function checkFont() {
+                    // Compare current width with original width
+                    if(node && node.offsetWidth != width) {
+                        ++loadedFonts;
+                        node.parentNode.removeChild(node);
+                        node = null;
+                    }
+
+                    // If all fonts have been loaded
+                    if(loadedFonts >= fonts.length) {
+                        if(interval) {
+                            clearInterval(interval);
+                        }
+                        if(loadedFonts == fonts.length) {
+                            callback();
+                            return true;
+                        }
+                    }
+                };
+
+                if(!checkFont()) {
+                    interval = setInterval(checkFont, 50);
+                }
+            })(fonts[i]);
+        }
+    } else {
+        callback && callback();
+        return true;
+    }
+};
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+Entry.isMobile = function() {
+    if (Entry.device)
+        return Entry.device === 'tablet';
+
+    var platform = window.platform;
+    var ret = platform &&
+           platform.type &&
+           (platform.type === 'tablet' ||
+               platform.type === 'mobile');
+
+    if (ret) {
+        Entry.device = 'tablet';
+        return true;
+    } else {
+        Entry.device = 'desktop';
+        return false;
+    }
+}
+
+Entry.Utils.convertMouseEvent = function(e) {
+    if (e.originalEvent && e.originalEvent.touches)
+        return e.originalEvent.touches[0];
+    else return e;
+}
+
+Entry.Utils.convertIntToHex = function(num) {
+    return (num).toString(16).toUpperCase();
+}
+
+Entry.Utils.hasSpecialCharacter = function(str) {
+    var reg = /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g;
+    return reg.test(str);
+}
+
+Entry.Utils.debounce = function(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+        return timeout;
+    };
+}
+
+Entry.Utils.isNewVersion = function(old_version, new_version) {
+    try {
+        old_version = old_version.replace('v', '');
+        new_version = new_version.replace('v', '');
+        var arrOld = old_version.split('.');
+        var arrNew = new_version.split('.');
+        var count = (arrOld.length < arrNew.length) ? arrOld.length : arrNew.length;
+        var isNew = false;
+        var isSame = true;
+        for(var i = 0; i < count; i++) {
+            if(Number(arrOld[i]) < Number(arrNew[i])) {
+                isNew = true;
+                isSame = false;
+            } else if(Number(arrOld[i]) > Number(arrNew[i])) {
+                isSame = false;
+            }
+        }
+
+        if(isSame && (arrOld.length < arrNew.length)) {
+            isNew = true;
+        }
+
+        return isNew;
+    } catch(e) {
+        return false;
+    }
+}
+
+Entry.Utils.getBlockCategory = (function() {
+    var map = {};
+    var allBlocks;
+    return function(blockType) {
+        if (!blockType) return;
+
+        if (map[blockType])
+            return map[blockType];
+
+        if (!allBlocks)
+            allBlocks = EntryStatic.getAllBlocks();
+
+        for (var i=0; i<allBlocks.length; i++) {
+            var data = allBlocks[i];
+            var category = data.category;
+            if (data.blocks.indexOf(blockType) > -1) {
+                map[blockType] = category;
+                return category;
+            }
+        }
+    }
+})();
+
+Entry.Utils.getUniqObjectsBlocks = function(objects) {
+    objects = objects || Entry.container.objects_;
+    var ret = [];
+
+    objects.forEach(function(o) {
+        var script = o.script;
+        if (!(script instanceof Entry.Code))
+            script = new Entry.Code(script);
+        var blocks = script.getBlockList();
+        blocks.forEach(function(b) {
+            if (ret.indexOf(b.type) < 0)
+                ret.push(b.type);
+        });
+    });
+
+    return ret;
+};
+
+Entry.Utils.getObjectsBlocks = function(objects) {
+    objects = objects || Entry.container.objects_;
+    var ret = [];
+
+    objects.forEach(function(o) {
+        var script = o.script;
+        if (!(script instanceof Entry.Code))
+            script = new Entry.Code(script);
+        var blocks = script.getBlockList(true);
+        blocks.forEach(function(b) {
+            ret.push(b.type);
+        });
+    });
+
+    return ret;
+};
+
+Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
+    if (!blockArr) return;
+    var that = this;
+
+    var data = EntryStatic.getAllBlocks();
+    var categoryIndexMap = {};
+    for (var i=0; i<data.length; i++) {
+        var datum = data[i];
+        datum.blocks = [];
+        categoryIndexMap[datum.category] = i;
+    }
+
+    blockArr.forEach(function(b) {
+        var category = that.getBlockCategory(b);
+        var index = categoryIndexMap[category];
+        if (index === undefined) return;
+        data[index].blocks.push(b);
+    });
+
+    var allBlocksInfo = EntryStatic.getAllBlocks();
+    for (var i=0; i<allBlocksInfo.length; i++) {
+        var info = allBlocksInfo[i];
+        var category = info.category;
+        var blocks = info.blocks;
+        if (category === 'func') {
+            allBlocksInfo.splice(i, 1);
+            continue;
+        }
+        var selectedBlocks = data[i].blocks;
+        var sorted = [];
+
+        blocks.forEach(function(b) {
+            if (selectedBlocks.indexOf(b) > -1)
+                sorted.push(b);
+        });
+
+        data[i].blocks = sorted;
+    }
+
+    return data;
+};
+
+Entry.Utils.blur = function() {
+    var elem = document.activeElement;
+    elem && elem.blur && elem.blur();
+};
+
+Entry.Utils.getWindow = function(hashId) {
+    if (!hashId) return;
+    for (var i=0; i<window.frames.length; i++) {
+        var frame = window.frames[i];
+        if (frame.Entry && frame.Entry.hashId === hashId)
+            return frame;
+    }
+};
+
+Entry.Utils.restrictAction = function(exceptions, callback, noDispose) {
+    var that = this;
+    exceptions = exceptions || [];
+    exceptions = exceptions.map(function(e) {
+        return e[0];
+    });
+    var handler = function(e) {
+        e = e || window.event;
+        var target = e.target || e.srcElement;
+        if (!that.isRightButton(e)) {
+            for (var i = 0; i < exceptions.length; i++) {
+                var exception = exceptions[i];
+                if (exception === target || $.contains(exception, target)) {
+                    if (!noDispose) {
+                        callback(e);
+                    } else target.focus && target.focus();
+                    return;
+                }
+            }
+        }
+
+        if (!e.preventDefault) {//IE quirks
+            e.returnValue = false;
+            e.cancelBubble = true;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+    this._restrictHandler = handler;
+
+    var entryDom = Entry.getDom();
+    Entry.Utils.disableContextmenu(entryDom);
+    if (entryDom.addEventListener) {
+        entryDom.addEventListener('click', handler, true);
+        entryDom.addEventListener('mousedown', handler, true);
+        entryDom.addEventListener('mouseup', handler, true);
+        entryDom.addEventListener('touchstart', handler, true);
+    }
+    else {
+        entryDom.attachEvent('onclick', handler);
+        entryDom.attachEvent('onmousedown', handler);
+        entryDom.attachEvent('onmouseup', handler);
+        entryDom.attachEvent('ontouchstart', handler);
+    }
+};
+
+Entry.Utils.allowAction = function() {
+    var entryDom = Entry.getDom();
+    Entry.Utils.enableContextmenu(entryDom);
+    if (this._restrictHandler) {
+        if (entryDom.addEventListener) {
+            entryDom.removeEventListener("click", this._restrictHandler, true);
+            entryDom.removeEventListener("mousedown", this._restrictHandler, true);
+            entryDom.removeEventListener("mouseup", this._restrictHandler, true);
+            entryDom.removeEventListener("touchstart", this._restrictHandler, true);
+        } else {
+            entryDom.detachEvent('onclick', this._restrictHandler);
+            entryDom.detachEvent('onmousedown', this._restrictHandler);
+            entryDom.detachEvent('onmouseup', this._restrictHandler);
+            entryDom.detachEvent('ontouchstart', this._restrictHandler);
+        }
+        delete this._restrictHandler;
+    }
+};
+
+Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
+    var rect = svgGroup.getBoundingClientRect();
+    var svgDom = Entry.Dom(
+        $('<svg id="globalSvg" width="10" height="10"' +
+          'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+        { parent: $(document.body) }
+    );
+    svgGroup = $(svgGroup.cloneNode(true));
+    svgGroup.attr({transform: "translate(8,0)"});
+    svgDom.append(svgGroup);
+    svgDom.css({
+        top: rect.top, left: rect.left
+    });
+    svgDom.velocity({
+        top: y,
+        left: x - 8
+    }, {
+        duration: 1200,
+        complete: function() {
+            setTimeout(function() {
+                svgDom.remove();
+                callback();
+            }, 500);
+        },
+        easing: "ease-in-out"
+    });
 };

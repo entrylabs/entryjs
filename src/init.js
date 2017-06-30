@@ -4,6 +4,7 @@
 'use strict';
 
 goog.require("Entry.PropertyPanel");
+goog.require("Entry.Commander");
 
 /**
  * Initialize method with options.
@@ -17,7 +18,11 @@ Entry.init = function(container, options) {
         menuWidth: 264
     };
 
-    Entry.Utils.bindGlobalEvent(['mousedown', 'mousemove']);
+    Entry.Utils.bindGlobalEvent([
+        'resize', 'mousedown',
+        'mousemove', 'keydown',
+        'keyup', 'dispose'
+    ]);
 
     /** @type {object} */
     this.options = options;
@@ -31,12 +36,17 @@ Entry.init = function(container, options) {
     this.initialize_();
     /** @type {!Element} */
     this.view_ = container;
-    this.view_.setAttribute('class', 'entry');
+    $(this.view_).addClass("entry");
+    if (this.type === "minimize")
+        $(this.view_).addClass(this.type);
+    if (this.device === 'tablet')
+        $(this.view_).addClass("tablet");
+
     Entry.initFonts(options.fonts);
     this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
-    this.maxCloneLimit = 302;
+    this.maxCloneLimit = 360;
     this.cloudSavable = true;
     this.startTime = new Date().getTime();
 
@@ -55,6 +65,10 @@ Entry.init = function(container, options) {
         Entry.addActivity("save");
     });
 
+    Entry.addEventListener("showBlockHelper", function(e) {
+        Entry.propertyPanel.select("helper");
+    });
+
     if (Entry.getBrowserType().substr(0,2) == 'IE' && !window.flashaudio) {
         createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/";
         createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);
@@ -69,11 +83,19 @@ Entry.init = function(container, options) {
     Entry.soundQueue.installPlugin(createjs.Sound);
 
     Entry.loadAudio_(
-        [Entry.mediaFilePath + 'media/click.mp3', Entry.mediaFilePath + 'media/click.wav', Entry.mediaFilePath + 'media/click.ogg'], 'click');
+        [Entry.mediaFilePath + 'sounds/click.mp3',
+        Entry.mediaFilePath + 'sounds/click.wav',
+        Entry.mediaFilePath + 'sounds/click.ogg'], 'entryMagneting');
     Entry.loadAudio_(
-        [Entry.mediaFilePath + 'media/delete.mp3', Entry.mediaFilePath + 'media/delete.ogg', Entry.mediaFilePath + 'media/delete.wav'], 'delete');
+        [Entry.mediaFilePath + 'sounds/delete.mp3',
+        Entry.mediaFilePath + 'sounds/delete.ogg',
+        Entry.mediaFilePath + 'sounds/delete.wav'], 'entryDelete');
 
+    createjs.Sound.stop();
+};
 
+Entry.changeContainer = function(container) {
+    container.appendChild(this.view_);
 };
 
 Entry.loadAudio_ = function(filenames, name) {
@@ -108,7 +130,7 @@ Entry.initialize_ = function() {
      */
     this.stage = new Entry.Stage();
 
-    if (Entry.engine)
+    if (Entry.engine && Entry.engine.projectTimer)
         Entry.engine.clearTimer();
     /**
      * Initialize engine for run.
@@ -121,7 +143,9 @@ Entry.initialize_ = function() {
      * Initialize PropertyPanel.
      * @type {!object}
      */
-    this.propertyPanel = new Entry.PropertyPanel();
+
+    if (this.type !== "minimize")
+        this.propertyPanel = new Entry.PropertyPanel();
 
     /**
      * Initialize container for objects.
@@ -146,13 +170,7 @@ Entry.initialize_ = function() {
      */
     this.variableContainer = new Entry.VariableContainer();
 
-    /**
-     * Initialize stateManager for redo and undo.
-     * @type {!Entry.StateManager}
-     * @type {!object}
-     */
-    if (this.type == 'workspace' || this.type == 'phone')
-        this.stateManager = new Entry.StateManager();
+    this.commander = new Entry.Commander(this.type, this.doNotSkipAny);
 
     /**
      * Initialize scenes.
@@ -235,7 +253,7 @@ Entry.createDom = function(container, option) {
             for(var i=0; i<tempList.length; i++) {
                 var list = tempList[i];
                 if(wheelDirection){
-                    if(list.scrollButton_.y >= 46 ) 
+                    if(list.scrollButton_.y >= 46 )
                         list.scrollButton_.y -= 23;
                     else
                         list.scrollButton_.y = 23;
@@ -256,6 +274,10 @@ Entry.createDom = function(container, option) {
         /** @type {!Element} */
         this.containerView = containerView;
         this.container.generateView(this.containerView, option);
+        this.propertyPanel.addMode("object", this.container);
+
+        this.helper.generateView(this.containerView, option);
+        this.propertyPanel.addMode("helper" , this.helper);
 
         var playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
@@ -263,14 +285,12 @@ Entry.createDom = function(container, option) {
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
 
-        this.propertyPanel.addMode("object", this.container);
-        this.propertyPanel.addMode("helper" , this.helper);
-        // this.propertyPanel.addMode("youtube" , this.youtube);
 
         this.propertyPanel.select("object");
+        this.helper.bindWorkspace(this.playground.mainWorkspace);
     } else if (option == 'minimize') {
-        var canvas = Entry.createElement('canvas');
-        canvas.className = 'entryCanvasWorkspace';
+       var canvas = Entry.createElement('canvas');
+        canvas.className = 'entryCanvasWorkspace minimize';
         canvas.id = 'entryCanvas';
         canvas.width = 640;
         canvas.height = 360;
@@ -329,6 +349,8 @@ Entry.createDom = function(container, option) {
  * @param {?number} FPS
  */
 Entry.start = function(FPS) {
+    if (Entry.type === "invisible")
+        return;
     /** @type {number} */
     if (!this.FPS)
         this.FPS = 60;
@@ -336,13 +358,25 @@ Entry.start = function(FPS) {
     Entry.engine.start(this.FPS);
 };
 
+Entry.stop = function() {
+    if (Entry.type === "invisible")
+        return;
+    this.FPS = null;
+    Entry.engine.stop();
+}
+
 /**
  * Parse init options
  * @param {!object} options for parse
  */
 Entry.parseOptions = function(options) {
     /** @type {string} */
-    this.type = options.type;
+    this.type = options.type || this.type;
+
+    this.hashId = options.hashId || this.hasId;
+
+    if (options.device)
+        this.device = options.device;
 
     this.projectSaveable = options.projectsaveable;
     if (this.projectSaveable === undefined)
@@ -390,6 +424,10 @@ Entry.parseOptions = function(options) {
     if (this.listEnable === undefined)
         this.listEnable = true;
 
+    this.doCommandAll = options.doCommandAll;
+    if (this.doCommandAll === undefined)
+        this.doCommandAll = false;
+
     this.hasVariableManager = options.hasvariablemanager;
     if (!(this.variableEnable || this.messageEnable ||
           this.listEnable || this.functionEnable))
@@ -397,12 +435,28 @@ Entry.parseOptions = function(options) {
     else if (this.hasVariableManager === undefined)
         this.hasVariableManager = true;
 
-    this.isForLecture = options.isForLecture;
+    this.readOnly = options.readOnly || false;
+    if (this.readOnly) {
+        this.soundEditable = a.sceneEditable = this.objectAddable = false;
+    }
+
+    if (options.isForLecture)
+        this.isForLecture = options.isForLecture;
+    if (options.textCodingEnable)
+        this.textCodingEnable = options.textCodingEnable;
 };
 
 
 Entry.initFonts = function(fonts) {
     this.fonts = fonts;
     if (!fonts) this.fonts = [];
+};
 
+Entry.reloadOption = function(options) {
+    this.options = options;
+    this.parseOptions(options);
+    this.playground.applyTabOption();
+    this.variableContainer.applyOption();
+    this.engine.applyOption();
+    this.commander.applyOption();
 };

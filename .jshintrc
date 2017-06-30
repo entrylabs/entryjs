@@ -9,6 +9,7 @@
     "validthis": true,
     "globals": {
         "goog": true,
+        "acorn": true,
         "createjs": true,
         "Entry": true,
         "Blockly": true,
@@ -25,6 +26,8 @@
         "mina": true,
         "Touch": true,
         "io": true,
-        "ActiveXObject": true
+        "LC": true,
+        "ActiveXObject": true,
+        "CodeMirror": true
     }
 }
