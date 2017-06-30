@@ -21,7 +21,9 @@
     "url": "https://github.com/boolgom/entryjs/issues"
   },
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "google-closure-compiler": "^20170521.0.0"
+  },
   "devDependencies": {
     "chai": "^3.2.0",
     "closurecompiler": "1.6.0",
