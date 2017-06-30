@@ -21,5 +21,4 @@ deploy:
   file: dist/*
   skip_cleanup: true
   on:
-    repo: kimorkim/entryjs
     tags: true
