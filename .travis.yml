@@ -16,7 +16,7 @@ deploy:
   provider: releases
   api_key:
     secure: EeL6Oq+4RjTwS+6tn6IS6lozpmDTUC5q0QE9teikwjwR3KM+B9f13sUs9VFQPs7OznXtPPs+hHXS0f4Cg4Qo70AMiMPnC7BFQtrnNGzM4Ri+z1XXISuvNpyLcMCcCUTv6ucdN8fygi/WL+TvLdAAjdKNAoliyUBhlX0oAaLFAp3G+Obk8aluF+KO2jmXdoPymEKVOdlo2CK3UHiayesrCd6bTyq7B8FABRfwhxeiiGFR+ZtV2fXrXaS3180TBe/akjl5mt6Mgzlo1TDBKabn1ruo4pkyqD0hzqOxitCmvegZYuY6v2BqdxYUuNb88lxqp6CxEXx5hd8SI+lalOwYzfKtDmT8dD+6dYciAkxt7b3L6C35idSxtA7r7+JLobXotrTQQF6K/bJJYhNd/j+zF4Trn8NycBrzCfgwiwtQja7ZDN6eUcOwv4I1WjGnPyAbmhXvZQvsVOs3iBdU7lJNYINhwpCWKwYH1ibR8qqjJESIiLVfbrObgzmeErnvNcalM4Z9rqrPd8bSgnStToKwhpAT9cPNERG/njxQfa9Km44+6q/W2h5Hzj6q4uVVXvtRt5uFkV5nBD2YGoDeCN0IotFmyB1yzkfNCPiRqZC9YruooyoAnM/O1Nv5oChsqR2gq+0kI3Y98nCsDODO29hCYrl47gp1HG3DM71AWdThf/Q=
-  file: dist/*
+  file: /home/travis/build/kimorkim/entryjs/dist/*
   skip_cleanup: true
   on:
     tags: true
