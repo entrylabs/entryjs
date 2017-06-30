@@ -15,11 +15,6 @@ cache:
   directories:
   - node_modules
   - "$HOME/.npm"
-before_install:
-- git clone https://github.com/creationix/nvm.git ~/.nvm
-- source ~/.nvm/nvm.sh
-- nvm install $NODE_VERSION
-- nvm use --delete-prefix $NODE_VERSION
 install:
 - npm prune
 - npm install
