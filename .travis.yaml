@@ -1,0 +1,34 @@
+os:
+- osx
+language:
+- javascript
+env:
+  global:
+  - NODE_VERSION=6
+  - secure: ZzfzZGUliJ0ronvHdWl87WZOrFK9MJQPMT1opzKYlEfrRyoxqzxRM0tdj4MIxXV95c8jN8iOq0sLVWkRcE/thlMRIN49ox9Dcgyg06JZaBXH7fii3AFedxEUOkPTe03GFrJLPZSKT6iGJBroKRb0fB0DqMhfNJzPdaOXYieAVpBTFMSHr6xrENftUoScE2gSBJIJr3FdwpewuJ3XCnoQGPV7TyxKfQg2g2OFG7+Y6/+TQjSYnNqgUwC2YfG5ZxQ5hEGKBWXTgKa/IiqqXRjBBE7790N8v//8W0A98/73QLiPgsKWPKHwKW6mcj8ovwHFGU1cbX/F6t2nwIRv6Yz3/9P1cp/b/O6hGZitFs7YcFOZJaeGscYIg8/4pQxJniN7ErE/o12is2w9P8VxTp045sSaJAfSRxBFtdYcMwwLNf1gyEm4tB0QDcAgOqVoEaUCwsEmgsIAh6SxLgEwynm5vAeuqblhMoPgYViYGrmBBmkTBRj/FANGZW2ZwVxUVqQ8UTYeAZzkWjjNL2B02aF2ZW6WPXlwFQ8s68nev/U11ndfK6uCSuW8Ibnq7Me9NbZaqvrxViK4nIo5kcQ89G61oICbtntnlYl0brBAh1XIjMIln7yyj0nt25sb3Gp0D7XNkTa7IG7jvBgbXMI9/Ye3Aro+Bb+1MQcM4NaJ3MwdZao=
+  - secure: X6KaTTToe11LbPnKxcqJA6/3jBkdd16DeI1Id9yQ4WLJyCPvVLEyW+gJdVB/6RfxMDly9sTSREnTv1VEJY5/V9xLlRfuQV39P+wtL4iQlSjNYoUrryCyU6LeprAf1712ERna3fAVEMoy5nHeer7BjdM5B5XTQTnCDAYTq0bXvO9UraQH7As10xlnGrW0rCBXN/BcPjcqUuRn26Gd7bDlsjl6/22Wx4cjzPWLsBd+QAR1PUazX7lv2UT6T3i4xibfBMyi+7uCM9gHG8jNNZ8slc/+4IxY/1wHfa2aTs/XrFkmvzygwPnz2Y88MW/U6G2WgX0Cd631OX18WMAl0yC0sHfIzJPQZPHEWPC2QilRNHySpgE/6u5xTcf9/drGWc4LdULxARHuzt3gLWJWZU/ZY7ELJ8ZSDQ5aru1jtY+uVlSFtONjsiCUA5h3Uy++i0N2xXDi0Q7XaxnAiLfaiV+003RH/L4WjnRPqImLyd7o8c7cqEwZio92PW+Hic4xvrlIgJmYNf2uL1anfqmxv4eLqlfULLsAqFFcuhye6XwoEWMM7w5YTX9M/s8VjqK61am1P0RS1/C8roFxrcjir6rmkJc2QRVLMlJWVQVV/kxQWzQi6b+AofdemXxEuspQMWkw6+2hi+qAojW3ltUNVvADQhLf/xaN0NOK6OmTtz7ZzxA=
+  - secure: p1cCe6Jzc55Pl7O/bJvCdLBR/wMZsRqt4rTDm9WRxtdvhWoEaDUMK23l8msOzpaFXV9hd1Sb+W+AXwpiddgvVEdVXqTKJkS0hlVZjblvhxGFS4ATQkx3ZVgKeMBiLT6dP4DzwOcZOBvheFvLsbppAbKPfD0dIXxnYwdZEJbe5o78Ve/usS6Od23vC3iCzCeF3SRBY5uFtsARMAyk6URT80qiXZwNMtmNUOPtUTQD5Vlr+6yUCM6wO8c/Hpu7rDfZ1fVPYuYXFwvGWwd5v72jciDjvNFlMTrvV49TGpNFyfmBBaHfc0nuVrt6tbEdYEsYN1KNjk64+lTRU2LXXY5jEJGmlEbJ32n4sOxXSyhAnb0STWZS05M/N5Tcq4tvlm03ix4kmw5cJiMmt9a6HWu3SLwVuer6vhAkFYbvwCA5BDiHC8HgyVzRjTA299kdKKZIqlyjp5zvvlxWI73jihWs7oQfv7iMVUSrIqnXBdvATfDZdaxNoFGkM6aVHCIFdLyE/OBeum+z36eZCi6aJQi21qZUbMUtA8V43AWCnLfLi2LeF/wHVmlIru3OnTJ/vUIgE1SM9OHDE1HlxzDs0GtTqIhoyRN5LdNnyZZeNiUmm+QWRginld4j5hXeHkNConYO5ilvP628fFWHHmKYovmf3Hr9VfTGk3EG0pV7srw5cJY=
+branches:
+  only:
+  - build
+cache:
+  directories:
+  - node_modules
+  - "$HOME/.npm"
+before_install:
+- git clone https://github.com/creationix/nvm.git ~/.nvm
+- source ~/.nvm/nvm.sh
+- nvm install $NODE_VERSION
+- nvm use --delete-prefix $NODE_VERSION
+install:
+- npm prune
+- npm install
+script:
+- grunt
+after_success:
+#- echo "Send Deploy File"
+#- export RELEASE_PKG_FILE=$(ls dist/**/*.dmg)
+#- curl --ftp-create-dirs -T ${RELEASE_PKG_FILE} -u ${FTP_USER}:${FTP_PASSWORD} ftp://play04.play-entry.com/build/Entry/osx/${TRAVIS_BUILD_NUMBER}/
+notifications:
+  slack:
+    secure: CenKYBywenLDNB8vHpiMBui0dMDNn4GB6+D00yY41a745hwMVwldZnz6QPrzRxUuUhWpXI+QXFaTr5I9+AMn/a+gV3CoFHeOp8OUMZxEpipLGxNrXgJYfXt+z3MgmIvau6oMQG6Dta60uQJ4vEpnmOnNYo5YSmkr0ugYmKEn9La9uuJN+FVoCWMizhwWE2Zdh3Ua6wnZCUilQ8a51V+xh6ASZXrXIFma9RbUeuxvzq2AtMQ+0zInPozqwFenRDl2bLI4iqtDLWMFeac8/6jKUdvTVusleed/8NeLha2VW1SS3uNBiMJ5h80AODH84Lx0xmzWEj4FrvcsHMQiK9Sb4jcvjM2UJxlu8kbH6ssPMkwUAk2QZItkQlbpQjD+b1+xxKh3VjNXjSp7HCL7nzh7mhPxWKYhygqBHszznszjFyHUrnhXoDutHVRfOIZrzzpJNMF5ryKqtFR7hyq4cRvrT4YtvDHsX3kfQaySFgXupoQCSRpSngWentm8+X7iXypOrs0OxLxxm6lQkP1qzElPFrKo3M88OkCfupYTB4NlzXaES3b7N/An+hQ97/Rir/+g8wQtkJVTglyJRnxk1on7gThy+mx41Ax44N84k/ozAzqTkVT2EYo1cD3F7QOqK1DvinkZZPvoQui9i9mo+nbtlKigy46heakDw4umxzd9y/g=
