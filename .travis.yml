@@ -11,8 +11,7 @@ install:
 - npm install
 script:
 - ./node_modules/grunt-cli/bin/grunt build
-- ls -al
-- ls -al dist
+- pwd
 deploy:
   provider: releases
   api_key:
