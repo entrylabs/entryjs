@@ -95,6 +95,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
       Entry.propertyPanel.resize(f);
       var e = Entry.engine.view_.getElementsByClassName("entryAddButtonWorkspace_w")[0];
       e && Entry.objectAddable && (e.style.top = d + 25 + "px", e.style.width = .7 * f + "px");
+      (e = Entry.engine.view_.getElementsByClassName("entryPauseButtonWorkspace_w")[0]) && Entry.objectAddable && (e.style.top = d + 25 + "px", e.style.width = .7 * f + "px");
       if (e = Entry.engine.view_.getElementsByClassName("entryRunButtonWorkspace_w")[0]) {
         Entry.objectAddable ? (e.style.top = d + 25 + "px", e.style.left = .7 * f + "px", e.style.width = .3 * f + "px") : (e.style.left = "2px", e.style.top = d + 25 + "px", e.style.width = f - 4 + "px");
       }
@@ -6226,6 +6227,15 @@ Entry.Engine = function() {
         this.blur();
         Entry.engine.togglePause();
       });
+      this.pauseButtonFull = Entry.createElement("button");
+      this.pauseButtonFull.addClass("entryEngineButtonWorkspace_w");
+      this.pauseButtonFull.addClass("entryPauseButtonWorkspace_full");
+      this.pauseButtonFull.addClass("entryRemove");
+      this.view_.appendChild(this.pauseButtonFull);
+      this.pauseButtonFull.bindOnClick(function(b) {
+        this.blur();
+        Entry.engine.togglePause();
+      });
       this.mouseView = Entry.createElement("div");
       this.mouseView.addClass("entryMouseViewWorkspace_w");
       this.mouseView.addClass("entryRemove");
@@ -6338,7 +6348,8 @@ Entry.Engine = function() {
       }), this.projectTimer.takeSnapshot(), c.inputValue.takeSnapshot(), c.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"), this.achieveEnabled = !1 !== b);
       this.state = "run";
       "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
-      this.runButton && (this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("run"), this.runButton.addClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.pauseButton && this.pauseButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove"), this.stopButton2 && this.stopButton2.removeClass("entryRemove"));
+      this.runButton && (this.pauseButton && (this.pauseButton.innerHTML = Lang.Workspace.pause), this.pauseButtonFull && (this.pauseButtonFull.innerHTML = Lang.Workspace.pause), this.runButton.addClass("run"), this.runButton.addClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.addButton && (this.addButton.addClass("entryRemove"), Entry.objectAddable && this.pauseButton.removeClass("entryRemove")), this.pauseButton && ("minimize" === Entry.type || Entry.objectAddable) && this.pauseButton.removeClass("entryRemove"), 
+      this.runButton2 && this.runButton2.addClass("entryRemove"), this.stopButton2 && this.stopButton2.removeClass("entryRemove"), this.pauseButtonFull && this.pauseButtonFull.removeClass("entryRemove"));
       this.isUpdating || (this.update(), this.isUpdating = !0);
       Entry.stage.selectObject();
       Entry.dispatchEvent("run");
@@ -6371,7 +6382,7 @@ Entry.Engine = function() {
     createjs.Sound.setVolume(1);
     createjs.Sound.stop();
     this.view_.removeClass("entryEngineBlueWorkspace");
-    this.runButton && (this.runButton.removeClass("entryRemove"), this.stopButton.addClass("entryRemove"), this.pauseButton && this.pauseButton.addClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove"), this.stopButton2 && this.stopButton2.addClass("entryRemove"));
+    this.runButton && (this.runButton.removeClass("entryRemove"), this.stopButton.addClass("entryRemove"), this.pauseButton && this.pauseButton.addClass("entryRemove"), this.pauseButtonFull && this.pauseButtonFull.addClass("entryRemove"), this.addButton && this.addButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove"), this.stopButton2 && this.stopButton2.addClass("entryRemove"));
     this.state = "stop";
     Entry.dispatchEvent("stop");
     Entry.stage.hideInputField();
@@ -6381,8 +6392,8 @@ Entry.Engine = function() {
   };
   c.togglePause = function() {
     var b = Entry.engine.projectTimer;
-    "pause" == this.state ? (b.pausedTime += (new Date).getTime() - b.pauseStart, b.isPaused ? b.pauseStart = (new Date).getTime() : delete b.pauseStart, this.state = "run", this.runButton && (this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove"))) : (this.state = "pause", b.isPaused && (b.pausedTime += (new Date).getTime() - b.pauseStart), b.pauseStart = (new Date).getTime(), this.runButton && (this.pauseButton.innerHTML = 
-    Lang.Workspace.restart, this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove")));
+    "pause" == this.state ? (b.pausedTime += (new Date).getTime() - b.pauseStart, b.isPaused ? b.pauseStart = (new Date).getTime() : delete b.pauseStart, this.state = "run", this.runButton && (this.pauseButton && (this.pauseButton.innerHTML = Lang.Workspace.pause), this.pauseButtonFull && (this.pauseButtonFull.innerHTML = Lang.Workspace.pause), this.runButton.addClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove"))) : (this.state = "pause", b.isPaused && (b.pausedTime += 
+    (new Date).getTime() - b.pauseStart), b.pauseStart = (new Date).getTime(), this.runButton && (this.pauseButton && (this.pauseButton.innerHTML = Lang.Workspace.restart), this.pauseButtonFull && (this.pauseButtonFull.innerHTML = Lang.Workspace.restart), this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove")));
   };
   c.fireEvent = function(b) {
     "run" === this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, b);

@@ -2274,7 +2274,8 @@ svg .svgBlockGroup text {
   font-size: 9pt;
   color: #6c5af2;
 }
-.entryAddButtonWorkspace_w {
+.entryAddButtonWorkspace_w,
+.entryPauseButtonWorkspace_w {
   top: 289px;
   left: 0px;
   width: 236px;
@@ -2288,10 +2289,11 @@ svg .svgBlockGroup text {
   padding-left: 50px;
   background-repeat: no-repeat;
   background-position: 10% 43%;
-  font-family: nanumBarunBold !important;
+  font-weight: 600;
   background-image: url("../images/layers_icon_button_plus_nor.png");
 }
-.collapsed > .entryAddButtonWorkspace_w {
+.collapsed > .entryAddButtonWorkspace_w,
+.collapsed > .entryPauseButtonWorkspace_w {
   color: transparent;
   background-position: 50% 43%;
 }
@@ -2361,16 +2363,13 @@ svg .svgBlockGroup text {
   background-repeat: no-repeat;
   background-position: 10% center;
   font-weight: 600;
-  background-image: url("../images/layers_icon_button_stop_nor_1.png");
+  background-image: url("../images/layers_icon_button_stop_nor_2.png");
 }
 .collapsed > .entryStopButtonWorkspace_w {
   color: transparent;
   background-position: 50% 43%;
 }
 .entryStopButtonWorkspace_w2 {
-  display: none;
-}
-.entryPauseButtonWorkspace_w {
   display: none;
 }
 .entryEngineBigButtonMinimize_popup {
@@ -2403,18 +2402,27 @@ svg .svgBlockGroup text {
   display: block;
 }
 .entryPauseButtonWorkspace_w {
-  display: none;
+  background-image: url("../images/layers_icon_button_pause_nor.png");
 }
 .entryPopupWindow .entryPauseButtonWorkspace_w {
+  display: none;
+}
+.entryPauseButtonWorkspace_full {
+  display: none;
+}
+.entryPopupWindow .entryPauseButtonWorkspace_full {
   display: inline-block;
   background: url("../images/pause_btn.png");
   background-repeat: no-repeat;
   color: transparent;
-  width: auto;
   padding-left: 20px;
   left: 103px;
   color: #4b37a0;
   background-position: center left;
+  border: none;
+  font-size: 14px;
+  font-family: ng;
+  width: auto;
 }
 .nav_right_wrapper {
   right: 0;
