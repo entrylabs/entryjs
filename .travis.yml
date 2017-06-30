@@ -19,7 +19,7 @@ install:
 - npm prune
 - npm install
 script:
-- grunt
+- ./node_modules/grunt-cli/bin/grunt
 after_success:
 #- echo "Send Deploy File"
 #- export RELEASE_PKG_FILE=$(ls dist/**/*.dmg)
