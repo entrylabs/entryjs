@@ -162,84 +162,6 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   }
 }};
 window.Entry = Entry;
-Entry.ContextMenu = {};
-(function(b) {
-  b.visible = !1;
-  b._hideEvent = null;
-  b.createDom = function() {
-    this.dom = Entry.Dom("ul", {id:"entry-contextmenu", parent:$("body")});
-    this.dom.bind("mousedown touchstart", function(b) {
-      b.stopPropagation();
-    });
-    Entry.Utils.disableContextmenu(this.dom);
-  };
-  b.show = function(b, d, e) {
-    this._hideEvent = Entry.documentMousedown.attach(this, function() {
-      this.hide();
-    });
-    this.dom || this.createDom();
-    if (0 !== b.length) {
-      var c = this;
-      void 0 !== d && (this._className = d, this.dom.addClass(d));
-      var g = this.dom;
-      g.empty();
-      for (var h = 0, k = b.length; h < k; h++) {
-        var l = b[h], m = l.text, r = !1 !== l.enable, q = Entry.Dom("li", {parent:g});
-        l.divider ? d = "divider" : (d = r ? "menuAble" : "menuDisable", Entry.Dom("span", {parent:q}).text(m), r && l.callback && function(b, d) {
-          b.mousedown(function(b) {
-            b.preventDefault();
-            c.hide();
-            d(b);
-          });
-        }(q, l.callback));
-        q.addClass(d);
-      }
-      g.removeClass("entryRemove");
-      this.visible = !0;
-      this.position(e || Entry.mouseCoordinate);
-    }
-  };
-  b.position = function(b) {
-    var c = this.dom;
-    c.css({left:0, top:0});
-    var e = c.width(), f = c.height(), g = $(window), h = g.width(), g = g.height();
-    b.x + e > h && (b.x -= e + 3);
-    b.y + f > g && (b.y -= f);
-    c.css({left:b.x, top:b.y});
-  };
-  b.hide = function() {
-    this.visible = !1;
-    this.dom.empty();
-    this.dom.addClass("entryRemove");
-    this._className && (this.dom.removeClass(this._className), delete this._className);
-    this._hideEvent && (Entry.documentMousedown.detach(this._hideEvent), this._hideEvent = null);
-  };
-  b.onContextmenu = function(b, d) {
-    b.on("touchstart mousemove mouseup contextmenu", function(b) {
-      switch(b.type) {
-        case "touchstart":
-          b = Entry.Utils.convertMouseEvent(b);
-          this.coordi = {x:b.clientX, y:b.clientY};
-          this.longTouchEvent = setTimeout(function() {
-            d(this.coordi);
-            this.longTouchEvent = void 0;
-          }.bind(this), 900);
-          break;
-        case "mousemove":
-          if (!this.coordi) {
-            break;
-          }
-          5 < Math.sqrt(Math.pow(b.pageX - this.coordi.x, 2) + Math.pow(b.pageY - this.coordi.y, 2)) && this.longTouchEvent && (clearTimeout(this.longTouchEvent), this.longTouchEvent = void 0);
-          break;
-        case "mouseup":
-          this.longTouchEvent && (clearTimeout(this.longTouchEvent), this.longTouchEvent = null);
-          break;
-        case "contextmenu":
-          clearTimeout(this.longTouchEvent), this.longTouchEvent = void 0, "contextmenu" === b.type && d(this.coordi);
-      }
-    });
-  };
-})(Entry.ContextMenu);
 Entry.BlockDriver = function() {
 };
 (function(b) {
@@ -388,6 +310,84 @@ Entry.BlockMockup = function(b, c, d) {
     c[b] = Object.keys(c).length;
   };
 })(Entry.BlockMockup.prototype);
+Entry.ContextMenu = {};
+(function(b) {
+  b.visible = !1;
+  b._hideEvent = null;
+  b.createDom = function() {
+    this.dom = Entry.Dom("ul", {id:"entry-contextmenu", parent:$("body")});
+    this.dom.bind("mousedown touchstart", function(b) {
+      b.stopPropagation();
+    });
+    Entry.Utils.disableContextmenu(this.dom);
+  };
+  b.show = function(b, d, e) {
+    this._hideEvent = Entry.documentMousedown.attach(this, function() {
+      this.hide();
+    });
+    this.dom || this.createDom();
+    if (0 !== b.length) {
+      var c = this;
+      void 0 !== d && (this._className = d, this.dom.addClass(d));
+      var g = this.dom;
+      g.empty();
+      for (var h = 0, k = b.length; h < k; h++) {
+        var l = b[h], m = l.text, r = !1 !== l.enable, q = Entry.Dom("li", {parent:g});
+        l.divider ? d = "divider" : (d = r ? "menuAble" : "menuDisable", Entry.Dom("span", {parent:q}).text(m), r && l.callback && function(b, d) {
+          b.mousedown(function(b) {
+            b.preventDefault();
+            c.hide();
+            d(b);
+          });
+        }(q, l.callback));
+        q.addClass(d);
+      }
+      g.removeClass("entryRemove");
+      this.visible = !0;
+      this.position(e || Entry.mouseCoordinate);
+    }
+  };
+  b.position = function(b) {
+    var c = this.dom;
+    c.css({left:0, top:0});
+    var e = c.width(), f = c.height(), g = $(window), h = g.width(), g = g.height();
+    b.x + e > h && (b.x -= e + 3);
+    b.y + f > g && (b.y -= f);
+    c.css({left:b.x, top:b.y});
+  };
+  b.hide = function() {
+    this.visible = !1;
+    this.dom.empty();
+    this.dom.addClass("entryRemove");
+    this._className && (this.dom.removeClass(this._className), delete this._className);
+    this._hideEvent && (Entry.documentMousedown.detach(this._hideEvent), this._hideEvent = null);
+  };
+  b.onContextmenu = function(b, d) {
+    b.on("touchstart mousemove mouseup contextmenu", function(b) {
+      switch(b.type) {
+        case "touchstart":
+          b = Entry.Utils.convertMouseEvent(b);
+          this.coordi = {x:b.clientX, y:b.clientY};
+          this.longTouchEvent = setTimeout(function() {
+            d(this.coordi);
+            this.longTouchEvent = void 0;
+          }.bind(this), 900);
+          break;
+        case "mousemove":
+          if (!this.coordi) {
+            break;
+          }
+          5 < Math.sqrt(Math.pow(b.pageX - this.coordi.x, 2) + Math.pow(b.pageY - this.coordi.y, 2)) && this.longTouchEvent && (clearTimeout(this.longTouchEvent), this.longTouchEvent = void 0);
+          break;
+        case "mouseup":
+          this.longTouchEvent && (clearTimeout(this.longTouchEvent), this.longTouchEvent = null);
+          break;
+        case "contextmenu":
+          clearTimeout(this.longTouchEvent), this.longTouchEvent = void 0, "contextmenu" === b.type && d(this.coordi);
+      }
+    });
+  };
+})(Entry.ContextMenu);
 Entry.Dom = function(b, c) {
   var d = /<(\w+)>/;
   var e = b instanceof HTMLElement ? $(b) : b instanceof jQuery ? b : d.test(b) ? $(b) : $("<" + b + "></" + b + ">");
@@ -2381,6 +2381,243 @@ Entry.Altino = {PORT_MAP:{rightWheel:0, leftWheel:0, steering:0, ascii:0, led:0,
   }
   this.timeouts = [];
 }, name:"altino"};
+Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5:"MIC", 21:"UserSensor", 11:"UserInput", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
+  for (var b = [], c = Entry.hw.portData, d = 1; 5 > d; d++) {
+    var e = c[d];
+    e && (e.value || 0 === e.value) && b.push([d + " - " + Lang.Blocks["BITBRICK_" + e.type], d.toString()]);
+  }
+  return 0 == b.length ? [[Lang.Blocks.no_target, "null"]] : b;
+}, touchList:function() {
+  for (var b = [], c = Entry.hw.portData, d = 1; 5 > d; d++) {
+    var e = c[d];
+    e && "touch" === e.type && b.push([d.toString(), d.toString()]);
+  }
+  return 0 == b.length ? [[Lang.Blocks.no_target, "null"]] : b;
+}, servoList:function() {
+  for (var b = [], c = Entry.hw.portData, d = 5; 9 > d; d++) {
+    var e = c[d];
+    e && "SERVO" === e.type && b.push(["ABCD"[d - 5], d.toString()]);
+  }
+  return 0 == b.length ? [[Lang.Blocks.no_target, "null"]] : b;
+}, dcList:function() {
+  for (var b = [], c = Entry.hw.portData, d = 5; 9 > d; d++) {
+    var e = c[d];
+    e && "DC" === e.type && b.push(["ABCD"[d - 5], d.toString()]);
+  }
+  return 0 == b.length ? [[Lang.Blocks.no_target, "null"]] : b;
+}, setZero:function() {
+  var b = Entry.hw.sendQueue, c;
+  for (c in Entry.Bitbrick.PORT_MAP) {
+    b[c] = 0;
+  }
+  Entry.hw.update();
+}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100, monitorTemplate:{keys:["value"], imgPath:"hw/bitbrick.png", width:400, height:400, listPorts:{1:{name:Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, 
+y:0}}, A:{name:Lang.Hw.port_en + " A " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, B:{name:Lang.Hw.port_en + " B " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, C:{name:Lang.Hw.port_en + " C " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, D:{name:Lang.Hw.port_en + " D " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
+Blockly.Blocks.bitbrick_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT").appendField(" \uac12");
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_sensor_value = function(b, c) {
+  b = c.getStringField("PORT");
+  return Entry.hw.portData[b].value;
+};
+Blockly.Blocks.bitbrick_is_touch_pressed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.BITBRICK_touch).appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.touchList), "PORT").appendField("\uc774(\uac00) \ub20c\ub838\ub294\uac00?");
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_is_touch_pressed = function(b, c) {
+  return 0 === Entry.hw.portData[c.getStringField("PORT")].value;
+};
+Blockly.Blocks.bitbrick_turn_off_color_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ub044\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_off_color_led = function(b, c) {
+  Entry.hw.sendQueue.LEDR = 0;
+  Entry.hw.sendQueue.LEDG = 0;
+  Entry.hw.sendQueue.LEDB = 0;
+  return c.callReturn();
+};
+Blockly.Blocks.bitbrick_turn_on_color_led_by_rgb = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ucf1c\uae30 R");
+  this.appendValueInput("rValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("G");
+  this.appendValueInput("gValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("B");
+  this.appendValueInput("bValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_on_color_led_by_rgb = function(b, c) {
+  b = c.getNumberValue("rValue");
+  var d = c.getNumberValue("gValue"), e = c.getNumberValue("bValue"), f = Entry.adjustValueWithMaxMin, g = Entry.hw.sendQueue;
+  g.LEDR = f(b, 0, 255);
+  g.LEDG = f(d, 0, 255);
+  g.LEDB = f(e, 0, 255);
+  return c.callReturn();
+};
+Blockly.Blocks.bitbrick_turn_on_color_led_by_picker = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \uc0c9 ").appendField(new Blockly.FieldColour("#ff0000"), "VALUE").appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_on_color_led_by_picker = function(b, c) {
+  b = c.getStringField("VALUE");
+  Entry.hw.sendQueue.LEDR = parseInt(b.substr(1, 2), 16);
+  Entry.hw.sendQueue.LEDG = parseInt(b.substr(3, 2), 16);
+  Entry.hw.sendQueue.LEDB = parseInt(b.substr(5, 2), 16);
+  return c.callReturn();
+};
+Blockly.Blocks.bitbrick_turn_on_color_led_by_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ucf1c\uae30 \uc0c9");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_on_color_led_by_value = function(b, c) {
+  b = c.getNumberValue("VALUE");
+  b %= 200;
+  if (67 > b) {
+    var d = 200 - 3 * b;
+    var e = 3 * b;
+    var f = 0;
+  } else {
+    134 > b ? (b -= 67, d = 0, e = 200 - 3 * b, f = 3 * b) : 201 > b && (b -= 134, d = 3 * b, e = 0, f = 200 - 3 * b);
+  }
+  Entry.hw.sendQueue.LEDR = d;
+  Entry.hw.sendQueue.LEDG = e;
+  Entry.hw.sendQueue.LEDB = f;
+  return c.callReturn();
+};
+Blockly.Blocks.bitbrick_buzzer = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc84\uc800\uc74c ");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub0b4\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_buzzer = function(b, c) {
+  if (c.isStart) {
+    return Entry.hw.sendQueue.buzzer = 0, delete c.isStart, c.callReturn();
+  }
+  b = c.getNumberValue("VALUE");
+  Entry.hw.sendQueue.buzzer = b;
+  c.isStart = !0;
+  return c;
+};
+Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubaa8\ub4e0 \ubaa8\ud130 \ub044\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_off_all_motors = function(b, c) {
+  var d = Entry.hw.sendQueue;
+  b = Entry.Bitbrick;
+  b.servoList().map(function(b) {
+    d[b[1]] = 0;
+  });
+  b.dcList().map(function(b) {
+    d[b[1]] = 128;
+  });
+  return c.callReturn();
+};
+Blockly.Blocks.bitbrick_dc_speed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \uc18d\ub3c4");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_dc_speed = function(b, c) {
+  b = c.getNumberValue("VALUE");
+  b = Math.min(b, Entry.Bitbrick.dcMaxValue);
+  b = Math.max(b, Entry.Bitbrick.dcMinValue);
+  Entry.hw.sendQueue[c.getStringField("PORT")] = b + 128;
+  return c.callReturn();
+};
+Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" ").appendField(new Blockly.FieldDropdown([[Lang.Blocks.BITBRICK_dc_direction_cw, "CW"], [Lang.Blocks.BITBRICK_dc_direction_ccw, "CCW"]]), "DIRECTION").appendField(" \ubc29\ud5a5").appendField(" \uc18d\ub825");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_dc_direction_speed = function(b, c) {
+  b = "CW" === c.getStringField("DIRECTION");
+  var d = c.getNumberValue("VALUE"), d = Math.min(d, Entry.Bitbrick.dcMaxValue), d = Math.max(d, 0);
+  Entry.hw.sendQueue[c.getStringField("PORT")] = b ? d + 128 : 128 - d;
+  return c.callReturn();
+};
+Blockly.Blocks.bitbrick_servomotor_angle = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc11c\ubcf4 \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.servoList), "PORT").appendField(" \uac01\ub3c4");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_servomotor_angle = function(b, c) {
+  b = c.getNumberValue("VALUE") + 1;
+  b = Math.min(b, Entry.Bitbrick.servoMaxValue);
+  b = Math.max(b, Entry.Bitbrick.servoMinValue);
+  Entry.hw.sendQueue[c.getStringField("PORT")] = b;
+  return c.callReturn();
+};
+Blockly.Blocks.bitbrick_convert_scale = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubcc0\ud658");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT");
+  this.appendDummyInput().appendField("\uac12");
+  this.appendValueInput("VALUE2").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_convert_scale_3);
+  this.appendValueInput("VALUE3").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField("\uc5d0\uc11c");
+  this.appendValueInput("VALUE4").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_convert_scale_5);
+  this.appendValueInput("VALUE5").setCheck(["Number", "String", null]);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_convert_scale = function(b, c) {
+  b = c.getNumberField("PORT");
+  var d = Entry.hw.portData[b].value, e = c.getNumberValue("VALUE2", c), f = c.getNumberValue("VALUE3", c);
+  b = c.getNumberValue("VALUE4", c);
+  c = c.getNumberValue("VALUE5", c);
+  if (b > c) {
+    var g = b;
+    b = c;
+    c = g;
+  }
+  d = (c - b) / (f - e) * (d - e);
+  d += b;
+  d = Math.min(c, d);
+  d = Math.max(b, d);
+  return Math.round(d);
+};
 Entry.Arduino = {name:"arduino", setZero:function() {
   Entry.hw.sendQueue.readablePorts = [];
   for (var b = 0; 20 > b; b++) {
@@ -2900,243 +3137,6 @@ Entry.block.dplay_servo = function(b, c) {
   return c.callReturn();
 };
 Entry.rokoboard = {name:"rokoboard", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
-Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5:"MIC", 21:"UserSensor", 11:"UserInput", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
-  for (var b = [], c = Entry.hw.portData, d = 1; 5 > d; d++) {
-    var e = c[d];
-    e && (e.value || 0 === e.value) && b.push([d + " - " + Lang.Blocks["BITBRICK_" + e.type], d.toString()]);
-  }
-  return 0 == b.length ? [[Lang.Blocks.no_target, "null"]] : b;
-}, touchList:function() {
-  for (var b = [], c = Entry.hw.portData, d = 1; 5 > d; d++) {
-    var e = c[d];
-    e && "touch" === e.type && b.push([d.toString(), d.toString()]);
-  }
-  return 0 == b.length ? [[Lang.Blocks.no_target, "null"]] : b;
-}, servoList:function() {
-  for (var b = [], c = Entry.hw.portData, d = 5; 9 > d; d++) {
-    var e = c[d];
-    e && "SERVO" === e.type && b.push(["ABCD"[d - 5], d.toString()]);
-  }
-  return 0 == b.length ? [[Lang.Blocks.no_target, "null"]] : b;
-}, dcList:function() {
-  for (var b = [], c = Entry.hw.portData, d = 5; 9 > d; d++) {
-    var e = c[d];
-    e && "DC" === e.type && b.push(["ABCD"[d - 5], d.toString()]);
-  }
-  return 0 == b.length ? [[Lang.Blocks.no_target, "null"]] : b;
-}, setZero:function() {
-  var b = Entry.hw.sendQueue, c;
-  for (c in Entry.Bitbrick.PORT_MAP) {
-    b[c] = 0;
-  }
-  Entry.hw.update();
-}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100, monitorTemplate:{keys:["value"], imgPath:"hw/bitbrick.png", width:400, height:400, listPorts:{1:{name:Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, 
-y:0}}, A:{name:Lang.Hw.port_en + " A " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, B:{name:Lang.Hw.port_en + " B " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, C:{name:Lang.Hw.port_en + " C " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, D:{name:Lang.Hw.port_en + " D " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
-Blockly.Blocks.bitbrick_sensor_value = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT").appendField(" \uac12");
-  this.setOutput(!0, "String");
-  this.setInputsInline(!0);
-}};
-Entry.block.bitbrick_sensor_value = function(b, c) {
-  b = c.getStringField("PORT");
-  return Entry.hw.portData[b].value;
-};
-Blockly.Blocks.bitbrick_is_touch_pressed = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.BITBRICK_touch).appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.touchList), "PORT").appendField("\uc774(\uac00) \ub20c\ub838\ub294\uac00?");
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.bitbrick_is_touch_pressed = function(b, c) {
-  return 0 === Entry.hw.portData[c.getStringField("PORT")].value;
-};
-Blockly.Blocks.bitbrick_turn_off_color_led = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uceec\ub7ec LED \ub044\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.bitbrick_turn_off_color_led = function(b, c) {
-  Entry.hw.sendQueue.LEDR = 0;
-  Entry.hw.sendQueue.LEDG = 0;
-  Entry.hw.sendQueue.LEDB = 0;
-  return c.callReturn();
-};
-Blockly.Blocks.bitbrick_turn_on_color_led_by_rgb = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uceec\ub7ec LED \ucf1c\uae30 R");
-  this.appendValueInput("rValue").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("G");
-  this.appendValueInput("gValue").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("B");
-  this.appendValueInput("bValue").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.bitbrick_turn_on_color_led_by_rgb = function(b, c) {
-  b = c.getNumberValue("rValue");
-  var d = c.getNumberValue("gValue"), e = c.getNumberValue("bValue"), f = Entry.adjustValueWithMaxMin, g = Entry.hw.sendQueue;
-  g.LEDR = f(b, 0, 255);
-  g.LEDG = f(d, 0, 255);
-  g.LEDB = f(e, 0, 255);
-  return c.callReturn();
-};
-Blockly.Blocks.bitbrick_turn_on_color_led_by_picker = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uceec\ub7ec LED \uc0c9 ").appendField(new Blockly.FieldColour("#ff0000"), "VALUE").appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.bitbrick_turn_on_color_led_by_picker = function(b, c) {
-  b = c.getStringField("VALUE");
-  Entry.hw.sendQueue.LEDR = parseInt(b.substr(1, 2), 16);
-  Entry.hw.sendQueue.LEDG = parseInt(b.substr(3, 2), 16);
-  Entry.hw.sendQueue.LEDB = parseInt(b.substr(5, 2), 16);
-  return c.callReturn();
-};
-Blockly.Blocks.bitbrick_turn_on_color_led_by_value = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uceec\ub7ec LED \ucf1c\uae30 \uc0c9");
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.bitbrick_turn_on_color_led_by_value = function(b, c) {
-  b = c.getNumberValue("VALUE");
-  b %= 200;
-  if (67 > b) {
-    var d = 200 - 3 * b;
-    var e = 3 * b;
-    var f = 0;
-  } else {
-    134 > b ? (b -= 67, d = 0, e = 200 - 3 * b, f = 3 * b) : 201 > b && (b -= 134, d = 3 * b, e = 0, f = 200 - 3 * b);
-  }
-  Entry.hw.sendQueue.LEDR = d;
-  Entry.hw.sendQueue.LEDG = e;
-  Entry.hw.sendQueue.LEDB = f;
-  return c.callReturn();
-};
-Blockly.Blocks.bitbrick_buzzer = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ubc84\uc800\uc74c ");
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ub0b4\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.bitbrick_buzzer = function(b, c) {
-  if (c.isStart) {
-    return Entry.hw.sendQueue.buzzer = 0, delete c.isStart, c.callReturn();
-  }
-  b = c.getNumberValue("VALUE");
-  Entry.hw.sendQueue.buzzer = b;
-  c.isStart = !0;
-  return c;
-};
-Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ubaa8\ub4e0 \ubaa8\ud130 \ub044\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.bitbrick_turn_off_all_motors = function(b, c) {
-  var d = Entry.hw.sendQueue;
-  b = Entry.Bitbrick;
-  b.servoList().map(function(b) {
-    d[b[1]] = 0;
-  });
-  b.dcList().map(function(b) {
-    d[b[1]] = 128;
-  });
-  return c.callReturn();
-};
-Blockly.Blocks.bitbrick_dc_speed = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \uc18d\ub3c4");
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-  this.setInputsInline(!0);
-}};
-Entry.block.bitbrick_dc_speed = function(b, c) {
-  b = c.getNumberValue("VALUE");
-  b = Math.min(b, Entry.Bitbrick.dcMaxValue);
-  b = Math.max(b, Entry.Bitbrick.dcMinValue);
-  Entry.hw.sendQueue[c.getStringField("PORT")] = b + 128;
-  return c.callReturn();
-};
-Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" ").appendField(new Blockly.FieldDropdown([[Lang.Blocks.BITBRICK_dc_direction_cw, "CW"], [Lang.Blocks.BITBRICK_dc_direction_ccw, "CCW"]]), "DIRECTION").appendField(" \ubc29\ud5a5").appendField(" \uc18d\ub825");
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-  this.setInputsInline(!0);
-}};
-Entry.block.bitbrick_dc_direction_speed = function(b, c) {
-  b = "CW" === c.getStringField("DIRECTION");
-  var d = c.getNumberValue("VALUE"), d = Math.min(d, Entry.Bitbrick.dcMaxValue), d = Math.max(d, 0);
-  Entry.hw.sendQueue[c.getStringField("PORT")] = b ? d + 128 : 128 - d;
-  return c.callReturn();
-};
-Blockly.Blocks.bitbrick_servomotor_angle = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc11c\ubcf4 \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.servoList), "PORT").appendField(" \uac01\ub3c4");
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-  this.setInputsInline(!0);
-}};
-Entry.block.bitbrick_servomotor_angle = function(b, c) {
-  b = c.getNumberValue("VALUE") + 1;
-  b = Math.min(b, Entry.Bitbrick.servoMaxValue);
-  b = Math.max(b, Entry.Bitbrick.servoMinValue);
-  Entry.hw.sendQueue[c.getStringField("PORT")] = b;
-  return c.callReturn();
-};
-Blockly.Blocks.bitbrick_convert_scale = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ubcc0\ud658");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT");
-  this.appendDummyInput().appendField("\uac12");
-  this.appendValueInput("VALUE2").setCheck(["Number", "String", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_convert_scale_3);
-  this.appendValueInput("VALUE3").setCheck(["Number", "String", null]);
-  this.appendDummyInput().appendField("\uc5d0\uc11c");
-  this.appendValueInput("VALUE4").setCheck(["Number", "String", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_convert_scale_5);
-  this.appendValueInput("VALUE5").setCheck(["Number", "String", null]);
-  this.setOutput(!0, "Number");
-  this.setInputsInline(!0);
-}};
-Entry.block.bitbrick_convert_scale = function(b, c) {
-  b = c.getNumberField("PORT");
-  var d = Entry.hw.portData[b].value, e = c.getNumberValue("VALUE2", c), f = c.getNumberValue("VALUE3", c);
-  b = c.getNumberValue("VALUE4", c);
-  c = c.getNumberValue("VALUE5", c);
-  if (b > c) {
-    var g = b;
-    b = c;
-    c = g;
-  }
-  d = (c - b) / (f - e) * (d - e);
-  d += b;
-  d = Math.min(c, d);
-  d = Math.max(b, d);
-  return Math.round(d);
-};
 Entry.byrobot_dronefighter_controller = {name:"byrobot_dronefighter_controller", setZero:function() {
   for (var b = 0; 1 > b; b++) {
     this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(17, 255, 0), this.transferCommand(17, 129, 0);
@@ -6584,38 +6584,6 @@ Entry.block.robotori_dc_direction = function(b, c) {
   "LEFT_MOTOR" == d && ("STOP" == e ? b.LEFT_MOTOR = 255 : "CW" == e ? b.LEFT_MOTOR = 0 : "CCW" == e && (b.LEFT_MOTOR = 180));
   return c.callReturn();
 };
-Entry.Event = function(b) {
-  this._sender = b;
-  this._listeners = [];
-};
-(function(b) {
-  b.attach = function(b, d) {
-    var c = this;
-    b = {obj:b, fn:d, destroy:function() {
-      c.detach(this);
-    }};
-    this._listeners.push(b);
-    return b;
-  };
-  b.detach = function(b) {
-    var c = this._listeners;
-    b = c.indexOf(b);
-    if (-1 < b) {
-      return c.splice(b, 1);
-    }
-  };
-  b.clear = function() {
-    for (var b = this._listeners; b.length;) {
-      b.pop();
-    }
-  };
-  b.notify = function() {
-    var b = arguments;
-    this._listeners.slice().forEach(function(c) {
-      c.fn.apply(c.obj, b);
-    });
-  };
-})(Entry.Event.prototype);
 Entry.Xbot = {PORT_MAP:{rightWheel:0, leftWheel:0, head:90, armR:90, armL:90, analogD5:127, analogD6:127, D4:0, D7:0, D12:0, D13:0, ledR:0, ledG:0, ledB:0, lcdNum:0, lcdTxt:"                ", note:262, duration:0}, setZero:function() {
   var b = Entry.Xbot.PORT_MAP, c = Entry.hw.sendQueue, d;
   for (d in b) {
@@ -6943,6 +6911,38 @@ Entry.Collection = function(b) {
   b.destroy = function() {
   };
 })(Entry.Collection.prototype, Array.prototype);
+Entry.Event = function(b) {
+  this._sender = b;
+  this._listeners = [];
+};
+(function(b) {
+  b.attach = function(b, d) {
+    var c = this;
+    b = {obj:b, fn:d, destroy:function() {
+      c.detach(this);
+    }};
+    this._listeners.push(b);
+    return b;
+  };
+  b.detach = function(b) {
+    var c = this._listeners;
+    b = c.indexOf(b);
+    if (-1 < b) {
+      return c.splice(b, 1);
+    }
+  };
+  b.clear = function() {
+    for (var b = this._listeners; b.length;) {
+      b.pop();
+    }
+  };
+  b.notify = function() {
+    var b = arguments;
+    this._listeners.slice().forEach(function(c) {
+      c.fn.apply(c.obj, b);
+    });
+  };
+})(Entry.Event.prototype);
 Entry.Model = function(b, c) {
   var d = Entry.Model;
   d.generateSchema(b);
@@ -7717,30 +7717,6 @@ Entry.Commander = function(b) {
     return [["variable", b]];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, validate:!1, undo:"variableContainerAddVariable", dom:["variableContainer", "variableAddConfirmButton"]};
 })(Entry.Command);
-Entry.db = {data:{}, typeMap:{}};
-(function(b) {
-  b.add = function(b) {
-    this.data[b.id] = b;
-    var c = b.type;
-    void 0 === this.typeMap[c] && (this.typeMap[c] = {});
-    this.typeMap[c][b.id] = b;
-  };
-  b.has = function(b) {
-    return this.data.hasOwnProperty(b);
-  };
-  b.remove = function(b) {
-    this.has(b) && (delete this.typeMap[this.data[b].type][b], delete this.data[b]);
-  };
-  b.get = function(b) {
-    return this.data[b];
-  };
-  b.find = function() {
-  };
-  b.clear = function() {
-    this.data = {};
-    this.typeMap = {};
-  };
-})(Entry.db);
 Entry.Container = function() {
   this.objects_ = [];
   this.cachedPicture = {};
@@ -8340,6 +8316,30 @@ Entry.Container.prototype.getDom = function(b) {
     }
   }
 };
+Entry.db = {data:{}, typeMap:{}};
+(function(b) {
+  b.add = function(b) {
+    this.data[b.id] = b;
+    var c = b.type;
+    void 0 === this.typeMap[c] && (this.typeMap[c] = {});
+    this.typeMap[c][b.id] = b;
+  };
+  b.has = function(b) {
+    return this.data.hasOwnProperty(b);
+  };
+  b.remove = function(b) {
+    this.has(b) && (delete this.typeMap[this.data[b].type][b], delete this.data[b]);
+  };
+  b.get = function(b) {
+    return this.data[b];
+  };
+  b.find = function() {
+  };
+  b.clear = function() {
+    this.data = {};
+    this.typeMap = {};
+  };
+})(Entry.db);
 Entry.SVG = function(b, c) {
   b = c ? c : document.getElementById(b);
   return Entry.SVG.createElement(b);
@@ -10939,14 +10939,14 @@ Entry.StateManager.prototype.clear = function() {
     this.redoStack_.pop();
   }
 };
-Entry.BlockModel = function() {
-  Entry.Model(this);
-};
-Entry.BlockModel.prototype.schema = {id:null, x:0, y:0, type:null, params:{}, statements:{}, prev:null, next:null, view:null};
 Entry.BlockRenderModel = function() {
   Entry.Model(this);
 };
 Entry.BlockRenderModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, width:0, height:0, magneting:!1};
+Entry.BlockModel = function() {
+  Entry.Model(this);
+};
+Entry.BlockModel.prototype.schema = {id:null, x:0, y:0, type:null, params:{}, statements:{}, prev:null, next:null, view:null};
 Entry.BoxModel = function() {
   Entry.Model(this);
 };
@@ -11700,84 +11700,6 @@ Entry.EntryObject = function(b) {
     }
   };
 })(Entry.EntryObject.prototype);
-Entry.BlockParser = function(b) {
-  this.syntax = b;
-  this._iterVariableCount = 0;
-  this._iterVariableChunk = ["i", "j", "k"];
-};
-(function(b) {
-  b.Code = function(b) {
-    if (b instanceof Entry.Thread) {
-      return this.Thread(b);
-    }
-    if (b instanceof Entry.Block) {
-      return this.Block(b);
-    }
-    var c = "";
-    b = b.getThreads();
-    for (var e = 0; e < b.length; e++) {
-      c += this.Thread(b[e]);
-    }
-    return c;
-  };
-  b.Thread = function(b) {
-    if (b instanceof Entry.Block) {
-      return this.Block(b);
-    }
-    var c = "";
-    b = b.getBlocks();
-    for (var e = 0; e < b.length; e++) {
-      c += this.Block(b[e]);
-    }
-    return c;
-  };
-  b.Block = function(b) {
-    var c = b._schema.syntax;
-    return c ? this[c[0]](b) : "";
-  };
-  b.Program = function(b) {
-    return "";
-  };
-  b.Scope = function(b) {
-    b = b._schema.syntax.concat();
-    return b.splice(1, b.length - 1).join(".") + "();\n";
-  };
-  b.BasicFunction = function(b) {
-    b = this.Thread(b.statements[0]);
-    return "function promise() {\n" + this.indent(b) + "}\n";
-  };
-  b.BasicIteration = function(b) {
-    var c = b.params[0], e = this.publishIterateVariable();
-    b = this.Thread(b.statements[0]);
-    this.unpublishIterateVariable();
-    return "for (var " + e + " = 0; " + e + " < " + c + "; " + e + "++){\n" + this.indent(b) + "}\n";
-  };
-  b.BasicIf = function(b) {
-    var c = this.Thread(b.statements[0]);
-    return "if (" + b._schema.syntax.concat()[1] + ") {\n" + this.indent(c) + "}\n";
-  };
-  b.BasicWhile = function(b) {
-    var c = this.Thread(b.statements[0]);
-    return "while (" + b._schema.syntax.concat()[1] + ") {\n" + this.indent(c) + "}\n";
-  };
-  b.indent = function(b) {
-    var c = "    ";
-    b = b.split("\n");
-    b.pop();
-    return c += b.join("\n    ") + "\n";
-  };
-  b.publishIterateVariable = function() {
-    var b = "", d = this._iterVariableCount;
-    do {
-      b = this._iterVariableChunk[d % 3] + b, d = parseInt(d / 3) - 1, 0 === d && (b = this._iterVariableChunk[0] + b);
-    } while (0 < d);
-    this._iterVariableCount++;
-    return b;
-  };
-  b.unpublishIterateVariable = function() {
-    this._iterVariableCount && this._iterVariableCount--;
-  };
-})(Entry.BlockParser.prototype);
 Entry.Painter2 = function(b) {
   this.view = b;
   this.baseUrl = Entry.painterBaseUrl || "/lib/literallycanvas/lib/img";
@@ -11989,4 +11911,82 @@ Entry.Painter2 = function(b) {
     this.painterTopStageXY.textContent = "x:" + b.x.toFixed(1) + ", y:" + b.y.toFixed(1);
   };
 })(Entry.Painter2.prototype);
+Entry.BlockParser = function(b) {
+  this.syntax = b;
+  this._iterVariableCount = 0;
+  this._iterVariableChunk = ["i", "j", "k"];
+};
+(function(b) {
+  b.Code = function(b) {
+    if (b instanceof Entry.Thread) {
+      return this.Thread(b);
+    }
+    if (b instanceof Entry.Block) {
+      return this.Block(b);
+    }
+    var c = "";
+    b = b.getThreads();
+    for (var e = 0; e < b.length; e++) {
+      c += this.Thread(b[e]);
+    }
+    return c;
+  };
+  b.Thread = function(b) {
+    if (b instanceof Entry.Block) {
+      return this.Block(b);
+    }
+    var c = "";
+    b = b.getBlocks();
+    for (var e = 0; e < b.length; e++) {
+      c += this.Block(b[e]);
+    }
+    return c;
+  };
+  b.Block = function(b) {
+    var c = b._schema.syntax;
+    return c ? this[c[0]](b) : "";
+  };
+  b.Program = function(b) {
+    return "";
+  };
+  b.Scope = function(b) {
+    b = b._schema.syntax.concat();
+    return b.splice(1, b.length - 1).join(".") + "();\n";
+  };
+  b.BasicFunction = function(b) {
+    b = this.Thread(b.statements[0]);
+    return "function promise() {\n" + this.indent(b) + "}\n";
+  };
+  b.BasicIteration = function(b) {
+    var c = b.params[0], e = this.publishIterateVariable();
+    b = this.Thread(b.statements[0]);
+    this.unpublishIterateVariable();
+    return "for (var " + e + " = 0; " + e + " < " + c + "; " + e + "++){\n" + this.indent(b) + "}\n";
+  };
+  b.BasicIf = function(b) {
+    var c = this.Thread(b.statements[0]);
+    return "if (" + b._schema.syntax.concat()[1] + ") {\n" + this.indent(c) + "}\n";
+  };
+  b.BasicWhile = function(b) {
+    var c = this.Thread(b.statements[0]);
+    return "while (" + b._schema.syntax.concat()[1] + ") {\n" + this.indent(c) + "}\n";
+  };
+  b.indent = function(b) {
+    var c = "    ";
+    b = b.split("\n");
+    b.pop();
+    return c += b.join("\n    ") + "\n";
+  };
+  b.publishIterateVariable = function() {
+    var b = "", d = this._iterVariableCount;
+    do {
+      b = this._iterVariableChunk[d % 3] + b, d = parseInt(d / 3) - 1, 0 === d && (b = this._iterVariableChunk[0] + b);
+    } while (0 < d);
+    this._iterVariableCount++;
+    return b;
+  };
+  b.unpublishIterateVariable = function() {
+    this._iterVariableCount && this._iterVariableCount--;
+  };
+})(Entry.BlockParser.prototype);
 
