@@ -2,9 +2,6 @@ language:
 - node_js
 node_js:
   - "6"
-branches:
-  only:
-  - master
 cache:
   directories:
   - node_modules
@@ -22,3 +19,4 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+    all_branches: true
