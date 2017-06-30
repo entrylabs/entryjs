@@ -7,8 +7,14 @@ DATEFMT=`date "+%Y%m%d%H%M%S"`
 # echo "$DATEFMT: My message"
 
 git config user.name "JY KIM"
+echo "1"
 git config user.email "kimorkim@gmail.com"
-git add *
+echo "2"
+git add dist/*
+echo "3"
 git commit -m "Entry Js Update"
+echo "4"
 git tag -fa "$DATEFMT"
+echo "5"
 git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" build
+echo "6"
