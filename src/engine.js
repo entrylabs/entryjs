@@ -718,7 +718,7 @@ Entry.Engine = function() {
         if (e.ctrlKey && type == 'workspace') {
             if (keyCode == 83) {
                 e.preventDefault();
-                Entry.dispatchEvent('saveWorkspace');
+                Entry.dispatchEvent(e.shiftKey ? 'saveAsWorkspace': 'saveWorkspace');
             } else if (keyCode == 82) {
                 e.preventDefault();
                 Entry.engine.run();
