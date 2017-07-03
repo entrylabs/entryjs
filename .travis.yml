@@ -23,9 +23,10 @@ install:
 - npm install
 script:
 - ./scripts/build.sh
-deploy:
-  - provider: script
-    script: ./scripts/deploy.sh
-    on:
-      branch: travis/test
+- ./scripts/deploy.sh
+# deploy:
+#   - provider: script
+#     script: ./scripts/deploy.sh
+#     on:
+#       branch: travis/test
       # branch: master
