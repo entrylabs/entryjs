@@ -12,8 +12,7 @@ cache:
   - $HOME/.npm
 branches:
   only:
-  - travis/test
-  # - master
+  - master
 before_script:
 - chmod +x ./scripts/build.sh
 - chmod +x ./scripts/deploy.sh
@@ -22,10 +21,9 @@ install:
 - npm install
 script:
 - ./scripts/build.sh
-- ./scripts/deploy.sh
-# deploy:
-#   - provider: script
-#     script: ./scripts/deploy.sh
-#     on:
-#       branch: travis/test
-      # branch: master
+# - ./scripts/deploy.sh
+deploy:
+  - provider: script
+    script: ./scripts/deploy.sh
+    on:
+      branch: master
