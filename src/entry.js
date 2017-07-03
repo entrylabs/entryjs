@@ -281,6 +281,13 @@ Entry.resizeElement = function(interfaceModel) {
                 addButton.style.width = (canvasSize * 0.7) + 'px';
             }
         }
+        var pauseButton = Entry.engine.view_.getElementsByClassName('entryPauseButtonWorkspace_w')[0];
+        if (pauseButton) {
+            if (Entry.objectAddable) {
+                pauseButton.style.top = (canvasHeight + 25) + 'px';
+                pauseButton.style.width = (canvasSize * 0.7) + 'px';
+            }
+        }
 
         var runButton = Entry.engine.view_.getElementsByClassName('entryRunButtonWorkspace_w')[0];
         if (runButton) {
