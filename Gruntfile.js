@@ -1,6 +1,8 @@
 module.exports = function(grunt) {
     'use strict';
 
+    require('google-closure-compiler').grunt(grunt);
+
     grunt.initConfig({
         concurrent: {
             tasks: ['watch'],
@@ -62,6 +64,30 @@ module.exports = function(grunt) {
                 ]
             }
         },
+        'closure-compiler': {
+            develop: {
+                files: {
+                    'dist/entry.js': ['src/entry.js', 'src/util/**/*.js', 'src/property_panel.js', 'src/**/*.js']
+                },
+                options: {
+                    compilation_level: 'SIMPLE_OPTIMIZATIONS',
+                    language_in: 'ECMASCRIPT5',
+                    language_out: 'ECMASCRIPT5',
+                    formatting: 'pretty_print'
+                }
+            },
+            dist: {
+                files: {
+                    'dist/entry.min.js': ['src/entry.js', 'src/util/**/*.js', 'src/property_panel.js', 'src/**/*.js']
+                },
+                options: {
+                    create_source_map: 'entry.js.map',
+                    compilation_level: 'SIMPLE_OPTIMIZATIONS',
+                    language_in: 'ECMASCRIPT5',
+                    language_out: 'ECMASCRIPT5'
+                }
+            }
+        },
         closureCompiler: {
             options: {
                 compilerFile: 'node_modules/closurecompiler/compiler/compiler.jar',
@@ -120,4 +146,9 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('closure', ['closureCompiler']);
+
+    grunt.registerTask('build', [
+        'closure-compiler',
+        'less'
+    ]);
 };
