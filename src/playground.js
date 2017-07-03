@@ -656,7 +656,7 @@ Entry.Playground = function() {
 
         var fontSizeLabel = Entry.createElement("div");
         fontSizeLabel.addClass("entryPlaygroundFontSizeLabel");
-        fontSizeLabel.innerHTML = "글자 크기";
+        fontSizeLabel.innerHTML = Lang.General.font_size;
         fontSizeWrapper.appendChild(fontSizeLabel);
 
         var isFontSizing = false;
