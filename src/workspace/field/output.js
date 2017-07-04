@@ -199,6 +199,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
     p.separate = function(block) {
         this.getCode().createThread([block]);
+        this._updateValueBlock(null);
         this.changeEvent.notify();
     };
 

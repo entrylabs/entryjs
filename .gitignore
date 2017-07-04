@@ -34,3 +34,5 @@ extern/closure-library
 *.map
 
 .vscode/*
+dist/entry.min.js
+dist/entry.js

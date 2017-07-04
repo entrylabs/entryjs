@@ -181,6 +181,16 @@ Entry.Engine = function() {
                 Entry.engine.togglePause();
             });
 
+            this.pauseButtonFull = Entry.createElement('button');
+            this.pauseButtonFull.addClass('entryEngineButtonWorkspace_w');
+            this.pauseButtonFull.addClass('entryPauseButtonWorkspace_full');
+            this.pauseButtonFull.addClass('entryRemove');
+            this.view_.appendChild(this.pauseButtonFull);
+            this.pauseButtonFull.bindOnClick(function(e) {
+                this.blur();
+                Entry.engine.togglePause();
+            });
+
             this.mouseView = Entry.createElement('div');
             this.mouseView.addClass('entryMouseViewWorkspace_w');
             this.mouseView.addClass('entryRemove');
@@ -519,17 +529,27 @@ Entry.Engine = function() {
             this.view_.addClass('entryEngineBlueWorkspace');
 
         if (this.runButton) {
-            this.pauseButton.innerHTML = Lang.Workspace.pause;
+            if (this.pauseButton)
+                this.pauseButton.innerHTML = Lang.Workspace.pause;
+            if (this.pauseButtonFull)
+                this.pauseButtonFull.innerHTML = Lang.Workspace.pause;
             this.runButton.addClass('run');
             this.runButton.addClass('entryRemove');
             this.stopButton.removeClass('entryRemove');
-            if (this.pauseButton)
+            if (this.addButton) {
+                this.addButton.addClass('entryRemove');
+                if (Entry.objectAddable)
+                    this.pauseButton.removeClass('entryRemove');
+            }
+            if (this.pauseButton && (Entry.type === 'minimize' || Entry.objectAddable))
                 this.pauseButton.removeClass('entryRemove');
 
             if (this.runButton2)
                 this.runButton2.addClass('entryRemove');
             if (this.stopButton2)
                 this.stopButton2.removeClass('entryRemove');
+            if (this.pauseButtonFull)
+                this.pauseButtonFull.removeClass('entryRemove');
         }
 
         if (!this.isUpdating) {
@@ -583,6 +603,10 @@ Entry.Engine = function() {
             this.stopButton.addClass('entryRemove');
             if (this.pauseButton)
                 this.pauseButton.addClass('entryRemove');
+            if (this.pauseButtonFull)
+                this.pauseButtonFull.addClass('entryRemove');
+            if (this.addButton)
+                this.addButton.removeClass('entryRemove');
 
             if (this.runButton2)
                 this.runButton2.removeClass('entryRemove');
@@ -610,7 +634,10 @@ Entry.Engine = function() {
             else delete timer.pauseStart;
             this.state = 'run';
             if (this.runButton) {
-                this.pauseButton.innerHTML = Lang.Workspace.pause;
+                if (this.pauseButton)
+                    this.pauseButton.innerHTML = Lang.Workspace.pause;
+                if (this.pauseButtonFull)
+                    this.pauseButtonFull.innerHTML = Lang.Workspace.pause;
                 this.runButton.addClass('entryRemove');
                 if (this.runButton2)
                     this.runButton2.addClass('entryRemove');
@@ -624,7 +651,10 @@ Entry.Engine = function() {
                 timer.pauseStart = (new Date()).getTime();
             }
             if (this.runButton) {
-                this.pauseButton.innerHTML = Lang.Workspace.restart;
+                if (this.pauseButton)
+                    this.pauseButton.innerHTML = Lang.Workspace.restart;
+                if (this.pauseButtonFull)
+                    this.pauseButtonFull.innerHTML = Lang.Workspace.restart;
                 this.runButton.removeClass('entryRemove');
                 this.stopButton.removeClass('entryRemove');
                 if (this.runButton2)
@@ -688,7 +718,7 @@ Entry.Engine = function() {
         if (e.ctrlKey && type == 'workspace') {
             if (keyCode == 83) {
                 e.preventDefault();
-                Entry.dispatchEvent('saveWorkspace');
+                Entry.dispatchEvent(e.shiftKey ? 'saveAsWorkspace': 'saveWorkspace');
             } else if (keyCode == 82) {
                 e.preventDefault();
                 Entry.engine.run();
@@ -826,10 +856,12 @@ Entry.Engine = function() {
 
     p.startProjectTimer = function() {
         var timer = this.projectTimer;
-        if (!timer)
-            return;
+
+        if (!timer) return;
+
         timer.start = (new Date()).getTime();
         timer.isInit = true;
+        timer.isPaused = false;
         timer.pausedTime = 0;
         timer.tick = setInterval(function (e) {
             Entry.engine.updateProjectTimer();
@@ -847,6 +879,25 @@ Entry.Engine = function() {
         clearInterval(timer.tick);
     };
 
+    p.resetTimer = function() {
+        var timer = this.projectTimer;
+        if (!timer.isInit) return;
+        var isPaused = timer.isPaused;
+
+        delete timer.pauseStart;
+
+        this.updateProjectTimer(0);
+        timer.pausedTime = 0;
+
+        timer.isPaused = isPaused;
+
+        if (!isPaused) return;
+
+        clearInterval(timer.tick);
+        timer.isInit = false;
+        delete timer.start;
+    };
+
     p.updateProjectTimer = function(value) {
         var engine = Entry.engine;
         var timer = engine.projectTimer;
@@ -854,7 +905,7 @@ Entry.Engine = function() {
         var current = (new Date()).getTime();
         if (typeof value == 'undefined') {
             if (!timer.isPaused && !engine.isState('pause'))
-                timer.setValue(((current - timer.start - timer.pausedTime)/1000));
+                timer.setValue(((current - (timer.start || current) - timer.pausedTime)/1000));
         } else {
             timer.setValue(value);
             timer.pausedTime = 0;

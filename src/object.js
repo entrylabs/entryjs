@@ -90,13 +90,14 @@ Entry.EntryObject = function(model) {
                 image.onload = function(e) {
                     Entry.container.cachePicture(
                         picture.id + that.entity.id, this);
-                    Entry.requestUpdate = true;
                     Entry.Loader.removeQueue();
                 };
                 image.onerror = function(err) {
                     Entry.Loader.removeQueue();
                 }
             })(this.pictures[i]);
+
+            Entry.requestUpdate = true;
         }
     }
     this._isContextMenuEnabled = true;
