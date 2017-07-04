@@ -1490,7 +1490,7 @@ Entry.Playground = function() {
         function nameViewBlur() {
             if (this.value.trim() === '') {
                 Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                alert('이름을 입력하여 주세요.');
+                alert(Lang.Workspace.enter_the_name);
                 this.focus();
                 Entry.attachEventListener(this, 'blur', nameViewBlur);
                 return;
@@ -1501,7 +1501,7 @@ Entry.Playground = function() {
                 if(nameViewArray.eq(i).val()==nameView.value &&
                    nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                    alert('이름이 중복 되었습니다.');
+                    alert(Lang.Workspace.name_already_exists);
                     this.focus();
                     Entry.attachEventListener(this, 'blur', nameViewBlur);
                     return;
@@ -1625,7 +1625,7 @@ Entry.Playground = function() {
         var nameViewArray = document.getElementsByClassName('entryPlaygroundSoundName');
         nameView.onblur = function() {
             if (this.value === '') {
-                alert('이름을 입력하여 주세요.');
+                alert(Lang.Workspace.enter_the_name);
                 this.focus();
                 return;
             }
@@ -1634,7 +1634,7 @@ Entry.Playground = function() {
                 if(nameViewArray[i].value==nameView.value) {
                     count = count+1;
                     if (count > 1) {
-                        alert('이름이 중복 되었습니다.');
+                        alert(Lang.Workspace.name_already_exists);
                         this.focus();
                         return;
                     }
