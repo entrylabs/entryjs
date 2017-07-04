@@ -1137,7 +1137,10 @@ Lang.Blocks = {
     "modi_speaker_F_SOL_S_7": "라#7",
     "modi_speaker_F_RA_S_7": "라#7",
     "ardublock_motor_forward": "앞",
-    "ardublock_motor_backward": "뒤"    
+    "ardublock_motor_backward": "뒤",
+    "mkboard_dc_motor_forward": "앞",
+    "mkboard_dc_motor_backward": "뒤"
+
 };
 Lang.Buttons = {
     "apply": "적용하기",
@@ -1682,6 +1685,7 @@ Lang.Menus = {
     "orange_board": "오렌지보드",
     "joystick": "오렌지보드(조이스틱)",
     "ardublock": "아두블럭",
+    "mkboard": "몽키보드",
     "codingtoolbox": "코딩툴박스",
     "materials_etc_all": "기타 교육자료 모음",
     "materials_teaching": "교원 연수 자료",
@@ -4613,7 +4617,23 @@ Lang.template = {
     "ardublock_get_right_cds_analog_value": "오른쪽 조도센서 %1 센서값",
     "ardublock_toggle_left_led": "왼쪽 라이트 %1 번 핀 %2 %3",
     "ardublock_toggle_right_led": "오른쪽 라이트 %1 번 핀 %2 %3",
-    "ardublock_get_sound_analog_value": "사운드(소리) 센서 %1 센서값"    
+    "ardublock_get_sound_analog_value": "사운드(소리) 센서 %1 센서값",  
+
+    "mkboard_get_analog_value": "아날로그 %1 번 센서값",
+    "mkboard_get_analog_value_map": "%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값",
+    "mkboard_get_ultrasonic_value": "초음파센서 Trig %1 Echo %2 센서값",
+    "mkboard_toggle_led": "디지털 %1 번 핀 %2 %3",
+    "mkboard_digital_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
+    "mkboard_set_tone": "디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5",
+    "mkboard_set_servo": "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
+    "mkboard_get_digital": "디지털 %1 번 센서값",
+    "mkboard_set_left_dc_motor": "왼쪽 DC모터를 %1 으로 %2 회전 속도로 정하기",
+    "mkboard_set_right_dc_motor": "오른쪽 DC모터를 %1 으로 %2 회전 속도로 정하기",
+    "mkboard_get_left_cds_analog_value": "왼쪽 조도센서 %1 센서값",
+    "mkboard_get_right_cds_analog_value": "오른쪽 조도센서 %1 센서값",
+    "mkboard_toggle_left_led": "왼쪽 라이트 %1 번 핀 %2 %3",
+    "mkboard_toggle_right_led": "오른쪽 라이트 %1 번 핀 %2 %3",
+    "mkboard_get_sound_analog_value": "사운드(소리) 센서 %1 센서값"    
 
             
 /*

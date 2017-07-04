@@ -1137,7 +1137,9 @@ Lang.Blocks = {
     "modi_speaker_F_SOL_S_7": "",
     "modi_speaker_F_RA_S_7": "",
     "ardublock_motor_forward": "Forward",
-    "ardublock_motor_backward": "Backward"
+    "ardublock_motor_backward": "Backward",
+    "mkboard_dc_motor_forward": "Forward",
+    "mkboard_dc_motor_backward": "Backward"    
 };
 Lang.Buttons = {
     "apply": "Apply",
@@ -1682,6 +1684,7 @@ Lang.Menus = {
     "orange_board": "orangeBoard",
     "joystick": "orangeBoard(joystick)",
     "ardublock": "ardublock",
+    "mkboard": "monkeyboard",
     "codingtoolbox": "codingtoolbox",
     "materials_etc_all": "Other Educational Materials",
     "materials_teaching": "For Teacher Education",
@@ -4607,13 +4610,28 @@ Lang.template = {
     "ardublock_set_servo": "Set servo pin %1 angle as %2 %3",
     "ardublock_get_digital": "Digital %1 Sensor value",
     "ardublock_set_left_motor": "Left motor direction to %1 speed %2 set",
-    "ardublock_set_right_motor": "Right motor direction to %1 speed %2 set",
-    
+    "ardublock_set_right_motor": "Right motor direction to %1 speed %2 set",    
     "ardublock_get_left_cds_analog_value": "Left CDS %1 Sensor value",
     "ardublock_get_right_cds_analog_value": "Left CDS  %1 Sensor value",
     "ardublock_toggle_left_led": "Left Light %1 Pin %2 %3",
     "ardublock_toggle_right_led": "Right Light %1 Pin %2 %3",
-    "ardublock_get_sound_analog_value": "Analog Sound %1 Sensor value"
+    "ardublock_get_sound_analog_value": "Analog Sound %1 Sensor value",
+
+    "mkboard_get_analog_value": "Analog %1 Sensor value",
+    "mkboard_get_analog_value_map": "Map Value %1 %2 ~ %3 to %4 ~ %5",
+    "mkboard_get_ultrasonic_value": "Read ultrasonic sensor trig pin %1 echo pin %2",
+    "mkboard_toggle_led": "Digital %1 Pin %2 %3",
+    "mkboard_digital_pwm": "Digital %1 Pin %2 %3",
+    "mkboard_set_tone": "Play tone pin %1 on note %2 octave %3 beat %4 %5",
+    "mkboard_set_servo": "Set servo pin %1 angle as %2 %3",
+    "mkboard_get_digital": "Digital %1 Sensor value",
+    "mkboard_set_left_dc_motor": "Left DC motor direction to %1 speed %2 set",
+    "mkboard_set_right_dc_motor": "Right DC motor direction to %1 speed %2 set",    
+    "mkboard_get_left_cds_analog_value": "Left CDS %1 Sensor value",
+    "mkboard_get_right_cds_analog_value": "Left CDS  %1 Sensor value",
+    "mkboard_toggle_left_led": "Left Light %1 Pin %2 %3",
+    "mkboard_toggle_right_led": "Right Light %1 Pin %2 %3",
+    "mkboard_get_sound_analog_value": "Analog Sound %1 Sensor value"
 
 /*
     "ardublock_get_number_sensor_value": "Analog %1 Sensor value  ",

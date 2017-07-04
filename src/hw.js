@@ -41,6 +41,7 @@ Entry.HW = function() {
         '1.6': Entry.nemoino,
         '1.7': Entry.Xbot,
         '1.8': Entry.ardublock,
+        '1.B': Entry.mkboard,
         '1.A': Entry.Cobl,
         '2.4': Entry.Hamster,
         '2.5': Entry.Albert,
