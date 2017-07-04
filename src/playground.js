@@ -1622,28 +1622,32 @@ Entry.Playground = function() {
         nameView.addClass('entryPlaygroundSoundName');
         nameView.sound = sound;
         nameView.value = sound.name;
-        var nameViewArray = document.getElementsByClassName('entryPlaygroundSoundName');
-        nameView.onblur = function() {
-            if (this.value === '') {
+        Entry.attachEventListener(nameView, 'blur', nameViewBlur);
+
+        function nameViewBlur() {
+            if (this.value.trim() === '') {
+                Entry.deAttachEventListener(this, 'blur', nameViewBlur);
                 alert(Lang.Workspace.enter_the_name);
                 this.focus();
+                Entry.attachEventListener(this, 'blur', nameViewBlur);
                 return;
             }
-            var count=0;
+
+            var nameViewArray = $(".entryPlaygroundSoundName");
             for (var i=0; i<nameViewArray.length; i++) {
-                if(nameViewArray[i].value==nameView.value) {
-                    count = count+1;
-                    if (count > 1) {
-                        alert(Lang.Workspace.name_already_exists);
-                        this.focus();
-                        return;
-                    }
+                if(nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
+                    Entry.deAttachEventListener(this, 'blur', nameViewBlur);
+                    alert(Lang.Workspace.name_already_exists);
+                    this.focus();
+                    Entry.attachEventListener(this, 'blur', nameViewBlur);
+                    return;
                 }
             }
-
-            this.sound.name = this.value;
+            var newValue = this.value;
+            this.sound.name = newValue;
             Entry.playground.reloadPlayground();
-        };
+        }
+
         nameView.onkeypress = function(e) {
             if (e.keyCode == 13)
                 this.blur();
