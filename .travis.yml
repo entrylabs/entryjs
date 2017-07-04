@@ -13,6 +13,7 @@ cache:
 branches:
   only:
   - master
+  - /^travis\/.*$/
   - /^deploy\/.*$/
 before_script:
 - chmod +x ./scripts/build.sh
@@ -22,11 +23,12 @@ install:
 - npm install
 script:
 - ./scripts/build.sh
-deploy:
-- provider: script
-  script: ./scripts/deploy.sh
-  on:
-    all_branches: true
+- ./scripts/deploy.sh
+# deploy:
+# - provider: script
+#   script: ./scripts/deploy.sh
+#   on:
+#     all_branches: true
 notifications:
   email: false
   slack:
