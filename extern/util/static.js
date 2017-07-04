@@ -379,6 +379,7 @@ EntryStatic.getAllBlocks = function() {
                 "cobl_read_light",
                 "cobl_read_btn",
                 "cobl_led_control",
+				"cobl_rgb_boardled",
                 "cobl_servo_angle_control",
                 "cobl_melody",
                 "cobl_dcmotor",
