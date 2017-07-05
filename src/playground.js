@@ -1655,7 +1655,7 @@ Entry.Playground = function() {
         element.appendChild(nameView);
         var lengthView = Entry.createElement('div');
         lengthView.addClass('entryPlaygroundSoundLength');
-        lengthView.innerHTML = sound.duration + ' 초';
+        lengthView.innerHTML = sound.duration + ' ' + Lang.General.second;
         element.appendChild(lengthView);
     };
 
