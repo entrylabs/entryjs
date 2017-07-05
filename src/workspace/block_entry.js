@@ -7687,44 +7687,44 @@ Entry.block = {
 				Entry.hw.setDigitalPortValue("ELED_B", 0);
 			}
 			else if(value == 'Red') {
-				Entry.hw.setDigitalPortValue("ELED_R", 80);
+				Entry.hw.setDigitalPortValue("ELED_R", 10);
 				Entry.hw.setDigitalPortValue("ELED_G", 0);
 				Entry.hw.setDigitalPortValue("ELED_B", 0);
 			}
 			else if(value == 'Orange') {
-				Entry.hw.setDigitalPortValue("ELED_R", 80);
-				Entry.hw.setDigitalPortValue("ELED_G", 20);
+				Entry.hw.setDigitalPortValue("ELED_R", 10);
+				Entry.hw.setDigitalPortValue("ELED_G", 3);
 				Entry.hw.setDigitalPortValue("ELED_B", 0);
 			}
 			else if(value == 'Yellow') {
-				Entry.hw.setDigitalPortValue("ELED_R", 80);
-				Entry.hw.setDigitalPortValue("ELED_G", 80);
+				Entry.hw.setDigitalPortValue("ELED_R", 10);
+				Entry.hw.setDigitalPortValue("ELED_G", 10);
 				Entry.hw.setDigitalPortValue("ELED_B", 0);
 			}
 			else if(value == 'Green') {
 				Entry.hw.setDigitalPortValue("ELED_R", 0);
-				Entry.hw.setDigitalPortValue("ELED_G", 80);
+				Entry.hw.setDigitalPortValue("ELED_G", 10);
 				Entry.hw.setDigitalPortValue("ELED_B", 0);
 			}
 			else if(value == 'Blue') {
 				Entry.hw.setDigitalPortValue("ELED_R", 0);
 				Entry.hw.setDigitalPortValue("ELED_G", 0);
-				Entry.hw.setDigitalPortValue("ELED_B", 80);
+				Entry.hw.setDigitalPortValue("ELED_B", 10);
 			}
 			else if(value == 'Dark Blue') {
 				Entry.hw.setDigitalPortValue("ELED_R", 0);
-				Entry.hw.setDigitalPortValue("ELED_G", 50);
-				Entry.hw.setDigitalPortValue("ELED_B", 80);
+				Entry.hw.setDigitalPortValue("ELED_G", 7);
+				Entry.hw.setDigitalPortValue("ELED_B", 10);
 			}
 			else if(value == 'Purple') {
-				Entry.hw.setDigitalPortValue("ELED_R", 80);
+				Entry.hw.setDigitalPortValue("ELED_R", 10);
 				Entry.hw.setDigitalPortValue("ELED_G", 0);
-				Entry.hw.setDigitalPortValue("ELED_B", 80);
+				Entry.hw.setDigitalPortValue("ELED_B", 10);
 			}
 			else if(value == 'White') {
-				Entry.hw.setDigitalPortValue("ELED_R", 80);
-				Entry.hw.setDigitalPortValue("ELED_G", 80);
-				Entry.hw.setDigitalPortValue("ELED_B", 80);
+				Entry.hw.setDigitalPortValue("ELED_R", 10);
+				Entry.hw.setDigitalPortValue("ELED_G", 10);
+				Entry.hw.setDigitalPortValue("ELED_B", 10);
 			}
 			
 				
