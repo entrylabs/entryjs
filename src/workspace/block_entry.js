@@ -11824,7 +11824,7 @@ Entry.block = {
             NEXT: 1
         },
         "def": {
-            "params": [ "이름" ],
+            "params": [ Lang.Blocks.FUNCTION_explanation_1 ],
             "type": "function_field_label"
         },
         //"syntax": {"js": [], "py": ["%1function_field_label#"]}
@@ -11853,7 +11853,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": [ "문자/숫자값" ]
+                    "params": [ Lang.template.function_param_string ]
                 }
             ],
             "type": "function_field_string"
@@ -11884,7 +11884,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "True",
-                    "params": [ "판단값" ]
+                    "params": [ Lang.template.function_param_boolean ]
                 }
             ],
             "type": "function_field_boolean"
