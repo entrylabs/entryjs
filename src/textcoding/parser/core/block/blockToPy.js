@@ -98,6 +98,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.Block = function(block, template) {
+        if (!block) return "";
         !block._schema && block.loadSchema();
 
         var result = "";

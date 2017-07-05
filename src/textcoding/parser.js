@@ -39,7 +39,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._onError = false;
     this._onRunError = false;
 
-    this._console = new Entry.Console();
+    if (Entry.getMainWS())
+        this._console = new Entry.Console();
 };
 
 (function(p) {

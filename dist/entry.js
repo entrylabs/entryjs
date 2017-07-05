@@ -16865,6 +16865,9 @@ Entry.BlockToPyParser = function(c) {
     return c = c.trim() + "\n";
   };
   c.Block = function(b, c) {
+    if (!b) {
+      return "";
+    }
     !b._schema && b.loadSchema();
     c = "";
     var e, f, g;
@@ -19283,7 +19286,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.codeInit = function() {
     this.threadInit();
-    this._currentObject = Entry.getMainWS().vimBoard._currentObject;
+    this._currentObject = Entry.getMainWS() ? Entry.getMainWS().vimBoard._currentObject : {};
     this._funcMap = {};
     this._code = [];
     this._blockCount = this._threadCount = 0;
@@ -19560,7 +19563,7 @@ Entry.Parser = function(c, b, e, d) {
   Entry.Parser.PARSE_VARIABLE = 3;
   Entry.Parser.PARSE_BLOCK = 4;
   this._onRunError = this._onError = !1;
-  this._console = new Entry.Console;
+  Entry.getMainWS() && (this._console = new Entry.Console);
 };
 (function(c) {
   var b = {"Hamster.LINE_TRACER_MODE_OFF":"0", "Hamster.LINE_TRACER_MODE_BLACK_LEFT_SENSOR":"1", "Hamster.LINE_TRACER_MODE_BLACK_RIGHT_SENSOR":"2", "Hamster.LINE_TRACER_MODE_BLACK_BOTH_SENSORS":"3", "Hamster.LINE_TRACER_MODE_BLACK_TURN_LEFT":"4", "Hamster.LINE_TRACER_MODE_BLACK_TURN_RIGHT":"5", "Hamster.LINE_TRACER_MODE_BLACK_MOVE_FORWARD":"6", "Hamster.LINE_TRACER_MODE_BLACK_UTURN":"7", "Hamster.LINE_TRACER_MODE_WHITE_LEFT_SENSOR":"8", "Hamster.LINE_TRACER_MODE_WHITE_RIGHT_SENSOR":"9", "Hamster.LINE_TRACER_MODE_WHITE_BOTH_SENSORS":"10", 
