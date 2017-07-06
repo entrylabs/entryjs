@@ -1,13 +1,11 @@
 describe('EntryPython', function(){
     var allCategories = EntryStatic.getAllBlocks();
 
+    Entry.init(null, {type: "none"});
 
-
-            Entry.init(null, {type: "none"});
     function pairConvertTest(blockType) {
-        console.log(blockType);
-        it(blockType, function(){
-            var parser = new Entry.Parser(Entry.Vim.WORKSPACE_MODE)
+        it (blockType, function(){
+            var parser = new Entry.Parser(Entry.Vim.WORKSPACE_MODE);
             var syntax = parser.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
             var blockToPyParser = new Entry.BlockToPyParser(syntax);
             var pyToBlockParser = new Entry.PyToBlockParser(syntax);
@@ -22,7 +20,11 @@ describe('EntryPython', function(){
             var pythonOutput = blockToPyParser.Thread(new Entry.Thread([blockSchema.def], code));
             var blockOutput = pyToBlockParser.processProgram([filbert.parse(pythonOutput, options)]);
             var secondPythonOutput = blockToPyParser.Thread(new Entry.Thread(blockOutput[0], code));
-            console.log(pythonOutput, secondPythonOutput, blockOutput);
+            console.log(
+                pythonOutput,
+                secondPythonOutput,
+                blockOutput
+            );
             assert.equal(pythonOutput, secondPythonOutput);
         });
     }
