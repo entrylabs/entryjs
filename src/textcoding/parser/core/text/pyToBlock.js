@@ -34,19 +34,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.processProgram = function(astArr) {
         this.codeInit();
-        for(var index in astArr) {
-            if (astArr[index].type != 'Program') return;
+        for (var index in astArr) {
+            var ast = astArr[index];
+
+            if (ast.type != 'Program') return;
             this.threadInit();
             //this.isLastBlock = false;
             this._threadCount++;
             //this._thread = [];
-            var nodes = astArr[index].body;
+            var nodes = ast.body;
 
             this._isEntryEventExisted = false;
-            for(var index in nodes) {
+            for (var innerIndex in nodes) {
                 var blockType;
 
-                var node = nodes[index];
+                var node = nodes[innerIndex];
 
                 var block = this[node.type](node);
 
@@ -58,6 +60,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         keyword,
                         this._blockCount);
                 }
+
 
                 if (block && block.type) {
                     var blockDatum = Entry.block[block.type];

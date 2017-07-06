@@ -48,6 +48,7 @@ module.exports = function(grunt) {
             options: {
                 frameworks: ['mocha', 'chai'],
                 files: [
+                    'http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js',
                     'test_util/*.js',
                     'extern/lang/ko.js',
                     'extern/blockly/blockly_compressed.js',
