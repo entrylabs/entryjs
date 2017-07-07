@@ -3752,6 +3752,15 @@ Entry.block = {
             var value3 = script.getNumberValue("VALUE3", script);
             var value4 = script.getNumberValue("VALUE4", script);
             var value5 = script.getNumberValue("VALUE5", script);
+
+            var stringValue4 = script.getValue("VALUE4", script);
+            var stringValue5 = script.getValue("VALUE5", script);
+            var isFloat = false;
+
+            if((Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) || (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)) {
+                isFloat = true;
+            }
+
             var result = value1;
             if (value2 > value3) {
                 var swap = value2;
@@ -3768,7 +3777,14 @@ Entry.block = {
             result += value4;
             result = Math.min(value5, result);
             result = Math.max(value4, result);
-            return Math.round(result);
+
+            if(isFloat) {
+                result = Math.round(result * 100) / 100;
+            } else {
+                result = Math.round(result);
+            }
+
+            return result;
         },
         "syntax": {"js": [], "py": [
             {
@@ -3972,6 +3988,13 @@ Entry.block = {
             var value3 = script.getNumberValue("VALUE3", script);
             var value4 = script.getNumberValue("VALUE4", script);
             var value5 = script.getNumberValue("VALUE5", script);
+            var stringValue4 = script.getValue("VALUE4", script);
+            var stringValue5 = script.getValue("VALUE5", script);
+            var isFloat = false;
+
+            if((Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) || (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)) {
+                isFloat = true;
+            }
 
             if (value2 > value3) {
                 var swap = value2;
@@ -3988,6 +4011,12 @@ Entry.block = {
             result += value4;
             result = Math.min(value5, result);
             result = Math.max(value4, result);
+
+            if(isFloat) {
+                result = Math.round(result * 100) / 100;
+            } else {
+                result = Math.round(result);
+            }
 
             return result
         },
