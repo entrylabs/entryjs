@@ -726,4 +726,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return this._schema.skeleton === 'basic_string_field' || this._schema.skeleton === 'basic_boolean_field';
     };
 
+    p.getFuncId = function() {
+        var ret = /func_(.*)/.exec(this.type);
+        if (!ret) return;
+        return ret[1];
+    };
 })(Entry.Block.prototype);

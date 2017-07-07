@@ -1285,11 +1285,18 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._rightClick = function(e) {
         var disposeEvent = Entry.disposeEvent;
-        if (disposeEvent)
-            disposeEvent.notify(e);
+        if (disposeEvent) disposeEvent.notify(e);
+
         var that = this;
         var block = that.block;
-        if (this.isInBlockMenu) return;
+
+        if (this.isInBlockMenu) {
+            //if long pressed block is function_general block
+            //edit function
+            block.getFuncId() &&
+                this._schema.events.dblclick[0](this);
+            return;
+        }
 
         var options = [];
         var isBoardReadOnly = this._board.readOnly;
