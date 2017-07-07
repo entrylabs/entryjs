@@ -1265,7 +1265,12 @@ Entry.Utils.stopProjectWithToast = function(scope, message, isHide, error) {
         }
     }
 
-    throw new Error(message);
+    if(error) {
+        error.message = message + ': ' + error.message;
+        throw error;
+    } else {
+        throw new Error(message);
+    }
 };
 
 Entry.Utils.AsyncError = function (message) {
