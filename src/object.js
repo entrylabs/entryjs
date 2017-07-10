@@ -75,32 +75,45 @@ Entry.EntryObject = function(model) {
                 if (!picture.id)
                     picture.id = Entry.generateHash();
                 var image = new Image();
-                if (picture.fileurl) {
-                    image.src = picture.fileurl;
-                } else {
-                    if (picture.fileurl) {
-                        image.src = picture.fileurl;
-                    } else {
-                        var fileName = picture.filename;
-                        image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
-                            fileName.substring(2, 4) + '/image/' + fileName + '.png';
-                    }
-                }
+                image.src = getImageSrc(picture);
                 Entry.Loader.addQueue();
+
                 image.onload = function(e) {
+                    delete this.triedCnt;
                     Entry.container.cachePicture(
                         picture.id + that.entity.id, this);
                     Entry.Loader.removeQueue();
                 };
+
                 image.onerror = function(err) {
-                    Entry.Loader.removeQueue();
+                    if (!this.triedCnt) {
+                        console.log('err=', picture.name, 'load failed');
+                        this.triedCnt = 1;
+                        this.src = getImageSrc(picture);
+                    } else if (this.triedCnt < 3) {
+                        this.triedCnt++;
+                        this.src = Entry.mediaFilePath + '_1x1.png';
+                    } else {
+                        //prevent infinite call
+                        delete this.triedCnt;
+                        Entry.Loader.removeQueue();
+                    }
                 }
             })(this.pictures[i]);
 
             Entry.requestUpdate = true;
+
         }
     }
     this._isContextMenuEnabled = true;
+
+    function getImageSrc(picture) {
+        if (picture.fileurl) return picture.fileurl;
+
+        var fileName = picture.filename;
+        return Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
+            fileName.substring(2, 4) + '/image/' + fileName + '.png';
+    }
 };
 
 (function(p) {
