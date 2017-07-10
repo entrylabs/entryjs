@@ -19,6 +19,11 @@ Entry.Workspace = function(options) {
 
     this.readOnly = options.readOnly === undefined ? false : options.readOnly;
 
+    this.blockViewMouseUpEvent = new Entry.Event(this);
+    this.widgetUpdateEvent = new Entry.Event(this);
+    this._blockViewMouseUpEvent = null;
+    this.widgetUpdateEveryTime = false;
+
     var option = options.blockMenu;
     if (option) {
         this.blockMenu = new Entry.BlockMenu(
@@ -29,7 +34,12 @@ Entry.Workspace = function(options) {
             this.readOnly
         );
         this.blockMenu.workspace = this;
-        this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
+        this.blockMenu.observe(
+            this,
+            "_setSelectedBlockView",
+            ["selectedBlockView"],
+            false
+        );
     }
 
     option = options.board;
@@ -37,7 +47,12 @@ Entry.Workspace = function(options) {
         option.workspace = this;
         option.readOnly = this.readOnly;
         this.board = new Entry.Board(option);
-        this.board.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
+        this.board.observe(
+            this,
+            "_setSelectedBlockView",
+            ["selectedBlockView"],
+            false)
+        ;
         this.set({selectedBoard:this.board});
     }
 
@@ -91,6 +106,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message) {
+        Entry.disposeEvent.notify();
         if (Entry.Utils.isNumber(mode)) this.mode = mode;
         else {
             this.mode = mode.boardType;
@@ -250,7 +266,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var blockView = this.board[view] ||
             this.blockMenu[view] ||
             (this.overlayBoard ? this.overlayBoard[view] : null);
+        this._unbindBlockViewMouseUpEvent();
         this.set({selectedBlockView:blockView});
+        if (blockView) {
+            var that = this;
+            this._blockViewMouseUpEvent =
+                blockView.mouseUpEvent.attach(
+                    this, function() {
+                        that.blockViewMouseUpEvent.notify(blockView);
+                    });
+        }
     };
 
     p.initOverlayBoard = function() {
@@ -282,23 +307,24 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var blockView = this.selectedBlockView;
         var board = this.selectedBoard;
         var isBoardReadOnly = board.readOnly;
+        var checkKeyCodes;
 
         if (ctrlKey) {
+            checkKeyCodes = [219, 221];
+
+            if (checkKeyCodes.indexOf(keyCode) > -1) {
+                if (!checkObjectAndAlert(object))
+                    return;
+            }
+
             switch (keyCode) {
                 case 86:  //paste
-                    if (!isBoardReadOnly &&board && board instanceof Entry.Board && Entry.clipboard)
+                    if (!isBoardReadOnly &&board && board instanceof Entry.Board && Entry.clipboard) {
                         Entry.do('addThread', Entry.clipboard).value
                             .getFirstBlock().copyToClipboard();
+                    }
                     break;
                 case 219: //setMode(block) for textcoding
-                    if (!object) {
-                        if (isVimMode) {
-                            var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                            alert(message);
-                            return;
-                        }
-                    }
-
                     var oldMode = Entry.getMainWS().oldMode;
                     if(oldMode == Entry.Workspace.MODE_OVERLAYBOARD)
                         return;
@@ -316,14 +342,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     e.preventDefault();
                     break;
                 case 221: //setMode(python) for textcoding
-                    if (!object) {
-                        if (this.oldMode === Entry.Workspace.MODE_BOARD) {
-                            var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                            alert(message);
-                            return;
-                        }
-                    }
-
                     var message;
                     message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
                     if(message) {
@@ -331,8 +349,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         return;
                     }
 
-                    var message = Entry.TextCodingUtil.isNamesIncludeSpace()
-                    if(message) {
+                    var message = Entry.TextCodingUtil.isNamesIncludeSpace();
+                    if (message) {
                         alert(message);
                         return;
                     }
@@ -345,7 +363,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     e.preventDefault();
                     break;
                 case 67:
-                    if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
+                    if (blockView && !blockView.isInBlockMenu &&
+                        blockView.block.isDeletable() && blockView.block.isCopyable()) {
                         blockView.block.copyToClipboard();
                     }
                     break;
@@ -360,10 +379,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
             }
         } else if (altKey) {
-            if (!object) {
-                var message = "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                alert(message);
-                return;
+            checkKeyCodes = [49, 50, 51, 52, 219, 221];
+
+            if (checkKeyCodes.indexOf(keyCode) > -1) {
+                if (!checkObjectAndAlert(object))
+                    return;
             }
 
             switch (keyCode) {
@@ -429,6 +449,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         setTimeout(function() {
             Entry.disposeEvent && Entry.disposeEvent.notify(e);
         }, 0);
+
+        function checkObjectAndAlert(object, message) {
+            if (!object) {
+                message = message || "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                alert(message);
+                return false;
+            }
+            return true;
+        }
     };
 
     p._handleChangeBoard = function() {
@@ -490,5 +519,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             Entry.keyPressed.detach(this._keyboardEvent);
             delete this._keyboardEvent;
         }
+    };
+
+    p._unbindBlockViewMouseUpEvent = function() {
+        if (this._blockViewMouseUpEvent) {
+            var oldOne = this.selectedBlockView;
+            oldOne.mouseUpEvent.detach(this._blockViewMouseUpEvent);
+            this._blockViewMouseUpEvent = null;
+        }
+    };
+
+    p.setWidgetUpdateEveryTime = function(val) {
+        this.widgetUpdateEveryTime = !!val;
     };
 })(Entry.Workspace.prototype);

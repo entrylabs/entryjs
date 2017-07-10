@@ -23,7 +23,7 @@ Entry.Vim = function(dom, textType) {
         if (Entry.hw.hwModule) {
             var name = Entry.hw.hwModule.name;
             name = name[0].toUpperCase() + name.slice(1);
-            if (name == "ArduinoExt" || name === "ardublock")
+            if (name == "ArduinoExt")
                 name = "Arduino";
             Entry.Vim.PYTHON_IMPORT_HW = "\nimport " + name + "\n";
             Entry.Vim.INEDITABLE_LINE_PY = 4;

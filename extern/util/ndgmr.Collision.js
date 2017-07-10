@@ -91,7 +91,12 @@ this.ndgmr = this.ndgmr || {};
         return intersection;
     }
 
-    if (intersection.width === 0 || intersection.height == 0)
+    if (intersection.width === 0 || intersection.height === 0)
+        return false;
+
+    //chrome float point number bug
+    if (intersection.width/threshold < 1 ||
+          intersection.height/threshold < 1)
         return false;
 
     alphaThreshold = alphaThreshold || 0;

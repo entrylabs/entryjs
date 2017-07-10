@@ -10,14 +10,19 @@ Entry.Executor = function(block, entity) {
     this.entity = entity;
     this._callStack = [];
     this.register = {};
+    this.parentExecutor = null;
 };
 
+Entry.Executor.MAXIMUM_CALLSTACK = 100;
+
 (function(p) {
-    p.execute = function() {
+    p.execute = function(isFromOrigin) {
         if (this.isEnd())
             return;
 
         var executedBlocks = [];
+        if (isFromOrigin)
+            Entry.callStackLength = 0;
         while (true) {
             var returnVal = null;
             executedBlocks.push(this.scope.block);

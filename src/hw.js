@@ -16,8 +16,8 @@ Entry.HW = function() {
     this.isFirstConnect = true;
     //this.requireVerion = 'v1.6.1';
     this.requireVerion = 'v1.6.1';
-    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.5_Setup.exe";
-    this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.4.dmg";
+    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.10_Setup.exe";
+    this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.10.dmg";
     this.hwPopupCreate();
     this.initSocket();
     this.connected = false;
@@ -33,7 +33,6 @@ Entry.HW = function() {
 
     this.hwInfo = {
         '1.1': Entry.Arduino,
-        '1.9': Entry.ArduinoExt,
         '1.2': Entry.SensorBoard,
         '1.3': Entry.CODEino,
         '1.4': Entry.joystick,
@@ -41,26 +40,35 @@ Entry.HW = function() {
         '1.6': Entry.nemoino,
         '1.7': Entry.Xbot,
         '1.8': Entry.ardublock,
-        '6.1': Entry.mkboard,
+        '1.9': Entry.ArduinoExt,
+        '1.10': Entry.ArduinoNano,
         '1.A': Entry.Cobl,
+        '1.B': Entry.Blacksmith,
         '2.4': Entry.Hamster,
         '2.5': Entry.Albert,
         '3.1': Entry.Bitbrick,
         '4.2': Entry.Arduino,
         '5.1': Entry.Neobot,
+        '6.1': Entry.mkboard,
         '7.1': Entry.Robotis_carCont,
         '7.2': Entry.Robotis_openCM70,
         '8.1': Entry.Arduino,
-        '10.1': Entry.Roborobo_Roduino,
-        '10.2': Entry.Roborobo_SchoolKit,
-        '12.1': Entry.EV3,
-        'B.1': Entry.Codestar,
         'A.1': Entry.SmartBoard,
+        'B.1': Entry.Codestar,
         'C.1': Entry.DaduBlock,
+        'C.2': Entry.DaduBlock_Car,
         'D.1': Entry.robotori,
         'F.1': Entry.byrobot_dronefighter_controller,
         'F.2': Entry.byrobot_dronefighter_drive,
         'F.3': Entry.byrobot_dronefighter_flight,
+        '10.1': Entry.Roborobo_Roduino,
+        '10.2': Entry.Roborobo_SchoolKit,
+        '12.1': Entry.EV3,
+        '13.1': Entry.rokoboard,
+        '14.1': Entry.Chocopi,
+        '15.1': Entry.coconut,
+        '16.1': Entry.MODI,
+        '18.1': Entry.Altino,
     };
 };
 
@@ -182,7 +190,7 @@ p.openHardwareProgram = function() {
             hw.initSocket();
         }, 1000);
     }
-}
+};
 
 p.initHardware = function(socket) {
     this.socket = socket;
@@ -192,14 +200,14 @@ p.initHardware = function(socket) {
     if (Entry.playground && Entry.playground.object) {
         Entry.playground.setMenu(Entry.playground.object.objectType);
     }
-}
+};
 
 p.disconnectHardware = function() {
-    Entry.propertyPanel.removeMode("hw");
+    Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
     this.selectedDevice = undefined;
     this.hwModule = undefined;
     Entry.dispatchEvent("hwChanged");
-}
+};
 
 p.disconnectedSocket = function() {
     this.tlsSocketIo.close();
@@ -207,7 +215,7 @@ p.disconnectedSocket = function() {
         this.socketIo.close();
     }
 
-    Entry.propertyPanel.removeMode("hw");
+    Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
     this.socket = undefined;
     this.connectTrial = 0;
     this.connected = false;
@@ -292,7 +300,7 @@ p.update = function() {
 
 p.updatePortData = function(data) {
     this.portData = data;
-    if (this.hwMonitor && Entry.propertyPanel.selected == 'hw') {
+    if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected == 'hw') {
         this.hwMonitor.update();
     }
 };
@@ -338,8 +346,12 @@ p.checkDevice = function(data, version) {
     if (data.company === undefined)
         return;
     var key = [Entry.Utils.convertIntToHex(data.company), '.', Entry.Utils.convertIntToHex(data.model)].join('');
-    if (key == this.selectedDevice)
+    if (key == this.selectedDevice) {
+        if (this.hwModule && this.hwModule.dataHandler) {
+            this.hwModule.dataHandler(data);
+        }
         return;
+    }
 
     if(Entry.Utils.isNewVersion(version, this.requireVerion)) {
         this.popupHelper.show('newVersion', true);
@@ -350,7 +362,7 @@ p.checkDevice = function(data, version) {
     Entry.dispatchEvent("hwChanged");
 
     var descMsg = '';
-    if (this.hwModule.monitorTemplate) {
+    if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
         descMsg = Lang.Msgs.hw_connection_success_desc;
         if(!this.hwMonitor) {
             this.hwMonitor = new Entry.HWMonitor(this.hwModule);

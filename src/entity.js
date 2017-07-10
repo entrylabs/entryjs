@@ -49,7 +49,7 @@ Entry.EntityObject = function(object) {
         Entry.dispatchEvent('entityClick', this.entity);
         Entry.stage.isObjectClick = true;
 
-        if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
+        if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
             this.offset = {x:-this.parent.x+this.entity.getX()-(evt.stageX*0.75 -240),
                 y:-this.parent.y-this.entity.getY()-(evt.stageY*0.75 -135)};
             this.cursor = "move";
@@ -66,7 +66,7 @@ Entry.EntityObject = function(object) {
     });
 
     this.object.on("pressmove", function(evt) {
-        if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
+        if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
             if (this.entity.parent.getLock())
                 return;
             this.entity.doCommand();
@@ -566,6 +566,10 @@ Entry.EntityObject.prototype.syncFont = function() {
     this.setLineHeight();
     Entry.stage.update();
     if (this.getLineBreak()) {
+        if (this.fontType == "Nanum Gothic Coding") {
+            var textObjectHeight = this.textObject.getMeasuredLineHeight();
+            this.textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
+        }
 
     } else {
         this.setWidth(this.textObject.getMeasuredWidth());
@@ -744,6 +748,7 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
 
     var previousState = this.lineBreak;
     this.lineBreak = lineBreak;
+
     if (previousState && !this.lineBreak) {
         this.textObject.lineWidth = null;
         this.setHeight(this.textObject.getMeasuredLineHeight());
@@ -756,6 +761,10 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
         this.setScaleY(1);
         this.textObject.lineWidth = this.getWidth();
         this.alignTextBox();
+        if (this.fontType == "Nanum Gothic Coding") {
+            var textObjectHeight = this.textObject.getMeasuredLineHeight();
+            this.textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
+        }
     }
 
     Entry.stage.updateObject();
@@ -853,13 +862,17 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 /**
  * Apply easel filter
  */
-Entry.EntityObject.prototype.applyFilter = function(isForce) {
+Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
     var effects = this.effect;
     var object = this.object;
 
     var diffEffects = isEqualEffects(effects, this.getInitialEffectValue());
     if (!isForce && diffEffects.length === 0)
         return;
+
+    if(Array.isArray(forceEffects)) {
+        diffEffects = diffEffects.concat(forceEffects);
+    }
 
     (function(e, obj) {
         var f = [];
@@ -1082,6 +1095,20 @@ Entry.EntityObject.prototype.removeBrush = function () {
     this.shape = null;
 };
 
+/*
+ * erase brush
+ */
+Entry.EntityObject.prototype.eraseBrush = function () {
+    var brush = this.brush;
+    if (brush) {
+        var stroke = brush._stroke.style;
+        var style = brush._strokeStyle.width;
+        brush.clear().setStrokeStyle(style).beginStroke(stroke);
+        brush.moveTo(this.getX(), this.getY()*-1);
+        Entry.requestUpdate = true;
+    }
+};
+
 Entry.EntityObject.prototype.updateBG = function () {
     if (!this.bgObject)
         return;
@@ -1116,6 +1143,9 @@ Entry.EntityObject.prototype.alignTextBox = function () {
     if (this.lineBreak) {
         var textObjectHeight = textObject.getMeasuredLineHeight();
         textObject.y = textObjectHeight / 2 - this.getHeight() / 2;
+        if (this.fontType == "Nanum Gothic Coding") {
+            textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
+        }
         switch (this.textAlign) {
             case Entry.TEXT_ALIGN_CENTER:
                 textObject.x = 0;

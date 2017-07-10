@@ -43,6 +43,7 @@ p.initialize = function() {
             ]
         }
     );
+    //this.lc.respondToSizeChange();
 
     bgImage.onload = function() {
         this.lc.repaintLayer("background")
@@ -51,12 +52,12 @@ p.initialize = function() {
     var watchFunc = function(e) {
         if (e && ((e.shape && !e.opts && e.shape.isPass) ||
             e.opts && e.opts.isPass)) {
-            Entry.do("processPicture", e, this.lc)
+            Entry.do("processPicture", e, this.lc);
         } else {
-            Entry.do("editPicture", e, this.lc)
+            Entry.do("editPicture", e, this.lc);
         }
         this.file.modified = true;
-    }.bind(this)
+    }.bind(this);
 
     this.lc.on("clear", watchFunc);
     this.lc.on("remove", watchFunc);
@@ -103,12 +104,10 @@ p.changePicture = function(picture) {
     this.file.modified = false;
     this.lc.clear(false);
 
-    if (picture.id)
-        this.file.id = picture.id;
-    else
-        this.file.id = Entry.generateHash();
+    this.file.id = picture.id || Entry.generateHash();
     this.file.name = picture.name;
     this.file.mode = 'edit';
+    this.file.objectId = picture.objectId;
 
     this.addPicture(picture, true);
     // INFO: picture 변경시마다 undoStack 리셋
@@ -132,15 +131,15 @@ p.addPicture = function(picture, isOriginal) {
         y: 270,
         width: dimension.width,
         height: dimension.height,
-        image: image
+        image: image,
     });
+
     this.lc.saveShape(shape, !isOriginal);
 
     image.onload = function() {
         this.lc.setTool(this.lc.tools.SelectShape);
         this.lc.tool.setShape(this.lc, shape);
     }.bind(this);
-
 };
 
 p.copy = function() {
@@ -182,7 +181,7 @@ p.updateEditMenu = function() {
 };
 
 p.file_save = function() {
-    this.lc.trigger("dispose")
+    this.lc.trigger("dispose");
     var dataURL = this.lc.getImage().toDataURL();
     this.file_ = JSON.parse(JSON.stringify(this.file));
     Entry.dispatchEvent('saveCanvasImage',
@@ -203,6 +202,8 @@ p.newPicture = function() {
     };
 
     newPicture.id = Entry.generateHash();
+    if (this.file && this.file.objectId)
+        newPicture.objectId = this.file.objectId;
     Entry.playground.addPicture(newPicture, true);
 };
 

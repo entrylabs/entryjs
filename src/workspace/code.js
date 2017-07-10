@@ -141,7 +141,7 @@ Entry.PARAM = -1;
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
             if (!executor.isEnd())
-                executedBlocks = executedBlocks.concat(executor.execute());
+                executedBlocks = executedBlocks.concat(executor.execute(true));
             else {
                 executors.splice(i--, 1);
                 if (executors.length === 0)
@@ -183,7 +183,7 @@ Entry.PARAM = -1;
             return console.error("blocks must be array");
 
         var thread = new Entry.Thread(blocks, this);
-        if (index === undefined) this._data.push(thread);
+        if (index === undefined || index === null) this._data.push(thread);
         else this._data.insert(thread, index);
 
         this.changeEvent.notify();
@@ -192,6 +192,10 @@ Entry.PARAM = -1;
 
     p.getThreadIndex = function(thread) {
         return this._data.indexOf(thread);
+    };
+
+    p.getThreadCount = function() {
+        return this._data.length;
     };
 
     p.cloneThread = function(thread, mode) {
@@ -216,6 +220,10 @@ Entry.PARAM = -1;
         data.splice(index, 1);
     };
 
+    p.getThread = function(index) {
+        return this._data[index];
+    };
+
     p.getThreads = function() {
         return this._data.map(function(t){return t;});
     };
@@ -232,11 +240,11 @@ Entry.PARAM = -1;
         return arr;
     };
 
-    p.toJSON = function(excludeData) {
+    p.toJSON = function(excludeData, option) {
         var threads = this.getThreads();
         var json = [];
         for (var i=0, len=threads.length; i<len; i++)
-            json.push(threads[i].toJSON(false, undefined, excludeData));
+            json.push(threads[i].toJSON(false, undefined, excludeData, option));
         return json;
     };
 
@@ -312,8 +320,11 @@ Entry.PARAM = -1;
             var type = pointer.shift();
             var index = pointer.shift();
             if (type > -1) {
-                var statements = block.statements[type];
-                block = statements.getBlock(index);
+                var statement = block.statements[type];
+                if (index === undefined)
+                    return statement;
+                else
+                    block = statement.getBlock(index);
             } else if (type === -1) {
                 block = block.view.getParam(index);
             }
@@ -383,5 +394,10 @@ Entry.PARAM = -1;
                 return false;
         }
         return true;
+    };
+
+    p.destroy = function() {
+        this.clear();
+        this.destroyView();
     };
 })(Entry.Code.prototype);

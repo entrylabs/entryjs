@@ -6,6 +6,7 @@ if (typeof exports == "object") {
     if (typeof Entry !== "object")
         var Entry = {};
     Entry.Bitbrick = {};
+    Entry.MODI = {};
     EntryStatic = {};
 }
 if (!Entry.block)
@@ -181,6 +182,1272 @@ if (Entry && Entry.block) {
 }
 
 Entry.block = {
+    "modi_microphone_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "마이크 %1번의 볼륨",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.microphoneList
+            }
+        ],
+        "def": {
+            "params": [ null ],
+            "type": "modi_microphone_value"
+        },
+        "paramsKeyMap": {
+            "name": 0
+        },
+        "class": "microphone",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            var key = script.getStringField("name");
+
+            var pd = JSON.parse(Entry.hw.portData.module["mic"][key]);
+            var moduleID = pd.id;
+
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+            if(!pd.value[2]){
+                pd.value[2] = 0;
+
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: 2, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                }*/
+            }
+
+            return pd.value[2];
+        }
+    },
+    "modi_environment_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "환경센서 %1번의 %2",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.environmentList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.modi_enviroment_temperature,6],
+                    [Lang.Blocks.modi_enviroment_humidity,7],
+                    [Lang.Blocks.modi_enviroment_illuminance,2],
+                    [Lang.Blocks.modi_enviroment_red,3],
+                    [Lang.Blocks.modi_enviroment_bule,5],
+                    [Lang.Blocks.modi_enviroment_green,4]
+                ],
+                "fontSize": 11
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                6
+            ],
+            "type": "modi_environment_value"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1
+        },
+        "class": "environment",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            var key = script.getStringField("name");
+            var property = script.getNumberField("property");
+
+            var pd = JSON.parse(Entry.hw.portData.module["environment"][key]);
+            var moduleID = pd.id;
+
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+            if(!pd.value[property]){
+                pd.value[property] = 0;
+
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Entry.MODI.getModule.property != property || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                    Entry.MODI.getModule.property = property;
+                }*/
+            }
+
+            return pd.value[property];
+        }
+    },
+    "modi_dial_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "다이얼 %1번의 각도",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.dialList
+            }
+        ],
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "modi_dial_value"
+        },
+        "paramsKeyMap": {
+            "name": 0
+        },
+        "class": "dial",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            var key = script.getStringField("name");
+
+            var pd = JSON.parse(Entry.hw.portData.module["dial"][key]);
+            var moduleID = pd.id;
+
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+            if(!pd.value[2]){
+                pd.value[2] = 0;
+
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: 2, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                }*/
+            }
+
+            var moduleID = JSON.parse(Entry.hw.portData.module["dial"][key]).id;
+
+            return pd.value[2];
+        }
+    },
+    "modi_gyroscope_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "자이로센서 %1번의 %2",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.gyroscopeList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Roll",2],
+                    ["Pitch",3],
+                    ["Yaw",4],
+                    [Lang.Blocks.modi_gyroscope_xAcceleratior,8],
+                    [Lang.Blocks.modi_gyroscope_yAcceleratior,9],
+                    [Lang.Blocks.modi_gyroscope_zAcceleratior,10]
+                ],
+                "fontSize": 11
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                2
+            ],
+            "type": "modi_gyroscope_value"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1
+        },
+        "class": "gyroscope",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            var key = script.getStringField("name");
+            var property = script.getNumberField("property");
+
+            var pd = JSON.parse(Entry.hw.portData.module["gyro"][key]);
+            var moduleID = pd.id;
+
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+
+            if(!pd.value[property]){
+                pd.value[property] = 0;
+
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Entry.MODI.getModule.property != property || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                    Entry.MODI.getModule.property = property;
+                }*/
+            }
+
+            return pd.value[property];
+        }
+    },
+    "modi_button_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "버튼 %1번의 %2",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.buttonList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Click",2],
+                    ["Double Click",3],
+                    ["Toggle",5],
+                    ["Press",4]
+                ],
+                "fontSize": 11
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                2
+            ],
+            "type": "modi_button_value"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1
+        },
+        "class": "button",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+
+            if(!Entry.hw.sendQueue.moduleValue || !Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name");
+            var property = script.getNumberField("property");
+            var moduleID = JSON.parse(Entry.hw.portData.module["button"][key]).id;
+            var pd = JSON.parse(Entry.hw.portData.module["button"][key]);
+
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+            if(!pd.value[property]){
+                pd.value[property] = 0;
+
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Entry.MODI.getModule.property != property || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                    Entry.MODI.getModule.property = property;
+                }*/
+                return 0;
+            }
+
+            return pd.value[property];
+        }
+    },
+    "modi_is_button_touch": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "template": "버튼 %1번의 %2 했는가?",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.buttonList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Click",2],
+                    ["Double Click",3],
+                    ["Toggle",5],
+                    ["Press",4]
+                ],
+                "fontSize": 11
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                2
+            ],
+            "type": "modi_is_button_touch"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1
+        },
+        "class": "button",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            var key = script.getStringField("name");
+            var property = script.getNumberField("property");
+
+            var pd = JSON.parse(Entry.hw.portData.module["button"][key]);
+            var moduleID = pd.id;
+
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+
+            if(!pd.value[property]){
+                pd.value[property] = 0;
+
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Entry.MODI.getModule.property != property || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                    Entry.MODI.getModule.property = property;
+                }*/
+            }
+
+            var doButton = false;
+
+            if(pd.value[property] == 100){
+                doButton = true;
+            }
+            else{
+                doButton = false;
+            }
+            return doButton;
+        }
+    },
+    "modi_button_true": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "눌림",
+        "def": {
+            "params": [ null ],
+            "type": "modi_button_true"
+        },
+        "class": "button",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            return 100;
+        }
+    },
+    "modi_button_false": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "안눌림",
+        "def": {
+            "params": [ null ],
+            "type": "modi_button_false"
+        },
+        "class": "button",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            return 0;
+        }
+    },
+    "modi_infrared_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "적외선 %1번 센서의 거리(%)",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.infraredList
+            }
+        ],
+        "def": {
+            "params": [ null ],
+            "type": "modi_infrared_value"
+        },
+        "paramsKeyMap": {
+            "name": 0
+        },
+        "class": "infrared",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            var key = script.getStringField("name");
+
+            var pd = JSON.parse(Entry.hw.portData.module["ir"][key]);
+            var moduleID = pd.id;
+
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+            if(!pd.value[2]){
+                pd.value[2] = 0;
+
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: 2, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                }*/
+            }
+
+            return pd.value[2];
+        }
+    },
+    "modi_ultrasonic_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "초음파 %1번 센서의 거리(%)",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.ultrasonicList
+            }
+        ],
+        "def": {
+            "params": [ null ],
+            "type": "modi_ultrasonic_value"
+        },
+        "paramsKeyMap": {
+            "name": 0
+        },
+        "class": "ultrasonic",
+        "isNotFor": [ "modi" ],
+        "func": function(sprite, script) {
+            var key = script.getStringField("name");
+
+            var pd = JSON.parse(Entry.hw.portData.module["ultrasonic"][key]);
+            var moduleID = pd.id;
+
+            if(!Entry.hw.sendQueue["getProperty"]){
+                Entry.MODI.initSend();
+            }
+
+            if(!pd.value[2]){
+                pd.value[2] = 0;
+
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: 2, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                }*/
+            }
+
+            return pd.value[2];
+        }
+    },
+    "modi_set_motor_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "template": "모터 %1번 %2의 상단값은 %3 하단값은 %4 (으)로 정하기 %5",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.motorList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.modi_motor_angle,"MOTOR_ANGLE"],
+                    [Lang.Blocks.modi_motor_speed,"MOTOR_SPEED"],
+                    [Lang.Blocks.modi_motor_torque,"MOTOR_TORQUE"]
+                ],
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                "MOTOR_ANGLE",
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_set_motor_value"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1,
+            "upper": 2,
+            "bottom": 3
+        },
+        "class": "motor",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+            var key = script.getStringField("name"),
+                property = script.getStringField("property"),
+                upper = script.getNumberValue("upper") * 10,
+                bottom = script.getNumberValue("bottom") * 10;
+            var moduleID = JSON.parse(Entry.hw.portData.module["motor"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["motor"][key] = JSON.stringify({module: property, id: moduleID, value1: upper, value2: bottom});
+
+            return script.callReturn();
+        }
+    },
+    "modi_change_motor_upper_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "모터 %1번 %2의 상단값을 %3만큼 바꾸기 %4",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.motorList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.modi_motor_angle,"MOTOR_ANGLE"],
+                    [Lang.Blocks.modi_motor_speed,"MOTOR_SPEED"],
+                    [Lang.Blocks.modi_motor_torque,"MOTOR_TORQUE"]
+                ],
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                "MOTOR_ANGLE",
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_change_motor_upper_value"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1,
+            "value": 2
+        },
+        "class": "motor",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name"),
+                value = script.getNumberValue("value"),
+                property = script.getStringField("property");
+
+            var pd = JSON.parse(Entry.hw.portData.module["motor"][key]);
+            var uValue = 0,
+                bValue = 0;
+            var moduleID = pd.id;
+
+            switch(property){
+                case "MOTOR_ANGLE":
+                    uValue = 4;
+                    bValue = 12;
+                    break;
+                case "MOTOR_SPEED":
+                    uValue = 3;
+                    bValue = 11;
+                    break;
+                case "MOTOR_TORQUE":
+                    uValue = 2;
+                    bValue = 10;
+                    break;
+            }
+
+            if(!pd.value[uValue]){
+                pd.value[uValue] = 0;
+
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                }*/
+            }
+            if(!pd.value[bValue]){
+                pd.value[bValue] = 0;
+            }
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            var upper = (value*10) + (pd.value[uValue]*10),
+                bottom = (pd.value[bValue]*10);
+
+            if(upper > 1000 || (upper < 0 && property == MOTOR_ANGLE))
+                upper = 1000;
+
+            sq["motor"][key] = JSON.stringify({module: property, id: moduleID, value1: upper, value2: bottom});
+
+            return script.callReturn();
+        }
+    },
+    "modi_change_motor_bottom_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "모터 %1번 %2의 하단값을 %3만큼 바꾸기 %4",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.motorList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.modi_motor_angle,"MOTOR_ANGLE"],
+                    [Lang.Blocks.modi_motor_speed,"MOTOR_SPEED"],
+                    [Lang.Blocks.modi_motor_torque,"MOTOR_TORQUE"]
+                ],
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                "MOTOR_ANGLE",
+                {
+                    "type": "text",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_change_motor_bottom_value"
+        },
+        "class": "motor",
+        "isNotFor": [ "modi" ],
+        "paramsKeyMap": {
+            "name": 0,
+            "property": 1,
+            "value": 2
+        },
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name"),
+                value = script.getNumberValue("value"),
+                property = script.getStringField("property");
+
+            var pd = JSON.parse(Entry.hw.portData.module["motor"][key]);
+            var uValue = 0,
+                bValue = 0;
+            var moduleID = pd.id;
+
+            if(!pd.value[uValue]){
+                pd.value[uValue] = 0;
+
+                // send GETPROPERTY
+                /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
+                    Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
+                    Entry.MODI.getModule.id = moduleID;
+                }*/
+            }
+            if(!pd.value[bValue]){
+                pd.value[bValue] = 0;
+            }
+
+            switch(property){
+                case "MOTOR_ANGLE":
+                    uValue = 4;
+                    bValue = 12;
+                    break;
+                case "MOTOR_SPEED":
+                    uValue = 3;
+                    bValue = 11;
+                    break;
+                case "MOTOR_TORQUE":
+                    uValue = 2;
+                    bValue = 10;
+                    break;
+            }
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            var upper = (pd.value[uValue]*10),
+                bottom = (value*10) + (pd.value[bValue]*10);
+
+            if(bottom > 1000 || (bottom < 0 && property == MOTOR_ANGLE))
+                bottom = 1000;
+
+            sq["motor"][key] = JSON.stringify({module: property, id: moduleID, value1: upper, value2: bottom});
+
+            return script.callReturn();
+        }
+    },
+    "modi_clear_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "LED %1번의 색 끄기 %2",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.ledList
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "modi_clear_led"
+        },
+        "paramsKeyMap": {
+            "name": 0
+        },
+        "class": "led",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name");
+            var moduleID = JSON.parse(Entry.hw.portData.module["led"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["led"][key] = JSON.stringify({module: "LED_RGB", id: moduleID, value1: 0, value2: 0, value3: 0});
+
+            return script.callReturn();
+        }
+    },
+    "modi_set_led_rgb": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "LED %1번 R %2 G %3 B %4  %5",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.ledList
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "255" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "255" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "255" ]
+                }
+            ],
+            "type": "modi_set_led_rgb"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "rValue": 1,
+            "gValue": 2,
+            "bValue": 3
+        },
+        "class": "led",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+            var key = script.getStringField("name");
+                red = script.getNumberValue("rValue"),
+                green = script.getNumberValue("gValue"),
+                blue = script.getNumberValue("bValue");
+            var moduleID = JSON.parse(Entry.hw.portData.module["led"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["led"][key] = JSON.stringify({module: "LED_RGB", id: moduleID, value1: red, value2: green, value3: blue});
+
+            return script.callReturn();
+        }
+    },
+    "modi_set_led_color": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "LED %1번 색 %2로 정하기 %3",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.ledList
+            },
+            {
+                "type": "Color"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [ null ],
+            "type": "modi_set_led_color"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "color": 1
+        },
+        "class": "led",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+            var key = script.getStringField("name");
+                color = script.getStringField("color");
+
+            color = color.substring(1,7);
+            var bigint = parseInt(color, 16);
+            var red = (bigint >> 16) & 255,
+                green = (bigint >> 8) & 255,
+                blue = bigint & 255;
+            var moduleID = JSON.parse(Entry.hw.portData.module["led"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["led"][key] = JSON.stringify({module: "LED_RGB", id: moduleID, value1: red, value2: green, value3: blue});
+
+            return script.callReturn();
+        }
+    },
+    "modi_set_basic_speaker": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "스피커 %1번을 %2음으로 크기는 %3(으)로 정하기 %4",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.speakerList
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.modi_speaker_F_DO_5,"F_DO_5"],
+                    [Lang.Blocks.modi_speaker_F_RE_5,"F_RE_5"],
+                    [Lang.Blocks.modi_speaker_F_MI_5,"F_MI_5"],
+                    [Lang.Blocks.modi_speaker_F_PA_5,"F_PA_5"],
+                    [Lang.Blocks.modi_speaker_F_SOL_5,"F_SOL_5"],
+                    [Lang.Blocks.modi_speaker_F_RA_5,"F_RA_5"],
+                    [Lang.Blocks.modi_speaker_F_SO_5,"F_SO_5"],
+                    [Lang.Blocks.modi_speaker_F_DO_S_5,"F_DO_S_5"],
+                    [Lang.Blocks.modi_speaker_F_RE_S_5,"F_RE_S_5"],
+                    [Lang.Blocks.modi_speaker_F_PA_S_5,"F_PA_S_5"],
+                    [Lang.Blocks.modi_speaker_F_SOL_S_5,"F_SOL_S_5"],
+                    [Lang.Blocks.modi_speaker_F_RA_S_5,"F_RA_S_5"],
+                    [Lang.Blocks.modi_speaker_F_DO_6,"F_DO_6"],
+                    [Lang.Blocks.modi_speaker_F_RE_6,"F_RE_6"],
+                    [Lang.Blocks.modi_speaker_F_MI_6,"F_MI_6"],
+                    [Lang.Blocks.modi_speaker_F_PA_6,"F_PA_6"],
+                    [Lang.Blocks.modi_speaker_F_SOL_6,"F_SOL_6"],
+                    [Lang.Blocks.modi_speaker_F_RA_6,"F_RA_6"],
+                    [Lang.Blocks.modi_speaker_F_SO_6,"F_SO_6"],
+                    [Lang.Blocks.modi_speaker_F_DO_S_6,"F_DO_S_6"],
+                    [Lang.Blocks.modi_speaker_F_RE_S_6,"F_RE_S_6"],
+                    [Lang.Blocks.modi_speaker_F_PA_S_6,"F_PA_S_6"],
+                    [Lang.Blocks.modi_speaker_F_SOL_S_6,"F_SOL_S_6"],
+                    [Lang.Blocks.modi_speaker_F_RA_S_6,"F_RA_S_6"],
+                    [Lang.Blocks.modi_speaker_F_DO_7,"F_DO_7"],
+                    [Lang.Blocks.modi_speaker_F_RE_7,"F_RE_7"],
+                    [Lang.Blocks.modi_speaker_F_MI_7,"F_MI_7"],
+                    [Lang.Blocks.modi_speaker_F_PA_7,"F_PA_7"],
+                    [Lang.Blocks.modi_speaker_F_SOL_7,"F_SOL_7"],
+                    [Lang.Blocks.modi_speaker_F_RA_7,"F_RA_7"],
+                    [Lang.Blocks.modi_speaker_F_SO_7,"F_SO_7"],
+                    [Lang.Blocks.modi_speaker_F_DO_S_7,"F_DO_S_7"],
+                    [Lang.Blocks.modi_speaker_F_RE_S_7,"F_RE_S_7"],
+                    [Lang.Blocks.modi_speaker_F_PA_S_7,"F_PA_S_7"],
+                    [Lang.Blocks.modi_speaker_F_SOL_S_7,"F_SOL_S_7"],
+                    [Lang.Blocks.modi_speaker_F_RA_S_7,"F_RA_S_7"]
+                ],
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                "F_DO_5",
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_set_basic_speaker"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "frequence": 1,
+            "volume": 2
+        },
+        "class": "speaker",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+            var key = script.getStringField("name"),
+                frequence = script.getStringField("frequence"),
+                volume = script.getNumberValue("volume",script) * 10;
+            var moduleID = JSON.parse(Entry.hw.portData.module["speaker"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["speaker"][key] = JSON.stringify({module: "SPEAKER_BUZZER", id: moduleID, value1: frequence, value2: volume});
+
+            return script.callReturn();
+        }
+    },
+    "modi_set_custom_speaker": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "스피커 %1번의 진동수는 %2 크기는 %3(으)로 정하기 %4",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.speakerList
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_set_custom_speaker"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "frequence": 1,
+            "volume": 2
+        },
+        "class": "speaker",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+            var key = script.getStringField("name"),
+                frequence = script.getNumberValue("frequence") * 10,
+                volume = script.getNumberValue("volume",script) * 10;
+            var moduleID = JSON.parse(Entry.hw.portData.module["speaker"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["speaker"][key] = JSON.stringify({module: "SPEAKER_BUZZER", id: moduleID, value1: frequence, value2: volume});
+
+            return script.callReturn();
+        }
+    },
+    "modi_change_speaker_frequence": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "스피커 %1번의 진동수를 %2만큼 바꾸기 %3",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.speakerList
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_change_speaker_frequence"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "value": 1
+        },
+        "class": "speaker",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name"),
+                value = script.getNumberValue("value");
+
+            var pd = JSON.parse(Entry.hw.portData.module["speaker"][key]);
+            var moduleID = pd.id;
+
+            if(!pd.value[2]){
+                pd.value[2] = 0;
+            }
+            if(!pd.value[3]){
+                pd.value[3] = 0;
+            }
+
+            var frequence = (value*10) + (pd.value[3]*10),
+                volume = pd.value[2] * 10;
+            if(frequence > 1000 || frequence < 0)
+                frequence = 1000;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["speaker"][key] = JSON.stringify({module: "SPEAKER_BUZZER", id: moduleID, value1: frequence, value2: volume});
+
+            return script.callReturn();
+        }
+    },
+    "modi_change_speaker_volume": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "스피커 %1번의 크기를 %2만큼 바꾸기 %3",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.speakerList
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_change_speaker_volume"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "value": 1
+        },
+        "class": "speaker",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name"),
+                value = script.getNumberValue("value");
+
+            var pd = JSON.parse(Entry.hw.portData.module["speaker"][key]);
+            var moduleID = pd.id;
+
+            if(!pd.value[2]){
+                pd.value[2] = 0;
+            }
+            if(!pd.value[3]){
+                pd.value[3] = 0;
+            }
+
+            var frequence = (pd.value[3]*10),
+                volume = (value*10) + (pd.value[2]*10);
+            if(volume > 1000 || volume < 0)
+                frequence = 1000;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["speaker"][key] = JSON.stringify({module: "SPEAKER_BUZZER", id: moduleID, value1: frequence, value2: volume});
+
+            return script.callReturn();
+        }
+    },
+    "modi_print_display_by_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "template": "디스플레이 %1번의 화면에 %2 보이기 %3",
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "fontSize": 11,
+                menuName: Entry.MODI.displayList
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "modi_print_display_by_value"
+        },
+        "paramsKeyMap": {
+            "name": 0,
+            "text": 1
+        },
+        "class": "display",
+        "isNotFor": [ "modi" ],
+        "func": function (sprite, script) {
+            if(!Entry.hw.sendQueue.moduleValue){
+                Entry.MODI.initSend();
+            }
+
+            var key = script.getStringField("name"),
+                text = script.getStringValue("text");
+
+            if(text.length > 8){
+                return script.callReturn();
+            }
+
+            var moduleID = JSON.parse(Entry.hw.portData.module["display"][key]).id;
+
+            var sq = Entry.hw.sendQueue.moduleValue;
+            sq["display"][key] = JSON.stringify({module: "DISPLAY_TEXT", id: moduleID, value1: text});
+            return script.callReturn();
+        }
+    },
     "albert_hand_found": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -3420,6 +4687,1203 @@ Entry.block = {
             }
         ]}
     },
+    "arduino_nano_analog_list": {
+        "parent": "arduino_ext_analog_list",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ],
+                    [ "A4", "4" ],
+                    [ "A5", "5" ],
+                    [ "A6", "6" ],
+                    [ "A7", "7" ],
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%1",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "A0", "0" ],
+                            [ "A1", "1" ],
+                            [ "A2", "2" ],
+                            [ "A3", "3" ],
+                            [ "A4", "4" ],
+                            [ "A5", "5" ],
+                            [ "A6", "6" ],
+                            [ "A7", "7" ],
+                        ],
+                        "value": "0",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringKey,
+                        codeMap:"Entry.CodeMap.Arduino.arduino_nano_analog_list[0]"
+                    }
+                ],
+                keyOption: "arduino_nano_analog_list"
+            }
+        ]}
+    },
+    "arduino_nano_get_analog_value": {
+        "parent": "arduino_ext_get_analog_value",
+        "template": Lang.template.arduino_ext_get_analog_value,
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_nano_analog_list"
+                }
+            ],
+            "type": "arduino_nano_get_analog_value"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_get_analog_value_map": {
+        "parent": "arduino_ext_get_analog_value_map",
+        "template": Lang.template.arduino_ext_get_analog_value_map,
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_nano_get_analog_value",
+                    "params": [
+                        {
+                            "type": "arduino_nano_analog_list"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "arduino_nano_get_analog_value_map"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_get_ultrasonic_value": {
+        "template": Lang.template.arduino_ext_get_ultrasonic_value,
+        "parent": "arduino_ext_get_ultrasonic_value",
+        "def": {
+            "params": [{
+                type: 'arduino_get_port_number',
+                params: [ '2' ],
+            }, {
+                type: 'arduino_get_port_number',
+                params: [ '4' ],
+            }],
+            "type": "arduino_nano_get_ultrasonic_value"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_get_digital": {
+        "template": Lang.template.arduino_ext_get_digital,
+        "parent": "arduino_ext_get_digital",        
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "arduino_nano_get_digital"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_toggle_led": {
+        "template": Lang.template.arduino_ext_toggle_led,
+        "parent": "arduino_ext_toggle_led",        
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": [ "on" ],
+                },
+                null
+            ],
+            "type": "arduino_nano_toggle_led"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_digital_pwm": {
+        "template": Lang.template.arduino_ext_digital_pwm,
+        "parent": "arduino_ext_digital_pwm",
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "arduino_nano_digital_pwm"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_set_tone": {
+        "template": Lang.template.arduino_ext_set_tone,
+        "parent": "arduino_ext_set_tone",
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number",
+                    "value": 4
+                },
+                {
+                    "type": "arduino_ext_tone_list"
+                },
+                {
+                    "type": "arduino_ext_octave_list"
+                },
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "arduino_nano_set_tone"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_set_servo": {
+        "template": Lang.template.arduino_ext_set_servo,
+        "parent": "arduino_ext_set_servo",        
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number"
+                },
+                null
+            ],
+            "type": "arduino_nano_set_servo"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "blacksmith_list_analog_basic": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("PORT");
+        }
+    },
+    "blacksmith_list_digital_basic": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "6", "6" ],
+                    [ "7", "7" ],
+                    [ "8", "8" ],
+                    [ "9", "9" ],
+                    [ "10", "10" ],
+                    [ "11", "11" ]
+                ],
+                "value": "10",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("PORT");
+        }
+    },
+    "blacksmith_list_digital_octave": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "1"],
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["5", "5"],
+                    ["6", "6"],
+                    ["7", "7"],
+                    ["8", "8"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "OCTAVE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("OCTAVE");
+        }
+    },
+    "blacksmith_list_digital_pwm": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "~6", "6" ],
+                    [ "~9", "9" ],
+                    [ "~10", "10" ],
+                    [ "~11", "11" ]
+                ],
+                "value": "10",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("PORT");
+        }
+    },
+    "blacksmith_list_digital_toggle": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [                
+                    [Lang.Blocks.blacksmith_toggle_on,"on"],
+                    [Lang.Blocks.blacksmith_toggle_off,"off"]
+                ],
+                "value": "on",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "OPERATOR": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("OPERATOR");
+        }
+    },
+    "blacksmith_list_digital_tone": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.silent, "0"],
+                    [Lang.Blocks.do_name, "C"],
+                    [Lang.Blocks.do_sharp_name, "CS"],
+                    [Lang.Blocks.re_name, "D"],
+                    [Lang.Blocks.re_sharp_name, "DS"],
+                    [Lang.Blocks.mi_name, "E"],
+                    [Lang.Blocks.fa_name, "F"],
+                    [Lang.Blocks.fa_sharp_name, "FS"],
+                    [Lang.Blocks.sol_name, "G"],
+                    [Lang.Blocks.sol_sharp_name, "GS"],
+                    [Lang.Blocks.la_name, "A"],
+                    [Lang.Blocks.la_sharp_name, "AS"],
+                    [Lang.Blocks.si_name, "B"]
+                ],
+                "value": "C",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "NOTE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("NOTE");
+        }
+    },
+    "blacksmith_list_digital_lcd": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.blacksmith_lcd_first_line, "0" ],
+                    [ Lang.Blocks.blacksmith_lcd_seconds_line, "1" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "LINE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("LINE");
+        }
+    },   
+    "blacksmith_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": Lang.template.blacksmith_get_analog_value,
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ 
+                {
+                    "type": "blacksmith_list_analog_basic"
+                }
+            ],
+            "type": "blacksmith_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "blacksmithGet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+
+            if (port[0] === "A")
+                port = port.substring(1)
+
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": ["blacksmith.get_analog_value(%1)"]}
+    },
+    "blacksmith_get_analog_mapping": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": Lang.template.blacksmith_get_analog_mapping,
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_analog_basic",
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "blacksmith_get_analog_mapping"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE2": 1,
+            "VALUE3": 2,
+            "VALUE4": 3,
+            "VALUE5": 4
+        },
+        "class": "blacksmithGet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var result = 0;
+            var ANALOG = Entry.hw.portData.ANALOG;
+            var value2 = script.getNumberValue("VALUE2", script);
+            var value3 = script.getNumberValue("VALUE3", script);
+            var value4 = script.getNumberValue("VALUE4", script);
+            var value5 = script.getNumberValue("VALUE5", script);
+
+            if (port[0] === "A") {
+                port = port.substring(1)
+            }
+            result = ANALOG ? ANALOG[port] || 0 : 0;
+            if (value2 > value3) {
+                var swap = value2;
+                value2 = value3;
+                value3 = swap;
+            }
+            if (value4 > value5) {
+                var swap = value4;
+                value4 = value5;
+                value5 = swap;
+            }
+            result -= value2;
+            result = result * ((value5 - value4) / (value3 - value2));
+            result += value4;
+            result = Math.min(value5, result);
+            result = Math.max(value4, result);
+
+            return result
+        },
+        "syntax": {"js": [], "py": ["blacksmith.get_analog_mapping(%1, %2, %3, %4, %5)"]}
+    },
+    "blacksmith_get_digital_bluetooth": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": Lang.template.blacksmith_get_digital_bluetooth,
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "blacksmith_get_digital_bluetooth"
+        },
+        "paramsKeyMap": { },
+        "class": "blacksmithGet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = 2;
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            delete Entry.hw.sendQueue['SET'][port];
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.rxBLUETOOTH] = {
+                port: port,
+                time: new Date().getTime()
+            };
+
+            return Entry.hw.portData.rxBLUETOOTH || 0;            
+        },
+        "syntax": {"js": [], "py": ["blacksmith.get_digital_bluetooth()"]}
+    },
+    "blacksmith_get_digital_ultrasonic": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": Lang.template.blacksmith_get_digital_ultrasonic,
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "4" ]
+                },
+                                {
+                    "type": "text",
+                    "params": [ "5" ]
+                },
+            ],
+            "type": "blacksmith_get_digital_ultrasonic"
+        },
+        "paramsKeyMap": {
+            "PORT1": 0,
+            "PORT2": 1,
+        },
+        "class": "blacksmithGet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port1 = script.getNumberValue("PORT1");
+            var port2 = script.getNumberValue("PORT2");
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            delete Entry.hw.sendQueue['SET'][port1];
+            delete Entry.hw.sendQueue['SET'][port2];
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.ULTRASONIC] = {
+                port: [port1, port2],
+                time: new Date().getTime()
+            };
+
+            return Entry.hw.portData.ULTRASONIC || 0;
+        },
+        "syntax": {"js": [], "py": ["blacksmith.get_digital_ultrasonic(%1, %2)"]}
+    },
+    "blacksmith_get_digital_toggle": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": Lang.template.blacksmith_get_digital_toggle,
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_digital_basic"
+                }
+            ],
+            "type": "blacksmith_get_digital_toggle"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "blacksmithGet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
+
+            return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": ["blacksmith.get_digital_toggle(%1)"]}
+    },
+    "blacksmith_set_digital_toggle": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "statements": [],
+        "template": Lang.template.blacksmith_set_digital_toggle,
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_digital_basic"
+                },
+                {
+                    "type": "blacksmith_list_digital_toggle"
+                },
+                null
+            ],
+            "type": "blacksmith_set_digital_toggle"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "blacksmithSet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getValue("VALUE");
+
+            if(typeof value === 'string') {
+                value = value.toLowerCase();
+            }
+            if(Entry.Blacksmith.highList.indexOf(value) > -1) {
+                value = 255;
+            }
+            else if(Entry.Blacksmith.lowList.indexOf(value) > -1) {
+                value = 0;
+            }
+            else {
+                throw new Error();
+            }
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.Blacksmith.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["blacksmith.set_digital_toggle(%1, %2)"]}
+    },
+    "blacksmith_set_digital_pwm": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "statements": [],
+        "template": Lang.template.blacksmith_set_digital_pwm,
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_digital_pwm"
+                },
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                null
+            ], 
+            "type": "blacksmith_set_digital_pwm"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "blacksmithSet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+
+            value = Math.round(value);            
+            value = Math.min(value, 255);
+            value = Math.max(value, 0);
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.Blacksmith.sensorTypes.PWM,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["blacksmith.set_digital_pwm(%1, %2)"]}
+    },
+    "blacksmith_set_digital_servo": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "statements": [],
+        "template": Lang.template.blacksmith_set_digital_servo,
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_digital_basic"
+                },
+                {
+                    "type": "text",
+                    "params": [ "90" ]
+                },
+                null
+            ], 
+            "type": "blacksmith_set_digital_servo"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "blacksmithSet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.min(value, 180);
+            value = Math.max(value, 0);
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.Blacksmith.sensorTypes.SERVO,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["blacksmith.set_digital_servo(%1, %2)"]}
+    },
+    "blacksmith_set_digital_buzzer" : {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "statements": [],
+        "template": Lang.template.blacksmith_set_digital_buzzer,
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }, 
+            {
+                "type": "Block",
+                "accept": "string"
+            }, 
+            {
+                "type": "Block",
+                "accept": "string"
+            }, 
+            {
+                "type": "Block",
+                "accept": "string"
+            }, 
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_digital_basic"
+                },
+                {                    
+                    "type": "blacksmith_list_digital_octave"
+                },
+                {
+                    "type": "blacksmith_list_digital_tone"
+                },
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "blacksmith_set_digital_buzzer"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,            
+            "OCTAVE": 1,
+            "NOTE": 2,
+            "DURATION": 3
+        },
+        "class": "blacksmithSet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var duration = script.getNumberValue("DURATION");
+            var octave = script.getNumberValue("OCTAVE") - 1;
+            var value = 0;
+
+            if (!script.isStart) {
+                var note = script.getValue("NOTE");                
+                if(!Entry.Utils.isNumber(note)) {
+                    note = Entry.Blacksmith.toneTable[note];
+                }
+                if(note < 0) {
+                    note = 0;
+                } 
+                else if(note > 12) {
+                    note = 12;
+                }
+                if(duration < 0) {
+                    duration = 0;
+                }
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                if(duration === 0) {
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.Blacksmith.sensorTypes.TONE,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }                
+                if(octave < 0) {
+                    octave = 0;
+                } 
+                else if(octave > 8) {
+                    octave = 8;
+                }
+                if(note != 0) {
+                    value = Entry.Blacksmith.toneMap[note][octave];
+                }
+
+                duration = duration * 1000;
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.Blacksmith.sensorTypes.TONE,
+                    data: {
+                        value: value,
+                        duration: duration
+                    },
+                    time: new Date().getTime()
+                };
+
+                setTimeout(function() { script.timeFlag = 0; }, duration + 32);
+                return script;
+            } 
+            else if (script.timeFlag == 1) {
+                return script;
+            } 
+            else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.Blacksmith.sensorTypes.TONE,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["blacksmith.set_digital_toggle(%1, %2, %3, %4)"]}
+    },
+    "blacksmith_set_digital_lcd": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "template": Lang.template.blacksmith_set_digital_lcd,
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_digital_lcd"
+                },
+                {
+                    "type": "text",
+                    "params": [ "My Entry!!" ]
+                },
+                null
+            ],
+            "type": "blacksmith_set_digital_lcd"
+        },
+        "paramsKeyMap": {
+            "LINE": 0,
+            "STRING": 1,
+        },
+        "class": "blacksmithSet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var line = script.getNumberValue("LINE");
+            var string = script.getValue("STRING");
+            var text = [];
+
+            if(!script.isStart) {
+                if(typeof string === 'string') {
+                    for (var i = 0; i < string.length; i++) {  
+                        text[i] = Entry.Blacksmith.toByte(string[i]);
+                    }
+                }
+                else {
+                    text[0] = string;
+                }
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                timeValue = 60/fps*50;
+
+                Entry.hw.sendQueue['SET'][line] = {
+                    type: Entry.Blacksmith.sensorTypes.LCD,
+                    data: {
+                        text0 : text[0],
+                        text1 : text[1],
+                        text2 : text[2],
+                        text3 : text[3],
+                        text4 : text[4],
+                        text5 : text[5],
+                        text6 : text[6],
+                        text7 : text[7],
+                        text8 : text[8],
+                        text9 : text[9],
+                        text10 : text[10],
+                        text11 : text[11],
+                        text12 : text[12],
+                        text13 : text[13],
+                        text14 : text[14],
+                        text15 : text[15]
+                    },
+                    time: new Date().getTime()                
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            }
+            else if(script.timeFlag == 1) {
+                return script;
+            }
+            else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["blacksmith.set_digital_lcd(%1, %2)"]}
+    },
+    "blacksmith_set_digital_bluetooth": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "template": Lang.template.blacksmith_set_digital_bluetooth,
+        "statements": [],
+        "params": [    
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "My Entry!!" ]
+                },
+                null
+            ],
+            "type": "blacksmith_set_digital_bluetooth"
+        },
+        "paramsKeyMap": {
+            "STRING": 0
+        },
+        "class": "blacksmithSet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            if(!script.isStart) {
+                var string = script.getValue("STRING");            
+                var port = 3;
+                var text = [];
+
+                if(typeof string === 'string') {
+                    for (var i = 0; i < string.length; i++) {  
+                        text[i] = Entry.Blacksmith.toByte(string[i]);
+                    }
+                }
+                else {
+                    text[0] = string;
+                }
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                timeValue = 60/fps*50;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.Blacksmith.sensorTypes.txBLUETOOTH,
+                    data: {
+                        text0 : text[0],
+                        text1 : text[1],
+                        text2 : text[2],
+                        text3 : text[3],
+                        text4 : text[4],
+                        text5 : text[5],
+                        text6 : text[6],
+                        text7 : text[7],
+                        text8 : text[8],
+                        text9 : text[9],
+                        text10 : text[10],
+                        text11 : text[11],
+                        text12 : text[12],
+                        text13 : text[13],
+                        text14 : text[14],
+                        text15 : text[15]
+                    },
+                    time: new Date().getTime()
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            }
+            else if(script.timeFlag == 1) {
+                return script;
+            }
+            else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["blacksmith.set_digital_bluetooth(%1)"]}
+    },
     "sensorBoard_get_named_sensor_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -5141,7 +7605,7 @@ Entry.block = {
                 "value": null,
                 "fontSize": 11,
                 'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                menuName: Entry.Bitbrick.sensorList
+                'menuName': Entry.Bitbrick.sensorList,
 
             }
         ],
@@ -5790,11 +8254,48 @@ Entry.block = {
               return Entry.hw.getAnalogPortValue("tilt");
         }
     },
+    "cobl_read_color": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "8.색상센서",
+        def: {
+            type: "cobl_read_color"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+              var colorval = Entry.hw.getAnalogPortValue("color");
+
+              if(colorval == 1)
+                  return "빨강";
+              else if(colorval == 2)
+                  return "녹색"
+              else if(colorval == 3)
+                  return "파랑"
+              else
+                  return "알수없음";
+        }
+    },
+    "cobl_read_humid": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "9.습도센서",
+        def: {
+            type: "cobl_read_humid"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+              return Entry.hw.getAnalogPortValue("humid");
+        }
+    },
     "cobl_read_temps": {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_string_field",
-        template: "8.온도센서@포트%1",
+        template: "10.온도센서@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -5817,14 +8318,17 @@ Entry.block = {
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
+            //    console.log("-----temptest------")
             var signal = script.getField("VALUE", script);
             if (signal == 1)
             {
+                //    console.log("-----temp1 selected ");
                 return Entry.hw.getAnalogPortValue("temps1");
             }
 
             if (signal == 2)
             {
+                //     console.log("-----temp2 selected ");
                 return Entry.hw.getAnalogPortValue("temps2");
             }
         }
@@ -5833,7 +8337,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_string_field",
-        template: "9.빛센서@포트%1",
+        template: "11.빛센서@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -5872,7 +8376,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_boolean_field",
-        template: "10.버튼스위치@포트%1",
+        template: "12.버튼스위치@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -5911,7 +8415,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "11.무지개LED%1%2 %3",
+        template: "13-1.무지개LED%1%2 %3",
         params: [
             {
                 type: "Dropdown",
@@ -5965,11 +8469,118 @@ Entry.block = {
             return script.callReturn();
         }
     },
+    "cobl_rgb_boardled": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "13-2.무지개LED%1R%2G%3B%4 %5",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "1",
+                "1",
+                "1"
+            ],
+            type: "cobl_rgb_boardled"
+        },
+        paramsKeyMap: {
+            LED: 0,
+            RED: 1,
+            GREEN : 2,
+            BLUE : 3
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var led = script.getNumberField("LED");
+            var r = script.getStringField("RED");
+            var g = script.getStringField("GREEN");
+            var b = script.getStringField("BLUE");
+
+            Entry.hw.setDigitalPortValue("BLED_IDX", led);
+            Entry.hw.setDigitalPortValue("BLED_R", r);
+            Entry.hw.setDigitalPortValue("BLED_G", g);
+            Entry.hw.setDigitalPortValue("BLED_B", b);
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue["BLED_IDX"];
+            delete Entry.hw.sendQueue["BLED_R"];
+            delete Entry.hw.sendQueue["BLED_G"];
+            delete Entry.hw.sendQueue["BLED_B"];
+
+            return script.callReturn();
+        }
+    },
     "cobl_servo_angle_control": {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "12.각도모터 각도%1(15~165) %2",
+        template: "14.각도모터 각도%1(15~165) %2",
         params: [
             {
                 type: "TextInput",
@@ -6006,12 +8617,12 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "13.멜로디%1 ,%2",
+        template: "15.멜로디%1 시간%2(초) %3",
         params: [
             {
                 type: "Dropdown",
                 options: [
-                ["((낮은)솔","L_So"],
+                ["(낮은)솔","L_So"],
                 ["(낮은)솔#","L_So#"],
                 ["(낮은)라","L_La"],
                 ["(낮은)라#","L_La#"],
@@ -6032,10 +8643,14 @@ Entry.block = {
                 ["(높은)도#","H_Do#"],
                 ["(높은)레","H_Re"],
                 ["(높은)레#","H_Re#"],
-                ["(높은)미#","H_Mi"],
+                ["(높은)미","H_Mi"],
                 ["(높은)파","H_Fa"]
                 ],
                 fontSize: 11
+            },
+            {
+                type: "TextInput",
+                value: 1
             },
             {
                 type: "Indicator",
@@ -6045,21 +8660,27 @@ Entry.block = {
         ],
         def: {
             params: [
-                "Do"
+                "Do",
+                "1"
             ],
             type: "cobl_melody"
         },
         paramsKeyMap: {
-            MELODY: 0
+            MELODY: 0,
+            DURATION: 1
         },
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
             var melody = script.getStringField("MELODY");
+            var duration = script.getStringField("DURATION");
 
             Entry.hw.setDigitalPortValue("Melody", melody);
+            Entry.hw.setDigitalPortValue("Melody_DUR", duration);
+
             Entry.hw.update();
             delete Entry.hw.sendQueue["Melody"];
+            delete Entry.hw.sendQueue["Melody_DUR"];
 
             return script.callReturn();
         }
@@ -6068,7 +8689,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "14.회전모터%1%2속도%3 %4",
+        template: "16.회전모터%1%2속도%3 %4",
         params: [
             {
                 type: "Dropdown",
@@ -6147,7 +8768,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "15.USB포트%1단계%2 %3",
+        template: "17.USB포트%1단계%2 %3",
         params: [
             {
                 type: "Dropdown",
@@ -6206,11 +8827,117 @@ Entry.block = {
             return script.callReturn();
         }
     },
+    "cobl_external_RainBowled": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "18-1.외부LED%1 (1~64)%2 %3",
+        params: [
+            {
+                type: "TextInput",
+                value: 0,
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["OFF","OFF"],
+                  ["빨강","Red"],
+                  ["주황","Orange"],
+                  ["노랑","Yellow"],
+                  ["초록","Green"],
+                  ["파랑","Blue"],
+                  ["남색","Dark Blue"],
+                  ["보라","Purple"],
+                  ["흰색","White"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "OFF"
+            ],
+            type: "cobl_external_RainBowled"
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            OPERATOR: 1
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var led = script.getStringField("PORT");
+            var value = script.getStringField("OPERATOR");
+            
+            Entry.hw.setDigitalPortValue("ELED_IDX", led);
+            
+            if(value == 'OFF') {
+                Entry.hw.setDigitalPortValue("ELED_R", 0);
+                Entry.hw.setDigitalPortValue("ELED_G", 0);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Red') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 0);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Orange') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 20);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Yellow') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Green') {
+                Entry.hw.setDigitalPortValue("ELED_R", 0);
+                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Blue') {
+                Entry.hw.setDigitalPortValue("ELED_R", 0);
+                Entry.hw.setDigitalPortValue("ELED_G", 0);
+                Entry.hw.setDigitalPortValue("ELED_B", 80);
+            }
+            else if(value == 'Dark Blue') {
+                Entry.hw.setDigitalPortValue("ELED_R", 0);
+                Entry.hw.setDigitalPortValue("ELED_G", 50);
+                Entry.hw.setDigitalPortValue("ELED_B", 80);
+            }
+            else if(value == 'Purple') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 0);
+                Entry.hw.setDigitalPortValue("ELED_B", 80);
+            }
+            else if(value == 'White') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 80);
+            }
+            
+                
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue["ELED_IDX"];
+            delete Entry.hw.sendQueue["ELED_R"];
+            delete Entry.hw.sendQueue["ELED_G"];
+            delete Entry.hw.sendQueue["ELED_B"];
+        }
+    },
     "cobl_external_led": {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "16.외부LED%1(1~64)R%2G%3B%4 %5",
+        template: "18-2.외부LED%1(1~64)R%2G%3B%4 %5",
         params: [
             {
                 type: "TextInput",
@@ -6313,7 +9040,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "17.숫자전광판%1(0~9999) %2",
+        template: "19.숫자전광판%1(0~9999) %2",
         params: [
             {
                 type: "TextInput",
@@ -6335,7 +9062,9 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
             var value = script.getNumberField("VALUE");
-            Entry.hw.setDigitalPortValue("7SEG", value);
+            var value_s = value.toString();
+            var value_c = value_s.substring(0,4);
+            Entry.hw.setDigitalPortValue("7SEG", value_c);
             Entry.hw.update();
             delete Entry.hw.sendQueue["7SEG"];
             return script.callReturn();
@@ -6741,16 +9470,10 @@ Entry.block = {
         "class": "brush_clear",
         "isNotFor": [ "textBox" ],
         "func": function (sprite, script) {
-            var brush = sprite.brush;
-            if (brush) {
-                var stroke = brush._stroke.style;
-                var style = brush._strokeStyle.width;
-                brush.clear().setStrokeStyle(style).beginStroke(stroke);
-                brush.moveTo(sprite.getX(), sprite.getY()*-1);
-            }
+            sprite.eraseBrush && sprite.eraseBrush();
 
             var stampEntities = sprite.parent.getStampEntities();
-            stampEntities.map(function (entity) {
+            stampEntities.forEach(function (entity) {
                 entity.removeClone();
             });
             stampEntities = null;
@@ -9519,34 +12242,34 @@ Entry.block = {
         "class": "calc_timer",
         "isNotFor": [],
         "func": function (sprite, script) {
-            var action = script.getField('ACTION');
             var engine = Entry.engine;
             var timer = engine.projectTimer;
+            var isPaused = timer.isPaused;
+            var isInit = timer.isInit;
+            var currentTime = new Date().getTime();
 
-            if (action == 'START') {
-                if (!timer.isInit) {
-                    engine.startProjectTimer();
-                }
-                else if (timer.isInit && timer.isPaused) {
-                    if (timer.pauseStart)
-                        timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
-                    delete timer.pauseStart;
-                    timer.isPaused = false;
-                }
-            } else if (action == 'STOP') {
-                if (timer.isInit && !timer.isPaused) {
-                    timer.isPaused = true;
-                    timer.pauseStart = (new Date()).getTime();
-                }
-            } else if (action == 'RESET') {
-                if (timer.isInit) {
-                    timer.setValue(0);
-                    timer.start = (new Date()).getTime();
-                    timer.pausedTime = 0;
-                    delete timer.pauseStart;
-                }
-
+            switch (script.getField('ACTION')) {
+                case 'START':
+                    if (!isInit) {
+                        engine.startProjectTimer();
+                    } else if (isInit && isPaused) {
+                        if (timer.pauseStart)
+                            timer.pausedTime += currentTime - timer.pauseStart;
+                        delete timer.pauseStart;
+                        timer.isPaused = false;
+                    }
+                break;
+                case 'STOP':
+                    if (isInit && !isPaused) {
+                        timer.isPaused = true;
+                        timer.pauseStart = currentTime;
+                    }
+                break;
+                case 'RESET':
+                    engine.resetTimer();
+                break;
             }
+
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
@@ -10257,6 +12980,8 @@ Entry.block = {
             switch(script.getField("TARGET", script)) {
                 case 'all':
                     Entry.container.mapObject(function(obj) {
+                        if(!obj.objectType)
+                            return;
                         obj.script.clearExecutors();
                     }, null);
                     return this.die();
@@ -10277,7 +13002,8 @@ Entry.block = {
                     for (var i = 0 ; i < executors.length; i++) {
                         var currentExecutor = executors[i];
                         if (currentExecutor !== executor &&
-                            currentExecutor.entity.id === spriteId) {
+                            currentExecutor.entity.id === spriteId &&
+                           currentExecutor !== this.executor.parentExecutor) {
                             code.removeExecutor(currentExecutor);
                             --i;
                         }
@@ -10571,6 +13297,14 @@ Entry.block = {
         func: function(entity) {
             if (!this.initiated) {
                 this.initiated = true;
+                Entry.callStackLength++;
+                if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
+                    Entry.toast.alert(
+                        Lang.Workspace.RecursiveCallWarningTitle,
+                        Lang.Workspace.RecursiveCallWarningContent
+                    );
+                    throw new Error();
+                }
 
                 var func = Entry.variableContainer.getFunction(
                     this.block.type.substr(5, 9)
@@ -10580,12 +13314,14 @@ Entry.block = {
                 this.funcExecutor.register.params = this.getParams();
                 var paramMap = {};
                 this.funcExecutor.register.paramMap = func.paramMap;
+                this.funcExecutor.parentExecutor = this.executor;
             }
             this.funcExecutor.execute();
             if (!this.funcExecutor.isEnd()) {
                 this.funcCode.removeExecutor(this.funcExecutor);
                 return Entry.STATIC.BREAK;
             }
+            Entry.callStackLength--;
         },
         "syntax": {"js": [], "py": [""]}
     },
@@ -15615,19 +18351,23 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hue = effectValue + sprite.effect.hue;
+                effectName = 'hue';
             } else if (effect == "lens") {
             } else if (effect == "swriling") {
             } else if (effect == "pixel") {
             } else if (effect == "mosaic") {
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue + sprite.effect.brightness;
+                effectName = 'brightness';
             } else if (effect == "blur") {
             } else if (effect == "opacity") {
                 sprite.effect.alpha = (sprite.effect.alpha + effectValue / 100) ;
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.set_effect_volume(%1, %2)"]}
@@ -15678,19 +18418,23 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hue = effectValue;
+                effectName = 'hue';
             } else if (effect == "lens") {
             } else if (effect == "swriling") {
             } else if (effect == "pixel") {
             } else if (effect == "mosaic") {
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue;
+                effectName = 'brightness';
             } else if (effect == "blur") {
             } else if (effect == "opacity") {
                 sprite.effect.alpha = effectValue / 100;
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.set_effect(%1, %2)"]}
@@ -16132,14 +18876,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hsv = effectValue + sprite.effect.hsv;
+                effectName = 'hsv';
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue + sprite.effect.brightness;
+                effectName = 'brightness';
             } else if (effect == "transparency") {
                 sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
@@ -16225,14 +18973,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hsv = effectValue;
+                effectName = 'hsv';
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue;
+                effectName = 'brightness';
             } else if (effect == "transparency") {
                 sprite.effect.alpha = 1 - (effectValue / 100);
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [
@@ -16306,14 +19058,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hue = effectValue + sprite.effect.hue;
+                effectName = 'hue';
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue + sprite.effect.brightness;
+                effectName = 'brightness';
             } else if (effect == "transparency") {
                 sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [""]}
@@ -16364,14 +19120,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var effect = script.getField("EFFECT", script);
             var effectValue = script.getNumberValue("VALUE", script);
+            var effectName = '';
             if (effect == "color") {
                 sprite.effect.hue = effectValue;
+                effectName = 'hue';
             } else if (effect == "brightness") {
                 sprite.effect.brightness = effectValue;
+                effectName = 'brightness';
             } else if (effect == "transparency") {
                 sprite.effect.alpha = 1 - (effectValue / 100);
+                effectName = 'alpha';
             }
-            sprite.applyFilter(true);
+            sprite.applyFilter(true, [effectName]);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [""]}
@@ -18942,26 +21702,26 @@ Entry.block = {
                 data_length = 4;
             }
 
-	    data_address = script.getNumberValue('VALUE');
+        data_address = script.getNumberValue('VALUE');
 
-	    data_default_address = data_address;
-	    data_default_length = data_length;
+        data_default_address = data_address;
+        data_default_length = data_length;
 
-	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
-		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
-		    //throw new Entry.Utils.AsyncError();
-		    return Entry.hw.sendQueue.prevResult;
-		}
-	    }
+        if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+        if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
+            //throw new Entry.Utils.AsyncError();
+            return Entry.hw.sendQueue.prevResult;
+        }
+        }
 
-	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-	    Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+        // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+        Entry.Robotis_carCont.update();
 
-	    var result = Entry.hw.portData[data_default_address];
+        var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
-	    Entry.hw.sendQueue.prevTime = new Date();
-	    Entry.hw.sendQueue.prevResult = result;
+        Entry.hw.sendQueue.prevTime = new Date();
+        Entry.hw.sendQueue.prevResult = result;
 
             return result;
         },
@@ -19028,23 +21788,23 @@ Entry.block = {
                 data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
             }
 
-	    data_default_address = data_default_address + increase * data_default_length;
+        data_default_address = data_default_address + increase * data_default_length;
 
-	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
-	    	if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
-	    	    //throw new Entry.Utils.AsyncError();
-		    return Entry.hw.sendQueue.prevResult;
-	        }
-	    }
+        if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+            if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
+                //throw new Entry.Utils.AsyncError();
+            return Entry.hw.sendQueue.prevResult;
+            }
+        }
 
-	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-	    Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+        // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+        Entry.Robotis_carCont.update();
 
-	    var result = Entry.hw.portData[data_default_address];
+        var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
-	    Entry.hw.sendQueue.prevTime = new Date();
-	    Entry.hw.sendQueue.prevResult = result;
+        Entry.hw.sendQueue.prevTime = new Date();
+        Entry.hw.sendQueue.prevResult = result;
 
             return result;
         },
@@ -19101,7 +21861,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var scope = script.executor.scope;
 
-	    // instruction / address / length / value / default length
+        // instruction / address / length / value / default length
             var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
             var data_address = 0;
             var data_length = 0;
@@ -19192,21 +21952,21 @@ Entry.block = {
                // data_length = 6 * data_default_length;
             // }
 
-	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
-		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
-		    //throw new Entry.Utils.AsyncError();
-		    return Entry.hw.sendQueue.prevResult;
-		}
-	    }
+        if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+        if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 200) {
+            //throw new Entry.Utils.AsyncError();
+            return Entry.hw.sendQueue.prevResult;
+        }
+        }
 
-	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-	    Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+        // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+        Entry.Robotis_carCont.update();
 
-	    var result = Entry.hw.portData[data_default_address];
+        var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
-	    Entry.hw.sendQueue.prevTime = new Date();
-	    Entry.hw.sendQueue.prevResult = result;
+        Entry.hw.sendQueue.prevTime = new Date();
+        Entry.hw.sendQueue.prevResult = result;
 
             return result;
         },
@@ -20169,24 +22929,24 @@ Entry.block = {
             //Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
             //// Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
             //Entry.Robotis_carCont.update();
-			//
+            //
             //return Entry.hw.portData[data_default_address];
 
-	    if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
-		if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 300) {
-		    //throw new Entry.Utils.AsyncError();
-		    return Entry.hw.sendQueue.prevResult;
-		}
-	    }
+        if (Entry.hw.sendQueue.prevAddress && Entry.hw.sendQueue.prevAddress == data_default_address) {
+        if(Entry.hw.sendQueue.prevTime && new Date() - Entry.hw.sendQueue.prevTime < 300) {
+            //throw new Entry.Utils.AsyncError();
+            return Entry.hw.sendQueue.prevResult;
+        }
+        }
 
-	    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-	    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-	    Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+        // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+        Entry.Robotis_carCont.update();
 
-	    var result = Entry.hw.portData[data_default_address];
+        var result = Entry.hw.portData[data_default_address];
             Entry.hw.sendQueue.prevAddress = data_default_address;
-	    Entry.hw.sendQueue.prevTime = new Date();
-	    Entry.hw.sendQueue.prevResult = result;
+        Entry.hw.sendQueue.prevTime = new Date();
+        Entry.hw.sendQueue.prevResult = result;
 
             return result;
         },
@@ -28599,83 +31359,72 @@ Entry.block = {
         "syntax": {"js": [], "py": ["SensorBoard.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     // ardublock Added 2016-06-01
-
     "ardublock_analog_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
         "template": "%1",
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "A0", "0" ],
-                    [ "A1", "1" ],
-                    [ "A2", "2" ],
-                    [ "A3", "3" ],
-                    [ "A4", "4" ],
-                    [ "A5", "5" ]
-                ],
-                "value": "0",
-                "fontSize": 11
-            }
-        ],
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["A0", "0"],
+                ["A1", "1"],
+                ["A2", "2"],
+                ["A3", "3"],
+                ["A4", "4"],
+                ["A5", "5"]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }],
         "events": {},
         "def": {
-            "params": [ null ]
+            "params": [null]
         },
         "paramsKeyMap": {
             "PORT": 0
         },
-        "func": function (sprite, script) {
+        "func": function(sprite, script) {
             return script.getField("PORT");
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
-
     "ardublock_get_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "params": [
-            {
-                "type": "Block",
-                "accept": "string"
-            }
-        ],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
         "events": {},
         "def": {
-            "params": [
-                {
-                    "type": "arduino_ext_analog_list"
-                }
-            ],
+            "params": [{
+                "type": "arduino_ext_analog_list"
+            }],
             "type": "ardublock_get_analog_value"
         },
         "paramsKeyMap": {
             "PORT": 0
         },
         "class": "ardublockGet",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var port = script.getValue("PORT", script);
             var ANALOG = Entry.hw.portData.ANALOG;
             if (port[0] === "A")
                 port = port.substring(1)
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
     "ardublock_get_analog_value_map": {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "params": [
-            {
+        "params": [{
                 "type": "Block",
                 "accept": "string"
             },
@@ -28698,30 +31447,27 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [
-                {
+            "params": [{
                     "type": "ardublock_get_analog_value",
-                    "params": [
-                        {
-                            "type": "arduino_ext_analog_list"
-                        }
-                    ]
+                    "params": [{
+                        "type": "arduino_ext_analog_list"
+                    }]
                 },
                 {
                     "type": "number",
-                    "params": [ "0" ]
+                    "params": ["0"]
                 },
                 {
                     "type": "number",
-                    "params": [ "1023" ]
+                    "params": ["1023"]
                 },
                 {
                     "type": "number",
-                    "params": [ "0" ]
+                    "params": ["0"]
                 },
                 {
                     "type": "number",
-                    "params": [ "100" ]
+                    "params": ["100"]
                 }
             ],
             "type": "ardublock_get_analog_value_map"
@@ -28734,8 +31480,8 @@ Entry.block = {
             "VALUE5": 4
         },
         "class": "ardublockGet",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var result = script.getValue("PORT", script);
             var ANALOG = Entry.hw.portData.ANALOG;
             var value2 = script.getNumberValue("VALUE2", script);
@@ -28761,16 +31507,14 @@ Entry.block = {
 
             return result
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
     "ardublock_get_ultrasonic_value": {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "params": [
-            {
+        "params": [{
                 "type": "Block",
                 "accept": "string"
             },
@@ -28783,10 +31527,10 @@ Entry.block = {
         "def": {
             "params": [{
                 type: 'arduino_get_port_number',
-                params: [ '13' ],
+                params: ['13'],
             }, {
                 type: 'arduino_get_port_number',
-                params: [ '12' ],
+                params: ['12'],
             }],
             "type": "ardublock_get_ultrasonic_value"
         },
@@ -28795,18 +31539,18 @@ Entry.block = {
             "PORT2": 1,
         },
         "class": "ardublockGet",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var port1 = script.getNumberValue("PORT1", script);
             var port2 = script.getNumberValue("PORT2", script);
 
-            if(!Entry.hw.sendQueue['SET']) {
+            if (!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
             delete Entry.hw.sendQueue['SET'][port1];
             delete Entry.hw.sendQueue['SET'][port2];
 
-            if(!Entry.hw.sendQueue['GET']) {
+            if (!Entry.hw.sendQueue['GET']) {
                 Entry.hw.sendQueue['GET'] = {};
             }
             Entry.hw.sendQueue['GET'][Entry.ardublock.sensorTypes.ULTRASONIC] = {
@@ -28815,9 +31559,8 @@ Entry.block = {
             };
             return Entry.hw.portData.ULTRASONIC || 0;
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
     "ardublock_get_digital": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -28828,22 +31571,20 @@ Entry.block = {
         }],
         "events": {},
         "def": {
-            "params": [
-                {
-                    "type": "arduino_get_port_number"
-                }
-            ],
+            "params": [{
+                "type": "arduino_get_port_number"
+            }],
             "type": "ardublock_get_digital"
         },
         "paramsKeyMap": {
             "PORT": 0
         },
         "class": "ardublockGet",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var port = script.getNumberValue("PORT", script);
             var DIGITAL = Entry.hw.portData.DIGITAL;
-            if(!Entry.hw.sendQueue['GET']) {
+            if (!Entry.hw.sendQueue['GET']) {
                 Entry.hw.sendQueue['GET'] = {};
             }
             Entry.hw.sendQueue['GET'][Entry.ardublock.sensorTypes.DIGITAL] = {
@@ -28852,15 +31593,13 @@ Entry.block = {
             };
             return (DIGITAL) ? DIGITAL[port] || 0 : 0;
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
     "ardublock_toggle_led": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "params": [
-            {
+        "params": [{
                 "type": "Block",
                 "accept": "string"
             },
@@ -28876,13 +31615,12 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [
-                {
+            "params": [{
                     "type": "arduino_get_port_number"
                 },
                 {
                     "type": "arduino_get_digital_toggle",
-                    "params": [ "on" ],
+                    "params": ["on"],
                 },
                 null
             ],
@@ -28893,22 +31631,22 @@ Entry.block = {
             "VALUE": 1
         },
         "class": "ardublock",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var port = script.getNumberValue("PORT");
             var value = script.getValue("VALUE");
 
-            if(typeof value === 'string') {
+            if (typeof value === 'string') {
                 value = value.toLowerCase();
             }
-            if(Entry.ardublock.highList.indexOf(value) > -1) {
+            if (Entry.ardublock.highList.indexOf(value) > -1) {
                 value = 255;
-            } else if(Entry.ardublock.lowList.indexOf(value) > -1) {
+            } else if (Entry.ardublock.lowList.indexOf(value) > -1) {
                 value = 0;
             } else {
                 throw new Error();
             }
-            if(!Entry.hw.sendQueue['SET']) {
+            if (!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
             Entry.hw.sendQueue['SET'][port] = {
@@ -28918,15 +31656,13 @@ Entry.block = {
             };
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
     "ardublock_digital_pwm": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "params": [
-            {
+        "params": [{
                 "type": "Block",
                 "accept": "string"
             },
@@ -28942,13 +31678,12 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [
-                {
+            "params": [{
                     "type": "arduino_get_pwm_port_number"
                 },
                 {
                     "type": "text",
-                    "params": [ "255" ]
+                    "params": ["255"]
                 },
                 null
             ],
@@ -28959,14 +31694,14 @@ Entry.block = {
             "VALUE": 1
         },
         "class": "ardublock",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var port = script.getNumberValue("PORT");
             var value = script.getNumberValue("VALUE");
             value = Math.round(value);
             value = Math.max(value, 0);
             value = Math.min(value, 255);
-            if(!Entry.hw.sendQueue['SET']) {
+            if (!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
             Entry.hw.sendQueue['SET'][port] = {
@@ -28976,111 +31711,99 @@ Entry.block = {
             };
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
     "ardublock_tone_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
         "template": "%1",
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [Lang.Blocks.silent, "0"],
-                    [Lang.Blocks.do_name, "C"],
-                    [Lang.Blocks.do_sharp_name, "CS"],
-                    [Lang.Blocks.re_name, "D"],
-                    [Lang.Blocks.re_sharp_name, "DS"],
-                    [Lang.Blocks.mi_name, "E"],
-                    [Lang.Blocks.fa_name, "F"],
-                    [Lang.Blocks.fa_sharp_name, "FS"],
-                    [Lang.Blocks.sol_name, "G"],
-                    [Lang.Blocks.sol_sharp_name, "GS"],
-                    [Lang.Blocks.la_name, "A"],
-                    [Lang.Blocks.la_sharp_name, "AS"],
-                    [Lang.Blocks.si_name, "B"]
-                ],
-                "value": "C",
-                "fontSize": 11
-            }
-        ],
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.silent, "0"],
+                [Lang.Blocks.do_name, "C"],
+                [Lang.Blocks.do_sharp_name, "CS"],
+                [Lang.Blocks.re_name, "D"],
+                [Lang.Blocks.re_sharp_name, "DS"],
+                [Lang.Blocks.mi_name, "E"],
+                [Lang.Blocks.fa_name, "F"],
+                [Lang.Blocks.fa_sharp_name, "FS"],
+                [Lang.Blocks.sol_name, "G"],
+                [Lang.Blocks.sol_sharp_name, "GS"],
+                [Lang.Blocks.la_name, "A"],
+                [Lang.Blocks.la_sharp_name, "AS"],
+                [Lang.Blocks.si_name, "B"]
+            ],
+            "value": "C",
+            "fontSize": 11
+        }],
         "events": {},
         "def": {
-            "params": [ null ]
+            "params": [null]
         },
         "paramsKeyMap": {
             "NOTE": 0
         },
-        "func": function (sprite, script) {
+        "func": function(sprite, script) {
             return script.getField("NOTE");
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
     "ardublock_tone_value": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
         "template": "%1",
-        "params": [
-            {
-                "type": "Block",
-                "accept": "string"
-            }
-        ],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
         "events": {},
         "def": {
-            "params": [
-                {
-                    "type": "ardublock_tone_list"
-                }
-            ],
+            "params": [{
+                "type": "ardublock_tone_list"
+            }],
             "type": "ardublock_tone_value"
         },
         "paramsKeyMap": {
             "NOTE": 0
         },
-        "func": function (sprite, script) {
+        "func": function(sprite, script) {
             return script.getNumberValue("NOTE");
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
     "ardublock_octave_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
         "template": "%1",
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    ["1", "1"],
-                    ["2", "2"],
-                    ["3", "3"],
-                    ["4", "4"],
-                    ["5", "5"],
-                    ["6", "6"]
-                ],
-                "value": "3",
-                "fontSize": 11
-            }
-        ],
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"],
+                ["4", "4"],
+                ["5", "5"],
+                ["6", "6"]
+            ],
+            "value": "3",
+            "fontSize": 11
+        }],
         "events": {},
         "def": {
-            "params": [ null ]
+            "params": [null]
         },
         "paramsKeyMap": {
             "OCTAVE": 0
         },
-        "func": function (sprite, script) {
+        "func": function(sprite, script) {
             return script.getField("OCTAVE");
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
     "ardublock_set_tone": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -29107,7 +31830,7 @@ Entry.block = {
             "params": [{
                     "type": "arduino_get_port_number",
                     "value": 4,
-                    "params": [ "11" ]
+                    "params": ["11"]
                 },
                 {
                     "type": "ardublock_tone_list"
@@ -29117,7 +31840,7 @@ Entry.block = {
                 },
                 {
                     "type": "text",
-                    "params": [ "1" ]
+                    "params": ["1"]
                 },
                 null
             ],
@@ -29130,33 +31853,33 @@ Entry.block = {
             "DURATION": 3
         },
         "class": "ardublock",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var sq = Entry.hw.sendQueue;
             var port = script.getNumberValue("PORT", script);
 
             if (!script.isStart) {
                 var note = script.getValue("NOTE", script);
-                if(!Entry.Utils.isNumber(note))
+                if (!Entry.Utils.isNumber(note))
                     note = Entry.ardublock.toneTable[note];
 
-                if(note < 0) {
+                if (note < 0) {
                     note = 0;
-                } else if(note > 12) {
+                } else if (note > 12) {
                     note = 12;
                 }
 
                 var duration = script.getNumberValue("DURATION", script);
 
-                if(duration < 0) {
+                if (duration < 0) {
                     duration = 0;
                 }
 
-                if(!sq['SET']) {
+                if (!sq['SET']) {
                     sq['SET'] = {};
                 }
 
-                if(duration === 0) {
+                if (duration === 0) {
                     sq['SET'][port] = {
                         type: Entry.ardublock.sensorTypes.TONE,
                         data: 0,
@@ -29166,15 +31889,15 @@ Entry.block = {
                 }
 
                 var octave = script.getNumberValue("OCTAVE", script) - 1;
-                if(octave < 0) {
+                if (octave < 0) {
                     octave = 0;
-                } else if(octave > 5) {
+                } else if (octave > 5) {
                     octave = 5;
                 }
 
                 var value = 0;
 
-                if(note != 0) {
+                if (note != 0) {
                     value = Entry.ardublock.toneMap[note][octave];
                 }
 
@@ -29209,9 +31932,8 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
     "ardublock_set_servo": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -29231,7 +31953,7 @@ Entry.block = {
         "def": {
             "params": [{
                     "type": "arduino_get_port_number",
-                    "params": [ "10" ]
+                    "params": ["10"]
                 },
                 null
             ],
@@ -29242,15 +31964,15 @@ Entry.block = {
             "VALUE": 1
         },
         "class": "ardublock",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var sq = Entry.hw.sendQueue;
             var port = script.getNumberValue("PORT", script);
             var value = script.getNumberValue("VALUE", script);
             value = Math.min(180, value);
             value = Math.max(0, value);
 
-            if(!sq['SET']) {
+            if (!sq['SET']) {
                 sq['SET'] = {};
             }
             sq['SET'][port] = {
@@ -29261,38 +31983,34 @@ Entry.block = {
 
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-    
     "ardublock_motor_direction_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
         "template": "%1",
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [Lang.Blocks.ardublock_motor_forward, "0"],
-                    [Lang.Blocks.ardublock_motor_backward, "1"]
-                ],
-                "value": "0",
-                "fontSize": 11
-            }
-        ],
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.ardublock_motor_forward, "0"],
+                [Lang.Blocks.ardublock_motor_backward, "1"]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }],
         "events": {},
         "def": {
-            "params": [ null ]
+            "params": [null]
         },
         "paramsKeyMap": {
             "MOTOR_DIRECTION": 0
         },
-        "func": function (sprite, script) {
+        "func": function(sprite, script) {
             return script.getField("MOTOR_DIRECTION");
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
     "ardublock_set_left_motor": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -29315,7 +32033,7 @@ Entry.block = {
                 },
                 {
                     "type": "text",
-                    "params": [ "100" ]
+                    "params": ["100"]
                 },
                 null
             ],
@@ -29326,49 +32044,48 @@ Entry.block = {
             "MOTOR_SPEED": 1
         },
         "class": "ardublock",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             // var sq = Entry.hw.sendQueue;
             var direction = script.getValue("MOTOR_DIRECTION", script);
-            if(!Entry.Utils.isNumber(direction))
+            if (!Entry.Utils.isNumber(direction))
                 direction = Entry.ardublock.directionTable[direction];
 
-            if(direction < 0) {
+            if (direction < 0) {
                 direction = 0;
-            } else if(direction > 1) {
+            } else if (direction > 1) {
                 direction = 1;
             }
 
             var speed = script.getNumberValue("MOTOR_SPEED", script) - 1;
-            if(speed < 0) {
+            if (speed < 0) {
                 speed = 0;
-            } else if(speed > 254) {
+            } else if (speed > 254) {
                 speed = 254;
             }
 
 
-            if(!Entry.hw.sendQueue['SET']) {
+            if (!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
-            }            
+            }
 
             Entry.hw.sendQueue['SET'][0] = {
                 type: Entry.ardublock.sensorTypes.MOTOR_LEFT,
                 data: {
                     direction: direction,
                     speed: speed
-                 },
+                },
                 time: new Date().getTime()
             };
 
             setTimeout(function() {
                 script.timeFlag = 0;
-            }, 10);       
-            
-            return script.callReturn();            
+            }, 10);
+
+            return script.callReturn();
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-   
     "ardublock_set_right_motor": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -29391,7 +32108,7 @@ Entry.block = {
                 },
                 {
                     "type": "text",
-                    "params": [ "100" ]
+                    "params": ["100"]
                 },
                 null
             ],
@@ -29402,126 +32119,114 @@ Entry.block = {
             "MOTOR_SPEED": 1
         },
         "class": "ardublock",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             // var sq = Entry.hw.sendQueue;
             var direction = script.getValue("MOTOR_DIRECTION", script);
-            if(!Entry.Utils.isNumber(direction))
+            if (!Entry.Utils.isNumber(direction))
                 direction = Entry.ardublock.directionTable[direction];
 
-            if(direction < 0) {
+            if (direction < 0) {
                 direction = 0;
-            } else if(direction > 1) {
+            } else if (direction > 1) {
                 direction = 1;
             }
 
             var speed = script.getNumberValue("MOTOR_SPEED", script) - 1;
-            if(speed < 0) {
+            if (speed < 0) {
                 speed = 0;
-            } else if(speed > 254) {
+            } else if (speed > 254) {
                 speed = 254;
             }
 
-            if(!Entry.hw.sendQueue['SET']) {
+            if (!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
-            } 
+            }
 
             Entry.hw.sendQueue['SET'][1] = {
                 type: Entry.ardublock.sensorTypes.MOTOR_RIGHT,
                 data: {
                     direction: direction,
                     speed: speed
-                 },
+                },
                 time: new Date().getTime()
             };
 
             setTimeout(function() {
                 script.timeFlag = 0;
-            }, 10);              
-            
-            return script.callReturn();            
+            }, 10);
+
+            return script.callReturn();
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-       
     "ardublock_get_left_cds_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "params": [
-            {
-                "type": "Block",
-                "accept": "string"
-            }
-        ],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
         "events": {},
         "def": {
-            "params": [
-                {
-                    "type": "arduino_ext_analog_list",
-                    "params": [ "0" ]
-                }
-            ],
+            "params": [{
+                "type": "arduino_ext_analog_list",
+                "params": ["0"]
+            }],
             "type": "ardublock_get_left_cds_analog_value"
         },
         "paramsKeyMap": {
             "PORT": 0
         },
         "class": "ardublockGet",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var port = script.getValue("PORT", script);
             var ANALOG = Entry.hw.portData.ANALOG;
             if (port[0] === "A")
                 port = port.substring(1)
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-   
     "ardublock_get_right_cds_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "params": [
-            {
-                "type": "Block",
-                "accept": "string"
-            }
-        ],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
         "events": {},
         "def": {
-            "params": [
-                {
-                    "type": "arduino_ext_analog_list",
-                    "params": [ "1" ]
-                }
-            ],
+            "params": [{
+                "type": "arduino_ext_analog_list",
+                "params": ["1"]
+            }],
             "type": "ardublock_get_right_cds_analog_value"
         },
         "paramsKeyMap": {
             "PORT": 0
         },
         "class": "ardublockGet",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var port = script.getValue("PORT", script);
             var ANALOG = Entry.hw.portData.ANALOG;
             if (port[0] === "A")
                 port = port.substring(1)
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-        
     "ardublock_toggle_left_led": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "params": [
-            {
+        "params": [{
                 "type": "Block",
                 "accept": "string"
             },
@@ -29537,14 +32242,13 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [
-                {
+            "params": [{
                     "type": "arduino_get_port_number",
-                    "params": [ "3" ]
+                    "params": ["3"]
                 },
                 {
                     "type": "arduino_get_digital_toggle",
-                    "params": [ "on" ],
+                    "params": ["on"],
                 },
                 null
             ],
@@ -29555,22 +32259,22 @@ Entry.block = {
             "VALUE": 1
         },
         "class": "ardublock",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var port = script.getNumberValue("PORT");
             var value = script.getValue("VALUE");
 
-            if(typeof value === 'string') {
+            if (typeof value === 'string') {
                 value = value.toLowerCase();
             }
-            if(Entry.ardublock.highList.indexOf(value) > -1) {
+            if (Entry.ardublock.highList.indexOf(value) > -1) {
                 value = 255;
-            } else if(Entry.ardublock.lowList.indexOf(value) > -1) {
+            } else if (Entry.ardublock.lowList.indexOf(value) > -1) {
                 value = 0;
             } else {
                 throw new Error();
             }
-            if(!Entry.hw.sendQueue['SET']) {
+            if (!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
             Entry.hw.sendQueue['SET'][port] = {
@@ -29580,15 +32284,13 @@ Entry.block = {
             };
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-
     "ardublock_toggle_right_led": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "params": [
-            {
+        "params": [{
                 "type": "Block",
                 "accept": "string"
             },
@@ -29604,14 +32306,13 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [
-                {
+            "params": [{
                     "type": "arduino_get_port_number",
-                    "params": [ "9" ]
+                    "params": ["9"]
                 },
                 {
                     "type": "arduino_get_digital_toggle",
-                    "params": [ "on" ],
+                    "params": ["on"],
                 },
                 null
             ],
@@ -29622,22 +32323,22 @@ Entry.block = {
             "VALUE": 1
         },
         "class": "ardublock",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var port = script.getNumberValue("PORT");
             var value = script.getValue("VALUE");
 
-            if(typeof value === 'string') {
+            if (typeof value === 'string') {
                 value = value.toLowerCase();
             }
-            if(Entry.ardublock.highList.indexOf(value) > -1) {
+            if (Entry.ardublock.highList.indexOf(value) > -1) {
                 value = 255;
-            } else if(Entry.ardublock.lowList.indexOf(value) > -1) {
+            } else if (Entry.ardublock.lowList.indexOf(value) > -1) {
                 value = 0;
             } else {
                 throw new Error();
             }
-            if(!Entry.hw.sendQueue['SET']) {
+            if (!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
             Entry.hw.sendQueue['SET'][port] = {
@@ -29647,46 +32348,39 @@ Entry.block = {
             };
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-       
-   "ardublock_get_sound_analog_value": {
+    "ardublock_get_sound_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "params": [
-            {
-                "type": "Block",
-                "accept": "string"
-            }
-        ],
-        "events": {}, 
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
         "def": {
-            "params": [  
-                {
-                    "type": "arduino_ext_analog_list",
-                    "params": [ "2" ]
-                }
-            ],
+            "params": [{
+                "type": "arduino_ext_analog_list",
+                "params": ["2"]
+            }],
             "type": "ardublock_get_sound_analog_value"
         },
         "paramsKeyMap": {
             "PORT": 0
         },
         "class": "ardublockGet",
-        "isNotFor": [ "ardublock" ],
-        "func": function (sprite, script) {
+        "isNotFor": ["ardublock"],
+        "func": function(sprite, script) {
             var port = script.getValue("PORT", script);
             var ANALOG = Entry.hw.portData.ANALOG;
             if (port[0] === "A")
                 port = port.substring(1)
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": { "js": [], "py": [] }
     },
-         
-
     // ardublock Added 2016-06-01
 
 
@@ -31930,7 +34624,9 @@ Entry.block = {
         "isNotFor": [ "roborobo_roduino" ],
         "func": function (sprite, script) {
             var signal = parseInt(script.getValue("VALUE", script));
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.ANALOG_READ, signal]);
+            Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.ANALOG_READ;
+            Entry.hw.sendQueue.analogEnable[signal] = 1;
+            Entry.hw.update();
             return Entry.hw.getAnalogPortValue(signal);
         }
     },
@@ -31961,8 +34657,10 @@ Entry.block = {
         "isNotFor": [ "roborobo_roduino" ],
         "func": function (sprite, script) {
             var signal = script.getNumberValue("VALUE", script);
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ, signal]);
-            return Entry.hw.portData[signal - 2];
+            Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ;
+            Entry.hw.sendQueue[1] = signal;
+            Entry.hw.update();
+            return Entry.hw.getDigitalPortValue(signal - 2);
         }
     },
     "roduino_get_color": {
@@ -32076,7 +34774,9 @@ Entry.block = {
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
 
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, pin, value]);
+            Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE;
+            Entry.hw.sendQueue[1] = pin;
+            Entry.hw.setDigitalPortValue(pin, value);
             return script.callReturn();
         }
     },
@@ -32151,7 +34851,8 @@ Entry.block = {
                 value1 = 0;
                 value2 = 0;
             }
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.MOTOR, pin1, value1, pin2, value2]);
+            Entry.hw.setDigitalPortValue(pin1, value1);
+            Entry.hw.setDigitalPortValue(pin2, value2);
             return script.callReturn();
         }
     },
@@ -32210,7 +34911,9 @@ Entry.block = {
             var bluePin = script.getNumberValue("BLUE", script);
 
             Entry.Roborobo_Roduino.ColorPin = [ redPin, greenPin, bluePin ];
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, redPin, greenPin, bluePin]);
+            Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.COLOR;
+            Entry.hw.sendQueue.colorPin = redPin;
+            Entry.hw.update();
             return script.callReturn();
         }
     },
@@ -32371,7 +35074,12 @@ Entry.block = {
             var operator = script.getField("OPERATOR");
             var value = operator == "on" ? 1 : 0;
 
-            Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, pin, value]);
+            if(!Entry.hw.sendQueue.digitalPinMode) {
+                Entry.hw.sendQueue.digitalPinMode = {};
+            }
+
+            Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
+            Entry.hw.sendQueue[pin] = value;
             return script.callReturn();
         }
     },
@@ -32402,7 +35110,6 @@ Entry.block = {
         "isNotFor": [ "roborobo_schoolkit" ],
         "func": function (sprite, script) {
             var signal = script.getNumberValue("VALUE", script);
-            Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_READ, signal]);
             return Entry.hw.portData[signal - 7];
         }
     },
@@ -32463,31 +35170,35 @@ Entry.block = {
         "class": "schoolkit_set",
         "isNotFor": [ "roborobo_schoolkit" ],
         "func": function (sprite, script) {
-            var pin = 0;
-            var operatorValue = 0;
             var mode = script.getField("MODE");
+            var pin = 0;
             var operator = script.getField("OPERATOR");
             var value = script.getNumberValue("VALUE");
 
             if(mode == "motor1") {
-                pin = 7;
+                pin = 0;
             } else {
-                pin = 8;
+                pin = 1;
             }
+
             if(value > 255) {
                 value = 255;
             } else if(value < 0) {
                 value = 0;
             }
 
+            if(!Entry.hw.sendQueue.digitalPinMode) {
+                Entry.hw.sendQueue.digitalPinMode = {};
+            }
+
+            Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+            Entry.hw.sendQueue.digitalPinMode[pin + 7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
             if (operator == "cw") {
-                operatorValue = 1;
-                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+                Entry.hw.sendQueue[pin] = value;
             } else if (operator == "ccw") {
-                operatorValue = 2;
-                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+                Entry.hw.sendQueue[pin] = -value;
             } else if(operator == "stop") {
-                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+                Entry.hw.sendQueue[pin] = 0x00;
             }
             return script.callReturn();
         }
@@ -32535,13 +35246,15 @@ Entry.block = {
             var pin = script.getNumberValue("PIN", script);
             var value = script.getNumberValue("VALUE");
 
+            Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+
             if(value < 0) {
                 value = 0;
             } else if(value > 180) {
                 value = 180;
             }
-
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.SERVO, pin, value]);
+            Entry.hw.sendQueue.servo[pin - 2] = true;
+            Entry.hw.sendQueue[pin] = value;
             return script.callReturn();
         }
     },
@@ -33288,13 +36001,13 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [ "정지 시키기", "0"],
-                    [ "매우 느린 속도로 돌리기", "160"],
-                    [ "느린 속도로 돌리기", "185" ],
-                    [ "보통 속도로 돌리기", "210" ],
-                    [ "빠른 속도로 돌리기", "235" ],
+                    [ "매우 느린 속도로 돌리기", "70"],
+                    [ "느린 속도로 돌리기", "115" ],
+                    [ "보통 속도로 돌리기", "160" ],
+                    [ "빠른 속도로 돌리기", "205" ],
                     [ "매우 빠른 속도로 돌리기", "255"]
                 ],
-                "value": "210",
+                "value": "160",
                 "fontSize": 11
             },
             {
@@ -33618,11 +36331,11 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_A0_Input, "A0"],
-					[Lang.Blocks.robotori_A1_Input, "A1"],
-					[Lang.Blocks.robotori_A2_Input, "A2"],
-					[Lang.Blocks.robotori_A3_Input, "A3"],
-					[Lang.Blocks.robotori_A4_Input, "A4"],
-					[Lang.Blocks.robotori_A5_Input, "A5"],
+                    [Lang.Blocks.robotori_A1_Input, "A1"],
+                    [Lang.Blocks.robotori_A2_Input, "A2"],
+                    [Lang.Blocks.robotori_A3_Input, "A3"],
+                    [Lang.Blocks.robotori_A4_Input, "A4"],
+                    [Lang.Blocks.robotori_A5_Input, "A5"],
                 ],
                 "value": "A0",
                 "fontSize": 11
@@ -33653,9 +36366,9 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_D10_Output, "D10"],
-					[Lang.Blocks.robotori_D11_Output, "D11"],
-					[Lang.Blocks.robotori_D12_Output, "D12"],
-					[Lang.Blocks.robotori_D13_Output, "D13"]
+                    [Lang.Blocks.robotori_D11_Output, "D11"],
+                    [Lang.Blocks.robotori_D12_Output, "D12"],
+                    [Lang.Blocks.robotori_D13_Output, "D13"]
                 ],
                 "value": "D10",
                 "fontSize": 11
@@ -33664,7 +36377,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_On, "ON"],
-					[Lang.Blocks.robotori_Off, "OFF"]
+                    [Lang.Blocks.robotori_Off, "OFF"]
                 ],
                 "value": "ON",
                 "fontSize": 11
@@ -33718,7 +36431,7 @@ Entry.block = {
             return script.callReturn();
         }
     },
-	"robotori_analogOutput": {
+    "robotori_analogOutput": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
@@ -33727,8 +36440,8 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_analog5, "AOUT5"],
-					[Lang.Blocks.robotori_analog6, "AOUT6"],
-					[Lang.Blocks.robotori_analog9, "AOUT9"]
+                    [Lang.Blocks.robotori_analog6, "AOUT6"],
+                    [Lang.Blocks.robotori_analog9, "AOUT9"]
                 ],
                 "value": "AOUT5",
                 "fontSize": 11
@@ -33763,23 +36476,23 @@ Entry.block = {
         "isNotFor": [ "robotori" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
-			var dev = script.getStringField("DEVICE", script);
-			var value = script.getNumberValue("VALUE", script);
+            var dev = script.getStringField("DEVICE", script);
+            var value = script.getNumberValue("VALUE", script);
 
-			if (dev == 'AOUT5')
-			{
-				sq.AOUT5 = value;
-			}
-			else if(dev == 'AOUT6')
-			{
-				sq.AOUT6 = value;
-			}
-			else if(dev == 'AOUT9')
-			{
-				sq.AOUT9 = value;
-			}
+            if (dev == 'AOUT5')
+            {
+                sq.AOUT5 = value;
+            }
+            else if(dev == 'AOUT6')
+            {
+                sq.AOUT6 = value;
+            }
+            else if(dev == 'AOUT9')
+            {
+                sq.AOUT9 = value;
+            }
 
-			return script.callReturn();
+            return script.callReturn();
         }
     },
     "robotori_servo": {
@@ -33815,9 +36528,9 @@ Entry.block = {
         "isNotFor": [ "robotori" ],
         "func": function (sprite, script) {
            var sq = Entry.hw.sendQueue;
-			sq.SERVO = script.getNumberValue("SERVO");
+            sq.SERVO = script.getNumberValue("SERVO");
 
-			return script.callReturn();
+            return script.callReturn();
         }
     },
     "robotori_dc_direction": {
@@ -33829,7 +36542,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_DC_rightmotor, "RIGHT_MOTOR"],
-					[Lang.Blocks.robotori_DC_leftmotor, "LEFT_MOTOR"]
+                    [Lang.Blocks.robotori_DC_leftmotor, "LEFT_MOTOR"]
                 ],
                 "value": "RIGHT_MOTOR",
                 "fontSize": 11
@@ -33838,8 +36551,8 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.robotori_DC_STOP, "STOP"],
-					[Lang.Blocks.robotori_DC_CW, "CW"],
-					[Lang.Blocks.robotori_DC_CCW, "CCW"]
+                    [Lang.Blocks.robotori_DC_CW, "CW"],
+                    [Lang.Blocks.robotori_DC_CCW, "CCW"]
                 ],
                 "value": "STOP",
                 "fontSize": 11
@@ -33865,36 +36578,36 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
             var dev = script.getStringField("DEVICE", script);
             var value = script.getStringField('VALUE', script);
-			if( dev == 'RIGHT_MOTOR' )
-			{
-				if( value == 'STOP' )
-				{
-					sq.RIGHT_MOTOR = 0xFF;
-				}
-				else if( value == 'CW' )
-				{
-					sq.RIGHT_MOTOR = 0x00;
-				}
-				else if( value == 'CCW' )
-				{
-					sq.RIGHT_MOTOR = 0xB4;
-				}
-			}
-			if( dev == 'LEFT_MOTOR' )
-			{
-				if( value == 'STOP' )
-				{
-					sq.LEFT_MOTOR = 0xFF;
-				}
-				else if( value == 'CW' )
-				{
-					sq.LEFT_MOTOR = 0x00;
-				}
-				else if( value == 'CCW' )
-				{
-					sq.LEFT_MOTOR = 0xB4;
-				}
-			}
+            if( dev == 'RIGHT_MOTOR' )
+            {
+                if( value == 'STOP' )
+                {
+                    sq.RIGHT_MOTOR = 0xFF;
+                }
+                else if( value == 'CW' )
+                {
+                    sq.RIGHT_MOTOR = 0x00;
+                }
+                else if( value == 'CCW' )
+                {
+                    sq.RIGHT_MOTOR = 0xB4;
+                }
+            }
+            if( dev == 'LEFT_MOTOR' )
+            {
+                if( value == 'STOP' )
+                {
+                    sq.LEFT_MOTOR = 0xFF;
+                }
+                else if( value == 'CW' )
+                {
+                    sq.LEFT_MOTOR = 0x00;
+                }
+                else if( value == 'CCW' )
+                {
+                    sq.LEFT_MOTOR = 0xB4;
+                }
+            }
             return script.callReturn();
         }
     },
@@ -34493,12 +37206,901 @@ Entry.block = {
             }
         },
     },
+    "dadublock_car_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "dadublock_car_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "dadublock_car_get",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            return (ANALOG) ? ANALOG[port] || 0 : 0;
+        },
+    },
+    "dadublock_car_get_analog_value_map": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "dadublock_car_get_analog_value_map"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE2": 1,
+            "VALUE3": 2,
+            "VALUE4": 3,
+            "VALUE5": 4
+        },
+        "class": "dadublock_car_get",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            var value2 = script.getNumberValue("VALUE2", script);
+            var value3 = script.getNumberValue("VALUE3", script);
+            var value4 = script.getNumberValue("VALUE4", script);
+            var value5 = script.getNumberValue("VALUE5", script);
+
+            var result = ANALOG[port] || 0;
+            if (value2 > value3) {
+                var swap = value2;
+                value2 = value3;
+                value3 = swap;
+            }
+            if (value4 > value5) {
+                var swap = value4;
+                value4 = value5;
+                value5 = swap;
+            }
+            result -= value2;
+            result = result * ((value5 - value4) / (value3 - value2));
+            result += value4;
+            result = Math.min(value5, result);
+            result = Math.max(value4, result);
+
+            return result
+        },
+    },
+    "dadublock_car_get_ultrasonic_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ '2', '3' ],
+            "type": "dadublock_car_get_ultrasonic_value"
+        },
+        "paramsKeyMap": {
+            "PORT1": 0,
+            "PORT2": 1,
+        },
+        "class": "dadublock_car_get",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT1", script);
+            var port2 = script.getField("PORT2", script);
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            delete Entry.hw.sendQueue['SET'][port1];
+            delete Entry.hw.sendQueue['SET'][port2];
+
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.ULTRASONIC] = {
+                port: [port1, port2],
+                time: new Date().getTime()
+            };
+            return Entry.hw.portData.ULTRASONIC || 0;
+        },
+    },
+
+    "dadublock_car_get_digital": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "dadublock_car_get_digital"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "dadublock_car_get",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            //var port = script.getNumberValue("PORT", script);
+            var port = script.getField("PORT", script);
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
+            return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+        },
+    },
+    "dadublock_car_toggle_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["켜기","on"],
+                    ["끄기","off"]
+                ],
+                "value": "on",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null, null ],
+            "type": "dadublock_car_toggle_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "dadublock_car_set",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            //var port = script.getNumberValue("PORT");
+            var port = script.getField("PORT");
+            var value = script.getField("VALUE");
+             if(value == "on") {
+                value = 255;
+            } else {
+                value = 0;
+            }
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.DaduBlock.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+    },
+    "dadublock_car_digital_pwm": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "5",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "dadublock_car_digital_pwm"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "dadublock_car_set",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            //var port = script.getNumberValue("PORT");
+            var port = script.getField("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.DaduBlock.sensorTypes.PWM,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
+    },
+    "dadublock_car_set_servo": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "2",
+                "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [ null ,null ],
+            "type": "dadublock_car_set_servo"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "dadublock_car_set",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            //var port = script.getNumberValue("PORT", script);
+            var port = script.getField("PORT", script);
+            var value = script.getNumberValue("VALUE", script);
+            value = Math.min(180, value);
+            value = Math.max(0, value);
+
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: Entry.DaduBlock.sensorTypes.SERVO_PIN,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Arduino.servomotorWrite(%1, %2)"]}
+    },
+    "dadublock_car_set_tone": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "2",
+                "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["무음", "0"],
+                ["도", "1"],
+                ["도#(레♭)", "2"],
+                ["레", "3"],
+                ["레#(미♭)", "4"],
+                ["미", "5"],
+                ["파", "6"],
+                ["파#(솔♭)", "7"],
+                ["솔", "8"],
+                ["솔#(라♭)", "9"],
+                ["라", "10"],
+                ["라#(시♭)", "11"],
+                ["시", "12"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["1", "0"],
+                ["2", "1"],
+                ["3", "2"],
+                ["4", "3"],
+                ["5", "4"],
+                ["6", "5"]
+            ],
+            "value": "3",
+            "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                null,
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "dadublock_car_set_tone"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "NOTE": 1,
+            "OCTAVE": 2,
+            "DURATION": 3
+        },
+        "class": "dadublock_car_set",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            //var port = script.getNumberValue("PORT", script);
+            var port = script.getField("PORT", script);
+
+            if (!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+                var duration = script.getNumberValue("DURATION", script);
+
+                if(duration < 0) {
+                    duration = 0;
+                }
+
+                if(note === 0 || duration === 0) {
+                    sq['SET'][port] = {
+                        type: Entry.DaduBlock.sensorTypes.TONE,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+
+                var octave = script.getNumberField("OCTAVE", script);
+                var value = Entry.DaduBlock.toneMap[note][octave];
+
+                duration = duration * 1000;
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                if(!sq['SET']) {
+                    sq['SET'] = {};
+                }
+
+                sq['SET'][port] = {
+                    type: Entry.DaduBlock.sensorTypes.TONE,
+                    data: {
+                        value: value,
+                        duration: duration
+                    },
+                    time: new Date().getTime()
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, duration + 32);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                sq['SET'][port] = {
+                    type: Entry.DaduBlock.sensorTypes.TONE,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+    },
+    "dadublock_car_motor_stop": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["~5,~6", "1"],
+                    ["~9,~10", "2"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+            ],
+            "type": "dadublock_car_motor_stop"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "dadublock_car_motor",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT");
+            if(port == 1) //~5,~6번을 선택했을때
+            {
+
+                if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][5] = {
+                    type: Entry.DaduBlock.sensorTypes.PWM,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][6] = {
+                    type: Entry.DaduBlock.sensorTypes.PWM,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                return script.callReturn();
+
+            }
+            else if(port == 2) //~9,~10번을 선택했을때
+            {
+
+                if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][9] = {
+                    type: Entry.DaduBlock.sensorTypes.PWM,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][10] = {
+                    type: Entry.DaduBlock.sensorTypes.PWM,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                return script.callReturn();
+            }
+
+
+        },
+    },
+    "dadublock_car_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["~5,~6", "1"],
+                    ["~9,~10", "2"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["정방향", "1"],
+                    ["역방향", "2"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                {
+                    "type": "text",
+                    "params": [ "50" ] // %로 바꿈 0~100% 모터 속도
+                },
+                null
+            ],
+            "type": "dadublock_car_motor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "DIRECTION": 1,
+            "VALUE": 2
+        },
+        "class": "dadublock_car_motor",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT");
+            var direction = script.getField("DIRECTION");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 100);
+            value = value * 1.5; //최대값을 150으로 제한
+            if(port == 1) //~5,~6번을 선택했을때
+            {
+                if(direction == 1)
+                {
+                    if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][5] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: value,
+                        time: new Date().getTime()
+                    };
+
+                    if(!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][6] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+                else if(direction == 2)
+                {
+                    if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][5] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+
+                    if(!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][6] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: value,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+            }
+            else if(port == 2) //~9,~10번을 선택했을때
+            {
+
+                if(direction == 1)
+                {
+                    if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][9] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: value,
+                        time: new Date().getTime()
+                    };
+
+                    if(!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][10] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+                else if(direction == 2)
+                {
+                    if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][9] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+
+                    if(!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][10] = {
+                        type: Entry.DaduBlock.sensorTypes.PWM,
+                        data: value,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+
+            }
+
+
+        },
+    },
+    "dadublock_car_get_irsensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["14", "14"],
+                    ["15", "15"],
+                    ["16", "16"],
+                    ["~5", "5"],
+                    ["~6", "6"],
+                    ["~9", "9"],
+                    ["~10", "10"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "dadublock_car_get_irsensor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "dadublock_car_motor",
+        "isNotFor": [ "dadublock_car" ],
+        "func": function (sprite, script) {
+            //var port = script.getNumberValue("PORT", script);
+            var port = script.getField("PORT", script);
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
+            return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+        },
+    },
     "hidden": {
         "color": "#7C7C7C",
         "skeleton": "basic",
-        "template": "         ?       %1",
+        "template": "         %1       %2",
         "statements": [],
         "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            },
             {
                 "type": "Indicator",
                 "color": "#6B6B6B",
@@ -34511,6 +38113,38 @@ Entry.block = {
                 null
             ],
             "type": "hidden"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {}
+    },
+    "hidden_event": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_event",
+        "template": "         %1       ",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "hidden_event"
         },
         "paramsKeyMap": {
             "VALUE": 0
@@ -34616,7 +38250,7 @@ Entry.block = {
             }
             if (returnVal)
                 return;
-            else if (flow === 0)
+            else if (flow == 0)
                 return Entry.STATIC.BREAK;
             else
                 this.die();
@@ -34625,7 +38259,7 @@ Entry.block = {
     "check_lecture_goal": {
         "color": "#7C7C7C",
         "skeleton": "basic",
-        "template": "목표 %1 %2 %3",
+        "template": "목표 %1 %2 ( %3 ) %4",
         "statements": [],
         "params": [
             {
@@ -34638,6 +38272,15 @@ Entry.block = {
                     ["달성", 1],
                     ["실패", 0]
                 ],
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["공식", 1],
+                    ["비공식", 0]
+                ],
+                "value": 1,
                 "fontSize": 11
             },
             {
@@ -34656,6 +38299,7 @@ Entry.block = {
         "def": {
             "params": [
                 0,
+                1,
                 1
             ],
             "type": "check_lecture_goal"
@@ -34666,14 +38310,89 @@ Entry.block = {
         "class": "checker",
         "isNotFor": [ "checker" ],
         "func": function (sprite, script) {
-            Entry.achieve(this.block.params[1], this.block.params[0] + "");
-            this.die();
+            Entry.targetChecker.achieveCheck(
+                this.block.params[1], this.block.params[0] + "");
+        }
+    },
+    "switch_scope": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "%1 오브젝트 기준으로 실행하기 %2",
+        "statements": [],
+        "params": [
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "menuName": "sprites",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "switch_scope"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var obj = Entry.container.getObject(this.block.params[0]);
+            this.executor.entity = obj.entity;
+        }
+    },
+    "is_answer_submited": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "대답을 입력 받을때 까지 기다리기 %1",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "is_answer_submited"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            if (this.isSubmitted) {
+                Entry.removeEventListener("answerSubmitted", checkFunc);
+                return;
+            }
+            else if (this.isSubmitted === false)
+                return Entry.STATIC.BREAK;
+            var checkFunc = function() {
+                that.isSubmitted = true;
+            }
+            this.isSubmitted = false;
+            var that = this;
+            Entry.addEventListener("answerSubmitted", checkFunc);
+            return Entry.STATIC.BREAK;
         }
     },
     "check_block_execution": {
         "color": "#7C7C7C",
         "skeleton": "basic_loop",
-        "template": "%1 에서 아래 블록이 %2 실행되었는가 %3",
+        "template": "%1 에서 아래 블록이 %2 %3 번 실행되었는가 %4",
         "statements": [
             {
                 "accept": "basic"
@@ -34696,6 +38415,10 @@ Entry.block = {
                 "fontSize": 11
             },
             {
+                "type": "TextInput",
+                "value": 1
+            },
+            {
                 "type": "Indicator",
                 "color": "#6B6B6B",
                 "size": 12
@@ -34716,7 +38439,7 @@ Entry.block = {
         "isNotFor": [ "checker" ],
         "func": function (sprite, script) {
             if (this.listener) {
-                if (this.isDone) {
+                if (this.remainCheck === 0) {
                     this.listener.destroy();
                     return;
                 }
@@ -34727,14 +38450,14 @@ Entry.block = {
                 accuracy = this.block.params[1],
                 statements = this.block.statements[0].getBlocks(),
                 lastBlock = null;
-            this.isDone = false;
+            this.remainCheck = Number(this.block.params[2]);
             var index = 0;
             this.listener = code.watchEvent.attach(this, function(blocks) { //dangerous
                 blocks = blocks.concat();
-                var block;
+                var block, isFirst = true;
                 while (blocks.length && index < statements.length) {
                     block = blocks.shift();
-                    if (block === lastBlock)
+                    if (isFirst && block === lastBlock)
                         continue;
                     if (accuracy === 0 && statements[index].type === block.type) {
                         index++;
@@ -34743,12 +38466,109 @@ Entry.block = {
                     } else {
                         index = 0;
                     }
+                    isFirst = false;
                 }
                 lastBlock = block;
-                if (index === statements.length)
-                    this.isDone = true;
+                if (index === statements.length) {
+                    this.remainCheck = this.remainCheck - 1;
+                    index = 0;
+                }
             })
             return Entry.STATIC.BREAK;
+        }
+    },
+    "check_variable_by_name": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_string_field",
+        "template": "%1 이름의 변수",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "변수"
+            ],
+            "type": "check_variable_by_name"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var variableName = this.block.params[0] + "";
+            var variable = Entry.variableContainer.getVariableByName(variableName);
+            if (variable)
+                return variable.getValue();
+            else
+                return;
+        }
+    },
+    "show_prompt": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "%1 안내하기 %2",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": ""
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                " "
+            ],
+            "type": "show_prompt"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            if (Entry.targetChecker)
+                Entry.targetChecker.showStatusMessage(
+                    this.block.params[0]);
+        }
+    },
+    "check_goal_success": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_boolean_field",
+        "template": "목표 %1 이 성공?",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": ""
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "0"
+            ],
+            "type": "check_goal_success"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var goalName = this.block.params[0] + "";
+            return Entry.targetChecker.checkGoal(goalName);
         }
     },
     "wildcard_string": {
@@ -34790,10 +38610,17 @@ Entry.block = {
     "hidden_string": {
         "color": "#7C7C7C",
         "skeleton": "basic_string_field",
-        "template": "    ?    ",
+        "template": "    %1    ",
         "fontColor": "#fff",
         "statements": [],
-        "params": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            }
+        ],
         "events": {},
         "def": {
             "params": [],
@@ -34809,10 +38636,17 @@ Entry.block = {
     "hidden_boolean": {
         "color": "#7C7C7C",
         "skeleton": "basic_boolean_field",
-        "template": "    ?    ",
+        "template": "    %1    ",
         "fontColor": "#fff",
         "statements": [],
-        "params": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            }
+        ],
         "events": {},
         "def": {
             "params": [],
@@ -39229,7 +43063,4076 @@ Entry.block = {
             }
         ],
         "func": function (sprite, script) {},
-    }
+    },
+    "coconut_move_motor": {
+       "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_move_forward,"3"],
+                    [Lang.Blocks.coconut_move_backward,"4"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "coconut_move_motor"
+        },
+        "paramsKeyMap": {
+            "DIST": 0
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            //앞으로 가기
+            var dist = script.getField("DIST", script);
+            var move = parseInt(dist);
+            var arrMsg = Entry.coconut.moveMotor(move);
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x01","0x07","0x00","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "coconut_turn_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_turn_left,"1"],
+                    [Lang.Blocks.coconut_turn_right,"2"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "coconut_turn_motor"
+        },
+        "paramsKeyMap": {
+            "DIST": 0
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist = script.getField("DIST");
+            var move = parseInt(dist);
+            var arrMsg = Entry.coconut.turnMotor(move); //왼쪽, 오른쪽으로 가기
+            //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x1a","0x00","0x02","0x3c"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "coconut_stop_motor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_stop_motor"
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var arrMsg = Entry.coconut.stopMotor(); //모터정지
+            //var arrMsg = ["0xff","0x55","0x04","0x00","0x02","0x1a","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_move_for_secs": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_move_forward,"3"],
+                    [Lang.Blocks.coconut_move_backward,"4"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                }
+            ],
+            "type": "coconut_move_for_secs"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "VALUE": 1
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist = script.getField("DIST", script);
+            var move = parseInt(dist);
+            var time = script.getNumberValue("VALUE");
+            var arrMsg = Entry.coconut.moveGoTime(move,time); //앞으로 1초동안 움직이기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x1a","0x03","0x03","0x3c","0xe8","0x03"];
+
+            var now = Date();
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log(now + " : rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log(now + " : rev = continue" + pd.msg);
+                } else {
+                    console.log(now + " : rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log(now + " : rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_turn_for_secs": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_turn_left,"1"],
+                    [Lang.Blocks.coconut_turn_right,"2"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                }
+            ],
+            "type": "coconut_turn_for_secs"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "VALUE": 1
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist = script.getField("DIST", script);
+            var move = parseInt(dist);
+            var time = script.getNumberValue("VALUE");
+            var arrMsg = Entry.coconut.moveGoTime(move,time); //왼쪽으로 1초동안 돌기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x1a","0x03","0x01","0x3c","0xe8","0x03"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "coconut_turn_to_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_turn_left,"1"],
+                    [Lang.Blocks.coconut_turn_right,"2"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_color_red,"2"],
+                    [Lang.Blocks.coconut_color_yellow,"5"],
+                    [Lang.Blocks.coconut_color_green,"3"],
+                    [Lang.Blocks.coconut_color_cyan,"6"],
+                    [Lang.Blocks.coconut_color_blue,"4"],
+                    [Lang.Blocks.coconut_color_magenta,"7"],
+                    [Lang.Blocks.coconut_color_white,"1"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null],
+            "type": "coconut_turn_to_led"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "COLOR": 1
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist1 = script.getField("DIST", script);
+            var dist2 = script.getField("COLOR", script);
+            var move = parseInt(dist1);
+            var color = parseInt(dist2);
+            var arrMsg = Entry.coconut.moveMotorColor(move,color); //왼쪽으로 회전하는 동안 빨간색 LED켜기
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_move_outmotor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_move_forward,"3"],
+                    [Lang.Blocks.coconut_move_backward,"4"],
+                    [Lang.Blocks.coconut_turn_left,"1"],
+                    [Lang.Blocks.coconut_turn_right,"2"],
+                ],
+                "value": "3",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type":"text",
+                    "params":["60"]
+                }
+            ],
+            "type": "coconut_move_outmotor"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "VALUE": 1,
+        },
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist1 = script.getField("DIST", script);
+            var move = parseInt(dist1);
+            var speed = script.getNumberValue("VALUE");
+            var arrMsg = Entry.coconut.moveExtMotor(move,speed); //외부모터 앞으로 움직이기
+            //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x1a","0x07","0x03","0x3c"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_set_led_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_left_led,"1"],
+                    [Lang.Blocks.coconut_right_led,"2"],
+                    [Lang.Blocks.coconut_both_leds,"0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_color_red,"2"],
+                    [Lang.Blocks.coconut_color_yellow,"5"],
+                    [Lang.Blocks.coconut_color_green,"3"],
+                    [Lang.Blocks.coconut_color_cyan,"6"],
+                    [Lang.Blocks.coconut_color_blue,"4"],
+                    [Lang.Blocks.coconut_color_magenta,"7"],
+                    [Lang.Blocks.coconut_color_white,"1"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null],
+            "type": "coconut_set_led_to"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "COLOR": 1
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var now = new Date();
+            var dist1 = script.getField("DIST", script);
+            var dist2 = script.getField("COLOR", script);
+            var dir = parseInt(dist1);
+            var color = parseInt(dist2);
+            var arrMsg = Entry.coconut.rgbOn(dir,color); //왼쪽 LED 빨간색으로 켜기
+            //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x19","0x00","0x01","0x02"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log(now + " : rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log(now + " : rev = continue" + pd.msg);
+                } else {
+                    console.log(now + " : rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_clear_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_left_led,"1"],
+                    [Lang.Blocks.coconut_right_led,"2"],
+                    [Lang.Blocks.coconut_both_leds,"0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "coconut_clear_led"
+        },
+        "paramsKeyMap": {
+            "DIST": 0
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist1 = script.getField("DIST", script);
+            var dir = parseInt(dist1);
+            var arrMsg = Entry.coconut.rgbOff(dir); //왼쪽LED 끄기
+            //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x19","0x01","0x01","0x00"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+    },
+    "coconut_set_led_clear": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_left_led,"1"],
+                    [Lang.Blocks.coconut_right_led,"2"],
+                    [Lang.Blocks.coconut_both_leds,"0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_color_red,"2"],
+                    [Lang.Blocks.coconut_color_yellow,"5"],
+                    [Lang.Blocks.coconut_color_green,"3"],
+                    [Lang.Blocks.coconut_color_cyan,"6"],
+                    [Lang.Blocks.coconut_color_blue,"4"],
+                    [Lang.Blocks.coconut_color_magenta,"7"],
+                    [Lang.Blocks.coconut_color_white,"1"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null],
+            "type": "coconut_set_led_clear"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "COLOR": 1
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist1 = script.getField("DIST", script);
+            var dist2 = script.getField("COLOR", script);
+            var dir = parseInt(dist1);
+            var color = parseInt(dist2);
+            var arrMsg = Entry.coconut.rgbOffColor(dir,color); //왼쪽 LED 빨간색 끄기
+            //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x19","0x01","0x01","0x02"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_set_led_time": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_left_led,"Left"],
+                    [Lang.Blocks.coconut_right_led,"Right"],
+                    [Lang.Blocks.coconut_both_leds,"Both"]
+                ],
+                "value": "Left",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_color_red,"2"],
+                    [Lang.Blocks.coconut_color_yellow,"5"],
+                    [Lang.Blocks.coconut_color_green,"3"],
+                    [Lang.Blocks.coconut_color_cyan,"6"],
+                    [Lang.Blocks.coconut_color_blue,"4"],
+                    [Lang.Blocks.coconut_color_magenta,"7"],
+                    [Lang.Blocks.coconut_color_white,"1"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                {
+                    "type": "text",
+                    "params": [ "0.6" ]
+                }
+            ],
+            "type": "coconut_set_led_time"
+        },
+        "paramsKeyMap": {
+            "DIST": 0,
+            "COLOR": 1,
+            "VALUE": 2
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist1 = script.getField("DIST", script);
+            var dist2 = script.getField("COLOR", script);
+            var time = script.getNumberValue("VALUE");
+            var color = parseInt(dist2);
+            var arrMsg = Entry.coconut.ledOnTime(dist1,color,time); //왼쪽 LED 빨간색으로 1초동안 켜기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x19","0x03","0x01","0x02","0xe8","0x03"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_beep": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_beep"
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var arrMsg = Entry.coconut.beep(); //버저 켜기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x06","0x01","0xf4","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_buzzer_time": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0.6" ]
+                }
+            ],
+            "type": "coconut_buzzer_time"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var time = script.getNumberValue("VALUE");
+            var arrMsg = Entry.coconut.playBuzzerTime(time); //버저음을 1초동안 소리내기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x06","0x01","0xe8","0x03"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_buzzer_set_hz": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+                        {
+                "type": "Block",
+                "acce기t": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "300" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0.6" ]
+                }
+            ],
+            "type": "coconut_buzzer_set_hz"
+        },
+        "paramsKeyMap": {
+            "HZ": 0,
+            "TIME": 1
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var hz = script.getNumberValue("HZ");
+            var time = script.getNumberValue("TIME");
+            var arrMsg = Entry.coconut.playBuzzerFreq(hz,time); //버저음 1000hz를 1초동안 소리내기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x2c","0x01","0xe8","0x03"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_clear_buzzer": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_clear_buzzer"
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var arrMsg = Entry.coconut.buzzerOff();//버저 끄기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x00","0x00","0x00","0x00"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_play_buzzer": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_note_c,"NOTE_C"],
+                    [Lang.Blocks.coconut_note_d,"NOTE_D"],
+                    [Lang.Blocks.coconut_note_e,"NOTE_E"],
+                    [Lang.Blocks.coconut_note_f,"NOTE_F"],
+                    [Lang.Blocks.coconut_note_g,"NOTE_G"],
+                    [Lang.Blocks.coconut_note_a,"NOTE_A"],
+                    [Lang.Blocks.coconut_note_b,"NOTE_B"]
+                ],
+                "value": "NOTE_C",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "-", "-" ],
+                    [ "#", "#" ],
+                    [ "b", "b" ],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_play_buzzer_hn,"500"],
+                    [Lang.Blocks.coconut_play_buzzer_qn,"250"],
+                    [Lang.Blocks.coconut_play_buzzer_en,"125"],
+                    [Lang.Blocks.coconut_play_buzzer_sn,"63"],
+                    [Lang.Blocks.coconut_play_buzzer_tn,"32"],
+                    [Lang.Blocks.coconut_play_buzzer_wn,"1000"],
+                    [Lang.Blocks.coconut_play_buzzer_dhn,"750"],
+                    [Lang.Blocks.coconut_play_buzzer_dqn,"375"],
+                    [Lang.Blocks.coconut_play_buzzer_den,"188"],
+                    [Lang.Blocks.coconut_play_buzzer_dsn,"95"],
+                    [Lang.Blocks.coconut_play_buzzer_dtn,"48"]
+                ],
+                "value": "500",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                "4",
+                "-",
+                null
+            ],
+            "type": "coconut_play_buzzer"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0,
+            "OCTAVE": 1,
+            "SEMI" : 2,
+            "BEAT": 3
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist1 = script.getField("NOTE", script);
+            var dist2 = script.getField("OCTAVE", script);
+            var dist3 = script.getField("SEMI", script);
+            var dist4 = script.getField("BEAT", script);
+            var note = dist1;
+            var octave = parseInt(dist2);
+            var semi = dist3
+            var beat = parseInt(dist4);
+            var arrMsg = Entry.coconut.playNote(note, octave, semi, beat); //(도)(3)(-)음을 2분음표 박자로 연주하기
+            //var arrMsg = ["0xff","0x55","0x09","0x00","0x02","0x03","0x04","0x43","0x03","0x2d","0xf4","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_rest_buzzer": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_rest_buzzer_hr,"500"],
+                    [Lang.Blocks.coconut_rest_buzzer_qr,"250"],
+                    [Lang.Blocks.coconut_rest_buzzer_er,"175"],
+                    [Lang.Blocks.coconut_rest_buzzer_sr,"63"],
+                    [Lang.Blocks.coconut_rest_buzzer_tr,"32"],
+                    [Lang.Blocks.coconut_rest_buzzer_wr,"1000"]
+                ],
+                "value": "500",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "coconut_rest_buzzer"
+        },
+        "paramsKeyMap": {
+            "BEAT": 0
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist = script.getField("BEAT", script);
+            var beat = parseInt(dist);
+            var arrMsg = Entry.coconut.restBeat(dist); //2분 쉼표 동안 쉬기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x01","0x00","0x00","0xf4","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_play_buzzer_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALBERT_note_c,"NOTE_C"],
+                    [Lang.Blocks.ALBERT_note_d,"NOTE_D"],
+                    [Lang.Blocks.ALBERT_note_e,"NOTE_E"],
+                    [Lang.Blocks.ALBERT_note_f,"NOTE_F"],
+                    [Lang.Blocks.ALBERT_note_g,"NOTE_G"],
+                    [Lang.Blocks.ALBERT_note_a,"NOTE_A"],
+                    [Lang.Blocks.ALBERT_note_b,"NOTE_B"]
+                ],
+                "value": "NOTE_C",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "-", "-" ],
+                    [ "#", "#" ],
+                    [ "b", "b" ],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_play_buzzer_hn,"500"],
+                    [Lang.Blocks.coconut_play_buzzer_qn,"250"],
+                    [Lang.Blocks.coconut_play_buzzer_en,"125"],
+                    [Lang.Blocks.coconut_play_buzzer_sn,"63"],
+                    [Lang.Blocks.coconut_play_buzzer_tn,"32"],
+                    [Lang.Blocks.coconut_play_buzzer_wn,"1000"],
+                    [Lang.Blocks.coconut_play_buzzer_dhn,"750"],
+                    [Lang.Blocks.coconut_play_buzzer_dqn,"375"],
+                    [Lang.Blocks.coconut_play_buzzer_den,"188"],
+                    [Lang.Blocks.coconut_play_buzzer_dsn,"95"],
+                    [Lang.Blocks.coconut_play_buzzer_dtn,"48"]
+                ],
+                "value": "500",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_left_led,"1"],
+                    [Lang.Blocks.coconut_right_led,"2"],
+                    [Lang.Blocks.coconut_both_leds,"0"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_color_red,"2"],
+                    [Lang.Blocks.coconut_color_yellow,"5"],
+                    [Lang.Blocks.coconut_color_green,"3"],
+                    [Lang.Blocks.coconut_color_cyan,"6"],
+                    [Lang.Blocks.coconut_color_blue,"4"],
+                    [Lang.Blocks.coconut_color_magenta,"7"],
+                    [Lang.Blocks.coconut_color_white,"1"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                "4",
+                "-",
+                null,
+                null,
+                null
+            ],
+            "type": "coconut_play_buzzer_led"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0,
+            "OCTAVE": 1,
+            "SEMI" : 2,
+            "BEAT": 3,
+            "DIR" : 4,
+            "COLOR" : 5
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var dist1 = script.getField("NOTE", script);
+            var dist2 = script.getField("OCTAVE", script);
+            var dist3 = script.getField("SEMI", script);
+            var dist4 = script.getField("BEAT", script);
+            var dist5 = script.getField("DIR", script);
+            var dist6 = script.getField("COLOR", script);
+            var note = dist1
+            var octave = parseInt(dist2);
+            var semi = dist3;
+            var beat = parseInt(dist4);
+            var dir = parseInt(dist5);
+            var color = parseInt(dist6);
+            var arrMsg = Entry.coconut.playNoteColor(note, octave, semi, beat, dir, color);
+            //도 4 - 음을 2분음표 박자로 연주하는 동안 왼쪽 LED 빨간색 켜기
+            //var arrMsg = ["0xff","0x55","0x0b","0x00","0x02","0x03","0x05","0x43","0x04","0x2d","0xf4","0x01","0x01","0x02"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_play_midi": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_play_midi_1,"1"],
+                    [Lang.Blocks.coconut_play_midi_2,"2"],
+                    [Lang.Blocks.coconut_play_midi_3,"3"],
+                    [Lang.Blocks.coconut_play_midi_4,"4"],
+                    [Lang.Blocks.coconut_play_midi_5,"5"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+            ],
+            "type": "coconut_play_midi"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "coconut_buzzer",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            //반짝반짝 작은별 연주하기
+            var value = script.getField("VALUE");
+            var num = parseInt(value);
+            var arrMsg = Entry.coconut.playMelody(num);
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x01","0x07","0x00","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                sq.msgValue = "";
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_floor_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_sensor_left_floor, "1"],
+                    [Lang.Blocks.coconut_sensor_right_floor, "2"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "coconut_floor_sensor"
+        },
+        "paramsKeyMap": {
+            "DIR": 0
+        },
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var dir = script.getField("DIR");
+            if(dir == "1"){
+                return pd.leftFloorValue;
+            }else{
+                return pd.rightFloorValue;
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_floor_sensing": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_sensor_left_floor, "1"],
+                    [Lang.Blocks.coconut_sensor_right_floor, "2"],
+                    [Lang.Blocks.coconut_sensor_both_floor, "0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_floor_sensing_on,"1"],
+                    [Lang.Blocks.coconut_floor_sensing_off,"0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null,null],
+            "type": "coconut_floor_sensing"
+        },
+        "paramsKeyMap": {
+            "DIR": 0,
+            "DET": 1
+        },
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var dir = script.getField("DIR");
+            var det = script.getField("DET");
+            if(dir=="0"){
+                if(det=="1"){
+                     if (pd.BothFloorDetection == 3) //모든 바닥센서가 감지됐나
+                        return true;
+                       else
+                        return false;
+                }else{
+                     if (pd.BothFloorDetection == 0) //모든 바닥센서가 미감지됐나
+                        return true;
+                       else
+                        return false;
+                }
+            }else if(dir=="1"){
+                if(det=="1"){
+                    if (pd.BothFloorDetection == 2) // 왼쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }else{
+                    if (pd.BothFloorDetection == 0) // 왼쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }
+            }else if(dir == "2"){
+                if(det=="1"){
+                    if (pd.BothFloorDetection == 1) // 오른쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }else{
+                    if (pd.BothFloorDetection == 0) // 오른쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_following_line": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_following_line"
+        },
+        "paramsKeyMap": {},
+        "class": "coconut_wheel",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            //선 따라가기
+
+            var arrMsg = Entry.coconut.followLine();
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x07","0x03","0x3c"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_front_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_sensor_left_proximity, "1"],
+                    [Lang.Blocks.coconut_sensor_right_proximity, "2"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "coconut_front_sensor"
+        },
+        "paramsKeyMap": {
+            "DIR": 0
+        },
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var dir = script.getField("DIR");
+            if(dir == "1"){
+                return pd.leftProximityValue;
+            }else{
+                return pd.rightProximityValue;
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_front_sensing": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_sensor_left_proximity, "1"],
+                    [Lang.Blocks.coconut_sensor_right_proximity, "2"],
+                    [Lang.Blocks.coconut_sensor_both_proximity, "0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_floor_sensing_on,"1"],
+                    [Lang.Blocks.coconut_floor_sensing_off,"0"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null,null],
+            "type": "coconut_front_sensing"
+        },
+        "paramsKeyMap": {
+            "DIR": 0,
+            "DET": 1
+        },
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var dir = script.getField("DIR");
+            var det = script.getField("DET");
+            if(dir=="0"){
+                if(det=="1"){
+                     if (pd.BothProximityDetection == 3) //모든 바닥센서가 감지됐나
+                        return true;
+                       else
+                        return false;
+                }else{
+                     if (pd.BothProximityDetection == 0) //모든 바닥센서가 미감지됐나
+                        return true;
+                       else
+                        return false;
+                }
+            }else if(dir=="1"){
+                if(det=="1"){
+                    if (pd.BothProximityDetection == 2 || pd.BothProximityDetection ==3) // 왼쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }else{
+                    if (pd.BothProximityDetection == 0 || pd.BothProximityDetection ==1) // 왼쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }
+            }else if(dir == "2"){
+                if(det=="1"){
+                    if (pd.BothProximityDetection == 1 || pd.BothProximityDetection ==3) // 오른쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }else{
+                    if (pd.BothProximityDetection == 0 || pd.BothProximityDetection ==2) // 오른쪽 바닥센서가 감지
+                        return true;
+                       else
+                        return false;
+                }
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_obstruct_sensing": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_obstruct_sensing"
+        },
+        "paramsKeyMap": {},
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            if (pd.BothProximityDetection > 0)
+            {
+                return true;
+            }
+            return false;
+
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_avoid_mode": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_avoid_mode"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var arrMsg = Entry.coconut.avoidMode(); //어보이드 모드
+            //var arrMsg = ["0xff","0x55","0x04","0x00","0x02","0x05","0x03"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_set": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+
+                    [Lang.Blocks.coconut_dotmatrix_set_on,"1"],
+                    [Lang.Blocks.coconut_dotmatrix_set_off,"0"]
+
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_dotmatrix_row_0,"0"],
+                    [Lang.Blocks.coconut_dotmatrix_row_1,"1"],
+                    [Lang.Blocks.coconut_dotmatrix_row_2,"2"],
+                    [Lang.Blocks.coconut_dotmatrix_row_3,"3"],
+                    [Lang.Blocks.coconut_dotmatrix_row_4,"4"],
+                    [Lang.Blocks.coconut_dotmatrix_row_5,"5"],
+                    [Lang.Blocks.coconut_dotmatrix_row_6,"6"],
+                    [Lang.Blocks.coconut_dotmatrix_row_7,"7"],
+                    [Lang.Blocks.coconut_dotmatrix_row_8,"8"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_dotmatrix_col_0,"0"],
+                    [Lang.Blocks.coconut_dotmatrix_col_1,"1"],
+                    [Lang.Blocks.coconut_dotmatrix_col_2,"2"],
+                    [Lang.Blocks.coconut_dotmatrix_col_3,"3"],
+                    [Lang.Blocks.coconut_dotmatrix_col_4,"4"],
+                    [Lang.Blocks.coconut_dotmatrix_col_5,"5"],
+                    [Lang.Blocks.coconut_dotmatrix_col_6,"6"],
+                    [Lang.Blocks.coconut_dotmatrix_col_7,"7"],
+                    [Lang.Blocks.coconut_dotmatrix_col_8,"8"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                null
+            ],
+            "type": "coconut_dotmatrix_set"
+        },
+        "paramsKeyMap": {
+            "BUTTON" :0,
+            "ROW": 1,
+            "COL": 2,
+
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var row = script.getField("ROW");
+            var col = script.getField("COL");
+            var button = script.getField("BUTTON");
+            var row = parseInt(row);
+            var col = parseInt(col);
+            var button = parseInt(button);
+            var arrMsg = Entry.coconut.ledMatrixOn(button,row, col); //도트매트릭스 켜짐 1줄 1칸
+            //var arrMsg = ["0xff","0x55","0x07","0x00","0x02","0x1b","0x00","0x01","0x01","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_on": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+                {
+                    type: "Indicator",
+                    img: "block_icon/hardware_03.png",
+                    size: 12
+                }
+            ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_dotmatrix_on"
+        },
+        "paramsKeyMap": {},
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var arrMsg = Entry.coconut.ledMatrixOnAll(); //도트매트릭스 모두 켜기
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x01","0x07","0x00","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_off": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_dotmatrix_off"
+        },
+        "paramsKeyMap": {},
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var arrMsg = Entry.coconut.ledMatrixClear(); //도트매트릭스 모두 끄기
+            //var arrMsg = ["0xff","0x55","0x04","0x00","0x02","0x1b","0x05"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_num": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["0","0"],
+                    ["1","1"],
+                    ["2","2"],
+                    ["3","3"],
+                    ["4","4"],
+                    ["5","5"],
+                    ["6","6"],
+                    ["7","7"],
+                    ["8","8"],
+                    ["9","9"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type":"text",
+                    "params":["1"]
+                }
+            ],
+            "type": "coconut_dotmatrix_num"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var value = script.getField("VALUE");
+            var num = parseInt(value);
+            var arrMsg = Entry.coconut.showLedMatrix(num); //도트매트릭스 숫자 1표시
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x01","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_small_eng": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["a","0"],
+                    ["b","1"],
+                    ["c","2"],
+                    ["d","3"],
+                    ["e","4"],
+                    ["f","5"],
+                    ["g","6"],
+                    ["h","7"],
+                    ["i","8"],
+                    ["j","9"],
+                    ["k","10"],
+                    ["l","11"],
+                    ["m","12"],
+                    ["n","13"],
+                    ["o","14"],
+                    ["p","15"],
+                    ["q","16"],
+                    ["r","17"],
+                    ["s","18"],
+                    ["t","19"],
+                    ["u","20"],
+                    ["v","21"],
+                    ["w","22"],
+                    ["x","23"],
+                    ["y","24"],
+                    ["z","25"]
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "coconut_dotmatrix_small_eng"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var value = script.getField("VALUE");
+            var num = parseInt(value);
+            var arrMsg = Entry.coconut.showLedMatrixSmall(num); //도트매트릭스 소문자 a표시
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x02","0x00"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_big_eng": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["A","0"],
+                    ["B","1"],
+                    ["C","2"],
+                    ["D","3"],
+                    ["E","4"],
+                    ["F","5"],
+                    ["G","6"],
+                    ["H","7"],
+                    ["I","8"],
+                    ["J","9"],
+                    ["K","10"],
+                    ["L","11"],
+                    ["M","12"],
+                    ["N","13"],
+                    ["O","14"],
+                    ["P","15"],
+                    ["Q","16"],
+                    ["R","17"],
+                    ["S","18"],
+                    ["T","19"],
+                    ["U","20"],
+                    ["V","21"],
+                    ["W","22"],
+                    ["X","23"],
+                    ["Y","24"],
+                    ["Z","25"]
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "coconut_dotmatrix_big_eng"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var value = script.getField("VALUE");
+            var num = parseInt(value);
+            var arrMsg = Entry.coconut.showLedMatrixLarge(num); //도트매트릭스 대문자 A표시
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x03","0x00"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_dotmatrix_kor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["가","0"],
+                    ["나","1"],
+                    ["다","2"],
+                    ["라","3"],
+                    ["마","4"],
+                    ["바","5"],
+                    ["사","6"],
+                    ["아","7"],
+                    ["자","8"],
+                    ["차","9"],
+                    ["카","10"],
+                    ["타","11"],
+                    ["파","12"],
+                    ["하","13"]
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "coconut_dotmatrix_kor"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var value = script.getField("VALUE");
+            var num = parseInt(value);
+            var arrMsg = Entry.coconut.showLedMatrixKorean(num); //도트매트릭스 한글 가 표시
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x1b","0x04","0x00"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_light_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_light_sensor"
+        },
+        "paramsKeyMap": {},
+        "class": "coconut_sensor",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            return pd.light;
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_tmp_senser": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+        ],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "coconut_light_tmp"
+        },
+        "paramsKeyMap": {},
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            return pd.temp;
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_ac_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.coconut_x_axis,"1"],
+                    [Lang.Blocks.coconut_y_axis,"2"],
+                    [Lang.Blocks.coconut_z_axis,"3"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+        ],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "coconut_ac_sensor"
+        },
+        "paramsKeyMap": {
+            "XYZ": 0
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var xyz = script.getField("XYZ");
+
+            if(xyz == "1"){
+                return pd.accelerationX;
+            }else if(xyz == "2"){
+                return pd.accelerationY;
+            }else{
+                return pd.accelerationZ;
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_outled_sensor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["D4",4],
+                    ["D10",10],
+                    ["D11",11],
+                    ["D12",12],
+                    ["A2",16],
+                    ["A3",17]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+            {
+                "type": "number",
+                "params": [ "1" ]
+            }
+            ],
+            "type": "coconut_outled_sensor"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+            "TIME": 1
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var pin = script.getNumberField("PIN");
+            var time = script.getNumberValue("TIME");
+            var arrMsg = Entry.coconut.extLedOn(pin, time); //외부 LED 설정 D4 0.5초동안 켜기
+            //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x2c","0x04","0xf4","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_outspk_sensor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["D10","10"],
+                    ["D11","11"],
+                ],
+                "value": "10",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+            {
+                "type": "number",
+                "params": [ "100" ]
+            },
+            {
+                "type": "number",
+                "params": [ "0.5" ]
+            }
+            ],
+            "type": "coconut_outspk_sensor"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+            "HZ": 1,
+            "TIME": 2
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var pin = script.getNumberField("PIN");
+            var hz = script.getNumberValue("HZ");
+            var time = script.getNumberValue("TIME");
+            var arrMsg = Entry.coconut.playSpeaker(pin, hz, time); //외부 스피커 설정 D10 100hz로 0.5초 동안 소리내기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x29","0x10","0x64","0x00","0xf4","0x01"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_outspk_sensor_off": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["D10","10"],
+                    ["D11","11"]
+                ],
+                "value": "10",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "coconut_outspk_sensor_off"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var pin = script.getNumberField("PIN");
+            var arrMsg = Entry.coconut.stopSpeaker(pin); //외부스피커 D10 끄기
+            //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x29","0x10","0x00","0x00","0x00","0x00"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_outinfrared_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["A2","16"],
+                    ["A3","17"]
+                ],
+                "value": "16",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "coconut_outinfrared_sensor"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var pin = script.getNumberField("PIN");
+
+            if (pin == "16"){
+                return pd.extA2;
+            }else{
+                return pd.extA3;
+            }
+
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    "coconut_outcds_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["A2","16"],
+                    ["A3","17"]
+                ],
+                "value": "16",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "coconut_outcds_sensor"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var pin = script.getNumberField("PIN");
+            if(pin=="16"){
+                return pd.extA2;
+            }else{
+                return pd.extA3;
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+
+    "coconut_servomotor_angle": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["D4","4"],
+                    ["D10","10"],
+                    ["D11","11"],
+                    ["D12","12"],
+                    ["A2","16"],
+                    ["A3","17"]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "String"
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type":"text",
+                    "params": ["0"]
+                }
+            ],
+            "type": "coconut_servomotor_angle"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+            "ANGLE": 1
+        },
+        "class": "coconut_led",
+        "isNotFor": [ "coconut" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+
+            var pin = script.getNumberField("PIN");
+            var angle = script.getNumberValue("ANGLE");
+            var arrMsg = Entry.coconut.runExtServo(pin, angle); //서보모터 연결 D4 각도 90
+            //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x43","0x04","0x5a"];
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                pd.msgStatus = "start";
+                Entry.coconut.insertQueue(arrMsg, sq);
+                return script;
+            } else if (script.timeFlag == 1) {
+                if (pd.msgStatus == "end")
+                {
+                    console.log("rev = end");
+                    script.timeFlag = 0;
+                } else if (pd.msgStatus == "continue") {
+                    console.log("rev = continue" + pd.msg);
+                } else {
+                    console.log("rev = waiting");
+                }
+                Entry.coconut.clearQueue(sq);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                console.log("rev = ok");
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
+    },
+    chocopi_sensor: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            {
+                type: 'Dropdown', options: [
+                    [Lang.Hw.temp, 'temp'], [Lang.Hw.humidity, 'humi'], [Lang.Hw.light, 'light'],
+                    [Lang.Hw.analog + '1', '0'], [Lang.Hw.analog + '2', '1'], [Lang.Hw.analog + '3', '2']],
+                value: 'temp', fontSize: 11
+            }
+        ],
+        def: { params: [], type: 'chocopi_sensor' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_sensor',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(8, (script.getField('port')))
+            var name = script.getField('sensor')
+            if (port == -1) return 0
+            return Entry.Chocopi.p[port][name];
+        },
+        syntax: { js: [], py: ["Chocopi.sensor(%1, %2)"] }
+    },
+    chocopi_touch_event: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_event',
+        statements: [],
+        params: [
+            { type: "Indicator", img: "block_icon/start_icon_hardware.png", size: 17, position: { x: 0, y: -2 } },
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            {
+                type: 'Dropdown', options: [
+                    [1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5],
+                    [7, 6], [8, 7], [9, 8], [10, 9], [11, 10], [12, 11]
+                ], value: 0, fontSize: 11
+            },
+            { type: 'Dropdown', options: [[Lang.Blocks.chocopi_touch_event_touch, 1], [Lang.Blocks.chocopi_touch_event_untouch, 0]], value: 1, fontSize: 11 }
+        ],
+        def: { params: [], type: 'chocopi_touch_event' },
+        paramsKeyMap: { port: 1, id: 2, status: 3 },
+        class: 'chocopi_touch',
+        isNotFor: ['chocopi'],
+        event: 'touch14',
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(9, (script.getField('port')))
+            if (port == -1) return this.die()
+            var id = script.getField('id')
+            var status = script.getField('status')
+            var ev = Entry.Chocopi.ev[port]
+            if (((ev.id >> (id)) & 1) != 1 || (((Entry.Chocopi.p[port].ts >> (id)) & 1) != status)) {
+                return this.die()
+            }
+            return script.callReturn()
+        },
+        syntax: { "js": [], "py": ["def on_chocopi_touch(%2, %3, %4 ):"] }
+    },
+    chocopi_touch_status: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_boolean_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            {
+                type: 'Dropdown', options: [
+                    [1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5],
+                    [7, 6], [8, 7], [9, 8], [10, 9], [11, 10], [12, 11]
+                ], value: 0, fontSize: 11
+            }
+        ],
+        def: { params: [], type: 'chocopi_touch_status' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_touch',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(9, (script.getField('port')))
+            var sensor = script.getField('sensor')
+            if (port == -1) return false
+            return ((Entry.Chocopi.p[port].ts & (1 << sensor)) > 0);
+        },
+        syntax: { js: [], py: ["Chocopi.touchStatus(%1, %2)"] }
+    },
+    chocopi_touch_value: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            {
+                type: 'Dropdown', options: [
+                    [1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5],
+                    [7, 6], [8, 7], [9, 8], [10, 9], [11, 10], [12, 11]
+                ], value: 0, fontSize: 11
+            }
+        ],
+        def: { params: [], type: 'chocopi_touch_value' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_touch',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(9, (script.getField('port')))
+            if (port == -1) return false
+            var sensor = script.getField('sensor')
+            return Entry.Chocopi.p[port].tv[sensor]
+        },
+        syntax: { "js": [], "py": ["Chocopi.touchValue(%1, %2)"] }
+    },
+    chocopi_control_event: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_event',
+        statements: [],
+        params: [
+            { type: "Indicator", img: "block_icon/start_icon_hardware.png", size: 17, position: { x: 0, y: -2 } },
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            { type: 'Dropdown', options: [[Lang.Hw.button + '1', 0], [Lang.Hw.button + '2', 1], [Lang.Hw.button + '3', 2], [Lang.Hw.button + '4', 3]], value: '0', fontSize: 11 },
+            {
+                type: 'Dropdown', options: [
+                    [Lang.Blocks.chocopi_control_event_pressed, 1], [Lang.Blocks.chocopi_control_event_released, 0]
+                ], value: 1, fontSize: 11
+            }
+        ],
+        def: { params: [], type: 'chocopi_control_event' },
+        paramsKeyMap: { port: 1, id: 2, status: 3 },
+        class: 'chocopi_control',
+        isNotFor: ['chocopi'],
+        event: 'control14',
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(10, (script.getField('port')))
+            if (port == -1) return this.die()
+            var id = script.getField('id')
+            var status = script.getField('status')
+            var ev = Entry.Chocopi.ev[port]
+            if (((ev.id >> (4 - id)) & 1) != 1 || (ev.btn[id] != status)) {
+                return this.die()
+            }
+            return script.callReturn()
+        },
+        syntax: { "js": [], "py": ["def on_chocopi_control_button(%2, %3, %4 ):"] }
+    },
+    chocopi_control_joystick: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            { type: 'Dropdown', options: [[Lang.Blocks.chocopi_joystick_X, 0], [Lang.Blocks.chocopi_joystick_Y, 1], [Lang.Blocks.chocopi_pot, 2]], value: 0, fontSize: 11 }
+        ],
+        def: { params: [null], type: 'chocopi_control_joystick' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_control',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(10, (script.getField('port')))
+            if (port == -1) return false
+            var sensor = script.getField('sensor')
+            return Entry.Chocopi.p[port].xyp[sensor]
+        },
+        syntax: { "js": [], "py": ["Chocopi.joystick(%1, %2)"] }
+    },
+    chocopi_control_button: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_boolean_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            { type: 'Dropdown', options: [[Lang.Hw.button + '1', 0], [Lang.Hw.button + '2', 1], [Lang.Hw.button + '3', 2], [Lang.Hw.button + '4', 3]], value: '0', fontSize: 11 }
+        ],
+        def: { params: [null], type: 'chocopi_control_button' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_control',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(10, (script.getField('port')))
+            if (port == -1) return false
+            var sensor = script.getField('sensor')
+            if (!Entry.Chocopi.ev[port]) return 0
+            return Entry.Chocopi.ev[port].btn[sensor]
+        },
+        syntax: { "js": [], "py": ["Chocopi.button(%1, %2)"] }
+    },
+    chocopi_motion_photogate_time: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            { type: 'Dropdown', options: [[1, 0], [2, 1]], value: '0', fontSize: 11 },
+            { type: 'Dropdown', options: [[Lang.Blocks.chocopi_motion_photogate_time_unblocked, 0], [Lang.Blocks.chocopi_motion_photogate_time_blocked, 1]], value: 1, fontSize: 11 }
+        ],
+        def: { params: [null], type: 'chocopi_motion_photogate_time' },
+        paramsKeyMap: { port: 0, sensor: 1, action: 2 },
+        class: 'chocopi_motion',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(11, (script.getField('port')))
+            if (port == -1) return 0
+            var sensor = script.getField('sensor')
+            var action = script.getField('action')
+            if (!Entry.Chocopi.ev[port]) return 0
+            return Entry.Chocopi.ev[port].time[sensor][action]
+        },
+        syntax: { "js": [], "py": ["Chocopi.photogateTime(%1, %2, %3)"] }
+    },
+    chocopi_motion_value: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            {
+                type: 'Dropdown', options: [
+                    [Lang.Hw.IR + ' 1', 0],
+                    [Lang.Hw.IR + ' 2', 1],
+                    [Lang.Hw.IR + ' 3', 2],
+                    [Lang.Hw.acceleration + 'X', 3],
+                    [Lang.Hw.acceleration + 'Y', 4],
+                    [Lang.Hw.acceleration + 'Z', 5],
+                    [Lang.Hw.angular_acceleration + 'U', 6],
+                    [Lang.Hw.angular_acceleration + 'V', 7],
+                    [Lang.Hw.angular_acceleration + 'W', 8],
+                ], value: '0', fontSize: 11
+            },
+        ],
+        def: { params: [null], type: 'chocopi_motion_value' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_motion',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(11, (script.getField('port')))
+            if (port == -1) return 0
+            var sensor = script.getField('sensor')
+            return Entry.Chocopi.p[port].s[sensor]
+        },
+        syntax: { "js": [], "py": ["Chocopi.motionValue(%1, %2)"] }
+    },
+    chocopi_motion_photogate_status: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_boolean_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            {
+                type: 'Dropdown', options: [
+                    ['1', 0], ['2', 1],
+                ], value: 0, fontSize: 11
+            },
+        ],
+        def: { params: [null], type: 'chocopi_motion_photogate_status' },
+        paramsKeyMap: { port: 0, sensor: 1 },
+        class: 'chocopi_motion',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(11, (script.getField('port')))
+            if (port == -1) return 0
+            var sensor = script.getField('sensor')
+            if (!Entry.Chocopi.ev[port]) return 0
+            return Entry.Chocopi.ev[port].pg[sensor]
+        },
+        syntax: { "js": [], "py": ["Chocopi.motionPhotogateStatus(%1, %2)"] }
+    },
+    chocopi_motion_photogate_event: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_event',
+        statements: [],
+        params: [
+            { type: "Indicator", img: "block_icon/start_icon_hardware.png", size: 17, position: { x: 0, y: -2 } },
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            {
+                type: 'Dropdown', options: [
+                    [1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5],
+                    [7, 6], [8, 7], [9, 8], [10, 9], [11, 10], [12, 11]
+                ], value: 0, fontSize: 11
+            },
+            {
+                type: 'Dropdown', options: [
+                    [Lang.Blocks.chocopi_motion_photogate_event_unblocked, 0], [Lang.Blocks.chocopi_motion_photogate_event_blocked, 1]
+                ], value: 1, fontSize: 11
+            }
+        ],
+        def: { params: [], type: 'chocopi_motion_photogate_event' },
+        paramsKeyMap: { port: 1, id: 2, status: 3 },
+        class: 'chocopi_motion',
+        isNotFor: ['chocopi'],
+        event: 'motion14',
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(11, (script.getField('port')))
+            if (port == -1) return this.die()
+            var id = script.getField('id')
+            var status = script.getField('status')
+            if (Entry.Chocopi.ev[port].pg[id] != status) {
+                return this.die()
+            }
+
+            return script.callReturn()
+        },
+        syntax: { "js": [], "py": ["def on_chocopi_photogate(%2, %3, %4 ):"] }
+    },
+    chocopi_led: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            { type: 'Block', accept: 'string' },
+            { type: 'Block', accept: 'string' },
+            { type: 'Block', accept: 'string' },
+            { type: 'Block', accept: 'string' },
+            { type: "Indicator", img: "block_icon/hardware_03.png", size: 12 }
+        ],
+        def: { params: [null, { type: 'number', params: [1] }, { type: 'number', params: [2] }, { type: 'number', params: [1] }, { type: 'number', params: [1] }], type: 'chocopi_led' },
+        paramsKeyMap: { port: 0, l: 1, r: 2, g: 3, b: 4 },
+        class: 'chocopi_output',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(12, (script.getField('port')))
+            if (port == -1) return script.callReturn()
+            var l = script.getNumberValue('l')
+            var r = script.getNumberValue('r')
+            var g = script.getNumberValue('g')
+            var b = script.getNumberValue('b')
+            console.log([l, r, g, b])
+            Entry.hw.sendQueue.data[port] = [l, r, g, b]
+            Entry.hw.update()
+            delete Entry.hw.sendQueue.data[port]
+            return script.callReturn()
+        },
+        syntax: { "js": [], "py": ["Chocopi.LED(%1, %2, %3, %4, %5)"] }
+    },
+    chocopi_dc_motor: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            { type: 'Dropdown', options: [['1', 0], ['2', 1]], value: 0, fontSize: 11 },
+            { type: 'Block', accept: 'string' },
+            { type: 'Dropdown', options: [[Lang.General.clock, 0], [Lang.General.counter_clock, 1]], value: 0, fontSize: 11 },
+            { type: "Indicator", img: "block_icon/hardware_03.png", size: 12 }
+        ],
+        def: { params: [null, null, { type: 'number', params: [31] }], type: 'chocopi_dc_motor' },
+        paramsKeyMap: { port: 0, id: 1, power: 2, direction: 3 },
+        class: 'chocopi_output',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(14, (script.getField('port')))
+            if (port == -1) return script.callReturn()
+            var id = script.getField('id')
+            var s = script.getNumberValue('power')
+            var d = script.getField('direction')
+            Entry.hw.sendQueue.data[port] = [id, s, d]
+            Entry.hw.update()
+            delete Entry.hw.sendQueue.data[port]
+            return script.callReturn()
+        },
+        syntax: { "js": [], "py": ["Chocopi.DCmotor(%1, %2, %3, %4)"] }
+    },
+    chocopi_servo_motor: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options:  [
+                    [Lang.Blocks.chocopi_port+'1', 0],[Lang.Blocks.chocopi_port+'2', 1],[Lang.Blocks.chocopi_port+'3', 2],[Lang.Blocks.chocopi_port+'4', 3],
+                    [Lang.Blocks.chocopi_port+'5', 4],[Lang.Blocks.chocopi_port+'6', 5],[Lang.Blocks.chocopi_port+'7', 6],[Lang.Blocks.chocopi_port+'8', 7],
+                    ['BLE1', 8],['BLE2', 9],['BLE3', 10],['BLE4', 11],   ['BLE5', 12],['BLE6', 13],['BLE7', 14],['BLE8', 15],
+                ], value: 0
+            },
+            { type: 'Dropdown', options: [['1', 0], ['2', 1], ['3', 2], ['4', 3]], value: 0, fontSize: 11 },
+            { type: 'Block', accept: 'string' },
+            { type: "Indicator", img: "block_icon/hardware_03.png", size: 12 }
+        ],
+        def: { params: [null, null, { type: 'number', params: [90] }], type: 'chocopi_servo_motor' },
+        paramsKeyMap: { port: 0, id: 1, angle: 2 },
+        class: 'chocopi_output',
+        isNotFor: ['chocopi'],
+        func: function (sprite, script) {
+            var port = Entry.Chocopi.getport(15, (script.getField('port')))
+            if (port == -1) return script.callReturn()
+            var id = script.getField('id')
+            var a = script.getNumberValue('angle')
+            Entry.hw.sendQueue.data[port] = [id, a]
+            Entry.hw.update()
+            delete Entry.hw.sendQueue.data[port]
+            return script.callReturn()
+        },
+        syntax: { "js": [], "py": ["Chocopi.servo(%1, %2, %3)"] }
+    },
+    // rokoboard Implementation
+    "rokoboard_get_sensor_value_by_name": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.rokoboard_sensor_name_1,"1"],
+                    [Lang.Blocks.rokoboard_sensor_name_0,"0"],
+                    [Lang.Blocks.rokoboard_sensor_name_2,"2"],
+                    [Lang.Blocks.rokoboard_sensor_name_3,"3"],
+                    [Lang.Blocks.rokoboard_sensor_name_4,"4"],
+                    [Lang.Blocks.rokoboard_sensor_name_5,"5"],
+                    [Lang.Blocks.rokoboard_sensor_name_6,"6"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "rokoboard_get_sensor_value_by_name"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "rokoboard_sensor",
+        "isNotFor": [ "rokoboard" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            return (ANALOG) ? ANALOG[port] || 0 : 0;
+        }
+    },
+    "rokoboard_is_button_pressed": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.rokoboard_string_1,
+                "color": "#fff"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "rokoboard_is_button_pressed"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "rokoboard_sensor",
+        "isNotFor": [ "rokoboard" ],
+        "func": function (sprite, script) {
+            var port = 7;
+            var ANALOG = Entry.hw.portData.ANALOG;
+            return (ANALOG) ? (ANALOG[port] < 1) : false ;
+        }
+    },
+    //Altino start
+    "altino_analogValue": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.ALTINO_CDS, "cds"],
+                [Lang.Blocks.ALTINO_IR1, "ir1"],
+                [Lang.Blocks.ALTINO_IR2, "ir2"],
+                [Lang.Blocks.ALTINO_IR3, "ir3"],
+                [Lang.Blocks.ALTINO_IR4, "ir4"],
+                [Lang.Blocks.ALTINO_IR5, "ir5"],
+                [Lang.Blocks.ALTINO_IR6, "ir6"],
+                [Lang.Blocks.ALTINO_TOR1, "tor1"],
+                [Lang.Blocks.ALTINO_TOR2, "tor2"],
+                [Lang.Blocks.ALTINO_TEM, "tem"],
+                [Lang.Blocks.ALTINO_ACCX, "accx"],
+                [Lang.Blocks.ALTINO_ACCY, "accy"],
+                [Lang.Blocks.ALTINO_ACCZ, "accz"],
+                [Lang.Blocks.ALTINO_MAGX, "magx"],
+                [Lang.Blocks.ALTINO_MAGY, "magy"],
+                [Lang.Blocks.ALTINO_MAGZ, "magz"],
+                [Lang.Blocks.ALTINO_GYROX, "gyrox"],
+                [Lang.Blocks.ALTINO_GYROY, "gyroy"],
+                [Lang.Blocks.ALTINO_GYROZ, "gyroz"],
+                [Lang.Blocks.ALTINO_STVAR, "stvar"],
+                [Lang.Blocks.ALTINO_STTOR, "sttor"],
+                [Lang.Blocks.ALTINO_BAT, "bat"],
+                [Lang.Blocks.ALTINO_REMOTE, "remote"],
+            ],
+            "value": "cds",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "altino_analogValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "altino_sensor",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            return pd[dev];
+        },
+        "syntax": { "js": [], "py": ["Altino.analog_value(%1)"] }
+    },
+    "altino_steering": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALTINO_Steering_Angle_Center, "Center"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Left5, "Left5"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Left10, "Left10"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Left15, "Left15"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Left20, "Left20"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Right5, "Right5"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Right10, "Right10"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Right15, "Right15"],
+                    [Lang.Blocks.ALTINO_Steering_Angle_Right20, "Right20"],
+                ],
+                "value": "Center",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null],
+            "type": "altino_steering"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0
+        },
+        "class": "altino_motor",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var direction = script.getField("DIRECTION", script);
+
+            if (direction == "Center") {
+                sq.steering = 2;
+            } else if (direction == "Left5") {
+                sq.steering = 160;
+            } else if (direction == "Left10") {
+                sq.steering = 192;
+            } else if (direction == "Left15") {
+                sq.steering = 224;
+            } else if (direction == "Left20") {
+                sq.steering = 255;
+            } else if (direction == "Right5") {
+                sq.steering = 32;
+            } else if (direction == "Right10") {
+                sq.steering = 64;
+            } else if (direction == "Right15") {
+                sq.steering = 96;
+            } else if (direction == "Right20") {
+                sq.steering = 127;
+            }
+
+
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": ["Altino.steering(%1,%2)"] }
+    },
+    "altino_rear_wheel": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "text",
+                    "params": ["300"]
+                },
+                {
+                    "type": "text",
+                    "params": ["300"]
+                },
+                null
+            ],
+            "type": "altino_rear_wheel"
+        },
+        "paramsKeyMap": {
+            "rightWheel": 0,
+            "leftWheel": 1
+        },
+        "class": "altino_motor",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+
+            sq.rightWheel = script.getNumberValue('rightWheel');
+            sq.leftWheel = script.getNumberValue('leftWheel');
+
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": ["Altino.rear_wheel(%1, %2)"] }
+    },
+    "altino_sound": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Dropdown",
+                "options": [
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["5", "5"],
+                    ["6", "6"],
+                    ["7", "7"]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALTINO_h, "NOT"],
+                    [Lang.Blocks.ALTINO_c, "C"],
+                    [Lang.Blocks.ALTINO_c2, "C#"],
+                    [Lang.Blocks.ALTINO_d, "D"],
+                    [Lang.Blocks.ALTINO_d2, "D#"],
+                    [Lang.Blocks.ALTINO_e, "E"],
+                    [Lang.Blocks.ALTINO_f, "F"],
+                    [Lang.Blocks.ALTINO_f2, "F#"],
+                    [Lang.Blocks.ALTINO_g, "G"],
+                    [Lang.Blocks.ALTINO_g2, "G#"],
+                    [Lang.Blocks.ALTINO_a, "A"],
+                    [Lang.Blocks.ALTINO_a2, "A#"],
+                    [Lang.Blocks.ALTINO_b, "B"]
+                ],
+                "value": "NOT",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "altino_sound"
+        },
+        "paramsKeyMap": {
+            "OCTAVE": 0,
+            "NOTE": 1
+        },
+        "class": "altino_display",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var octave = script.getStringField("OCTAVE", script);
+            var note = script.getStringField("NOTE", script);
+            var octave_int = octave + note;
+
+            if (note == "NOT") sq.note = 0;
+            else if (octave_int == "2C") sq.note = 13;
+            else if (octave_int == "2C#") sq.note = 14;
+            else if (octave_int == "2D") sq.note = 15;
+            else if (octave_int == "2D#") sq.note = 16;
+            else if (octave_int == "2E") sq.note = 17;
+            else if (octave_int == "2F") sq.note = 18;
+            else if (octave_int == "2F#") sq.note = 19;
+            else if (octave_int == "2G") sq.note = 20;
+            else if (octave_int == "2G#") sq.note = 21;
+            else if (octave_int == "2A") sq.note = 22;
+            else if (octave_int == "2A#") sq.note = 23;
+            else if (octave_int == "2B") sq.note = 24;
+            else if (octave_int == "3C") sq.note = 25;
+            else if (octave_int == "3C#") sq.note = 26;
+            else if (octave_int == "3D") sq.note = 27;
+            else if (octave_int == "3D#") sq.note = 28;
+            else if (octave_int == "3E") sq.note = 29;
+            else if (octave_int == "3F") sq.note = 30;
+            else if (octave_int == "3F#") sq.note = 31;
+            else if (octave_int == "3G") sq.note = 32;
+            else if (octave_int == "3G#") sq.note = 33;
+            else if (octave_int == "3A") sq.note = 34;
+            else if (octave_int == "3A#") sq.note = 35;
+            else if (octave_int == "3B") sq.note = 36;
+            else if (octave_int == "4C") sq.note = 37;
+            else if (octave_int == "4C#") sq.note = 38;
+            else if (octave_int == "4D") sq.note = 39;
+            else if (octave_int == "4D#") sq.note = 40;
+            else if (octave_int == "4E") sq.note = 41;
+            else if (octave_int == "4F") sq.note = 42;
+            else if (octave_int == "4F#") sq.note = 43;
+            else if (octave_int == "4G") sq.note = 44;
+            else if (octave_int == "4G#") sq.note = 45;
+            else if (octave_int == "4A") sq.note = 46;
+            else if (octave_int == "4A#") sq.note = 47;
+            else if (octave_int == "4B") sq.note = 48;
+            else if (octave_int == "5C") sq.note = 49;
+            else if (octave_int == "5C#") sq.note = 50;
+            else if (octave_int == "5D") sq.note = 51;
+            else if (octave_int == "5D#") sq.note = 52;
+            else if (octave_int == "5E") sq.note = 53;
+            else if (octave_int == "5F") sq.note = 54;
+            else if (octave_int == "5F#") sq.note = 55;
+            else if (octave_int == "5G") sq.note = 56;
+            else if (octave_int == "5G#") sq.note = 57;
+            else if (octave_int == "5A") sq.note = 58;
+            else if (octave_int == "5A#") sq.note = 59;
+            else if (octave_int == "5B") sq.note = 60;
+            else if (octave_int == "6C") sq.note = 61;
+            else if (octave_int == "6C#") sq.note = 62;
+            else if (octave_int == "6D") sq.note = 63;
+            else if (octave_int == "6D#") sq.note = 64;
+            else if (octave_int == "6E") sq.note = 65;
+            else if (octave_int == "6F") sq.note = 66;
+            else if (octave_int == "6F#") sq.note = 67;
+            else if (octave_int == "6G") sq.note = 68;
+            else if (octave_int == "6G#") sq.note = 69;
+            else if (octave_int == "6A") sq.note = 70;
+            else if (octave_int == "6A#") sq.note = 71;
+            else if (octave_int == "6B") sq.note = 72;
+            else if (octave_int == "7C") sq.note = 73;
+            else if (octave_int == "7C#") sq.note = 74;
+            else if (octave_int == "7D") sq.note = 75;
+            else if (octave_int == "7D#") sq.note = 76;
+            else if (octave_int == "7E") sq.note = 77;
+            else if (octave_int == "7F") sq.note = 78;
+            else if (octave_int == "7F#") sq.note = 79;
+            else if (octave_int == "7G") sq.note = 80;
+            else if (octave_int == "7G#") sq.note = 81;
+            else if (octave_int == "7A") sq.note = 82;
+            else if (octave_int == "7A#") sq.note = 83;
+            else if (octave_int == "7B") sq.note = 84;
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": ["Altino.sound(%1, %2)"] }
+    },
+    "altino_light": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALTINO_Led_Forward_Light, "2"],
+                    [Lang.Blocks.ALTINO_Led_Reverse_Light, "3"],
+                    [Lang.Blocks.ALTINO_Led_Brake_Light, "4"],
+                    [Lang.Blocks.ALTINO_Led_Turn_Left_Light, "5"],
+                    [Lang.Blocks.ALTINO_Led_Turn_Right_Light, "6"],
+                ],
+                "value": "2",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALTINO_h2, "255"],
+                    [Lang.Blocks.ALTINO_h, "0"]
+                ],
+                "value": "255",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "altino_light"
+        },
+        "paramsKeyMap": {
+            "SELECT": 0,
+            "ONOFF": 1
+        },
+        "class": "altino_display",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var select = script.getStringField("SELECT", script);
+            var onoff = script.getStringField("ONOFF", script);
+
+            if (select == "2" && onoff == "255") {
+                sq.led = sq.led | 0x03;
+            } else if (select == "2" && onoff == "0") {
+                sq.led = sq.led & 0xFC;
+            }
+
+            if (select == "3" && onoff == "255") {
+                sq.led = sq.led | 0x0C;
+            } else if (select == "3" && onoff == "0") {
+                sq.led = sq.led & 0xF3;
+            }
+
+            if (select == "4" && onoff == "255") {
+                sq.led2 = sq.led2 | 0xC1;
+            } else if (select == "4" && onoff == "0") {
+                sq.led2 = sq.led2 & 0x3F;
+            }
+
+            if (select == "5" && onoff == "255") {
+                sq.led = sq.led | 0xA0;
+            } else if (select == "5" && onoff == "0") {
+                sq.led = sq.led & 0x5F;
+            }
+
+            if (select == "6" && onoff == "255") {
+                sq.led = sq.led | 0x50;
+            } else if (select == "6" && onoff == "0") {
+                sq.led = sq.led & 0xAF;
+            }
+
+            //sq.led = 0xff;
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": ["Altino.light(%1, %2)"] }
+    },
+    "altino_dot_display": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "text",
+                    "params": ["A"]
+                },
+                null
+            ],
+            "type": "altino_dot_display"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "altino_display",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var str = script.getStringValue('VALUE');
+            sq.ascii = str.charCodeAt(0);
+
+            return script.callReturn();
+
+        },
+        "syntax": {
+            "js": [],
+            "py": [{
+                syntax: "Altino.dot_display(%1)",
+                textParams: [{
+                    "type": "Block",
+                    "accept": "string"
+                }]
+            }]
+        }
+    },
+    "altino_dot_display_line": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                {
+                    "type": "text",
+                    "params": ["0xff"]
+                },
+                null
+            ],
+            "type": "altino_dot_display_line"
+        },
+        "paramsKeyMap": {
+            "VALUE1": 0,
+            "VALUE2": 1,
+            "VALUE3": 2,
+            "VALUE4": 3,
+            "VALUE5": 4,
+            "VALUE6": 5,
+            "VALUE7": 6,
+            "VALUE8": 7
+        },
+        "class": "altino_display",
+        "isNotFor": ["altino"],
+        "func": function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            sq.ascii=0;
+            sq.dot1 = script.getNumberValue('VALUE1');
+            sq.dot2 = script.getNumberValue('VALUE2');
+            sq.dot3 = script.getNumberValue('VALUE3');
+            sq.dot4 = script.getNumberValue('VALUE4');
+            sq.dot5 = script.getNumberValue('VALUE5');
+            sq.dot6 = script.getNumberValue('VALUE6');
+            sq.dot7 = script.getNumberValue('VALUE7');
+            sq.dot8 = script.getNumberValue('VALUE8');
+
+            return script.callReturn();
+        }
+    },
+    //Altino end
+    "register_score": {
+        "color": "#7C7C7C",
+        "skeleton": "basic",
+        "template": "%1를 %2로 정하기 %3",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "score"
+            },
+            {
+                "type": "TextInput",
+                "value": "1"
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {
+        },
+        "def": {
+            "params": [
+                'score',
+                1
+            ],
+            "type": "register_score"
+        },
+        "class": "checker",
+        "isNotFor": [ "checker" ],
+        "func": function (sprite, script) {
+            var obj = {};
+            obj[this.block.params[0]] = this.block.params[1];
+            if (typeof entrylms !== 'undefined')
+                entrylms.emit('registerScore', obj);
+            return script.callReturn();
+        }
+    },
+
 };
 
 (function() {

@@ -19,7 +19,13 @@ Entry.FieldDropdown = function(content, blockView, index) {
 
     this._contents = content;
     this._noArrow = content.noArrow;
-    this._arrowColor = content.arrowColor;
+
+    var arrowColor = content.arrowColor;
+    if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+        arrowColor = blockView._fillColor;
+    }
+
+    this._arrowColor = arrowColor;
     this._index = index;
     this.setValue(this.getValue());
 
@@ -179,12 +185,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 elem.bind('mouseup touchend', function(e){
                     e.stopPropagation();
                     that.applyValue(value);
-                    that.destroyOption();
+                    that.destroyOption(undefined, true);
                     that._selectBlockView();
                 });
             })(element, value);
         }
         this._position();
+
+        this.optionDomCreated();
     };
 
     p._position = function() {
@@ -284,5 +292,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var textValue = this.getTextByValue(this.getValue());
         this.textElement.textContent =
             this._convert(textValue, this.getValue());
+    };
+
+    p.getTextValue = function() {
+        return this.textElement.textContent;
     };
 })(Entry.FieldDropdown.prototype);

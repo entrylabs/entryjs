@@ -148,6 +148,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
             left:pos.x,
             top:pos.y
         });
+        this.optionDomCreated();
 
     };
 

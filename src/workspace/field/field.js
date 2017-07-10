@@ -18,22 +18,24 @@ Entry.Field = function() {};
         this.destroyOption();
     };
 
-    p.command = function() {
-        if (this._startValue) {
-            if (this._startValue !== this.getValue() && !this._blockView.isInBlockMenu) {
-                Entry.do(
-                    'setFieldValue',
-                    this._block, this,
-                    this.pointer(),
-                    this._startValue,
-                    this.getValue()
-                );
-            }
-        };
+    p.command = function(forceCommand) {
+        if (!this._blockView.isInBlockMenu && this._startValue !== undefined &&
+            (forceCommand || this._startValue !== this.getValue())) {
+            Entry.do(
+                'setFieldValue',
+                this.pointer(),
+                this._nextValue || this.getValue(),
+                this._code
+            );
+            delete this._nextValue;
+            delete this._code;
+        }
         delete this._startValue;
     };
 
-    p.destroyOption = function() {
+    p.destroyOption = function(skipCommand, forceCommand) {
+        this.isEditing() && Entry.Utils.blur();
+
         if (this.documentDownEvent) {
             Entry.documentMousedown.detach(this.documentDownEvent);
             delete this.documentDownEvent;
@@ -45,23 +47,21 @@ Entry.Field = function() {};
         }
 
         if (this.optionGroup) {
-            var blur = this.optionGroup.blur;
-            if (blur && Entry.Utils.isFunction(blur))
-                this.optionGroup.blur();
             this.optionGroup.remove();
             delete this.optionGroup;
         }
 
-        this.command();
+        this._isEditing = false;
+
+        skipCommand !== true && this.command(forceCommand);
     };
 
     p._attachDisposeEvent = function(func) {
         var that = this;
 
-        func = func || function() {
-            that.destroyOption();
+        func = func || function(skipCommand) {
+            that.destroyOption(skipCommand);
         };
-
         that.disposeEvent =
             Entry.disposeEvent.attach(that, func);
     };
@@ -164,11 +164,11 @@ Entry.Field = function() {};
         if (this._contents && this._contents.reference && this._contents.reference.length) {
             var ref = this._contents.reference.concat();
             var index = ref.pop();
-            var targetBlock = this._block.params[this._index]
+            var targetBlock = this._block.params[this._index];
             if (ref.length && ref[0][0] === "%")
                 targetBlock = this._block.params[parseInt(ref.shift().substr(1)) - 1];
             if (ref.length)
-                targetBlock = targetBlock.getDataByPointer(ref)
+                targetBlock = targetBlock.getDataByPointer(ref);
             targetBlock.params[index] = value;
         } else
             this._block.params[this._index] = value;
@@ -203,9 +203,11 @@ Entry.Field = function() {};
 
         $(this.svgGroup).bind('mouseup touchend', function(e){
             if (that._isEditable()) {
+                that._code = that.getCode();
                 that.destroyOption();
                 that._startValue = that.getValue();
                 that.renderOptions();
+                that._isEditing = true;
             }
         });
     };
@@ -266,6 +268,68 @@ Entry.Field = function() {};
         var obj = this._block.getCode().object;
         return value === '?' ||
             !obj || obj.constructor !== Entry.EntryObject;
+    };
+
+    p.isEditing = function(value) {
+        return !!this._isEditing;
+    };
+
+    p.getDom = function(query) {
+        if (query.length) {
+            var key = query.shift();
+            if (key === "option")
+                return this.optionGroup;
+
+        }
+
+        return this.svgGroup;
+    };
+
+    p.optionDomCreated = function() {
+        this._blockView.getBoard().workspace.widgetUpdateEvent.notify();
+    };
+
+    p.fixNextValue = function(value) {
+        this._nextValue = value;
+    };
+
+    p.getFieldRawType = function() {
+        if (this instanceof Entry.FieldTextInput)
+            return 'textInput';
+        else if (this instanceof Entry.FieldDropdown)
+            return 'dropdown';
+        else if (this instanceof Entry.FieldDropdownDynamic)
+            return 'dropdownDynamic';
+        else if (this instanceof Entry.FieldKeyboard)
+            return 'keyboard';
+    };
+
+    p.getTextValueByValue = function(value) {
+        switch (this.getFieldRawType()) {
+            case 'keyboard':
+                return Entry.getKeyCodeMap()[value];
+            case 'dropdown':
+            case 'dropdownDynamic':
+                var options = this._contents.options;
+                for (var i=0; i<options.length; i++) {
+                    var o = options[i];
+                    if (o[1] === value)
+                        return o[0];
+                }
+                break;
+            case 'textInput':
+                return value;
+        }
+    };
+
+    p.getBoard = function() {
+        var view = this._blockView;
+        return view && view.getBoard();
+    };
+
+    p.getCode = function() {
+        var board = this.getBoard();
+        return board && board.code;
     };
 
 })(Entry.Field.prototype);
