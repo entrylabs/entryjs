@@ -20,15 +20,17 @@ describe('EntryPython', function(){
             var pythonOutput = blockToPyParser.Thread(new Entry.Thread([blockSchema.def], code));
             var blockOutput = pyToBlockParser.processProgram([filbert.parse(pythonOutput, options)]);
             var secondPythonOutput = blockToPyParser.Thread(new Entry.Thread(blockOutput[0], code));
-            console.log(
-                pythonOutput,
-                secondPythonOutput,
-                blockOutput
-            );
+            if (pythonOutput !== secondPythonOutput)
+                console.log(
+                    pythonOutput,
+                    secondPythonOutput,
+                    blockOutput
+                );
             assert.equal(pythonOutput, secondPythonOutput);
         });
     }
 
+    /*
     describe('should convert block', function(){
         for (var i = 0; i < allCategories.length; i++) {
             var blocks = allCategories[i].blocks;
@@ -45,4 +47,20 @@ describe('EntryPython', function(){
             }
         }
     });
+    */
+
+    describe('should convert block', function(){
+        it ("move direction", function() {
+            assert.ok(Test.pythonToBlock(
+                "Entry.move_to_direction(10)",
+                [[{
+                    type: "move_direction",
+                    params: [{
+                        params: [10]
+                    }]
+                }]]
+            ));
+        });
+    });
+
 });
