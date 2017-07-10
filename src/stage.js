@@ -215,7 +215,6 @@ Entry.Stage.prototype.unloadEntity = function(entity) {
     var scene = entity.parent.scene;
     var objContainer = Entry.stage.getObjectContainerByScene(scene);
     objContainer.removeChild(entity.object);
-   //this.canvas.update();
     Entry.requestUpdate = true;
 };
 
