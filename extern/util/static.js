@@ -552,6 +552,24 @@ EntryStatic.getAllBlocks = function() {
                 "ardublock_get_sound_analog_value",
                 // ardublock Added 2016-06-01
 
+                // mkboard Added 2017-07-04
+                "mkboard_get_analog_value",
+                "mkboard_get_analog_value_map",
+                "mkboard_get_ultrasonic_value",
+                "mkboard_get_digital",
+                "mkboard_toggle_led",
+                "mkboard_digital_pwm",
+                "mkboard_set_servo",
+                "mkboard_set_tone",
+                "mkboard_set_left_dc_motor",
+                "mkboard_set_right_dc_motor",
+                "mkboard_get_left_cds_analog_value",
+                "mkboard_get_right_cds_analog_value",
+                "mkboard_toggle_left_led",
+                "mkboard_toggle_right_led",
+                "mkboard_get_sound_analog_value",
+                // mkboard Added 2017-07-04
+
                 "ev3_get_sensor_value",
                 "ev3_touch_sensor",
                 "ev3_color_sensor",
