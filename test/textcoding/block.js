@@ -4,7 +4,7 @@ describe('EntryPython', function(){
     Entry.init(null, {type: "invisible"});
 
     Entry.loadProject(Entry.getStartProject());
-    Entry.variableContainer.addVariable({"name": "testVar"})
+    //Entry.variableContainer.addVariable({"name": "testVar"})
 
     function pairConvertTest(blockType) {
         it (blockType, function(){
