@@ -25,7 +25,6 @@ Test.pythonToBlock = function(textCode, block) {
 
 
 Test.objectSimilarCheck = function(obj, targetObj) {
-    console.log(targetObj);
     for (var key in obj) {
         var value = obj[key];
         switch (typeof value) {

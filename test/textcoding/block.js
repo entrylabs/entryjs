@@ -1,7 +1,10 @@
 describe('EntryPython', function(){
     var allCategories = EntryStatic.getAllBlocks();
 
-    Entry.init(null, {type: "none"});
+    Entry.init(null, {type: "invisible"});
+
+    Entry.loadProject(Entry.getStartProject());
+    Entry.variableContainer.addVariable({"name": "testVar"})
 
     function pairConvertTest(blockType) {
         it (blockType, function(){
@@ -19,6 +22,10 @@ describe('EntryPython', function(){
             var blockSchema = Entry.block[blockType];
             var pythonOutput = blockToPyParser.Thread(new Entry.Thread([blockSchema.def], code));
             var blockOutput = pyToBlockParser.processProgram([filbert.parse(pythonOutput, options)]);
+
+            blockToPyParser = new Entry.BlockToPyParser(syntax);
+            blockToPyParser._parseMode = Entry.Parser.PARSE_GENERAL;
+
             var secondPythonOutput = blockToPyParser.Thread(new Entry.Thread(blockOutput[0], code));
             if (pythonOutput !== secondPythonOutput)
                 console.log(
@@ -30,7 +37,6 @@ describe('EntryPython', function(){
         });
     }
 
-    /*
     describe('should convert block', function(){
         for (var i = 0; i < allCategories.length; i++) {
             var blocks = allCategories[i].blocks;
@@ -42,12 +48,14 @@ describe('EntryPython', function(){
                     blockSchema.syntax &&
                     blockSchema.syntax.py &&
                     blockSchema.def) {
+                    if (i === 11 &&
+                        ["arduino", "ArduinoExt", "hamster"].indexOf(blockSchema.isNotFor[0]) < 0)
+                        continue;
                     pairConvertTest(blockType);
                 }
             }
         }
     });
-    */
 
     describe('should convert block', function(){
         it ("move direction", function() {

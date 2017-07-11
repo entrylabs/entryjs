@@ -18682,7 +18682,10 @@ Entry.block = {
                 "type": "Block",
                 "accept": "string"
             },
-            { "type": "Angle" },
+            {
+                "type": "angle",
+                "params": [ "10" ]
+            },
             {
                 "type": "Indicator",
                 "img": "block_icon/moving_03.png",
@@ -19255,7 +19258,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 null
             ],
             "type": "rotate_absolute"
@@ -19300,7 +19306,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 null
             ],
             "type": "rotate_relative"
@@ -19344,7 +19353,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 null
             ],
             "type": "direction_absolute"
@@ -19389,7 +19401,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 null
             ],
             "type": "direction_relative"
@@ -19438,7 +19453,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 {
                     "type": "number",
                     "params": [ "10" ]
@@ -19506,7 +19524,8 @@ Entry.block = {
                     "params": [ "2" ]
                 },
                 {
-                    "type": "angle"
+                    "type": "angle",
+                    "params": [ "10" ]
                 },
                 null
             ],
@@ -19585,7 +19604,10 @@ Entry.block = {
                     "type": "text",
                     "params": [ "2" ]
                 },
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 null
             ],
             "type": "direction_relative_duration"
