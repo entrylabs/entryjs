@@ -70,6 +70,8 @@ Entry.HW = function() {
         '16.1': Entry.MODI,
         '18.1': Entry.Altino,
     };
+
+    this.initBlocks();
 };
 
 Entry.HW.TRIAL_LIMIT = 2;
@@ -124,6 +126,17 @@ p.connectWebSocket = function(url, option) {
     });
 
     return socket;
+}
+
+p.initBlocks = function() {
+    for(var key in this.hwInfo) {
+        var hw = this.hwInfo[key];
+        if('getBlocks' in hw) {
+            var blocks = hw.getBlocks();
+            console.log(blocks);
+            $.extend(Entry.block, blocks);
+        }
+    }
 }
 
 p.initSocket = function() {
