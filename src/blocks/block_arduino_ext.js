@@ -64,8 +64,7 @@ Entry.ArduinoExt = {
         'low', '0', 'off'
     ],
     BlockState: {
-    },
-    blocks: {}
+    }
 }
 
 Entry.ArduinoExt.getBlocks = function () {
