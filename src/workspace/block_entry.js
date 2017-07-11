@@ -8884,44 +8884,44 @@ Entry.block = {
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Red') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
                 Entry.hw.setDigitalPortValue("ELED_G", 0);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Orange') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
-                Entry.hw.setDigitalPortValue("ELED_G", 20);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
+                Entry.hw.setDigitalPortValue("ELED_G", 3);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Yellow') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
-                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
+                Entry.hw.setDigitalPortValue("ELED_G", 10);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Green') {
                 Entry.hw.setDigitalPortValue("ELED_R", 0);
-                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 10);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Blue') {
                 Entry.hw.setDigitalPortValue("ELED_R", 0);
                 Entry.hw.setDigitalPortValue("ELED_G", 0);
-                Entry.hw.setDigitalPortValue("ELED_B", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 10);
             }
             else if(value == 'Dark Blue') {
                 Entry.hw.setDigitalPortValue("ELED_R", 0);
-                Entry.hw.setDigitalPortValue("ELED_G", 50);
-                Entry.hw.setDigitalPortValue("ELED_B", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 7);
+                Entry.hw.setDigitalPortValue("ELED_B", 10);
             }
             else if(value == 'Purple') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
                 Entry.hw.setDigitalPortValue("ELED_G", 0);
-                Entry.hw.setDigitalPortValue("ELED_B", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 10);
             }
             else if(value == 'White') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
-                Entry.hw.setDigitalPortValue("ELED_G", 80);
-                Entry.hw.setDigitalPortValue("ELED_B", 80);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
+                Entry.hw.setDigitalPortValue("ELED_G", 10);
+                Entry.hw.setDigitalPortValue("ELED_B", 10);
             }
             
                 
@@ -32382,12 +32382,7 @@ Entry.block = {
         "syntax": { "js": [], "py": [] }
     },
     // ardublock Added 2016-06-01
-
-
-
-
     // mkboard Added 2017-07-04
-
     "mkboard_analog_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -32418,10 +32413,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("PORT");
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
-
     "mkboard_get_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -32454,9 +32447,8 @@ Entry.block = {
                 port = port.substring(1)
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
     "mkboard_get_analog_value_map": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -32549,9 +32541,8 @@ Entry.block = {
 
             return result
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
     "mkboard_get_ultrasonic_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -32603,9 +32594,8 @@ Entry.block = {
             };
             return Entry.hw.portData.ULTRASONIC || 0;
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
     "mkboard_get_digital": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -32640,9 +32630,8 @@ Entry.block = {
             };
             return (DIGITAL) ? DIGITAL[port] || 0 : 0;
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
     "mkboard_toggle_led": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -32706,9 +32695,8 @@ Entry.block = {
             };
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
     "mkboard_digital_pwm": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -32764,9 +32752,8 @@ Entry.block = {
             };
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
     "mkboard_tone_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -32804,9 +32791,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("NOTE");
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
     "mkboard_tone_value": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -32833,9 +32819,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getNumberValue("NOTE");
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
     "mkboard_octave_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -32866,9 +32851,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("OCTAVE");
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
     "mkboard_set_tone": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -32997,9 +32981,8 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
     "mkboard_set_servo": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -33049,9 +33032,8 @@ Entry.block = {
 
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": []}
-    },
-    
+        "syntax": {"js": [], "py": []}
+    },    
     "mkboard_dc_motor_direction_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -33078,9 +33060,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("DC_MOTOR_DIRECTION");
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
     "mkboard_set_left_dc_motor": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -33099,7 +33080,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [{
-                    "type": "mkboard_motor_direction_list"
+                    "type": "mkboard_dc_motor_direction_list"
                 },
                 {
                     "type": "text",
@@ -33154,9 +33135,8 @@ Entry.block = {
             
             return script.callReturn();            
         },
-    "syntax": {"js": [], "py": []}
-    },
-   
+        "syntax": {"js": [], "py": []}
+    },   
     "mkboard_set_right_dc_motor": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -33229,9 +33209,8 @@ Entry.block = {
             
             return script.callReturn();            
         },
-    "syntax": {"js": [], "py": []}
-    },
-       
+        "syntax": {"js": [], "py": []}
+    },       
     "mkboard_get_left_cds_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -33265,9 +33244,8 @@ Entry.block = {
                 port = port.substring(1)
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
-    "syntax": {"js": [], "py": []}
-    },
-   
+        "syntax": {"js": [], "py": []}
+    },   
     "mkboard_get_right_cds_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -33301,9 +33279,8 @@ Entry.block = {
                 port = port.substring(1)
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
-    "syntax": {"js": [], "py": []}
-    },
-        
+        "syntax": {"js": [], "py": []}
+    },        
     "mkboard_toggle_left_led": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -33368,9 +33345,8 @@ Entry.block = {
             };
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-
     "mkboard_toggle_right_led": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -33435,10 +33411,9 @@ Entry.block = {
             };
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": []}
-    },
-       
-   "mkboard_get_sound_analog_value": {
+        "syntax": {"js": [], "py": []}
+    },       
+    "mkboard_get_sound_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
@@ -33471,13 +33446,9 @@ Entry.block = {
                 port = port.substring(1)
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
-    "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": []}
     },
-         
-
     // mkboard Added 2017-07-04
-
-
     "joystick_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
         "isNotFor": [
