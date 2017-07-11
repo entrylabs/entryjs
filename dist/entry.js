@@ -97,6 +97,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
       Entry.propertyPanel.resize(e);
       var f = Entry.engine.view_.getElementsByClassName("entryAddButtonWorkspace_w")[0];
       f && Entry.objectAddable && (f.style.top = d + 25 + "px", f.style.width = 0.7 * e + "px");
+      (f = Entry.engine.view_.getElementsByClassName("entryPauseButtonWorkspace_w")[0]) && Entry.objectAddable && (f.style.top = d + 25 + "px", f.style.width = 0.7 * e + "px");
       if (f = Entry.engine.view_.getElementsByClassName("entryRunButtonWorkspace_w")[0]) {
         Entry.objectAddable ? (f.style.top = d + 25 + "px", f.style.left = 0.7 * e + "px", f.style.width = 0.3 * e + "px") : (f.style.left = "2px", f.style.top = d + 25 + "px", f.style.width = e - 4 + "px");
       }
@@ -6983,7 +6984,7 @@ Entry.Commander = function(c) {
   d = Entry.cloneSimpleObject(c[e.moveBlock]);
   d.restrict = function(b, c, e) {
     e();
-    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {callBack:function() {
     }});
   };
   d.dom = ["playground", "board", "coord", "&1", "&2"];
@@ -8339,6 +8340,15 @@ Entry.Engine = function() {
         this.blur();
         Entry.engine.togglePause();
       });
+      this.pauseButtonFull = Entry.createElement("button");
+      this.pauseButtonFull.addClass("entryEngineButtonWorkspace_w");
+      this.pauseButtonFull.addClass("entryPauseButtonWorkspace_full");
+      this.pauseButtonFull.addClass("entryRemove");
+      this.view_.appendChild(this.pauseButtonFull);
+      this.pauseButtonFull.bindOnClick(function(b) {
+        this.blur();
+        Entry.engine.togglePause();
+      });
       this.mouseView = Entry.createElement("div");
       this.mouseView.addClass("entryMouseViewWorkspace_w");
       this.mouseView.addClass("entryRemove");
@@ -8452,7 +8462,8 @@ Entry.Engine = function() {
       }), this.projectTimer.takeSnapshot(), d.inputValue.takeSnapshot(), d.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"), this.achieveEnabled = !1 !== b);
       this.state = "run";
       "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
-      this.runButton && (this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("run"), this.runButton.addClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.pauseButton && this.pauseButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove"), this.stopButton2 && this.stopButton2.removeClass("entryRemove"));
+      this.runButton && (this.pauseButton && (this.pauseButton.innerHTML = Lang.Workspace.pause), this.pauseButtonFull && (this.pauseButtonFull.innerHTML = Lang.Workspace.pause), this.runButton.addClass("run"), this.runButton.addClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.addButton && (this.addButton.addClass("entryRemove"), Entry.objectAddable && this.pauseButton.removeClass("entryRemove")), this.pauseButton && ("minimize" === Entry.type || Entry.objectAddable) && this.pauseButton.removeClass("entryRemove"), 
+      this.runButton2 && this.runButton2.addClass("entryRemove"), this.stopButton2 && this.stopButton2.removeClass("entryRemove"), this.pauseButtonFull && this.pauseButtonFull.removeClass("entryRemove"));
       this.isUpdating || (this.update(), this.isUpdating = !0);
       Entry.stage.selectObject();
       Entry.dispatchEvent("run");
@@ -8485,7 +8496,7 @@ Entry.Engine = function() {
     createjs.Sound.setVolume(1);
     createjs.Sound.stop();
     this.view_.removeClass("entryEngineBlueWorkspace");
-    this.runButton && (this.runButton.removeClass("entryRemove"), this.stopButton.addClass("entryRemove"), this.pauseButton && this.pauseButton.addClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove"), this.stopButton2 && this.stopButton2.addClass("entryRemove"));
+    this.runButton && (this.runButton.removeClass("entryRemove"), this.stopButton.addClass("entryRemove"), this.pauseButton && this.pauseButton.addClass("entryRemove"), this.pauseButtonFull && this.pauseButtonFull.addClass("entryRemove"), this.addButton && this.addButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove"), this.stopButton2 && this.stopButton2.addClass("entryRemove"));
     this.state = "stop";
     Entry.dispatchEvent("stop");
     Entry.stage.hideInputField();
@@ -8495,8 +8506,8 @@ Entry.Engine = function() {
   };
   c.togglePause = function() {
     var b = Entry.engine.projectTimer;
-    "pause" == this.state ? (b.pausedTime += (new Date).getTime() - b.pauseStart, b.isPaused ? b.pauseStart = (new Date).getTime() : delete b.pauseStart, this.state = "run", this.runButton && (this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove"))) : (this.state = "pause", b.isPaused && (b.pausedTime += (new Date).getTime() - b.pauseStart), b.pauseStart = (new Date).getTime(), this.runButton && (this.pauseButton.innerHTML = 
-    Lang.Workspace.restart, this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove")));
+    "pause" == this.state ? (b.pausedTime += (new Date).getTime() - b.pauseStart, b.isPaused ? b.pauseStart = (new Date).getTime() : delete b.pauseStart, this.state = "run", this.runButton && (this.pauseButton && (this.pauseButton.innerHTML = Lang.Workspace.pause), this.pauseButtonFull && (this.pauseButtonFull.innerHTML = Lang.Workspace.pause), this.runButton.addClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove"))) : (this.state = "pause", b.isPaused && (b.pausedTime += 
+    (new Date).getTime() - b.pauseStart), b.pauseStart = (new Date).getTime(), this.runButton && (this.pauseButton && (this.pauseButton.innerHTML = Lang.Workspace.restart), this.pauseButtonFull && (this.pauseButtonFull.innerHTML = Lang.Workspace.restart), this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove")));
   };
   c.fireEvent = function(b) {
     "run" === this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, b);
@@ -8513,7 +8524,7 @@ Entry.Engine = function() {
   c.captureKeyEvent = function(b, c) {
     var e = b.keyCode, f = Entry.type;
     if (!Entry.Utils.isInInput(b) || c) {
-      b.ctrlKey && "workspace" == f ? 83 == e ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == e ? (b.preventDefault(), Entry.engine.run()) : 90 == e && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", e]), Entry.engine.isState("stop") && "workspace" === f && 37 <= e && 40 >= e && Entry.stage.moveSprite(b);
+      b.ctrlKey && "workspace" == f ? 83 == e ? (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "saveAsWorkspace" : "saveWorkspace")) : 82 == e ? (b.preventDefault(), Entry.engine.run()) : 90 == e && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", e]), Entry.engine.isState("stop") && "workspace" === f && 37 <= e && 40 >= e && Entry.stage.moveSprite(b);
     }
   };
   c.raiseKeyEvent = function(b, c) {
@@ -9634,8 +9645,9 @@ p.renderBlock = function(c) {
   var b = Lang.Helper[c];
   if (c && this.visible && b && !Entry.block[c].isPrimitive) {
     this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1);
-    this.code.clear();
-    var e = Entry.block[c].def || {type:c};
+    var e = this.code;
+    e.clear();
+    var d = Entry.block[c].def || {type:c};
     if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
       this._contentView.addClass("textMode");
       this.blockHelperDescription_.innerHTML = Lang.PythonHelper[c + "_desc"];
@@ -9643,17 +9655,17 @@ p.renderBlock = function(c) {
       this._elementsContainer.innerHTML = "";
       if (b) {
         for (this._elementsTitle.removeClass("entryRemove"), b = b.split("%next"); b.length;) {
-          var d = b.shift().split("-- "), f = Entry.createElement("div");
-          f.addClass("entryBlockHelperElementsContainer");
-          var g = Entry.createElement("div");
-          g.innerHTML = d[0];
-          g.addClass("elementLeft");
+          var f = b.shift().split("-- "), g = Entry.createElement("div");
+          g.addClass("entryBlockHelperElementsContainer");
           var h = Entry.createElement("div");
-          h.addClass("elementRight");
-          h.innerHTML = d[1];
-          f.appendChild(g);
-          f.appendChild(h);
-          this._elementsContainer.appendChild(f);
+          h.innerHTML = f[0];
+          h.addClass("elementLeft");
+          var k = Entry.createElement("div");
+          k.addClass("elementRight");
+          k.innerHTML = f[1];
+          g.appendChild(h);
+          g.appendChild(k);
+          this._elementsContainer.appendChild(g);
         }
       } else {
         this._elementsTitle.addClass("entryRemove");
@@ -9661,13 +9673,13 @@ p.renderBlock = function(c) {
       this._codeMirrorDesc.innerHTML = Lang.PythonHelper[c + "_exampleDesc"];
       this._codeMirror.setValue(Lang.PythonHelper[c + "_exampleCode"]);
       this.codeMirror.refresh();
-      e = Entry.block[c].pyHelpDef || e;
+      d = Entry.block[c].pyHelpDef || d;
     } else {
       this._contentView.removeClass("textMode"), this.blockHelperDescription_.innerHTML = b;
     }
-    this.code.createThread([e]);
-    this.code.board.align();
-    this.code.board.resize();
+    e.createThread([d]);
+    e.board.align();
+    e.board.resize();
     this._renderView.align();
     this._renderView.setDomSize();
   }
@@ -10343,7 +10355,7 @@ Entry.init = function(c, b) {
   Entry.addEventListener("showBlockHelper", function(b) {
     Entry.propertyPanel.select("helper");
   });
-  "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? createjs.Sound.registerPlugins([createjs.WebAudioPlugin]) : (createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), window.flashaudio = !0);
+  "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]) : (createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), window.flashaudio = !0);
   Entry.soundQueue = new createjs.LoadQueue;
   Entry.soundQueue.installPlugin(createjs.Sound);
   Entry.loadAudio_([Entry.mediaFilePath + "sounds/click.mp3", Entry.mediaFilePath + "sounds/click.wav", Entry.mediaFilePath + "sounds/click.ogg"], "entryMagneting");
@@ -11685,7 +11697,7 @@ Entry.Painter.prototype.initPicture = function() {
   Entry.addEventListener("pictureSelected", function(b) {
     c.selectToolbox("cursor");
     if (c.file.id !== b.id) {
-      c.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (c.file_ = JSON.parse(JSON.stringify(c.file)), c.file_save(!0));
+      c.file.modified && confirm(Lang.Menus.save_modified_shape) && (c.file_ = JSON.parse(JSON.stringify(c.file)), c.file_save(!0));
       c.file.modified = !1;
       c.clearCanvas(!0);
       var e = new Image;
@@ -12788,7 +12800,7 @@ Entry.Painter2 = function(c) {
     this.isShow = !1;
   };
   c.changePicture = function(b) {
-    this.file && this.file.id === b.id || (this.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && this.file_save(!0), this.file.modified = !1, this.lc.clear(!1), this.file.id = b.id || Entry.generateHash(), this.file.name = b.name, this.file.mode = "edit", this.file.objectId = b.objectId, this.addPicture(b, !0), this.lc.undoStack = [], Entry.stateManager.removeAllPictureCommand());
+    this.file && this.file.id === b.id || (this.file.modified && confirm(Lang.Menus.save_modified_shape) && this.file_save(!0), this.file.modified = !1, this.lc.clear(!1), this.file.id = b.id || Entry.generateHash(), this.file.name = b.name, this.file.mode = "edit", this.file.objectId = b.objectId, this.addPicture(b, !0), this.lc.undoStack = [], Entry.stateManager.removeAllPictureCommand());
   };
   c.addPicture = function(b, c) {
     var e = new Image;
@@ -15262,7 +15274,7 @@ Entry.Playground = function() {
     this.fontSizeKnob = z;
     g = Entry.createElement("div");
     g.addClass("entryPlaygroundFontSizeLabel");
-    g.innerHTML = "\uae00\uc790 \ud06c\uae30";
+    g.innerHTML = Lang.General.font_size;
     b.appendChild(g);
     var t = !1, C = 0;
     z.onmousedown = function(b) {
@@ -15644,12 +15656,12 @@ Entry.Playground = function() {
   c.generatePictureElement = function(b) {
     function c() {
       if ("" === this.value.trim()) {
-        Entry.deAttachEventListener(this, "blur", c), alert("\uc774\ub984\uc744 \uc785\ub825\ud558\uc5ec \uc8fc\uc138\uc694."), this.focus(), Entry.attachEventListener(this, "blur", c);
+        Entry.deAttachEventListener(this, "blur", c), alert(Lang.Workspace.enter_the_name), this.focus(), Entry.attachEventListener(this, "blur", c);
       } else {
         for (var b = $(".entryPlaygroundPictureName"), e = 0; e < b.length; e++) {
           if (b.eq(e).val() == h.value && b[e] != this) {
             Entry.deAttachEventListener(this, "blur", c);
-            alert("\uc774\ub984\uc774 \uc911\ubcf5 \ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
+            alert(Lang.Workspace.name_already_exists);
             this.focus();
             Entry.attachEventListener(this, "blur", c);
             return;
@@ -15716,67 +15728,69 @@ Entry.Playground = function() {
     d.appendChild(f);
   };
   c.generateSoundElement = function(b) {
-    var c = Entry.createElement("sound", b.id);
-    b.view = c;
-    c.addClass("entryPlaygroundSoundElement");
-    c.sound = b;
-    Entry.Utils.disableContextmenu(b.view);
-    Entry.ContextMenu.onContextmenu($(b.view), function() {
-      Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
-        k.focus();
-      }}, {text:Lang.Workspace.context_duplicate, callback:function() {
-        Entry.playground.addSound(b, !0, !0);
-      }}, {text:Lang.Workspace.context_remove, callback:function() {
-        Entry.do("objectRemoveSound", Entry.playground.object.id, b) ? (Entry.removeElement(c), Entry.dispatchEvent("removeSound", b), Entry.toast.success(Lang.Workspace.sound_remove_ok, b.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
-        Entry.removeElement(c);
-      }}], "workspace-contextmenu");
-    });
-    var d = Entry.createElement("div");
-    d.addClass("entryPlaygroundSoundOrder");
-    c.orderHolder = d;
-    c.appendChild(d);
-    var f = Entry.createElement("div");
-    f.addClass("entryPlaygroundSoundThumbnail");
-    f.addClass("entryPlaygroundSoundPlay");
-    var g = !1, h;
-    f.addEventListener("click", function() {
-      g ? (g = !1, f.removeClass("entryPlaygroundSoundStop"), f.addClass("entryPlaygroundSoundPlay"), h.stop()) : (g = !0, f.removeClass("entryPlaygroundSoundPlay"), f.addClass("entryPlaygroundSoundStop"), h = createjs.Sound.play(b.id), h.addEventListener("complete", function(b) {
-        f.removeClass("entryPlaygroundSoundStop");
-        f.addClass("entryPlaygroundSoundPlay");
-        g = !1;
-      }), h.addEventListener("loop", function(b) {
-      }), h.addEventListener("failed", function(b) {
-      }));
-    });
-    c.appendChild(f);
-    var k = Entry.createElement("input");
-    k.addClass("entryPlaygroundSoundName");
-    k.sound = b;
-    k.value = b.name;
-    var l = document.getElementsByClassName("entryPlaygroundSoundName");
-    k.onblur = function() {
-      if ("" === this.value) {
-        alert("\uc774\ub984\uc744 \uc785\ub825\ud558\uc5ec \uc8fc\uc138\uc694."), this.focus();
+    function c() {
+      if ("" === this.value.trim()) {
+        Entry.deAttachEventListener(this, "blur", c), alert(Lang.Workspace.enter_the_name), this.focus(), Entry.attachEventListener(this, "blur", c);
       } else {
-        for (var b = 0, c = 0; c < l.length; c++) {
-          if (l[c].value == k.value && (b += 1, 1 < b)) {
-            alert("\uc774\ub984\uc774 \uc911\ubcf5 \ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
+        for (var b = $(".entryPlaygroundSoundName"), e = 0; e < b.length; e++) {
+          if (b.eq(e).val() == l.value && b[e] != this) {
+            Entry.deAttachEventListener(this, "blur", c);
+            alert(Lang.Workspace.name_already_exists);
             this.focus();
+            Entry.attachEventListener(this, "blur", c);
             return;
           }
         }
         this.sound.name = this.value;
         Entry.playground.reloadPlayground();
       }
-    };
-    k.onkeypress = function(b) {
+    }
+    var d = Entry.createElement("sound", b.id);
+    b.view = d;
+    d.addClass("entryPlaygroundSoundElement");
+    d.sound = b;
+    Entry.Utils.disableContextmenu(b.view);
+    Entry.ContextMenu.onContextmenu($(b.view), function() {
+      Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
+        l.focus();
+      }}, {text:Lang.Workspace.context_duplicate, callback:function() {
+        Entry.playground.addSound(b, !0, !0);
+      }}, {text:Lang.Workspace.context_remove, callback:function() {
+        Entry.do("objectRemoveSound", Entry.playground.object.id, b) ? (Entry.removeElement(d), Entry.dispatchEvent("removeSound", b), Entry.toast.success(Lang.Workspace.sound_remove_ok, b.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
+        Entry.removeElement(d);
+      }}], "workspace-contextmenu");
+    });
+    var f = Entry.createElement("div");
+    f.addClass("entryPlaygroundSoundOrder");
+    d.orderHolder = f;
+    d.appendChild(f);
+    var g = Entry.createElement("div");
+    g.addClass("entryPlaygroundSoundThumbnail");
+    g.addClass("entryPlaygroundSoundPlay");
+    var h = !1, k;
+    g.addEventListener("click", function() {
+      h ? (h = !1, g.removeClass("entryPlaygroundSoundStop"), g.addClass("entryPlaygroundSoundPlay"), k.stop()) : (h = !0, g.removeClass("entryPlaygroundSoundPlay"), g.addClass("entryPlaygroundSoundStop"), k = createjs.Sound.play(b.id), k.addEventListener("complete", function(b) {
+        g.removeClass("entryPlaygroundSoundStop");
+        g.addClass("entryPlaygroundSoundPlay");
+        h = !1;
+      }), k.addEventListener("loop", function(b) {
+      }), k.addEventListener("failed", function(b) {
+      }));
+    });
+    d.appendChild(g);
+    var l = Entry.createElement("input");
+    l.addClass("entryPlaygroundSoundName");
+    l.sound = b;
+    l.value = b.name;
+    Entry.attachEventListener(l, "blur", c);
+    l.onkeypress = function(b) {
       13 == b.keyCode && this.blur();
     };
-    c.appendChild(k);
-    d = Entry.createElement("div");
-    d.addClass("entryPlaygroundSoundLength");
-    d.innerHTML = b.duration + " \ucd08";
-    c.appendChild(d);
+    d.appendChild(l);
+    f = Entry.createElement("div");
+    f.addClass("entryPlaygroundSoundLength");
+    f.innerHTML = b.duration + " " + Lang.General.second;
+    d.appendChild(f);
   };
   c.toggleColourChooser = function(b) {
     "foreground" === b ? "none" === this.coloursWrapper.style.display ? (this.coloursWrapper.style.display = "block", this.backgroundsWrapper.style.display = "none") : this.coloursWrapper.style.display = "none" : "background" === b && ("none" === this.backgroundsWrapper.style.display ? (this.backgroundsWrapper.style.display = "block", this.coloursWrapper.style.display = "none") : this.backgroundsWrapper.style.display = "none");
@@ -16002,9 +16016,9 @@ Entry.PopupList = function(c) {
   };
 })(Entry.PopupList.prototype);
 Entry.getStartProject = function(c) {
-  return {category:"\uae30\ud0c0", scenes:[{name:Lang.Blocks.SCENE + " 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"when_run_button_click", x:40, y:50}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}]], 
-  selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3000000000000000, ext:".mp3", id:"8el5", fileurl:c + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:c + "media/entrybot1.png", name:Lang.Blocks.walking_entryBot + "1", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:c + "media/entrybot2.png", name:Lang.Blocks.walking_entryBot + "2", scale:100, dimension:{width:284, 
-  height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:0.3154574132492113, scaleY:0.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
+  return {category:"\uae30\ud0c0", scenes:[{name:Lang.Blocks.SCENE + " 1", id:"7dwq"}], variables:[{name:Lang.Workspace.Variable_Timer, id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:Lang.Blocks.VARIABLE_get_canvas_input_value, id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"when_run_button_click", x:40, 
+  y:50}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3000000000000000, ext:".mp3", id:"8el5", fileurl:c + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:c + "media/entrybot1.png", name:Lang.Blocks.walking_entryBot + "1", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:c + "media/entrybot2.png", 
+  name:Lang.Blocks.walking_entryBot + "2", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:0.3154574132492113, scaleY:0.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
 };
 Entry.Reporter = function(c) {
   this.projectId = this.userId = null;
@@ -16230,7 +16244,9 @@ Entry.Scene.prototype.loadStartSceneSnapshot = function() {
   this.sceneBeforeRun = null;
 };
 Entry.Scene.prototype.createScene = function() {
-  var c = {name:Lang.Blocks.SCENE + " " + (this.getScenes().length + 1), id:Entry.generateHash()};
+  var c = Entry.getOrderedName(Lang.Blocks.SCENE + " ", this.scenes_, "name");
+  /[0-9]/.test(c) || (c += "1");
+  c = {name:c, id:Entry.generateHash()};
   this.generateElement(c);
   return c;
 };
@@ -17177,7 +17193,7 @@ Entry.BlockToJsParser = function(c, b) {
     }
     var b = {}, c;
     for (c in this.syntax.Scope) {
-      b[c + "();\n"] = this.syntax.Scope[c];
+      0 > c.indexOf("%") && (b[c + "();\n"] = this.syntax.Scope[c]);
     }
     return this._assist = b;
   };
@@ -17266,7 +17282,7 @@ Entry.BlockToPyParser = function(c) {
                   2 == r.length && ("stringParam" == u ? q = "string_param" : "booleanParam" == u && (q = "boolean_param"));
                 }
                 e && "index" == e.paramType && (Entry.Utils.isNumber(q) ? --q : (r = q.split("+"), " 1)" == r[r.length - 1] ? (delete r[r.length - 1], q = r.join("+"), q = q.substring(1, q.length - 2)) : q += " - 1"));
-                e && "integer" == e.paramType && Entry.Utils.isNumber(q) && 0 !== q % 1 && (c = c.replace("randint", "uniform"));
+                e && "integer" == e.paramType && Entry.Utils.isNumber(q) && Entry.isFloat(q) && (c = c.replace("randint", "uniform"));
                 c += q;
               } else {
                 q = f.textParams ? f.textParams : [], q = this["Field" + l[r].type](m[r], q[r]), c += q, f && "repeat_while_true" == f.key && (c = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(b, c));
@@ -17289,28 +17305,28 @@ Entry.BlockToPyParser = function(c) {
   c.searchSyntax = function(b) {
     if (b instanceof Entry.BlockView) {
       var c = b.block._schema;
-      applliedParams = b.block.data.params;
+      var d = b.block.data.params;
     } else {
-      b instanceof Entry.Block ? (c = b._schema, applliedParams = b.params) : c = b;
+      b instanceof Entry.Block ? (c = b._schema, d = b.params) : c = b;
     }
     if (c && c.syntax) {
       for (b = c.syntax.py.concat(); b.length;) {
         c = !1;
-        var d = b.shift();
-        if ("string" === typeof d) {
-          return {syntax:d, template:d};
+        var f = b.shift();
+        if ("string" === typeof f) {
+          return {syntax:f, template:f};
         }
-        if (d.params) {
-          for (var f = 0; f < d.params.length; f++) {
-            if (d.params[f] && d.params[f] !== applliedParams[f]) {
+        if (f.params) {
+          for (var g = 0; g < f.params.length; g++) {
+            if (f.params[g] && f.params[g] !== d[g]) {
               c = !0;
               break;
             }
           }
         }
-        d.template || (d.template = d.syntax);
+        f.template || (f.template = f.syntax);
         if (!c) {
-          return d;
+          return f;
         }
       }
     }
@@ -18212,7 +18228,7 @@ Entry.PyToBlockParser = function(c) {
                                         y = c.key;
                                       }
                                     } else {
-                                      "randint" == k.property.name && (b.arguments && b.arguments[0] && (r = b.arguments[0], "Literal" == r.type && (z = r.value, Entry.Utils.isNumber(z) && 0 !== z % 1 && (u = "random.uniform(%2, %4)", c = this.getBlockSyntax(u)))) && (y = c.key), b.arguments && b.arguments[1] && (r = b.arguments[1], "Literal" == r.type && (z = r.value, Entry.Utils.isNumber(z) && 0 !== z % 1 && (u = "random.uniform(%2, %4)", c = this.getBlockSyntax(u)))) && (y = c.key));
+                                      "randint" == k.property.name && b.arguments && b.arguments[0] && b.arguments[1] && (C = b.arguments[0], z = b.arguments[1], "Literal" == C.type || "Literal" == z.type) && (C = Entry.Utils.isNumber(C.raw) && Entry.isFloat(C.raw), z = Entry.Utils.isNumber(z.raw) && Entry.isFloat(z.raw), C || z) && (u = "random.uniform", c = this.getBlockSyntax(u)) && (y = c.key);
                                     }
                                   }
                                 }
@@ -18375,16 +18391,72 @@ Entry.PyToBlockParser = function(c) {
               }
             }
           } else {
-            "minus" != k.property.name && ("len" == k.property.name ? "len" == u && (E = h[1], E = this.ParamDropdownDynamic(E.name, z[1], C[1]), h[1] = E) : "in" == k.property.name ? (E = h[1], E = this.ParamDropdownDynamic(E.name, z[1], C[1]), h[1] = E) : "pop" == k.property.name ? h[0].type ? "number" == h[0].type || "text" == h[0].type ? Entry.Utils.isNumber(h[0].params[0]) && (h[0].params[0] += 1) : "get_variable" == h[0].type ? (B = {type:"calc_basic"}, t = [], t[0] = h[0], t[1] = "PLUS", t[2] = 
-            {type:"number", params:[1]}, B.params = t, h[0] = B) : "calc_basic" == h[0].type ? h[0].params && "MINUS" == h[0].params[1] && h[0].params[2] && h[0].params[2].params && "1" == h[0].params[2].params[0] ? h[0] = h[0].params[0] : (B = {type:"calc_basic"}, t = [], t[0] = h[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[0] = B) : (B = {type:"calc_basic"}, t = [], t[0] = h[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[0] = B) : this.isFuncParam(h[0].name) ? 
-            (B = {type:"calc_basic"}, t = [], t[0] = h[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[0] = B) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT) : "insert" == k.property.name ? h[2].type ? "number" == h[2].type || "text" == h[2].type ? Entry.Utils.isNumber(h[2].params && h[2].params[0]) && (h[2].params[0] += 1) : "get_variable" == 
-            h[2].type ? (B = {type:"calc_basic"}, t = [], t[0] = h[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[2] = B) : "calc_basic" == h[2].type ? h[2].params && "MINUS" == h[2].params[1] && h[2].params[2] && h[2].params[2].params && "1" == h[2].params[2].params[0] ? h[2] = h[2].params[0] : (B = {type:"calc_basic"}, t = [], t[0] = h[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[2] = B) : (B = {type:"calc_basic"}, t = [], t[0] = h[2], t[1] = "PLUS", 
-            t[2] = {type:"number", params:[1]}, B.params = t, h[2] = B) : this.isFuncParam(h[2].name) ? (B = {type:"calc_basic"}, t = [], t[0] = h[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[2] = B) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT) : "subscriptIndex" == k.property.name ? h[3].type ? "number" == h[3].type || "text" == h[3].type ? 
-            Entry.Utils.isNumber(h[3].params[0]) && (h[3].params[0] += 1) : "get_variable" == h[3].type ? (B = {type:"calc_basic"}, t = [], t[0] = h[3], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[3] = B) : "calc_basic" == h[3].type && (h[3].params && "MINUS" == h[3].params[1] && h[3].params[2] && h[3].params[2].params && "1" == h[3].params[2].params[0] ? h[3] = h[3].params[0] : (B = {type:"calc_basic"}, t = [], t[0] = h[3], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, 
-            B.params = t, h[3] = B)) : this.isFuncParam(h[3].name) ? (B = {type:"calc_basic"}, t = [], t[0] = h[3], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[3] = B) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT) : "_pySlice" == k.property.name ? k.object && (B = this[k.object.type](k.object), v = [], v[1] = B, h[1].type ? "number" == h[1].type || 
-            "text" == h[1].type ? Entry.Utils.isNumber(h[1].params[0]) && (h[1].params[0] += 1) : "get_variable" == h[1].type ? (B = {type:"calc_basic"}, t = [], t[0] = h[1], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[1] = B) : "calc_basic" == h[1].type && (h[1].params && "MINUS" == h[1].params[1] && h[1].params[2] && h[1].params[2].params && "1" == h[1].params[2].params[0] ? h[1] = h[1].params[0] : (B = {type:"calc_basic"}, t = [], t[0] = h[1], t[1] = "PLUS", t[2] = {type:"number", 
-            params:[1]}, B.params = t, h[1] = B)) : this.isFuncParam(h[1].name) ? (B = {type:"calc_basic"}, t = [], t[0] = h[1], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[1] = B) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT), v[3] = h[1], v[5] = h[3], h = v) : "find" == k.property.name ? k.object && (B = this[k.object.type](k.object), v = [], 
-            v[1] = B, v[3] = h[1], h = v) : "replace" == k.property.name ? k.object && (B = this[k.object.type](k.object), v = [], v[1] = B, v[3] = h[1], v[5] = h[3], h = v) : "upper" == k.property.name ? k.object && (B = this[k.object.type](k.object), v = [], v[1] = B, v[3] = h[1], h = v) : "lower" == k.property.name && k.object && (B = this[k.object.type](k.object), v = [], v[1] = B, v[3] = h[1], h = v));
+            if ("minus" != k.property.name) {
+              if ("len" == k.property.name) {
+                "len" == u && (E = h[1], E = this.ParamDropdownDynamic(E.name, z[1], C[1]), h[1] = E);
+              } else {
+                if ("in" == k.property.name) {
+                  E = h[1], E = this.ParamDropdownDynamic(E.name, z[1], C[1]), h[1] = E;
+                } else {
+                  if ("pop" == k.property.name) {
+                    h[0].type ? "number" == h[0].type || "text" == h[0].type ? Entry.Utils.isNumber(h[0].params[0]) && (h[0].params[0] += 1) : "get_variable" == h[0].type ? (B = {type:"calc_basic"}, t = [], t[0] = h[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[0] = B) : "calc_basic" == h[0].type ? h[0].params && "MINUS" == h[0].params[1] && h[0].params[2] && h[0].params[2].params && "1" == h[0].params[2].params[0] ? h[0] = h[0].params[0] : (B = {type:"calc_basic"}, t = [], 
+                    t[0] = h[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[0] = B) : (B = {type:"calc_basic"}, t = [], t[0] = h[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[0] = B) : this.isFuncParam(h[0].name) ? (B = {type:"calc_basic"}, t = [], t[0] = h[0], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[0] = B) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, t, 
+                    this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
+                  } else {
+                    if ("insert" == k.property.name) {
+                      h[2].type ? "number" == h[2].type || "text" == h[2].type ? Entry.Utils.isNumber(h[2].params && h[2].params[0]) && (h[2].params[0] += 1) : "get_variable" == h[2].type ? (B = {type:"calc_basic"}, t = [], t[0] = h[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[2] = B) : "calc_basic" == h[2].type ? h[2].params && "MINUS" == h[2].params[1] && h[2].params[2] && h[2].params[2].params && "1" == h[2].params[2].params[0] ? h[2] = h[2].params[0] : (B = {type:"calc_basic"}, 
+                      t = [], t[0] = h[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[2] = B) : (B = {type:"calc_basic"}, t = [], t[0] = h[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[2] = B) : this.isFuncParam(h[2].name) ? (B = {type:"calc_basic"}, t = [], t[0] = h[2], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[2] = B) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, 
+                      t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
+                    } else {
+                      if ("subscriptIndex" == k.property.name) {
+                        h[3].type ? "number" == h[3].type || "text" == h[3].type ? Entry.Utils.isNumber(h[3].params[0]) && (h[3].params[0] += 1) : "get_variable" == h[3].type ? (B = {type:"calc_basic"}, t = [], t[0] = h[3], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[3] = B) : "calc_basic" == h[3].type && (h[3].params && "MINUS" == h[3].params[1] && h[3].params[2] && h[3].params[2].params && "1" == h[3].params[2].params[0] ? h[3] = h[3].params[0] : (B = {type:"calc_basic"}, 
+                        t = [], t[0] = h[3], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[3] = B)) : this.isFuncParam(h[3].name) ? (B = {type:"calc_basic"}, t = [], t[0] = h[3], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[3] = B) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT);
+                      } else {
+                        if ("_pySlice" == k.property.name) {
+                          k.object && (B = this[k.object.type](k.object), v = [], v[1] = B, h[1].type ? "number" == h[1].type || "text" == h[1].type ? Entry.Utils.isNumber(h[1].params[0]) && (h[1].params[0] += 1) : "get_variable" == h[1].type ? (B = {type:"calc_basic"}, t = [], t[0] = h[1], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[1] = B) : "calc_basic" == h[1].type && (h[1].params && "MINUS" == h[1].params[1] && h[1].params[2] && h[1].params[2].params && "1" == h[1].params[2].params[0] ? 
+                          h[1] = h[1].params[0] : (B = {type:"calc_basic"}, t = [], t[0] = h[1], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[1] = B)) : this.isFuncParam(h[1].name) ? (B = {type:"calc_basic"}, t = [], t[0] = h[1], t[1] = "PLUS", t[2] = {type:"number", params:[1]}, B.params = t, h[1] = B) : Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError.MESSAGE_CONV_DEFAULT, t, this._blockCount, Entry.TextCodingError.SUBJECT_CONV_DEFAULT), 
+                          v[3] = h[1], v[5] = h[3], h = v);
+                        } else {
+                          if ("find" == k.property.name) {
+                            k.object && (B = this[k.object.type](k.object), v = [], v[1] = B, v[3] = h[1], h = v);
+                          } else {
+                            if ("replace" == k.property.name) {
+                              k.object && (B = this[k.object.type](k.object), v = [], v[1] = B, v[3] = h[1], v[5] = h[3], h = v);
+                            } else {
+                              if ("upper" == k.property.name) {
+                                k.object && (B = this[k.object.type](k.object), v = [], v[1] = B, v[3] = h[1], h = v);
+                              } else {
+                                if ("lower" == k.property.name) {
+                                  k.object && (B = this[k.object.type](k.object), v = [], v[1] = B, v[3] = h[1], h = v);
+                                } else {
+                                  if ("uniform" == k.property.name) {
+                                    if ("number" === h[1].type || "text" === h[1].type) {
+                                      t = h[1].params[0], Entry.isFloat(t) || (h[1].params[0] = t + ".0");
+                                    }
+                                    if ("number" === h[3].type || "text" === h[3].type) {
+                                      t = h[3].params[0], Entry.isFloat(t) || (h[3].params[0] = t + ".0");
+                                    }
+                                  } else {
+                                    if ("randint" == k.property.name) {
+                                      if ("number" === h[1].type || "text" === h[1].type) {
+                                        t = h[1].params[0], Entry.isFloat(t) && (h[1].params[0] = Math.floor(t));
+                                      }
+                                      if ("number" === h[3].type || "text" === h[3].type) {
+                                        t = h[3].params[0], Entry.isFloat(t) && (h[3].params[0] = Math.floor(t));
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -29049,8 +29121,8 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
     d === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._oldParserType != this._parserType && this._parser.setParser(this._mode, this._parserType, this.codeMirror), this._oldParserType = this._parserType) : d === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._oldParserType != this._parserType && this._parser.setParser(this._mode, this._parserType, this.codeMirror), this._oldParserType = this._parserType);
     Entry.playground && (this._currentObject = Entry.playground.object);
     this._parser._hasDeclaration = !1;
-    d == Entry.Vim.TEXT_TYPE_PY ? this._currentObject ? (c = "# " + this._currentObject.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc120 \ucf54\ub4dc", b = this._parser.parse(b, Entry.Parser.PARSE_GENERAL), d === Entry.Vim.TEXT_TYPE_PY && (b = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(b)), this.codeMirror.setValue(b), d == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:Entry.Vim.INEDITABLE_LINE_PY, 
-    ch:0}, {readOnly:!0, inclusiveLeft:!0}), d = this.codeMirror.getDoc(), d.setCursor({line:d.lastLine() - 1})) : this.clearText() : d == Entry.Vim.TEXT_TYPE_JS && (b = this._parser.parse(b, Entry.Parser.PARSE_GENERAL), this.codeMirror.setValue(b), d = this.codeMirror.getDoc(), d.setCursor({line:d.lastLine() - 1}));
+    d == Entry.Vim.TEXT_TYPE_PY ? this._currentObject ? (c = "# " + this._currentObject.name + Lang.TextCoding.python_code, b = this._parser.parse(b, Entry.Parser.PARSE_GENERAL), d === Entry.Vim.TEXT_TYPE_PY && (b = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(b)), this.codeMirror.setValue(b), d == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:Entry.Vim.INEDITABLE_LINE_PY, ch:0}, {readOnly:!0, inclusiveLeft:!0}), 
+    d = this.codeMirror.getDoc(), d.setCursor({line:d.lastLine() - 1})) : this.clearText() : d == Entry.Vim.TEXT_TYPE_JS && (b = this._parser.parse(b, Entry.Parser.PARSE_GENERAL), this.codeMirror.setValue(b), d = this.codeMirror.getDoc(), d.setCursor({line:d.lastLine() - 1}));
     Entry.isTextMode && (this._parser._onRunError = !1);
   };
   c.getCodeToText = function(b, c) {
