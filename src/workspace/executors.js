@@ -34,12 +34,8 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
                 if(e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;
                 } else {
-                    var errorMsg = '런타임 에러';
-                    var isToastHide = false;
-                    if(e.message != errorMsg) {
-                        isToastHide = true;
-                    }
-                    Entry.Utils.stopProjectWithToast(this.scope, errorMsg, isToastHide, e);
+                    Entry.Utils.stopProjectWithToast(
+                        this.scope, undefined, e);
                 }
             }
 

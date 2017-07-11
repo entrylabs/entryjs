@@ -1235,34 +1235,37 @@ Entry.Utils.xmlToJsonData = function(xml) {
     return result;
 };
 
-Entry.Utils.stopProjectWithToast = function(scope, message, isHide, error) {
+Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     var block = scope.block;
     message = message || '런타임 에러 발생';
 
-    if (Entry.toast && !isHide)
+    Entry.engine && Entry.engine.toggleStop();
+
+    var isErrorInFuncScope = false;
+
+    if (Entry.type === 'workspace') {
+        if (scope.block && 'funcBlock' in scope.block) {
+            block = scope.block.funcBlock;
+            isErrorInFuncScope = true;
+        } else if (scope.funcExecutor){
+            block = scope.funcExecutor.scope.block;
+            Entry.Func.edit(scope.type);
+            isErrorInFuncScope = true;
+        }
+
+        if (block) {
+            Entry.container.selectObject(block.getCode().object.id, true);
+            var view = block.view;
+            view && view.getBoard().activateBlock(block);
+        }
+    }
+
+    if (Entry.toast && isErrorInFuncScope) {
         Entry.toast.alert(
             Lang.Msgs.warn,
             Lang.Workspace.check_runtime_error,
             true
         );
-
-    if (Entry.engine)
-        Entry.engine.toggleStop();
-
-    if (Entry.type === 'workspace') {
-        if(scope.block && 'funcBlock' in scope.block) {
-            block = scope.block.funcBlock;
-        } else if(scope.funcExecutor){
-            block = scope.funcExecutor.scope.block;
-            var funcName = scope.type.replace('func_', '');
-            Entry.Func.edit(Entry.variableContainer.functions_[funcName]);
-        }
-
-        if(block) {
-            Entry.container.selectObject(block.getCode().object.id, true);
-            var view = block.view;
-            view && view.getBoard().activateBlock(block);
-        }
     }
 
     throw new Error(message);

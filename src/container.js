@@ -1103,3 +1103,8 @@ Entry.Container.prototype.getDom = function(query) {
     } else {
     }
 };
+
+Entry.Container.prototype.isSceneObjectsExist = function() {
+    var objects = this.getSceneObjects();
+    return !!(objects && objects.length);
+};
