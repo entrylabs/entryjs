@@ -70,13 +70,11 @@ Entry.init = function(container, options) {
     });
 
     if (Entry.getBrowserType().substr(0,2) == 'IE' && !window.flashaudio) {
-        createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/";
+        createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + 'media/';
         createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);
-        //createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
-        //createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
         window.flashaudio = true;
     } else {
-        createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
+        createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
     }
 
     Entry.soundQueue = new createjs.LoadQueue();

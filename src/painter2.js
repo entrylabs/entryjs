@@ -96,7 +96,7 @@ p.changePicture = function(picture) {
         return;
 
     if (this.file.modified) {
-        var save = confirm('수정된 내용을 저장하시겠습니까?');
+        var save = confirm(Lang.Menus.save_modified_shape);
         if (save) {
             this.file_save(true);
         }

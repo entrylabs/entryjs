@@ -535,27 +535,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var blockSyntax = this.getBlockSyntax(syntax);
                     if (blockSyntax)
                         type = blockSyntax.key;
-                }
-                else if (callee.property.name == "randint") {
-                    if (component.arguments && component.arguments[0]) {
-                        var arg = component.arguments[0];
-                        if (arg.type == "Literal") {
-                            var value = arg.value;
-                            if (Entry.Utils.isNumber(value) && value % 1 !== 0) {
-                                var syntax = String("random.uniform(%2, %4)");
-                                var blockSyntax = this.getBlockSyntax(syntax);
-                                if (blockSyntax)
-                                    type = blockSyntax.key;
-                            }
-                        }
-                    }
-
-                    if (component.arguments && component.arguments[1]) {
-                        arg = component.arguments[1];
-                        if (arg.type == "Literal") {
-                            var value = arg.value;
-                            if (Entry.Utils.isNumber(value) && value % 1 !== 0) {
-                                var syntax = String("random.uniform(%2, %4)");
+                } else if (callee.property.name == "randint") {
+                    if (component.arguments &&
+                        component.arguments[0] &&
+                        component.arguments[1]) {
+                        var left = component.arguments[0];
+                        var right = component.arguments[1];
+                        if (left.type == "Literal" || right.type == "Literal") {
+                            var valueLeft = left.value;
+                            var valueRight = right.value;
+                            var isLeftFloat = Entry.Utils.isNumber(left.raw) && Entry.isFloat(left.raw);
+                            var isRightFloat = Entry.Utils.isNumber(right.raw) && Entry.isFloat(right.raw);
+                            if (isLeftFloat || isRightFloat) {
+                                var syntax = "random.uniform";
                                 var blockSyntax = this.getBlockSyntax(syntax);
                                 if (blockSyntax)
                                     type = blockSyntax.key;
@@ -564,8 +556,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 }
             }
-
-
 
             if (!type) {
                 if (calleeData.object && calleeData.object.name) {
@@ -597,7 +587,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if (paramType == "Text")
                     params[p] = null;
             }
-
 
             var paramIndex = this.getParamIndex(syntax);
 
@@ -738,7 +727,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     if (!textParams)
                         var textParams = [];
 
-                    var param = this[argument.type](argument, paramsMeta[paramIndex[pi]], paramsDefMeta[paramIndex[pi]], textParams[paramIndex[pi]]);
+                    var param = this[argument.type](
+                        argument,
+                        paramsMeta[paramIndex[pi]],
+                        paramsDefMeta[paramIndex[pi]],
+                        textParams[paramIndex[pi]]
+                    );
 
                     if (param && param.data) {
                         param = param.data;
@@ -1534,7 +1528,34 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         newParams[3] = params[1];
                         params = newParams;
                     }
+                } else if (callee.property.name == "uniform") {
+                    var value;
+                    if (params[1].type === 'number' || params[1].type === 'text') {
+                        value = params[1].params[0];
+                        if (!Entry.isFloat(value))
+                            params[1].params[0] = value + '.0';
+                    }
+
+                    if (params[3].type === 'number' || params[3].type === 'text') {
+                        value = params[3].params[0];
+                        if (!Entry.isFloat(value))
+                            params[3].params[0] = value + '.0';
+                    }
+                } else if (callee.property.name == "randint") {
+                    var value;
+                    if (params[1].type === 'number' || params[1].type === 'text') {
+                        value = params[1].params[0];
+                        if (Entry.isFloat(value))
+                            params[1].params[0] = Math.floor(value);
+                    }
+
+                    if (params[3].type === 'number' || params[3].type === 'text') {
+                        value = params[3].params[0];
+                        if (Entry.isFloat(value))
+                            params[3].params[0] = Math.floor(value);
+                    }
                 }
+
             }
 
             //HW
@@ -3101,6 +3122,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if (value && typeof value === 'string')
             value = value.replace(/\t/gm, '    ');
+
 
         if (!paramMeta) {
             paramMeta = { type: "Block" };
