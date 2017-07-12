@@ -20,7 +20,10 @@ Test.pythonToBlock = function(textCode, block) {
 
     var blockOutput = pyToBlockParser.processProgram(
         [filbert.parse(textCode, options)]);
-    return Test.objectSimilarCheck(block, blockOutput);
+    var result = Test.objectSimilarCheck(block, blockOutput);
+    if (!result)
+        console.log(blockOutput);
+    return result;
 }
 
 
