@@ -21,8 +21,9 @@ Test.pythonToBlock = function(textCode, block) {
     var blockOutput = pyToBlockParser.processProgram(
         [filbert.parse(textCode, options)]);
     var result = Test.objectSimilarCheck(block, blockOutput);
-    if (!result)
-        console.log(blockOutput);
+    if (!result){
+        console.log(JSON.stringify(blockOutput));
+    }
     return result;
 }
 

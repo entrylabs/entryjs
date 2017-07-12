@@ -95,11 +95,32 @@ describe('EntryPython', function(){
                 [[{
                     "type": "move_x",
                     "params": [{
-                        params : [-10]
+                        params : ["-10"]
                     }]
                 }]]
             ));
         });
+    });
+
+    describe('String merge and add block test', function() { // variable add ,
+        it("calc_basic" , function() {
+            assert.ok(Test.pythonToBlock(
+                "('안녕' + '하세요')", 
+                [[{
+                    "type": "calc_basic",
+                    "params": [
+                        {
+                            params : ["안녕"]
+                        },
+                        "PLUS",
+                        {
+                            params : ["하세요"]
+                        }
+                    ]
+                }]]
+            ));
+        });
+
     });
 
 
