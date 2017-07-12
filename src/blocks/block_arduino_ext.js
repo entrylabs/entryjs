@@ -96,6 +96,61 @@ Entry.ArduinoExt.setLanguage = function (lang) {
 
 Entry.ArduinoExt.getBlocks = function () {
     return {
+        "arduino_ext_analog_list": {
+            "color": "#00979D",
+            "skeleton": "basic_string_field",
+            "statements": [],
+            "template": "%1",
+            "params": [
+                {
+                    "type": "Dropdown",
+                    "options": [
+                        [ "A0", "0" ],
+                        [ "A1", "1" ],
+                        [ "A2", "2" ],
+                        [ "A3", "3" ],
+                        [ "A4", "4" ],
+                        [ "A5", "5" ]
+                    ],
+                    "value": "0",
+                    "fontSize": 11
+                }
+            ],
+            "events": {},
+            "def": {
+                "params": [ null ]
+            },
+            "paramsKeyMap": {
+                "PORT": 0
+            },
+            "func": function (sprite, script) {
+                return script.getField("PORT");
+            },
+            "syntax": {"js": [], "py": [
+                {
+                    syntax: "%1",
+                    blockType: "param",
+                    textParams: [
+                        {
+                            "type": "Dropdown",
+                            "options": [
+                                [ "A0", "0" ],
+                                [ "A1", "1" ],
+                                [ "A2", "2" ],
+                                [ "A3", "3" ],
+                                [ "A4", "4" ],
+                                [ "A5", "5" ]
+                            ],
+                            "value": "0",
+                            "fontSize": 11,
+                            converter: Entry.block.converters.returnStringKey,
+                            codeMap:"Entry.CodeMap.Arduino.arduino_ext_analog_list[0]"
+                        }
+                    ],
+                    keyOption: "arduino_ext_analog_list"
+                }
+            ]}
+        },
         "arduino_ext_get_analog_value": {
             "color": "#00979D",
             "template": Entry.ArduinoExt.lang.arduino_ext_get_analog_value,
