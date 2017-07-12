@@ -46297,6 +46297,9 @@ objectAssign(Entry.block, EntryBlock);
 
 for(var id in Entry.HW.HARDWARE_INFO) {
     var hw = Entry.HW.HARDWARE_INFO[id];
+    if('setLanguage' in hw) {
+        hw.setLanguage(window.lang);
+    }
     if('getBlocks' in hw) {
         var block = hw.getBlocks();
         objectAssign(Entry.block, block);

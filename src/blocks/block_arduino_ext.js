@@ -67,10 +67,38 @@ Entry.ArduinoExt = {
     }
 }
 
+Entry.ArduinoExt.setLanguage = function (lang) {
+    var language = {
+        ko: {
+            arduino_ext_get_analog_value: "아날로그 %1 번 센서값",
+            arduino_ext_get_analog_value_map: "%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값",
+            arduino_ext_get_ultrasonic_value: "울트라소닉 Trig %1 Echo %2 센서값",
+            arduino_ext_toggle_led: "디지털 %1 번 핀 %2 %3",
+            arduino_ext_digital_pwm: "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
+            arduino_ext_set_tone: "디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5",
+            arduino_ext_set_servo: "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
+            arduino_ext_get_digital: "디지털 %1 번 센서값",
+        },
+        en: {
+            arduino_ext_get_analog_value: "Analog %1 Sensor value",
+            arduino_ext_get_analog_value_map: "Map Value %1 %2 ~ %3 to %4 ~ %5",
+            arduino_ext_get_ultrasonic_value: "Read ultrasonic sensor trig pin %1 echo pin %2",
+            arduino_ext_toggle_led: "Digital %1 Pin %2 %3",
+            arduino_ext_digital_pwm: "Digital %1 Pin %2 %3",
+            arduino_ext_set_tone: "Play tone pin %1 on note %2 octave %3 beat %4 %5",
+            arduino_ext_set_servo: "Set servo pin %1 angle as %2 %3",
+            arduino_ext_get_digital: "Digital %1 Sensor value",
+        }
+    }
+
+    Entry.ArduinoExt.lang = language[lang];
+};
+
 Entry.ArduinoExt.getBlocks = function () {
     return {
         "arduino_ext_get_analog_value": {
             "color": "#00979D",
+            "template": Entry.ArduinoExt.lang.arduino_ext_get_analog_value,
             "fontColor": "#fff",
             "skeleton": "basic_string_field",
             "statements": [],
@@ -115,7 +143,8 @@ Entry.ArduinoExt.getBlocks = function () {
             ]}
         },
         "arduino_ext_get_analog_value_map": {
-            "color": "#00979D",
+            "color": "#00979D",            
+            "template": Entry.ArduinoExt.lang.arduino_ext_get_analog_value_map,
             "fontColor": "#fff",
             "skeleton": "basic_string_field",
             "statements": [],
@@ -236,7 +265,8 @@ Entry.ArduinoExt.getBlocks = function () {
             ]}
         },
         "arduino_ext_get_ultrasonic_value": {
-            "color": "#00979D",
+            "color": "#00979D",            
+            "template": Entry.ArduinoExt.lang.arduino_ext_get_ultrasonic_value,
             "fontColor": "#fff",
             "skeleton": "basic_string_field",
             "statements": [],
@@ -306,6 +336,7 @@ Entry.ArduinoExt.getBlocks = function () {
         },
         "arduino_ext_get_digital": {
             "color": "#00979D",
+            "template": Entry.ArduinoExt.lang.arduino_ext_get_digital,
             "fontColor": "#fff",
             "skeleton": "basic_boolean_field",
             "params": [{
@@ -354,6 +385,7 @@ Entry.ArduinoExt.getBlocks = function () {
         },
         "arduino_get_digital_toggle": {
             "color": "#00979D",
+            "template": Entry.ArduinoExt.lang.arduino_get_digital_toggle,
             "skeleton": "basic_string_field",
             "statements": [],
             "params": [
@@ -401,6 +433,7 @@ Entry.ArduinoExt.getBlocks = function () {
         },
         "arduino_ext_toggle_led": {
             "color": "#00979D",
+            "template": Entry.ArduinoExt.lang.arduino_ext_toggle_led,
             "skeleton": "basic",
             "statements": [],
             "params": [
@@ -481,6 +514,7 @@ Entry.ArduinoExt.getBlocks = function () {
         },
         "arduino_ext_digital_pwm": {
             "color": "#00979D",
+            "template": Entry.ArduinoExt.lang.arduino_ext_digital_pwm,
             "skeleton": "basic",
             "statements": [],
             "params": [
@@ -689,6 +723,7 @@ Entry.ArduinoExt.getBlocks = function () {
         },
         "arduino_ext_set_tone": {
             "color": "#00979D",
+            "template": Entry.ArduinoExt.lang.arduino_ext_set_tone,
             "skeleton": "basic",
             "statements": [],
             "params": [{
@@ -840,6 +875,7 @@ Entry.ArduinoExt.getBlocks = function () {
         },
         "arduino_ext_set_servo": {
             "color": "#00979D",
+            "template": Entry.ArduinoExt.lang.arduino_ext_set_servo,
             "skeleton": "basic",
             "statements": [],
             "params": [{
