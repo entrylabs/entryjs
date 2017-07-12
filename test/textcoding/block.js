@@ -71,4 +71,33 @@ describe('EntryPython', function(){
         });
     });
 
+    describe('should convert block', function() {
+        it("move_x" , function() {
+            assert.ok(Test.pythonToBlock(
+                "Entry.add_x(10)" , 
+                [[{
+                    "type": "move_x",
+                    "params": [{
+                        params : [10]
+                    }]
+                }]]
+            ));
+        });
+    });
+
+    describe('minus / plus test', function() {
+        it("move_x" , function() {
+            assert.ok(Test.pythonToBlock(
+                "Entry.add_x(-10)" , 
+                [[{
+                    "type": "move_x",
+                    "params": [{
+                        params : [-10]
+                    }]
+                }]]
+            ));
+        });
+    });
+
+
 });

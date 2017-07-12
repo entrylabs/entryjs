@@ -26,7 +26,6 @@ Test.pythonToBlock = function(textCode, block) {
     return result;
 }
 
-
 Test.objectSimilarCheck = function(obj, targetObj) {
     for (var key in obj) {
         var value = obj[key];
