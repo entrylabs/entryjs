@@ -219,7 +219,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 this.svgGroup.elem("g", { class: 'statementGroup' });
         }
 
-        var reg = /(%\d)/mi;
+        var reg = /(%\d+)/mi;
 
         var template = this._getTemplate(mode);
         var params = this._getSchemaParams(mode);
