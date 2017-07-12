@@ -10176,6 +10176,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "len(%2)",
+                passTest: true,
                 blockType: "param",
                 keyOption: "length_of_string"
             }
@@ -17519,7 +17520,10 @@ Entry.block = {
             sprite.setImage(picture);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_shape(%1)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.change_shape(%1)"
+        }]}
     },
     "add_effect_amount": {
         "color": "#EC4466",
@@ -22633,7 +22637,10 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound(%1)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound(%1)"
+        }]}
     },
     "sound_something_second_with_block": {
         "color": "#A4D01D",
@@ -22705,7 +22712,10 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_for_sec(%1, %2)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound_for_sec(%1, %2)"
+        }]}
     },
     "sound_something_wait_with_block": {
         "color": "#A4D01D",
@@ -22768,7 +22778,10 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_and_wait(%1)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound_and_wait(%1)"
+        }]}
     },
     "sound_something_second_wait_with_block": {
         "color": "#A4D01D",
@@ -22848,7 +22861,10 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_for_sec_and_wait(%1, %2)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound_for_sec_and_wait(%1, %2)"
+        }]}
     },
     "sound_from_to": {
         "color": "#A4D01D",
@@ -22930,7 +22946,10 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_from_to(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound_from_to(%1, %2, %3)"
+        }]}
     },
     "sound_from_to_and_wait": {
         "color": "#A4D01D",
@@ -23029,7 +23048,10 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_from_to_and_wait(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax : "Entry.play_sound_from_to_and_wait(%1, %2, %3)"
+        }]}
     },
     "when_run_button_click": {
         "color": "#3BBD70",
@@ -23156,6 +23178,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "def when_press_key(%2):",
+                passTest: true,
                 blockType: "event",
                 textParams: [
                     undefined,
@@ -23383,6 +23406,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "def when_get_signal(%2):",
+                passTest: true,
                 blockType: "event",
                 textParams: [
                     undefined,
@@ -23897,6 +23921,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1 += %2",
+                passTest: true,
                 textParams: [
                     {
                         "type": "DropdownDynamic",
@@ -24005,6 +24030,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1 = %2",
+                passTest: true,
                 blockType: "variable",
                 textParams: [
                     {
@@ -24211,6 +24237,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1",
+                passTest: true,
                 keyOption: "get_variable",
                 blockType: "param",
                 textParams: [
@@ -24472,6 +24499,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2.append(%1)",
+                passTest: true,
                 textParams: [
                     {
                         "type": "Block",
@@ -24569,6 +24597,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2.pop(%1)",
+                passTest: true,
                 textParams: [
                     {
                         "type": "Block",
@@ -24680,6 +24709,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2.insert(%3, %1)",
+                passTest: true,
                 textParams: [
                     {
                         "type": "Block",
@@ -24795,6 +24825,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1\[%2\] = %3",
+                passTest: true,
                 textParams: [
                     {
                         "type": "DropdownDynamic",
@@ -24908,6 +24939,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2\[%4\]",
+                passTest: true,
                 blockType: "param",
                 textParams: [
                     undefined,
@@ -24990,6 +25022,7 @@ Entry.block = {
             {
                 syntax: "len(%2)",
                 blockType: "param",
+                passTest: true,
                 textParams: [
                     undefined,
                     {
@@ -25333,6 +25366,7 @@ Entry.block = {
             {
                 syntax: "%4 in %2",
                 blockType: "param",
+                passTest: true,
                 textParams: [
                     undefined,
                     {

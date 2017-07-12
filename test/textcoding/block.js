@@ -51,6 +51,9 @@ describe('EntryPython', function(){
                     if (i === 11 &&
                         ["arduino", "ArduinoExt", "hamster"].indexOf(blockSchema.isNotFor[0]) < 0)
                         continue;
+                    if (blockSchema.syntax.py[0] &&
+                        blockSchema.syntax.py[0].passTest)
+                        continue;
                     pairConvertTest(blockType);
                 }
             }
