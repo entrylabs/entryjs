@@ -14,15 +14,12 @@ module.exports = function(grunt) {
             test: {
                 files: ['test/**/*.js'],
                 tasks: [
-                    'karma'
                 ]
             },
             js: {
                 files: ['src/**'],
                 tasks: [
                     'closureCompiler:targetName',
-                    'karma',
-                    'jshint',
                     'less'
                 ]
             }
@@ -69,7 +66,8 @@ module.exports = function(grunt) {
                 compilerFile: ClosureCompiler.COMPILER_PATH,
                 checkModified: true,
                 compilerOpts: {
-                    create_source_map: 'entry.js.map',
+                    // create_source_map: 'dist/entry.js.map',
+                    // output_wrapper: '"%output%\n//# sourceMappingURL=entry.js.map"',
                     compilation_level: 'SIMPLE_OPTIMIZATIONS',
                     language_in: 'ECMASCRIPT5',
                     language_out: 'ECMASCRIPT5',
@@ -83,6 +81,8 @@ module.exports = function(grunt) {
             dist: {
                 options: {
                     compilerOpts: {
+                        // create_source_map: 'dist/entry.js.min.map',
+                        // output_wrapper: '"%output%\n//# sourceMappingURL=entry.js.min.map"',
                         compilation_level: 'SIMPLE_OPTIMIZATIONS',
                         language_in: 'ECMASCRIPT5',
                         language_out: 'ECMASCRIPT5'
@@ -109,15 +109,18 @@ module.exports = function(grunt) {
     // Default tasks.
     grunt.registerTask('default', [
         'closureCompiler',
-        'karma',
-        'jshint',
         'less'
     ]);
 
     grunt.registerTask('development', [
         'watch',
         'closureCompiler:targetName',
-        'karma',
+        'concurrent'
+    ]);
+
+    grunt.registerTask('dev', [
+        'watch',
+        'closureCompiler:targetName',
         'concurrent'
     ]);
 
