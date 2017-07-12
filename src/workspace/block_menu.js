@@ -89,6 +89,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     }.bind(this));
 
     Entry.addEventListener('cancelBlockMenuDynamic', this._cancelDynamic.bind(this));
+    Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
 };
 
 (function(p) {
