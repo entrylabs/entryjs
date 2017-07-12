@@ -77,7 +77,7 @@ describe('EntryPython', function(){
     describe('should convert block', function() {
         it("move_x" , function() {
             assert.ok(Test.pythonToBlock(
-                "Entry.add_x(10)" , 
+                "Entry.add_x(10)" ,
                 [[{
                     "type": "move_x",
                     "params": [{
@@ -91,7 +91,7 @@ describe('EntryPython', function(){
     describe('minus / plus test', function() {
         it("move_x" , function() {
             assert.ok(Test.pythonToBlock(
-                "Entry.add_x(-10)" , 
+                "Entry.add_x(-10)" ,
                 [[{
                     "type": "move_x",
                     "params": [{
@@ -124,4 +124,20 @@ describe('EntryPython', function(){
     });
 
 
+
+    describe('should convert block', function(){
+        it ("get_variable", function() {
+            Entry.variableContainer.addVariable({"name": "테스트변수1", "id": "asdf"})
+            assert.ok(Test.pythonToBlock(
+                "테스트변수1",
+                [[{
+                    type: "get_variable",
+                    params: [
+                        "asdf"
+                    ]
+                }]]
+            ));
+            Entry.clearProject();
+        });
+    });
 });
