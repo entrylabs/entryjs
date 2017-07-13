@@ -1192,16 +1192,28 @@ Entry.Playground = function() {
                     this.pictureView_.object = this.object;
                     this.injectPicture();
                 } else if(this.object && this.pictureListView_ && !this.pictureListView_.hasChildNodes()) {
-                    this.injectPicture();
+                    var pictures = this.object.pictures;
+                    if(pictures && pictures.length) {
+                        this.injectPicture();
+                    }
                 }
             } else this.painter.hide();
         }
 
-        if (viewType == 'sound' && (!this.soundView_.object ||
-            this.soundView_.object != this.object)) {
-            this.soundView_.object = this.object;
-            this.injectSound();
-        } else if (viewType == 'text' && this.object.objectType == 'textBox' ||
+        if (viewType == 'sound') {
+            if (!this.soundView_.object ||
+                this.soundView_.object != this.object) {
+                this.soundView_.object = this.object;
+                this.injectSound();
+            } else if(this.object && this.soundListView_ && !this.soundListView_.hasChildNodes()) {
+                var sounds = this.object.sounds;
+                if(sounds && sounds.length) {
+                    this.injectSound();
+                }
+            }
+        }
+
+        if (viewType == 'text' && this.object.objectType == 'textBox' ||
             (this.textView_.object != this.object)) {
             this.textView_.object = this.object;
             this.injectText();
